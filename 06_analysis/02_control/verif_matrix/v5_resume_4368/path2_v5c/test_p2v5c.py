@@ -200,6 +200,16 @@ class TestGridCmd(unittest.TestCase):
         body, st = self.run_grid(mut_vb=m)
         self.assertIn("H-7", body["stop_codes"])
 
+    def test_r82_non_p3_tag(self):
+        """rev8 R8-2: a VB grid run with a non-3 tag -> S-2, J-P3 not counted as undecidable."""
+        def m(stem, res):
+            if stem == "grid_r67_main":
+                res[0]["runs"][0]["resume_k1"] = {"controller_tag": "final_C4G2_LAS_K1"}
+        body, st = self.run_grid(mut_vb=m)
+        self.assertEqual(st, "stop")
+        self.assertIn("S-2", body["stop_codes"])
+        self.assertFalse(any("J-P3" in u["why"] for u in body["grid"]["undecidable"]))
+
 
 def line(case, setting, eps=0.0, **kw):
     ln = {"job": {"case": case, "eps": eps, "setting": setting}, "harness_class": "pass", "final_phase": "ready",
@@ -401,13 +411,17 @@ class TestRev3(unittest.TestCase):
         r = cm.check_rev3(REPO)
         self.assertTrue(r["ok"], r)
         self.assertEqual([i["path"].rsplit("_", 1)[1] for i in r["items"]],
-                         ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md"])
-        rev7 = r["items"][-1]
+                         ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md", "rev8.md"])
+        rev7 = r["items"][-2]
         self.assertEqual(rev7["want"], "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502")
         self.assertEqual(rev7["seal_file_sha"], rev7["want"])
+        rev8 = r["items"][-1]
+        self.assertEqual(rev8["want"], "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56")
+        self.assertEqual(rev8["seal_file_sha"], rev8["want"])
+        self.assertEqual(rev8["sha256"], rev8["want"])
 
     def test_rev7_seal_mismatch_stops(self):
-        """A rev7 file differing from its seal is not ok (S-1 through run_main)."""
+        """A rev8 (last) file differing from its seal is not ok (S-1 through run_main)."""
         with tempfile.TemporaryDirectory() as td:
             for rel, _w, srel in cm.LATER_RULES:
                 for x in (rel, srel):
@@ -418,10 +432,40 @@ class TestRev3(unittest.TestCase):
             p7.write_bytes(p7.read_bytes() + b"x")
             r = cm.check_rev3(td)
             self.assertFalse(r["ok"])
-            self.assertEqual([i["ok"] for i in r["items"]], [True, True, True, True, False])
+            self.assertEqual([i["ok"] for i in r["items"]], [True] * (len(cm.LATER_RULES) - 1) + [False])
             (Path(td) / cm.LATER_RULES[-1][2]).unlink()
             p7.write_bytes((REPO / cm.LATER_RULES[-1][0]).read_bytes())
             self.assertFalse(cm.check_rev3(td)["items"][-1]["ok"])     # .sha256 record missing
+            sp = Path(td) / cm.LATER_RULES[-1][2]                     # .sha256 record with another value
+            sp.write_text("0" * 64 + "  x.md\n", "utf-8")
+            self.assertFalse(cm.check_rev3(td)["items"][-1]["ok"])
+            sp.write_bytes((REPO / cm.LATER_RULES[-1][2]).read_bytes())
+            self.assertTrue(cm.check_rev3(td)["ok"])
+
+    def test_r82_jp3_tag_scope(self):
+        """rev8 R8-2: a VB / LS line whose tag is not 3 on -> J-P3 not applicable (not undecidable) + S-2."""
+        f = CORE.Findings()
+        self.assertFalse(cm.jp3_tag_scope(f, "w", "pass", "VB"))
+        self.assertFalse(cm.jp3_tag_scope(f, "w", "H-7", "VB"))
+        self.assertEqual(f.status(), "pass")
+        self.assertTrue(cm.jp3_tag_scope(f, "w", "not_applicable_tag", "VB"))
+        self.assertEqual(f.status(), "stop")
+        self.assertEqual([s["code"] for s in f.stops], ["S-2"])
+        self.assertEqual(f.undecidable, [])
+        # noise path: H-6 / noise_VB line with a non-3 tag
+        f = CORE.Findings()
+        r = {"resume_k1": {"controller_tag": "final_C4G2_LAS_K1"},
+             "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0]},
+             "hydraulic_options": {"m2_law": "flow_limited_r5"}}
+        is_p3, _ = CORE.load_is_extend_start(REPO)
+        jp = nz.run_checks("H-6", {"k": r}, CORE, V5J, is_p3, True, f)
+        self.assertEqual(jp.get("not_applicable_tag"), 1)
+        self.assertIn("S-2", [s["code"] for s in f.stops])
+        self.assertFalse(any("J-P3" in u["why"] for u in f.undecidable))
+        # V0 lines are not checked for J-P3
+        f = CORE.Findings()
+        nz.run_checks("noise_V0", {"k": r}, CORE, V5J, is_p3, False, f)
+        self.assertNotIn("S-2", [s["code"] for s in f.stops])
 
     def test_sa4_and_guard(self):
         ln = line("S8", "VB", events=[[39.9, "WARN_LIFT_STROKE_LIMITED:FR"], [39.9, "FAULT_LIFT_STROKE_LIMIT:soil:FR"]],

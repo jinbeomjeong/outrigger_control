@@ -268,8 +268,8 @@ def cmd_grid(args, repo, v5j, core):
             rows.append(row)
             # J-P3 (rod reading assumed: two-pressure event path, rev9 3.2 #4)
             res, why = v5j.jp3(run, is_p3, True)
-            if res == "not_applicable_tag":
-                fnd.undec(k, "J-P3 not applied (tag not ③ on)")
+            if cm.jp3_tag_scope(fnd, k, res, "VB"):   # rev8 R8-2: not applicable + S-2
+                pass
             elif res == "H-7":
                 fnd.stop("H-7", k, f"J-P3 {why}")
             elif res == "setting_defect":
