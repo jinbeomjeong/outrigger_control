@@ -66,7 +66,15 @@ def identity_scm(row, expect_tag=None):
                controller_tag=(res.get("v5_hydraulics") or {}).get("controller_tag"),
                expect_ok=(cs.get("expect_controller") or {}).get("ok"))
     want_gate = "on" if las_off else "preset"
-    ok = (out["k1_order_gate"] == want_gate and out["k1_order_gate_effective"] is True
+    # rev11 R11-1 (Chrono rows): expected switches by line kind. C-4 off arm = LAS-b off + K1 on, other
+    # Chrono rows = LAS-b on (preset) + K1 on. LAS-b off is checked by `settings.enable` = false only;
+    # on arm: `enable` = true (the 9 preset values are not checked by path 2, README).
+    las_set = (cm.get("liftoff_approach_slow") or {}).get("settings")
+    las_enable = las_set.get("enable") if isinstance(las_set, dict) else None
+    las_enable_ok = las_enable is (not las_off)
+    out.update(las_settings_enable=las_enable, las_settings_enable_ok=las_enable_ok,
+               r11_1_line_kind="C-4 off arm (LAS-b off, K1 on)" if las_off else "Chrono row (LAS-b on, K1 on)")
+    ok = (las_enable_ok and out["k1_order_gate"] == want_gate and out["k1_order_gate_effective"] is True
           and out["flat_soil_margin_order_gate"] is True and out["num_threads_chrono"] == 4
           and out["omp_wait_policy"] == "PASSIVE" and out["hull_hook_mode"] == "fast"
           and out["hull_hook_fallback"] is None and out["expect_ok"] is True
@@ -74,6 +82,9 @@ def identity_scm(row, expect_tag=None):
     out["verdict"] = "pass" if ok else "indeterminate"
     if not ok:
         out["reason"] = "4.2 / 6 record check failed: S-2 / S-3 / S-4 review"
+        if not las_enable_ok:
+            out["reason"] += (f"; liftoff_approach_slow.settings.enable {las_enable!r} != {not las_off}"
+                              " (rev11 R11-1 expected switch of the line kind)")
         if not las_consistent:
             out["reason"] += ("; argv --las-off vs c2_setup.las_off differ or the off-arm key is absent"
                               " (rev7 R7-4 required in the off arm, 9.3)")
@@ -494,6 +505,51 @@ def j11_record_item(row):
     out["c5_stop_would_be_record"] = j.get("stop")
     out["input_absent"] = bool(row.law_locked is None)
     out["verdict"] = "record"
+    return out
+
+
+def _head_of(v):
+    """git head from a `code_at_launch.git` / `code_state.git_at_start` record (dict with `head`, or a
+    string)."""
+    if isinstance(v, dict):
+        v = v.get("head")
+    return str(v) if isinstance(v, str) and v else None
+
+
+def _same_commit(head, ref):
+    """`ref` (judgement `git_at_start`, 7..40 hex) names `head` (full sha) when head starts with it."""
+    return head is not None and ref is not None and head.lower().startswith(ref.lower())
+
+
+def commit_item(bundle: str, case: dict, res: dict, git_ref: str | None) -> dict:
+    """436.8 rev11 R11-4 (rules 6 commit column, user decision Q-R11-1 = B): every Chrono row, open loop
+    included: `batch.json` `cases[].code_at_launch.git.head` = the judgement `git_at_start`; level, L2b
+    and L1-R rows also `result.json` `code_state.git_at_start` (when that record exists). Missing
+    `code_at_launch` head or any difference -> S-12 (scope widened by R11-4 5)."""
+    cal = (case.get("code_at_launch") or {}).get("git") if isinstance(case.get("code_at_launch"), dict) else None
+    head_launch = _head_of(cal)
+    cs = (res.get("code_state") or {}) if isinstance(res, dict) else {}
+    head_state = _head_of(cs.get("git_at_start")) if isinstance(cs, dict) else None
+    open_loop = bundle == "C-6C7"
+    out = {"clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)", "git_at_start": git_ref,
+           "code_at_launch_head": head_launch,
+           "code_at_launch_clean": cal.get("clean") if isinstance(cal, dict) else None,
+           "code_at_launch_dirty": cal.get("dirty") if isinstance(cal, dict) else None,
+           "code_state_head": head_state, "open_loop": open_loop,
+           "code_state_compared": (not open_loop) and head_state is not None}
+    probs = []
+    if git_ref is None:
+        probs.append("judgement git_at_start not given")
+    if head_launch is None:
+        probs.append("batch.json cases[].code_at_launch.git.head missing")
+    elif git_ref is not None and not _same_commit(head_launch, git_ref):
+        probs.append(f"code_at_launch.git.head {head_launch[:12]} != git_at_start {git_ref}")
+    if not open_loop and head_state is not None and git_ref is not None and not _same_commit(head_state, git_ref):
+        probs.append(f"result.json code_state.git_at_start {head_state[:12]} != git_at_start {git_ref}")
+    out["problems"] = probs
+    out["verdict"] = "indeterminate" if probs else "pass"
+    if probs:
+        out["stop"] = "S-12 (rev11 R11-4: " + "; ".join(probs) + ")"
     return out
 
 
