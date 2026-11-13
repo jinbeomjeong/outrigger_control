@@ -7,7 +7,12 @@ undecidable, S-5); absent start_s = not started; L2b / L1-R K1 record fields; op
 F<F_min window [t_D, t_D + 8 s]; S-9 on either path; grid family by meta.spec + run event; C-2 fixed rows;
 CRLF-only appendix-A difference passes and is disclosed. Later sealed addenda rev3..rev7 are checked
 with the same raw-sha rule; rev7 (e81f7d31...) R7-4 sets the G-S conditional-absence table of the SCM
-level rows (``GS_CONDITIONAL_R74``) and R7-6 the recorded pool mask (identity record only). Author: dynamics-expert (path 2, user decision
+level rows (``GS_CONDITIONAL_R74``) and R7-6 the recorded pool mask (identity record only). rev8
+(3ecafaaf...): seal check; R8-3 / R8-3a ``step_series.npz`` ``law_locked`` presence and format on SCM level
+rows (G-S: S-11; main run: recorded, a C-5 row without it is undecidable); R8-2 ③ request record
+(argv ``--extend-start-tracked``, ``v5_hydraulics.hydraulic_options.extend_start_tracked``) and
+``controller_meta.two_pressure.settings.extend_start_rule`` against the tag ③ (S-2), J-P3 scope recorded;
+R8-1b dotted ``controller_settings`` key read as one key. Author: dynamics-expert (path 2, user decision
 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -73,6 +78,10 @@ REV6_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.s
 REV7_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md"
 REV7_SHA = "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
 REV7_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.sha256"
+REV8_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md"
+REV8_SHA = "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+REV8_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.sha256"
+EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
 
@@ -412,7 +421,8 @@ def check_seals(repo, appendix=True):
                             (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL),
                             (REV4_REL, REV4_SHA, REV4_SEAL_REL),
                             (REV5_REL, REV5_SHA, REV5_SEAL_REL), (REV6_REL, REV6_SHA, REV6_SEAL_REL),
-                            (REV7_REL, REV7_SHA, REV7_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
+                            (REV7_REL, REV7_SHA, REV7_SEAL_REL),
+                            (REV8_REL, REV8_SHA, REV8_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -768,8 +778,13 @@ def cmd_harness(args, repo):
             elif is_p3 is not None and KIND_P3.get(kind) is not None and is_p3(tag) != KIND_P3[kind]:
                 fnd.stop("S-2", where, f"is_extend_start_tag({tag}) = {is_p3(tag)} for kind {kind}")
             if kind in ("H6", "H7"):
-                rule, rp = first_path(rec, ("controller_settings.two_pressure.extend_start_rule",
-                                            "resume_k1.two_pressure.extend_start_rule"))
+                # rev8 R8-1b: the record key is one dotted key, controller_settings["two_pressure.extend_start_rule"]
+                cs = rec.get("controller_settings")
+                if isinstance(cs, dict) and EXT_RULE_DOTTED in cs:
+                    rule = cs[EXT_RULE_DOTTED]
+                else:
+                    rule, rp = first_path(rec, ("controller_settings.two_pressure.extend_start_rule",
+                                                "resume_k1.two_pressure.extend_start_rule"))
                 if rule is MISSING:
                     fnd.note(where, "two_pressure.extend_start_rule not in line (RV1-3.2 check not possible)")
                 elif (kind == "H6") != (rule == "tracked_bound"):
@@ -1119,6 +1134,101 @@ GS_CONDITIONAL = set(GS_CONDITIONAL_R74)   # kept name: the keys whose absence c
 NONE_IS_VALUE = ("hull_hook.fallback_reason",) + tuple(GS_CONDITIONAL_R74)
 
 
+# rev8 R8-3a name table (SCM level rows): <row>/step_series.npz law_locked, [N, 4] int8, legs FL FR RL RR,
+# time axis = t_s of the same file (1 ms, same rows as the other keys), values 1 locked / 0 moving / -1 unarmed
+LAW_LOCKED_KEY = "law_locked"
+LAW_LOCKED_VALUES = (-1, 0, 1)
+LAW_LOCKED_DT_S = 1e-3
+LAW_LOCKED_DT_TOL_S = 1e-6     # path-2 tolerance on the 1 ms spacing (float sums of the Chrono step)
+
+
+def law_locked_format(step_path):
+    """rev8 R8-3 / R8-3a: presence and format of ``step_series.npz`` ``law_locked``. Returns a dict with
+    ``present`` (key in the file), ``ok`` and ``problems`` (empty when the table is met). Values are not
+    judged here (J11 is graded by the C-5 path 2); per-leg 0->1 / 1->0 counts are recorded."""
+    import numpy as np  # noqa: PLC0415
+    out = {"file": "step_series.npz", "present": False, "ok": False, "problems": []}
+    p = Path(step_path)
+    if not p.is_file():
+        out["problems"].append("step_series.npz absent")
+        return out
+    z = np.load(p, allow_pickle=False)
+    if LAW_LOCKED_KEY not in z.files:
+        out["problems"].append("law_locked key absent")
+        return out
+    out["present"] = True
+    a = z[LAW_LOCKED_KEY]
+    prob = out["problems"]
+    if a.dtype != np.int8:
+        prob.append(f"dtype {a.dtype} (int8 required)")
+    if a.ndim != 2 or a.shape[1] != 4:
+        prob.append(f"shape {tuple(a.shape)} ([N, 4] required)")
+    out["shape"] = list(a.shape)
+    if a.size and not np.isin(a, LAW_LOCKED_VALUES).all():
+        prob.append(f"values {sorted(set(np.unique(a).tolist()) - set(LAW_LOCKED_VALUES))} outside {{-1, 0, 1}}")
+    if "t_s" not in z.files:
+        prob.append("t_s absent (time axis of law_locked)")
+    else:
+        t = np.asarray(z["t_s"], float)
+        if t.ndim != 1 or t.size != (a.shape[0] if a.ndim >= 1 else -1):
+            prob.append(f"t_s rows {t.size} != law_locked rows {a.shape[0] if a.ndim >= 1 else None}")
+        elif t.size > 1:
+            dt = np.diff(t)
+            bad = np.abs(dt - LAW_LOCKED_DT_S) > LAW_LOCKED_DT_TOL_S
+            if bad.any():
+                prob.append(f"t_s spacing not 1 ms at {int(bad.sum())} steps (first {float(dt[bad][0])!r} s)")
+    if not prob and a.ndim == 2 and a.shape[0] > 1:
+        lk = a != 0             # revision 6 section 6: -1 (before the first arming) counts as locked
+        out["transitions_per_leg"] = {leg: {"to_locked": int(np.count_nonzero(~lk[:-1, i] & lk[1:, i])),
+                                            "to_unlocked": int(np.count_nonzero(lk[:-1, i] & ~lk[1:, i]))}
+                                      for i, leg in enumerate(("FL", "FR", "RL", "RR"))}
+    out["ok"] = not prob
+    return out
+
+
+def r82_extend_start(res, argv, tag, is_p3, where, fnd):
+    """rev8 R8-2 on a Chrono controller row. ③ is judged by the row tag only (4.1, rev3 R3-C8); the two
+    request records must agree with it (argv ``--extend-start-tracked``; ``v5_hydraulics.hydraulic_options
+    .extend_start_tracked``, key absent = off, only when the ``v5_hydraulics`` block exists), else S-2. On a ③
+    row ``controller_meta.two_pressure.settings.extend_start_rule`` must be ``tracked_bound`` (other value =
+    S-2; absent = J-P3 not judgeable, recorded: J-P3 is graded by the C-5 path 2). Non-③ rows: J-P3 not
+    applicable, the key is not counted as missing."""
+    if is_p3 is None or not isinstance(tag, str):
+        return {"status": "tag_unreadable"}       # the tag check above already stopped (S-2)
+    p3 = bool(is_p3(tag))
+    rec = {"tag_extend_start": p3, "argv_extend_start_tracked": argv_has(argv, "--extend-start-tracked")}
+    if rec["argv_extend_start_tracked"] != p3:
+        fnd.stop("S-2", where, f"R8-2: argv --extend-start-tracked {rec['argv_extend_start_tracked']} vs tag ③ {p3}")
+    v5h = res.get("v5_hydraulics")
+    if isinstance(v5h, dict):
+        ho = v5h.get("hydraulic_options")
+        rec["v5_hydraulic_options_block"] = isinstance(ho, dict)
+        rec["v5_extend_start_tracked"] = bool(ho.get("extend_start_tracked", False)) if isinstance(ho, dict) else False
+        if rec["v5_extend_start_tracked"] != p3:
+            fnd.stop("S-2", where, f"R8-2: v5_hydraulics.hydraulic_options.extend_start_tracked "
+                                   f"{rec['v5_extend_start_tracked']} vs tag ③ {p3}")
+    else:
+        rec["v5_hydraulics_block"] = False     # argv only (R8-2)
+    rule = dig(res, "controller_meta.two_pressure.settings.extend_start_rule", MISSING)
+    rec["extend_start_rule"] = None if rule is MISSING else rule
+    if not p3:
+        rec["status"] = "not_applicable"
+    elif rule is MISSING:
+        rec["status"] = "applicable_rule_missing"
+        fnd.note(where, "R8-2: ③ row without controller_meta.two_pressure.settings.extend_start_rule -> "
+                        "J-P3 not judgeable (9.3; graded by the C-5 path 2)")
+    elif rule != "tracked_bound":
+        rec["status"] = "applicable_rule_wrong"
+        fnd.stop("S-2", where, f"R8-2: extend_start_rule {rule!r} on a ③ row (tracked_bound required)")
+    else:
+        rec["status"] = "applicable"
+    return rec
+
+
+def is_scm_level(argv, engine, kind):
+    return engine == "SCM" and kind != "openloop" and "level" in argv
+
+
 def gs_presence(row, res, keys):
     """11.2 key presence with rev7 R7-4: a table key is ``conditional_absent`` only when its absence
     condition holds, else ``result_missing`` (S-11); a key outside the table is ``present`` or ``absent``
@@ -1182,6 +1292,11 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
         if kind == "openloop":
             keys = ("v5_hydraulics.controller_options.applied", "p3a.checks", "num_threads_chrono",
                     "hull_hook.mode")
+        elif engine == "SCM" and not isinstance(res.get("v5_hydraulics"), dict):
+            # rev8 R8-2: SCM rows without a v5_hydraulics block (V0, S6SEED) are normal; their tag is the
+            # --expect-controller value with c2_setup.expect_controller.ok
+            keys = tuple(k for k in keys if k != "v5_hydraulics.controller_tag")
+            out["gs_v5_hydraulics_block"] = False
         keys = tuple(dict.fromkeys(keys))
         pres, bad = gs_presence(row, res, keys)
         for k in bad:
@@ -1192,6 +1307,12 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
             fnd.note(where, f"r4368.arm {arm!r} vs path-2 off arm {off} (R7-4 uses r4368.arm)")
         out["gs_keys"] = pres
         out["gs_conditional_absent"] = sorted(k for k, v in pres.items() if v == "conditional_absent")
+        if is_scm_level(argv, engine, kind):
+            # rev8 R8-3: the 1 ms law_locked record is a G-S key (11.2); absent or malformed = S-11
+            ll = law_locked_format(Path(rpath).parent / "step_series.npz")
+            out["gs_law_locked"] = ll
+            if not ll["ok"]:
+                fnd.stop("S-11", where, f"G-S law_locked (R8-3a): {'; '.join(ll['problems'])}")
         return out
     # ---- tag (4.1, RV1-10 a)
     if kind == "openloop":
@@ -1201,19 +1322,31 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
         exp_arg = argv_value(argv, "--expect-controller")
         if exp_arg != want_tag:
             fnd.stop("S-2", where, f"--expect-controller {exp_arg!r} != {want_tag!r}")
-        tag, tag_path = first_path(res, ("controller_tag", "v5_hydraulics.controller_tag"))
+        rec_tag, tag_path = first_path(res, ("controller_tag", "v5_hydraulics.controller_tag"))
         ok_flag, _ = first_path(res, ("expect_controller.ok", "c2_setup.expect_controller.ok"))
         name, _ = first_path(res, ("expect_controller.name", "c2_setup.expect_controller.name",
                                    "expect_controller.controller_tag"))
+        # rev8 R8-2 (original 6, RV1-10 a): the tag of a Chrono row is its --expect-controller value with
+        # a true expect_controller check. A recorded tag must agree; SCM rows without a v5_hydraulics
+        # block (V0, S6SEED) carry none, which is not a stop.
+        tag = exp_arg if isinstance(exp_arg, str) else MISSING
         out["tag"] = None if tag is MISSING else tag
-        if tag is MISSING or tag != want_tag:
-            fnd.stop("S-2", where, f"recorded tag {out['tag']!r} != {want_tag!r}")
+        out["tag_recorded"] = None if rec_tag is MISSING else rec_tag
+        out["tag_source"] = "argv --expect-controller"
+        if rec_tag is MISSING:
+            if engine == "SCM" and not isinstance(res.get("v5_hydraulics"), dict):
+                fnd.note(where, "no recorded controller_tag (no v5_hydraulics block): tag = --expect-controller (R8-2)")
+            else:
+                fnd.stop("S-2", where, f"recorded tag missing (expected {want_tag!r})")
+        elif rec_tag != want_tag:
+            fnd.stop("S-2", where, f"recorded tag {rec_tag!r} != {want_tag!r}")
         if ok_flag is not True or name != want_tag:
             fnd.stop("S-2", where, f"expect_controller ok={ok_flag!r} name={name!r}")
         if is_p3 is not None and tag is not MISSING and isinstance(tag, str):
             p3_want = kind in ("VB", "C4OFF_VB")
             if is_p3(tag) != p3_want:
                 fnd.stop("S-2", where, f"is_extend_start_tag({tag}) = {is_p3(tag)}")
+        out["jp3_scope"] = r82_extend_start(res, argv, tag, is_p3, where, fnd)
     # ---- forbidden argv / env (4.2)
     for opt in CHRONO_FORBIDDEN_ARGV:
         if argv_has(argv, opt):
@@ -1364,6 +1497,16 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
                 diffs = [i for i in range(4) if not same_value(rec["legs"][i]["F_min_after_N"], fa_rec[i])]
                 if diffs:
                     fnd.note(where, f"F_min_after path2 vs recorded differ on legs {diffs}")
+    # ---- rev8 R8-3: law_locked record of the SCM level rows (J11 input; J11 itself is the C-5 path 2's)
+    if is_scm_level(argv, engine, kind):
+        ll = law_locked_format(step)
+        out["law_locked"] = ll
+        if not ll["ok"]:
+            if cid == "C-5":
+                fnd.undec(where, f"R8-3: law_locked {'; '.join(ll['problems'])} -> J11 not judgeable (9.3); "
+                                 "the fallback-leg n_late > 0 stop cannot be checked: stop the bundle and ask")
+            else:
+                fnd.note(where, f"R8-3: law_locked {'; '.join(ll['problems'])} (row outside C-5, recorded)")
     # ---- O-C5 (7.4, S-9, S-10)
     if cid in ("C-8a", "C-8b"):
         oc = {"k_from_argv": None}
@@ -1457,7 +1600,18 @@ def cmd_chrono(args, repo):
         if cl:
             k1_table.setdefault(r.get("criteria_id"), {}).setdefault(cl, 0)
             k1_table[r.get("criteria_id")][cl] += 1
+    ll_rows = [r.get("gs_law_locked") or r.get("law_locked") for r in rows]
+    ll_rows = [x for x in ll_rows if isinstance(x, dict)]
+    law_locked_check = {"rows": len(ll_rows),
+                        "missing": sum(1 for x in ll_rows if not x["present"]),
+                        "problems": sum(1 for x in ll_rows if x["present"] and not x["ok"])}
+    jp3 = {}
+    for r in rows:
+        st = (r.get("jp3_scope") or {}).get("status")
+        if st:
+            jp3[st] = jp3.get(st, 0) + 1
     return {"rows": out_rows, "rows_per_criteria_id": per_cid, "launch_commits": {str(k): v for k, v in commits.items()},
+            "R8-3_law_locked_check": law_locked_check, "R8-2_jp3_scope": jp3,
             "outside_start_condition_rows": outside, "k1_table": k1_table, "v5_options": mod_info,
             "grade_scope": "436.8 layer (4.1 / 4.2 / 6 / 7.2 / 7.4 / O-C5); original Chrono judgement blocks "
                            "(D-1 rules 11, rev12 2.2) not recounted", **fnd.as_dict()}, fnd.status()
@@ -1778,7 +1932,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}

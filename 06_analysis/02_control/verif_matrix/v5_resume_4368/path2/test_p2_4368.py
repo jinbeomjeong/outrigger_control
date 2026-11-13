@@ -266,7 +266,15 @@ def test_harness_line_count_s15(tmp_path, capsys):
 
 
 # ------------------------------------------------------------------ 1 ms recount
-def synth_step(path, dip_N=9000.0, t_dep=2.0):
+def synth_law_locked(n):
+    """rev8 R8-3a: [N, 4] int8, -1 unarmed then 1 locked with one moving tail (0) on RL."""
+    ll = np.full((n, 4), 1, dtype=np.int8)
+    ll[:500] = -1
+    ll[3000:3200, 2] = 0
+    return ll
+
+
+def synth_step(path, dip_N=9000.0, t_dep=2.0, law_locked="ok"):
     t = np.round(np.arange(0.0, 12.0, 0.001), 6)
     W = 380000.0
     cr = np.where(t < t_dep, 0.3 * W, 0.0)
@@ -274,7 +282,20 @@ def synth_step(path, dip_N=9000.0, t_dep=2.0):
     dip = (t > t_dep + 0.5) & (t < t_dep + 0.6)       # 99 or 100 samples below F_min
     F[dip, 2] = dip_N
     F[t < t_dep, 2] = 5000.0                          # before departure: ignored
-    np.savez(path, t_s=t, F_cyl_N=F, scm_crawler_normal_N=cr)
+    extra = {}
+    if law_locked == "ok":
+        extra["law_locked"] = synth_law_locked(t.size)
+    elif law_locked == "int64":
+        extra["law_locked"] = synth_law_locked(t.size).astype(np.int64)
+    elif law_locked == "values":
+        a = synth_law_locked(t.size)
+        a[10, 0] = 2
+        extra["law_locked"] = a
+    elif law_locked == "shape":
+        extra["law_locked"] = synth_law_locked(t.size)[:, :3].copy()
+    elif law_locked == "rows":
+        extra["law_locked"] = synth_law_locked(t.size - 1)
+    np.savez(path, t_s=t, F_cyl_N=F, scm_crawler_normal_N=cr, **extra)
     return W
 
 
@@ -312,18 +333,21 @@ def test_departure_needs_hold():
 
 
 # ------------------------------------------------------------------ Chrono rows (synthetic batch)
-def scm_result(tag, rc_att, las_start=None, decisions=(), events=()):
+def scm_result(tag, rc_att, las_start=None, decisions=(), events=(), p3=None):
+    p3 = tag in (p2.TAG_VB, p2.TAG_C4OFF_VB) if p3 is None else p3
     return {"args": {"soil": "J1", "rigid_base": "FR", "floor_roll": 2.1434, "floor_pitch": 1.3784,
                      "extend_start_tracked": True, "duration": 160.0},
             "num_threads_chrono": 4,
             "placement": {"omp_wait_policy": "PASSIVE", "power_throttling_off_ok": True},
             "hull_hook": {"requested": "fast", "mode": "fast", "fallback_reason": None, "env": {}},
-            "v5_hydraulics": {"controller_tag": tag},
+            "v5_hydraulics": {"controller_tag": tag,
+                              "hydraulic_options": {"extend_start_tracked": True} if p3 else {}},
             "c2_setup": {"k1_order_gate": "preset", "k1_order_gate_effective": True,
                          "expect_controller": {"name": tag, "ok": True}},
             "controller_meta": {"liftoff_approach_slow": {"settings": dict(p2.LAS_PRESET, min_active_periods=0,
                                                                            end_ramp_periods=0),
                                                           "start_s": las_start},
+                                **({"two_pressure": {"settings": {"extend_start_rule": "tracked_bound"}}} if p3 else {}),
                                 "slope_clearance_margin": {"settings": {"flat_soil_margin_order_gate": True},
                                                            "order_gate": {"enabled": True,
                                                                           "decisions": list(decisions)}}},
@@ -334,16 +358,21 @@ def scm_result(tag, rc_att, las_start=None, decisions=(), events=()):
             "events": list(events)}
 
 
-def make_batch(tmp_path, res, cid="C-8a", argv_extra=(), name="batch_V5-RESUME-K1-OC5_20990101_000000"):
+def make_batch(tmp_path, res, cid="C-8a", argv_extra=(), name="batch_V5-RESUME-K1-OC5_20990101_000000",
+               law_locked="ok", est_argv=None, setting="VB"):
     bd = tmp_path / name
     case = "OC5_mixed_rigid_J1FR_Kc3_VB_top"
     (bd / case).mkdir(parents=True)
     (bd / case / "result.json").write_text(json.dumps(res), "utf-8")
-    synth_step(bd / case / "step_series.npz")
+    if law_locked != "nofile":
+        synth_step(bd / case / "step_series.npz", law_locked=law_locked)
+    if est_argv is None:
+        est_argv = bool(p2.dig(res, "v5_hydraulics.hydraulic_options.extend_start_tracked", False))
     argv = ["python.exe", "run_S9.py", "level", "--threads", "4", "--floor-roll", "2.1434", "--floor-pitch", "1.3784",
-            "--expect-controller", res["v5_hydraulics"]["controller_tag"], "--start-limit", "record_only", *argv_extra]
+            "--expect-controller", res["c2_setup"]["expect_controller"]["name"], "--start-limit", "record_only",
+            *(["--extend-start-tracked"] if est_argv else []), *argv_extra]
     row = {"case": case, "argv": argv, "rc": 0, "pool": "pcore", "planned_pool": "pcore", "criteria_id": cid,
-           "v5_setting": "VB", "start_env": {"OMP_WAIT_POLICY": "PASSIVE"}, "hull_hook_env": None,
+           "v5_setting": setting, "start_env": {"OMP_WAIT_POLICY": "PASSIVE"}, "hull_hook_env": None,
            "hull_hook_requested": "fast", "hull_hook_effective": {"mode": "fast", "fallback_reason": None},
            "code_at_launch": {"git": {"head": "a" * 40, "dirty": []}}}
     (bd / "batch.json").write_text(json.dumps({"batch": "X", "mixed_hull_mode": False, "cases": [row]}), "utf-8")
@@ -562,3 +591,162 @@ def test_rev7_seal_listed_and_checked():
     seals = p2.check_seals(REPO, appendix=False)
     assert p2.REV7_REL in seals["rules"] and seals["rules"][p2.REV7_REL]["ok"]
     assert p2.REV7_SHA == "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+
+
+# ------------------------------------------------------------------ rev8 (3ecafaaf)
+def test_rev8_seal_listed_and_checked():
+    seals = p2.check_seals(REPO, appendix=False)
+    assert p2.REV8_REL in seals["rules"] and seals["rules"][p2.REV8_REL]["ok"], seals["rules"].get(p2.REV8_REL)
+    assert p2.REV8_SHA == "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+    item = seals["rules"][p2.REV8_REL]
+    assert item["sha256"] == item["seal_file_sha"] == p2.REV8_SHA
+
+
+def test_rev8_seal_mismatch_stops(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(p2, "REV8_SHA", "0" * 64)
+    code, s = run_main(["seal"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-1"]
+
+
+@pytest.mark.parametrize("variant, problem", [
+    ("int64", "dtype"), ("values", "values"), ("shape", "shape"), ("rows", "t_s rows"),
+    ("nokey", "law_locked key absent"), ("nofile", "step_series.npz absent")])
+def test_rev8_r83a_law_locked_format(tmp_path, variant, problem):
+    p = tmp_path / "step_series.npz"
+    if variant != "nofile":
+        synth_step(p, law_locked=variant)
+    r = p2.law_locked_format(p)
+    assert not r["ok"] and any(problem in x for x in r["problems"]), r
+    assert r["present"] is (variant not in ("nokey", "nofile"))
+
+
+def test_rev8_r83a_law_locked_ok_and_spacing(tmp_path):
+    p = tmp_path / "step_series.npz"
+    synth_step(p)
+    r = p2.law_locked_format(p)
+    assert r["ok"] and r["problems"] == [] and r["shape"] == [12000, 4]
+    # -1 counts as locked (revision 6 section 6): only the RL tail gives transitions
+    assert r["transitions_per_leg"]["FL"] == {"to_locked": 0, "to_unlocked": 0}
+    assert r["transitions_per_leg"]["RL"] == {"to_locked": 1, "to_unlocked": 1}
+    t = np.round(np.arange(0.0, 12.0, 0.001), 6)
+    t[5000:] += 0.0005                              # one 1.5 ms step: not the 1 ms axis
+    np.savez(p, t_s=t, law_locked=synth_law_locked(t.size))
+    r = p2.law_locked_format(p)
+    assert not r["ok"] and "spacing" in r["problems"][0]
+
+
+@pytest.mark.parametrize("variant", ["ok", "nokey", "int64"])
+def test_rev8_r83_gs_mode(tmp_path, capsys, variant):
+    res = gs_full_result()
+    bd = make_batch(tmp_path, res, name="batch_V5-RESUME-K1-GS_20990101_000000", law_locked=variant)
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    if variant == "ok":
+        assert code == 0, rep["stops"]
+        assert rep["R8-3_law_locked_check"] == {"rows": 1, "missing": 0, "problems": 0}
+    else:
+        assert code == 2 and s["stop_codes"] == ["S-11"]
+        assert any("law_locked" in x["why"] for x in rep["stops"])
+        assert rep["R8-3_law_locked_check"] == {"rows": 1, "missing": int(variant == "nokey"),
+                                                "problems": int(variant == "int64")}
+
+
+def test_rev8_r83_main_run_c5_undecidable(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.4, 1.8])                 # R_c > 1, no O-C5 (C-5 row)
+    bd = make_batch(tmp_path, res, cid="C-5", law_locked="nokey")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 1 and s["stop_codes"] == [] and any("J11 not judgeable" in u["why"] for u in rep["undecidable"])
+    bd = make_batch(tmp_path / "b", res, cid="C-5")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, (rep["stops"], rep["undecidable"])
+    assert rep["rows"][0]["law_locked"]["ok"] and rep["rows"][0]["jp3_scope"]["status"] == "applicable"
+
+
+def test_rev8_r82_jp3_scope_and_request_records(tmp_path, capsys):
+    # V0 row without the extend_start_rule key: J-P3 not applicable, not missing
+    res = scm_result(p2.TAG_V0, [2.4, 1.8])
+    bd = make_batch(tmp_path, res, cid="C-5", setting="V0")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    assert rep["rows"][0]["jp3_scope"]["status"] == "not_applicable"
+    assert rep["R8-2_jp3_scope"] == {"not_applicable": 1}
+    # V0 row with --extend-start-tracked in argv -> S-2
+    bd = make_batch(tmp_path / "b", res, cid="C-5", setting="V0", est_argv=True)
+    code, s = run_main(["chrono", "--batch", str(bd)], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-2"]
+    # VB row whose v5 record says off -> S-2; v5 block absent -> argv only
+    r2 = scm_result(p2.TAG_VB, [2.4, 1.8])
+    r2["v5_hydraulics"]["hydraulic_options"] = {}
+    bd = make_batch(tmp_path / "c", r2, cid="C-5", est_argv=True)
+    code, s = run_main(["chrono", "--batch", str(bd)], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-2"]
+    r3 = scm_result(p2.TAG_V0, [2.4, 1.8])
+    r3["v5_hydraulics"] = {"controller_tag": p2.TAG_V0}          # no hydraulic_options: key absent = off
+    bd = make_batch(tmp_path / "d", r3, cid="C-5", setting="V0")
+    code, s = run_main(["chrono", "--batch", str(bd)], capsys)
+    assert code == 0, s
+    # ③ row: rule missing = J-P3 not judgeable (recorded), other value = S-2
+    r4 = scm_result(p2.TAG_VB, [2.4, 1.8])
+    del r4["controller_meta"]["two_pressure"]
+    bd = make_batch(tmp_path / "e", r4, cid="C-5")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0 and rep["rows"][0]["jp3_scope"]["status"] == "applicable_rule_missing"
+    assert any("J-P3 not judgeable" in r["what"] for r in rep["records"])
+    r4["controller_meta"]["two_pressure"] = {"settings": {"extend_start_rule": "constant"}}
+    bd = make_batch(tmp_path / "f", r4, cid="C-5")
+    code, s = run_main(["chrono", "--batch", str(bd)], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-2"]
+
+
+def test_rev8_r81b_dotted_controller_settings_key(tmp_path, capsys):
+    lines = [d1_line(i, "H-R-0", "rigid", p2.TAG_VB) for i in range(2)]
+    for ln in lines:
+        ln["controller_settings"] = {"two_pressure.extend_start_rule": "tracked_bound"}
+    f = tmp_path / "h.jsonl"
+    write_jsonl(f, lines)
+    man = tmp_path / "m.json"
+    man.write_text(json.dumps({"files": [{"bundle": "TEST", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "H6"}]}), "utf-8")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "harness", "--manifest", str(man)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep
+    assert "extend_start_rule not in line" not in json.dumps(rep["bundles"]["TEST"]["records"])
+    lines[0]["controller_settings"] = {"two_pressure.extend_start_rule": "constant"}
+    write_jsonl(f, lines)
+    code, s = run_main(["harness", "--manifest", str(man)], capsys)
+    assert code == 2 and "S-2" in s["stop_codes"]
+
+
+def test_rev8_r82_scm_row_without_v5_block(tmp_path, capsys):
+    """V0 / S6SEED SCM rows carry no v5_hydraulics block: tag = --expect-controller + expect_controller.ok."""
+    res = gs_full_result(p2.TAG_V0)
+    del res["v5_hydraulics"]
+    bd = make_batch(tmp_path, res, cid="C-5", setting="V0", name="batch_V5-RESUME-K1-GS_20990101_000000")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    assert "v5_hydraulics.controller_tag" not in rep["rows"][0]["gs_keys"]
+    bd = make_batch(tmp_path / "m", res, cid="C-5", setting="V0")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    row = rep["rows"][0]
+    assert row["tag"] == p2.TAG_V0 and row["tag_recorded"] is None and row["jp3_scope"]["v5_hydraulics_block"] is False
+    res["c2_setup"]["expect_controller"]["ok"] = False             # the check must still be true
+    bd = make_batch(tmp_path / "n", res, cid="C-5", setting="V0")
+    code, s = run_main(["chrono", "--batch", str(bd)], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-2"]
+    r2 = scm_result(p2.TAG_VB, [2.4, 1.8])
+    r2["v5_hydraulics"]["controller_tag"] = p2.TAG_V0                # recorded tag differs from argv
+    bd = make_batch(tmp_path / "o", r2, cid="C-5")
+    code, s = run_main(["chrono", "--batch", str(bd)], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-2"]

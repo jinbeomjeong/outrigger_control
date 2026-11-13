@@ -239,6 +239,40 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 - 자체 시험은 다섯 파일 112개(앞 판 103개)다. pytest 개수는 매개변수화한 시험을 하나씩 센다.
 - `p2_4368.py`가 바뀌었으므로 이 파일을 sha로 import하는 `../path2_v5c/p2v5c_common.py`(`P2_CORE_SHA` `dc631509…`)는 새 sha로 고칠 때까지 `P2-SHA`(종료 2)로 멈춘다. 그 폴더는 이 도구 작성자 소유가 아니라 고치지 않았다.
 
+## rev8 반영 (`v5_resume_4368_rules_rev8.md`, sha256 `3ecafaaf…`, 2026-11-13)
+
+앞 절과 다른 곳은 아래가 맞다. 근거는 원판~rev8 문장과 R8-3a 이름표뿐이다(경로 1 코드·출력은 열지 않았다).
+
+| 절 | 도구 | 반영 |
+|---|---|---|
+| R8-4 봉인 확인 | `p2_4368.py`(`check_seals`, 다섯 도구 공통) | rev8 raw sha가 코드의 봉인 sha와 `.sha256` 첫 값 둘 다와 같고 LF·BOM 없음일 때만 통과(아니면 S-1, 종료 2). 출력 `seals.rev8_sha256` |
+| R8-3·R8-3a G-S | `p2_4368.py chrono --gs` | SCM `run_S9.py level` 행(열린 루프 제외)마다 `<행>/step_series.npz` `law_locked`를 본다: 파일·키 있음, int8, [N, 4], 값 ⊂ {−1, 0, 1}, 같은 파일 `t_s`와 행 수 같음, `t_s` 간격 1 ms(경로 2 허용 1e-6 s). 하나라도 어긋나면 **S-11**. 행 `gs_law_locked`, 출력 `R8-3_law_locked_check`(행 수, `missing`, `problems`). 다리별 0→1·1→0 수는 기록만(−1은 잠김으로 셈, 개정 6 6절) |
+| R8-3 본 실행 | `p2_4368.py chrono` | 같은 형식 검사를 행 `law_locked`에 기록. C-5 행에서 어긋나면 **판정 불가**(J11 판정 불가 → 대체 다리 $n_{late}$ 멈춤을 확인할 수 없으니 묶음을 멈추고 묻는다, 종료 1). C-5 밖 행은 기록만. J11 값 자체는 이 도구가 계산하지 않는다(C-5 경로 2 `../path2_chrono` 몫) |
+| R8-2 태그 | `p2_4368.py chrono` | Chrono 행의 태그 = argv `--expect-controller` 값 + `expect_controller` 확인 참(원판 6절, RV1-10 a). 기록 태그(`controller_tag`·`v5_hydraulics.controller_tag`)는 있으면 같아야 하고(다르면 S-2), `v5_hydraulics` 블록이 없는 SCM 행(V0·S6SEED)에서는 없어도 멈추지 않는다(기록). L2b·L1-R 행은 기록 태그가 없으면 앞 판대로 S-2. G-S 키 목록에서도 `v5_hydraulics.controller_tag`는 그 블록이 있는 SCM 행에서만 요구한다(앞 판에서는 V0·S6SEED 행에 S-11이 났다) |
+| R8-2 ③ 대조·J-P3 범위 | `p2_4368.py chrono` | ③ = `is_extend_start_tag(태그)`. argv `--extend-start-tracked` 유무, `v5_hydraulics` 블록이 있으면 `hydraulic_options.extend_start_tracked`(키 없음 = 끔)가 ③과 다르면 **S-2**. ③ 행: `controller_meta.two_pressure.settings.extend_start_rule` = `tracked_bound`가 아니면 S-2, 키가 없으면 기록 "J-P3 판정 불가"(J-P3 등급은 C-5 경로 2 몫). ③ 아닌 행: J-P3 해당 없음, 키 없음을 결측으로 세지 않음. 행 `jp3_scope`, 출력 `R8-2_jp3_scope`(상태별 수) |
+| R8-1b 이름 | `p2_4368.py harness` | H-6·H-7 줄의 `controller_settings["two_pressure.extend_start_rule"]`(점이 든 키 하나)를 그대로 읽는다. 앞 판은 이 키를 중첩 경로로 찾아 언제나 "not in line" 기록만 남기고 ③ 대조를 건너뛰었다 |
+| 바꾸지 않음 | – | R8-1 재계산 대조(T4h 없는 r79·격자 job)는 R8-1d가 경로 1 도구(`resume4368_judge`) 몫으로 정했다. `p2_4368.py harness`는 앞 판대로 기록 태그를 kind 기대 태그와 대조한다. `p2_v5j.py` J-P3은 이미 ③을 `is_extend_start_tag`로만 정하고 ③ 아닌 줄을 `not_applicable_tag`로 둔다(R8-2와 같음). L2b `pads.npz` `law_locked` 읽기(R8-3a 둘째 줄)는 C-5 J11 계산이라 `../path2_chrono` 몫이다. `p2_d1.py`·`p2_t3k.py`·`p2_u3.py`에 rev8이 요구하는 것은 없다(봉인 확인은 공통 함수로 들어감) |
+
+- 2026-11-13 G-S `…_082117`에 이 판을 돌린 결과(참고, 11.2 충족에 쓰지 않음, R8-4): SCM level 9행 모두 `law_locked key absent`로 S-11(R8-4가 예상한 결과), 그 밖 S-11 없음.
+
+### 도구 sha256 (rev8 판, LF 바이트)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `bebed9f1663ce17a0ea24c72de67080b335109dfb83d735971fe68cff4ed9d31` | 바뀜 |
+| `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 그대로 |
+| `p2_t3k.py` | `f4a84aba0beb07fe2de09fa6edd803406baefee73fdd90f8957a9dd258a6777a` | 그대로 |
+| `p2_u3.py` | `408944c498da8736e343c2dbc2d816f6fdbe8a5ecd73a0a96689f06680bc5f28` | 그대로 |
+| `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | 그대로 |
+| `test_p2_4368.py` | `2b887bc23ab0ac37b3684ae13fc474c5efbd8776d6e2e7570b77b79ecb9e9fa7` | 바뀜(65개) |
+| `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 그대로(17개) |
+| `test_p2_t3k.py` | `c3696fb7cfc1bc240f71b14b5c06e7b5b2a18f3cdf7b3c3a6f47f5ea57b933be` | 그대로(19개) |
+| `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
+| `test_p2_v5j.py` | `d52ca6adb89f77f6bd952bf6ff03f966f9cd7d0a05486af7e044ee700fb0a418` | 그대로(16개) |
+
+- 자체 시험은 다섯 파일 128개(앞 판 112개)다. 더한 것: rev8 봉인 확인과 불일치 S-1, `law_locked` 형식 6가지·정상·1 ms 간격, G-S 모드 3가지, 본 실행 C-5 판정 불가, R8-2 J-P3 범위·요청 기록 대조, `v5_hydraulics` 없는 SCM 행, R8-1b 점 키.
+- `p2_4368.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`를 `bebed9f1…`로 고쳐야 한다(R8-4, 그 폴더 작성자 몫). `p2_v5j.py`는 바뀌지 않았다.
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
@@ -264,7 +298,7 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B -m pytest -q -p no:cacheprovider --basetemp <scratch>\pt <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\test_p2_4368.py
 ```
 
-- 45개 시험, 합성 입력만 쓴다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
+- `test_p2_4368.py`는 65개(rev8 판, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). rev3~rev8에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
 
 ## 독립성 공개 (규칙 9.2, 이 도구를 쓰려고 읽은 것)
 
