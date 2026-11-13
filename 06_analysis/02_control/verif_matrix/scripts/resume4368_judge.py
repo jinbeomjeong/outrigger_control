@@ -50,8 +50,10 @@ Rev3 (``v5_resume_4368_rules_rev3.md``, sealed dad8dfa6, checked raw too):
 Rev4 (``v5_resume_4368_rules_rev4.md``, sealed 7ea87a30, checked raw too): grid-v0-sample
 pairs every run of a sampled result by (event, offset) (R4-B4); gs requires the record-only
 fields F-1 .. F-6 of the R4-D table and checks the second table (``extend_bound_check.rule`` =
-the ext_moving rule with ``breach_reads``, r79 ``base.t_done_s`` = the first DONE of
-``base.phase_path``, ``gs --chrono``: PS-c ``soil_event_series.npz`` columns).
+the ext_moving rule with ``breach_reads``, r79 first DONE = the first DONE entry of
+``base.timeline`` (R4-B2 as the record is written: the r79 base has no ``t_done_s`` /
+``phase_path``; no timeline or no DONE = S-11, rev7 proposal), ``gs --chrono``: PS-c
+``soil_event_series.npz`` columns).
 
 Rev5 (``v5_resume_4368_rules_rev5.md``, sealed 452a8436, checked raw too): R5-A1 makes the
 ``04_scripts/04_hydraulic/coupled/*_4368.py`` judges the harness path 1 (this tool keeps its
@@ -1172,7 +1174,14 @@ SA4_CASES = ("S8",)
 """Rev4 F-4: the v5 S8 family rows (``job.case``) carry ``values.sa4.lift_after_stop_ms``."""
 DONE_PHASE = "done"
 PHASE_PATH_TIME_TOL_S = 0.005
-"""``base.phase_path`` keeps the times rounded to 0.01 s."""
+"""``base.timeline`` keeps the times rounded to 1 ms (``r67_g1_screen.run_base``), the cut
+``phase_path`` of older records to 0.01 s: 5 ms accepts both and still parts two 0.1 s
+controller periods."""
+FIRST_DONE_KEY = "r79 R4-B2 first DONE = first DONE of base.timeline"
+"""G-S key of the R4-B2 check (rev7 proposal: the r79 base has ``timeline``, not ``t_done_s`` /
+``phase_path``; a missing timeline or DONE stops with S-11)."""
+FIRST_DONE_OK = "pass"
+FIRST_DONE_STOP = "S-11"
 
 
 def rev4_presence(record: dict) -> dict[str, bool]:
@@ -1202,7 +1211,7 @@ def rev4_presence(record: dict) -> dict[str, bool]:
         out["extend_bound_check.rule = ext_moving rule"] = bound.get("rule") == extend_bound_rule()
         out["extend_bound_check.breach_reads"] = "breach_reads" in bound
     if is_r79_record(record) and isinstance(record.get("base"), dict):
-        out["r79 base.t_done_s = first DONE of base.phase_path"] = is_first_done(record["base"])
+        out[FIRST_DONE_KEY] = first_done_check(record["base"])["status"] == FIRST_DONE_OK
     return out
 
 
@@ -1227,16 +1236,43 @@ def extend_bound_rule() -> str | None:
     return EXTEND_BOUND_CHECK_RULE
 
 
-def is_first_done(base: dict) -> bool:
-    """Rev4 R4-B2: ``base.t_done_s`` is the first DONE of ``base.phase_path`` (both absent is
-    true; a DONE time the cut path does not show cannot be confirmed: false)."""
-    t_done = base.get("t_done_s")
-    done_times = [float(entry[0]) for entry in base.get("phase_path") or []
-                  if isinstance(entry, (list, tuple)) and len(entry) == 2
-                  and str(entry[1]).lower().endswith(DONE_PHASE)]
-    if t_done is None:
-        return not done_times
-    return bool(done_times) and abs(done_times[0] - float(t_done)) <= PHASE_PATH_TIME_TOL_S
+def timeline_first_done_s(timeline) -> float | None:
+    """Time [s] of the first DONE entry of an r79 ``base.timeline`` (``[[t_s, phase], ...]``,
+    one entry per phase change); None without one."""
+    for entry in timeline or []:
+        if not isinstance(entry, (list, tuple)) or len(entry) != 2:
+            continue
+        if str(entry[1]).lower().endswith(DONE_PHASE):
+            return float(entry[0])
+    return None
+
+
+def first_done_check(base: dict) -> dict:
+    """Rev4 R4-B2 on the r79 record as written: the first DONE time of the run.
+
+    The r79 ``base`` keeps ``timeline`` (each phase change), ``t_ready`` and ``final_phase``; it
+    has no ``t_done_s`` or ``phase_path`` (G-S b1ddeae), so the first DONE is rebuilt as the
+    first DONE entry of ``timeline``. When the record also has ``t_done_s`` (the DONE time a
+    judge would read), it must be that time. No timeline, or no DONE in it, is not a pass but
+    a stop (S-11: a G-S failure, rules 8.2; the DONE time is missing, 9.3).
+
+    Returns:
+        ``status`` (``pass`` or ``S-11``), ``t_first_done_s`` (None when missing) and
+        ``reason`` (None on a pass).
+    """
+    timeline = base.get("timeline")
+    if not isinstance(timeline, list) or not timeline:
+        return {"status": FIRST_DONE_STOP, "t_first_done_s": None,
+                "reason": "base.timeline missing or empty"}
+    t_first_done = timeline_first_done_s(timeline)
+    if t_first_done is None:
+        return {"status": FIRST_DONE_STOP, "t_first_done_s": None,
+                "reason": "no DONE entry in base.timeline"}
+    t_done_used = base.get("t_done_s")
+    if t_done_used is not None and abs(float(t_done_used) - t_first_done) > PHASE_PATH_TIME_TOL_S:
+        return {"status": FIRST_DONE_STOP, "t_first_done_s": t_first_done,
+                "reason": f"base.t_done_s {t_done_used} is not the first DONE {t_first_done}"}
+    return {"status": FIRST_DONE_OK, "t_first_done_s": t_first_done, "reason": None}
 
 
 SOIL_EVENT_SERIES = "soil_event_series.npz"

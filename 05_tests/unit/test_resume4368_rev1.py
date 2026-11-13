@@ -1261,7 +1261,8 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
         "inner": "x",
         judge.RECORD_KEY: block,
         "controller_tag": judge.TAG_V0,
-        "base": {"commands_sha256": "a"},
+        # the r79 base as written: a timeline (R4-B2 first DONE), no t_done_s / phase_path
+        "base": {"commands_sha256": "a", "timeline": [[0.1, "check"], [38.5, "done"]]},
     }
     path = _write_json(tmp_path / "r79.json", {"results": [r79]})
     out = tmp_path / "g.json"
@@ -1270,6 +1271,11 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
     r79["commands_sha256"] = "a"
     _write_json(path, {"results": [r79]})
     assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 0
+    # no timeline: the first DONE cannot be rebuilt (S-11), not a pass
+    _write_json(path, {"results": [{**r79, "base": {"commands_sha256": "a"}}]})
+    assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 1
+    missing = json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
+    assert missing == [judge.FIRST_DONE_KEY]
     run = {judge.RECORD_KEY: block, "event": "G4", "commands_sha256": "h"}
     grid = {
         "meta": {"spec": judge.GRID_SPEC, "v5_setting": "VB"},
@@ -1427,13 +1433,28 @@ def test_rev4_gs_fields(tmp_path) -> None:
     }
 
 
-def test_rev4_r79_first_done() -> None:
-    path = [[0.1, "check"], [40.0, "done"], [50.0, "level"], [60.0, "done"]]
-    base = {"t_done_s": 40.003, "phase_path": path}
-    assert judge.is_first_done(base) is True
-    assert judge.is_first_done({**base, "t_done_s": 60.0}) is False
-    assert judge.is_first_done({"t_done_s": None, "phase_path": [[0.1, "check"]]}) is True
-    assert judge.is_first_done({"t_done_s": 40.0, "phase_path": [[0.1, "check"]]}) is False
+def test_rev4_r79_first_done_from_the_timeline() -> None:
+    """R4-B2 on the r79 base as written (G-S b1ddeae): ``timeline``, ``t_ready``,
+    ``final_phase``; no ``t_done_s`` / ``phase_path``."""
+    timeline = [[0.1, "check"], [10.1, "touch"], [30.1, "level"], [38.5, "done"],
+                [38.6, "probe"], [45.0, "level"], [48.0, "done"], [50.5, "ready"]]
+    base = {"timeline": timeline, "t_ready": 50.5, "final_phase": "ready"}
+    check = judge.first_done_check(base)
+    assert check == {"status": "pass", "t_first_done_s": 38.5, "reason": None}
+    # a DONE time a judge reads must be the first one (a re-level DONE is not)
+    assert judge.first_done_check({**base, "t_done_s": 38.503})["status"] == "pass"
+    later = judge.first_done_check({**base, "t_done_s": 48.0})
+    assert later["status"] == "S-11" and later["t_first_done_s"] == 38.5
+    # missing timeline or no DONE in it: a stop, never a pass
+    for missing in ({"t_ready": 50.5, "final_phase": "ready"}, {"timeline": []},
+                    {"timeline": None}, {"timeline": [[0.1, "check"], [10.1, "touch"]]},
+                    {"t_done_s": None, "phase_path": [[0.1, "check"]]}):
+        out = judge.first_done_check(missing)
+        assert out["status"] == "S-11" and out["t_first_done_s"] is None, missing
+    record = {"seed_index": 1, "harness": "L3", "inner": 34, "key": "k", "base": base}
+    assert judge.rev4_presence(record)[judge.FIRST_DONE_KEY] is True
+    no_done = {**record, "base": {"timeline": timeline[:3], "final_phase": "level"}}
+    assert judge.rev4_presence(no_done)[judge.FIRST_DONE_KEY] is False
 
 
 def test_rev4_soil_event_series_columns(tmp_path) -> None:
