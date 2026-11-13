@@ -750,3 +750,253 @@ def test_rev8_r82_scm_row_without_v5_block(tmp_path, capsys):
     bd = make_batch(tmp_path / "o", r2, cid="C-5")
     code, s = run_main(["chrono", "--batch", str(bd)], capsys)
     assert code == 2 and s["stop_codes"] == ["S-2"]
+
+
+# ------------------------------------------------------------------ rev9 (4cf7843c)
+def test_rev9_seal_listed_and_checked():
+    seals = p2.check_seals(REPO, appendix=False)
+    assert p2.REV9_REL in seals["rules"] and seals["rules"][p2.REV9_REL]["ok"], seals["rules"].get(p2.REV9_REL)
+    assert p2.REV9_SHA == "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+    item = seals["rules"][p2.REV9_REL]
+    assert item["sha256"] == item["seal_file_sha"] == p2.REV9_SHA
+
+
+def test_rev9_seal_mismatch_stops(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(p2, "REV9_SHA", "0" * 64)
+    code, s = run_main(["seal"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-1"]
+    monkeypatch.setattr(p2, "REV9_SEAL_REL", "06_analysis/02_control/verif_matrix/no_such_rev9.sha256")
+    monkeypatch.setattr(p2, "REV9_SHA", "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d")
+    code, s = run_main(["seal"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-1"]      # .sha256 record absent = S-1 (R9-8)
+
+
+def _ll(n=1000, pre=100):
+    a = np.ones((n, 4), dtype=np.int8)
+    a[:pre] = -1
+    return a
+
+
+@pytest.mark.parametrize("variant, patterns, ok", [
+    ("none", ["none"], True), ("pre", ["pre_arming"], True), ("after", ["after_arming"], False),
+    ("whole", ["whole_run"], False), ("mismatch", ["leg_mismatch"], False), ("never", ["leg_mismatch"], False),
+    ("rearm_via_minus1", ["after_arming"], False), ("after_and_mismatch", ["after_arming", "leg_mismatch"], False)])
+def test_rev9_r93_minus1_patterns(tmp_path, variant, patterns, ok):
+    a = _ll()
+    if variant == "none":
+        a[:] = 1
+        a[400:450, 1] = 0
+    elif variant == "after":
+        a[500:510, 3] = -1                     # -1 after the first arming on RR
+    elif variant == "whole":
+        a[:] = -1
+    elif variant == "mismatch":
+        a[100:120, 2] = -1                     # RL leaves -1 20 samples later than the others
+    elif variant == "never":
+        a[:, 0] = -1                           # FL never leaves -1
+    elif variant == "rearm_via_minus1":
+        a[600:700] = -1                        # four legs back to -1 together: disarm is not a recorded path
+    elif variant == "after_and_mismatch":
+        a[100:120, 2] = -1
+        a[800, 0] = -1
+    p = tmp_path / "step_series.npz"
+    np.savez(p, t_s=np.round(np.arange(a.shape[0]) * 1e-3, 9), law_locked=a)
+    r = p2.law_locked_format(p)
+    assert r["minus1_patterns"] == patterns and r["ok"] is ok, r
+    if not ok:
+        assert r["failed_items"] == ["6_minus1"] and all("R9-3" in x for x in r["problems"])
+    if variant == "pre":
+        assert r["pre_arming_samples"] == 100
+        assert r["transitions_per_leg"]["FL"] == {"to_locked": 0, "to_unlocked": 0}   # -1 counts as locked
+
+
+def test_rev9_r92_l2b_pads_time_column_and_items(tmp_path):
+    a = _ll()
+    t = np.round(np.arange(a.shape[0]) * 1e-3, 9)
+    p = tmp_path / "pads.npz"
+    np.savez(p, t=t, law_locked=a)
+    r = p2.law_locked_format(p, "t")
+    assert r["ok"] and r["file"] == "pads.npz" and r["max_abs_dt_error_s"] < 1e-12
+    np.savez(p, t_s=t, law_locked=a)                       # SCM time key in an L2b file: item 1
+    r = p2.law_locked_format(p, "t")
+    assert not r["ok"] and r["failed_items"] == ["1_time_column"]
+    t2 = t.copy()
+    t2[500:] += 2e-6                                       # one step 1.002 ms: outside 1 ms +- 1e-6 s
+    np.savez(p, t=t2, law_locked=a.astype(np.int16))
+    r = p2.law_locked_format(p, "t")
+    assert set(r["failed_items"]) == {"3_dtype", "5_spacing"}
+    t3 = t.copy()
+    t3[500:] += 0.9e-6                                     # inside the 1e-6 s procedure value
+    np.savez(p, t=t3, law_locked=a)
+    assert p2.law_locked_format(p, "t")["ok"]
+    assert p2.LAW_LOCKED_FILES == {"SCM": ("step_series.npz", "t_s"), "L2b": ("pads.npz", "t")}
+
+
+def l2b_result(tag=None, ok=True):
+    tag = tag or p2.TAG_VB
+    return {"controller_tag": tag, "expect_controller": {"ok": ok, "controller_tag": tag, "name": tag},
+            "controller_meta": {"slope_clearance_margin": {"settings": {"flat_soil_margin_order_gate": True},
+                                                           "order_gate": {"enabled": True, "decisions": []}},
+                                "liftoff_approach_slow": {"settings": dict(p2.LAS_PRESET)}}}
+
+
+def make_l2b_batch(tmp_path, res, cid="C-5", pads="ok", name="batch_V5-RESUME-K1-GS_20990101_000000",
+                   setting="VB"):
+    bd = tmp_path / name
+    case = "L2b_case_VB"
+    (bd / case).mkdir(parents=True)
+    (bd / case / "result.json").write_text(json.dumps(res), "utf-8")
+    (bd / case / "controller_events.json").write_text("[]", "utf-8")
+    a = _ll()
+    t = np.round(np.arange(a.shape[0]) * 1e-3, 9)
+    if pads == "ok":
+        np.savez(bd / case / "pads.npz", t=t, law_locked=a)
+    elif pads == "nokey":
+        np.savez(bd / case / "pads.npz", t=t)
+    elif pads == "after":
+        a[500, 1] = -1
+        np.savez(bd / case / "pads.npz", t=t, law_locked=a)
+    argv = ["python.exe", "run_S8C.py", "--expect-controller", res["expect_controller"]["controller_tag"],
+            "--extend-start-tracked"]
+    row = {"case": case, "argv": argv, "rc": 0, "pool": "pcore", "planned_pool": "pcore", "criteria_id": cid,
+           "v5_setting": setting, "code_at_launch": {"git": {"head": "b" * 40, "dirty": []}}}
+    (bd / "batch.json").write_text(json.dumps({"batch": "X", "mixed_hull_mode": False, "cases": [row]}), "utf-8")
+    return bd
+
+
+@pytest.mark.parametrize("pads, stop", [("ok", False), ("nokey", True), ("nofile", True), ("after", True)])
+def test_rev9_r92_r95_gs_l2b_law_locked(tmp_path, capsys, pads, stop):
+    bd = make_l2b_batch(tmp_path, l2b_result(), pads=pads)
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    ll = rep["R9-2_law_locked_check"]
+    assert ll["by_engine"]["L2b"]["rows"] == 1
+    if stop:
+        assert code == 2 and s["stop_codes"] == ["S-11"], rep["stops"]
+        assert any("L2b pads.npz" in x["why"] for x in rep["stops"])
+        if pads == "after":
+            assert ll["failed_items"] == {"6_minus1": 1} and ll["minus1_patterns"] == {"after_arming": 1}
+    else:
+        assert code == 0, rep["stops"]
+        assert ll["by_engine"]["L2b"]["ok"] == 1 and ll["minus1_patterns"] == {"pre_arming": 1}
+
+
+@pytest.mark.parametrize("engine, okv", [("SCM", False), ("SCM", "absent"), ("L2b", False), ("L2b", "absent")])
+def test_rev9_r91_gs_expect_controller_ok(tmp_path, capsys, engine, okv):
+    if engine == "SCM":
+        res = gs_full_result()
+        if okv == "absent":
+            del res["c2_setup"]["expect_controller"]["ok"]
+        else:
+            res["c2_setup"]["expect_controller"]["ok"] = False
+        bd = make_batch(tmp_path, res, name="batch_V5-RESUME-K1-GS_20990101_000000")
+    else:
+        res = l2b_result(ok=False)
+        if okv == "absent":
+            del res["expect_controller"]["ok"]
+        bd = make_l2b_batch(tmp_path, res)
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-11", "S-2"], rep["stops"]
+    assert any(x["code"] == "S-2" and "R9-1" in x["why"] for x in rep["stops"])
+    assert any(x["code"] == "S-11" and "R9-1" in x["why"] for x in rep["stops"])
+    assert rep["R9-1_expect_controller"] == {"rows_checked": 1, "s2": 1}
+
+
+def test_rev9_r91_main_run_ok_false_is_s2_not_jp3_only(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.4, 1.8])
+    res["c2_setup"]["expect_controller"]["ok"] = False
+    bd = make_batch(tmp_path, res, cid="C-5")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-2"] and any("R9-1" in x["why"] for x in rep["stops"])
+
+
+def test_rev9_r95_r96_main_run_l2b(tmp_path, capsys):
+    out = tmp_path / "o.json"
+    for cid, want in (("C-5", "c5_not_judgeable"), ("C-1", "outside_c5_input_missing")):
+        bd = make_l2b_batch(tmp_path / cid, l2b_result(), cid=cid, pads="nokey",
+                            name="batch_V5-RESUME-K1-C5_20990101_000000")
+        run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+        rep = json.loads(out.read_text("utf-8"))
+        ll = rep["R9-2_law_locked_check"]
+        assert ll[want] == 1 and ll["missing"] == 1, ll
+        if cid == "C-5":
+            assert any("R9-5" in u["why"] and "J11 not judgeable" in u["why"] for u in rep["undecidable"])
+        else:
+            assert not any("law_locked" in u["why"] for u in rep["undecidable"])
+            assert not any("law_locked" in x["why"] for x in rep["stops"])
+            assert any("R9-6" in r["what"] for r in rep["records"])
+
+
+def test_rev9_r96_scm_outside_c5_recorded_not_stopped(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.4, 1.8])
+    bd = make_batch(tmp_path, res, cid="C-1", law_locked="nokey")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, (rep["stops"], rep["undecidable"])
+    assert rep["R9-2_law_locked_check"]["outside_c5_input_missing"] == 1
+
+
+def _manifest(tmp_path, bundle, case, setting, extra_row=False):
+    rows = [{"case": case, "v5_setting": setting}]
+    if extra_row:
+        rows.append({"case": case, "v5_setting": setting})
+    p = tmp_path / "manifest.json"
+    p.write_text(json.dumps({"batches": {bundle: {"rows": rows}}}), "utf-8")
+    return p
+
+
+def test_rev9_r94_ls_reading():
+    bd = "x/batch_V5-RESUME-K1-C5_20990101_000000"
+    assert p2.bundle_of(bd) == "V5-RESUME-K1-C5" and p2.bundle_of("x/other") is None
+    m = lambda s: {"batches": {"V5-RESUME-K1-C5": {"rows": [{"case": "c", "v5_setting": s}]}}}   # noqa: E731
+    assert p2.r94_ls_row(m("LS1"), bd, {"case": "c", "v5_setting": "LS1"})["class"] == "ls"
+    assert p2.r94_ls_row(m("LS4"), bd, {"case": "c", "v5_setting": "LS4"})["class"] == "ls"
+    assert p2.r94_ls_row(m("VB"), bd, {"case": "c", "v5_setting": "VB"})["class"] == "not_ls"
+    assert p2.r94_ls_row(m(None), bd, {"case": "c", "v5_setting": None})["class"] == "not_ls"
+    assert p2.r94_ls_row(m(None), bd, {"case": "c"})["class"] == "not_ls"              # L1-R style row
+    assert p2.r94_ls_row(m("LS1"), bd, {"case": "c", "v5_setting": "LS4"})["class"] == "undecidable"
+    assert p2.r94_ls_row(m("LS1"), bd, {"case": "c"})["class"] == "undecidable"         # one side only
+    assert p2.r94_ls_row(m("LS1"), bd, {"case": "other", "v5_setting": "LS1"})["class"] == "undecidable"
+    # the row name is not read: an "_LS1_" case with V0 on both sides is not an LS row
+    assert p2.r94_ls_row({"batches": {"V5-RESUME-K1-C5": {"rows": [{"case": "v5s3_LS1_x", "v5_setting": "V0"}]}}},
+                         bd, {"case": "v5s3_LS1_x", "v5_setting": "V0"})["class"] == "not_ls"
+    assert p2.r94_ls_row(None, bd, {"case": "c", "v5_setting": "LS1"})["class"] == "not_checked"
+    # exact LS1..LS4, LS on the off arm needs the ③ off-arm tag
+    row = {"criteria_id": "C-4", "v5_setting": "LS1", "r4368": {"arm": "off"}}
+    assert p2.expected_chrono_tag(row, {}, [])[0] == p2.TAG_C4OFF_VB
+    assert p2.expected_chrono_tag({"criteria_id": "C-5", "v5_setting": "LS5"}, {}, [])[0] == p2.TAG_V0
+
+
+def test_rev9_r94_ls_row_tag_and_c5_undecidable(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.4, 1.8])
+    bd = make_batch(tmp_path, res, cid="C-5", setting="LS1", name="batch_V5-RESUME-K1-C5_20990101_000000")
+    case = "OC5_mixed_rigid_J1FR_Kc3_VB_top"
+    man = _manifest(tmp_path, "V5-RESUME-K1-C5", case, "LS1")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--rows-manifest", str(man)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, (rep["stops"], rep["undecidable"])
+    assert rep["R9-4_ls_rows"]["classes"] == {"ls": 1} and rep["R9-4_ls_rows"]["ls_rows"] == [case]
+    # LS row whose tag is not ③ -> S-2 (R9-4)
+    monkey = copy.deepcopy(res)
+    monkey["v5_hydraulics"]["controller_tag"] = p2.TAG_V0
+    monkey["c2_setup"]["expect_controller"]["name"] = p2.TAG_V0
+    monkey["v5_hydraulics"]["hydraulic_options"] = {}
+    bd2 = make_batch(tmp_path / "b", monkey, cid="C-5", setting="LS1", name="batch_V5-RESUME-K1-C5_20990101_000001")
+    man2 = _manifest(tmp_path / "b", "V5-RESUME-K1-C5", case, "LS1")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd2), "--rows-manifest", str(man2)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and "S-2" in s["stop_codes"]
+    assert any("R9-4" in x["why"] for x in rep["stops"])
+    # one side only on a C-5 row: LS reading not judgeable, recorded with the 'LS 판별 불가' note
+    man3 = _manifest(tmp_path / "b", "V5-RESUME-K1-C5", case, None)
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--rows-manifest", str(man3)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert rep["R9-4_ls_rows"]["c5_undecidable_rows"] == [case]
+    assert any("R9-4" in r["what"] and "LS 판별 불가" in r["what"] for r in rep["records"])
