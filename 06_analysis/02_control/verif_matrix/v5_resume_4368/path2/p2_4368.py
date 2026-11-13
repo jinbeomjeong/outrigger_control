@@ -34,6 +34,12 @@ rev7 R7-5 (applied 2026-11-13 after rev11): the L2b / L1-R row folder is the las
 line of ``<batch>/<case>.log`` (relocated under ``<repo>/07_results`` when that folder has no result.json),
 else the unique runner folder of the row's ``--tag`` whose stamp is in the row window (progress.log
 START~END, else batch stamp + wall_s) +-2 s; none or several = the row is not judged (S-11).
+rev12 (78f1f99b...): seal check; R12-2 Chrono ``code_at_launch.git`` clean / dirty / paths recorded only;
+R12-3 ``chrono --git-at-start`` required (also ``--gs``), missing = input error (S-11, exit 2, not judged);
+R12-4 open-loop ``result.json`` ``code_state`` recorded only; R12-5 time-window fallback: window START~END
+else batch stamp + ``wall_s`` (no ``est_s``) +-2 s, candidates exactly ``S8/<tag>_<stamp>`` (run_S8C) or
+``S6/..._<tag>_L1R_<stamp>`` (run_S6C, ``_check_L1R_`` excluded) with ``<--only>/result.json``, 0 or 2+ =
+input error (S-11). R12-1 (T4h search for every T4h read) is in ``p2_v5j.py`` u9.
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -111,6 +117,9 @@ REV10_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10
 REV11_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md"
 REV11_SHA = "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
 REV11_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.sha256"
+REV12_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md"
+REV12_SHA = "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+REV12_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.sha256"
 EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
@@ -455,7 +464,8 @@ def check_seals(repo, appendix=True):
                             (REV8_REL, REV8_SHA, REV8_SEAL_REL),
                             (REV9_REL, REV9_SHA, REV9_SEAL_REL),
                             (REV10_REL, REV10_SHA, REV10_SEAL_REL),
-                            (REV11_REL, REV11_SHA, REV11_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7)
+                            (REV11_REL, REV11_SHA, REV11_SEAL_REL),
+                            (REV12_REL, REV12_SHA, REV12_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7, R12-6)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -1074,11 +1084,6 @@ _STAMP_RE = re.compile(r"_(\d{8}_\d{6})$")
 _PROG_RE = re.compile(r"^(START|END)\s+(\S+)\s+(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})")
 
 
-def runner_roots(repo):
-    """Result roots searched by the R7-5 time window (L1-R ``07_results/S6``, L2b ``07_results/S8``)."""
-    return [repo / "07_results" / "S6", repo / "07_results" / "S8"]
-
-
 def _row_result(folder, argv):
     """result.json of a runner folder: ``<folder>/<--only>/result.json``, else ``<folder>/result.json``."""
     only = argv_value(argv, "--only")
@@ -1153,27 +1158,42 @@ def resolve_runner_row(batch_dir, row, repo, argv):
         return None, rec
     t0, t1, src = win
     rec["window"] = [t0.isoformat(), t1.isoformat(), src]
-    tag = argv_value(argv, "--tag")
+    tag, only = argv_value(argv, "--tag"), argv_value(argv, "--only")
+    engine = engine_of(argv)
+    if not tag or not only or engine not in ("L2b", "L1-R"):
+        rec["why"] = f"R12-5: --tag {tag!r} / --only {only!r} / engine {engine} do not define the candidates"
+        return None, rec
+    name_re = folder_name_re(engine, tag)
     lo, hi = t0 - _dt.timedelta(seconds=R75_WINDOW_S), t1 + _dt.timedelta(seconds=R75_WINDOW_S)
     cands = []
-    for root in runner_roots(repo):
-        if not root.is_dir():
+    root = runner_root(repo, engine)
+    for d in (sorted(root.iterdir()) if root.is_dir() else []):
+        m = name_re.match(d.name)
+        ts = _stamp_time(m.group(1)) if m else None
+        if not d.is_dir() or ts is None or not lo <= ts <= hi:
             continue
-        for d in root.iterdir():
-            m = _STAMP_RE.search(d.name)
-            ts = _stamp_time(m.group(1)) if m else None
-            if not d.is_dir() or ts is None or not lo <= ts <= hi:
-                continue
-            if tag and tag not in d.name:
-                continue
-            if _row_result(d, argv) is not None:
-                cands.append(d)
+        if (d / only / "result.json").is_file():          # R12-5 2: <--only>/result.json
+            cands.append(d)
     rec["candidates"] = [str(d) for d in cands]
     if len(cands) != 1:
-        rec["why"] = f"R7-5: {len(cands)} runner folders in the row time window +-{R75_WINDOW_S:g} s"
+        rec["why"] = f"R12-5: {len(cands)} runner folders in the row time window +-{R75_WINDOW_S:g} s (input error)"
         return None, rec
     rec.update(method="time_window", folder=str(cands[0]))
-    return _row_result(cands[0], argv), rec
+    return cands[0] / only / "result.json", rec
+
+
+def runner_root(repo, engine):
+    """rev12 R12-5 2: ``07_results/S8`` for run_S8C.py (L2b), ``07_results/S6`` for run_S6C.py (L1-R)."""
+    return repo / "07_results" / ("S8" if engine == "L2b" else "S6")
+
+
+def folder_name_re(engine, tag):
+    """rev12 R12-5 2 exact names: L2b ``<tag>_<YYYYmmdd_HHMMSS>``; L1-R ``<base>_<tag>_L1R_<stamp>`` (the
+    check-run form ``..._<tag>_check_L1R_<stamp>`` does not match; no substring match)."""
+    t = re.escape(tag)
+    if engine == "L2b":
+        return re.compile(rf"^{t}_(\d{{8}}_\d{{6}})$")
+    return re.compile(rf"^.+_{t}_L1R_(\d{{8}}_\d{{6}})$")
 
 
 def departure_index(t, crawler_n, weight_n):
@@ -1572,14 +1592,23 @@ def r114_launch_head(row, git_at_start, where, fnd):
     return out
 
 
-def r114_result_head(res, out114, where, fnd):
+def row_is_openloop(row):
+    cid = row.get("criteria_id") or dig(row, "r4368.criteria_id", None)
+    return cid in ("C-6", "C-7")
+
+
+def r114_result_head(res, out114, where, fnd, record_only=False):
     """rev11 R11-4 4: level / L2b / L1-R rows are also checked against ``result.json``
-    ``code_state.git_at_start`` (head) where that record exists."""
+    ``code_state.git_at_start`` (head) where that record exists. rev12 R12-4: on open-loop rows the value
+    and its equality with git_at_start are recorded only (``record_only``)."""
     v = dig(res, "code_state.git_at_start", MISSING)
     head = v.get("head") if isinstance(v, dict) else (v if isinstance(v, str) else None)
     out114["code_state_head"] = head if v is not MISSING else None
     if v is MISSING or out114.get("git_at_start") is None:
         out114["code_state"] = "absent" if v is MISSING else "not_checked"
+        return
+    if record_only:
+        out114["code_state"] = "openloop_record_" + ("same" if same_commit(head, out114["git_at_start"]) else "differs")
         return
     if not same_commit(head, out114["git_at_start"]):
         out114["code_state"] = "differs"
@@ -1619,8 +1648,11 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
     # rev11 R11-4: every Chrono row (open loop included) carries code_at_launch.git.head = the judgement's
     # git_at_start; absent or different = S-12 (scope widened by R11-4 5)
     out["r114"] = r114_launch_head(row, git_at_start, where, fnd)
-    if dig(row, "code_at_launch.git.dirty", []) not in ([], None):
-        fnd.stop("S-12", where, "dirty tree at launch")
+    # rev12 R12-2: clean / dirty / paths of a Chrono row are recorded only (no stop); the commit identity
+    # is the head (R11-4). The pre-run audit checks the checkout.
+    out["launch_git_record"] = {k: dig(row, f"code_at_launch.git.{k}", None) for k in ("clean", "dirty", "paths")}
+    if dig(row, "code_at_launch.git.dirty", []) not in ([], None) or dig(row, "code_at_launch.git.clean", True) is False:
+        fnd.note(where, f"R12-2: dirty tree at launch recorded {dig(row, 'code_at_launch.git.dirty', None)!r}")
     if row.get("rc") not in (0, None):
         fnd.undec(where, f"rc = {row.get('rc')} (run error, P-15)")
     if engine in ("L2b", "L1-R"):
@@ -1643,7 +1675,7 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
         return out
     res = json.loads(rpath.read_text("utf-8"))
     out["result_sha256"] = sha256_file(rpath)
-    r114_result_head(res, out["r114"], where, fnd)
+    r114_result_head(res, out["r114"], where, fnd, record_only=row_is_openloop(row))
     want_tag, kind, off = expected_chrono_tag(row, res, argv)
     out["kind"] = kind
     if kind == "openloop":
@@ -1963,6 +1995,12 @@ def cmd_chrono(args, repo):
     rows = []
     commits = {}
     per_cid = {}
+    gas = getattr(args, "git_at_start", None)
+    if not isinstance(gas, str) or len(gas) < 7:
+        # rev12 R12-3: --git-at-start is required (judgement and G-S); missing = input error, not judged
+        fnd.stop("S-11", "--git-at-start", f"R12-3 input error: --git-at-start {gas!r} (required, >= 7 hex)")
+        return {"rows": [], "input_error": "R12-3 --git-at-start missing",
+                "batches_not_judged": [str(b) for b in args.batch], **fnd.as_dict()}, fnd.status()
     mpath = Path(args.rows_manifest) if getattr(args, "rows_manifest", None) else repo / ROWS_MANIFEST_REL
     manifest, merr = load_rows_manifest(mpath)
     if manifest is None:
@@ -2357,8 +2395,9 @@ def build_parser():
                    help="chrono_rows_manifest.json for the rev9 R9-4 / rev10 R10-1 LS reading (default: "
                         "<repo>/" + ROWS_MANIFEST_REL + "; missing or unreadable = input error, S-11)")
     c.add_argument("--git-at-start", default=None,
-                   help="judgement git_at_start (rev11 R11-4: every row's code_at_launch.git.head and, where "
-                        "recorded, result.json code_state.git_at_start; absent or different = S-12)")
+                   help="judgement git_at_start, required (rev12 R12-3; G-S: the final Y). rev11 R11-4: every "
+                        "row's code_at_launch.git.head and, on non-open-loop rows where recorded, result.json "
+                        "code_state.git_at_start; absent or different = S-12")
     o = sub.add_parser("oc5k")
     o.add_argument("--row", choices=sorted(OC5_K1), required=True)
     o.add_argument("--probe", action="append", required=True, help="probe result.json, in run order")
@@ -2394,7 +2433,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA, "rev10_sha256": REV10_SHA, "rev11_sha256": REV11_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA, "rev10_sha256": REV10_SHA, "rev11_sha256": REV11_SHA, "rev12_sha256": REV12_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
