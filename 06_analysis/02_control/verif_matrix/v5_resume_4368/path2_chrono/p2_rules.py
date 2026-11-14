@@ -39,7 +39,12 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
      "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f", "rules rev11"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
-     "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140", "rules rev12 (wins)"),
+     "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140", "rules rev12"),
+    # rev15 R15-7: the two Chrono judgement tools add rev15 (rev13 / rev14 stay out of the tool lists,
+    # R13-7 / R14-7; they are checked by tools/verif/seal_check.py). Sealed 2026-11-15 00:08:30 +09:00,
+    # seal commit S3 cc0d9b8. Being in this list also turns on the D-29 L2b 10 Hz reading (R15-3).
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+     "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef", "rules rev15 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -72,9 +77,9 @@ RECORDED = [
 ]
 
 
-# D-29 (rev6 table: L2b D8 t_lift from the 1 ms pads.npz crawler_normal_N). User decision 2026-11-14:
-# L2b rows without the 1 ms record (V0 rows) take the rev6 R6-B1 10 Hz bracket; this reading goes into
-# rev15 and is used only after rev15 is sealed, i.e. after its file and seal sha are added to SEALED.
+# D-29 (rev6 table: L2b D8 t_lift from the 1 ms pads.npz crawler_normal_N). rev15 R15-3 (user decision
+# 2026-11-14): L2b rows without the 1 ms record (V0 rows) take the rev6 R6-B1 10 Hz bracket. The reading is
+# on only while rev15 is in SEALED (added after its seal, R15-7); the seal check then requires the file.
 D29_RULE_FILE = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md"
 
 
@@ -100,6 +105,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
 }
 
 
@@ -113,9 +119,9 @@ def sidecar_sha(p: Path):
 
 
 def seal_check(repo: Path) -> dict:
-    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6). Raw sha must match; for
+    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6, rev15 R15-7). Raw sha must match; for
     Appendix A files, if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12) are compared raw only, and
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15) are compared raw only, and
     their code seal sha must also equal the first token of the sibling `.sha256` record (R7-7, R8-4,
     R9-8)."""
     rows = []

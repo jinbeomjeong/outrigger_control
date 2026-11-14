@@ -33,6 +33,7 @@ REPO = p2_chrono.find_repo(HERE)
 PARAMS = C.load_params(REPO)
 FMIN = PARAMS["F_min_N"]
 RESULTS = []
+CLI_REPO = []   # ["--repo", <rules repo>] when this checkout lacks a sealed file (set in main)
 
 
 def check(name, cond, detail=""):
@@ -864,21 +865,28 @@ def t_p2t45(tmp, l2r, doc):
     rj = json.loads((dv / "result.json").read_text(encoding="utf-8"))
     rj["floor_plane"] = {"normal_world": [0.0, 0.0, 1.0]}
     (dv / "result.json").write_text(json.dumps(rj), encoding="utf-8")
-    rv = C.load_row(dv, "l2b", L2B_ARGV)
-    tl, basis = C.t_lift(rv)
-    check("D-29 before rev15: L2b row without 1 ms crawler_normal_N -> t_lift not computed (pending rev15)",
-          R.d29_l2b_bracket_enabled() is False and tl is None and basis == "bracket_10Hz_d29_pending_rev15",
-          (tl, basis))
+    keep = list(R.SEALED)
+    try:
+        R.SEALED[:] = [x for x in keep if x[0] != R.D29_RULE_FILE]
+        rv = C.load_row(dv, "l2b", L2B_ARGV)
+        tl, basis = C.t_lift(rv)
+        check("D-29 without rev15 in the sealed list: L2b row without 1 ms crawler_normal_N -> t_lift not"
+              " computed (pending rev15)",
+              R.d29_l2b_bracket_enabled() is False and tl is None and basis == "bracket_10Hz_d29_pending_rev15",
+              (tl, basis))
+    finally:
+        R.SEALED[:] = keep
     rl = C.load_row(dv, "l1r", ["run_S6C.py"])
     tl1, b1 = C.t_lift(rl)
     check("R6-B1 L1-R: same record -> 10 Hz bracket t_b", b1 == "bracket_10Hz" and tl1 is not None
           and abs(tl1 - 23.0) < 0.1 + 1e-9, (tl1, b1))
     keep = list(R.SEALED)
     try:
-        R.SEALED.append((R.D29_RULE_FILE, "0" * 64, "rules rev15 (test only)"))
+        check("R15-7: rev15 is in the code sealed list -> D-29 L2b 10 Hz reading on",
+              R.d29_l2b_bracket_enabled() is True)
         rv2 = C.load_row(dv, "l2b", L2B_ARGV)
         tl2, b2 = C.t_lift(rv2)
-        check("D-29 after rev15 in the sealed list: L2b row -> R6-B1 10 Hz bracket (same t_b as L1-R)",
+        check("D-29 with rev15 sealed: L2b row -> R6-B1 10 Hz bracket (same t_b as L1-R)",
               b2 == "bracket_10Hz" and tl2 == tl1, (tl2, b2))
         rnf = C.load_row(tmp / "l2b_v0_nocr_nofp", "l2b", L2B_ARGV)
         tl3, b3 = C.t_lift(rnf)
@@ -989,14 +997,20 @@ def t_c67(tmp):
                                        ("P3a_G1_B_VB_prop", "P3a_G1_B_VB_FB", "P3a_G1_B_V0_FB")] == ["C-6", "C-7a", "C-7b"])
 
 
-def t_seal(tmp):
+def t_seal(tmp, rules_repo=None):
+    """Copies of the sealed files into a temporary repo. A file this checkout does not have (rev15 before the
+    seal branch is merged) is copied from `--rules-repo` (the seal worktree); without it the test is skipped."""
     repo = tmp / "repo"
     for rel, _, _ in R.SEALED:
+        src_root = REPO if (REPO / rel).exists() else rules_repo
+        if src_root is None or not (Path(src_root) / rel).exists():
+            print(f"SKIP seal tests ({rel} not in this checkout; give --rules-repo <seal worktree>)")
+            return
         (repo / rel).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(REPO / rel, repo / rel)
+        shutil.copyfile(Path(src_root) / rel, repo / rel)
         if rel in R.RAW_ONLY:
             sc = Path(rel).with_suffix(".sha256")
-            shutil.copyfile(REPO / sc, repo / sc)
+            shutil.copyfile(Path(src_root) / sc, repo / sc)
     ok = R.seal_check(repo)
     check("seal: copies match", ok["ok"], [r["status"] for r in ok["sealed"]])
     rel7 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md"
@@ -1086,10 +1100,37 @@ def t_seal(tmp):
           and {r["file"]: r["status"] for r in s11["sealed"]}[rel11] == "mismatch")
     p11.write_bytes(keep11md)
     rel12 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md"
-    check("seal: rev12 listed, raw only, 78f1f99b, only rev12 wins (rev12 R12-6)",
-          rel12 in R.RAW_ONLY and any(r == rel12 and w.startswith("78f1f99b") and "wins" in role
+    check("seal: rev12 listed, raw only, 78f1f99b (rev12 R12-6)",
+          rel12 in R.RAW_ONLY and any(r == rel12 and w.startswith("78f1f99b") for r, w, role in R.SEALED))
+    rel15 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md"
+    check("seal: rev15 listed, raw only, 0162561c, only rev15 wins; rev13 / rev14 not listed (R15-7)",
+          rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") and "wins" in role
                                       for r, w, role in R.SEALED)
-          and [r for r, w, role in R.SEALED if "wins" in role] == [rel12])
+          and [r for r, w, role in R.SEALED if "wins" in role] == [rel15]
+          and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
+    check("seal: rev15 raw sha = code seal sha = .sha256 first token",
+          {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
+          and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
+    sc15 = repo / Path(rel15).with_suffix(".sha256")
+    keep15 = sc15.read_bytes()
+    sc15.write_text("a" * 64 + "  v5_resume_4368_rules_rev15.md\n", encoding="utf-8")
+    check("seal: rev15 .sha256 record differs -> S-1 (sidecar_mismatch)",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel15] == "sidecar_mismatch")
+    sc15.unlink()
+    check("seal: rev15 .sha256 record missing -> S-1",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel15] == "sidecar_missing")
+    sc15.write_bytes(keep15)
+    p15 = repo / rel15
+    keep15md = p15.read_bytes()
+    p15.write_bytes(keep15md.replace(b"\n", b"\r\n"))
+    check("seal: rev15 CRLF copy -> S-1 (raw only)",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel15] == "mismatch")
+    p15.unlink()
+    s15 = R.seal_check(repo)
+    check("seal: rev15 file missing -> S-1", not s15["ok"]
+          and {r["file"]: r["status"] for r in s15["sealed"]}[rel15] == "missing")
+    p15.write_bytes(keep15md)
+    check("seal: rev15 restored -> all match", R.seal_check(repo)["ok"])
     check("seal: rev12 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel12] == "match"
           and R.sidecar_sha(repo / rel12) == next(w for r, w, _ in R.SEALED if r == rel12))
@@ -1154,6 +1195,9 @@ def t_cli(tmp):
     if not (HERE / "p2_b_c3.py").exists():
         print("SKIP CLI tests (p2_b_c3.py not in this commit)")
         return
+    if not CLI_REPO and not R.seal_check(REPO)["ok"]:
+        print("SKIP CLI tests (seal check of this checkout fails: a sealed rule file is missing; give --rules-repo)")
+        return
     bdir = tmp / "batch_P2TEST"
     bdir.mkdir(exist_ok=True)
     sp = scm_spec()
@@ -1165,7 +1209,7 @@ def t_cli(tmp):
                        {"case": "gs", "argv": ["run_S9.py"], "criteria_id": "C-3", "r4368": {"role": "gs"}}]}
     (bdir / "batch.json").write_text(json.dumps(batch), encoding="utf-8")
     out = tmp / "out_c3.json"
-    proc = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3", "--git-at-start", GREF[:7],
+    proc = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-3", "--git-at-start", GREF[:7],
                            "--batch", str(bdir / "batch.json"), "--out", str(out)],
                           capture_output=True, text=True, encoding="utf-8")
     last = json.loads(proc.stdout.strip().splitlines()[-1])
@@ -1173,19 +1217,19 @@ def t_cli(tmp):
     check("CLI C-3 synthetic: exit 0, 2 rows, 통과, out_sha256 = file sha",
           proc.returncode == 0 and last.get("rows") == 2 and last.get("status") == "통과"
           and last.get("out_sha256") == hashlib.sha256(out.read_bytes()).hexdigest(), proc.stdout[-500:] + proc.stderr[-500:])
-    proc2 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-1", "--git-at-start", GREF[:7],
+    proc2 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-1", "--git-at-start", GREF[:7],
                             "--batch", str(bdir / "batch.json"), "--out", str(tmp / "o2.json"),
                             "--row-dir", "x=y"], capture_output=True, text=True, encoding="utf-8")
     last2 = json.loads(proc2.stdout.strip().splitlines()[-1])
     check("CLI C-1 on a batch with no C-1 rows -> S-15, exit 1", proc2.returncode == 1
           and any("S-15" in s for s in last2.get("stops", [])), proc2.stdout[-300:])
-    proc3 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3", "--git-at-start", GREF[:7],
+    proc3 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-3", "--git-at-start", GREF[:7],
                             "--batch", str(tmp / "missing.json"), "--out", str(tmp / "o3.json")],
                            capture_output=True, text=True, encoding="utf-8")
     check("CLI missing batch -> exit 3 or 2 (input)", proc3.returncode in (2, 3), proc3.returncode)
     # gs-load on the G-S row (read-only, no verdicts in the output)
     out4 = tmp / "gs_load.json"
-    proc4 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
+    proc4 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load", *CLI_REPO,
                             "--batch", str(bdir / "batch.json"), "--out", str(out4), "--git-at-start", GREF[:7],
                             "--row-dir", f"gs={bdir / 'rowA'}"], capture_output=True, text=True, encoding="utf-8")
     last4 = json.loads(proc4.stdout.strip().splitlines()[-1])
@@ -1204,7 +1248,7 @@ def t_cli(tmp):
           g11.get("r11_4_code_at_launch_missing_rows") == 1 and g11.get("r11_4_s12_rows") == 1
           and g11.get("r11_5_grades_written") is False
           and g11.get("rev11_seal") == "match" and g11.get("git_at_start") == GREF[:7], g11)
-    proc4c = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
+    proc4c = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load", *CLI_REPO,
                              "--batch", str(bdir / "batch.json"), "--out", str(tmp / "gs_load_nogit.json"),
                              "--row-dir", f"gs={bdir / 'rowA'}"], capture_output=True, text=True, encoding="utf-8")
     check("CLI gs-load without --git-at-start -> input error, exit 2 (rev12 R12-3)", proc4c.returncode == 2,
@@ -1214,7 +1258,7 @@ def t_cli(tmp):
           " rev10 seal match",
           g10.get("r10_1b_rows_per_case", {}).get("batch_name_unknown") == 1 and g10.get("r10_2_s11_rows") == 1
           and g10.get("rev10_seal") == "match", g10)
-    proc4b = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
+    proc4b = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load", *CLI_REPO,
                              "--batch", str(bdir / "batch.json"), "--out", str(tmp / "gs_load_noman.json"),
                              "--git-at-start", GREF[:7],
                              "--manifest", str(tmp / "no_manifest.json"), "--row-dir", f"gs={bdir / 'rowA'}"],
@@ -1230,7 +1274,7 @@ def t_cli(tmp):
     rb["c2_setup"]["expect_controller"]["ok"] = False
     (bko / "rowB" / "result.json").write_text(json.dumps(rb), encoding="utf-8")
     (bko / "batch.json").write_text(json.dumps({"cases": batch["cases"][:2]}), encoding="utf-8")
-    proc5 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3", "--git-at-start", GREF[:7],
+    proc5 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-3", "--git-at-start", GREF[:7],
                             "--batch", str(bko / "batch.json"), "--out", str(tmp / "o5.json")],
                            capture_output=True, text=True, encoding="utf-8")
     last5 = json.loads(proc5.stdout.strip().splitlines()[-1])
@@ -1252,7 +1296,7 @@ def t_cli(tmp):
                                                                 {"case": "Y", "v5_setting": "LS4"}]}}}),
                      encoding="utf-8")
     out6 = tmp / "o6.json"
-    proc6 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5", "--git-at-start", GREF[:7],
+    proc6 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-5", "--git-at-start", GREF[:7],
                             "--batch", str(b5 / "batch.json"), "--manifest", str(man_p), "--out", str(out6)],
                            capture_output=True, text=True, encoding="utf-8")
     o6 = json.loads(out6.read_text(encoding="utf-8")) if out6.exists() else {}
@@ -1261,7 +1305,7 @@ def t_cli(tmp):
           proc6.returncode == 1 and ls6 == {"ls_rows": 1, "not_ls_rows": 0, "not_judgeable_rows": 1}
           and sum("R9-5" in s for s in (o6.get("bundle_result") or {}).get("stops", [])) == 2,
           (proc6.returncode, ls6, proc6.stdout[-300:] + proc6.stderr[-300:]))
-    proc7 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5", "--git-at-start", GREF[:7],
+    proc7 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-5", "--git-at-start", GREF[:7],
                             "--batch", str(b5 / "batch.json"), "--manifest", str(tmp / "no_manifest.json"),
                             "--out", str(tmp / "o7.json")], capture_output=True, text=True, encoding="utf-8")
     check("CLI C-5 without the manifest -> input error, exit 2", proc7.returncode == 2, proc7.stdout[-300:])
@@ -1372,8 +1416,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tmp")
     ap.add_argument("--lawlock-record", help="SCM row folder recorded by the runner at 7527fc3 (optional)")
+    ap.add_argument("--rules-repo", help="checkout holding sealed rule files this checkout lacks (seal worktree)")
     a = ap.parse_args()
     tmp = Path(a.tmp) if a.tmp else Path(tempfile.mkdtemp(prefix="p2chrono_"))
+    if a.rules_repo and not R.seal_check(REPO)["ok"]:
+        CLI_REPO[:] = ["--repo", str(a.rules_repo)]
     tmp.mkdir(parents=True, exist_ok=True)
     t_classify()
     t_scm(tmp)
@@ -1383,7 +1430,7 @@ def main():
     t_rev8_record(a.lawlock_record)
     t_l2b(tmp)
     t_c67(tmp)
-    t_seal(tmp)
+    t_seal(tmp, a.rules_repo)
     t_cli(tmp)
     t_resolve(tmp)
     n_fail = sum(1 for r in RESULTS if not r["ok"])
