@@ -321,9 +321,11 @@ def test_fallback_log_leg_without_event_is_s11(mod, tmp_path):
 
 
 # ------------------------------------------------------------------------------------ engine (z4372)
-def _write_pads_row(d: Path, *, engine: str | None, crawler_1ms: bool) -> Path:
+def _write_pads_row(d: Path, *, engine: str | None, crawler_1ms: bool,
+                    floor_normal: list[float] | None = None, record: bool = True) -> Path:
     """A run_S8C-like row; ``crawler_1ms`` False = a V0 L2b row (``law_locked``, no
-    ``crawler_normal_N``)."""
+    ``crawler_normal_N``). ``F_crawler`` z > 0 until 15.1 s, x > 0 until 16.1 s (so a tilted
+    floor normal moves the 10 Hz t_lift); ``floor_normal`` None = no ``floor_plane`` record."""
     d.mkdir(parents=True)
     (d / "record").mkdir()
     t0 = 3.0
@@ -335,8 +337,10 @@ def _write_pads_row(d: Path, *, engine: str | None, crawler_1ms: bool) -> Path:
     np.savez(d / "pads.npz", **pads)
     tr = t0 + np.arange(1, 200) * 0.1
     f_crawler = np.zeros((tr.size, 3))
+    f_crawler[:, 0] = np.where(tr < t0 + 13.05, 5000.0, 0.0)
     f_crawler[:, 2] = np.where(tr < t0 + 12.05, 5000.0, 0.0)
-    np.savez(d / "record" / "record.npz", t=tr, F_crawler=f_crawler)
+    if record:
+        np.savez(d / "record" / "record.npz", t=tr, F_crawler=f_crawler)
     np.savez(d / "r8_series.npz", t=tr)
     settings: dict = {"start_t_s": t0}
     if engine is not None:
@@ -345,6 +349,8 @@ def _write_pads_row(d: Path, *, engine: str | None, crawler_1ms: bool) -> Path:
     res = {"settings": settings, "phases": [[0.1, "check"], [5.0, "touch"], [8.0, "level"]],
            "event_t_s": None, "args": {"expect_controller": "final_C4G2_LAS_K1"},
            "expect_controller": {"name": "final_C4G2_LAS_K1", "ok": True}}
+    if floor_normal is not None:
+        res["floor_plane"] = {"normal_world": floor_normal}
     (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
     return d
 
@@ -382,24 +388,57 @@ def test_engine_record_missing_unknown_or_conflicting_is_input_error(mod, tmp_pa
         mod.load_row(scm, {"r4368": {"engine": "L2b_NSC"}})
 
 
-def test_v0_l2b_row_d29_is_a_rule_gap(mod, tmp_path):
-    """z4372: no rule gives the D-29 t_lift of an L2b row without the 1 ms crawler normal; none is
-    decided, the 10 Hz bracket is a reference only, no stop."""
-    v0 = _write_pads_row(tmp_path / "E_G4_Fs4_V0", engine="L2b_NSC", crawler_1ms=False)
-    vb = _write_pads_row(tmp_path / "E_G4_Fs4", engine="L2b_NSC", crawler_1ms=True)
+def test_v0_l2b_row_d29_by_10hz_bracket_r15_3(mod, tmp_path):
+    """Rev15 R15-3: a V0 L2b row (no 1 ms crawler normal) takes the R6-B1 10 Hz bracket t_b; C1 and
+    Q-14 are computed from it; a 1 ms row keeps the 1 ms t_lift."""
+    v0 = _write_pads_row(tmp_path / "E_G4_Fs4_V0", engine="L2b_NSC", crawler_1ms=False,
+                         floor_normal=[0.0, 0.0, 2.0])  # not unit length: normalised
+    vb = _write_pads_row(tmp_path / "E_G4_Fs4", engine="L2b_NSC", crawler_1ms=True,
+                         floor_normal=[0.0, 0.0, 1.0])
     code, doc = _judge(mod, tmp_path, [v0, vb])
     assert code == 0, doc["stops"]
     rows = {r["case"]: r for r in doc["rows"]}
-    gap = rows["E_G4_Fs4_V0"]["items"]
-    assert gap["D8_t_lift_s_D-29_D-30"] is None
-    assert gap["D8_t_lift_basis"]["status"] == mod.D29_RULE_GAP
-    assert gap["D8_t_lift_basis"]["reference_not_used"]["t_lift_s"] == pytest.approx(15.1)
-    assert gap["C1_R40"]["status"] == "not_judgeable"
-    assert gap["D8_no_pad_lift_Q-14"]["status"] == "not_judgeable"
+    items = rows["E_G4_Fs4_V0"]["items"]
+    basis = items["D8_t_lift_basis"]
+    assert items["D8_t_lift_s_D-29_D-30"] == pytest.approx(15.1)
+    assert basis["basis"] == "bracket_10Hz" and basis["rule"] == mod.R15_3_RULE
+    assert basis["t_a_s"] == pytest.approx(15.0) and basis["t_b_s"] == pytest.approx(15.1)
+    assert basis["normal"] == "result.json floor_plane.normal_world"
+    assert items["C1_R40"]["status"] == "judged" and items["C1_R40"]["verdict"] == "pass"
+    assert items["C1_R40"]["t_lift_s"] == pytest.approx(15.1)
+    q14 = items["D8_no_pad_lift_Q-14"]
+    assert q14["t_from_s"] == pytest.approx(15.1) and q14["lifted"] is False
     ok = rows["E_G4_Fs4"]["items"]
     assert ok["D8_t_lift_basis"] == "pads.npz crawler_normal_N 1 ms"
     assert ok["D8_t_lift_s_D-29_D-30"] == pytest.approx(13.001)
-    assert doc["rule_gaps_D29"] == ["E_G4_Fs4_V0"]
+    assert doc["l2b_bracket_rows_R15_3"] == ["E_G4_Fs4_V0"]
+
+
+def test_v0_l2b_bracket_uses_the_floor_normal(mod, tmp_path):
+    """R15-3 projects F_crawler on the floor normal: x > 0 lasts 1 s longer than z, so a 45-degree
+    normal moves t_b from 15.1 s to 16.1 s."""
+    d = _write_pads_row(tmp_path / "tilt", engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=[1.0, 0.0, 1.0])
+    t_lift, basis = mod.v0_l2b_bracket_lift(mod.load_row(d))
+    assert t_lift == pytest.approx(16.1) and basis["t_a_s"] == pytest.approx(16.0)
+
+
+def test_v0_l2b_bracket_without_inputs_is_not_judgeable(mod, tmp_path):
+    """R15-3 inputs missing (floor normal; record.npz): t_lift not judgeable, inputs named."""
+    no_floor = mod.load_row(_write_pads_row(tmp_path / "nf", engine="L2b_NSC", crawler_1ms=False))
+    t_lift, basis = mod.v0_l2b_bracket_lift(no_floor)
+    assert t_lift is None and basis["status"] == "not_judgeable"
+    assert basis["missing_inputs"] == ["result.json floor_plane.normal_world"]
+    no_rec = mod.load_row(_write_pads_row(tmp_path / "nr", engine="L2b_NSC", crawler_1ms=False,
+                                          floor_normal=[0.0, 0.0, 1.0], record=False))
+    t_lift, basis = mod.v0_l2b_bracket_lift(no_rec)
+    assert t_lift is None
+    assert basis["missing_inputs"] == ["record/record.npz F_crawler", "record/record.npz t"]
+    code, doc = _judge(mod, tmp_path, [tmp_path / "nf"])
+    items = doc["rows"][0]["items"]
+    assert code == 0 and items["C1_R40"]["status"] == "not_judgeable"
+    assert items["D8_no_pad_lift_Q-14"]["status"] == "not_judgeable"
+    assert doc["l2b_bracket_rows_R15_3"] == ["nf"]
 
 
 # ------------------------------------------------------------------------------------------------- seals / CLI

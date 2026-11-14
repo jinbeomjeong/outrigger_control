@@ -49,7 +49,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 | D-26 | N-1 | `sgs_class` | 427.9 조건 1~5(첫 FAULT = `FAULT_LIFT_STROKE_LIMIT:soil`, `FAULT_STROKE_END` 없음, LEVEL 시작 뒤 부상(Q-14) 없음, t_D ~ 끝 참 F_cyl ≥ F_min, 이동 ≤ 180 bar·포화 0)이 모두 참이면 `stroke_limited_stop`(= `allowed_stop`). S-01·02·03·04(R6-B8) |
 | D-27 | N-2 | `ready_items` | P3-6: 한계(`p3b.P3-6_ready.limit_s`) 밖이면 FLAG(기록) |
 | D-28 | N-3 | `ready_items` | G6 관문 READY − 폐루프 시작 ≤ 120 s + 1e-9 |
-| D-29 | N-4 | `d8_lift_time` | L2b t_lift = 단계 ∉ {idle, check, touch} ∧ `pads.npz` `crawler_normal_N` ≤ 0인 첫 1 ms 표본. 단계는 `phases` + `settings.start_t_s`(R6-1). `crawler_normal_N`이 없는 L2b 행(V0)은 규칙 공백이라 t_lift를 정하지 않는다: `D8_t_lift_basis.status` = `rule_gap`, 10 Hz 구간 값은 `reference_not_used`로 참고만, C1·Q-14는 `not_judgeable`, 출력 `rule_gaps_D29`에 행 이름(멈춤 아님, z4372) |
+| D-29 | N-4 | `d8_lift_time` | L2b t_lift = 단계 ∉ {idle, check, touch} ∧ `pads.npz` `crawler_normal_N` ≤ 0인 첫 1 ms 표본. 단계는 `phases` + `settings.start_t_s`(R6-1). `crawler_normal_N`이 없는 L2b 행(V0)은 rev15 R15-3(사용자 결정 2026-11-14)에 따라 L1-R과 같은 R6-B1 10 Hz 구간 대체를 쓴다(`v0_l2b_bracket_lift`): `record/record.npz` `F_crawler`를 `result.json` `floor_plane.normal_world`(정규화)에 사영, 시간축 `t`(0.1 s), 단계는 `phases` + `settings.start_t_s`. L1-R 경로와 달리 세계 z 대체는 없다. 세 입력 중 하나라도 없으면 t_lift는 `not_judgeable`이고 `missing_inputs`에 이름을 적는다. 그 행들은 출력 `l2b_bracket_rows_R15_3`에 적는다 |
 | D-30 | N-5 | `d8_lift_time`, `judge_rigid` | SCM: `step_series.npz` `scm_crawler_normal_N`. L1-R: 10 Hz 구간 대체(R6-B1). t_b = 단계 조건 ∧ `F_crawler`·바닥 법선 ≤ 0인 첫 `record.npz` 행, t_a = 그 앞 > 0인 마지막 행 |
 | D-31 | N-6 | `c1_block` | R40-2 보류(강체 크롤러, 원값 최소 < F_min + 5 kN, 그 시각 ≤ t_lift + 8 s, 같은 8 s 느린 성분 최소 ≥ 문턱) = 판정 불가 + 멈춤. L1 짝 해제는 사람이 한다(값만 낸다) |
 | D-32 | N-7 | `moving_pressure` | 10 Hz 제어 주기 행(R6-B5), 이동 = abs(u_applied) > 1e-9, p = F_cyl/A_p(YAML 다리별), 포화 = 신장 ∧ ≥ 210 bar. 사건 행(J-5·U58 창)은 이 판에 없다 → 판정 불가 |
@@ -120,4 +120,4 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 8. 시험
 
-`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 35개 = 합성 입력 33개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록과 D-29 규칙 공백 3개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.
+`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 37개 = 합성 입력 35개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록 2개·rev15 R15-3 V0 L2b 10 Hz 구간 3개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.

@@ -12,8 +12,8 @@ rules rev6 R6-A D-26 .. D-39):
 * D-26 (N-1) :func:`sgs_class` - spec 427.9 soil-guard safe stop -> ``stroke_limited_stop`` (allowed stop), S-01..04.
 * D-27 / D-28 (N-2 / N-3) :func:`ready_items` - P3-6 FLAG (record), READY <= 120 s + 1e-9 (G6 gate).
 * D-29 (N-4) :func:`d8_lift_time` - D8 t_lift = first 1 ms sample, phase not idle / check / touch, crawler normal <= 0.
-  An L2b row without ``crawler_normal_N`` (V0) gets no t_lift: ``rule_gap``
-  (:data:`D29_RULE_GAP`), listed in ``rule_gaps_D29``.
+  An L2b row without ``crawler_normal_N`` (V0) uses the R6-B1 10 Hz bracket (rev15 R15-3,
+  :func:`v0_l2b_bracket_lift`), listed in ``l2b_bracket_rows_R15_3``.
 * D-30 (N-5) SCM t_lift (same function on ``step_series.npz``); L1-R 10 Hz bracket t_b / t_a (R6-B1).
 * Engine kind (z4372): :func:`recorded_engine` (batch.json ``r4368.engine`` / ``engine``,
   result.json ``settings.s8.engine``); a ``pads.npz`` row without a record is an input error.
@@ -83,7 +83,7 @@ ROOT = HERE.parents[1]
 TOOL_VERSION = ("chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows "
                 "skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked; "
                 "python-expert 2026-11-14 z4372: engine from the batch.json / result.json records, "
-                "D-29 rule gap of V0 L2b rows)")
+                "V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3)")
 
 # --- rules and seals (rev5 R5-A1 requirement 4) -----------------------------------------------------------------
 RULES_DIR_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix"
@@ -162,10 +162,12 @@ ENGINE_KINDS = {"SCM": "SCM", "L2b_NSC": "L2b", "L1R": "L1R"}
 (:func:`recorded_engine`) are the batch.json entry ``r4368.engine`` / ``engine`` (s9_batch) and
 result.json ``settings.s8.engine`` (run_S8C). The ``pads.npz`` keys do not decide the engine: V0
 L2b rows write ``law_locked`` but no ``crawler_normal_N`` / ``m2_*``."""
-D29_RULE_GAP = "rule_gap"
-"""``D8_t_lift_basis`` status of an L2b row without the 1 ms ``pads.npz`` ``crawler_normal_N`` (V0
-L2b rows): rev6 D-29 names that array as the L2b input, R6-B1 defines the 10 Hz bracket for L1-R
-(C-1) only. No t_lift is decided; the person decides the rule (z4372, 2026-11-14)."""
+R15_3_RULE = ("rev15 R15-3 (user decision 2026-11-14): V0 L2b D-29 t_lift by the R6-B1 "
+              "10 Hz bracket")
+"""D-29 of an L2b row without the 1 ms ``pads.npz`` ``crawler_normal_N`` (V0 L2b rows)."""
+R15_3_SOURCES = ("record/record.npz F_crawler", "record/record.npz t",
+                 "result.json floor_plane.normal_world")
+"""Inputs R15-3 needs (same as L1-R R6-B1); a missing one = not judgeable, its name recorded."""
 LEGS = ("FL", "FR", "RL", "RR")
 G = 9.80665
 _EVENT_RE = re.compile(r"t_s=([-0-9.eE+]+), name='([^']*)'")
@@ -877,22 +879,28 @@ def bracket_10hz_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]
     return t_lift, {"basis": "bracket_10Hz", "t_a_s": t_a, "t_b_s": t_lift, "normal": n_src}
 
 
-def d29_rule_gap_basis(row: dict[str, Any], has_bracket_input: bool) -> dict[str, Any]:
-    """D-29 basis of an L2b row without the 1 ms ``crawler_normal_N`` (:data:`D29_RULE_GAP`).
+def _missing_r15_3_sources(row: dict[str, Any]) -> list[str]:
+    rec = row["record"] or {}
+    present = {"record/record.npz F_crawler": "F_crawler" in rec,
+               "record/record.npz t": "t" in rec,
+               "result.json floor_plane.normal_world":
+                   (row["result"].get("floor_plane") or {}).get("normal_world") is not None}
+    return [name for name in R15_3_SOURCES if not present[name]]
 
-    The 10 Hz bracket value is written as a reference only (``reference_not_used``): which reading
-    applies is the person's decision, so no t_lift and none of the items built on it (C1, Q-14)
-    are decided here.
+
+def v0_l2b_bracket_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
+    """Rev15 R15-3: (t_lift, basis) of an L2b row without the 1 ms ``crawler_normal_N``.
+
+    Same inputs and rule as the L1-R R6-B1 bracket (:func:`bracket_10hz_lift`): ``F_crawler``
+    projected on the normalised ``floor_plane.normal_world``, 0.1 s ``t``, phases + start_t_s. A
+    missing input makes the t_lift not judgeable; the basis names the missing inputs. Unlike the
+    L1-R path there is no world-z fallback: R15-3 names the floor normal as an input.
     """
-    reference = None
-    if has_bracket_input:
-        t_b, bracket = bracket_10hz_lift(row)
-        reference = {**bracket, "t_lift_s": t_b}
-    return {"status": D29_RULE_GAP,
-            "reason": "L2b row without pads.npz crawler_normal_N: rev6 D-29 names that 1 ms array "
-                      "as the L2b input; rev6 R6-B1 (10 Hz bracket) is defined for L1-R rows (C-1) "
-                      "only",
-            "reference_not_used": reference}
+    missing = _missing_r15_3_sources(row)
+    if missing:
+        return None, {"status": "not_judgeable", "rule": R15_3_RULE, "missing_inputs": missing}
+    t_lift, basis = bracket_10hz_lift(row)
+    return t_lift, {**basis, "rule": R15_3_RULE}
 
 
 def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]) -> dict[str, Any]:
@@ -906,7 +914,7 @@ def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]
         t_lift = d8_lift_time(t, np.asarray(pads["crawler_normal_N"], float), row["phases"])
         lift_basis = "pads.npz crawler_normal_N 1 ms"
     elif row["engine"] == "L2b":
-        t_lift, lift_basis = None, d29_rule_gap_basis(row, has_bracket_input)
+        t_lift, lift_basis = v0_l2b_bracket_lift(row)
     elif asm["C-1"] == "bracket_10hz" and has_bracket_input:
         t_lift, lift_basis = bracket_10hz_lift(row)
     else:
@@ -1752,13 +1760,13 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     tds = [r["items"]["departure_t_D"] for r in rows if r["engine"] == "SCM"]
     td_diff = [abs(x["diff_from_runner_s"]) for x in tds if x.get("diff_from_runner_s") is not None]
     deviates = {k: v for k, v in asm.items() if ASSUMPTIONS[k] != v}
-    rule_gaps = d29_rule_gap_cases(rows)
+    r15_3_rows = l2b_bracket_cases(rows)
     doc = {"tool": TOOL_VERSION,
            "rules": "v5_resume_4368_rules.md + rev1 .. rev8 (rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3)",
            "definitions_C": asm, "deviates_from_rev6": deviates or None, "d_numbers": D_NUMBERS,
            "params": params, "seals": seals, "disclosure": disclose(), "rows": rows, "stops": stops,
            "origin_failed": origin_bad, "skipped_rows": skipped,
-           "rule_gaps_D29": rule_gaps,
+           "l2b_bracket_rows_R15_3": r15_3_rows,
            "t_D_vs_runner_R6_B4": {"scm_rows": len(tds), "rows_differing": sum(1 for x in tds if x["differs_from_runner"]),
                                    "max_abs_diff_s": max(td_diff) if td_diff else None},
            "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")},
@@ -1778,19 +1786,18 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
                "commit_identity_R11_4": {k: doc["commit_identity_R11_4"][k]
                                          for k in ("git_at_start", "counts", "s12_rows")},
                "skipped": {s["case"]: s["skipped"] for s in skipped},
-               "rule_gaps_D29": rule_gaps, "out": str(args.out)}
+               "l2b_bracket_rows_R15_3": r15_3_rows, "out": str(args.out)}
     return code, summary
 
 
-def d29_rule_gap_cases(rows: list[dict[str, Any]]) -> list[str]:
-    """Cases whose D8 t_lift basis is :data:`D29_RULE_GAP` (recorded, no stop: the person decides
-    the rule)."""
-    gaps = []
+def l2b_bracket_cases(rows: list[dict[str, Any]]) -> list[str]:
+    """Cases whose D8 t_lift follows rev15 R15-3 (V0 L2b rows, judged or not judgeable)."""
+    cases = []
     for r in rows:
         basis = r["items"].get("D8_t_lift_basis")
-        if isinstance(basis, dict) and basis.get("status") == D29_RULE_GAP:
-            gaps.append(r["case"])
-    return gaps
+        if isinstance(basis, dict) and basis.get("rule") == R15_3_RULE:
+            cases.append(r["case"])
+    return cases
 
 
 def _json_default(x: Any) -> Any:
