@@ -22,7 +22,7 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 | 파일 | 고정 sha256 | 판 | 쓰는 것 |
 |---|---|---|---|
 | `p2_v5j.py` | `69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db` | 사용자 결정 24 판(dynamics-expert 커밋 `e6971e5`, 병합 `66dfe09`). `rod_reading_lookup`이 `t4h_file` 키의 값이 None·문자열 아님·빈 값이면 `bad_t4h_file`(S-2)을 낸다. 앞 판: rev11 `582fa93` `e5d769b9…`(R11-2 `t4h_convention_dirs`·`t4h_places`·`rod_reading_lookup` 추가, rev12에서 바뀌지 않음), rev5·rev6 `d49068e` `5772624c…`(rev7~rev10에서 바뀌지 않음) | `judge_pair`(M-3: LS J11 n_late > 0 → stop, 이 도구의 L-e로 이어짐), `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `t4h_places`, `rod_reading_lookup`(rev11 R11-2), `tag_of`, `is_event`. `rod_reading_from_t4h`는 rev11 판부터 이 폴더가 쓰지 않는다 |
-| `p2_4368.py`(`p2_v5j.core`) | `424e12f98ba2441b6d51eef55d3ee5c2ae7be49e38413b34532c78ac53a22c67` | 사용자 결정 19 판(dynamics-expert 커밋 `c969b57`: harness 격자 run 태그를 job 기록에서 읽음, `harness --gs`. 이 브랜치에 `z4369-p2h` 병합 `52f27f7`로 들어옴). 이 폴더가 쓰는 함수는 바뀌지 않았다. 앞 판: rev12 `6d41462` `a948d9a1…`, rev11 `582fa93` `a8c625bf…`, rev10 `a9594dc` `6e297ea3…`, rev9 `b0d6382` `7d764a80…`, rev8 `fd9bb68` `bebed9f1…`, rev7 `69b563f` `e033ca4b…`, `d49068e` `dc631509…` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
+| `p2_4368.py`(`p2_v5j.core`) | `0ccc518695d63bf7a3a4d7ebf164a5047833d570226f44e09578b9175da6bcd9` | b9f5707 Chrono 판정 뒤 판(dynamics-expert 브랜치 `z4372-p2chrono`: `chrono`가 C-7a·C-7b를 열린 루프로 읽음, V0 열린 루프의 `v5_hydraulics` 블록 없음을 정상으로 봄, probe 행에 O-C5 본 행 블록을 적용하지 않음. 결정 19·2026-11-14). 이 폴더가 쓰는 함수는 바뀌지 않았다. 앞 판: 결정 19 `c969b57` `424e12f9…`, rev12 `6d41462` `a948d9a1…`, rev11 `582fa93` `a8c625bf…`, rev10 `a9594dc` `6e297ea3…`, rev9 `b0d6382` `7d764a80…`, rev8 `fd9bb68` `bebed9f1…`, rev7 `69b563f` `e033ca4b…`, `d49068e` `dc631509…` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
 
 - 이 폴더의 rev7 판(c6a1b47)은 고정값 `dc631509…`였고, 이 브랜치에 dynamics-expert rev7 판(`69b563f`, `e033ca4b…`)이 병합된 뒤로는 맞지 않았다(`--allow-import-sha` 없이 실행하면 `P2-SHA` 멈춤). rev8 판에서 `bebed9f1…`로 맞췄다. 그 사이에 436.8 본 결과를 낸 적은 없다(R8-0).
 
@@ -30,7 +30,7 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 
 | 도구 | 묶음 | sha256 | rev11 판 |
 |---|---|---|---|
-| `p2v5c_common.py` | 공통 | `84d9c10b1b9426a6e9b83a53306f82f83bc5f665bc3f5065c4a92a4b4d0ff00b` | 결정 19 반영(`P2_CORE_SHA` `424e12f9…`). 그 전 결정 24 판 `1ae2d2c2…`. rev11 판 `122c2054…`(rev12 봉인 확인, `P2_CORE_SHA` `a948d9a1…`, `jp3_rod_input`·`strip_jp3`·`t4h_input_error` 추가). 결정 24 반영 전 rev12 판 `04793dbe…`(`P2_V5J_SHA` `e5d769b9…`, 이름 아닌 값을 자체 판단 `unreadable_name`으로 셈) |
+| `p2v5c_common.py` | 공통 | `86e922f1e6721e098204e3eff686e20907ea984b393659d4515f66c46a402247` | `P2_CORE_SHA`만 `0ccc5186…`으로 바꿈(z4372-p2chrono). 그 전 결정 19 반영 `84d9c10b…`(`P2_CORE_SHA` `424e12f9…`). 그 전 결정 24 판 `1ae2d2c2…`. rev11 판 `122c2054…`(rev12 봉인 확인, `P2_CORE_SHA` `a948d9a1…`, `jp3_rod_input`·`strip_jp3`·`t4h_input_error` 추가). 결정 24 반영 전 rev12 판 `04793dbe…`(`P2_V5J_SHA` `e5d769b9…`, 이름 아닌 값을 자체 판단 `unreadable_name`으로 셈) |
 | `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `c50495d255213d604efee8768ca74b6a5d8fe8ab2dece172c6b881897d15a42f` | `55e70931…`(R12-1: S-2 줄의 J-P3 판정 안 함, 이름 아닌 `t4h_file` 값도 S-2) |
 | `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `762100a56ab09e10ef24a42a1caa626b79ebe266fadd95cbd1c7d608f7cabeb1` | 결정 19 반영(`run_tag_view`: run 태그가 없으면 job 기록 `results[i]` 태그). 그 전 rev12 판 `c2a74931…`(R12-1 T4h 찾기, `--t4h-root`). rev11 판 `4100dbdc…` |
 | `p2v5c_noise.py noise` | H-6, H-8 | `11ee8d1562b515eb27493fadbb049ec50f9c5a42f8dc65d93e7c80b1196ee519` | `4e4e174f…`(R12-1 T4h 찾기, `--t4h-root`, R12-3 `--git-at-start` 필수) |
@@ -42,7 +42,7 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 
 | 항목 | 반영 | 함수 |
 |---|---|---|
-| `P2_CORE_SHA` | `424e12f9…`(병합 `52f27f7` 뒤 실제 sha와 같음 확인). `P2_V5J_SHA`(`69d0e747…`)는 그대로 | `common.import_record` |
+| `P2_CORE_SHA` | `424e12f9…`(병합 `52f27f7` 뒤 실제 sha와 같음 확인). `P2_V5J_SHA`(`69d0e747…`)는 그대로. 그 뒤 z4372-p2chrono에서 `0ccc5186…`으로 갱신(위 표) | `common.import_record` |
 | 격자 run 태그 | G-S `gs_harness_bbacfd7/h9_grid_r67_main.json`의 구조를 확인했다(키 위치만, 판정 값 아님). `results[i]` 1개 모두에 `controller_tag`가 있고, run 6개에는 태그가 없었다. rev8 판 이후 grid는 run의 태그만 읽었다. 그래서 본 실행 격자에서 VB run 전부가 "③ 아님 → J-P3 해당 없음 + S-2"로 잘못 멈출 결함이 있었다. 합성 시험 `fast_run`에는 run 태그가 있어 드러나지 않았다. 이제 run 태그가 있으면 그것을 쓰고, 없으면 job 기록 `results[i]`의 태그를 쓴다(rev8 R8-1 "최상위 `controller_tag`"). 둘 다 없으면 앞 판대로 J-P3 해당 없음 + S-2다(R8-2). 출력 `inputs.vb.<stem>.tags`와 V0 `tags`도 같은 읽기다 | `grid.run_tag_view`, `grid.cmd_grid` |
 | noise·stage1 | r79 기록과 run_v5 줄은 줄 자체에 태그가 있다(합성 시험·앞 판 확인). 바꾸지 않았다 | – |
 
