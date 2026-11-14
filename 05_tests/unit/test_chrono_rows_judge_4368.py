@@ -299,7 +299,9 @@ def test_phase_time_base_mix_is_s11(mod, tmp_path):
     np.savez(d / "pads.npz", t=t, crawler_normal_N=np.zeros(t.size), F_cyl_min_interval=np.full((t.size, 4), 6e4),
              N=np.full((t.size, 4), 1e4))
     np.savez(d / "r8_series.npz", t=t0 + np.arange(1, 21) * 0.1)
-    res = {"settings": {"start_t_s": t0}, "phases": [[3.1, "check"], [4.5, "level"]], "event_t_s": None}  # absolute
+    # z4372: the engine comes from the record
+    res = {"settings": {"start_t_s": t0, "s8": {"engine": "L2b_NSC"}},
+           "phases": [[3.1, "check"], [4.5, "level"]], "event_t_s": None}  # absolute
     (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
     code, doc = _judge(mod, tmp_path, [d])
     assert code == 1 and doc["origin_failed"] == ["L2b_row"]
@@ -316,6 +318,88 @@ def test_fallback_log_leg_without_event_is_s11(mod, tmp_path):
     oc = doc["rows"][0]["origin_check_R5_B1"]
     assert code == 1 and any("S-11" in p for p in oc["problems"])
     assert oc["fallback"]["fallback_legs_R6_B7"] == ["RR"]
+
+
+# ------------------------------------------------------------------------------------ engine (z4372)
+def _write_pads_row(d: Path, *, engine: str | None, crawler_1ms: bool) -> Path:
+    """A run_S8C-like row; ``crawler_1ms`` False = a V0 L2b row (``law_locked``, no
+    ``crawler_normal_N``)."""
+    d.mkdir(parents=True)
+    (d / "record").mkdir()
+    t0 = 3.0
+    t = t0 + np.arange(1, 20001) * 1e-3
+    pads = {"t": t, "F_cyl_min_interval": np.full((t.size, 4), 6e4),
+            "N": np.full((t.size, 4), 1e4), "law_locked": np.ones((t.size, 4), dtype=np.int8)}
+    if crawler_1ms:
+        pads["crawler_normal_N"] = np.where(t < t0 + 10.0005, 5000.0, 0.0)
+    np.savez(d / "pads.npz", **pads)
+    tr = t0 + np.arange(1, 200) * 0.1
+    f_crawler = np.zeros((tr.size, 3))
+    f_crawler[:, 2] = np.where(tr < t0 + 12.05, 5000.0, 0.0)
+    np.savez(d / "record" / "record.npz", t=tr, F_crawler=f_crawler)
+    np.savez(d / "r8_series.npz", t=tr)
+    settings: dict = {"start_t_s": t0}
+    if engine is not None:
+        settings["s8"] = {"engine": engine}
+    # rev9 R9-1: the row tag and its true check (V0 tag, so no J-P3)
+    res = {"settings": settings, "phases": [[0.1, "check"], [5.0, "touch"], [8.0, "level"]],
+           "event_t_s": None, "args": {"expect_controller": "final_C4G2_LAS_K1"},
+           "expect_controller": {"name": "final_C4G2_LAS_K1", "ok": True}}
+    (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    return d
+
+
+def test_engine_from_records_not_from_pads_keys(mod, tmp_path):
+    """z4372: a V0 L2b row (no crawler_normal_N) is L2b by its records; batch.json r4368.engine
+    counts too."""
+    v0 = _write_pads_row(tmp_path / "v0", engine="L2b_NSC", crawler_1ms=False)
+    row = mod.load_row(v0)
+    assert row["engine"] == "L2b"
+    assert row["engine_record"]["sources"] == {"result.json settings.s8.engine": "L2b_NSC"}
+    l1r = _write_pads_row(tmp_path / "l1r", engine=None, crawler_1ms=False)
+    row = mod.load_row(l1r, {"case": "X", "r4368": {"engine": "L1R"}})
+    assert row["engine"] == "L1R"
+    assert row["engine_record"]["sources"] == {"batch.json r4368.engine": "L1R"}
+    # a 1 ms crawler array does not make a recorded L1-R row L2b
+    assert mod.load_row(_write_pads_row(tmp_path / "l1r1ms", engine=None, crawler_1ms=True),
+                        {"r4368": {"engine": "L1R"}})["engine"] == "L1R"
+
+
+def test_engine_record_missing_unknown_or_conflicting_is_input_error(mod, tmp_path):
+    bare = _write_pads_row(tmp_path / "bare", engine=None, crawler_1ms=True)
+    with pytest.raises(mod.InputError, match="engine record"):
+        mod.load_row(bare)
+    with pytest.raises(mod.InputError, match="unknown engine"):
+        mod.load_row(bare, {"r4368": {"engine": "L2b_SMC"}})
+    v0 = _write_pads_row(tmp_path / "v0", engine="L2b_NSC", crawler_1ms=False)
+    with pytest.raises(mod.InputError, match="disagree"):
+        mod.load_row(v0, {"r4368": {"engine": "L1R"}})
+    with pytest.raises(mod.InputError, match="does not fit"):
+        mod.load_row(bare, {"r4368": {"engine": "SCM"}})
+    scm = _write_scm_row(tmp_path / "scm", sgs=False)
+    assert mod.load_row(scm, {"r4368": {"engine": "SCM"}})["engine"] == "SCM"
+    with pytest.raises(mod.InputError, match="does not fit"):
+        mod.load_row(scm, {"r4368": {"engine": "L2b_NSC"}})
+
+
+def test_v0_l2b_row_d29_is_a_rule_gap(mod, tmp_path):
+    """z4372: no rule gives the D-29 t_lift of an L2b row without the 1 ms crawler normal; none is
+    decided, the 10 Hz bracket is a reference only, no stop."""
+    v0 = _write_pads_row(tmp_path / "E_G4_Fs4_V0", engine="L2b_NSC", crawler_1ms=False)
+    vb = _write_pads_row(tmp_path / "E_G4_Fs4", engine="L2b_NSC", crawler_1ms=True)
+    code, doc = _judge(mod, tmp_path, [v0, vb])
+    assert code == 0, doc["stops"]
+    rows = {r["case"]: r for r in doc["rows"]}
+    gap = rows["E_G4_Fs4_V0"]["items"]
+    assert gap["D8_t_lift_s_D-29_D-30"] is None
+    assert gap["D8_t_lift_basis"]["status"] == mod.D29_RULE_GAP
+    assert gap["D8_t_lift_basis"]["reference_not_used"]["t_lift_s"] == pytest.approx(15.1)
+    assert gap["C1_R40"]["status"] == "not_judgeable"
+    assert gap["D8_no_pad_lift_Q-14"]["status"] == "not_judgeable"
+    ok = rows["E_G4_Fs4"]["items"]
+    assert ok["D8_t_lift_basis"] == "pads.npz crawler_normal_N 1 ms"
+    assert ok["D8_t_lift_s_D-29_D-30"] == pytest.approx(13.001)
+    assert doc["rule_gaps_D29"] == ["E_G4_Fs4_V0"]
 
 
 # ------------------------------------------------------------------------------------------------- seals / CLI
