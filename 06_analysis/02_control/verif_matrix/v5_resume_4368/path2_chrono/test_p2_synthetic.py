@@ -860,6 +860,10 @@ def t_p2t45(tmp, l2r, doc):
     fc[:, 2] = np.where(rec["t"] < 23.0, 300000.0, 0.0)
     rec["F_crawler"] = fc
     np.savez(dv / "record" / "record.npz", **rec)
+    _edit_result(dv, tmp / "l2b_v0_nocr_nofp", lambda r: None)   # copy without floor_plane (source missing)
+    rj = json.loads((dv / "result.json").read_text(encoding="utf-8"))
+    rj["floor_plane"] = {"normal_world": [0.0, 0.0, 1.0]}
+    (dv / "result.json").write_text(json.dumps(rj), encoding="utf-8")
     rv = C.load_row(dv, "l2b", L2B_ARGV)
     tl, basis = C.t_lift(rv)
     check("D-29 before rev15: L2b row without 1 ms crawler_normal_N -> t_lift not computed (pending rev15)",
@@ -876,8 +880,28 @@ def t_p2t45(tmp, l2r, doc):
         tl2, b2 = C.t_lift(rv2)
         check("D-29 after rev15 in the sealed list: L2b row -> R6-B1 10 Hz bracket (same t_b as L1-R)",
               b2 == "bracket_10Hz" and tl2 == tl1, (tl2, b2))
+        rnf = C.load_row(tmp / "l2b_v0_nocr_nofp", "l2b", L2B_ARGV)
+        tl3, b3 = C.t_lift(rnf)
+        check("R15-3: floor_plane.normal_world missing -> source missing, t_lift not computed (판정 불가)",
+              tl3 is None and b3 == "bracket_10Hz_source_missing"
+              and any("normal_world" in n for n in rnf.notes), (tl3, b3, rnf.notes))
     finally:
         R.SEALED[:] = keep
+    # R6-B1 / R15-3 projection on a tilted floor normal (not the world z component)
+    n = np.array([0.6, 0.0, 0.8])
+    rec2 = {"t": np.array([0.1, 0.2, 0.3]), "F_crawler": np.array([[0.0, 0.0, 10.0], [-8.0, 0.0, 6.0],
+                                                                  [-10.0, 0.0, 0.0]])}
+
+    class _Npz(dict):
+        files = property(lambda self: list(self.keys()))
+    cn, tn, why = C.bracket_crawler_normal(_Npz(rec2), {"floor_plane": {"normal_world": (2 * n).tolist()}})
+    check("R15-3 normal projection: F_crawler . unit normal_world (z component would stay positive)",
+          np.allclose(cn, [8.0, 0.0, -6.0]) and why == "" and np.allclose(tn, rec2["t"]), cn)
+    cb, _, whyb = C.bracket_crawler_normal(_Npz({"t": rec2["t"], "F_crawler": rec2["F_crawler"][:, :2]}),
+                                           {"floor_plane": {"normal_world": [0, 0, 1]}})
+    check("R15-3 F_crawler not [N, 3] -> source missing", cb is None and "shape" in whyb, whyb)
+    cz, _, whyz = C.bracket_crawler_normal(_Npz(rec2), {"floor_plane": {"normal_world": [0, 0, 0]}})
+    check("R15-3 zero normal_world -> source missing", cz is None and "zero" in whyz, whyz)
 
 
 def t_l2b(tmp):
