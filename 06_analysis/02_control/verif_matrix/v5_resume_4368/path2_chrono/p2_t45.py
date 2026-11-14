@@ -19,14 +19,23 @@ BASE_COMMIT = "f46b5ab"   # rev4 R4-A2 condition 1 (436.8 rules sealing commit)
 TOOL = "04_scripts/04_hydraulic/coupled/chrono_t45_replay.py"
 GATED_FILES = (TOOL, "03_src/outrigger_sim/control/contact_replay.py")   # rev4 R4-0 list
 RECORDED_FILES = ("04_scripts/04_hydraulic/coupled/j_p3_inputs.py",)    # imported, recorded only
-# rev7 4 / 5: the 18 stored stage-3 L2b rows (rev6 3 rows 1-18: VB 12 + LS 6)
+# rev7 4 (line 95 "3단계 저장 기록 18행") / 5 ("18행(VB 12 + LS 6)"), v5 rev6 3 rows 1-18: the stored
+# stage-3 L2b rows, pinned by exact runner folder name (stamp included). Source of the names: the row logs
+# of the stored stage-3 batch `07_results/S9/batch_V5-STAGE3_20261107_184341/<case>.log` (runner line
+# `-> <folder>`, checked 2026-11-14). The 436.8 C-5 rows reuse the same tag prefixes
+# (`v5s3_VB_..._<new stamp>`), so a prefix search is not a row identity (path 2 defect fixed 2026-11-14,
+# user decision 19).
+REG_BATCH = "07_results/S9/batch_V5-STAGE3_20261107_184341"
 REG_ROWS = (
-    "v5s3_VB_K0V_top_fup3.5_Fs0_", "v5s3_VB_K0_top_fup3.2_Fs0_", "v5s3_VB_K0V_top_roll5.5_Fs0_",
-    "v5s3_VB_K0_top_fdown3.2_Fs0_", "v5s3_VB_K0V_top_fdown3.5_Fs0_", "v5s3_VB_E_G4_Fs8_",
-    "v5s3_VB_K0_top_rpBop_Fs0_", "v5s3_VB_E_RE1bF_Fs0_", "v5s3_VB_E_RE1bF_Fs8_",
-    "v5s3_VB_K8_top_rpB_Fs8_", "v5s3_VB_S_top_fdown3.5_wika_Fs8_", "v5s3_VB_K8_top_fdown3.5_Fs8_",
-    "v5s3_LS1_K0V_top_fup3.5_Fs0_", "v5s3_LS4_K0V_top_fup3.5_Fs0_", "v5s3_LS1_E_G4_Fs8_",
-    "v5s3_LS4_E_G4_Fs8_", "v5s3_LS1_E_RE1bF_Fs8_", "v5s3_LS4_E_RE1bF_Fs8_",
+    "v5s3_VB_K0V_top_fup3.5_Fs0_20261107_205714", "v5s3_VB_K0_top_fup3.2_Fs0_20261107_212720",
+    "v5s3_VB_K0V_top_roll5.5_Fs0_20261107_212243", "v5s3_VB_K0_top_fdown3.2_Fs0_20261107_202521",
+    "v5s3_VB_K0V_top_fdown3.5_Fs0_20261107_200743", "v5s3_VB_E_G4_Fs8_20261107_214226",
+    "v5s3_VB_K0_top_rpBop_Fs0_20261107_213744", "v5s3_VB_E_RE1bF_Fs0_20261107_202305",
+    "v5s3_VB_E_RE1bF_Fs8_20261107_184342", "v5s3_VB_K8_top_rpB_Fs8_20261107_205024",
+    "v5s3_VB_S_top_fdown3.5_wika_Fs8_20261107_222708", "v5s3_VB_K8_top_fdown3.5_Fs8_20261107_221440",
+    "v5s3_LS1_K0V_top_fup3.5_Fs0_20261107_210733", "v5s3_LS4_K0V_top_fup3.5_Fs0_20261107_211219",
+    "v5s3_LS1_E_G4_Fs8_20261107_215219", "v5s3_LS4_E_G4_Fs8_20261107_220449",
+    "v5s3_LS1_E_RE1bF_Fs8_20261107_184342", "v5s3_LS4_E_RE1bF_Fs8_20261107_191407",
 )
 # rev7 4 line 95 / 5 table (rule text values)
 REG_EXPECT = {
@@ -69,19 +78,26 @@ def run_tool(repo: Path, out_json: Path, cases: list) -> dict:
             "report": rep, "out_sha256": sha(out_json) if out_json.exists() else None}
 
 
-def regression(repo: Path, results_root: Path, out_dir: Path) -> dict:
+def regression_folders(results_root: Path):
+    """The 18 stored rows by exact folder name under `<results_root>/S8`. Returns (folders, missing):
+    a name with 0 folders (or a non-folder) is missing; exact names cannot match twice."""
     s8 = results_root / "S8"
-    folders = []
-    missing = []
-    for pre in REG_ROWS:
-        hits = sorted(d for d in s8.glob(pre + "*") if d.is_dir())
-        if len(hits) != 1:
-            missing.append(pre)
+    folders, missing = [], []
+    for name in REG_ROWS:
+        d = s8 / name
+        if d.is_dir():
+            folders.append(d)
         else:
-            folders.append(hits[0])
-    out = {"clause": "rev4 R4-A2 condition 2 / rev7 4 line 95", "rows_found": len(folders), "missing": missing}
-    if missing:
-        out["ok"] = False
+            missing.append(name)
+    return folders, missing
+
+
+def regression(repo: Path, results_root: Path, out_dir: Path) -> dict:
+    folders, missing = regression_folders(results_root)
+    out = {"clause": "rev4 R4-A2 condition 2 / rev7 4 line 95", "source_batch": REG_BATCH,
+           "rows_expected": len(REG_ROWS), "rows_found": len(folders), "missing": missing}
+    if missing or len(folders) != len(REG_ROWS):
+        out["ok"] = False   # t45_items: regression not ok -> S-11
         return out
     r = run_tool(repo, out_dir / "t45_regression_stage3_18.json", folders)
     out.update(rc=r["rc"], out_sha256=r["out_sha256"], stderr_tail=r["stderr_tail"])
@@ -95,14 +111,44 @@ def regression(repo: Path, results_root: Path, out_dir: Path) -> dict:
     diff = {k: (got.get(k), v) for k, v in {**REG_EXPECT, **REG_EXPECT_TOP}.items() if got.get(k) != v}
     if any(x != REG_OWN_MAX_KN for x in got["max_own_kN_rounded"]):
         diff["max_own_kN_rounded"] = (got["max_own_kN_rounded"], REG_OWN_MAX_KN)
+    n_rows = len(rep.get("rows") or [])
+    if n_rows != len(REG_ROWS):
+        diff["report_rows"] = (n_rows, len(REG_ROWS))
     out.update(got=got, differences=diff, ok=(r["rc"] == 0 and not diff and rep.get("criteria") == "rev7"))
     return out
 
 
+def row_key(folder) -> str:
+    """Replay row key = the row folder path (one per row). The `--only` folder name is not unique: VB /
+    LS1 / LS4 and V0 pairs share it (path 2 defect fixed 2026-11-14, user decision 19)."""
+    return str(Path(folder).resolve()).lower()
+
+
+def map_replay(folders: list, rep_rows: list):
+    """Key the tool's report rows by input folder path, position by position (the tool reports rows in
+    input order and carries the folder name in `case`, not the path). Any count or name mismatch, or a
+    repeated input folder, leaves the mapping empty (t45_items: row not in the replay -> 판정 불가)."""
+    rows, problems = {}, []
+    keys = [row_key(f) for f in folders]
+    if len(set(keys)) != len(keys):
+        problems.append("repeated input folder")
+    if len(rep_rows) != len(folders):
+        problems.append(f"replay rows {len(rep_rows)} != input folders {len(folders)}")
+    else:
+        for f, k, row in zip(folders, keys, rep_rows):
+            if row.get("case") != Path(f).name:
+                problems.append(f"position mismatch: report {row.get('case')!r} vs folder {Path(f).name!r}")
+            rows[k] = dict(row, folder=str(f))
+    if problems:
+        rows = {}
+    return rows, problems
+
+
 def replay_rows(repo: Path, folders: list, out_dir: Path) -> dict:
     r = run_tool(repo, out_dir / "t45_replay_C5.json", folders)
-    rows = {row.get("case"): row for row in ((r["report"] or {}).get("rows") or [])}
+    rows, problems = map_replay(folders, list((r["report"] or {}).get("rows") or []))
     return {"rc": r["rc"], "out_sha256": r["out_sha256"], "stderr_tail": r["stderr_tail"], "rows": rows,
+            "row_key": "row folder path (resolved, lower case)", "mapping_problems": problems,
             "criteria": (r["report"] or {}).get("criteria")}
 
 
@@ -120,8 +166,10 @@ def main(argv=None):
     p = out_dir / "t45_path2.json"
     data = json.dumps(doc, ensure_ascii=False, indent=1, default=str).encode("utf-8")
     p.write_bytes(data)
-    ok = gate["ok"] and doc.get("regression", {}).get("ok", False)
+    rep = doc.get("replay") or {}
+    ok = gate["ok"] and doc.get("regression", {}).get("ok", False) and not rep.get("mapping_problems")
     print(json.dumps({"tool": "p2_t45.py", "gate_ok": gate["ok"], "regression_ok": doc.get("regression", {}).get("ok"),
+                      "replay_rows_mapped": len(rep.get("rows") or {}), "mapping_problems": rep.get("mapping_problems"),
                       "out": str(p), "out_sha256": hashlib.sha256(data).hexdigest()}))
     return 0 if ok else 1
 

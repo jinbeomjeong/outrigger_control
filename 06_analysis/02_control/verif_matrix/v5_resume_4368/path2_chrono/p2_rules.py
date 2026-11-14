@@ -72,6 +72,16 @@ RECORDED = [
 ]
 
 
+# D-29 (rev6 table: L2b D8 t_lift from the 1 ms pads.npz crawler_normal_N). User decision 2026-11-14:
+# L2b rows without the 1 ms record (V0 rows) take the rev6 R6-B1 10 Hz bracket; this reading goes into
+# rev15 and is used only after rev15 is sealed, i.e. after its file and seal sha are added to SEALED.
+D29_RULE_FILE = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md"
+
+
+def d29_l2b_bracket_enabled() -> bool:
+    return any(rel == D29_RULE_FILE for rel, _, _ in SEALED)
+
+
 def sha256_bytes(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 

@@ -781,11 +781,12 @@ def t_scm(tmp):
     check("c2_setup.las_off true but argv on arm -> identity 판정 불가", idx["verdict"] == "indeterminate", idx)
     # T4 / T5 grades from a synthetic p2_t45 document
     l2r = C.load_row(write_l2b(tmp / "l2b_t45"), "l2b", L2B_ARGV)
+    import p2_t45 as T45
     doc = {"tool_gate": {"ok": True}, "regression": {"ok": True},
-           "replay": {"criteria": "rev7", "out_sha256": "x",
-                      "rows": {"l2b_t45": {"settings_equal": True, "t4_0": True,
-                                           "T4": {"over_0p6kN": 0, "judged_samples": 10},
-                                           "T5": {"over_0p6kN": 2}}}}}
+           "replay": {"criteria": "rev7", "out_sha256": "x", "row_key": "row folder path", "mapping_problems": [],
+                      "rows": {T45.row_key(l2r.folder): {"settings_equal": True, "t4_0": True,
+                                                         "T4": {"over_0p6kN": 0, "judged_samples": 10},
+                                                         "T5": {"over_0p6kN": 2}}}}}
     t = K.t45_items(l2r, doc)
     check("t45 grades: T4-0 pass, T4 pass, T5 over 2 -> fail + H-7", t["T4-0"]["verdict"] == "pass"
           and t["T4"]["verdict"] == "pass" and t["T5"]["verdict"] == "fail" and "H-7" in t["T5"]["stop"], t)
@@ -793,6 +794,90 @@ def t_scm(tmp):
     t2 = K.t45_items(l2r, doc)
     check("t45 regression failed -> S-11, 판정 불가", t2["T4"]["verdict"] == "indeterminate"
           and "S-11" in t2["T4"]["stop"], t2["T4"])
+    t_p2t45(tmp, l2r, doc)
+
+
+def t_p2t45(tmp, l2r, doc):
+    """p2_t45 fixes (2026-11-14, user decision 19): regression rows by exact folder name, replay rows keyed
+    by folder path; D-29 L2b 10 Hz bracket only after rev15 is sealed."""
+    import re as _re
+    import p2_t45 as T45
+    doc = copy.deepcopy(doc)
+    doc["regression"]["ok"] = True
+    check("REG_ROWS: 18 unique exact names with stamps, VB 12 + LS 6",
+          len(T45.REG_ROWS) == 18 == len(set(T45.REG_ROWS))
+          and all(_re.match(r"^v5s3_(VB|LS1|LS4)_.+_\d{8}_\d{6}$", n) for n in T45.REG_ROWS)
+          and sum(n.startswith("v5s3_VB_") for n in T45.REG_ROWS) == 12)
+    src = REPO / T45.REG_BATCH
+    if src.is_dir():
+        logs = "\n".join(p.read_text(encoding="utf-8", errors="replace") for p in src.glob("*.log"))
+        check("REG_ROWS: every name is a runner folder in the stored stage-3 batch row logs (source)",
+              all(n in logs for n in T45.REG_ROWS), [n for n in T45.REG_ROWS if n not in logs])
+    else:
+        print("SKIP stage-3 batch source check (batch folder not in this checkout)")
+    rr = tmp / "regroot"
+    for n in T45.REG_ROWS:
+        (rr / "S8" / n).mkdir(parents=True, exist_ok=True)
+    newer = rr / "S8" / (T45.REG_ROWS[0].rsplit("_", 2)[0] + "_20261114_125334")
+    newer.mkdir(parents=True, exist_ok=True)
+    f, miss = T45.regression_folders(rr)
+    check("regression: a newer folder with the same tag prefix is not picked (exact names, 18 found)",
+          len(f) == 18 and not miss and newer not in f, (len(f), miss))
+    shutil.rmtree(rr / "S8" / T45.REG_ROWS[5])
+    r = T45.regression(REPO, rr, tmp / "reg_out")
+    check("regression: one stored folder missing -> ok false (S-11), tool not run",
+          r["ok"] is False and r["missing"] == [T45.REG_ROWS[5]] and "rc" not in r, r)
+    d2 = copy.deepcopy(doc)
+    d2["regression"] = r
+    t = K.t45_items(l2r, d2)
+    check("regression missing row -> T4 S-11", "S-11" in t["T4"].get("stop", ""), t["T4"])
+    # replay mapping: same --only name in three runner folders -> three keys
+    fs = [tmp / f"run{i}" / "E_G4_Fs8" for i in range(3)] + [tmp / "run0" / "K0_top_fup3.2_Fs0"]
+    rows_rep = [{"case": p.name, "t4_0": True, "i": i} for i, p in enumerate(fs)]
+    m, prob = T45.map_replay(fs, rows_rep)
+    check("replay mapping: 4 folders (3 share the --only name) -> 4 keys by folder path, no problem",
+          len(m) == 4 and not prob and [m[T45.row_key(p)]["i"] for p in fs] == [0, 1, 2, 3], (len(m), prob))
+    m2, prob2 = T45.map_replay(fs, rows_rep[:3])
+    check("replay mapping: report row count differs -> empty mapping + problem", m2 == {} and prob2, prob2)
+    m3, prob3 = T45.map_replay(fs, [rows_rep[1], rows_rep[0], rows_rep[3], rows_rep[2]])
+    check("replay mapping: report order does not follow the input names -> empty mapping + problem",
+          m3 == {} and any("position" in p for p in prob3), prob3)
+    m4, prob4 = T45.map_replay([fs[0], fs[0]], rows_rep[:2])
+    check("replay mapping: repeated input folder -> empty mapping + problem", m4 == {} and prob4, prob4)
+    d3 = copy.deepcopy(doc)
+    d3["replay"]["mapping_problems"] = ["x"]
+    check("t45_items: mapping problems -> S-11", "S-11" in K.t45_items(l2r, d3)["T4"].get("stop", ""))
+    d4 = copy.deepcopy(doc)
+    d4["replay"].pop("row_key")
+    d4["replay"]["rows"] = {l2r.folder.name: d4["replay"]["rows"][T45.row_key(l2r.folder)]}
+    check("t45_items: old name-keyed replay document -> S-11 (not used)",
+          "S-11" in K.t45_items(l2r, d4)["T4"].get("stop", ""))
+    # D-29: L2b row without the 1 ms crawler_normal_N
+    dv = write_l2b(tmp / "l2b_v0_nocr")
+    _set_npz(dv / "pads.npz", crawler_normal_N=None)
+    rec = dict(np.load(dv / "record" / "record.npz"))
+    fc = np.zeros((len(rec["t"]), 3))
+    fc[:, 2] = np.where(rec["t"] < 23.0, 300000.0, 0.0)
+    rec["F_crawler"] = fc
+    np.savez(dv / "record" / "record.npz", **rec)
+    rv = C.load_row(dv, "l2b", L2B_ARGV)
+    tl, basis = C.t_lift(rv)
+    check("D-29 before rev15: L2b row without 1 ms crawler_normal_N -> t_lift not computed (pending rev15)",
+          R.d29_l2b_bracket_enabled() is False and tl is None and basis == "bracket_10Hz_d29_pending_rev15",
+          (tl, basis))
+    rl = C.load_row(dv, "l1r", ["run_S6C.py"])
+    tl1, b1 = C.t_lift(rl)
+    check("R6-B1 L1-R: same record -> 10 Hz bracket t_b", b1 == "bracket_10Hz" and tl1 is not None
+          and abs(tl1 - 23.0) < 0.1 + 1e-9, (tl1, b1))
+    keep = list(R.SEALED)
+    try:
+        R.SEALED.append((R.D29_RULE_FILE, "0" * 64, "rules rev15 (test only)"))
+        rv2 = C.load_row(dv, "l2b", L2B_ARGV)
+        tl2, b2 = C.t_lift(rv2)
+        check("D-29 after rev15 in the sealed list: L2b row -> R6-B1 10 Hz bracket (same t_b as L1-R)",
+              b2 == "bracket_10Hz" and tl2 == tl1, (tl2, b2))
+    finally:
+        R.SEALED[:] = keep
 
 
 def t_l2b(tmp):

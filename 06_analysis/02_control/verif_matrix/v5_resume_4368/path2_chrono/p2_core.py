@@ -342,7 +342,15 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         else:
             cr = np.asarray(rec["F_crawler"], float)[:, 2]
             t_cr = np.asarray(rec["t"], float)
-            cr_basis = "bracket_10Hz"
+            # L1-R: rev6 R6-B1 10 Hz bracket. L2b without the 1 ms `crawler_normal_N` (V0 rows): the
+            # same bracket only under the rev15 D-29 reading (user decision 2026-11-14), i.e. only once
+            # rev15 is in the sealed list; before that the L2b t_lift is not defined (rev6 D-29 = 1 ms).
+            # The engine comes from the batch.json argv (p2_chrono.engine_of).
+            if engine == "l2b" and not R.d29_l2b_bracket_enabled():
+                cr_basis = "bracket_10Hz_d29_pending_rev15"
+                notes.append("L2b pads.npz crawler_normal_N absent: t_lift not computed until rev15 D-29 is sealed")
+            else:
+                cr_basis = "bracket_10Hz"
         pad_n = np.asarray(pads["N"], float) if "N" in pads.files else None
         t_pad = tF if pad_n is not None else None
         sink = None
@@ -477,6 +485,8 @@ def t_lift(row: Row):
 def t_lift_bracket(row: Row):
     if row.cr is None:
         return None, None, None
+    if row.cr_basis == "bracket_10Hz_d29_pending_rev15":
+        return None, row.cr_basis, None
     ph = phase_at(row, row.t_cr)
     ok = ~np.isin(ph, list(R.TLIFT_SKIP_PHASES) + ["<before>"])
     le0 = np.array([R.le(x, 0.0) for x in row.cr])

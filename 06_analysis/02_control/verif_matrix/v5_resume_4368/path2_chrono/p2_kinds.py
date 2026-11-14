@@ -267,12 +267,21 @@ def t45_items(row, t45):
     gate = t45.get("tool_gate") or {}
     reg = t45.get("regression") or {}
     rep = t45.get("replay") or {}
-    rr = (rep.get("rows") or {}).get(row.folder.name)
+    # replay rows are keyed by the row folder path (p2_t45.row_key; the `--only` name is not unique,
+    # path 2 defect fixed 2026-11-14, user decision 19)
+    import p2_t45
+    rr = (rep.get("rows") or {}).get(p2_t45.row_key(row.folder))
     base = {"layer": lay, "tool_gate_ok": gate.get("ok"), "regression_ok": reg.get("ok"),
-            "replay_out_sha256": rep.get("out_sha256"), "criteria": rep.get("criteria")}
+            "replay_out_sha256": rep.get("out_sha256"), "criteria": rep.get("criteria"),
+            "replay_row_key": rep.get("row_key"), "replay_mapping_problems": rep.get("mapping_problems")}
     if not gate.get("ok") or not reg.get("ok") or rep.get("criteria") != "rev7":
         for k in ("T4-0", "T4", "T5"):
             out[k] = dict(base, verdict="indeterminate", stop="S-11 (rev4 R4-A2 conditions 1-2)")
+        return out
+    if rep.get("row_key") is None or rep.get("mapping_problems"):
+        for k in ("T4-0", "T4", "T5"):
+            out[k] = dict(base, verdict="indeterminate",
+                          stop="S-11 (replay rows not keyed by folder path or mapping problems)")
         return out
     if rr is None:
         for k in ("T4-0", "T4", "T5"):
