@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -46,12 +47,48 @@ def mod():
     return _import("chrono_rows_judge_4368")
 
 
+RULES_REL = Path("06_analysis") / "02_control" / "verif_matrix"
+RULES_DIRS = (PROJECT_ROOT / RULES_REL, MAIN_CHECKOUT / RULES_REL)
+REV15_SEAL_COMMIT = "cc0d9b8"
+"""rev15 seal commit S3: before the R3 merge the rev15 files are only in this commit's blobs."""
+REV15_NAME = "v5_resume_4368_rules_rev15.md"
+REV15_SHA256 = "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+_BUILT_RULES: dict[str, Path] = {}
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _rules_tmp(tmp_path_factory):
+    _BUILT_RULES.clear()
+    _BUILT_RULES["tmp"] = tmp_path_factory.mktemp("rules")
+
+
+def _rules_files(mod) -> list[str]:
+    return [f for n in mod.RULES_SEALS for f in (n, n.replace(".md", ".sha256"))]
+
+
+def _blob(path: Path) -> bytes | None:
+    """Bytes of ``path`` at the rev15 seal commit (None when the object is not in this repo)."""
+    spec = f"{REV15_SEAL_COMMIT}:{path.as_posix()}"
+    done = subprocess.run(["git", "-C", str(PROJECT_ROOT), "cat-file", "blob", spec],
+                          capture_output=True, check=False)
+    return done.stdout if done.returncode == 0 else None
+
+
 def _rules_dir(mod) -> Path:
-    for d in (PROJECT_ROOT / "06_analysis" / "02_control" / "verif_matrix",
-              MAIN_CHECKOUT / "06_analysis" / "02_control" / "verif_matrix"):
-        if all((d / n).exists() for n in mod.RULES_SEALS):
+    """A folder with every sealed rules file: the checkout's own, else one built from the checkout
+    files plus the seal commit blobs (rev15 before the R3 merge)."""
+    for d in RULES_DIRS:
+        if all((d / n).exists() for n in _rules_files(mod)):
             return d
-    pytest.skip("rules original .. rev6 not found")
+    built = _BUILT_RULES["tmp"]
+    if not all((built / n).exists() for n in _rules_files(mod)):
+        for name in _rules_files(mod):
+            data = next(((d / name).read_bytes() for d in RULES_DIRS if (d / name).exists()),
+                        None) or _blob(RULES_REL / name)
+            if data is None:
+                pytest.skip(f"{name} not found (checkout or {REV15_SEAL_COMMIT})")
+            (built / name).write_bytes(data)
+    return built
 
 
 # ------------------------------------------------------------------------------------------------- departure / t_D
@@ -441,6 +478,34 @@ def test_v0_l2b_bracket_without_inputs_is_not_judgeable(mod, tmp_path):
     assert doc["l2b_bracket_rows_R15_3"] == ["nf"]
 
 
+@pytest.mark.parametrize(("change", "problem"), [
+    ("F_crawler_2col", "F_crawler shape"),
+    ("t_short", "record/record.npz t shape"),
+    ("zero_normal", "floor_plane.normal_world"),
+])
+def test_v0_l2b_bracket_wrong_input_form_is_not_judgeable(mod, tmp_path, change, problem):
+    """Rev15 R15-3: F_crawler not [N, 3], t of another length or a zero normal = not judgeable."""
+    normal = [0.0, 0.0, 0.0] if change == "zero_normal" else [0.0, 0.0, 1.0]
+    d = _write_pads_row(tmp_path / change, engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=normal)
+    rec = dict(np.load(d / "record" / "record.npz"))
+    if change == "F_crawler_2col":
+        rec["F_crawler"] = rec["F_crawler"][:, :2]
+    elif change == "t_short":
+        rec["t"] = rec["t"][:-1]
+    np.savez(d / "record" / "record.npz", **rec)
+    t_lift, basis = mod.v0_l2b_bracket_lift(mod.load_row(d))
+    assert t_lift is None and basis["status"] == "not_judgeable"
+    assert len(basis["form_problems"]) == 1 and problem in basis["form_problems"][0]
+
+
+def test_v0_l2b_bracket_basis_names_its_inputs(mod, tmp_path):
+    d = _write_pads_row(tmp_path / "v0", engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=[0.0, 0.0, 1.0])
+    _, basis = mod.v0_l2b_bracket_lift(mod.load_row(d))
+    assert basis["inputs"] == list(mod.R15_3_SOURCES)
+
+
 # ------------------------------------------------------------------------------------------------- seals / CLI
 def test_seals(mod, tmp_path):
     src = _rules_dir(mod)
@@ -454,6 +519,35 @@ def test_seals(mod, tmp_path):
     assert not s["ok"] and not s["files"]["v5_resume_4368_rules_rev6.md"]["ok"]
     (tmp_path / "v5_resume_4368_rules_rev3.sha256").unlink()
     assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 2
+
+
+def test_rev15_in_the_seal_list(mod):
+    """Rev15 R15-7: the path 1 Chrono judge checks rev15 (rev13 / rev14 stay outside, R14-7)."""
+    assert mod.RULES_SEALS[REV15_NAME] == REV15_SHA256
+    assert "v5_resume_4368_rules_rev13.md" not in mod.RULES_SEALS
+    assert "v5_resume_4368_rules_rev14.md" not in mod.RULES_SEALS
+    assert "rev15" in mod.RULES_DESCRIPTION and "R15-3" in mod.RULES_DESCRIPTION
+
+
+def test_seals_command_checks_rev15(mod, tmp_path, capsys):
+    """``seals`` on the sealed files (rev15 from the seal commit blob before R3): exit 0 with rev15
+    matching; a changed rev15 is exit 1, a rev15 without its .sha256 is exit 2 (original 8.2
+    S-1)."""
+    src = _rules_dir(mod)
+    for name in _rules_files(mod):
+        shutil.copy2(src / name, tmp_path / name)
+    capsys.readouterr()
+    assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 0
+    entry = json.loads(capsys.readouterr().out.strip().splitlines()[-1])["files"][REV15_NAME]
+    assert entry == {"sha256": REV15_SHA256, "sealed": REV15_SHA256, "tool": REV15_SHA256,
+                     "ok": True}
+    rev15 = tmp_path / REV15_NAME
+    rev15.write_bytes(rev15.read_bytes() + b"\n")
+    assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 1
+    assert mod.seal_check(tmp_path)["files"][REV15_NAME]["ok"] is False
+    (tmp_path / REV15_NAME.replace(".md", ".sha256")).unlink()
+    assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 2
+    assert mod.seal_check(tmp_path)["missing"] == [REV15_NAME]
 
 
 def test_missing_input_exit_2(mod, tmp_path, capsys):

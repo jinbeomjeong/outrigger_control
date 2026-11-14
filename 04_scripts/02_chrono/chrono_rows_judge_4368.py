@@ -101,9 +101,16 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev10.md": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
     "v5_resume_4368_rules_rev11.md": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
     "v5_resume_4368_rules_rev12.md": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    # rev15 R15-7 (seal commit cc0d9b8, sealed 2026-11-15 00:08:30 +09:00); rev13 / rev14 are not
+    # in this list (rev13 R13-7, rev14 R14-7: checked by tools/verif/seal_check.py)
+    "v5_resume_4368_rules_rev15.md": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
-match (original 8.2 S-1)."""
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 of 2026-11-15);
+both the file and its ``.sha256`` must match (original 8.2 S-1)."""
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 (seal list; rev13 / rev14 "
+                     "by tools/verif/seal_check.py, rev15 R15-7): rev5 R5-A1, rev6 R6-A / R6-B, "
+                     "rev8 R8-2 / R8-3, rev9 .. rev12 items, rev15 R15-3 (V0 L2b D-29)")
+"""Output ``rules`` text (a description; the seal list above is what is checked)."""
 
 # --- disclosure (requirement 3) ---------------------------------------------------------------------------------
 DISCLOSE_PAIRS = (
@@ -888,19 +895,39 @@ def _missing_r15_3_sources(row: dict[str, Any]) -> list[str]:
     return [name for name in R15_3_SOURCES if not present[name]]
 
 
+def _r15_3_form_problems(row: dict[str, Any]) -> list[str]:
+    """Rev15 R15-3 form checks: ``F_crawler`` [N, 3], ``t`` of the same length, normal not zero."""
+    force = np.asarray(row["record"]["F_crawler"])
+    times = np.asarray(row["record"]["t"])
+    normal = np.asarray(row["result"]["floor_plane"]["normal_world"], float)
+    problems = []
+    if force.ndim != 2 or force.shape[1] != 3:
+        problems.append(f"record/record.npz F_crawler shape {force.shape} (want [N, 3])")
+    elif times.ndim != 1 or times.shape[0] != force.shape[0]:
+        problems.append(f"record/record.npz t shape {times.shape} (want [{force.shape[0]}])")
+    if normal.shape != (3,) or not np.linalg.norm(normal) > 0.0:
+        problems.append(f"result.json floor_plane.normal_world {normal.tolist()} (want a nonzero "
+                        "3-vector)")
+    return problems
+
+
 def v0_l2b_bracket_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
     """Rev15 R15-3: (t_lift, basis) of an L2b row without the 1 ms ``crawler_normal_N``.
 
     Same inputs and rule as the L1-R R6-B1 bracket (:func:`bracket_10hz_lift`): ``F_crawler``
     projected on the normalised ``floor_plane.normal_world``, 0.1 s ``t``, phases + start_t_s. A
-    missing input makes the t_lift not judgeable; the basis names the missing inputs. Unlike the
-    L1-R path there is no world-z fallback: R15-3 names the floor normal as an input.
+    missing input, or one of the wrong form (``F_crawler`` not [N, 3], ``t`` of another length,
+    zero normal), makes the t_lift not judgeable; the basis names the inputs. Unlike the L1-R path
+    there is no world-z fallback: R15-3 names the floor normal as an input.
     """
     missing = _missing_r15_3_sources(row)
     if missing:
         return None, {"status": "not_judgeable", "rule": R15_3_RULE, "missing_inputs": missing}
+    problems = _r15_3_form_problems(row)
+    if problems:
+        return None, {"status": "not_judgeable", "rule": R15_3_RULE, "form_problems": problems}
     t_lift, basis = bracket_10hz_lift(row)
-    return t_lift, {**basis, "rule": R15_3_RULE}
+    return t_lift, {**basis, "rule": R15_3_RULE, "inputs": list(R15_3_SOURCES)}
 
 
 def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]) -> dict[str, Any]:
@@ -1762,7 +1789,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     deviates = {k: v for k, v in asm.items() if ASSUMPTIONS[k] != v}
     r15_3_rows = l2b_bracket_cases(rows)
     doc = {"tool": TOOL_VERSION,
-           "rules": "v5_resume_4368_rules.md + rev1 .. rev8 (rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3)",
+           "rules": RULES_DESCRIPTION,
            "definitions_C": asm, "deviates_from_rev6": deviates or None, "d_numbers": D_NUMBERS,
            "params": params, "seals": seals, "disclosure": disclose(), "rows": rows, "stops": stops,
            "origin_failed": origin_bad, "skipped_rows": skipped,

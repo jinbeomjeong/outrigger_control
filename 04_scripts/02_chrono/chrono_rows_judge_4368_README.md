@@ -96,7 +96,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 6. 봉인 대조 (요건 4)
 
-원판·rev1~rev12의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`, rev12 = `78f1f99b…`. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
+원판·rev1~rev12·rev15의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`, rev12 = `78f1f99b…`, rev15 = `0162561c…`(R15-7, 봉인 커밋 `cc0d9b8`). rev13·rev14는 목록에 없고 `tools/verif/seal_check.py`로 확인한다(rev13 R13-7, rev14 R14-7). 출력 `rules`는 설명 문자열(`RULES_DESCRIPTION`)이고, 대조 대상은 이 목록이다. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
 
 ## 7. rev8~rev10 반영: J-P3 범위, J11 입력·범위, LS 판별 (v3, python-expert 2026-11-13)
 
@@ -120,4 +120,4 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 8. 시험
 
-`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 37개 = 합성 입력 35개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록 2개·rev15 R15-3 V0 L2b 10 Hz 구간 3개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.
+`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 43개 = 합성 입력 41개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록 2개·rev15 R15-3 V0 L2b 10 Hz 구간 7개·rev15 봉인 2개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.
