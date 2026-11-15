@@ -7,8 +7,9 @@ it runs no simulation and no other judge:
   ``run_S6C.py judge`` -> ``verify_S6C``), one file per row named
   ``<C1|C2|C5>_<case>.verify_S8C.json`` / ``.verify_S6C.json`` in ``--runner-judge-dir`` (the form
   of ``judge_b9f5707/chrono_path1/runner_judge/``). Row items = the runner rows of that case and
-  of ``*``: ``passed`` true / false = pass / fail, ``kind`` hold = not judgeable, ``passed`` None =
-  record.
+  of ``*``, by :func:`runner_verdict` (record kinds stay records, a judged kind with ``passed``
+  None is not judgeable unless marked a report / record; README 9 table). The runner items
+  windowed from the runner's own lift-off are listed (:data:`RUNNER_T_LIFT_ITEMS`).
 * SCM rows: ``result.json`` ``p3b`` (P3-1 .. P3-9, :func:`p3_items`).
 * Over both: the re-computed items (D-26 .. D-39) of ``chrono_rows_judge_4368.py judge``
   (``--rows-judge``) replace the items of the same name (:data:`RIGID_OVERRIDES`,
@@ -17,7 +18,9 @@ it runs no simulation and no other judge:
   false = ``fail`` (:func:`safe_stop_grade`); P3-5, P3-6 and FAULT0 are replaced by them.
 * Bundle rules (:func:`bundle_grade`): C-1 / C-2 / C-3 = ``d1_selection_rules.md`` 11 (+ rev1),
   C-5 = v5 criteria revision 12 / 12a / 12b (T4 / T5 from ``chrono_t45_replay`` ``--t45``, J11,
-  J-P3, D2 record, P3 items); bundle status by original 8.1 (not judgeable > fail > pass).
+  J-P3, D2 record, P3 items, exactly the six VB / V0 pairs of revision 12 2.1 or S-15); bundle
+  status by original 8.1 (not judgeable > fail > pass), the row phrase counts the safe stops
+  apart.
 * Record bundles: C-6 / C-7 ``result.json`` ``p3a`` (P3a-1 .. 5, spec 11047 FLAG), C-8 the
   ``resume4368_judge.py oc5`` and ``fmin-time`` outputs (``--oc5``, ``--fmin-time``).
 * Row count (S-15): rows from the ``batch.json`` ``cases[]`` of the bundle criteria, each one a
@@ -45,6 +48,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import traceback
 from collections import Counter
@@ -126,6 +130,41 @@ J11_PASS_STATES = ("pass", "no_fallback_leg", "not_computed")
 J11_STOP_STATES = (rows_judge.J11_STOP_VB, rows_judge.J11_STOP_LS)
 V0_PAIR_SUFFIXES = ("_V0", "_v0v")
 """Revision 12 2.1: the V0 / V0v pair of a VB row is its case name + one of these."""
+C5_VB_V0_PAIRS = (
+    ("E_G4_Fs4", "E_G4_Fs4_V0"),
+    ("E_G4_Fs4_ph0.05", "E_G4_Fs4_ph0.05_V0"),
+    ("G1R_FS24_FL_top_o050_Fs0", "G1R_FS24_FL_top_o050_Fs0_V0"),
+    ("P3b_J1_B_top_Fs4", "P3b_J1_B_top_Fs4_v0v"),
+    ("P3b_J2_B_top_Fs4_m1p1_t180", "P3b_J2_B_top_Fs4_m1p1_t180_v0v"),
+    ("S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0", "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0_v0v"),
+)
+"""v5 criteria revision 12 2.1 (33 .. 51): the six VB / V0(V0v) pairs of C-5 (names as in the
+manifest and the C-5 batches); the pairs found must be exactly these, else S-15 (no grade)."""
+RUNNER_RECORD_KINDS = ("record", "report", "info", "consistency", "comparison", "pair",
+                       "sensitivity", "superseded", "leak_compare")
+"""Runner row kinds that are never judged (record whatever ``passed`` says)."""
+RUNNER_JUDGED_KINDS = ("function", "judged", "anomaly", "replay", "quality")
+"""Runner row kinds that are judged: ``passed`` None is not judgeable (original 9.3), except an
+item the runner marks as a report / record (:data:`RUNNER_REPORT_MARK`) and an anomaly row
+whose note carries a FLAG."""
+RUNNER_REPORT_MARK = re.compile(r"\((report|record)\b|\b(report|record)\b:|\breport\)")
+"""Runner report / record marks in the item name or the note (``... (report)``,
+``(record, ...)``, ``J5 / I6 report: ...``)."""
+RUNNER_T_LIFT_ITEMS = (
+    ("C1 D8 min true rod force", "s8_control c1_metrics: raw minimum after the runner lift-off"),
+    ("D8 min true cylinder force >= F_min + 5 kN",
+     "s6_bundle_c: min_cyl_after_liftoff_kN (runner lift-off)"),
+    ("D8 no pad lift-off", "s6_bundle_c / s8_control: pad normal after the runner lift-off"),
+    ("3 F_min (1 ms)", "s6_control _force_metrics: 1 ms minimum after the runner lift-off"),
+    ("3 F_min before the event", "s6_control event_force_metrics: runner lift-off .. event"),
+    ("5a rocking amplitude", "s6_control rocking metrics: after the runner lift-off"),
+    ("F2 lower-bound soundness", "s8_control s8_case_metrics: samples after the runner lift-off"),
+)
+"""Runner judge items whose window starts at the runner's own lift-off time (``_times``
+``liftoff``, code reading of ``verify/s6_control.py`` / ``s6_bundle_c.py`` / ``s8_control.py``);
+only the first is replaced by a re-computed item (D-31 / D-39)."""
+RUNNER_T_LIFT_EXPECTED = ("C1 D8 min true rod force",)
+"""Coordinator request 2026-11-15: the expected list; any other present item is a warning."""
 S9_HANDLED_CRITERIA = ("C-8a",)
 S9_HANDLED_TEXT = ("S-9 handled by rules rev18 R18-5 (user decision 60 (A)): L-5 known limit, "
                    "cause to 436.9; C-8 is a record bundle, no grade")
@@ -291,18 +330,46 @@ def runner_items(doc: dict[str, Any], case: str) -> list[dict[str, Any]]:
     for runner_row in doc.get("rows") or []:
         if runner_row.get("case") not in (case, "*"):
             continue
-        if runner_row.get("kind") == "hold":
-            verdict: str | None = NOT_JUDGEABLE
-        elif runner_row.get("passed") is True:
-            verdict = PASS
-        elif runner_row.get("passed") is False:
-            verdict = FAIL
-        else:
-            verdict = None
+        verdict, branch = runner_verdict(runner_row)
         items.append(item(str(runner_row.get("item")), verdict, "runner",
                           value=runner_row.get("value"), limit=runner_row.get("limit"),
-                          kind=runner_row.get("kind")))
+                          kind=runner_row.get("kind"), passed=runner_row.get("passed"),
+                          branch=branch))
     return items
+
+
+def runner_verdict(runner_row: dict[str, Any]) -> tuple[str | None, str]:
+    """(verdict, branch name) of one runner judge row (README 9 table).
+
+    hold = not judgeable; a record kind stays a record; a judged kind (or no kind) takes
+    ``passed`` true / false; ``passed`` None of a judged kind is a record only when the runner
+    marks it a report / record or it is an anomaly FLAG, else not judgeable (original 9.3).
+    """
+    kind, passed = runner_row.get("kind"), runner_row.get("passed")
+    if kind == "hold":
+        return NOT_JUDGEABLE, "hold"
+    if kind in RUNNER_RECORD_KINDS:
+        return None, "record_kind"
+    if kind is not None and kind not in RUNNER_JUDGED_KINDS:
+        return NOT_JUDGEABLE, "unknown_kind"
+    if passed is True:
+        return PASS, "passed_true"
+    if passed is False:
+        return FAIL, "passed_false"
+    text = f"{runner_row.get('item')} {runner_row.get('note')}"
+    if kind == "anomaly" and "FLAG" in str(runner_row.get("note")):
+        return FLAG, "anomaly_flag"
+    if RUNNER_REPORT_MARK.search(text):
+        return None, "judged_kind_report_mark"
+    return NOT_JUDGEABLE, "judged_kind_passed_none"
+
+
+def runner_t_lift_items(items: list[dict[str, Any]]) -> list[str]:
+    """Runner items of the row whose window starts at the runner lift-off
+    (:data:`RUNNER_T_LIFT_ITEMS`), as the table prefix."""
+    names = [entry["item"] for entry in items]
+    return [prefix for prefix, _ in RUNNER_T_LIFT_ITEMS
+            if any(name.startswith(prefix) for name in names)]
 
 
 def recomputed_verdict(judge_key: str, runner_name: str,
@@ -576,8 +643,10 @@ def grade_row(row: RowInput, bundle: str, runner_dir: Path | None,
     overrides: list[dict[str, Any]] = []
     record_items: list[dict[str, Any]] = []
     note = ""
+    t_lift_items: list[str] = []
     if row.engine in RUNNER_FILE_SUFFIX:
         items, overrides = rigid_row_items(row, bundle, runner_dir)
+        t_lift_items = runner_t_lift_items(items)
     elif row.result is not None and is_soil_event_row(row):
         items = soil_event_items(row.result)
         record_items.append(item("p3b", None, "record (event row judged by 426.3)"))
@@ -597,6 +666,7 @@ def grade_row(row: RowInput, bundle: str, runner_dir: Path | None,
     return {"case": row.case, "criteria_id": row.criteria_id, "row_id": row.row_id,
             "engine": row.engine, "role": row.role, "grade": grade, "grade_note": note,
             "items": items, "overrides": overrides, "record_items": record_items,
+            "runner_t_lift_items": t_lift_items,
             "missing_inputs": row.missing, "inputs_sha256": row.files,
             "result_path": None if row.result_path is None else str(row.result_path)}
 
@@ -687,6 +757,40 @@ def vb_specific_failures(rows: list[dict[str, Any]]) -> list[dict[str, str]]:
     return found
 
 
+def found_vb_v0_pairs(rows: list[dict[str, Any]]) -> list[tuple[str, str]]:
+    """(VB case, V0 / V0v case) pairs present among the rows (:data:`V0_PAIR_SUFFIXES`)."""
+    cases = {row["case"] for row in rows}
+    return sorted((case, case + suffix) for case in cases for suffix in V0_PAIR_SUFFIXES
+                  if case + suffix in cases)
+
+
+def c5_pair_check(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """The found VB / V0 pairs against :data:`C5_VB_V0_PAIRS` (revision 12 2.1; S-15)."""
+    found = set(found_vb_v0_pairs(rows))
+    expected = set(C5_VB_V0_PAIRS)
+    return {"rule": "v5 criteria revision 12 2.1: exactly the six VB / V0 pairs (S-15)",
+            "expected": sorted(expected), "found": sorted(found),
+            "missing": sorted(expected - found), "extra": sorted(found - expected),
+            "ok": found == expected}
+
+
+def t_lift_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Runner items windowed from the runner's own lift-off (:data:`RUNNER_T_LIFT_ITEMS`)."""
+    by_case = {row["case"]: row["runner_t_lift_items"] for row in rows
+               if row.get("runner_t_lift_items")}
+    present = sorted({name for names in by_case.values() for name in names})
+    unexpected = [name for name in present if name not in RUNNER_T_LIFT_EXPECTED]
+    out: dict[str, Any] = {"table": [{"item": p, "window": w} for p, w in RUNNER_T_LIFT_ITEMS],
+                           "expected": list(RUNNER_T_LIFT_EXPECTED), "present": present,
+                           "by_case": by_case}
+    if by_case and present != list(RUNNER_T_LIFT_EXPECTED):
+        out["warning"] = (f"runner items windowed from the runner lift-off are {present}, not "
+                          f"only {list(RUNNER_T_LIFT_EXPECTED)}; only the C1 D8 item is replaced "
+                          f"by the D-29 t_lift (D-31 / D-39), the others keep the runner window: "
+                          f"{unexpected}")
+    return out
+
+
 def pair_record(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """C-5 pairs (VB / V0, LS - VB) side by side (record)."""
     by_case = {row["case"]: row["grade"] for row in rows}
@@ -697,6 +801,22 @@ def pair_record(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 pairs.append({"base": case, "base_grade": grade, "pair": case + suffix,
                               "pair_grade": by_case[case + suffix]})
     return pairs
+
+
+PHRASE_PARTS = (("통과", (PASS, FLAG)), ("안전 종료", (ALLOWED_STOP,)), ("미달", (FAIL,)),
+                ("판정 불가", (NOT_JUDGEABLE,)))
+"""Row count phrase: spec 427.9 counts the safe stop separately from the pass ("따로 센다");
+the bundle status still counts it on the pass side."""
+
+
+def row_phrase(judged: list[dict[str, Any]]) -> str:
+    """``통과 4 / 안전 종료 2`` (a part with 0 rows is left out, except 통과)."""
+    parts = []
+    for label, grades in PHRASE_PARTS:
+        count = sum(1 for row in judged if row["grade"] in grades)
+        if count or label == "통과":
+            parts.append(f"{label} {count}")
+    return " / ".join(parts)
 
 
 def unique_stops(stops: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -725,7 +845,8 @@ def bundle_grade(rows: list[dict[str, Any]], count_ok: bool, has_stop: bool) -> 
         "flag_rows": [row["case"] for row in judged if row["grade"] == FLAG],
         "record_rows_reported": [{"case": row["case"], "grade": row["grade"]} for row in record
                                  if row["grade"] in (FAIL, NOT_JUDGEABLE)],
-        "missing_count": sum(len(row["missing_inputs"]) for row in rows)}
+        "missing_count": sum(len(row["missing_inputs"]) for row in rows),
+        "row_phrase": row_phrase(judged)}
     if not count_ok:
         out.update(grade=None, status=None, reason="S-15: row count differs, no grade")
     elif not judged:
@@ -913,11 +1034,19 @@ def _graded_bundle(doc: dict[str, Any], bundle: str, inputs: list[RowInput],
     rows = [grade_row(row, bundle, runner_dir, t45) for row in inputs]
     stops = row_stops(rows, judge_doc)
     if bundle == "C-5":
+        pairs = c5_pair_check(rows)
+        doc["vb_v0_pairs_S15"] = pairs
+        if not pairs["ok"]:
+            count_ok = False
+            stops.append({"case": "*", "reason": f"S-15: VB / V0 pairs differ from revision 12 "
+                                                 f"2.1 (missing {pairs['missing']}, extra "
+                                                 f"{pairs['extra']})"})
         stops += vb_specific_failures(rows)
         doc["pairs_record"] = pair_record(rows)
         doc["t4_t5_phrase"] = _t45_phrase(rows)
     stops = unique_stops(prior_stops + stops)
     doc["rows"] = rows
+    doc["runner_t_lift_items"] = t_lift_summary(rows)
     doc["bundle_grade"] = bundle_grade(rows, count_ok, has_stop=bool(stops))
     return stops
 

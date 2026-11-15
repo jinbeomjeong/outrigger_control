@@ -366,8 +366,10 @@ def test_c3_g6_grade_with_p37(mod, tmp_path):
 
 
 # ------------------------------------------------------------------------------------- C-5
-C5_SCM = ("P3b_J1_B_top_Fs4", "P3b_J1_B_top_Fs4_v0v", "P3b_J2_t180", "P3b_J2_t180_v0v",
-          "S9SL_p0", "S9SL_p0_v0v", "seed26", "seed27", "seed28", "seed29", "seed26_flow")
+C5_SCM = ("P3b_J1_B_top_Fs4", "P3b_J1_B_top_Fs4_v0v", "P3b_J2_B_top_Fs4_m1p1_t180",
+          "P3b_J2_B_top_Fs4_m1p1_t180_v0v", "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+          "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0_v0v", "seed26", "seed27", "seed28", "seed29",
+          "seed26_flow")
 C5_RIGID_EXTRA = ("E_G4_Fs4", "E_G4_Fs4_V0", "E_G4_Fs4_ph0.05", "E_G4_Fs4_ph0.05_V0",
                   "G1R_FS24_FL_top_o050_Fs0", "G1R_FS24_FL_top_o050_Fs0_V0")
 
@@ -519,3 +521,92 @@ def test_worst_order(mod):
     assert mod.worst([]) == "pass"
     assert mod.worst(["allowed_stop", "flag"]) == "flag"
     assert mod.worst(["fail", "not_judgeable", "pass"]) == "not_judgeable"
+
+
+# ------------------------------------------------------------- coordinator follow-up 2026-11-15
+@pytest.mark.parametrize(("row", "want"), [
+    ({"kind": "hold", "passed": None}, ("not_judgeable", "hold")),
+    ({"kind": "record", "passed": None}, (None, "record_kind")),
+    ({"kind": "report", "passed": True}, (None, "record_kind")),
+    ({"kind": "pair", "passed": None}, (None, "record_kind")),
+    ({"kind": "function", "passed": True}, ("pass", "passed_true")),
+    ({"kind": "judged", "passed": False}, ("fail", "passed_false")),
+    ({"kind": None, "passed": True}, ("pass", "passed_true")),
+    ({"kind": "function", "passed": None, "item": "2/5b window",
+      "note": "run ended before 5 s of READY: items 2 and 5b not judged"},
+     ("not_judgeable", "judged_kind_passed_none")),
+    ({"kind": "function", "passed": None, "item": "3 lift-off RR time / ratio (report)"},
+     (None, "judged_kind_report_mark")),
+    ({"kind": "function", "passed": None, "item": "K8 shadow (B) - true floor",
+      "note": "J5 / I6 report: within 0.03 deg"}, (None, "judged_kind_report_mark")),
+    ({"kind": "anomaly", "passed": None, "item": "5.24.2 unexpected warnings",
+      "note": "0 expected (not counted); FLAG: WARN_ROD_PRESSURE_FALLBACK x1"},
+     ("flag", "anomaly_flag")),
+    ({"kind": "something_new", "passed": True}, ("not_judgeable", "unknown_kind")),
+])
+def test_runner_verdict_table(mod, row, want):
+    assert mod.runner_verdict(row) == want
+
+
+def test_judged_kind_none_makes_row_not_judgeable(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    b.write()
+    path = b.runner_dir / "C1_D1C2_0.verify_S8C.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["rows"].append({"case": "D1C2_0", "item": "2/5b window", "passed": None,
+                         "kind": "function", "note": "run too short: not judged"})
+    path.write_text(json.dumps(data), encoding="utf-8")
+    b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
+    _, doc = run(mod, b, tmp_path, "C-1")
+    row = doc["rows"][0]
+    assert row["grade"] == "not_judgeable"
+    window = next(i for i in row["items"] if i["item"] == "2/5b window")
+    assert window["branch"] == "judged_kind_passed_none"
+
+
+def test_c5_pairs_must_be_the_six(mod, tmp_path):
+    b, t45 = c5_bundle(mod, tmp_path)
+    b.entries = [e for e in b.entries if e["case"] != "E_G4_Fs4_V0"]
+    b.judged = [j for j in b.judged if j["case"] != "E_G4_Fs4_V0"]
+    b.add_rigid(entry("E_G4_Fs4_other", "C-5", "L2b_NSC"), runner_pass_rows(), rigid_items(),
+                "C5")  # keeps 35 rows: only the pair check can catch it
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    pairs = doc["vb_v0_pairs_S15"]
+    assert code == 1 and pairs["ok"] is False
+    assert pairs["missing"] == [["E_G4_Fs4", "E_G4_Fs4_V0"]] and pairs["extra"] == []
+    assert doc["row_count_S15"]["ok"] is True
+    assert doc["bundle_grade"]["grade"] is None and "S-15" in doc["bundle_grade"]["reason"]
+
+
+def test_c5_six_pairs_found(mod, tmp_path):
+    b, t45 = c5_bundle(mod, tmp_path)
+    _, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    assert doc["vb_v0_pairs_S15"]["ok"] is True
+    assert len(doc["vb_v0_pairs_S15"]["found"]) == 6
+
+
+def test_row_phrase_counts_safe_stop_apart(mod, tmp_path):
+    _, doc = run(mod, c2_bundle(tmp_path), tmp_path, "C-2")
+    assert doc["bundle_grade"]["row_phrase"] == "통과 3 / 안전 종료 2"
+    assert doc["bundle_grade"]["status"] == "통과"
+
+
+def test_runner_t_lift_items_expected_only_c1(mod, tmp_path):
+    _, doc = run(mod, c1_bundle(tmp_path), tmp_path, "C-1")
+    summary = doc["runner_t_lift_items"]
+    assert summary["present"] == ["C1 D8 min true rod force"] and "warning" not in summary
+
+
+def test_runner_t_lift_items_warning(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    b.write()
+    path = b.runner_dir / "C1_D1C2_3.verify_S8C.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["rows"].append({"case": "D1C2_3", "item": "3 F_min (1 ms)", "passed": True,
+                         "kind": "function"})
+    path.write_text(json.dumps(data), encoding="utf-8")
+    b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
+    code, doc = run(mod, b, tmp_path, "C-1")
+    summary = doc["runner_t_lift_items"]
+    assert summary["by_case"]["D1C2_3"] == ["C1 D8 min true rod force", "3 F_min (1 ms)"]
+    assert "3 F_min (1 ms)" in summary["warning"] and code == 0  # a warning, not a stop
