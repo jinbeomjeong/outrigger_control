@@ -7,7 +7,9 @@ Synthetic inputs only (batch folders, manifest, ``chrono_rows_judge`` output, ru
 
 from __future__ import annotations
 
+import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -122,17 +124,21 @@ class Bundle:
 
     def add_rigid(self, e: dict[str, Any], runner_rows: list[dict[str, Any]],
                   items: dict[str, Any], prefix: str, suffix: str = "verify_S8C",
-                  liftoff_rel_s: float | None = RUNNER_LIFTOFF_REL_S) -> None:
+                  liftoff_rel_s: float | None = RUNNER_LIFTOFF_REL_S,
+                  inner: str | None = None) -> None:
+        """``inner``: the run folder's inner (``--only``) name, default the case name. As in the
+        real runner output, the runner rows and the ``s8_metrics`` key use the inner name."""
         self.entries.append(e)
         folder = self.root / "S8" / f"tag_{e['case']}_{STAMP}"
-        write_json(folder / e["case"] / "result.json", {"settings": {}})
-        write_rigid_series(folder / e["case"])
-        self.judged.append({"case": e["case"], "dir": str(folder / e["case"]), "items": items,
+        inner = inner or e["case"]
+        write_json(folder / inner / "result.json", {"settings": {}})
+        write_rigid_series(folder / inner)
+        self.judged.append({"case": e["case"], "dir": str(folder / inner), "items": items,
                             "t0_s": T0_S})
-        rows = [{"case": e["case"], **r} for r in runner_rows]
+        rows = [{"case": inner, **r} for r in runner_rows]
         meta = {"batch": str(folder), "failed": sum(r.get("passed") is False for r in rows),
                 "hold": sum(r.get("kind") == "hold" for r in rows)}
-        metrics = {} if liftoff_rel_s is None else {e["case"]: {"liftoff_s": liftoff_rel_s}}
+        metrics = {} if liftoff_rel_s is None else {inner: {"liftoff_s": liftoff_rel_s}}
         write_json(self.runner_dir / f"{prefix}_{e['case']}.{suffix}.json",
                    {"meta": meta, "rows": rows, "s8_metrics": metrics})
 
@@ -158,8 +164,21 @@ def run(mod, bundle: Bundle, tmp_path: Path, name: str, *extra: str) -> tuple[in
     if name in mod.GRADED_BUNDLES:
         argv += ["--rows-judge", str(paths["judge"]), "--runner-judge-dir",
                  str(bundle.runner_dir)]
+    if name == "C-5" and "--t45" in extra and "--t45-reference-judge" not in extra:
+        # rev22 R22-1 source fix: this synthetic judge output is its own R3c reference
+        argv += ["--t45-reference-judge", str(paths["judge"]),
+                 "--t45-reference-sha256", mod.rows_judge.sha256_file(paths["judge"]),
+                 "--t45-cases-script", str(write_cases_script(mod, tmp_path))]
     code = mod.main(argv)
     return code, json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+
+
+def write_cases_script(mod, tmp_path: Path, cases: tuple[str, ...] | None = None) -> Path:
+    """A run-script stand-in with ``$T45Cases = @(...)`` (rev22 R22-1 evidence chain)."""
+    names = ", ".join(f"'{case}'" for case in (cases or mod.T45_CASES))
+    path = tmp_path / "run_path1_r3c.ps1"
+    path.write_text(f"$T45Cases = @({names})\n", encoding="utf-8")
+    return path
 
 
 def runner_pass_rows() -> list[dict[str, Any]]:
@@ -494,14 +513,25 @@ def t45_row(case: str, over_t4: int = 0, *, t4_0: bool = True) -> dict[str, Any]
             "T4": {"over_0p6kN": over_t4}, "T5": {"over_0p6kN": 0}}
 
 
+def inner_of(case: str) -> str:
+    """The run folder inner name of a C-5 row: an LS or V0 row runs its VB case (``--only``)."""
+    for suffix in ("_LS1", "_LS4", "_V0"):
+        if case.endswith(suffix):
+            return case[: -len(suffix)]
+    return case
+
+
 def c5_bundle(mod, tmp_path: Path) -> tuple[Bundle, Path]:
+    """C-5 rows as run: the LS1 / LS4 / VB rows of one case share the inner folder name, so the
+    t45 rows repeat names (rev22 R22-1)."""
     b = Bundle(tmp_path, "C5")
     for case in (*mod.T45_CASES, *C5_RIGID_EXTRA):
-        b.add_rigid(entry(case, "C-5", "L2b_NSC"), runner_pass_rows(), rigid_items(), "C5")
+        b.add_rigid(entry(case, "C-5", "L2b_NSC"), runner_pass_rows(), rigid_items(), "C5",
+                    inner=inner_of(case))
     for case in C5_SCM:
         b.add_scm(entry(case, "C-5", "SCM"), {"p3b": p3b_ok()}, scm_items())
-    t45 = write_json(tmp_path / "t45.json", {"criteria": "rev7",
-                                             "rows": [t45_row(c) for c in mod.T45_CASES]})
+    t45 = write_json(tmp_path / "t45.json", {
+        "criteria": "rev7", "rows": [t45_row(inner_of(c)) for c in mod.T45_CASES]})
     return b, t45
 
 
@@ -630,6 +660,12 @@ def test_seals_command(mod, capsys):
     assert mod.main(["seals", "--rules-dir", str(RULES_DIR)]) == 0
     last = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
     assert last["files"]["v5_resume_4368_rules_rev18.md"]["ok"] is True
+    rev22 = last["files"]["v5_resume_4368_rules_rev22.md"]  # rev22 R22-2 seal list
+    assert rev22["ok"] is True
+    assert rev22["sha256"] == "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+    rev23 = last["files"]["v5_resume_4368_rules_rev23.md"]  # rev23 R23-2 seal list
+    assert rev23["ok"] is True
+    assert rev23["sha256"] == "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
 
 
 def test_worst_order(mod):
@@ -947,3 +983,396 @@ def test_v0_sus_record_is_passed_through(mod, tmp_path):
     check = doc["rows"][0]["t_lift_check_R19_5"]
     assert check["t_lift_D29_10Hz_s"] == 23.1  # graded on t_b (R15-3)
     assert check["t_lift_sus_record_R21_1"]["differs_from_t_b"] is True
+
+
+# ------------------------------------------------------------- rev22 R22-1 t45 pairing
+def pairing_case(mod, tmp_path: Path) -> tuple[dict, dict]:
+    """(judge_C5 document, t45 document): the 18 T45 rows (LS1 / LS4 / VB share inner names,
+    outer folders differ) mixed with two other C-5 rows, in run order."""
+    rows = [{"case": "E_G4_Fs4", "dir": str(tmp_path / "S8" / "v5s3_VB_E_G4_Fs4_1" / "E_G4_Fs4")}]
+    for i, case in enumerate(mod.T45_CASES):
+        outer = f"v5s3_{case.rsplit('_', 1)[-1] if case.endswith(('_LS1', '_LS4')) else 'VB'}"
+        rows.append({"case": case, "dir": str(tmp_path / "S8" / f"{outer}_{i}" / inner_of(case))})
+    rows.append({"case": "seed26", "dir": str(tmp_path / "S9" / "batch" / "seed26")})
+    judge = {"rows": rows}
+    t45 = {"criteria": "rev7", "rows": [t45_row(inner_of(c)) for c in mod.T45_CASES]}
+    return judge, t45
+
+
+def pairing_args(mod, tmp_path: Path, judge: dict, *, reference: dict | None = None,
+                 cases: tuple[str, ...] | None = None, folders: list[str] | None = None):
+    """argparse-like inputs of :func:`t45_pairing` (the reference judge written to a file)."""
+    import argparse
+
+    ref = write_json(tmp_path / "ref_judge_C5.json", reference if reference is not None else judge)
+    listed = None if folders is None else write_json(tmp_path / "folders.json", folders)
+    return argparse.Namespace(t45_reference_judge=str(ref),
+                              t45_reference_sha256=mod.rows_judge.sha256_file(ref),
+                              t45_cases_script=str(write_cases_script(mod, tmp_path, cases)),
+                              t45_folders=None if listed is None else str(listed))
+
+
+def stop_codes(stops: list[dict[str, str]]) -> set[str]:
+    return {s["reason"].split(":", 1)[0] for s in stops}
+
+
+def test_pairing_same_inner_names(mod, tmp_path):
+    """Three rows with the inner name E_RE1bF_Fs8 (VB, LS1, LS4) pair by position."""
+    judge, t45 = pairing_case(mod, tmp_path)
+    by_case, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stops == [] and record["ok"] is True
+    assert sorted(by_case) == sorted(mod.T45_CASES)
+    same = [p for p in record["pairs"] if p["t45_case"] == "E_RE1bF_Fs8"]
+    assert [p["case"] for p in same] == ["E_RE1bF_Fs8", "E_RE1bF_Fs8_LS1", "E_RE1bF_Fs8_LS4"]
+    assert len({p["folder"] for p in same}) == 3
+    assert record["folders_sha256"] == mod.folder_list_sha256(record["folders"])
+    assert record["sources"]["reference_judge"]["list_equal"] is True
+
+
+def test_pairing_row_count_mismatch_is_s15(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    t45["rows"].pop()
+    by_case, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert by_case == {} and "S-15" in stop_codes(stops)
+    assert record["checks"]["1_row_count"]["ok"] is False
+
+
+def test_pairing_reordered_dirs_is_s11(mod, tmp_path):
+    """The R3d judge_C5 rows in another order than the R3c reference: source list differs."""
+    judge, t45 = pairing_case(mod, tmp_path)
+    reference = {"rows": [judge["rows"][0], judge["rows"][2], judge["rows"][1],
+                          *judge["rows"][3:]]}
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge,
+                                                                reference=reference))
+    assert stop_codes(stops) == {"S-11"}
+    assert record["sources"]["reference_judge"]["list_equal"] is False
+
+
+def test_pairing_inner_name_mismatch_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    t45["rows"][0]["case"] = "K0_top_fup3.2_Fs0"  # row 0 is K0V_top_fup3.5_Fs0
+    by_case, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert by_case == {} and stop_codes(stops) == {"S-11"}
+    assert record["checks"]["3_inner_name_equal"] is False
+
+
+def test_pairing_duplicate_folder_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"][2]["dir"] = judge["rows"][1]["dir"]
+    t45["rows"][1]["case"] = t45["rows"][0]["case"]  # keep check 3 true: only 4 fails
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stop_codes(stops) == {"S-11"} and record["checks"]["4_unique_folders"] is False
+
+
+def test_pairing_target_list_mismatch_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    _, record, stops = mod.t45_pairing(
+        t45, judge, pairing_args(mod, tmp_path, judge, cases=tuple(mod.T45_CASES[:-1])))
+    assert stop_codes(stops) == {"S-11"} and record["sources"]["script"]["equal"] is False
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"] = [r for r in judge["rows"] if r["case"] != mod.T45_CASES[-1]]
+    t45["rows"].pop()
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stop_codes(stops) == {"S-11"} and record["checks"]["4_cases_equal_target"] is False
+
+
+def test_pairing_empty_dir_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"][3]["dir"] = None
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stop_codes(stops) == {"S-11"} and record["empty_dir_cases"] == [mod.T45_CASES[2]]
+
+
+def test_pairing_case_only_differs_is_s11(mod, tmp_path):
+    """A judged case that differs from a target only in letter case: PowerShell -in would take
+    it, the exact match does not (R22-1)."""
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"].append({"case": mod.T45_CASES[0].lower(), "dir": str(tmp_path / "x" / "y")})
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert "S-11" in stop_codes(stops)
+    assert record["sources"]["case_insensitive_list_equal"] is False
+
+
+def test_pairing_list_file_mismatch_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    folders, _, _ = mod.t45_folder_list(judge)
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge,
+                                                                folders=folders))
+    assert stops == [] and record["sources"]["list_file"]["equal"] is True
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge,
+                                                                folders=folders[::-1]))
+    assert stop_codes(stops) == {"S-11"} and record["sources"]["list_file"]["equal"] is False
+
+
+def test_pairing_reference_sha_and_missing_sources_are_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    args = pairing_args(mod, tmp_path, judge)
+    args.t45_reference_sha256 = mod.R3C_JUDGE_C5_SHA256  # the real R3c sha: this file is not it
+    _, record, stops = mod.t45_pairing(t45, judge, args)
+    assert stop_codes(stops) == {"S-11"}
+    assert record["sources"]["reference_judge"]["sha256_equal"] is False
+    args = pairing_args(mod, tmp_path, judge)
+    args.t45_reference_judge = None
+    args.t45_cases_script = None
+    _, _, stops = mod.t45_pairing(t45, judge, args)
+    assert len(stops) == 2 and stop_codes(stops) == {"S-11"}
+
+
+def test_c5_bundle_writes_the_pairing_record(mod, tmp_path):
+    b, t45 = c5_bundle(mod, tmp_path)
+    data = json.loads(t45.read_text(encoding="utf-8"))
+    data["rows"][0]["case"] = "not_the_inner_name"
+    t45.write_text(json.dumps(data), encoding="utf-8")
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    assert code == 1 and doc["t45_pairing_R22_1"]["ok"] is False
+    assert any(s["reason"].startswith("S-11") for s in doc["stops"])
+    assert doc["bundle_grade"]["grade"] is None
+
+
+# ------------------------------------------------------------- rev23 R23-1 runner names
+R23_C5_NAME_DIFFERS = sorted([
+    "E_G4_Fs4_V0", "E_G4_Fs4_ph0.05_V0", "G1R_FS24_FL_top_o050_Fs0_V0", "E_G4_Fs8_LS1",
+    "E_G4_Fs8_LS4", "E_RE1bF_Fs8_LS1", "E_RE1bF_Fs8_LS4", "K0V_top_fup3.5_Fs0_LS1",
+    "K0V_top_fup3.5_Fs0_LS4"])
+"""Rev23 R23-1 expected impact: the C-5 rows whose name differs from the inner name."""
+R23_ENTRY_KEYS = ["case", "dir", "inner_name", "name_differs", "runner_file",
+                  "runner_meta_batch_name", "runner_row_cases", "runner_rows_found",
+                  "s8_metrics_keys", "checks", "ok"]
+REV22_TOOL_COMMIT = "7cd7031"
+"""The path 1 tool commit before R23-1 (rev22 R22-1 / R22-2)."""
+
+
+def name_entry(doc: dict, case: str) -> dict:
+    return next(e for e in doc["runner_name_map_R23_1"]["rows"] if e["case"] == case)
+
+
+def r23_stop(case: str, check: str) -> dict[str, str]:
+    return {"case": case, "reason": f"S-11: check {check} false (rev23 R23-1)"}
+
+
+def r23_stops(doc: dict) -> list[dict[str, str]]:
+    return [s for s in doc["stops"] if "rev23 R23-1" in s["reason"]]
+
+
+def load_rev22_tool(tmp_path: Path):
+    """The bundle tool as committed before R23-1 (skip when the commit is not reachable)."""
+    relative = "04_scripts/02_chrono/chrono_bundle_grade_4368.py"
+    try:
+        text = subprocess.run(
+            ["git", "-C", str(PROJECT_ROOT), "show", f"{REV22_TOOL_COMMIT}:{relative}"],
+            capture_output=True, check=True, encoding="utf-8").stdout
+    except (OSError, subprocess.CalledProcessError):
+        pytest.skip(f"tool commit {REV22_TOOL_COMMIT} not reachable")
+    folder = tmp_path / "rev22_tool"
+    folder.mkdir()
+    path = folder / "chrono_bundle_grade_4368_rev22.py"
+    path.write_text(text, encoding="utf-8")
+    spec = importlib.util.spec_from_file_location("chrono_bundle_grade_4368_rev22", path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module  # dataclasses resolve string annotations through it
+    sys.path.insert(0, str(CHRONO_SCRIPTS))
+    try:
+        spec.loader.exec_module(module)  # inserts its own folder into sys.path
+    finally:
+        sys.modules.pop(spec.name, None)
+        for entry_path in (str(CHRONO_SCRIPTS), str(folder)):
+            while entry_path in sys.path:
+                sys.path.remove(entry_path)
+    return module
+
+
+def test_r23_same_inner_name_rows_read_their_own_files(mod, tmp_path):
+    """Test 1: VB, LS1 and LS4 share the inner name E_RE1bF_Fs8 (outer folders differ); each
+    row takes the runner rows and s8_metrics of its own file (different values per file)."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    cases = ("E_RE1bF_Fs8", "E_RE1bF_Fs8_LS1", "E_RE1bF_Fs8_LS4")
+    for i, case in enumerate(cases):
+        def change(data, i=i):
+            data["s8_metrics"]["E_RE1bF_Fs8"]["liftoff_s"] = RUNNER_LIFTOFF_REL_S + 0.01 * i
+            next(r for r in data["rows"] if r["item"] == "F4 record")["value"] = f"file {i}"
+        edit_runner(b, tmp_path, case, change)
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    rows = {r["case"]: r for r in doc["rows"]}
+    for i, case in enumerate(cases):
+        f4 = next(it for it in rows[case]["runner_items"] if it["item"] == "F4 record")
+        assert f4["value"] == f"file {i}"
+        check = rows[case]["t_lift_check_R19_5"]
+        assert check["runner_liftoff_rel_s"] == pytest.approx(RUNNER_LIFTOFF_REL_S + 0.01 * i)
+        assert rows[case]["grade"] == "pass"
+        assert name_entry(doc, case)["inner_name"] == "E_RE1bF_Fs8"
+    assert code == 0 and r23_stops(doc) == []
+
+
+def test_r23_suffixed_row_is_found_by_the_inner_name(mod, tmp_path):
+    """Test 2: the V0 row E_G4_Fs4_V0 runs E_G4_Fs4; its runner rows and t_lift are found."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    _, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    row = next(r for r in doc["rows"] if r["case"] == "E_G4_Fs4_V0")
+    assert row["grade"] == "pass" and row["missing_inputs"] == []
+    assert len(row["runner_items"]) == len(runner_pass_rows())
+    assert row["t_lift_check_R19_5"]["ok"] is True
+    entry = name_entry(doc, "E_G4_Fs4_V0")
+    assert entry["inner_name"] == "E_G4_Fs4" and entry["name_differs"] is True
+
+
+@pytest.mark.parametrize("bundle", ["C-1", "C-2"])
+def test_r23_same_names_keep_the_rev22_output(mod, tmp_path, bundle):
+    """Test 3: with judged row name = inner name the bundle output equals the pre-R23 tool's
+    except the tool / rules strings and the new record block."""
+    old_tool = load_rev22_tool(tmp_path)
+    b = c1_bundle(tmp_path) if bundle == "C-1" else c2_bundle(tmp_path)
+    code, new = run(mod, b, tmp_path, bundle)
+    b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
+    old_code, old = run(old_tool, b, tmp_path, bundle)
+    assert new["runner_name_map_R23_1"]["name_differs_count"] == 0
+    left_out = ("tool", "rules", "runner_name_map_R23_1")
+    assert {k: v for k, v in new.items() if k not in left_out} == {
+        k: v for k, v in old.items() if k not in left_out}
+    assert code == old_code == 0
+
+
+def test_r23_only_star_rows_is_missing(mod, tmp_path):
+    """Test 4: no inner-name runner row, only ``*`` rows: the existing missing input."""
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: [r.update(case="*") for r in d["rows"]])
+    code, doc = run(mod, b, tmp_path, "C-1")
+    row = doc["rows"][0]
+    assert row["grade"] == "not_judgeable"
+    assert "runner judge rows of D1C2_0" in row["missing_inputs"]
+    entry = name_entry(doc, "D1C2_0")
+    assert entry["runner_rows_found"] == 0 and entry["runner_row_cases"] == []
+    assert entry["ok"] is True and r23_stops(doc) == [] and code == 0
+
+
+@pytest.mark.parametrize("other", ["E_G4_Fs8_LS1", "E_RE1bF_Fs8", "e_g4_fs8"])
+def test_r23_other_runner_row_case_is_s11(mod, tmp_path, other):
+    """Tests 5 / 6: a runner row named after the judged row, another row, or the inner name in
+    another letter case is S-11 (check 3)."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    edit_runner(b, tmp_path, "E_G4_Fs8_LS1", lambda d: d["rows"].append(
+        {"case": other, "item": "extra", "passed": None, "kind": "record"}))
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    assert r23_stops(doc) == [r23_stop("E_G4_Fs8_LS1", "3_runner_row_cases")]
+    entry = name_entry(doc, "E_G4_Fs8_LS1")
+    assert entry["runner_row_cases"] == sorted(["E_G4_Fs8", other]) and entry["ok"] is False
+    assert doc["runner_name_map_R23_1"]["ok"] is False
+    assert code == 1 and doc["bundle_grade"]["grade"] is None
+
+
+@pytest.mark.parametrize("other", ["E_G4_Fs8_LS1", "E_RE1bF_Fs8", "e_g4_fs8"])
+def test_r23_other_s8_metrics_key_is_s11(mod, tmp_path, other):
+    """Tests 6 / 7: an s8_metrics key other than the inner name (letter case included) is S-11
+    (check 4)."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    edit_runner(b, tmp_path, "E_G4_Fs8_LS1", lambda d: d["s8_metrics"].update(
+        {other: {"liftoff_s": RUNNER_LIFTOFF_REL_S}}))
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    assert r23_stops(doc) == [r23_stop("E_G4_Fs8_LS1", "4_s8_metrics_keys")]
+    assert name_entry(doc, "E_G4_Fs8_LS1")["s8_metrics_keys"] == sorted(["E_G4_Fs8", other])
+    assert code == 1 and doc["bundle_grade"]["grade"] is None
+
+
+@pytest.mark.parametrize("metrics", [{}, {"E_G4_Fs8": {}}])
+def test_r23_no_inner_liftoff_is_the_r19_5_stop(mod, tmp_path, metrics):
+    """Test 7: no inner-name key (or no liftoff_s in it) with t_lift items: the existing R19-5
+    not-computable stop, no R23-1 stop."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    edit_runner(b, tmp_path, "E_G4_Fs8_LS1", lambda d: d.update(s8_metrics=metrics))
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    row = next(r for r in doc["rows"] if r["case"] == "E_G4_Fs8_LS1")
+    assert "not computable" in row["t_lift_check_R19_5"]["stop"]
+    assert r23_stops(doc) == [] and name_entry(doc, "E_G4_Fs8_LS1")["checks"][
+        "4_s8_metrics_keys"] is True
+    assert code == 1
+
+
+def test_r23_empty_dir_is_s11(mod, tmp_path):
+    """Test 8: an empty judged row dir gives no inner name: S-11 (check 1)."""
+    b = c1_bundle(tmp_path)
+    b.judged[0]["dir"] = ""
+    code, doc = run(mod, b, tmp_path, "C-1")
+    entry = name_entry(doc, "D1C2_0")
+    assert entry["dir"] is None and entry["inner_name"] is None and entry["name_differs"] is None
+    assert entry["checks"]["1_dir_set"] is False and entry["checks"]["2_dir_unique"] is True
+    assert r23_stop("D1C2_0", "1_dir_set") in doc["stops"]
+    assert code == 1 and doc["bundle_grade"]["grade"] is None
+
+
+def test_r23_shared_dir_is_s11(mod, tmp_path):
+    """Test 8: two judged rows with the same full dir path: S-11 (check 2) on both."""
+    b = c1_bundle(tmp_path)
+    shared = b.judged[0]["dir"]
+    b.judged[1]["dir"] = shared
+
+    def point_at_shared(data):
+        data["meta"]["batch"] = str(Path(shared).parent)
+        data["s8_metrics"] = {"D1C2_0": data["s8_metrics"]["D1C2_1"]}
+        for runner_row in data["rows"]:
+            runner_row["case"] = "D1C2_0"
+    edit_runner(b, tmp_path, "D1C2_1", point_at_shared)
+    code, doc = run(mod, b, tmp_path, "C-1")
+    assert r23_stops(doc) == [r23_stop("D1C2_0", "2_dir_unique"),
+                              r23_stop("D1C2_1", "2_dir_unique")]
+    assert code == 1 and doc["bundle_grade"]["grade"] is None
+
+
+def test_r23_meta_batch_of_another_row_is_s11(mod, tmp_path):
+    """Test 9: an LS file whose meta.batch is the VB row's outer folder (same inner name): the
+    existing meta.batch S-11 (input error)."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    vb_dir = next(j["dir"] for j in b.judged if j["case"] == "E_G4_Fs8")
+    edit_runner(b, tmp_path, "E_G4_Fs8_LS1",
+                lambda d: d["meta"].update(batch=str(Path(vb_dir).parent)))
+    code, _ = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    assert code == 2
+
+
+def test_r23_name_map_record(mod, tmp_path):
+    """Test 10: the bundle output keeps runner_name_map_R23_1 with the name_differs rows."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    block = doc["runner_name_map_R23_1"]
+    assert list(block) == ["rule", "rows", "name_differs_count", "ok"]
+    assert block["rule"] == "rev23 R23-1" and block["ok"] is True and code == 0
+    assert len(block["rows"]) == 24 and block["name_differs_count"] == 9
+    assert sorted(e["case"] for e in block["rows"] if e["name_differs"]) == R23_C5_NAME_DIFFERS
+    entry = name_entry(doc, "E_G4_Fs4_V0")
+    assert list(entry) == R23_ENTRY_KEYS
+    assert entry["runner_file"] == "C5_E_G4_Fs4_V0.verify_S8C.json"
+    assert entry["runner_meta_batch_name"] == f"tag_E_G4_Fs4_V0_{STAMP}"
+    assert entry["runner_row_cases"] == ["E_G4_Fs4"] and entry["s8_metrics_keys"] == ["E_G4_Fs4"]
+    assert entry["runner_rows_found"] == len(runner_pass_rows())
+    assert entry["checks"] == dict.fromkeys(mod.R23_1_CHECKS, True) and entry["ok"] is True
+    assert not any(key.startswith("runner_name") for key in doc["rows"][0])
+
+
+def test_r23_name_map_of_c1_and_c3(mod, tmp_path):
+    """Test 10: C-1 maps its 10 rigid rows without a name difference, C-3 maps none."""
+    _, doc = run(mod, c1_bundle(tmp_path), tmp_path, "C-1")
+    block = doc["runner_name_map_R23_1"]
+    assert len(block["rows"]) == 10 and block["name_differs_count"] == 0 and block["ok"]
+    assert name_entry(doc, "D1C1_0")["s8_metrics_keys"] == ["D1C1_0"]
+    c3 = Bundle(tmp_path / "c3", "C3")
+    for rid in ("S-03", "S-04"):
+        c3.add_scm(entry(f"D1S_G1_{rid}", "C-3", "SCM", d1_id=rid, d1_role="judge"),
+                   {"p3b": p3b_ok(), "events": []}, scm_items(), grade="pass", gates={})
+    _, doc = run(mod, c3, tmp_path / "c3", "C-3")
+    assert doc["runner_name_map_R23_1"] == {"rule": "rev23 R23-1", "rows": [],
+                                            "name_differs_count": 0, "ok": True}
+
+
+def test_r23_checks_not_applied_are_null(mod, tmp_path):
+    """No judged row: checks 1 .. 4 null; no runner judge file: checks 3 / 4 null."""
+    b = c1_bundle(tmp_path)
+    b.judged.pop(1)
+    b.write()
+    (b.runner_dir / "C1_D1C2_2.verify_S8C.json").unlink()
+    b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
+    _, doc = run(mod, b, tmp_path, "C-1")
+    no_judged = name_entry(doc, "D1C2_1")
+    assert no_judged["checks"] == dict.fromkeys(mod.R23_1_CHECKS) and no_judged["dir"] is None
+    no_file = name_entry(doc, "D1C2_2")
+    assert no_file["runner_file"] is None and no_file["runner_row_cases"] is None
+    assert no_file["checks"] == {"1_dir_set": True, "2_dir_unique": True,
+                                 "3_runner_row_cases": None, "4_s8_metrics_keys": None}
+    assert r23_stops(doc) == []
