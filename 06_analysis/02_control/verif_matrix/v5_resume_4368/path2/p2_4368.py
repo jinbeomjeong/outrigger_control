@@ -44,6 +44,9 @@ input error (S-11). R12-1 (T4h search for every T4h read) is in ``p2_v5j.py`` u9
 the tag of its job record ``results[i]`` (rev8 R8-1 "top-level controller_tag"); ``harness --gs`` reports
 bundles as ``GS-<bundle>``, skips the rules-5.1 line counts (S-15) and accepts manifest kind ``auto`` for
 run_v5 files mixing settings (VB -> VB, LS1..LS4 -> LS, other settings -> V0, no setting = S-11).
+``chrono`` after the b9f5707 judgement (decisions 19 and 2026-11-14): criteria_id C-7a / C-7b are C-7 open-loop
+rows (rev4, counted as C-7); a V0 open-loop row without a ``v5_hydraulics`` block is normal (5.3, recorded);
+OC5PROBE rows (``r4368.role`` probe) get no O-C5 main-row block (5.4, k procedure in ``oc5k``).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -1294,6 +1297,23 @@ def series_force_recount(step_path, weight_n):
     return out
 
 
+# rules 5.2 / rev4 (82nd line): the open-loop rows are C-6 and C-7; C-7 rows may carry criteria_id C-7a / C-7b
+# (P3a_G1_B_VB_FB = C-7a, P3a_G1_B_V0_FB = C-7b), judged the same as C-7
+OPENLOOP_CIDS = ("C-6", "C-7", "C-7a", "C-7b")
+C7_ALIASES = {"C-7a": "C-7", "C-7b": "C-7"}
+
+
+def openloop_v0_without_v5(row, res):
+    """An open-loop row of v5 setting V0 (batch / manifest ``v5_setting``) whose result has no
+    ``v5_hydraulics`` block at all (decision 2026-11-14, rules 5.3)."""
+    return row.get("v5_setting") == "V0" and isinstance(res, dict) and "v5_hydraulics" not in res
+
+
+def is_probe_row(row):
+    """OC5PROBE rows (r4368.role probe): inputs of the 5.4 k procedure (oc5k) only, not O-C5 main rows."""
+    return dig(row, "r4368.role", None) == "probe" or row.get("role") == "probe"
+
+
 def expected_chrono_tag(row, res, argv):
     cid = row.get("criteria_id") or dig(row, "r4368.criteria_id", None)
     arm = dig(row, "r4368.arm", None)
@@ -1301,7 +1321,7 @@ def expected_chrono_tag(row, res, argv):
     if setting is None and isinstance(res, dict):
         setting = "VB" if dig(res, "args.extend_start_tracked", False) else "V0"
     off = arm == "off" or argv_has(argv, "--las-off")
-    if cid in ("C-6", "C-7"):
+    if cid in OPENLOOP_CIDS:
         return None, "openloop", off
     # rev9 R9-4: LS = v5 setting LS1..LS4 exactly (original 4.1 "VB / LS1~LS4 (③ on)"); an LS row needs a ③ tag
     ext = setting == "VB" or setting in LS_SETTINGS
@@ -1636,7 +1656,7 @@ def r114_launch_head(row, git_at_start, where, fnd):
 
 def row_is_openloop(row):
     cid = row.get("criteria_id") or dig(row, "r4368.criteria_id", None)
-    return cid in ("C-6", "C-7")
+    return cid in OPENLOOP_CIDS
 
 
 def r114_result_head(res, out114, where, fnd, record_only=False):
@@ -1744,6 +1764,8 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
         if kind == "openloop":
             keys = ("v5_hydraulics.controller_options.applied", "p3a.checks", "num_threads_chrono",
                     "hull_hook.mode")
+            if openloop_v0_without_v5(row, res):        # decision 2026-11-14: V0 open loop has no v5 block
+                keys = keys[1:]
         elif engine == "SCM" and not isinstance(res.get("v5_hydraulics"), dict):
             # rev8 R8-2: SCM rows without a v5_hydraulics block (V0, S6SEED) are normal; their tag is the
             # --expect-controller value with c2_setup.expect_controller.ok
@@ -1779,7 +1801,12 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
         return out
     # ---- tag (4.1, RV1-10 a)
     if kind == "openloop":
-        if dig(res, "v5_hydraulics.controller_options.applied", None) is not False:
+        if openloop_v0_without_v5(row, res):
+            # decision 2026-11-14 (rules 5.3 "V0, flow items not applicable"): a V0 open-loop run has no
+            # v5_hydraulics block; no controller is the normal state (disclosed in the judgement document)
+            out["openloop_v5_block"] = "absent (V0 open loop, normal)"
+            fnd.note(where, "V0 open-loop row without v5_hydraulics block: no controller (5.3, decision 2026-11-14)")
+        elif dig(res, "v5_hydraulics.controller_options.applied", None) is not False:
             fnd.stop("S-2", where, "open-loop row: controller_options.applied is not false")
     else:
         exp_arg = argv_value(argv, "--expect-controller")
@@ -1956,7 +1983,7 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
             out["series"] = rec
             if rec.get("t_departure_s") is None:
                 fnd.note(where, "t_D undefined: F<F_min times are missing (R2-5)")
-                if cid in ("C-8a", "C-8b"):
+                if cid in ("C-8a", "C-8b") and not is_probe_row(row):
                     fnd.undec(where, "t_D undefined (R2-5)")
             stored_td = num(dig(res, "p3b.departure.t_departure_s", None))
             if rec.get("t_departure_s") is not None and stored_td is not None and not same_value(rec["t_departure_s"], stored_td):
@@ -1985,7 +2012,10 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
                 fnd.note(where, f"R9-6: law_locked ({engine} {tgt[0]}) {'; '.join(ll['problems'])} (row outside "
                                 "C-5: J11 input missing, recorded)")
     # ---- O-C5 (7.4, S-9, S-10)
-    if cid in ("C-8a", "C-8b"):
+    if cid in ("C-8a", "C-8b") and is_probe_row(row):
+        # rules 5.4: a probe gives R_c for the k procedure (oc5k); the O-C5 main-row block does not apply
+        out["oc5"] = {"probe": True, "note": "O-C5 main-row block not applied to a probe (5.4); see oc5k"}
+    elif cid in ("C-8a", "C-8b"):
         oc = {"k_from_argv": None}
         fr, fp = fnum(argv_value(argv, "--floor-roll")), fnum(argv_value(argv, "--floor-pitch"))
         if fr is not None and fp is not None:
@@ -2059,8 +2089,9 @@ def cmd_chrono(args, repo):
             r = chrono_row(bd, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest,
                            getattr(args, "git_at_start", None))
             rows.append(r)
-            if not gs_mode and dig(row, "r4368.role", None) not in ("probe",):
-                per_cid[r["criteria_id"]] = per_cid.get(r["criteria_id"], 0) + 1
+            if not gs_mode and not is_probe_row(row):
+                cc = C7_ALIASES.get(r["criteria_id"], r["criteria_id"])    # C-7a / C-7b count as C-7 (rev4)
+                per_cid[cc] = per_cid.get(cc, 0) + 1
     real_heads = [h for h in commits if h is not None]
     if len(real_heads) > 1 and not args.gs:
         fnd.stop("S-12", "batches", f"{len(real_heads)} launch commits: {sorted(real_heads)}")

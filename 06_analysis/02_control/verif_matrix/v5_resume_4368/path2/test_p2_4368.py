@@ -1465,3 +1465,66 @@ def test_harness_gs_auto_kind_splits_mixed_settings(tmp_path, capsys):
     man.write_text(json.dumps({"files": files}), "utf-8")
     code, s = run_main(["harness", "--manifest", str(man)], capsys)
     assert code == 3 and "auto" in s["error"]
+
+
+# ------------------------------------------------------------------ chrono open loop C-7a/b, V0 block, probes
+def ol_rows_batch(tmp_path, name="batch_V5-RESUME-K1-C6C7_20990101_000000", v0_block=False, vb_block=True):
+    """C-6 VB, C-7a VB, C-7b V0 open-loop rows as the runner records them (C-7b: no v5_hydraulics block)."""
+    bd = tmp_path / name
+    rows = []
+    for case, cid, st, blk in (("P3a_G1_B_VB_prop", "C-6", "VB", True), ("P3a_G1_B_VB_FB", "C-7a", "VB", vb_block),
+                               ("P3a_G1_B_V0_FB", "C-7b", "V0", v0_block)):
+        (bd / case).mkdir(parents=True)
+        res = {"p3a": {"checks": {}}, "num_threads_chrono": 4, "hull_hook": {"mode": "fast"}}
+        if blk:
+            res["v5_hydraulics"] = {"controller_options": {"applied": False}}
+        (bd / case / "result.json").write_text(json.dumps(res), "utf-8")
+        rows.append({"case": case, "argv": ["python.exe", "run_S9.py", "openloop"], "rc": 0, "criteria_id": cid,
+                     "v5_setting": st, "pool": "pcore", "planned_pool": "pcore",
+                     "code_at_launch": {"git": {"head": "c" * 40, "dirty": [], "clean": True}}})
+    write_batch_json(bd, rows)
+    return bd
+
+
+@pytest.mark.parametrize("gs", [False, True])
+def test_c7a_c7b_are_open_loop_and_v0_without_block_is_normal(tmp_path, capsys, gs):
+    bd = ol_rows_batch(tmp_path, name="batch_V5-RESUME-K1-" + ("GS" if gs else "C6C7") + "_20990101_000000")
+    out = tmp_path / "o.json"
+    run_main(["--out", str(out), "chrono", "--batch", str(bd), "--git-at-start", "c" * 40] + (["--gs"] if gs else []),
+             capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert {r["case"]: r["kind"] for r in rep["rows"]} == {"P3a_G1_B_VB_prop": "openloop", "P3a_G1_B_VB_FB": "openloop",
+                                                          "P3a_G1_B_V0_FB": "openloop"}
+    assert not any(s["code"] in ("S-2", "S-3", "S-11") for s in rep["stops"]), rep["stops"]
+    assert not any("liftoff_approach_slow" in u["why"] for u in rep["undecidable"])
+    if not gs:
+        assert rep["rows_per_criteria_id"] == {"C-6": 1, "C-7": 2}              # C-7a / C-7b count as C-7
+        assert any("V0 open-loop row without v5_hydraulics block" in r["what"] for r in rep["records"])
+    # a VB open-loop row without the block is still S-2 (S-11 in G-S: the applied key is required)
+    bd = ol_rows_batch(tmp_path / "b", name=bd.name, vb_block=False)
+    run_main(["--out", str(out), "chrono", "--batch", str(bd), "--git-at-start", "c" * 40] + (["--gs"] if gs else []),
+             capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert ("S-11" if gs else "S-2") in rep["stop_codes"]
+
+
+def test_probe_rows_get_no_oc5_main_row_block(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.0, 1.5])
+    bd = make_batch(tmp_path, res, cid="C-8a", name="batch_V5-RESUME-K1-OC5PROBE_20990101_000000")
+    b = json.loads((bd / "batch.json").read_text("utf-8"))
+    b["cases"][0]["r4368"] = {"role": "probe", "criteria_id": "C-8a"}
+    (bd / "batch.json").write_text(json.dumps(b), "utf-8")
+    np.savez(bd / b["cases"][0]["case"] / "step_series.npz", t_s=np.round(np.arange(0.0, 7.0, 0.001), 6),
+             F_cyl_N=np.full((7000, 4), 95000.0), scm_crawler_normal_N=np.full(7000, 1e5),
+             law_locked=np.ones((7000, 4), dtype=np.int8))                   # 7 s probe: no departure
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, (rep["stops"], rep["undecidable"])
+    assert rep["rows"][0]["oc5"]["probe"] is True and rep["rows_per_criteria_id"] == {}
+    # the same row as an O-C5 main row (no probe role) keeps the main-row block (no departure -> undecidable)
+    b["cases"][0]["r4368"] = {"criteria_id": "C-8a"}
+    (bd / "batch.json").write_text(json.dumps(b), "utf-8")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 1 and any("O-C5" in u["why"] or "t_D undefined" in u["why"] for u in rep["undecidable"])

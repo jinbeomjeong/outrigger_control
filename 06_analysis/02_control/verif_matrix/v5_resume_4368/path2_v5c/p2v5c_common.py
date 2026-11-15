@@ -78,8 +78,11 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # bad_t4h_file for a t4h_file key with None / non-string / empty value); before: e5d769b9...
 # p2_4368 after user decision 19 (dynamics-expert commit c969b57: grid run tag from its job record,
 # harness --gs); before: rev12 6d41462 a948d9a1...
+# p2_4368 after the b9f5707 Chrono judgement (dynamics-expert branch z4372-p2chrono: C-7a / C-7b open loop,
+# V0 open loop without v5_hydraulics block normal, no O-C5 main-row block on probes; decisions 19 and
+# 2026-11-14); the functions used here are unchanged; before: c969b57 424e12f9...
 P2_V5J_SHA = "69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db"
-P2_CORE_SHA = "424e12f98ba2441b6d51eef55d3ee5c2ae7be49e38413b34532c78ac53a22c67"
+P2_CORE_SHA = "0ccc518695d63bf7a3a4d7ebf164a5047833d570226f44e09578b9175da6bcd9"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
