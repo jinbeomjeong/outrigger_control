@@ -266,6 +266,27 @@ def _floor_flat_from_label(label: str) -> bool:
     return label.strip().lower() == "flat"
 
 
+def bracket_crawler_normal(rec, res: dict):
+    """rev6 R6-B1 / rev15 R15-3 10 Hz crawler normal: `F_crawler` [N, 3] (world, N) . unit
+    `floor_plane.normal_world`, on `record.npz` `t`. Returns (normal (N,), t (N,), problem); (None, None,
+    problem) when a source is missing or malformed."""
+    if "F_crawler" not in rec.files or "t" not in rec.files:
+        return None, None, "record.npz F_crawler / t missing"
+    fc = np.asarray(rec["F_crawler"], float)
+    t = np.asarray(rec["t"], float)
+    if fc.ndim != 2 or fc.shape[1] != 3 or fc.shape[0] != len(t):
+        return None, None, f"record.npz F_crawler shape {list(fc.shape)} vs t {len(t)}"
+    nw = (res.get("floor_plane") or {}).get("normal_world") if isinstance(res, dict) else None
+    try:
+        n = np.asarray(nw, float).reshape(3)
+    except (TypeError, ValueError):
+        return None, None, "result.json floor_plane.normal_world missing or not a 3-vector"
+    norm = float(np.linalg.norm(n))
+    if not np.isfinite(norm) or norm <= 0.0:
+        return None, None, "result.json floor_plane.normal_world zero / not finite"
+    return fc @ (n / norm), t, ""
+
+
 def load_row(folder: Path, engine: str, argv=None) -> Row:
     folder = Path(folder)
     res_p = folder / "result.json"
@@ -340,9 +361,23 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
             t_cr = tF
             cr_basis = "1ms"
         else:
-            cr = np.asarray(rec["F_crawler"], float)[:, 2]
-            t_cr = np.asarray(rec["t"], float)
-            cr_basis = "bracket_10Hz"
+            # rev6 R6-B1 10 Hz bracket source (rev15 R15-3 for D-29: the same source): crawler force
+            # `record/record.npz` `F_crawler` [N, 3] (N, world) projected on `result.json`
+            # `floor_plane.normal_world`, time axis `record.npz` `t` (0.1 s), phases = `phases` +
+            # `settings.start_t_s` (offset below). Any source missing -> t_lift not computed (판정 불가).
+            cr, t_cr, why = bracket_crawler_normal(rec, res)
+            # L1-R: rev6 R6-B1. L2b without the 1 ms `crawler_normal_N` (V0 rows): the same bracket only
+            # under the rev15 D-29 reading (user decision 2026-11-14), i.e. only once rev15 is in the
+            # sealed list; before that the L2b t_lift is not defined (rev6 D-29 = 1 ms). The engine comes
+            # from the batch.json argv (p2_chrono.engine_of).
+            if engine == "l2b" and not R.d29_l2b_bracket_enabled():
+                cr_basis = "bracket_10Hz_d29_pending_rev15"
+                notes.append("L2b pads.npz crawler_normal_N absent: t_lift not computed until rev15 D-29 is sealed")
+            elif cr is None:
+                cr_basis = "bracket_10Hz_source_missing"
+                notes.append("10 Hz bracket source missing: " + why)
+            else:
+                cr_basis = "bracket_10Hz"
         pad_n = np.asarray(pads["N"], float) if "N" in pads.files else None
         t_pad = tF if pad_n is not None else None
         sink = None
@@ -475,6 +510,8 @@ def t_lift(row: Row):
 
 
 def t_lift_bracket(row: Row):
+    if row.cr_basis in ("bracket_10Hz_d29_pending_rev15", "bracket_10Hz_source_missing"):
+        return None, row.cr_basis, None
     if row.cr is None:
         return None, None, None
     ph = phase_at(row, row.t_cr)
