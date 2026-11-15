@@ -539,6 +539,39 @@ def t_lift_sus(row: Row):
     return float(row.t_cr[j]) if j < len(row.t_cr) else None
 
 
+def t_lift_sus_d29(row: Row, t=None, cr=None):
+    """rev21 R21-1 new D-29 t_lift (v5 rev6 5 t_lift,sus): the first sample whose phase is not idle / check / touch
+    and from which crawler normal <= 0.01 W (W = 376.7 kN) holds to the end of the record. None when the last
+    sample is above the threshold (not held to the end) or no allowed-phase sample remains. Engine absolute time
+    (phases + settings.start_t_s, rev6 R6-1). `t` / `cr` default to the row's crawler series."""
+    t = row.t_cr if t is None else np.asarray(t, float)
+    cr = row.cr if cr is None else np.asarray(cr, float)
+    if t is None or cr is None or len(cr) == 0:
+        return None
+    thr = R.W_FRACTION * R.W_TLIFT_SUS_N
+    above = np.where(cr > thr + R.CMP_TOL)[0]          # 7.6: "<= 0.01 W" read as not (> 0.01 W + 1e-9)
+    j = int(above[-1]) + 1 if above.size else 0
+    if j >= len(cr):
+        return None
+    ph = phase_at(row, t[j:])
+    ok = ~np.isin(ph, list(R.TLIFT_SKIP_PHASES) + ["<before>"])
+    idx = np.where(ok)[0]
+    return float(t[j + int(idx[0])]) if idx.size else None
+
+
+def up_to_control_instant(row: Row, t_s):
+    """rev21 R21-2 rounding: the first `record/record.npz` `t` sample >= t_s - 1e-9 (chosen from the array, no ceil).
+    None when the record or such a sample is missing."""
+    if t_s is None:
+        return None
+    rp = row.folder / "record" / "record.npz"
+    if not rp.exists():
+        return None
+    tr = np.asarray(np.load(rp)["t"], float)
+    k = np.where(tr >= t_s - R.CMP_TOL)[0]
+    return float(tr[k[0]]) if k.size else None
+
+
 def loc_times(row: Row):
     locs = [t for t, _ in events_named(row, R.EVENT_LOC)]
     revs = [t for t, _ in events_named(row, R.EVENT_LOC_REVOKED)]
@@ -965,6 +998,25 @@ def d8_force(row: Row, params, rigid_nsc_hold: bool):
     tl, basis = t_lift(row)
     out = {"clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; "
                      "R40-2 hold for rigid NSC crawler", "t_lift_s": tl, "t_lift_basis": basis}
+    if row.engine == "l2b":
+        # rev21 R21-1: the D-29 t_lift of L2b D8 items. 1 ms rows: t_lift,sus (`1ms_sus`); the first <= 0 sample
+        # (rev6 5 t_lift) is kept as a record. V0 rows (10 Hz bracket, rev15 R15-3): t_b unchanged; the 10 Hz
+        # t_lift,sus counterpart is a record ("기록 결측" when absent). rev21 R21-2 rounding up to the first
+        # record.npz control instant is recorded (path 2 has no runner t_lift comparison item).
+        if row.cr_basis == "1ms":
+            sus = t_lift_sus_d29(row)
+            out.update(t_lift_first_le0_record_s=tl, t_lift_s=sus, t_lift_basis="1ms_sus",
+                       t_lift_sus_up_10Hz_record_s=up_to_control_instant(row, sus),
+                       clause_t_lift="rev21 R21-1 (v5 rev6 5 t_lift,sus, W = 376.7 kN)")
+            tl = sus
+            if sus is None:
+                out.update(verdict="indeterminate", reason="no t_lift,sus (crawler not <= 0.01 W to the record end)",
+                           stop="rev21 R21-1: no t_lift,sus -> D8 items 판정 불가, stop the bundle and ask")
+                return out
+        elif basis == "bracket_10Hz":
+            s10 = t_lift_sus_d29(row)
+            out["t_lift_sus_10Hz_record_s"] = s10 if s10 is not None else "기록 결측"
+            out["t_lift_sus_10Hz_differs_from_t_b"] = None if s10 is None else not (abs(s10 - tl) <= R.CMP_TOL)
     m = min_force_after(row, tl, None, params["F_min_N"])
     if m is None:
         out.update(verdict="indeterminate", reason="no crawler lift-off")

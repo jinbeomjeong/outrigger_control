@@ -1108,7 +1108,7 @@ def t_seal(tmp, rules_repo=None):
           rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") for r, w, role in R.SEALED)
           and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
     # rev18 R18-1 (다): rev16..rev18 in the Chrono tool list, raw only, seal sha = .sha256 first token; rev18 wins
-    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd"}
+    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949"}
     for n, pre in want16.items():
         reln = f"06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev{n}.md"
         check(f"seal: rev{n} listed, raw only, {pre}, match, = .sha256 first token (R18-1)",
@@ -1120,9 +1120,9 @@ def t_seal(tmp, rules_repo=None):
         pn.write_bytes(keepn + b"x")
         check(f"seal: rev{n} edited -> S-1", not R.seal_check(repo)["ok"])
         pn.write_bytes(keepn)
-    rel20 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md"
-    check("seal: only rev20 wins (latest sealed revision)",
-          [r for r, w, role in R.SEALED if "wins" in role] == [rel20])
+    rel21 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md"
+    check("seal: only rev21 wins (latest sealed revision)",
+          [r for r, w, role in R.SEALED if "wins" in role] == [rel21])
     check("seal: rev15 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
           and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
@@ -1876,6 +1876,86 @@ def t_e7_tool(tmp):
           and "S-11" in it5["E-7"].get("stop", ""), it5["E-7"])
 
 
+def t_tlift_sus(tmp):
+    """rev21 R21-1 / R21-2: the D-29 t_lift of L2b D8 items = t_lift,sus (1 ms crawler <= 0.01 W, W = 376.7 kN,
+    held to the record end, phase not idle / check / touch); V0 rows keep the R15-3 10 Hz t_b with the 10 Hz
+    t_lift,sus counterpart as a record; rounding up to the first record.npz control instant."""
+    start = 3.0
+    thr = 0.01 * 376700.0
+
+    def l2b_with_cr(name, fn, **kw):
+        d = write_l2b(tmp / name, **kw)
+        z = dict(np.load(d / "pads.npz"))
+        z["crawler_normal_N"] = fn(z["t"], z["crawler_normal_N"].copy())
+        np.savez(d / "pads.npz", **z)
+        return C.load_row(d, "l2b", L2B_ARGV)
+    r1 = l2b_with_cr("sus_hold", lambda t, c: c)
+    d1 = C.d8_force(r1, PARAMS, rigid_nsc_hold=True)
+    check("R21-1 held to the end: t_lift,sus = first sample <= 0.01 W held to the end (23.0 s), basis 1ms_sus",
+          d1["t_lift_basis"] == "1ms_sus" and abs(d1["t_lift_s"] - 23.0) < 1e-9
+          and d1["t_lift_first_le0_record_s"] == d1["t_lift_s"], {k: d1.get(k) for k in ("t_lift_s", "t_lift_basis")})
+    r2 = l2b_with_cr("sus_recontact", lambda t, c: np.where((t >= start + 25.0) & (t < start + 25.5), 50000.0, c))
+    d2 = C.d8_force(r2, PARAMS, rigid_nsc_hold=True)
+    check("R21-1 re-contact after the first zero: t_lift,sus after the last re-contact (28.5 s); first <= 0 kept",
+          abs(d2["t_lift_s"] - 28.5) < 1e-9 and abs(d2["t_lift_first_le0_record_s"] - 23.0) < 1e-9,
+          (d2["t_lift_s"], d2["t_lift_first_le0_record_s"]))
+    r2b = l2b_with_cr("sus_small", lambda t, c: np.where((t >= start + 25.0) & (t < start + 25.5), thr, c))
+    d2b = C.d8_force(r2b, PARAMS, rigid_nsc_hold=True)
+    check("R21-1 crawler exactly 0.01 W after the zero counts as <= 0.01 W (7.6) -> t_lift,sus 23.0 s",
+          abs(d2b["t_lift_s"] - 23.0) < 1e-9, d2b["t_lift_s"])
+    r3 = l2b_with_cr("sus_none", lambda t, c: np.where(t >= t[-1] - 0.0005, 2 * thr, c))
+    d3 = C.d8_force(r3, PARAMS, rigid_nsc_hold=True)
+    check("R21-1 crawler above 0.01 W at the record end -> no t_lift,sus -> D8 판정 불가 + stop",
+          d3["verdict"] == "indeterminate" and d3["t_lift_s"] is None and "R21-1" in d3.get("stop", ""), d3.get("reason"))
+    r4 = l2b_with_cr("sus_phase", lambda t, c: np.where(t >= start + 3.0, 0.0, c))
+    d4 = C.d8_force(r4, PARAMS, rigid_nsc_hold=True)
+    check("R21-1 phase rule: crawler 0 from the check / touch phases -> t_lift,sus = first level sample (18.0 s)",
+          abs(d4["t_lift_s"] - 18.0) < 1e-9, d4["t_lift_s"])
+    it, keys, _ = K.items_d8p(r3, PARAMS, judged=True, hold=True)
+    b = K.bundle_status([{"case": "x", "items": it, "judged_keys": keys, "status": C.row_status(it, keys)}])
+    check("R21-1 missing t_lift,sus stops the bundle (판정 불가 with the stop listed)",
+          b["status"] == "판정 불가" and any("R21-1" in s for s in b["stops"]), b["stops"])
+    # R21-2 rounding up to the first record.npz control instant (t >= t_sus - 1e-9)
+    check("R21-2 rounding: t_lift,sus on a control instant -> same instant", abs(d1["t_lift_sus_up_10Hz_record_s"] - 23.0)
+          < 1e-9, d1["t_lift_sus_up_10Hz_record_s"])
+    check("R21-2 rounding boundary: 23.0 + 5e-10 -> 23.0 (within 1e-9), 23.0 + 2e-9 -> 23.1, 23.05 -> 23.1",
+          abs(C.up_to_control_instant(r1, 23.0 + 5e-10) - 23.0) < 1e-12
+          and abs(C.up_to_control_instant(r1, 23.0 + 2e-9) - 23.1) < 1e-9
+          and abs(C.up_to_control_instant(r1, 23.05) - 23.1) < 1e-9)
+    check("R21-2 rounding: past the last control instant or no time -> None",
+          C.up_to_control_instant(r1, 200.0) is None and C.up_to_control_instant(r1, None) is None)
+    check("R21-2 rounding uses engine absolute times (pads t and record t from 3.0 s; phases + start_t_s)",
+          r1.t_offset == start and abs(C.first_phase_time(r1, "level") - (start + 15.0)) < 1e-9)
+    # V0 L2b (no 1 ms crawler_normal_N): R15-3 t_b kept; 10 Hz t_lift,sus counterpart recorded
+    for name, fz, want in (("sus_v0", lambda t: np.where(t < 23.0, 300000.0, 0.0), 23.0),
+                           ("sus_v0_recont", lambda t: np.where((t < 23.0) | ((t >= 30.0) & (t < 31.0)), 300000.0, 0.0),
+                            31.0),
+                           ("sus_v0_none", lambda t: np.where((t < 23.0) | (t >= t[-1] - 0.05), 300000.0, 0.0), None)):
+        dv = write_l2b(tmp / name)
+        _set_npz(dv / "pads.npz", crawler_normal_N=None)
+        rec = dict(np.load(dv / "record" / "record.npz"))
+        fc = np.zeros((len(rec["t"]), 3))
+        fc[:, 2] = fz(rec["t"])
+        rec["F_crawler"] = fc
+        np.savez(dv / "record" / "record.npz", **rec)
+        rj = json.loads((dv / "result.json").read_text(encoding="utf-8"))
+        rj["floor_plane"] = {"normal_world": [0.0, 0.0, 1.0]}
+        (dv / "result.json").write_text(json.dumps(rj), encoding="utf-8")
+        rv = C.load_row(dv, "l2b", L2B_ARGV)
+        dd = C.d8_force(rv, PARAMS, rigid_nsc_hold=True)
+        rec10 = dd.get("t_lift_sus_10Hz_record_s")
+        okv = dd["t_lift_basis"] == "bracket_10Hz" and abs(dd["t_lift_s"] - 23.0) < 1e-9
+        okv = okv and (rec10 == "기록 결측" if want is None else abs(rec10 - want) < 1e-9)
+        check(f"R21-1 V0 ({name}): t_b 23.0 s kept (R15-3), 10 Hz t_lift,sus record = {want or '기록 결측'}, "
+              f"differs flag {want not in (None, 23.0)}", okv
+              and dd["t_lift_sus_10Hz_differs_from_t_b"] == (None if want is None else want != 23.0),
+              {k: dd.get(k) for k in ("t_lift_s", "t_lift_basis", "t_lift_sus_10Hz_record_s")})
+    rs = scm_row(tmp, scm_spec(), "sus_scm")
+    ds = C.d8_force(rs, PARAMS, rigid_nsc_hold=False)
+    check("R21-1 scope: SCM rows keep the rev6 5 t_lift (1ms), no t_lift,sus basis", ds["t_lift_basis"] == "1ms",
+          ds["t_lift_basis"])
+
+
 def t_pairs():
     """rev19 R19-6: C-5 VB <-> V0 six pairs from the batch rows and the manifest rows together."""
     import p2_b_c5 as B5
@@ -1924,6 +2004,7 @@ def main():
     t_psc(tmp)
     t_e7_tool(tmp)
     t_pairs()
+    t_tlift_sus(tmp)
     t_seal(tmp, a.rules_repo)
     t_cli(tmp)
     t_resolve(tmp)
