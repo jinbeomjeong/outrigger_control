@@ -602,16 +602,17 @@ REV16_18_SHA256 = {
     "v5_resume_4368_rules_rev19.md": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
     "v5_resume_4368_rules_rev20.md": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
     "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
 }
-"""Rev18 R18-1 2 / rev19 R19-8 2 / rev20 R20-4 2: rev16 .. rev20 in the Chrono judge seal list
-(sha of each ``.sha256``)."""
+"""Rev18 R18-1 2 .. rev22 R22-2: rev16 .. rev22 in the Chrono judge seal list (sha of each
+``.sha256``)."""
 
 
 def test_rev16_to_rev18_in_the_seal_list(mod):
-    """Rev20 R20-4 2: the path 1 Chrono judge checks rev16 .. rev20; rev13 / rev14 stay out."""
+    """Rev22 R22-2: the path 1 Chrono judge checks rev16 .. rev22; rev13 / rev14 stay out."""
     for name, sha in REV16_18_SHA256.items():
         assert mod.RULES_SEALS[name] == sha
-    assert "rev15 .. rev21" in mod.RULES_DESCRIPTION and "R21-3" in mod.RULES_DESCRIPTION
+    assert "rev15 .. rev22" in mod.RULES_DESCRIPTION and "R22-2" in mod.RULES_DESCRIPTION
 
 
 def test_seals_command_checks_rev16_to_rev18(mod, capsys):

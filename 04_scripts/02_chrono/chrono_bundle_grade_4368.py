@@ -24,7 +24,11 @@ it runs no simulation and no other judge:
   (:func:`safe_stop_conditions`); every P3 / G6 item becomes a record.
 * Bundle rules (:func:`bundle_grade`): C-1 / C-2 / C-3 = ``d1_selection_rules.md`` 11 (+ rev1),
   C-5 = v5 criteria revision 12 / 12a / 12b (T4 / T5 from ``chrono_t45_replay`` ``--t45``, J11,
-  J-P3, D2 record, P3 items, exactly the six VB / V0 pairs of revision 12 2.1 or S-15); bundle
+  J-P3, D2 record, P3 items, exactly the six VB / V0 pairs of revision 12 2.1 or S-15); the t45
+  rows are paired with the judged rows by the t45 input folder order, not by name (rev22 R22-1,
+  :func:`t45_pairing`: list rebuilt from ``judge_C5.json``, fixed against the R3c one
+  ``--t45-reference-judge``, ``$T45Cases`` of ``--t45-cases-script``, optional ``--t45-folders``;
+  record ``t45_pairing_R22_1``; a count mismatch is S-15, any other mismatch S-11); bundle
   status by original 8.1 (not judgeable > fail > pass), the row phrase counts the safe stops
   apart.
 * Record bundles: C-6 / C-7 ``result.json`` ``p3a`` (P3a-1 .. 5, spec 11047 FLAG), C-8 the
@@ -39,7 +43,8 @@ CLI (Chrono-dev or python-dev, no simulation)::
     python -I -B -X utf8 04_scripts/02_chrono/chrono_bundle_grade_4368.py grade --bundle C-1 \
         --git-at-start <R2> --batch <07_results/S9/batch_...> [--batch ...] \
         --rows-judge <judge_C1.json> --runner-judge-dir <runner_judge> --out <out.json>
-    ... grade --bundle C-5 ... --t45 <t45_C5.json>
+    ... grade --bundle C-5 ... --t45 <t45_C5.json> --t45-reference-judge <R3c judge_C5.json> \
+        --t45-cases-script <R3c run_path1_r3c.ps1> [--t45-folders <list>]
     ... grade --bundle C-6C7 --git-at-start <R2> --batch <...C6C7...> --out <out.json>
     ... grade --bundle C-8 --git-at-start <R2> --batch <...OC5...> --oc5 <a.json> --oc5 <b.json> \
         --fmin-time <a.json> --fmin-time <b.json> --out <out.json>
@@ -53,7 +58,9 @@ VB-specific failure, S-9 / S-10 record) or a seal mismatch; 2 an input is missin
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import sys
 import traceback
 from collections import Counter
@@ -71,10 +78,11 @@ import chrono_rows_judge_4368 as rows_judge  # noqa: E402 - needs the path above
 
 InputError = rows_judge.InputError
 
-TOOL_VERSION = ("chrono_bundle_grade_4368 v3 (python-expert 2026-11-15, rules rev18 R18-2, rev19, "
-                "rev21)")
+TOOL_VERSION = ("chrono_bundle_grade_4368 v4 (python-expert 2026-11-15, rules rev18 R18-2, rev19, "
+                "rev21, rev22 R22-1)")
 RULES_TEXT = ("rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 "
-              "R19-1 .. R19-6, rev21 R21-1 / R21-2; original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
+              "R19-1 .. R19-6, rev21 R21-1 / R21-2, rev22 R22-1 (t45 pairing by input folder "
+              "order); original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
               "d1_selection_rules.md 7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; "
               "rev6 R6-A / R6-B4 / R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py")
 
@@ -139,6 +147,13 @@ T45_CASES = (
     "K0V_top_fup3.5_Fs0_LS4", "E_G4_Fs8_LS4", "E_RE1bF_Fs8_LS4",
 )
 """v5 criteria revision 6 3 rows 1 .. 18 (VB 12 + LS 6): the T4 / T5 rows."""
+R3C_JUDGE_C5_SHA256 = "c1ba93823eee39c47b099042193ad54e29ae513bb7cbda3ae52a8437b27ad76a"
+"""Rev22 R22-1: sha256 of the R3c ``judge_C5.json`` the t45 input folder list was built from
+(``--t45-reference-sha256`` default)."""
+T45_SCRIPT_RE = re.compile(r"\$T45Cases\s*=\s*@\((.*?)\)", re.S)
+R22_1_RULE = ("rev22 R22-1: t45 row i <-> i-th t45 input folder (judge_C5.json rows in order, "
+              "case in T45_CASES, their dir) <-> the judged row with that dir; checks 1 (count, "
+              "S-15) and 2 .. 4 (dir, inner name, unique, target set; S-11)")
 T45_CRITERIA = "rev7"
 """v5 criteria revision 7 (E exclusion, guard, B1) applies from the next Chrono T4 judgement."""
 J11_PASS_STATES = ("pass", "no_fallback_leg", "not_computed")
@@ -861,20 +876,161 @@ def j11_item(judged_items: dict[str, Any], is_judged: bool) -> dict[str, Any]:
                 n_late=block.get("n_late_fallback_R6_B7"))
 
 
-def t45_rows(doc: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
-    """``chrono_t45_replay`` rows by case (revision 7 output with ``--t5``)."""
-    if doc is None:
-        return {}
+def check_t45_criteria(doc: dict[str, Any]) -> None:
+    """The ``--t45`` output must be the revision 7 replay (v5 criteria revision 7 94)."""
     if doc.get("criteria") != T45_CRITERIA:
         raise InputError(f"--t45: criteria {doc.get('criteria')!r}, revision 7 output needed "
                          "(v5 criteria revision 7 94)")
-    out: dict[str, dict[str, Any]] = {}
-    for row in doc.get("rows") or []:
+
+
+def t45_folder_list(judge_doc: dict[str, Any] | None, *, ignore_case: bool = False
+                    ) -> tuple[list[str], list[str], list[str]]:
+    """Rev22 R22-1: (folders, cases, empty-dir cases) of the t45 input list rebuilt from a
+    ``judge_C5.json``: its ``rows`` in order, the rows whose ``case`` is in :data:`T45_CASES`
+    (exact match; ``ignore_case`` mimics PowerShell ``-in``), their ``dir``."""
+    wanted = {case.casefold() for case in T45_CASES} if ignore_case else set(T45_CASES)
+    folders, cases, empty = [], [], []
+    for row in (judge_doc or {}).get("rows") or []:
         case = str(row.get("case"))
-        if case in out:
-            raise InputError(f"--t45 lists {case} twice")
-        out[case] = row
-    return out
+        if (case.casefold() if ignore_case else case) not in wanted:
+            continue
+        folder = row.get("dir")
+        if not folder:
+            empty.append(case)
+        folders.append("" if not folder else str(folder))
+        cases.append(case)
+    return folders, cases, empty
+
+
+def folder_list_sha256(folders: list[str]) -> str:
+    """sha256 of a folder list written as UTF-8 text, one path per line, each ending in ``\\n``."""
+    return hashlib.sha256("".join(f"{folder}\n" for folder in folders).encode("utf-8")).hexdigest()
+
+
+def read_folder_list(path: Path) -> list[str]:
+    """A t45 input folder list file: a JSON list of paths, or one path per line."""
+    text = path.read_text(encoding="utf-8-sig")
+    try:
+        value = json.loads(text)
+    except ValueError:
+        return [line.strip() for line in text.splitlines() if line.strip()]
+    if not isinstance(value, list):
+        raise InputError(f"--t45-folders {path}: a JSON list of paths needed")
+    return [str(folder) for folder in value]
+
+
+def script_t45_cases(path: Path) -> list[str]:
+    """The ``$T45Cases = @(...)`` names of a run_path1 PowerShell script (single-quoted)."""
+    text = path.read_text(encoding="utf-8-sig")
+    match = T45_SCRIPT_RE.search(text)
+    if match is None:
+        raise InputError(f"--t45-cases-script {path}: no $T45Cases = @(...) list")
+    return re.findall(r"'([^']*)'", match.group(1))
+
+
+def inner_name(folder: str) -> str:
+    """Last name of a path written with \\ or / (the run folder's ``--only`` case)."""
+    return re.split(r"[\\/]", folder.rstrip("\\/"))[-1]
+
+
+def _pairing_sources(args: argparse.Namespace, judge_doc: dict[str, Any] | None,
+                     folders: list[str]) -> tuple[dict[str, Any], list[str]]:
+    """Rev22 R22-1 evidence chain: script case list, case-insensitive list, reference judge
+    (R3c ``judge_C5.json``) list and the optional list file; returns (record, S-11 reasons)."""
+    reasons: list[str] = []
+    record: dict[str, Any] = {}
+    if args.t45_cases_script:
+        script_cases = script_t45_cases(Path(args.t45_cases_script))
+        record["script"] = {"path": args.t45_cases_script,
+                            "sha256": rows_judge.sha256_file(Path(args.t45_cases_script)),
+                            "cases": script_cases, "equal": script_cases == list(T45_CASES)}
+        if not record["script"]["equal"]:
+            reasons.append("run script $T45Cases differs from T45_CASES")
+    else:
+        reasons.append("no --t45-cases-script: $T45Cases not compared with T45_CASES")
+    folded, _, _ = t45_folder_list(judge_doc, ignore_case=True)
+    record["case_insensitive_list_equal"] = folded == folders
+    if folded != folders:
+        reasons.append("case-insensitive selection gives another folder list")
+    if args.t45_reference_judge:
+        ref_path = Path(args.t45_reference_judge)
+        ref_sha = rows_judge.sha256_file(ref_path)
+        ref_folders, _, _ = t45_folder_list(read_json(ref_path, "--t45-reference-judge"))
+        record["reference_judge"] = {"path": str(ref_path), "sha256": ref_sha,
+                                     "sha256_expected": args.t45_reference_sha256,
+                                     "sha256_equal": ref_sha == args.t45_reference_sha256,
+                                     "list_equal": ref_folders == folders,
+                                     "list_sha256": folder_list_sha256(ref_folders)}
+        if ref_sha != args.t45_reference_sha256:
+            reasons.append("reference judge_C5.json sha256 is not the R3c one")
+        if ref_folders != folders:
+            reasons.append("folder list of the reference judge_C5.json differs (source fix)")
+    else:
+        reasons.append("no --t45-reference-judge: the source list is not fixed")
+    if args.t45_folders:
+        listed = read_folder_list(Path(args.t45_folders))
+        record["list_file"] = {"path": args.t45_folders,
+                               "sha256": rows_judge.sha256_file(Path(args.t45_folders)),
+                               "equal": listed == folders}
+        if listed != folders:
+            reasons.append("--t45-folders list differs from the rebuilt list")
+    return record, reasons
+
+
+def _pairing_checks(t45_doc: dict[str, Any], judge_doc: dict[str, Any] | None,
+                    folders: list[str], cases: list[str]) -> tuple[dict[str, Any], list[str],
+                                                                   list[str]]:
+    """Rev22 R22-1 checks 1 .. 4: (record, S-15 reasons, S-11 reasons)."""
+    t45 = t45_doc.get("rows") or []
+    dirs = {str(row.get("case")): row.get("dir") for row in (judge_doc or {}).get("rows") or []}
+    count_ok = len(t45) == len(folders)
+    pairs = [{"index": i, "case": case, "folder": folder,
+              "t45_case": str(row.get("case")) if count_ok else None,
+              "dir_equal": dirs.get(case) == folder,
+              "inner_name_equal": count_ok and str(row.get("case")) == inner_name(folder)}
+             for i, (case, folder, row) in enumerate(zip(cases, folders, t45 if count_ok
+                                                         else [{}] * len(folders),
+                                                         strict=True))]
+    checks = {"1_row_count": {"t45_rows": len(t45), "folders": len(folders), "ok": count_ok},
+              "2_dir_equal": all(p["dir_equal"] for p in pairs),
+              "3_inner_name_equal": count_ok and all(p["inner_name_equal"] for p in pairs),
+              "4_unique_folders": len(set(folders)) == len(folders),
+              "4_unique_cases": len(set(cases)) == len(cases),
+              "4_cases_equal_target": set(cases) == set(T45_CASES)}
+    s15 = [] if count_ok else [f"t45 rows {len(t45)} != input folders {len(folders)}"]
+    s11 = [name for name, ok in checks.items() if name != "1_row_count" and not ok]
+    return {"checks": checks, "pairs": pairs}, s15, s11
+
+
+def t45_pairing(t45_doc: dict[str, Any], judge_doc: dict[str, Any] | None,
+                args: argparse.Namespace) -> tuple[dict[str, dict[str, Any]], dict[str, Any],
+                                                   list[dict[str, str]]]:
+    """Rev22 R22-1: t45 rows paired with the judged rows by the t45 input folder order.
+
+    i-th t45 row <-> i-th folder of the list rebuilt from ``judge_C5.json``
+    (:func:`t45_folder_list`) <-> the judged row with that ``dir``. Returns (t45 row by judged
+    case, the pairing record, stops); any stop leaves the pairing empty (the T4 / T5 items are
+    then not judgeable).
+    """
+    check_t45_criteria(t45_doc)
+    folders, cases, empty = t45_folder_list(judge_doc)
+    record: dict[str, Any] = {"rule": R22_1_RULE, "target_cases": len(T45_CASES),
+                              "folders": folders, "folders_sha256": folder_list_sha256(folders),
+                              "empty_dir_cases": empty}
+    sources, s11 = _pairing_sources(args, judge_doc, folders)
+    checked, s15, failed = _pairing_checks(t45_doc, judge_doc, folders, cases)
+    record.update(sources=sources, **checked)
+    if empty:
+        s11.append(f"judged rows without dir: {empty}")
+    s11 += [f"check {name} false" for name in failed]
+    stops = [{"case": "*", "reason": f"S-15: {text} (rev22 R22-1)"} for text in s15]
+    stops += [{"case": "*", "reason": f"S-11: {text} (rev22 R22-1)"} for text in s11]
+    record["ok"] = not stops
+    if stops:
+        return {}, record, stops
+    by_case = {pair["case"]: row for pair, row in zip(record["pairs"], t45_doc["rows"],
+                                                      strict=True)}
+    return by_case, record, stops
 
 
 def t45_item(row: dict[str, Any] | None) -> dict[str, Any]:
@@ -1340,11 +1496,14 @@ def _graded_bundle(doc: dict[str, Any], bundle: str, inputs: list[RowInput],
     """Row grades, C-5 extras and the bundle grade into ``doc``; returns every stop."""
     runner_dir = Path(args.runner_judge_dir) if args.runner_judge_dir else None
     t45_doc = read_json(Path(args.t45), "--t45 output") if args.t45 else None
-    t45 = t45_rows(t45_doc)
+    t45: dict[str, dict[str, Any]] = {}
+    pairing_stops: list[dict[str, str]] = []
+    if bundle == "C-5" and t45_doc is not None:
+        t45, doc["t45_pairing_R22_1"], pairing_stops = t45_pairing(t45_doc, judge_doc, args)
     params = rows_judge.load_params(Path(args.params))
     doc["params"] = {key: params[key] for key in ("path", "sha256", "head_area_m2", "F_min_N")}
     rows = [grade_row(row, bundle, runner_dir, t45, params) for row in inputs]
-    stops = row_stops(rows, judge_doc)
+    stops = pairing_stops + row_stops(rows, judge_doc)
     if bundle == "C-5":
         pairs = c5_pair_check(rows, doc["row_count_S15"]["manifest_cases"])
         doc["vb_v0_pairs_S15"] = pairs
@@ -1421,7 +1580,18 @@ def build_parser() -> argparse.ArgumentParser:
     grade.add_argument("--rows-judge", help="chrono_rows_judge_4368.py judge output (C-1 .. C-5)")
     grade.add_argument("--runner-judge-dir",
                        help="folder of <C1|C2|C5>_<case>.verify_S8C.json / .verify_S6C.json")
-    grade.add_argument("--t45", help="chrono_t45_replay output (--t5, rev7) for C-5")
+    grade.add_argument("--t45", help="chrono_t45_replay output (--t5, rev7) for C-5; rows paired "
+                                     "by the input folder order (rev22 R22-1)")
+    grade.add_argument("--t45-reference-judge",
+                       help="C-5: the R3c judge_C5.json the t45 input folders came from (rev22 "
+                            "R22-1 source fix; its list must equal the one from --rows-judge)")
+    grade.add_argument("--t45-reference-sha256", default=R3C_JUDGE_C5_SHA256,
+                       help="sha256 the --t45-reference-judge file must have (default: R3c)")
+    grade.add_argument("--t45-cases-script",
+                       help="C-5: the run script whose $T45Cases must equal T45_CASES (R22-1)")
+    grade.add_argument("--t45-folders",
+                       help="C-5: optional t45 input folder list (JSON list or one per line); "
+                            "must equal the rebuilt list (R22-1)")
     grade.add_argument("--oc5", action="append", help="resume4368_judge.py oc5 output (C-8)")
     grade.add_argument("--fmin-time", action="append",
                        help="resume4368_judge.py fmin-time output (C-8)")

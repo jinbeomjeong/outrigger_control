@@ -122,12 +122,15 @@ class Bundle:
 
     def add_rigid(self, e: dict[str, Any], runner_rows: list[dict[str, Any]],
                   items: dict[str, Any], prefix: str, suffix: str = "verify_S8C",
-                  liftoff_rel_s: float | None = RUNNER_LIFTOFF_REL_S) -> None:
+                  liftoff_rel_s: float | None = RUNNER_LIFTOFF_REL_S,
+                  inner: str | None = None) -> None:
+        """``inner``: the run folder's inner (``--only``) name, default the case name."""
         self.entries.append(e)
         folder = self.root / "S8" / f"tag_{e['case']}_{STAMP}"
-        write_json(folder / e["case"] / "result.json", {"settings": {}})
-        write_rigid_series(folder / e["case"])
-        self.judged.append({"case": e["case"], "dir": str(folder / e["case"]), "items": items,
+        inner = inner or e["case"]
+        write_json(folder / inner / "result.json", {"settings": {}})
+        write_rigid_series(folder / inner)
+        self.judged.append({"case": e["case"], "dir": str(folder / inner), "items": items,
                             "t0_s": T0_S})
         rows = [{"case": e["case"], **r} for r in runner_rows]
         meta = {"batch": str(folder), "failed": sum(r.get("passed") is False for r in rows),
@@ -158,8 +161,21 @@ def run(mod, bundle: Bundle, tmp_path: Path, name: str, *extra: str) -> tuple[in
     if name in mod.GRADED_BUNDLES:
         argv += ["--rows-judge", str(paths["judge"]), "--runner-judge-dir",
                  str(bundle.runner_dir)]
+    if name == "C-5" and "--t45" in extra and "--t45-reference-judge" not in extra:
+        # rev22 R22-1 source fix: this synthetic judge output is its own R3c reference
+        argv += ["--t45-reference-judge", str(paths["judge"]),
+                 "--t45-reference-sha256", mod.rows_judge.sha256_file(paths["judge"]),
+                 "--t45-cases-script", str(write_cases_script(mod, tmp_path))]
     code = mod.main(argv)
     return code, json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+
+
+def write_cases_script(mod, tmp_path: Path, cases: tuple[str, ...] | None = None) -> Path:
+    """A run-script stand-in with ``$T45Cases = @(...)`` (rev22 R22-1 evidence chain)."""
+    names = ", ".join(f"'{case}'" for case in (cases or mod.T45_CASES))
+    path = tmp_path / "run_path1_r3c.ps1"
+    path.write_text(f"$T45Cases = @({names})\n", encoding="utf-8")
+    return path
 
 
 def runner_pass_rows() -> list[dict[str, Any]]:
@@ -494,14 +510,25 @@ def t45_row(case: str, over_t4: int = 0, *, t4_0: bool = True) -> dict[str, Any]
             "T4": {"over_0p6kN": over_t4}, "T5": {"over_0p6kN": 0}}
 
 
+def inner_of(case: str) -> str:
+    """The run folder inner name of a C-5 row: an LS row runs its VB case (``--only``)."""
+    for suffix in ("_LS1", "_LS4"):
+        if case.endswith(suffix):
+            return case[: -len(suffix)]
+    return case
+
+
 def c5_bundle(mod, tmp_path: Path) -> tuple[Bundle, Path]:
+    """C-5 rows as run: the LS1 / LS4 / VB rows of one case share the inner folder name, so the
+    t45 rows repeat names (rev22 R22-1)."""
     b = Bundle(tmp_path, "C5")
     for case in (*mod.T45_CASES, *C5_RIGID_EXTRA):
-        b.add_rigid(entry(case, "C-5", "L2b_NSC"), runner_pass_rows(), rigid_items(), "C5")
+        b.add_rigid(entry(case, "C-5", "L2b_NSC"), runner_pass_rows(), rigid_items(), "C5",
+                    inner=inner_of(case))
     for case in C5_SCM:
         b.add_scm(entry(case, "C-5", "SCM"), {"p3b": p3b_ok()}, scm_items())
-    t45 = write_json(tmp_path / "t45.json", {"criteria": "rev7",
-                                             "rows": [t45_row(c) for c in mod.T45_CASES]})
+    t45 = write_json(tmp_path / "t45.json", {
+        "criteria": "rev7", "rows": [t45_row(inner_of(c)) for c in mod.T45_CASES]})
     return b, t45
 
 
@@ -630,6 +657,9 @@ def test_seals_command(mod, capsys):
     assert mod.main(["seals", "--rules-dir", str(RULES_DIR)]) == 0
     last = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
     assert last["files"]["v5_resume_4368_rules_rev18.md"]["ok"] is True
+    rev22 = last["files"]["v5_resume_4368_rules_rev22.md"]  # rev22 R22-2 seal list
+    assert rev22["ok"] is True
+    assert rev22["sha256"] == "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
 
 
 def test_worst_order(mod):
@@ -947,3 +977,147 @@ def test_v0_sus_record_is_passed_through(mod, tmp_path):
     check = doc["rows"][0]["t_lift_check_R19_5"]
     assert check["t_lift_D29_10Hz_s"] == 23.1  # graded on t_b (R15-3)
     assert check["t_lift_sus_record_R21_1"]["differs_from_t_b"] is True
+
+
+# ------------------------------------------------------------- rev22 R22-1 t45 pairing
+def pairing_case(mod, tmp_path: Path) -> tuple[dict, dict]:
+    """(judge_C5 document, t45 document): the 18 T45 rows (LS1 / LS4 / VB share inner names,
+    outer folders differ) mixed with two other C-5 rows, in run order."""
+    rows = [{"case": "E_G4_Fs4", "dir": str(tmp_path / "S8" / "v5s3_VB_E_G4_Fs4_1" / "E_G4_Fs4")}]
+    for i, case in enumerate(mod.T45_CASES):
+        outer = f"v5s3_{case.rsplit('_', 1)[-1] if case.endswith(('_LS1', '_LS4')) else 'VB'}"
+        rows.append({"case": case, "dir": str(tmp_path / "S8" / f"{outer}_{i}" / inner_of(case))})
+    rows.append({"case": "seed26", "dir": str(tmp_path / "S9" / "batch" / "seed26")})
+    judge = {"rows": rows}
+    t45 = {"criteria": "rev7", "rows": [t45_row(inner_of(c)) for c in mod.T45_CASES]}
+    return judge, t45
+
+
+def pairing_args(mod, tmp_path: Path, judge: dict, *, reference: dict | None = None,
+                 cases: tuple[str, ...] | None = None, folders: list[str] | None = None):
+    """argparse-like inputs of :func:`t45_pairing` (the reference judge written to a file)."""
+    import argparse
+
+    ref = write_json(tmp_path / "ref_judge_C5.json", reference if reference is not None else judge)
+    listed = None if folders is None else write_json(tmp_path / "folders.json", folders)
+    return argparse.Namespace(t45_reference_judge=str(ref),
+                              t45_reference_sha256=mod.rows_judge.sha256_file(ref),
+                              t45_cases_script=str(write_cases_script(mod, tmp_path, cases)),
+                              t45_folders=None if listed is None else str(listed))
+
+
+def stop_codes(stops: list[dict[str, str]]) -> set[str]:
+    return {s["reason"].split(":", 1)[0] for s in stops}
+
+
+def test_pairing_same_inner_names(mod, tmp_path):
+    """Three rows with the inner name E_RE1bF_Fs8 (VB, LS1, LS4) pair by position."""
+    judge, t45 = pairing_case(mod, tmp_path)
+    by_case, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stops == [] and record["ok"] is True
+    assert sorted(by_case) == sorted(mod.T45_CASES)
+    same = [p for p in record["pairs"] if p["t45_case"] == "E_RE1bF_Fs8"]
+    assert [p["case"] for p in same] == ["E_RE1bF_Fs8", "E_RE1bF_Fs8_LS1", "E_RE1bF_Fs8_LS4"]
+    assert len({p["folder"] for p in same}) == 3
+    assert record["folders_sha256"] == mod.folder_list_sha256(record["folders"])
+    assert record["sources"]["reference_judge"]["list_equal"] is True
+
+
+def test_pairing_row_count_mismatch_is_s15(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    t45["rows"].pop()
+    by_case, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert by_case == {} and "S-15" in stop_codes(stops)
+    assert record["checks"]["1_row_count"]["ok"] is False
+
+
+def test_pairing_reordered_dirs_is_s11(mod, tmp_path):
+    """The R3d judge_C5 rows in another order than the R3c reference: source list differs."""
+    judge, t45 = pairing_case(mod, tmp_path)
+    reference = {"rows": [judge["rows"][0], judge["rows"][2], judge["rows"][1],
+                          *judge["rows"][3:]]}
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge,
+                                                                reference=reference))
+    assert stop_codes(stops) == {"S-11"}
+    assert record["sources"]["reference_judge"]["list_equal"] is False
+
+
+def test_pairing_inner_name_mismatch_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    t45["rows"][0]["case"] = "K0_top_fup3.2_Fs0"  # row 0 is K0V_top_fup3.5_Fs0
+    by_case, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert by_case == {} and stop_codes(stops) == {"S-11"}
+    assert record["checks"]["3_inner_name_equal"] is False
+
+
+def test_pairing_duplicate_folder_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"][2]["dir"] = judge["rows"][1]["dir"]
+    t45["rows"][1]["case"] = t45["rows"][0]["case"]  # keep check 3 true: only 4 fails
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stop_codes(stops) == {"S-11"} and record["checks"]["4_unique_folders"] is False
+
+
+def test_pairing_target_list_mismatch_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    _, record, stops = mod.t45_pairing(
+        t45, judge, pairing_args(mod, tmp_path, judge, cases=tuple(mod.T45_CASES[:-1])))
+    assert stop_codes(stops) == {"S-11"} and record["sources"]["script"]["equal"] is False
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"] = [r for r in judge["rows"] if r["case"] != mod.T45_CASES[-1]]
+    t45["rows"].pop()
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stop_codes(stops) == {"S-11"} and record["checks"]["4_cases_equal_target"] is False
+
+
+def test_pairing_empty_dir_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"][3]["dir"] = None
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert stop_codes(stops) == {"S-11"} and record["empty_dir_cases"] == [mod.T45_CASES[2]]
+
+
+def test_pairing_case_only_differs_is_s11(mod, tmp_path):
+    """A judged case that differs from a target only in letter case: PowerShell -in would take
+    it, the exact match does not (R22-1)."""
+    judge, t45 = pairing_case(mod, tmp_path)
+    judge["rows"].append({"case": mod.T45_CASES[0].lower(), "dir": str(tmp_path / "x" / "y")})
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge))
+    assert "S-11" in stop_codes(stops)
+    assert record["sources"]["case_insensitive_list_equal"] is False
+
+
+def test_pairing_list_file_mismatch_is_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    folders, _, _ = mod.t45_folder_list(judge)
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge,
+                                                                folders=folders))
+    assert stops == [] and record["sources"]["list_file"]["equal"] is True
+    _, record, stops = mod.t45_pairing(t45, judge, pairing_args(mod, tmp_path, judge,
+                                                                folders=folders[::-1]))
+    assert stop_codes(stops) == {"S-11"} and record["sources"]["list_file"]["equal"] is False
+
+
+def test_pairing_reference_sha_and_missing_sources_are_s11(mod, tmp_path):
+    judge, t45 = pairing_case(mod, tmp_path)
+    args = pairing_args(mod, tmp_path, judge)
+    args.t45_reference_sha256 = mod.R3C_JUDGE_C5_SHA256  # the real R3c sha: this file is not it
+    _, record, stops = mod.t45_pairing(t45, judge, args)
+    assert stop_codes(stops) == {"S-11"}
+    assert record["sources"]["reference_judge"]["sha256_equal"] is False
+    args = pairing_args(mod, tmp_path, judge)
+    args.t45_reference_judge = None
+    args.t45_cases_script = None
+    _, _, stops = mod.t45_pairing(t45, judge, args)
+    assert len(stops) == 2 and stop_codes(stops) == {"S-11"}
+
+
+def test_c5_bundle_writes_the_pairing_record(mod, tmp_path):
+    b, t45 = c5_bundle(mod, tmp_path)
+    data = json.loads(t45.read_text(encoding="utf-8"))
+    data["rows"][0]["case"] = "not_the_inner_name"
+    t45.write_text(json.dumps(data), encoding="utf-8")
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    assert code == 1 and doc["t45_pairing_R22_1"]["ok"] is False
+    assert any(s["reason"].startswith("S-11") for s in doc["stops"])
+    assert doc["bundle_grade"]["grade"] is None
