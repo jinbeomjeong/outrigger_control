@@ -1,0 +1,800 @@
+{
+ "tool": "chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked; python-expert 2026-11-14 z4372: engine from the batch.json / result.json records, V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3; python-expert 2026-11-15: L2b D-29 = t_lift,sus, rev21 R21-1)",
+ "rules": "v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev21 (seal list; rev13 / rev14 by tools/verif/seal_check.py, rev15 R15-7, rev18 R18-1 2, rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2): rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3, rev9 .. rev12 items, rev15 R15-3 (V0 L2b D-29), rev21 R21-1 (L2b D-29 = t_lift,sus)",
+ "definitions_C": {
+  "C-1": "bracket_10hz",
+  "C-2": "s8a2",
+  "C-3": "first",
+  "C-4": "count",
+  "C-5": "10hz",
+  "C-6": "round",
+  "C-7": "union",
+  "C-8": "S-01,S-02,S-03,S-04",
+  "C-9": "q14"
+ },
+ "deviates_from_rev6": null,
+ "d_numbers": {
+  "N-1": "D-26",
+  "N-2": "D-27",
+  "N-3": "D-28",
+  "N-4": "D-29",
+  "N-5": "D-30",
+  "N-6": "D-31",
+  "N-7": "D-32",
+  "N-8": "D-33",
+  "N-9": "D-34",
+  "N-10": "D-35",
+  "N-11": "D-36",
+  "N-12": "D-37",
+  "N-13": "D-38",
+  "N-14": "D-39"
+ },
+ "params": {
+  "path": "C:\\workspace\\outrigger_control\\02_params\\rexome33.yaml",
+  "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+  "head_area_m2": [
+   0.013273229,
+   0.013273229,
+   0.00950331778,
+   0.00950331778
+  ],
+  "rod_weight_N": [
+   1047.1900381788998,
+   1047.1900381788998,
+   717.483872168105,
+   717.483872168105
+  ],
+  "F_min_N": 9414.58911,
+  "F_min_matches_rules": true
+ },
+ "seals": {
+  "rules_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix",
+  "files": {
+   "v5_resume_4368_rules.md": {
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "sealed": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "tool": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "sealed": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "tool": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "sealed": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "tool": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "sealed": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "tool": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "sealed": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "tool": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "sealed": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "tool": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "sealed": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "tool": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "sealed": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "tool": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "sealed": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "tool": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "sealed": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "tool": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "sealed": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "tool": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "sealed": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "tool": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "sealed": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "tool": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "sealed": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "tool": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "sealed": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "tool": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "sealed": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "tool": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "sealed": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "tool": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "sealed": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "tool": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "sealed": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "tool": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "sealed": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "tool": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "ok": true
+   }
+  },
+  "ok": true,
+  "missing": []
+ },
+ "disclosure": {
+  "new": "04_scripts/02_chrono/chrono_rows_judge_4368.py",
+  "pairs": [
+   {
+    "old": "04_scripts/03_control/s8/r76_g6_chrono_judge.py",
+    "scope": "G6 gates: D-26 / D-27 / D-28 / D-34 / D-35",
+    "added": 1913,
+    "deleted": 420,
+    "old_sha256": "c813b0473524ba7f5b1c9b19a068f81e21225fd34cc886490c344fca74ad8701"
+   },
+   {
+    "old": "03_src/outrigger_sim/verify/s8_control.py",
+    "scope": "C1 row (R40-1 / R40-2): D-31 / D-39",
+    "added": 1835,
+    "deleted": 7877,
+    "old_sha256": "3aa15db72e952bd7c6333776e6b2152e2729fc2ebb699794f492bb4cdb09bb09"
+   },
+   {
+    "old": "03_src/outrigger_sim/verify/s6_control.py",
+    "scope": "_times lift-off and moving pressure: D-29 / D-30 / D-32",
+    "added": 1846,
+    "deleted": 3035,
+    "old_sha256": "d0c413308e273e21707a1359c9b78631825c0e1998ab7f3e5de4739ae0346f34"
+   }
+  ],
+  "new_sha256": "b97ec48edc4477565205c6b941a4b5ecfca3ce5432d851a77a0041a0e72f446c"
+ },
+ "rows": [
+  {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "case": "OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "engine": "SCM",
+   "engine_record": {
+    "kind": "SCM",
+    "sources": {
+     "batch.json r4368.engine": "SCM"
+    }
+   },
+   "row_id": null,
+   "criteria_id": "C-8b",
+   "t0_s": 7.999999999994694,
+   "inputs": {
+    "step_series.npz": {
+     "sha256": "2dcc05a8486fd89de32bacc47c23bdba95540d56da2685fa0920c393b7d81d86"
+    },
+    "r8_series.npz": {
+     "sha256": "abdf5777c4bb835bd00ff594d01834f7e15d762fd5b2e4e8b5a1309057fcf075"
+    },
+    "record/record.npz": {
+     "sha256": "5eb70b70fa0b47f2661233a6b0ddb0bdc9ce0fb03788bf099f5e0ea2163ebf58"
+    }
+   },
+   "row_dir": {
+    "source": "batch_folder"
+   },
+   "origin_check_R5_B1": {
+    "rule": "rev6 R6-B6 round(t / T)",
+    "ok": true,
+    "problems": [],
+    "r8_first_t_s": 8.099999999994461,
+    "t0_s": 7.999999999994694,
+    "first_period_number": 1,
+    "periods_consecutive": true,
+    "r8_rows_without_1ms_sample": 0,
+    "residual_period_max": 4.458797775441781e-08,
+    "residual_1ms_max_s": 4.453482915778295e-09,
+    "fallback": {
+     "log_entries": 0,
+     "log_legs": [],
+     "event_legs": [],
+     "fallback_legs_R6_B7": [],
+     "open_stretch_legs": [],
+     "open_stretch_note": "J11 window end / n_late of open stretches: item J11_R8-3 (criteria revision 6 6, rev8 R8-3)",
+     "t_start_not_on_r8_rows": []
+    }
+   },
+   "commit_identity_R11_4": {
+    "status": "match",
+    "problems": [],
+    "batch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "dirty": [],
+    "result_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "result_same_as_git_at_start": true
+   },
+   "items": {
+    "departure_t_D": {
+     "limit_N": 3801.1291206408396,
+     "rule": "crawler normal < 0.01 W held 0.1 s (C-4 count)",
+     "departed": true,
+     "t_departure_s": 33.99100000000485,
+     "t_confirmed_s": 34.09000000000814,
+     "k_confirmed": 26089,
+     "runner_t_departure_s": 33.99100000000485,
+     "differs_from_runner": false,
+     "diff_from_runner_s": 0.0
+    },
+    "P3-3_after_t_D": {
+     "t_D_s": 33.99100000000485,
+     "F_min_after_departure_N": 11951.205749459283,
+     "within": true
+    },
+    "P3-1_recontact_D-36": {
+     "events": [],
+     "pass": true,
+     "flags": []
+    },
+    "loc_timeline": {
+     "t_loc_first_s": 35.20000000004499,
+     "t_loc_final_s": 35.20000000004499,
+     "revoked_loc_s": [],
+     "revokes_s": []
+    },
+    "P3-2_D-37_D-38": {
+     "t_loc_final_s": 35.20000000004499,
+     "t_first_done_s": 69.20000000117366,
+     "limit_s": 2.91165281234524,
+     "revoked": [],
+     "order": true,
+     "crawler_normal_at_loc_N": 0.0,
+     "loaded": false,
+     "loc_minus_departure_s": 1.2090000000401346,
+     "within": true
+    },
+    "P3-8_D-34_D-35": {
+     "window_end_s": 35.20000000004499,
+     "events": [],
+     "loc_for_377": "first",
+     "fault": false,
+     "F_min_N": 9414.58911,
+     "G6-3_pass": true,
+     "demoted_items": [],
+     "flags": [],
+     "verdict": "pass",
+     "preloc_flag_ok": null
+    },
+    "ready_D-27_D-28": {
+     "t_ready_rel_s": 73.20000000157732,
+     "P3-6_limit_s": 120.0,
+     "P3-6": "pass",
+     "READY_le_120s": true
+    },
+    "moving_pressure_D-32": {
+     "basis": "record.npz 10 Hz rows (C-5)",
+     "moving_samples": 2338,
+     "max_moving_bar": 128.1175434119743,
+     "saturated_samples": 0,
+     "within": true,
+     "status": "judged"
+    },
+    "D8_t_lift_s_D-30": 34.07700000000771,
+    "lift_after_level_D-33": {
+     "t_from_s": 32.599999999958676,
+     "rule": "q14",
+     "per_leg": {
+      "FL": {
+       "samples": 0,
+       "t_first_s": null
+      },
+      "FR": {
+       "samples": 0,
+       "t_first_s": null
+      },
+      "RL": {
+       "samples": 0,
+       "t_first_s": null
+      },
+      "RR": {
+       "samples": 0,
+       "t_first_s": null
+      }
+     },
+     "lifted": false
+    },
+    "SGS_427_9_D-26": {
+     "applies": null,
+     "reason": "C-8: not a SGS row"
+    },
+    "J-P3_R8-2": {
+     "rule": "rev8 R8-2, rev9 R9-1 / R9-4",
+     "tag": {
+      "tag": "final_C4G2_LAS_K1",
+      "source": "batch argv",
+      "expect_check_ok": true,
+      "expect_check_name": "final_C4G2_LAS_K1"
+     },
+     "request": {
+      "argv_flag": false,
+      "argv_source": "batch argv",
+      "hydraulic_options": null,
+      "v5_hydraulics_block": false
+     },
+     "s2": [],
+     "ls_setting": {
+      "bundle": "V5-RESUME-K1-OC5",
+      "v5_setting": "V0",
+      "batch_v5_setting": "V0",
+      "boundary_case": null,
+      "is_ls": false,
+      "basis": "manifest V5-RESUME-K1-OC5 and batch.json v5_setting 'V0' (not LS)"
+     },
+     "is_extend_start": false,
+     "status": "not_applicable"
+    },
+    "J11_R8-3": {
+     "rule": "rev8 R8-3, rev9 R9-2 .. R9-6, criteria revision 6 6, rev6 R6-B7",
+     "criteria_id": "C-8b",
+     "j11_row": false,
+     "law_locked_form": {
+      "key_missing": false,
+      "problems": {},
+      "minus_one": "none",
+      "file": "step_series.npz"
+     },
+     "lock_source": "step_series.npz law_locked (1 ms, -1 read as locked)",
+     "fallback_legs_R6_B7": [],
+     "record": {
+      "stretches_by_leg": {
+       "FL": 7,
+       "FR": 9,
+       "RL": 10,
+       "RR": 9
+      },
+      "judged_by_leg": {
+       "FL": 7,
+       "FR": 8,
+       "RL": 9,
+       "RR": 6
+      },
+      "unjudged_by_leg": {
+       "FL": 0,
+       "FR": 1,
+       "RL": 1,
+       "RR": 3
+      },
+      "n_late_by_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "n_late_fallback_by_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "n_late_fallback": 0,
+      "fallback_legs": {},
+      "margin_min_s_by_leg": {
+       "FL": 0.49777641039375453,
+       "FR": 0.49777641039375453,
+       "RL": 0.43949131984690837,
+       "RR": 0.49777641039375453
+      },
+      "margin_min_s_fallback": null,
+      "unjudged_command_resumed_by_leg": {
+       "FL": 0,
+       "FR": 1,
+       "RL": 1,
+       "RR": 3
+      },
+      "late": [],
+      "window_check": {
+       "compared": 0,
+       "max_abs_diff_s": 0.0
+      },
+      "unlock_in_stretch": 0,
+      "time_tol_s": 1e-06
+     },
+     "n_late_fallback_R6_B7": 0,
+     "n_late_by_leg": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "unjudged_by_leg": {
+      "FL": 0,
+      "FR": 1,
+      "RL": 1,
+      "RR": 3
+     },
+     "event_only_legs": [],
+     "status": "no_fallback_leg",
+     "stop": false
+    }
+   },
+   "grade": null,
+   "grade_note": "D items re-computed; row grade only for G6 rows (S-03 / S-04)",
+   "demoted_items": []
+  },
+  {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\OC5_mixed_rigid_J1FR_Kc3_VB_top",
+   "case": "OC5_mixed_rigid_J1FR_Kc3_VB_top",
+   "engine": "SCM",
+   "engine_record": {
+    "kind": "SCM",
+    "sources": {
+     "batch.json r4368.engine": "SCM"
+    }
+   },
+   "row_id": null,
+   "criteria_id": "C-8a",
+   "t0_s": 7.999999999994694,
+   "inputs": {
+    "step_series.npz": {
+     "sha256": "292643dd535f4049d6b843cc9425ea313a4ffb89370eda42d724a40c23214c41"
+    },
+    "r8_series.npz": {
+     "sha256": "26eaba43a4b1f33b114da190773c82001fa905d739b370e334555b85334fe573"
+    },
+    "record/record.npz": {
+     "sha256": "3bb7a33b8006e01ed508efabc3b6391ebb9555c1527360d5a0a8efa801cf301d"
+    }
+   },
+   "row_dir": {
+    "source": "batch_folder"
+   },
+   "origin_check_R5_B1": {
+    "rule": "rev6 R6-B6 round(t / T)",
+    "ok": true,
+    "problems": [],
+    "r8_first_t_s": 8.099999999994461,
+    "t0_s": 7.999999999994694,
+    "first_period_number": 1,
+    "periods_consecutive": true,
+    "r8_rows_without_1ms_sample": 0,
+    "residual_period_max": 4.458797775441781e-08,
+    "residual_1ms_max_s": 4.453482915778295e-09,
+    "fallback": {
+     "log_entries": 0,
+     "log_legs": [],
+     "event_legs": [],
+     "fallback_legs_R6_B7": [],
+     "open_stretch_legs": [],
+     "open_stretch_note": "J11 window end / n_late of open stretches: item J11_R8-3 (criteria revision 6 6, rev8 R8-3)",
+     "t_start_not_on_r8_rows": []
+    }
+   },
+   "commit_identity_R11_4": {
+    "status": "match",
+    "problems": [],
+    "batch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "dirty": [],
+    "result_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "result_same_as_git_at_start": true
+   },
+   "items": {
+    "departure_t_D": {
+     "limit_N": 3801.1291206408396,
+     "rule": "crawler normal < 0.01 W held 0.1 s (C-4 count)",
+     "departed": true,
+     "t_departure_s": 34.54600000002328,
+     "t_confirmed_s": 34.64500000002656,
+     "k_confirmed": 26644,
+     "runner_t_departure_s": 34.54600000002328,
+     "differs_from_runner": false,
+     "diff_from_runner_s": 0.0
+    },
+    "P3-3_after_t_D": {
+     "t_D_s": 34.54600000002328,
+     "F_min_after_departure_N": 5869.61684783503,
+     "within": false
+    },
+    "P3-1_recontact_D-36": {
+     "events": [],
+     "pass": true,
+     "flags": []
+    },
+    "loc_timeline": {
+     "t_loc_first_s": 35.900000000068225,
+     "t_loc_final_s": 35.900000000068225,
+     "revoked_loc_s": [],
+     "revokes_s": []
+    },
+    "P3-2_D-37_D-38": {
+     "t_loc_final_s": 35.900000000068225,
+     "t_first_done_s": 69.20000000117366,
+     "limit_s": 2.91165281234524,
+     "revoked": [],
+     "order": true,
+     "crawler_normal_at_loc_N": 0.0,
+     "loaded": false,
+     "loc_minus_departure_s": 1.3540000000449481,
+     "within": true
+    },
+    "P3-8_D-34_D-35": {
+     "window_end_s": 35.900000000068225,
+     "events": [],
+     "loc_for_377": "first",
+     "fault": false,
+     "F_min_N": 9414.58911,
+     "G6-3_pass": false,
+     "demoted_items": [],
+     "flags": [],
+     "verdict": "pass",
+     "preloc_flag_ok": null
+    },
+    "ready_D-27_D-28": {
+     "t_ready_rel_s": 73.20000000157732,
+     "P3-6_limit_s": 120.0,
+     "P3-6": "pass",
+     "READY_le_120s": true
+    },
+    "moving_pressure_D-32": {
+     "basis": "record.npz 10 Hz rows (C-5)",
+     "moving_samples": 2412,
+     "max_moving_bar": 135.7792283988909,
+     "saturated_samples": 0,
+     "within": true,
+     "status": "judged"
+    },
+    "D8_t_lift_s_D-30": 34.599000000025036,
+    "lift_after_level_D-33": {
+     "t_from_s": 33.59999999999187,
+     "rule": "q14",
+     "per_leg": {
+      "FL": {
+       "samples": 0,
+       "t_first_s": null
+      },
+      "FR": {
+       "samples": 0,
+       "t_first_s": null
+      },
+      "RL": {
+       "samples": 0,
+       "t_first_s": null
+      },
+      "RR": {
+       "samples": 0,
+       "t_first_s": null
+      }
+     },
+     "lifted": false
+    },
+    "SGS_427_9_D-26": {
+     "applies": null,
+     "reason": "C-8: not a SGS row"
+    },
+    "J-P3_R8-2": {
+     "rule": "rev8 R8-2, rev9 R9-1 / R9-4",
+     "tag": {
+      "tag": "final_C4G2_P3_LAS_K1",
+      "source": "batch argv",
+      "expect_check_ok": true,
+      "expect_check_name": "final_C4G2_P3_LAS_K1"
+     },
+     "request": {
+      "argv_flag": true,
+      "argv_source": "batch argv",
+      "hydraulic_options": true,
+      "v5_hydraulics_block": true
+     },
+     "s2": [],
+     "ls_setting": {
+      "bundle": "V5-RESUME-K1-OC5",
+      "v5_setting": "VB",
+      "batch_v5_setting": "VB",
+      "boundary_case": null,
+      "is_ls": false,
+      "basis": "manifest V5-RESUME-K1-OC5 and batch.json v5_setting 'VB' (not LS)"
+     },
+     "is_extend_start": true,
+     "extend_start_rule": "tracked_bound",
+     "case": "judged",
+     "breach_reads": 0,
+     "status": "pass",
+     "stop": null
+    },
+    "J11_R8-3": {
+     "rule": "rev8 R8-3, rev9 R9-2 .. R9-6, criteria revision 6 6, rev6 R6-B7",
+     "criteria_id": "C-8a",
+     "j11_row": false,
+     "law_locked_form": {
+      "key_missing": false,
+      "problems": {},
+      "minus_one": "none",
+      "file": "step_series.npz"
+     },
+     "lock_source": "step_series.npz law_locked (1 ms, -1 read as locked)",
+     "fallback_legs_R6_B7": [],
+     "record": {
+      "stretches_by_leg": {
+       "FL": 7,
+       "FR": 8,
+       "RL": 9,
+       "RR": 8
+      },
+      "judged_by_leg": {
+       "FL": 6,
+       "FR": 8,
+       "RL": 8,
+       "RR": 8
+      },
+      "unjudged_by_leg": {
+       "FL": 1,
+       "FR": 0,
+       "RL": 1,
+       "RR": 0
+      },
+      "n_late_by_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "n_late_fallback_by_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "n_late_fallback": 0,
+      "fallback_legs": {},
+      "margin_min_s_by_leg": {
+       "FL": 0.12499964157305499,
+       "FR": 0.12499964157305499,
+       "RL": 0.12499964157305499,
+       "RR": 0.12499964157305499
+      },
+      "margin_min_s_fallback": null,
+      "unjudged_command_resumed_by_leg": {
+       "FL": 1,
+       "FR": 0,
+       "RL": 1,
+       "RR": 0
+      },
+      "late": [],
+      "window_check": {
+       "compared": 0,
+       "max_abs_diff_s": 0.0
+      },
+      "unlock_in_stretch": 0,
+      "time_tol_s": 1e-06
+     },
+     "n_late_fallback_R6_B7": 0,
+     "n_late_by_leg": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "unjudged_by_leg": {
+      "FL": 1,
+      "FR": 0,
+      "RL": 1,
+      "RR": 0
+     },
+     "event_only_legs": [],
+     "status": "no_fallback_leg",
+     "stop": false
+    }
+   },
+   "grade": null,
+   "grade_note": "D items re-computed; row grade only for G6 rows (S-03 / S-04)",
+   "demoted_items": []
+  }
+ ],
+ "stops": [],
+ "origin_failed": [],
+ "skipped_rows": [],
+ "l2b_bracket_rows_R15_3": [],
+ "t_D_vs_runner_R6_B4": {
+  "scm_rows": 2,
+  "rows_differing": 0,
+  "max_abs_diff_s": 0.0
+ },
+ "demoted_items": {},
+ "rev8_counts": {
+  "J-P3": {
+   "not_applicable": 1,
+   "pass": 1
+  },
+  "S-2_rows": 0,
+  "J11": {
+   "no_fallback_leg": 2
+  },
+  "J11_rows_not_judgeable": 0,
+  "R9-1_expect_failed": 0,
+  "R9-2_form_problems_by_item": {
+   "time_column": 0,
+   "shape": 0,
+   "dtype": 0,
+   "values": 0,
+   "spacing": 0,
+   "minus_one": 0
+  },
+  "R9-2_key_missing": 0,
+  "R9-3_minus_one": {
+   "none": 2
+  },
+  "R9-4_ls_rows": 0,
+  "R9-4_undecided": 0,
+  "R9-6_no_input": 0,
+  "R10-1b_cases": {
+   "batch_name_unknown": 0,
+   "manifest_rows_not_one": 0,
+   "batch_json_entries_not_one": 0,
+   "both_sources_without_v5_setting": 0
+  }
+ },
+ "grade_counts_R11_5": {
+  "counts": {
+   "None": 2
+  },
+  "rows": 2,
+  "note": "rev11 R11-5: in G-S the row grades are not judged and are no stop; the judgement records only these counts"
+ },
+ "commit_identity_R11_4": {
+  "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+  "rule": "rev11 R11-4: every row's batch.json cases[].code_at_launch.git.head (open-loop rows included) = the judgement git_at_start, else S-12 (record missing, git.error or another commit); level / L2b / L1-R rows also result.json code_state.git_at_start.head where that record exists (present with an error or another commit = S-12, absent = no_result_record, no stop); open-loop rows: the result.json head is recorded only; git.dirty is recorded only (original 6: commit '+ dirty 여부'); --row inputs have no batch.json entry (no_batch_entry, recorded, no stop, like the --row criteria)",
+  "rows": 2,
+  "counts": {
+   "match": 2
+  },
+  "s12_rows": [],
+  "dirty_rows_recorded": []
+ },
+ "ls_manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ }
+}

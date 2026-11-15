@@ -1,0 +1,2219 @@
+{
+ "tool": "p2_chrono.py (436.8 path 2, Chrono)",
+ "bundle": "C-2",
+ "tool_sha256": "ee275324845fd64808e9471e8f5c21088afb30beac1d3aaf2da3f31a360b5186",
+ "tool_files_sha256": {
+  "p2_chrono.py": "bb1f9028492342893aa71618fab30edb5fdd993a87a44b0564ee15b70e61f14c",
+  "p2_rules.py": "e23334671855005224d4596a65fea6e467f81b0365846130ba02f5c77f67e3a1",
+  "p2_core.py": "009427c749ac81efe9b5823fbe98b79065fadcc1fc1e0dd726ba54309998b0f4",
+  "p2_kinds.py": "96846945518f3b711390a29f28ddafba9884cd939785eb716532ed2b5cf0cf65",
+  "p2_t45.py": "03317f2af52d38fd2ba303df57e7841d1975ebed9907248eb29cc6ad9fbd2f6a",
+  "p2_psc.py": "fe2f414d0c5ce605b6c26cd5342db213e0b1677cf7426acb3c85e33fb6f5bc07",
+  "p2_e7.py": "499743186e695ca72b29069b0af002891bbd506bfd8235cfb2816dce620668f0",
+  "p2_b_c2.py": "7f51c053465874c4610925d78468eb4a60c89b1e7962a6047432e07a184403d0"
+ },
+ "seal": {
+  "ok": true,
+  "sealed": [
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md",
+    "role": "rules (original)",
+    "status": "match",
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
+    "role": "rules rev1",
+    "status": "match",
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
+    "role": "rules rev2",
+    "status": "match",
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+    "role": "rules rev3",
+    "status": "match",
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+    "role": "rules rev4",
+    "status": "match",
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+    "role": "rules rev5",
+    "status": "match",
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+    "role": "rules rev6",
+    "status": "match",
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+    "role": "rules rev7",
+    "status": "match",
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
+    "role": "rules rev8",
+    "status": "match",
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
+    "role": "rules rev9",
+    "status": "match",
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
+    "role": "rules rev10",
+    "status": "match",
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
+    "role": "rules rev11",
+    "status": "match",
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
+    "role": "rules rev12",
+    "status": "match",
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+    "role": "rules rev15",
+    "status": "match",
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+    "role": "rules rev16",
+    "status": "match",
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+    "role": "rules rev17",
+    "status": "match",
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+    "role": "rules rev18",
+    "status": "match",
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "role": "rules rev19",
+    "status": "match",
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+    "role": "rules rev20",
+    "status": "match",
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md",
+    "role": "rules rev21",
+    "status": "match",
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev22.md",
+    "role": "rules rev22",
+    "status": "match",
+    "sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md",
+    "role": "rules rev23 (wins)",
+    "status": "match",
+    "sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
+    "role": "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)",
+    "status": "match",
+    "sha256": "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
+    "role": "Appendix A: v5 rev8 (J-P3 3.2)",
+    "status": "match",
+    "sha256": "c6ec89f71c1d8de4c06000568c2e5978fd7f9fe58a53defea728f2f4886bb25f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev9.md",
+    "role": "Appendix A: v5 rev9 (J-P3 table)",
+    "status": "match",
+    "sha256": "3c50dda50ca6dca60177f26d91d86c009eeb4f9321f5ffd0c98ddc27cf62e981"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev2.md",
+    "role": "Appendix A: v5 rev2 (J11 D-1)",
+    "status": "match",
+    "sha256": "e120474b8ebd721e6edc4fec8eef811ce810006b8c489e38cecbb7ae5caeed77"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules.md",
+    "role": "Appendix A: D-1 rules 11",
+    "status": "match",
+    "sha256": "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
+    "role": "Appendix A: D-1 rules rev1",
+    "status": "match",
+    "sha256": "eb730bddae35e76bc2569503605dea714b066fa42de7bc7b98efdde3edb3e868"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md",
+    "role": "Appendix A: P5r4 judgement (R2-5 source, not opened)",
+    "status": "match",
+    "sha256": "5e9fb33b7419d624d8dc305ad93121be090802cc5c85ea29fbc823e019fc9e2f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev6.md",
+    "role": "Appendix A: v5 rev6 (t_lift, J11)",
+    "status": "match",
+    "sha256": "fd5117031ef460cf4c6aa74807b2e73de984b014abb89a952b593499841da39c"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12.md",
+    "role": "Appendix A: v5 rev12 (C-5 rows)",
+    "status": "match",
+    "sha256": "e02d63cc1290383ee85d9a1f3a20c6348224b60999cccaf8d587cf610c5f5eb2"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12a.md",
+    "role": "Appendix A: v5 rev12a",
+    "status": "match",
+    "sha256": "e171141dce180fbb48493b9b95503ff3577d16f17cc54061ce3ad6e9efd51458"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12b.md",
+    "role": "Appendix A: v5 rev12b",
+    "status": "match",
+    "sha256": "0d17f87e9532d558efcab9fa89648e2790ece9c7568a802fbaa4c7631824e75d"
+   }
+  ],
+  "recorded": [
+   {
+    "file": "00_docs/04_control/s6_control_spec.md",
+    "sha256": "1924ae89a02752761f7b1e494304843f5c99d29c59d3989f7671ee258143be16"
+   },
+   {
+    "file": "02_params/rexome33.yaml",
+    "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+   },
+   {
+    "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+    "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e"
+   }
+  ]
+ },
+ "params": {
+  "F_min_N": 9414.58911,
+  "v_max_m_s": 0.0209243016,
+  "head_area_m2": [
+   0.013273229,
+   0.013273229,
+   0.00950331778,
+   0.00950331778
+  ]
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "rows": [
+  {
+   "case": "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\D1S_J1_B_bottom_Fs4_r0_pm2p8",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "82645c46ccf7eaab7e61b5464433fba12248fc05853e4b2875c0a07dee5c7309",
+    "step_series.npz": "cf6b52ecceb50cf578be080dd428a0b3b263c2c618cdb5c906bc3e0ea5e3f1a3",
+    "r8_series.npz": "73a21262aaed47a1f43dfc4e87b80d9e6b94e947ba483258a5a536c89bd4cc62",
+    "flow_series.npz": "a9a77d7f6425b846f9ffc46dd2a6611383362526bb86998ddc185f906a865303",
+    "record/record.npz": "8c2e48a477e1b2709ec0364ebd3988a197dea4b2606707428f63645473ba90ea"
+   },
+   "kind": "P3_S",
+   "criteria_id": "C-2",
+   "d1_id": "S-02",
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C2_20261114_222633/D1S_J1_B_bottom_Fs4_r0_pm2p8/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "통과",
+   "judged_keys": [
+    "identity",
+    "K1_class",
+    "safe_stop_427_9",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 41.83000000026508,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "window_complete": false,
+     "verdict": "indeterminate",
+     "reason": "no READY (284.1)",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 41.83000000026508,
+     "t_loc_final_s": 43.10000000030724,
+     "t_first_done_s": null,
+     "locs_s": [
+      43.10000000030724
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 471.5465387226169,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 1.2700000000421596,
+     "time_ok": true,
+     "verdict": "pass",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 41.83000000026508,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      114040.19751320519,
+      113024.4838946852,
+      71589.13480491677,
+      71195.68251101814
+     ],
+     "min_t_s": [
+      41.83000000026508,
+      43.6470000003254,
+      53.09500000063904,
+      44.36600000034927
+     ],
+     "min_all_N": 71195.68251101814,
+     "min_leg": "RR",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "verdict": "pass",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 51.742000000594125,
+     "t_final_signed_s": 51.742000000594125,
+     "t_last_ready_s": null,
+     "verdict": "indeterminate",
+     "reason": "no READY",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.6771070695883831,
+     "stroke_max_leg": "RL",
+     "stroke_ok": true,
+     "clearance_min_m": null,
+     "clearance_samples": 0,
+     "clearance_ok": null,
+     "verdict": "indeterminate",
+     "reason": "no READY or no rut_clearance_m sample after READY",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-6": {
+     "clause": "P3-6 READY <= 120.0 s",
+     "t_ready_rel_s": null,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "fail",
+     "within": null,
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 42.70000000029396,
+     "t_soil_mode_s": 42.70000000029396,
+     "t_first_loc_s": 43.10000000030724,
+     "events": [],
+     "verdict": "pass",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "fail",
+     "fault_events": [
+      "FAULT_LIFT_STROKE_LIMIT:soil:RL"
+     ],
+     "fault_phases": [
+      "fault"
+     ],
+     "any": true,
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "leg_lift_after_departure": {
+     "t0": 41.83000000026508,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "not_started",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "inactive",
+     "verdict": "record"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": false,
+     "c2_setup_las_off": null,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "on",
+      "present": {
+       "c2_setup.las_off": false,
+       "controller_meta.liftoff_approach_slow.start_s": true,
+       "controller_meta.liftoff_approach_slow.end_s": true,
+       "controller_meta.liftoff_approach_slow.end_reason": true,
+       "controller_meta.liftoff_approach_slow.active_periods": true,
+       "controller_meta.liftoff_approach_slow.ramp": true,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": true
+      },
+      "condition": {
+       "c2_setup.las_off": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.start_s": "required",
+       "controller_meta.liftoff_approach_slow.end_s": "required",
+       "controller_meta.liftoff_approach_slow.end_reason": "required",
+       "controller_meta.liftoff_approach_slow.active_periods": "required",
+       "controller_meta.liftoff_approach_slow.ramp": "required",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "required"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "preset",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": false,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_LAS_K1",
+     "expect_ok": true,
+     "las_settings_enable": true,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "Chrono row (LAS-b on, K1 on)",
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 1,
+     "fault_lift_stroke_limit": [
+      "FAULT_LIFT_STROKE_LIMIT:soil:RL"
+     ],
+     "fault_stroke_end": 0,
+     "verdict": "record"
+    },
+    "safe_stop_427_9": {
+     "clause": "spec 427.9 판정 분류 (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2, rev19 R19-1",
+     "category": "stroke_limited_stop",
+     "stop_event": "FAULT_LIFT_STROKE_LIMIT:soil:RL",
+     "first_fault_event": "FAULT_LIFT_STROKE_LIMIT:soil:RL",
+     "t_stop_s": 52.900000000632566,
+     "stop_reason": "soil",
+     "t_D_s": 41.83000000026508,
+     "t_level_start_s": 33.299999999981914,
+     "conditions": {
+      "1_stop_reason_soil": true,
+      "2_no_fault_stroke_end": true,
+      "3_no_leg_lift_from_level_start": true,
+      "4_min_after_departure_ge_Fmin": true,
+      "5_moving_le_180bar_saturation0": true
+     },
+     "values": {
+      "fault_stroke_end_events": 0,
+      "leg_lift_samples_from_level_start": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "min_after_departure_N": [
+       114040.19751320519,
+       113024.4838946852,
+       71589.13480491677,
+       71195.68251101814
+      ],
+      "min_after_departure_all_N": 71195.68251101814,
+      "F_min_N": 9414.58911,
+      "moving_max_bar": 89.22100871193186,
+      "saturation_rows_per_leg": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "missing_inputs": [],
+     "not_computable": [],
+     "class": "allowed_stop",
+     "verdict": "allowed_stop",
+     "recorded_items": {
+      "P3-1": "indeterminate",
+      "P3-2": "pass",
+      "P3-3": "pass",
+      "P3-4": "indeterminate",
+      "P3-5": "indeterminate",
+      "P3-8": "pass",
+      "FAULT0": "fail",
+      "P3-6": "fail"
+     }
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": "allowed_stop"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": []
+  },
+  {
+   "case": "D1S_J1_B_middle_Fs4_r0_pm2p8",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\D1S_J1_B_middle_Fs4_r0_pm2p8",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "0fa4ca368248992150a9e4ef67ce543c5bf2c91824d6452deccc4b1dcdda94cc",
+    "step_series.npz": "272eb45114794c6afccc5bbfe5c0ff0b824cb2c077899d4f007d604016197980",
+    "r8_series.npz": "5ec397a1266a62fe957f2c52ff8cc7071464c943945c5607f2ff82548403c2d3",
+    "flow_series.npz": "0a75c95a598cc5faff7924f5b71e5a9b0f0db320cd223071abc65dc21cb4971c",
+    "record/record.npz": "7bb14deefe326cbd772c2ee4ee789c71e910568c26186585af43e98a13cf7038"
+   },
+   "kind": "P3_S",
+   "criteria_id": "C-2",
+   "d1_id": "S-01",
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C2_20261114_222633/D1S_J1_B_middle_Fs4_r0_pm2p8/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "통과",
+   "judged_keys": [
+    "identity",
+    "K1_class",
+    "safe_stop_427_9",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 42.05800000027265,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "window_complete": false,
+     "verdict": "indeterminate",
+     "reason": "no READY (284.1)",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 42.05800000027265,
+     "t_loc_final_s": 43.20000000031056,
+     "t_first_done_s": null,
+     "locs_s": [
+      43.20000000031056
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 756.3747546591317,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 1.1420000000379105,
+     "time_ok": true,
+     "verdict": "pass",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 42.05800000027265,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      113455.97461005991,
+      112022.8737316805,
+      71382.48070833979,
+      71268.16852867186
+     ],
+     "min_t_s": [
+      42.05800000027265,
+      44.20500000034392,
+      52.546000000620815,
+      44.544000000355176
+     ],
+     "min_all_N": 71268.16852867186,
+     "min_leg": "RR",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "verdict": "pass",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 53.67400000065826,
+     "t_final_signed_s": 53.67400000065826,
+     "t_last_ready_s": null,
+     "verdict": "indeterminate",
+     "reason": "no READY",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.6770838881514238,
+     "stroke_max_leg": "RL",
+     "stroke_ok": true,
+     "clearance_min_m": null,
+     "clearance_samples": 0,
+     "clearance_ok": null,
+     "verdict": "indeterminate",
+     "reason": "no READY or no rut_clearance_m sample after READY",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-6": {
+     "clause": "P3-6 READY <= 120.0 s",
+     "t_ready_rel_s": null,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "fail",
+     "within": null,
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 43.00000000030392,
+     "t_soil_mode_s": 43.00000000030392,
+     "t_first_loc_s": 43.20000000031056,
+     "events": [],
+     "verdict": "pass",
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "fail",
+     "fault_events": [
+      "FAULT_LIFT_STROKE_LIMIT:soil:RL"
+     ],
+     "fault_phases": [
+      "fault"
+     ],
+     "any": true,
+     "record_only": "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+    },
+    "leg_lift_after_departure": {
+     "t0": 42.05800000027265,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "not_started",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "inactive",
+     "verdict": "record"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": false,
+     "c2_setup_las_off": null,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "on",
+      "present": {
+       "c2_setup.las_off": false,
+       "controller_meta.liftoff_approach_slow.start_s": true,
+       "controller_meta.liftoff_approach_slow.end_s": true,
+       "controller_meta.liftoff_approach_slow.end_reason": true,
+       "controller_meta.liftoff_approach_slow.active_periods": true,
+       "controller_meta.liftoff_approach_slow.ramp": true,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": true
+      },
+      "condition": {
+       "c2_setup.las_off": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.start_s": "required",
+       "controller_meta.liftoff_approach_slow.end_s": "required",
+       "controller_meta.liftoff_approach_slow.end_reason": "required",
+       "controller_meta.liftoff_approach_slow.active_periods": "required",
+       "controller_meta.liftoff_approach_slow.ramp": "required",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "required"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "preset",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": false,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_LAS_K1",
+     "expect_ok": true,
+     "las_settings_enable": true,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "Chrono row (LAS-b on, K1 on)",
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 1,
+     "fault_lift_stroke_limit": [
+      "FAULT_LIFT_STROKE_LIMIT:soil:RL"
+     ],
+     "fault_stroke_end": 0,
+     "verdict": "record"
+    },
+    "safe_stop_427_9": {
+     "clause": "spec 427.9 판정 분류 (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2, rev19 R19-1",
+     "category": "stroke_limited_stop",
+     "stop_event": "FAULT_LIFT_STROKE_LIMIT:soil:RL",
+     "first_fault_event": "FAULT_LIFT_STROKE_LIMIT:soil:RL",
+     "t_stop_s": 52.00000000060269,
+     "stop_reason": "soil",
+     "t_D_s": 42.05800000027265,
+     "t_level_start_s": 33.299999999981914,
+     "conditions": {
+      "1_stop_reason_soil": true,
+      "2_no_fault_stroke_end": true,
+      "3_no_leg_lift_from_level_start": true,
+      "4_min_after_departure_ge_Fmin": true,
+      "5_moving_le_180bar_saturation0": true
+     },
+     "values": {
+      "fault_stroke_end_events": 0,
+      "leg_lift_samples_from_level_start": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "min_after_departure_N": [
+       113455.97461005991,
+       112022.8737316805,
+       71382.48070833979,
+       71268.16852867186
+      ],
+      "min_after_departure_all_N": 71268.16852867186,
+      "F_min_N": 9414.58911,
+      "moving_max_bar": 89.40925056459206,
+      "saturation_rows_per_leg": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "missing_inputs": [],
+     "not_computable": [],
+     "class": "allowed_stop",
+     "verdict": "allowed_stop",
+     "recorded_items": {
+      "P3-1": "indeterminate",
+      "P3-2": "pass",
+      "P3-3": "pass",
+      "P3-4": "indeterminate",
+      "P3-5": "indeterminate",
+      "P3-8": "pass",
+      "FAULT0": "fail",
+      "P3-6": "fail"
+     }
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": "allowed_stop"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": []
+  },
+  {
+   "case": "D1C2_middle_rollm4.4_Fs4",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5s3_VB_D1C2_middle_rollm4.4_Fs4_20261115_004908\\D1C2_middle_rollm4.4_Fs4",
+   "folder_method": "case_log",
+   "engine": "l2b",
+   "input_files_sha256": {
+    "result.json": "59b8f149ca4b8e71e7a9de337287daef5afbfb83802c8d2a7d88d7ca9280cf6a",
+    "r8_series.npz": "5353b24e7a57c55ac675cb1d1c42d61a26c8ad05105fa3aea051686d52eb93d6",
+    "s8_series.npz": "0c1f42b741b360f8edcf829d1c8a00d3921eb8bee89ea023db8d3fe6bfb3603b",
+    "pads.npz": "0b16455be562da01e76ac640d2edd3199b65b1030b6455cf9ae0692628446003",
+    "controller_events.json": "60215a28453ffc66b2cff78e103ec7437a6a99ba813cc44867b7cb73b3d7f954",
+    "flow_series.npz": "c68c8c4730d5eb74a74ed0b38e9b05ef65261bf1c82910af9b412fd32ce247cf",
+    "record/record.npz": "cf6d1b718b1cb2f38c7f8a672fa261b15278165c328083d7dbc1c772970c6b07"
+   },
+   "kind": "D8P_judged",
+   "criteria_id": "C-2",
+   "d1_id": "C2-03",
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S8/v5s3_VB_D1C2_middle_rollm4.4_Fs4_20261115_004908/D1C2_middle_rollm4.4_Fs4/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": null,
+    "affinity_mask_ok": null,
+    "power_throttling_off_ok": null,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "통과",
+   "judged_keys": [
+    "D8_F_after_liftoff",
+    "D8_end_attitude",
+    "D8_READY",
+    "D8_pressure",
+    "D8_FAULT0",
+    "identity",
+    "K1_class",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 29.114999999945486,
+     "t_lift_basis": "1ms_sus",
+     "t_lift_first_le0_record_s": 28.699999999946453,
+     "t_lift_sus_up_10Hz_record_s": 29.199999999945287,
+     "clause_t_lift": "rev21 R21-1 (v5 rev6 5 t_lift,sus, W = 376.7 kN)",
+     "t0": 29.114999999945486,
+     "t1": 71.50000000125002,
+     "truncated_at_run_end": false,
+     "min_N": [
+      105498.07183939997,
+      84008.84191891148,
+      56907.80833590416,
+      46558.043813517004
+     ],
+     "min_t_s": [
+      53.866000000664634,
+      29.28399999994509,
+      59.86400000086375,
+      29.27599999994511
+     ],
+     "min_all_N": 46558.043813517004,
+     "min_leg": "RR",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "verdict": "pass"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      66.50000000125002,
+      71.50000000125002
+     ],
+     "absmax_deg": 0.015134563078460015,
+     "with_mount_deg": 0.03513456307846002,
+     "verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 58.50000000091615,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 113.11467271814031,
+     "all_max_bar": 113.11467271814031,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass"
+    },
+    "D8_FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "D8_stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record",
+     "clause": "d1 11 행정 가드 분류 (record)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "not_started",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "inactive",
+     "verdict": "record"
+    },
+    "identity": {
+     "clause": "rules 4.2 via rev2 R2-3; tag rev1 RV1-10 a",
+     "argv_k1_order_gate": false,
+     "argv_las_off": false,
+     "order_gate_enabled": true,
+     "flat_soil_margin_order_gate": true,
+     "argv_expect_controller": "final_C4G2_P3_LAS_K1",
+     "result_controller_tag": "final_C4G2_P3_LAS_K1",
+     "result_expect_ok": true,
+     "las_settings_9_values": "not checked by path 2 (preset values not in the rule text)",
+     "verdict": "pass"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": null,
+     "open_loop": false,
+     "code_state_compared": false,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "pads.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": []
+  },
+  {
+   "case": "D1C2_bottom_rollm4.4_Fs4",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5s3_VB_D1C2_bottom_rollm4.4_Fs4_20261115_005844\\D1C2_bottom_rollm4.4_Fs4",
+   "folder_method": "case_log",
+   "engine": "l2b",
+   "input_files_sha256": {
+    "result.json": "7e828bbfaacb1c861c504e32b4ce7708ba290d28b66189d660fb8b36cb78813d",
+    "r8_series.npz": "9eff3222fff4a50b43aaccd4f50ea2df6425e1eafe41cc79e00e0836c79877f1",
+    "s8_series.npz": "6d083d665dd04f6b217a36ba88451a3cd5b5f8670e429bbc799fbaf584c89859",
+    "pads.npz": "9e2dd833257353fd86d3398e4d0bd7a73c09661d5d1d5d9a5dd6f7e6008bcd77",
+    "controller_events.json": "0ad99a93cfc527cd7acbca3717db398fd0888a08803d2c91d6a65ded202a829d",
+    "flow_series.npz": "68a1ddebd5db1715cafd084e44e472179b78b7ec21fd4f8dbeda3bf6aa6b9edb",
+    "record/record.npz": "99c82f8a761ca09e727ec90e647463464bbed045581d4627fc6371f5f350a29e"
+   },
+   "kind": "D8P_judged",
+   "criteria_id": "C-2",
+   "d1_id": "C2-07",
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S8/v5s3_VB_D1C2_bottom_rollm4.4_Fs4_20261115_005844/D1C2_bottom_rollm4.4_Fs4/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": null,
+    "affinity_mask_ok": null,
+    "power_throttling_off_ok": null,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "통과",
+   "judged_keys": [
+    "D8_F_after_liftoff",
+    "D8_end_attitude",
+    "D8_READY",
+    "D8_pressure",
+    "D8_FAULT0",
+    "identity",
+    "K1_class",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 29.345999999944947,
+     "t_lift_basis": "1ms_sus",
+     "t_lift_first_le0_record_s": 28.899999999945987,
+     "t_lift_sus_up_10Hz_record_s": 29.39999999994482,
+     "clause_t_lift": "rev21 R21-1 (v5 rev6 5 t_lift,sus, W = 376.7 kN)",
+     "t0": 29.345999999944947,
+     "t1": 71.80000000125997,
+     "truncated_at_run_end": false,
+     "min_N": [
+      105524.43518023608,
+      94234.73605782622,
+      56704.203694796975,
+      52442.78388592633
+     ],
+     "min_t_s": [
+      54.14700000067396,
+      29.43899999994473,
+      60.345000000879715,
+      54.18000000067506
+     ],
+     "min_all_N": 52442.78388592633,
+     "min_leg": "RR",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "verdict": "pass"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      66.80000000125997,
+      71.80000000125997
+     ],
+     "absmax_deg": 0.015942404150781922,
+     "with_mount_deg": 0.035942404150781926,
+     "verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 58.80000000092611,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 106.51514696703309,
+     "all_max_bar": 106.51514696703309,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass"
+    },
+    "D8_FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "D8_stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record",
+     "clause": "d1 11 행정 가드 분류 (record)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "not_started",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "inactive",
+     "verdict": "record"
+    },
+    "identity": {
+     "clause": "rules 4.2 via rev2 R2-3; tag rev1 RV1-10 a",
+     "argv_k1_order_gate": false,
+     "argv_las_off": false,
+     "order_gate_enabled": true,
+     "flat_soil_margin_order_gate": true,
+     "argv_expect_controller": "final_C4G2_P3_LAS_K1",
+     "result_controller_tag": "final_C4G2_P3_LAS_K1",
+     "result_expect_ok": true,
+     "las_settings_9_values": "not checked by path 2 (preset values not in the rule text)",
+     "verdict": "pass"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": null,
+     "open_loop": false,
+     "code_state_compared": false,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "pads.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": []
+  },
+  {
+   "case": "D1PSC_J1_B_top_Fs4_spFLJ1_base",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\D1PSC_J1_B_top_Fs4_spFLJ1_base",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "a6383b960600ba0bebbc10d0a2f754bef8f6510e0cdce79e691c2f893a9e588e",
+    "step_series.npz": "dda48241d69adc6ebbe9af4b56f723644abc1d2f2ebbc340d76be218a0269cd7",
+    "r8_series.npz": "254f5890f868fb42cb08f333a6154ca57ebf07641e0bae1bba7da6d3997925f0",
+    "flow_series.npz": "8007a0f085a8c21d58dc480ec8d4ab0c69258981e7345d0f708d602d6cff09a5",
+    "record/record.npz": "1fa0f46187dec7b8998ad4511a2de523cc7aae00acbe537c38406908553e0b17"
+   },
+   "kind": "PSC_base",
+   "criteria_id": "C-2",
+   "d1_id": "PSC-base-FL",
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C2_20261114_230123/D1PSC_J1_B_top_Fs4_spFLJ1_base/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x000000FF",
+     "affinity_mask_process": "0x000000FF",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ]
+    },
+    "affinity_mask_process": "0x000000FF",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x000000FF"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "P3-1",
+    "P3-2",
+    "P3-3",
+    "P3-4",
+    "P3-5",
+    "P3-8",
+    "FAULT0",
+    "identity",
+    "K1_class",
+    "P3-6",
+    "D8_F_after_liftoff",
+    "D8_end_attitude",
+    "D8_READY",
+    "D8_pressure",
+    "D8_FAULT0",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 38.985000000170636,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "t_ready_s": 78.20000000147243,
+     "window_complete": true,
+     "ready_window_crawler_max_N": 0.0,
+     "verdict": "pass"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 38.985000000170636,
+     "t_loc_final_s": 41.700000000260765,
+     "t_first_done_s": 53.000000000635886,
+     "locs_s": [
+      41.700000000260765
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 0.0,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 2.7150000000901287,
+     "time_ok": true,
+     "verdict": "pass"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 38.985000000170636,
+     "t1": 208.00000000578135,
+     "truncated_at_run_end": false,
+     "min_N": [
+      114960.93676944388,
+      112535.22557524087,
+      68724.86983361629,
+      67928.44404877347
+     ],
+     "min_t_s": [
+      55.224000000709715,
+      74.71600000135678,
+      71.69200000125639,
+      72.96200000129855
+     ],
+     "min_all_N": 67928.44404877347,
+     "min_leg": "RR",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "verdict": "pass"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 79.82700000152644,
+     "t_final_signed_s": 79.82700000152644,
+     "t_last_ready_s": 78.20000000147243,
+     "window_s": [
+      79.82700000152644,
+      208.00000000578135
+     ],
+     "window_length_s": 128.1730000042549,
+     "absmax_deg": 0.05619226381132357,
+     "absmax_within_0p2_record": true,
+     "flags": [],
+     "verdict": "pass"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.5029953330284754,
+     "stroke_max_leg": "RL",
+     "stroke_ok": true,
+     "clearance_min_m": 0.06745866269644107,
+     "clearance_samples": 1299,
+     "clearance_ok": true,
+     "verdict": "pass"
+    },
+    "P3-6": {
+     "clause": "P3-6 READY <= 120.0 s",
+     "t_ready_rel_s": 70.20000000147773,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 35.10000000004167,
+     "t_soil_mode_s": 35.10000000004167,
+     "t_first_loc_s": 41.700000000260765,
+     "events": [],
+     "verdict": "pass"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "leg_lift_after_departure": {
+     "t0": 38.985000000170636,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "not_started",
+     "n_decisions": 1,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "inactive",
+     "verdict": "record"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": false,
+     "c2_setup_las_off": null,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "on",
+      "present": {
+       "c2_setup.las_off": false,
+       "controller_meta.liftoff_approach_slow.start_s": true,
+       "controller_meta.liftoff_approach_slow.end_s": true,
+       "controller_meta.liftoff_approach_slow.end_reason": true,
+       "controller_meta.liftoff_approach_slow.active_periods": true,
+       "controller_meta.liftoff_approach_slow.ramp": true,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": true
+      },
+      "condition": {
+       "c2_setup.las_off": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.start_s": "required",
+       "controller_meta.liftoff_approach_slow.end_s": "required",
+       "controller_meta.liftoff_approach_slow.end_reason": "required",
+       "controller_meta.liftoff_approach_slow.active_periods": "required",
+       "controller_meta.liftoff_approach_slow.ramp": "required",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "required"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "preset",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": false,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_LAS_K1",
+     "expect_ok": true,
+     "las_settings_enable": true,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "Chrono row (LAS-b on, K1 on)",
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record"
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": null
+    },
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 41.40200000025087,
+     "t_lift_basis": "1ms",
+     "t0": 41.40200000025087,
+     "t1": 208.00000000578135,
+     "truncated_at_run_end": false,
+     "min_N": [
+      114960.93676944388,
+      112535.22557524087,
+      68724.86983361629,
+      67928.44404877347
+     ],
+     "min_t_s": [
+      55.224000000709715,
+      74.71600000135678,
+      71.69200000125639,
+      72.96200000129855
+     ],
+     "min_all_N": 67928.44404877347,
+     "min_leg": "RR",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      203.00000000578135,
+      208.00000000578135
+     ],
+     "absmax_deg": 0.05551067594121768,
+     "with_mount_deg": 0.07551067594121769,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 70.20000000147773,
+     "limit_s": 90.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true,
+     "record_verdict": "pass"
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 91.0336681389761,
+     "all_max_bar": 91.09627433251681,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false,
+     "record_verdict": "pass"
+    },
+    "E_items": {
+     "verdict": "record",
+     "clause": "rev19 R19-2",
+     "note": "PS-c base row: no soil event, E-1..E-7 not computed (not a missing input)"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": []
+  },
+  {
+   "case": "D1PSC_J1_B_top_Fs4_FL_cslow",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\D1PSC_J1_B_top_Fs4_FL_cslow",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "9d911790322d94ed31e363cb9386788f1f4b2e93c8b2d09a911b375b8d9e8e98",
+    "step_series.npz": "dbc936bd238f46dd54ca4310cb5a7168c4851f424d1b073a1e1fd323e892fffd",
+    "r8_series.npz": "f4e186aff5125d135543db14ffd75703618b2d195378a31bff51292bdc7257ba",
+    "flow_series.npz": "c14235789a7a19a51725c266b2c8d03024c4cf86c710e75e8cce7c0967162179",
+    "record/record.npz": "907362df2e78aedf556e8197ad600d96e0b47d89bc55c23b87c3548b46860d4c",
+    "soil_event_series.npz": "f2ee16abe58e0e7c80396286a8f6dd8141c6e9d1e0e347ae7035e5430f8fc582"
+   },
+   "kind": "PSC",
+   "criteria_id": "C-2",
+   "d1_id": "PSC-c-slow-FL",
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C2_20261114_230123/D1PSC_J1_B_top_Fs4_FL_cslow/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x000000FF",
+     "affinity_mask_process": "0x000000FF",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ]
+    },
+    "affinity_mask_process": "0x000000FF",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x000000FF"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "미달",
+   "judged_keys": [
+    "E-1",
+    "E-3",
+    "E-4",
+    "E-5",
+    "E-6",
+    "E-7",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "E_branch": {
+     "verdict": "record",
+     "clause": "426.3 branch = adapter window (rev19 R19-3)",
+     "event": {
+      "event_id": "SS",
+      "speed": "slow",
+      "leg": "FL",
+      "t_ev_s": 83.20000000147243,
+      "depth_m": 0.0115,
+      "ramp_s": 20.0
+     },
+     "branch": {
+      "t_end_rel_s": 60.0,
+      "t_end_s": 143.20000000147243,
+      "reason": "max_after",
+      "min_after_s": 23.0,
+      "rows": 60500
+     },
+     "after_branch_end_record": {
+      "rows": 64801,
+      "min_F_cyl_N": [
+       114261.36290337083,
+       112009.05833321049,
+       67718.92170281554,
+       66516.71317866113
+      ],
+      "lift_samples_per_leg": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "window_end_s": 23.0
+    },
+    "E-1": {
+     "clause": "426.3 E-1 slow: no lift on any leg after the event",
+     "lift_samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "verdict": "pass"
+    },
+    "E-2": {
+     "clause": "426.3 E-2 (U57) fast events only",
+     "verdict": "not_applicable"
+    },
+    "E-3": {
+     "clause": "426.3 E-3: four legs 1 ms actual F_cyl >= F_min after W (fast) / after the event (slow) to the branch end (rev19 R19-3)",
+     "min_N": [
+      114847.94303602136,
+      112265.54762168959,
+      67731.65467300237,
+      67131.4115709153
+     ],
+     "F_min_N": 9414.58911,
+     "verdict": "pass"
+    },
+    "E-4": {
+     "clause": "426.3 E-4: in the event window F_cyl/A_p <= 350 bar per leg; outside it (after the event, to the branch end) moving 1 ms rows (|valve| > 1e-6 m/s) <= 180 bar and saturation 0 (extending, >= 210 bar)",
+     "window_end_s": 23.0,
+     "window_max_bar": [
+      89.73458940969189,
+      88.90463952361371,
+      78.18228144924471,
+      73.87058086988654
+     ],
+     "moving_outside_max_bar": 91.17597122668656,
+     "saturation_outside_ms": 0,
+     "verdict": "pass"
+    },
+    "E-5": {
+     "clause": "426.3 E-5 / r67 end_att, fault0: last c2_phase in the branch READY, last 1 s mean |roll|, |pitch| <= 0.2 deg, FAULT periods in the branch 0, run maximum stroke <= 684.8 mm",
+     "phase_at_end": "probe",
+     "end_mean_abs_deg": [
+      0.031585150077005596,
+      0.00637120669048481
+     ],
+     "fault_periods_in_branch": 0,
+     "stroke_max_m": 0.5126262522505427,
+     "branch_end_reason": "max_after",
+     "verdict": "fail"
+    },
+    "E-6": {
+     "clause": "426.3 E-6 (confirmed 2026-10-30): recontact in W of a fast event FLAG; outside W / after a slow event 0; end crawler load 0 and all-node clearance (crawler_gap_min_m at the cut) >= 25 mm (0 < c < 25 mm FLAG)",
+     "contact_in_W_ms": 0,
+     "contact_outside_ms": 0,
+     "end_load_N": 0.0,
+     "end_clearance_m": 0.0619443635593826,
+     "end_clearance_t_s": 143.1000000036269,
+     "flags": [],
+     "verdict": "pass"
+    },
+    "E-7": {
+     "clause": "426.3 E-7 (248.3): twist-work bundles > +20 J <= 1; tool run by path 2 (rev4 R4-A2 c)",
+     "layer": "tool-run (rev4 R4-A2 c)",
+     "n_bundles": 0,
+     "bundles": [],
+     "bins_J": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "verdict": "pass"
+    },
+    "E_records": {
+     "verdict": "record",
+     "diff_sink_events": [
+      "INFO_DIFF_SINK_HOLD:FL,RL:4.8",
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     "loc_revokes_after_event": 0
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": []
+  }
+ ],
+ "bundle_result": {
+  "status": "미달",
+  "stops": [],
+  "rows_judged": 5,
+  "rows_record": 1,
+  "row_status": {
+   "D1S_J1_B_bottom_Fs4_r0_pm2p8": "통과",
+   "D1S_J1_B_middle_Fs4_r0_pm2p8": "통과",
+   "D1C2_middle_rollm4.4_Fs4": "통과",
+   "D1C2_bottom_rollm4.4_Fs4": "통과",
+   "D1PSC_J1_B_top_Fs4_spFLJ1_base": "기록 완료",
+   "D1PSC_J1_B_top_Fs4_FL_cslow": "미달"
+  },
+  "note": null,
+  "recalculated_judged_items": 53,
+  "reaggregated_items": {
+   "names": [],
+   "count": 0
+  },
+  "TABLE_REAGG": [],
+  "safe_stop_427_9": {
+   "clause": "spec 427.9 / rev6 R6-B8 / rev18 R18-2, R18-4 / rev19 R19-1",
+   "rows": [
+    {
+     "case": "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+     "d1_id": "S-02",
+     "class": "allowed_stop",
+     "conditions": {
+      "1_stop_reason_soil": true,
+      "2_no_fault_stroke_end": true,
+      "3_no_leg_lift_from_level_start": true,
+      "4_min_after_departure_ge_Fmin": true,
+      "5_moving_le_180bar_saturation0": true
+     },
+     "leg_lift_samples_from_level_start": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "moving_max_bar": 89.22100871193186,
+     "saturation_rows_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "missing_inputs": []
+    },
+    {
+     "case": "D1S_J1_B_middle_Fs4_r0_pm2p8",
+     "d1_id": "S-01",
+     "class": "allowed_stop",
+     "conditions": {
+      "1_stop_reason_soil": true,
+      "2_no_fault_stroke_end": true,
+      "3_no_leg_lift_from_level_start": true,
+      "4_min_after_departure_ge_Fmin": true,
+      "5_moving_le_180bar_saturation0": true
+     },
+     "leg_lift_samples_from_level_start": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "moving_max_bar": 89.40925056459206,
+     "saturation_rows_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "missing_inputs": []
+    }
+   ],
+   "counts": {
+    "allowed_stop": 2,
+    "fail": 0,
+    "indeterminate": 0
+   },
+   "phrase": "통과 2 / 안전 종료 2",
+   "disclosure": "allowed_stop을 묶음 등급의 통과 쪽으로 센 것은 결과 본 뒤 정한 정의(사용자 결정 65, rev19 R19-1)"
+  },
+  "psc_E": {
+   "clause": "426.3 E-1..E-7 (rev4 R4-A2 b / c, rev18 R18-3 1, rev19 R19-2 / R19-3)",
+   "rows": {
+    "D1PSC_J1_B_top_Fs4_FL_cslow": {
+     "E-1": "pass",
+     "E-2": "not_applicable",
+     "E-3": "pass",
+     "E-4": "pass",
+     "E-5": "fail",
+     "E-6": "pass",
+     "E-7": "pass"
+    }
+   },
+   "record_rows": [
+    "D1PSC_J1_B_top_Fs4_spFLJ1_base"
+   ],
+   "e7_tool_output": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2\\e7_path2.json",
+   "limit_disclosure": "rev4 R4-A2 한계 공개 문장(판정서 한계 절에 그대로): \"T4-0·T4·T5, PS-c E-7, 잡음 S-1~S-6과 L1 게이트의 항목 값은 원 규칙이 지정한 같은 판정 도구를 경로 2가 따로 실행해 얻었다. 그래서 두 경로는 같은 계산 함수에 기댄다. 경로 2의 독립성은 도구 실행과 등급 재집계에 있고, 항목 값 계산에는 없다.\""
+  },
+  "rev9_R9_6_j11_record": {
+   "clause": "rev9 R9-6 (J11 outside C-5: record only, input absent counted)",
+   "rows": 6,
+   "input_absent_rows": 0,
+   "n_late_positive_on_actual_leg_rows": 0
+  }
+ }
+}

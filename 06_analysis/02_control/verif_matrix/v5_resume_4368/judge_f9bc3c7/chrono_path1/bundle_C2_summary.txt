@@ -1,0 +1,12 @@
+bundle C-2
+grade {"judged_rows": 5, "record_rows": 1, "grade_counts": {"allowed_stop": 2, "fail": 1, "pass": 2}, "allowed_stop_rows": ["D1S_J1_B_bottom_Fs4_r0_pm2p8", "D1S_J1_B_middle_Fs4_r0_pm2p8"], "flag_rows": [], "record_rows_reported": [], "missing_count": 0, "row_phrase": "통과 2 / 안전 종료 2 / 미달 1", "grade_without_stop": "fail", "grade": "fail", "status": "미달"}
+t_lift present ['3 F_min (1 ms)', '5a rocking amplitude', 'C1 D8 min true rod force', 'F2 lower-bound soundness'] max 0.09999999999976694 stop_rows []
+  D1C2_middle_rollm4.4_Fs4: runner 29.199999999945287 (rel 26.19999999994338, t0 3.0000000000019065) D-29 29.114999999945486 -> 10Hz 29.199999999945287 basis 1ms_sus diff 0.0 stop None
+  D1C2_bottom_rollm4.4_Fs4: runner 29.49999999994459 (rel 26.49999999994268, t0 3.0000000000019065) D-29 29.345999999944947 -> 10Hz 29.39999999994482 basis 1ms_sus diff 0.09999999999976694 stop None
+unjudged 0 {} unknown []
+row D1S_J1_B_bottom_Fs4_r0_pm2p8 judged allowed_stop judged_true None missing [] count_ok None
+row D1S_J1_B_middle_Fs4_r0_pm2p8 judged allowed_stop judged_true None missing [] count_ok None
+row D1C2_middle_rollm4.4_Fs4 judged pass judged_true 17 missing [] count_ok True
+row D1C2_bottom_rollm4.4_Fs4 judged pass judged_true 17 missing [] count_ok True
+row D1PSC_J1_B_top_Fs4_spFLJ1_base record pass judged_true None missing [] count_ok None
+row D1PSC_J1_B_top_Fs4_FL_cslow judged fail judged_true None missing [] count_ok None

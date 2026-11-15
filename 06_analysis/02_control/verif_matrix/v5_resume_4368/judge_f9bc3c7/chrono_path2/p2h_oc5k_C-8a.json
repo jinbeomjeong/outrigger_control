@@ -1,0 +1,69 @@
+{
+ "seals": {
+  "ok": true,
+  "rules_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+  "rev1_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+  "rev2_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+  "rev3_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+  "rev4_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+  "rev5_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+  "rev6_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+  "rev7_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+  "rev8_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+  "rev9_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+  "rev10_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+  "rev11_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+  "rev12_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+  "eol_only": [],
+  "eol_only_detail": {}
+ },
+ "row": "C-8a",
+ "k1": 0.9179,
+ "steps": [
+  {
+   "probe_file": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5PROBE_20261113_215123\\OC5P_Kc3_VB_n1_k0p9179\\result.json",
+   "k": 0.9179,
+   "floor_args": [
+    2.1434,
+    1.3784
+   ],
+   "floor_want": [
+    2.1434,
+    1.3784
+   ],
+   "duration_s": 7.0,
+   "R_c_recorded": 0.9523695802182304,
+   "R_c_path2": 0.9523695802182304,
+   "doubled_rerun": false
+  }
+ ],
+ "k": 0.9179,
+ "floor_deg": [
+  2.1434,
+  1.3784
+ ],
+ "n_probes_counted": 1,
+ "n_probe_files": 1,
+ "status": "pass",
+ "stops": [],
+ "undecidable": [],
+ "fails": [],
+ "records": [],
+ "stop_codes": [],
+ "tool": "p2_4368.py",
+ "version": "1",
+ "tool_sha256": "9e2673d5e50614346cfc86458ddc4f8afadea03250b98cb1fd224309f803c03d",
+ "cmd": "oc5k",
+ "argv": [
+  "--repo",
+  "C:\\workspace\\outrigger_control",
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_f9bc3c7\\chrono_path2\\p2h_oc5k_C-8a.json",
+  "oc5k",
+  "--row",
+  "C-8a",
+  "--probe",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5PROBE_20261113_215123\\OC5P_Kc3_VB_n1_k0p9179\\result.json"
+ ],
+ "created": "2026-11-15T18:00:18+09:00"
+}

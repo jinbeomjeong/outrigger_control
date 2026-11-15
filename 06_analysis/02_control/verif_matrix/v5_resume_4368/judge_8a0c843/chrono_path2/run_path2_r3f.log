@@ -1,0 +1,80 @@
+script C:\workspace\_resume_4368_20261115\p2r3f_8a0c843\run_path2_r3f.ps1 sha256 61cf51b2f62e624375290176efe88c1b0b8212f8c39cf5625c78c3991929a182
+k10 comparator C:\workspace\_resume_4368_20261115\p2r3f_8a0c843\k10_compare_r3f.py sha256 cc92c5479ef69e63dc7222e0b42914100e00f4877ba1d61ad924e834b67291dd
+R3f HEAD 8a0c8432d23c9db0916bf6f9cb9139466bd32551 (expected 8a0c8432d23c9db0916bf6f9cb9139466bd32551)
+[2026-11-16T02:02:59] R3c (before) outputs.sha256 check: all entries match
+[2026-11-16T02:02:59] R3d (before) outputs.sha256 check: all entries match
+[2026-11-16T02:02:59] R3d run log (outside the list) sha256 (before): ecf4b0f6f3f7bb7fff0a4522b9a0b592c48602100487d715759a1324756000c4
+[2026-11-16T02:02:59] CD-2 (1) judge code diff vs b9f5707d7f3f7a26230b25f4edbc1fec587ca612 : none; checkout 8a0c8432d23c9db0916bf6f9cb9139466bd32551
+  judge file 03_src/outrigger_sim/verify/s8_control.py sha256 3aa15db72e952bd7c6333776e6b2152e2729fc2ebb699794f492bb4cdb09bb09
+  judge file 03_src/outrigger_sim/verify/s6_control.py sha256 d0c413308e273e21707a1359c9b78631825c0e1998ab7f3e5de4739ae0346f34
+  judge file 03_src/outrigger_sim/verify/s6_bundle_c.py sha256 1d8f7dabf877e73a5cd6da64d2853f7be11ae4a7cfc9e3114e3a2d5354fa1410
+  judge file 04_scripts/02_chrono/run_S8C.py sha256 1e5d9fa20d7be634c107d12b1148cf0f5fffca74cc5f2d17901346b774067bb3
+  judge file 04_scripts/02_chrono/run_S6C.py sha256 7359bdd585b013b7df6bb7e43b54589bf7786fc697a6b68d039abb25b3134914
+[2026-11-16T02:02:59] CD-2 L2b S8 folders: 32 (expected 32)
+[2026-11-16T02:03:02] 01_p2_chrono_seal exit=0 :: {"tool": "p2_chrono.py", "cmd": "seal", "ok": true, "tool_sha256": "e6fcc72aeb0b3354b4620af9d84e9b0300f2c0afe28fa3a684a9ee737c9f4e95", "out_sha256": null}
+[2026-11-16T02:03:35] 02_test_p2_synthetic exit=0 :: {"tool": "test_p2_synthetic.py", "tests": 413, "failed": 0, "common_tool_sha256": "e6fcc72aeb0b3354b4620af9d84e9b0300f2c0afe28fa3a684a9ee737c9f4e95", "tmp": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\synth_tmp"}
+[2026-11-16T02:03:35] removed synthetic scratch C:\workspace\outrigger_control\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_8a0c843\chrono_path2\synth_tmp (result in logs\02_test_p2_synthetic.txt)
+[2026-11-16T02:03:40] 03_p2_e7 exit=0 :: {"tool": "p2_e7.py", "gate_ok": true, "rows": 1, "row_errors": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\e7_path2.json", "out_sha256": "79a85e2de69ff87fc92433333724edcc6be912c6996476898d1a9f91ca04cd17"}
+[2026-11-16T02:03:44] 03b_verify_S8C_v5s3_VB_D1C2_middle_rpBop_Fs4_20261114_110926 exit=0 :: }
+[2026-11-16T02:03:46] 03b_verify_S8C_v5s3_VB_D1C2_middle_fup3.2_Fs4_20261114_110926 exit=0 :: }
+[2026-11-16T02:03:50] 03b_verify_S8C_v5s3_VB_D1C2_middle_fdown3.2_Fs4_20261114_110926 exit=0 :: }
+[2026-11-16T02:03:53] 03b_verify_S8C_v5s3_VB_D1C2_bottom_fup3.2_Fs4_20261114_111917 exit=0 :: }
+[2026-11-16T02:03:57] 03b_verify_S8C_v5s3_VB_D1C2_bottom_fdown3.2_Fs4_20261114_111903 exit=0 :: }
+[2026-11-16T02:04:00] 03b_verify_S8C_v5s3_VB_D1C2_bottom_rpBop_Fs4_20261114_112101 exit=0 :: }
+[2026-11-16T02:04:02] 03b_verify_S8C_v5s3_VB_D1C2_middle_rollm4.4_Fs4_20261115_004908 exit=0 :: }
+[2026-11-16T02:04:05] 03b_verify_S8C_v5s3_VB_D1C2_bottom_rollm4.4_Fs4_20261115_005844 exit=0 :: }
+[2026-11-16T02:04:09] 03b_verify_S8C_v5s3_V0_E_G4_Fs4_20261114_113721 exit=0 :: }
+[2026-11-16T02:04:13] 03b_verify_S8C_v5s3_LS1_E_RE1bF_Fs8_20261114_113721 exit=0 :: }
+[2026-11-16T02:04:18] 03b_verify_S8C_v5s3_LS4_E_RE1bF_Fs8_20261114_113721 exit=0 :: }
+[2026-11-16T02:04:22] 03b_verify_S8C_v5s3_VB_E_RE1bF_Fs8_20261114_114534 exit=0 :: }
+[2026-11-16T02:04:27] 03b_verify_S8C_v5s3_VB_E_RE1bF_Fs0_20261114_115500 exit=0 :: }
+[2026-11-16T02:04:31] 03b_verify_S8C_v5s3_VB_G1R_FS24_FL_top_o050_Fs0_20261114_115454 exit=0 :: }
+[2026-11-16T02:04:35] 03b_verify_S8C_v5s3_VB_E_G4_Fs4_20261114_120247 exit=0 :: }
+[2026-11-16T02:04:39] 03b_verify_S8C_v5s3_VB_E_G4_Fs4_ph0.05_20261114_120955 exit=0 :: }
+[2026-11-16T02:04:42] 03b_verify_S8C_v5s3_VB_E_G4_Fs8_20261114_121015 exit=0 :: }
+[2026-11-16T02:04:46] 03b_verify_S8C_v5s3_LS1_E_G4_Fs8_20261114_121535 exit=0 :: }
+[2026-11-16T02:04:50] 03b_verify_S8C_v5s3_VB_K8_top_fdown3.5_Fs8_20261114_122308 exit=0 :: }
+[2026-11-16T02:04:53] 03b_verify_S8C_v5s3_LS4_E_G4_Fs8_20261114_122243 exit=0 :: }
+[2026-11-16T02:04:57] 03b_verify_S8C_v5s3_VB_S_top_fdown3.5_wika_Fs8_20261114_122828 exit=0 :: }
+[2026-11-16T02:05:01] 03b_verify_S8C_v5s3_V0_G1R_FS24_FL_top_o050_Fs0_20261114_123356 exit=0 :: }
+[2026-11-16T02:05:08] 03b_verify_S8C_v5s3_VB_K0V_top_fdown3.5_Fs0_20261114_123500 exit=0 :: }
+[2026-11-16T02:05:11] 03b_verify_S8C_v5s3_VB_K0_top_fdown3.2_Fs0_20261114_123917 exit=0 :: }
+[2026-11-16T02:05:17] 03b_verify_S8C_v5s3_LS1_K0V_top_fup3.5_Fs0_20261114_124459 exit=0 :: }
+[2026-11-16T02:05:20] 03b_verify_S8C_v5s3_VB_K8_top_rpB_Fs8_20261114_124415 exit=0 :: }
+[2026-11-16T02:05:23] 03b_verify_S8C_v5s3_VB_K0_top_fup3.2_Fs0_20261114_124917 exit=0 :: }
+[2026-11-16T02:05:29] 03b_verify_S8C_v5s3_VB_K0V_top_fup3.5_Fs0_20261114_125334 exit=0 :: }
+[2026-11-16T02:05:35] 03b_verify_S8C_v5s3_VB_K0V_top_roll5.5_Fs0_20261114_125406 exit=0 :: }
+[2026-11-16T02:05:41] 03b_verify_S8C_v5s3_LS4_K0V_top_fup3.5_Fs0_20261114_125746 exit=0 :: }
+[2026-11-16T02:05:43] 03b_verify_S8C_v5s3_VB_K0_top_rpBop_Fs0_20261114_130208 exit=0 :: }
+[2026-11-16T02:05:47] 03b_verify_S8C_v5s3_V0_E_G4_Fs4_ph0.05_20261114_130232 exit=0 :: }
+[2026-11-16T02:05:51] 04_p2_chrono_judge_C1 exit=0 :: {"tool": "p2_chrono.py", "bundle": "C-1", "tool_sha256": "d3f927d79f7ccfbdc32ab02d6a617de026a9300fcde8a3ba09371051ba3c069a", "status": "占쎈꽰?⑨옙", "rows": 10, "stops": [], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C1.json", "out_sha256": "52769dbcc15833ab66a6d877356bce0282d9a58b850f6631635841a2f364f7c9"}
+[2026-11-16T02:05:57] 04_p2_chrono_judge_C2 exit=1 :: {"tool": "p2_chrono.py", "bundle": "C-2", "tool_sha256": "179666f7e8358e266d1761ac8cd258434dcf0606f40a76fd665ea90d8f5c745f", "status": "沃섎챶??, "rows": 6, "stops": [], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C2.json", "out_sha256": "a37943700ff5c2338cbbdf589fb9f362aec7dccd1730549e417040b025ab8c11"}
+[2026-11-16T02:06:01] 04_p2_chrono_judge_C3 exit=0 :: {"tool": "p2_chrono.py", "bundle": "C-3", "tool_sha256": "0a6e98c783845b6c8690c4e1109fe6bb9dbb4053ac06d4996c4da857aaa945d0", "status": "占쎈꽰?⑨옙", "rows": 2, "stops": [], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C3.json", "out_sha256": "12c6fac34968e49635f4e2a6cdc6c95e334a8ad3e97e6cfea0b08af4bfbd2c34"}
+[2026-11-16T02:06:06] 04_p2_chrono_judge_C4 exit=0 :: {"tool": "p2_chrono.py", "bundle": "C-4", "tool_sha256": "79f12956f0beb21670f42a5d004779024385632e84c1f01849c97cafdcf0d7f1", "status": "疫꿸퀡以?占쎌끏?뤄옙", "rows": 4, "stops": [], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C4.json", "out_sha256": "5def3fdd6a97de32f3712ecd0ba3cf3bb01962bf0dd733b0d06fa50cf4cc5951"}
+[2026-11-16T02:06:20] 04_p2_chrono_judge_C5 exit=1 :: {"tool": "p2_chrono.py", "bundle": "C-5", "tool_sha256": "757899909e03997c048ffb3d1a0848d24d8329048cb8145af5810d27d9982649", "status": "占쎈솇占쎌젟 ?븍뜃占쏙옙", "rows": 35, "stops": ["CD-7: empty reason on P3b_J2_B_top_Fs4_m1p1_t180_seed20261026: H-9; P3b_J2_B_top_Fs4_m1p1_t180_seed20261028: H-9; P3b_J2_B_top_Fs4_m1p1_t180_seed20261026_flow: H-9; P3b_J1_B_top_Fs4_v0v: H-9; S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0_v0v: H-9; E_G4_Fs4_V0: H-9; G1R_FS24_FL_top_o050_Fs0_V0: H-9; E_G4_Fs4_ph0.05_V0: H-9; P3b_J2_B_top_Fs4_m1p1_t180_seed20261027: H-9; P3b_J2_B_top_Fs4_m1p1_t180_seed20261029: H-9; P3b_J2_B_top_Fs4_m1p1_t180_v0v: H-9"], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C5.json", "out_sha256": "e8462c305933fb22f3984232e52750049f7434a01ebf5d9bebd3410ddb348bd8"}
+[2026-11-16T02:06:22] 04_p2_chrono_judge_C6C7 exit=0 :: {"tool": "p2_chrono.py", "bundle": "C-6C7", "tool_sha256": "e18c42b4b3b5643091579bfb2bc3cf054fca78580f485e5603ae03c4d673e532", "status": "疫꿸퀡以?占쎌끏?뤄옙", "rows": 3, "stops": [], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C6C7.json", "out_sha256": "5027ee60f8cca0c08bff4c6ef7554fbffa926b75964e365794b9542d336a6228"}
+[2026-11-16T02:06:26] 04_p2_chrono_judge_C8 exit=0 :: {"tool": "p2_chrono.py", "bundle": "C-8", "tool_sha256": "77e848efb3b82a1e59f8f760154fb5857d52a816f83675d8e613bc4cc2745ffa", "status": "疫꿸퀡以?占쎌끏?뤄옙", "rows": 2, "stops": [], "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C8.json", "out_sha256": "eb0b8c5348b014a35cae483ecbaeecf156aab71edf11f48448eff65575f1f3da"}
+[2026-11-16T02:06:30] 05_p2_chrono_gs_load exit=0 :: {"tool": "p2_chrono.py", "cmd": "gs-load", "tool_sha256": "e6fcc72aeb0b3354b4620af9d84e9b0300f2c0afe28fa3a684a9ee737c9f4e95", "status": "ok", "rows": 12, "errors": 0, "input_errors": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\gs_load.json", "out_sha256": "390e884a20cff59674304430b64fac3afb77213eae3cbb007f8a6d95bcf05e14"}
+[2026-11-16T02:06:32] 06_p2_4368_seal exit=0 :: {"tool": "p2_4368.py", "version": "1", "tool_sha256": "9e2673d5e50614346cfc86458ddc4f8afadea03250b98cb1fd224309f803c03d", "cmd": "seal", "status": "pass", "exit": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2h_seal.json", "out_sha256": "76d87481aac32d25ae3160ac3f4744cc606c28cbb8dd5b8929bb5e6fec3c8375", "stop_codes": []}
+[2026-11-16T02:06:37] 07_p2_4368_chrono exit=2 :: {"tool": "p2_4368.py", "version": "1", "tool_sha256": "9e2673d5e50614346cfc86458ddc4f8afadea03250b98cb1fd224309f803c03d", "cmd": "chrono", "status": "stop", "exit": 2, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2h_chrono.json", "out_sha256": "ad0b9a7c4677a48b89eb84c1cd32d193604478f31365480e117000ee7ca7b2a6", "stop_codes": ["S-9"]}
+[2026-11-16T02:06:40] 08_p2_4368_oc5k_C-8a exit=0 :: {"tool": "p2_4368.py", "version": "1", "tool_sha256": "9e2673d5e50614346cfc86458ddc4f8afadea03250b98cb1fd224309f803c03d", "cmd": "oc5k", "status": "pass", "exit": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2h_oc5k_C-8a.json", "out_sha256": "805ad500eac75ef8477f476d5f5966a1d29c8f761778d6b215f376ebbf316ee2", "stop_codes": []}
+[2026-11-16T02:06:42] 08_p2_4368_oc5k_C-8b exit=0 :: {"tool": "p2_4368.py", "version": "1", "tool_sha256": "9e2673d5e50614346cfc86458ddc4f8afadea03250b98cb1fd224309f803c03d", "cmd": "oc5k", "status": "pass", "exit": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2h_oc5k_C-8b.json", "out_sha256": "51d2ae5fc2796c049f66fbfcb4e6ae9788ac33ee3472206a46339bf4852fee5a", "stop_codes": []}
+[2026-11-16T02:06:44] 08_p2_4368_openloop exit=0 :: {"tool": "p2_4368.py", "version": "1", "tool_sha256": "9e2673d5e50614346cfc86458ddc4f8afadea03250b98cb1fd224309f803c03d", "cmd": "openloop", "status": "pass", "exit": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2h_openloop.json", "out_sha256": "87dc0254709348326f3e3ed70acecaf7bb3d2c83a0863349be5a16ed0c377e80", "stop_codes": []}
+[2026-11-16T02:06:44] R3c (after) outputs.sha256 check: all entries match
+[2026-11-16T02:06:44] R3d (after) outputs.sha256 check: all entries match
+[2026-11-16T02:06:44] R3d run log (outside the list) sha256 (after): ecf4b0f6f3f7bb7fff0a4522b9a0b592c48602100487d715759a1324756000c4
+[2026-11-16T02:06:46] 10_k10_C1 exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C1.json"}
+[2026-11-16T02:06:48] 10_k10_C2 exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C2.json"}
+[2026-11-16T02:06:50] 10_k10_C3 exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C3.json"}
+[2026-11-16T02:06:52] 10_k10_C4 exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C4.json"}
+[2026-11-16T02:06:54] 10_k10_C5 exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C5.json"}
+[2026-11-16T02:06:56] 10_k10_C6C7 exit=0 :: {"tool": "k10_compare_r3f.py", "status": "equal", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C6C7.json"}
+[2026-11-16T02:06:58] 10_k10_C8 exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_p2_C8.json"}
+[2026-11-16T02:07:00] 10_k10_record_e7_path2 exit=0 :: {"tool": "k10_compare_r3f.py", "status": "equal", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_record_e7_path2.json"}
+[2026-11-16T02:07:03] 10_k10_record_gs_load exit=1 :: {"tool": "k10_compare_r3f.py", "status": "different", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_record_gs_load.json"}
+[2026-11-16T02:07:05] 10_k10_record_p2h_chrono exit=0 :: {"tool": "k10_compare_r3f.py", "status": "equal", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_record_p2h_chrono.json"}
+[2026-11-16T02:07:07] 10_k10_record_p2h_oc5k_C-8a exit=0 :: {"tool": "k10_compare_r3f.py", "status": "equal", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_record_p2h_oc5k_C-8a.json"}
+[2026-11-16T02:07:09] 10_k10_record_p2h_oc5k_C-8b exit=0 :: {"tool": "k10_compare_r3f.py", "status": "equal", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_record_p2h_oc5k_C-8b.json"}
+[2026-11-16T02:07:11] 10_k10_record_p2h_openloop exit=0 :: {"tool": "k10_compare_r3f.py", "status": "equal", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\k10\\k10_record_p2h_openloop.json"}
+[2026-11-16T02:07:11] K-10 per bundle vs R3d: C-1=different (sort against the allowed key list), C-2=different (sort against the allowed key list), C-3=different (sort against the allowed key list), C-4=different (sort against the allowed key list), C-5=different (sort against the allowed key list), C-6C7=equal, C-8=different (sort against the allowed key list); R3c / R3d lists after: match
+[2026-11-16T02:07:11] C-1..C-3 grade change vs R3d: 0

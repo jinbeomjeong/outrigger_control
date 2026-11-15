@@ -1,0 +1,1282 @@
+{
+ "tool": "p2_chrono.py (436.8 path 2, Chrono)",
+ "bundle": "C-6C7",
+ "tool_sha256": "e18c42b4b3b5643091579bfb2bc3cf054fca78580f485e5603ae03c4d673e532",
+ "tool_files_sha256": {
+  "p2_chrono.py": "1319c6e63d5a6bde425ffdadcb0d950598e5d1d5f41f307fdeda13bbc18ffa3d",
+  "p2_rules.py": "c48438d0a4dda6f878e4ac2e0b19941330227f8ab2d8a728af6e4eb7527e48c7",
+  "p2_core.py": "009427c749ac81efe9b5823fbe98b79065fadcc1fc1e0dd726ba54309998b0f4",
+  "p2_kinds.py": "e81ddfab58afa218f07e6000db280e4ba6acc3152d41c7be897770e86809d6b0",
+  "p2_t45.py": "03317f2af52d38fd2ba303df57e7841d1975ebed9907248eb29cc6ad9fbd2f6a",
+  "p2_psc.py": "fe2f414d0c5ce605b6c26cd5342db213e0b1677cf7426acb3c85e33fb6f5bc07",
+  "p2_e7.py": "499743186e695ca72b29069b0af002891bbd506bfd8235cfb2816dce620668f0",
+  "p2_cd.py": "f44b636f012a2fbbe1aa50625b157727966dcb23663c7b2bfcfb648b9c3893a5",
+  "p2_b_c67.py": "22597dca9522b586293205d19e9ac43f63f6a36a4e93b5eceacfc0c2bb5fefbd"
+ },
+ "seal": {
+  "ok": true,
+  "sealed": [
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md",
+    "role": "rules (original)",
+    "status": "match",
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
+    "role": "rules rev1",
+    "status": "match",
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
+    "role": "rules rev2",
+    "status": "match",
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+    "role": "rules rev3",
+    "status": "match",
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+    "role": "rules rev4",
+    "status": "match",
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+    "role": "rules rev5",
+    "status": "match",
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+    "role": "rules rev6",
+    "status": "match",
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+    "role": "rules rev7",
+    "status": "match",
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
+    "role": "rules rev8",
+    "status": "match",
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
+    "role": "rules rev9",
+    "status": "match",
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
+    "role": "rules rev10",
+    "status": "match",
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
+    "role": "rules rev11",
+    "status": "match",
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
+    "role": "rules rev12",
+    "status": "match",
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+    "role": "rules rev15",
+    "status": "match",
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+    "role": "rules rev16",
+    "status": "match",
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+    "role": "rules rev17",
+    "status": "match",
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+    "role": "rules rev18",
+    "status": "match",
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "role": "rules rev19",
+    "status": "match",
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+    "role": "rules rev20",
+    "status": "match",
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md",
+    "role": "rules rev21",
+    "status": "match",
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev22.md",
+    "role": "rules rev22",
+    "status": "match",
+    "sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md",
+    "role": "rules rev23",
+    "status": "match",
+    "sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev24.md",
+    "role": "rules rev24",
+    "status": "match",
+    "sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev25.md",
+    "role": "rules rev25 (wins)",
+    "status": "match",
+    "sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
+    "role": "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)",
+    "status": "match",
+    "sha256": "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
+    "role": "Appendix A: v5 rev8 (J-P3 3.2)",
+    "status": "match",
+    "sha256": "c6ec89f71c1d8de4c06000568c2e5978fd7f9fe58a53defea728f2f4886bb25f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev9.md",
+    "role": "Appendix A: v5 rev9 (J-P3 table)",
+    "status": "match",
+    "sha256": "3c50dda50ca6dca60177f26d91d86c009eeb4f9321f5ffd0c98ddc27cf62e981"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev2.md",
+    "role": "Appendix A: v5 rev2 (J11 D-1)",
+    "status": "match",
+    "sha256": "e120474b8ebd721e6edc4fec8eef811ce810006b8c489e38cecbb7ae5caeed77"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules.md",
+    "role": "Appendix A: D-1 rules 11",
+    "status": "match",
+    "sha256": "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
+    "role": "Appendix A: D-1 rules rev1",
+    "status": "match",
+    "sha256": "eb730bddae35e76bc2569503605dea714b066fa42de7bc7b98efdde3edb3e868"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md",
+    "role": "Appendix A: P5r4 judgement (R2-5 source, not opened)",
+    "status": "match",
+    "sha256": "5e9fb33b7419d624d8dc305ad93121be090802cc5c85ea29fbc823e019fc9e2f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev6.md",
+    "role": "Appendix A: v5 rev6 (t_lift, J11)",
+    "status": "match",
+    "sha256": "fd5117031ef460cf4c6aa74807b2e73de984b014abb89a952b593499841da39c"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12.md",
+    "role": "Appendix A: v5 rev12 (C-5 rows)",
+    "status": "match",
+    "sha256": "e02d63cc1290383ee85d9a1f3a20c6348224b60999cccaf8d587cf610c5f5eb2"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12a.md",
+    "role": "Appendix A: v5 rev12a",
+    "status": "match",
+    "sha256": "e171141dce180fbb48493b9b95503ff3577d16f17cc54061ce3ad6e9efd51458"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12b.md",
+    "role": "Appendix A: v5 rev12b",
+    "status": "match",
+    "sha256": "0d17f87e9532d558efcab9fa89648e2790ece9c7568a802fbaa4c7631824e75d"
+   }
+  ],
+  "recorded": [
+   {
+    "file": "00_docs/04_control/s6_control_spec.md",
+    "sha256": "1924ae89a02752761f7b1e494304843f5c99d29c59d3989f7671ee258143be16"
+   },
+   {
+    "file": "02_params/rexome33.yaml",
+    "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+   },
+   {
+    "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+    "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e"
+   }
+  ]
+ },
+ "params": {
+  "F_min_N": 9414.58911,
+  "v_max_m_s": 0.0209243016,
+  "head_area_m2": [
+   0.013273229,
+   0.013273229,
+   0.00950331778,
+   0.00950331778
+  ]
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "rows": [
+  {
+   "case": "P3a_G1_B_V0_FB",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638\\P3a_G1_B_V0_FB",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "2750f949ebc90f33311196dfcfff6309edd0bec5a6af43b3415346cb82c8ae5a",
+    "series.npz": "d1e8427fbcf7f054c170bbc4b64a487cc8ea3a2637d8371c5253fb5faffa1760"
+   },
+   "kind": "C-7b",
+   "criteria_id": "C-7b",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C6C7_20261113_215638/P3a_G1_B_V0_FB/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "analyse",
+    "spec_11047",
+    "speed_ratios",
+    "R11-4_commit"
+   ],
+   "items": {
+    "analyse": {
+     "clause": "rules 5.3 / 9.1: openloop_compare.analyse",
+     "verdict": "record",
+     "script_sha256": "a91a8fe1905d0dee383437ff4f65253a501289a9fb1b75e40687f5cbc70328c0",
+     "dropped_keys": [
+      "stored_before_liftoff",
+      "stored_creep_stop",
+      "stored_liftoff_s",
+      "stored_p3a_checks"
+     ],
+     "values": {
+      "t_liftoff_s": 27.27599999994977,
+      "t_liftoff_after_start_s": 19.27599999994977,
+      "s_motor_at_liftoff_mm": [
+       349.2892220123981,
+       349.3069935254385,
+       349.53643585995,
+       349.49506575189656
+      ],
+      "pad_N_at_liftoff_kN": [
+       113.44814489037606,
+       112.86898999965618,
+       76.2264769386943,
+       77.1544100184992
+      ],
+      "sink_at_liftoff_mm": [
+       7.005252697833253,
+       6.949759475878725,
+       8.39433677105128,
+       8.28603121966176
+      ],
+      "sink_end_mm": [
+       7.703621940439165,
+       7.462807666637872,
+       8.39682416862475,
+       8.157876398424468
+      ],
+      "creep_after_liftoff_mm": [
+       0.6983692426059118,
+       0.5130481907591466,
+       0.0024873975734696074,
+       -0.12815482123729183
+      ],
+      "pre_liftoff_min_F_kN": [
+       13.245525471426534,
+       13.210306003409979,
+       13.36041107773036,
+       13.314485599346337
+      ],
+      "pre_liftoff_min_t_s": [
+       26.643999999951244,
+       26.642999999951247,
+       26.74399999995101,
+       26.741999999951016
+      ],
+      "creep_stop_first_s": 1.351999999996849,
+      "creep_stop_final_s": 3.8799999999909573,
+      "sink_rate_end_mm_s": [
+       0.007402562421710002,
+       -0.0055464761674617336,
+       0.0053626231115710965,
+       -0.00845791904935389
+      ],
+      "d_roll_pitch_liftoff_deg": [
+       -0.0017181318810402199,
+       -0.04422564837783212
+      ],
+      "d_roll_pitch_end_deg": [
+       -0.00831444841051243,
+       -0.027984487706528643
+      ],
+      "roll_rate_last1s_deg_s": 0.00024352933649935538,
+      "roll_rate_last3s_deg_s": -6.051272806382069e-05,
+      "pitch_rate_last1s_deg_s": 0.0002597317976493696,
+      "roll_quad_last4s": {
+       "a2_deg_s2": -3.23267553333544e-05,
+       "a1_deg_s": -0.00016136936995144832
+      },
+      "roll_pp_last1s_deg": 0.0010199801555653039,
+      "decomp_end_deg": {
+       "stroke_roll": -0.0027597772069128186,
+       "stroke_pitch": 0.01094913915340905,
+       "sink_roll": -0.005557540286591627,
+       "sink_pitch": -0.03892864310944799,
+       "sum_roll": -0.008317317454644042,
+       "sum_pitch": -0.027979507588860548
+      },
+      "s_motor_end_mm": [
+       579.1608805464354,
+       579.2981195225581,
+       580.1048810007111,
+       580.2103370850208
+      ],
+      "s_motor_max_mm": 580.2103370850208,
+      "stroke_margin_mm": 104.58966291497917,
+      "F_peak_kN": [
+       124.6008523738057,
+       120.65786865746713,
+       77.14949598962887,
+       77.85412541620538
+      ],
+      "F_peak_ratio_max": 0.4470181252691981,
+      "F_end_kN": [
+       118.7604520566638,
+       115.9759320755055,
+       71.69443395381204,
+       70.15366552505309
+      ],
+      "pad_N_end_kN": [
+       119.80880807625522,
+       117.02473986531045,
+       72.41065314730578,
+       70.8700546814679
+      ],
+      "us_per_step": 2527.0574295016568,
+      "wall_s": 1009.0540316000115
+     }
+    },
+    "spec_11047": {
+     "clause": "spec 11047: open-loop pre-lift-off min F_a < F_min -> FLAG",
+     "verdict": "record",
+     "flag": false,
+     "legs": []
+    },
+    "speed_ratios": {
+     "clause": "rev2 R2-4",
+     "v_max_m_s": 0.0209243016,
+     "r_vu": null,
+     "r_vu_reason": "no flow_series.npz (V0: not applicable, rules 5.3)",
+     "r_v": [
+      0.8769091893027084,
+      0.8769091892495227,
+      0.8769062088027366,
+      0.8769062087579768
+     ],
+     "r_v_window_s": [
+      9.999999999990033,
+      19.99999999996673
+     ],
+     "verdict": "record"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": true,
+     "code_state_compared": false,
+     "open_loop_code_state_same_record": true,
+     "problems": [],
+     "verdict": "pass"
+    }
+   },
+   "notes": [],
+   "failures_reported": []
+  },
+  {
+   "case": "P3a_G1_B_VB_FB",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638\\P3a_G1_B_VB_FB",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "5f65cb3a737fd9154c6c996b45b270ea5796760391e8985ffbbf2cb0d0cd0b6c",
+    "series.npz": "8b71a6e3d5a9cca7013119cbb5cce41f8b89806faf58847db7967a51392dd313",
+    "flow_series.npz": "ae40951bcf2f272d26b45eb5c87717d1358def528994aefdf7df02f13c6183a1"
+   },
+   "kind": "C-7a",
+   "criteria_id": "C-7a",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C6C7_20261113_215638/P3a_G1_B_VB_FB/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "analyse",
+    "spec_11047",
+    "speed_ratios",
+    "R11-4_commit"
+   ],
+   "items": {
+    "analyse": {
+     "clause": "rules 5.3 / 9.1: openloop_compare.analyse",
+     "verdict": "record",
+     "script_sha256": "a91a8fe1905d0dee383437ff4f65253a501289a9fb1b75e40687f5cbc70328c0",
+     "dropped_keys": [
+      "stored_before_liftoff",
+      "stored_creep_stop",
+      "stored_liftoff_s",
+      "stored_p3a_checks"
+     ],
+     "values": {
+      "t_liftoff_s": 27.33199999994964,
+      "t_liftoff_after_start_s": 19.33199999994964,
+      "s_motor_at_liftoff_mm": [
+       349.283544752493,
+       349.30120592038065,
+       349.52931750120104,
+       349.4878870429693
+      ],
+      "pad_N_at_liftoff_kN": [
+       113.37554274487748,
+       112.80076214121034,
+       76.1939454788333,
+       77.12244933689243
+      ],
+      "sink_at_liftoff_mm": [
+       7.000683564110544,
+       6.945398887592935,
+       8.390018561196033,
+       8.28194314302122
+      ],
+      "sink_end_mm": [
+       7.702245560710752,
+       7.463436511855548,
+       8.396867727602064,
+       8.160042401164302
+      ],
+      "creep_after_liftoff_mm": [
+       0.7015619966002085,
+       0.5180376242626128,
+       0.00684916640603106,
+       -0.12190074185691735
+      ],
+      "pre_liftoff_min_F_kN": [
+       13.19501949385687,
+       13.285380982932336,
+       13.276875266416614,
+       13.228671880823622
+      ],
+      "pre_liftoff_min_t_s": [
+       26.699999999951114,
+       26.699999999951114,
+       26.79999999995088,
+       26.797999999950886
+      ],
+      "creep_stop_first_s": 1.351999999996849,
+      "creep_stop_final_s": 3.8799999999909573,
+      "sink_rate_end_mm_s": [
+       0.007354069565534971,
+       -0.0063802953143010654,
+       0.006635297744139734,
+       -0.008055317175292842
+      ],
+      "d_roll_pitch_liftoff_deg": [
+       -0.0017112329700158157,
+       -0.04424541186001635
+      ],
+      "d_roll_pitch_end_deg": [
+       -0.00818750254361654,
+       -0.028051706832686207
+      ],
+      "roll_rate_last1s_deg_s": 0.00022707483101455875,
+      "roll_rate_last3s_deg_s": -1.7507500000644373e-05,
+      "pitch_rate_last1s_deg_s": 0.000322342064560753,
+      "roll_quad_last4s": {
+       "a2_deg_s2": -3.826371376180049e-06,
+       "a1_deg_s": -5.055613207614754e-05
+      },
+      "roll_pp_last1s_deg": 0.0010737418706937623,
+      "decomp_end_deg": {
+       "stroke_roll": -0.002679427682590584,
+       "stroke_pitch": 0.010899028956752647,
+       "sink_roll": -0.005510951023096848,
+       "sink_pitch": -0.03894575050171711,
+       "sum_roll": -0.008190378668846122,
+       "sum_pitch": -0.02804672517144008
+      },
+      "s_motor_end_mm": [
+       578.1373777849938,
+       578.2707559796888,
+       579.0767628880735,
+       579.1790005627639
+      ],
+      "s_motor_max_mm": 579.1790005627639,
+      "stroke_margin_mm": 105.62099943723602,
+      "F_peak_kN": [
+       124.60423051380656,
+       120.66036763499503,
+       77.15398286259654,
+       77.85867016792234
+      ],
+      "F_peak_ratio_max": 0.44703024468717406,
+      "F_end_kN": [
+       118.70426098696281,
+       115.98990764466359,
+       71.69285345792449,
+       70.1938993001971
+      ],
+      "pad_N_end_kN": [
+       119.75266946283645,
+       117.03885607035917,
+       72.409006086509,
+       70.91060123316316
+      ],
+      "us_per_step": 2663.371573002776,
+      "wall_s": 1063.4842691000085,
+      "flow": {
+       "supply_L_min": 51.169999829999995,
+       "short_s": 0.0,
+       "limited_s": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+       },
+       "max_deficit_L_min": 0.0,
+       "deficit_integral_end_mm": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+       },
+       "speed_ratio": {
+        "FL": {
+         "min_r_by_phase": {
+          "lift": 1.0
+         },
+         "longest_below_0p93_s": 0.0
+        },
+        "FR": {
+         "min_r_by_phase": {
+          "lift": 1.0
+         },
+         "longest_below_0p93_s": 0.0
+        },
+        "RL": {
+         "min_r_by_phase": {
+          "lift": 1.0
+         },
+         "longest_below_0p93_s": 0.0
+        },
+        "RR": {
+         "min_r_by_phase": {
+          "lift": 1.0
+         },
+         "longest_below_0p93_s": 0.0
+        }
+       },
+       "tracking": {
+        "max_abs_integral_mm": {
+         "FL": 0.0,
+         "FR": 0.0,
+         "RL": 0.0,
+         "RR": 0.0
+        },
+        "max_between_legs_mm": 0.0
+       },
+       "limited_sets": {},
+       "max_sum_Q_over_supply_minus_1": -0.020002347839,
+       "audit_mismatches": 0
+      },
+      "m2": {
+       "law": "flow_limited_r5",
+       "shift_total_mm": [
+        -0.004275194664441578,
+        -0.004275194668416748,
+        -0.0049721622268909995,
+        -0.004972162231056706
+       ],
+       "clipped_steps": [
+        4,
+        4,
+        4,
+        4
+       ],
+       "clip_times_s": [
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693,
+         8.000499999994693
+        ],
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693,
+         8.000499999994693
+        ],
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693,
+         8.000499999994693
+        ],
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693,
+         8.000499999994693
+        ]
+       ],
+       "tension_truth": {
+        "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+        "substeps": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "substeps_over_margin": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "active_substeps": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "max_excess_bar": [
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "min_p_tr_minus_p_star_bar": [
+         null,
+         null,
+         null,
+         null
+        ],
+        "first_t_s": [
+         null,
+         null,
+         null,
+         null
+        ],
+        "back_pressure_bar": 5.0,
+        "margin_bar": 0.5
+       },
+       "extend_bound_check": null,
+       "n_releases": 4
+      },
+      "v5_controller_options": {
+       "lock_window_follows_plant": true,
+       "extend_start_tracked": true,
+       "applied": false,
+       "reason": "machine open-loop lift: no controller (the plant options alone act)"
+      },
+      "v5_records": {
+       "rod_release": {
+        "m2_shift_total_mm": [
+         -0.004275194664441578,
+         -0.004275194668416748,
+         -0.0049721622268909995,
+         -0.004972162231056706
+        ],
+        "m2_clipped_steps": [
+         4,
+         4,
+         4,
+         4
+        ]
+       },
+       "overlap_cut_steps": [
+        0,
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    },
+    "spec_11047": {
+     "clause": "spec 11047: open-loop pre-lift-off min F_a < F_min -> FLAG",
+     "verdict": "record",
+     "flag": false,
+     "legs": []
+    },
+    "speed_ratios": {
+     "clause": "rev2 R2-4",
+     "v_max_m_s": 0.0209243016,
+     "r_vu": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "r_vu_window_s": [
+      8.5,
+      39.93000000020201
+     ],
+     "r_v": [
+      0.8769091889347057,
+      0.8769091889383218,
+      0.8769062082325311,
+      0.876906208235984
+     ],
+     "r_v_window_s": [
+      9.999999999990033,
+      19.99999999996673
+     ],
+     "verdict": "record"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": true,
+     "code_state_compared": false,
+     "open_loop_code_state_same_record": true,
+     "problems": [],
+     "verdict": "pass"
+    }
+   },
+   "notes": [],
+   "failures_reported": []
+  },
+  {
+   "case": "P3a_G1_B_VB_prop",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638\\P3a_G1_B_VB_prop",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "8db61189ab66cea9c9744af77943123a080d823be27364ce1527f555c2d22caa",
+    "series.npz": "6b35d00d2c02f980b21eb24e3a38297f7f5dfa657532eaa0258996851813667a",
+    "flow_series.npz": "685fd53c97723496a26ecf28c50ed3b98d3f29903b85712d94901c6142cc9778"
+   },
+   "kind": "C-6",
+   "criteria_id": "C-6",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C6C7_20261113_215638/P3a_G1_B_VB_prop/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "analyse",
+    "spec_11047",
+    "speed_ratios",
+    "R11-4_commit"
+   ],
+   "items": {
+    "analyse": {
+     "clause": "rules 5.3 / 9.1: openloop_compare.analyse",
+     "verdict": "record",
+     "script_sha256": "a91a8fe1905d0dee383437ff4f65253a501289a9fb1b75e40687f5cbc70328c0",
+     "dropped_keys": [
+      "stored_before_liftoff",
+      "stored_creep_stop",
+      "stored_liftoff_s",
+      "stored_p3a_checks"
+     ],
+     "values": {
+      "t_liftoff_s": 26.9209999999506,
+      "t_liftoff_after_start_s": 18.9209999999506,
+      "s_motor_at_liftoff_mm": [
+       349.2822761820491,
+       349.3001202732541,
+       349.53786348783854,
+       349.49669824707973
+      ],
+      "pad_N_at_liftoff_kN": [
+       113.49257575947254,
+       112.91294232545211,
+       76.11757607845941,
+       77.04186332152982
+      ],
+      "sink_at_liftoff_mm": [
+       7.0112048894415135,
+       6.955530114558073,
+       8.370770061151278,
+       8.262438583240161
+      ],
+      "sink_end_mm": [
+       7.70276286510696,
+       7.467515524731905,
+       8.40874979331363,
+       8.178905443318119
+      ],
+      "creep_after_liftoff_mm": [
+       0.6915579756654466,
+       0.5119854101738319,
+       0.037979732162352065,
+       -0.08353313992204292
+      ],
+      "pre_liftoff_min_F_kN": [
+       13.213408017559592,
+       13.303879647507358,
+       13.225082260690355,
+       13.359777917408287
+      ],
+      "pre_liftoff_min_t_s": [
+       26.300999999952044,
+       26.300999999952044,
+       26.399999999951813,
+       26.398999999951815
+      ],
+      "creep_stop_first_s": 1.3599999999968304,
+      "creep_stop_final_s": 3.880999999990955,
+      "sink_rate_end_mm_s": [
+       -0.005458560487392461,
+       0.010347386311782003,
+       -0.012713024333477208,
+       0.0037494924494119175
+      ],
+      "d_roll_pitch_liftoff_deg": [
+       -0.0017236272520417054,
+       -0.043778138467970434
+      ],
+      "d_roll_pitch_end_deg": [
+       -0.007644931829019377,
+       -0.02898656103996705
+      ],
+      "roll_rate_last1s_deg_s": -0.00016823300500566515,
+      "roll_rate_last3s_deg_s": -0.00023301533955299333,
+      "pitch_rate_last1s_deg_s": 0.00010108413546518952,
+      "roll_quad_last4s": {
+       "a2_deg_s2": -0.000142564160348524,
+       "a1_deg_s": -0.000611737645575525
+      },
+      "roll_pp_last1s_deg": 0.002050047881602645,
+      "decomp_end_deg": {
+       "stroke_roll": -0.002254027362213542,
+       "stroke_pitch": 0.010117621681979553,
+       "sink_roll": -0.005393605742211052,
+       "sink_pitch": -0.03909930464346572,
+       "sum_roll": -0.007647633076102595,
+       "sum_pitch": -0.02898168645390085
+      },
+      "s_motor_end_mm": [
+       517.5203187739259,
+       517.6321875084622,
+       518.3904612234179,
+       518.4768334896921
+      ],
+      "s_motor_max_mm": 518.4768334896921,
+      "stroke_margin_mm": 166.32316651030789,
+      "F_peak_kN": [
+       124.57188420026051,
+       120.55062918995417,
+       77.51642881894476,
+       78.39580802875138
+      ],
+      "F_peak_ratio_max": 0.4469141990248431,
+      "F_end_kN": [
+       118.75692054241718,
+       116.27481591528303,
+       71.46559141767945,
+       70.08897306245943
+      ],
+      "pad_N_end_kN": [
+       119.80662001219135,
+       117.32280705011785,
+       72.18144687486117,
+       70.80606690015425
+      ],
+      "us_per_step": 2576.48035083338,
+      "wall_s": 927.5329263000167,
+      "flow": {
+       "supply_L_min": 51.169999829999995,
+       "short_s": 27.7749,
+       "limited_s": {
+        "FL": 27.7749,
+        "FR": 27.7749,
+        "RL": 27.7749,
+        "RR": 27.7749
+       },
+       "max_deficit_L_min": 6.02,
+       "deficit_integral_end_mm": {
+        "FL": 60.9555,
+        "FR": 60.9555,
+        "RL": 60.9555,
+        "RR": 60.9555
+       },
+       "speed_ratio": {
+        "FL": {
+         "min_r_by_phase": {
+          "lift": 0.89474
+         },
+         "longest_below_0p93_s": 27.002
+        },
+        "FR": {
+         "min_r_by_phase": {
+          "lift": 0.89474
+         },
+         "longest_below_0p93_s": 27.002
+        },
+        "RL": {
+         "min_r_by_phase": {
+          "lift": 0.89474
+         },
+         "longest_below_0p93_s": 27.002
+        },
+        "RR": {
+         "min_r_by_phase": {
+          "lift": 0.89474
+         },
+         "longest_below_0p93_s": 27.002
+        }
+       },
+       "tracking": {
+        "max_abs_integral_mm": {
+         "FL": 60.956,
+         "FR": 60.956,
+         "RL": 60.956,
+         "RR": 60.956
+        },
+        "max_between_legs_mm": 0.0
+       },
+       "limited_sets": {
+        "FL+FR+RL+RR": 27.775
+       },
+       "max_sum_Q_over_supply_minus_1": 0.0,
+       "audit_mismatches": 0
+      },
+      "m2": {
+       "law": "flow_limited_r5",
+       "shift_total_mm": [
+        -0.00428110390138812,
+        -0.004281103905374587,
+        -0.004979599197178199,
+        -0.004979599201355242
+       ],
+       "clipped_steps": [
+        3,
+        3,
+        4,
+        4
+       ],
+       "clip_times_s": [
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693
+        ],
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693
+        ],
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693,
+         8.000499999994693
+        ],
+        [
+         8.000199999994694,
+         8.000299999994693,
+         8.000399999994693,
+         8.000499999994693
+        ]
+       ],
+       "tension_truth": {
+        "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+        "substeps": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "substeps_over_margin": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "active_substeps": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "max_excess_bar": [
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "min_p_tr_minus_p_star_bar": [
+         null,
+         null,
+         null,
+         null
+        ],
+        "first_t_s": [
+         null,
+         null,
+         null,
+         null
+        ],
+        "back_pressure_bar": 5.0,
+        "margin_bar": 0.5
+       },
+       "extend_bound_check": null,
+       "n_releases": 4
+      },
+      "v5_controller_options": {
+       "lock_window_follows_plant": true,
+       "extend_start_tracked": true,
+       "applied": false,
+       "reason": "machine open-loop lift: no controller (the plant options alone act)"
+      },
+      "v5_records": {
+       "rod_release": {
+        "m2_shift_total_mm": [
+         -0.00428110390138812,
+         -0.004281103905374587,
+         -0.004979599197178199,
+         -0.004979599201355242
+        ],
+        "m2_clipped_steps": [
+         3,
+         3,
+         4,
+         4
+        ]
+       },
+       "overlap_cut_steps": [
+        0,
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    },
+    "spec_11047": {
+     "clause": "spec 11047: open-loop pre-lift-off min F_a < F_min -> FLAG",
+     "verdict": "record",
+     "flag": false,
+     "legs": []
+    },
+    "speed_ratios": {
+     "clause": "rev2 R2-4",
+     "v_max_m_s": 0.0209243016,
+     "r_vu": [
+      0.894736837447082,
+      0.894736837447082,
+      0.894736837447082,
+      0.894736837447082
+     ],
+     "r_vu_window_s": [
+      8.5,
+      36.000000000071545
+     ],
+     "r_v": [
+      0.8948074314423266,
+      0.8948074314230806,
+      0.894804389962376,
+      0.8948043899479063
+     ],
+     "r_v_window_s": [
+      9.999999999990033,
+      19.99999999996673
+     ],
+     "verdict": "record"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": true,
+     "code_state_compared": false,
+     "open_loop_code_state_same_record": true,
+     "problems": [],
+     "verdict": "pass"
+    }
+   },
+   "notes": [],
+   "failures_reported": []
+  }
+ ],
+ "bundle_result": {
+  "status": "기록 완료",
+  "stops": [],
+  "rows_judged": 0,
+  "rows_record": 3,
+  "row_status": {
+   "P3a_G1_B_V0_FB": "기록 완료",
+   "P3a_G1_B_VB_FB": "기록 완료",
+   "P3a_G1_B_VB_prop": "기록 완료"
+  },
+  "note": null,
+  "recalculated_judged_items": 12,
+  "reaggregated_items": {
+   "names": [],
+   "count": 0
+  },
+  "TABLE_REAGG": []
+ }
+}

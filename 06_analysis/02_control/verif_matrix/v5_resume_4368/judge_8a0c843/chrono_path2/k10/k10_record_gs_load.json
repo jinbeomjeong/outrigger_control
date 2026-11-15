@@ -1,0 +1,268 @@
+{
+ "r3c": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2\\gs_load.json",
+ "r3d": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\gs_load.json",
+ "excluded_keys": [
+  "batch",
+  "cd7_change_reason",
+  "cd7_empty_reasons",
+  "cd7_reason",
+  "cd7_row_reason",
+  "checkout_commit",
+  "clause",
+  "clause_t_lift",
+  "created",
+  "disclosure",
+  "e7_tool_output",
+  "folder",
+  "head",
+  "input_files_sha256",
+  "layer",
+  "limit_disclosure",
+  "manifest",
+  "note",
+  "out_sha256",
+  "rule",
+  "seal",
+  "t45_report",
+  "tool",
+  "tool_files_sha256",
+  "tool_sha256"
+ ],
+ "dropped_list_elements_containing": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2"
+ ],
+ "status": "different",
+ "differences": [
+  {
+   "path": "$.rows[1].n_items",
+   "r3c": 11,
+   "r3d": 12
+  },
+  {
+   "path": "$.rows[1].n_judged_keys",
+   "r3c": 9,
+   "r3d": 5
+  },
+  {
+   "path": "$.rows[2].absent_inputs",
+   "r3c": "len 5",
+   "r3d": "len 2"
+  },
+  {
+   "path": "$.rows[2].absent_inputs[0].item",
+   "r3c": "P3-1",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[2].absent_inputs[0].reason",
+   "r3c": "no READY (284.1)",
+   "r3d": "no confirmed LOC"
+  },
+  {
+   "path": "$.rows[2].absent_inputs[1].item",
+   "r3c": "P3-2",
+   "r3d": "D8_F_after_liftoff"
+  },
+  {
+   "path": "$.rows[2].absent_inputs[1].reason",
+   "r3c": "no confirmed LOC",
+   "r3d": "no crawler lift-off"
+  },
+  {
+   "path": "$.rows[2].n_items",
+   "r3c": 25,
+   "r3d": 29
+  },
+  {
+   "path": "$.rows[2].n_judged_keys",
+   "r3c": 17,
+   "r3d": 3
+  },
+  {
+   "path": "$.rows[3].absent_inputs",
+   "r3c": "len 5",
+   "r3d": "len 2"
+  },
+  {
+   "path": "$.rows[3].absent_inputs[0].item",
+   "r3c": "P3-1",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[3].absent_inputs[0].reason",
+   "r3c": "no READY (284.1)",
+   "r3d": "no confirmed LOC"
+  },
+  {
+   "path": "$.rows[3].absent_inputs[1].item",
+   "r3c": "P3-2",
+   "r3d": "D8_F_after_liftoff"
+  },
+  {
+   "path": "$.rows[3].absent_inputs[1].reason",
+   "r3c": "no confirmed LOC",
+   "r3d": "no crawler lift-off"
+  },
+  {
+   "path": "$.rows[3].n_items",
+   "r3c": 25,
+   "r3d": 29
+  },
+  {
+   "path": "$.rows[3].n_judged_keys",
+   "r3c": 17,
+   "r3d": 3
+  },
+  {
+   "path": "$.rows[4].absent_inputs",
+   "r3c": "len 4",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.rows[4].absent_inputs[0].item",
+   "r3c": "P3-1",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[4].absent_inputs[0].reason",
+   "r3c": "no READY (284.1)",
+   "r3d": "no confirmed LOC"
+  },
+  {
+   "path": "$.rows[4].n_items",
+   "r3c": 19,
+   "r3d": 21
+  },
+  {
+   "path": "$.rows[4].n_judged_keys",
+   "r3c": 12,
+   "r3d": 13
+  },
+  {
+   "path": "$.rows[5].absent_inputs",
+   "r3c": "len 4",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.rows[5].absent_inputs[0].item",
+   "r3c": "P3-1",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[5].absent_inputs[0].reason",
+   "r3c": "no READY (284.1)",
+   "r3d": "no confirmed LOC"
+  },
+  {
+   "path": "$.rows[5].n_items",
+   "r3c": 18,
+   "r3d": 19
+  },
+  {
+   "path": "$.rows[5].n_judged_keys",
+   "r3c": 12,
+   "r3d": 13
+  },
+  {
+   "path": "$.rows[6].absent_inputs",
+   "r3c": "len 0",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.rows[6].n_items",
+   "r3c": 13,
+   "r3d": 28
+  },
+  {
+   "path": "$.rows[6].n_judged_keys",
+   "r3c": 6,
+   "r3d": 11
+  },
+  {
+   "path": "$.rows[6].r7_4_absent_where_required",
+   "r3c": null,
+   "r3d": []
+  },
+  {
+   "path": "$.rows[7].absent_inputs",
+   "r3c": "len 0",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.rows[7].n_items",
+   "r3c": 13,
+   "r3d": 28
+  },
+  {
+   "path": "$.rows[7].n_judged_keys",
+   "r3c": 6,
+   "r3d": 11
+  },
+  {
+   "path": "$.rows[7].r7_4_absent_where_required",
+   "r3c": null,
+   "r3d": []
+  },
+  {
+   "path": "$.rows[8].absent_inputs",
+   "r3c": "len 1",
+   "r3d": "len 2"
+  },
+  {
+   "path": "$.rows[8].n_items",
+   "r3c": 13,
+   "r3d": 28
+  },
+  {
+   "path": "$.rows[8].n_judged_keys",
+   "r3c": 6,
+   "r3d": 11
+  },
+  {
+   "path": "$.rows[8].r7_4_absent_where_required",
+   "r3c": null,
+   "r3d": []
+  },
+  {
+   "path": "$.rows[10].absent_inputs",
+   "r3c": "len 0",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.rows[10].n_items",
+   "r3c": 8,
+   "r3d": 27
+  },
+  {
+   "path": "$.rows[10].n_judged_keys",
+   "r3c": 6,
+   "r3d": 7
+  },
+  {
+   "path": "$.rows[10].r7_4_absent_where_required",
+   "r3c": null,
+   "r3d": []
+  },
+  {
+   "path": "$.rows[11].absent_inputs",
+   "r3c": "len 0",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.rows[11].n_items",
+   "r3c": 8,
+   "r3d": 27
+  },
+  {
+   "path": "$.rows[11].n_judged_keys",
+   "r3c": 6,
+   "r3d": 7
+  },
+  {
+   "path": "$.rows[11].r7_4_absent_where_required",
+   "r3c": null,
+   "r3d": []
+  }
+ ]
+}

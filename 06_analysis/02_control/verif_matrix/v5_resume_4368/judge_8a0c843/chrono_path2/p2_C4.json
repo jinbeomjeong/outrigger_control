@@ -1,0 +1,3559 @@
+{
+ "tool": "p2_chrono.py (436.8 path 2, Chrono)",
+ "bundle": "C-4",
+ "tool_sha256": "79f12956f0beb21670f42a5d004779024385632e84c1f01849c97cafdcf0d7f1",
+ "tool_files_sha256": {
+  "p2_chrono.py": "1319c6e63d5a6bde425ffdadcb0d950598e5d1d5f41f307fdeda13bbc18ffa3d",
+  "p2_rules.py": "c48438d0a4dda6f878e4ac2e0b19941330227f8ab2d8a728af6e4eb7527e48c7",
+  "p2_core.py": "009427c749ac81efe9b5823fbe98b79065fadcc1fc1e0dd726ba54309998b0f4",
+  "p2_kinds.py": "e81ddfab58afa218f07e6000db280e4ba6acc3152d41c7be897770e86809d6b0",
+  "p2_t45.py": "03317f2af52d38fd2ba303df57e7841d1975ebed9907248eb29cc6ad9fbd2f6a",
+  "p2_psc.py": "fe2f414d0c5ce605b6c26cd5342db213e0b1677cf7426acb3c85e33fb6f5bc07",
+  "p2_e7.py": "499743186e695ca72b29069b0af002891bbd506bfd8235cfb2816dce620668f0",
+  "p2_cd.py": "f44b636f012a2fbbe1aa50625b157727966dcb23663c7b2bfcfb648b9c3893a5",
+  "p2_b_c4.py": "0472dc0eb6dc703cf32f809dd53b2ca772c55744a69cf33b6a475a6108acba85"
+ },
+ "seal": {
+  "ok": true,
+  "sealed": [
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md",
+    "role": "rules (original)",
+    "status": "match",
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
+    "role": "rules rev1",
+    "status": "match",
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
+    "role": "rules rev2",
+    "status": "match",
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+    "role": "rules rev3",
+    "status": "match",
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+    "role": "rules rev4",
+    "status": "match",
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+    "role": "rules rev5",
+    "status": "match",
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+    "role": "rules rev6",
+    "status": "match",
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+    "role": "rules rev7",
+    "status": "match",
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
+    "role": "rules rev8",
+    "status": "match",
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
+    "role": "rules rev9",
+    "status": "match",
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
+    "role": "rules rev10",
+    "status": "match",
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
+    "role": "rules rev11",
+    "status": "match",
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
+    "role": "rules rev12",
+    "status": "match",
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+    "role": "rules rev15",
+    "status": "match",
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+    "role": "rules rev16",
+    "status": "match",
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+    "role": "rules rev17",
+    "status": "match",
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+    "role": "rules rev18",
+    "status": "match",
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "role": "rules rev19",
+    "status": "match",
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+    "role": "rules rev20",
+    "status": "match",
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md",
+    "role": "rules rev21",
+    "status": "match",
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev22.md",
+    "role": "rules rev22",
+    "status": "match",
+    "sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md",
+    "role": "rules rev23",
+    "status": "match",
+    "sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev24.md",
+    "role": "rules rev24",
+    "status": "match",
+    "sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev25.md",
+    "role": "rules rev25 (wins)",
+    "status": "match",
+    "sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
+    "role": "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)",
+    "status": "match",
+    "sha256": "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
+    "role": "Appendix A: v5 rev8 (J-P3 3.2)",
+    "status": "match",
+    "sha256": "c6ec89f71c1d8de4c06000568c2e5978fd7f9fe58a53defea728f2f4886bb25f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev9.md",
+    "role": "Appendix A: v5 rev9 (J-P3 table)",
+    "status": "match",
+    "sha256": "3c50dda50ca6dca60177f26d91d86c009eeb4f9321f5ffd0c98ddc27cf62e981"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev2.md",
+    "role": "Appendix A: v5 rev2 (J11 D-1)",
+    "status": "match",
+    "sha256": "e120474b8ebd721e6edc4fec8eef811ce810006b8c489e38cecbb7ae5caeed77"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules.md",
+    "role": "Appendix A: D-1 rules 11",
+    "status": "match",
+    "sha256": "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
+    "role": "Appendix A: D-1 rules rev1",
+    "status": "match",
+    "sha256": "eb730bddae35e76bc2569503605dea714b066fa42de7bc7b98efdde3edb3e868"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md",
+    "role": "Appendix A: P5r4 judgement (R2-5 source, not opened)",
+    "status": "match",
+    "sha256": "5e9fb33b7419d624d8dc305ad93121be090802cc5c85ea29fbc823e019fc9e2f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev6.md",
+    "role": "Appendix A: v5 rev6 (t_lift, J11)",
+    "status": "match",
+    "sha256": "fd5117031ef460cf4c6aa74807b2e73de984b014abb89a952b593499841da39c"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12.md",
+    "role": "Appendix A: v5 rev12 (C-5 rows)",
+    "status": "match",
+    "sha256": "e02d63cc1290383ee85d9a1f3a20c6348224b60999cccaf8d587cf610c5f5eb2"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12a.md",
+    "role": "Appendix A: v5 rev12a",
+    "status": "match",
+    "sha256": "e171141dce180fbb48493b9b95503ff3577d16f17cc54061ce3ad6e9efd51458"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12b.md",
+    "role": "Appendix A: v5 rev12b",
+    "status": "match",
+    "sha256": "0d17f87e9532d558efcab9fa89648e2790ece9c7568a802fbaa4c7631824e75d"
+   }
+  ],
+  "recorded": [
+   {
+    "file": "00_docs/04_control/s6_control_spec.md",
+    "sha256": "1924ae89a02752761f7b1e494304843f5c99d29c59d3989f7671ee258143be16"
+   },
+   {
+    "file": "02_params/rexome33.yaml",
+    "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+   },
+   {
+    "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+    "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e"
+   }
+  ]
+ },
+ "params": {
+  "F_min_N": 9414.58911,
+  "v_max_m_s": 0.0209243016,
+  "head_area_m2": [
+   0.013273229,
+   0.013273229,
+   0.00950331778,
+   0.00950331778
+  ]
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "rows": [
+  {
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "7923e7c151a5f397b5102914fb2ab73a4c40a93fade9cee73adf6232f00bb5a9",
+    "step_series.npz": "475a5434e2496f849d687913d75f63e9e2dd7fa7677f4b91e0dc9b058645e7fd",
+    "r8_series.npz": "594101bfed3b11d2ff3ef2fde128df007734cb50d9a741006727414db84f33be",
+    "flow_series.npz": "f71c849cf2e74a7200a5e51a46f778ae283a318705a49a2de68b3f391851f73a",
+    "record/record.npz": "3f2abf57c0b4b89917cedc480029101ce89189238425c593825f14760ad98ec5"
+   },
+   "kind": "record_D8_G6",
+   "criteria_id": "C-4",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C4_20261113_222912/R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": "on",
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "CD-9_record"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 35.22900000004595,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "t_ready_s": 81.20000000157202,
+     "window_complete": true,
+     "ready_window_crawler_max_N": 0.0,
+     "verdict": "pass"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 35.22900000004595,
+     "t_loc_final_s": 36.50000000008814,
+     "t_first_done_s": 69.20000000117366,
+     "locs_s": [
+      36.50000000008814
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 0.0,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 1.2710000000421928,
+     "time_ok": true,
+     "verdict": "pass"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 35.22900000004595,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122317.24642750931,
+      88086.35553183626,
+      10813.782713753233,
+      72593.34917533369
+     ],
+     "min_t_s": [
+      76.25100000140773,
+      36.14800000007646,
+      35.93900000006952,
+      71.8190000012606
+     ],
+     "min_all_N": 10813.782713753233,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.13100000000434875,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.13100000000434875,
+     "verdict": "pass",
+     "outside_start_condition": "R_c > 1: shortfall = L-5 known limit (7.4)"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 81.65300000158706,
+     "t_final_signed_s": 81.65300000158706,
+     "t_last_ready_s": 81.20000000157202,
+     "window_s": [
+      81.65300000158706,
+      168.00000000445348
+     ],
+     "window_length_s": 86.34700000286642,
+     "absmax_deg": 0.023859707573883393,
+     "absmax_within_0p2_record": true,
+     "flags": [],
+     "verdict": "pass"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.6580065679220669,
+     "stroke_max_leg": "FR",
+     "stroke_ok": true,
+     "clearance_min_m": null,
+     "clearance_samples": 0,
+     "clearance_ok": null,
+     "verdict": "indeterminate",
+     "reason": "no READY or no rut_clearance_m sample after READY",
+     "value_cd9": "해당 없음(rigid_base)",
+     "cd7_reason": "해당 없음(rigid_base) (사용자 결정 88)"
+    },
+    "P3-6": {
+     "clause": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": false,
+     "verdict": "record",
+     "within": true,
+     "limit_basis": "421.1 ① 바닥 경사",
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s"
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 36.50000000008814,
+     "t_soil_mode_s": null,
+     "t_first_loc_s": 36.50000000008814,
+     "events": [],
+     "verdict": "pass"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "leg_lift_after_departure": {
+     "t0": 35.22900000004595,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "started",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "las_active",
+     "verdict": "record",
+     "cd11_class": "관문"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": false,
+     "c2_setup_las_off": null,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "on",
+      "present": {
+       "c2_setup.las_off": false,
+       "controller_meta.liftoff_approach_slow.start_s": true,
+       "controller_meta.liftoff_approach_slow.end_s": true,
+       "controller_meta.liftoff_approach_slow.end_reason": true,
+       "controller_meta.liftoff_approach_slow.active_periods": true,
+       "controller_meta.liftoff_approach_slow.ramp": true,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": true
+      },
+      "condition": {
+       "c2_setup.las_off": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.start_s": "required",
+       "controller_meta.liftoff_approach_slow.end_s": "required",
+       "controller_meta.liftoff_approach_slow.end_reason": "required",
+       "controller_meta.liftoff_approach_slow.active_periods": "required",
+       "controller_meta.liftoff_approach_slow.ramp": "required",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "required"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "preset",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": false,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_LAS_K1",
+     "expect_ok": true,
+     "las_settings_enable": true,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "Chrono row (LAS-b on, K1 on)",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "G6-6": {
+     "clause": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+     "fault": false,
+     "ready_reached": true,
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record",
+     "stop": null
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": null
+    },
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 35.365000000050465,
+     "t_lift_basis": "1ms",
+     "t0": 35.365000000050465,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122317.24642750931,
+      88086.35553183626,
+      10813.782713753233,
+      72593.34917533369
+     ],
+     "min_t_s": [
+      76.25100000140773,
+      36.14800000007646,
+      35.93900000006952,
+      71.8190000012606
+     ],
+     "min_all_N": 10813.782713753233,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.13100000000434875,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.13100000000434875,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      163.00000000445348,
+      168.00000000445348
+     ],
+     "absmax_deg": 0.021067268255091223,
+     "with_mount_deg": 0.04106726825509122,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true,
+     "record_verdict": "pass"
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 130.87739950481898,
+     "all_max_bar": 130.87739950481898,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "Fmin_time_8s": {
+     "t0": 35.22900000004595,
+     "t1": 43.22900000004595,
+     "truncated_at_run_end": false,
+     "min_N": [
+      137579.83004001842,
+      88086.35553183626,
+      10813.782713753233,
+      97356.87870036285
+     ],
+     "min_t_s": [
+      43.22900000031152,
+      36.14800000007646,
+      35.93900000006952,
+      43.22900000031152
+     ],
+     "min_all_N": 10813.782713753233,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.13100000000434875,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.13100000000434875,
+     "clause": "rev2 R2-5 [t_D, t_D + 8 s]",
+     "verdict": "record"
+    },
+    "R_c": {
+     "crawler_attitude_deg": [
+      2.3620181222471603,
+      1.726765995745734
+     ],
+     "R_c": 1.07643667418126,
+     "clause": "rules 2 / 7.4",
+     "verdict": "record"
+    },
+    "READY_le_120s": {
+     "clause": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+     "t_ready_rel_s": 73.20000000157732,
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+     "verdict": "pass"
+    },
+    "P3-7": {
+     "clause": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+     "verdict_role": "record",
+     "lw_mode": "restart",
+     "reconstruct_ok": true,
+     "t_P_rec_s": 35.00000000003835,
+     "t_loc_rec_s": 36.50000000008814,
+     "t_P_meta_s": 35.00000000003835,
+     "t_loc_meta_s": 36.50000000008814,
+     "n_windows": 7,
+     "loaded_threshold_N": 3765.8356424339,
+     "W_ref_N": 376583.56424339,
+     "mass_scale": 1.0,
+     "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+     "rise_min_loaded_N": null,
+     "t_end_at_min_s": null,
+     "crawler_at_end_N": null,
+     "rise_min_gt1kN_N_record": null,
+     "rise_min_gt0p05W_N_record": null,
+     "rise_min_loaded_true_N_record": null,
+     "within": true,
+     "verdict": "record",
+     "note": "부담 창 없음 (통과로 셈)",
+     "record_verdict": "pass"
+    },
+    "CD-9_record": {
+     "clause": "CD-9",
+     "rigid_base": "FR",
+     "values": {
+      "t_D_s": 35.22900000004595,
+      "R_c": 1.07643667418126,
+      "min_after_departure": {
+       "min_N": [
+        122317.24642750931,
+        88086.35553183626,
+        10813.782713753233,
+        72593.34917533369
+       ],
+       "min_t_s": [
+        76.25100000140773,
+        36.14800000007646,
+        35.93900000006952,
+        71.8190000012606
+       ],
+       "min_leg": "RL"
+      },
+      "P3-1": "pass",
+      "P3-2": "pass",
+      "P3-3": "pass",
+      "P3-4": "pass",
+      "P3-5": "해당 없음(rigid_base)",
+      "P3-6": "record",
+      "P3-7": "pass",
+      "P3-8": "pass",
+      "P3-9": "record",
+      "FAULT0": "pass"
+     },
+     "missing": [],
+     "record_status": "기록 완료",
+     "verdict": "record",
+     "cd7_reason": ""
+    },
+    "earlier_record_keys": {
+     "verdict": "record",
+     "keys": [
+      "P3-1",
+      "P3-2",
+      "P3-3",
+      "P3-4",
+      "P3-5",
+      "P3-8",
+      "FAULT0",
+      "identity",
+      "K1_class",
+      "D8_F_after_liftoff",
+      "D8_end_attitude",
+      "D8_pressure",
+      "Fmin_time_8s",
+      "R_c"
+     ]
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": [],
+   "cd7_row_reason": ""
+  },
+  {
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "35b5929902ec60118f29b9f87dec4a94e4eeb8dfafaaaff6b2226fcbad67433b",
+    "step_series.npz": "214cc7f48ae1035c1d2056d9aa103763e77796a4f9112042642b8fabba0687ba",
+    "r8_series.npz": "2b20682a4897a0faff448651215f7b96cc9b460665f58d06f62d3aefa038dd87",
+    "flow_series.npz": "c797d51bc430fd50da9946b8439392c46ef0a0e0bee19f2789adcf189da743a0",
+    "record/record.npz": "2c5b51b05e017f3dcdd27ad44593b4537b195e23dce7060fc1eee273b303cc08"
+   },
+   "kind": "record_D8_G6",
+   "criteria_id": "C-4",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C4_20261113_222912/R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": "off",
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "CD-9_record"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 35.09400000004147,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "t_ready_s": 81.20000000157202,
+     "window_complete": true,
+     "ready_window_crawler_max_N": 0.0,
+     "verdict": "pass"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 35.09400000004147,
+     "t_loc_final_s": 36.100000000074864,
+     "t_first_done_s": 69.20000000117366,
+     "locs_s": [
+      36.100000000074864
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 0.0,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 1.0060000000333957,
+     "time_ok": true,
+     "verdict": "pass"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 35.09400000004147,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122240.6738360018,
+      87704.71689465945,
+      7653.189442478606,
+      72487.51731353626
+     ],
+     "min_t_s": [
+      76.25200000140777,
+      35.54500000005644,
+      35.27900000004761,
+      71.8160000012605
+     ],
+     "min_all_N": 7653.189442478606,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.117000000003884,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.16000000000531145,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.117000000003884,
+     "t_below_Fmin_plus2k_max_s": 0.16000000000531145,
+     "verdict": "fail",
+     "outside_start_condition": "R_c > 1: shortfall = L-5 known limit (7.4)"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 81.65300000158706,
+     "t_final_signed_s": 81.65300000158706,
+     "t_last_ready_s": 81.20000000157202,
+     "window_s": [
+      81.65300000158706,
+      168.00000000445348
+     ],
+     "window_length_s": 86.34700000286642,
+     "absmax_deg": 0.023260727745773434,
+     "absmax_within_0p2_record": true,
+     "flags": [],
+     "verdict": "pass"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.6583233301266801,
+     "stroke_max_leg": "FR",
+     "stroke_ok": true,
+     "clearance_min_m": null,
+     "clearance_samples": 0,
+     "clearance_ok": null,
+     "verdict": "indeterminate",
+     "reason": "no READY or no rut_clearance_m sample after READY",
+     "value_cd9": "해당 없음(rigid_base)",
+     "cd7_reason": "해당 없음(rigid_base) (사용자 결정 88)"
+    },
+    "P3-6": {
+     "clause": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": false,
+     "verdict": "record",
+     "within": true,
+     "limit_basis": "421.1 ① 바닥 경사",
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s"
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 36.100000000074864,
+     "t_soil_mode_s": null,
+     "t_first_loc_s": 36.100000000074864,
+     "events": [],
+     "verdict": "pass"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "leg_lift_after_departure": {
+     "t0": 35.09400000004147,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "las_none",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "las_none_inactive",
+     "verdict": "record",
+     "cd11_class": "관문"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": true,
+     "c2_setup_las_off": true,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "off",
+      "present": {
+       "c2_setup.las_off": true,
+       "controller_meta.liftoff_approach_slow.start_s": false,
+       "controller_meta.liftoff_approach_slow.end_s": false,
+       "controller_meta.liftoff_approach_slow.end_reason": false,
+       "controller_meta.liftoff_approach_slow.active_periods": false,
+       "controller_meta.liftoff_approach_slow.ramp": false,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": false
+      },
+      "condition": {
+       "c2_setup.las_off": "required",
+       "controller_meta.liftoff_approach_slow.start_s": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.end_s": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.end_reason": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.active_periods": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.ramp": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "absent_allowed"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "on",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": true,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_K1",
+     "expect_ok": true,
+     "las_settings_enable": false,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "C-4 off arm (LAS-b off, K1 on)",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "G6-6": {
+     "clause": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+     "fault": false,
+     "ready_reached": true,
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record",
+     "stop": null
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": null
+    },
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 35.14100000004303,
+     "t_lift_basis": "1ms",
+     "t0": 35.14100000004303,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122240.6738360018,
+      87704.71689465945,
+      7653.189442478606,
+      72487.51731353626
+     ],
+     "min_t_s": [
+      76.25200000140777,
+      35.54500000005644,
+      35.27900000004761,
+      71.8160000012605
+     ],
+     "min_all_N": 7653.189442478606,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.117000000003884,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.16000000000531145,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.117000000003884,
+     "t_below_Fmin_plus2k_max_s": 0.16000000000531145,
+     "verdict": "fail",
+     "record_verdict": "fail"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      163.00000000445348,
+      168.00000000445348
+     ],
+     "absmax_deg": 0.02046680791354024,
+     "with_mount_deg": 0.04046680791354024,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true,
+     "record_verdict": "pass"
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 132.33171418626077,
+     "all_max_bar": 132.33171418626077,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "Fmin_time_8s": {
+     "t0": 35.09400000004147,
+     "t1": 43.09400000004147,
+     "truncated_at_run_end": false,
+     "min_N": [
+      136924.25191589937,
+      87704.71689465945,
+      7653.189442478606,
+      96121.44905637302
+     ],
+     "min_t_s": [
+      43.09400000030704,
+      35.54500000005644,
+      35.27900000004761,
+      43.09400000030704
+     ],
+     "min_all_N": 7653.189442478606,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.117000000003884,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.16000000000531145,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.117000000003884,
+     "t_below_Fmin_plus2k_max_s": 0.16000000000531145,
+     "clause": "rev2 R2-5 [t_D, t_D + 8 s]",
+     "verdict": "record"
+    },
+    "R_c": {
+     "crawler_attitude_deg": [
+      2.3620181222471603,
+      1.726765995745734
+     ],
+     "R_c": 1.07643667418126,
+     "clause": "rules 2 / 7.4",
+     "verdict": "record"
+    },
+    "READY_le_120s": {
+     "clause": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+     "t_ready_rel_s": 73.20000000157732,
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+     "verdict": "pass"
+    },
+    "P3-7": {
+     "clause": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+     "verdict_role": "record",
+     "lw_mode": "restart",
+     "reconstruct_ok": true,
+     "t_P_rec_s": 35.00000000003835,
+     "t_loc_rec_s": 36.100000000074864,
+     "t_P_meta_s": 35.00000000003835,
+     "t_loc_meta_s": 36.100000000074864,
+     "n_windows": 8,
+     "loaded_threshold_N": 3765.8356424339,
+     "W_ref_N": 376583.56424339,
+     "mass_scale": 1.0,
+     "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+     "rise_min_loaded_N": null,
+     "t_end_at_min_s": null,
+     "crawler_at_end_N": null,
+     "rise_min_gt1kN_N_record": null,
+     "rise_min_gt0p05W_N_record": null,
+     "rise_min_loaded_true_N_record": null,
+     "within": true,
+     "verdict": "record",
+     "note": "부담 창 없음 (통과로 셈)",
+     "record_verdict": "pass"
+    },
+    "CD-9_record": {
+     "clause": "CD-9",
+     "rigid_base": "FR",
+     "values": {
+      "t_D_s": 35.09400000004147,
+      "R_c": 1.07643667418126,
+      "min_after_departure": {
+       "min_N": [
+        122240.6738360018,
+        87704.71689465945,
+        7653.189442478606,
+        72487.51731353626
+       ],
+       "min_t_s": [
+        76.25200000140777,
+        35.54500000005644,
+        35.27900000004761,
+        71.8160000012605
+       ],
+       "min_leg": "RL"
+      },
+      "P3-1": "pass",
+      "P3-2": "pass",
+      "P3-3": "fail",
+      "P3-4": "pass",
+      "P3-5": "해당 없음(rigid_base)",
+      "P3-6": "record",
+      "P3-7": "pass",
+      "P3-8": "pass",
+      "P3-9": "record",
+      "FAULT0": "pass"
+     },
+     "missing": [],
+     "record_status": "기록 완료",
+     "verdict": "record",
+     "cd7_reason": ""
+    },
+    "earlier_record_keys": {
+     "verdict": "record",
+     "keys": [
+      "P3-1",
+      "P3-2",
+      "P3-3",
+      "P3-4",
+      "P3-5",
+      "P3-8",
+      "FAULT0",
+      "identity",
+      "K1_class",
+      "D8_F_after_liftoff",
+      "D8_end_attitude",
+      "D8_pressure",
+      "Fmin_time_8s",
+      "R_c"
+     ]
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_K1",
+     "expect_name": "final_C4G2_P3_K1",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": [],
+   "cd7_row_reason": ""
+  },
+  {
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "29af8bc2d40ae1d734a3fd0b1774d73483674bbe2d514d9aa1c7bd21b45adb10",
+    "step_series.npz": "856aa4ea5c87f0f4f905fe7c68476456787ccc613979fabef515f34b926cce26",
+    "r8_series.npz": "b02b1433469e365788e15c2a7b46b5f469226f96475d3d2280a0fea9c03ad569",
+    "flow_series.npz": "6dd5012e6e6fa2445b95de1524b9cd80cb3e5e827796a3424747ecfe9854fa3e",
+    "record/record.npz": "601c3c30efdc4ec724fed87ecb7f34be8e24623b8315a745ac183314d3a605f6"
+   },
+   "kind": "record_D8_G6",
+   "criteria_id": "C-4",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C4_20261113_222912/R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": "on",
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "CD-9_record"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 34.868000000033966,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "t_ready_s": 81.20000000157202,
+     "window_complete": true,
+     "ready_window_crawler_max_N": 0.0,
+     "verdict": "pass"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 34.868000000033966,
+     "t_loc_final_s": 36.200000000078184,
+     "t_first_done_s": 69.20000000117366,
+     "locs_s": [
+      36.200000000078184
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 0.0,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 1.3320000000442178,
+     "time_ok": true,
+     "verdict": "pass"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 34.868000000033966,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122168.01482456196,
+      85849.16380253815,
+      8637.135601077238,
+      72729.2327080295
+     ],
+     "min_t_s": [
+      76.25200000140777,
+      35.825000000065735,
+      35.581000000057635,
+      71.8190000012606
+     ],
+     "min_all_N": 8637.135601077238,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.19500000000647333,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.36200000001201715,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.19500000000647333,
+     "t_below_Fmin_plus2k_max_s": 0.36200000001201715,
+     "verdict": "fail",
+     "outside_start_condition": "R_c > 1: shortfall = L-5 known limit (7.4)"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 81.65200000158703,
+     "t_final_signed_s": 81.65200000158703,
+     "t_last_ready_s": 81.20000000157202,
+     "window_s": [
+      81.65200000158703,
+      168.00000000445348
+     ],
+     "window_length_s": 86.34800000286646,
+     "absmax_deg": 0.02370625223639074,
+     "absmax_within_0p2_record": true,
+     "flags": [],
+     "verdict": "pass"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.6578972510898937,
+     "stroke_max_leg": "FR",
+     "stroke_ok": true,
+     "clearance_min_m": null,
+     "clearance_samples": 0,
+     "clearance_ok": null,
+     "verdict": "indeterminate",
+     "reason": "no READY or no rut_clearance_m sample after READY",
+     "value_cd9": "해당 없음(rigid_base)",
+     "cd7_reason": "해당 없음(rigid_base) (사용자 결정 88)"
+    },
+    "P3-6": {
+     "clause": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": false,
+     "verdict": "record",
+     "within": true,
+     "limit_basis": "421.1 ① 바닥 경사",
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s"
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 36.200000000078184,
+     "t_soil_mode_s": null,
+     "t_first_loc_s": 36.200000000078184,
+     "events": [],
+     "verdict": "pass"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "leg_lift_after_departure": {
+     "t0": 34.868000000033966,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "started",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "las_active",
+     "verdict": "record",
+     "cd11_class": "관문"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": false,
+     "c2_setup_las_off": null,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "on",
+      "present": {
+       "c2_setup.las_off": false,
+       "controller_meta.liftoff_approach_slow.start_s": true,
+       "controller_meta.liftoff_approach_slow.end_s": true,
+       "controller_meta.liftoff_approach_slow.end_reason": true,
+       "controller_meta.liftoff_approach_slow.active_periods": true,
+       "controller_meta.liftoff_approach_slow.ramp": true,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": true
+      },
+      "condition": {
+       "c2_setup.las_off": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.start_s": "required",
+       "controller_meta.liftoff_approach_slow.end_s": "required",
+       "controller_meta.liftoff_approach_slow.end_reason": "required",
+       "controller_meta.liftoff_approach_slow.active_periods": "required",
+       "controller_meta.liftoff_approach_slow.ramp": "required",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "required"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "preset",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": false,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_LAS_K1",
+     "expect_ok": true,
+     "las_settings_enable": true,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "Chrono row (LAS-b on, K1 on)",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "G6-6": {
+     "clause": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+     "fault": false,
+     "ready_reached": true,
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record",
+     "stop": null
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": null
+    },
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 34.98100000003772,
+     "t_lift_basis": "1ms",
+     "t0": 34.98100000003772,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122168.01482456196,
+      85849.16380253815,
+      8637.135601077238,
+      72729.2327080295
+     ],
+     "min_t_s": [
+      76.25200000140777,
+      35.825000000065735,
+      35.581000000057635,
+      71.8190000012606
+     ],
+     "min_all_N": 8637.135601077238,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.19500000000647333,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.36200000001201715,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.19500000000647333,
+     "t_below_Fmin_plus2k_max_s": 0.36200000001201715,
+     "verdict": "fail",
+     "record_verdict": "fail"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      163.00000000445348,
+      168.00000000445348
+     ],
+     "absmax_deg": 0.020958813788291605,
+     "with_mount_deg": 0.04095881378829161,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true,
+     "record_verdict": "pass"
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 134.4487665879779,
+     "all_max_bar": 134.4487665879779,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "Fmin_time_8s": {
+     "t0": 34.868000000033966,
+     "t1": 42.868000000033966,
+     "truncated_at_run_end": false,
+     "min_N": [
+      137332.76376151727,
+      85849.16380253815,
+      8637.135601077238,
+      97308.32112357073
+     ],
+     "min_t_s": [
+      42.86800000029954,
+      35.825000000065735,
+      35.581000000057635,
+      42.86800000029954
+     ],
+     "min_all_N": 8637.135601077238,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.19500000000647333,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.36200000001201715,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.19500000000647333,
+     "t_below_Fmin_plus2k_max_s": 0.36200000001201715,
+     "clause": "rev2 R2-5 [t_D, t_D + 8 s]",
+     "verdict": "record"
+    },
+    "R_c": {
+     "crawler_attitude_deg": [
+      2.3446892975573097,
+      1.6080974849746523
+     ],
+     "R_c": 1.0354143953176038,
+     "clause": "rules 2 / 7.4",
+     "verdict": "record"
+    },
+    "READY_le_120s": {
+     "clause": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+     "t_ready_rel_s": 73.20000000157732,
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+     "verdict": "pass"
+    },
+    "P3-7": {
+     "clause": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+     "verdict_role": "record",
+     "lw_mode": "restart",
+     "reconstruct_ok": true,
+     "t_P_rec_s": 34.80000000003171,
+     "t_loc_rec_s": 36.200000000078184,
+     "t_P_meta_s": 34.80000000003171,
+     "t_loc_meta_s": 36.200000000078184,
+     "n_windows": 5,
+     "loaded_threshold_N": 3765.8356424339,
+     "W_ref_N": 376583.56424339,
+     "mass_scale": 1.0,
+     "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+     "rise_min_loaded_N": null,
+     "t_end_at_min_s": null,
+     "crawler_at_end_N": null,
+     "rise_min_gt1kN_N_record": null,
+     "rise_min_gt0p05W_N_record": null,
+     "rise_min_loaded_true_N_record": null,
+     "within": true,
+     "verdict": "record",
+     "note": "부담 창 없음 (통과로 셈)",
+     "record_verdict": "pass"
+    },
+    "CD-9_record": {
+     "clause": "CD-9",
+     "rigid_base": "FR",
+     "values": {
+      "t_D_s": 34.868000000033966,
+      "R_c": 1.0354143953176038,
+      "min_after_departure": {
+       "min_N": [
+        122168.01482456196,
+        85849.16380253815,
+        8637.135601077238,
+        72729.2327080295
+       ],
+       "min_t_s": [
+        76.25200000140777,
+        35.825000000065735,
+        35.581000000057635,
+        71.8190000012606
+       ],
+       "min_leg": "RL"
+      },
+      "P3-1": "pass",
+      "P3-2": "pass",
+      "P3-3": "fail",
+      "P3-4": "pass",
+      "P3-5": "해당 없음(rigid_base)",
+      "P3-6": "record",
+      "P3-7": "pass",
+      "P3-8": "pass",
+      "P3-9": "record",
+      "FAULT0": "pass"
+     },
+     "missing": [],
+     "record_status": "기록 완료",
+     "verdict": "record",
+     "cd7_reason": ""
+    },
+    "earlier_record_keys": {
+     "verdict": "record",
+     "keys": [
+      "P3-1",
+      "P3-2",
+      "P3-3",
+      "P3-4",
+      "P3-5",
+      "P3-8",
+      "FAULT0",
+      "identity",
+      "K1_class",
+      "D8_F_after_liftoff",
+      "D8_end_attitude",
+      "D8_pressure",
+      "Fmin_time_8s",
+      "R_c"
+     ]
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": [],
+   "cd7_row_reason": ""
+  },
+  {
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912\\R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "99d5c93b2fd742ebe604b9272a1d93a5d9529fd61ed5b2df9b8666266e54c23f",
+    "step_series.npz": "8b1ddd1345855f6a0487dd6cf998f6ae33119d4432875df4d1a5505626b1cbbc",
+    "r8_series.npz": "3f89725d34ba60cb414abddd021de499ee7f28f5698ffa7dc5b5bd1f281cb9f0",
+    "flow_series.npz": "8d3b37d41cf15ca5dae2e6be799acbf55a5314aaffe72152b8fda772a6fefca1",
+    "record/record.npz": "983ebf6213487f61c5d6644dc014b32e51524fe868e875ae6e0c1b5989977149"
+   },
+   "kind": "record_D8_G6",
+   "criteria_id": "C-4",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-C4_20261113_222912/R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": "off",
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "CD-9_record"
+   ],
+   "items": {
+    "departure": {
+     "clause": "P3-2 t_D / rev2 R2-5",
+     "t_D_s": 34.598000000025,
+     "verdict": "record"
+    },
+    "P3-1": {
+     "clause": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+     "recontacts": [],
+     "flags": [],
+     "t_ready_s": 81.20000000157202,
+     "window_complete": true,
+     "ready_window_crawler_max_N": 0.0,
+     "verdict": "pass"
+    },
+    "P3-2": {
+     "clause": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+     "T_lim_s": 2.91165281234524,
+     "T_lim_rule_text_s": 2.9,
+     "t_D_s": 34.598000000025,
+     "t_loc_final_s": 35.700000000061586,
+     "t_first_done_s": 69.20000000117366,
+     "locs_s": [
+      35.700000000061586
+     ],
+     "revokes_s": [],
+     "order_ok": true,
+     "loc_cycle_crawler_max_N": 0.0,
+     "loaded_ok": true,
+     "revoked_loc_under_load_record_s": [],
+     "loc_minus_departure_s": 1.1020000000365826,
+     "time_ok": true,
+     "verdict": "pass"
+    },
+    "P3-3": {
+     "clause": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+     "t0": 34.598000000025,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122029.84035224302,
+      84434.86277718734,
+      4199.379941910644,
+      72422.20242177197
+     ],
+     "min_t_s": [
+      76.2500000014077,
+      35.09100000004137,
+      34.76000000003038,
+      71.82000000126064
+     ],
+     "min_all_N": 4199.379941910644,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.16400000000544424,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.3420000000113532,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.16400000000544424,
+     "t_below_Fmin_plus2k_max_s": 0.3420000000113532,
+     "verdict": "fail",
+     "outside_start_condition": "R_c > 1: shortfall = L-5 known limit (7.4)"
+    },
+    "P3-4": {
+     "clause": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+     "t_final_two_sided_s": 81.65300000158706,
+     "t_final_signed_s": 81.65300000158706,
+     "t_last_ready_s": 81.20000000157202,
+     "window_s": [
+      81.65300000158706,
+      168.00000000445348
+     ],
+     "window_length_s": 86.34700000286642,
+     "absmax_deg": 0.023260693585215274,
+     "absmax_within_0p2_record": true,
+     "flags": [],
+     "verdict": "pass"
+    },
+    "P3-5": {
+     "clause": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+     "stroke_max_m": 0.6583924226940153,
+     "stroke_max_leg": "FR",
+     "stroke_ok": true,
+     "clearance_min_m": null,
+     "clearance_samples": 0,
+     "clearance_ok": null,
+     "verdict": "indeterminate",
+     "reason": "no READY or no rut_clearance_m sample after READY",
+     "value_cd9": "해당 없음(rigid_base)",
+     "cd7_reason": "해당 없음(rigid_base) (사용자 결정 88)"
+    },
+    "P3-6": {
+     "clause": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": false,
+     "verdict": "record",
+     "within": true,
+     "limit_basis": "421.1 ① 바닥 경사",
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s"
+    },
+    "P3-8": {
+     "clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+     "cutoff_s": 35.700000000061586,
+     "t_soil_mode_s": null,
+     "t_first_loc_s": 35.700000000061586,
+     "events": [],
+     "verdict": "pass"
+    },
+    "P3-9": {
+     "clause": "spec 284 P3-9 (record): RT deferrals",
+     "verdict": "record",
+     "deferrals": 0,
+     "rows": []
+    },
+    "FAULT0": {
+     "clause": "FAULT 0",
+     "verdict": "pass",
+     "fault_events": [],
+     "fault_phases": [],
+     "any": false
+    },
+    "leg_lift_after_departure": {
+     "t0": 34.598000000025,
+     "samples_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "any": false,
+     "verdict": "record",
+     "clause": "pad normal <= 0 after t_D (definition chosen by path 2)"
+    },
+    "K1_class": {
+     "clause": "rules 7.2, rev2 R2-1 / R2-2",
+     "las_state": "las_none",
+     "n_decisions": 0,
+     "n_blocks": 0,
+     "n_conflicts": 0,
+     "n_skipped_order_events": 0,
+     "cls": "las_none_inactive",
+     "verdict": "record",
+     "cd11_class": "관문"
+    },
+    "identity": {
+     "clause": "rules 4.2 record check (SCM keys) + 6 identity",
+     "argv_las_off": true,
+     "c2_setup_las_off": true,
+     "las_off_consistent": true,
+     "r7_4_las_keys": {
+      "clause": "rev7 R7-4 (record; key presence = path 1 G-S check)",
+      "arm": "off",
+      "present": {
+       "c2_setup.las_off": true,
+       "controller_meta.liftoff_approach_slow.start_s": false,
+       "controller_meta.liftoff_approach_slow.end_s": false,
+       "controller_meta.liftoff_approach_slow.end_reason": false,
+       "controller_meta.liftoff_approach_slow.active_periods": false,
+       "controller_meta.liftoff_approach_slow.ramp": false,
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": false
+      },
+      "condition": {
+       "c2_setup.las_off": "required",
+       "controller_meta.liftoff_approach_slow.start_s": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.end_s": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.end_reason": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.active_periods": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.ramp": "absent_allowed",
+       "controller_meta.liftoff_approach_slow.ramp.periods_applied": "absent_allowed"
+      },
+      "absent_where_required": []
+     },
+     "k1_order_gate": "on",
+     "k1_order_gate_effective": true,
+     "flat_soil_margin_order_gate": true,
+     "las_off": true,
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "hull_hook_mode": "fast",
+     "hull_hook_fallback": null,
+     "controller_tag": "final_C4G2_P3_K1",
+     "expect_ok": true,
+     "las_settings_enable": false,
+     "las_settings_enable_ok": true,
+     "r11_1_line_kind": "C-4 off arm (LAS-b off, K1 on)",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "G6-6": {
+     "clause": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+     "fault": false,
+     "ready_reached": true,
+     "verdict": "pass"
+    },
+    "stroke_guard": {
+     "warn_lift_stroke_limited": 0,
+     "fault_lift_stroke_limit": [],
+     "fault_stroke_end": 0,
+     "verdict": "record",
+     "stop": null
+    },
+    "row_class": {
+     "verdict": "record",
+     "class": null
+    },
+    "D8_F_after_liftoff": {
+     "clause": "d1 11 D8.P / spec 3 item 3: after crawler lift-off all 1 ms F_cyl >= F_min; R40-2 hold for rigid NSC crawler",
+     "t_lift_s": 34.62900000002603,
+     "t_lift_basis": "1ms",
+     "t0": 34.62900000002603,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122029.84035224302,
+      84434.86277718734,
+      4199.379941910644,
+      72422.20242177197
+     ],
+     "min_t_s": [
+      76.2500000014077,
+      35.09100000004137,
+      34.76000000003038,
+      71.82000000126064
+     ],
+     "min_all_N": 4199.379941910644,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.16400000000544424,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.3420000000113532,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.16400000000544424,
+     "t_below_Fmin_plus2k_max_s": 0.3420000000113532,
+     "verdict": "fail",
+     "record_verdict": "fail"
+    },
+    "D8_end_attitude": {
+     "clause": "spec 3 item 2: last 5 s (after first READY, standstill) max |att - target| + 0.02 <= 0.2",
+     "phases_in_window": [
+      "ready"
+     ],
+     "window_s": [
+      163.00000000445348,
+      168.00000000445348
+     ],
+     "absmax_deg": 0.020521808762805214,
+     "with_mount_deg": 0.040521808762805214,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "D8_READY": {
+     "clause": "d1 11 READY flat 90 / slope 120 s (relative to loop start)",
+     "t_ready_rel_s": 73.20000000157732,
+     "limit_s": 120.0,
+     "judged": true,
+     "verdict": "pass",
+     "within": true,
+     "record_verdict": "pass"
+    },
+    "D8_pressure": {
+     "clause": "d1 11 D8.P: moving <= 180 bar, locked <= 350 bar (head equivalent F_cyl/A_p)",
+     "moving_max_bar": 135.4423506002558,
+     "all_max_bar": 135.4423506002558,
+     "moving_ok": true,
+     "all_ok": true,
+     "verdict": "pass",
+     "record_verdict": "pass"
+    },
+    "Fmin_time_8s": {
+     "t0": 34.598000000025,
+     "t1": 42.598000000025,
+     "truncated_at_run_end": false,
+     "min_N": [
+      136549.39591302982,
+      84434.86277718734,
+      4199.379941910644,
+      95853.20120434741
+     ],
+     "min_t_s": [
+      42.59600000029051,
+      35.09100000004137,
+      34.76000000003038,
+      42.598000000290575
+     ],
+     "min_all_N": 4199.379941910644,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.16400000000544424,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.3420000000113532,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.16400000000544424,
+     "t_below_Fmin_plus2k_max_s": 0.3420000000113532,
+     "clause": "rev2 R2-5 [t_D, t_D + 8 s]",
+     "verdict": "record"
+    },
+    "R_c": {
+     "crawler_attitude_deg": [
+      2.3446892975573097,
+      1.6080974849746523
+     ],
+     "R_c": 1.0354143953176038,
+     "clause": "rules 2 / 7.4",
+     "verdict": "record"
+    },
+    "READY_le_120s": {
+     "clause": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+     "t_ready_rel_s": 73.20000000157732,
+     "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+     "verdict": "pass"
+    },
+    "P3-7": {
+     "clause": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+     "verdict_role": "record",
+     "lw_mode": "restart",
+     "reconstruct_ok": true,
+     "t_P_rec_s": 34.60000000002507,
+     "t_loc_rec_s": 35.700000000061586,
+     "t_P_meta_s": 34.60000000002507,
+     "t_loc_meta_s": 35.700000000061586,
+     "n_windows": 7,
+     "loaded_threshold_N": 3765.8356424339,
+     "W_ref_N": 376583.56424339,
+     "mass_scale": 1.0,
+     "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+     "rise_min_loaded_N": null,
+     "t_end_at_min_s": null,
+     "crawler_at_end_N": null,
+     "rise_min_gt1kN_N_record": null,
+     "rise_min_gt0p05W_N_record": null,
+     "rise_min_loaded_true_N_record": null,
+     "within": true,
+     "verdict": "record",
+     "note": "부담 창 없음 (통과로 셈)",
+     "record_verdict": "pass"
+    },
+    "CD-9_record": {
+     "clause": "CD-9",
+     "rigid_base": "FR",
+     "values": {
+      "t_D_s": 34.598000000025,
+      "R_c": 1.0354143953176038,
+      "min_after_departure": {
+       "min_N": [
+        122029.84035224302,
+        84434.86277718734,
+        4199.379941910644,
+        72422.20242177197
+       ],
+       "min_t_s": [
+        76.2500000014077,
+        35.09100000004137,
+        34.76000000003038,
+        71.82000000126064
+       ],
+       "min_leg": "RL"
+      },
+      "P3-1": "pass",
+      "P3-2": "pass",
+      "P3-3": "fail",
+      "P3-4": "pass",
+      "P3-5": "해당 없음(rigid_base)",
+      "P3-6": "record",
+      "P3-7": "pass",
+      "P3-8": "pass",
+      "P3-9": "record",
+      "FAULT0": "pass"
+     },
+     "missing": [],
+     "record_status": "기록 완료",
+     "verdict": "record",
+     "cd7_reason": ""
+    },
+    "earlier_record_keys": {
+     "verdict": "record",
+     "keys": [
+      "P3-1",
+      "P3-2",
+      "P3-3",
+      "P3-4",
+      "P3-5",
+      "P3-8",
+      "FAULT0",
+      "identity",
+      "K1_class",
+      "D8_F_after_liftoff",
+      "D8_end_attitude",
+      "D8_pressure",
+      "Fmin_time_8s",
+      "R_c"
+     ]
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_K1",
+     "expect_name": "final_C4G2_P3_K1",
+     "verdict": "pass",
+     "cd11_class": "관문"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": [],
+   "cd7_row_reason": ""
+  }
+ ],
+ "bundle_result": {
+  "status": "기록 완료",
+  "stops": [],
+  "rows_judged": 0,
+  "rows_record": 4,
+  "row_status": {
+   "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason": "기록 완료",
+   "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff": "기록 완료",
+   "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason": "기록 완료",
+   "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff": "기록 완료"
+  },
+  "note": null,
+  "recalculated_judged_items": 4,
+  "reaggregated_items": {
+   "names": [],
+   "count": 0
+  },
+  "TABLE_REAGG": [],
+  "rev9_R9_6_j11_record": {
+   "clause": "rev9 R9-6 (J11 outside C-5: record only, input absent counted)",
+   "rows": 4,
+   "input_absent_rows": 0,
+   "n_late_positive_on_actual_leg_rows": 0
+  },
+  "cd7_empty_reasons": [],
+  "cd11_item_list": {
+   "clause": "CD-11 (rev25)",
+   "bundle": "C-4",
+   "rows": [
+    {
+     "row": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason",
+     "status": "기록 완료",
+     "record_row": true,
+     "items": [
+      {
+       "common_id": "CD-9_record",
+       "class": "기록",
+       "path2_item": "CD-9_record",
+       "clause_id": "CD-11 기록",
+       "description": "CD-9",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "identity",
+       "class": "관문",
+       "path2_item": "identity",
+       "clause_id": "CD-11 관문",
+       "description": "rules 4.2 record check (SCM keys) + 6 identity",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "K1_class",
+       "class": "관문",
+       "path2_item": "K1_class",
+       "clause_id": "CD-11 관문",
+       "description": "rules 7.2, rev2 R2-1 / R2-2",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "R9-1",
+       "class": "관문",
+       "path2_item": "R9-1_expect_controller",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "R11-4",
+       "class": "관문",
+       "path2_item": "R11-4_commit",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "J11",
+       "class": "기록",
+       "path2_item": "J11_record",
+       "clause_id": "CD-11 기록",
+       "description": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "P3-6",
+       "class": "기록",
+       "path2_item": "P3-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-7",
+       "class": "기록",
+       "path2_item": "P3-7",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+       "method": "재계산",
+       "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "FAULT0",
+       "class": "기록",
+       "path2_item": "FAULT0",
+       "clause_id": "CD-11 기록",
+       "description": "FAULT 0",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "G6-6",
+       "class": "기록",
+       "path2_item": "G6-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "READY_le_120s",
+       "class": "기록",
+       "path2_item": "READY_le_120s",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "pass",
+       "reason": ""
+      }
+     ]
+    },
+    {
+     "row": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff",
+     "status": "기록 완료",
+     "record_row": true,
+     "items": [
+      {
+       "common_id": "CD-9_record",
+       "class": "기록",
+       "path2_item": "CD-9_record",
+       "clause_id": "CD-11 기록",
+       "description": "CD-9",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "identity",
+       "class": "관문",
+       "path2_item": "identity",
+       "clause_id": "CD-11 관문",
+       "description": "rules 4.2 record check (SCM keys) + 6 identity",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "K1_class",
+       "class": "관문",
+       "path2_item": "K1_class",
+       "clause_id": "CD-11 관문",
+       "description": "rules 7.2, rev2 R2-1 / R2-2",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "R9-1",
+       "class": "관문",
+       "path2_item": "R9-1_expect_controller",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "R11-4",
+       "class": "관문",
+       "path2_item": "R11-4_commit",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "J11",
+       "class": "기록",
+       "path2_item": "J11_record",
+       "clause_id": "CD-11 기록",
+       "description": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "fail",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "P3-6",
+       "class": "기록",
+       "path2_item": "P3-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-7",
+       "class": "기록",
+       "path2_item": "P3-7",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+       "method": "재계산",
+       "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "FAULT0",
+       "class": "기록",
+       "path2_item": "FAULT0",
+       "clause_id": "CD-11 기록",
+       "description": "FAULT 0",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "fail",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "G6-6",
+       "class": "기록",
+       "path2_item": "G6-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "READY_le_120s",
+       "class": "기록",
+       "path2_item": "READY_le_120s",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "pass",
+       "reason": ""
+      }
+     ]
+    },
+    {
+     "row": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+     "status": "기록 완료",
+     "record_row": true,
+     "items": [
+      {
+       "common_id": "CD-9_record",
+       "class": "기록",
+       "path2_item": "CD-9_record",
+       "clause_id": "CD-11 기록",
+       "description": "CD-9",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "identity",
+       "class": "관문",
+       "path2_item": "identity",
+       "clause_id": "CD-11 관문",
+       "description": "rules 4.2 record check (SCM keys) + 6 identity",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "K1_class",
+       "class": "관문",
+       "path2_item": "K1_class",
+       "clause_id": "CD-11 관문",
+       "description": "rules 7.2, rev2 R2-1 / R2-2",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "R9-1",
+       "class": "관문",
+       "path2_item": "R9-1_expect_controller",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "R11-4",
+       "class": "관문",
+       "path2_item": "R11-4_commit",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "J11",
+       "class": "기록",
+       "path2_item": "J11_record",
+       "clause_id": "CD-11 기록",
+       "description": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "fail",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "P3-6",
+       "class": "기록",
+       "path2_item": "P3-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-7",
+       "class": "기록",
+       "path2_item": "P3-7",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+       "method": "재계산",
+       "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "FAULT0",
+       "class": "기록",
+       "path2_item": "FAULT0",
+       "clause_id": "CD-11 기록",
+       "description": "FAULT 0",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "fail",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "G6-6",
+       "class": "기록",
+       "path2_item": "G6-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "READY_le_120s",
+       "class": "기록",
+       "path2_item": "READY_le_120s",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "pass",
+       "reason": ""
+      }
+     ]
+    },
+    {
+     "row": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+     "status": "기록 완료",
+     "record_row": true,
+     "items": [
+      {
+       "common_id": "CD-9_record",
+       "class": "기록",
+       "path2_item": "CD-9_record",
+       "clause_id": "CD-11 기록",
+       "description": "CD-9",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "identity",
+       "class": "관문",
+       "path2_item": "identity",
+       "clause_id": "CD-11 관문",
+       "description": "rules 4.2 record check (SCM keys) + 6 identity",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "K1_class",
+       "class": "관문",
+       "path2_item": "K1_class",
+       "clause_id": "CD-11 관문",
+       "description": "rules 7.2, rev2 R2-1 / R2-2",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "R9-1",
+       "class": "관문",
+       "path2_item": "R9-1_expect_controller",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "R11-4",
+       "class": "관문",
+       "path2_item": "R11-4_commit",
+       "clause_id": "CD-11 관문",
+       "description": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "J11",
+       "class": "기록",
+       "path2_item": "J11_record",
+       "clause_id": "CD-11 기록",
+       "description": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "fail",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "P3-6",
+       "class": "기록",
+       "path2_item": "P3-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-4 P3-6 READY <= 120 s (spec 421.1)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-7",
+       "class": "기록",
+       "path2_item": "P3-7",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-7 / 314.1 C-S9-60-3 (CD-4: 명세 원문 정의로 계산)",
+       "method": "재계산",
+       "interval": "LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-9",
+       "class": "기록",
+       "path2_item": "P3-9",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-9 (record): RT deferrals",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "record",
+       "reason": ""
+      },
+      {
+       "common_id": "FAULT0",
+       "class": "기록",
+       "path2_item": "FAULT0",
+       "clause_id": "CD-11 기록",
+       "description": "FAULT 0",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-1",
+       "class": "기록",
+       "path2_item": "P3-1",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-1 + U-S9-G6d (393) + 423.3 Q-G + 424.8.1 (final LOC)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-2",
+       "class": "기록",
+       "path2_item": "P3-2",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-2 (U-S9P-13) + 419.8 / 419.8.1 + 424.8.1",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-3",
+       "class": "기록",
+       "path2_item": "P3-3",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-3 (true F_cyl after departure >= F_min)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "fail",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-4",
+       "class": "기록",
+       "path2_item": "P3-4",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-4 + 284.1 window + 433.6 (1.0 s rate, window_short FLAG)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-5",
+       "class": "기록",
+       "path2_item": "P3-5",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-5 (U-S9P-14): rut clearance first READY..end >= 25 mm; motor stroke <= 0.6848 m",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "indeterminate",
+       "reason": "해당 없음(rigid_base) (사용자 결정 88)"
+      },
+      {
+       "common_id": "G6-6",
+       "class": "기록",
+       "path2_item": "G6-6",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "P3-8",
+       "class": "기록",
+       "path2_item": "P3-8",
+       "clause_id": "CD-11 기록",
+       "description": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)",
+       "method": "재계산",
+       "interval": "",
+       "verdict": "pass",
+       "reason": ""
+      },
+      {
+       "common_id": "READY_le_120s",
+       "class": "기록",
+       "path2_item": "READY_le_120s",
+       "clause_id": "CD-11 기록",
+       "description": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+       "method": "재계산",
+       "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+       "verdict": "pass",
+       "reason": ""
+      }
+     ]
+    }
+   ],
+   "problems": []
+  },
+  "cd9_record_status": {
+   "rows": {
+    "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason": {
+     "status": "기록 완료",
+     "cd7_reason": ""
+    },
+    "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff": {
+     "status": "기록 완료",
+     "cd7_reason": ""
+    },
+    "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason": {
+     "status": "기록 완료",
+     "cd7_reason": ""
+    },
+    "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff": {
+     "status": "기록 완료",
+     "cd7_reason": ""
+    }
+   },
+   "bundle": "기록 완료"
+  }
+ }
+}

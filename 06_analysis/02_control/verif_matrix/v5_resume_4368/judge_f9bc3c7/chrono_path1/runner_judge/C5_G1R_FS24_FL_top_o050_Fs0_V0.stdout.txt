@@ -1,0 +1,16 @@
+-> C:\workspace\outrigger_control\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_f9bc3c7\chrono_path1\runner_judge\C5_G1R_FS24_FL_top_o050_Fs0_V0.verify_S8C.json
+{
+ "rows": 72,
+ "failed": [],
+ "ml0_rod_fallback_gate": null,
+ "ml1_rod_fallback_runs": null,
+ "deferred_leg_below_F_min": {
+  "flagged_runs": 1,
+  "runs": [
+   "G1R_FS24_FL_top_o050_Fs0"
+  ]
+ },
+ "flag_rows": [
+  "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+ ]
+}

@@ -1,0 +1,1073 @@
+{
+ "r3c": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2\\p2_C5.json",
+ "r3d": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2\\p2_C5.json",
+ "excluded_keys": [
+  "batch",
+  "cd7_change_reason",
+  "cd7_empty_reasons",
+  "cd7_reason",
+  "cd7_row_reason",
+  "checkout_commit",
+  "clause",
+  "clause_t_lift",
+  "created",
+  "disclosure",
+  "e7_tool_output",
+  "folder",
+  "head",
+  "input_files_sha256",
+  "layer",
+  "limit_disclosure",
+  "manifest",
+  "note",
+  "out_sha256",
+  "rule",
+  "seal",
+  "t45_report",
+  "tool",
+  "tool_files_sha256",
+  "tool_sha256"
+ ],
+ "dropped_list_elements_containing": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path2"
+ ],
+ "status": "different",
+ "differences": [
+  {
+   "path": "$.bundle_result.cd11_item_list",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.bundle_result.cd1_engine_counts",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.bundle_result.recalculated_judged_items",
+   "r3c": 282,
+   "r3d": 213
+  },
+  {
+   "path": "$.bundle_result.rev19_R19_6_pairs.pairs[4].v0_status",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.rev19_R19_6_pairs.pairs[4].vb_status",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180_seed20261026",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180_seed20261026_flow",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180_seed20261027",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180_seed20261028",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180_seed20261029",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.row_status.P3b_J2_B_top_Fs4_m1p1_t180_v0v",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.bundle_result.status",
+   "r3c": "통과",
+   "r3d": "판정 불가"
+  },
+  {
+   "path": "$.bundle_result.stops",
+   "r3c": "len 0",
+   "r3d": "len 1"
+  },
+  {
+   "path": "$.cd2_judge_provenance",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.FAULT0",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.H-9.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.J-P3.reason",
+   "r3c": "tag ③ off (rev8 R8-2: not applicable; extend_start_rule key not required)",
+   "r3d": "tag ③ off (rev8 R8-2 / rev25 CD-1: 해당 없음(③ 끔), extend_start_rule key not required)"
+  },
+  {
+   "path": "$.rows[0].items.J-P3.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.K1_class.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.K1_class.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-1",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-2",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-3",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-4",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-5",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-6",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-7",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-8",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.P3-9",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.R11-4_commit.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.R9-1_expect_controller.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T4.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[0].items.T4.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T4.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T4-0.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T4-0.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[0].items.T4-0.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T4-0.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T5.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[0].items.T5.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.T5.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.identity",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.leg_lift_after_departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.row_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].items.stroke_guard",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[0].judged_keys",
+   "r3c": "len 6",
+   "r3d": "len 11"
+  },
+  {
+   "path": "$.rows[0].judged_keys[0]",
+   "r3c": "H-9",
+   "r3d": "J-P3"
+  },
+  {
+   "path": "$.rows[0].judged_keys[1]",
+   "r3c": "K1_class",
+   "r3d": "J11_window"
+  },
+  {
+   "path": "$.rows[0].judged_keys[2]",
+   "r3c": "J-P3",
+   "r3d": "P3-1"
+  },
+  {
+   "path": "$.rows[0].judged_keys[3]",
+   "r3c": "J11_window",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[0].judged_keys[4]",
+   "r3c": "R11-4_commit",
+   "r3d": "P3-3"
+  },
+  {
+   "path": "$.rows[0].judged_keys[5]",
+   "r3c": "R9-1_expect_controller",
+   "r3d": "P3-4"
+  },
+  {
+   "path": "$.rows[0].status",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.rows[1].items.FAULT0",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.H-9.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.J-P3.reason",
+   "r3c": "tag ③ off (rev8 R8-2: not applicable; extend_start_rule key not required)",
+   "r3d": "tag ③ off (rev8 R8-2 / rev25 CD-1: 해당 없음(③ 끔), extend_start_rule key not required)"
+  },
+  {
+   "path": "$.rows[1].items.J-P3.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.K1_class.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.K1_class.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-1",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-2",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-3",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-4",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-5",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-6",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-7",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-8",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.P3-9",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.R11-4_commit.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.R9-1_expect_controller.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T4.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[1].items.T4.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T4.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T4-0.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T4-0.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[1].items.T4-0.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T4-0.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T5.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[1].items.T5.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.T5.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.identity",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.leg_lift_after_departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.row_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].items.stroke_guard",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[1].judged_keys",
+   "r3c": "len 6",
+   "r3d": "len 11"
+  },
+  {
+   "path": "$.rows[1].judged_keys[0]",
+   "r3c": "H-9",
+   "r3d": "J-P3"
+  },
+  {
+   "path": "$.rows[1].judged_keys[1]",
+   "r3c": "K1_class",
+   "r3d": "J11_window"
+  },
+  {
+   "path": "$.rows[1].judged_keys[2]",
+   "r3c": "J-P3",
+   "r3d": "P3-1"
+  },
+  {
+   "path": "$.rows[1].judged_keys[3]",
+   "r3c": "J11_window",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[1].judged_keys[4]",
+   "r3c": "R11-4_commit",
+   "r3d": "P3-3"
+  },
+  {
+   "path": "$.rows[1].judged_keys[5]",
+   "r3c": "R9-1_expect_controller",
+   "r3d": "P3-4"
+  },
+  {
+   "path": "$.rows[1].status",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.rows[2].items.FAULT0",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.H-9.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.J-P3.reason",
+   "r3c": "tag ③ off (rev8 R8-2: not applicable; extend_start_rule key not required)",
+   "r3d": "tag ③ off (rev8 R8-2 / rev25 CD-1: 해당 없음(③ 끔), extend_start_rule key not required)"
+  },
+  {
+   "path": "$.rows[2].items.J-P3.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.K1_class.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.K1_class.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-1",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-2",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-3",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-4",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-5",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-6",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-7",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-8",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.P3-9",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.R11-4_commit.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.R9-1_expect_controller.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T4.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[2].items.T4.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T4.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T4-0.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T4-0.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[2].items.T4-0.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T4-0.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T5.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[2].items.T5.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.T5.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.identity",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.leg_lift_after_departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.row_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].items.stroke_guard",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[2].judged_keys",
+   "r3c": "len 6",
+   "r3d": "len 11"
+  },
+  {
+   "path": "$.rows[2].judged_keys[0]",
+   "r3c": "H-9",
+   "r3d": "J-P3"
+  },
+  {
+   "path": "$.rows[2].judged_keys[1]",
+   "r3c": "K1_class",
+   "r3d": "J11_window"
+  },
+  {
+   "path": "$.rows[2].judged_keys[2]",
+   "r3c": "J-P3",
+   "r3d": "P3-1"
+  },
+  {
+   "path": "$.rows[2].judged_keys[3]",
+   "r3c": "J11_window",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[2].judged_keys[4]",
+   "r3c": "R11-4_commit",
+   "r3d": "P3-3"
+  },
+  {
+   "path": "$.rows[2].judged_keys[5]",
+   "r3c": "R9-1_expect_controller",
+   "r3d": "P3-4"
+  },
+  {
+   "path": "$.rows[2].status",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.rows[3].items.FAULT0",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.H-9.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.J-P3.head_only_declared",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.J-P3.rod_reading",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.K1_class.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.K1_class.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-1",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-2",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-3",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-4",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-5",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-6",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-7",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-8",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.P3-9",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.R11-4_commit.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.R9-1_expect_controller.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T4.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[3].items.T4.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T4.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T4-0.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T4-0.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[3].items.T4-0.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T4-0.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T5.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[3].items.T5.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.T5.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.identity",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.leg_lift_after_departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.row_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].items.stroke_guard",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[3].judged_keys",
+   "r3c": "len 6",
+   "r3d": "len 11"
+  },
+  {
+   "path": "$.rows[3].judged_keys[0]",
+   "r3c": "H-9",
+   "r3d": "J-P3"
+  },
+  {
+   "path": "$.rows[3].judged_keys[1]",
+   "r3c": "K1_class",
+   "r3d": "J11_window"
+  },
+  {
+   "path": "$.rows[3].judged_keys[2]",
+   "r3c": "J-P3",
+   "r3d": "P3-1"
+  },
+  {
+   "path": "$.rows[3].judged_keys[3]",
+   "r3c": "J11_window",
+   "r3d": "P3-2"
+  },
+  {
+   "path": "$.rows[3].judged_keys[4]",
+   "r3c": "R11-4_commit",
+   "r3d": "P3-3"
+  },
+  {
+   "path": "$.rows[3].judged_keys[5]",
+   "r3c": "R9-1_expect_controller",
+   "r3d": "P3-4"
+  },
+  {
+   "path": "$.rows[3].status",
+   "r3c": "통과",
+   "r3d": "미달"
+  },
+  {
+   "path": "$.rows[4].items.FAULT0",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.H-9.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.J-P3.reason",
+   "r3c": "tag ③ off (rev8 R8-2: not applicable; extend_start_rule key not required)",
+   "r3d": "tag ③ off (rev8 R8-2 / rev25 CD-1: 해당 없음(③ 끔), extend_start_rule key not required)"
+  },
+  {
+   "path": "$.rows[4].items.J-P3.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.K1_class.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.K1_class.cd1_role",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-1",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-2",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-3",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-4",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-5",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-6",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-7",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-8",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.P3-9",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.R11-4_commit.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.R9-1_expect_controller.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T4.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[4].items.T4.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T4.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T4-0.cd11_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T4-0.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[4].items.T4-0.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T4-0.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T5.reason",
+   "r3c": "<present>",
+   "r3d": "<absent>"
+  },
+  {
+   "path": "$.rows[4].items.T5.replay_record",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.T5.value",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.identity",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.leg_lift_after_departure",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.row_class",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  },
+  {
+   "path": "$.rows[4].items.stroke_guard",
+   "r3c": "<absent>",
+   "r3d": "<present>"
+  }
+ ]
+}

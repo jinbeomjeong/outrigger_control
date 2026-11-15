@@ -1,0 +1,757 @@
+{
+ "tool": "p2_chrono.py (436.8 path 2, Chrono)",
+ "bundle": "C-8",
+ "tool_sha256": "7e10359d716ec11cdca73aac2540d8bc67330a3700b289c9d8c1b2dc74c2c1e5",
+ "tool_files_sha256": {
+  "p2_chrono.py": "bb1f9028492342893aa71618fab30edb5fdd993a87a44b0564ee15b70e61f14c",
+  "p2_rules.py": "e23334671855005224d4596a65fea6e467f81b0365846130ba02f5c77f67e3a1",
+  "p2_core.py": "009427c749ac81efe9b5823fbe98b79065fadcc1fc1e0dd726ba54309998b0f4",
+  "p2_kinds.py": "96846945518f3b711390a29f28ddafba9884cd939785eb716532ed2b5cf0cf65",
+  "p2_t45.py": "03317f2af52d38fd2ba303df57e7841d1975ebed9907248eb29cc6ad9fbd2f6a",
+  "p2_psc.py": "fe2f414d0c5ce605b6c26cd5342db213e0b1677cf7426acb3c85e33fb6f5bc07",
+  "p2_e7.py": "499743186e695ca72b29069b0af002891bbd506bfd8235cfb2816dce620668f0",
+  "p2_b_c8.py": "8dbc14cabe2d1475787139c66c4a9380401895027fedba0766a92bcb3bad1ca1"
+ },
+ "seal": {
+  "ok": true,
+  "sealed": [
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md",
+    "role": "rules (original)",
+    "status": "match",
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
+    "role": "rules rev1",
+    "status": "match",
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
+    "role": "rules rev2",
+    "status": "match",
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+    "role": "rules rev3",
+    "status": "match",
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+    "role": "rules rev4",
+    "status": "match",
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+    "role": "rules rev5",
+    "status": "match",
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+    "role": "rules rev6",
+    "status": "match",
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+    "role": "rules rev7",
+    "status": "match",
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
+    "role": "rules rev8",
+    "status": "match",
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
+    "role": "rules rev9",
+    "status": "match",
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
+    "role": "rules rev10",
+    "status": "match",
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
+    "role": "rules rev11",
+    "status": "match",
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
+    "role": "rules rev12",
+    "status": "match",
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+    "role": "rules rev15",
+    "status": "match",
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+    "role": "rules rev16",
+    "status": "match",
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+    "role": "rules rev17",
+    "status": "match",
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+    "role": "rules rev18",
+    "status": "match",
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "role": "rules rev19",
+    "status": "match",
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+    "role": "rules rev20",
+    "status": "match",
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md",
+    "role": "rules rev21",
+    "status": "match",
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev22.md",
+    "role": "rules rev22",
+    "status": "match",
+    "sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md",
+    "role": "rules rev23 (wins)",
+    "status": "match",
+    "sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
+    "role": "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)",
+    "status": "match",
+    "sha256": "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
+    "role": "Appendix A: v5 rev8 (J-P3 3.2)",
+    "status": "match",
+    "sha256": "c6ec89f71c1d8de4c06000568c2e5978fd7f9fe58a53defea728f2f4886bb25f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev9.md",
+    "role": "Appendix A: v5 rev9 (J-P3 table)",
+    "status": "match",
+    "sha256": "3c50dda50ca6dca60177f26d91d86c009eeb4f9321f5ffd0c98ddc27cf62e981"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev2.md",
+    "role": "Appendix A: v5 rev2 (J11 D-1)",
+    "status": "match",
+    "sha256": "e120474b8ebd721e6edc4fec8eef811ce810006b8c489e38cecbb7ae5caeed77"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules.md",
+    "role": "Appendix A: D-1 rules 11",
+    "status": "match",
+    "sha256": "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
+    "role": "Appendix A: D-1 rules rev1",
+    "status": "match",
+    "sha256": "eb730bddae35e76bc2569503605dea714b066fa42de7bc7b98efdde3edb3e868"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md",
+    "role": "Appendix A: P5r4 judgement (R2-5 source, not opened)",
+    "status": "match",
+    "sha256": "5e9fb33b7419d624d8dc305ad93121be090802cc5c85ea29fbc823e019fc9e2f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev6.md",
+    "role": "Appendix A: v5 rev6 (t_lift, J11)",
+    "status": "match",
+    "sha256": "fd5117031ef460cf4c6aa74807b2e73de984b014abb89a952b593499841da39c"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12.md",
+    "role": "Appendix A: v5 rev12 (C-5 rows)",
+    "status": "match",
+    "sha256": "e02d63cc1290383ee85d9a1f3a20c6348224b60999cccaf8d587cf610c5f5eb2"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12a.md",
+    "role": "Appendix A: v5 rev12a",
+    "status": "match",
+    "sha256": "e171141dce180fbb48493b9b95503ff3577d16f17cc54061ce3ad6e9efd51458"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12b.md",
+    "role": "Appendix A: v5 rev12b",
+    "status": "match",
+    "sha256": "0d17f87e9532d558efcab9fa89648e2790ece9c7568a802fbaa4c7631824e75d"
+   }
+  ],
+  "recorded": [
+   {
+    "file": "00_docs/04_control/s6_control_spec.md",
+    "sha256": "1924ae89a02752761f7b1e494304843f5c99d29c59d3989f7671ee258143be16"
+   },
+   {
+    "file": "02_params/rexome33.yaml",
+    "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+   },
+   {
+    "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+    "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e"
+   }
+  ]
+ },
+ "params": {
+  "F_min_N": 9414.58911,
+  "v_max_m_s": 0.0209243016,
+  "head_area_m2": [
+   0.013273229,
+   0.013273229,
+   0.00950331778,
+   0.00950331778
+  ]
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "rows": [
+  {
+   "case": "OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "e8a3a9b64d1373e1af1a2e9ca5efd26212b1f3229f47e08a3d00265e1a9b176d",
+    "step_series.npz": "2dcc05a8486fd89de32bacc47c23bdba95540d56da2685fa0920c393b7d81d86",
+    "r8_series.npz": "abdf5777c4bb835bd00ff594d01834f7e15d762fd5b2e4e8b5a1309057fcf075",
+    "record/record.npz": "5eb70b70fa0b47f2661233a6b0ddb0bdc9ce0fb03788bf099f5e0ea2163ebf58"
+   },
+   "kind": "OC5",
+   "criteria_id": "C-8b",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-OC5_20261114_210626/OC5_mixed_rigid_J1FR_Kc1_V0_top/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "departure",
+    "R_c",
+    "m_7_4",
+    "Fmin_time_8s",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "departure": {
+     "t_D_s": 33.99100000000485,
+     "clause": "rev2 R2-5",
+     "verdict": "record"
+    },
+    "R_c": {
+     "crawler_attitude_deg": [
+      2.085628285738074,
+      1.544967148046799
+     ],
+     "R_c": 0.9568086623414596,
+     "clause": "rules 2",
+     "verdict": "record"
+    },
+    "m_7_4": {
+     "clause": "rules 7.4 / rev2 R2-6 path 2",
+     "m_N": 11951.205749459283,
+     "treatment": "record",
+     "per_leg": {
+      "t0": 33.99100000000485,
+      "t1": 168.00000000445348,
+      "truncated_at_run_end": false,
+      "min_N": [
+       121958.59178308239,
+       88312.95169153338,
+       11951.205749459283,
+       74601.26289539503
+      ],
+      "min_t_s": [
+       76.14000000140405,
+       34.63800000002633,
+       34.50400000002188,
+       76.56500000141816
+      ],
+      "min_all_N": 11951.205749459283,
+      "min_leg": "RL",
+      "t_below_Fmin_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "t_below_Fmin_plus2k_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "t_below_Fmin_max_s": 0.0,
+      "t_below_Fmin_plus2k_max_s": 0.0
+     },
+     "applies": true,
+     "verdict": "record"
+    },
+    "Fmin_time_8s": {
+     "t0": 33.99100000000485,
+     "t1": 41.99100000000485,
+     "truncated_at_run_end": false,
+     "min_N": [
+      136889.1930433076,
+      88312.95169153338,
+      11951.205749459283,
+      95193.89578267495
+     ],
+     "min_t_s": [
+      41.991000000270425,
+      34.63800000002633,
+      34.50400000002188,
+      41.991000000270425
+     ],
+     "min_all_N": 11951.205749459283,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "clause": "rev2 R2-5",
+     "verdict": "record"
+    },
+    "Fmin_time_full": {
+     "t0": 33.99100000000485,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      121958.59178308239,
+      88312.95169153338,
+      11951.205749459283,
+      74601.26289539503
+     ],
+     "min_t_s": [
+      76.14000000140405,
+      34.63800000002633,
+      34.50400000002188,
+      76.56500000141816
+     ],
+     "min_all_N": 11951.205749459283,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.0,
+     "t_below_Fmin_plus2k_max_s": 0.0,
+     "clause": "rev2 R2-5 (record only)",
+     "verdict": "record"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_LAS_K1",
+     "expect_name": "final_C4G2_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": []
+  },
+  {
+   "case": "OC5_mixed_rigid_J1FR_Kc3_VB_top",
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\batch.json",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\OC5_mixed_rigid_J1FR_Kc3_VB_top",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "input_files_sha256": {
+    "result.json": "e09428a8b350a628f02208e6fd82a7c63b2258b37fd74f289d23d2df545820e5",
+    "step_series.npz": "292643dd535f4049d6b843cc9425ea313a4ffb89370eda42d724a40c23214c41",
+    "r8_series.npz": "26eaba43a4b1f33b114da190773c82001fa905d739b370e334555b85334fe573",
+    "flow_series.npz": "710563129c65fc3dfc991badb77863d23211f1c9a2ef884a21ccc36cab72afc5",
+    "record/record.npz": "3bb7a33b8006e01ed508efabc3b6391ebb9555c1527360d5a0a8efa801cf301d"
+   },
+   "kind": "OC5",
+   "criteria_id": "C-8a",
+   "d1_id": null,
+   "pool": "pcore",
+   "rc": 0,
+   "placement_record": {
+    "clause": "rules 6 pool / rev7 R7-6 (record)",
+    "pool": "pcore",
+    "planned_pool": "pcore",
+    "placement_applied": {
+     "result_json": "C:/workspace/outrigger_control/07_results/S9/batch_V5-RESUME-K1-OC5_20261114_210626/OC5_mixed_rigid_J1FR_Kc3_VB_top/result.json",
+     "mode": "pcore",
+     "affinity_mask_requested": "0x0000FF00",
+     "affinity_mask_process": "0x0000FF00",
+     "affinity_mask_ok": true,
+     "affinity_logical_processors": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ]
+    },
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "batch_affinity_masks": {
+     "pcore": "0x0000FF00"
+    },
+    "r4368_arm": null,
+    "notes": []
+   },
+   "status": "기록 완료",
+   "judged_keys": [
+    "departure",
+    "R_c",
+    "m_7_4",
+    "Fmin_time_8s",
+    "R11-4_commit",
+    "R9-1_expect_controller"
+   ],
+   "items": {
+    "departure": {
+     "t_D_s": 34.54600000002328,
+     "clause": "rev2 R2-5",
+     "verdict": "record"
+    },
+    "R_c": {
+     "crawler_attitude_deg": [
+      2.151902773093178,
+      1.482562458085117
+     ],
+     "R_c": 0.9523695802182304,
+     "clause": "rules 2",
+     "verdict": "record"
+    },
+    "m_7_4": {
+     "clause": "rules 7.4 / rev2 R2-6 path 2",
+     "m_N": 5869.61684783503,
+     "treatment": "stop (S-9)",
+     "per_leg": {
+      "t0": 34.54600000002328,
+      "t1": 168.00000000445348,
+      "truncated_at_run_end": false,
+      "min_N": [
+       122313.096890219,
+       82974.0613203602,
+       5869.61684783503,
+       72774.76545875728
+      ],
+      "min_t_s": [
+       76.25500000140786,
+       35.553000000056706,
+       35.28600000004784,
+       71.8160000012605
+      ],
+      "min_all_N": 5869.61684783503,
+      "min_leg": "RL",
+      "t_below_Fmin_s": [
+       0.0,
+       0.0,
+       0.15800000000524506,
+       0.0
+      ],
+      "t_below_Fmin_plus2k_s": [
+       0.0,
+       0.0,
+       0.21200000000703767,
+       0.0
+      ],
+      "t_below_Fmin_max_s": 0.15800000000524506,
+      "t_below_Fmin_plus2k_max_s": 0.21200000000703767
+     },
+     "applies": true,
+     "verdict": "record",
+     "stop": "S-9"
+    },
+    "Fmin_time_8s": {
+     "t0": 34.54600000002328,
+     "t1": 42.54600000002328,
+     "truncated_at_run_end": false,
+     "min_N": [
+      136324.74507706572,
+      82974.0613203602,
+      5869.61684783503,
+      95239.19358241769
+     ],
+     "min_t_s": [
+      42.54100000028868,
+      35.553000000056706,
+      35.28600000004784,
+      42.54600000028885
+     ],
+     "min_all_N": 5869.61684783503,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.15800000000524506,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.21200000000703767,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.15800000000524506,
+     "t_below_Fmin_plus2k_max_s": 0.21200000000703767,
+     "clause": "rev2 R2-5",
+     "verdict": "record"
+    },
+    "Fmin_time_full": {
+     "t0": 34.54600000002328,
+     "t1": 168.00000000445348,
+     "truncated_at_run_end": false,
+     "min_N": [
+      122313.096890219,
+      82974.0613203602,
+      5869.61684783503,
+      72774.76545875728
+     ],
+     "min_t_s": [
+      76.25500000140786,
+      35.553000000056706,
+      35.28600000004784,
+      71.8160000012605
+     ],
+     "min_all_N": 5869.61684783503,
+     "min_leg": "RL",
+     "t_below_Fmin_s": [
+      0.0,
+      0.0,
+      0.15800000000524506,
+      0.0
+     ],
+     "t_below_Fmin_plus2k_s": [
+      0.0,
+      0.0,
+      0.21200000000703767,
+      0.0
+     ],
+     "t_below_Fmin_max_s": 0.15800000000524506,
+     "t_below_Fmin_plus2k_max_s": 0.21200000000703767,
+     "clause": "rev2 R2-5 (record only)",
+     "verdict": "record"
+    },
+    "R11-4_commit": {
+     "clause": "436.8 rev11 R11-4 (rules 6 commit, 8.2 S-12)",
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "code_at_launch_clean": true,
+     "code_at_launch_dirty": [],
+     "code_at_launch_paths": [
+      "03_src/outrigger_sim/control",
+      "03_src/outrigger_sim/sensors",
+      "04_scripts/02_chrono/run_S9.py"
+     ],
+     "dirty_record": false,
+     "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "open_loop": false,
+     "code_state_compared": true,
+     "problems": [],
+     "verdict": "pass"
+    },
+    "R9-1_expect_controller": {
+     "clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)",
+     "source": "c2_setup.expect_controller.ok",
+     "expect_ok": true,
+     "tag_argv": "final_C4G2_P3_LAS_K1",
+     "expect_name": "final_C4G2_P3_LAS_K1",
+     "verdict": "pass"
+    },
+    "J11_record": {
+     "clause": "rev9 R9-6 (C-5 outside: J11 record only) / rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4 / R9-5",
+     "law_locked_source": "step_series.npz law_locked",
+     "law_locked_problems": [],
+     "law_locked_codes": [],
+     "law_locked_pattern": [
+      "none"
+     ],
+     "ls": null,
+     "actual_fallback_legs": [],
+     "unarmed_after_armed_samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_late": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "log_matches": [],
+     "stretches": {},
+     "status": "no actual fallback leg (n_late of all legs recorded)",
+     "computed_verdict_record": "record",
+     "c5_stop_would_be_record": null,
+     "input_absent": false,
+     "verdict": "record"
+    }
+   },
+   "notes": [],
+   "failures_reported": []
+  }
+ ],
+ "bundle_result": {
+  "status": "기록 불완전",
+  "stops": [
+   "OC5_mixed_rigid_J1FR_Kc3_VB_top: m_7_4 S-9"
+  ],
+  "rows_judged": 0,
+  "rows_record": 2,
+  "row_status": {
+   "OC5_mixed_rigid_J1FR_Kc1_V0_top": "기록 완료",
+   "OC5_mixed_rigid_J1FR_Kc3_VB_top": "기록 완료"
+  },
+  "note": null,
+  "recalculated_judged_items": 12,
+  "reaggregated_items": {
+   "names": [],
+   "count": 0
+  },
+  "TABLE_REAGG": [],
+  "rev9_R9_6_j11_record": {
+   "clause": "rev9 R9-6 (J11 outside C-5: record only, input absent counted)",
+   "rows": 2,
+   "input_absent_rows": 0,
+   "n_late_positive_on_actual_leg_rows": 0
+  }
+ }
+}

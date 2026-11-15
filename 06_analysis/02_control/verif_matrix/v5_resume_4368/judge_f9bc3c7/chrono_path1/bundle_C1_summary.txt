@@ -1,0 +1,20 @@
+bundle C-1
+grade {"judged_rows": 6, "record_rows": 4, "grade_counts": {"pass": 6}, "allowed_stop_rows": [], "flag_rows": [], "record_rows_reported": [], "missing_count": 0, "row_phrase": "통과 6", "grade_without_stop": "pass", "grade": "pass", "status": "통과"}
+t_lift present ['3 F_min (1 ms)', '5a rocking amplitude', 'C1 D8 min true rod force', 'D8 no pad lift-off', 'F2 lower-bound soundness'] max 0.09999999999976694 stop_rows []
+  D1C2_middle_rpBop_Fs4: runner 29.49999999994459 (rel 26.49999999994268, t0 3.0000000000019065) D-29 29.444999999944717 -> 10Hz 29.49999999994459 basis 1ms_sus diff 0.0 stop None
+  D1C2_middle_fup3.2_Fs4: runner 29.39999999994482 (rel 26.399999999942914, t0 3.0000000000019065) D-29 29.274999999945113 -> 10Hz 29.299999999945054 basis 1ms_sus diff 0.09999999999976694 stop None
+  D1C2_middle_fdown3.2_Fs4: runner 29.49999999994459 (rel 26.49999999994268, t0 3.0000000000019065) D-29 29.39599999994483 -> 10Hz 29.39999999994482 basis 1ms_sus diff 0.09999999999976694 stop None
+  D1C2_bottom_fup3.2_Fs4: runner 29.49999999994459 (rel 26.49999999994268, t0 3.0000000000019065) D-29 29.371999999944887 -> 10Hz 29.39999999994482 basis 1ms_sus diff 0.09999999999976694 stop None
+  D1C2_bottom_fdown3.2_Fs4: runner 29.199999999945287 (rel 26.19999999994338, t0 3.0000000000019065) D-29 29.13099999994545 -> 10Hz 29.199999999945287 basis 1ms_sus diff 0.0 stop None
+  D1C2_bottom_rpBop_Fs4: runner 29.199999999945287 (rel 26.19999999994338, t0 3.0000000000019065) D-29 29.12999999994545 -> 10Hz 29.199999999945287 basis 1ms_sus diff 0.0 stop None
+unjudged 4 {'K8 shadow (B) - true floor': 4} unknown []
+row D1C2_middle_rpBop_Fs4 judged pass judged_true 17 missing [] count_ok True
+row D1C2_middle_fup3.2_Fs4 judged pass judged_true 17 missing [] count_ok True
+row D1C2_middle_fdown3.2_Fs4 judged pass judged_true 23 missing [] count_ok True
+row D1C2_bottom_fup3.2_Fs4 judged pass judged_true 17 missing [] count_ok True
+row D1C2_bottom_fdown3.2_Fs4 judged pass judged_true 23 missing [] count_ok True
+row D1C2_bottom_rpBop_Fs4 judged pass judged_true 17 missing [] count_ok True
+row D1C1_top_flat_crx3 record pass judged_true 12 missing [] count_ok True
+row D1C1_top_rpBop_crx3 record pass judged_true 12 missing [] count_ok True
+row D1C1_bottom_flat_crx3 record pass judged_true 12 missing [] count_ok True
+row D1C1_bottom_rpBop_crx3 record pass judged_true 12 missing [] count_ok True

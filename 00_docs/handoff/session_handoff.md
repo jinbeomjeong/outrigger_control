@@ -2,39 +2,32 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.** (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
 
-- 갱신: 2026-11-13(세션 6f3ebc4d). B1 판정 커밋(이 파일 커밋, 부모 bd64cc4 + 병합 1ac4849·24a108e).
-- 결정 경과 원본: 메모리 `k2-judgement-decisions-20261111.md`(11-11~13 결정), `decision_log.md` LAS-b P5r4·B1 단락.
-- 이 세션 scratchpad: `C:\Users\jinbeom\AppData\Local\Temp\claude\63917d480778c1ba\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\scratchpad\`.
+- 갱신: 2026-11-16(세션 7ea6ef9d). 436.8 Chrono 판정서 커밋(이 파일 커밋, 부모 R3f `8a0c843`).
+- 결정 경과 원본: 메모리 `gs-4368-decisions-20261113.md`(결정 74~111), `r3e-authorization-20261116.md`(결정 96 자동 범위). 규칙 결정은 각 rev 봉인본의 결정 기록 표.
 
-## 1. 최근 끝난 것 (11-11~13)
+## 1. 최근 끝난 것 (11-15~16)
 
 | 항목 | 결과 | 근거 |
 |---|---|---|
-| K-2(`_TCL`) | 판정 불가, 채택 안 함 → v5 제어기 = `final_C4G2_LAS_K1` 확정 | `06_analysis/02_control/k2/judgement/k2_judgement.md` |
-| LAS-b P5r4+K1 재판정 | 하네스 통과·Chrono 미달 → 최종 미달, P0 유지. P0+K1 A3·A5 F_min 하회는 알려진 한계 + 436.8 O-C5 | `06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md` |
-| B1 크리프 근거 | 두 경로 일치: ZA-2, OS-MAX, H-OPT, PRED-FAIL, B1-OPEN, FUP-OUT, W-NA, K-SAME. 판정 후 감사 차단 0 | `06_analysis/02_control/b1/b1_creep_basis_judgement.md`, `b1_creep_post_audit.md` |
-| C3 probe 가드 초과(683.475 > 682.8 mm) | 설계 의도·안전 여유 안(LEVEL 가드는 LEVEL·LOC 뒤만, PROBE는 P6 689.8 mm) | `06_analysis/02_control/b1/b1_c3_probe_guard_check.md` |
+| 436.8 규칙 rev22~rev25 | rev22 S10 `570a9c1`, rev23 S11 `f40935a`, rev24 S12 `b75d874`, rev25 S13 `f381053`(브랜치 `z4373-s4`). rev24부터 두 경로 공통 판정 정의 블록(CD-1~CD-11), rev25 블록 sha `0e082b9c…` | `06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2{2..5}.md` |
+| R3d·R3e·R3f | R3d `0220671`(C-5 S-13) → R3e `4b81591` 폐기(미푸시) → R3f `8a0c843`(master). 옛 R3f `1fadc06`은 `z4373-r3f-discarded-1fadc06` | 판정서 3절 |
+| 436.8 Chrono 판정 | 두 경로 일치. C-1 통과, C-2 미달, C-3 통과, C-5 미달 28/7, 기록 묶음 완료. Chrono 최악 미달 | `v5_resume_4368_judgement.md` 0.1·0.2절 |
+| tools/verif 보완 | judgement_checklist 동사 확장, missing_scan 신설, seal_check 계열 판별(시험 128) | `~/.claude/tools/verif/README.md` |
 
-## 2. 다음 (사용자 승인됨)
+## 2. 다음 (사용자 결정 96·110 순서, 각 시작은 알리고 승인)
 
-### 2.1 436.8 v5 재개 검증
-- 계획 초안 `06_analysis/02_control/verif_matrix/v5_resume_4368_plan_draft.md`(141e4958, 추적 밖). 결정(11-12): R-1 ±0.02·탐침 최대 3회, R-2 C-4 갈래 `_LAS_K1` 재실행, **R-3 V0 짝 둠(초안 권고와 다름, 행 수·시간 다시 셈)**, O-C5 행 포함.
-- 순서: 계획 반영 → 규칙 봉인 → 실행 전 감사(verif-protocol-auditor) 차단 0 → Chrono(배치표 compute-scheduler-expert).
-
-### 2.2 B1 새 예측 형식 재등록(rev2)
-- 초안 `06_analysis/02_control/b1/b1_creep_rules_rev2_draft.md`(94a17ca5, 봉인 전). 결과 본 뒤 개정이므로 새 Chrono 행 V1~V7(약 5 h)으로만 검증.
-- 봉인 전 사용자 질문 U-R2-1~6, 위임 질문 dynamics-expert D-1~D-3, terramechanics-expert T-1~T-4.
-- J2 fup(앞들림)은 Q6 결정으로 운용 권고로 분리(권고값 분석은 뒤).
-
-### 2.3 그 밖
-- LAS-c 재설계(설계·준비만, 판정은 v5 뒤): `06_analysis/02_control/las_redesign/las_redesign_v1_draft.md`.
-- K-2b 봉인, 논문 v5 반영, tools/verif 후보(`kr_compare`, `judgement_numbers`, `doc_reconstruct`), 경로 2 출력에 `tool_sha256` 넣기(다음 판).
+1. **R4 하네스 판정**(436.8 종합에 필요): 하네스 도구 브랜치 `z4373-p1harness`·`z4373-p2harness`·`z4373-r4`를 R3f에서 가른다. 봉인 목록 rev13~rev25. 지시문 넘기기 전에 하네스 H-* 정의 출처 표 점검(결정 95). J_P Chrono 12행 판독도 이때(결정 110). 사전 예측 P-7·P-11·P-11b 확인.
+2. C-8a 기전 개입 실행 2행(P5r4 끝 램프 / LAS 끔, 각 약 80분, 진단 `scratchpad diag-4368` 명세 → 판정서 4.7절).
+3. LAS-c 재설계(이탈~is_lifted 가벼운 다리 보호 공백, 끝 램프, 이탈 선행 지표 LAS-b 시작).
+4. 436.9 규칙(C-2 E-5 READY 여유, C-4·O-C5 rigid_base P3-5, 열린 루프 해당 없음) · rev26 후보(판정서 11절: 경로 1 CD-11 분류, 경로 2 H-9 사유·J-P3 H-7 멈춤, C-2 S 행 P3-6, J11 표기, C-4 목록, K-10 키) · B1 rev2.
 
 ## 3. 열린 작은 항목
-- 명세 369.2 아래 "LEVEL 가드는 PROBE·REANCHOR·DONE·READY에서 보지 않음" 한 줄, 20.4 "FAULT 679 mm" 옛 값 주석(선택, control-expert).
-- K-77 문장(비가 NA면 κ 비선형 표시도 NA)은 B1 rev2 R2-4에 넣음.
+- 판정서 12절 남은 확인: N3(E-5 행정 517.33 대 512.63 mm, python-expert), integrity Low 3(경로 1 README `c3f4cad`·TOOL_VERSION·시험 개수 기준), rev6:85 둘째 구절(최종 LOC 대안 377 계산 미실시), 부록 E 확인 필요 24.
+- 판정서 조립 조각: `scratchpad 7ea6ef9d…\judgement-4368\build\`(세션 임시 폴더, 지워질 수 있음 — 정본은 커밋된 판정서).
+- tools/verif 후보: `kr_cd11`, `judgement_checklist --exclude-section`, `log_errors` 빈 통과 경고.
+- 추적 밖 보존(지우지 않음): `judge_576eb87/chrono_path1/chrono_view`(R3f 입력), G-S `gs_*_b9f5707`, `judge_062e051`·`judge_576eb87`·`judge_b9f5707`, `h0_judge_b9f5707`, `run_b9f5707`.
 
 ## 4. 규칙 요약 (자세한 것은 CLAUDE.md·메모리)
 - 답변은 한국어. 다음 단계 실행은 알리고 승인 뒤(사전 승인 범위는 메모리). 서브에이전트가 낸 결정 사항은 AskUserQuestion.
-- 봉인 규칙 실행: 실행 전 감사 차단 0 → 실행 중 추적 파일 변경·커밋 금지 → postrun → 경로 2 → 경로 1 → K-R → 판정서 → 판정 후 감사 → integrity → 커밋.
-- 두 경로 독립: 한 경로 작성자에게 다른 경로 코드·출력을 주지 않는다.
+- 봉인 규칙 실행: 실행 전 감사 차단 0 → 실행 중 추적 파일 변경·커밋 금지 → 두 경로 실행 → 판정 후 감사 → K-R → 판정서 → 판정 후 감사 → integrity → 커밋.
+- 두 경로 독립: 공통 블록은 같은 바이트, 경로 2 몫에 경로 1 구조·이름 금지, 넘기기 전 출처 표 점검.

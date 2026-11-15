@@ -1,0 +1,446 @@
+{
+ "tool": "p2_e7.py",
+ "tool_gate": {
+  "clause": "rev4 R4-A2 condition 1 (E-7 tool) + rev19 R19-7",
+  "base": "f46b5ab",
+  "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+  "head": "f9bc3c775d09d0588adb388dec96614fd95f2929",
+  "files": {
+   "04_scripts/03_control/s9/s9_soil_event_screen.py": {
+    "commits_base_to_ref": 0,
+    "sha256_executed": "b66fa9275cad90a250a09e8168ac35a5619f359113790be8a59b1978978868ea",
+    "executed_is_ref_blob": true,
+    "used_names_same": {
+     "judge_soil_event": true,
+     "_event_window_end_s": true,
+     "_per_leg_lift_rows": true,
+     "_adjacent_outside_lift": true,
+     "_pressure_rows": true,
+     "_crawler_rows": true,
+     "_soil_records": true,
+     "_fast_gates": true,
+     "_slow_gates": true,
+     "_common_gates": true,
+     "BranchResult": true
+    }
+   },
+   "04_scripts/03_control/s8/r67_g1_screen.py": {
+    "commits_base_to_ref": 2,
+    "sha256_executed": "1aad3a5f9e90c404522b30769d87d64cc87a931c28e751a9b6a72122ee1c0d62",
+    "executed_is_ref_blob": true,
+    "used_names_same": {
+     "judge_event": true,
+     "twist_work": true,
+     "is_fast": true,
+     "_intervals": true,
+     "LEGS": true,
+     "DIAG": true,
+     "N_TWIST": true,
+     "V_MAX": true,
+     "T3_S": true,
+     "F_MIN_N": true
+    }
+   },
+   "04_scripts/03_control/s8/r51_reapp_closed_loop.py": {
+    "commits_base_to_ref": 0,
+    "sha256_executed": "a3f1494e398d8d0f60151ea5627e5aaef22c0a8c82f2643bbfe4eab79580cdb4",
+    "executed_is_ref_blob": true,
+    "used_names_same": {
+     "_intervals": true
+    }
+   },
+   "04_scripts/03_control/s9/s9_soil_closed_loop.py": {
+    "commits_base_to_ref": 0,
+    "sha256_executed": "17290d403837d5ba97d677a4700e7c79d049b7f62d816f966a8ca9cc699a67a8",
+    "executed_is_ref_blob": true
+   },
+   "04_scripts/03_control/s8/r64_g4_closed_loop.py": {
+    "commits_base_to_ref": 0,
+    "sha256_executed": "55b9416fc9fca6e566ad933e3dc8e3744df093b215f5cc7cf7d3ffe75c00c180",
+    "executed_is_ref_blob": true
+   }
+  },
+  "r19_7": {
+   "clause": "rev19 R19-7 / rev20 R20-1",
+   "file": "04_scripts/03_control/s8/r67_g1_screen.py",
+   "base": "f46b5ab",
+   "ref": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+   "diff_cmd": "git diff -U0 f46b5ab b9f5707d7f3f7a26230b25f4edbc1fec587ca612 -- 04_scripts/03_control/s8/r67_g1_screen.py",
+   "hunks": [
+    {
+     "hunk": "@@ -615 +615,19 @@ def v5_job_record(options, env_name: str = V5_SETTING_ENV) -> dict:",
+     "enclosing": [
+      "resume_k1_block",
+      "v5_job_record"
+     ],
+     "names_1b": [
+      "RESUME_K1_KEY"
+     ],
+     "lines": [
+      {
+       "side": "old",
+       "line": 615,
+       "enclosing": "v5_job_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 615,
+       "enclosing": "v5_job_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 616,
+       "enclosing": "v5_job_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 617,
+       "enclosing": "v5_job_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 618,
+       "enclosing": "v5_job_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 619,
+       "enclosing": "v5_job_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 622,
+       "text": "RESUME_K1_KEY = \"resume_k1\"",
+       "statement": "Assign",
+       "defines": [
+        "RESUME_K1_KEY"
+       ],
+       "read_by": [
+        "v5_branch_record",
+        "v5_job_record"
+       ],
+       "readers_all_record_only": true,
+       "rule": "1b",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 623,
+       "text": "\"\"\"``resume_k1_record.RECORD_KEY`` (436.8 record block, coupled folder).\"\"\"",
+       "statement": "Expr",
+       "defines": [
+        "RESUME_K1_KEY"
+       ],
+       "read_by": [
+        "v5_branch_record",
+        "v5_job_record"
+       ],
+       "readers_all_record_only": true,
+       "rule": "1b",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 626,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 627,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 628,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 629,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 630,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 631,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 633,
+       "enclosing": "resume_k1_block",
+       "rule": "1a",
+       "ok": true
+      }
+     ],
+     "blank_lines_not_attributed": 5,
+     "ok": true
+    },
+    {
+     "hunk": "@@ -627 +645 @@ def v5_branch_record(plant, ctrl) -> dict:",
+     "enclosing": [
+      "v5_branch_record"
+     ],
+     "names_1b": [],
+     "lines": [
+      {
+       "side": "old",
+       "line": 627,
+       "enclosing": "v5_branch_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 645,
+       "enclosing": "v5_branch_record",
+       "rule": "1a",
+       "ok": true
+      }
+     ],
+     "blank_lines_not_attributed": 0,
+     "ok": true
+    },
+    {
+     "hunk": "@@ -635 +653 @@ def v5_setting_record(options, env_name: str = V5_SETTING_ENV,",
+     "enclosing": [
+      "v5_setting_record"
+     ],
+     "names_1b": [],
+     "lines": [
+      {
+       "side": "old",
+       "line": 635,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 653,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      }
+     ],
+     "blank_lines_not_attributed": 0,
+     "ok": true
+    },
+    {
+     "hunk": "@@ -639 +657,3 @@ def v5_setting_record(options, env_name: str = V5_SETTING_ENV,",
+     "enclosing": [
+      "v5_setting_record"
+     ],
+     "names_1b": [],
+     "lines": [
+      {
+       "side": "old",
+       "line": 639,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 657,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 658,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 659,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      }
+     ],
+     "blank_lines_not_attributed": 0,
+     "ok": true
+    },
+    {
+     "hunk": "@@ -645 +665,2 @@ def v5_setting_record(options, env_name: str = V5_SETTING_ENV,",
+     "enclosing": [
+      "v5_setting_record"
+     ],
+     "names_1b": [],
+     "lines": [
+      {
+       "side": "old",
+       "line": 645,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 665,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      },
+      {
+       "side": "new",
+       "line": 666,
+       "enclosing": "v5_setting_record",
+       "rule": "1a",
+       "ok": true
+      }
+     ],
+     "blank_lines_not_attributed": 0,
+     "ok": true
+    }
+   ],
+   "names_1b_cross_file_check": {
+    "greps": [
+     {
+      "cmd": "git grep -n -E import +r67_g1_screen|from +r67_g1_screen +import b9f5707d7f3f7a26230b25f4edbc1fec587ca612 -- *.py",
+      "rc": 0,
+      "lines": [
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r67_g1_xcheck.py:24:import r67_g1_screen as g  # noqa: E402",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r68_p27_screen.py:44:import r67_g1_screen as r67  # noqa: E402",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r69_g5_screen.py:26:import r67_g1_screen as r67  # noqa: E402",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r69_g8_screen.py:70:import r67_g1_screen as r67  # noqa: E402",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r69_g8_xcheck.py:27:import r67_g1_screen as r67  # noqa: E402",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r79_sensor_screen.py:820:    import r67_g1_screen as r67",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r79_sensor_screen.py:953:    import r67_g1_screen as r67",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r79_sensor_screen.py:1076:    import r67_g1_screen as r67",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s9/s9_soil_event_screen.py:201:            import r67_g1_screen as r67",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:05_tests/unit/test_r79_controller_tag.py:40:import r67_g1_screen as r67",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:05_tests/unit/test_resume4368_rev1.py:239:        \"import r67_g1_screen as r67\\n\""
+      ]
+     },
+     {
+      "cmd": "git grep -n -w RESUME_K1_KEY b9f5707d7f3f7a26230b25f4edbc1fec587ca612 -- *.py",
+      "rc": 0,
+      "lines": [
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r67_g1_screen.py:616:        extra[RESUME_K1_KEY] = resume_k1_block(ctrl)",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r67_g1_screen.py:622:RESUME_K1_KEY = \"resume_k1\"",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r67_g1_screen.py:645:    out = {\"t_lift_s\": t_lift_s, **extra, RESUME_K1_KEY: resume_k1_block(ctrl)}",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r79_sensor_screen.py:930:    out[RESUME_K1_KEY] = _resume_k1_record(run.ctrl)  # 436.8 rules 4.2 / 7.2, every setting",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/03_control/s8/r79_sensor_screen.py:1057:RESUME_K1_KEY = \"resume_k1\"",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/04_hydraulic/coupled/run_v5.py:452:                                                \"head_only_declared\", \"d1\", RESUME_K1_KEY)",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:04_scripts/04_hydraulic/coupled/run_v5.py:503:RESUME_K1_KEY = \"resume_k1\"",
+       "b9f5707d7f3f7a26230b25f4edbc1fec587ca612:05_tests/unit/test_resume4368.py:152:    assert record.RECORD_KEY == judge.RECORD_KEY == run_v5.RESUME_K1_KEY"
+      ]
+     }
+    ],
+    "importing_files": [
+     "04_scripts/03_control/s8/r67_g1_xcheck.py",
+     "04_scripts/03_control/s8/r68_p27_screen.py",
+     "04_scripts/03_control/s8/r69_g5_screen.py",
+     "04_scripts/03_control/s8/r69_g8_screen.py",
+     "04_scripts/03_control/s8/r69_g8_xcheck.py",
+     "04_scripts/03_control/s8/r79_sensor_screen.py",
+     "04_scripts/03_control/s9/s9_soil_event_screen.py",
+     "05_tests/unit/test_r79_controller_tag.py",
+     "05_tests/unit/test_resume4368_rev1.py"
+    ],
+    "readers": []
+   },
+   "e7_functions": [
+    "judge_event",
+    "twist_work",
+    "_intervals",
+    "is_fast"
+   ],
+   "e7_functions_same": {
+    "_intervals": true,
+    "is_fast": true,
+    "judge_event": true,
+    "twist_work": true
+   },
+   "problems": [],
+   "ok": true
+  },
+  "problems": [],
+  "ok": true
+ },
+ "rows": {
+  "c:\\workspace\\outrigger_control\\07_results\\s9\\batch_v5-resume-k1-c2_20261114_230123\\d1psc_j1_b_top_fs4_fl_cslow": {
+   "case": "D1PSC_J1_B_top_Fs4_FL_cslow",
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\D1PSC_J1_B_top_Fs4_FL_cslow",
+   "event_id": "SS",
+   "t_ev_s": 83.20000000147243,
+   "branch": {
+    "t_end_rel_s": 60.0,
+    "t_end_s": 143.20000000147243,
+    "reason": "max_after",
+    "min_after_s": 23.0
+   },
+   "rows": 60500,
+   "twist": {
+    "bins_J": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bundles": [],
+    "n_bundles": 0,
+    "max_judged_bin_J": 0.0,
+    "D0_kN": -1.7
+   },
+   "tool_gates_record_not_used": {
+    "E-1_no_lift": true,
+    "E-3_Fmin_after_event": true,
+    "E-4_window_350bar": true,
+    "E-4_moving_180bar": true,
+    "E-4_saturation0": true,
+    "E-5_end_ready_att": false,
+    "E-5_fault0": true,
+    "E-5_stroke": true,
+    "E-6_crawler": false,
+    "E-7_recurrence": true
+   },
+   "tool_pass_record_not_used": false
+  }
+ }
+}

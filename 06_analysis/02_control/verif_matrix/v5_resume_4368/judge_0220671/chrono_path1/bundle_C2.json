@@ -1,0 +1,2426 @@
+{
+ "tool": "chrono_bundle_grade_4368 v5 (python-expert 2026-11-15, rules rev18 R18-2, rev19, rev21, rev22 R22-1, rev23 R23-1)",
+ "rules": "rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 R19-1 .. R19-6, rev21 R21-1 / R21-2, rev22 R22-1 (t45 pairing by input folder order), rev23 R23-1 (runner rows and s8_metrics by the inner name of the judged row dir); original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; d1_selection_rules.md 7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; rev6 R6-A / R6-B4 / R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py",
+ "bundle": "C-2",
+ "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+ "seals": {
+  "rules_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix",
+  "files": {
+   "v5_resume_4368_rules.md": {
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "sealed": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "tool": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "sealed": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "tool": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "sealed": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "tool": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "sealed": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "tool": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "sealed": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "tool": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "sealed": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "tool": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "sealed": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "tool": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "sealed": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "tool": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "sealed": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "tool": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "sealed": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "tool": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "sealed": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "tool": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "sealed": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "tool": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "sealed": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "tool": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "sealed": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "tool": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "sealed": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "tool": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "sealed": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "tool": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "sealed": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "tool": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "sealed": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "tool": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "sealed": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "tool": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "sealed": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "tool": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev22.md": {
+    "sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "sealed": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "tool": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev23.md": {
+    "sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "sealed": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "tool": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "ok": true
+   }
+  },
+  "ok": true,
+  "missing": []
+ },
+ "row_count_S15": {
+  "rule": "rules rev18 R18-2 row count (S-15)",
+  "expected": 6,
+  "found": 6,
+  "criteria_ids": [
+   "C-2"
+  ],
+  "batches": {
+   "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633": {
+    "batch_value": "V5-RESUME-K1-C2",
+    "folder_part": "V5-RESUME-K1-C2",
+    "name": "V5-RESUME-K1-C2"
+   },
+   "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123": {
+    "batch_value": "V5-RESUME-K1-C2",
+    "folder_part": "V5-RESUME-K1-C2",
+    "name": "V5-RESUME-K1-C2"
+   }
+  },
+  "not_in_manifest": [],
+  "duplicates": [],
+  "manifest_cases": [
+   "D1C2_bottom_roll4.4_Fs4",
+   "D1C2_bottom_rollm4.4_Fs4",
+   "D1C2_middle_roll4.4_Fs4",
+   "D1C2_middle_rollm4.4_Fs4",
+   "D1PSC_J1_B_top_Fs4_FL_cedge",
+   "D1PSC_J1_B_top_Fs4_FL_cfast",
+   "D1PSC_J1_B_top_Fs4_FL_cmid",
+   "D1PSC_J1_B_top_Fs4_FL_cslow",
+   "D1PSC_J1_B_top_Fs4_RL_cmid",
+   "D1PSC_J1_B_top_Fs4_spFLJ1_base",
+   "D1PSC_J1_B_top_Fs4_spRLJ1_base",
+   "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+   "D1S_J1_B_bottom_Fs4_r1p925_p1p4",
+   "D1S_J1_B_bottom_Fs4_rm2p64_p0",
+   "D1S_J1_B_middle_Fs4_r0_pm2p8",
+   "D1S_J1_B_middle_Fs4_r1p925_p1p4",
+   "D1S_J1_B_middle_Fs4_rm2p64_p0"
+  ],
+  "ok": true
+ },
+ "commit_identity_R11_4": {
+  "D1S_J1_B_bottom_Fs4_r0_pm2p8": "match",
+  "D1S_J1_B_middle_Fs4_r0_pm2p8": "match",
+  "D1C2_middle_rollm4.4_Fs4": "match",
+  "D1C2_bottom_rollm4.4_Fs4": "match",
+  "D1PSC_J1_B_top_Fs4_spFLJ1_base": "match",
+  "D1PSC_J1_B_top_Fs4_FL_cslow": "match"
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "inputs": {
+  "rows_judge": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path1\\judge_C2.json",
+   "sha256": "16479c4b51b4905976a638cacbf4701de91911ef3cd2c2902c4aca22fd4dab69"
+  },
+  "rows_judge_tool": "chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked; python-expert 2026-11-14 z4372: engine from the batch.json / result.json records, V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3; python-expert 2026-11-15: L2b D-29 = t_lift,sus, rev21 R21-1)",
+  "runner_judge_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_f9bc3c7\\chrono_path1\\runner_judge"
+ },
+ "params": {
+  "path": "C:\\workspace\\outrigger_control\\02_params\\rexome33.yaml",
+  "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+  "head_area_m2": [
+   0.013273229,
+   0.013273229,
+   0.00950331778,
+   0.00950331778
+  ],
+  "F_min_N": 9414.58911
+ },
+ "rows": [
+  {
+   "case": "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+   "criteria_id": "C-2",
+   "row_id": "S-02",
+   "engine": "SCM",
+   "role": "judged",
+   "grade": "allowed_stop",
+   "grade_note": "soil-guard stop: the five 427.9 conditions decide the row (rev19 R19-1); recorded: P3-1 .. P3-9 (sub-keys, P3-3_within, P3-6_ready, READY <= 120 s D-28, P3-6 FLAG D-27), FAULT0, G6-1 .. G6-7 (S-03 / S-04), items on READY / DONE / end attitude",
+   "items": [
+    {
+     "item": "SGS_427_9",
+     "verdict": "allowed_stop",
+     "source": "rev19 R19-1 (427.9 conditions 1 .. 5)",
+     "applies": true,
+     "first_fault": "FAULT_LIFT_STROKE_LIMIT:soil:RL",
+     "conditions": {
+      "1_soil_stop_first": true,
+      "2_no_stroke_end": true,
+      "3_no_lift_after_level": true,
+      "4_F_after_departure": true,
+      "5_moving_pressure": true
+     },
+     "t_level_start_s": 33.299999999981914,
+     "lifted_samples_after_level": 0,
+     "t_departure_s": 41.83000000026508,
+     "F_min_after_departure_N_by_leg": [
+      114040.19751320519,
+      113024.4838946852,
+      71589.13480491677,
+      71195.68251101814
+     ],
+     "moving_max_bar": 89.22100871193186,
+     "saturated_rows": 0,
+     "moving_rows": 1648,
+     "rule": "rev19 R19-1 (spec 427.9 conditions 1 .. 5, D-26)"
+    },
+    {
+     "item": "J-P3",
+     "verdict": "pass",
+     "source": "recomputed rev8 R8-2",
+     "status": "pass",
+     "breach_reads": 0
+    }
+   ],
+   "record_items": [
+    {
+     "item": "P3-1",
+     "verdict": null,
+     "source": "p3b crawler zero + recomputed D-36",
+     "crawler_zero_after_ready": null,
+     "flags": [],
+     "verdict_recorded": "not_judgeable"
+    },
+    {
+     "item": "P3-2",
+     "verdict": null,
+     "source": "recomputed D-37 / D-38 + p3b late-LOC FLAG",
+     "late_loc_flag": false,
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-3",
+     "verdict": null,
+     "source": "recomputed R6-B4 t_D",
+     "value": 71195.68251101814,
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-4",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "fail"
+    },
+    {
+     "item": "P3-5",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "not_judgeable"
+    },
+    {
+     "item": "P3-6",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "fail"
+    },
+    {
+     "item": "P3-7",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-8",
+     "verdict": null,
+     "source": "recomputed D-34 / D-35",
+     "flags": [],
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-9",
+     "verdict": null,
+     "source": "p3b checks (FLAG record)",
+     "value": 0,
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "FAULT0",
+     "verdict": null,
+     "source": "recomputed (chrono_rows_judge has_fault)",
+     "verdict_recorded": "fail"
+    },
+    {
+     "item": "J11",
+     "verdict": null,
+     "source": "recomputed rev8 R8-3 (record)",
+     "status": "no_fallback_leg"
+    }
+   ],
+   "overrides": [],
+   "runner_items": [],
+   "runner_unjudged": [],
+   "runner_count_check_R19_4": null,
+   "runner_t_lift_items": [],
+   "t_lift_check_R19_5": null,
+   "missing_inputs": [],
+   "inputs_sha256": {
+    "result.json": "82645c46ccf7eaab7e61b5464433fba12248fc05853e4b2875c0a07dee5c7309"
+   },
+   "result_path": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\D1S_J1_B_bottom_Fs4_r0_pm2p8\\result.json"
+  },
+  {
+   "case": "D1S_J1_B_middle_Fs4_r0_pm2p8",
+   "criteria_id": "C-2",
+   "row_id": "S-01",
+   "engine": "SCM",
+   "role": "judged",
+   "grade": "allowed_stop",
+   "grade_note": "soil-guard stop: the five 427.9 conditions decide the row (rev19 R19-1); recorded: P3-1 .. P3-9 (sub-keys, P3-3_within, P3-6_ready, READY <= 120 s D-28, P3-6 FLAG D-27), FAULT0, G6-1 .. G6-7 (S-03 / S-04), items on READY / DONE / end attitude",
+   "items": [
+    {
+     "item": "SGS_427_9",
+     "verdict": "allowed_stop",
+     "source": "rev19 R19-1 (427.9 conditions 1 .. 5)",
+     "applies": true,
+     "first_fault": "FAULT_LIFT_STROKE_LIMIT:soil:RL",
+     "conditions": {
+      "1_soil_stop_first": true,
+      "2_no_stroke_end": true,
+      "3_no_lift_after_level": true,
+      "4_F_after_departure": true,
+      "5_moving_pressure": true
+     },
+     "t_level_start_s": 33.299999999981914,
+     "lifted_samples_after_level": 0,
+     "t_departure_s": 42.05800000027265,
+     "F_min_after_departure_N_by_leg": [
+      113455.97461005991,
+      112022.8737316805,
+      71382.48070833979,
+      71268.16852867186
+     ],
+     "moving_max_bar": 89.40925056459206,
+     "saturated_rows": 0,
+     "moving_rows": 1609,
+     "rule": "rev19 R19-1 (spec 427.9 conditions 1 .. 5, D-26)"
+    },
+    {
+     "item": "J-P3",
+     "verdict": "pass",
+     "source": "recomputed rev8 R8-2",
+     "status": "pass",
+     "breach_reads": 0
+    }
+   ],
+   "record_items": [
+    {
+     "item": "P3-1",
+     "verdict": null,
+     "source": "p3b crawler zero + recomputed D-36",
+     "crawler_zero_after_ready": null,
+     "flags": [],
+     "verdict_recorded": "not_judgeable"
+    },
+    {
+     "item": "P3-2",
+     "verdict": null,
+     "source": "recomputed D-37 / D-38 + p3b late-LOC FLAG",
+     "late_loc_flag": false,
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-3",
+     "verdict": null,
+     "source": "recomputed R6-B4 t_D",
+     "value": 71268.16852867186,
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-4",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "fail"
+    },
+    {
+     "item": "P3-5",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "not_judgeable"
+    },
+    {
+     "item": "P3-6",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "fail"
+    },
+    {
+     "item": "P3-7",
+     "verdict": null,
+     "source": "p3b checks",
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-8",
+     "verdict": null,
+     "source": "recomputed D-34 / D-35",
+     "flags": [],
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "P3-9",
+     "verdict": null,
+     "source": "p3b checks (FLAG record)",
+     "value": 0,
+     "verdict_recorded": "pass"
+    },
+    {
+     "item": "FAULT0",
+     "verdict": null,
+     "source": "recomputed (chrono_rows_judge has_fault)",
+     "verdict_recorded": "fail"
+    },
+    {
+     "item": "J11",
+     "verdict": null,
+     "source": "recomputed rev8 R8-3 (record)",
+     "status": "no_fallback_leg"
+    }
+   ],
+   "overrides": [],
+   "runner_items": [],
+   "runner_unjudged": [],
+   "runner_count_check_R19_4": null,
+   "runner_t_lift_items": [],
+   "t_lift_check_R19_5": null,
+   "missing_inputs": [],
+   "inputs_sha256": {
+    "result.json": "0fa4ca368248992150a9e4ef67ce543c5bf2c91824d6452deccc4b1dcdda94cc"
+   },
+   "result_path": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_222633\\D1S_J1_B_middle_Fs4_r0_pm2p8\\result.json"
+  },
+  {
+   "case": "D1C2_middle_rollm4.4_Fs4",
+   "criteria_id": "C-2",
+   "row_id": "C2-03",
+   "engine": "L2b",
+   "role": "judged",
+   "grade": "pass",
+   "grade_note": "",
+   "items": [
+    {
+     "item": "runner",
+     "verdict": "pass",
+     "source": "runner judge (rev19 R19-4)",
+     "judged_true_items": 17,
+     "stop": null
+    },
+    {
+     "item": "J-P3",
+     "verdict": "pass",
+     "source": "recomputed rev8 R8-2",
+     "status": "pass",
+     "breach_reads": 0
+    }
+   ],
+   "record_items": [
+    {
+     "item": "J11",
+     "verdict": null,
+     "source": "recomputed rev8 R8-3 (record)",
+     "status": "no_fallback_leg"
+    }
+   ],
+   "overrides": [
+    {
+     "item": "4 saturation steps",
+     "rule": "D-32",
+     "runner": {
+      "verdict": "pass",
+      "value": 0
+     },
+     "recomputed": {
+      "verdict": "pass",
+      "value": 0
+     },
+     "applied": true
+    },
+    {
+     "item": "4 max moving pressure",
+     "rule": "D-32",
+     "runner": {
+      "verdict": "pass",
+      "value": 113.11467271814031
+     },
+     "recomputed": {
+      "verdict": "pass",
+      "value": 113.11467271814031
+     },
+     "applied": true
+    },
+    {
+     "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+     "rule": "D-31 / D-39",
+     "runner": {
+      "verdict": "pass",
+      "value": 46.558043813517
+     },
+     "recomputed": {
+      "verdict": "pass",
+      "value": 46558.043813517004
+     },
+     "applied": true
+    }
+   ],
+   "runner_items": [
+    {
+     "item": "run",
+     "verdict": "pass",
+     "source": "runner",
+     "value": "ready",
+     "limit": "ready",
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "2 attitude +-0.2 (+mount)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0.0351335080180106,
+     "limit": 0.2,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "3 F_min (1 ms)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 46.558043813517,
+     "limit": 9.414589110000001,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "RR at 26.28 s; D8 margin ok"
+    },
+    {
+     "item": "4 saturation steps",
+     "verdict": "pass",
+     "source": "recomputed D-32",
+     "value": 0,
+     "limit": 0,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "4 max moving pressure",
+     "verdict": "pass",
+     "source": "recomputed D-32",
+     "value": 113.11467271814031,
+     "limit": 180.0,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)"
+    },
+    {
+     "item": "5a rocking amplitude",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0.025040821350136522,
+     "limit": 0.06,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)"
+    },
+    {
+     "item": "7a probe attitude change",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0.02771915190394497,
+     "limit": 0.1,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "per round and leg (U53)"
+    },
+    {
+     "item": "7b verdict = truth",
+     "verdict": "pass",
+     "source": "runner",
+     "value": true,
+     "limit": true,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "per round and leg (U53)"
+    },
+    {
+     "item": "7c load estimate error",
+     "verdict": null,
+     "source": "runner",
+     "value": -5.144504034031297,
+     "limit": "<= 0 (max(5 kN,10 %))",
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "R43-2: 7c of an F_s > 0 case is a record (C7), see the F5 7c pair row; per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)"
+    },
+    {
+     "item": "72.1 (6) no false pressure diagnosis",
+     "verdict": "pass",
+     "source": "runner",
+     "value": {
+      "WARN_LOAD_SUM_MISMATCH": 0,
+      "WARN_PRESSURE_DRIFT": 0
+     },
+     "limit": "0 warnings",
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "spec rev. 28 110.1, rev. 29 122"
+    },
+    {
+     "item": "5.24.2 unexpected warnings",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "anomaly",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "0 expected (not counted)"
+    },
+    {
+     "item": "5.24.2 law-C saturation steps",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": null,
+     "kind": "report",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}"
+    },
+    {
+     "item": "146 consistency vs reduced (142 C)",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": null,
+     "kind": "consistency",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no reference file given"
+    },
+    {
+     "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+     "verdict": "pass",
+     "source": "recomputed D-31 / D-39",
+     "value": 46558.043813517004,
+     "limit": 14.414589110000001,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": [
+      0.1,
+      0.1,
+      0.1,
+      0.1
+     ],
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "max |r| / limit per leg: FL 0.000/0.100 kN @ 51.9 s probe; FR 0.000/0.100 kN @ 58.3 s probe; RL 0.000/0.100 kN @ 26.3 s level; RR 0.000/0.100 kN @ 57.1 s probe; samples [639, 639, 639, 639]; grade None, terms False; areas params.raw legs.<leg>.cylinder.{head,annulus}_area_m2; F - f vs F_pressure 0.00e+00 N"
+    },
+    {
+     "item": "F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "max excess -0.100 kN over 2556 leg samples; |F_hat - F| <= F_s,leg + 0.1 kN (ideal sensor), phases other than CHECK; reading F_hat_N (ideal sensor)"
+    },
+    {
+     "item": "F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "max excess -0.100 kN (share 0.1 kN); raw reading before the zero calibration (record, R43-1); by phase {'check': {'max_kN': 4.000000000000001, 'min_kN': -4.0}, 'done': {'max_kN': 4.0, 'min_kN': 3.333199999999997}, 'level': {'max_kN': 4.000000000000014, 'min_kN': -4.0}, 'probe': {'max_kN': 4.000000000000014, 'min_kN': -4.000000000000029}, 'ready': {'max_kN': 4.000000000000014, 'min_kN': -3.731888764852134}, 'touch': {'max_kN': 4.000000000000001, 'min_kN': -3.333199999999997}}"
+    },
+    {
+     "item": "F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [kN])",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "max excess 0.03297203533589754 kN; c_i = F_hat - F_hat_cal [0.11431436529023631, 0.08812098250222335, 0.13297203533588617, 0.12608924618003947]"
+    },
+    {
+     "item": "F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0.13297203533588936,
+     "limit": [
+      0.75,
+      0.75,
+      0.75,
+      0.75
+     ],
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "4 leg samples; per leg [0.11431436529023359, 0.08812098250222243, 0.13297203533588936, 0.12608924618003947] vs [0.75, 0.75, 0.75, 0.75] kN (R46-1: 0.1 kN at F_s,leg = 0, 0.75 kN at F_s,leg > 0 (U-S8-25)); above the limit -> D-S8-6"
+    },
+    {
+     "item": "7c split E - T2: estimator bias [kN] (U-S8-16, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 4.493588877774087,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "largest |E - T2| at FR round 0; max signed +4.49 kN; worst 7c row RR r0: E - T0 -1.99 = +3.11 + -5.10 kN"
+    },
+    {
+     "item": "7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": -5.099137760656973,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "largest |T2 - T0| at RR round 0 (load the probe moved and did not give back; not an estimator error, spec rev. 44 214.4 ②)"
+    },
+    {
+     "item": "F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0.13297203533589116,
+     "limit": 1.7,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "808 leg samples outside CHECK; worst RL in touch; per leg [0.11431436529023495, 0.08812098250222425, 0.13297203533589116, 0.12608924618004358]; parts: static max +0.000 kN, calibration friction c_fric ['+0.114', '+0.088', '+0.133', '+0.126'] kN, noise max - sigma"
+    },
+    {
+     "item": "R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound < F_min + 15 kN at the round start; record, U-S8-19)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no probe below F_min + 15 kN at the round start"
+    },
+    {
+     "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "max -4.5462917946133965 kN; source F_lower_est_N (controller _load_estimate_N(forces.lower)); cross-check F_hat - F_band - F max -4.458170812111159 kN; rev. 42 reading lower (no band) max 3.911879017497791 kN"
+    },
+    {
+     "item": "F3 F_band >= F_s after the first probe",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 8.458170812111181,
+     "limit": 4.0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "F_band - F_s +4.46 kN (record)"
+    },
+    {
+     "item": "F4 CHECK air seal friction F_s,air (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 3448.037838566257,
+     "limit": [
+      4000.0,
+      4000.0,
+      3333.2000000000003,
+      3333.2000000000003
+     ],
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "per leg [N] vs F_s,leg [N]"
+    },
+    {
+     "item": "S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "min_1ms": [
+       -1.2914218478022332,
+       -1.4949333889818839,
+       -1.1024658696894203,
+       -1.3036925192275681
+      ],
+      "mean20_min": [
+       -0.054698935259583775,
+       -0.056379874255562526,
+       -0.03894706099260236,
+       -0.04307705330749468
+      ],
+      "mean20_max": [
+       0.0646869705584753,
+       0.052617158367430424,
+       0.05625073780665536,
+       0.052509695299401755
+      ]
+     },
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "airborne samples [25078, 25078, 24680, 24680] (20 ms pad normal <= 0); 20 ms mean expected within +-0.3 kN"
+    },
+    {
+     "item": "S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      25376,
+      28529,
+      22594,
+      25612
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "slip starts [13150, 14984, 11824, 13534]; head floor hook steps [3868, 3870, 3526, 3525], measurements [3, 3, 3, 3]"
+    },
+    {
+     "item": "F8 no false re-level in event-free READY",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "events [], READY exits 0"
+    },
+    {
+     "item": "F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      -4.115282774975516,
+      -0.8417228431184413,
+      3.273559931857071
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": ""
+    },
+    {
+     "item": "F10 retract commands on low-load legs (periods, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": ""
+    },
+    {
+     "item": "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0 (crawler_transient 0), upper95 1.0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay"
+    },
+    {
+     "item": "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0 (crawler_transient 0), upper95 1.0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay"
+    },
+    {
+     "item": "item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      46.558043813517,
+      0.0,
+      0.0
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": ""
+    },
+    {
+     "item": "item 9 I1-I5",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no item-9 case in the batch"
+    },
+    {
+     "item": "I4 summary (gate: every compared case matches)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "match": 0,
+      "mismatch": 0,
+      "not_compared": 0
+     },
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "0 of 33 table cases in the batch"
+    },
+    {
+     "item": "C-S8-14 E-group G4 RR summary (record, control rev. 42 212.4 check)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 8,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "per case: relevel_predicted / reapproach start [s], mean RR command [mm/s] between them, min true RR force [kN] and time, F_band [kN], twist stiffness scale (run end) + C-S8-19 ⑤: scale_in_use / raw_ratio at the event, per-round scale history, RR F_hat_cal - F_band at the re-approach start vs 1.4 F_min"
+    },
+    {
+     "item": "R44-213.6 TOUCH regression F_s 0 vs reference batch (TOUCH end 0.3 s, D8 1 kN, READY 1 s)",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no reference batch (--ref-batch)"
+    },
+    {
+     "item": "R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": 1.0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "this 20.999999999951058 s, twin None None s"
+    },
+    {
+     "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "per leg instants [[], [], [], []]"
+    },
+    {
+     "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "PROBE [], READY []"
+    },
+    {
+     "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "runs_with_reapproach": 0,
+      "runs_after_event": 0,
+      "retriggers": 0,
+      "deferred": 0,
+      "starts_after_1.5_s": 0,
+      "runs_with_deferred": []
+     },
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "none"
+    },
+    {
+     "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, spec rev. 55 267), < F_min = FLAG (record, U-S8-57 (a); C-S8-42 reference columns event + 0..4 s)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "rt_runs": 1,
+      "runs_with_deferral": 0,
+      "windows": 0,
+      "flagged_runs": 0,
+      "worst": null
+     },
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no deferred leg below F_min"
+    },
+    {
+     "item": "S8-L5 crawler label of the batch (R41-5: one crawler contact per batch)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      "nsc_rigid: rigid crawler upper bound (S8-L5)"
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "D1C2_middle_rollm4.4_Fs4: nsc_rigid: rigid crawler upper bound (S8-L5)"
+    }
+   ],
+   "runner_unjudged": [],
+   "runner_count_check_R19_4": {
+    "counted": {
+     "failed": 0,
+     "hold": 0
+    },
+    "meta": {
+     "failed": 0,
+     "hold": 0
+    },
+    "ok": true
+   },
+   "runner_t_lift_items": [
+    "C1 D8 min true rod force",
+    "3 F_min (1 ms)",
+    "5a rocking amplitude",
+    "F2 lower-bound soundness"
+   ],
+   "t_lift_check_R19_5": {
+    "runner_liftoff_rel_s": 26.19999999994338,
+    "t0_s": 3.0000000000019065,
+    "t_lift_D29_s": 29.114999999945486,
+    "basis": "1ms_sus",
+    "t_lift_sus_record_R21_1": {
+     "basis": "1ms_sus",
+     "rule": "rev21 R21-1: D-29 t_lift = t_lift,sus = first 1 ms sample, phase not idle / check / touch, from which crawler_normal_N <= 0.01 W (W 376.7 kN) holds to the record end",
+     "threshold_N": 3767.0,
+     "t_lift_sus_s": 29.114999999945486,
+     "t_lift_first_le0_rev6_record_s": 28.699999999946453
+    },
+    "runner_t_lift_s": 29.199999999945287,
+    "t_lift_D29_10Hz_s": 29.199999999945287,
+    "difference_s": 0.0,
+    "ok": true
+   },
+   "missing_inputs": [],
+   "inputs_sha256": {
+    "result.json": "59b8f149ca4b8e71e7a9de337287daef5afbfb83802c8d2a7d88d7ca9280cf6a",
+    "C2_D1C2_middle_rollm4.4_Fs4.verify_S8C.json": "abaa0164deaed0191fe1c28b3e0871431f623a12f03599e831128985c8cf1c52"
+   },
+   "result_path": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5s3_VB_D1C2_middle_rollm4.4_Fs4_20261115_004908\\D1C2_middle_rollm4.4_Fs4\\result.json"
+  },
+  {
+   "case": "D1C2_bottom_rollm4.4_Fs4",
+   "criteria_id": "C-2",
+   "row_id": "C2-07",
+   "engine": "L2b",
+   "role": "judged",
+   "grade": "pass",
+   "grade_note": "",
+   "items": [
+    {
+     "item": "runner",
+     "verdict": "pass",
+     "source": "runner judge (rev19 R19-4)",
+     "judged_true_items": 17,
+     "stop": null
+    },
+    {
+     "item": "J-P3",
+     "verdict": "pass",
+     "source": "recomputed rev8 R8-2",
+     "status": "pass",
+     "breach_reads": 0
+    }
+   ],
+   "record_items": [
+    {
+     "item": "J11",
+     "verdict": null,
+     "source": "recomputed rev8 R8-3 (record)",
+     "status": "no_fallback_leg"
+    }
+   ],
+   "overrides": [
+    {
+     "item": "4 saturation steps",
+     "rule": "D-32",
+     "runner": {
+      "verdict": "pass",
+      "value": 0
+     },
+     "recomputed": {
+      "verdict": "pass",
+      "value": 0
+     },
+     "applied": true
+    },
+    {
+     "item": "4 max moving pressure",
+     "rule": "D-32",
+     "runner": {
+      "verdict": "pass",
+      "value": 106.51514696703309
+     },
+     "recomputed": {
+      "verdict": "pass",
+      "value": 106.51514696703309
+     },
+     "applied": true
+    },
+    {
+     "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+     "rule": "D-31 / D-39",
+     "runner": {
+      "verdict": "pass",
+      "value": 52.44278388592633
+     },
+     "recomputed": {
+      "verdict": "pass",
+      "value": 52442.78388592633
+     },
+     "applied": true
+    }
+   ],
+   "runner_items": [
+    {
+     "item": "run",
+     "verdict": "pass",
+     "source": "runner",
+     "value": "ready",
+     "limit": "ready",
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "2 attitude +-0.2 (+mount)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0.035940010029526334,
+     "limit": 0.2,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "3 F_min (1 ms)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 52.44278388592633,
+     "limit": 9.414589110000001,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "RR at 51.18 s; D8 margin ok"
+    },
+    {
+     "item": "4 saturation steps",
+     "verdict": "pass",
+     "source": "recomputed D-32",
+     "value": 0,
+     "limit": 0,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "4 max moving pressure",
+     "verdict": "pass",
+     "source": "recomputed D-32",
+     "value": 106.51514696703309,
+     "limit": 180.0,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)"
+    },
+    {
+     "item": "5a rocking amplitude",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0.025043062452199116,
+     "limit": 0.06,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)"
+    },
+    {
+     "item": "7a probe attitude change",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0.026701047222234667,
+     "limit": 0.1,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "per round and leg (U53)"
+    },
+    {
+     "item": "7b verdict = truth",
+     "verdict": "pass",
+     "source": "runner",
+     "value": true,
+     "limit": true,
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "per round and leg (U53)"
+    },
+    {
+     "item": "7c load estimate error",
+     "verdict": null,
+     "source": "runner",
+     "value": -4.8041009545992175,
+     "limit": "<= 0 (max(5 kN,10 %))",
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "R43-2: 7c of an F_s > 0 case is a record (C7), see the F5 7c pair row; per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)"
+    },
+    {
+     "item": "72.1 (6) no false pressure diagnosis",
+     "verdict": "pass",
+     "source": "runner",
+     "value": {
+      "WARN_LOAD_SUM_MISMATCH": 0,
+      "WARN_PRESSURE_DRIFT": 0
+     },
+     "limit": "0 warnings",
+     "kind": "function",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "spec rev. 28 110.1, rev. 29 122"
+    },
+    {
+     "item": "5.24.2 unexpected warnings",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "anomaly",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "0 expected (not counted)"
+    },
+    {
+     "item": "5.24.2 law-C saturation steps",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": null,
+     "kind": "report",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}"
+    },
+    {
+     "item": "146 consistency vs reduced (142 C)",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": null,
+     "kind": "consistency",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no reference file given"
+    },
+    {
+     "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+     "verdict": "pass",
+     "source": "recomputed D-31 / D-39",
+     "value": 52442.78388592633,
+     "limit": 14.414589110000001,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": ""
+    },
+    {
+     "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": [
+      0.1,
+      0.1,
+      0.1,
+      0.1
+     ],
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "max |r| / limit per leg: FL 0.000/0.100 kN @ 55.6 s probe; FR 0.000/0.100 kN @ 47.8 s probe; RL 0.000/0.100 kN @ 26.8 s level; RR 0.000/0.100 kN @ 58.0 s probe; samples [640, 640, 640, 640]; grade None, terms False; areas params.raw legs.<leg>.cylinder.{head,annulus}_area_m2; F - f vs F_pressure 0.00e+00 N"
+    },
+    {
+     "item": "F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "max excess -0.100 kN over 2560 leg samples; |F_hat - F| <= F_s,leg + 0.1 kN (ideal sensor), phases other than CHECK; reading F_hat_N (ideal sensor)"
+    },
+    {
+     "item": "F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "max excess -0.100 kN (share 0.1 kN); raw reading before the zero calibration (record, R43-1); by phase {'check': {'max_kN': 4.000000000000001, 'min_kN': -4.000000000000001}, 'done': {'max_kN': 3.988697902430693, 'min_kN': 3.333199999999997}, 'level': {'max_kN': 4.000000000000014, 'min_kN': -4.0}, 'probe': {'max_kN': 4.000000000000014, 'min_kN': -4.000000000000029}, 'ready': {'max_kN': 4.000000000000014, 'min_kN': -3.626433274690542}, 'touch': {'max_kN': 4.000000000000007, 'min_kN': -3.57504066279787}}"
+    },
+    {
+     "item": "F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [kN])",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "max excess 0.04972312175836123 kN; c_i = F_hat - F_hat_cal [0.08871893708595599, 0.14972312175833213, 0.0678984941518429, 0.04026165882886562]"
+    },
+    {
+     "item": "F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0.1497231217583285,
+     "limit": [
+      0.75,
+      0.75,
+      0.75,
+      0.75
+     ],
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "2 leg samples; per leg [0.08871893708596144, 0.1497231217583285, None, None] vs [0.75, 0.75, 0.75, 0.75] kN (R46-1: 0.1 kN at F_s,leg = 0, 0.75 kN at F_s,leg > 0 (U-S8-25)); above the limit -> D-S8-6"
+    },
+    {
+     "item": "7c split E - T2: estimator bias [kN] (U-S8-16, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 3.0542479018274804,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "largest |E - T2| at FR round 0; max signed +3.05 kN; worst 7c row RR r0: E - T0 -2.35 = +2.79 + -5.14 kN"
+    },
+    {
+     "item": "7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": -5.144714040396863,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "largest |T2 - T0| at RR round 0 (load the probe moved and did not give back; not an estimator error, spec rev. 44 214.4 ②)"
+    },
+    {
+     "item": "F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0.14972312175832939,
+     "limit": 1.7,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "808 leg samples outside CHECK; worst FR in touch; per leg [0.0887189370859628, 0.14972312175832939, 0.0678984941518438, 0.04026165882886607]; parts: static max +0.000 kN, calibration friction c_fric ['+0.089', '+0.150', '+0.068', '+0.040'] kN, noise max - sigma"
+    },
+    {
+     "item": "R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound < F_min + 15 kN at the round start; record, U-S8-19)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no probe below F_min + 15 kN at the round start"
+    },
+    {
+     "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "max -3.7935138864576 kN; source F_lower_est_N (controller _load_estimate_N(forces.lower)); cross-check F_hat - F_band - F max -3.7047949493716295 kN; rev. 42 reading lower (no band) max 3.9112810629140586 kN"
+    },
+    {
+     "item": "F3 F_band >= F_s after the first probe",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 7.704794949371641,
+     "limit": 4.0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "F_band - F_s +3.70 kN (record)"
+    },
+    {
+     "item": "F4 CHECK air seal friction F_s,air (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 3593.52033772128,
+     "limit": [
+      4000.0,
+      4000.0,
+      3333.2000000000003,
+      3333.2000000000003
+     ],
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "per leg [N] vs F_s,leg [N]"
+    },
+    {
+     "item": "S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "min_1ms": [
+       -0.9467634156399783,
+       -0.9442231892528367,
+       -0.7722690209924662,
+       -0.8399042540056634
+      ],
+      "mean20_min": [
+       -0.02502935834548748,
+       -0.03510834131762158,
+       -0.02668582191127655,
+       -0.02731030905145326
+      ],
+      "mean20_max": [
+       0.030324030491971028,
+       0.034265221398523976,
+       0.031733645339297595,
+       0.03164372204806557
+      ]
+     },
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "airborne samples [25273, 25273, 24879, 24879] (20 ms pad normal <= 0); 20 ms mean expected within +-0.3 kN"
+    },
+    {
+     "item": "S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      24607,
+      27996,
+      30137,
+      28785
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "slip starts [12764, 14769, 15575, 15138]; head floor hook steps [3759, 3786, 3511, 3508], measurements [3, 3, 3, 3]"
+    },
+    {
+     "item": "F8 no false re-level in event-free READY",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "events [], READY exits 0"
+    },
+    {
+     "item": "F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      -3.6656438928462594,
+      -0.711261839211751,
+      2.954382053634503
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": ""
+    },
+    {
+     "item": "F10 retract commands on low-load legs (periods, record)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": ""
+    },
+    {
+     "item": "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0 (crawler_transient 0), upper95 1.0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay"
+    },
+    {
+     "item": "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0 (crawler_transient 0), upper95 1.0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay"
+    },
+    {
+     "item": "item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      0,
+      0,
+      null,
+      0,
+      null
+     ],
+     "limit": null,
+     "kind": "sensitivity",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}"
+    },
+    {
+     "item": "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      52.44278388592633,
+      0.0,
+      0.0
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": ""
+    },
+    {
+     "item": "item 9 I1-I5",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no item-9 case in the batch"
+    },
+    {
+     "item": "I4 summary (gate: every compared case matches)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "match": 0,
+      "mismatch": 0,
+      "not_compared": 0
+     },
+     "limit": 0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "0 of 33 table cases in the batch"
+    },
+    {
+     "item": "C-S8-14 E-group G4 RR summary (record, control rev. 42 212.4 check)",
+     "verdict": null,
+     "source": "runner",
+     "value": 0,
+     "limit": 8,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "per case: relevel_predicted / reapproach start [s], mean RR command [mm/s] between them, min true RR force [kN] and time, F_band [kN], twist stiffness scale (run end) + C-S8-19 ⑤: scale_in_use / raw_ratio at the event, per-round scale history, RR F_hat_cal - F_band at the re-approach start vs 1.4 F_min"
+    },
+    {
+     "item": "R44-213.6 TOUCH regression F_s 0 vs reference batch (TOUCH end 0.3 s, D8 1 kN, READY 1 s)",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no reference batch (--ref-batch)"
+    },
+    {
+     "item": "R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s",
+     "verdict": null,
+     "source": "runner",
+     "value": null,
+     "limit": 1.0,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "this 20.999999999951058 s, twin None None s"
+    },
+    {
+     "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "per leg instants [[], [], [], []]"
+    },
+    {
+     "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+     "verdict": "pass",
+     "source": "runner",
+     "value": 0,
+     "limit": 0,
+     "kind": "judged",
+     "passed": true,
+     "branch": "passed_true",
+     "note": "PROBE [], READY []"
+    },
+    {
+     "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "runs_with_reapproach": 0,
+      "runs_after_event": 0,
+      "retriggers": 0,
+      "deferred": 0,
+      "starts_after_1.5_s": 0,
+      "runs_with_deferred": []
+     },
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "none"
+    },
+    {
+     "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, spec rev. 55 267), < F_min = FLAG (record, U-S8-57 (a); C-S8-42 reference columns event + 0..4 s)",
+     "verdict": null,
+     "source": "runner",
+     "value": {
+      "rt_runs": 1,
+      "runs_with_deferral": 0,
+      "windows": 0,
+      "flagged_runs": 0,
+      "worst": null
+     },
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "no deferred leg below F_min"
+    },
+    {
+     "item": "S8-L5 crawler label of the batch (R41-5: one crawler contact per batch)",
+     "verdict": null,
+     "source": "runner",
+     "value": [
+      "nsc_rigid: rigid crawler upper bound (S8-L5)"
+     ],
+     "limit": null,
+     "kind": "record",
+     "passed": null,
+     "branch": "record_kind",
+     "note": "D1C2_bottom_rollm4.4_Fs4: nsc_rigid: rigid crawler upper bound (S8-L5)"
+    }
+   ],
+   "runner_unjudged": [],
+   "runner_count_check_R19_4": {
+    "counted": {
+     "failed": 0,
+     "hold": 0
+    },
+    "meta": {
+     "failed": 0,
+     "hold": 0
+    },
+    "ok": true
+   },
+   "runner_t_lift_items": [
+    "C1 D8 min true rod force",
+    "3 F_min (1 ms)",
+    "5a rocking amplitude",
+    "F2 lower-bound soundness"
+   ],
+   "t_lift_check_R19_5": {
+    "runner_liftoff_rel_s": 26.49999999994268,
+    "t0_s": 3.0000000000019065,
+    "t_lift_D29_s": 29.345999999944947,
+    "basis": "1ms_sus",
+    "t_lift_sus_record_R21_1": {
+     "basis": "1ms_sus",
+     "rule": "rev21 R21-1: D-29 t_lift = t_lift,sus = first 1 ms sample, phase not idle / check / touch, from which crawler_normal_N <= 0.01 W (W 376.7 kN) holds to the record end",
+     "threshold_N": 3767.0,
+     "t_lift_sus_s": 29.345999999944947,
+     "t_lift_first_le0_rev6_record_s": 28.899999999945987
+    },
+    "runner_t_lift_s": 29.49999999994459,
+    "t_lift_D29_10Hz_s": 29.39999999994482,
+    "difference_s": 0.09999999999976694,
+    "ok": true
+   },
+   "missing_inputs": [],
+   "inputs_sha256": {
+    "result.json": "7e828bbfaacb1c861c504e32b4ce7708ba290d28b66189d660fb8b36cb78813d",
+    "C2_D1C2_bottom_rollm4.4_Fs4.verify_S8C.json": "edf2b667bf622065367e93f679b66c6a5dcdab8005026795edf5201612ad02dd"
+   },
+   "result_path": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5s3_VB_D1C2_bottom_rollm4.4_Fs4_20261115_005844\\D1C2_bottom_rollm4.4_Fs4\\result.json"
+  },
+  {
+   "case": "D1PSC_J1_B_top_Fs4_spFLJ1_base",
+   "criteria_id": "C-2",
+   "row_id": "PSC-base-FL",
+   "engine": "SCM",
+   "role": "record",
+   "grade": "pass",
+   "grade_note": "",
+   "items": [
+    {
+     "item": "P3-1",
+     "verdict": "pass",
+     "source": "p3b crawler zero + recomputed D-36",
+     "crawler_zero_after_ready": true,
+     "flags": []
+    },
+    {
+     "item": "P3-2",
+     "verdict": "pass",
+     "source": "recomputed D-37 / D-38 + p3b late-LOC FLAG",
+     "late_loc_flag": false
+    },
+    {
+     "item": "P3-3",
+     "verdict": "pass",
+     "source": "recomputed R6-B4 t_D",
+     "value": 67928.44404877347
+    },
+    {
+     "item": "P3-4",
+     "verdict": "pass",
+     "source": "p3b checks"
+    },
+    {
+     "item": "P3-5",
+     "verdict": "pass",
+     "source": "p3b checks"
+    },
+    {
+     "item": "P3-6",
+     "verdict": "pass",
+     "source": "p3b checks"
+    },
+    {
+     "item": "P3-7",
+     "verdict": "pass",
+     "source": "p3b checks"
+    },
+    {
+     "item": "P3-8",
+     "verdict": "pass",
+     "source": "recomputed D-34 / D-35",
+     "flags": []
+    },
+    {
+     "item": "P3-9",
+     "verdict": "pass",
+     "source": "p3b checks (FLAG record)",
+     "value": 0
+    },
+    {
+     "item": "FAULT0",
+     "verdict": "pass",
+     "source": "recomputed (chrono_rows_judge has_fault)"
+    },
+    {
+     "item": "J-P3",
+     "verdict": "pass",
+     "source": "recomputed rev8 R8-2",
+     "status": "pass",
+     "breach_reads": 0
+    }
+   ],
+   "record_items": [
+    {
+     "item": "J11",
+     "verdict": null,
+     "source": "recomputed rev8 R8-3 (record)",
+     "status": "no_fallback_leg"
+    }
+   ],
+   "overrides": [],
+   "runner_items": [],
+   "runner_unjudged": [],
+   "runner_count_check_R19_4": null,
+   "runner_t_lift_items": [],
+   "t_lift_check_R19_5": null,
+   "missing_inputs": [],
+   "inputs_sha256": {
+    "result.json": "a6383b960600ba0bebbc10d0a2f754bef8f6510e0cdce79e691c2f893a9e588e"
+   },
+   "result_path": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\D1PSC_J1_B_top_Fs4_spFLJ1_base\\result.json",
+   "record_status": "기록 완료"
+  },
+  {
+   "case": "D1PSC_J1_B_top_Fs4_FL_cslow",
+   "criteria_id": "C-2",
+   "row_id": "PSC-c-slow-FL",
+   "engine": "SCM",
+   "role": "judged",
+   "grade": "fail",
+   "grade_note": "",
+   "items": [
+    {
+     "item": "E-1",
+     "verdict": "pass",
+     "source": "result.json soil_event.judgement.gates",
+     "gates": {
+      "E-1_no_lift": true
+     },
+     "flags": []
+    },
+    {
+     "item": "E-3",
+     "verdict": "pass",
+     "source": "result.json soil_event.judgement.gates",
+     "gates": {
+      "E-3_Fmin_after_event": true
+     },
+     "flags": []
+    },
+    {
+     "item": "E-4",
+     "verdict": "pass",
+     "source": "result.json soil_event.judgement.gates",
+     "gates": {
+      "E-4_window_350bar": true,
+      "E-4_moving_180bar": true,
+      "E-4_saturation0": true
+     },
+     "flags": []
+    },
+    {
+     "item": "E-5",
+     "verdict": "fail",
+     "source": "result.json soil_event.judgement.gates",
+     "gates": {
+      "E-5_end_ready_att": false,
+      "E-5_fault0": true,
+      "E-5_stroke": true
+     },
+     "flags": []
+    },
+    {
+     "item": "E-6",
+     "verdict": "pass",
+     "source": "result.json soil_event.judgement.gates",
+     "gates": {
+      "E-6_crawler": true
+     },
+     "flags": []
+    },
+    {
+     "item": "E-7",
+     "verdict": "pass",
+     "source": "result.json soil_event.judgement.gates",
+     "gates": {
+      "E-7_recurrence": true
+     },
+     "flags": []
+    },
+    {
+     "item": "stroke_le_684.8mm",
+     "verdict": "pass",
+     "source": "soil_event.judgement",
+     "value": 517.33
+    },
+    {
+     "item": "J-P3",
+     "verdict": "pass",
+     "source": "recomputed rev8 R8-2",
+     "status": "pass",
+     "breach_reads": 0
+    }
+   ],
+   "record_items": [
+    {
+     "item": "p3b",
+     "verdict": null,
+     "source": "record (event row judged by 426.3)"
+    },
+    {
+     "item": "branch_window",
+     "verdict": null,
+     "source": "run_S9.judge_chrono_soil_event (rev19 R19-3)",
+     "start_rel_s": -0.5,
+     "t_ev_s": 83.20000000147243,
+     "stop_rel_s": 60.0,
+     "stop_reason": "max_after"
+    },
+    {
+     "item": "after_branch",
+     "verdict": null,
+     "source": "soil_event_series.npz after the branch end (R19-3)",
+     "samples": 64801,
+     "F_cyl_min_N": [
+      114261.36290337083,
+      112009.05833321049,
+      67718.92170281554,
+      66516.71317866113
+     ],
+     "lifted_samples": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "item": "J11",
+     "verdict": null,
+     "source": "recomputed rev8 R8-3 (record)",
+     "status": "no_fallback_leg"
+    }
+   ],
+   "overrides": [],
+   "runner_items": [],
+   "runner_unjudged": [],
+   "runner_count_check_R19_4": null,
+   "runner_t_lift_items": [],
+   "t_lift_check_R19_5": null,
+   "missing_inputs": [],
+   "inputs_sha256": {
+    "result.json": "9d911790322d94ed31e363cb9386788f1f4b2e93c8b2d09a911b375b8d9e8e98"
+   },
+   "result_path": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123\\D1PSC_J1_B_top_Fs4_FL_cslow\\result.json"
+  }
+ ],
+ "runner_t_lift_R19_5": {
+  "recomputed_D8": [
+   "C1 D8 min true rod force",
+   "D8 min true cylinder force >= F_min + 5 kN",
+   "D8 no pad lift-off"
+  ],
+  "runner_value_kept": [
+   "3 F_min (1 ms)",
+   "3 F_min before the event",
+   "5a rocking amplitude",
+   "F2 lower-bound soundness"
+  ],
+  "present": [
+   "3 F_min (1 ms)",
+   "5a rocking amplitude",
+   "C1 D8 min true rod force",
+   "F2 lower-bound soundness"
+  ],
+  "by_case": {
+   "D1C2_middle_rollm4.4_Fs4": [
+    "C1 D8 min true rod force",
+    "3 F_min (1 ms)",
+    "5a rocking amplitude",
+    "F2 lower-bound soundness"
+   ],
+   "D1C2_bottom_rollm4.4_Fs4": [
+    "C1 D8 min true rod force",
+    "3 F_min (1 ms)",
+    "5a rocking amplitude",
+    "F2 lower-bound soundness"
+   ]
+  },
+  "checks": {
+   "D1C2_middle_rollm4.4_Fs4": {
+    "runner_liftoff_rel_s": 26.19999999994338,
+    "t0_s": 3.0000000000019065,
+    "t_lift_D29_s": 29.114999999945486,
+    "basis": "1ms_sus",
+    "t_lift_sus_record_R21_1": {
+     "basis": "1ms_sus",
+     "rule": "rev21 R21-1: D-29 t_lift = t_lift,sus = first 1 ms sample, phase not idle / check / touch, from which crawler_normal_N <= 0.01 W (W 376.7 kN) holds to the record end",
+     "threshold_N": 3767.0,
+     "t_lift_sus_s": 29.114999999945486,
+     "t_lift_first_le0_rev6_record_s": 28.699999999946453
+    },
+    "runner_t_lift_s": 29.199999999945287,
+    "t_lift_D29_10Hz_s": 29.199999999945287,
+    "difference_s": 0.0,
+    "ok": true
+   },
+   "D1C2_bottom_rollm4.4_Fs4": {
+    "runner_liftoff_rel_s": 26.49999999994268,
+    "t0_s": 3.0000000000019065,
+    "t_lift_D29_s": 29.345999999944947,
+    "basis": "1ms_sus",
+    "t_lift_sus_record_R21_1": {
+     "basis": "1ms_sus",
+     "rule": "rev21 R21-1: D-29 t_lift = t_lift,sus = first 1 ms sample, phase not idle / check / touch, from which crawler_normal_N <= 0.01 W (W 376.7 kN) holds to the record end",
+     "threshold_N": 3767.0,
+     "t_lift_sus_s": 29.345999999944947,
+     "t_lift_first_le0_rev6_record_s": 28.899999999945987
+    },
+    "runner_t_lift_s": 29.49999999994459,
+    "t_lift_D29_10Hz_s": 29.39999999994482,
+    "difference_s": 0.09999999999976694,
+    "ok": true
+   }
+  },
+  "max_difference_s": 0.09999999999976694,
+  "stop_rows": []
+ },
+ "runner_unjudged_R19_4": {
+  "label": "러너 미판정",
+  "count": 0,
+  "rows": [],
+  "items": {},
+  "unknown_kind_items": [],
+  "by_case": {}
+ },
+ "runner_name_map_R23_1": {
+  "rule": "rev23 R23-1",
+  "rows": [
+   {
+    "case": "D1C2_middle_rollm4.4_Fs4",
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5s3_VB_D1C2_middle_rollm4.4_Fs4_20261115_004908\\D1C2_middle_rollm4.4_Fs4",
+    "inner_name": "D1C2_middle_rollm4.4_Fs4",
+    "name_differs": false,
+    "runner_file": "C2_D1C2_middle_rollm4.4_Fs4.verify_S8C.json",
+    "runner_meta_batch_name": "v5s3_VB_D1C2_middle_rollm4.4_Fs4_20261115_004908",
+    "runner_row_cases": [
+     "D1C2_middle_rollm4.4_Fs4"
+    ],
+    "runner_rows_found": 43,
+    "s8_metrics_keys": [
+     "D1C2_middle_rollm4.4_Fs4"
+    ],
+    "checks": {
+     "1_dir_set": true,
+     "2_dir_unique": true,
+     "3_runner_row_cases": true,
+     "4_s8_metrics_keys": true
+    },
+    "ok": true
+   },
+   {
+    "case": "D1C2_bottom_rollm4.4_Fs4",
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5s3_VB_D1C2_bottom_rollm4.4_Fs4_20261115_005844\\D1C2_bottom_rollm4.4_Fs4",
+    "inner_name": "D1C2_bottom_rollm4.4_Fs4",
+    "name_differs": false,
+    "runner_file": "C2_D1C2_bottom_rollm4.4_Fs4.verify_S8C.json",
+    "runner_meta_batch_name": "v5s3_VB_D1C2_bottom_rollm4.4_Fs4_20261115_005844",
+    "runner_row_cases": [
+     "D1C2_bottom_rollm4.4_Fs4"
+    ],
+    "runner_rows_found": 43,
+    "s8_metrics_keys": [
+     "D1C2_bottom_rollm4.4_Fs4"
+    ],
+    "checks": {
+     "1_dir_set": true,
+     "2_dir_unique": true,
+     "3_runner_row_cases": true,
+     "4_s8_metrics_keys": true
+    },
+    "ok": true
+   }
+  ],
+  "name_differs_count": 0,
+  "ok": true
+ },
+ "bundle_grade": {
+  "judged_rows": 5,
+  "record_rows": 1,
+  "grade_counts": {
+   "allowed_stop": 2,
+   "fail": 1,
+   "pass": 2
+  },
+  "allowed_stop_rows": [
+   "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+   "D1S_J1_B_middle_Fs4_r0_pm2p8"
+  ],
+  "flag_rows": [],
+  "record_rows_reported": [],
+  "missing_count": 0,
+  "row_phrase": "통과 2 / 안전 종료 2 / 미달 1",
+  "grade_without_stop": "fail",
+  "grade": "fail",
+  "status": "미달"
+ },
+ "stops": []
+}

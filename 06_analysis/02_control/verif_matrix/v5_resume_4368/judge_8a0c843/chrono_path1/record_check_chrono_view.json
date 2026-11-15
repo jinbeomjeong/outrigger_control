@@ -1,0 +1,576 @@
+{
+ "expect_controller_failed_R9_1": [
+  "P3a_G1_B_V0_FB",
+  "P3a_G1_B_VB_FB",
+  "P3a_G1_B_VB_prop"
+ ],
+ "rules": "v5_resume_4368_rules.md",
+ "section": "4.2 (+ rev7 R7-1a / rev8 R8-1 tags, rev9 R9-1 expect_controller, rev11 R11-1 line kinds, rev11 R11-2 T4h lookup)",
+ "mode": "main",
+ "harness_runs": 0,
+ "harness_line_kinds_R11_1": {},
+ "kind_input_defects_R11_1": 0,
+ "chrono_rows": 64,
+ "rows_with_problems": 3,
+ "stop_S3": true,
+ "stop_S11": false,
+ "harness": [],
+ "chrono": [
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C2_middle_rpBop_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C2_middle_fup3.2_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C2_middle_fdown3.2_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C2_bottom_fup3.2_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C2_bottom_fdown3.2_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C2_bottom_rpBop_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C1_top_flat_crx3",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C1_top_rpBop_crx3",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C1_bottom_flat_crx3",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C1_20261114_110925",
+   "case": "D1C1_bottom_rpBop_crx3",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C2_20261114_222633",
+   "case": "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C2_20261114_222633",
+   "case": "D1S_J1_B_middle_Fs4_r0_pm2p8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C2_20261114_222633",
+   "case": "D1C2_middle_rollm4.4_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C2_20261114_222633",
+   "case": "D1C2_bottom_rollm4.4_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123",
+   "case": "D1PSC_J1_B_top_Fs4_spFLJ1_base",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C2_20261114_230123",
+   "case": "D1PSC_J1_B_top_Fs4_FL_cslow",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C3_20261114_010541",
+   "case": "D1S_G1_B_bottom_Fs4_spJ1FL",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C3_20261114_010541",
+   "case": "D1S_G1_B_middle_Fs4_spJ1FL",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912",
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912",
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff",
+   "c4_off_arm": true,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912",
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C4_20261113_222912",
+   "case": "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+   "c4_off_arm": true,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_032426",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180_seed20261026",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_032426",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180_seed20261028",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_032426",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180_seed20261026_flow",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_032426",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_032426",
+   "case": "P3b_J1_B_top_Fs4_v0v",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_032426",
+   "case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0_v0v",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs4_V0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_RE1bF_Fs8_LS1",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_RE1bF_Fs8_LS4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_RE1bF_Fs8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_RE1bF_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "G1R_FS24_FL_top_o050_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs4_ph0.05",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs8_LS1",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K8_top_fdown3.5_Fs8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs8_LS4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "S_top_fdown3.5_wika_Fs8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "G1R_FS24_FL_top_o050_Fs0_V0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0V_top_fdown3.5_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0_top_fdown3.2_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0V_top_fup3.5_Fs0_LS1",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K8_top_rpB_Fs8",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0_top_fup3.2_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0V_top_fup3.5_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0V_top_roll5.5_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0V_top_fup3.5_Fs0_LS4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "K0_top_rpBop_Fs0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_576eb87\\chrono_path1\\chrono_view\\batch_V5-RESUME-K1-C5_20261114_113720",
+   "case": "E_G4_Fs4_ph0.05_V0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_131025",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180_seed20261027",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_131025",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180_seed20261029",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_131025",
+   "case": "P3b_J1_B_top_Fs4",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_131025",
+   "case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C5_20261114_131025",
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180_v0v",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638",
+   "case": "P3a_G1_B_V0_FB",
+   "c4_off_arm": false,
+   "problems": [
+    "c2_setup.k1_order_gate None != 'preset' (missing)",
+    "c2_setup.k1_order_gate_effective None != True (missing)",
+    "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate None != True (missing)",
+    "liftoff_approach_slow.settings missing"
+   ],
+   "expect_controller_ok_R9_1": false
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638",
+   "case": "P3a_G1_B_VB_FB",
+   "c4_off_arm": false,
+   "problems": [
+    "c2_setup.k1_order_gate None != 'preset' (missing)",
+    "c2_setup.k1_order_gate_effective None != True (missing)",
+    "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate None != True (missing)",
+    "liftoff_approach_slow.settings missing"
+   ],
+   "expect_controller_ok_R9_1": false
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-C6C7_20261113_215638",
+   "case": "P3a_G1_B_VB_prop",
+   "c4_off_arm": false,
+   "problems": [
+    "c2_setup.k1_order_gate None != 'preset' (missing)",
+    "c2_setup.k1_order_gate_effective None != True (missing)",
+    "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate None != True (missing)",
+    "liftoff_approach_slow.settings missing"
+   ],
+   "expect_controller_ok_R9_1": false
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5PROBE_20261113_215123",
+   "case": "OC5P_Kc1_V0_n1_k0p8829",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5PROBE_20261113_215123",
+   "case": "OC5P_Kc3_VB_n1_k0p9179",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626",
+   "case": "OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  },
+  {
+   "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626",
+   "case": "OC5_mixed_rigid_J1FR_Kc3_VB_top",
+   "c4_off_arm": false,
+   "problems": [],
+   "expect_controller_ok_R9_1": true
+  }
+ ],
+ "r79_tag_check": {
+  "rule": "rev7 R7-1a / rev8 R8-1: r79 (H-6 .. H-8) / grid (H-9) top-level controller_tag = T4h meta controller_tag (runs with t4h_file) or the tag recomputed from the recorded switches (runs without); different, one side only or not computable = S-2 (G-S: not computable also S-11)",
+  "compared": 0,
+  "by_method": {
+   "t4h_meta": 0,
+   "recompute": 0
+  },
+  "mismatched": 0,
+  "not_computable": 0,
+  "rows": [],
+  "t4h_folders_searched_R11_2": {},
+  "stop_S2": false,
+  "stop_S11_not_computable": false
+ },
+ "stop_S2": true,
+ "exit_code": 1,
+ "rules_seal": {
+  "revisions": {
+   "v5_resume_4368_rules_rev1.md": {
+    "expected_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "seal_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "rules_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "expected_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "seal_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "rules_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "expected_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "seal_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "rules_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "expected_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "seal_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "rules_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "expected_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "seal_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "rules_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "expected_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "seal_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "rules_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "expected_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "seal_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "rules_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "expected_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "seal_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "rules_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "expected_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "seal_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "rules_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "expected_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "seal_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "rules_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "expected_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "seal_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "rules_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "expected_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "seal_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "rules_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   }
+  },
+  "problems": [],
+  "stop_S1": false
+ },
+ "rules_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+ "rules_rev1_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+ "rules_rev2_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+ "rules_rev3_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+ "rules_rev4_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+ "rules_rev7_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+ "rules_rev8_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+ "rules_rev9_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+ "rules_rev10_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+ "rules_rev11_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+ "rules_rev12_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+}

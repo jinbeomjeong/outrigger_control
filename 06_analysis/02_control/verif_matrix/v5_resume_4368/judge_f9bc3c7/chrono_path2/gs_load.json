@@ -1,0 +1,1270 @@
+{
+ "tool": "p2_chrono.py gs-load (436.8 path 2, Chrono; read-only, no judgement)",
+ "tool_sha256": "dba04b89359e3ff2f914677e72fb28135770bc008b19a2a8a1fa560eb566a9c7",
+ "tool_files_sha256": {
+  "p2_chrono.py": "bb1f9028492342893aa71618fab30edb5fdd993a87a44b0564ee15b70e61f14c",
+  "p2_rules.py": "80c17e5eaa00be3cc6af036fdcea67fd8aca858ab3cefb5e194e1dfad1c25a01",
+  "p2_core.py": "009427c749ac81efe9b5823fbe98b79065fadcc1fc1e0dd726ba54309998b0f4",
+  "p2_kinds.py": "96846945518f3b711390a29f28ddafba9884cd939785eb716532ed2b5cf0cf65",
+  "p2_t45.py": "03317f2af52d38fd2ba303df57e7841d1975ebed9907248eb29cc6ad9fbd2f6a",
+  "p2_psc.py": "fe2f414d0c5ce605b6c26cd5342db213e0b1677cf7426acb3c85e33fb6f5bc07",
+  "p2_e7.py": "499743186e695ca72b29069b0af002891bbd506bfd8235cfb2816dce620668f0"
+ },
+ "seal": {
+  "ok": true,
+  "sealed": [
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md",
+    "role": "rules (original)",
+    "status": "match",
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
+    "role": "rules rev1",
+    "status": "match",
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
+    "role": "rules rev2",
+    "status": "match",
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+    "role": "rules rev3",
+    "status": "match",
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+    "role": "rules rev4",
+    "status": "match",
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+    "role": "rules rev5",
+    "status": "match",
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+    "role": "rules rev6",
+    "status": "match",
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+    "role": "rules rev7",
+    "status": "match",
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
+    "role": "rules rev8",
+    "status": "match",
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
+    "role": "rules rev9",
+    "status": "match",
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
+    "role": "rules rev10",
+    "status": "match",
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
+    "role": "rules rev11",
+    "status": "match",
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
+    "role": "rules rev12",
+    "status": "match",
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+    "role": "rules rev15",
+    "status": "match",
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+    "role": "rules rev16",
+    "status": "match",
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+    "role": "rules rev17",
+    "status": "match",
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+    "role": "rules rev18",
+    "status": "match",
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "role": "rules rev19",
+    "status": "match",
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+    "role": "rules rev20",
+    "status": "match",
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md",
+    "role": "rules rev21 (wins)",
+    "status": "match",
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
+    "role": "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)",
+    "status": "match",
+    "sha256": "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
+    "role": "Appendix A: v5 rev8 (J-P3 3.2)",
+    "status": "match",
+    "sha256": "c6ec89f71c1d8de4c06000568c2e5978fd7f9fe58a53defea728f2f4886bb25f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev9.md",
+    "role": "Appendix A: v5 rev9 (J-P3 table)",
+    "status": "match",
+    "sha256": "3c50dda50ca6dca60177f26d91d86c009eeb4f9321f5ffd0c98ddc27cf62e981"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev2.md",
+    "role": "Appendix A: v5 rev2 (J11 D-1)",
+    "status": "match",
+    "sha256": "e120474b8ebd721e6edc4fec8eef811ce810006b8c489e38cecbb7ae5caeed77"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules.md",
+    "role": "Appendix A: D-1 rules 11",
+    "status": "match",
+    "sha256": "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
+    "role": "Appendix A: D-1 rules rev1",
+    "status": "match",
+    "sha256": "eb730bddae35e76bc2569503605dea714b066fa42de7bc7b98efdde3edb3e868"
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md",
+    "role": "Appendix A: P5r4 judgement (R2-5 source, not opened)",
+    "status": "match",
+    "sha256": "5e9fb33b7419d624d8dc305ad93121be090802cc5c85ea29fbc823e019fc9e2f"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev6.md",
+    "role": "Appendix A: v5 rev6 (t_lift, J11)",
+    "status": "match",
+    "sha256": "fd5117031ef460cf4c6aa74807b2e73de984b014abb89a952b593499841da39c"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12.md",
+    "role": "Appendix A: v5 rev12 (C-5 rows)",
+    "status": "match",
+    "sha256": "e02d63cc1290383ee85d9a1f3a20c6348224b60999cccaf8d587cf610c5f5eb2"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12a.md",
+    "role": "Appendix A: v5 rev12a",
+    "status": "match",
+    "sha256": "e171141dce180fbb48493b9b95503ff3577d16f17cc54061ce3ad6e9efd51458"
+   },
+   {
+    "file": "06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev12b.md",
+    "role": "Appendix A: v5 rev12b",
+    "status": "match",
+    "sha256": "0d17f87e9532d558efcab9fa89648e2790ece9c7568a802fbaa4c7631824e75d"
+   }
+  ],
+  "recorded": [
+   {
+    "file": "00_docs/04_control/s6_control_spec.md",
+    "sha256": "1924ae89a02752761f7b1e494304843f5c99d29c59d3989f7671ee258143be16"
+   },
+   {
+    "file": "02_params/rexome33.yaml",
+    "sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+   },
+   {
+    "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+    "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e"
+   }
+  ]
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "rows": [
+  {
+   "case": "GS_D1C1_top_flat_crx3",
+   "criteria_id": "C-1",
+   "bundle": "C-1",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [
+     "both_value_absent"
+    ],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S6\\bundleC_d1c1_r4368gs_D1C1_top_flat_crx3_L1R_20261113_194756\\D1C1_top_flat_crx3",
+   "folder_method": "case_log",
+   "engine": "l1r",
+   "kind": "D8P_record",
+   "input_files_sha256": {
+    "result.json": "021e26ea664647585f1ce12cbb57baf3482e6725111390fe050d891e72d5803f",
+    "r8_series.npz": "42e0c65c4ac46e82b9a0e56c84decdb6adfa706d55dc5c87c1695a61c837676a",
+    "pads.npz": "000a3460dde87d54820cdb100d98c433e602a16e43028110980395bd415d7e0c",
+    "controller_events.json": "a8aab53d574aef1ceb61170cb41b095a368b65e8da8920a0aea1b85a358ae3bd",
+    "record/record.npz": "97c936f3400909c106bfa412ec8b4bb1804e4d6983f965eca6ad5ff7e3fa791a"
+   },
+   "n_items": 11,
+   "n_judged_keys": 9,
+   "absent_inputs": [
+    {
+     "item": "J11_record",
+     "reason": "pads.npz law_locked missing (rev9 R9-5)"
+    }
+   ],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": false,
+    "placement.affinity_mask_ok": false,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": null,
+    "present": false,
+    "well_formed": false,
+    "problems": [],
+    "codes": [
+     "key"
+    ],
+    "pattern": null,
+    "unarmed_prefix_samples": null
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "input absent (R9-6 record; 11.2 key check unchanged)"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": null,
+    "code_state_compared": false,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_D1C2_middle_fdown3.2_Fs4",
+   "criteria_id": "C-1",
+   "bundle": "C-1",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S8\\r4368gs_D1C2_middle_fdown3.2_Fs4_20261113_194755\\D1C2_middle_fdown3.2_Fs4",
+   "folder_method": "case_log",
+   "engine": "l2b",
+   "kind": "D8P_judged",
+   "input_files_sha256": {
+    "result.json": "097cc8ba093c6bcaff2d5c9af80ab2d836e6016278b8e6745eabd5742d8d0e32",
+    "r8_series.npz": "18982433fe117e2cbf180915daf3523ab4b276ed19319ecb3f63eb211136ca14",
+    "s8_series.npz": "75ba32cc11d8556977ba476e30b77518e676dcc10ccdfe281d5d57796017dd6d",
+    "pads.npz": "441972ab2259a787f09c48940aee012949d16064b298c9e0f13520c3a73e3809",
+    "controller_events.json": "e60673af1ab4c925ade88075daeba88b9ea49b1180d0b3840e437e636b3e83a3",
+    "flow_series.npz": "c9a97436851f0a87de0049ca1d66f125ffd2b0ab41358941ebb096865f194426",
+    "record/record.npz": "679cecabf27e319bf9a43ef73a9e94df418e99ab822c89c57e71db550c4b93cb"
+   },
+   "n_items": 11,
+   "n_judged_keys": 9,
+   "absent_inputs": [],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": false,
+    "placement.affinity_mask_ok": false,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "pads.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": null,
+    "code_state_compared": false,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+   "criteria_id": "C-4",
+   "bundle": "C-4",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "record_D8_G6",
+   "input_files_sha256": {
+    "result.json": "3f6956a67ec7807095ff93783ef3aaee7b47c770d6e96c76b6ebfd08e71dc660",
+    "step_series.npz": "8aa3ecb7eb609a56d85a92a5ce4de1db669c44c389f9732d764cde2d582309d7",
+    "r8_series.npz": "a0f8f97246c05d067d6062e2084e3ab231ea3f0722c505f2d8f0ec03a2cc46e4",
+    "flow_series.npz": "f3fd8ae48727a6fe7d38e453ec37df4181197cbc1d0a20ed742d1669784bd600",
+    "record/record.npz": "d0880aa5dc8b1daefda4a10bb68c4e8ce268e07f45a74e3889bbd7d82b5c7565"
+   },
+   "n_items": 25,
+   "n_judged_keys": 17,
+   "absent_inputs": [
+    {
+     "item": "P3-1",
+     "reason": "no READY (284.1)"
+    },
+    {
+     "item": "P3-2",
+     "reason": "no confirmed LOC"
+    },
+    {
+     "item": "P3-4",
+     "reason": "no READY"
+    },
+    {
+     "item": "P3-5",
+     "reason": "no READY or no rut_clearance_m sample after READY"
+    },
+    {
+     "item": "D8_F_after_liftoff",
+     "reason": "no crawler lift-off"
+    }
+   ],
+   "r7_4_absent_where_required": [],
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+   "criteria_id": "C-4",
+   "bundle": "C-4",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "record_D8_G6",
+   "input_files_sha256": {
+    "result.json": "6415cf2e506b91fa43f9938aff590a1666e55d28642182c9e61e5aff748406a8",
+    "step_series.npz": "8aa3ecb7eb609a56d85a92a5ce4de1db669c44c389f9732d764cde2d582309d7",
+    "r8_series.npz": "a0f8f97246c05d067d6062e2084e3ab231ea3f0722c505f2d8f0ec03a2cc46e4",
+    "flow_series.npz": "f3fd8ae48727a6fe7d38e453ec37df4181197cbc1d0a20ed742d1669784bd600",
+    "record/record.npz": "d0880aa5dc8b1daefda4a10bb68c4e8ce268e07f45a74e3889bbd7d82b5c7565"
+   },
+   "n_items": 25,
+   "n_judged_keys": 17,
+   "absent_inputs": [
+    {
+     "item": "P3-1",
+     "reason": "no READY (284.1)"
+    },
+    {
+     "item": "P3-2",
+     "reason": "no confirmed LOC"
+    },
+    {
+     "item": "P3-4",
+     "reason": "no READY"
+    },
+    {
+     "item": "P3-5",
+     "reason": "no READY or no rut_clearance_m sample after READY"
+    },
+    {
+     "item": "D8_F_after_liftoff",
+     "reason": "no crawler lift-off"
+    }
+   ],
+   "r7_4_absent_where_required": [],
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_D1S_G1_B_middle_Fs4_spJ1FL",
+   "criteria_id": "C-3",
+   "bundle": "C-3",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_D1S_G1_B_middle_Fs4_spJ1FL",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "P3_G6",
+   "input_files_sha256": {
+    "result.json": "fa19d9ffeaa0e28454c69fd84b673d6d6457082d5bcfd00586bb8bf941ddc851",
+    "step_series.npz": "ec36b572ffbe65acf8d315be17fc6363a7c0d9f7a7ab523462d30159b9b1fc35",
+    "r8_series.npz": "a0f8f97246c05d067d6062e2084e3ab231ea3f0722c505f2d8f0ec03a2cc46e4",
+    "flow_series.npz": "49892c70e1b86b87caa89925642352fb951510b0973c5d3b36a94bc3586d9e1f",
+    "record/record.npz": "187bb541a7807f5eb6d60d3586f961c16751f6bfe740e4bdc98f16399ad2b676"
+   },
+   "n_items": 19,
+   "n_judged_keys": 12,
+   "absent_inputs": [
+    {
+     "item": "P3-1",
+     "reason": "no READY (284.1)"
+    },
+    {
+     "item": "P3-2",
+     "reason": "no confirmed LOC"
+    },
+    {
+     "item": "P3-4",
+     "reason": "no READY"
+    },
+    {
+     "item": "P3-5",
+     "reason": "no READY or no rut_clearance_m sample after READY"
+    }
+   ],
+   "r7_4_absent_where_required": [],
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_D1S_J1_B_middle_Fs4_r1p925_p1p4",
+   "criteria_id": "C-2",
+   "bundle": "C-2",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_D1S_J1_B_middle_Fs4_r1p925_p1p4",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "P3_S",
+   "input_files_sha256": {
+    "result.json": "5ac8ec2968ddeca67d2830b85947a6e9886068fa6d482217aa917b3af9779d98",
+    "step_series.npz": "90c874914ae92132c339dd140bd3939dec686a85d93e23d5e805d54abe66400b",
+    "r8_series.npz": "a0f8f97246c05d067d6062e2084e3ab231ea3f0722c505f2d8f0ec03a2cc46e4",
+    "flow_series.npz": "635e630097926f41c3f33c07b332c8685556c8938910ac01e568d7ed2b85b417",
+    "record/record.npz": "5b5ca5d8118a8b93735a9627f97f8e4c3e2d17f27a77164771cfd55f23942b91"
+   },
+   "n_items": 18,
+   "n_judged_keys": 12,
+   "absent_inputs": [
+    {
+     "item": "P3-1",
+     "reason": "no READY (284.1)"
+    },
+    {
+     "item": "P3-2",
+     "reason": "no confirmed LOC"
+    },
+    {
+     "item": "P3-4",
+     "reason": "no READY"
+    },
+    {
+     "item": "P3-5",
+     "reason": "no READY or no rut_clearance_m sample after READY"
+    }
+   ],
+   "r7_4_absent_where_required": [],
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_P3b_J2_B_top_Fs4_m1p1_t180_seed20261026",
+   "criteria_id": "C-5",
+   "bundle": "C-5",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_P3b_J2_B_top_Fs4_m1p1_t180_seed20261026",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "stage3",
+   "input_files_sha256": {
+    "result.json": "80ac4fa4fb195974b7057d0c74f48e0c1479a4be8704465ba1009bbdbe51a96e",
+    "step_series.npz": "28bcb2db8f6435c3a64a2dcb382639e8db2e4f95392457525f4d5f3231760a19",
+    "r8_series.npz": "e6d682abad858c23bc1d60d41523adcc34a1c758a3054480996bdf261fb8ae53",
+    "record/record.npz": "f5ee468376793aabacec168f2b5c2c30a332a62c2bd94657fd999092dbc21d5a"
+   },
+   "n_items": 13,
+   "n_judged_keys": 6,
+   "absent_inputs": [],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": {
+    "scope": "not_applicable",
+    "tag": "final_C4G2_LAS_K1",
+    "tag_established": true,
+    "extend_start_tag": false,
+    "request_compared": [
+     "argv"
+    ],
+    "request_mismatch": null,
+    "s2_reason": null
+   },
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok",
+    "r9_4": {
+     "ls": false,
+     "manifest_v5_setting": "S6SEED",
+     "batch_v5_setting": "S6SEED",
+     "s2": false
+    }
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_P3b_J1_B_top_Fs4_v0v",
+   "criteria_id": "C-5",
+   "bundle": "C-5",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_P3b_J1_B_top_Fs4_v0v",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "stage3",
+   "input_files_sha256": {
+    "result.json": "4d77564b46eb851da8f4aac9d6a06e89d1a0265bfa34e8e317b4b5a3b474337f",
+    "step_series.npz": "35c40ad2e3923f7802bf1d753654f884abb5c02418c257a33b83f7446cfe7da6",
+    "r8_series.npz": "6ba88875bca200d2f11a738a8132eb66f1488c16de59f37706ca93fa671a4069",
+    "record/record.npz": "f412c42e25fd27e0557ceae8fb0f262bc007f6880a773a55e13a2e72a4aed5a6"
+   },
+   "n_items": 13,
+   "n_judged_keys": 6,
+   "absent_inputs": [],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": {
+    "scope": "not_applicable",
+    "tag": "final_C4G2_LAS_K1",
+    "tag_established": true,
+    "extend_start_tag": false,
+    "request_compared": [
+     "argv",
+     "hydraulic_options"
+    ],
+    "request_mismatch": null,
+    "s2_reason": null
+   },
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok",
+    "r9_4": {
+     "ls": false,
+     "manifest_v5_setting": "V0v",
+     "batch_v5_setting": "V0v",
+     "s2": false
+    }
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_P3b_J1_B_top_Fs4",
+   "criteria_id": "C-5",
+   "bundle": "C-5",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_P3b_J1_B_top_Fs4",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "stage3",
+   "input_files_sha256": {
+    "result.json": "37460f96b7e4ae4ae8f9e29940eddcbc23df7a35bd5c044f974ee9330dfa6004",
+    "step_series.npz": "3dc70f4f54a9baf574169c98ff99fefeeaf47c9682864f78b6e8f33e1446dca0",
+    "r8_series.npz": "a0f8f97246c05d067d6062e2084e3ab231ea3f0722c505f2d8f0ec03a2cc46e4",
+    "flow_series.npz": "c0a25e6054a7e1861b99d2dee64c179f23f9e286b99e9dc87b812ba88a646457",
+    "record/record.npz": "0f3c39851bf105a94899573f0a66a6e52993d8b39b47a131c3c869495ca785be"
+   },
+   "n_items": 13,
+   "n_judged_keys": 6,
+   "absent_inputs": [
+    {
+     "item": "H-9",
+     "reason": "clip times missing / incomplete or no t_lift"
+    }
+   ],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": {
+    "scope": "applicable",
+    "tag": "final_C4G2_P3_LAS_K1",
+    "tag_established": true,
+    "extend_start_tag": true,
+    "request_compared": [
+     "argv",
+     "hydraulic_options"
+    ],
+    "request_mismatch": null,
+    "s2_reason": null
+   },
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok",
+    "r9_4": {
+     "ls": false,
+     "manifest_v5_setting": "VB",
+     "batch_v5_setting": "VB",
+     "s2": false
+    }
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_P3a_G1_B_VB_prop_lift10",
+   "criteria_id": "C-6",
+   "bundle": "C-6C7",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_P3a_G1_B_VB_prop_lift10",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "C-6",
+   "input_files_sha256": {
+    "result.json": "5bdaaa1751f84cda2d78836248c506286b9377c2a97c30bf96503223516f7ede",
+    "series.npz": "44e65a9c7e0d96ba18c2d148a595ee0ff22368a1fecf25bdea68915a361fb54f",
+    "flow_series.npz": "aa02dc20f7b9b16a2bdc484fa10b7fb8fd2574ad03c7a50c86daf5f6c7399806"
+   },
+   "n_items": 3,
+   "n_judged_keys": 3,
+   "absent_inputs": [],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": null,
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": null
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": false,
+    "open_loop": true,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": true,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_OC5_mixed_rigid_J1FR_Kc1_V0_top_k1",
+   "criteria_id": "C-8b",
+   "bundle": "C-8",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_OC5_mixed_rigid_J1FR_Kc1_V0_top_k1",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "OC5",
+   "input_files_sha256": {
+    "result.json": "036fe9eabbe17acde37f3beeb85e5c92e2d72fa596f859d031f2e00ffc7a1b93",
+    "step_series.npz": "d93ef3f26a52dfebb914601f7b1641c079f59b6875dac5b0ad0e414413ceed6c",
+    "r8_series.npz": "e6d682abad858c23bc1d60d41523adcc34a1c758a3054480996bdf261fb8ae53",
+    "record/record.npz": "d104b96a6644fff590a558c36880298a73e256e97e1af0e0fb5cee42ee6018ec"
+   },
+   "n_items": 8,
+   "n_judged_keys": 6,
+   "absent_inputs": [],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  },
+  {
+   "case": "GS_OC5_mixed_rigid_J1FR_Kc3_VB_top_k1",
+   "criteria_id": "C-8a",
+   "bundle": "C-8",
+   "r10": {
+    "batch_name": "V5-RESUME-K1-GS",
+    "batch_name_reason": "batch key = folder name",
+    "manifest_rows": 1,
+    "batch_cases": 1,
+    "labels": [],
+    "s11": false
+   },
+   "folder": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-GS_20261113_194755\\GS_OC5_mixed_rigid_J1FR_Kc3_VB_top_k1",
+   "folder_method": "batch_folder",
+   "engine": "scm",
+   "kind": "OC5",
+   "input_files_sha256": {
+    "result.json": "78af2c7a72c6ba316cea3e50946bebf8688a7c4ca16b5e5bcd3869488cdaa887",
+    "step_series.npz": "8aa3ecb7eb609a56d85a92a5ce4de1db669c44c389f9732d764cde2d582309d7",
+    "r8_series.npz": "a0f8f97246c05d067d6062e2084e3ab231ea3f0722c505f2d8f0ec03a2cc46e4",
+    "flow_series.npz": "f3fd8ae48727a6fe7d38e453ec37df4181197cbc1d0a20ed742d1669784bd600",
+    "record/record.npz": "d0880aa5dc8b1daefda4a10bb68c4e8ce268e07f45a74e3889bbd7d82b5c7565"
+   },
+   "n_items": 8,
+   "n_judged_keys": 6,
+   "absent_inputs": [],
+   "r7_4_absent_where_required": null,
+   "r7_6_keys_present": {
+    "placement.affinity_mask_process": true,
+    "placement.affinity_mask_ok": true,
+    "batch.affinity_masks": true,
+    "case.placement_applied": true
+   },
+   "law_locked_record": {
+    "source": "step_series.npz law_locked",
+    "present": true,
+    "well_formed": true,
+    "problems": [],
+    "codes": [],
+    "pattern": [
+     "none"
+    ],
+    "unarmed_prefix_samples": 0
+   },
+   "jp3_scope": null,
+   "r9": {
+    "r9_1": {
+     "expect_ok": true,
+     "source": "c2_setup.expect_controller.ok",
+     "s2": false
+    },
+    "r9_5": "ok"
+   },
+   "r11_4": {
+    "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_at_launch_clean": true,
+    "code_state_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+    "code_state_compared": true,
+    "open_loop": false,
+    "dirty_record": false,
+    "code_at_launch_paths": [
+     "03_src/outrigger_sim/control",
+     "03_src/outrigger_sim/sensors",
+     "04_scripts/02_chrono/run_S9.py"
+    ],
+    "open_loop_code_state_same_record": null,
+    "problems": [],
+    "s12": false
+   },
+   "folder_notes": [],
+   "error": null
+  }
+ ],
+ "n_rows": 12,
+ "n_errors": 0,
+ "n_input_errors": 0,
+ "rev9_R9_8_gs_items": {
+  "r9_1_s2_rows": 0,
+  "r9_2_rows_per_item": {
+   "key": 1,
+   "R9-2.1": 0,
+   "R9-2.2": 0,
+   "R9-2.3": 0,
+   "R9-2.4": 0,
+   "R9-2.5": 0,
+   "R9-2.6": 0
+  },
+  "r9_3_pattern_rows": {
+   "none": 10
+  },
+  "r9_4_ls_rows": 0,
+  "r9_4_not_judgeable_rows": 0,
+  "r9_4_ls_non_extend_tag_s2_rows": 0,
+  "r9_5_c5_s11_rows": 0,
+  "r9_6_input_absent_rows": 1,
+  "rev9_seal": "match"
+ },
+ "rev10_R10_2_gs_items": {
+  "r10_1b_rows_per_case": {
+   "batch_name_unknown": 0,
+   "manifest_rows_0": 0,
+   "manifest_rows_many": 0,
+   "batch_cases_0": 0,
+   "batch_cases_many": 0,
+   "both_value_absent": 1
+  },
+  "r10_2_s11_rows": 0,
+  "rows": 12,
+  "rev10_seal": "match"
+ },
+ "rev11_gs_items": {
+  "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+  "r11_4_rows": 12,
+  "r11_4_s12_rows": 0,
+  "r11_4_open_loop_rows": 1,
+  "r11_4_open_loop_s12_rows": 0,
+  "r11_4_code_at_launch_missing_rows": 0,
+  "r11_4_code_state_compared_rows": 9,
+  "r12_2_dirty_record_rows": 0,
+  "r12_4_open_loop_code_state_rows": 1,
+  "r11_5_grades_written": false,
+  "rev11_seal": "match"
+ }
+}

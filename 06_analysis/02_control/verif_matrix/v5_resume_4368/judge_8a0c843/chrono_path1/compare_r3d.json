@@ -1,0 +1,1908 @@
+{
+ "rules": "rev24 R24-3 re-judgement 2 / 3, original 9.2 K-10, CD-10, CD-7",
+ "judge_ignored": [
+  "disclosure",
+  "rules",
+  "seals",
+  "tool"
+ ],
+ "bundle_ignored": [
+  "inputs.rows_judge.path",
+  "inputs.rows_judge.sha256",
+  "reasons_CD_7",
+  "rules",
+  "runner_name_map_R23_1",
+  "seals",
+  "t45_pairing_R22_1",
+  "tool"
+ ],
+ "reason_keys": [
+  "reason",
+  "override_reason",
+  "grade_reason",
+  "record_reason",
+  "reason_not_judgeable",
+  "gate_reasons_CD_5",
+  "condition_note"
+ ],
+ "allowed": {
+  "judge_C5.json": [
+   "rows.#.items.moving_pressure_D-32*",
+   "rows.#.items.ready_D-27_D-28.*"
+  ],
+  "judge_C1.json": [
+   "rows.#.items.moving_pressure_D-32.event_test_CD_3*"
+  ],
+  "judge_C2.json": [
+   "rows.#.items.moving_pressure_D-32.event_test_CD_3*",
+   "rows.#.items.ready_D-27_D-28.P3-6",
+   "rows.#.items.ready_D-27_D-28.ready_reached"
+  ],
+  "bundle_C5.json": [
+   "*"
+  ],
+  "bundle_C1.json": [
+   "item_list_CD_11*",
+   "rows.#.overrides.#*",
+   "rows.#.runner_items.#*"
+  ],
+  "bundle_C2.json": [
+   "item_list_CD_11*",
+   "rows.#.overrides.#*",
+   "rows.#.runner_items.#*",
+   "rows.#.items",
+   "rows.#.items.#*",
+   "rows.#.record_items",
+   "rows.#.record_items.#*"
+  ],
+  "bundle_C3.json": [
+   "item_list_CD_11*"
+  ],
+  "bundle_OC5.json": [
+   "rows.#.record_values_CD_8*",
+   "rows.#.complete",
+   "rows.#.missing_inputs*",
+   "rows.#.inputs_sha256*",
+   "record_status",
+   "inputs.rows_judge",
+   "inputs.rows_judge_tool"
+  ]
+ },
+ "judge": {
+  "C1": {
+   "r3d_sha256": "53c86d8397adf31dc72ca900181f5bcf937beeb7842b8da1da11201fd702219c",
+   "r3e_sha256": "ffd6638697b8bf9a29bf6485419e8de9e795bdf67e47e2165d00cf47e74ecfdd",
+   "allowed_differences": [
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    }
+   ],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C2": {
+   "r3d_sha256": "16479c4b51b4905976a638cacbf4701de91911ef3cd2c2902c4aca22fd4dab69",
+   "r3e_sha256": "5d0feed8f81d921d23da9e3401f852709df61bfddc47848b95ee974d24efa6d6",
+   "allowed_differences": [
+    {
+     "key": "rows.#.items.ready_D-27_D-28.ready_reached",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.ready_D-27_D-28.ready_reached",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    }
+   ],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C3": {
+   "r3d_sha256": "bfb14476ef82a667305ab13b5ed10b8e3c8d9a102413f31e7179d6e75ce38317",
+   "r3e_sha256": "26d0aa6ccff1ccbea139accc914250ea5f6b42c9fe67f2e006826804deb65bbc",
+   "allowed_differences": [],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C4": {
+   "r3d_sha256": "1a640105fa9b6dd3a006052741ad157dd6ffd5385f6be9fd5edbf8d73fc41e23",
+   "r3e_sha256": "92e34cd1d51bce338e4527c8412cee00ec403ce77ff62cc673434bda45e92f1d",
+   "allowed_differences": [],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C5": {
+   "r3d_sha256": "4228d131c85852c1ebe7b73e744a950d52431877d9eef25dd6d66e18b7115252",
+   "r3e_sha256": "d952f07563ebaac34dc4a1ac40f3ac3d786b5149317c755ff7d00f94d62b6ce5",
+   "allowed_differences": [
+    {
+     "key": "rows.#.items.ready_D-27_D-28.ready_reached",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.inside",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.max_moving_bar",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.moving_samples",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_extension",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_retraction_record",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.row_kind",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.rule",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.runner_window_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.saturation_within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.window",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.inside",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.max_moving_bar",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.moving_samples",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_extension",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_retraction_record",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.row_kind",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.rule",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.runner_window_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.saturation_within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.window",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.inside",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.max_moving_bar",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.moving_samples",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_extension",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_retraction_record",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.row_kind",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.rule",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.runner_window_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.saturation_within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.window",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.inside",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.max_moving_bar",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.moving_samples",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_extension",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_retraction_record",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.row_kind",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.rule",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.runner_window_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.saturation_within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.window",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.inside",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.max_moving_bar",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.moving_samples",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_extension",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_retraction_record",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.row_kind",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.rule",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.runner_window_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.saturation_within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.window",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.inside",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.max_moving_bar",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.moving_samples",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_extension",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.outside_retraction_record",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.row_kind",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.rule",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.runner_window_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.saturation_within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.window",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.event_test_CD_3",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.status",
+     "diff": "'not_judgeable' != 'judged'"
+    },
+    {
+     "key": "rows.#.items.moving_pressure_D-32.within",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.ready_D-27_D-28.ready_reached",
+     "diff": "present only in R3e"
+    }
+   ],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C6C7": {
+   "r3d_sha256": "f8f354e35ce7ed2c9c7ee2712b7515645d90f3e7007eca8329952ab6334a1b2c",
+   "r3e_sha256": "4aa7e3d52a61df0ce9af5d2279617bda887b29ed8916034fb95a7cf9127fc2c7",
+   "allowed_differences": [],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "OC5PROBE": {
+   "r3d_sha256": "b7e4eebb2f77887a4b8c098c004f85033b40409605e172b85c1561789e3be903",
+   "r3e_sha256": "0665d4d125f43bc9f6f0b9b8bba4bf8de702f3a1be096f0a2dee2df606be06f4",
+   "allowed_differences": [],
+   "failing_differences": [
+    {
+     "key": "rows.#.items.ready_D-27_D-28.ready_reached",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items.ready_D-27_D-28.ready_reached",
+     "diff": "present only in R3e"
+    }
+   ],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": false
+  },
+  "OC5": {
+   "r3d_sha256": "8a8ffa58456e4bd56554a1eb2125c56387447dd617cf69c0dab96626d7c4153b",
+   "r3e_sha256": "0ce2dc13bbcb43229fcc3ea413db602121378f05560c53efaf2e8886449e51a3",
+   "allowed_differences": [],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  }
+ },
+ "bundle": {
+  "C1": {
+   "r3d_sha256": "a68d9ec73718bcbc437bcc65c1d62dbcbf514a30a8a2822ecb8641fdcc8fa3e5",
+   "r3e_sha256": "30c0da5c54ea0c84febbdb2a82a8f3db3c75a9137103e5f7f846a9db75e106c4",
+   "allowed_differences": [
+    {
+     "key": "item_list_CD_11",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    }
+   ],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C2": {
+   "r3d_sha256": "981efcbb6e248ea1be7c49457cc6ff7a404874f3a9002dde39b83565c9bfe7fb",
+   "r3e_sha256": "0dd4129b6982724469376d67117128b3d8f5f77ed7615a6e90ae40f0fab72693",
+   "allowed_differences": [
+    {
+     "key": "item_list_CD_11",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.crawler_zero_after_ready",
+     "diff": "'None' != '해당 없음(READY 없음)'"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.record_items.#.status",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'fail' != 'None'"
+    },
+    {
+     "key": "rows.#.record_items.#.status",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'not_judgeable' != 'None'"
+    },
+    {
+     "key": "rows.#.record_items.#.source",
+     "diff": "'p3b checks' != 'rules rev25 CD-4 P3-6 (spec 421.1 limit, p3b P3-6_ready)'"
+    },
+    {
+     "key": "rows.#.record_items.#.status",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'fail' != 'None'"
+    },
+    {
+     "key": "rows.#.record_items.#.crawler_zero_after_ready",
+     "diff": "'None' != '해당 없음(READY 없음)'"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.record_items.#.status",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'fail' != 'None'"
+    },
+    {
+     "key": "rows.#.record_items.#.status",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'not_judgeable' != 'None'"
+    },
+    {
+     "key": "rows.#.record_items.#.source",
+     "diff": "'p3b checks' != 'rules rev25 CD-4 P3-6 (spec 421.1 limit, p3b P3-6_ready)'"
+    },
+    {
+     "key": "rows.#.record_items.#.status",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.verdict_recorded",
+     "diff": "'fail' != 'None'"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 11 != 9"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 3"
+    }
+   ],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "C3": {
+   "r3d_sha256": "b0dc449858211ab824d5fcc676b0fca777fbd075611c568181f727844e65bc43",
+   "r3e_sha256": "b10bb25ddf64433f65f684d6c953ccae94643c9ee0f50c54e75a31dcd4d53314",
+   "allowed_differences": [
+    {
+     "key": "item_list_CD_11",
+     "diff": "present only in R3e"
+    }
+   ],
+   "failing_differences": [
+    {
+     "key": "rows.#.record_items.#.limit_matches_runner",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.limit_row",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.limit_s",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.runner_limit_s",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.source",
+     "diff": "'p3b checks' != 'rules rev25 CD-4 P3-6 (spec 421.1 limit, p3b P3-6_ready)'"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.limit_matches_runner",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.limit_row",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.limit_s",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.runner_limit_s",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_items.#.source",
+     "diff": "'p3b checks' != 'rules rev25 CD-4 P3-6 (spec 421.1 limit, p3b P3-6_ready)'"
+    },
+    {
+     "key": "rows.#.record_items.#.value",
+     "diff": "present only in R3e"
+    }
+   ],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": false
+  },
+  "C5": {
+   "r3d_sha256": "2df24fafbc1cdb0186be7b21707d582d71822677c23a270b8d4aa5a99928e10f",
+   "r3e_sha256": "8dca46782e130aa2b373bf033d12f6b0d24de55448c4679a00ca4f7d2304bd30",
+   "allowed_differences": [
+    {
+     "key": "bundle_grade.grade",
+     "diff": "'not_judgeable' != 'fail'"
+    },
+    {
+     "key": "bundle_grade.grade_counts.fail",
+     "diff": "7 != 9"
+    },
+    {
+     "key": "bundle_grade.grade_counts.not_judgeable",
+     "diff": "present only in R3d"
+    },
+    {
+     "key": "bundle_grade.grade_counts.pass",
+     "diff": "13 != 26"
+    },
+    {
+     "key": "bundle_grade.grade_without_stop",
+     "diff": "'not_judgeable' != 'fail'"
+    },
+    {
+     "key": "bundle_grade.row_phrase",
+     "diff": "'통과 13 / 미달 7 / 판정 불가 15' != '통과 26 / 미달 9'"
+    },
+    {
+     "key": "bundle_grade.status",
+     "diff": "'판정 불가' != '미달'"
+    },
+    {
+     "key": "item_list_CD_11",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "pairs_record.#.base_grade",
+     "diff": "'not_judgeable' != 'fail'"
+    },
+    {
+     "key": "pairs_record.#.pair_grade",
+     "diff": "'not_judgeable' != 'fail'"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 11 != 10"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 2"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 11 != 10"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 2"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 11 != 10"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 2"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 12 != 11"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 2"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 11 != 10"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 2"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'fail'"
+    },
+    {
+     "key": "rows.#.items",
+     "diff": "list length 11 != 10"
+    },
+    {
+     "key": "rows.#.record_items",
+     "diff": "list length 1 != 2"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides.#.recomputed.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.overrides.#.recomputed.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides.#.recomputed.value",
+     "diff": "'None' != '137.88020203868305'"
+    },
+    {
+     "key": "rows.#.overrides.#.recomputed.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '137.88020203868305'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides",
+     "diff": "list length 3 != 4"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'recomputed D-32' != 'recomputed D-32 CD-3 outside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '100.38818948604018'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'runner' != 'recomputed D-32 CD-3 inside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "174.21791078893114 != 169.3019330735245"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides",
+     "diff": "list length 3 != 4"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'recomputed D-32' != 'recomputed D-32 CD-3 outside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '100.36931842459263'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'runner' != 'recomputed D-32 CD-3 inside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "174.45207865929672 != 168.9608879097322"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides",
+     "diff": "list length 3 != 4"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'recomputed D-32' != 'recomputed D-32 CD-3 outside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '100.47000318557544'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'runner' != 'recomputed D-32 CD-3 inside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "174.25598004578535 != 169.34388891094864"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides",
+     "diff": "list length 3 != 4"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'recomputed D-32' != 'recomputed D-32 CD-3 outside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '105.52287801655397'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'runner' != 'recomputed D-32 CD-3 inside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "180.05003973832078 != 177.6890562909331"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.overrides",
+     "diff": "list length 3 != 4"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '0'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'recomputed D-32' != 'recomputed D-32 CD-3 outside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "'None' != '142.4153708142804'"
+    },
+    {
+     "key": "rows.#.runner_items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.runner_items.#.source",
+     "diff": "'runner' != 'recomputed D-32 CD-3 inside W'"
+    },
+    {
+     "key": "rows.#.runner_items.#.value",
+     "diff": "190.70496600297997 != 185.61387137953847"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.runner_items.#.case_star",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.grade",
+     "diff": "'not_judgeable' != 'pass'"
+    },
+    {
+     "key": "rows.#.items.#.verdict",
+     "diff": "'not_judgeable' != 'pass'"
+    }
+   ],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": true,
+   "ok": false
+  },
+  "C6C7": {
+   "r3d_sha256": "4935355f3ca2c5da407eebaf123ced2a5a303433953a53e7befbf69174e5342e",
+   "r3e_sha256": "66e5bf3cb0e4edcb32313c5a64d06176ef8e4bb600bac3914c917d561f48bff5",
+   "allowed_differences": [],
+   "failing_differences": [],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": true
+  },
+  "OC5": {
+   "r3d_sha256": "64624e9f99fa62dfa74c335e9f2490bc91bc4a8e49961969cf4136ed3294093b",
+   "r3e_sha256": "d8a7b0668b82b264d36cac65b57b9c0f85b08e8c20005faf4dc158ab4fc54df5",
+   "allowed_differences": [
+    {
+     "key": "inputs.rows_judge",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "inputs.rows_judge_tool",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_values_CD_8",
+     "diff": "present only in R3e"
+    },
+    {
+     "key": "rows.#.record_values_CD_8",
+     "diff": "present only in R3e"
+    }
+   ],
+   "failing_differences": [
+    {
+     "key": "rows.#.fmin-time_file",
+     "diff": "'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_' != 'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_'"
+    },
+    {
+     "key": "rows.#.oc5_file",
+     "diff": "'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_' != 'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_'"
+    },
+    {
+     "key": "rows.#.fmin-time_file",
+     "diff": "'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_' != 'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_'"
+    },
+    {
+     "key": "rows.#.oc5_file",
+     "diff": "'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_' != 'C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\verif_'"
+    }
+   ],
+   "grade_differences": [],
+   "truncated": false,
+   "ok": false
+  }
+ },
+ "new_in_r3e": {
+  "C4": true
+ },
+ "all_ok": false
+}

@@ -1,0 +1,32 @@
+{
+ "r3c": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_f9bc3c7\\chrono_path2\\e7_path2.json",
+ "r3d": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2\\e7_path2.json",
+ "excluded_keys": [
+  "batch",
+  "clause",
+  "clause_t_lift",
+  "disclosure",
+  "e7_tool_output",
+  "folder",
+  "input_files_sha256",
+  "layer",
+  "limit_disclosure",
+  "manifest",
+  "note",
+  "out_sha256",
+  "rule",
+  "seal",
+  "t45_report",
+  "tool",
+  "tool_files_sha256",
+  "tool_sha256"
+ ],
+ "status": "different",
+ "differences": [
+  {
+   "path": "$.tool_gate.head",
+   "r3c": "f9bc3c775d09d0588adb388dec96614fd95f2929",
+   "r3d": "02206710fe9ea77088d466f8a486afd5e130bceb"
+  }
+ ]
+}

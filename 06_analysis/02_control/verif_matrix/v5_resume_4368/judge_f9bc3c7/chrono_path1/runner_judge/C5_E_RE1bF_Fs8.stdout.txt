@@ -1,0 +1,14 @@
+-> C:\workspace\outrigger_control\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_f9bc3c7\chrono_path1\runner_judge\C5_E_RE1bF_Fs8.verify_S8C.json
+{
+ "rows": 79,
+ "failed": [],
+ "ml0_rod_fallback_gate": null,
+ "ml1_rod_fallback_runs": null,
+ "deferred_leg_below_F_min": {
+  "flagged_runs": 0,
+  "runs": []
+ },
+ "flag_rows": []
+}
+C:\workspace\outrigger_control\03_src\outrigger_sim\verify\s6_control.py:1011: RuntimeWarning: Mean of empty slice
+  reference = np.nanmean(anchors[before], axis=0)  # (4, 3)

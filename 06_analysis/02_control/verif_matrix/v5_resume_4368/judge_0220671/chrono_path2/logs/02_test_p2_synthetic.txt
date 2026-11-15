@@ -1,0 +1,335 @@
+PASS 423.3 / G6d classify case 1
+PASS 423.3 / G6d classify case 2
+PASS 423.3 / G6d classify case 3
+PASS 423.3 / G6d classify case 4
+PASS 423.3 / G6d classify case 5
+PASS 423.3 / G6d classify case 6
+PASS 423.3 / G6d classify case 7
+PASS t_D = first sample < 0.01 W lasting 0.1 s
+PASS P3-1 transient recontact before LOC -> flag
+PASS P3-2 pass
+PASS P3-3 pass
+PASS P3-4 pass, window from last READY
+PASS P3-5 pass
+PASS row ?듦낵
+PASS P3-1 after-LOC short recontact -> chatter flag
+PASS P3-1 after-LOC long recontact -> fail, row 誘몃떖
+PASS P3-3 dip -> fail, min RL 9000
+PASS F<F_min time = 200 samples x 1 ms
+PASS P3-2 late LOC after reapproach -> 419.8 flag
+PASS P3-2 late LOC without reapproach -> fail
+PASS final LOC = last non-revoked; 424.8.1 revoked-LOC flag
+PASS revoked LOC under load recorded only (Q-17)
+PASS condition 6: delay 7.5 s > 2 T_lim -> revoked flag refused, P3-2 fail (rev3 R3-G12)
+PASS P3-4 window < 5 s -> window_short FLAG, row not failed (rev3 R3-G7)
+PASS P3-4 two-sided creep stop with the 1.0 s backward rate (433.6)
+PASS P3-5 clearance 20 mm -> fail
+PASS P3-8 pre-LOC reapproach with min >= F_min -> 377 demoted flag
+PASS 377 threshold is F_min (F_min + 100 N demotes, rev3 R3-G8)
+PASS pre-LOC loss below F_min with P3-3 pass, FAULT 0 -> P3-8_preloc_loss FLAG (rev6 R6-C3)
+PASS P3-8 without G6 demotion -> fail
+PASS K1 would_block & not due -> S-5 (rev2 R2-1)
+PASS K1 block with one _SKIPPED:order -> k1_block
+PASS LAS-b start_s number -> las_active (rev2 R2-2)
+PASS start_s None & no block -> inactive
+PASS C-8 R_c from crawler attitude
+PASS C-8 m in [F_min, F_min+2 kN) -> margin record
+PASS C-8 m < F_min -> S-9
+PASS C-5 H-9 clips before t_lift only -> pass; SCM T4 -> na
+PASS J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)
+PASS J11 SCM row without step_series law_locked -> ?먯젙 遺덇? + stop (436.8 rev9 R9-5)
+PASS D2 reason from INFO_ROD_PRESSURE_FAULT_REASON (rev5 R5-B2), FR reason unreadable
+PASS R8-2 V0 tag, no extend_start_rule key, argv / options off -> na (not counted as missing)
+PASS R8-2 no v5_hydraulics block -> argv only compared, na
+PASS R8-2 V0 tag but argv --extend-start-tracked -> S-2
+PASS R8-2 V0 tag but hydraulic_options.extend_start_tracked true -> S-2
+PASS R8-2 ??tag, requests on, extend_start_rule key absent -> ?먯젙 遺덇? (9.3), no stop
+PASS R8-2 ??tag but extend_start_rule constant -> S-2
+PASS R8-2 V0 tag, requests off, but extend_start_rule tracked_bound -> S-2 (tag vs controller)
+PASS R8-2 no argv --expect-controller -> tag not established, S-2
+PASS R8-2 expect_controller.name != argv tag -> S-2
+PASS R8-2 expect check false -> S-2
+PASS R8-2 ??by is_extend_start_tag whatever the suffixes (final_C4G2_P3_K1) -> judged (breach fail)
+PASS R8-2 ??tag, no v5_hydraulics block, argv on -> argv only, judged
+PASS rules 4.1 reading: is_extend_start_tag from v5_options of this checkout
+PASS R7-4 on arm, c2_setup.las_off absent -> read as on, identity pass
+PASS R7-4 record: on arm LAS end_s / ramp absent -> listed as absent where required (record only)
+PASS R7-4 off arm (argv --las-off), c2_setup.las_off absent -> identity ?먯젙 遺덇?
+PASS R7-4 off arm with c2_setup.las_off true -> identity pass
+PASS c2_setup.las_off true but argv on arm -> identity ?먯젙 遺덇?
+PASS t45 grades: T4-0 pass, T4 pass, T5 over 2 -> fail + H-7
+PASS t45 regression failed -> S-11, ?먯젙 遺덇?
+PASS REG_ROWS: 18 unique exact names with stamps, VB 12 + LS 6
+PASS REG_ROWS: every name is a runner folder in the stored stage-3 batch row logs (source)
+PASS regression: a newer folder with the same tag prefix is not picked (exact names, 18 found)
+PASS regression: one stored folder missing -> ok false (S-11), tool not run
+PASS regression missing row -> T4 S-11
+PASS replay mapping: 4 folders (3 share the --only name) -> 4 keys by folder path, no problem
+PASS replay mapping: report row count differs -> empty mapping + problem
+PASS replay mapping: report order does not follow the input names -> empty mapping + problem
+PASS replay mapping: repeated input folder -> empty mapping + problem
+PASS t45_items: mapping problems -> S-11
+PASS t45_items: old name-keyed replay document -> S-11 (not used)
+PASS D-29 without rev15 in the sealed list: L2b row without 1 ms crawler_normal_N -> t_lift not computed (pending rev15)
+PASS R6-B1 L1-R: same record -> 10 Hz bracket t_b
+PASS R15-7: rev15 is in the code sealed list -> D-29 L2b 10 Hz reading on
+PASS D-29 with rev15 sealed: L2b row -> R6-B1 10 Hz bracket (same t_b as L1-R)
+PASS R15-3: floor_plane.normal_world missing -> source missing, t_lift not computed (?먯젙 遺덇?)
+PASS R15-3 normal projection: F_crawler . unit normal_world (z component would stay positive)
+PASS R15-3 F_crawler not [N, 3] -> source missing
+PASS R15-3 zero normal_world -> source missing
+PASS R8-3 SCM law_locked read from step_series.npz on t_s, well formed
+PASS R8-3 SCM fallback leg FL locked before t_w -> window end = log, n_late 0, pass
+PASS R8-3 SCM fallback leg still moving after t_w -> n_late 1, H-7
+PASS rev6 6: -1 before the first armed sample = locked (pass; transitions FL off 1 / on 1)
+PASS R9-3 before_first_arming pattern recorded, prefix 1999 samples
+PASS R9-3 -1 after arming -> format error R9-2.6, J11 ?먯젙 遺덇? + stop R9-5
+PASS R9-3 whole run -1 -> format error (whole_run), J11 stop R9-5
+PASS R9-3 legs leave -1 at different samples -> format error (per_leg_mismatch), stop R9-5
+PASS R9-3 one-sample -1 prefix on all legs -> before_first_arming (allowed)
+PASS R9-2 malformed (R9-2.3) -> law_locked unused, J11 ?먯젙 遺덇? + stop R9-5
+PASS R9-2 malformed (R9-2.2) -> law_locked unused, J11 ?먯젙 遺덇? + stop R9-5
+PASS R9-2 malformed (R9-2.2) -> law_locked unused, J11 ?먯젙 遺덇? + stop R9-5
+PASS R9-2 malformed (R9-2.4) -> law_locked unused, J11 ?먯젙 遺덇? + stop R9-5
+PASS R9-2.5 time column not 1 ms -> malformed
+PASS R9-2.5 a 0.9 us jitter (within 1e-6 s procedure value) -> well formed
+PASS R9-2.5 a 1.2 us step (> 1e-6 s) -> malformed
+PASS R9-2.1 time column absent -> malformed
+PASS R9-5 SCM law_locked missing (fallback leg present) -> ?먯젙 遺덇? + stop
+PASS R9-5: SCM law_locked missing, no fallback leg -> still ?먯젙 遺덇? + stop (not 'record')
+PASS R9-5 L2b pads.npz law_locked missing, no fallback leg -> ?먯젙 遺덇? + stop (was record under rev8)
+PASS R9-6 outside C-5: same L2b row -> J11 record, input absent counted, no stop
+PASS R9-5 L2b pads.npz law_locked malformed (int64) -> ?먯젙 遺덇? + stop
+PASS R9-2 / R9-3 same format check on L2b: -1 after arming -> R9-2.6, stop R9-5
+PASS R9-6 outside C-5, well-formed L2b law_locked -> record, input not absent
+PASS R9-1 SCM c2_setup.expect_controller.ok true -> pass, no stop
+PASS R9-1 ok false -> S-2 stop (G-S also S-11)
+PASS R9-1 expect_controller key absent -> S-2 stop
+PASS R9-1 L2b expect_controller.ok absent -> S-2 stop (source expect_controller.ok)
+PASS R9-1 in a bundle (C-3) -> bundle stop S-2, ?먯젙 遺덇? (not only J-P3)
+PASS R9-1 not applied to open-loop C-6C7
+PASS R9-4 / R10-1b LS classes: both LS1 -> LS; both VB -> not; differ -> None; both value None (one row each) -> not; name '_LS4' with VB -> not; batch value only -> None; manifest key absent + batch None -> not; manifest 2 rows -> None; manifest 0 rows (batch value absent) -> None (was 'not' in rev9 reading); batch.json 2 entries -> None
+PASS R10-1b labels: manifest_rows_many, manifest_rows_0, batch_cases_many
+PASS R10-1b batch.json has 0 entries for the case -> None (batch_cases_0)
+PASS R9-4 manifest batch absent -> rows None
+PASS R10-1a full batch name: key = folder -> name; no key -> folder; differ / unstamped folder / neither / short ID / not a manifest key -> unknown
+PASS R10-1b batch name unknown + both values absent -> None (not 'not LS')
+PASS R9-4 LS row with a non-??tag -> S-2
+PASS R9-4 LS row with a ??tag -> record, no stop
+PASS R9-4 items_c5: LS_class present, mismatch -> ?먯젙 遺덇?, J11 ls None
+PASS batch id from batch.json 'batch' (checked against the folder) or folder name
+PASS R10-1b manifest absent -> input error
+PASS R10-1b manifest notjson -> input error
+PASS R10-1b manifest nobatches -> input error
+PASS R9-7 tags: final_C4G2_K1 not ?? final_C4G2_P3_K1 ??(is_extend_start_tag)
+PASS R9-2 / R9-4 constants: 1 ms +- 1e-6 s, LS1..LS4
+PASS R11-4 level row: code_at_launch head and code_state head = git_at_start (7-digit) -> pass
+PASS R11-4 open-loop row with code_at_launch = git_at_start -> pass (code_state not compared)
+PASS R11-4 open-loop row without code_at_launch -> S-12
+PASS R11-4 code_at_launch head != git_at_start -> S-12
+PASS R11-4 level / L2b row: result.json code_state.git_at_start differs -> S-12
+PASS R11-4 closed-loop row without code_state record -> code_at_launch only ('that record exists')
+PASS R12-2 Chrono dirty / clean false -> record only (pass, dirty_record true, paths kept)
+PASS R12-4 open-loop row with a different result.json code_state -> record only (pass, same false)
+PASS R11-4 no judgement git_at_start -> S-12 (cannot show the commit)
+PASS R11-4 --git-at-start not hex -> input error
+PASS R11-4 judge without --git-at-start -> input error
+PASS R11-4 augment: open-loop bundle gets the commit item only (no R9-1 / J11)
+PASS R11-4 S-12 on an open-loop row -> record bundle stops (湲곕줉 遺덉셿??
+PASS R11-1 Chrono row: LAS-b enable true expected -> identity pass
+PASS R11-1 on arm with LAS-b settings.enable false -> identity ?먯젙 遺덇?
+SKIP 7527fc3 SCM record tests (no --lawlock-record)
+PASS L2b time base: events absolute, phases + start_t_s (rev6 R6-1)
+PASS D8 t_lift = first crawler <= 0 outside check/touch
+PASS D8 base row ?듦낵
+PASS R40-2: raw min < F_min in 8 s, slow min >= 14.41 kN -> hold (?먯젙 遺덇?)
+PASS dip after 8 s -> fail (no hold)
+PASS moving sample 185 bar -> pressure fail
+PASS end attitude 0.19 + 0.02 > 0.2 -> fail
+PASS J11: window end recomputed = log to 1e-12, plant unlocked after t_w -> n_late 1, H-7
+PASS J11 LS row (R9-4 ls True) -> L-e stop (rev5 R5-B3)
+PASS R9-4 name token not used: case '..._LS1' with ls False -> H-7
+PASS R9-4 LS not judgeable + n_late > 0 -> stop, text 'LS ?먮퀎 遺덇?'
+PASS J11 window end mismatch -> S-11
+PASS argv --k1-order-gate -> identity ?먯젙 遺덇? (R2-3 / S-3)
+PASS R2-4 r_vu = median v/u in window with u >= 0.1 v_max
+PASS R2-4 r_v = s_motor slope 10..20 s / v_max
+PASS openloop_compare.analyse loaded without running its driver
+PASS C-6/C-7 kinds from names (rev4 R4-A3)
+PASS 427.9: stop event FAULT_LIFT_STROKE_LIMIT:soil:RL, conditions 1-5 true -> allowed_stop
+PASS R19-1: grade by conditions 1-5 only: P3-1..P3-9 / FAULT0 / P3-6 record only, identity + K1 + 427.9 judged
+PASS 427.9 values kept per row: lift samples from LEVEL start, moving max bar (R18-4), saturation rows
+PASS R19-1: allowed_stop row (no READY) -> row ?듦낵 (no READY item graded)
+PASS 427.9 condition 1 reason not soil: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 1 first FAULT* is another fault: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 2 FAULT_STROKE_END: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 3 pad normal <= 0 after t_D: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 3 pad normal <= 0 after LEVEL start, before t_D: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 4 no departure t_D -> false: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 4 F_cyl < F_min after t_D: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 5 moving 190 bar: that condition false, others true -> fail, row 誘몃떖
+PASS 427.9 condition 5 saturation (extending >= 210 bar): that condition false, others true -> fail, row 誘몃떖
+PASS R19-1 condition 3: a pad lift before the LEVEL start is outside the window -> allowed_stop
+PASS R19-1 missing input (s9_rows) -> ?먯젙 遺덇? (rules 9.3)
+PASS 427.9 saturation row counted
+PASS 427.9 record/record.npz missing -> missing input -> indeterminate (not allowed, not fail)
+PASS 427.9: no stroke-limit stop event -> no safe-stop branch
+PASS C-4 (allow_stop False): no 427.9 branch, earlier path unchanged
+PASS S-03/04 (G6): allowed_stop, G6-6 record only (R19-1), row ?듦낵
+PASS safe-stop summary: allowed_stop 1 / fail 1, per row lift and moving bar; phrase ?듦낵 1 / ?덉쟾 醫낅즺 1
+PASS safe-stop summary of an empty set: no rows, all counts 0
+PASS C-2 empty set -> ?먯젙 遺덇? + S-15 (never ?듦낵)
+PASS C-3 empty set -> ?먯젙 遺덇?
+PASS PS-c slow event all good: E-1 E-3 E-4 E-5 E-6 E-7 pass, E-2 not applicable (not judged)
+PASS PS-c branch: READY again at 55 s, held 3 s, >= ramp + 3 s after t_ev -> end 58 s (ready_held)
+PASS PS-c E-1 condition false -> E-1 fail, other E items pass, row 誘몃떖
+PASS PS-c E-3 condition false -> E-3 fail, other E items pass, row 誘몃떖
+PASS PS-c E-4 condition false -> E-4 fail, other E items pass, row 誘몃떖
+PASS PS-c E-5 condition false -> E-5 fail, other E items pass, row 誘몃떖
+PASS PS-c E-6 condition false -> E-6 fail, other E items pass, row 誘몃떖
+PASS PS-c E-4 moving sample outside the window > 180 bar -> fail
+PASS PS-c E-4 moving 190 bar inside the window (<= 350) -> pass
+PASS PS-c E-5 FAULT periods in the branch (c2_phase fault) -> fail (R19-3)
+PASS PS-c E-5 FAULT period before the branch start is not counted (R19-3 window)
+PASS PS-c branch 60 s without READY held -> max_after, last phase level -> E-5 fail
+PASS PS-c E-5 run maximum stroke 700 mm > 684.8 mm -> fail
+PASS PS-c E-6 end clearance 20 mm (0 < c < 25), crawler 0 -> FLAG E-6_post_event_clearance (counts as pass)
+PASS PS-c E-6 crawler load > 0 at the end -> fail
+PASS PS-c event-row kind without a soil event block -> E-1..E-7 indeterminate, row ?먯젙 遺덇?
+PASS PS-c soil_event_series columns differ -> all E indeterminate
+PASS PS-c soil_event_series.npz missing -> ?먯젙 遺덇?
+PASS PS-c E-7 tool output not given -> E-7 indeterminate, row ?먯젙 遺덇? (E-1..E-6 pass)
+PASS PS-c E-7 tool gate failed -> indeterminate + S-11 stop
+PASS PS-c E-7 two twist bundles -> fail (path 2 grade <= 1)
+PASS PS-c E-7 output without this row -> indeterminate
+PASS PS-c event id not in 426.3 -> all E indeterminate
+PASS PS-c run ends before READY held -> run_end, E-5 judged on that record (R19-3)
+PASS PS-c fast: FL lift 1.0 s (<= 1.8, touch-down 1.0 <= 3.0), W = 1.82 s, FR 0.2 s / 1 mm in W -> E-1 E-2 pass
+PASS PS-c fast: FL lift 2.0 s > 1.8 s -> E-1 fail
+PASS PS-c fast: adjacent lift outside W 0.05 s / 0.3 mm, F_s 1 kN -> E-2 FLAG (U-S8-75)
+PASS PS-c fast: same outside lift with F_s 4 kN -> E-2 fail
+PASS PS-c fast: crawler recontact inside W -> E-6 FLAG E-6_event_transient_recontact
+PASS C-2 bundle: PS-c E table per row and the rev4 R4-A2 limit sentence
+PASS R19-2: kind of the PS-c base row (no --soil-event) = PSC_base, event row = PSC
+PASS R19-2: base row is a record row: no E-1..E-7 items, P3 and D8 values present
+PASS R19-2: C-2 bundle lists the base row as a record row, not in the E table
+PASS E-7 gate at HEAD: s9_soil_event_screen 0 commits since f46b5ab; R19-7 (2) E-7 functions the same
+PASS E-7 gate at HEAD: R20-1 (1b) RESUME_K1_KEY (+ docstring) read only by record functions, no other file reads r67_g1_screen.RESUME_K1_KEY -> gate ok, hunk table + grep commands written
+PASS E-7 gate: source segments of a def and a constant
+PASS R19-7 synthetic: changes only inside v5_job_record + new resume_k1_block -> ok, hunk table
+PASS R19-7 synthetic: twist_work body changed -> (1) and (2) fail (S-11)
+PASS R20-1 (1b) true: constant + docstring below it, read only by v5_job_record, no other file -> ok
+PASS R20-1 (1b): constant read by no function -> its readers are all record-only (none) -> ok
+PASS R20-1 (1b) false: the constant is also read by twist_work (not record-only) -> its line fails, S-11
+PASS R20-1 (1b) false: another file reads r67_g1_screen.KEY through the import alias -> S-11, grep kept
+PASS R20-1 (1b) false: `from r67_g1_screen import KEY` in another file -> S-11
+PASS R20-1 (1b): another module's own KEY and run_v5.KEY are not reads of r67_g1_screen.KEY -> ok
+PASS E-7 tool run on the adapter branch: twist n_bundles 0 for a zero-valve record -> E-7 pass
+PASS E-7 tool run: two twist bundles -> path 2 grade fail; a row without an event -> row error
+PASS E-7 CLI at HEAD: gate ok (R20-1) -> exit 0, tool row, E-7 pass
+PASS E-7 gate not ok -> E-7 indeterminate + S-11 stop
+PASS R19-6: six pairs found from batch rows + manifest rows (seed / LS rows are not pairs) -> exact, no stop
+PASS R19-6: one V0 row missing -> pairs != six -> S-15, no grade
+PASS R19-6: a seventh pair -> S-15
+PASS R19-6 / v5 rev12 2.2: VB 誘몃떖 with V0 ?듦낵 -> stop and ask; pair grades recorded
+PASS R19-6: both 誘몃떖 -> no 2.2 stop
+PASS R19-6: C-5 bundle with a missing pair -> ?먯젙 遺덇?
+PASS R21-1 held to the end: t_lift,sus = first sample <= 0.01 W held to the end (23.0 s), basis 1ms_sus
+PASS R21-1 re-contact after the first zero: t_lift,sus after the last re-contact (28.5 s); first <= 0 kept
+PASS R21-1 crawler exactly 0.01 W after the zero counts as <= 0.01 W (7.6) -> t_lift,sus 23.0 s
+PASS R21-1 crawler above 0.01 W at the record end -> no t_lift,sus -> D8 ?먯젙 遺덇? + stop
+PASS R21-1 phase rule: crawler 0 from the check / touch phases -> t_lift,sus = first level sample (18.0 s)
+PASS R21-1 missing t_lift,sus stops the bundle (?먯젙 遺덇? with the stop listed)
+PASS R21-2 rounding: t_lift,sus on a control instant -> same instant
+PASS R21-2 rounding boundary: 23.0 + 5e-10 -> 23.0 (within 1e-9), 23.0 + 2e-9 -> 23.1, 23.05 -> 23.1
+PASS R21-2 rounding: past the last control instant or no time -> None
+PASS R21-2 rounding uses engine absolute times (pads t and record t from 3.0 s; phases + start_t_s)
+PASS R21-1 V0 (sus_v0): t_b 23.0 s kept (R15-3), 10 Hz t_lift,sus record = 23.0, differs flag False
+PASS R21-1 V0 (sus_v0_recont): t_b 23.0 s kept (R15-3), 10 Hz t_lift,sus record = 31.0, differs flag True
+PASS R21-1 V0 (sus_v0_none): t_b 23.0 s kept (R15-3), 10 Hz t_lift,sus record = 湲곕줉 寃곗륫, differs flag False
+PASS R21-1 scope: SCM rows keep the rev6 5 t_lift (1ms), no t_lift,sus basis
+PASS seal: copies match
+PASS seal: rev7 listed, raw only, e81f7d31 (rev7 R7-7)
+PASS seal: rev7 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev7 .sha256 record missing -> S-1
+PASS seal: rev8 listed, raw only, 3ecafaaf (rev8 R8-4)
+PASS seal: rev8 raw sha = code seal sha = .sha256 first token
+PASS seal: rev8 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev8 .sha256 record missing -> S-1
+PASS seal: rev8 file changed (.sha256 intact) -> S-1 (mismatch)
+PASS seal: rev9 listed, raw only, 4cf7843c (rev9 R9-8)
+PASS seal: rev10 listed, raw only, 62a0bd8d (rev10 R10-3)
+PASS seal: rev10 raw sha = code seal sha = .sha256 first token
+PASS seal: rev10 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev10 .sha256 record missing -> S-1
+PASS seal: rev10 file changed -> S-1 (mismatch)
+PASS seal: rev11 listed, raw only, 9bac4524 (rev11 R11-7)
+PASS seal: rev11 raw sha = code seal sha = .sha256 first token
+PASS seal: rev11 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev11 .sha256 record missing -> S-1
+PASS seal: rev11 CRLF copy -> S-1 (raw only)
+PASS seal: rev12 listed, raw only, 78f1f99b (rev12 R12-6)
+PASS seal: rev15 listed, raw only, 0162561c; rev13 / rev14 not listed (R15-7)
+PASS seal: rev16 listed, raw only, b3899194, match, = .sha256 first token (R18-1)
+PASS seal: rev16 edited -> S-1
+PASS seal: rev17 listed, raw only, 9400660e, match, = .sha256 first token (R18-1)
+PASS seal: rev17 edited -> S-1
+PASS seal: rev18 listed, raw only, 3693a69c, match, = .sha256 first token (R18-1)
+PASS seal: rev18 edited -> S-1
+PASS seal: rev19 listed, raw only, 7f87b8bb, match, = .sha256 first token (R18-1)
+PASS seal: rev19 edited -> S-1
+PASS seal: rev20 listed, raw only, 615a8fbd, match, = .sha256 first token (R18-1)
+PASS seal: rev20 edited -> S-1
+PASS seal: rev21 listed, raw only, ecd70949, match, = .sha256 first token (R18-1)
+PASS seal: rev21 edited -> S-1
+PASS seal: rev22 listed, raw only, a48a81f9, match, = .sha256 first token (R18-1)
+PASS seal: rev22 edited -> S-1
+PASS seal: rev23 listed, raw only, fa72e172, match, = .sha256 first token (R18-1)
+PASS seal: rev23 edited -> S-1
+PASS seal: only rev23 wins (latest sealed revision)
+PASS seal: rev15 raw sha = code seal sha = .sha256 first token
+PASS seal: rev15 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev15 .sha256 record missing -> S-1
+PASS seal: rev15 CRLF copy -> S-1 (raw only)
+PASS seal: rev15 file missing -> S-1
+PASS seal: rev15 restored -> all match
+PASS seal: rev12 raw sha = code seal sha = .sha256 first token
+PASS seal: rev12 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev12 .sha256 record missing -> S-1
+PASS seal: rev12 file changed -> S-1 (mismatch)
+PASS seal: rev9 raw sha = code seal sha = .sha256 first token
+PASS seal: rev9 .sha256 record differs -> S-1 (sidecar_mismatch)
+PASS seal: rev9 .sha256 record missing -> S-1
+PASS seal: rev9 CRLF copy -> S-1 (raw only)
+PASS seal: rev9 file missing -> S-1
+PASS seal: restored copies match again
+PASS seal: Appendix A CRLF-only -> pass, disclosed
+PASS seal: rule file CRLF -> mismatch (raw only, R2-9)
+PASS seal: changed byte -> mismatch
+PASS CLI C-3 synthetic: exit 0, 2 rows, ?듦낵, out_sha256 = file sha
+PASS CLI C-1 on a batch with no C-1 rows -> S-15, exit 1
+PASS CLI missing batch -> exit 3 or 2 (input)
+PASS CLI gs-load: exit 0, 1 G-S row, no verdict / status keys in output
+PASS CLI gs-load rev9 R9-8 items: S-2 0, law_locked key absent counted, rev9 seal match
+PASS CLI gs-load rev11 items: G-S row without code_at_launch -> S-12 counted, no grades written (R11-5), rev11 seal match, git_at_start given
+PASS CLI gs-load without --git-at-start -> input error, exit 2 (rev12 R12-3)
+PASS CLI gs-load rev10 R10-2 items: unstamped folder without batch key -> batch name unknown, S-11 row 1, rev10 seal match
+PASS CLI gs-load without the manifest -> input error, exit 2 (R10-1b: G-S failure)
+PASS CLI R9-1: expect_controller.ok false on one row -> S-2 stop, ?먯젙 遺덇?, exit 1
+PASS CLI C-5 R9-4: LS1/LS1 -> LS, VB/LS4 -> ?먯젙 遺덇?; law_locked missing -> R9-5 stops; exit 1
+PASS CLI C-5 without the manifest -> input error, exit 2
+PASS resolve: no row log, two tag folders -> input error
+PASS resolve: row log runner line -> case_log
+PASS resolve: logged folder moved -> same relative path under results root (case_log_relocated)
+PASS resolve: logged folder without the tag -> input error
+PASS R12-5: no row log, no progress.log, unstamped batch folder -> no window, input error
+PASS R12-5: no row log, progress.log START..END +-2 s -> time_window, one folder
+PASS R12-5: a tag containing <tag> (x<tag>_<stamp>) is not a candidate (exact name)
+PASS R12-5: two folders in the window -> input error
+PASS R12-5: folder stamp exactly 2 s before START is inside (pad +-2 s)
+PASS R12-5: folder stamps 3-4 s before START -> 0 candidates, input error
+PASS R12-5: no START..END, stamped folder, est_s only (no wall_s) -> input error (est_s not used)
+PASS R12-5: batch folder stamp + wall_s +-2 s -> time_window
+PASS R12-5 S6: exact _<tag>_L1R_<stamp>, _check_L1R_ and <tag>x excluded -> one folder
+PASS R7-6 placement record: mask keys copied, affinity_mask_ok false -> note
+{"tool": "test_p2_synthetic.py", "tests": 333, "failed": 0, "common_tool_sha256": "2f323244c6a77a65ac106f90d888a4df04f651f7d7ade9fc9be348996b75a61c", "tmp": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_0220671\\chrono_path2\\synth_tmp"}

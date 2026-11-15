@@ -1,0 +1,558 @@
+{
+ "tool": "chrono_bundle_grade_4368 v7 (python-expert 2026-11-16, rules rev18 R18-2, rev19, rev21, rev22 R22-1, rev23 R23-1, rev24 CD-2 / CD-5 / CD-7 / CD-8 / CD-9 / CD-11, rev25 CD-4 P3-6 / CD-5 / CD-8 / CD-11)",
+ "rules": "rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 R19-1 .. R19-6, rev21 R21-1 / R21-2, rev22 R22-1 (t45 pairing by input folder order), rev23 R23-1 (runner rows and s8_metrics by the inner name of the judged row dir), rev24 R24-2 path 1 (common definitions CD-2 override table, CD-3 window stop, CD-5 READY missing, CD-7 reasons, CD-8 C-8 record values, CD-9 C-4 record bundle, CD-11 item list), rev25 R25-2 path 1 (common block rev25: CD-4 P3-6 role and spec 421.1 limit, CD-5 P3-6 lines, P3-9 record, CD-8 values 1 / 7 / 8 / 9, CD-11 classes, clause ids, G6 table, [case *]; C-4 CD-7 stop); original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; d1_selection_rules.md 7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; rev6 R6-A / R6-B4 / R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py",
+ "bundle": "C-8",
+ "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+ "seals": {
+  "rules_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix",
+  "files": {
+   "v5_resume_4368_rules.md": {
+    "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "sealed": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "tool": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "sealed": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "tool": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "sealed": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "tool": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "sealed": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "tool": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "sealed": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "tool": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "sealed": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "tool": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "sealed": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "tool": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "sealed": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "tool": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "sealed": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "tool": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "sealed": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "tool": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "sealed": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "tool": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "sealed": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "tool": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "sealed": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "tool": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "sealed": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "tool": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "sealed": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "tool": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "sealed": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "tool": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "sealed": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "tool": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "sealed": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "tool": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "sealed": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "tool": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "sealed": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "tool": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev22.md": {
+    "sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "sealed": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "tool": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev23.md": {
+    "sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "sealed": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "tool": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev24.md": {
+    "sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "sealed": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "tool": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "ok": true
+   },
+   "v5_resume_4368_rules_rev25.md": {
+    "sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "sealed": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "tool": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "ok": true
+   }
+  },
+  "ok": true,
+  "missing": []
+ },
+ "row_count_S15": {
+  "rule": "rules rev18 R18-2 row count (S-15)",
+  "expected": 2,
+  "found": 2,
+  "criteria_ids": [
+   "C-8a",
+   "C-8b"
+  ],
+  "batches": {
+   "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626": {
+    "batch_value": "V5-RESUME-K1-OC5",
+    "folder_part": "V5-RESUME-K1-OC5",
+    "name": "V5-RESUME-K1-OC5"
+   }
+  },
+  "not_in_manifest": [],
+  "duplicates": [],
+  "manifest_cases": [
+   "OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "OC5_mixed_rigid_J1FR_Kc3_VB_top"
+  ],
+  "ok": true
+ },
+ "commit_identity_R11_4": {
+  "OC5_mixed_rigid_J1FR_Kc1_V0_top": "match",
+  "OC5_mixed_rigid_J1FR_Kc3_VB_top": "match"
+ },
+ "manifest": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\chrono_rows_manifest.json",
+  "sha256": "394599cd3dcb2d05e4636f96d6f5d5e0df5c46954a1f7e84e904e9520efa1d41"
+ },
+ "inputs": {
+  "rows_judge": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path1\\judge_OC5.json",
+   "sha256": "0ce2dc13bbcb43229fcc3ea413db602121378f05560c53efaf2e8886449e51a3"
+  },
+  "rows_judge_tool": "chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked; python-expert 2026-11-14 z4372: engine from the batch.json / result.json records, V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3; python-expert 2026-11-15: L2b D-29 = t_lift,sus, rev21 R21-1)"
+ },
+ "rows": [
+  {
+   "case": "OC5_mixed_rigid_J1FR_Kc1_V0_top",
+   "criteria_id": "C-8b",
+   "oc5_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path1\\oc5_C-8b.json",
+   "m_N": 11951.205749459283,
+   "min_leg": "RL",
+   "margin_N": 2536.616749459283,
+   "oc5_class": "record",
+   "oc5_status": "기록",
+   "R_c_operating": 0.9568086623414596,
+   "fmin-time_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path1\\fmin_C-8b.json",
+   "fmin_time": {
+    "t_D_s": 33.99100000000485,
+    "window_complete": true,
+    "F_below_F_min": {
+     "samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ms": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "window_samples": 8001,
+     "step_s": 0.0010000000000331966,
+     "max_ms": 0.0,
+     "to_run_end_record_only": {
+      "ms": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_ms": 0.0
+     }
+    },
+    "F_below_F_min_plus_2kN": {
+     "samples": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ms": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "window_samples": 8001,
+     "step_s": 0.0010000000000331966,
+     "max_ms": 0.0,
+     "to_run_end_record_only": {
+      "ms": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "max_ms": 0.0
+     }
+    },
+    "status": "기록"
+   },
+   "record_values_CD_8": {
+    "values": {
+     "F_min_after_N": [
+      121958.59178308239,
+      88312.95169153338,
+      11951.205749459283,
+      74601.26289539503
+     ],
+     "F_min_transient_N": [
+      136889.46103526992,
+      88312.95169153338,
+      11951.205749459283,
+      95195.21212454153
+     ],
+     "t_min_after_s": [
+      76.14000000140405,
+      34.63800000002633,
+      34.50400000002188,
+      76.56500000141816
+     ],
+     "las_start_s": 33.299999999981914,
+     "las_end_s": 34.20000000001179,
+     "las_end_reason": "sum",
+     "k1_decisions": [],
+     "R_c_operating": 0.9568086623414596,
+     "crawler_attitude_deg": [
+      2.085628285738074,
+      1.544967148046799
+     ],
+     "floor_roll_deg": 2.0617,
+     "floor_pitch_deg": 1.3259,
+     "F_below_F_min.ms": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "F_below_F_min_plus_2kN.ms": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "P3-3_within": true,
+     "crawler_stiffness_scale_k": 1.0,
+     "F_a_min_N_by_leg": [
+      121958.59178308239,
+      88312.95169153338,
+      11951.205749459283,
+      74601.26289539503
+     ],
+     "t_a_s_by_leg": [
+      76.14000000140405,
+      34.63800000002633,
+      34.50400000002188,
+      76.56500000141816
+     ],
+     "F_t_min_N_by_leg": [
+      136889.46103526992,
+      88312.95169153338,
+      11951.205749459283,
+      95195.21212454153
+     ],
+     "t_t_s_by_leg": [
+      41.99000000027039,
+      34.63800000002633,
+      34.50400000002188,
+      41.99000000027039
+     ],
+     "a_t_match_oc5": {
+      "F_min_after_N": true,
+      "F_min_transient_N": true,
+      "t_min_after_s": true
+     },
+     "D8_t_lift_s": 33.992000000004886,
+     "D8_F_min_after_t_lift_N": 11951.205749459283,
+     "D8_F_min_leg": "RL",
+     "D8_F_min_t_s": 34.50400000002188,
+     "D8_end_attitude_plus_mount_deg": 0.038139726789001724,
+     "D8_pad_lift_samples": 0,
+     "D8_pad_lift_samples_by_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "G6-6": "pass",
+     "READY_le_120s": "pass",
+     "P3-1": "pass",
+     "P3-2": "pass",
+     "P3-3": "pass",
+     "P3-4": "pass",
+     "P3-5": "해당 없음(rigid_base)",
+     "P3-6": "pass",
+     "P3-7": "pass",
+     "P3-8": "pass",
+     "P3-9": "pass"
+    },
+    "missing": [],
+    "crawler_normal_series": "step_series.npz scm_crawler_normal_N (the t_D series)",
+    "rule": "rules rev25 CD-8 (original 7.4 record items)"
+   },
+   "complete": true,
+   "missing_inputs": [],
+   "stops": [],
+   "inputs_sha256": {
+    "result.json": "e8a3a9b64d1373e1af1a2e9ca5efd26212b1f3229f47e08a3d00265e1a9b176d",
+    "oc5:oc5_C-8b.json": "ca05f8dae559ab1fea2855e202a21fb33db54d0fab289977ec5311dc371854de",
+    "fmin-time:fmin_C-8b.json": "0b15c5e2f8ccf35ade4a2d12f582aeea0090a0ab3bb1bfd881ac33498fa691f1"
+   }
+  },
+  {
+   "case": "OC5_mixed_rigid_J1FR_Kc3_VB_top",
+   "criteria_id": "C-8a",
+   "oc5_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path1\\oc5_C-8a.json",
+   "m_N": 5869.61684783503,
+   "min_leg": "RL",
+   "margin_N": -3544.97215216497,
+   "oc5_class": "stop_S9",
+   "oc5_status": "기록",
+   "R_c_operating": 0.9523695802182304,
+   "S-9_handled": "S-9 handled by rules rev18 R18-5 (user decision 60 (A)): L-5 known limit, cause to 436.9; C-8 is a record bundle, no grade",
+   "fmin-time_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_8a0c843\\chrono_path1\\fmin_C-8a.json",
+   "fmin_time": {
+    "t_D_s": 34.54600000002328,
+    "window_complete": true,
+    "F_below_F_min": {
+     "samples": [
+      0,
+      0,
+      158,
+      0
+     ],
+     "ms": [
+      0.0,
+      0.0,
+      158.0,
+      0.0
+     ],
+     "window_samples": 8001,
+     "step_s": 0.0010000000000331966,
+     "max_ms": 158.0,
+     "to_run_end_record_only": {
+      "ms": [
+       0.0,
+       0.0,
+       158.0,
+       0.0
+      ],
+      "max_ms": 158.0
+     }
+    },
+    "F_below_F_min_plus_2kN": {
+     "samples": [
+      0,
+      0,
+      212,
+      0
+     ],
+     "ms": [
+      0.0,
+      0.0,
+      212.0,
+      0.0
+     ],
+     "window_samples": 8001,
+     "step_s": 0.0010000000000331966,
+     "max_ms": 212.0,
+     "to_run_end_record_only": {
+      "ms": [
+       0.0,
+       0.0,
+       212.0,
+       0.0
+      ],
+      "max_ms": 212.0
+     }
+    },
+    "status": "기록"
+   },
+   "record_values_CD_8": {
+    "values": {
+     "F_min_after_N": [
+      122313.096890219,
+      82974.0613203602,
+      5869.61684783503,
+      72774.76545875728
+     ],
+     "F_min_transient_N": [
+      136324.74507706572,
+      82974.0613203602,
+      5869.61684783503,
+      95240.42912579246
+     ],
+     "t_min_after_s": [
+      76.25500000140786,
+      35.553000000056706,
+      35.28600000004784,
+      71.8160000012605
+     ],
+     "las_start_s": 34.40000000001843,
+     "las_end_s": 34.90000000003503,
+     "las_end_reason": "sum",
+     "k1_decisions": [],
+     "R_c_operating": 0.9523695802182304,
+     "crawler_attitude_deg": [
+      2.151902773093178,
+      1.482562458085117
+     ],
+     "floor_roll_deg": 2.1434,
+     "floor_pitch_deg": 1.3784,
+     "F_below_F_min.ms": [
+      0.0,
+      0.0,
+      158.0,
+      0.0
+     ],
+     "F_below_F_min_plus_2kN.ms": [
+      0.0,
+      0.0,
+      212.0,
+      0.0
+     ],
+     "P3-3_within": false,
+     "crawler_stiffness_scale_k": 3.0,
+     "F_a_min_N_by_leg": [
+      122313.096890219,
+      82974.0613203602,
+      5869.61684783503,
+      72774.76545875728
+     ],
+     "t_a_s_by_leg": [
+      76.25500000140786,
+      35.553000000056706,
+      35.28600000004784,
+      71.8160000012605
+     ],
+     "F_t_min_N_by_leg": [
+      136324.74507706572,
+      82974.0613203602,
+      5869.61684783503,
+      95240.42912579246
+     ],
+     "t_t_s_by_leg": [
+      42.54100000028868,
+      35.553000000056706,
+      35.28600000004784,
+      42.545000000288816
+     ],
+     "a_t_match_oc5": {
+      "F_min_after_N": true,
+      "F_min_transient_N": true,
+      "t_min_after_s": true
+     },
+     "D8_t_lift_s": 34.54700000002331,
+     "D8_F_min_after_t_lift_N": 5869.61684783503,
+     "D8_F_min_leg": "RL",
+     "D8_F_min_t_s": 35.28600000004784,
+     "D8_end_attitude_plus_mount_deg": 0.039762974672833004,
+     "D8_pad_lift_samples": 0,
+     "D8_pad_lift_samples_by_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "G6-6": "pass",
+     "READY_le_120s": "pass",
+     "P3-1": "pass",
+     "P3-2": "pass",
+     "P3-3": "fail",
+     "P3-4": "pass",
+     "P3-5": "해당 없음(rigid_base)",
+     "P3-6": "pass",
+     "P3-7": "pass",
+     "P3-8": "pass",
+     "P3-9": "pass"
+    },
+    "missing": [],
+    "crawler_normal_series": "step_series.npz scm_crawler_normal_N (the t_D series)",
+    "rule": "rules rev25 CD-8 (original 7.4 record items)"
+   },
+   "complete": true,
+   "missing_inputs": [],
+   "stops": [],
+   "inputs_sha256": {
+    "result.json": "e09428a8b350a628f02208e6fd82a7c63b2258b37fd74f289d23d2df545820e5",
+    "oc5:oc5_C-8a.json": "17329569ece3d1d81150e3c1e425756b6ecd9d455d698cfcb0631f8a203f0fa3",
+    "fmin-time:fmin_C-8a.json": "abc60a18315bf54834fd3168b0671269fb166666c1797c1bda12120798c758dd"
+   }
+  }
+ ],
+ "record_status": "기록 완료",
+ "stops": []
+}
