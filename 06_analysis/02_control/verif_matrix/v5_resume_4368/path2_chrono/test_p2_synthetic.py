@@ -87,7 +87,8 @@ def write_scm(folder: Path, sp: dict):
         "events": [{"t_s": a, "name": b} for a, b in sp["events"]],
         "args": {"floor_roll": sp["floor"][0], "floor_pitch": sp["floor"][1]},
         "p3b": {"weight_N": W}, "mass_scale": {"judgement_weights": {"weight_N": W}},
-        "s9_rows": [{"t_s": float(x), "rut_clearance_m": sp["rut"]} for x in t10],
+        "s9_rows": [{"t_s": float(x), "rut_clearance_m": sp["rut"], "crawler_gap_min_m": sp["rut"], "c2_phase": p}
+                    for x, p in zip(t10, ph)],
         "c2_soil": {"soil_mode_t_s": None, "mode_starts": []},
         "controller_meta": {"liftoff_approach_slow": {"settings": {"enable": True}, "start_s": sp["las_start"]},
                             "slope_clearance_margin": {"order_gate": {"enabled": True, "decisions": sp["decisions"]},
@@ -1103,11 +1104,25 @@ def t_seal(tmp, rules_repo=None):
     check("seal: rev12 listed, raw only, 78f1f99b (rev12 R12-6)",
           rel12 in R.RAW_ONLY and any(r == rel12 and w.startswith("78f1f99b") for r, w, role in R.SEALED))
     rel15 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md"
-    check("seal: rev15 listed, raw only, 0162561c, only rev15 wins; rev13 / rev14 not listed (R15-7)",
-          rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") and "wins" in role
-                                      for r, w, role in R.SEALED)
-          and [r for r, w, role in R.SEALED if "wins" in role] == [rel15]
+    check("seal: rev15 listed, raw only, 0162561c; rev13 / rev14 not listed (R15-7)",
+          rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") for r, w, role in R.SEALED)
           and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
+    # rev18 R18-1 (다): rev16..rev18 in the Chrono tool list, raw only, seal sha = .sha256 first token; rev18 wins
+    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd"}
+    for n, pre in want16.items():
+        reln = f"06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev{n}.md"
+        check(f"seal: rev{n} listed, raw only, {pre}, match, = .sha256 first token (R18-1)",
+              reln in R.RAW_ONLY and any(r == reln and w.startswith(pre) for r, w, _ in R.SEALED)
+              and {r["file"]: r["status"] for r in ok["sealed"]}[reln] == "match"
+              and R.sidecar_sha(repo / reln) == next(w for r, w, _ in R.SEALED if r == reln))
+        pn = repo / reln
+        keepn = pn.read_bytes()
+        pn.write_bytes(keepn + b"x")
+        check(f"seal: rev{n} edited -> S-1", not R.seal_check(repo)["ok"])
+        pn.write_bytes(keepn)
+    rel20 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md"
+    check("seal: only rev20 wins (latest sealed revision)",
+          [r for r, w, role in R.SEALED if "wins" in role] == [rel20])
     check("seal: rev15 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
           and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
@@ -1412,6 +1427,481 @@ def t_resolve(tmp):
           and any("affinity_mask_ok" in n for n in plc["notes"]), plc)
 
 
+# ------------------------------------------------------------------ rev18 R18-2: 427.9 safe stop (S-01..04)
+def write_record(folder: Path, t0, t_end, F=50000.0, u=0.0, edits=()):
+    """record/record.npz (10 Hz control rows): F_cyl, u_applied; edits = (t_a, t_b, leg, F, u)."""
+    t = np.round(np.arange(t0 + 0.1, t_end + 1e-9, 0.1), 6)
+    Fc = np.full((len(t), 4), F)
+    ua = np.full((len(t), 4), u)
+    for a, b, leg, f, uu in edits:
+        sel = (t >= a - 1e-9) & (t <= b + 1e-9)
+        Fc[sel, leg] = f
+        ua[sel, leg] = uu
+    (folder / "record").mkdir(parents=True, exist_ok=True)
+    np.savez(folder / "record" / "record.npz", t=t, F_cyl=Fc, u_applied=ua)
+
+
+def stop_spec(reason="soil"):
+    sp = scm_spec()
+    sp.update(phases=[(8.1, "check"), (12.0, "touch"), (20.0, "level"), (40.0, "fault")], recontacts=[],
+              events=[(24.5, C.R.EVENT_LOC), (40.0, "WARN_LIFT_STROKE_LIMITED:RL"),
+                      (40.0, f"FAULT_LIFT_STROKE_LIMIT:{reason}:RL")])
+    return sp
+
+
+def stop_row(tmp, name, sp=None, rec_edits=(), record=True, pad_dip=None):
+    d = write_scm(tmp / name, sp or stop_spec())
+    if record:
+        write_record(d, 8.0, 60.0, u=1e-3, edits=rec_edits)
+    if pad_dip is not None:
+        z = dict(np.load(d / "step_series.npz"))
+        t = z["t_s"]
+        pad = z["scm_pad_normal_N"].copy()
+        a, b, leg = pad_dip
+        pad[(t >= a) & (t <= b), leg] = 0.0
+        _set_npz(d / "step_series.npz", scm_pad_normal_N=pad)
+    return C.load_row(d, "scm", ["run_S9.py", "level"])
+
+
+def t_safe_stop(tmp):
+    import p2_b_c2 as B2
+    import p2_b_c3 as B3
+    A = PARAMS["head_area_m2"][0]
+    row = stop_row(tmp, "ss_ok")
+    it, keys, _ = K.items_p3(row, PARAMS, R.READY_SLOPE_S, ready_judged=True, g6=False, allow_stop=True)
+    ss = it.get("safe_stop_427_9") or {}
+    check("427.9: stop event FAULT_LIFT_STROKE_LIMIT:soil:RL, conditions 1-5 true -> allowed_stop",
+          ss.get("class") == "allowed_stop" and all(v is True for v in ss["conditions"].values())
+          and ss["stop_reason"] == "soil", ss)
+    check("R19-1: grade by conditions 1-5 only: P3-1..P3-9 / FAULT0 / P3-6 record only, identity + K1 + 427.9 judged",
+          set(keys) == {"identity", "K1_class", "safe_stop_427_9"} and it["P3-1"].get("record_only")
+          and it["FAULT0"].get("record_only") and set(ss["recorded_items"]) >= {"P3-1", "P3-4", "P3-5", "P3-6", "FAULT0"},
+          keys)
+    check("427.9 values kept per row: lift samples from LEVEL start, moving max bar (R18-4), saturation rows",
+          ss["values"]["leg_lift_samples_from_level_start"] == [0, 0, 0, 0] and ss["values"]["moving_max_bar"] is not None
+          and ss["values"]["saturation_rows_per_leg"] == [0, 0, 0, 0] and abs(ss["t_level_start_s"] - 20.0) < 1e-6,
+          ss["values"])
+    check("R19-1: allowed_stop row (no READY) -> row 통과 (no READY item graded)", C.row_status(it, keys) == "통과",
+          C.row_status(it, keys))
+    sp_first = dict(stop_spec(), events=[(24.5, C.R.EVENT_LOC), (30.0, "FAULT_OTHER:FL")] + stop_spec()["events"][1:])
+    cases = [
+        ("1 reason not soil", stop_row(tmp, "ss_c1", stop_spec("guard")), "1_stop_reason_soil"),
+        ("1 first FAULT* is another fault", stop_row(tmp, "ss_c1b", sp_first), "1_stop_reason_soil"),
+        ("2 FAULT_STROKE_END", stop_row(tmp, "ss_c2", dict(stop_spec(), events=stop_spec()["events"]
+                                                          + [(41.0, "FAULT_STROKE_END:RL")])), "2_no_fault_stroke_end"),
+        ("3 pad normal <= 0 after t_D", stop_row(tmp, "ss_c3", pad_dip=(30.0, 30.01, 2)),
+         "3_no_leg_lift_from_level_start"),
+        ("3 pad normal <= 0 after LEVEL start, before t_D", stop_row(tmp, "ss_c3b", pad_dip=(21.0, 21.01, 2)),
+         "3_no_leg_lift_from_level_start"),
+        ("4 no departure t_D -> false", stop_row(tmp, "ss_c4b", dict(stop_spec(), crawler=[])),
+         "4_min_after_departure_ge_Fmin"),
+        ("4 F_cyl < F_min after t_D", stop_row(tmp, "ss_c4", dict(stop_spec(), dips=[(1, 35.0, 35.002, FMIN - 100.0)])),
+         "4_min_after_departure_ge_Fmin"),
+        ("5 moving 190 bar", stop_row(tmp, "ss_c5", rec_edits=[(30.0, 30.0, 0, 190e5 * A, 1e-3)]),
+         "5_moving_le_180bar_saturation0"),
+        ("5 saturation (extending >= 210 bar)", stop_row(tmp, "ss_c5s", rec_edits=[(30.0, 30.0, 0, 215e5 * A, 1e-3)]),
+         "5_moving_le_180bar_saturation0"),
+    ]
+    for lab, r, cond in cases:
+        i2, k2, _ = K.items_p3(r, PARAMS, R.READY_SLOPE_S, ready_judged=True, g6=False, allow_stop=True)
+        s2 = i2.get("safe_stop_427_9") or {}
+        others = [v for k, v in s2.get("conditions", {}).items() if k != cond]
+        check(f"427.9 condition {lab}: that condition false, others true -> fail, row 미달",
+              s2.get("class") == "fail" and s2["conditions"][cond] is False and all(v is True for v in others)
+              and C.row_status(i2, k2) == "미달", s2.get("conditions"))
+    i3e, k3e, _ = K.items_p3(stop_row(tmp, "ss_c3e", pad_dip=(15.0, 15.01, 2)), PARAMS, 120.0, True, allow_stop=True)
+    check("R19-1 condition 3: a pad lift before the LEVEL start is outside the window -> allowed_stop",
+          i3e["safe_stop_427_9"]["class"] == "allowed_stop", i3e["safe_stop_427_9"]["conditions"])
+    d_ns = write_scm(tmp / "ss_nos9", stop_spec())
+    write_record(d_ns, 8.0, 60.0, u=1e-3)
+    res_ns = json.loads((d_ns / "result.json").read_text(encoding="utf-8"))
+    res_ns.pop("s9_rows")
+    (d_ns / "result.json").write_text(json.dumps(res_ns), encoding="utf-8")
+    ins, kns, _ = K.items_p3(C.load_row(d_ns, "scm", ["run_S9.py", "level"]), PARAMS, 120.0, True, allow_stop=True)
+    check("R19-1 missing input (s9_rows) -> 판정 불가 (rules 9.3)", ins["safe_stop_427_9"]["class"] == "indeterminate"
+          and "result.json s9_rows" in ins["safe_stop_427_9"]["missing_inputs"] and C.row_status(ins, kns) == "판정 불가",
+          ins["safe_stop_427_9"].get("missing_inputs"))
+    s5s = K.items_p3(cases[-1][1], PARAMS, 120.0, True, allow_stop=True)[0]["safe_stop_427_9"]
+    check("427.9 saturation row counted", s5s["values"]["saturation_rows_per_leg"][0] == 1, s5s["values"])
+    r6 = stop_row(tmp, "ss_norec", record=False)
+    i6, k6, _ = K.items_p3(r6, PARAMS, 120.0, True, allow_stop=True)
+    check("427.9 record/record.npz missing -> missing input -> indeterminate (not allowed, not fail)",
+          i6["safe_stop_427_9"]["class"] == "indeterminate"
+          and i6["safe_stop_427_9"]["not_computable"] == ["5_moving_le_180bar_saturation0"]
+          and "record/record.npz u_applied / F_cyl" in i6["safe_stop_427_9"]["missing_inputs"]
+          and C.row_status(i6, k6) == "판정 불가", i6["safe_stop_427_9"]["conditions"])
+    i7, _, _ = K.items_p3(scm_row(tmp, scm_spec(), "ss_none"), PARAMS, 120.0, True, allow_stop=True)
+    check("427.9: no stroke-limit stop event -> no safe-stop branch", "safe_stop_427_9" not in i7)
+    i8, k8, _ = K.items_p3(row, PARAMS, 120.0, False, g6=True, allow_stop=False)
+    check("C-4 (allow_stop False): no 427.9 branch, earlier path unchanged", "safe_stop_427_9" not in i8
+          and "FAULT0" in k8, k8)
+    i9, k9, _ = K.items_p3(row, PARAMS, R.READY_FLAT_S, ready_judged=False, g6=True, allow_stop=True)
+    check("S-03/04 (G6): allowed_stop, G6-6 record only (R19-1), row 통과",
+          i9["safe_stop_427_9"]["class"] == "allowed_stop" and "G6-6" not in k9 and i9["G6-6"].get("record_only")
+          and C.row_status(i9, k9) == "통과", k9)
+    rows = [{"case": "S1", "d1_id": "S-01", "items": it, "kind": "P3_S", "status": "통과"},
+            {"case": "S2", "d1_id": "S-02", "items": K.items_p3(cases[0][1], PARAMS, 120.0, True)[0], "kind": "P3_S",
+             "status": "미달"},
+            {"case": "C1", "d1_id": "C2-03", "items": {}, "kind": "D8P_judged", "status": "통과"}]
+    sm = K.safe_stop_summary(rows)
+    check("safe-stop summary: allowed_stop 1 / fail 1, per row lift and moving bar; phrase 통과 1 / 안전 종료 1",
+          sm["counts"] == {"allowed_stop": 1, "fail": 1, "indeterminate": 0} and len(sm["rows"]) == 2
+          and "moving_max_bar" in sm["rows"][0] and sm["phrase"] == "통과 1 / 안전 종료 1", sm)
+    check("safe-stop summary of an empty set: no rows, all counts 0",
+          K.safe_stop_summary([])["counts"] == {"allowed_stop": 0, "fail": 0, "indeterminate": 0})
+    e0 = B2.bundle_status([])
+    check("C-2 empty set -> 판정 불가 + S-15 (never 통과)", e0["status"] == "판정 불가"
+          and any("S-15" in s for s in e0["stops"]), e0["stops"])
+    check("C-3 empty set -> 판정 불가", B3.bundle_status([])["status"] == "판정 불가")
+
+
+# ------------------------------------------------------------------ rev18 R18-3 1: PS-c E-1..E-7
+def psc_spec():
+    sp = scm_spec()
+    sp.update(t_end=80.0, recontacts=[],
+              phases=[(8.1, "check"), (12.0, "touch"), (20.0, "level"), (30.0, "done"), (32.0, "ready"),
+                      (45.0, "level"), (50.0, "done"), (55.0, "ready")])
+    return sp
+
+
+def write_psc(folder, sp=None, ev=("FL", "SS", 10.0), t_ev=40.0, edit=None, fs=4.0, cols=None, block=True,
+              rut=None):
+    """Synthetic PS-c event row: SCM files + result.json soil_event + soil_event_series.npz (1 ms from t_ev - 0.5).
+    edit(t, rows) changes the event rows in place."""
+    sp = sp or psc_spec()
+    d = write_scm(folder, sp)
+    t = np.round(np.arange(t_ev - 0.5, sp["t_end"] + 1e-9, 0.001), 6)
+    rows = np.zeros((len(t), 20))
+    rows[:, 0] = t
+    rows[:, 1:5] = 60000.0
+    rows[:, 5:9] = 50000.0
+    rows[:, 17:19] = 0.05
+    if edit:
+        edit(t, rows)
+    np.savez(d / "soil_event_series.npz", rows=rows, t_s=t,
+             columns=np.array(list(cols or R.E_ROW_COLUMNS)))
+    res = json.loads((d / "result.json").read_text(encoding="utf-8"))
+    res["fs_kN"] = fs
+    if rut is not None:
+        res["s9_rows"] = [dict(r, rut_clearance_m=rut, crawler_gap_min_m=rut) for r in res["s9_rows"]]
+    if block:
+        res["soil_event"] = {"spec": {"leg": ev[0], "event_id": ev[1], "depth_m": 0.0115, "ramp_s": ev[2]},
+                             "driver": {"t_ev_s": t_ev}, "event_reached": True,
+                             "judgement": {"pass": "NOT READ"}}
+    (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    return d
+
+
+def e7doc(folder, nb=0, gate=True):
+    import p2_psc as P
+    return {"tool_gate": {"ok": gate}, "rows": {P.row_key(folder): {"twist": {"n_bundles": nb, "bundles": []}}}}
+
+
+def psc_items(tmp, name, e7=True, nb=0, gate=True, **kw):
+    import p2_psc as P
+    d = write_psc(tmp / name, **kw)
+    row = C.load_row(d, "scm", ["run_S9.py", "level"])
+    return P.e_items(row, PARAMS, e7doc(d, nb, gate) if e7 else None)
+
+
+def t_psc(tmp):
+    import p2_b_c2 as B2
+    import p2_psc as P
+    A = PARAMS["head_area_m2"]
+    it, keys = psc_items(tmp, "psc_ok")
+    v = {k: it[k]["verdict"] for k in P.E_KEYS}
+    check("PS-c slow event all good: E-1 E-3 E-4 E-5 E-6 E-7 pass, E-2 not applicable (not judged)",
+          v == {"E-1": "pass", "E-2": "not_applicable", "E-3": "pass", "E-4": "pass", "E-5": "pass",
+                "E-6": "pass", "E-7": "pass"} and "E-2" not in keys and C.row_status(it, keys) == "통과", v)
+    br = it["E_branch"]["branch"]
+    check("PS-c branch: READY again at 55 s, held 3 s, >= ramp + 3 s after t_ev -> end 58 s (ready_held)",
+          abs(br["t_end_s"] - 58.0) < 1e-6 and br["reason"] == "ready_held" and it["E_branch"]["window_end_s"] == 13.0, br)
+
+    def ed(fn):
+        return {"edit": fn}
+    fails = {
+        "E-1": ed(lambda t, r: r.__setitem__((slice(None), 2), np.where((t >= 45.0) & (t < 45.01), 0.0, r[:, 2]))),
+        "E-3": ed(lambda t, r: r.__setitem__((slice(None), 7), np.where((t >= 50.0) & (t < 50.002), FMIN - 1.0, r[:, 7]))),
+        "E-4": ed(lambda t, r: r.__setitem__((slice(None), 5), np.where((t >= 45.0) & (t < 45.002), 360e5 * A[0], r[:, 5]))),
+        "E-5": ed(lambda t, r: r.__setitem__((slice(None), 17), np.where(t >= 57.0, 0.3, r[:, 17]))),
+        "E-6": ed(lambda t, r: r.__setitem__((slice(None), 19), np.where((t >= 47.0) & (t < 47.01), 100.0, r[:, 19]))),
+    }
+    for k, kw in fails.items():
+        i2, k2 = psc_items(tmp, f"psc_f_{k}", **kw)
+        others = [x for x in P.E_KEYS if x not in (k, "E-2")]
+        check(f"PS-c {k} condition false -> {k} fail, other E items pass, row 미달",
+              i2[k]["verdict"] == "fail" and all(i2[x]["verdict"] == "pass" for x in others)
+              and C.row_status(i2, k2) == "미달", {x: i2[x]["verdict"] for x in P.E_KEYS})
+
+    def outside_moving(t, r):
+        sel = (t >= 54.0) & (t < 54.002)
+        r[sel, 9] = 1e-3
+        r[sel, 5] = 190e5 * A[0]
+    i3, _ = psc_items(tmp, "psc_f_E4out", edit=outside_moving)
+    check("PS-c E-4 moving sample outside the window > 180 bar -> fail",
+          i3["E-4"]["verdict"] == "fail" and i3["E-4"]["moving_outside_max_bar"] > 180.0, i3["E-4"])
+    i3b, _ = psc_items(tmp, "psc_f_E4in_moving",
+                       edit=lambda t, r: (r.__setitem__((slice(None), 9), np.where((t >= 45) & (t < 45.002), 1e-3, r[:, 9])),
+                                          r.__setitem__((slice(None), 5), np.where((t >= 45) & (t < 45.002), 190e5 * A[0], r[:, 5]))))
+    check("PS-c E-4 moving 190 bar inside the window (<= 350) -> pass", i3b["E-4"]["verdict"] == "pass", i3b["E-4"])
+    spf = psc_spec()
+    spf["phases"] = spf["phases"][:6] + [(46.0, "fault"), (47.0, "level")] + spf["phases"][6:]
+    i4, _ = psc_items(tmp, "psc_f_E5fault", sp=spf)
+    check("PS-c E-5 FAULT periods in the branch (c2_phase fault) -> fail (R19-3)",
+          i4["E-5"]["verdict"] == "fail" and i4["E-5"]["fault_periods_in_branch"] == 10, i4["E-5"])
+    i4b, _ = psc_items(tmp, "psc_E5fault_before", sp=dict(psc_spec(), phases=[(8.1, "check"), (10.0, "fault"),
+                                                                             (12.0, "touch")] + psc_spec()["phases"][2:]))
+    check("PS-c E-5 FAULT period before the branch start is not counted (R19-3 window)",
+          i4b["E-5"]["verdict"] == "pass", i4b["E-5"])
+    i4c, _ = psc_items(tmp, "psc_E5_60s", sp=dict(psc_spec(), t_end=110.0, phases=psc_spec()["phases"][:5]
+                                                   + [(45.0, "level"), (101.0, "ready")]))
+    check("PS-c branch 60 s without READY held -> max_after, last phase level -> E-5 fail",
+          i4c["E_branch"]["branch"]["reason"] == "max_after" and i4c["E-5"]["verdict"] == "fail"
+          and i4c["E_branch"]["after_branch_end_record"]["rows"] > 0, i4c["E_branch"]["branch"])
+    i5, _ = psc_items(tmp, "psc_f_E5stroke", sp=dict(psc_spec(), stroke=0.70))
+    check("PS-c E-5 run maximum stroke 700 mm > 684.8 mm -> fail", i5["E-5"]["verdict"] == "fail", i5["E-5"]["stroke_max_m"])
+    i6, _ = psc_items(tmp, "psc_flag_E6", rut=0.02)
+    check("PS-c E-6 end clearance 20 mm (0 < c < 25), crawler 0 -> FLAG E-6_post_event_clearance (counts as pass)",
+          i6["E-6"]["verdict"] == "flag" and i6["E-6"]["flags"] == ["E-6_post_event_clearance"], i6["E-6"])
+    i6b, _ = psc_items(tmp, "psc_f_E6end", edit=lambda t, r: r.__setitem__((slice(None), 19),
+                                                                         np.where(t >= 57.9, 50.0, r[:, 19])))
+    check("PS-c E-6 crawler load > 0 at the end -> fail", i6b["E-6"]["verdict"] == "fail", i6b["E-6"])
+    # missing inputs: every item 판정 불가, never 통과
+    i7, k7 = psc_items(tmp, "psc_noblock", block=False)
+    check("PS-c event-row kind without a soil event block -> E-1..E-7 indeterminate, row 판정 불가",
+          all(i7[k]["verdict"] == "indeterminate" for k in P.E_KEYS) and C.row_status(i7, k7) == "판정 불가", k7)
+    i8, k8 = psc_items(tmp, "psc_badcols", cols=[*R.E_ROW_COLUMNS[:-1], "crawler"])
+    check("PS-c soil_event_series columns differ -> all E indeterminate", all(i8[k]["verdict"] == "indeterminate"
+                                                                             for k in P.E_KEYS), i8["E-1"])
+    d9 = write_psc(tmp / "psc_noseries")
+    (d9 / "soil_event_series.npz").unlink()
+    i9, k9 = P.e_items(C.load_row(d9, "scm", ["run_S9.py", "level"]), PARAMS, None)
+    check("PS-c soil_event_series.npz missing -> 판정 불가", C.row_status(i9, k9) == "판정 불가")
+    i10, k10 = psc_items(tmp, "psc_noe7", e7=False)
+    check("PS-c E-7 tool output not given -> E-7 indeterminate, row 판정 불가 (E-1..E-6 pass)",
+          i10["E-7"]["verdict"] == "indeterminate" and C.row_status(i10, k10) == "판정 불가")
+    i11, _ = psc_items(tmp, "psc_e7gate", gate=False)
+    check("PS-c E-7 tool gate failed -> indeterminate + S-11 stop", i11["E-7"]["verdict"] == "indeterminate"
+          and "S-11" in i11["E-7"].get("stop", ""), i11["E-7"])
+    i12, _ = psc_items(tmp, "psc_e7nb2", nb=2)
+    check("PS-c E-7 two twist bundles -> fail (path 2 grade <= 1)", i12["E-7"]["verdict"] == "fail")
+    d13 = write_psc(tmp / "psc_e7other")
+    i13, _ = P.e_items(C.load_row(d13, "scm", ["run_S9.py", "level"]), PARAMS, e7doc(tmp / "psc_ok"))
+    check("PS-c E-7 output without this row -> indeterminate", i13["E-7"]["verdict"] == "indeterminate")
+    i14, _ = psc_items(tmp, "psc_unknown_ev", ev=("FL", "XX", 10.0))
+    check("PS-c event id not in 426.3 -> all E indeterminate", all(i14[k]["verdict"] == "indeterminate" for k in P.E_KEYS))
+    i15, _ = psc_items(tmp, "psc_short", sp=dict(psc_spec(), t_end=56.0))
+    check("PS-c run ends before READY held -> run_end, E-5 judged on that record (R19-3)",
+          i15["E_branch"]["branch"]["reason"] == "run_end" and i15["E-5"]["verdict"] in ("pass", "fail")
+          and i15["E-5"]["branch_end_reason"] == "run_end", i15["E-5"])
+
+    # fast event (RE1bF on FL; pair FL + RR, adjacent FR, RL)
+    def fast_edit(fl_lift=1.0, adj_out=None):
+        def f(t, r):
+            r[(t >= 40.0) & (t < 40.0 + fl_lift), 1] = 0.0
+            r[(t >= 40.5) & (t < 40.7), 2] = 0.0
+            r[(t >= 40.5) & (t < 40.7), 14] = 0.001
+            if adj_out:
+                sel = (t >= 43.0) & (t < 43.0 + adj_out)
+                r[sel, 2] = 0.0
+                r[sel, 14] = 0.0003
+        return f
+    f1, fk = psc_items(tmp, "psc_fast_ok", ev=("FL", "RE1bF", 0.05), edit=fast_edit())
+    check("PS-c fast: FL lift 1.0 s (<= 1.8, touch-down 1.0 <= 3.0), W = 1.82 s, FR 0.2 s / 1 mm in W -> E-1 E-2 pass",
+          f1["E-1"]["verdict"] == "pass" and f1["E-2"]["verdict"] == "pass" and abs(f1["E-2"]["W_end_s"] - 1.82) < 1e-6
+          and "E-2" in fk, (f1["E-1"].get("per_leg"), f1["E-2"]))
+    f2, _ = psc_items(tmp, "psc_fast_e1", ev=("FL", "RE1bF", 0.05), edit=fast_edit(fl_lift=2.0))
+    check("PS-c fast: FL lift 2.0 s > 1.8 s -> E-1 fail", f2["E-1"]["verdict"] == "fail")
+    f3, _ = psc_items(tmp, "psc_fast_lowf", ev=("FL", "RE1bF", 0.05), edit=fast_edit(adj_out=0.05), fs=1.0)
+    check("PS-c fast: adjacent lift outside W 0.05 s / 0.3 mm, F_s 1 kN -> E-2 FLAG (U-S8-75)",
+          f3["E-2"]["verdict"] == "flag", f3["E-2"])
+    f4, _ = psc_items(tmp, "psc_fast_out", ev=("FL", "RE1bF", 0.05), edit=fast_edit(adj_out=0.05), fs=4.0)
+    check("PS-c fast: same outside lift with F_s 4 kN -> E-2 fail", f4["E-2"]["verdict"] == "fail", f4["E-2"])
+    f5, _ = psc_items(tmp, "psc_fast_e6w", ev=("FL", "RE1bF", 0.05),
+                      edit=lambda t, r: (fast_edit()(t, r), r.__setitem__((slice(None), 19),
+                                                                          np.where((t >= 41.0) & (t < 41.01), 80.0, r[:, 19]))))
+    check("PS-c fast: crawler recontact inside W -> E-6 FLAG E-6_event_transient_recontact",
+          f5["E-6"]["verdict"] == "flag" and "E-6_event_transient_recontact" in f5["E-6"]["flags"], f5["E-6"])
+    # bundle: PS-c rows in C-2 counted, limit sentence attached
+    B2.AUX = {}
+    rows = [{"case": "P1", "d1_id": "PSC-c-slow-FL", "kind": "PSC", "items": it, "status": "통과",
+             "judged_keys": keys}]
+    b = B2.bundle_status(rows)
+    check("C-2 bundle: PS-c E table per row and the rev4 R4-A2 limit sentence", b["psc_E"]["rows"]["P1"]["E-7"] == "pass"
+          and "같은 계산 함수에 기댄다" in (b["psc_E"]["limit_disclosure"] or ""), b["psc_E"])
+    # rev19 R19-2: PS-c base row = record row (no E items, not missing; P3 / D8 values recorded)
+    base_case = {"case": "D1PSC_J1_B_top_Fs4_spFLJ1_base", "d1_id": "PSC-base-FL", "argv": ["run_S9.py", "level"]}
+    ev_case = {"case": "D1PSC_J1_B_top_Fs4_FL_cslow", "d1_id": "PSC-c-slow-FL",
+               "argv": ["run_S9.py", "level", "--soil-event", "FL:11.5:20:ready+5"]}
+    check("R19-2: kind of the PS-c base row (no --soil-event) = PSC_base, event row = PSC",
+          B2.kind_of(base_case) == "PSC_base" and B2.kind_of(ev_case) == "PSC")
+    db = write_psc(tmp / "psc_base", block=False)
+    rb = C.load_row(db, "scm", ["run_S9.py", "level"])
+    ib, kb, _, recb = B2.judge_row(rb, base_case, "PSC_base", PARAMS)
+    check("R19-2: base row is a record row: no E-1..E-7 items, P3 and D8 values present",
+          recb is True and not any(k in ib for k in P.E_KEYS) and "P3-3" in ib and "D8_F_after_liftoff" in ib
+          and ib["E_items"]["verdict"] == "record", sorted(ib)[:12])
+    rows2 = rows + [{"case": "B1", "d1_id": "PSC-base-FL", "kind": "PSC_base", "items": ib, "status": "기록 완료",
+                     "judged_keys": kb}]
+    b2 = B2.bundle_status(rows2)
+    check("R19-2: C-2 bundle lists the base row as a record row, not in the E table",
+          b2["psc_E"]["record_rows"] == ["B1"] and "B1" not in b2["psc_E"]["rows"], b2["psc_E"])
+
+
+def t_e7_tool(tmp):
+    """p2_e7.py end to end on a synthetic PS-c row: gate at this checkout's HEAD, designated tool run."""
+    import p2_e7 as E7
+    import p2_psc as P
+    head = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    g = E7.tool_gate(REPO, head)
+    r19 = g["r19_7"]
+    b1 = [x for h in r19["hunks"] for x in h["lines"] if x["rule"] == "1b"]
+    check("E-7 gate at HEAD: s9_soil_event_screen 0 commits since f46b5ab; R19-7 (2) E-7 functions the same",
+          g["files"][E7.TOOL]["commits_base_to_ref"] == 0 and r19["e7_functions_same"]
+          and all(r19["e7_functions_same"].values())
+          and set(r19["e7_functions"]) == {"judge_event", "twist_work", "_intervals", "is_fast"}, r19["e7_functions_same"])
+    check("E-7 gate at HEAD: R20-1 (1b) RESUME_K1_KEY (+ docstring) read only by record functions, no other file reads "
+          "r67_g1_screen.RESUME_K1_KEY -> gate ok, hunk table + grep commands written",
+          g["ok"] and r19["ok"] and b1 and all(x["defines"] == ["RESUME_K1_KEY"] and x["ok"] for x in b1)
+          and r19["names_1b_cross_file_check"]["greps"] and not r19["names_1b_cross_file_check"]["readers"],
+          g["problems"])
+    seg = E7.segments("A = 1\ndef f():\n    return 2\n", ("A", "f"))
+    check("E-7 gate: source segments of a def and a constant", seg == {"A": "A = 1", "f": "def f():\n    return 2"}, seg)
+    # R19-7 on a synthetic repository (base -> record-only change -> E-7 change / module constant)
+    sr = tmp / "r197repo"
+    if sr.exists():
+        shutil.rmtree(sr)
+    f = sr / E7.R67
+    f.parent.mkdir(parents=True)
+    gitc = ["git", "-C", str(sr), "-c", "user.name=t", "-c", "user.email=t@t", "-c", "core.autocrlf=false"]
+    base_src = ("import numpy as np\n\n\ndef _intervals(m, t):\n    return []\n\n\ndef is_fast(ev):\n    return True\n\n\n"
+                "def twist_work(t, F, v):\n    return {'n_bundles': 0}\n\n\ndef judge_event(rec):\n"
+                "    _intervals(rec, rec)\n    is_fast(rec)\n    return twist_work(rec, rec, rec)\n\n\n"
+                "def v5_job_record(o):\n    return {'a': 1}\n")
+
+    def commit(src, msg):
+        f.write_text(src, encoding="utf-8", newline="\n")
+        subprocess.run(gitc + ["add", "-A"], capture_output=True)
+        subprocess.run(gitc + ["commit", "-q", "-m", msg], capture_output=True)
+        return subprocess.run(["git", "-C", str(sr), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    subprocess.run(["git", "init", "-q", str(sr)], capture_output=True)
+    b0 = commit(base_src, "base")
+    keep = E7.BASE_COMMIT
+    try:
+        E7.BASE_COMMIT = b0
+        c1 = commit(base_src.replace("return {'a': 1}", "x = 2\n    return {'a': x}")
+                    + "\n\ndef resume_k1_block(c):\n    return {}\n", "record only")
+        r1 = E7.r19_7_function_check(sr, c1)
+        check("R19-7 synthetic: changes only inside v5_job_record + new resume_k1_block -> ok, hunk table",
+              r1["ok"] and r1["hunks"] and all(h["ok"] for h in r1["hunks"]), r1["hunks"])
+        c2 = commit(base_src.replace("return {'n_bundles': 0}", "return {'n_bundles': 1}"), "e7 change")
+        r2 = E7.r19_7_function_check(sr, c2)
+        check("R19-7 synthetic: twist_work body changed -> (1) and (2) fail (S-11)",
+              not r2["ok"] and r2["e7_functions_same"]["twist_work"] is False
+              and any("(1)" in p for p in r2["problems"]), r2["problems"])
+        rec_key = base_src.replace("return {'a': 1}", "return {KEY: 1}") + "\n\nKEY = 'k'\n\"\"\"record key.\"\"\"\n"
+        c3 = commit(rec_key, "module constant read by a record function")
+        r3 = E7.r19_7_function_check(sr, c3)
+        l3 = [x for h in r3["hunks"] for x in h["lines"] if x["rule"] == "1b"]
+        check("R20-1 (1b) true: constant + docstring below it, read only by v5_job_record, no other file -> ok",
+              r3["ok"] and len(l3) == 2 and all(x["defines"] == ["KEY"] and x["read_by"] == ["v5_job_record"]
+                                                for x in l3), r3["hunks"])
+        c4 = commit(base_src + "\n\nKEY = 'k'\n", "module constant read by nobody")
+        r4 = E7.r19_7_function_check(sr, c4)
+        check("R20-1 (1b): constant read by no function -> its readers are all record-only (none) -> ok",
+              r4["ok"], r4["problems"])
+        c5 = commit(rec_key.replace("return {'n_bundles': 0}", "return {'n_bundles': 0, KEY: 0}"),
+                    "constant read by twist_work")
+        r5 = E7.r19_7_function_check(sr, c5)
+        l5 = [x for h in r5["hunks"] for x in h["lines"] if x["rule"] == "1b"]
+        check("R20-1 (1b) false: the constant is also read by twist_work (not record-only) -> its line fails, S-11",
+              not r5["ok"] and l5 and all(not x["ok"] and "twist_work" in x["read_by"] for x in l5), l5)
+        other = sr / "04_scripts" / "other.py"
+        other.write_text("import r67_g1_screen as r67\n\n\ndef f():\n    return r67.KEY\n", encoding="utf-8",
+                         newline="\n")
+        c6 = commit(rec_key, "other file reads r67.KEY")
+        r6 = E7.r19_7_function_check(sr, c6)
+        check("R20-1 (1b) false: another file reads r67_g1_screen.KEY through the import alias -> S-11, grep kept",
+              not r6["ok"] and r6["names_1b_cross_file_check"]["readers"][0]["how"] == "r67.KEY"
+              and any("import" in g["cmd"] for g in r6["names_1b_cross_file_check"]["greps"]), r6["problems"])
+        other.write_text("from r67_g1_screen import KEY\n", encoding="utf-8", newline="\n")
+        c7 = commit(rec_key, "other file from-imports KEY")
+        r7 = E7.r19_7_function_check(sr, c7)
+        check("R20-1 (1b) false: `from r67_g1_screen import KEY` in another file -> S-11", not r7["ok"],
+              r7["names_1b_cross_file_check"]["readers"])
+        other.write_text("import run_v5\nKEY = 'own'\n\n\ndef f():\n    return run_v5.KEY, KEY\n", encoding="utf-8",
+                         newline="\n")
+        c8 = commit(rec_key, "other module defines / reads its own KEY")
+        r8 = E7.r19_7_function_check(sr, c8)
+        check("R20-1 (1b): another module's own KEY and run_v5.KEY are not reads of r67_g1_screen.KEY -> ok",
+              r8["ok"] and not r8["names_1b_cross_file_check"]["readers"], r8["problems"])
+    finally:
+        E7.BASE_COMMIT = keep
+    # the tool run itself (in process, the gate bypassed only in this test): zero valve -> 0 bundles; twist -> 2
+    for pth in (REPO / "04_scripts" / "03_control" / "s9", REPO / "04_scripts" / "03_control" / "s8"):
+        if str(pth) not in sys.path:
+            sys.path.insert(0, str(pth))
+    import s9_soil_event_screen as s9e
+    d = write_psc(tmp / "e7row", edit=lambda t, r: r.__setitem__((slice(None), 9), 0.0))
+    rec = E7.run_row(s9e, d, ["run_S9.py", "level"], PARAMS)
+    doc = {"tool_gate": {"ok": True}, "rows": {P.row_key(d): rec}}
+    it, _ = P.e_items(C.load_row(d, "scm", ["run_S9.py", "level"]), PARAMS, doc)
+    check("E-7 tool run on the adapter branch: twist n_bundles 0 for a zero-valve record -> E-7 pass",
+          (rec.get("twist") or {}).get("n_bundles") == 0 and it["E-7"]["verdict"] == "pass"
+          and rec["branch"]["reason"] == "ready_held", rec.get("error") or rec.get("branch"))
+
+    def twist(t, r):   # two separated twist-work bundles > +20 J (rel 2.0-2.5 s and 4.0-4.5 s)
+        for a in (42.0, 44.0):
+            sel = (t >= a) & (t < a + 0.5)
+            r[sel, 5] += 1e5
+            r[sel, 9] = 0.01
+    d2 = write_psc(tmp / "e7twist", edit=twist)
+    rec2 = E7.run_row(s9e, d2, ["run_S9.py", "level"], PARAMS)
+    it2, _ = P.e_items(C.load_row(d2, "scm", ["run_S9.py", "level"]), PARAMS,
+                       {"tool_gate": {"ok": True}, "rows": {P.row_key(d2): rec2}})
+    rec3 = E7.run_row(s9e, tmp / "psc_noblock", ["run_S9.py", "level"], PARAMS)
+    check("E-7 tool run: two twist bundles -> path 2 grade fail; a row without an event -> row error",
+          it2["E-7"]["verdict"] == "fail" and it2["E-7"]["n_bundles"] == 2 and rec3.get("error"), it2["E-7"])
+    out = tmp / "e7out"
+    p = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_e7.py"), str(REPO), str(out), "--git-at-start", head,
+                        str(d)], capture_output=True, text=True, encoding="utf-8")
+    doc_cli = json.loads((out / "e7_path2.json").read_text(encoding="utf-8"))
+    it4, _ = P.e_items(C.load_row(d, "scm", ["run_S9.py", "level"]), PARAMS, doc_cli)
+    check("E-7 CLI at HEAD: gate ok (R20-1) -> exit 0, tool row, E-7 pass",
+          p.returncode == 0 and doc_cli["tool_gate"]["ok"] and doc_cli["tool_gate"]["r19_7"]["hunks"]
+          and it4["E-7"]["verdict"] == "pass", p.stdout[-300:] + p.stderr[-600:])
+    doc_bad = dict(doc_cli, tool_gate=dict(doc_cli["tool_gate"], ok=False))
+    it5, _ = P.e_items(C.load_row(d, "scm", ["run_S9.py", "level"]), PARAMS, doc_bad)
+    check("E-7 gate not ok -> E-7 indeterminate + S-11 stop", it5["E-7"]["verdict"] == "indeterminate"
+          and "S-11" in it5["E-7"].get("stop", ""), it5["E-7"])
+
+
+def t_pairs():
+    """rev19 R19-6: C-5 VB <-> V0 six pairs from the batch rows and the manifest rows together."""
+    import p2_b_c5 as B5
+    six = [x for p in B5.PAIRS_R19_6 for x in p]
+
+    def rows_of(names, status=None):
+        return [{"case": n, "status": (status or {}).get(n, "통과")} for n in names]
+    pc = B5.pair_check(rows_of(six[:6]), six[6:] + ["P3b_J2_B_top_Fs4_m1p1_t180_seed20261026", "LS1_E_G4_Fs8"])
+    check("R19-6: six pairs found from batch rows + manifest rows (seed / LS rows are not pairs) -> exact, no stop",
+          pc["exact"] and not pc["stops"] and len(pc["pairs"]) == 6, pc["found"])
+    pc2 = B5.pair_check(rows_of(six[:-1]), [])
+    check("R19-6: one V0 row missing -> pairs != six -> S-15, no grade",
+          not pc2["exact"] and any("S-15" in s for s in pc2["stops"]), pc2["stops"])
+    pc3 = B5.pair_check(rows_of(six + ["X_Fs0", "X_Fs0_V0"]), [])
+    check("R19-6: a seventh pair -> S-15", not pc3["exact"] and pc3["stops"], pc3["found"][-1:])
+    vb, v0 = B5.PAIRS_R19_6[0]
+    pc4 = B5.pair_check(rows_of(six, {vb: "미달"}), [])
+    check("R19-6 / v5 rev12 2.2: VB 미달 with V0 통과 -> stop and ask; pair grades recorded",
+          any("2.2" in s for s in pc4["stops"]) and pc4["pairs"][0]["verdict"] == "record", pc4["stops"])
+    pc5 = B5.pair_check(rows_of(six, {vb: "미달", v0: "미달"}), [])
+    check("R19-6: both 미달 -> no 2.2 stop", not pc5["stops"], pc5["stops"])
+    b = B5.bundle_status([dict(r, items={}, engine="scm", judged_keys=[]) for r in rows_of(six[:-1])])
+    check("R19-6: C-5 bundle with a missing pair -> 판정 불가", b["status"] == "판정 불가"
+          and not b["rev19_R19_6_pairs"]["exact"], b["status"])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tmp")
@@ -1430,6 +1920,10 @@ def main():
     t_rev8_record(a.lawlock_record)
     t_l2b(tmp)
     t_c67(tmp)
+    t_safe_stop(tmp)
+    t_psc(tmp)
+    t_e7_tool(tmp)
+    t_pairs()
     t_seal(tmp, a.rules_repo)
     t_cli(tmp)
     t_resolve(tmp)

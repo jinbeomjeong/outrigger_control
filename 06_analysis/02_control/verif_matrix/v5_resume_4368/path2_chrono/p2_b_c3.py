@@ -1,6 +1,7 @@
 """C-3 (J-5): D-1 fixed soil rows S-03, S-04 (`D1S_G1_B_{middle,bottom}_Fs4_spJ1FL`).
 Rules 5.2 C-3, d1 rules 11 "S-03·04 | P3 + G6": P3-1..P3-5, P3-8 with 377 demotion, G6-6
-(FAULT 0 + READY <= 120 s). P3-6 (90 s) is a record (spec 284). stroke_limited_stop is allowed
+(FAULT 0 + READY <= 120 s). P3-6 (90 s) is a record (spec 284). Safe stop: spec 427.9 conditions 1-5
+(rev6 R6-B8 / D-26, rev18 R18-2) -> allowed_stop replaces P3-5 / P3-6 / FAULT0 (G6-6 stays judged). stroke_limited_stop is allowed
 as for H-S-A (d1 11; see README 확인 필요 Q-C3).
 """
 import p2_kinds as K
@@ -20,4 +21,6 @@ def judge_row(row, case, kind, params):
 
 
 def bundle_status(rows):
-    return K.bundle_status(rows, EXPECTED_ROWS)
+    b = K.bundle_status(rows, EXPECTED_ROWS)
+    b["safe_stop_427_9"] = K.safe_stop_summary(rows)   # rev18 R18-2 (S-03, S-04)
+    return b

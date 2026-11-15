@@ -44,7 +44,22 @@ SEALED = [
     # R13-7 / R14-7; they are checked by tools/verif/seal_check.py). Sealed 2026-11-15 00:08:30 +09:00,
     # seal commit S3 cc0d9b8. Being in this list also turns on the D-29 L2b 10 Hz reading (R15-3).
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
-     "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef", "rules rev15 (wins)"),
+     "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef", "rules rev15"),
+    # rev18 R18-1 (다) / order 2: the Chrono judgement tools add rev16..rev18 (both paths the same). Seal sha
+    # = first token of each `.sha256` (rev16 sealed 2026-11-15 09:58:22, rev17 10:51:35, rev18 14:28:43 +09:00).
+    # The latest sealed revision wins over the earlier ones (rev18 S-01..04 / PS-c completion, R18-2 / R18-3).
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+     "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683", "rules rev16"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+     "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422", "rules rev17"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+     "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e", "rules rev18"),
+    # rev19 R19-8 order 2: rev16..rev19 in the Chrono tool lists (sealed 2026-11-15, S7 38897f0); rev19 wins.
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+     "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2", "rules rev19"),
+    # rev20 R20-4 2: rev16..rev20 in the Chrono tool lists (S8 4d8a95d); rev20 wins.
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+     "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531", "rules rev20 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -106,6 +121,11 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev15.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev16.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
 }
 
 
@@ -119,9 +139,10 @@ def sidecar_sha(p: Path):
 
 
 def seal_check(repo: Path) -> dict:
-    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6, rev15 R15-7). Raw sha must match; for
+    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6, rev15 R15-7,
+    rev18 R18-1, rev19 R19-8, rev20 R20-4). Raw sha must match; for
     Appendix A files, if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15) are compared raw only, and
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15..rev20) are compared raw only, and
     their code seal sha must also equal the first token of the sibling `.sha256` record (R7-7, R8-4,
     R9-8)."""
     rows = []
@@ -259,3 +280,44 @@ EVENT_DEFERRED = "leg_reapproach_deferred"
 EVENT_STROKE_LIMITED = "WARN_LIFT_STROKE_LIMITED"
 EVENT_STROKE_STOP = "FAULT_LIFT_STROKE_LIMIT"
 FAULT_PHASES = ("fault", "fault_reground")
+
+# spec 427.9 "판정 분류" (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2 (S-01..04 safe stop).
+# The recorded stop event is `FAULT_LIFT_STROKE_LIMIT:<reason>:<leg>` (raw events of the C-2 rows); condition 1
+# reads the reason token. Saturation ("포화 0") = an extending control row (applied u > 0) with F_cyl / A_p >= the
+# 210 bar relief (harness form, `s9_soil_event_screen` docstring E-4; CLAUDE.md "이동 중 최대 210 bar(릴리프)").
+SAFE_STOP_REASON = "soil"
+EVENT_STROKE_END = "FAULT_STROKE_END"
+SATURATION_BAR = 210.0
+SAFE_STOP_CLASSES = ("allowed_stop", "fail", "indeterminate")
+
+# spec 426.3 study A rows E-1..E-7 (PS-c rows of C-2, rev4 R4-A2 option b / c). Branch structure of 426.3
+# (event - 0.5 s; >= 12 s after the event and READY held 3 s; at most 60 s; slow pressure window to the ramp
+# end + 3 s, so the branch runs >= ramp + 3 s).
+E_SLOW_EVENTS = ("G4", "SS")          # 426.3 E-1 "느린 사건(G4·SS)"
+E_FAST_EVENTS = ("FS24", "RE1bF")     # 426.3 timing level / E-1 "빠른 사건"
+E_PRE_S = 0.5                         # 426.3 "사건 0.5 s 전 deepcopy"
+E_MIN_AFTER_S = 12.0                  # "사건 뒤 >= 12 s"
+E_READY_HOLD_S = 3.0                  # "READY 3 s 유지까지"
+E_MAX_AFTER_S = 60.0                  # "최대 60 s"
+E_SLOW_TAIL_S = 3.0                   # E-4 "느린 사건은 사건 시작 ~ 램프 끝 + 3 s"
+E1_LIFT_SUM_S = 1.8                   # E-1 "다리별 누적 부상 최대 <= 1.8 s"
+E1_LAST_TOUCH_S = 3.0                 # E-1 "마지막 재접지 <= 사건 + 3.0 s"
+E2_T3_S = 0.82                        # E-2 "T_3 0.82 s (가정)"
+E2_W_CAP_S = 5.0                      # E-2 "W = [0, min(쌍 마지막 재접지 + T_3, 5 s)]"
+E2_SUM_S = 0.5                        # E-2 "W 안 부상 합 <= 0.5 s"
+E2_GAP_M = 0.002                      # E-2 "틈 <= 2 mm"
+E2_LOWF_FS_N = 2000.0                 # E-2 "U-S8-75 저마찰 예외(F_s < 2 kN 전방"
+E2_LOWF_SUM_S = 0.1                   # "합 <= 0.1 s"
+E2_LOWF_GAP_M = 0.0005                # "틈 <= 0.5 mm) 는 FLAG"
+E4_WINDOW_BAR = 350.0                 # E-4 "창 안 다리별 F_cyl/A_p <= 350 bar"
+E4_MOVING_BAR = 180.0                 # E-4 "창 밖 이동 표본 ... <= 180 bar"
+E4_MOVING_EPS_M_S = 1e-6              # E-4 "(|u| > 10^-6 m/s)"
+E5_END_MEAN_S = 1.0                   # E-5 "끝 1 s 평균 참 데크 |roll|·|pitch| <= 0.2°"
+E5_STROKE_M = 0.6848                  # E-5 "실행 중 최대 행정 <= 684.8 mm"
+E6_CLEAR_M = 0.025                    # E-6 "전 절점 틈 >= 25 mm"
+E7_MAX_BUNDLES = 1                    # E-7 "비틀림 일 +20 J 초과 묶음 <= 1" (248.3)
+E_DIAG = {"FL": "RR", "RR": "FL", "FR": "RL", "RL": "FR"}   # E-1 "침하 다리 + 대각"
+E_ROW_COLUMNS = ("t", "contact_FL", "contact_FR", "contact_RL", "contact_RR", "Fcyl_FL", "Fcyl_FR",
+                 "Fcyl_RL", "Fcyl_RR", "valve_FL", "valve_FR", "valve_RL", "valve_RR", "gap_FL",
+                 "gap_FR", "gap_RL", "gap_RR", "roll_deg", "pitch_deg", "crawler_N")
+"""`soil_event_series.npz` `columns` (raw record of the C-2 PS-c event row; R4-A2 "패드 접촉 법선, F_cyl, 틈")."""

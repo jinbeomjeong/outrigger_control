@@ -558,7 +558,7 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 - 건조 확인(판정 아님, scratch): 고친 도구로 R2 본 묶음 배치 8개를 다시 돌렸다. 종료 0, 멈춤·판정 불가·실패 0이다. 행 수는 C-1 10·C-3 2·C-4 4·C-5 35·C-6 1·C-7 2이고, C-7b 기록은 "V0 open-loop row without v5_hydraulics block"이다.
 - 자체 시험: `path2` 다섯 파일 219개(앞 판 216개)다. `test_p2_4368.py`에 3개를 더했다(132개). 하나는 C-6·C-7a·C-7b 열린 루프를 본 실행·G-S 두 모드로 본다(S-2·S-3·S-11 없음, C-7 2행으로 셈, V0 블록 없음 기록, VB 블록 없음은 여전히 S-2·S-11). 다른 하나는 probe 행에 O-C5 블록이 없는지, 같은 행이 본 행이면 블록이 남는지를 본다. `../path2_v5c` 33개도 통과한다.
 
-### 도구 sha256 (chrono 열린 루프 C-7a·C-7b·probe 판, LF 바이트, 현재 값)
+### 도구 sha256 (chrono 열린 루프 C-7a·C-7b·probe 판, LF 바이트; 현재 값은 아래 rev18 절)
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -574,6 +574,25 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 | `test_p2_v5j.py` | `1380d01eb0c0f28bc13ff62c2b2276f225b679a2fb2ab895647b3415d9a67b2a` | 그대로(21개) |
 
 - `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`를 `0ccc5186…`으로 맞췄다(같은 커밋). `p2v5c_common.py` sha256은 `86e922f1e6721e098204e3eff686e20907ea984b393659d4515f66c46a402247`이고, 그 폴더 README 표도 고쳤다. `P2_V5J_SHA`(`69d0e747…`)는 그대로다.
+
+## rev18 R3b: chrono 봉인 목록 rev16~rev18 (`v5_resume_4368_rules_rev18.md`, sha256 `3693a69c…`, 2026-11-15)
+
+- 작성자 공개: 원 경로 2 작성자를 다시 부를 수 없어 새 작성자(새 에이전트 실행, 경로 1 코드·출력을 열지 않음)가 고쳤다(사용자 결정 62).
+- R18-1 (다)·순서 2: "Chrono 판정 도구의 봉인 목록에 rev16~rev18을 넣는다(두 경로 같게)". `p2_4368.py`에서는 `chrono` 하위 명령만 바꿨다. 새 상수 `CHRONO_SEALS`(rev16 `b3899194…`, rev17 `9400660e…`, rev18 `3693a69c…`, 각 `.sha256` 첫 토막)와 함수 `check_chrono_seals`(raw sha = 코드 sha = `.sha256` 첫 값, LF, BOM 없음)를 Chrono 절에 두고, `main`은 `chrono`일 때만 이 결과를 `seals.chrono_rev16_18`로 더해 하나라도 어긋나면 S-1(종료 2)로 멈춘다. 출력 `seals.chrono_rev16_18_sha256`에 세 값을 적는다. 다른 하위 명령(`seal`·`harness`·`anchors`·`oc5k`·`jp`·`openloop`·`compare`)과 공용 `check_seals`는 그대로다(하네스 도구 목록 갱신은 R4 몫, R18-1).
+- 시험 `test_p2_4368.py`에 4개를 더했다(136개): 실제 rev16~18 sha와 `.sha256`, rev17 값 어긋남 → `chrono` S-1·`seal`은 그대로 통과, rev18 파일 없음 → 실패, `chrono` 출력의 세 sha 기록. `path2` 다섯 파일 223개 통과.
+- **`../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`(`0ccc5186…`)는 이 커밋에서 고치지 않았다.** R18-1 (다)의 허용 목록에 `path2_v5c`가 없기 때문이다. 그래서 `path2_v5c`는 새 sha로 고칠 때까지 `P2-SHA`(종료 2)로 멈추고, 그 폴더 시험 `test_pinned_sha` 1건이 실패한다(32/33). R4 하네스 도구 커밋에서 맞출 것을 메인 세션에 넘긴다.
+
+- **rev19 R19-8(2026-11-15)**: `CHRONO_SEALS`에 rev19(`7f87b8bb…`)를 더했다(rev16~rev19). 출력 키는 `seals.chrono_rev16_19`·`seals.chrono_rev16_19_sha256`으로 바꿨다. 시험 1개를 더했다(rev19 값 어긋남 → `chrono` S-1, 137개). `P2_CORE_SHA`는 R4에서 맞춘다(사용자 결정).
+
+- **rev20 R20-4(2026-11-15)**: `CHRONO_SEALS`에 rev20(`615a8fbd…`)을 더했다(rev16~rev20). 출력 키는 `seals.chrono_rev16_20`·`seals.chrono_rev16_20_sha256`. rev19 값 어긋남 시험을 rev19·rev20 두 경우로 늘렸다(138개).
+
+### 도구 sha256 (rev20 판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `be4905976fdd8b6350d9419f3ab4a8b03811b85106cada82922295e4033b7183` | 바뀜(`chrono` 봉인 목록만; rev19 판 `fe8f8b29…`, rev18 판 `434734ce…`) |
+| `test_p2_4368.py` | `2d7c910925690609b7e58da0444b87a63acac55462454f6abeaab7efe9095ebb` | 바뀜(138개) |
+| `p2_d1.py`·`p2_t3k.py`·`p2_u3.py`·`p2_v5j.py`와 그 시험 | 위 표와 같음 | 그대로 |
 
 ## 하지 않는 것 (범위)
 

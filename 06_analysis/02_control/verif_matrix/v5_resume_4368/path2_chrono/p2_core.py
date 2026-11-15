@@ -1048,6 +1048,100 @@ def stop_classification(row: Row, t_D, params):
             "departed": departed, "stop_with_crawler_loaded": loaded, "conditions": conds, "class": cls}
 
 
+def saturation_rows(row: Row, params):
+    """Control rows of `record/record.npz` (rev6 R6-B5 basis) that extend (applied u > 1e-9 m/s) with the head
+    equivalent F_cyl / A_p >= 210 bar (relief): "포화" of spec 427.9 condition 5 (harness form). None if the
+    record is missing."""
+    rp = row.folder / "record" / "record.npz"
+    if not rp.exists():
+        return None
+    rec = np.load(rp)
+    A = np.array(params["head_area_m2"])
+    p_bar = np.asarray(rec["F_cyl"], float) / A[None, :] / 1e5
+    ext = np.asarray(rec["u_applied"], float) > R.MOVING_U_EPS
+    sat = ext & (p_bar >= R.SATURATION_BAR - R.CMP_TOL)
+    return {"rows_per_leg": sat.sum(axis=0).astype(int).tolist(), "any": bool(sat.any())}
+
+
+def safe_stop_427_9(row: Row, t_D, params):
+    """spec 427.9 "판정 분류" (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2: rows S-01..S-04 that stop on the
+    lift stroke guard. Returns None when the row has no `FAULT_LIFT_STROKE_LIMIT` event (no safe-stop branch).
+    Conditions (each computed on its own, values kept):
+      1 stop reason = `FAULT_LIFT_STROKE_LIMIT:soil` (first stroke-limit stop event, reason token),
+      2 `FAULT_STROKE_END` 0,
+      3 leg lift 0: pad normal <= 0 1 ms samples after t_D (rev6 R6-B9 / rev3 Q-14: SCM `scm_pad_normal_N`),
+      4 after the crawler departure t_D to the end of the run, the four legs' actual 1 ms F_cyl minimum >= F_min,
+      5 moving pressure <= 180 bar (head equivalent, applied u != 0 control rows, rev6 R6-B5) and saturation 0.
+    All true -> `allowed_stop` (stroke_limited_stop, counted apart; replaces P3-5 / P3-6 / FAULT0); any false ->
+    `fail`; otherwise (a condition not computable, none false) -> `indeterminate`.
+
+    rev19 R19-1 (wins over the earlier reading): condition 1 = the FIRST `FAULT*` event of `result.json` `events`
+    starts with `FAULT_LIFT_STROKE_LIMIT:soil:`; 3 = pad normal <= 0 1 ms samples from the first LEVEL start
+    (first `s9_rows` row with `c2_phase` = level) to the record end; 4 = from t_D (rev6 R6-B4) to the end, each leg's
+    1 ms true F_cyl minimum >= F_min, no t_D = false; 5 = the 10 Hz `record.npz` rows of the whole run, moving =
+    |u_applied| > 1e-9, saturation = u_applied > 1e-9 and F_cyl/A_p >= 210 bar (both values written). A missing
+    input (`events`, `s9_rows`, `scm_pad_normal_N`, 1 ms true F_cyl, `record.npz` u_applied / F_cyl) makes the row
+    판정 불가 (rules 9.3)."""
+    stops = events_named(row, R.EVENT_STROKE_STOP)
+    if not stops:
+        return None
+    t_stop, name = stops[0]
+    res = row.result
+    faults = [(t, n) for t, n in row.events if n.startswith("FAULT")]
+    first_fault = faults[0][1] if faults else None
+    toks = name.split(":")
+    reason = toks[1] if len(toks) > 1 else None
+    n_end = len(events_named(row, R.EVENT_STROKE_END))
+    s9 = res.get("s9_rows")
+    lvl = next((float(r["t_s"]) for r in (s9 or []) if isinstance(r, dict) and r.get("c2_phase") == "level"), None)
+    lift = leg_lift(row, lvl)
+    m = min_force_after(row, t_D, None, params["F_min_N"])
+    press = pressure_item(row, params)
+    sat = saturation_rows(row, params)
+    missing = []
+    if not isinstance(res.get("events"), list):
+        missing.append("result.json events")
+    if not isinstance(s9, list) or not s9:
+        missing.append("result.json s9_rows")
+    if row.pad_n is None:
+        missing.append("step_series.npz scm_pad_normal_N")
+    if row.F is None or not len(row.F):
+        missing.append("1 ms true F_cyl")
+    if press.get("verdict") == "indeterminate" or sat is None:
+        missing.append("record/record.npz u_applied / F_cyl")
+    if press.get("verdict") == "indeterminate" or sat is None:
+        c5 = None
+    else:
+        c5 = bool(press["moving_ok"] and not sat["any"])
+    conds = {
+        "1_stop_reason_soil": first_fault is not None and first_fault.startswith(R.EVENT_STROKE_STOP + ":soil:"),
+        "2_no_fault_stroke_end": n_end == 0,
+        "3_no_leg_lift_from_level_start": None if lift is None else not lift["any"],
+        "4_min_after_departure_ge_Fmin": False if t_D is None else (
+            None if m is None else all(R.ge(x, params["F_min_N"]) for x in m["min_N"])),
+        "5_moving_le_180bar_saturation0": c5,
+    }
+    vals = list(conds.values())
+    if missing:
+        cls = "indeterminate"
+    else:
+        cls = "fail" if any(v is False for v in vals) else ("allowed_stop" if all(v is True for v in vals)
+                                                             else "indeterminate")
+    return {"clause": "spec 427.9 판정 분류 (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2, rev19 R19-1",
+            "category": "stroke_limited_stop", "stop_event": name, "first_fault_event": first_fault,
+            "t_stop_s": t_stop, "stop_reason": reason, "t_D_s": t_D, "t_level_start_s": lvl, "conditions": conds,
+            "values": {"fault_stroke_end_events": n_end,
+                       "leg_lift_samples_from_level_start": None if lift is None else lift["samples_per_leg"],
+                       "min_after_departure_N": None if m is None else m["min_N"],
+                       "min_after_departure_all_N": None if m is None else m["min_all_N"],
+                       "F_min_N": params["F_min_N"],
+                       "moving_max_bar": press.get("moving_max_bar"),
+                       "saturation_rows_per_leg": None if sat is None else sat["rows_per_leg"]},
+            "missing_inputs": missing,
+            "not_computable": [k for k, v in conds.items() if v is None],
+            "class": cls, "verdict": cls}
+
+
 def rc_from_record(row: Row):
     """rules 2 R_c from the recorded crawler attitude (9.1 C-8 row): p3b_ext.start_condition.crawler_attitude_deg."""
     sc = ((row.result.get("p3b_ext") or {}).get("start_condition") or {})
