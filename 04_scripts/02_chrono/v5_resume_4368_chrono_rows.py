@@ -492,25 +492,36 @@ def probe_case(rid: str, nxt: dict[str, Any]) -> str:
             + f"_k{k_tag(nxt['k'])}")
 
 
+def _oc5_common(rid: str, spec: dict[str, Any]) -> dict[str, Any]:
+    return {"oc5_row": rid, "oc5_base": spec["base"], "floor_ref_deg": list(FLOOR_REF_DEG),
+            "oc5_target": OC5_TARGET, "oc5_tol": OC5_TOL}
+
+
+def _oc5_probe_row(sb: ModuleType, rid: str, nxt: dict[str, Any]) -> dict[str, Any]:
+    """One ``V5-RESUME-K1-OC5PROBE`` row for the probe ``nxt`` = {n, attempt, k, duration_s} (rules 5.4-1)."""
+    spec = OC5_ROWS[rid]
+    tag = VB_TAG if spec["setting"] == "VB" else V0_TAG
+    roll, pitch = floor_of_k(nxt["k"])
+    row = {"case": probe_case(rid, nxt), "argv": oc5_argv(sb, rid, nxt["k"], nxt["duration_s"]),
+           "controller": tag, "v5_setting": spec["setting"], "k": nxt["k"]}
+    return finish(row, batch=B_PROBE, criteria_id=rid, role="probe", tag=tag, est_kind="probe",
+                  extra={**_oc5_common(rid, spec), "probe": nxt, "floor_deg": [roll, pitch]},
+                  note=f"{B_PROBE} {rid} probe n{nxt['n']} attempt {nxt['attempt']}: k {nxt['k']:.4f}, "
+                       f"floor ({roll:g}, {pitch:g}) deg, --duration {nxt['duration_s']:g} "
+                       f"(PROBE_DURATION = {spec['base']} CHECK end "
+                       f"{PROBE_CHECK_END_S[spec['base']]:g} s + 2 s, ceil); start condition keys only")
+
+
 def oc5_rows(sb: ModuleType, state: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """(probe rows, main rows) from the probe state."""
+    """(probe rows, main rows) from the probe state: the next probe of each row still probing and the main row of each
+    row whose k is decided (the s9_batch launch definitions; :func:`manifest_oc5_rows` adds the probes already run)."""
     probes, mains = [], []
     for rid, spec in OC5_ROWS.items():
         ev = oc5_evaluate(rid, state["rows"][rid]["probes"])
         tag = VB_TAG if spec["setting"] == "VB" else V0_TAG
-        common = {"oc5_row": rid, "oc5_base": spec["base"], "floor_ref_deg": list(FLOOR_REF_DEG),
-                  "oc5_target": OC5_TARGET, "oc5_tol": OC5_TOL}
+        common = _oc5_common(rid, spec)
         if ev["status"] == "probing":
-            nxt = ev["next"]
-            roll, pitch = floor_of_k(nxt["k"])
-            row = {"case": probe_case(rid, nxt), "argv": oc5_argv(sb, rid, nxt["k"], nxt["duration_s"]),
-                   "controller": tag, "v5_setting": spec["setting"], "k": nxt["k"]}
-            probes.append(finish(row, batch=B_PROBE, criteria_id=rid, role="probe", tag=tag, est_kind="probe",
-                                 extra={**common, "probe": nxt, "floor_deg": [roll, pitch]},
-                                 note=f"{B_PROBE} {rid} probe n{nxt['n']} attempt {nxt['attempt']}: k {nxt['k']:.4f}, "
-                                      f"floor ({roll:g}, {pitch:g}) deg, --duration {nxt['duration_s']:g} "
-                                      f"(PROBE_DURATION = {spec['base']} CHECK end "
-                                      f"{PROBE_CHECK_END_S[spec['base']]:g} s + 2 s, ceil); start condition keys only"))
+            probes.append(_oc5_probe_row(sb, rid, ev["next"]))
         elif ev["status"] == "decided":
             k = ev["k"]
             roll, pitch = floor_of_k(k)
@@ -521,6 +532,23 @@ def oc5_rows(sb: ModuleType, state: dict[str, Any]) -> tuple[list[dict[str, Any]
                                        "R_c_probe": ev["R_c_probe"], "n_probes": ev["n_probes"]},
                                 note=f"{B_OC5} {rid}: {spec['base']} form, k {k:.4f}, floor ({roll:g}, {pitch:g}) deg, "
                                      f"no --las-candidate, tag {tag}; probe R_c {ev['R_c_probe']}"))
+    return probes, mains
+
+
+def manifest_oc5_rows(sb: ModuleType, state: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """``manifest`` rows of ``V5-RESUME-K1-OC5PROBE`` / ``-OC5`` (rules rev15 R15-5 (f)): every probe already run
+    (state ``probes``, in launch order, the doubled-duration retry included) followed by the next probe of a row still
+    probing, and the main row of each decided row. The launch definitions (:func:`oc5_rows`) are unchanged: once a row
+    is decided it launches no probe, but the probes it ran stay in the manifest so that the probe batch rows have one
+    manifest row each (rev9 R9-4 / rev10 R10-1)."""
+    nxt_probes, mains = oc5_rows(sb, state)
+    probes: list[dict[str, Any]] = []
+    for rid in OC5_ROWS:
+        for p in state["rows"][rid]["probes"]:
+            probes.append(_oc5_probe_row(sb, rid, {"n": p["n"], "attempt": p["attempt"], "k": p["k"],
+                                                   "duration_s": p["duration_s"]}))
+    seen = {r["case"] for r in probes}
+    probes += [r for r in nxt_probes if r["case"] not in seen]
     return probes, mains
 
 
@@ -888,6 +916,8 @@ def cmd_check(out_path: str | None) -> int:
 
 def cmd_manifest(out_path: str) -> int:
     sb, b = _batches()
+    b = dict(b)
+    b[B_PROBE], b[B_OC5] = manifest_oc5_rows(sb, oc5_state())  # rev15 R15-5 (f): run probes stay listed
     doc: dict[str, Any] = {"rules": SOURCE, "batches": {}}
     for name in BATCHES:
         rows = []

@@ -140,7 +140,11 @@ def test_c4_and_c8_diffs(mod, batches):
     for rid, spec in mod.OC5_ROWS.items():
         assert mod.option_diff(mod.oc5_argv(sb, rid, 0.9), mod._a_row_argv(sb, spec["base"])) == [
             "--floor-pitch", "--floor-roll", "--las-candidate"]
-    probe = next(r for r in b[mod.B_PROBE] if r["r4368"]["oc5_row"] == "C-8a")
+    # an explicit empty O-C5 state: the launch probes of b[B_PROBE] depend on oc5_state.json
+    # (none once both rows are decided), this check does not
+    empty_state = {"rows": {rid: {"probes": [], "main": None} for rid in mod.OC5_ROWS}}
+    first_probes, _ = mod.oc5_rows(sb, empty_state)
+    probe = next(r for r in first_probes if r["r4368"]["oc5_row"] == "C-8a")
     main = mod.oc5_argv(sb, "C-8a", probe["k"])
     assert mod.option_diff(probe["argv"], main) == ["--duration"]
 
@@ -484,13 +488,30 @@ def test_gs_check_manifest_table(mod, tmp_path, capsys):
 STORED_MANIFEST = PROJECT_ROOT / "06_analysis" / "02_control" / "verif_matrix" / "v5_resume_4368" / \
     "chrono_rows_manifest.json"
 
+STORED_OC5_STATE = {"rows": {
+    "C-8a": {"probes": [{"n": 1, "attempt": 1, "k": 0.9179, "R_c": 0.9523695802182304,
+                         "duration_s": 7.0}], "main": None},
+    "C-8b": {"probes": [{"n": 1, "attempt": 1, "k": 0.8829, "R_c": 0.9568086623414596,
+                         "duration_s": 7.0}], "main": None}}}
+"""Rev15 R15-5 (f): the O-C5 state the stored manifest was generated from (both rows decided by
+probe n1, ``batch_V5-RESUME-K1-OC5PROBE_20261113_215123``). ``oc5_state.json`` is not tracked, so
+the test carries the values that decide the rows instead of reading the file."""
+
 
 @pytest.mark.skipif(not STORED_MANIFEST.is_file(), reason="stored manifest absent")
 def test_stored_manifest_table_and_scope(mod, batches):
-    _, b = batches
+    sb, launch = batches
+    b = dict(launch)
+    # cmd_manifest lists the run probes and the decided main rows, not the launch
+    # definitions (rev15 R15-5 (f)); the same composition here
+    b[mod.B_PROBE], b[mod.B_OC5] = mod.manifest_oc5_rows(sb, STORED_OC5_STATE)
     doc = json.loads(STORED_MANIFEST.read_text("utf-8"))
     assert json.dumps(doc["gs_conditional_absent"], sort_keys=True) == json.dumps(mod.gs_conditional_table(b),
                                                                                    sort_keys=True)
     scope = doc["gs_conditional_absent"]["scope"]
     assert sorted(scope[mod.B_C4]["off_arm_rows"]) == sorted(r["case"] for r in b[mod.B_C4] if mod.is_off_arm(r))
     assert scope[mod.B_C1]["level_rows"] == [] and len(scope[mod.B_C5]["level_rows"]) == 11
+    for name in (mod.B_PROBE, mod.B_OC5):
+        assert [r["case"] for r in doc["batches"][name]["rows"]] == [r["case"] for r in b[name]]
+    assert scope[mod.B_OC5]["level_rows"] == ["OC5_mixed_rigid_J1FR_Kc3_VB_top",
+                                              "OC5_mixed_rigid_J1FR_Kc1_V0_top"]

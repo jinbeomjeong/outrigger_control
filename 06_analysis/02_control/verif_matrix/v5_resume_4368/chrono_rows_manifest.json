@@ -4054,13 +4054,143 @@
    "list_sha256": "3bd98cbbda9615cbbaf0158865a4e3b77495f330978641e536781d40901871d8"
   },
   "V5-RESUME-K1-OC5": {
-   "rows": [],
-   "n": 0,
-   "est_sum_s": [
-    0,
-    0
+   "rows": [
+    {
+     "case": "OC5_mixed_rigid_J1FR_Kc3_VB_top",
+     "criteria_id": "C-8a",
+     "role": "record",
+     "engine": "SCM",
+     "controller": "final_C4G2_P3_LAS_K1",
+     "v5_setting": "VB",
+     "planned_pool": "pcore",
+     "start_env": {
+      "OMP_WAIT_POLICY": "PASSIVE"
+     },
+     "est_range_s": [
+      3885.0,
+      4413.0
+     ],
+     "argv_sha256": "12a2a37b984efd5a982cc20a5b661916067fdd99e4ad8d302e8a7b4a0c055d2c",
+     "argv_tail": [
+      "level",
+      "--soil",
+      "J1",
+      "--rigid-base",
+      "FR",
+      "--crawler-kn-scale",
+      "3",
+      "--pad-variant",
+      "dwg_rear250",
+      "--level",
+      "top",
+      "--fs-kN",
+      "4",
+      "--grid",
+      "0.01",
+      "--settle-dashpot",
+      "zrp",
+      "--threads",
+      "4",
+      "--duration",
+      "160",
+      "--pressure-grade",
+      "normal",
+      "--imu-grade",
+      "ideal",
+      "--seed",
+      "20261026",
+      "--floor-roll",
+      "2.1434",
+      "--floor-pitch",
+      "1.3784",
+      "--start-limit",
+      "record_only",
+      "--expect-controller",
+      "final_C4G2_P3_LAS_K1",
+      "--approved",
+      "--flow-eta-v",
+      "0.85",
+      "--flow-dp-comp-bar",
+      "10",
+      "--flow-dp-unload-bar",
+      "20",
+      "--flow-width-bar",
+      "1",
+      "--flow-law",
+      "priority",
+      "--valve-tau-s",
+      "0.1",
+      "--rod-release-force",
+      "--lock-overlap-ratio",
+      "0.02",
+      "--lock-closing-delay-s",
+      "0.05",
+      "--lock-window-follows-plant",
+      "--extend-start-tracked"
+     ],
+     "depends_on": null
+    },
+    {
+     "case": "OC5_mixed_rigid_J1FR_Kc1_V0_top",
+     "criteria_id": "C-8b",
+     "role": "record",
+     "engine": "SCM",
+     "controller": "final_C4G2_LAS_K1",
+     "v5_setting": "V0",
+     "planned_pool": "pcore",
+     "start_env": {
+      "OMP_WAIT_POLICY": "PASSIVE"
+     },
+     "est_range_s": [
+      3885.0,
+      4413.0
+     ],
+     "argv_sha256": "d52c63b53b5aacdc77588c8e7af35c03343131e17f14b28caca451d6db5d90b2",
+     "argv_tail": [
+      "level",
+      "--soil",
+      "J1",
+      "--rigid-base",
+      "FR",
+      "--pad-variant",
+      "dwg_rear250",
+      "--level",
+      "top",
+      "--fs-kN",
+      "4",
+      "--grid",
+      "0.01",
+      "--settle-dashpot",
+      "zrp",
+      "--threads",
+      "4",
+      "--duration",
+      "160",
+      "--pressure-grade",
+      "normal",
+      "--imu-grade",
+      "ideal",
+      "--seed",
+      "20261026",
+      "--floor-roll",
+      "2.0617",
+      "--floor-pitch",
+      "1.3259",
+      "--start-limit",
+      "record_only",
+      "--expect-controller",
+      "final_C4G2_LAS_K1",
+      "--approved"
+     ],
+     "depends_on": null
+    }
    ],
-   "list_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   "n": 2,
+   "est_sum_s": [
+    7770.0,
+    8826.0
+   ],
+   "list_sha256": "539fb9e9445b1a1ecfe2625bfc46f72151d8ecb550887c5c5f025a6c70c52857"
   },
   "V5-RESUME-K1-JP": {
    "rows": [
@@ -5447,7 +5577,10 @@
     "off_arm_rows": []
    },
    "V5-RESUME-K1-OC5": {
-    "level_rows": [],
+    "level_rows": [
+     "OC5_mixed_rigid_J1FR_Kc3_VB_top",
+     "OC5_mixed_rigid_J1FR_Kc1_V0_top"
+    ],
     "off_arm_rows": []
    },
    "V5-RESUME-K1-JP": {
