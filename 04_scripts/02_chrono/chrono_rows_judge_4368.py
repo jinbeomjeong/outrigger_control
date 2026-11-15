@@ -29,7 +29,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev22).
+* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev23).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -120,12 +120,14 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
     # rev22 R22-2 (seal commit S10 570a9c1 on S9 da12622)
     "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    # rev23 R23-2 (seal commit S11 f40935a on S10 570a9c1)
+    "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev22 of
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev23 of
 2026-11-15); both the file and its ``.sha256`` must match (original 8.2 S-1)."""
-RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev22 (seal list; "
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev23 (seal list; "
                      "rev13 / rev14 by tools/verif/seal_check.py, rev15 R15-7, rev18 R18-1 2, "
-                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2, rev22 R22-2): "
+                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2, rev22 R22-2, rev23 R23-2): "
                      "rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3, rev9 .. rev12 items, "
                      "rev15 R15-3 (V0 L2b D-29), rev21 R21-1 (L2b D-29 = t_lift,sus)")
 """Output ``rules`` text (a description; the seal list above is what is checked)."""

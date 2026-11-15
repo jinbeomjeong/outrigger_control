@@ -7,7 +7,12 @@ it runs no simulation and no other judge:
 * L2b / L1-R rows: the runner judge output (``run_S8C.py judge`` -> ``verify_S8C``,
   ``run_S6C.py judge`` -> ``verify_S6C``), one file per row named
   ``<C1|C2|C5>_<case>.verify_S8C.json`` / ``.verify_S6C.json`` in ``--runner-judge-dir`` (the form
-  of ``judge_b9f5707/chrono_path1/runner_judge/``). Rev19 R19-4: the runner's own count decides
+  of ``judge_b9f5707/chrono_path1/runner_judge/``). Rev23 R23-1: inside that file the row's runner
+  rows (``case``) and its ``s8_metrics`` key are the inner name of the judged row ``dir`` (last path
+  name, exact match; :func:`row_inner_name`), ``*`` rows as before; checks 1 .. 4 (``dir`` set,
+  ``dir`` unique in the bundle, no other runner row ``case``, no other ``s8_metrics`` key) are
+  S-11 stops, record ``runner_name_map_R23_1`` (:func:`runner_name_map`). Rev19 R19-4: the
+  runner's own count decides
   (``passed`` False = fail, else ``kind`` hold = not judgeable, else pass; no judged-kind item
   with ``passed`` True = not judgeable); a judged kind with ``passed`` None is ``러너 미판정``
   (recorded), and the counts must equal ``meta.failed`` / ``meta.hold`` (S-11).
@@ -51,8 +56,9 @@ CLI (Chrono-dev or python-dev, no simulation)::
     ... seals [--rules-dir <verif_matrix>]
 
 Exit codes: 0 done without a stop; 1 a stop (S-15, S-12, H-7, R40-2 hold, S-2, J11, T4-0,
-VB-specific failure, S-9 / S-10 record) or a seal mismatch; 2 an input is missing or invalid;
-3 internal error. The last stdout line is JSON, the line before it ``errors N``.
+VB-specific failure, S-9 / S-10 record, rev23 R23-1 S-11) or a seal mismatch; 2 an input is
+missing or invalid; 3 internal error. The last stdout line is JSON, the line before it
+``errors N``.
 """
 
 from __future__ import annotations
@@ -78,11 +84,12 @@ import chrono_rows_judge_4368 as rows_judge  # noqa: E402 - needs the path above
 
 InputError = rows_judge.InputError
 
-TOOL_VERSION = ("chrono_bundle_grade_4368 v4 (python-expert 2026-11-15, rules rev18 R18-2, rev19, "
-                "rev21, rev22 R22-1)")
+TOOL_VERSION = ("chrono_bundle_grade_4368 v5 (python-expert 2026-11-15, rules rev18 R18-2, rev19, "
+                "rev21, rev22 R22-1, rev23 R23-1)")
 RULES_TEXT = ("rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 "
               "R19-1 .. R19-6, rev21 R21-1 / R21-2, rev22 R22-1 (t45 pairing by input folder "
-              "order); original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
+              "order), rev23 R23-1 (runner rows and s8_metrics by the inner name of the judged "
+              "row dir); original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
               "d1_selection_rules.md 7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; "
               "rev6 R6-A / R6-B4 / R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py")
 
@@ -97,6 +104,9 @@ RECORD_BUNDLES = ("C-6C7", "C-8")
 RUNNER_FILE_PREFIX = {"C-1": "C1", "C-2": "C2", "C-5": "C5"}
 """Runner judge file name prefix (``judge_b9f5707/chrono_path1/runner_judge/C1_<case>...``)."""
 RUNNER_FILE_SUFFIX = {"L2b": "verify_S8C", "L1R": "verify_S6C"}
+R23_1_RULE = "rev23 R23-1"
+R23_1_CHECKS = ("1_dir_set", "2_dir_unique", "3_runner_row_cases", "4_s8_metrics_keys")
+"""Rev23 R23-1 checks 1 .. 4 of a row that reads a runner judge file (a false one is S-11)."""
 
 # --- grades ----------------------------------------------------------------------------------
 PASS, FLAG, FAIL = "pass", "flag", "fail"
@@ -218,6 +228,8 @@ class RowInput:
     judged: dict[str, Any] | None = None
     missing: list[str] = field(default_factory=list)
     files: dict[str, str] = field(default_factory=dict)
+    runner_name_map: dict[str, Any] | None = None
+    """Rev23 R23-1 entry of an L2b / L1-R row (:func:`runner_name_entry`), None otherwise."""
 
 
 # =============================================================================== small helpers
@@ -355,11 +367,16 @@ def runner_judge_file(directory: Path | None, bundle: str, row: RowInput) -> Pat
     return path if path.is_file() else None
 
 
-def runner_items(doc: dict[str, Any], case: str) -> list[dict[str, Any]]:
-    """Runner judge rows of the case and of the whole batch (``*``) as row items."""
+def runner_items(doc: dict[str, Any], inner: str | None) -> list[dict[str, Any]]:
+    """Runner judge rows of the row and of the whole batch (``*``) as row items.
+
+    The row's runner rows are those whose ``case`` is ``inner``, the inner name of the judged
+    row ``dir`` (rev23 R23-1, exact match); without an inner name only the ``*`` rows.
+    """
+    wanted = ("*",) if inner is None else (inner, "*")
     items = []
     for runner_row in doc.get("rows") or []:
-        if runner_row.get("case") not in (case, "*"):
+        if runner_row.get("case") not in wanted:
             continue
         verdict, branch = runner_verdict(runner_row)
         items.append(item(str(runner_row.get("item")), verdict, "runner",
@@ -530,17 +547,19 @@ def apply_d8_overrides(items: list[dict[str, Any]], judged_items: dict[str, Any]
 
 
 def t_lift_difference(doc: dict[str, Any], row: RowInput, judged_items: dict[str, Any],
-                      record: dict[str, np.ndarray] | None) -> dict[str, Any]:
+                      record: dict[str, np.ndarray] | None, inner: str | None
+                      ) -> dict[str, Any]:
     """Rev19 R19-5 with rev21 R21-2: |runner t_lift - D-29 t_lift| on the 10 Hz grid.
 
-    Runner t_lift = ``verify_S8C`` ``s8_metrics.<case>.liftoff_s`` (``_times`` ``liftoff``,
-    relative to ``settings.start_t_s``) + the row's ``t0_s`` (engine absolute time); the 1 ms
+    Runner t_lift = ``verify_S8C`` ``s8_metrics.<inner>.liftoff_s`` (``inner`` = the inner name
+    of the judged row ``dir``, rev23 R23-1; ``_times`` ``liftoff``, relative to
+    ``settings.start_t_s``) + the row's ``t0_s`` (engine absolute time); the 1 ms
     t_lift,sus (basis ``1ms_sus``) is raised to the first 10 Hz ``record.npz`` ``t`` >= it - 1e-9
     s (picked from the array, no ``ceil``), a 10 Hz bracket (R15-3) t_b is used as it is. Not
     computable (an unknown basis included) or > 0.1 s + 1e-9 s = a stop.
     """
     judged = row.judged or {}
-    metrics = (doc.get("s8_metrics") or {}).get(row.case) or {}
+    metrics = {} if inner is None else (doc.get("s8_metrics") or {}).get(inner) or {}
     runner_rel = metrics.get("liftoff_s")
     t0 = judged.get("t0_s")
     d29 = judged_items.get("D8_t_lift_s_D-29_D-30")
@@ -585,21 +604,91 @@ class RigidResult:
     t_lift_items: list[str] = field(default_factory=list)
     t_lift_check: dict[str, Any] | None = None
     stops: list[str] = field(default_factory=list)
+    name_map: dict[str, Any] | None = None
+    """Rev23 R23-1 entry of the row (:func:`runner_name_entry`)."""
+
+
+def row_inner_name(row: RowInput) -> str | None:
+    """Rev23 R23-1: last path name of the judged row ``dir`` (None without a judged row or with
+    an empty ``dir``)."""
+    folder = (row.judged or {}).get("dir")
+    return inner_name(str(folder)) if folder else None
+
+
+def runner_name_entry(row: RowInput, path: Path | None, doc: dict[str, Any] | None,
+                      inner: str | None) -> dict[str, Any]:
+    """Rev23 R23-1 record entry and checks 1, 3, 4 of one row that reads a runner judge file.
+
+    Check 2 (``dir`` unique in the bundle) and ``ok`` are set by :func:`runner_name_map`. A check
+    that does not apply is None: all four without a judged row, 3 and 4 without the file.
+    """
+    folder = (row.judged or {}).get("dir")
+    entry: dict[str, Any] = {
+        "case": row.case, "dir": str(folder) if folder else None, "inner_name": inner,
+        "name_differs": None if inner is None else row.case != inner,
+        "runner_file": None if path is None else path.name, "runner_meta_batch_name": None,
+        "runner_row_cases": None, "runner_rows_found": None, "s8_metrics_keys": None,
+        "checks": dict.fromkeys(R23_1_CHECKS), "ok": None}
+    if row.judged is None:
+        return entry
+    entry["checks"].update({"1_dir_set": inner is not None, "2_dir_unique": True})
+    if doc is None:
+        return entry
+    batch = (doc.get("meta") or {}).get("batch")
+    row_cases = [runner_row.get("case") for runner_row in doc.get("rows") or []
+                 if runner_row.get("case") != "*"]
+    metrics = doc.get("s8_metrics")
+    metric_keys = sorted(str(key) for key in metrics) if isinstance(metrics, dict) else None
+    entry.update(runner_meta_batch_name=None if batch is None else Path(str(batch)).name,
+                 runner_row_cases=sorted({str(case) for case in row_cases}),
+                 runner_rows_found=sum(1 for case in row_cases if case == inner),
+                 s8_metrics_keys=metric_keys)
+    entry["checks"].update({
+        "3_runner_row_cases": all(case == inner for case in row_cases),
+        "4_s8_metrics_keys": metric_keys is None or all(key == inner for key in metric_keys)})
+    return entry
+
+
+def runner_name_map(inputs: list[RowInput]) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    """Rev23 R23-1 record ``runner_name_map_R23_1`` of a bundle and its S-11 stops.
+
+    Check 2: no two entries share the full ``dir`` path (entries without a ``dir`` left out).
+    Every false check is a stop of that row (case = judged row name).
+    """
+    entries = [row.runner_name_map for row in inputs if row.runner_name_map is not None]
+    dir_counts = Counter(entry["dir"] for entry in entries if entry["dir"] is not None)
+    stops: list[dict[str, str]] = []
+    for entry in entries:
+        checks = entry["checks"]
+        if checks["2_dir_unique"] is not None:
+            checks["2_dir_unique"] = entry["dir"] is None or dir_counts[entry["dir"]] == 1
+        entry["ok"] = all(value for value in checks.values() if value is not None)
+        stops += [{"case": entry["case"], "reason": f"S-11: check {name} false ({R23_1_RULE})"}
+                  for name, value in checks.items() if value is False]
+    block = {"rule": R23_1_RULE, "rows": entries,
+             "name_differs_count": sum(1 for entry in entries if entry["name_differs"] is True),
+             "ok": all(entry["ok"] for entry in entries)}
+    return block, stops
 
 
 def rigid_row(row: RowInput, bundle: str, runner_dir: Path | None) -> RigidResult:
-    """An L2b / L1-R row: runner items (R19-4), re-computed items (D-31 / D-32 / D-39), the D8
-    items from the D-29 t_lift and the t_lift difference (R19-5, L2b rows)."""
+    """An L2b / L1-R row: runner items (R19-4) found by the inner name of the judged row ``dir``
+    (R23-1), re-computed items (D-31 / D-32 / D-39), the D8 items from the D-29 t_lift and the
+    t_lift difference (R19-5, L2b rows)."""
     out = RigidResult()
+    inner = row_inner_name(row)
     path = runner_judge_file(runner_dir, bundle, row)
     if path is None:
         row.missing.append(f"runner judge {RUNNER_FILE_SUFFIX[row.engine]}")
+        out.name_map = runner_name_entry(row, None, None, inner)
         return out
     doc = read_json(path, "runner judge output")
     row.files[path.name] = rows_judge.sha256_file(path)
     _check_runner_batch(doc, row, path)
-    out.items = runner_items(doc, row.case)
-    if not any(runner_row.get("case") == row.case for runner_row in doc.get("rows") or []):
+    out.name_map = runner_name_entry(row, path, doc, inner)
+    out.items = runner_items(doc, inner)
+    if inner is None or not any(runner_row.get("case") == inner
+                                for runner_row in doc.get("rows") or []):
         row.missing.append(f"runner judge rows of {row.case}")
     out.judged_true = sum(1 for entry in out.items if entry["branch"] in JUDGED_TRUE_BRANCHES)
     out.unjudged = [{"item": entry["item"], "branch": entry["branch"],
@@ -620,7 +709,7 @@ def rigid_row(row: RowInput, bundle: str, runner_dir: Path | None) -> RigidResul
         if judged_items.get("D8_t_lift_basis") == T_LIFT_1MS_BASIS and t_lift is None:
             out.stops.append("no t_lift,sus: D8 / D-39 not judgeable (rev21 R21-1)")
         if out.t_lift_items:
-            out.t_lift_check = t_lift_difference(doc, row, judged_items, record)
+            out.t_lift_check = t_lift_difference(doc, row, judged_items, record, inner)
             if out.t_lift_check.get("stop"):
                 out.stops.append(out.t_lift_check["stop"])
     out.grade = runner_part_grade(out.items, out.judged_true)
@@ -1074,6 +1163,7 @@ def grade_row(row: RowInput, bundle: str, runner_dir: Path | None,
     rigid: RigidResult | None = None
     if row.engine in RUNNER_FILE_SUFFIX:
         rigid = rigid_row(row, bundle, runner_dir)
+        row.runner_name_map = rigid.name_map
         items = [item("runner", rigid.grade, "runner judge (rev19 R19-4)",
                       judged_true_items=rigid.judged_true,
                       stop="; ".join(rigid.stops) or None)]
@@ -1503,7 +1593,8 @@ def _graded_bundle(doc: dict[str, Any], bundle: str, inputs: list[RowInput],
     params = rows_judge.load_params(Path(args.params))
     doc["params"] = {key: params[key] for key in ("path", "sha256", "head_area_m2", "F_min_N")}
     rows = [grade_row(row, bundle, runner_dir, t45, params) for row in inputs]
-    stops = pairing_stops + row_stops(rows, judge_doc)
+    name_map, name_stops = runner_name_map(inputs)
+    stops = pairing_stops + name_stops + row_stops(rows, judge_doc)
     if bundle == "C-5":
         pairs = c5_pair_check(rows, doc["row_count_S15"]["manifest_cases"])
         doc["vb_v0_pairs_S15"] = pairs
@@ -1519,6 +1610,7 @@ def _graded_bundle(doc: dict[str, Any], bundle: str, inputs: list[RowInput],
     doc["rows"] = rows
     doc["runner_t_lift_R19_5"] = t_lift_summary(rows)
     doc["runner_unjudged_R19_4"] = unjudged_summary(rows)
+    doc["runner_name_map_R23_1"] = name_map
     doc["bundle_grade"] = bundle_grade(rows, count_ok, has_stop=bool(stops))
     return stops
 
