@@ -2528,12 +2528,18 @@ FMIN_WINDOW_S = 8.0
 """P5r4 judgement 8.2 table: departure .. departure + 8 s, 1 ms true F_cyl."""
 SERIES_FILE = "step_series.npz"
 LEG_NAMES = ("FL", "FR", "RL", "RR")
+FMIN_SAMPLE_MS = 1.0
+"""R2-5: a time = sample count x 1 ms (the 1 ms ``step_series.npz`` grid)."""
+FMIN_STEP_TOL_S = 1e-6
+"""The series step must be 1 ms within this (rev9 R9-2 grid tolerance), else the two times are
+not judgeable (R2-5 counts 1 ms samples)."""
 
 
 def below_durations(t_s, force_N, t_start_s: float, limit_N: float,
                     window_s: float = FMIN_WINDOW_S) -> dict:
     """Per leg the time (and sample count) with ``F < limit`` (7.6: ``v < X - 1e-9``) in the
-    window ``t_start .. t_start + window_s``; the sample step is the median of ``diff(t)``."""
+    window ``t_start .. t_start + window_s``; time = samples x 1 ms (R2-5), the median step of
+    ``diff(t)`` is recorded."""
     import numpy as np
 
     t = np.asarray(t_s, dtype=float)
@@ -2542,22 +2548,22 @@ def below_durations(t_s, force_N, t_start_s: float, limit_N: float,
     step_s = float(np.median(np.diff(t))) if t.size > 1 else math.nan
     below = window[:, None] & (force < limit_N - COMPARE_EPS)
     counts = below.sum(axis=0)
-    return {"samples": [int(n) for n in counts], "ms": [round(float(n) * step_s * 1e3, 3)
-                                                        for n in counts],
+    return {"samples": [int(n) for n in counts], "ms": [float(n) * FMIN_SAMPLE_MS for n in counts],
             "window_samples": int(window.sum()), "step_s": step_s}
 
 
 DEPARTURE_FRACTION_W = 0.01
-DEPARTURE_HOLD_S = 0.1
+DEPARTURE_HOLD_SAMPLES = 100
 CRAWLER_NORMAL_KEY = "scm_crawler_normal_N"
-"""R2-5: t_D = first sample of the first stretch with the 1 ms crawler true normal < 0.01 W for
->= 0.1 s (W = ``p3b.weight_N``). ``step_series.npz`` ``scm_crawler_normal_N`` is the crawler
-support force along the plane normal (``run_S9`` ``sup_force_N @ normal``), taken as the sum of
-all crawler contact normals also on mixed terrain."""
+"""R2-5 with rev6 R6-B4: t_D = first sample of the first stretch of >= 100 consecutive 1 ms
+samples with the crawler true normal < 0.01 W (W = ``p3b.weight_N``; the runner's last - first
+>= 0.1 s needs 101). ``step_series.npz`` ``scm_crawler_normal_N`` is the crawler support force
+along the plane normal (``run_S9`` ``sup_force_N @ normal``), taken as the sum of all crawler
+contact normals also on mixed terrain."""
 
 
 def departure_time(t_s, crawler_N, weight_N: float) -> float | None:
-    """R2-5 t_D (None when no stretch qualifies)."""
+    """R2-5 / R6-B4 t_D (None when no stretch qualifies)."""
     import numpy as np
 
     t = np.asarray(t_s, dtype=float)
@@ -2568,7 +2574,7 @@ def departure_time(t_s, crawler_N, weight_N: float) -> float | None:
             start = None
             continue
         start = index if start is None else start
-        if t[index] - t[start] >= DEPARTURE_HOLD_S - COMPARE_EPS:
+        if index - start + 1 >= DEPARTURE_HOLD_SAMPLES:
             return float(t[start])
     return None
 
@@ -2583,7 +2589,9 @@ def fmin_time(args: argparse.Namespace) -> dict:
     out: dict[str, Any] = {"rules": RULES_REV2_NAME, "section": "RV1-7 / R2-5 (7.4 record)",
                            "case": str(case), "window_s": FMIN_WINDOW_S,
                            "definition": "1 ms true F_cyl (step_series.npz F_cyl_N) in [t_D, t_D + "
-                                         "8 s]; t_D = crawler normal < 0.01 W for 0.1 s (R2-5)",
+                                         "8 s], time = samples x 1 ms; t_D = crawler normal < "
+                                         "0.01 W for >= 100 consecutive 1 ms samples (R2-5, "
+                                         "rev6 R6-B4)",
                            "series_sha256": file_sha256(case / SERIES_FILE)}
     present, weight_N = get_path(result, "p3b.weight_N")
     if not present or not isinstance(weight_N, (int, float)):
@@ -2595,6 +2603,11 @@ def fmin_time(args: argparse.Namespace) -> dict:
             crawler_N = np.asarray(series[CRAWLER_NORMAL_KEY], dtype=float)
     except (OSError, KeyError, ValueError) as exc:
         raise InputError(f"{case / SERIES_FILE}: {exc}") from exc
+    step_s = float(np.median(np.diff(t_s))) if t_s.size > 1 else math.nan
+    out["series_step_s"] = step_s
+    if not abs(step_s - FMIN_SAMPLE_MS * 1e-3) <= FMIN_STEP_TOL_S:
+        return {**out, "status": "판정 불가 (step_series.npz step is not 1 ms, R2-5)",
+                "exit_code": 1}
     t_dep = departure_time(t_s, crawler_N, float(weight_N))
     out["t_D_s"] = t_dep
     out["p3b_departure_t_s"] = get_path(result, "p3b.departure.t_departure_s")[1]  # record only
