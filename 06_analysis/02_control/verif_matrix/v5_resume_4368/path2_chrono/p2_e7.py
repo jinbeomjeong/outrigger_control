@@ -7,7 +7,9 @@ E judgement of `04_scripts/03_control/s9/s9_soil_event_screen.py` (`judge_soil_e
    `r51_reapp_closed_loop` (`_intervals`); those files changed after f46b5ab outside these functions, so the
    gate compares the source of the functions and constants used (f46b5ab = git_at_start = executed file);
    per-file commit counts are recorded. rev19 R19-7 (function-level check of `r67_g1_screen.py`): every changed
-   line of `git diff f46b5ab <git_at_start>` lies in a record-only function and the E-7 functions (`judge_event`,
+   line of `git diff -U0 f46b5ab <git_at_start>` is (1a) in a record-only function or (1b, rev20 R20-1) the
+   definition of a module-level name read only by record-only functions of the file and by no other file as
+   `r67_g1_screen.<name>` (grep commands and output kept), and the E-7 functions (`judge_event`,
    `twist_work`, `_intervals` and the functions of the file they call) have the same body; the hunk table
    (hunk head, enclosing functions) is written to `tool_gate.r19_7`. Any breach = S-11.
 2. (t45 regression only; not part of E-7.)
@@ -132,19 +134,82 @@ def _enclosing(spans, line):
     return next((n for n, a, b in spans if a <= line <= b), None)
 
 
-def _module_line(side: str, src: str, line: int) -> dict:
-    """A changed line outside every function (record for the R19-7 table): the module statement it belongs to,
-    the names it assigns and the top-level functions that read those names. It still breaks R19-7 (1)."""
-    tree = ast.parse(src)
-    stmt = next((n for n in tree.body if n.lineno <= line <= n.end_lineno), None)
-    names = []
+def _module_names(tree, stmt) -> list:
+    """Names a module-level statement defines: an assignment, or the docstring right below an assignment
+    (rev20 R20-1 (1b) "상수와 그 바로 아래 docstring")."""
     if isinstance(stmt, (ast.Assign, ast.AnnAssign)):
         tg = stmt.targets if isinstance(stmt, ast.Assign) else [stmt.target]
-        names = [t.id for t in tg if isinstance(t, ast.Name)]
-    users = sorted({f.name for f in tree.body if isinstance(f, ast.FunctionDef)
-                    for x in ast.walk(f) if isinstance(x, ast.Name) and x.id in names})
+        return [t.id for t in tg if isinstance(t, ast.Name)]
+    if isinstance(stmt, ast.Expr) and isinstance(getattr(stmt, "value", None), ast.Constant) \
+            and isinstance(stmt.value.value, str):
+        i = tree.body.index(stmt)
+        if i > 0 and isinstance(tree.body[i - 1], (ast.Assign, ast.AnnAssign)):
+            return _module_names(tree, tree.body[i - 1])
+    return []
+
+
+def _readers_in_file(tree, names) -> list:
+    """Who reads the names in this file: top-level functions / classes by name, other module statements as
+    `<module>` (the defining statements themselves excluded)."""
+    out = set()
+    for node in tree.body:
+        defines = set(_module_names(tree, node))
+        loads = {x.id for x in ast.walk(node) if isinstance(x, ast.Name) and isinstance(x.ctx, ast.Load)}
+        hit = (loads & set(names)) - (defines if not isinstance(node, (ast.FunctionDef, ast.ClassDef)) else set())
+        if hit:
+            out.add(node.name if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                    else "<module>")
+    return sorted(out)
+
+
+def _module_line(side: str, src: str, line: int) -> dict:
+    """A changed line outside every function: the module statement, the names it defines and the functions of this
+    file that read them (rev20 R20-1 table row)."""
+    tree = ast.parse(src)
+    stmt = next((n for n in tree.body if n.lineno <= line <= n.end_lineno), None)
+    names = _module_names(tree, stmt) if stmt is not None else []
+    readers = _readers_in_file(tree, names) if names else []
     return {"side": side, "line": line, "text": src.splitlines()[line - 1].strip()[:120],
-            "statement": type(stmt).__name__ if stmt is not None else None, "assigns": names, "read_by": users}
+            "statement": type(stmt).__name__ if stmt is not None else None, "defines": names, "read_by": readers,
+            "readers_all_record_only": bool(names) and all(r in R19_7_RECORD_FUNCS for r in readers)}
+
+
+def _other_file_readers(repo: Path, ref: str, names) -> dict:
+    """rev20 R20-1 (1b): other files that read `r67_g1_screen.<name>` (`from r67_g1_screen import <name>` or
+    `<alias>.<name>` with `import r67_g1_screen [as alias]`), at <ref>. The grep commands and their output lines are
+    kept; the decision is made on the parsed import statements of the files the first grep lists."""
+    cmd1 = ["git", "grep", "-n", "-E", r"import +r67_g1_screen|from +r67_g1_screen +import", ref, "--", "*.py"]
+    p1 = subprocess.run(["git", "-C", str(repo), *cmd1[1:]], capture_output=True, text=True, encoding="utf-8")
+    lines1 = [x for x in p1.stdout.splitlines() if x]
+    greps = [{"cmd": " ".join(cmd1), "rc": p1.returncode, "lines": lines1}]
+    files = sorted({x.split(":", 2)[1] for x in lines1 if x.count(":") >= 2} - {R67})
+    for nm in names:
+        cmd2 = ["git", "grep", "-n", "-w", nm, ref, "--", "*.py"]
+        p2 = subprocess.run(["git", "-C", str(repo), *cmd2[1:]], capture_output=True, text=True, encoding="utf-8")
+        greps.append({"cmd": " ".join(cmd2), "rc": p2.returncode, "lines": [x for x in p2.stdout.splitlines() if x]})
+    readers = []
+    for f in files:
+        try:
+            tree = ast.parse(git(repo, "show", f"{ref}:{f}"))
+        except (SyntaxError, subprocess.CalledProcessError) as exc:
+            readers.append({"file": f, "name": None, "how": f"not parsed: {type(exc).__name__}"})
+            continue
+        aliases = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for a in node.names:
+                    if a.name.split(".")[-1] == "r67_g1_screen":
+                        aliases.add(a.asname or a.name)
+            elif isinstance(node, ast.ImportFrom) and (node.module or "").split(".")[-1] == "r67_g1_screen":
+                for a in node.names:
+                    if a.name in names or a.name == "*":
+                        readers.append({"file": f, "name": a.name, "how": f"from r67_g1_screen import {a.name}"})
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Attribute) and node.attr in names and isinstance(node.value, ast.Name) \
+                    and node.value.id in aliases:
+                readers.append({"file": f, "name": node.attr, "how": f"{node.value.id}.{node.attr}",
+                                "line": node.lineno})
+    return {"greps": greps, "importing_files": files, "readers": readers}
 
 
 def _called_closure(src: str, roots) -> list:
@@ -163,46 +228,58 @@ def _called_closure(src: str, roots) -> list:
 
 
 def r19_7_function_check(repo: Path, ref: str) -> dict:
-    """rev19 R19-7: (1) every changed (+/-) line of `git diff f46b5ab <ref> -- r67_g1_screen.py` lies inside a
-    record-only function (`v5_job_record`, `v5_branch_record`, `v5_setting_record`, new `resume_k1_block`);
-    blank changed lines are not attributed (listed); (2) the body bytes of `judge_event`, `twist_work`, `_intervals`
-    and the functions of this file they call are the same at f46b5ab, <ref> and the executed file. Hunk table
-    (hunk head, enclosing functions) in the output. Any breach -> S-11."""
+    """rev19 R19-7 with rev20 R20-1 condition (1): every changed (+/-) line of
+    `git diff -U0 f46b5ab <ref> -- r67_g1_screen.py` is (1a) inside a record-only function (`v5_job_record`,
+    `v5_branch_record`, `v5_setting_record`, `resume_k1_block`) or (1b) the definition of a module-level name
+    (a constant and the docstring right below it) that every reading function of this file is a record-only
+    function and that no other file reads as `r67_g1_screen.<name>` (grep commands and output kept). Blank changed
+    lines belong to no statement and are counted, not attributed. (2) the body bytes of `judge_event`,
+    `twist_work`, `_intervals` and the functions of this file they call are the same at f46b5ab, <ref> and the
+    executed file. Hunk table per changed line (enclosing function or (1b) name). Any breach -> S-11."""
     old_src = git(repo, "show", f"{BASE_COMMIT}:{R67}")
     new_src = git(repo, "show", f"{ref}:{R67}")
     exe_src = (repo / R67).read_text(encoding="utf-8")
     old_lines, new_lines = old_src.splitlines(), new_src.splitlines()
     so, sn = _top_spans(old_src), _top_spans(new_src)
     diff = git(repo, "diff", "-U0", BASE_COMMIT, ref, "--", R67).splitlines()
-    hunks, problems = [], []
+    hunks, problems, outside_names = [], [], set()
     for h in diff:
         m = HUNK_RE.match(h)
         if not m:
             continue
         a, b = int(m.group(1)), int(m.group(2) or 1)
         c, d = int(m.group(3)), int(m.group(4) or 1)
-        enc, blank, outside = set(), 0, []
-        for ln in range(a, a + b) if b else ():
-            if not old_lines[ln - 1].strip():
-                blank += 1
-                continue
-            e = _enclosing(so, ln)
-            enc.add(e)
-            if e is None:
-                outside.append(_module_line("old", old_src, ln))
-        for ln in range(c, c + d) if d else ():
-            if not new_lines[ln - 1].strip():
-                blank += 1
-                continue
-            e = _enclosing(sn, ln)
-            enc.add(e)
-            if e is None:
-                outside.append(_module_line("new", new_src, ln))
-        bad = sorted(str(x) for x in enc if x not in R19_7_RECORD_FUNCS)
-        hunks.append({"hunk": h, "enclosing": sorted(str(x) for x in enc), "blank_lines_not_attributed": blank,
-                      "outside_function_lines": outside, "ok": not bad})
-        if bad:
-            problems.append(f"R19-7 (1): hunk {h!r} changes lines outside the record-only functions: {bad}")
+        rows, blank = [], 0
+        sides = [("old", old_src, old_lines, so, range(a, a + b) if b else range(0)),
+                 ("new", new_src, new_lines, sn, range(c, c + d) if d else range(0))]
+        for side, src, lines, spans, rng in sides:
+            for ln in rng:
+                if not lines[ln - 1].strip():
+                    blank += 1
+                    continue
+                e = _enclosing(spans, ln)
+                if e is not None:
+                    rows.append({"side": side, "line": ln, "enclosing": e, "rule": "1a",
+                                 "ok": e in R19_7_RECORD_FUNCS})
+                else:
+                    ml = _module_line(side, src, ln)
+                    outside_names.update(ml["defines"])
+                    rows.append(dict(ml, rule="1b", ok=ml["readers_all_record_only"]))
+        hunks.append({"hunk": h, "enclosing": sorted({str(r.get("enclosing")) for r in rows if r["rule"] == "1a"}),
+                      "names_1b": sorted({n for r in rows if r["rule"] == "1b" for n in r["defines"]}),
+                      "lines": rows, "blank_lines_not_attributed": blank})
+    cross = _other_file_readers(repo, ref, sorted(outside_names)) if outside_names else \
+        {"greps": [], "importing_files": [], "readers": []}
+    cross_names = {r["name"] for r in cross["readers"]}
+    for hk in hunks:
+        for r in hk["lines"]:
+            if r["rule"] == "1b" and (set(r["defines"]) & cross_names or "*" in cross_names):
+                r["ok"] = False
+                r["read_by_other_files"] = [x for x in cross["readers"] if x["name"] in r["defines"] or x["name"] == "*"]
+        hk["ok"] = all(r["ok"] for r in hk["lines"])
+        if not hk["ok"]:
+            bad = [f"{r['side']}:{r['line']} {r.get('enclosing') or r.get('defines')}" for r in hk["lines"] if not r["ok"]]
+            problems.append(f"R20-1 (1): hunk {hk['hunk']!r} lines neither (1a) nor (1b): {bad}")
     used = _called_closure(new_src, R19_7_ROOTS)
     same = {}
     for f in sorted(set(used) | set(_called_closure(old_src, R19_7_ROOTS))):
@@ -210,8 +287,10 @@ def r19_7_function_check(repo: Path, ref: str) -> dict:
         same[f] = segs[0] is not None and segs[0] == segs[1] == segs[2]
         if not same[f]:
             problems.append(f"R19-7 (2): {f} body differs between {BASE_COMMIT}, {ref} and the executed file")
-    return {"clause": "rev19 R19-7", "file": R67, "base": BASE_COMMIT, "ref": ref, "hunks": hunks,
-            "e7_functions": used, "e7_functions_same": same, "problems": problems, "ok": not problems}
+    return {"clause": "rev19 R19-7 / rev20 R20-1", "file": R67, "base": BASE_COMMIT, "ref": ref,
+            "diff_cmd": f"git diff -U0 {BASE_COMMIT} {ref} -- {R67}", "hunks": hunks,
+            "names_1b_cross_file_check": cross, "e7_functions": used, "e7_functions_same": same,
+            "problems": problems, "ok": not problems}
 
 
 class _NoController:

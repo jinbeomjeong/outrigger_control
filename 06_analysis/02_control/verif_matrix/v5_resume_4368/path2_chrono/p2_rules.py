@@ -56,7 +56,10 @@ SEALED = [
      "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e", "rules rev18"),
     # rev19 R19-8 order 2: rev16..rev19 in the Chrono tool lists (sealed 2026-11-15, S7 38897f0); rev19 wins.
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
-     "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2", "rules rev19 (wins)"),
+     "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2", "rules rev19"),
+    # rev20 R20-4 2: rev16..rev20 in the Chrono tool lists (S8 4d8a95d); rev20 wins.
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
+     "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531", "rules rev20 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -122,6 +125,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev17.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev18.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md",
 }
 
 
@@ -136,9 +140,9 @@ def sidecar_sha(p: Path):
 
 def seal_check(repo: Path) -> dict:
     """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6, rev15 R15-7,
-    rev18 R18-1, rev19 R19-8). Raw sha must match; for
+    rev18 R18-1, rev19 R19-8, rev20 R20-4). Raw sha must match; for
     Appendix A files, if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15..rev19) are compared raw only, and
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15..rev20) are compared raw only, and
     their code seal sha must also equal the first token of the sibling `.sha256` record (R7-7, R8-4,
     R9-8)."""
     rows = []

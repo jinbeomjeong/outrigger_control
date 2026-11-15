@@ -1536,7 +1536,7 @@ def test_rev18_chrono_seals_listed_and_checked():
     assert s["ok"], s
     names = [Path(rel).name for rel, _, _ in p2.CHRONO_SEALS]
     assert names == ["v5_resume_4368_rules_rev16.md", "v5_resume_4368_rules_rev17.md", "v5_resume_4368_rules_rev18.md",
-                     "v5_resume_4368_rules_rev19.md"]
+                     "v5_resume_4368_rules_rev19.md", "v5_resume_4368_rules_rev20.md"]
     for rel, want, _ in p2.CHRONO_SEALS:
         it = s["rules"][rel]
         assert it["sha256"] == it["seal_file_sha"] == want
@@ -1550,7 +1550,7 @@ def test_rev18_chrono_seal_mismatch_stops_chrono_only(tmp_path, capsys, monkeypa
     code, s = run_main(["--out", str(tmp_path / "o.json"), "chrono", "--batch", str(bd)], capsys)
     assert code == 2 and s["stop_codes"] == ["S-1"]
     rep = json.loads((tmp_path / "o.json").read_text("utf-8"))
-    assert not rep["seals"]["chrono_rev16_19"]["ok"]
+    assert not rep["seals"]["chrono_rev16_20"]["ok"]
     code2, s2 = run_main(["seal"], capsys)          # other sub-commands keep their list (R4 harness tool's job)
     assert code2 == 0 and s2["stop_codes"] == []
 
@@ -1568,13 +1568,15 @@ def test_rev18_chrono_report_records_rev16_18(tmp_path, capsys):
     out = tmp_path / "o.json"
     run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
     rep = json.loads(out.read_text("utf-8"))
-    assert rep["seals"]["chrono_rev16_19_sha256"]["v5_resume_4368_rules_rev18"].startswith("3693a69c")
-    assert rep["seals"]["chrono_rev16_19_sha256"]["v5_resume_4368_rules_rev19"].startswith("7f87b8bb")
+    assert rep["seals"]["chrono_rev16_20_sha256"]["v5_resume_4368_rules_rev18"].startswith("3693a69c")
+    assert rep["seals"]["chrono_rev16_20_sha256"]["v5_resume_4368_rules_rev19"].startswith("7f87b8bb")
+    assert rep["seals"]["chrono_rev16_20_sha256"]["v5_resume_4368_rules_rev20"].startswith("615a8fbd")
 
 
-def test_rev19_chrono_seal_mismatch_stops(tmp_path, capsys, monkeypatch):
-    # rev19 R19-8 order 2: rev19 is in the chrono list; a wrong rev19 seal value stops chrono (S-1)
-    bad = tuple((rel, "f" * 64, seal) if rel.endswith("rev19.md") else (rel, want, seal)
+@pytest.mark.parametrize("which", ["rev19.md", "rev20.md"])
+def test_rev19_rev20_chrono_seal_mismatch_stops(tmp_path, capsys, monkeypatch, which):
+    # rev19 R19-8 / rev20 R20-4 order 2: rev19 and rev20 are in the chrono list; a wrong seal value stops chrono (S-1)
+    bad = tuple((rel, "f" * 64, seal) if rel.endswith(which) else (rel, want, seal)
                 for rel, want, seal in p2.CHRONO_SEALS)
     monkeypatch.setattr(p2, "CHRONO_SEALS", bad)
     bd = make_batch(tmp_path, scm_result(p2.TAG_VB, [2.0, 1.5]))

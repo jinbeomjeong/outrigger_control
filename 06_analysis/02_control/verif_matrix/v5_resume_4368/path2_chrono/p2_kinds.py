@@ -225,7 +225,9 @@ def items_p3(row, params, ready_limit_s, ready_judged, g6=False, allow_stop=True
 
 
 # rev19 R19-1: on a soil-guard stop row only these keys stay next to `safe_stop_427_9` (rev18 R18-2's
-# "P3-5·P3-6·FAULT0" is read as examples of the record list)
+# "P3-5·P3-6·FAULT0" is read as examples of the record list).
+# rev20 R20-2: rules 4.2 / 6 (`identity`) and 7.2 (`K1_class`) stay judged keys on an allowed_stop row; the 6-section
+# commit / tag checks (`R11-4_commit`, `R9-1_expect_controller`) are added after the row by `p2_chrono.augment_items`.
 SAFE_STOP_KEEP = ("identity", "K1_class")
 
 

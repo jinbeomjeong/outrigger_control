@@ -584,12 +584,14 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 
 - **rev19 R19-8(2026-11-15)**: `CHRONO_SEALS`에 rev19(`7f87b8bb…`)를 더했다(rev16~rev19). 출력 키는 `seals.chrono_rev16_19`·`seals.chrono_rev16_19_sha256`으로 바꿨다. 시험 1개를 더했다(rev19 값 어긋남 → `chrono` S-1, 137개). `P2_CORE_SHA`는 R4에서 맞춘다(사용자 결정).
 
-### 도구 sha256 (rev19 판, LF 바이트, 현재 값)
+- **rev20 R20-4(2026-11-15)**: `CHRONO_SEALS`에 rev20(`615a8fbd…`)을 더했다(rev16~rev20). 출력 키는 `seals.chrono_rev16_20`·`seals.chrono_rev16_20_sha256`. rev19 값 어긋남 시험을 rev19·rev20 두 경우로 늘렸다(138개).
+
+### 도구 sha256 (rev20 판, LF 바이트, 현재 값)
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
-| `p2_4368.py` | `fe8f8b29f396069da937f7ef76d415917c87fd490afde7e3f84a1a19848b97f8` | 바뀜(`chrono` 봉인 목록만; rev18 판 `434734ce…`) |
-| `test_p2_4368.py` | `4835612dc53a34cfc7ace30c6ca6288d31376ab25f397a191e7faeb9bdfd2af9` | 바뀜(137개) |
+| `p2_4368.py` | `be4905976fdd8b6350d9419f3ab4a8b03811b85106cada82922295e4033b7183` | 바뀜(`chrono` 봉인 목록만; rev19 판 `fe8f8b29…`, rev18 판 `434734ce…`) |
+| `test_p2_4368.py` | `2d7c910925690609b7e58da0444b87a63acac55462454f6abeaab7efe9095ebb` | 바뀜(138개) |
 | `p2_d1.py`·`p2_t3k.py`·`p2_u3.py`·`p2_v5j.py`와 그 시험 | 위 표와 같음 | 그대로 |
 
 ## 하지 않는 것 (범위)

@@ -1108,7 +1108,7 @@ def t_seal(tmp, rules_repo=None):
           rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") for r, w, role in R.SEALED)
           and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
     # rev18 R18-1 (다): rev16..rev18 in the Chrono tool list, raw only, seal sha = .sha256 first token; rev18 wins
-    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb"}
+    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd"}
     for n, pre in want16.items():
         reln = f"06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev{n}.md"
         check(f"seal: rev{n} listed, raw only, {pre}, match, = .sha256 first token (R18-1)",
@@ -1120,9 +1120,9 @@ def t_seal(tmp, rules_repo=None):
         pn.write_bytes(keepn + b"x")
         check(f"seal: rev{n} edited -> S-1", not R.seal_check(repo)["ok"])
         pn.write_bytes(keepn)
-    rel19 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev19.md"
-    check("seal: only rev19 wins (latest sealed revision)",
-          [r for r, w, role in R.SEALED if "wins" in role] == [rel19])
+    rel20 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev20.md"
+    check("seal: only rev20 wins (latest sealed revision)",
+          [r for r, w, role in R.SEALED if "wins" in role] == [rel20])
     check("seal: rev15 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
           and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
@@ -1755,15 +1755,16 @@ def t_e7_tool(tmp):
     head = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     g = E7.tool_gate(REPO, head)
     r19 = g["r19_7"]
-    outside = [x for h in r19["hunks"] for x in h["outside_function_lines"]]
+    b1 = [x for h in r19["hunks"] for x in h["lines"] if x["rule"] == "1b"]
     check("E-7 gate at HEAD: s9_soil_event_screen 0 commits since f46b5ab; R19-7 (2) E-7 functions the same",
           g["files"][E7.TOOL]["commits_base_to_ref"] == 0 and r19["e7_functions_same"]
           and all(r19["e7_functions_same"].values())
           and set(r19["e7_functions"]) == {"judge_event", "twist_work", "_intervals", "is_fast"}, r19["e7_functions_same"])
-    check("E-7 gate at HEAD: R19-7 (1) the r67 diff has a module-level line (RESUME_K1_KEY, read only by record "
-          "functions) outside the record-only functions -> literal reading: gate not ok (S-11), hunk table written",
-          not g["ok"] and not r19["ok"] and any("RESUME_K1_KEY" in x["assigns"] for x in outside)
-          and len(r19["hunks"]) >= 1, [h["enclosing"] for h in r19["hunks"]])
+    check("E-7 gate at HEAD: R20-1 (1b) RESUME_K1_KEY (+ docstring) read only by record functions, no other file reads "
+          "r67_g1_screen.RESUME_K1_KEY -> gate ok, hunk table + grep commands written",
+          g["ok"] and r19["ok"] and b1 and all(x["defines"] == ["RESUME_K1_KEY"] and x["ok"] for x in b1)
+          and r19["names_1b_cross_file_check"]["greps"] and not r19["names_1b_cross_file_check"]["readers"],
+          g["problems"])
     seg = E7.segments("A = 1\ndef f():\n    return 2\n", ("A", "f"))
     check("E-7 gate: source segments of a def and a constant", seg == {"A": "A = 1", "f": "def f():\n    return 2"}, seg)
     # R19-7 on a synthetic repository (base -> record-only change -> E-7 change / module constant)
@@ -1798,11 +1799,42 @@ def t_e7_tool(tmp):
         check("R19-7 synthetic: twist_work body changed -> (1) and (2) fail (S-11)",
               not r2["ok"] and r2["e7_functions_same"]["twist_work"] is False
               and any("(1)" in p for p in r2["problems"]), r2["problems"])
-        c3 = commit(base_src + "\n\nKEY = 'k'\n", "module constant")
+        rec_key = base_src.replace("return {'a': 1}", "return {KEY: 1}") + "\n\nKEY = 'k'\n\"\"\"record key.\"\"\"\n"
+        c3 = commit(rec_key, "module constant read by a record function")
         r3 = E7.r19_7_function_check(sr, c3)
-        check("R19-7 synthetic: module-level constant added -> (1) fail, line listed with its assigned name",
-              not r3["ok"] and any(x["assigns"] == ["KEY"] for h in r3["hunks"] for x in h["outside_function_lines"]),
-              r3["hunks"])
+        l3 = [x for h in r3["hunks"] for x in h["lines"] if x["rule"] == "1b"]
+        check("R20-1 (1b) true: constant + docstring below it, read only by v5_job_record, no other file -> ok",
+              r3["ok"] and len(l3) == 2 and all(x["defines"] == ["KEY"] and x["read_by"] == ["v5_job_record"]
+                                                for x in l3), r3["hunks"])
+        c4 = commit(base_src + "\n\nKEY = 'k'\n", "module constant read by nobody")
+        r4 = E7.r19_7_function_check(sr, c4)
+        check("R20-1 (1b): constant read by no function -> its readers are all record-only (none) -> ok",
+              r4["ok"], r4["problems"])
+        c5 = commit(rec_key.replace("return {'n_bundles': 0}", "return {'n_bundles': 0, KEY: 0}"),
+                    "constant read by twist_work")
+        r5 = E7.r19_7_function_check(sr, c5)
+        l5 = [x for h in r5["hunks"] for x in h["lines"] if x["rule"] == "1b"]
+        check("R20-1 (1b) false: the constant is also read by twist_work (not record-only) -> its line fails, S-11",
+              not r5["ok"] and l5 and all(not x["ok"] and "twist_work" in x["read_by"] for x in l5), l5)
+        other = sr / "04_scripts" / "other.py"
+        other.write_text("import r67_g1_screen as r67\n\n\ndef f():\n    return r67.KEY\n", encoding="utf-8",
+                         newline="\n")
+        c6 = commit(rec_key, "other file reads r67.KEY")
+        r6 = E7.r19_7_function_check(sr, c6)
+        check("R20-1 (1b) false: another file reads r67_g1_screen.KEY through the import alias -> S-11, grep kept",
+              not r6["ok"] and r6["names_1b_cross_file_check"]["readers"][0]["how"] == "r67.KEY"
+              and any("import" in g["cmd"] for g in r6["names_1b_cross_file_check"]["greps"]), r6["problems"])
+        other.write_text("from r67_g1_screen import KEY\n", encoding="utf-8", newline="\n")
+        c7 = commit(rec_key, "other file from-imports KEY")
+        r7 = E7.r19_7_function_check(sr, c7)
+        check("R20-1 (1b) false: `from r67_g1_screen import KEY` in another file -> S-11", not r7["ok"],
+              r7["names_1b_cross_file_check"]["readers"])
+        other.write_text("import run_v5\nKEY = 'own'\n\n\ndef f():\n    return run_v5.KEY, KEY\n", encoding="utf-8",
+                         newline="\n")
+        c8 = commit(rec_key, "other module defines / reads its own KEY")
+        r8 = E7.r19_7_function_check(sr, c8)
+        check("R20-1 (1b): another module's own KEY and run_v5.KEY are not reads of r67_g1_screen.KEY -> ok",
+              r8["ok"] and not r8["names_1b_cross_file_check"]["readers"], r8["problems"])
     finally:
         E7.BASE_COMMIT = keep
     # the tool run itself (in process, the gate bypassed only in this test): zero valve -> 0 bundles; twist -> 2
@@ -1835,9 +1867,13 @@ def t_e7_tool(tmp):
                         str(d)], capture_output=True, text=True, encoding="utf-8")
     doc_cli = json.loads((out / "e7_path2.json").read_text(encoding="utf-8"))
     it4, _ = P.e_items(C.load_row(d, "scm", ["run_S9.py", "level"]), PARAMS, doc_cli)
-    check("E-7 CLI at HEAD: gate not ok -> exit 1, no tool rows, E-7 indeterminate + S-11 stop",
-          p.returncode == 1 and doc_cli["rows"] == {} and doc_cli["tool_gate"]["r19_7"]["hunks"]
-          and it4["E-7"]["verdict"] == "indeterminate" and "S-11" in it4["E-7"].get("stop", ""), p.stdout[-300:])
+    check("E-7 CLI at HEAD: gate ok (R20-1) -> exit 0, tool row, E-7 pass",
+          p.returncode == 0 and doc_cli["tool_gate"]["ok"] and doc_cli["tool_gate"]["r19_7"]["hunks"]
+          and it4["E-7"]["verdict"] == "pass", p.stdout[-300:] + p.stderr[-600:])
+    doc_bad = dict(doc_cli, tool_gate=dict(doc_cli["tool_gate"], ok=False))
+    it5, _ = P.e_items(C.load_row(d, "scm", ["run_S9.py", "level"]), PARAMS, doc_bad)
+    check("E-7 gate not ok -> E-7 indeterminate + S-11 stop", it5["E-7"]["verdict"] == "indeterminate"
+          and "S-11" in it5["E-7"].get("stop", ""), it5["E-7"])
 
 
 def t_pairs():
