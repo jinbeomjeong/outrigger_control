@@ -47,6 +47,8 @@ run_v5 files mixing settings (VB -> VB, LS1..LS4 -> LS, other settings -> V0, no
 ``chrono`` after the b9f5707 judgement (decisions 19 and 2026-11-14): criteria_id C-7a / C-7b are C-7 open-loop
 rows (rev4, counted as C-7); a V0 open-loop row without a ``v5_hydraulics`` block is normal (5.3, recorded);
 OC5PROBE rows (``r4368.role`` probe) get no O-C5 main-row block (5.4, k procedure in ``oc5k``).
+rev18 (3693a69c...) R18-1: ``chrono`` also checks the rev16 / rev17 / rev18 seals (``CHRONO_SEALS``, S-1);
+the other sub-commands are unchanged (their list is the R4 harness tool's).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -1061,6 +1063,37 @@ def cmd_anchors(args, repo):
 
 
 # ----------------------------------------------------------------- Chrono rows
+# rev18 R18-1 (다) / order 2: the Chrono judgement tools add rev16..rev18 to their seal list (both paths the
+# same). Only the ``chrono`` sub-command checks them (``check_chrono_seals``); the shared ``check_seals`` of the
+# harness sub-commands is the R4 harness tool's job (R18-1: rev13..rev18 there). Seal sha = first token of each
+# ``.sha256``; raw sha only, LF, no BOM (as ``check_seals``).
+CHRONO_SEALS = (
+    (_VM + "v5_resume_4368_rules_rev16.md", "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+     _VM + "v5_resume_4368_rules_rev16.sha256"),
+    (_VM + "v5_resume_4368_rules_rev17.md", "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+     _VM + "v5_resume_4368_rules_rev17.sha256"),
+    (_VM + "v5_resume_4368_rules_rev18.md", "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+     _VM + "v5_resume_4368_rules_rev18.sha256"),
+)
+
+
+def check_chrono_seals(repo):
+    """rev16..rev18 seal check of the ``chrono`` sub-command (S-1 when any is off)."""
+    out = {"rules": {}, "ok": True}
+    for rel, want, seal in CHRONO_SEALS:
+        p, sp = repo / rel, repo / seal
+        got = sha256_file(p) if p.is_file() else None
+        seal_sha = None
+        if sp.is_file():
+            first = sp.read_text("utf-8").split()
+            seal_sha = first[0].lower() if first else None
+        raw = p.read_bytes() if p.is_file() else b""
+        ok = got == want and seal_sha == want and not raw.startswith(b"\xef\xbb\xbf") and b"\r\n" not in raw
+        out["rules"][rel] = {"sha256": got, "want": want, "seal_file_sha": seal_sha, "ok": ok}
+        out["ok"] &= ok
+    return out
+
+
 def batch_rows(batch_dir):
     b = json.loads((Path(batch_dir) / "batch.json").read_text("utf-8"))
     return b, b.get("cases", [])
@@ -2502,6 +2535,9 @@ def main(argv=None):
     summary = {"tool": TOOL_NAME, "version": TOOL_VERSION, "tool_sha256": tool_sha, "cmd": args.cmd}
     try:
         seals = check_seals(repo)
+        if args.cmd == "chrono":    # rev18 R18-1: rev16..rev18 for the Chrono sub-command only
+            seals["chrono_rev16_18"] = check_chrono_seals(repo)
+            seals["ok"] &= seals["chrono_rev16_18"]["ok"]
         if not seals["ok"]:
             report = {"seals": seals, "status": "stop", "stop_codes": ["S-1"]}
             status = "stop"
@@ -2513,6 +2549,8 @@ def main(argv=None):
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
+            if args.cmd == "chrono":
+                report["seals"]["chrono_rev16_18_sha256"] = {Path(rel).stem: want for rel, want, _ in CHRONO_SEALS}
         report.update(tool=TOOL_NAME, version=TOOL_VERSION, tool_sha256=tool_sha, cmd=args.cmd,
                       argv=sys.argv[1:] if argv is None else list(argv),
                       created=_dt.datetime.now().astimezone().isoformat(timespec="seconds"), status=status)

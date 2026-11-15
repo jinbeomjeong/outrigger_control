@@ -190,34 +190,71 @@ def items_p3(row, params, ready_limit_s, ready_judged, g6=False, allow_stop=True
         keys.append("G6-6")
     # stroke guard classes (398.1 SL-1, 427.12.5)
     sg = C.stroke_guard_class(row)
-    stop = C.stop_classification(row, t_D, params)
-    items["stroke_guard"] = dict(sg, verdict="record", stop=stop)
     row_class = None
-    if stop is not None:
-        row_class = stop["class"]
-        if row_class == "stroke_limited_stop" and allow_stop:
-            for k in ("P3-4", "P3-5", "P3-6", "FAULT0", "G6-6", "P3-1", "P3-2"):
-                if k in items:
-                    items[k]["superseded_by"] = "stroke_limited_stop"
-            keys = ["P3-3", "P3-8", "identity", "K1_class"]
-            items["stroke_guard"]["verdict"] = "pass"
-            keys.append("stroke_guard")
-        else:
+    if allow_stop:
+        # rev18 R18-2 / rev6 R6-B8 (D-26): rows S-01..S-04 take the spec 427.9 safe-stop branch (conditions 1-5).
+        # allowed_stop replaces P3-5 / P3-6 / FAULT0 (only these three, R18-2); the other P3 items stay judged.
+        items["stroke_guard"] = dict(sg, verdict="record")
+        ss = C.safe_stop_427_9(row, t_D, params)
+        if ss is not None:
+            row_class = ss["class"]
+            items["safe_stop_427_9"] = ss
+            if row_class == "allowed_stop":
+                for k in SAFE_STOP_REPLACES:
+                    if k in items:
+                        items[k]["superseded_by"] = "allowed_stop (spec 427.9, rev18 R18-2)"
+                keys = [k for k in keys if k not in SAFE_STOP_REPLACES]
+            keys.append("safe_stop_427_9")
+            ss["ready_dependent_items"] = {k: {"verdict": items[k]["verdict"], "reason": items[k].get("reason")}
+                                           for k in ("P3-1", "P3-2", "P3-4", "G6-6") if k in items}
+        elif sg["warn_lift_stroke_limited"] > 0:
+            row_class = _sl1_relax(items, fault, p33)
+    else:
+        # C-4 (allow_stop False): the earlier SA-4 path, unchanged (not an S-01..04 row)
+        stop = C.stop_classification(row, t_D, params)
+        items["stroke_guard"] = dict(sg, verdict="record", stop=stop)
+        if stop is not None:
+            row_class = stop["class"]
             items["stroke_guard"]["verdict"] = "fail"
             keys.append("stroke_guard")
-    elif sg["warn_lift_stroke_limited"] > 0:
-        lift = items["leg_lift_after_departure"]
-        okc = (not fault["any"] and not lift.get("any", True)
-               and items["P3-1"]["verdict"] in ("pass", "flag") and p33["verdict"] == "pass"
-               and items["P3-4"]["verdict"] in ("pass", "flag"))
-        row_class = "stroke_limited_pass" if okc else "stroke_limited_fail"
-        if okc and items["P3-5"]["verdict"] == "fail":
-            items["P3-5"]["relaxed_by"] = "stroke_limited_pass (398.1 SL-1)"
-            items["P3-5"]["verdict"] = "flag"
+        elif sg["warn_lift_stroke_limited"] > 0:
+            row_class = _sl1_relax(items, fault, p33)
     items["row_class"] = {"verdict": "record", "class": row_class}
     if row.notes:
         notes += row.notes
     return items, keys, notes
+
+
+# rev18 R18-2: "그때 P3-5·P3-6·FAULT0은 이 조건으로 대신한다"
+SAFE_STOP_REPLACES = ("P3-5", "P3-6", "FAULT0")
+
+
+def _sl1_relax(items, fault, p33):
+    """398.1 SL-1: WARN_LIFT_STROKE_LIMITED without a stop -> P3-5 relaxed when FAULT 0, lift 0, P3-1, P3-3, P3-4."""
+    lift = items["leg_lift_after_departure"]
+    okc = (not fault["any"] and not lift.get("any", True)
+           and items["P3-1"]["verdict"] in ("pass", "flag") and p33["verdict"] == "pass"
+           and items["P3-4"]["verdict"] in ("pass", "flag"))
+    if okc and items["P3-5"]["verdict"] == "fail":
+        items["P3-5"]["relaxed_by"] = "stroke_limited_pass (398.1 SL-1)"
+        items["P3-5"]["verdict"] = "flag"
+    return "stroke_limited_pass" if okc else "stroke_limited_fail"
+
+
+def safe_stop_summary(rows) -> dict:
+    """rev18 R18-2 / R18-4: allowed_stop rows counted apart (spec 427.9 "따로 센다"); per row the two values
+    leg lift and moving pressure (R18-4 "두 경로가 값으로 내고")."""
+    per = []
+    for r in rows:
+        ss = r["items"].get("safe_stop_427_9")
+        if not isinstance(ss, dict):
+            continue
+        per.append({"case": r["case"], "d1_id": r.get("d1_id"), "class": ss["class"], "conditions": ss["conditions"],
+                    "leg_lift_samples_after_t_D": ss["values"]["leg_lift_samples_after_t_D"],
+                    "moving_max_bar": ss["values"]["moving_max_bar"],
+                    "saturation_rows_per_leg": ss["values"]["saturation_rows_per_leg"]})
+    return {"clause": "spec 427.9 / rev6 R6-B8 / rev18 R18-2, R18-4", "rows": per,
+            "counts": {c: sum(1 for p in per if p["class"] == c) for c in R.SAFE_STOP_CLASSES}}
 
 
 def bundle_status(rows, expected_count=None, record_bundle=False, extra_stops=None):

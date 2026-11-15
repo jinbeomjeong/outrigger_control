@@ -31,7 +31,7 @@ import p2_rules as R  # noqa: E402
 
 BUNDLE_MODULES = {"C-1": "p2_b_c1", "C-2": "p2_b_c2", "C-3": "p2_b_c3", "C-4": "p2_b_c4",
                   "C-5": "p2_b_c5", "C-6C7": "p2_b_c67", "C-8": "p2_b_c8"}
-COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py", "p2_t45.py")
+COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py", "p2_t45.py", "p2_psc.py", "p2_e7.py")
 
 
 def file_sha(p: Path) -> str:
@@ -46,7 +46,8 @@ def tool_sha(bundle_module: str | None):
 
 
 INPUT_FILES = ("result.json", "step_series.npz", "r8_series.npz", "s8_series.npz", "pads.npz",
-               "controller_events.json", "series.npz", "flow_series.npz", "record/record.npz")
+               "controller_events.json", "series.npz", "flow_series.npz", "record/record.npz",
+               "soil_event_series.npz")   # rev18 R18-3: PS-c E rows
 
 
 def input_shas(d: Path) -> dict:
@@ -660,7 +661,7 @@ def main(argv=None) -> int:
     j.add_argument("--batch", action="append", required=True)
     j.add_argument("--results-root")
     j.add_argument("--row-dir", action="append")
-    j.add_argument("--aux", action="append", help="NAME=PATH extra input for a bundle (C-5: t45=<t45_path2.json>)")
+    j.add_argument("--aux", action="append", help="NAME=PATH extra input for a bundle (C-5: t45=<t45_path2.json>, C-2: e7=<e7_path2.json>)")
     j.add_argument("--git-at-start", help="judgement git_at_start commit (7..40 hex, required, rev11 R11-4)")
     j.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
     j.add_argument("--out", required=True)

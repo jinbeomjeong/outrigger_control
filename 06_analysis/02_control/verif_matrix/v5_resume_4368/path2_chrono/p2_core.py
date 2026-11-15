@@ -1048,6 +1048,74 @@ def stop_classification(row: Row, t_D, params):
             "departed": departed, "stop_with_crawler_loaded": loaded, "conditions": conds, "class": cls}
 
 
+def saturation_rows(row: Row, params):
+    """Control rows of `record/record.npz` (rev6 R6-B5 basis) that extend (applied u > 1e-9 m/s) with the head
+    equivalent F_cyl / A_p >= 210 bar (relief): "포화" of spec 427.9 condition 5 (harness form). None if the
+    record is missing."""
+    rp = row.folder / "record" / "record.npz"
+    if not rp.exists():
+        return None
+    rec = np.load(rp)
+    A = np.array(params["head_area_m2"])
+    p_bar = np.asarray(rec["F_cyl"], float) / A[None, :] / 1e5
+    ext = np.asarray(rec["u_applied"], float) > R.MOVING_U_EPS
+    sat = ext & (p_bar >= R.SATURATION_BAR - R.CMP_TOL)
+    return {"rows_per_leg": sat.sum(axis=0).astype(int).tolist(), "any": bool(sat.any())}
+
+
+def safe_stop_427_9(row: Row, t_D, params):
+    """spec 427.9 "판정 분류" (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2: rows S-01..S-04 that stop on the
+    lift stroke guard. Returns None when the row has no `FAULT_LIFT_STROKE_LIMIT` event (no safe-stop branch).
+    Conditions (each computed on its own, values kept):
+      1 stop reason = `FAULT_LIFT_STROKE_LIMIT:soil` (first stroke-limit stop event, reason token),
+      2 `FAULT_STROKE_END` 0,
+      3 leg lift 0: pad normal <= 0 1 ms samples after t_D (rev6 R6-B9 / rev3 Q-14: SCM `scm_pad_normal_N`),
+      4 after the crawler departure t_D to the end of the run, the four legs' actual 1 ms F_cyl minimum >= F_min,
+      5 moving pressure <= 180 bar (head equivalent, applied u != 0 control rows, rev6 R6-B5) and saturation 0.
+    All true -> `allowed_stop` (stroke_limited_stop, counted apart; replaces P3-5 / P3-6 / FAULT0); any false ->
+    `fail`; otherwise (a condition not computable, none false) -> `indeterminate`."""
+    stops = events_named(row, R.EVENT_STROKE_STOP)
+    if not stops:
+        return None
+    t_stop, name = stops[0]
+    toks = name.split(":")
+    reason = toks[1] if len(toks) > 1 else None
+    n_end = len(events_named(row, R.EVENT_STROKE_END))
+    lift = leg_lift(row, t_D)
+    m = min_force_after(row, t_D, None, params["F_min_N"])
+    press = pressure_item(row, params)
+    sat = saturation_rows(row, params)
+    press_ok = press.get("moving_ok") if press.get("verdict") != "indeterminate" else None
+    if press_ok is False or (sat is not None and sat["any"]):
+        c5 = False
+    elif press_ok is None or sat is None:
+        c5 = None
+    else:
+        c5 = True
+    conds = {
+        "1_stop_reason_soil": reason == R.SAFE_STOP_REASON,
+        "2_no_fault_stroke_end": n_end == 0,
+        "3_no_leg_lift": None if lift is None else not lift["any"],
+        "4_min_after_departure_ge_Fmin": None if m is None else R.ge(m["min_all_N"], params["F_min_N"]),
+        "5_moving_le_180bar_saturation0": c5,
+    }
+    vals = list(conds.values())
+    cls = "fail" if any(v is False for v in vals) else ("allowed_stop" if all(v is True for v in vals)
+                                                         else "indeterminate")
+    return {"clause": "spec 427.9 판정 분류 (17690-17692), rev6 R6-B8 / D-26, rev18 R18-2",
+            "category": "stroke_limited_stop", "stop_event": name, "t_stop_s": t_stop, "stop_reason": reason,
+            "t_D_s": t_D, "conditions": conds,
+            "values": {"fault_stroke_end_events": n_end,
+                       "leg_lift_samples_after_t_D": None if lift is None else lift["samples_per_leg"],
+                       "min_after_departure_N": None if m is None else m["min_N"],
+                       "min_after_departure_all_N": None if m is None else m["min_all_N"],
+                       "F_min_N": params["F_min_N"],
+                       "moving_max_bar": press.get("moving_max_bar"),
+                       "saturation_rows_per_leg": None if sat is None else sat["rows_per_leg"]},
+            "not_computable": [k for k, v in conds.items() if v is None],
+            "class": cls, "verdict": cls}
+
+
 def rc_from_record(row: Row):
     """rules 2 R_c from the recorded crawler attitude (9.1 C-8 row): p3b_ext.start_condition.crawler_attitude_deg."""
     sc = ((row.result.get("p3b_ext") or {}).get("start_condition") or {})

@@ -1,16 +1,22 @@
 """C-2 (J-4): D-1 selected rows + PS-c. Rules 5.2 C-2, rev1 RV1-10 g, rev2 R2-8, d1 rules 11:
 - C2-03, C2-07 (L2b): D8.P judged (as C-1).
-- S-01, S-02 (SCM): P3, READY 120 s, stroke_limited_stop allowed.
+- S-01, S-02 (SCM): P3, READY 120 s, safe stop of spec 427.9 (rev6 R6-B8 / D-26, rev18 R18-2: conditions 1-5 ->
+  allowed_stop / fail; allowed_stop replaces P3-5 / P3-6 / FAULT0).
 - baseline-failure extra rows: same item set as their family (D1C2_* -> D8.P, D1S_* -> P3 S-type).
-- D1-PSC rows: 426.3 E-1..E-7 + stroke <= 684.8 mm; path 2 recomputes E-5 (with stroke);
-  E-1..E-6 (rev4 b) and E-7 (rev4 c) are not built in this version -> PS-c row 판정 불가.
+- D1-PSC rows: 426.3 E-1..E-7 (+ stroke <= 684.8 mm in E-5, DSb75 record), rev18 R18-3 1 (`p2_psc`): E-1..E-6
+  recomputed from the raw record (rev4 R4-A2 b), E-7 from the path 2 run of the designated tool (`p2_e7.py`,
+  rev4 R4-A2 c, `--aux e7=<e7_path2.json>`). An item that cannot be computed makes the row 판정 불가.
 """
-import p2_core as C
 import p2_kinds as K
+import p2_psc as P
 import p2_rules as R
 
 CRITERIA = ("C-2",)
 FIXED = ("C2-03", "C2-07", "S-01", "S-02")
+AUX = {}
+E7_LIMIT = ("rev4 R4-A2 한계 공개 문장(판정서 한계 절에 그대로): \"T4-0·T4·T5, PS-c E-7, 잡음 S-1~S-6과 L1 게이트의 "
+            "항목 값은 원 규칙이 지정한 같은 판정 도구를 경로 2가 따로 실행해 얻었다. 그래서 두 경로는 같은 계산 "
+            "함수에 기댄다. 경로 2의 독립성은 도구 실행과 등급 재집계에 있고, 항목 값 계산에는 없다.\"")
 
 
 def kind_of(case):
@@ -43,27 +49,7 @@ def judge_row(row, case, kind, params):
 
 
 def _psc(row, params):
-    items = {}
-    t_R = C.first_phase_time(row, "ready")
-    last = row.phases[-1][1] if row.phases else None
-    sel = row.t_att >= row.t_end - 1.0 - R.CMP_TOL
-    import numpy as np
-    m = np.abs(row.att[sel].mean(axis=0)) if sel.any() else None
-    items["E-5"] = {"clause": "426.3 E-5: ends in READY, last 1 s mean |roll|,|pitch| <= 0.2, FAULT 0, stroke <= 684.8 mm",
-                    "last_phase": last, "end_mean_abs_deg": None if m is None else m.tolist(),
-                    "fault": C.fault_present(row)["any"], "stroke_max_m": float(row.s_motor.max())}
-    ok = (last == "ready" and m is not None and R.le(float(m.max()), R.ATT_LIMIT_DEG)
-          and not items["E-5"]["fault"] and R.le(items["E-5"]["stroke_max_m"], R.STROKE_END_M))
-    items["E-5"]["verdict"] = "pass" if ok else "fail"
-    # rev4 R4-A2: E-1..E-6 recompute from soil_event_series.npz (option b), E-7 by running the
-    # study A judge function (option c). Not built in this tool version (PS-c rows are 0..2 and
-    # appear only if H-2 selects them); a PS-c row is 판정 불가 until built.
-    has = (row.folder / "soil_event_series.npz").exists()
-    for k in ("E-1", "E-2", "E-3", "E-4", "E-6", "E-7"):
-        items[k] = {"clause": "426.3 / rev4 R4-A2", "verdict": "indeterminate",
-                    "soil_event_series_present": has,
-                    "reason": "PS-c E path 2 not built yet (rev4 b / c); build before judging a PS-c row"}
-    keys = ["E-1", "E-2", "E-3", "E-4", "E-5", "E-6", "E-7"]
+    items, keys = P.e_items(row, params, P.load_e7(AUX.get("e7")))
     return items, keys, list(row.notes), False
 
 
@@ -81,4 +67,9 @@ def bundle_status(rows):
         stops.append(f"S-15 (RV1-10 g): baseline extra rows {len(extra)} > 4")
     if not 4 <= len(rows) <= 10:
         stops.append(f"S-15: rows {len(rows)} not in 4..10")
-    return K.bundle_status(rows, None, extra_stops=stops)
+    b = K.bundle_status(rows, None, extra_stops=stops)
+    b["safe_stop_427_9"] = K.safe_stop_summary(rows)
+    b["psc_E"] = {"clause": "426.3 E-1..E-7 (rev4 R4-A2 b / c, rev18 R18-3 1)",
+                  "rows": {r["case"]: {k: (r["items"].get(k) or {}).get("verdict") for k in P.E_KEYS} for r in psc},
+                  "e7_tool_output": AUX.get("e7"), "limit_disclosure": E7_LIMIT if psc else None}
+    return b
