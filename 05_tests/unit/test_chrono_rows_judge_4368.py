@@ -605,16 +605,17 @@ REV16_18_SHA256 = {
     "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
     "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
     "v5_resume_4368_rules_rev24.md": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "v5_resume_4368_rules_rev25.md": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
 }
-"""Rev18 R18-1 2 .. rev24 R24-3: rev16 .. rev24 in the Chrono judge seal list (sha of each
+"""Rev18 R18-1 2 .. rev25 R25-3: rev16 .. rev25 in the Chrono judge seal list (sha of each
 ``.sha256``)."""
 
 
 def test_rev16_to_rev18_in_the_seal_list(mod):
-    """Rev24 R24-3: the path 1 Chrono judge checks rev16 .. rev24; rev13 / rev14 stay out."""
+    """Rev25 R25-3: the path 1 Chrono judge checks rev16 .. rev25; rev13 / rev14 stay out."""
     for name, sha in REV16_18_SHA256.items():
         assert mod.RULES_SEALS[name] == sha
-    assert "rev15 .. rev24" in mod.RULES_DESCRIPTION and "R24-3" in mod.RULES_DESCRIPTION
+    assert "rev15 .. rev25" in mod.RULES_DESCRIPTION and "R25-3" in mod.RULES_DESCRIPTION
 
 
 def test_seals_command_checks_rev16_to_rev18(mod, capsys):
@@ -986,9 +987,11 @@ def test_cd3_event_free_row_keeps_the_d32_rule(mod):
 
 
 def test_cd5_ready_items_without_ready(mod):
+    """Rev25 CD-5: READY <= 120 s fails; the P3-6 record stays empty (the bundle judge decides
+    fail or 해당 없음 by the P3-6 role)."""
     out = mod.ready_items([(1.0, "level")], 0.0, {"P3-6_ready": {"limit_s": 60.0}})
-    assert out["P3-6"] == "fail" and out["READY_le_120s"] is False
-    assert out["reason"].startswith("READY 없음")
+    assert out["P3-6"] is None and out["READY_le_120s"] is False
+    assert out["reason"].startswith("READY 없음") and out["ready_reached"] is False
 
 
 def test_cd5_g6_gates_without_ready(mod):

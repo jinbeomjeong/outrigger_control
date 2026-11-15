@@ -35,7 +35,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev24).
+* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev25).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -131,15 +131,18 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
     # rev24 R24-3 (seal commit S12 b75d874 on S11 f40935a)
     "v5_resume_4368_rules_rev24.md": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    # rev25 R25-3 (seal commit S13 f381053 on S12 b75d874)
+    "v5_resume_4368_rules_rev25.md": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev24 of
-2026-11-15); both the file and its ``.sha256`` must match (original 8.2 S-1)."""
-RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev24 (seal list; "
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev25 of
+2026-11-15 / 16); both the file and its ``.sha256`` must match (original 8.2 S-1)."""
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev25 (seal list; "
                      "rev13 / rev14 by tools/verif/seal_check.py, rev15 R15-7, rev18 R18-1 2, "
-                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2, rev22 R22-2, rev23 R23-2, rev24 R24-3): "
+                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2, rev22 R22-2, rev23 R23-2, rev24 R24-3, "
+                     "rev25 R25-3): "
                      "rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3, rev9 .. rev12 items, "
                      "rev15 R15-3 (V0 L2b D-29), rev21 R21-1 (L2b D-29 = t_lift,sus), "
-                     "rev24 CD-3 (L2b item 4 event rows and W), CD-5 (run without READY)")
+                     "rev24 / rev25 CD-3 (L2b item 4 event rows and W), CD-5 (run without READY)")
 """Output ``rules`` text (a description; the seal list above is what is checked)."""
 
 # --- disclosure (requirement 3) ---------------------------------------------------------------------------------
@@ -981,8 +984,9 @@ def sgs_class(row: dict[str, Any], s: dict[str, np.ndarray], dep: dict[str, Any]
 
 
 def ready_items(phases: list[tuple[float, str]], t0: float, p3b: dict[str, Any]) -> dict[str, Any]:
-    """N-2 / N-3: P3-6 (record; FLAG when outside the row limit), G6 gate READY <= 120 s + 1e-9. Rules rev24 CD-5:
-    a run without a first READY gives P3-6 and READY <= 120 s ``fail`` (READY reached items), with the reason."""
+    """N-2 / N-3: P3-6 (record; FLAG when outside the row limit), G6 gate READY <= 120 s + 1e-9. Rules rev25 CD-5:
+    a run without a first READY fails READY <= 120 s (a READY reached gate); its P3-6 record stays empty here (the
+    bundle judge fails it where P3-6 is graded, C-5 SCM rows, and writes ``해당 없음(READY 없음)`` elsewhere)."""
     t_ready = first_phase(phases, "ready")
     rel = None if t_ready is None else t_ready - t0
     p36 = p3b.get("P3-6_ready") or {}
@@ -991,8 +995,9 @@ def ready_items(phases: list[tuple[float, str]], t0: float, p3b: dict[str, Any])
            "P3-6": None if rel is None or lim is None else ("pass" if le(rel, float(lim)) else "flag"),
            "READY_le_120s": bool(rel is not None and le(rel, READY_GATE_S))}
     if rel is None:
-        out.update({"P3-6": "fail", "ready_reached": False,
-                    "reason": f"{READY_MISSING} (rules rev24 CD-5: READY reached items P3-6 / READY <= 120 s fail)"})
+        out.update({"ready_reached": False,
+                    "reason": f"{READY_MISSING} (rules rev25 CD-5: READY <= 120 s fails; P3-6 fails where graded "
+                              "(C-5 SCM rows), else 해당 없음(READY 없음))"})
     return out
 
 
