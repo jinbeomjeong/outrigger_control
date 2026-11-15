@@ -1108,7 +1108,7 @@ def t_seal(tmp, rules_repo=None):
           rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") for r, w, role in R.SEALED)
           and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
     # rev18 R18-1 (다): rev16..rev18 in the Chrono tool list, raw only, seal sha = .sha256 first token; rev18 wins
-    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949"}
+    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949", "22": "a48a81f9", "23": "fa72e172"}
     for n, pre in want16.items():
         reln = f"06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev{n}.md"
         check(f"seal: rev{n} listed, raw only, {pre}, match, = .sha256 first token (R18-1)",
@@ -1120,9 +1120,9 @@ def t_seal(tmp, rules_repo=None):
         pn.write_bytes(keepn + b"x")
         check(f"seal: rev{n} edited -> S-1", not R.seal_check(repo)["ok"])
         pn.write_bytes(keepn)
-    rel21 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md"
-    check("seal: only rev21 wins (latest sealed revision)",
-          [r for r, w, role in R.SEALED if "wins" in role] == [rel21])
+    rel23 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md"
+    check("seal: only rev23 wins (latest sealed revision)",
+          [r for r, w, role in R.SEALED if "wins" in role] == [rel23])
     check("seal: rev15 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
           and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
