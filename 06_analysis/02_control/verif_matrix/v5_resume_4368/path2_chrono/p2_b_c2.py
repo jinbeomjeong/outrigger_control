@@ -8,7 +8,10 @@
   path 2 run of the designated tool (`p2_e7.py`, rev4 R4-A2 c, `--aux e7=<e7_path2.json>`). An item that cannot
   be computed makes the row 판정 불가.
 - D1-PSC base row (no `--soil-event` in argv): record row (rev19 R19-2), P3 and D8 values recorded, no E items.
+rev24 (common block scope sentence): L2b rows take CD-2; S-type SCM rows take CD-4 (P3-7 added, judged) and
+CD-5 (no READY); the PS-c base row records P3-7; the PS-c event row keeps its 426.3 E items.
 """
+import p2_cd as CD
 import p2_kinds as K
 import p2_psc as P
 import p2_rules as R
@@ -42,10 +45,14 @@ def kind_of(case):
 def judge_row(row, case, kind, params):
     if kind == "D8P_judged":
         items, keys, notes = K.items_d8p(row, params, judged=True, hold=True)
+        CD.use_cd2(items, keys, row, params)
         return items, keys, notes, False
     if kind == "P3_S":
         items, keys, notes = K.items_p3(row, params, R.READY_SLOPE_S, ready_judged=True, g6=False,
                                         allow_stop=True)
+        CD.add_p3_7(items, keys, row, params, judged=True)
+        CD.apply_ready_none(items, keys, row)
+        CD.scm_grade_guard(items, keys)
         return items, keys, notes, False
     if kind == "PSC":
         return _psc(row, params)
@@ -62,6 +69,8 @@ def _psc(row, params):
 def _psc_base(row, params):
     """rev19 R19-2: record row. No E items (no event: not missing); P3 and D8 values recorded, failures reported."""
     items, keys, notes = K.items_p3(row, params, R.READY_SLOPE_S, ready_judged=True, g6=False, allow_stop=True)
+    CD.add_p3_7(items, keys, row, params, judged=False)
+    CD.apply_ready_none(items, keys, row)
     d8, d8k, _ = K.items_d8p(row, params, judged=False, hold=False)
     for k in d8k:
         if k not in items:

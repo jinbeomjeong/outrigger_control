@@ -68,7 +68,10 @@ SEALED = [
      "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328", "rules rev22"),
     # rev23 R23-2: rev16..rev23 in the Chrono tool lists (S11 f40935a); rev23 wins.
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md",
-     "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97", "rules rev23 (wins)"),
+     "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97", "rules rev23"),
+    # rev24 R24-3: rev16..rev24 in the Chrono tool lists (S12 b75d874); rev24 wins.
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev24.md",
+     "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15", "rules rev24 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -138,6 +141,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev21.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev22.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev24.md",
 }
 
 
@@ -152,9 +156,9 @@ def sidecar_sha(p: Path):
 
 def seal_check(repo: Path) -> dict:
     """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6, rev15 R15-7,
-    rev18 R18-1, rev19 R19-8, rev20 R20-4, rev21 R21-3, rev22 R22-2, rev23 R23-2). Raw sha must match; for
+    rev18 R18-1, rev19 R19-8, rev20 R20-4, rev21 R21-3, rev22 R22-2, rev23 R23-2, rev24 R24-3). Raw sha must match; for
     Appendix A files, if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15..rev23) are compared raw only, and
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev12, rev15..rev24) are compared raw only, and
     their code seal sha must also equal the first token of the sibling `.sha256` record (R7-7, R8-4,
     R9-8)."""
     rows = []

@@ -1108,7 +1108,7 @@ def t_seal(tmp, rules_repo=None):
           rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") for r, w, role in R.SEALED)
           and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
     # rev18 R18-1 (다): rev16..rev18 in the Chrono tool list, raw only, seal sha = .sha256 first token; rev18 wins
-    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949", "22": "a48a81f9", "23": "fa72e172"}
+    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949", "22": "a48a81f9", "23": "fa72e172", "24": "f475cf77"}
     for n, pre in want16.items():
         reln = f"06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev{n}.md"
         check(f"seal: rev{n} listed, raw only, {pre}, match, = .sha256 first token (R18-1)",
@@ -1120,9 +1120,9 @@ def t_seal(tmp, rules_repo=None):
         pn.write_bytes(keepn + b"x")
         check(f"seal: rev{n} edited -> S-1", not R.seal_check(repo)["ok"])
         pn.write_bytes(keepn)
-    rel23 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev23.md"
-    check("seal: only rev23 wins (latest sealed revision)",
-          [r for r, w, role in R.SEALED if "wins" in role] == [rel23])
+    rel24 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev24.md"
+    check("seal: only rev24 wins (latest sealed revision)",
+          [r for r, w, role in R.SEALED if "wins" in role] == [rel24])
     check("seal: rev15 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
           and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
@@ -1218,6 +1218,8 @@ def t_cli(tmp):
     sp = scm_spec()
     write_scm(bdir / "rowA", sp)
     write_scm(bdir / "rowB", sp)
+    for name in ("rowA", "rowB"):   # rev24 CD-4: P3-7 reads record.npz and c2_soil (no S-1 window -> no LOC)
+        write_p37_record(bdir / name, sp, [])
     batch = {"cases": [{"case": "rowA", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3", "code_at_launch": CAL},
                        {"case": "rowB", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3",
                         "code_at_launch": CAL},
@@ -1232,6 +1234,19 @@ def t_cli(tmp):
     check("CLI C-3 synthetic: exit 0, 2 rows, 통과, out_sha256 = file sha",
           proc.returncode == 0 and last.get("rows") == 2 and last.get("status") == "통과"
           and last.get("out_sha256") == hashlib.sha256(out.read_bytes()).hexdigest(), proc.stdout[-500:] + proc.stderr[-500:])
+    o1 = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+    l11 = (o1.get("bundle_result") or {}).get("cd11_item_list") or {}
+    check("CLI C-3 rev24: CD-11 list with 2 rows (P3-7 listed), no CD-7 empty reason, no stop",
+          len(l11.get("rows") or []) == 2 and not l11.get("problems")
+          and any(x["common_id"] == "P3-7" for x in l11["rows"][0]["items"])
+          and (o1.get("bundle_result") or {}).get("cd7_empty_reasons") == [], l11.get("problems"))
+    out1p = tmp / "o1p.json"
+    subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-1",
+                    "--git-at-start", GREF[:7], "--batch", str(bdir / "batch.json"), "--out", str(out1p),
+                    "--s8c-dir", str(tmp / "s8c_empty")], capture_output=True, text=True, encoding="utf-8")
+    pv = (json.loads(out1p.read_text(encoding="utf-8")) if out1p.exists() else {}).get("cd2_judge_provenance") or {}
+    check("CLI C-1 with --s8c-dir: CD-2 (1) provenance recorded (judge code = b9f5707, ok)",
+          pv.get("ok") is True and pv.get("reference") == "b9f5707", pv)
     proc2 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", *CLI_REPO, "--bundle", "C-1", "--git-at-start", GREF[:7],
                             "--batch", str(bdir / "batch.json"), "--out", str(tmp / "o2.json"),
                             "--row-dir", "x=y"], capture_output=True, text=True, encoding="utf-8")
@@ -1982,6 +1997,410 @@ def t_pairs():
           and not b["rev19_R19_6_pairs"]["exact"], b["status"])
 
 
+# ------------------------------------------------------------------ rev24 common block CD-1..CD-11
+W_REF = 376580.0   # synthetic C2 meta soil.W_ref_N
+
+
+def write_p37_record(folder: Path, sp: dict, moving, F_of=None, meta=(None, None), mode="restart"):
+    """record/record.npz with the P3-7 reading keys (10 Hz) and result.json c2_soil / LW meta. `moving` = [(a, b)]
+    intervals of u_applied 0.01 m/s on all legs; meas.stroke grows 1 mm per moving sample; `F_of(t, e)` = sum
+    of p_h A_p - p_r A_ann (default 0.5 W_ref)."""
+    import p2_cd as CD
+    t10 = np.round(np.arange(sp["t0"] + 0.1, sp["t_end"] + 1e-9, 0.1), 6)
+    mov = np.zeros(len(t10), bool)
+    for a, b in moving:
+        mov |= (t10 >= a - 1e-9) & (t10 < b - 1e-9)
+    u = np.where(mov[:, None], 0.01, 0.0) * np.ones((1, 4))
+    e = 0.3 + 0.001 * np.cumsum(mov)
+    F_total = F_of(t10, e) if F_of else np.full(len(t10), 0.5 * W_REF)
+    head, _ = CD._cylinder_areas(REPO)
+    p_h = np.repeat((F_total / head.sum())[:, None], 4, axis=1)
+    (folder / "record").mkdir(exist_ok=True)
+    np.savez(folder / "record" / "record.npz", t=t10, u_applied=u, F_cyl=np.repeat(F_total[:, None] / 4, 4, axis=1),
+             s_motor=np.repeat(e[:, None], 4, axis=1), **{"meas.stroke": np.repeat(e[:, None], 4, axis=1),
+                                                         "meas.head_pressure": p_h,
+                                                         "meas.rod_pressure": np.zeros((len(t10), 4))})
+    res = json.loads((folder / "result.json").read_text(encoding="utf-8"))
+    res["c2_soil"].update(W_ref_N=W_REF, t_P_s=meta[0], t_loc_s=meta[1])
+    res["controller_meta"]["liftoff_window_reapproach"] = {"mode": mode, "restarts": 0}
+    (folder / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    return folder
+
+
+def _p37_profile(slope_N_per_mm, plateau_from=23.0):
+    def f(t, e):
+        base = 0.80 * W_REF + slope_N_per_mm * (e - 0.3) * 1000.0
+        return np.where(t >= plateau_from - 1e-9, 0.95 * W_REF, base)
+    return f
+
+
+def _jr(item, passed=True, kind="judged", note="", **kw):
+    return dict({"item": item, "case": "case", "value": 1.0, "limit": 1.0, "passed": passed, "note": note,
+                 "kind": kind}, **kw)
+
+
+def write_judge_doc(s8c: Path, folder: Path, rows, liftoff_rel=20.0, event_window=None):
+    import p2_cd as CD
+    d = s8c / folder.parent.name
+    d.mkdir(parents=True, exist_ok=True)
+    metric = {"case": folder.name, "times_s": {"t0": 3.0, "liftoff": liftoff_rel}}
+    if event_window is not None:
+        metric["event_window"] = event_window
+    doc = {"meta": {"batch": str(folder.parent), "judge_revision": "synthetic"},
+           "rows": [dict(r, case=folder.name) for r in rows], "metrics": [metric]}
+    (d / CD.JUDGE_REL_PATH).write_text(json.dumps(doc), encoding="utf-8")
+    CD._DOCS.clear()
+
+
+def _l2b_case(tmp, group, name="case", **kw):
+    return write_l2b(tmp / "r24" / group / name, **kw)
+
+
+def t_rev24(tmp):
+    import types
+    import p2_b_c5 as B5
+    import p2_b_c8 as B8
+    import p2_cd as CD
+    s8c = tmp / "r24_s8c"
+    CD.CONTEXT.clear()
+    CD.CONTEXT.update(repo=REPO, s8c_dir=str(s8c))
+    # ---- CD-2 classification and count
+    check("CD-2 classify: recalc / original / t_lift prefix (suffixed 5a) / other",
+          [CD.classify_item(n) for n in (CD.ITEM_C1, "D8 attitude last 5 s + mount <= 0.2 deg",
+                                          "5a rocking amplitude after the re-READY", "3 F_min before the event",
+                                          "3 F_min after the re-READY", "RE1b re-READY <= 60 s")]
+          == ["recalc", "original", "original_tlift", "original_tlift", "original_other", "original_other"])
+    check("CD-2 kinds: judged kinds / record kinds / hold / unknown -> runner_unjudged",
+          [CD._use_of(k) for k in ("quality", None, "consistency", "hold", "not_applicable")]
+          == ["judged", "judged", "record", "hold", "runner_unjudged"])
+    g = CD._cd2_grade([{"use": "judged", "passed": False}, {"use": "hold", "passed": None}])
+    check("CD-2 count: passed False wins over hold (미달)", g["verdict"] == "fail", g)
+    g = CD._cd2_grade([{"use": "judged", "passed": True}, {"use": "hold", "passed": None}])
+    check("CD-2 count: hold -> 판정 불가", g["verdict"] == "indeterminate", g)
+    g = CD._cd2_grade([{"use": "record", "passed": True}, {"use": "runner_unjudged", "passed": None}])
+    check("CD-2 count: no judged-class passed True -> 판정 불가", g["verdict"] == "indeterminate", g)
+    # ---- CD-2 rows on a synthetic L2b row (non-event)
+    base_rows = [_jr(CD.ITEM_C1), _jr(CD.ITEM_D8_LIFT), _jr(CD.ITEM_P4_MOVING), _jr(CD.ITEM_P4_SAT),
+                 _jr("3 F_min (1 ms)"), _jr("6 relevel time"), _jr("S8-L5 crawler label", passed=None, kind="record"),
+                 _jr("W weird kind", kind="weird"), _jr("J judged none", passed=None),
+                 _jr("F anomaly", kind="anomaly", note="FLAG near F_min")]
+    f1 = _l2b_case(tmp, "S8a_ok")
+    write_judge_doc(s8c, f1, base_rows)
+    row1 = C.load_row(f1, "l2b", L2B_ARGV)
+    b1 = CD.cd2_items(row1, PARAMS)
+    by = {e["item"]: e for e in b1["entries"]}
+    check("CD-2 non-event row: recalc C1 / lift-off / moving pressure / saturation pass, CD-2 통과, no stop",
+          b1["verdict"] == "pass" and "stop" not in b1
+          and all(by[k]["handling"] == "recalc" and by[k]["verdict"] == "pass"
+                  for k in (CD.ITEM_C1, CD.ITEM_D8_LIFT, CD.ITEM_P4_MOVING, CD.ITEM_P4_SAT)), b1)
+    check("CD-2 (a) t_lift = 1 ms t_lift,sus (engine absolute 23.0 s); t_lift diff check 0 (prefix item present)",
+          abs(b1["t_lift"]["t_lift_s"] - 23.0) < 1e-9 and b1["t_lift_check"]["ok"]
+          and abs(b1["t_lift_check"]["diff_s"]) < 1e-9, b1.get("t_lift_check"))
+    check("CD-2 runner 미판정: unknown kind and judged passed None, with note; not counted",
+          by["W weird kind"]["verdict"] == "runner_unjudged" and by["J judged none"]["verdict"] == "runner_unjudged"
+          and len(b1["runner_unjudged"]) == 2 and b1["n_runner_unjudged"] == 2, b1["runner_unjudged"])
+    check("CD-2 FLAG: anomaly note FLAG -> flag (counts as pass); record kind -> record",
+          by["F anomaly"]["verdict"] == "flag" and by["S8-L5 crawler label"]["verdict"] == "record"
+          and "F anomaly" in b1["flags"])
+    write_judge_doc(s8c, f1, base_rows, liftoff_rel=20.3)
+    b1b = CD.cd2_items(row1, PARAMS)
+    check("CD-2 t_lift 차 > 0.1 s on a prefix-item row -> stop and ask", "t_lift 차" in b1b.get("stop", ""), b1b)
+    write_judge_doc(s8c, f1, [_jr(CD.ITEM_C1), _jr("6 relevel time")], liftoff_rel=20.3)
+    check("CD-2 t_lift 차 not checked without a prefix item", "stop" not in CD.cd2_items(row1, PARAMS))
+    write_judge_doc(s8c, f1, base_rows + [_jr(CD.ITEM_D8_CYL)])
+    check("CD-2 table row 2 item (0 rows expected) appears -> stop", "D8 min true cylinder" in
+          CD.cd2_items(row1, PARAMS).get("stop", ""))
+    write_judge_doc(s8c, f1, [_jr(CD.ITEM_P4_OUT), _jr("6 relevel time")])
+    check("CD-2/CD-3 event item on a non-event row -> stop (row class mismatch)",
+          "outside the table's row class" in CD.cd2_items(row1, PARAMS).get("stop", ""))
+    write_judge_doc(s8c, f1, [_jr(CD.ITEM_P4_MOVING, kind="info"), _jr("6 relevel time")])
+    bi = CD.cd2_items(row1, PARAMS)
+    check("CD-2 recalc item that came as a record kind -> record (both values kept, not judged)",
+          bi["entries"][0]["use"] == "record" and "recalc" in bi["entries"][0] and bi["verdict"] == "pass", bi)
+    f_none = _l2b_case(tmp, "S8a_none")
+    check("CD-2 no original judge output -> 판정 불가 with reason",
+          CD.cd2_items(C.load_row(f_none, "l2b", L2B_ARGV), PARAMS)[CD.REASON_KEY].startswith(CD.REASON_NO_JUDGE))
+    # C1: R40-2 hold (rigid), fail (compliant, passed check), REANCHOR exclusion, no t_lift
+    f2 = _l2b_case(tmp, "S8a_dip", dip=(1, 21.0, 21.05, 5000.0))
+    write_judge_doc(s8c, f2, [_jr(CD.ITEM_C1), _jr("6 relevel time")])
+    b2 = CD.cd2_items(C.load_row(f2, "l2b", L2B_ARGV), PARAMS)
+    check("CD-2 C1 recalc below F_min + 5 kN within 8 s, slow min >= limit, rigid crawler -> hold -> 판정 불가",
+          b2["entries"][0]["recalc"]["verdict"] == "hold" and b2["verdict"] == "indeterminate"
+          and CD.REASON_JUDGE_HOLD in b2[CD.REASON_KEY], b2)
+    f2c = _edit_result(f2, tmp / "r24" / "S8a_dipc" / "case", lambda r: r["settings"].update(
+        s8={"crawler_contact": "nsc_compliant", "crawler_check_passed": True}))
+    write_judge_doc(s8c, f2c, [_jr(CD.ITEM_C1), _jr("6 relevel time")])
+    b2c = CD.cd2_items(C.load_row(f2c, "l2b", L2B_ARGV), PARAMS)
+    check("CD-2 C1 recalc on a compliant crawler with S8-L4 passed -> 미달 (no hold), change reason recorded",
+          b2c["verdict"] == "fail" and b2c["entries"][0].get("cd7_change_reason"), b2c)
+    f2r = _edit_result(f2, tmp / "r24" / "S8a_reanchor" / "case", lambda r: r.update(phases=[
+        [0.1, "check"], [5.0, "touch"], [15.0, "level"], [20.9, "reanchor"], [21.2, "level"], [35.0, "done"],
+        [36.0, "ready"]]))
+    write_judge_doc(s8c, f2r, [_jr(CD.ITEM_C1), _jr("6 relevel time")])
+    b2r = CD.cd2_items(C.load_row(f2r, "l2b", L2B_ARGV), PARAMS)
+    check("CD-2 C1 recalc: the dip inside REANCHOR is excluded -> pass", b2r["verdict"] == "pass"
+          and b2r["entries"][0]["recalc"]["reanchor_windows_s"], b2r["entries"][0]["recalc"])
+    f3 = _l2b_case(tmp, "S8a_nolift", liftoff=200.0)
+    write_judge_doc(s8c, f3, [_jr(CD.ITEM_C1), _jr("6 relevel time")])
+    b3 = CD.cd2_items(C.load_row(f3, "l2b", L2B_ARGV), PARAMS)
+    check("CD-2 (a) no t_lift -> recalc item 판정 불가 (hold class), reason 't_lift 없음'",
+          b3["verdict"] == "indeterminate" and CD.REASON_NO_TLIFT in b3[CD.REASON_KEY], b3)
+    # ---- CD-3 event classes
+    ns = types.SimpleNamespace
+    ev = CD.event_class(ns(result={"settings": {"event": "drop_RR_30"}}), PARAMS["v_max_m_s"])
+    check("CD-3 settings.event drop_RR_30 -> floor event", ev["class"] == "floor")
+    fast = {"settings": {}, "event_t_s": 30.0, "event": {"spec": {"kind": "settle", "leg": "FL", "depth_m": 0.05,
+                                                                  "ramp_s": 0.5}}}
+    check("CD-3 settle FL 100 mm/s > v_max with event_t_s -> fast settle (FL + diagonal RR)",
+          CD.event_class(ns(result=fast), PARAMS["v_max_m_s"]).get("event_legs") == ["FL", "RR"])
+    slow = copy.deepcopy(fast)
+    slow["event"]["spec"].update(depth_m=0.0115, ramp_s=2.0)
+    check("CD-3 E_G4 settle 5.75 mm/s -> non-event", CD.event_class(ns(result=slow), PARAMS["v_max_m_s"])["class"]
+          == "none")
+    noev = copy.deepcopy(fast)
+    noev.pop("event_t_s")
+    zero = copy.deepcopy(fast)
+    zero["event"]["spec"]["ramp_s"] = 0.0
+    check("CD-3 fast settle without event_t_s -> non-event; ramp 0 -> infinite speed -> fast",
+          CD.event_class(ns(result=noev), PARAMS["v_max_m_s"])["class"] == "none"
+          and CD.event_class(ns(result=zero), PARAMS["v_max_m_s"])["class"] == "fast_settle")
+    # ---- CD-3 floor window and pressure items
+    def floor_row(group, lift=None, event_t=30.0, edit_rec=None):
+        def fn(r):
+            r["settings"].update(event="drop_RR_30", level="top")
+            if event_t is not None:
+                r["event_t_s"] = event_t
+        f = _edit_result(_l2b_case(tmp, group + "_src"), tmp / "r24" / group / "case", fn)
+        if lift is not None:
+            z = dict(np.load(f / "pads.npz"))
+            sel = (z["t"] >= lift[0]) & (z["t"] < lift[1])
+            z["N"][sel, 3] = 0.0
+            np.savez(f / "pads.npz", **z)
+        if edit_rec is not None:
+            z = dict(np.load(f / "record" / "record.npz"))
+            edit_rec(z)
+            np.savez(f / "record" / "record.npz", **z)
+        return f
+    r_nl = C.load_row(floor_row("S8f_nolift"), "l2b", L2B_ARGV)
+    w = CD.event_window(r_nl, CD.event_class(r_nl, PARAMS["v_max_m_s"]), None)
+    check("CD-3 floor window, RR never lifts -> W = [t_event, t_event + T_3] (abs 33.0 .. 33.82)",
+          abs(w["start_s"] - 33.0) < 1e-9 and abs(w["end_s"] - 33.82) < 1e-9, w)
+    r_l = C.load_row(floor_row("S8f_lift", lift=(33.5, 34.0)), "l2b", L2B_ARGV)
+    w = CD.event_window(r_l, CD.event_class(r_l, PARAMS["v_max_m_s"]), None)
+    check("CD-3 floor window: RR last lifted 1 ms sample 33.999 -> re-ground 34.000, end 34.82",
+          abs(w["rr_last_reground_s"] - 34.0) < 1e-9 and abs(w["end_s"] - 34.82) < 1e-9, w)
+    r_cap = C.load_row(floor_row("S8f_cap", lift=(33.5, 200.0)), "l2b", L2B_ARGV)
+    w = CD.event_window(r_cap, CD.event_class(r_cap, PARAMS["v_max_m_s"]), None)
+    check("CD-3 floor window: RR lifted to the record end -> end = t_event + 5 s", abs(w["end_s"] - 38.0) < 1e-9, w)
+    r_ne = C.load_row(floor_row("S8f_noevt", event_t=None), "l2b", L2B_ARGV)
+    w = CD.event_window(r_ne, CD.event_class(r_ne, PARAMS["v_max_m_s"]), None)
+    check("CD-3 floor event without event_t_s -> first READY + 5 s (abs 39 + 5)",
+          abs(w["t_event_s"] - 44.0) < 1e-9 and w["t_event_basis"] == "first READY + 5 s", w)
+    A = PARAMS["head_area_m2"]
+
+    def press(z):
+        t = z["t"]
+        z["u_applied"] = np.zeros_like(z["u_applied"])
+        z["F_cyl"] = np.full_like(z["F_cyl"], 50e5 * A[0])
+        k_out = int(np.argmin(np.abs(t - 50.0)))
+        z["u_applied"][k_out, 0] = 0.005
+        z["F_cyl"][k_out, 0] = 200e5 * A[0]           # extension outside W: 200 bar > 180
+        k_ret = int(np.argmin(np.abs(t - 52.0)))
+        z["u_applied"][k_ret, 1] = -0.005
+        z["F_cyl"][k_ret, 1] = 300e5 * A[1]           # retraction outside W: recorded only
+        k_in = int(np.argmin(np.abs(t - 33.5)))
+        z["F_cyl"][k_in, 2] = 360e5 * A[2]            # hold inside W: 360 bar > 350
+    r_p = C.load_row(floor_row("S8f_press", edit_rec=press), "l2b", L2B_ARGV)
+    ev_p = CD.event_class(r_p, PARAMS["v_max_m_s"])
+    it = CD.cd3_items(r_p, PARAMS, ev_p, CD.event_window(r_p, ev_p, None))
+    check("CD-3 W 밖: extension 200 bar -> fail; retraction 300 bar recorded (leg FR), W 안 hold 360 bar -> fail",
+          it[CD.ITEM_P4_OUT]["verdict"] == "fail" and it[CD.ITEM_P4_OUT]["retract_record"]["leg"] == "FR"
+          and it[CD.ITEM_P4_IN]["verdict"] == "fail" and it[CD.ITEM_P4_IN]["state"] == "hold"
+          and it[CD.ITEM_P4_SAT]["verdict"] == "pass", it)
+
+    def sat(z):
+        press(z)
+        k_out = int(np.argmin(np.abs(z["t"] - 50.0)))
+        z["F_cyl"][k_out, 0] = 215e5 * A[0]
+    r_s = C.load_row(floor_row("S8f_sat", edit_rec=sat), "l2b", L2B_ARGV)
+    ev_s = CD.event_class(r_s, PARAMS["v_max_m_s"])
+    it_s = CD.cd3_items(r_s, PARAMS, ev_s, CD.event_window(r_s, ev_s, None))
+    check("CD-3 saturation: extension 215 bar outside W -> 1 sample, fail",
+          it_s[CD.ITEM_P4_SAT]["count"] == 1 and it_s[CD.ITEM_P4_SAT]["verdict"] == "fail", it_s[CD.ITEM_P4_SAT])
+    f_w = floor_row("S8f_judgewin")
+    write_judge_doc(s8c, f_w, [_jr(CD.ITEM_P4_OUT), _jr(CD.ITEM_P4_IN), _jr(CD.ITEM_P4_SAT)],
+                    event_window={"pressure_end_s": 30.82 + 0.2})
+    bw = CD.cd2_items(C.load_row(f_w, "l2b", L2B_ARGV), PARAMS)
+    check("CD-3 computed window end vs original judge end differs by 0.2 s -> stop and ask",
+          "CD-3: computed window end" in bw.get("stop", "") and abs(bw["window"]["diff_vs_judge_s"] + 0.2) < 1e-9, bw)
+    write_judge_doc(s8c, f_w, [_jr(CD.ITEM_P4_OUT), _jr(CD.ITEM_P4_IN), _jr(CD.ITEM_P4_SAT)],
+                    event_window={"pressure_end_s": 30.82})
+    bw2 = CD.cd2_items(C.load_row(f_w, "l2b", L2B_ARGV), PARAMS)
+    check("CD-3 equal window ends -> no stop, W items recalculated, CD-2 통과", "stop" not in bw2
+          and bw2["verdict"] == "pass" and abs(bw2["window"]["diff_vs_judge_s"]) < 1e-9, bw2)
+    f_fs = _edit_result(_l2b_case(tmp, "S8s_src"), tmp / "r24" / "S8s_fast" / "case", lambda r: r.update(
+        event_t_s=30.0, event={"spec": {"kind": "settle", "leg": "FL", "depth_m": 0.05, "ramp_s": 0.5}}))
+    r_fs = C.load_row(f_fs, "l2b", L2B_ARGV)
+    ev_fs = CD.event_class(r_fs, PARAMS["v_max_m_s"])
+    w_read = CD.event_window(r_fs, ev_fs, {"event_window": {"pressure_end_s": 31.0}})
+    w_cap = CD.event_window(r_fs, ev_fs, None)
+    check("CD-3 fast settle: original judge window read (abs 34.0); without it and without airborne -> t_event + 5",
+          abs(w_read["end_s"] - 34.0) < 1e-9 and w_read["method"].startswith("original")
+          and abs(w_cap["end_s"] - 38.0) < 1e-9, (w_read, w_cap))
+    # ---- CD-4 P3-7 (S-1 window replay, gate, loaded windows)
+    sp = scm_spec()
+    sp.update(crawler=[("ramp", 22.95, 23.0)], recontacts=[])
+
+    def p37_row(name, slope, meta, events=(), mode="restart", crawler=None):
+        s = copy.deepcopy(sp)
+        s["events"] = list(s["events"]) + list(events)
+        if crawler is not None:
+            s["crawler"] = crawler
+        f = write_scm(tmp / "r24" / name, s)
+        write_p37_record(f, s, [(20.0, 26.0)], _p37_profile(slope), meta=meta, mode=mode)
+        return C.load_row(f, "scm", SCM_VB_ARGV)
+    p = CD.p3_7(p37_row("p37_ok", 600.0, (23.0, 24.0)), PARAMS)
+    check("CD-4 P3-7: gate (t_P 23.0 = first tail sample, t_LOC 24.0) ok; loaded rise 6 kN >= 4 kN -> pass",
+          p["reconstruct_ok"] and p["verdict"] == "pass" and abs(p["rise_min_loaded_N"] - 6000.0) < 1e-3, p)
+    p = CD.p3_7(p37_row("p37_low", 300.0, (23.0, 24.0)), PARAMS)
+    check("CD-4 P3-7: loaded rise 3 kN < 4 kN -> fail", p["verdict"] == "fail"
+          and abs(p["rise_min_loaded_N"] - 3000.0) < 1e-3, p)
+    p = CD.p3_7(p37_row("p37_gate", 600.0, (23.1, 24.0)), PARAMS)
+    check("CD-4 P3-7: meta t_P differs by 0.1 s -> reconstruction gate fails -> 판정 불가 with reason",
+          p["verdict"] == "indeterminate" and "재구성 관문" in p[CD.REASON_KEY], p)
+    p = CD.p3_7(p37_row("p37_revoke", 600.0, (24.1, 25.1), events=[(24.05, R.EVENT_LOC_REVOKED)]), PARAMS)
+    check("CD-4 P3-7: LOC revoked at 24.05 -> scan resumes after it, last LOC (24.1, 25.1) = meta",
+          p["reconstruct_ok"] and (p["t_P_rec_s"], p["t_loc_rec_s"]) == (24.1, 25.1), p)
+    reap = [(23.45, "leg_reapproach_start:FL"), (23.75, "leg_reapproach_contact:FL")]
+    p = CD.p3_7(p37_row("p37_lwa", 600.0, (23.8, 24.8), events=reap), PARAMS)
+    check("CD-4 P3-7: LWa (mode restart) clears the window during a re-approach -> LOC (23.8, 24.8)",
+          p["reconstruct_ok"], p)
+    p = CD.p3_7(p37_row("p37_lwoff", 600.0, (23.8, 24.8), events=reap, mode="off"), PARAMS)
+    check("CD-4 P3-7: same run read with LW off -> LOC (23.0, 24.0) != meta -> gate fails",
+          not p["reconstruct_ok"] and p["verdict"] == "indeterminate", p)
+    p = CD.p3_7(p37_row("p37_lwb", 600.0, (23.0, 24.0), mode="LWb"), PARAMS)
+    check("CD-4 P3-7: unknown window rule (LWb) -> 판정 불가", p["verdict"] == "indeterminate", p)
+    p = CD.p3_7(p37_row("p37_free", 600.0, (23.0, 24.0), crawler=[("ramp", 19.0, 19.5)]), PARAMS)
+    check("CD-4 P3-7: no loaded window -> pass ('부담 창 없음')", p["verdict"] == "pass"
+          and p["rise_min_loaded_N"] is None, p)
+    p = CD.p3_7(p37_row("p37_rec", 300.0, (23.0, 24.0)), PARAMS, judged=False)
+    check("CD-4 P3-7 recorded (C-4 / C-8 / PS-c base): verdict record, record_verdict kept",
+          p["verdict"] == "record" and p["record_verdict"] == "fail", p)
+    # ---- CD-5 READY none, CD-4 guard
+    sp5 = scm_spec()
+    sp5["phases"] = [(8.1, "check"), (12.0, "touch"), (20.0, "level"), (30.0, "done")]
+    r5 = scm_row(tmp / "r24", sp5, "noready")
+    it5, k5, _ = K.items_p3(r5, PARAMS, R.READY_SLOPE_S, ready_judged=True, g6=False, allow_stop=True)
+    CD.apply_ready_none(it5, k5, r5)
+    check("CD-5 no READY: P3-1 READY condition 해당 없음, recontact condition judged; P3-4 / P3-5 해당 없음; "
+          "judged P3-6 미달",
+          it5["P3-1"]["verdict"] in ("pass", "flag") and it5["P3-1"]["ready_window_condition"] == CD.NA_NO_READY
+          and it5["P3-4"]["verdict"] == "na" and it5["P3-5"]["verdict"] == "na" and it5["P3-6"]["verdict"] == "fail",
+          {k: it5[k]["verdict"] for k in ("P3-1", "P3-4", "P3-5", "P3-6")})
+    it6, k6, _ = K.items_p3(r5, PARAMS, R.READY_FLAT_S, ready_judged=False, g6=True, allow_stop=True)
+    CD.apply_ready_none(it6, k6, r5)
+    check("CD-5 no READY: recorded P3-6 keeps record with value 해당 없음(READY 없음); G6-6 미달",
+          it6["P3-6"]["verdict"] == "record" and it6["P3-6"]["value_cd5"] == CD.NA_NO_READY
+          and it6["G6-6"]["verdict"] == "fail")
+    gi = {k: {"verdict": "na"} for k in CD.P3_KEYS}
+    gk = list(CD.P3_KEYS)
+    check("CD-4 guard: all P3 grade items 해당 없음 -> row item CD-4_grade_guard 판정 불가",
+          CD.scm_grade_guard(gi, gk)["verdict"] == "indeterminate" and "CD-4_grade_guard" in gk)
+    # ---- CD-6 targets, CD-1 C-5 rows
+    it_t = {"T4-0": {"verdict": "pass"}, "T4": {"verdict": "pass", "over_0p6kN": 0}, "T5": {"verdict": "pass"}}
+    keys_t = ["T4-0", "T4", "T5", "J-P3"]
+    CD.apply_t45_targets(it_t, keys_t, ns(case="E_G4_Fs4", engine="l2b"))
+    check("CD-6 E_G4_Fs4 (not in v5 rev6 3 rows 1-18) -> T4-0 / T4 / T5 해당 없음(대상 행 아님), out of keys",
+          keys_t == ["J-P3"] and it_t["T4"]["verdict"] == "na" and it_t["T4"]["value"] == CD.NA_NOT_TARGET)
+    keys_t2 = ["J-P3"]
+    CD.apply_t45_targets({}, keys_t2, ns(case="E_RE1bF_Fs8_LS4", engine="l2b"))
+    check("CD-6 E_RE1bF_Fs8_LS4 (row 13-18) -> T4-0 / T4 / T5 graded; 18 target rows",
+          keys_t2 == ["J-P3", "T4-0", "T4", "T5"] and len(CD.T45_TARGET_ROWS) == 18)
+    f_c5 = _l2b_case(tmp, "S8c5", name="K0_top_fup3.2_Fs0")
+    write_judge_doc(s8c, f_c5, [_jr(CD.ITEM_C1), _jr("6 relevel time")])
+    B5.AUX, B5.CTX = {}, {}
+    i5, k5b, _, rec5 = B5.judge_row(C.load_row(f_c5, "l2b", L2B_ARGV), {"case": "K0_top_fup3.2_Fs0"}, "stage3",
+                                    PARAMS)
+    check("CD-1 C-5 L2b target row: keys = T4-0 / T4 / T5, J-P3, J11, CD-2; H-9 and K1_class not graded",
+          set(k5b) == {"T4-0", "T4", "T5", "J-P3", "J11_window", "CD-2"} and not rec5
+          and i5["H-9"].get("cd1_role"), k5b)
+    s5 = write_scm(tmp / "r24" / "c5scm", sp)
+    write_p37_record(s5, sp, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))
+    i5s, k5s, _, _ = B5.judge_row(C.load_row(s5, "scm", SCM_VB_ARGV), {"case": "c5scm"}, "stage3", PARAMS)
+    check("CD-1 / CD-4 C-5 SCM row: P3-1..P3-5, P3-7, P3-8, FAULT0 graded; P3-6 / P3-9 records; T4 / T5 해당 없음",
+          {"P3-1", "P3-2", "P3-3", "P3-4", "P3-5", "P3-7", "P3-8", "FAULT0"} <= set(k5s)
+          and not {"P3-6", "P3-9", "T4", "identity"} & set(k5s) and i5s["T4"]["value"] == CD.NA_NOT_TARGET, k5s)
+    ec = B5.engine_counts([{"engine": "l2b"}] * 24 + [{"engine": "scm"}] * 10)
+    check("CD-1 C-5 engine counts L2b 24 / SCM 10 -> S-15", "S-15" in ec.get("stop", ""), ec)
+    # ---- CD-7 reasons, CD-11 item list
+    rows7 = [{"case": "a", "status": "판정 불가", "judged_keys": ["X"], "items": {"X": {"verdict": "indeterminate"}}},
+             {"case": "b", "status": "판정 불가", "judged_keys": ["Y"],
+              "items": {"Y": {"verdict": "indeterminate", "reason": "원 입력 결측 (x)"}}}]
+    empty = CD.attach_reasons(rows7)
+    check("CD-7: empty reason detected (item and row), filled reason kept as row reason",
+          "a: X" in empty and "a: row" in empty and rows7[1][CD.ROW_REASON_KEY].startswith("Y: 원 입력 결측"), empty)
+    rows11 = [{"case": "a", "status": "통과", "judged_keys": ["CD-2", "J-P3"],
+               "items": {"CD-2": {"entries": [{"item": CD.ITEM_P4_OUT, "use": "judged", "handling": "recalc",
+                                               "verdict": "pass", "cd3_sub_id": "W 밖"},
+                                              {"item": "S8-L5", "use": "record", "handling": "original_other",
+                                               "verdict": "record"}]},
+                         "J-P3": {"verdict": "na"}}},
+              {"case": "b", "status": "통과", "judged_keys": ["D2x"], "items": {"D2x": {"verdict": "record"}}}]
+    lst = CD.item_list("C-5", rows11)
+    ids = [x["common_id"] for x in lst["rows"][0]["items"]]
+    check("CD-11: CD-2 expanded (counted judge items only, method 재계산, CD-3 sub id W 밖), row without a graded "
+          "item -> stop", ids == [CD.ITEM_P4_OUT, "J-P3"] and lst["rows"][0]["items"][0]["method"] == "재계산"
+          and lst["rows"][0]["items"][0]["cd3_sub_id"] == "W 밖" and "b: 등급 항목 0" in lst.get("stop", ""), lst)
+    # ---- CD-8 C-8 record, C-8a S-9 with the R3d output
+    r8 = scm_row(tmp / "r24", copy.deepcopy(sp), "oc5_Kc3_VB_top")
+    write_p37_record(r8.folder, sp, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))
+    r8 = C.load_row(r8.folder, "scm", ["run_S9.py", "level", "--crawler-kn-scale", "3"])
+    i8, k8, _, rec8 = B8.judge_row(r8, {"case": "oc5_Kc3_VB_top"}, "OC5", PARAMS)
+    v8 = i8["CD-8_record"]
+    check("CD-8: record values written (F^a / F^t minima, LAS-b start text, k = 3 from argv, P3-7 value), "
+          "기록 완료", rec8 and "CD-8_record" in k8 and not v8["missing"] and v8["values"]["crawler_kn_scale"] == 3.0
+          and v8["values"]["las_start_s"] == "시작 없음" and v8["values"]["P3-7"] in ("pass", "fail"), v8["missing"])
+    m74 = {"m_N": 9000.0, "per_leg": {"min_leg": "FR"}}
+    r3d = tmp / "r24_r3d_c8.json"
+    r3d.write_text(json.dumps({"rows": [{"case": r8.case, "items": {"m_7_4": m74}}]}), encoding="utf-8")
+    CD.CONTEXT["r3d_c8"] = str(r3d)
+    s9 = CD.c8a_s9_record(r8, m74)
+    check("CD-8 C-8a S-9: m and minimum leg equal R3d -> L-5 known limit, no stop",
+          s9["r3d_equal"] and "stop" not in s9 and s9["known_limit"].startswith("L-5"), s9)
+    s9b = CD.c8a_s9_record(r8, dict(m74, m_N=9001.0))
+    check("CD-8 C-8a S-9: m differs from R3d -> 원판 7.4 stop", "S-9" in s9b.get("stop", ""), s9b)
+    CD.CONTEXT["r3d_c8"] = str(tmp / "absent.json")
+    check("CD-8 C-8a S-9 without the R3d output -> stop", "S-9" in CD.c8a_s9_record(r8, m74).get("stop", ""))
+    check("CD-8 C-8a identified by criteria id, else by Kc3 + VB in the row name",
+          CD.is_c8a({"criteria_id": "C-8a"}, ns(case="x")) and not CD.is_c8a({"criteria_id": "C-8b"}, r8)
+          and CD.is_c8a({}, r8))
+    # ---- CD-9 C-4 record
+    r9 = scm_row(tmp / "r24", copy.deepcopy(sp), "c4_rigid")
+    res9 = json.loads((r9.folder / "result.json").read_text(encoding="utf-8"))
+    res9["args"]["rigid_base"] = "FR"
+    (r9.folder / "result.json").write_text(json.dumps(res9), encoding="utf-8")
+    write_p37_record(r9.folder, sp, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))
+    import p2_b_c4 as B4
+    i9, k9, _, _ = B4.judge_row(C.load_row(r9.folder, "scm", SCM_VB_ARGV), {}, "record_D8_G6", PARAMS)
+    c9 = i9["CD-9_record"]
+    check("CD-9: rigid_base row -> P3-5 해당 없음(rigid_base), values complete -> 기록 완료, row key CD-9_record",
+          k9 == ["CD-9_record"] and c9["values"]["P3-5"] == CD.NA_RIGID_BASE and c9["record_status"] == "기록 완료",
+          c9["missing"])
+    i9["P3-3"]["min_N"] = None
+    check("CD-9: per-leg minimum after departure absent -> 기록 불완전",
+          CD.c4_record(C.load_row(r9.folder, "scm", SCM_VB_ARGV), i9)["record_status"] == "기록 불완전")
+    # ---- CD-2 (1) judge provenance
+    pv = CD.judge_provenance(REPO)
+    keep = CD.JUDGE_CODE_PATHS
+    CD.JUDGE_CODE_PATHS = keep + ("06_analysis/02_control/verif_matrix/v5_resume_4368/path2_chrono/p2_rules.py",)
+    pv2 = CD.judge_provenance(REPO)
+    CD.JUDGE_CODE_PATHS = keep
+    check("CD-2 (1): 03_src / run_S8C / run_S6C equal b9f5707 -> ok with commit and file sha; a differing path "
+          "-> S-11", pv["ok"] and len(pv["checkout_commit"]) == 40 and all(pv["judge_files_sha256"].values())
+          and not pv2["ok"] and pv2["stop"].startswith("S-11"), (pv, pv2.get("stop")))
+    CD.CONTEXT.clear()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tmp")
@@ -2008,6 +2427,7 @@ def main():
     t_seal(tmp, a.rules_repo)
     t_cli(tmp)
     t_resolve(tmp)
+    t_rev24(tmp)
     n_fail = sum(1 for r in RESULTS if not r["ok"])
     tool_sha, per = p2_chrono.tool_sha(None)
     print(json.dumps({"tool": "test_p2_synthetic.py", "tests": len(RESULTS), "failed": n_fail,

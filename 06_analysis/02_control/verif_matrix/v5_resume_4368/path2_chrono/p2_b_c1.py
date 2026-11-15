@@ -1,7 +1,10 @@
 """C-1 (J-3): D-1 fixed rigid rows. Rules 5.2 C-1, 7.1 (d1 rules 11):
-- C2-01, 02, 04, 05, 06, 08 (L2b NSC, VB): D8.P judged, tag "이륙 뒤 8 s 강체 크롤러 상한" -> R40-2 hold.
-- C1-09..12 (L1-R V0 Kc x3): record (D8.P computed, failures reported), rule 8 transfer is H-2's job.
+- C2-01, 02, 04, 05, 06, 08 (L2b NSC, VB): rev24 CD-2 (original judge items with the override table; the C1
+  item's R40-2 hold is part of it). The earlier D8.P items stay as records.
+- C1-09..12 (L1-R V0 Kc x3): record (D8.P computed, failures reported), rule 8 transfer is H-2's job; outside the
+  rev24 common block (its scope sentence).
 """
+import p2_cd as CD
 import p2_kinds as K
 
 CRITERIA = ("C-1",)
@@ -20,6 +23,7 @@ def kind_of(case):
 def judge_row(row, case, kind, params):
     if kind == "D8P_judged":
         items, keys, notes = K.items_d8p(row, params, judged=True, hold=True)
+        CD.use_cd2(items, keys, row, params)
         return items, keys, notes, False
     if kind == "D8P_record":
         items, keys, notes = K.items_d8p(row, params, judged=False, hold=False)
