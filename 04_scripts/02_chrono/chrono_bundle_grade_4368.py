@@ -108,7 +108,7 @@ import chrono_rows_judge_4368 as rows_judge  # noqa: E402 - needs the path above
 
 InputError = rows_judge.InputError
 
-TOOL_VERSION = ("chrono_bundle_grade_4368 v7 (python-expert 2026-11-16, rules rev18 R18-2, rev19, "
+TOOL_VERSION = ("chrono_bundle_grade_4368 v8 (python-expert 2026-11-16, rules rev18 R18-2, rev19, "
                 "rev21, rev22 R22-1, rev23 R23-1, rev24 CD-2 / CD-5 / CD-7 / CD-8 / CD-9 / "
                 "CD-11, rev25 CD-4 P3-6 / CD-5 / CD-8 / CD-11)")
 RULES_TEXT = ("rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 "
