@@ -27,7 +27,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev12).
+* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev20).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -104,12 +104,23 @@ RULES_SEALS = {
     # rev15 R15-7 (seal commit cc0d9b8, sealed 2026-11-15 00:08:30 +09:00); rev13 / rev14 are not
     # in this list (rev13 R13-7, rev14 R14-7: checked by tools/verif/seal_check.py)
     "v5_resume_4368_rules_rev15.md": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    # rev18 R18-1 2: rev16 .. rev18 in the seal lists of both Chrono judges (R3b; rev16 sealed
+    # 2026-11-15 09:58:22, rev17 10:51:35, rev18 14:28:43 +09:00, seal commit S6 59c933b)
+    "v5_resume_4368_rules_rev16.md": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "v5_resume_4368_rules_rev17.md": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "v5_resume_4368_rules_rev18.md": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    # rev19 R19-8 2 (seal commit S7 38897f0 on S6 59c933b)
+    "v5_resume_4368_rules_rev19.md": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    # rev20 R20-4 2 (seal commit S8 4d8a95d on S7 38897f0)
+    "v5_resume_4368_rules_rev20.md": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 of 2026-11-15);
-both the file and its ``.sha256`` must match (original 8.2 S-1)."""
-RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 (seal list; rev13 / rev14 "
-                     "by tools/verif/seal_check.py, rev15 R15-7): rev5 R5-A1, rev6 R6-A / R6-B, "
-                     "rev8 R8-2 / R8-3, rev9 .. rev12 items, rev15 R15-3 (V0 L2b D-29)")
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev20 of
+2026-11-15); both the file and its ``.sha256`` must match (original 8.2 S-1)."""
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev20 (seal list; "
+                     "rev13 / rev14 by tools/verif/seal_check.py, rev15 R15-7, rev18 R18-1 2, "
+                     "rev19 R19-8 2, rev20 R20-4 2): "
+                     "rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3, rev9 .. rev12 items, "
+                     "rev15 R15-3 (V0 L2b D-29)")
 """Output ``rules`` text (a description; the seal list above is what is checked)."""
 
 # --- disclosure (requirement 3) ---------------------------------------------------------------------------------

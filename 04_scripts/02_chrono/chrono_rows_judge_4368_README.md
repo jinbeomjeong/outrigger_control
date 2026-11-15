@@ -96,7 +96,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 6. 봉인 대조 (요건 4)
 
-원판·rev1~rev12·rev15의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`, rev12 = `78f1f99b…`, rev15 = `0162561c…`(R15-7, 봉인 커밋 `cc0d9b8`). rev13·rev14는 목록에 없고 `tools/verif/seal_check.py`로 확인한다(rev13 R13-7, rev14 R14-7). 출력 `rules`는 설명 문자열(`RULES_DESCRIPTION`)이고, 대조 대상은 이 목록이다. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
+원판·rev1~rev12·rev15~rev20의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`, rev12 = `78f1f99b…`, rev15 = `0162561c…`(R15-7, 봉인 커밋 `cc0d9b8`), rev16 = `b3899194…`, rev17 = `9400660e…`, rev18 = `3693a69c…`(rev18 R18-1 2, 봉인 파일 커밋 S6 `59c933b`), rev19 = `7f87b8bb…`(rev19 R19-8 2, 봉인 파일 커밋 S7 `38897f0`), rev20 = `615a8fbd…`(rev20 R20-4 2, 봉인 파일 커밋 S8 `4d8a95d`). rev13·rev14는 목록에 없고 `tools/verif/seal_check.py`로 확인한다(rev13 R13-7, rev14 R14-7). 묶음 등급 도구 `chrono_bundle_grade_4368.py`(9절)는 이 목록을 그대로 쓴다. 출력 `rules`는 설명 문자열(`RULES_DESCRIPTION`)이고, 대조 대상은 이 목록이다. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
 
 ## 7. rev8~rev10 반영: J-P3 범위, J11 입력·범위, LS 판별 (v3, python-expert 2026-11-13)
 
@@ -120,4 +120,56 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 8. 시험
 
-`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 43개 = 합성 입력 41개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록 2개·rev15 R15-3 V0 L2b 10 Hz 구간 7개·rev15 봉인 2개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.
+`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 45개 = 합성 입력 43개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록 2개·rev15 R15-3 V0 L2b 10 Hz 구간 7개·rev15 봉인 2개·rev16~rev18 봉인 2개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.
+
+## 9. 경로 1 묶음 등급 집계 `chrono_bundle_grade_4368.py` (rev18 R18-2, rev19 R19-1~R19-6, python-expert 2026-11-15)
+
+- 이 도구는 시뮬레이션·다른 판정기를 돌리지 않는다. 이미 만든 출력과 실행 파일(`result.json`, `step_series.npz`, `pads.npz`, `record/record.npz`, `soil_event_series.npz`)만 읽어 묶음 등급(C-1·C-2·C-3·C-5)과 기록 상태(C-6·C-7, C-8)를 낸다. 봉인 목록과 커밋 정체성·manifest·YAML 함수는 `chrono_rows_judge_4368.py`의 것을 import해 쓴다(같은 봉인 목록: 원판~rev12, rev15~rev20, rev20 R20-4 2).
+- 실행(`--git-at-start`는 R2, R18-4):
+
+```
+python -I -B -X utf8 04_scripts/02_chrono/chrono_bundle_grade_4368.py grade --bundle C-1 --git-at-start <R2> \
+    --batch <07_results/S9/batch_V5-RESUME-K1-C1_<stamp>> --rows-judge <judge_C1.json> \
+    --runner-judge-dir <runner_judge> [--params 02_params/rexome33.yaml] --out <bundle_C1.json>
+... grade --bundle C-5 ... --t45 <t45_C5.json>          # chrono_t45_replay --t5 (rev7) 출력
+... grade --bundle C-6C7 --git-at-start <R2> --batch <...C6C7_<stamp>> --out <bundle_C6C7.json>
+... grade --bundle C-8 --git-at-start <R2> --batch <...OC5_<stamp>> --oc5 <oc5_C-8a.json> --oc5 <oc5_C-8b.json> \
+    --fmin-time <fmin_C-8a.json> --fmin-time <fmin_C-8b.json> --out <bundle_C8.json>
+... seals [--rules-dir <verif_matrix>]
+```
+
+- 종료 코드: 0 멈춤 없음, 1 멈춤(S-15, S-12, S-11 러너 셈·폴더, H-7, R40-2 보류, S-2, J11, T4-0·설정 불일치, VB 고유 실패, R19-5 t_lift 차, C-8b S-9·S-10) 또는 봉인 불일치, 2 입력 없음·잘못됨, 3 내부 오류. 마지막 줄 JSON, 그 앞 줄 `errors N`. `미달`은 판정 결과이므로 종료 0이다.
+
+| 항목 | 정의 |
+|---|---|
+| 행 열거·행 수(S-15) | `--batch`의 `batch.json` `cases[]` 가운데 묶음 `criteria_id`(C-6C7 = C-6·C-7·C-7a·C-7b, C-8 = C-8a·C-8b) 행. 각 행이 manifest 그 묶음의 행이어야 하고 수가 C-1 10, C-2 6, C-3 2, C-5 35, C-6C7 3, C-8 2와 같아야 한다. 다르거나 manifest에 없는 행·중복이 있으면 S-15이고 등급을 내지 않는다. 행 0개도 등급 없음 |
+| 행 역할(R19-2) | `batch.json` `d1_role`: `record`(C1-09~12)·`timing base`(PS-c 기준 행) = 기록 행(묶음 등급 밖, `record_status` 기록 완료/불완전, 실패·판정 불가는 `record_rows_reported`). PS-c 기준 행은 E 항목을 계산하지 않는다(결측 아님). `judge…`·없음(C-5) = 판정 행 |
+| L2b·L1-R 행(R19-4) | 러너 판정기 출력 `<C1\|C2\|C5>_<case>.verify_S8C.json`·`.verify_S6C.json`(`--runner-judge-dir`, `judge_b9f5707\chrono_path1\runner_judge\` 꼴)의 그 행과 `*` 행. 러너 부분 등급(`items[0]` `runner`) = `passed` 거짓이 하나라도 있으면 미달, 아니면 hold(또는 입력 없는 재계산 항목)가 있으면 판정 불가, 아니면 판정 종류 `passed` 참 항목이 0개면 판정 불가(빈 통과 막기), 아니면 FLAG/통과. 셈 대조: 파일 전체의 `passed` 거짓 수·`kind` hold 수 = `meta.failed`·`meta.hold`(없으면 0), 다르면 S-11(`runner_count_check_R19_4`). `meta.batch` 폴더 이름이 `chrono_rows_judge`가 찾은 러너 폴더와 다르면 입력 오류(S-11). 러너 항목 전체는 `runner_items`(분기 `branch`) |
+| 재계산 항목 덮어쓰기 | `C1 D8 min true rod force…` ← `C1_R40`(D-31·D-39), `4 max moving pressure`·`4 saturation steps` ← `moving_pressure_D-32`(D-32), L2b 행의 `D8 min true cylinder force >= F_min + 5 kN`(`pads.npz` `F_cyl_min_interval` 최소, 러너 문턱)·`D8 no pad lift-off`(`pads.npz` `N` ≤ 0 1 ms 표본 0개) ← D-29 t_lift부터 실행 끝(R19-5). D-29 t_lift가 없으면 D8 항목은 판정 불가. 행마다 `overrides[]`에 러너 값·재계산 값·D-29 t_lift를 남긴다. 러너가 기록 종류로 낸 항목은 기록 그대로 둔다 |
+| 러너 t_lift(R19-5) | 러너 값을 그대로 쓰는 넷: `3 F_min (1 ms)`, `3 F_min before the event`, `5a rocking amplitude`, `F2 lower-bound soundness`. L2b 행에 러너 t_lift 항목(D8 셋 포함 일곱)이 하나라도 있으면 차를 계산한다: 러너 t_lift = `s8_metrics.<case>.liftoff_s` + 행 `t0_s`, D-29 t_lift는 1 ms 기준이면 그 이상의 첫 10 Hz `record.npz` `t`로 올리고 10 Hz 구간 대체(R15-3)면 그대로. 차 > 0.1 s + 10⁻⁹ s 또는 계산 불가면 멈춤. 출력 행 `t_lift_check_R19_5`, 묶음 `runner_t_lift_R19_5`(`checks`, `max_difference_s`, `stop_rows`) |
+| SCM 행(P3) | `p3b.checks`와 재계산 항목: P3-1 = 크롤러 0(`P3-1_crawler_zero_after_ready`) ∧ D-36 재접촉(FLAG 받음), P3-2 = D-37·D-38 `within`(거짓이면 늦은 LOC FLAG가 있을 때 FLAG), P3-3 = R6-B4 t_D 뒤 `within`, P3-4 = `P3-4_verdict`, P3-5·P3-6·P3-7 = `within`, P3-8 = D-34·D-35 판정, P3-9 = FLAG 수(기록 FLAG), FAULT0 = `has_fault` 거짓. None은 판정 불가(원판 9.3) |
+| S-01~04(R19-1) | 첫 `FAULT*` 사건이 `FAULT_LIFT_STROKE_LIMIT:soil:`이면 이 도구가 실행 파일에서 조건 1~5를 계산해 그것만으로 `allowed_stop`/`fail`: 2 = `FAULT_STROKE_END` 사건 0, 3 = 첫 LEVEL `s9_rows` 행 시각부터 끝까지 `step_series.npz` `scm_pad_normal_N` ≤ 0 1 ms 표본 0, 4 = t_D(R6-B4 100표본, 없으면 거짓)부터 다리별 1 ms `F_cyl_N` 최소 ≥ F_min(YAML), 5 = `record.npz` 10 Hz 행 실행 전체 이동 최대 ≤ 180 bar·포화 0(`moving_pressure`, 두 값 따로). 입력 결측은 판정 불가. P3-1~P3-9·FAULT0·(S-03·04) G6는 기록(`record_items`). 기록으로 내리는 것은 이 등급 항목뿐이다(rev20 R20-2): 안전 종료 행에도 S-12 커밋 정체성(이 도구), `chrono_rows_judge`의 멈춤(S-2 태그 등, `stops`), J-P3는 그대로 걸리고, 원판 4.2·7.2는 R18-2a view의 `resume4368_judge.py record-check`·`k1-class`가 행 등급과 따로 판정한다 |
+| C-3 | 토양 가드 정지가 아니면 `chrono_rows_judge` G6 등급(`stroke_limited_stop` = `allowed_stop`) + G6에 없는 P3-7 |
+| PS-c 사건 행(R19-3) | `d1_select` psc인 판정 행: `soil_event.judgement.gates`의 E-1~E-7(러너 어댑터 `run_S9.judge_chrono_soil_event`가 가지 창 사건 − 0.5 s ~ `soil_event_stop_s`로 계산한 값; 느린 사건의 E-2는 해당 없음, 빠른 사건은 E-2 필요), 집단마다 게이트가 하나도 없으면 판정 불가, FLAG는 `flags`의 같은 번호. 행정 `stroke_max_run_mm` ≤ 684.8 mm. 기록: `branch_window`(`t_ev_s`, `stop_rel_s`, `stop_reason`), `after_branch`(가지 끝 뒤 `soil_event_series.npz` 다리별 최소 F_cyl·부상 표본 수), `p3b` |
+| J-P3·J11 | J-P3(rev8 R8-2)는 ③ 행만: `pass` 통과, `H-7` 실패, 그 밖 판정 불가. J11은 C-5에서 판정(`pass`·`no_fallback_leg`·`not_computed` 통과, H-7·L-e 실패), 다른 묶음은 기록 |
+| C-5 T4·T5 | 개정 6 3 18행(VB 12 + LS 6)에 `chrono_t45_replay`(개정 7, `--t5`) 행: 설정 불일치·T4-0 실패 = 판정 불가 + 멈춤, T4·T5 초과 ≥ 1 = 실패 + H-7. 출력이 개정 7이 아니면 입력 오류. 개정 6 4.6 문구를 `t4_t5_phrase`에 적는다. D2는 기록 |
+| C-5 짝(R19-6) | C-5 `batch.json` 행과 manifest C-5 행 이름의 합집합에서 찾은 VB↔V0 짝(`<case>_V0`·`_v0v`)이 개정 12 2.1의 6쌍과 정확히 같아야 한다. 다르면 S-15, 등급 없음(`vb_v0_pairs_S15`, `found_in_batch_json` 함께). VB 실패 ∧ V0 통과 = 멈춤(개정 12 2.2). 짝 등급은 `pairs_record`(기록) |
+| 묶음 등급 | 판정 행의 최악(판정 불가 > 실패 > FLAG > 통과, `allowed_stop`은 통과 쪽, 사용자 결정 65). 결측 입력이 있는 행은 판정 불가. 멈춤이 하나라도 있으면 `grade`는 비우고 `grade_without_stop`에 둔다(원판 8.2). 행 문구 `row_phrase` = `통과 n / 안전 종료 m`(명세 427.9 "따로 센다"), 미달·판정 불가는 있을 때만. `러너 미판정`은 `runner_unjudged_R19_4`(수, 행, 항목 이름별 수, 목록 밖 `kind`) |
+| C-6·C-7 | `p3a.checks` P3a-1~5와 `P3a-9_min_cylinder_force.before_liftoff.any_flag`(명세 11047 FLAG). 하나라도 없으면 그 행 `기록 불완전`. P3a-1 실패·`abort`는 `report_separately` |
+| C-8 | `resume4368_judge.py oc5`(m, 분류)와 `fmin-time`(8 s 창 시간) 출력을 행 이름으로 붙인다. 없거나 `기록`이 아니면 `기록 불완전`. C-8a S-9는 rev18 R18-5(사용자 결정 60 (A))로 처리됨을 적고 멈추지 않는다. C-8b S-9와 S-10은 멈춤 |
+
+**러너 행 분기**(`runner_verdict`, rev19 R19-4). 실제 출력의 `kind` 값은 2026-11-15에 메인 checkout `07_results/S8`·`S6`과 `judge_b9f5707\chrono_path1\runner_judge\`의 `verify_S*C*.json` 67개에서 셌다(kind, passed: 행 수).
+
+| 분기(`branch`) | 조건 | 결과 | 실측 |
+|---|---|---|---|
+| `hold` | `kind` = hold | 판정 불가 | 표본에 없음(`s8_control`이 R40-2 보류에 쓴다) |
+| `record_kind` | `kind` ∈ record, report, info, consistency, comparison, pair, sensitivity, superseded, leak_compare | 기록 | s8: record None 15191, pair None 2578, report None 1463, sensitivity None 1376, consistency None 909, info None 443, comparison None 130, superseded None 15. s6_bundle_c: report None 791, consistency None 650, info None 114, leak_compare None 34. s6_control: record None 32 |
+| `passed_true` / `passed_false` | 판정 종류(function, judged, anomaly, replay, quality) 또는 `kind` 없음, `passed` 참/거짓 | 통과 / 실패 | s8: function T 9751·F 95, judged T 8287·F 67, anomaly T 905. s6_bundle_c: function T 3719·F 290, judged T 1099·F 41, anomaly T 426, replay T 271. s6_control: judged T 82·F 2. kind 없음: function T 23, quality T 2 |
+| `passed_true_flag` | 위 참 행 가운데 anomaly note에 `FLAG` 또는 행 `flag` 참 | FLAG | – |
+| `anomaly_flag` | anomaly, `passed` None, note에 `FLAG` | FLAG | s8 anomaly None 4(`WARN_ROD_PRESSURE_FALLBACK` FLAG) |
+| `runner_unjudged` | 판정 종류, `passed` None | **러너 미판정**(기록, 실패·판정 불가 아님) | `2/5b window`(s8 15, s6 202), `3 lift-off RR time / ratio (report)`(s8 80, s6 45), `K8 shadow (B) - true floor`(s8 28, s6 270), `3 F_min after the re-READY`(8), `5a rocking amplitude after the re-READY`(8), `8 level trend time`(2), `I3 J_C: M4 max <= sensor share`(1), s6 `C-5a`·`C-5c`·`C-5`·`C-R5`·`T3` 행(40) |
+| `unknown_kind` | 위 어느 목록에도 없는 `kind` | 러너 미판정(따로 표, `unknown_kind_items`) | 표본에 없음 |
+
+- `judge_b9f5707` C-1 러너 출력 20개에는 판정 종류의 `passed` None 행이 없다.
+- 결과 본 뒤 정한 정의(R18-0, rev19)다. 판정서에는 이 표와 출력 `rows[].overrides`·`t_lift_check_R19_5`·`runner_unjudged`를 싣는다.
+- 시험: `05_tests/unit/test_chrono_bundle_grade_4368.py`(합성 입력 64개: 행 수 불일치·빈 묶음·manifest 밖 행·결측 러너 출력·결측 judge 행·결측 E 항목·T4·T5 초과·VB 고유 실패·S-12·C-8 S-9 처리, 러너 행 분기 15개, 러너 미판정·미달 우선·빈 통과·셈 불일치 S-11, D8 재계산·t_lift 차(0.1 s 허용, 0.2 s 멈춤, 계산 불가, 구간 대체), 427.9 조건 2·3·4 거짓·창·결측·LEVEL 전 부상, C-3 토양 정지, C-5 짝 6쌍·manifest에만 있는 짝, 행 문구, 기록 행 상태, PS-c 기준 행·가지 끝 뒤 기록 포함), `test_resume4368_rev18.py`(fmin-time 3개).
