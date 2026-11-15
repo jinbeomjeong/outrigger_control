@@ -23,7 +23,26 @@ it runs no simulation and no other judge:
 * SCM rows: ``result.json`` ``p3b`` (P3-1 .. P3-9, :func:`p3_items`).
 * Over both: the re-computed items (D-26 .. D-39) of ``chrono_rows_judge_4368.py judge``
   (``--rows-judge``) replace the items of the same name (:data:`RIGID_OVERRIDES`,
-  :func:`p3_items`); every replaced item keeps its runner and re-computed values.
+  :func:`p3_items`); every replaced item keeps its runner and re-computed values. Rules rev24
+  CD-2: a runner item is replaced only on a whole-name match with the closed table, on the rows
+  of its line (``4 max moving pressure`` event-free rows, ``... outside the event transient`` and
+  ``4 max pressure in the event transient`` event rows by the row judge's CD-3 test, ``4
+  saturation steps`` every L2b row); a W end more than 0.1 s from the original judge's, or one
+  that changes a verdict, stops the bundle (:func:`event_window_stop`).
+* Rules rev24 CD-5 (:func:`p3_items`): a run without a first READY judges P3-1 on the recontact
+  condition only, P3-4 / P3-5 are ``해당 없음(READY 없음)``, P3-6 fails; an SCM row without a
+  graded item is not judgeable. CD-7 (:func:`reason_check`): every not-judgeable, runner-unjudged
+  or not-applicable item and not-judgeable row carries a reason, a replaced item the reason of
+  the change; a missing one stops the bundle. CD-11 (:func:`item_list`): the graded items of
+  every row (``item_list_CD_11``); an empty row or another row count stops the bundle.
+* Rules rev25 (common block replacing rev24's): CD-4 P3-6 against the spec 421.1 limit of the run
+  args (:func:`p36_item`; a limit unlike the runner P3b ``limit_s`` stops), graded on C-5 SCM
+  rows only and a record elsewhere; P3-9 a record on every row; CD-5 P3-6 without READY fails
+  where graded and is ``해당 없음(READY 없음)`` where recorded; CD-8 values 1 / 7 / 8 / 9 from the
+  1 ms record (:func:`scm_force_minima`, :func:`scm_d8_values`, :func:`g6_record_values`; O-C5
+  P3-5 ``해당 없음(rigid_base)``); CD-11 classes (graded / gate / record), clause ids, the C-3
+  G6 table and the 427.9 conditions one id each, ``[case *]`` runner items, record rows exempt
+  from ">= 1 graded item". The C-4 record bundle stops on an empty reason (CD-7, a rev24 fix).
 * S-01 .. S-04 (rev19 R19-1): a row whose first ``FAULT*`` event is the soil guard is graded by
   the five 427.9 conditions alone, computed here from the run files with the R19-1 windows
   (:func:`safe_stop_conditions`); every P3 / G6 item becomes a record.
@@ -37,7 +56,10 @@ it runs no simulation and no other judge:
   status by original 8.1 (not judgeable > fail > pass), the row phrase counts the safe stops
   apart.
 * Record bundles: C-6 / C-7 ``result.json`` ``p3a`` (P3a-1 .. 5, spec 11047 FLAG), C-8 the
-  ``resume4368_judge.py oc5`` and ``fmin-time`` outputs (``--oc5``, ``--fmin-time``).
+  ``resume4368_judge.py oc5`` and ``fmin-time`` outputs (``--oc5``, ``--fmin-time``) with the
+  rules rev24 CD-8 record values (:func:`c8_record_values`; P3 values from ``--rows-judge``), C-4
+  the rules rev24 CD-9 record rows (:func:`c4_row`, ``--rows-judge``; P3-5 on a rigid base
+  ``해당 없음(rigid_base)``).
 * Row count (S-15): rows from the ``batch.json`` ``cases[]`` of the bundle criteria, each one a
   row of the manifest bundle, against :data:`EXPECTED_ROWS`; a mismatch is S-15 and the bundle
   gets no grade, a bundle without rows gets no grade either. A missing row input makes that row
@@ -52,13 +74,15 @@ CLI (Chrono-dev or python-dev, no simulation)::
         --t45-cases-script <R3c run_path1_r3c.ps1> [--t45-folders <list>]
     ... grade --bundle C-6C7 --git-at-start <R2> --batch <...C6C7...> --out <out.json>
     ... grade --bundle C-8 --git-at-start <R2> --batch <...OC5...> --oc5 <a.json> --oc5 <b.json> \
-        --fmin-time <a.json> --fmin-time <b.json> --out <out.json>
+        --fmin-time <a.json> --fmin-time <b.json> --rows-judge <judge_OC5.json> --out <out.json>
+    ... grade --bundle C-4 --git-at-start <R2> --batch <...C4...> --rows-judge <judge_C4.json> \
+        --out <out.json>
     ... seals [--rules-dir <verif_matrix>]
 
 Exit codes: 0 done without a stop; 1 a stop (S-15, S-12, H-7, R40-2 hold, S-2, J11, T4-0,
-VB-specific failure, S-9 / S-10 record, rev23 R23-1 S-11) or a seal mismatch; 2 an input is
-missing or invalid; 3 internal error. The last stdout line is JSON, the line before it
-``errors N``.
+VB-specific failure, S-9 / S-10 record, rev23 R23-1 S-11, rev24 CD-3 window end, CD-7 reason,
+CD-11 item list) or a seal mismatch; 2 an input is missing or invalid; 3 internal error. The
+last stdout line is JSON, the line before it ``errors N``.
 """
 
 from __future__ import annotations
@@ -84,23 +108,30 @@ import chrono_rows_judge_4368 as rows_judge  # noqa: E402 - needs the path above
 
 InputError = rows_judge.InputError
 
-TOOL_VERSION = ("chrono_bundle_grade_4368 v5 (python-expert 2026-11-15, rules rev18 R18-2, rev19, "
-                "rev21, rev22 R22-1, rev23 R23-1)")
+TOOL_VERSION = ("chrono_bundle_grade_4368 v7 (python-expert 2026-11-16, rules rev18 R18-2, rev19, "
+                "rev21, rev22 R22-1, rev23 R23-1, rev24 CD-2 / CD-5 / CD-7 / CD-8 / CD-9 / "
+                "CD-11, rev25 CD-4 P3-6 / CD-5 / CD-8 / CD-11)")
 RULES_TEXT = ("rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 "
               "R19-1 .. R19-6, rev21 R21-1 / R21-2, rev22 R22-1 (t45 pairing by input folder "
               "order), rev23 R23-1 (runner rows and s8_metrics by the inner name of the judged "
-              "row dir); original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
+              "row dir), rev24 R24-2 path 1 (common definitions CD-2 override table, CD-3 window "
+              "stop, CD-5 READY missing, CD-7 reasons, CD-8 C-8 record values, CD-9 C-4 record "
+              "bundle, CD-11 item list), rev25 R25-2 path 1 (common block rev25: CD-4 P3-6 role "
+              "and spec 421.1 limit, CD-5 P3-6 lines, P3-9 record, CD-8 values 1 / 7 / 8 / 9, "
+              "CD-11 classes, clause ids, G6 table, [case *]; C-4 CD-7 stop); original 5.2 / "
+              "7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
               "d1_selection_rules.md 7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; "
               "rev6 R6-A / R6-B4 / R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py")
 
 # --- bundles ---------------------------------------------------------------------------------
-EXPECTED_ROWS = {"C-1": 10, "C-2": 6, "C-3": 2, "C-5": 35, "C-6C7": 3, "C-8": 2}
-"""Rules rev18 R18-2 row count check (S-15)."""
-BUNDLE_CRITERIA = {"C-1": ("C-1",), "C-2": ("C-2",), "C-3": ("C-3",), "C-5": ("C-5",),
-                   "C-6C7": ("C-6", "C-7", "C-7a", "C-7b"), "C-8": ("C-8a", "C-8b")}
+EXPECTED_ROWS = {"C-1": 10, "C-2": 6, "C-3": 2, "C-4": 4, "C-5": 35, "C-6C7": 3, "C-8": 2}
+"""Rules rev18 R18-2 row count check (S-15); C-4 4 rows by rules rev24 CD-9."""
+BUNDLE_CRITERIA = {"C-1": ("C-1",), "C-2": ("C-2",), "C-3": ("C-3",), "C-4": ("C-4",),
+                   "C-5": ("C-5",), "C-6C7": ("C-6", "C-7", "C-7a", "C-7b"),
+                   "C-8": ("C-8a", "C-8b")}
 """``batch.json`` ``criteria_id`` values of each bundle (original 5.2 table, rev4 R4-A3)."""
 GRADED_BUNDLES = ("C-1", "C-2", "C-3", "C-5")
-RECORD_BUNDLES = ("C-6C7", "C-8")
+RECORD_BUNDLES = ("C-4", "C-6C7", "C-8")
 RUNNER_FILE_PREFIX = {"C-1": "C1", "C-2": "C2", "C-5": "C5"}
 """Runner judge file name prefix (``judge_b9f5707/chrono_path1/runner_judge/C1_<case>...``)."""
 RUNNER_FILE_SUFFIX = {"L2b": "verify_S8C", "L1R": "verify_S6C"}
@@ -124,13 +155,35 @@ RECORD_ROLES = ("record", "timing base")
 D1-PSC base = the event's timing base); ``judge ...`` or no role = a judged row."""
 
 # --- items -----------------------------------------------------------------------------------
+C1_D8_ITEM = ("C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) "
+              ">= F_min + 5 kN")
+MOVING_ITEM = "4 max moving pressure"
+OUTSIDE_W_ITEM = "4 max moving pressure outside the event transient"
+INSIDE_W_ITEM = "4 max pressure in the event transient"
+SATURATION_ITEM = "4 saturation steps"
+ROWS_ALL, ROWS_EVENT_FREE, ROWS_EVENT = "all L2b rows", "event-free rows", "event rows"
 RIGID_OVERRIDES = (
-    ("C1 D8 min true rod force", "C1_R40", "D-31 / D-39"),
-    ("4 max moving pressure", "moving_pressure_D-32", "D-32"),
-    ("4 saturation steps", "moving_pressure_D-32", "D-32"),
+    (C1_D8_ITEM, "C1_R40", "D-31 / D-39", ROWS_ALL),
+    (MOVING_ITEM, "moving_pressure_D-32", "D-32", ROWS_EVENT_FREE),
+    (OUTSIDE_W_ITEM, "moving_pressure_D-32", "D-32 CD-3 outside W", ROWS_EVENT),
+    (INSIDE_W_ITEM, "moving_pressure_D-32", "D-32 CD-3 inside W", ROWS_EVENT),
+    (SATURATION_ITEM, "moving_pressure_D-32", "D-32", ROWS_ALL),
 )
-"""(runner item name prefix, ``chrono_rows_judge`` item, rev6 R6-A number): the re-computed
-items with a runner item of the same meaning (R18-2 "같은 이름 항목에 덮어쓴다")."""
+"""Rules rev24 CD-2 table (closed): (runner item name, ``chrono_rows_judge`` item, rule label,
+rows it applies to). A runner item is replaced only when its whole name is equal; on other rows
+the runner count stays (the saturation of an event row is the outside-W one, CD-3)."""
+D8_OVERRIDE_ITEMS = ("D8 min true cylinder force >= F_min + 5 kN", "D8 no pad lift-off")
+"""Rules rev24 CD-2: the two pads D8 items re-computed from the D-29 t_lift (whole-name match)."""
+NOT_APPLICABLE_STATUS = "not_applicable"
+READY_MISSING = rows_judge.READY_MISSING
+INPUT_MISSING = "원 입력 결측"
+RUNNER_HOLD = "원 판정기 보류"
+CD7_RULE = ("rules rev24 CD-7: every not-judgeable / runner-unjudged / not-applicable item and "
+            "every not-judgeable row has a one-line reason, a replaced item the reason of the "
+            "change")
+CD11_RULE = ("rules rev25 CD-11: per row the items (common id, class graded / gate / record, "
+             "item name, clause id, description, method, interval, verdict, reason); one list row "
+             "per bundle row, >= 1 graded item each except record rows")
 MOVING_PRESSURE_MAX_BAR = rows_judge.MOVING_PRESSURE_MAX_BAR
 SAFE_STOP_ROWS = ("S-01", "S-02", "S-03", "S-04")
 """Rev6 R6-B8 (D-26): rows of the 427.9 safe stop."""
@@ -379,11 +432,27 @@ def runner_items(doc: dict[str, Any], inner: str | None) -> list[dict[str, Any]]
         if runner_row.get("case") not in wanted:
             continue
         verdict, branch = runner_verdict(runner_row)
-        items.append(item(str(runner_row.get("item")), verdict, "runner",
-                          value=runner_row.get("value"), limit=runner_row.get("limit"),
-                          kind=runner_row.get("kind"), passed=runner_row.get("passed"),
-                          branch=branch, note=runner_row.get("note")))
+        entry = item(str(runner_row.get("item")), verdict, "runner",
+                     value=runner_row.get("value"), limit=runner_row.get("limit"),
+                     kind=runner_row.get("kind"), passed=runner_row.get("passed"),
+                     branch=branch, note=runner_row.get("note"))
+        if runner_row.get("case") == "*":  # rules rev25 CD-11: common id + " [case *]"
+            entry["case_star"] = True
+        reason = _runner_reason(branch, runner_row)
+        if reason:
+            entry["reason"] = reason
+        items.append(entry)
     return items
+
+
+def _runner_reason(branch: str, runner_row: dict[str, Any]) -> str | None:
+    """Rules rev24 CD-7 reason of a held or runner-unjudged runner row (None otherwise)."""
+    detail = runner_row.get("note") or f"kind {runner_row.get('kind')!r}"
+    if branch == "hold":
+        return f"{RUNNER_HOLD}(hold): {detail}"
+    if branch in UNJUDGED_BRANCHES:
+        return f"{RUNNER_UNJUDGED}: {detail}"
+    return None
 
 
 def runner_verdict(runner_row: dict[str, Any]) -> tuple[str | None, str]:
@@ -448,52 +517,80 @@ def runner_t_lift_items(items: list[dict[str, Any]]) -> list[str]:
             if any(name.startswith(prefix) for name in names)]
 
 
-def recomputed_verdict(judge_key: str, runner_name: str,
-                       judged_items: dict[str, Any]) -> tuple[str, Any]:
-    """(verdict, value) of a re-computed item standing in for a runner item."""
+def recomputed_verdict(judge_key: str, runner_name: str, judged_items: dict[str, Any]
+                       ) -> tuple[str, Any, str | None]:
+    """(verdict, value, reason when not judgeable) of a re-computed item standing in for a
+    runner item (rules rev24 CD-2 table, CD-3 for the item 4 rows)."""
     block = judged_items.get(judge_key)
     if not isinstance(block, dict):
-        return NOT_JUDGEABLE, None
+        return NOT_JUDGEABLE, None, f"{INPUT_MISSING}: chrono_rows_judge {judge_key}"
     if judge_key == "C1_R40":
         if block.get("status") != "judged":
-            return NOT_JUDGEABLE, block.get("raw_min_N")
-        return (PASS if block.get("verdict") == "pass" else FAIL), block.get("raw_min_N")
+            reason = (f"{RUNNER_HOLD}: R40-2 hold not resolved" if block.get("hold")
+                      else f"{INPUT_MISSING}: {block.get('reason') or 'C1_R40 not judged'}")
+            return NOT_JUDGEABLE, block.get("raw_min_N"), reason
+        return (PASS if block.get("verdict") == "pass" else FAIL), block.get("raw_min_N"), None
     if block.get("status") != "judged":
-        return NOT_JUDGEABLE, None
-    if runner_name.startswith("4 saturation steps"):
+        return NOT_JUDGEABLE, None, str(block.get("reason") or f"{judge_key} not judged")
+    if runner_name == SATURATION_ITEM:
         count = block.get("saturated_samples")
-        return (PASS if count == 0 else FAIL), count
+        return (PASS if count == 0 else FAIL), count, None
+    if runner_name in (OUTSIDE_W_ITEM, INSIDE_W_ITEM):
+        part = block["outside_extension" if runner_name == OUTSIDE_W_ITEM else "inside"]
+        return (PASS if part.get("within") else FAIL), part.get("max_bar"), None
     value = block.get("max_moving_bar")
     if value is None:  # no moving sample: nothing exceeds the limit
-        return PASS, None
-    return (PASS if rows_judge.le(float(value), MOVING_PRESSURE_MAX_BAR) else FAIL), value
+        return PASS, None, None
+    return (PASS if rows_judge.le(float(value), MOVING_PRESSURE_MAX_BAR) else FAIL), value, None
+
+
+def is_event_row(judged_items: dict[str, Any]) -> bool:
+    """Rules rev24 CD-3 event row (floor event or fast settlement) as the row judge decided it."""
+    block = judged_items.get("moving_pressure_D-32")
+    return isinstance(block, dict) and block.get("row_kind") is not None
+
+
+def _override_applies(rows: str, event_row: bool) -> bool:
+    if rows == ROWS_EVENT:
+        return event_row
+    if rows == ROWS_EVENT_FREE:
+        return not event_row
+    return True
 
 
 def apply_rigid_overrides(items: list[dict[str, Any]], judged_items: dict[str, Any]
                           ) -> list[dict[str, Any]]:
-    """Replace the runner items of :data:`RIGID_OVERRIDES`; returns the before / after log."""
+    """Replace the runner items of :data:`RIGID_OVERRIDES` (whole-name match, on the rows of the
+    table line); returns the before / after log."""
     log = []
+    event_row = is_event_row(judged_items)
     for runner_item in items:
-        for prefix, judge_key, number in RIGID_OVERRIDES:
-            if not runner_item["item"].startswith(prefix):
+        for name, judge_key, rule, rows in RIGID_OVERRIDES:
+            if runner_item["item"] != name or not _override_applies(rows, event_row):
                 continue
-            verdict, value = recomputed_verdict(judge_key, runner_item["item"], judged_items)
-            _override(runner_item, verdict, value, number, log)
+            verdict, value, reason = recomputed_verdict(judge_key, name, judged_items)
+            extra = {} if reason is None else {"reason_not_judgeable": reason}
+            _override(runner_item, verdict, value, rule, log, **extra)
             break
     return log
 
 
 def _override(runner_item: dict[str, Any], verdict: str, value: Any, rule: str,
               log: list[dict[str, Any]], **extra: Any) -> None:
-    """Replace one runner item (a runner record row stays a record, its value logged)."""
+    """Replace one runner item (a runner record row stays a record, its value logged); the
+    replaced item carries the reason of the change (rules rev24 CD-7)."""
     before = {"verdict": runner_item["verdict"], "value": runner_item.get("value")}
     entry = {"item": runner_item["item"], "rule": rule, "runner": before,
              "recomputed": {"verdict": verdict, "value": value}, **extra}
     if runner_item["verdict"] is None:
         log.append({**entry, "applied": False, "reason": "runner record row"})
         return
-    runner_item.update(verdict=verdict, value=value, source=f"recomputed {rule}")
-    log.append({**entry, "applied": True})
+    change = f"CD-2 table: re-computed value replaces the runner's ({rule})"
+    runner_item.update(verdict=verdict, value=value, source=f"recomputed {rule}",
+                       override_reason=change)
+    if verdict == NOT_JUDGEABLE:
+        runner_item["reason"] = str(extra.get("reason_not_judgeable") or change)
+    log.append({**entry, "applied": True, "override_reason": change})
 
 
 def load_npz(path: Path) -> dict[str, np.ndarray] | None:
@@ -528,16 +625,19 @@ def apply_d8_overrides(items: list[dict[str, Any]], judged_items: dict[str, Any]
     log: list[dict[str, Any]] = []
     for runner_item in items:
         for name, rule in D8_ITEMS[1:]:
-            if not runner_item["item"].startswith(name):
+            if runner_item["item"] != name:  # rules rev24 CD-2: whole-name match
                 continue
             value, detail = d8_value(name, pads, t_lift)
             if value is None:
                 verdict = NOT_JUDGEABLE
+                detail["reason_not_judgeable"] = f"{INPUT_MISSING}: {detail.get('reason')}"
             elif name.startswith("D8 min"):
                 limit = runner_item.get("limit")
                 limit = float(limit) if isinstance(limit, (int, float)) else None
                 verdict = NOT_JUDGEABLE if limit is None else (
                     PASS if rows_judge.ge(value, limit) else FAIL)
+                if limit is None:
+                    detail["reason_not_judgeable"] = f"{INPUT_MISSING}: runner item limit"
             else:
                 verdict = PASS if value == 0 else FAIL
             _override(runner_item, verdict, value, f"rev19 R19-5 ({rule})", log,
@@ -606,6 +706,8 @@ class RigidResult:
     stops: list[str] = field(default_factory=list)
     name_map: dict[str, Any] | None = None
     """Rev23 R23-1 entry of the row (:func:`runner_name_entry`)."""
+    reason: str | None = None
+    """Rules rev24 CD-7 reason of a not-judgeable runner part (:func:`runner_part_reason`)."""
 
 
 def row_inner_name(row: RowInput) -> str | None:
@@ -681,6 +783,7 @@ def rigid_row(row: RowInput, bundle: str, runner_dir: Path | None) -> RigidResul
     if path is None:
         row.missing.append(f"runner judge {RUNNER_FILE_SUFFIX[row.engine]}")
         out.name_map = runner_name_entry(row, None, None, inner)
+        out.reason = runner_part_reason([], 0, row.missing)
         return out
     doc = read_json(path, "runner judge output")
     row.files[path.name] = rows_judge.sha256_file(path)
@@ -712,8 +815,39 @@ def rigid_row(row: RowInput, bundle: str, runner_dir: Path | None) -> RigidResul
             out.t_lift_check = t_lift_difference(doc, row, judged_items, record, inner)
             if out.t_lift_check.get("stop"):
                 out.stops.append(out.t_lift_check["stop"])
+        window_stop = event_window_stop(judged_items)
+        if window_stop:
+            out.stops.append(window_stop)
     out.grade = runner_part_grade(out.items, out.judged_true)
+    if out.grade == NOT_JUDGEABLE:
+        out.reason = runner_part_reason(out.items, out.judged_true, row.missing)
     return out
+
+
+def event_window_stop(judged_items: dict[str, Any]) -> str | None:
+    """Rules rev24 CD-3: the row judge's W end against the original judge's ``pressure_end_s``;
+    > 0.1 s or a verdict changed by the difference stops the bundle before its grade."""
+    block = judged_items.get("moving_pressure_D-32")
+    check = block.get("runner_window_CD_3") if isinstance(block, dict) else None
+    if not isinstance(check, dict) or not check.get("stop"):
+        return None
+    return (f"CD-3: event window end differs from the original judge's pressure_end_s by "
+            f"{check.get('difference_s')} s (changed verdicts {check.get('verdicts_changed')})")
+
+
+def runner_part_reason(items: list[dict[str, Any]], judged_true: int,
+                       missing: list[str]) -> str:
+    """Rules rev24 CD-7 reason of a not-judgeable runner part: missing runner input, the reasons
+    of its not-judgeable items, or no judged item passed (empty pass)."""
+    if missing:
+        return f"{INPUT_MISSING}: {', '.join(missing)}"
+    reasons = [entry.get("reason") or entry["item"] for entry in items
+               if entry["verdict"] == NOT_JUDGEABLE]
+    if reasons:
+        return "; ".join(reasons)
+    if judged_true == 0:
+        return "no judged-kind runner item with passed True (empty pass, rev19 R19-4)"
+    return ""
 
 
 def _check_runner_batch(doc: dict[str, Any], row: RowInput, path: Path) -> None:
@@ -728,73 +862,200 @@ def _check_runner_batch(doc: dict[str, Any], row: RowInput, path: Path) -> None:
 
 
 # =============================================================================== SCM rows
-def p3_items(p3b: dict[str, Any], judged_items: dict[str, Any]) -> list[dict[str, Any]]:
+def has_first_ready(judged_items: dict[str, Any]) -> bool | None:
+    """Whether the run reached a first READY (``chrono_rows_judge`` D-27 / D-28 block); None when
+    the block is missing."""
+    ready = judged_items.get("ready_D-27_D-28")
+    if not isinstance(ready, dict):
+        return None
+    return ready.get("t_ready_rel_s") is not None
+
+
+def missing_reason(what: str) -> str:
+    return f"{INPUT_MISSING}: {what}"
+
+
+def checked_item(name: str, check: Any, source: str, what: str, **detail: Any) -> dict[str, Any]:
+    """An item judged from a true / false ``check``; a missing one is not judgeable with the
+    rules rev24 CD-7 reason ``원 입력 결측``."""
+    verdict = bool_verdict(check)
+    if verdict == NOT_JUDGEABLE:
+        detail["reason"] = missing_reason(what)
+    return item(name, verdict, source, **detail)
+
+
+def word_item(name: str, word: Any, source: str, what: str, **detail: Any) -> dict[str, Any]:
+    """An item judged from a pass / flag / fail word (anything else: not judgeable, CD-7)."""
+    verdict = _verdict_word(word)
+    if verdict == NOT_JUDGEABLE:
+        detail["reason"] = missing_reason(what)
+    return item(name, verdict, source, **detail)
+
+
+def not_applicable_item(name: str, source: str, why: str) -> dict[str, Any]:
+    """A ``해당 없음(<why>)`` item (rules rev24 CD-5 / CD-9): no grade, the text as its value."""
+    text = f"해당 없음({why})"
+    return item(name, None, source, status=NOT_APPLICABLE_STATUS, value=text, reason=text)
+
+
+def p3_items(p3b: dict[str, Any], judged_items: dict[str, Any], *,
+             rigid_base: bool = False, args: dict[str, Any] | None = None,
+             p36_graded: bool = False) -> list[dict[str, Any]]:
     """P3-1 .. P3-9 and FAULT0 of an SCM row; the D items of ``chrono_rows_judge`` stand in for
-    P3-1 (D-36), P3-2 (D-37 / D-38), P3-3 (t_D, R6-B4) and P3-8 (D-34 / D-35)."""
+    P3-1 (D-36), P3-2 (D-37 / D-38), P3-3 (t_D, R6-B4) and P3-8 (D-34 / D-35).
+
+    Rules rev25 CD-5: without a first READY, P3-1 judges only the recontact condition, P3-4 and
+    P3-5 are not applicable, P3-6 fails where it is graded (``p36_graded``: C-5 SCM rows) and is
+    not applicable where it is a record. CD-9 / CD-8 7: P3-5 of a ``rigid_base`` row is not
+    applicable. CD-4: P3-6 against the spec 421.1 limit of the run ``args`` (:func:`p36_item`).
+    Which items grade the row is decided by the caller (:func:`_scm_items`).
+    """
     checks = p3b.get("checks") or {}
     recontact = judged_items.get("P3-1_recontact_D-36") or {}
     p32 = judged_items.get("P3-2_D-37_D-38") or {}
     p33 = judged_items.get("P3-3_after_t_D") or {}
     p38 = judged_items.get("P3-8_D-34_D-35") or {}
+    no_ready = has_first_ready(judged_items) is False
     return [
-        _p31_item(checks, recontact),
+        _p31_item(checks, recontact, no_ready),
         _p32_item(checks, p32),
-        item("P3-3", bool_verdict(p33.get("within")), "recomputed R6-B4 t_D",
-             value=p33.get("F_min_after_departure_N")),
-        item("P3-4", _verdict_word(checks.get("P3-4_verdict")), "p3b checks"),
-        item("P3-5", bool_verdict(checks.get("P3-5_within")), "p3b checks"),
-        item("P3-6", bool_verdict(checks.get("P3-6_within")), "p3b checks"),
-        item("P3-7", bool_verdict(checks.get("P3-7_within")), "p3b checks"),
-        item("P3-8", _verdict_word(p38.get("verdict")), "recomputed D-34 / D-35",
-             flags=p38.get("flags")),
+        checked_item("P3-3", p33.get("within"), "recomputed R6-B4 t_D",
+                     "chrono_rows_judge P3-3_after_t_D within",
+                     value=p33.get("F_min_after_departure_N")),
+        not_applicable_item("P3-4", "p3b checks", READY_MISSING) if no_ready else word_item(
+            "P3-4", checks.get("P3-4_verdict"), "p3b checks", "p3b checks P3-4_verdict"),
+        _p35_item(checks, no_ready, rigid_base),
+        p36_item(p3b, args, no_ready=no_ready, graded=p36_graded),
+        checked_item("P3-7", checks.get("P3-7_within"), "p3b checks", "p3b checks P3-7_within"),
+        word_item("P3-8", p38.get("verdict"), "recomputed D-34 / D-35",
+                  "chrono_rows_judge P3-8_D-34_D-35 verdict", flags=p38.get("flags")),
         _p39_item(checks),
-        item("FAULT0", _fault_verdict(p38), "recomputed (chrono_rows_judge has_fault)"),
+        _fault_item(p38),
     ]
+
+
+P36_GRADED_BUNDLE = "C-5"
+"""Rules rev25 CD-4: P3-6 is graded on C-5 SCM rows only (a record elsewhere)."""
+P3_RECORDED = ("P3-9",)
+"""Rules rev25 CD-11: P3-9 (RT deferral) is a record on every row."""
+P36_SLOPE_LIMIT_S, P36_SOFT_PAD_B_LIMIT_S, P36_FLAT_LIMIT_S = 120.0, 100.0, 90.0
+P36_SOFT_SOILS = ("J1", "J2", "S1")
+P36_PAD_B = "dwg_rear250"
+
+
+def p36_limit(args: dict[str, Any] | None) -> dict[str, Any]:
+    """Rules rev25 CD-4 P3-6 limit (spec 421.1, first matching row): floor slope (``floor_roll``
+    or ``floor_pitch`` not 0) 120 s; flat, pad B and both rear pads (RL, RR; ``soil_patch``
+    ``LEG:SET`` when it covers the leg, else ``soil``) on J1 / J2 / S1 100 s; other flat 90 s."""
+    run = args or {}
+    roll, pitch = float(run.get("floor_roll") or 0.0), float(run.get("floor_pitch") or 0.0)
+    patch_leg, _, patch_set = str(run.get("soil_patch") or "").partition(":")
+    rear = [patch_set if patch_leg == leg and patch_set else run.get("soil")
+            for leg in ("RL", "RR")]
+    if roll != 0.0 or pitch != 0.0:
+        return {"limit_s": P36_SLOPE_LIMIT_S, "row": "slope", "rear_pad_soils": rear}
+    if run.get("pad_variant") == P36_PAD_B and all(soil in P36_SOFT_SOILS for soil in rear):
+        return {"limit_s": P36_SOFT_PAD_B_LIMIT_S, "row": "flat, pad B, rear pads J1 / J2 / S1",
+                "rear_pad_soils": rear}
+    return {"limit_s": P36_FLAT_LIMIT_S, "row": "flat, other", "rear_pad_soils": rear}
+
+
+def p36_item(p3b: dict[str, Any], args: dict[str, Any] | None, *, no_ready: bool,
+             graded: bool) -> dict[str, Any]:
+    """Rules rev25 CD-4 P3-6: first READY after the closed-loop start <= the spec 421.1 limit
+    (+ 1e-9 s); the limit is checked against the runner's P3b ``P3-6_ready.limit_s``
+    (``limit_matches_runner``, False stops the bundle). Without a first READY (CD-5): fail where
+    P3-6 is graded, ``해당 없음(READY 없음)`` where it is a record."""
+    source = "rules rev25 CD-4 P3-6 (spec 421.1 limit, p3b P3-6_ready)"
+    if no_ready:
+        if graded:
+            return item("P3-6", FAIL, source, reason=f"{READY_MISSING}: READY 도달 항목 = 미달")
+        return not_applicable_item("P3-6", source, READY_MISSING)
+    block = p3b.get("P3-6_ready")
+    if not isinstance(block, dict):  # no P3b block: the runner's check, limit not compared
+        return checked_item("P3-6", (p3b.get("checks") or {}).get("P3-6_within"), "p3b checks",
+                            "p3b checks P3-6_within", limit_matches_runner=None)
+    limit = p36_limit(args)
+    runner_limit = block.get("limit_s")
+    matches = runner_limit is not None and abs(float(runner_limit) - limit["limit_s"]) <= \
+        rows_judge.CMP_EPS
+    t_ready = block.get("t_ready_after_loop_start_s")
+    within = None if t_ready is None else rows_judge.le(float(t_ready), limit["limit_s"])
+    return checked_item("P3-6", within, source, "p3b P3-6_ready.t_ready_after_loop_start_s",
+                        value=t_ready, limit_s=limit["limit_s"], limit_row=limit["row"],
+                        runner_limit_s=runner_limit, limit_matches_runner=matches)
+
+
+def _p35_item(checks: dict[str, Any], no_ready: bool, rigid_base: bool) -> dict[str, Any]:
+    if rigid_base:
+        return not_applicable_item("P3-5", "rules rev24 CD-9", "rigid_base")
+    if no_ready:
+        return not_applicable_item("P3-5", "p3b checks", READY_MISSING)
+    return checked_item("P3-5", checks.get("P3-5_within"), "p3b checks", "p3b checks P3-5_within")
 
 
 def _verdict_word(word: Any) -> str:
     return word if word in (PASS, FLAG, FAIL) else NOT_JUDGEABLE
 
 
-def _p31_item(checks: dict[str, Any], recontact: dict[str, Any]) -> dict[str, Any]:
+def _p31_item(checks: dict[str, Any], recontact: dict[str, Any],
+              no_ready: bool = False) -> dict[str, Any]:
+    """P3-1 = crawler zero READY .. READY + 10 s and no recontact after the first departure;
+    without a READY (rules rev24 CD-5) the first condition is not applicable."""
     zero = checks.get("P3-1_crawler_zero_after_ready")
     passed = recontact.get("pass")
-    if zero is None or passed is None:
+    detail: dict[str, Any] = {}
+    if no_ready:
+        zero = f"해당 없음({READY_MISSING})"
+        if passed is None:
+            verdict = NOT_JUDGEABLE
+            detail["reason"] = missing_reason("chrono_rows_judge P3-1_recontact_D-36")
+        else:
+            verdict = (FLAG if recontact.get("flags") else PASS) if passed else FAIL
+        detail["condition_note"] = (f"{READY_MISSING}: READY .. READY + 10 s crawler condition "
+                                    "not applicable, recontact condition judged (CD-5)")
+    elif zero is None or passed is None:
         verdict = NOT_JUDGEABLE
+        detail["reason"] = missing_reason("p3b P3-1_crawler_zero_after_ready / D-36 recontact")
     elif not zero or not passed:
         verdict = FAIL
     else:
         verdict = FLAG if recontact.get("flags") else PASS
     return item("P3-1", verdict, "p3b crawler zero + recomputed D-36",
-                crawler_zero_after_ready=zero, flags=recontact.get("flags"))
+                crawler_zero_after_ready=zero, flags=recontact.get("flags"), **detail)
 
 
 def _p32_item(checks: dict[str, Any], p32: dict[str, Any]) -> dict[str, Any]:
     within = p32.get("within")
     late_flag = bool(checks.get("P3-2_late_loc_reapproach") or checks.get(
         "P3-2_late_loc_revoked"))
+    detail: dict[str, Any] = {}
     if within is True:
         verdict = PASS
     elif within is False:
         verdict = FLAG if late_flag else FAIL
     else:
         verdict = NOT_JUDGEABLE
+        detail["reason"] = missing_reason("chrono_rows_judge P3-2_D-37_D-38 within")
     return item("P3-2", verdict, "recomputed D-37 / D-38 + p3b late-LOC FLAG",
-                late_loc_flag=late_flag)
+                late_loc_flag=late_flag, **detail)
 
 
 def _p39_item(checks: dict[str, Any]) -> dict[str, Any]:
     flags = checks.get("P3-9_flags")
     if not isinstance(flags, int):
-        return item("P3-9", NOT_JUDGEABLE, "p3b checks", value=flags)
+        return item("P3-9", NOT_JUDGEABLE, "p3b checks", value=flags,
+                    reason=missing_reason("p3b checks P3-9_flags"))
     return item("P3-9", FLAG if flags > 0 else PASS, "p3b checks (FLAG record)", value=flags)
 
 
-def _fault_verdict(p38: dict[str, Any]) -> str:
+def _fault_item(p38: dict[str, Any]) -> dict[str, Any]:
     fault = p38.get("fault")
+    source = "recomputed (chrono_rows_judge has_fault)"
     if fault is None:
-        return NOT_JUDGEABLE
-    return FAIL if fault else PASS
+        return item("FAULT0", NOT_JUDGEABLE, source,
+                    reason=missing_reason("chrono_rows_judge P3-8_D-34_D-35 fault"))
+    return item("FAULT0", FAIL if fault else PASS, source)
 
 
 def first_fault(events: list[Any]) -> str | None:
@@ -921,8 +1182,8 @@ def soil_event_items(result: dict[str, Any]) -> list[dict[str, Any]]:
                           gates=values, flags=group_flags))
     stroke = judgement.get("stroke_max_run_mm")
     stroke_ok = None if stroke is None else rows_judge.le(float(stroke), PSC_STROKE_LIMIT_MM)
-    items.append(item("stroke_le_684.8mm", bool_verdict(stroke_ok), "soil_event.judgement",
-                      value=stroke))
+    items.append(checked_item("stroke_le_684.8mm", stroke_ok, "soil_event.judgement",
+                              "soil_event.judgement.stroke_max_run_mm", value=stroke))
     if is_fast is None:
         items.append(item("event_kind", NOT_JUDGEABLE, "soil_event.judgement.fast missing"))
     return items
@@ -1167,6 +1428,8 @@ def grade_row(row: RowInput, bundle: str, runner_dir: Path | None,
         items = [item("runner", rigid.grade, "runner judge (rev19 R19-4)",
                       judged_true_items=rigid.judged_true,
                       stop="; ".join(rigid.stops) or None)]
+        if rigid.reason:
+            items[0]["reason"] = rigid.reason
     elif row.result is not None and is_soil_event_row(row):
         items = soil_event_items(row.result)
         record_items += _event_records(row)
@@ -1196,7 +1459,311 @@ def grade_row(row: RowInput, bundle: str, runner_dir: Path | None,
         out.update(overrides=rigid.overrides, runner_items=rigid.items,
                    runner_unjudged=rigid.unjudged, runner_count_check_R19_4=rigid.count_check,
                    runner_t_lift_items=rigid.t_lift_items, t_lift_check_R19_5=rigid.t_lift_check)
+    for entry in [*items, *record_items, *out["runner_items"]]:
+        add_derived_reason(entry)
+    if grade == NOT_JUDGEABLE:
+        out["grade_reason"] = row_grade_reason(row.missing, items)
     return out
+
+
+NO_GRADED_ITEM = "no judged item"
+
+
+def needs_reason(entry: dict[str, Any]) -> bool:
+    """Rules rev24 CD-7: a not-judgeable item (graded or recorded), a not-applicable item and a
+    runner-unjudged or held runner row carry a reason."""
+    return (NOT_JUDGEABLE in (entry.get("verdict"), entry.get("verdict_recorded"))
+            or entry.get("status") == NOT_APPLICABLE_STATUS
+            or entry.get("branch") in (*UNJUDGED_BRANCHES, "hold"))
+
+
+def derived_reason(entry: dict[str, Any]) -> str | None:
+    """The reason an item's own record states (missing inputs, its stop, a missing source, a
+    status word); None when the record states none."""
+    missing = entry.get("missing_inputs")
+    if missing:
+        return missing_reason(", ".join(map(str, missing)))
+    if entry.get("stop"):
+        return str(entry["stop"])
+    source = str(entry.get("source", ""))
+    if source.endswith(" missing"):
+        return missing_reason(source.removesuffix(" missing"))
+    if entry.get("item") in SOIL_EVENT_GROUPS and not entry.get("gates"):
+        return missing_reason(f"soil_event.judgement.gates {entry['item']}_*")
+    if entry.get("status") is not None:
+        return f"{entry['item']} status {entry['status']}"
+    return None
+
+
+def add_derived_reason(entry: dict[str, Any]) -> None:
+    if needs_reason(entry) and not entry.get("reason"):
+        reason = derived_reason(entry)
+        if reason:
+            entry["reason"] = reason
+
+
+def row_grade_reason(missing: list[str], items: list[dict[str, Any]]) -> str:
+    """Rules rev24 CD-7 reason of a not-judgeable row."""
+    if missing == [NO_GRADED_ITEM]:
+        return "no graded item besides not-applicable and record items (original 9.3, CD-4)"
+    if missing:
+        return missing_reason(", ".join(missing))
+    return "; ".join(str(entry.get("reason") or entry["item"]) for entry in items
+                     if entry["verdict"] == NOT_JUDGEABLE)
+
+
+def reason_gaps(rows: list[dict[str, Any]]) -> list[dict[str, str]]:
+    """Rules rev24 CD-7: the items and rows that need a reason and have none (a stop)."""
+    gaps = []
+    for row in rows:
+        if row.get("grade") == NOT_JUDGEABLE and not row.get("grade_reason"):
+            gaps.append({"case": row["case"], "item": "(row grade)"})
+        for entry in [*row.get("items", []), *row.get("record_items", []),
+                      *row.get("runner_items", [])]:
+            if needs_reason(entry) and not entry.get("reason"):
+                gaps.append({"case": row["case"], "item": str(entry.get("item"))})
+        for entry in row.get("runner_items", []):
+            replaced = str(entry.get("source", "")).startswith("recomputed")
+            if replaced and not entry.get("override_reason"):
+                gaps.append({"case": row["case"], "item": f"{entry.get('item')} (change)"})
+    return gaps
+
+
+# =============================================================================== CD-11 item list
+METHOD_RUNNER, METHOD_RECOMPUTED = "원 판정기 실행", "재계산"
+CLASS_GRADED, CLASS_GATE, CLASS_RECORD = "등급 항목", "관문", "기록"
+RECOMPUTED_SOURCES = ("recomputed", "rev19", "chrono_rows_judge", "chrono_t45_replay",
+                      "rules rev24", "rules rev25")
+"""Sources of the items this path re-computes (everything else is the original judge's result)."""
+ITEM_INTERVALS = {
+    C1_D8_ITEM: "after the D-29 t_lift (a), outside REANCHOR, before a numeric event_t_s (1 ms)",
+    D8_OVERRIDE_ITEMS[0]: "after the D-29 t_lift (a), window end of the runner item (1 ms)",
+    D8_OVERRIDE_ITEMS[1]: "after the D-29 t_lift (a) to the record end (1 ms)",
+    MOVING_ITEM: "10 Hz rows with |u_applied| > 1e-9 m/s (whole run)",
+    OUTSIDE_W_ITEM: "10 Hz extension rows outside W",
+    INSIDE_W_ITEM: "10 Hz rows inside W, any state",
+}
+CD2_TABLE_LINES = {
+    C1_D8_ITEM: 1, D8_OVERRIDE_ITEMS[0]: 2, D8_OVERRIDE_ITEMS[1]: 3, MOVING_ITEM: 4,
+    OUTSIDE_W_ITEM: 5, INSIDE_W_ITEM: 6, SATURATION_ITEM: 7,
+    ("C-S8-72 U58: head F/A_p in the window <= 350 bar, outside extension samples <= 180 bar "
+     "(slow event: whole-run any-state peak <= 350)"): 8,
+    "R/D8 min force >= F_min + 5 kN": 9, "R/D8 no pad lift-off": 9,
+    "D8 attitude last 5 s + mount <= 0.2 deg": 10, "2 attitude +-0.2 (+mount)": 10,
+}
+"""Rules rev25 CD-11 clause ids of the CD-2 table lines (whole names; line 11 is the t_lift
+prefix line, line 12 every other runner item, ``[case *]`` items included)."""
+CD2_PREFIX_LINE, CD2_OTHER_LINE = 11, 12
+CD2_PREFIX_ITEMS = ("3 F_min (1 ms)", "3 F_min before the event", "5a rocking amplitude",
+                    "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share "
+                    "(after lift-off)")
+CASE_STAR_SUFFIX = " [case *]"
+G6_GATE_IDS = (("G6-1_crawler", "P3-1"), ("G6-2_loc", "P3-2"), ("G6-3_Fmin", "P3-3"),
+               ("G6-4_att", "P3-4"), ("G6-5_rut_stroke", "P3-5"),
+               ("G6-6_fault_ready", "G6-6"), ("G6-7_preloc", "P3-8"),
+               ("READY_le_120s", "READY_le_120s"))
+"""Rules rev25 CD-11 G6 table: the ``chrono_rows_judge`` G6 gate -> its common item id."""
+SGS_CONDITION_IDS = ("427.9-1", "427.9-2", "427.9-3", "427.9-4", "427.9-5")
+OUTSIDE_TOOL_GATES = (("identity", "original 4.2 record-check (resume4368_judge.py view stage)"),
+                      ("K1_class", "original 7.2 k1-class (resume4368_judge.py view stage)"))
+"""Gates path 1 checks in the run script's view stage, not in this tool (listed for CD-11)."""
+
+
+def _interval(entry: dict[str, Any], method: str, event_row: bool) -> str:
+    name = entry["item"]
+    if name == SATURATION_ITEM and method == METHOD_RECOMPUTED:
+        return ("10 Hz extension rows outside W" if event_row
+                else "10 Hz extension rows (whole run)")
+    if name in ITEM_INTERVALS and method == METHOD_RECOMPUTED:
+        return ITEM_INTERVALS[name]
+    if method == METHOD_RUNNER:
+        return "original judge interval"
+    return f"re-computed definition ({entry.get('source')})"
+
+
+def cd2_clause(name: str, case_star: bool) -> str:
+    """``CD-2 표 n줄`` of a runner item (whole name, the prefix line, else line 12)."""
+    if case_star:
+        return f"CD-2 표 {CD2_OTHER_LINE}줄"
+    if name in CD2_TABLE_LINES:
+        return f"CD-2 표 {CD2_TABLE_LINES[name]}줄"
+    if name.startswith(CD2_PREFIX_ITEMS):
+        return f"CD-2 표 {CD2_PREFIX_LINE}줄"
+    return f"CD-2 표 {CD2_OTHER_LINE}줄"
+
+
+def list_entry(entry: dict[str, Any], event_row: bool, *, common_id: str | None = None,
+               cls: str = CLASS_GRADED, clause: str | None = None) -> dict[str, Any]:
+    """One CD-11 item row (common id, class, item, clause id, description, method, interval,
+    verdict, reason)."""
+    source = str(entry.get("source", ""))
+    method = METHOD_RECOMPUTED if source.startswith(RECOMPUTED_SOURCES) else METHOD_RUNNER
+    name = entry["item"]
+    shown = entry["verdict"]
+    if cls == CLASS_RECORD:
+        shown = entry.get("verdict_recorded", entry.get("value"))
+    return {"common_id": common_id or name, "class": cls, "item": name,
+            "clause_id": clause or ("CD-11 기록" if cls == CLASS_RECORD else name),
+            "description": source, "method": method,
+            "interval": _interval(entry, method, event_row), "verdict": shown,
+            "reason": entry.get("reason") or entry.get("override_reason") or ""}
+
+
+def _runner_entries(row: dict[str, Any], event_row: bool) -> list[dict[str, Any]]:
+    """Runner items: graded (a verdict), records (record kinds, runner-unjudged rows)."""
+    entries = []
+    for entry in row.get("runner_items", []):
+        star = bool(entry.get("case_star"))
+        common = entry["item"] + (CASE_STAR_SUFFIX if star else "")
+        if entry["verdict"] is None:
+            entries.append(list_entry(entry, event_row, common_id=common, cls=CLASS_RECORD))
+        else:
+            entries.append(list_entry(entry, event_row, common_id=common,
+                                      clause=cd2_clause(entry["item"], star)))
+    return entries
+
+
+def _t45_entries(entry: dict[str, Any], event_row: bool) -> list[dict[str, Any]]:
+    """T4_T5 as the two common items T4 and T5, and the T4-0 gate."""
+    t4_0 = FAIL if str(entry.get("stop") or "").startswith("T4-0") else (
+        None if entry.get("source") == "chrono_t45_replay row missing" else PASS)
+    gate = list_entry({**entry, "verdict": t4_0}, event_row, common_id="T4-0", cls=CLASS_GATE,
+                      clause="CD-11 관문")
+    if entry["verdict"] == NOT_JUDGEABLE:
+        return [*(list_entry(entry, event_row, common_id=name, clause="CD-6")
+                  for name in ("T4", "T5")), gate]
+    return [*(list_entry({**entry, "verdict": PASS if entry.get(f"{name}_over_0p6kN") == 0
+                          else FAIL}, event_row, common_id=name, clause="CD-6")
+              for name in ("T4", "T5")), gate]
+
+
+def _g6_entries(entry: dict[str, Any], event_row: bool) -> list[dict[str, Any]]:
+    """The C-3 G6 item as the eight G6 table ids (CD-11 G6 대응표)."""
+    gates = entry.get("gates") or {}
+    reasons = entry.get("gate_reasons_CD_5") or {}
+    out = []
+    for gate, common in G6_GATE_IDS:
+        value = gates.get(gate)
+        verdict = None if value == rows_judge.NOT_APPLICABLE else _verdict_word(value)
+        line = {**entry, "item": gate, "verdict": verdict, "reason": reasons.get(gate) or (
+            missing_reason(f"chrono_rows_judge gate {gate}") if verdict == NOT_JUDGEABLE else "")}
+        out.append(list_entry(line, event_row, common_id=common, clause="CD-11 G6 대응표"))
+    return out
+
+
+def _sgs_entries(entry: dict[str, Any], event_row: bool) -> list[dict[str, Any]]:
+    """The 427.9 safe-stop item as its five conditions (명세 427.9 조건 n)."""
+    conditions = list((entry.get("conditions") or {}).values())
+    out = []
+    for n, common in enumerate(SGS_CONDITION_IDS):
+        value = conditions[n] if n < len(conditions) else None
+        line = {**entry, "item": common, "verdict": bool_verdict(value)}
+        out.append(list_entry(line, event_row, common_id=common,
+                              clause=f"명세 427.9 조건 {n + 1}"))
+    return out
+
+
+ITEM_CLAUSES = {"J11": "CD-1 ①", "J-P3": "CD-1 ①", "FAULT0": "CD-4 FAULT0"}
+PSC_STROKE_ITEM = "stroke_le_684.8mm"
+PSC_STROKE_CLAUSE = "명세 426.3 E-5 (stroke limit 684.8 mm, record under E-5)"
+"""Rules rev25 CD-11: the graded ids of a PS-c event row are E-1 .. E-7 only; the stroke limit is
+part of E-5, so the separate stroke item is listed as a record under E-5 (row grading unchanged)."""
+
+
+def _item_entries(row: dict[str, Any], event_row: bool, has_runner: bool
+                  ) -> list[dict[str, Any]]:
+    entries = []
+    for entry in row["items"]:
+        name = entry["item"]
+        if name == "runner" and has_runner:
+            continue
+        if name == "T4_T5":
+            entries += _t45_entries(entry, event_row)
+        elif name == "G6":
+            entries += _g6_entries(entry, event_row)
+        elif name == "SGS_427_9":
+            entries += _sgs_entries(entry, event_row)
+        elif name.startswith("P3-"):
+            entries.append(list_entry(entry, event_row, clause=f"CD-4 {name}"))
+        elif name in SOIL_EVENT_GROUPS:
+            entries.append(list_entry(entry, event_row, clause=f"명세 426.3 {name}"))
+        elif name == PSC_STROKE_ITEM:
+            entries.append(list_entry({**entry, "verdict_recorded": entry["verdict"]}, event_row,
+                                      cls=CLASS_RECORD, clause=PSC_STROKE_CLAUSE))
+        else:
+            entries.append(list_entry(entry, event_row, clause=ITEM_CLAUSES.get(name, name)))
+    return entries
+
+
+def _gate_entries(row: dict[str, Any], row_input: RowInput, identity: Any
+                  ) -> list[dict[str, Any]]:
+    """Per-row gates (not graded; a failing gate stops the bundle where this tool checks it)."""
+    judged_items = (row_input.judged or {}).get("items") or {}
+    tag = ((judged_items.get("J-P3_R8-2") or {}).get("tag") or {})
+    gates = [("R11-4", PASS if identity not in (None, rows_judge.COMMIT_STOP) else (
+                 None if identity is None else FAIL), "commit identity (rev11 R11-4)"),
+             ("R9-1", None if not tag else (PASS if tag.get("expect_check_ok") else FAIL),
+              "expect_controller check (rev9 R9-1)")]
+    gates += [(name, None, source) for name, source in OUTSIDE_TOOL_GATES]
+    check = row.get("t_lift_check_R19_5")
+    if check:
+        gates.append(("t_lift 차 확인", PASS if check.get("ok") else FAIL, "rev19 R19-5"))
+    window = (judged_items.get("moving_pressure_D-32") or {}).get("runner_window_CD_3")
+    if isinstance(window, dict) and window.get("status") == "found":
+        gates.append(("사건 창 끝 차 확인", FAIL if window.get("stop") else PASS, "CD-3"))
+    return [{"common_id": name, "class": CLASS_GATE, "item": name, "clause_id": "CD-11 관문",
+             "description": source, "method": METHOD_RECOMPUTED,
+             "interval": "row", "verdict": verdict,
+             "reason": "" if verdict is not None else "checked outside this tool / no input"}
+            for name, verdict, source in gates]
+
+
+def row_item_list(row: dict[str, Any], event_row: bool, row_input: RowInput | None = None,
+                  identity: Any = None) -> list[dict[str, Any]]:
+    """The CD-11 item rows of one bundle row: graded items (runner rows itemised; the runner part
+    only when the row has no runner item), records and gates."""
+    runner = _runner_entries(row, event_row)
+    entries = [*runner, *_item_entries(row, event_row, has_runner=bool(runner))]
+    entries += [list_entry(entry, event_row, cls=CLASS_RECORD)
+                for entry in row.get("record_items", [])]
+    if row_input is not None:
+        if row_input.judged is not None and not any(e["item"] == "J-P3" for e in row["items"]):
+            status = ((row_input.judged.get("items") or {}).get("J-P3_R8-2") or {}).get("status")
+            if status == rows_judge.J_P3_NOT_APPLICABLE:
+                entries.append({"common_id": "J-P3", "class": CLASS_GRADED, "item": "J-P3",
+                                "clause_id": "CD-1 ①", "description": "recomputed rev8 R8-2",
+                                "method": METHOD_RECOMPUTED, "interval": "row",
+                                "verdict": None, "reason": "해당 없음(③ 끔)"})
+        entries += _gate_entries(row, row_input, identity)
+    return entries
+
+
+def graded_count(entries: list[dict[str, Any]]) -> int:
+    return sum(1 for e in entries if e["class"] == CLASS_GRADED and e["verdict"] is not None)
+
+
+def item_list(inputs: list[RowInput], rows: list[dict[str, Any]],
+              doc: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Rules rev25 CD-11 item list of a graded bundle: class (graded / gate / record), clause id,
+    description per item. A row (record rows apart) without a graded item or a list whose row
+    count is not the bundle's stops the bundle; bundle gates: the row count check."""
+    identities = (doc or {}).get("commit_identity_R11_4") or {}
+    listed = []
+    for row_input, row in zip(inputs, rows, strict=True):
+        event_row = is_event_row((row_input.judged or {}).get("items") or {})
+        entries = row_item_list(row, event_row, row_input, identities.get(row["case"]))
+        listed.append({"case": row["case"], "role": row["role"], "engine": row["engine"],
+                       "event_row_CD_3": event_row, "graded_items": graded_count(entries),
+                       "items": entries})
+    empty = [entry["case"] for entry in listed
+             if not entry["graded_items"] and entry["role"] != ROLE_RECORD]
+    count = (doc or {}).get("row_count_S15") or {}
+    return {"rule": CD11_RULE, "rows": listed, "list_rows": len(listed),
+            "bundle_rows": len(rows), "empty_rows": empty,
+            "bundle_gates": [{"common_id": "행 수 검사", "class": CLASS_GATE,
+                              "clause_id": "CD-11 관문", "verdict": (
+                                  None if not count else (PASS if count.get("ok") else FAIL))}],
+            "ok": len(listed) == len(rows) and not empty}
 
 
 def _event_records(row: RowInput) -> list[dict[str, Any]]:
@@ -1219,12 +1786,14 @@ def as_record(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def _scm_items(row: RowInput, bundle: str, judged_items: dict[str, Any], params: dict[str, Any]
                ) -> tuple[str, list[dict[str, Any]], list[dict[str, Any]]]:
     """(note, items, record items) of an SCM row; a soil-guard S-01 .. S-04 row is graded by
-    the five 427.9 conditions alone (rev19 R19-1), its P3 / G6 items recorded."""
+    the five 427.9 conditions alone (rev19 R19-1), its P3 / G6 items recorded. Rules rev25
+    CD-4 / CD-11: P3-9 is a record on every row, P3-6 is graded on C-5 SCM rows only."""
     p3b = (row.result or {}).get("p3b")
     if not isinstance(p3b, dict):
         row.missing.append("result.json p3b")
         return "", [], []
-    items = p3_items(p3b, judged_items)
+    items = p3_items(p3b, judged_items, args=(row.result or {}).get("args"),
+                     p36_graded=bundle == P36_GRADED_BUNDLE)
     if row.row_id in SAFE_STOP_ROWS:
         grade, block = safe_stop_conditions(row, params)
         if grade is not None:
@@ -1239,7 +1808,9 @@ def _scm_items(row: RowInput, bundle: str, judged_items: dict[str, Any], params:
             return note, [safe], recorded
     if bundle == "C-3":
         return _g6_items(row, items)
-    return "", items, []
+    recorded = P3_RECORDED if bundle == P36_GRADED_BUNDLE else (*P3_RECORDED, "P3-6")
+    return ("", [entry for entry in items if entry["item"] not in recorded],
+            as_record([entry for entry in items if entry["item"] in recorded]))
 
 
 def _g6_items(row: RowInput, p3: list[dict[str, Any]]
@@ -1254,6 +1825,12 @@ def _g6_items(row: RowInput, p3: list[dict[str, Any]]
     word = ALLOWED_STOP if g6 == "stroke_limited_stop" else _verdict_word(g6)
     g6_entry = item("G6", word, "chrono_rows_judge g6_grade", gates=judged.get("gates"),
                     grade_note=judged.get("grade_note"))
+    if judged.get("gate_reasons_CD_5"):
+        g6_entry["gate_reasons_CD_5"] = judged["gate_reasons_CD_5"]
+    if word == NOT_JUDGEABLE:
+        open_gates = [name for name, value in (judged.get("gates") or {}).items()
+                      if value == NOT_JUDGEABLE]
+        g6_entry["reason"] = f"G6 gates not judgeable: {open_gates or g6}"
     extra = [entry for entry in p3 if entry["item"] in G6_EXTRA_P3]
     covered = [entry for entry in p3 if entry["item"] not in G6_EXTRA_P3]
     return "", [g6_entry, *extra], as_record(covered)
@@ -1265,7 +1842,7 @@ def _row_grade(row: RowInput, items: list[dict[str, Any]]) -> str:
         return NOT_JUDGEABLE
     verdicts = [entry["verdict"] for entry in items if entry["verdict"] is not None]
     if not verdicts:
-        row.missing.append("no judged item")
+        row.missing.append(NO_GRADED_ITEM)
         return NOT_JUDGEABLE
     return worst(verdicts)
 
@@ -1490,8 +2067,215 @@ def oc5_row(row: RowInput, oc5: dict[str, tuple[dict[str, Any], Path]],
                              "F_below_F_min_plus_2kN", "status")}
         if fmin_doc.get("status") != "기록":
             row.missing.append(f"fmin-time ({fmin_doc.get('status')})")
+    out["record_values_CD_8"] = c8_record_values(row, oc5_doc, fmin_doc)
+    row.missing += [f"CD-8 record value {name}" for name in out["record_values_CD_8"]["missing"]]
     out.update(complete=not row.missing, missing_inputs=row.missing, stops=stops,
                inputs_sha256=row.files)
+    if row.missing:
+        out["record_reason"] = missing_reason(", ".join(row.missing))
+    return out
+
+
+C8_OC5_VALUES = ("F_min_after_N", "F_min_transient_N", "t_min_after_s", "las_start_s",
+                 "las_end_s", "las_end_reason", "k1_decisions", "R_c_operating",
+                 "crawler_attitude_deg", "floor_roll_deg", "floor_pitch_deg")
+"""Rules rev24 CD-8: the ``resume4368_judge.py oc5`` values a C-8 row must record (the after-
+departure minimum force a / t per leg and its time, LAS-b start / end / reason, K1 decisions,
+run R_c, crawler attitude, floor angles)."""
+C8_FMIN_VALUES = ("F_below_F_min", "F_below_F_min_plus_2kN")
+P3_RECORD_ITEMS = tuple(f"P3-{n}" for n in range(1, 10))
+LIFTOFF_TRANSIENT_S = 8.0
+"""Original 1 / rules rev25 CD-8 1: the t minimum is over [t_D, t_D + 8 s)."""
+END_ATTITUDE_WINDOW_S = 5.0
+MOUNT_ALLOWANCE_DEG = 0.02
+"""Rules rev25 CD-8 8 ③: last 5 s of the 1 ms true deck roll / pitch + the 0.02 deg mount share."""
+
+
+def _present(value: Any) -> bool:
+    """A recorded value (an empty list counts, None does not)."""
+    return value is not None
+
+
+def crawler_stiffness_scale(result: dict[str, Any] | None) -> Any:
+    """Crawler stiffness multiplier k of a run (``result.json``
+    ``meta.rigid_base.crawler_kn_scale``)."""
+    return (((result or {}).get("meta") or {}).get("rigid_base") or {}).get("crawler_kn_scale")
+
+
+def p3_record_values(items: list[dict[str, Any]], names: tuple[str, ...]
+                     ) -> tuple[dict[str, Any], list[str]]:
+    """(value by P3 item, missing names): the verdict, or the ``해당 없음`` text; a not-judgeable
+    item has no value."""
+    by_name = {entry["item"]: entry for entry in items}
+    values, missing = {}, []
+    for name in names:
+        entry = by_name.get(name)
+        if entry is None or entry["verdict"] == NOT_JUDGEABLE:
+            missing.append(name)
+            values[name] = None
+            continue
+        values[name] = entry["value"] if entry.get("status") == NOT_APPLICABLE_STATUS else \
+            entry["verdict"]
+    return values, missing
+
+
+def c8_record_values(row: RowInput, oc5_doc: dict[str, Any] | None,
+                     fmin_doc: dict[str, Any] | None) -> dict[str, Any]:
+    """Rules rev25 CD-8 record values of a C-8 row and the missing ones (a missing one makes the
+    row ``기록 불완전``): the oc5 / fmin-time values, the per-leg a / t minima with their times,
+    P3-1 .. P3-9 (P3-5 ``해당 없음(rigid_base)``), the SCM D8 values ① .. ④ and the G6 values."""
+    oc5_values = (oc5_doc or {}).get("values") or {}
+    values: dict[str, Any] = {name: oc5_values.get(name) for name in C8_OC5_VALUES}
+    for name in C8_FMIN_VALUES:
+        values[f"{name}.ms"] = ((fmin_doc or {}).get(name) or {}).get("ms")
+    result = row.result or {}
+    p3b = result.get("p3b") or {}
+    values["P3-3_within"] = (p3b.get("checks") or {}).get("P3-3_within")
+    values["crawler_stiffness_scale_k"] = crawler_stiffness_scale(result)
+    judged_items = (row.judged or {}).get("items") or {}
+    series = load_npz(row.batch / row.case / "step_series.npz")
+    values.update(scm_force_minima(series, (p3b.get("departure") or {}).get("t_departure_s"),
+                                   oc5_values))
+    values.update(scm_d8_values(series, result.get("phases")))
+    values.update(g6_record_values(judged_items))
+    missing = [name for name, value in values.items() if not _present(value)]
+    p3, p3_missing = p3_record_values(
+        p3_items(p3b, judged_items, rigid_base=is_rigid_base(result), args=result.get("args")),
+        P3_RECORD_ITEMS)
+    values.update(p3)
+    return {"values": values, "missing": missing + p3_missing,
+            "crawler_normal_series": "step_series.npz scm_crawler_normal_N (the t_D series)",
+            "rule": "rules rev25 CD-8 (original 7.4 record items)"}
+
+
+def _leg_minima(t: np.ndarray, force: np.ndarray, mask: np.ndarray
+                ) -> tuple[list[float] | None, list[float] | None]:
+    """Per-leg minimum of ``force`` over ``mask`` and its sample time (None when empty)."""
+    if not mask.any():
+        return None, None
+    masked = np.where(mask[:, None], force, np.inf)
+    k = np.argmin(masked, axis=0)
+    return masked.min(axis=0).tolist(), [float(t[i]) for i in k]
+
+
+def scm_force_minima(series: dict[str, np.ndarray] | None, t_dep: Any,
+                     oc5_values: dict[str, Any]) -> dict[str, Any]:
+    """Rules rev25 CD-8 1: per-leg 1 ms true F_cyl minimum a (t_D .. record end) and t
+    ([t_D, t_D + 8 s)) with their times (the runner P3b ``P3-3_leg_force`` definitions; the
+    agreement with the oc5 values is recorded)."""
+    out: dict[str, Any] = dict.fromkeys(("F_a_min_N_by_leg", "t_a_s_by_leg", "F_t_min_N_by_leg",
+                                         "t_t_s_by_leg"))
+    if series is None or t_dep is None or "t_s" not in series or "F_cyl_N" not in series:
+        return out
+    t = np.asarray(series["t_s"], float)
+    force = np.asarray(series["F_cyl_N"], float)
+    after = t >= float(t_dep) - rows_judge.CMP_EPS
+    transient = after & (t < float(t_dep) + LIFTOFF_TRANSIENT_S)
+    out["F_a_min_N_by_leg"], out["t_a_s_by_leg"] = _leg_minima(t, force, after)
+    out["F_t_min_N_by_leg"], out["t_t_s_by_leg"] = _leg_minima(t, force, transient)
+    out["a_t_match_oc5"] = {
+        "F_min_after_N": _close_lists(out["F_a_min_N_by_leg"], oc5_values.get("F_min_after_N")),
+        "F_min_transient_N": _close_lists(out["F_t_min_N_by_leg"],
+                                          oc5_values.get("F_min_transient_N")),
+        "t_min_after_s": _close_lists(out["t_a_s_by_leg"], oc5_values.get("t_min_after_s"))}
+    return out
+
+
+def _close_lists(a: Any, b: Any) -> bool | None:
+    if not isinstance(a, list) or not isinstance(b, list) or len(a) != len(b):
+        return None
+    return all(abs(float(x) - float(y)) <= rows_judge.CMP_EPS * max(1.0, abs(float(x)))
+               for x, y in zip(a, b, strict=True))
+
+
+def scm_d8_values(series: dict[str, np.ndarray] | None, phases: Any) -> dict[str, Any]:
+    """Rules rev25 CD-8 8 (SCM row D8): ① t_lift,sus on the 1 ms crawler normal (the t_D series;
+    first sample, phase not idle / check / touch, from which it stays <= 0.01 W), ② the minimum
+    true F_cyl after it with leg and time, ③ last 5 s max |roll|, |pitch| (true deck, target 0)
+    + 0.02 deg mount, ④ ``scm_pad_normal_N`` <= 0 samples after it."""
+    keys = ("D8_t_lift_s", "D8_F_min_after_t_lift_N", "D8_F_min_leg", "D8_F_min_t_s",
+            "D8_end_attitude_plus_mount_deg", "D8_pad_lift_samples")
+    out: dict[str, Any] = dict.fromkeys(keys)
+    needed = ("t_s", "scm_crawler_normal_N", "F_cyl_N", "roll_pitch_deg", "scm_pad_normal_N")
+    if series is None or any(key not in series for key in needed):
+        return out
+    t = np.asarray(series["t_s"], float)
+    phases_abs = sorted((float(p["t_s"]), str(p["phase"])) for p in phases or []
+                        if isinstance(p, dict))
+    threshold = rows_judge.SUSTAINED_LIFT_FRACTION * rows_judge.SUSTAINED_LIFT_WEIGHT_N
+    end = t >= t[-1] - END_ATTITUDE_WINDOW_S - rows_judge.CMP_EPS
+    attitude = float(np.abs(np.asarray(series["roll_pitch_deg"], float)[end]).max())
+    out["D8_end_attitude_plus_mount_deg"] = attitude + MOUNT_ALLOWANCE_DEG
+    t_lift = rows_judge.sustained_lift_time(t, series["scm_crawler_normal_N"], phases_abs,
+                                            threshold)
+    if t_lift is None:
+        return out
+    after = t >= t_lift - rows_judge.CMP_EPS
+    force = np.where(after[:, None], np.asarray(series["F_cyl_N"], float), np.inf)
+    k, leg = np.unravel_index(int(np.argmin(force)), force.shape)
+    pads = np.asarray(series["scm_pad_normal_N"], float)[after]
+    out.update(D8_t_lift_s=t_lift, D8_F_min_after_t_lift_N=float(force[k, leg]),
+               D8_F_min_leg=rows_judge.LEGS[leg], D8_F_min_t_s=float(t[k]),
+               D8_pad_lift_samples=int((pads <= 0.0).sum()),
+               D8_pad_lift_samples_by_leg=(pads <= 0.0).sum(axis=0).astype(int).tolist())
+    return out
+
+
+def g6_record_values(judged_items: dict[str, Any]) -> dict[str, Any]:
+    """Rules rev25 CD-8 9: the two G6 gates not replaced by a P3 value: G6-6 (no FAULT and READY
+    reached) and READY <= 120 s (``chrono_rows_judge`` D-28 / D-34 records)."""
+    ready = judged_items.get("ready_D-27_D-28")
+    fault = (judged_items.get("P3-8_D-34_D-35") or {}).get("fault")
+    reached = has_first_ready(judged_items)
+    g6_6 = None if fault is None or reached is None else (
+        PASS if not fault and reached else FAIL)
+    within = ready.get("READY_le_120s") if isinstance(ready, dict) else None
+    return {"G6-6": g6_6, "READY_le_120s": None if within is None else (PASS if within else FAIL)}
+
+
+def is_rigid_base(result: dict[str, Any] | None) -> bool:
+    """A run on the rigid base (``result.json`` ``args.rigid_base`` set)."""
+    value = ((result or {}).get("args") or {}).get("rigid_base")
+    return value not in (None, False, "", "none", "off", 0)
+
+
+def c4_row(row: RowInput) -> dict[str, Any]:
+    """Rules rev24 CD-9 C-4 record row: P3-1 .. P3-9 and FAULT0 (CD-5, P3-5 not applicable on a
+    rigid base), t_D, per-leg minimum force after the departure with the minimum leg and time,
+    run R_c; all present = ``기록 완료``."""
+    judged_items = (row.judged or {}).get("items") or {}
+    if row.judged is None:
+        row.missing.append("chrono_rows_judge row")
+    p3b = (row.result or {}).get("p3b")
+    if not isinstance(p3b, dict):
+        row.missing.append("result.json p3b")
+        p3b = {}
+    items = p3_items(p3b, judged_items, rigid_base=is_rigid_base(row.result),
+                     args=(row.result or {}).get("args"))
+    values, missing = p3_record_values(items, (*P3_RECORD_ITEMS, "FAULT0"))
+    leg_force = p3b.get("P3-3_leg_force") or {}
+    forces, times = leg_force.get("F_min_after_N"), leg_force.get("t_min_after_s")
+    values.update({
+        "t_D_s": (judged_items.get("departure_t_D") or {}).get("t_departure_s"),
+        "F_min_after_departure_N_by_leg": forces, "t_min_after_departure_s_by_leg": times,
+        "R_c_operating": (((row.result or {}).get("p3b_ext") or {}).get("start_condition")
+                          or {}).get("R_c_operating")})
+    if isinstance(forces, list) and len(forces) == len(rows_judge.LEGS) and None not in forces:
+        k = int(np.argmin(forces))
+        values["min_leg"] = rows_judge.LEGS[k]
+        values["t_min_s"] = times[k] if isinstance(times, list) and len(times) > k else None
+    missing += [name for name in ("t_D_s", "F_min_after_departure_N_by_leg", "min_leg",
+                                  "t_min_s", "R_c_operating") if not _present(values.get(name))]
+    row.missing += [f"CD-9 record value {name}" for name in missing]
+    out = {"case": row.case, "criteria_id": row.criteria_id,
+           "rigid_base": is_rigid_base(row.result), "items": items, "values": values,
+           "complete": not row.missing, "missing_inputs": row.missing,
+           "record_status": RECORD_COMPLETE if not row.missing else RECORD_INCOMPLETE,
+           "inputs_sha256": row.files}
+    for entry in items:
+        add_derived_reason(entry)
+    if row.missing:
+        out["record_reason"] = missing_reason(", ".join(row.missing))
     return out
 
 
@@ -1606,12 +2390,59 @@ def _graded_bundle(doc: dict[str, Any], bundle: str, inputs: list[RowInput],
         stops += vb_specific_failures(rows)
         doc["pairs_record"] = pair_record(rows)
         doc["t4_t5_phrase"] = _t45_phrase(rows)
+    reasons, items_cd11 = reason_check(rows), item_list(inputs, rows, doc)
+    stops += cd7_cd11_stops(reasons, items_cd11) + p36_limit_stops(rows)
     stops = unique_stops(prior_stops + stops)
     doc["rows"] = rows
     doc["runner_t_lift_R19_5"] = t_lift_summary(rows)
     doc["runner_unjudged_R19_4"] = unjudged_summary(rows)
     doc["runner_name_map_R23_1"] = name_map
+    doc["reasons_CD_7"] = reasons
+    doc["item_list_CD_11"] = items_cd11
     doc["bundle_grade"] = bundle_grade(rows, count_ok, has_stop=bool(stops))
+    return stops
+
+
+def reason_check(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Rules rev24 CD-7 block: the items and rows without a needed reason."""
+    gaps = reason_gaps(rows)
+    return {"rule": CD7_RULE, "gaps": gaps, "ok": not gaps}
+
+
+def record_reason_check(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Rules rev24 / rev25 CD-7 on the C-4 record bundle (a rev24 defect fix): every item that
+    needs a reason has one, every ``기록 불완전`` row has its ``record_reason``."""
+    gaps = [{"case": row["case"], "item": str(entry.get("item"))} for row in rows
+            for entry in row.get("items", []) if needs_reason(entry) and not entry.get("reason")]
+    gaps += [{"case": row["case"], "item": "(record status)"} for row in rows
+             if not row.get("complete") and not row.get("record_reason")]
+    return {"rule": CD7_RULE, "gaps": gaps, "ok": not gaps}
+
+
+def p36_limit_stops(rows: list[dict[str, Any]]) -> list[dict[str, str]]:
+    """Rules rev25 CD-4: a P3-6 limit that differs from the runner's P3b ``limit_s`` is a
+    definition difference; the bundle stops before its grade."""
+    stops = []
+    for row in rows:
+        for entry in [*row.get("items", []), *row.get("record_items", [])]:
+            if entry.get("item") == "P3-6" and entry.get("limit_matches_runner") is False:
+                stops.append({"case": row["case"], "reason": (
+                    f"CD-4 P3-6 limit {entry.get('limit_s')} s differs from the runner P3b "
+                    f"limit {entry.get('runner_limit_s')} s (rules rev25)")})
+    return stops
+
+
+def cd7_cd11_stops(reasons: dict[str, Any], items_cd11: dict[str, Any]) -> list[dict[str, str]]:
+    """Stops before the bundle grade: an empty reason (CD-7), an item list with an empty row or
+    another row count (CD-11)."""
+    stops = []
+    if not reasons["ok"]:
+        stops.append({"case": "*", "reason": f"CD-7: {len(reasons['gaps'])} items / rows without "
+                                             "a reason (rules rev24)"})
+    if not items_cd11["ok"]:
+        stops.append({"case": "*", "reason": f"CD-11: item list rows {items_cd11['list_rows']} / "
+                                             f"bundle rows {items_cd11['bundle_rows']}, rows "
+                                             f"without a graded item {items_cd11['empty_rows']}"})
     return stops
 
 
@@ -1634,6 +2465,10 @@ def _record_bundle(doc: dict[str, Any], bundle: str, inputs: list[RowInput],
     stops: list[dict[str, str]] = []
     if bundle == "C-6C7":
         rows = [openloop_row(row) for row in inputs]
+    elif bundle == "C-4":
+        rows = [c4_row(row) for row in inputs]
+        doc["reasons_CD_7"] = record_reason_check(rows)
+        stops = cd7_cd11_stops(doc["reasons_CD_7"], {"ok": True}) + p36_limit_stops(rows)
     else:
         oc5 = oc5_rows([Path(p) for p in args.oc5 or []])
         fmin = fmin_rows([Path(p) for p in args.fmin_time or []])
@@ -1669,7 +2504,9 @@ def build_parser() -> argparse.ArgumentParser:
     grade.add_argument("--bundle", required=True, choices=tuple(EXPECTED_ROWS))
     grade.add_argument("--git-at-start", required=True, help="run commit R2 (rev18 R18-4)")
     grade.add_argument("--batch", action="append", help="S9 batch folder with batch.json")
-    grade.add_argument("--rows-judge", help="chrono_rows_judge_4368.py judge output (C-1 .. C-5)")
+    grade.add_argument("--rows-judge",
+                       help="chrono_rows_judge_4368.py judge output (C-1 .. C-5; C-4 record rows "
+                            "and the C-8 P3 record values, rules rev24 CD-8 / CD-9)")
     grade.add_argument("--runner-judge-dir",
                        help="folder of <C1|C2|C5>_<case>.verify_S8C.json / .verify_S6C.json")
     grade.add_argument("--t45", help="chrono_t45_replay output (--t5, rev7) for C-5; rows paired "

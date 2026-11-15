@@ -78,8 +78,10 @@ def write_scm_series(folder: Path, *, lift_after_level: bool = False,
     force[t >= 40.0, 1] = f_after_kN * 1e3
     crawler = np.where(t < 40.0, 300_000.0, 0.0)
     folder.mkdir(parents=True, exist_ok=True)
+    roll_pitch = np.full((t.size, 2), 0.05)
+    roll_pitch[t >= 55.0, 0] = -0.1  # the last 5 s maximum |roll|, |pitch| is 0.1 deg
     np.savez(folder / "step_series.npz", t_s=t, scm_pad_normal_N=pads, F_cyl_N=force,
-             scm_crawler_normal_N=crawler)
+             scm_crawler_normal_N=crawler, roll_pitch_deg=roll_pitch)
     (folder / "record").mkdir(exist_ok=True)
     rows = np.round(np.arange(0.0, 60.0, 0.1), 6).size
     np.savez(folder / "record" / "record.npz", t=np.round(np.arange(0.0, 60.0, 0.1), 6),
@@ -181,12 +183,16 @@ def write_cases_script(mod, tmp_path: Path, cases: tuple[str, ...] | None = None
     return path
 
 
+C1_D8_NAME = ("C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) "
+              ">= F_min + 5 kN")
+"""The whole runner item name of the C1 D8 row (rules rev24 CD-2 whole-name match)."""
+
+
 def runner_pass_rows() -> list[dict[str, Any]]:
     return [{"item": "run", "passed": True, "kind": "function"},
             {"item": "4 max moving pressure", "passed": True, "value": 98.0, "kind": "function"},
             {"item": "4 saturation steps", "passed": True, "value": 0, "kind": "function"},
-            {"item": "C1 D8 min true rod force (raw 1 ms) >= F_min + 5 kN", "passed": True,
-             "value": 56.0, "kind": "judged"},
+            {"item": C1_D8_NAME, "passed": True, "value": 56.0, "kind": "judged"},
             {"item": "F4 record", "passed": None, "kind": "record"}]
 
 
@@ -610,42 +616,88 @@ def test_openloop_record_complete_and_incomplete(mod, tmp_path):
     assert row["missing_inputs"] == ["P3a-5_within"]
 
 
-def oc5_files(tmp_path: Path, b: Bundle, case: str, m_class: str, *, fmin: bool = True
-              ) -> list[str]:
+OC5_VALUES = {"F_min_after_N": [20e3, 21e3, 22e3, 23e3],
+              "F_min_transient_N": [19e3, 20e3, 21e3, 22e3],
+              "t_min_after_s": [40.0, 41.0, 42.0, 43.0], "within": True,
+              "R_c_operating": 0.95, "crawler_attitude_deg": [0.1, 0.2],
+              "floor_roll_deg": 1.0, "floor_pitch_deg": 2.0, "las_start_s": 30.0,
+              "las_end_s": 31.0, "las_end_reason": "contact", "k1_decisions": []}
+"""Rules rev24 CD-8: every ``resume4368_judge.py oc5`` value a C-8 row records."""
+
+
+def oc5_files(tmp_path: Path, b: Bundle, case: str, m_class: str, *, fmin: bool = True,
+              values: dict[str, Any] | None = None) -> list[str]:
     oc5 = write_json(tmp_path / f"oc5_{case}.json", {
         "result": str(b.batch / case / "result.json"), "class": m_class, "m_N": 5869.6,
-        "status": "기록", "values": {"R_c_operating": 0.95}})
+        "status": "기록", "values": OC5_VALUES if values is None else values})
     argv = ["--oc5", str(oc5)]
     if fmin:
         f = write_json(tmp_path / f"fmin_{case}.json", {
             "case": str(b.batch / case), "status": "기록", "t_D_s": 35.0,
-            "F_below_F_min": {"ms": [0.0, 0.0, 158.0, 0.0]}})
+            "F_below_F_min": {"ms": [0.0, 0.0, 158.0, 0.0]},
+            "F_below_F_min_plus_2kN": {"ms": [0.0, 0.0, 300.0, 0.0]}})
         argv += ["--fmin-time", str(f)]
     return argv
 
 
-def test_c8_record_with_s9_handling(mod, tmp_path):
+def oc5_result(**checks: Any) -> dict[str, Any]:
+    """result.json of an O-C5 row with every CD-8 record value (crawler scale k 3, rigid base,
+    departure at 40 s, phases for the SCM D8 t_lift)."""
+    p3b = p3b_ok(**{"P3-3_within": True, **checks})
+    p3b["departure"] = {"t_departure_s": 40.0}
+    return {"p3b": p3b, "meta": {"rigid_base": {"crawler_kn_scale": 3.0}},
+            "args": {"rigid_base": "FR"},
+            "phases": [{"t_s": 5.0, "phase": "touch"}, {"t_s": 10.0, "phase": "level"}]}
+
+
+def c8_bundle(tmp_path: Path) -> Bundle:
     b = Bundle(tmp_path, "OC5")
-    b.add_scm(entry("OC5_VB", "C-8a", "SCM"), {"p3b": {}}, {})
-    b.add_scm(entry("OC5_V0", "C-8b", "SCM"), {"p3b": {}}, {})
+    ready = {"ready_D-27_D-28": {"t_ready_rel_s": 30.0, "READY_le_120s": True}}
+    for case, crit in (("OC5_VB", "C-8a"), ("OC5_V0", "C-8b")):
+        b.add_scm(entry(case, crit, "SCM"), oc5_result(), scm_items(**ready))
+        write_scm_series(b.batch / case)
+    return b
+
+
+def test_c8_record_with_s9_handling(mod, tmp_path):
+    b = c8_bundle(tmp_path)
     argv = oc5_files(tmp_path, b, "OC5_VB", "stop_S9") + oc5_files(tmp_path, b, "OC5_V0",
                                                                    "record")
-    code, doc = run(mod, b, tmp_path, "C-8", *argv)
+    code, doc = run(mod, b, tmp_path, "C-8", *argv, "--rows-judge", str(tmp_path / "judge.json"))
     assert code == 0 and doc["record_status"] == "기록 완료"
     vb = next(r for r in doc["rows"] if r["case"] == "OC5_VB")
     assert "R18-5" in vb["S-9_handled"] and vb["stops"] == []
     assert vb["fmin_time"]["F_below_F_min"]["ms"][2] == 158.0
+    values = vb["record_values_CD_8"]
+    assert values["missing"] == [] and values["values"]["crawler_stiffness_scale_k"] == 3.0
+    assert values["values"]["k1_decisions"] == []  # an empty list is a recorded value
+
+
+def test_cd8_rev25_values(mod, tmp_path):
+    """Rules rev25 CD-8 1 / 7 / 8 / 9: a / t minima with a time per leg and series, P3-5 of the
+    rigid base not applicable, SCM D8 ① .. ④, G6-6 and READY <= 120 s."""
+    b = c8_bundle(tmp_path)
+    argv = oc5_files(tmp_path, b, "OC5_VB", "stop_S9") + oc5_files(tmp_path, b, "OC5_V0", "record")
+    _, doc = run(mod, b, tmp_path, "C-8", *argv, "--rows-judge", str(tmp_path / "judge.json"))
+    values = doc["rows"][0]["record_values_CD_8"]["values"]
+    assert values["F_a_min_N_by_leg"] == [50e3] * 4 and values["t_a_s_by_leg"] == [40.0] * 4
+    assert values["F_t_min_N_by_leg"] == [50e3] * 4 and values["t_t_s_by_leg"] == [40.0] * 4
+    assert values["P3-5"] == "해당 없음(rigid_base)" and values["P3-6"] == "pass"
+    assert values["D8_t_lift_s"] == 40.0 and values["D8_pad_lift_samples"] == 0
+    assert values["D8_F_min_after_t_lift_N"] == 50e3 and values["D8_F_min_leg"] == "FL"
+    assert values["D8_end_attitude_plus_mount_deg"] == pytest.approx(0.12)
+    assert values["G6-6"] == "pass" and values["READY_le_120s"] == "pass"
 
 
 def test_c8_s9_on_v0_stops_and_missing_fmin(mod, tmp_path):
-    b = Bundle(tmp_path, "OC5")
-    b.add_scm(entry("OC5_VB", "C-8a", "SCM"), {"p3b": {}}, {})
-    b.add_scm(entry("OC5_V0", "C-8b", "SCM"), {"p3b": {}}, {})
+    b = c8_bundle(tmp_path)
     argv = oc5_files(tmp_path, b, "OC5_VB", "record", fmin=False) + oc5_files(
         tmp_path, b, "OC5_V0", "stop_S9")
-    code, doc = run(mod, b, tmp_path, "C-8", *argv)
+    code, doc = run(mod, b, tmp_path, "C-8", *argv, "--rows-judge", str(tmp_path / "judge.json"))
     assert code == 1 and doc["record_status"] == "기록 불완전"
     assert doc["stops"] == [{"case": "OC5_V0", "reason": "S-9 (original 7.4)"}]
+    vb = next(r for r in doc["rows"] if r["case"] == "OC5_VB")
+    assert "fmin-time output" in vb["missing_inputs"] and vb["record_reason"].startswith("원 입력")
 
 
 # ------------------------------------------------------------------------------------- commit / CLI
@@ -666,6 +718,12 @@ def test_seals_command(mod, capsys):
     rev23 = last["files"]["v5_resume_4368_rules_rev23.md"]  # rev23 R23-2 seal list
     assert rev23["ok"] is True
     assert rev23["sha256"] == "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+    rev24 = last["files"]["v5_resume_4368_rules_rev24.md"]  # rev24 R24-3 seal list
+    assert rev24["ok"] is True
+    assert rev24["sha256"] == "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+    rev25 = last["files"]["v5_resume_4368_rules_rev25.md"]  # rev25 R25-3 seal list
+    assert rev25["ok"] is True
+    assert rev25["sha256"] == "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
 
 
 def test_worst_order(mod):
@@ -1218,17 +1276,36 @@ def test_r23_suffixed_row_is_found_by_the_inner_name(mod, tmp_path):
 @pytest.mark.parametrize("bundle", ["C-1", "C-2"])
 def test_r23_same_names_keep_the_rev22_output(mod, tmp_path, bundle):
     """Test 3: with judged row name = inner name the bundle output equals the pre-R23 tool's
-    except the tool / rules strings and the new record block."""
+    except the tool / rules strings, the new record blocks, the rev24 CD-7 reason keys and the
+    rev25 P3-6 / P3-9 roles of the SCM rows (L2b / L1-R rows and grades compared)."""
     old_tool = load_rev22_tool(tmp_path)
     b = c1_bundle(tmp_path) if bundle == "C-1" else c2_bundle(tmp_path)
     code, new = run(mod, b, tmp_path, bundle)
     b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
     old_code, old = run(old_tool, b, tmp_path, bundle)
     assert new["runner_name_map_R23_1"]["name_differs_count"] == 0
-    left_out = ("tool", "rules", "runner_name_map_R23_1")
-    assert {k: v for k, v in new.items() if k not in left_out} == {
-        k: v for k, v in old.items() if k not in left_out}
+    left_out = ("tool", "rules", "runner_name_map_R23_1", "reasons_CD_7", "item_list_CD_11",
+                "rows")
+    assert without_keys(new, REV24_REASON_KEYS, left_out) == without_keys(old, (), left_out)
+    rigid = ("L2b", "L1R")
+    assert [without_keys(r, REV24_REASON_KEYS) for r in new["rows"] if r["engine"] in rigid] == \
+        [r for r in old["rows"] if r["engine"] in rigid]
+    assert [r["grade"] for r in new["rows"]] == [r["grade"] for r in old["rows"]]
     assert code == old_code == 0
+
+
+REV24_REASON_KEYS = ("reason", "override_reason", "grade_reason")
+"""Rules rev24 CD-7 reason keys (left out of a K-10 comparison, CD-10)."""
+
+
+def without_keys(node: Any, keys: tuple[str, ...], top: tuple[str, ...] = ()) -> Any:
+    """``node`` without the ``keys`` at any depth and the ``top`` keys at the top level."""
+    if isinstance(node, dict):
+        return {k: without_keys(v, keys) for k, v in node.items()
+                if k not in keys and k not in top}
+    if isinstance(node, list):
+        return [without_keys(v, keys) for v in node]
+    return node
 
 
 def test_r23_only_star_rows_is_missing(mod, tmp_path):
@@ -1376,3 +1453,355 @@ def test_r23_checks_not_applied_are_null(mod, tmp_path):
     assert no_file["checks"] == {"1_dir_set": True, "2_dir_unique": True,
                                  "3_runner_row_cases": None, "4_s8_metrics_keys": None}
     assert r23_stops(doc) == []
+
+
+# ------------------------------------------------------------- rules rev24 CD-2 / CD-3 (bundle)
+OUTSIDE_W = "4 max moving pressure outside the event transient"
+INSIDE_W = "4 max pressure in the event transient"
+
+
+def event_rows() -> list[dict[str, Any]]:
+    """Runner rows of a floor-event L2b row (the event-free ``4 max moving pressure`` too, to
+    show it is not replaced on an event row)."""
+    return [*runner_pass_rows(),
+            {"item": OUTSIDE_W, "passed": True, "value": 99.0, "kind": "function"},
+            {"item": INSIDE_W, "passed": True, "value": 299.0, "kind": "function"},
+            {"item": "D8 no pad lift-off", "passed": True, "value": 0, "kind": "judged"},
+            {"item": "R/D8 no pad lift-off", "passed": True, "value": 0, "kind": "function"}]
+
+
+def event_block(*, outside: float = 120.0, inside: float = 330.0, saturated: int = 0,
+                stop: bool = False) -> dict[str, Any]:
+    """``chrono_rows_judge`` CD-3 item 4 block of a floor-event row."""
+    return {"status": "judged", "row_kind": "floor", "event_test_CD_3": {"kind": "floor"},
+            "outside_extension": {"max_bar": outside, "within": outside <= 180.0},
+            "inside": {"max_bar": inside, "within": inside <= 350.0},
+            "saturated_samples": saturated, "saturation_within": saturated == 0,
+            "runner_window_CD_3": {"status": "found", "difference_s": 0.2 if stop else 0.0,
+                                   "verdicts_changed": [], "stop": stop}}
+
+
+def event_bundle(tmp_path: Path, block: dict[str, Any]) -> Bundle:
+    """C-1 with its first row turned into a floor-event row (runner rows and CD-3 block)."""
+    b = c1_bundle(tmp_path)
+    b.entries.pop(0)
+    b.judged.pop(0)
+    b.add_rigid(entry("D1C2_event", "C-1", "L2b_NSC", d1_id="C2-00", d1_role="judge"),
+                event_rows(), {**rigid_items(), "moving_pressure_D-32": block}, "C1")
+    return b
+
+
+def runner_item_of(doc: dict, case: str, name: str) -> dict:
+    row = next(r for r in doc["rows"] if r["case"] == case)
+    return next(i for i in row["runner_items"] if i["item"] == name)
+
+
+def test_cd2_event_row_lines(mod, tmp_path):
+    """CD-2 table on an event row: outside W, inside W and saturation re-computed; the
+    event-free line keeps the runner value; D8 no pad lift-off re-computed, R/D8 not."""
+    _, doc = run(mod, event_bundle(tmp_path, event_block(inside=360.0)), tmp_path, "C-1")
+    outside = runner_item_of(doc, "D1C2_event", OUTSIDE_W)
+    inside = runner_item_of(doc, "D1C2_event", INSIDE_W)
+    assert outside["value"] == 120.0 and outside["verdict"] == "pass"
+    assert inside["value"] == 360.0 and inside["verdict"] == "fail"
+    assert inside["override_reason"].startswith("CD-2 table")
+    assert runner_item_of(doc, "D1C2_event", "4 saturation steps")["source"] == "recomputed D-32"
+    assert runner_item_of(doc, "D1C2_event", "4 max moving pressure")["source"] == "runner"
+    assert runner_item_of(doc, "D1C2_event", "D8 no pad lift-off")["source"].startswith(
+        "recomputed")
+    assert runner_item_of(doc, "D1C2_event", "R/D8 no pad lift-off")["source"] == "runner"
+
+
+def test_cd2_whole_name_match(mod, tmp_path):
+    """An item whose name only starts with a table name keeps the runner value."""
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: d["rows"].append(
+        {"case": "D1C2_0", "item": "C1 D8 min true rod force (raw 1 ms) >= F_min + 5 kN",
+         "passed": True, "value": 1.0, "kind": "judged"}))
+    _, doc = run(mod, b, tmp_path, "C-1")
+    short = runner_item_of(doc, "D1C2_0", "C1 D8 min true rod force (raw 1 ms) >= F_min + 5 kN")
+    assert short["source"] == "runner" and short["value"] == 1.0
+    assert runner_item_of(doc, "D1C2_0", C1_D8_NAME)["source"].startswith("recomputed")
+
+
+def test_cd3_window_difference_stops_the_bundle(mod, tmp_path):
+    code, doc = run(mod, event_bundle(tmp_path, event_block(stop=True)), tmp_path, "C-1")
+    assert code == 1 and doc["bundle_grade"]["grade"] is None
+    assert any("CD-3: event window end" in s["reason"] for s in doc["stops"])
+
+
+def test_cd3_window_undecided_is_not_judgeable_with_reason(mod, tmp_path):
+    block = {"status": "not_judgeable", "row_kind": "floor", "reason": "사건 창 결정 불가: x"}
+    _, doc = run(mod, event_bundle(tmp_path, block), tmp_path, "C-1")
+    inside = runner_item_of(doc, "D1C2_event", INSIDE_W)
+    assert inside["verdict"] == "not_judgeable" and inside["reason"].startswith("사건 창 결정 불가")
+    row = next(r for r in doc["rows"] if r["case"] == "D1C2_event")
+    assert row["grade"] == "not_judgeable" and "사건 창 결정 불가" in row["grade_reason"]
+    assert doc["reasons_CD_7"]["ok"] is True
+
+
+# ------------------------------------------------------------- rules rev24 CD-5 / CD-7
+NO_READY = {"ready_D-27_D-28": {"t_ready_rel_s": None}}
+
+
+def test_cd5_p3_items_without_ready(mod):
+    """The READY-missing table: P3-1 recontact only, P3-4 / P3-5 not applicable, P3-6 fail where
+    graded (C-5 SCM) and not applicable where recorded (rev25), P3-2 / P3-3 / P3-7 / P3-8 / P3-9
+    / FAULT0 as defined."""
+    p3b = p3b_ok(**{"P3-1_crawler_zero_after_ready": None})
+    items = {i["item"]: i for i in mod.p3_items(p3b, scm_items(**NO_READY), p36_graded=True)}
+    assert items["P3-1"]["verdict"] == "pass"
+    assert items["P3-1"]["crawler_zero_after_ready"] == "해당 없음(READY 없음)"
+    for name in ("P3-4", "P3-5"):
+        assert items[name]["verdict"] is None and items[name]["value"] == "해당 없음(READY 없음)"
+    assert items["P3-6"]["verdict"] == "fail" and items["P3-6"]["reason"].startswith("READY 없음")
+    assert [items[n]["verdict"] for n in ("P3-2", "P3-3", "P3-7", "P3-8", "P3-9", "FAULT0")] == \
+        ["pass"] * 6
+    recorded = {i["item"]: i for i in mod.p3_items(p3b, scm_items(**NO_READY))}
+    assert recorded["P3-6"]["verdict"] is None
+    assert recorded["P3-6"]["value"] == "해당 없음(READY 없음)"
+
+
+def test_cd5_recontact_failure_without_ready(mod):
+    judged = scm_items(**NO_READY, **{"P3-1_recontact_D-36": {"pass": False, "flags": []}})
+    items = {i["item"]: i for i in mod.p3_items(p3b_ok(), judged)}
+    assert items["P3-1"]["verdict"] == "fail"
+
+
+def test_cd5_row_without_graded_item(mod):
+    row = mod.RowInput(case="x", criteria_id="C-5", engine="SCM", role="judged", row_id=None,
+                       entry={}, batch=Path("."))
+    items = [mod.not_applicable_item("P3-4", "p3b checks", "READY 없음")]
+    assert mod._row_grade(row, items) == "not_judgeable"
+    assert "no graded item" in mod.row_grade_reason(row.missing, items)
+
+
+def test_cd7_reasons_and_gap_stop(mod, tmp_path):
+    """Every not-judgeable item of a bundle has a reason; an item without one is a CD-7 stop."""
+    b = c1_bundle(tmp_path)
+    b.judged[0]["items"]["C1_R40"] = {"status": "not_judgeable", "hold": True}
+    _, doc = run(mod, b, tmp_path, "C-1")
+    c1 = runner_item_of(doc, "D1C2_0", C1_D8_NAME)
+    assert c1["verdict"] == "not_judgeable" and c1["reason"].startswith("원 판정기 보류")
+    assert doc["reasons_CD_7"] == {"rule": mod.CD7_RULE, "gaps": [], "ok": True}
+    gap_row = {"case": "y", "grade": "not_judgeable",
+               "items": [{"item": "X", "verdict": "not_judgeable", "source": "s"}]}
+    gaps = mod.reason_gaps([gap_row])
+    assert gaps == [{"case": "y", "item": "(row grade)"}, {"case": "y", "item": "X"}]
+    stops = mod.cd7_cd11_stops({"gaps": gaps, "ok": False}, {"ok": True})
+    assert stops[0]["reason"].startswith("CD-7")
+
+
+# ------------------------------------------------------------- rules rev24 CD-11
+def test_cd11_item_list(mod, tmp_path):
+    """One list row per bundle row with >= 1 graded item; T4 / T5 apart, T4-0 and the row gates
+    as gates, records as records, clause ids of the rev25 table."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    _, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    listed = doc["item_list_CD_11"]
+    assert listed["ok"] is True and listed["list_rows"] == listed["bundle_rows"] == 35
+    row = next(r for r in listed["rows"] if r["case"] == "E_RE1bF_Fs8")
+    by_id = {entry["common_id"]: entry for entry in row["items"]}
+    assert {"T4", "T5", "J11", "4 saturation steps", C1_D8_NAME} <= set(by_id)
+    assert by_id["4 saturation steps"]["clause_id"] == "CD-2 표 7줄"
+    assert by_id[C1_D8_NAME]["clause_id"] == "CD-2 표 1줄"
+    assert by_id["run"]["clause_id"] == "CD-2 표 12줄"
+    assert by_id["run"]["method"] == "원 판정기 실행"
+    assert by_id["T4"]["clause_id"] == "CD-6" and by_id["J11"]["clause_id"] == "CD-1 ①"
+    assert by_id["T4-0"]["class"] == "관문" and by_id["R11-4"]["class"] == "관문"
+    assert by_id["F4 record"]["class"] == "기록" and by_id["D2"]["class"] == "기록"
+    assert by_id["4 saturation steps"]["interval"].startswith("10 Hz extension rows")
+    scm = next(r for r in listed["rows"] if r["case"] == "seed26")
+    scm_ids = {entry["common_id"]: entry for entry in scm["items"]}
+    assert scm_ids["P3-6"]["class"] == "등급 항목" and scm_ids["P3-9"]["class"] == "기록"
+    assert scm_ids["P3-6"]["clause_id"] == "CD-4 P3-6"
+
+
+def test_cd11_case_star_suffix(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: d["rows"].append(
+        {"case": "*", "item": "I4 summary (gate: every compared case matches)", "passed": True,
+         "kind": "judged"}))
+    _, doc = run(mod, b, tmp_path, "C-1")
+    row = next(r for r in doc["item_list_CD_11"]["rows"] if r["case"] == "D1C2_0")
+    star = next(e for e in row["items"] if e["item"].startswith("I4 summary"))
+    assert star["common_id"].endswith(" [case *]") and star["clause_id"] == "CD-2 표 12줄"
+
+
+def test_cd11_g6_rows_and_427_9_conditions(mod, tmp_path):
+    """C-3: the G6 item as the eight G6 table ids (READY-missing G6-4 / G6-5 not applicable),
+    P3-7 graded, FAULT0 / P3-6 / P3-9 records; a 427.9 row as 427.9-1 .. 5."""
+    b = Bundle(tmp_path, "C3")
+    gates = {"G6-1_crawler": "pass", "G6-2_loc": "pass", "G6-3_Fmin": "pass",
+             "G6-4_att": "not_applicable", "G6-5_rut_stroke": "not_applicable",
+             "G6-6_fault_ready": "fail", "G6-7_preloc": "pass", "READY_le_120s": "fail"}
+    b.add_scm(entry("D1S_G1_S-03", "C-3", "SCM", d1_id="S-03", d1_role="judge"),
+              {"p3b": p3b_ok(), "events": []}, scm_items(**NO_READY), grade="fail", gates=gates,
+              gate_reasons_CD_5={"G6-4_att": "해당 없음(READY 없음)"})
+    b.add_scm(entry("D1S_G1_S-04", "C-3", "SCM", d1_id="S-04", d1_role="judge"),
+              {"p3b": {**p3b_ok(), "weight_N": 380_000.0}, **soil_stop_result()}, scm_items(),
+              grade="fail", gates={})
+    write_scm_series(b.batch / "D1S_G1_S-04")
+    _, doc = run(mod, b, tmp_path, "C-3")
+    rows = {r["case"]: r for r in doc["item_list_CD_11"]["rows"]}
+    g6 = {e["common_id"]: e for e in rows["D1S_G1_S-03"]["items"] if e["class"] == "등급 항목"}
+    assert set(g6) == {"P3-1", "P3-2", "P3-3", "P3-4", "P3-5", "G6-6", "P3-8", "READY_le_120s",
+                       "P3-7", "J-P3"}  # J-P3 of a ③ row is graded in C-1 .. C-5 (CD-1)
+    assert g6["P3-4"]["verdict"] is None and g6["G6-6"]["clause_id"] == "CD-11 G6 대응표"
+    assert g6["P3-7"]["clause_id"] == "CD-4 P3-7"
+    records = {e["common_id"] for e in rows["D1S_G1_S-03"]["items"] if e["class"] == "기록"}
+    assert {"FAULT0", "P3-6", "P3-9"} <= records
+    sgs = [e["common_id"] for e in rows["D1S_G1_S-04"]["items"] if e["class"] == "등급 항목"]
+    assert sgs[:5] == ["427.9-1", "427.9-2", "427.9-3", "427.9-4", "427.9-5"]
+
+
+@pytest.mark.parametrize(("args", "limit"), [
+    ({"floor_roll": 1.0, "floor_pitch": 0.0, "pad_variant": "dwg_rear250", "soil": "J1"}, 120.0),
+    ({"floor_roll": 0.0, "floor_pitch": 0.0, "pad_variant": "dwg_rear250", "soil": "J2"}, 100.0),
+    ({"pad_variant": "dwg_rear250", "soil": "J1", "soil_patch": "RR:G1"}, 90.0),
+    ({"pad_variant": "cad330", "soil": "S1"}, 90.0),
+])
+def test_cd4_p36_limit_rows(mod, args, limit):
+    """Rules rev25 CD-4 P3-6 limit: slope 120 s, flat pad B both rear pads soft 100 s, other 90 s
+    (a soil patch on a rear leg decides that leg)."""
+    assert mod.p36_limit(args)["limit_s"] == limit
+
+
+def p36_block(t_ready: float, limit: float) -> dict[str, Any]:
+    return {"P3-6_ready": {"t_ready_after_loop_start_s": t_ready, "limit_s": limit}}
+
+
+def test_cd4_p36_role_and_limit_check(mod, tmp_path):
+    """P3-6 graded on a C-5 SCM row (95 s > 90 s: fail), a record elsewhere; a limit unlike the
+    runner P3b one stops the bundle."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    for case in ("seed26", "seed27"):
+        result = b.batch / case / "result.json"
+        data = json.loads(result.read_text(encoding="utf-8"))
+        data["p3b"].update(p36_block(95.0, 90.0 if case == "seed26" else 120.0))
+        data["args"] = {"pad_variant": "cad330", "soil": "G1"}
+        result.write_text(json.dumps(data), encoding="utf-8")
+    code, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    rows = {r["case"]: r for r in doc["rows"]}
+    p36 = next(i for i in rows["seed26"]["items"] if i["item"] == "P3-6")
+    assert p36["verdict"] == "fail" and p36["limit_s"] == 90.0 and p36["limit_matches_runner"]
+    assert rows["seed26"]["grade"] == "fail"
+    assert any(i["item"] == "P3-9" for i in rows["seed26"]["record_items"])
+    assert any(s["reason"].startswith("CD-4 P3-6 limit") and s["case"] == "seed27"
+               for s in doc["stops"]) and code == 1
+    _, doc = run(mod, c2_bundle(tmp_path / "c2"), tmp_path / "c2", "C-2")
+    base = next(r for r in doc["rows"] if r["case"] == "D1PSC_base")
+    assert not any(i["item"] in ("P3-6", "P3-9") for i in base["items"])
+    assert {"P3-6", "P3-9"} <= {i["item"] for i in base["record_items"]}
+
+
+def test_cd7_c4_empty_reason_stops(mod, tmp_path):
+    """Rev24 defect fix: the C-4 record bundle checks its reasons (CD-7)."""
+    b = c4_bundle(tmp_path)
+    _, doc = run(mod, b, tmp_path, "C-4", "--rows-judge", str(tmp_path / "judge.json"))
+    assert doc["reasons_CD_7"]["ok"] is True
+    gap_rows = [{"case": "y", "complete": False,
+                 "items": [{"item": "P3-2", "verdict": "not_judgeable", "source": "s"}]}]
+    check = mod.record_reason_check(gap_rows)
+    assert check["gaps"] == [{"case": "y", "item": "P3-2"},
+                             {"case": "y", "item": "(record status)"}]
+    assert mod.cd7_cd11_stops(check, {"ok": True})[0]["reason"].startswith("CD-7")
+
+
+def test_cd11_psc_stroke_is_a_record_under_e5(mod, tmp_path):
+    """PS-c event row: E-1 .. E-7 graded (명세 426.3 E-n); the 684.8 mm stroke item is a record
+    under E-5 in the list, the row items and grade are unchanged."""
+    _, doc = run(mod, c2_bundle(tmp_path), tmp_path, "C-2")
+    row = next(r for r in doc["item_list_CD_11"]["rows"] if r["case"] == "D1PSC_cslow")
+    stroke = next(e for e in row["items"] if e["item"] == "stroke_le_684.8mm")
+    assert stroke["class"] == "기록" and stroke["clause_id"].startswith("명세 426.3 E-5")
+    assert stroke["verdict"] == "pass"  # the recorded check
+    graded = {e["common_id"]: e["clause_id"] for e in row["items"]
+              if e["class"] == "등급 항목" and e["common_id"].startswith("E-")}
+    assert graded["E-5"] == "명세 426.3 E-5" and "stroke_le_684.8mm" not in graded
+    event = next(r for r in doc["rows"] if r["case"] == "D1PSC_cslow")
+    assert any(i["item"] == "stroke_le_684.8mm" and i["verdict"] == "pass"
+               for i in event["items"])
+
+
+def test_cd11_record_row_without_graded_item(mod):
+    """A record row (C-2 PS-c base) may have no graded item; a judged row may not."""
+    inputs = [mod.RowInput(case=c, criteria_id="C-2", engine="SCM", role=role, row_id=None,
+                           entry={}, batch=Path(".")) for c, role in (("base", "record"),
+                                                                     ("x", "judged"))]
+    rows = [{"case": c, "role": role, "engine": "SCM", "items": [], "runner_items": []}
+            for c, role in (("base", "record"), ("x", "judged"))]
+    assert mod.item_list(inputs, rows)["empty_rows"] == ["x"]
+
+
+def test_cd11_empty_row_stops(mod):
+    inputs = [mod.RowInput(case="x", criteria_id="C-5", engine="SCM", role="judged", row_id=None,
+                           entry={}, batch=Path("."))]
+    rows = [{"case": "x", "role": "judged", "engine": "SCM", "items": [], "runner_items": []}]
+    listed = mod.item_list(inputs, rows)
+    assert listed["ok"] is False and listed["empty_rows"] == ["x"]
+    assert mod.cd7_cd11_stops({"ok": True, "gaps": []}, listed)[0]["reason"].startswith("CD-11")
+
+
+# ------------------------------------------------------------- rules rev24 CD-8 / CD-9
+def test_cd8_missing_record_value_is_incomplete(mod, tmp_path):
+    b = c8_bundle(tmp_path)
+    values = {**OC5_VALUES, "las_end_reason": None}
+    argv = oc5_files(tmp_path, b, "OC5_VB", "stop_S9", values=values) + oc5_files(
+        tmp_path, b, "OC5_V0", "record")
+    _, doc = run(mod, b, tmp_path, "C-8", *argv, "--rows-judge", str(tmp_path / "judge.json"))
+    vb = next(r for r in doc["rows"] if r["case"] == "OC5_VB")
+    assert vb["record_values_CD_8"]["missing"] == ["las_end_reason"]
+    assert vb["complete"] is False and doc["record_status"] == "기록 불완전"
+
+
+def test_cd8_p3_values_need_the_rows_judge(mod, tmp_path):
+    b = c8_bundle(tmp_path)
+    argv = oc5_files(tmp_path, b, "OC5_VB", "stop_S9") + oc5_files(tmp_path, b, "OC5_V0", "record")
+    _, doc = run(mod, b, tmp_path, "C-8", *argv)
+    missing = doc["rows"][0]["record_values_CD_8"]["missing"]
+    assert {"P3-1", "P3-2", "P3-3", "P3-8"} <= set(missing)
+
+
+def c4_result(**start: Any) -> dict[str, Any]:
+    p3b = {**p3b_ok(), "P3-3_leg_force": {"F_min_after_N": [30e3, 20e3, 25e3, 26e3],
+                                          "t_min_after_s": [41.0, 42.0, 43.0, 44.0]}}
+    return {"p3b": p3b, "args": {"rigid_base": "J1FR"},
+            "p3b_ext": {"start_condition": {"R_c_operating": 0.9, **start}}}
+
+
+def c4_bundle(tmp_path: Path, rows: int = 4) -> Bundle:
+    b = Bundle(tmp_path, "C4")
+    judged = scm_items(**{"ready_D-27_D-28": {"t_ready_rel_s": 30.0},
+                          "departure_t_D": {"t_departure_s": 40.0}})
+    for i in range(rows):
+        b.add_scm(entry(f"R4368C4_{i}", "C-4", "SCM"), c4_result(), judged)
+    return b
+
+
+def test_cd9_c4_record_bundle(mod, tmp_path):
+    """C-4: 4 record rows; P3-5 on the rigid base is 해당 없음(rigid_base), not a missing value."""
+    b = c4_bundle(tmp_path)
+    code, doc = run(mod, b, tmp_path, "C-4", "--rows-judge", str(tmp_path / "judge.json"))
+    assert code == 0 and doc["record_status"] == "기록 완료"
+    row = doc["rows"][0]
+    assert row["values"]["P3-5"] == "해당 없음(rigid_base)" and row["rigid_base"] is True
+    assert row["values"]["min_leg"] == "FR" and row["values"]["t_min_s"] == 42.0
+    assert row["values"]["t_D_s"] == 40.0 and row["record_status"] == "기록 완료"
+
+
+def test_cd9_c4_missing_value_and_row_count(mod, tmp_path):
+    b = c4_bundle(tmp_path)
+    b.write()
+    result = b.batch / "R4368C4_0" / "result.json"
+    data = json.loads(result.read_text(encoding="utf-8"))
+    data["p3b_ext"]["start_condition"]["R_c_operating"] = None
+    result.write_text(json.dumps(data), encoding="utf-8")
+    b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
+    _, doc = run(mod, b, tmp_path, "C-4", "--rows-judge", str(tmp_path / "judge.json"))
+    assert doc["record_status"] == "기록 불완전"
+    assert doc["rows"][0]["record_reason"].endswith("CD-9 record value R_c_operating")
+    short = c4_bundle(tmp_path / "short", rows=3)
+    code, doc = run(mod, short, tmp_path / "short", "C-4", "--rows-judge",
+                    str(tmp_path / "short" / "judge.json"))
+    assert code == 1 and doc["row_count_S15"]["ok"] is False and doc["record_status"] is None
