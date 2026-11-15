@@ -25,13 +25,17 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))  # -I drops the script folder from sys.path
 
+import p2_cd as CD  # noqa: E402
 import p2_core as C  # noqa: E402
 import p2_kinds as K  # noqa: E402
 import p2_rules as R  # noqa: E402
 
 BUNDLE_MODULES = {"C-1": "p2_b_c1", "C-2": "p2_b_c2", "C-3": "p2_b_c3", "C-4": "p2_b_c4",
                   "C-5": "p2_b_c5", "C-6C7": "p2_b_c67", "C-8": "p2_b_c8"}
-COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py", "p2_t45.py", "p2_psc.py", "p2_e7.py")
+COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py", "p2_t45.py", "p2_psc.py", "p2_e7.py",
+                "p2_cd.py")   # rev24: p2_cd.py (common definitions CD-1..CD-11)
+CD2_BUNDLES = ("C-1", "C-2", "C-5")              # bundles with L2b rows (CD-2 original judge items)
+CD11_BUNDLES = ("C-1", "C-2", "C-3", "C-4", "C-5")
 
 
 def file_sha(p: Path) -> str:
@@ -322,6 +326,11 @@ def augment_items(bundle: str, row, items: dict, keys: list, case: dict | None =
         return
     items["R9-1_expect_controller"] = K.expect_item(row)
     keys.append("R9-1_expect_controller")
+    if bundle == "C-5":
+        # rev24 CD-1: the C-5 row grade uses the closed item list only; the R11-4 / R9-1 checks keep their stops
+        for k in ("R11-4_commit", "R9-1_expect_controller"):
+            if k in keys:
+                keys.remove(k)
     if bundle != "C-5":
         items["J11_record"] = K.j11_record_item(row)
 
@@ -358,6 +367,9 @@ def judge(args) -> int:
         return 2
     mod = importlib.import_module(mod_name)
     mod.AUX = dict(x.split("=", 1) for x in (args.aux or []))
+    CD.CONTEXT.clear()
+    CD.CONTEXT.update(repo=repo, s8c_dir=getattr(args, "s8c_dir", None), r3d_c8=getattr(args, "r3d_c8", None))
+    provenance = CD.judge_provenance(repo) if (args.bundle in CD2_BUNDLES and CD.CONTEXT["s8c_dir"]) else None
     params = C.load_params(repo)
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
@@ -379,6 +391,8 @@ def judge(args) -> int:
             kind = mod.kind_of(case)
             items, keys, notes, record = mod.judge_row(row, case, kind, params)
             augment_items(args.bundle, row, items, keys, case, _result_of(d), git_ref, commit=True)
+            if args.bundle in CD11_BUNDLES and eng != "l1r":
+                CD.apply_rev25_row(args.bundle, row, items, keys, record)   # rev25 CD-11 gates, CD-1 J-P3
             st = C.row_status(items, keys)
             if record:
                 st = "기록 완료" if st != "판정 불가" else "기록 불완전"
@@ -395,9 +409,12 @@ def judge(args) -> int:
     bundle = mod.bundle_status(rows)
     if args.bundle not in ("C-5", "C-6C7"):
         bundle["rev9_R9_6_j11_record"] = r9_6_summary(rows)
+    finish_rev24(args.bundle, rows, bundle, provenance)
     out = {"tool": "p2_chrono.py (436.8 path 2, Chrono)", "bundle": args.bundle,
            "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal, "params": params,
            "manifest": {"path": man_path, "sha256": man_sha}, "rows": rows, "bundle_result": bundle}
+    if provenance is not None:
+        out["cd2_judge_provenance"] = provenance
     out_p = Path(args.out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(C.jsonable(out), ensure_ascii=False, indent=1).encode("utf-8")
@@ -407,6 +424,35 @@ def judge(args) -> int:
                    out=str(out_p), out_sha256=osha)
     print(json.dumps(summary, ensure_ascii=False))
     return 0 if bundle["status"] in ("통과", "기록 완료") else 1
+
+
+def finish_rev24(bundle_name: str, rows: list, bundle: dict, provenance: dict | None):
+    """rev24 bundle-level steps for C-1..C-5: CD-7 reasons (an empty one stops the bundle), CD-11 item list; for
+    C-1 / C-2 / C-5 the CD-2 (1) provenance (S-11); CD-9 bundle record status (C-4). Added stops make a judged
+    bundle 판정 불가 and a record bundle 기록 불완전 (rules 8.1)."""
+    record_bundle = bundle["status"] in ("기록 완료", "기록 불완전")
+    new_stops = []
+    if bundle_name in CD11_BUNDLES:
+        # common block scope sentence: CD-7 on C-5 and the C-1 / C-2 / C-3 L2b / SCM rows and the C-4 record rows;
+        # the C-1 L1-R record rows are outside the block (C-6C7 and C-8 are not in its scope either)
+        empty = CD.attach_reasons([r for r in rows if r.get("engine") != "l1r"])
+        bundle["cd7_empty_reasons"] = empty
+        if empty:
+            new_stops.append("CD-7: empty reason on " + "; ".join(empty[:20]))
+        lst = CD.item_list(bundle_name, rows, record_bundle=record_bundle)
+        bundle["cd11_item_list"] = lst
+        if "stop" in lst:
+            new_stops.append(lst["stop"])
+    if provenance is not None and not provenance.get("ok"):
+        new_stops.append(provenance.get("stop") or "S-11 (CD-2 (1))")
+    if bundle_name == "C-4":
+        bundle["cd9_record_status"] = {"rows": {r["case"]: {"status": r["status"],
+                                                             CD.REASON_KEY: r.get(CD.ROW_REASON_KEY, "")}
+                                                for r in rows},
+                                       "bundle": bundle["status"]}
+    if new_stops:
+        bundle["stops"] = list(bundle.get("stops") or []) + new_stops
+        bundle["status"] = "기록 불완전" if record_bundle else "판정 불가"
 
 
 def _result_of(d: Path) -> dict:
@@ -667,6 +713,9 @@ def main(argv=None) -> int:
     j.add_argument("--aux", action="append", help="NAME=PATH extra input for a bundle (C-5: t45=<t45_path2.json>, C-2: e7=<e7_path2.json>)")
     j.add_argument("--git-at-start", help="judgement git_at_start commit (7..40 hex, required, rev11 R11-4)")
     j.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
+    j.add_argument("--s8c-dir", help="rev24 CD-2: folder of the path 2 original-judge outputs "
+                                     "(<dir>/<S8 batch folder>/verify_S8C.json); needed for L2b rows")
+    j.add_argument("--r3d-c8", help="rev24 CD-8: this path's R3d C-8 output (C-8a S-9 m / minimum leg check)")
     j.add_argument("--out", required=True)
     j.add_argument("--repo")
     g = sub.add_parser("gs-load", help="read-only loader run on G-S rows (no judgement)")

@@ -4,11 +4,19 @@ rev4 R4-A2: J-P3 / J11 / D2 recomputed from the run records (option b); T4-0 / T
 path 2 run of `chrono_t45_replay` (option c, `p2_t45.py`, pass `--aux t45=<t45_path2.json>`),
 graded by path 2 (rev6 4.6, rev7). rev6 4.6 bundle phrase: all L2b rows T4 / T5 over 0 and T4-0
 passed -> `일치`(등급 `부분`).
+rev24 CD-1 (closed item list of the C-5 row grade): all rows T4-0 / T4 / T5 (CD-6: only the 18 rows of v5 rev6 3,
+other rows 해당 없음), J11 (`J11_window`), J-P3, D2 (record, as before) ; L2b rows the CD-2 block ; SCM rows the
+CD-4 P3 items (P3-1..P3-5, P3-7, P3-8, FAULT0 graded; P3-6 and P3-9 records; CD-5 without READY). H-9 and
+K1_class stay as records whose stops still stop the bundle. Row count 35 = L2b 24 + SCM 11, else S-15.
+rev25: P3-6 is a grade item on the SCM rows (421.1 limit); T4-0, K1_class, R9-1 and R11-4 are CD-11 gates (out of
+the grade, a failing gate stops the bundle, `p2_cd.apply_rev25_row`).
 """
 import json
 from pathlib import Path
 
+import p2_cd as CD
 import p2_kinds as K
+import p2_rules as R
 
 CRITERIA = ("C-5",)
 EXPECTED_ROWS = 35
@@ -39,10 +47,39 @@ PAIRS_R19_6 = (
 V0_SUFFIXES = ("_V0", "_v0v")
 
 
+CD1_ALL_ROWS = ("T4-0", "T4", "T5", "J-P3", "J11_window")
+CD1_RECORD_ONLY = ("H-9", "K1_class")
+
+
 def judge_row(row, case, kind, params):
     _MCASES.update((CTX.get("mrows") or {}).keys())
     items, keys, notes = K.items_c5(row, params, _t45(), case=case, ctx=CTX)
-    return items, keys, notes, False
+    graded = [k for k in keys if k in CD1_ALL_ROWS]
+    for k in CD1_RECORD_ONLY:
+        if isinstance(items.get(k), dict):
+            items[k]["cd1_role"] = ("record (CD-1 closed item list); a stop still stops the bundle" if k == "H-9"
+                                    else "gate (rev25 CD-11); a failing gate stops the bundle")
+    CD.apply_t45_targets(items, graded, row)
+    if row.engine == "l2b":
+        items["CD-2"] = CD.cd2_items(row, params)
+        graded.append("CD-2")
+    elif row.engine == "scm":
+        _add_p3(items, graded, notes, row, params)
+    return items, graded, notes, False
+
+
+def _add_p3(items, graded, notes, row, params):
+    """CD-4: the P3 definitions used for the C-2 / C-3 / C-4 SCM rows (`items_p3`) plus P3-7; rev25 CD-4: P3-6 is
+    a grade item on the C-5 SCM rows with the spec 421.1 limit; CD-5 without READY; CD-4 empty-grade guard."""
+    p3, p3_keys, p3_notes = K.items_p3(row, params, R.READY_FLAT_S, ready_judged=False, g6=False, allow_stop=True)
+    for k, v in p3.items():
+        items.setdefault(k, v)
+    graded += [k for k in p3_keys if k in CD.P3_KEYS or k == "safe_stop_427_9"]
+    CD.set_p3_6(items, graded, row, judged=True)
+    CD.add_p3_7(items, graded, row, params, judged=True)
+    CD.apply_ready_none(items, graded, row)
+    CD.scm_grade_guard(items, graded)
+    notes += [n for n in p3_notes if n not in notes]
 
 
 def pairs_found(names) -> list:
@@ -71,13 +108,25 @@ def pair_check(rows, manifest_cases) -> dict:
     return out
 
 
+def engine_counts(rows) -> dict:
+    """CD-1: C-5 rows 35 = L2b 24 + SCM 11; any other count is S-15."""
+    n_l2b = sum(1 for r in rows if r["engine"] == "l2b")
+    n_scm = sum(1 for r in rows if r["engine"] == "scm")
+    out = {"clause": "CD-1", "l2b": n_l2b, "scm": n_scm, "expected": [CD.C5_ROWS_L2B, CD.C5_ROWS_SCM]}
+    if (n_l2b, n_scm) != (CD.C5_ROWS_L2B, CD.C5_ROWS_SCM):
+        out["stop"] = f"S-15 (CD-1): L2b {n_l2b} / SCM {n_scm} != 24 / 11"
+    return out
+
+
 def bundle_status(rows):
     pc = pair_check(rows, _MCASES)
-    b = K.bundle_status(rows, EXPECTED_ROWS, extra_stops=pc["stops"])
+    ec = engine_counts(rows)
+    b = K.bundle_status(rows, EXPECTED_ROWS, extra_stops=pc["stops"] + ([ec["stop"]] if "stop" in ec else []))
     b["rev19_R19_6_pairs"] = pc
-    if not pc["exact"]:
+    b["cd1_engine_counts"] = ec
+    if not pc["exact"] or "stop" in ec:
         b["status"] = "판정 불가"   # S-15: no grade
-    l2b = [r for r in rows if r["engine"] == "l2b"]
+    l2b = [r for r in rows if r["engine"] == "l2b" and r["case"] in CD.T45_TARGET_ROWS]   # CD-6 target rows
     over = sum(int(r["items"].get(k, {}).get("over_0p6kN") or 0) for r in l2b for k in ("T4", "T5"))
     t40 = all(r["items"].get("T4-0", {}).get("verdict") == "pass" for r in l2b) if l2b else False
     b["rev6_4_6_phrase"] = ("일치(등급 부분)" if (t40 and over == 0) else
