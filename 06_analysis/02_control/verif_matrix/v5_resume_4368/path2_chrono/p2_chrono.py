@@ -425,16 +425,18 @@ def judge(args) -> int:
 
 
 def finish_rev24(bundle_name: str, rows: list, bundle: dict, provenance: dict | None):
-    """rev24 bundle-level steps: CD-7 reasons (an empty one stops the bundle), CD-11 item list (C-1..C-5),
-    CD-2 (1) provenance (S-11), CD-9 bundle record status (C-4). Added stops make a judged bundle 판정 불가 and a
-    record bundle 기록 불완전 (rules 8.1)."""
+    """rev24 bundle-level steps for C-1..C-5: CD-7 reasons (an empty one stops the bundle), CD-11 item list; for
+    C-1 / C-2 / C-5 the CD-2 (1) provenance (S-11); CD-9 bundle record status (C-4). Added stops make a judged
+    bundle 판정 불가 and a record bundle 기록 불완전 (rules 8.1)."""
     record_bundle = bundle["status"] in ("기록 완료", "기록 불완전")
     new_stops = []
-    empty = CD.attach_reasons(rows)
-    bundle["cd7_empty_reasons"] = empty
-    if empty:
-        new_stops.append("CD-7: empty reason on " + "; ".join(empty[:20]))
     if bundle_name in CD11_BUNDLES:
+        # common block scope sentence: CD-7 on C-5 and the C-1 / C-2 / C-3 L2b / SCM rows and the C-4 record rows;
+        # the C-1 L1-R record rows are outside the block (C-6C7 and C-8 are not in its scope either)
+        empty = CD.attach_reasons([r for r in rows if r.get("engine") != "l1r"])
+        bundle["cd7_empty_reasons"] = empty
+        if empty:
+            new_stops.append("CD-7: empty reason on " + "; ".join(empty[:20]))
         lst = CD.item_list(bundle_name, rows, record_bundle=record_bundle)
         bundle["cd11_item_list"] = lst
         if "stop" in lst:

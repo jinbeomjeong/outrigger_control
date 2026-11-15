@@ -2351,6 +2351,17 @@ def t_rev24(tmp):
     check("CD-11: CD-2 expanded (counted judge items only, method 재계산, CD-3 sub id W 밖), row without a graded "
           "item -> stop", ids == [CD.ITEM_P4_OUT, "J-P3"] and lst["rows"][0]["items"][0]["method"] == "재계산"
           and lst["rows"][0]["items"][0]["cd3_sub_id"] == "W 밖" and "b: 등급 항목 0" in lst.get("stop", ""), lst)
+    def fin(bundle, engine):
+        rows_f = [{"case": "a", "engine": engine, "status": "판정 불가", "judged_keys": ["X"],
+                   "items": {"X": {"verdict": "indeterminate"}}}]
+        b = {"status": "판정 불가", "stops": []}
+        p2_chrono.finish_rev24(bundle, rows_f, b, None)
+        return b
+    b67, b3, b1 = fin("C-6C7", "scm"), fin("C-3", "scm"), fin("C-1", "l1r")
+    check("CD-7 scope: C-6C7 not checked; C-3 SCM row empty reason -> stop; C-1 L1-R row outside (no CD-7 stop, "
+          "CD-11 scope note)", "cd7_empty_reasons" not in b67 and not b67["stops"]
+          and any(s.startswith("CD-7") for s in b3["stops"]) and b1["cd7_empty_reasons"] == []
+          and b1["cd11_item_list"]["rows"][0].get("scope", "").startswith("L1-R"), (b67, b3["stops"], b1))
     # ---- CD-8 C-8 record, C-8a S-9 with the R3d output
     r8 = scm_row(tmp / "r24", copy.deepcopy(sp), "oc5_Kc3_VB_top")
     write_p37_record(r8.folder, sp, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))

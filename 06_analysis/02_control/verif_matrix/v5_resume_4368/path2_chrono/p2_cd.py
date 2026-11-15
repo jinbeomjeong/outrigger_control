@@ -963,9 +963,13 @@ def item_list(bundle: str, rows, record_bundle=False) -> dict:
                                 "method": "재계산", "interval": "", "verdict": it.get("verdict"),
                                 "reason": "기록 항목"})
         graded = [x for x in entries if x["verdict"] not in ("record",)]
-        if not record_bundle and not graded:
+        outside = r.get("engine") == "l1r"   # C-1 L1-R record rows: outside the common block (scope sentence)
+        if not record_bundle and not outside and not graded:
             problems.append(f"{r['case']}: 등급 항목 0")
-        lst.append({"row": r["case"], "status": r["status"], "items": entries})
+        ent = {"row": r["case"], "status": r["status"], "items": entries}
+        if outside:
+            ent["scope"] = "L1-R 기록 행(공통 블록 적용 밖, 앞 판 그대로)"
+        lst.append(ent)
     if len(lst) != len(rows):
         problems.append(f"목록 행 {len(lst)} != 묶음 행 {len(rows)}")
     out = {"clause": "CD-11", "bundle": bundle, "rows": lst, "problems": problems}
