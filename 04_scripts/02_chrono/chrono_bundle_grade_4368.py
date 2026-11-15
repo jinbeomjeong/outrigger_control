@@ -1664,6 +1664,10 @@ def _sgs_entries(entry: dict[str, Any], event_row: bool) -> list[dict[str, Any]]
 
 
 ITEM_CLAUSES = {"J11": "CD-1 ①", "J-P3": "CD-1 ①", "FAULT0": "CD-4 FAULT0"}
+PSC_STROKE_ITEM = "stroke_le_684.8mm"
+PSC_STROKE_CLAUSE = "명세 426.3 E-5 (stroke limit 684.8 mm, record under E-5)"
+"""Rules rev25 CD-11: the graded ids of a PS-c event row are E-1 .. E-7 only; the stroke limit is
+part of E-5, so the separate stroke item is listed as a record under E-5 (row grading unchanged)."""
 
 
 def _item_entries(row: dict[str, Any], event_row: bool, has_runner: bool
@@ -1683,9 +1687,11 @@ def _item_entries(row: dict[str, Any], event_row: bool, has_runner: bool
             entries.append(list_entry(entry, event_row, clause=f"CD-4 {name}"))
         elif name in SOIL_EVENT_GROUPS:
             entries.append(list_entry(entry, event_row, clause=f"명세 426.3 {name}"))
+        elif name == PSC_STROKE_ITEM:
+            entries.append(list_entry({**entry, "verdict_recorded": entry["verdict"]}, event_row,
+                                      cls=CLASS_RECORD, clause=PSC_STROKE_CLAUSE))
         else:
-            entries.append(list_entry(entry, event_row, clause=ITEM_CLAUSES.get(
-                name, "d1_selection_rules 11" if name.startswith("stroke") else name)))
+            entries.append(list_entry(entry, event_row, clause=ITEM_CLAUSES.get(name, name)))
     return entries
 
 

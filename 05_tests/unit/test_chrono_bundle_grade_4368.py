@@ -1708,6 +1708,22 @@ def test_cd7_c4_empty_reason_stops(mod, tmp_path):
     assert mod.cd7_cd11_stops(check, {"ok": True})[0]["reason"].startswith("CD-7")
 
 
+def test_cd11_psc_stroke_is_a_record_under_e5(mod, tmp_path):
+    """PS-c event row: E-1 .. E-7 graded (명세 426.3 E-n); the 684.8 mm stroke item is a record
+    under E-5 in the list, the row items and grade are unchanged."""
+    _, doc = run(mod, c2_bundle(tmp_path), tmp_path, "C-2")
+    row = next(r for r in doc["item_list_CD_11"]["rows"] if r["case"] == "D1PSC_cslow")
+    stroke = next(e for e in row["items"] if e["item"] == "stroke_le_684.8mm")
+    assert stroke["class"] == "기록" and stroke["clause_id"].startswith("명세 426.3 E-5")
+    assert stroke["verdict"] == "pass"  # the recorded check
+    graded = {e["common_id"]: e["clause_id"] for e in row["items"]
+              if e["class"] == "등급 항목" and e["common_id"].startswith("E-")}
+    assert graded["E-5"] == "명세 426.3 E-5" and "stroke_le_684.8mm" not in graded
+    event = next(r for r in doc["rows"] if r["case"] == "D1PSC_cslow")
+    assert any(i["item"] == "stroke_le_684.8mm" and i["verdict"] == "pass"
+               for i in event["items"])
+
+
 def test_cd11_record_row_without_graded_item(mod):
     """A record row (C-2 PS-c base) may have no graded item; a judged row may not."""
     inputs = [mod.RowInput(case=c, criteria_id="C-2", engine="SCM", role=role, row_id=None,
