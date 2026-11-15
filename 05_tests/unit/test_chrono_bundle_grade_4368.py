@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -44,6 +45,55 @@ def write_json(path: Path, doc: Any) -> Path:
     return path
 
 
+T0_S = 3.0
+"""settings.start_t_s of the synthetic rigid rows (chrono_rows_judge rows[].t0_s)."""
+D29_T_LIFT_S = 23.05
+"""1 ms D-29 t_lift (absolute); raised to the 10 Hz grid it is 23.1 s."""
+RUNNER_LIFTOFF_REL_S = 20.1
+"""Runner lift-off relative to t0: 23.1 s absolute, the same 10 Hz row."""
+
+
+def write_rigid_series(folder: Path, *, pad_n_kN: float = 50.0, f_min_kN: float = 50.0) -> None:
+    """pads.npz (1 ms) and record/record.npz (10 Hz) of a synthetic L2b row."""
+    t = np.round(np.arange(0.0, 60.0, 0.001), 6)
+    n = np.full((t.size, 4), pad_n_kN * 1e3)
+    f = np.full((t.size, 4), f_min_kN * 1e3)
+    folder.mkdir(parents=True, exist_ok=True)
+    np.savez(folder / "pads.npz", t=t, N=n, F_cyl_min_interval=f)
+    (folder / "record").mkdir(exist_ok=True)
+    np.savez(folder / "record" / "record.npz", t=np.round(np.arange(0.0, 60.0, 0.1), 6))
+
+
+def write_scm_series(folder: Path, *, lift_after_level: bool = False,
+                     f_after_kN: float = 50.0) -> None:
+    """step_series.npz (1 ms) and record/record.npz (10 Hz) of a synthetic SCM row: crawler
+    departs at 40 s, LEVEL starts at 10 s (``s9_rows``)."""
+    t = np.round(np.arange(0.0, 60.0, 0.001), 6)
+    pads = np.full((t.size, 4), 50_000.0)
+    if lift_after_level:
+        pads[30_000, 2] = 0.0
+    force = np.full((t.size, 4), 50_000.0)
+    force[t >= 40.0, 1] = f_after_kN * 1e3
+    crawler = np.where(t < 40.0, 300_000.0, 0.0)
+    folder.mkdir(parents=True, exist_ok=True)
+    np.savez(folder / "step_series.npz", t_s=t, scm_pad_normal_N=pads, F_cyl_N=force,
+             scm_crawler_normal_N=crawler)
+    (folder / "record").mkdir(exist_ok=True)
+    rows = np.round(np.arange(0.0, 60.0, 0.1), 6).size
+    np.savez(folder / "record" / "record.npz", t=np.round(np.arange(0.0, 60.0, 0.1), 6),
+             u_applied=np.zeros((rows, 4)), F_cyl=np.full((rows, 4), 50_000.0))
+
+
+def soil_stop_result(*, stroke_end: bool = False) -> dict[str, Any]:
+    """result.json parts of a soil-guard stop row (rev19 R19-1 inputs)."""
+    events = [{"t_s": 45.0, "name": "WARN_LIFT_STROKE_LIMITED:RL"},
+              {"t_s": 45.0, "name": "FAULT_LIFT_STROKE_LIMIT:soil:RL"}]
+    if stroke_end:
+        events.append({"t_s": 46.0, "name": "FAULT_STROKE_END:RL"})
+    return {"events": events, "s9_rows": [{"t_s": 5.0, "c2_phase": "touch"},
+                                          {"t_s": 10.0, "c2_phase": "level"}]}
+
+
 def entry(case: str, criteria: str, engine: str, **extra: Any) -> dict[str, Any]:
     return {"case": case, "criteria_id": criteria, "r4368": {"engine": engine},
             "code_at_launch": {"git": {"head": GIT, "dirty": []}}, **extra}
@@ -71,14 +121,20 @@ class Bundle:
                             "items": items, **judged})
 
     def add_rigid(self, e: dict[str, Any], runner_rows: list[dict[str, Any]],
-                  items: dict[str, Any], prefix: str, suffix: str = "verify_S8C") -> None:
+                  items: dict[str, Any], prefix: str, suffix: str = "verify_S8C",
+                  liftoff_rel_s: float | None = RUNNER_LIFTOFF_REL_S) -> None:
         self.entries.append(e)
         folder = self.root / "S8" / f"tag_{e['case']}_{STAMP}"
         write_json(folder / e["case"] / "result.json", {"settings": {}})
-        self.judged.append({"case": e["case"], "dir": str(folder / e["case"]), "items": items})
+        write_rigid_series(folder / e["case"])
+        self.judged.append({"case": e["case"], "dir": str(folder / e["case"]), "items": items,
+                            "t0_s": T0_S})
         rows = [{"case": e["case"], **r} for r in runner_rows]
+        meta = {"batch": str(folder), "failed": sum(r.get("passed") is False for r in rows),
+                "hold": sum(r.get("kind") == "hold" for r in rows)}
+        metrics = {} if liftoff_rel_s is None else {e["case"]: {"liftoff_s": liftoff_rel_s}}
         write_json(self.runner_dir / f"{prefix}_{e['case']}.{suffix}.json",
-                   {"meta": {"batch": str(folder)}, "rows": rows})
+                   {"meta": meta, "rows": rows, "s8_metrics": metrics})
 
     def write(self) -> dict[str, Path]:
         write_json(self.batch / "batch.json", {"batch": f"V5-RESUME-K1-{self.name}",
@@ -121,7 +177,9 @@ def rigid_items(*, moving_bar: float = 98.0, c1: str = "pass", j_p3: str = "pass
                                      "saturated_samples": 0},
             "C1_R40": {"status": "judged", "verdict": c1, "raw_min_N": 56000.0},
             "J-P3_R8-2": {"status": j_p3, "breach_reads": 0},
-            "J11_R8-3": {"status": "no_fallback_leg"}}
+            "J11_R8-3": {"status": "no_fallback_leg"},
+            "D8_t_lift_s_D-29_D-30": D29_T_LIFT_S,
+            "D8_t_lift_basis": "pads.npz crawler_normal_N 1 ms"}
 
 
 def p3b_ok(**checks: Any) -> dict[str, Any]:
@@ -172,7 +230,7 @@ def test_c1_recomputed_item_overrides_runner(mod, tmp_path):
     b.judged[0]["items"] = rigid_items(moving_bar=181.0)  # runner said 98 bar, pass
     code, doc = run(mod, b, tmp_path, "C-1")
     row = doc["rows"][0]
-    moving = next(i for i in row["items"] if i["item"] == "4 max moving pressure")
+    moving = next(i for i in row["runner_items"] if i["item"] == "4 max moving pressure")
     assert moving["verdict"] == "fail" and moving["source"] == "recomputed D-32"
     log = next(o for o in row["overrides"] if o["item"] == "4 max moving pressure")
     assert log["runner"] == {"verdict": "pass", "value": 98.0}
@@ -281,7 +339,8 @@ def test_assumed_rows_judge_output_is_refused(mod, tmp_path):
 def soil_event(gates: dict[str, Any], *, fast: bool = False, stroke: float = 517.0,
                flags: list[str] | None = None) -> dict[str, Any]:
     return {"soil_event": {"judgement": {"gates": gates, "fast": fast, "flags": flags or [],
-                                         "stroke_max_run_mm": stroke}}}
+                                         "stroke_max_run_mm": stroke, "t_ev_s": 83.2,
+                                         "stop_rel_s": 60.0, "stop_reason": "max_after"}}}
 
 
 SLOW_GATES = {"E-1_no_lift": True, "E-3_Fmin_after_event": True, "E-4_window_350bar": True,
@@ -290,17 +349,18 @@ SLOW_GATES = {"E-1_no_lift": True, "E-3_Fmin_after_event": True, "E-4_window_350
               "E-7_recurrence": True}
 
 
-def c2_bundle(tmp_path: Path, *, sgs_class: str = "stroke_limited_stop",
-              event_gates: dict[str, Any] | None = None) -> Bundle:
+def c2_bundle(tmp_path: Path, *, stroke_end: bool = False, lift_after_level: bool = False,
+              f_after_kN: float = 50.0, event_gates: dict[str, Any] | None = None) -> Bundle:
     b = Bundle(tmp_path, "C2")
     for i, rid in enumerate(("C2-03", "C2-07")):
         b.add_rigid(entry(f"D1C2_roll{i}", "C-2", "L2b_NSC", d1_id=rid, d1_role="judge"),
                     runner_pass_rows(), rigid_items(), "C2")
-    sgs = {"applies": True, "class": sgs_class, "conditions": {"1_soil_stop_first": True}}
     for rid in ("S-01", "S-02"):
-        b.add_scm(entry(f"D1S_{rid}", "C-2", "SCM", d1_id=rid, d1_role="judge"),
-                  {"p3b": p3b_ok(**{"P3-4_verdict": "fail", "P3-6_within": False})},
-                  scm_items(**{"SGS_427_9_D-26": sgs}))
+        case = f"D1S_{rid}"
+        p3b = {**p3b_ok(**{"P3-4_verdict": "fail", "P3-6_within": False}), "weight_N": 380_000.0}
+        b.add_scm(entry(case, "C-2", "SCM", d1_id=rid, d1_role="judge"),
+                  {"p3b": p3b, **soil_stop_result(stroke_end=stroke_end)}, scm_items())
+        write_scm_series(b.batch / case, lift_after_level=lift_after_level, f_after_kN=f_after_kN)
     b.add_scm(entry("D1PSC_base", "C-2", "SCM", d1_id="PSC-base-FL", d1_role="timing base",
                     d1_select="psc"), {"p3b": p3b_ok()}, scm_items())
     gates = SLOW_GATES if event_gates is None else event_gates
@@ -326,10 +386,48 @@ def test_c2_safe_stop_and_event_row(mod, tmp_path):
     assert doc["bundle_grade"]["status"] == "통과"
 
 
-def test_c2_safe_stop_condition_false_is_fail(mod, tmp_path):
-    _, doc = run(mod, c2_bundle(tmp_path, sgs_class="fail"), tmp_path, "C-2")
-    assert {r["case"]: r["grade"] for r in doc["rows"]}["D1S_S-01"] == "fail"
+@pytest.mark.parametrize(("kwargs", "condition"), [
+    ({"stroke_end": True}, "2_no_stroke_end"),
+    ({"lift_after_level": True}, "3_no_lift_after_level"),
+    ({"f_after_kN": 9.0}, "4_F_after_departure"),
+])
+def test_c2_safe_stop_condition_false_is_fail(mod, tmp_path, kwargs, condition):
+    _, doc = run(mod, c2_bundle(tmp_path, **kwargs), tmp_path, "C-2")
+    row = next(r for r in doc["rows"] if r["case"] == "D1S_S-01")
+    assert row["grade"] == "fail"
+    conditions = row["items"][0]["conditions"]
+    assert conditions[condition] is False
+    assert sum(value is False for value in conditions.values()) == 1
     assert doc["bundle_grade"]["status"] == "미달"
+
+
+def test_c2_safe_stop_windows(mod, tmp_path):
+    """R19-1: condition 3 from the first LEVEL s9_rows row, condition 4 from t_D (100 samples),
+    condition 5 over the 10 Hz record rows."""
+    _, doc = run(mod, c2_bundle(tmp_path), tmp_path, "C-2")
+    block = next(r for r in doc["rows"] if r["case"] == "D1S_S-01")["items"][0]
+    assert block["t_level_start_s"] == 10.0
+    assert block["t_departure_s"] == pytest.approx(40.0)
+    assert block["moving_rows"] == 0 and block["saturated_rows"] == 0
+
+
+def test_c2_safe_stop_missing_input_is_not_judgeable(mod, tmp_path):
+    b = c2_bundle(tmp_path)
+    (b.batch / "D1S_S-01" / "record" / "record.npz").unlink()
+    _, doc = run(mod, b, tmp_path, "C-2")
+    row = next(r for r in doc["rows"] if r["case"] == "D1S_S-01")
+    assert row["grade"] == "not_judgeable"
+    assert "record/record.npz u_applied" in row["items"][0]["missing_inputs"]
+
+
+def test_lift_before_level_is_not_counted(mod, tmp_path):
+    b = c2_bundle(tmp_path)
+    folder = b.batch / "D1S_S-01"
+    data = dict(np.load(folder / "step_series.npz"))
+    data["scm_pad_normal_N"][5_000, 0] = 0.0  # 5 s: before the LEVEL start (10 s)
+    np.savez(folder / "step_series.npz", **data)
+    _, doc = run(mod, b, tmp_path, "C-2")
+    assert next(r for r in doc["rows"] if r["case"] == "D1S_S-01")["grade"] == "allowed_stop"
 
 
 def test_c2_event_row_missing_e_item_is_not_judgeable(mod, tmp_path):
@@ -357,12 +455,29 @@ def test_c3_g6_grade_with_p37(mod, tmp_path):
     b = Bundle(tmp_path, "C3")
     for rid, p37 in (("S-03", True), ("S-04", False)):
         b.add_scm(entry(f"D1S_G1_{rid}", "C-3", "SCM", d1_id=rid, d1_role="judge"),
-                  {"p3b": p3b_ok(**{"P3-7_within": p37})}, scm_items(), grade="pass",
-                  gates={"G6-1_crawler": "pass"})
+                  {"p3b": p3b_ok(**{"P3-7_within": p37}), "events": []}, scm_items(),
+                  grade="pass", gates={"G6-1_crawler": "pass"})
     code, doc = run(mod, b, tmp_path, "C-3")
     grades = {r["row_id"]: r["grade"] for r in doc["rows"]}
     assert grades == {"S-03": "pass", "S-04": "fail"} and code == 0
     assert doc["bundle_grade"]["status"] == "미달"
+
+
+def test_c3_soil_stop_records_g6(mod, tmp_path):
+    """R19-1: a soil-guard S-03 is graded by the five conditions; G6 and P3 are records."""
+    b = Bundle(tmp_path, "C3")
+    for rid in ("S-03", "S-04"):
+        case = f"D1S_G1_{rid}"
+        b.add_scm(entry(case, "C-3", "SCM", d1_id=rid, d1_role="judge"),
+                  {"p3b": {**p3b_ok(**{"P3-7_within": False}), "weight_N": 380_000.0},
+                   **soil_stop_result()}, scm_items(), grade="fail", gates={})
+        write_scm_series(b.batch / case)
+    _, doc = run(mod, b, tmp_path, "C-3")
+    row = doc["rows"][0]
+    assert row["grade"] == "allowed_stop"
+    recorded = {i["item"]: i.get("verdict_recorded") for i in row["record_items"]}
+    assert recorded["G6"] == "fail" and recorded["P3-7"] == "fail"
+    assert doc["bundle_grade"]["row_phrase"] == "통과 0 / 안전 종료 2"
 
 
 # ------------------------------------------------------------------------------------- C-5
@@ -523,7 +638,7 @@ def test_worst_order(mod):
     assert mod.worst(["fail", "not_judgeable", "pass"]) == "not_judgeable"
 
 
-# ------------------------------------------------------------- coordinator follow-up 2026-11-15
+# ------------------------------------------------------------- rev19 R19-4 runner rows
 @pytest.mark.parametrize(("row", "want"), [
     ({"kind": "hold", "passed": None}, ("not_judgeable", "hold")),
     ({"kind": "record", "passed": None}, (None, "record_kind")),
@@ -534,36 +649,163 @@ def test_worst_order(mod):
     ({"kind": None, "passed": True}, ("pass", "passed_true")),
     ({"kind": "function", "passed": None, "item": "2/5b window",
       "note": "run ended before 5 s of READY: items 2 and 5b not judged"},
-     ("not_judgeable", "judged_kind_passed_none")),
-    ({"kind": "function", "passed": None, "item": "3 lift-off RR time / ratio (report)"},
-     (None, "judged_kind_report_mark")),
-    ({"kind": "function", "passed": None, "item": "K8 shadow (B) - true floor",
-      "note": "J5 / I6 report: within 0.03 deg"}, (None, "judged_kind_report_mark")),
+     (None, "runner_unjudged")),
+    ({"kind": "function", "passed": None, "item": "3 F_min after the re-READY",
+      "note": "no re-READY: not judged here (failed in the re-READY row)"},
+     (None, "runner_unjudged")),
     ({"kind": "anomaly", "passed": None, "item": "5.24.2 unexpected warnings",
       "note": "0 expected (not counted); FLAG: WARN_ROD_PRESSURE_FALLBACK x1"},
      ("flag", "anomaly_flag")),
-    ({"kind": "something_new", "passed": True}, ("not_judgeable", "unknown_kind")),
+    ({"kind": "anomaly", "passed": True, "note": "FLAG: x"}, ("flag", "passed_true_flag")),
+    ({"kind": "function", "passed": True, "flag": True}, ("flag", "passed_true_flag")),
+    ({"kind": "something_new", "passed": True}, (None, "unknown_kind")),
 ])
 def test_runner_verdict_table(mod, row, want):
     assert mod.runner_verdict(row) == want
 
 
-def test_judged_kind_none_makes_row_not_judgeable(mod, tmp_path):
-    b = c1_bundle(tmp_path)
+def edit_runner(b: Bundle, tmp_path: Path, case: str, change) -> None:
+    """Write the bundle, change one runner judge file, keep later writes from undoing it."""
     b.write()
-    path = b.runner_dir / "C1_D1C2_0.verify_S8C.json"
+    path = next(b.runner_dir.glob(f"*_{case}.verify_S*C.json"))
     data = json.loads(path.read_text(encoding="utf-8"))
-    data["rows"].append({"case": "D1C2_0", "item": "2/5b window", "passed": None,
-                         "kind": "function", "note": "run too short: not judged"})
+    change(data)
     path.write_text(json.dumps(data), encoding="utf-8")
     b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
+
+
+def test_judged_kind_none_is_runner_unjudged(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: d["rows"].append(
+        {"case": "D1C2_0", "item": "2/5b window", "passed": None, "kind": "function",
+         "note": "run too short: not judged"}))
     _, doc = run(mod, b, tmp_path, "C-1")
     row = doc["rows"][0]
+    assert row["grade"] == "pass"
+    assert row["runner_unjudged"] == [{"item": "2/5b window", "branch": "runner_unjudged",
+                                       "note": "run too short: not judged"}]
+    summary = doc["runner_unjudged_R19_4"]
+    assert summary["count"] == 1 and summary["rows"] == ["D1C2_0"]
+    assert summary["items"] == {"2/5b window": 1}
+
+
+def test_fail_beats_hold_in_the_runner_count(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_1", lambda d: (
+        d["rows"].extend([{"case": "D1C2_1", "item": "x", "passed": False, "kind": "function"},
+                          {"case": "D1C2_1", "item": "y", "passed": None, "kind": "hold"}]),
+        d["meta"].update(failed=1, hold=1)))
+    _, doc = run(mod, b, tmp_path, "C-1")
+    assert next(r for r in doc["rows"] if r["case"] == "D1C2_1")["grade"] == "fail"
+
+
+def test_empty_pass_is_not_judgeable(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_2", lambda d: d.update(rows=[
+        {"case": "D1C2_2", "item": "only a record", "passed": None, "kind": "record"}]))
+    _, doc = run(mod, b, tmp_path, "C-1")
+    row = next(r for r in doc["rows"] if r["case"] == "D1C2_2")
     assert row["grade"] == "not_judgeable"
-    window = next(i for i in row["items"] if i["item"] == "2/5b window")
-    assert window["branch"] == "judged_kind_passed_none"
+    assert row["items"][0]["judged_true_items"] == 0
 
 
+def test_runner_count_mismatch_is_s11(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_3", lambda d: d["meta"].update(failed=2))
+    code, doc = run(mod, b, tmp_path, "C-1")
+    row = next(r for r in doc["rows"] if r["case"] == "D1C2_3")
+    assert row["runner_count_check_R19_4"]["ok"] is False
+    assert code == 1 and any("S-11" in s["reason"] for s in doc["stops"])
+
+
+def test_s6c_without_hold_key_counts_zero(mod):
+    check = mod.runner_count_check({"meta": {"failed": 0}, "rows": [{"passed": True}]})
+    assert check["ok"] is True and check["meta"] == {"failed": 0, "hold": 0}
+
+
+# ------------------------------------------------------------- rev19 R19-5 t_lift
+def d8_rows() -> list[dict[str, Any]]:
+    return [*runner_pass_rows(),
+            {"item": "D8 min true cylinder force >= F_min + 5 kN", "passed": True,
+             "value": 60.0, "limit": 14.41, "kind": "judged"},
+            {"item": "D8 no pad lift-off", "passed": True, "value": 55.0, "limit": "> 0",
+             "kind": "judged"},
+            {"item": "3 F_min (1 ms)", "passed": True, "value": 55.0, "kind": "function"}]
+
+
+def test_d8_items_recomputed_from_d29(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    b.add_rigid(entry("D1C2_d8", "C-1", "L2b_NSC", d1_id="C2-09", d1_role="judge"),
+                d8_rows(), rigid_items(), "C1")
+    b.entries.pop(0)
+    b.judged.pop(0)
+    folder = Path(b.judged[-1]["dir"])
+    write_rigid_series(folder, f_min_kN=12.0)  # below F_min + 5 kN after the D-29 t_lift
+    _, doc = run(mod, b, tmp_path, "C-1")
+    row = next(r for r in doc["rows"] if r["case"] == "D1C2_d8")
+    d8 = {o["item"]: o for o in row["overrides"]}
+    assert d8["D8 min true cylinder force >= F_min + 5 kN"]["recomputed"] == {
+        "verdict": "fail", "value": 12.0}
+    assert d8["D8 no pad lift-off"]["recomputed"] == {"verdict": "pass", "value": 0}
+    assert d8["D8 no pad lift-off"]["t_lift_D29_s"] == D29_T_LIFT_S
+    assert row["grade"] == "fail"
+    kept = next(i for i in row["runner_items"] if i["item"] == "3 F_min (1 ms)")
+    assert kept["source"] == "runner"
+    check = row["t_lift_check_R19_5"]
+    assert check["t_lift_D29_10Hz_s"] == pytest.approx(23.1) and check["ok"] is True
+    summary = doc["runner_t_lift_R19_5"]
+    assert "3 F_min (1 ms)" in summary["present"] and summary["stop_rows"] == []
+
+
+def test_t_lift_difference_over_one_period_stops(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: d["s8_metrics"]["D1C2_0"].update(
+        liftoff_s=RUNNER_LIFTOFF_REL_S + 0.2))
+    code, doc = run(mod, b, tmp_path, "C-1")
+    row = doc["rows"][0]
+    assert row["t_lift_check_R19_5"]["difference_s"] == pytest.approx(0.2)
+    assert code == 1 and doc["runner_t_lift_R19_5"]["stop_rows"] == ["D1C2_0"]
+    assert doc["bundle_grade"]["grade"] is None
+
+
+def test_t_lift_one_period_is_allowed(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: d["s8_metrics"]["D1C2_0"].update(
+        liftoff_s=RUNNER_LIFTOFF_REL_S + 0.1))
+    code, doc = run(mod, b, tmp_path, "C-1")
+    assert doc["rows"][0]["t_lift_check_R19_5"]["ok"] is True and code == 0
+
+
+def test_t_lift_not_computable_stops(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    edit_runner(b, tmp_path, "D1C2_0", lambda d: d.update(s8_metrics={}))
+    code, doc = run(mod, b, tmp_path, "C-1")
+    assert code == 1 and "not computable" in doc["rows"][0]["t_lift_check_R19_5"]["stop"]
+
+
+def test_bracket_t_lift_is_used_as_it_is(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    b.judged[0]["items"].update({"D8_t_lift_s_D-29_D-30": 23.1,
+                                 "D8_t_lift_basis": {"basis": "bracket_10Hz"}})
+    _, doc = run(mod, b, tmp_path, "C-1")
+    check = doc["rows"][0]["t_lift_check_R19_5"]
+    assert check["basis"] == "bracket_10Hz" and check["t_lift_D29_10Hz_s"] == 23.1
+
+
+def test_no_d29_t_lift_makes_d8_not_judgeable(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    b.add_rigid(entry("D1C2_d8", "C-1", "L2b_NSC", d1_id="C2-09", d1_role="judge"),
+                d8_rows(), {**rigid_items(), "D8_t_lift_s_D-29_D-30": None}, "C1")
+    b.entries.pop(0)
+    b.judged.pop(0)
+    code, doc = run(mod, b, tmp_path, "C-1")
+    row = next(r for r in doc["rows"] if r["case"] == "D1C2_d8")
+    d8 = {o["item"]: o for o in row["overrides"]}
+    assert d8["D8 no pad lift-off"]["recomputed"]["verdict"] == "not_judgeable"
+    assert code == 1  # the t_lift difference cannot be computed either
+
+
+# ------------------------------------------------------------- rev19 R19-6 pairs, R19-2 records
 def test_c5_pairs_must_be_the_six(mod, tmp_path):
     b, t45 = c5_bundle(mod, tmp_path)
     b.entries = [e for e in b.entries if e["case"] != "E_G4_Fs4_V0"]
@@ -576,6 +818,19 @@ def test_c5_pairs_must_be_the_six(mod, tmp_path):
     assert pairs["missing"] == [["E_G4_Fs4", "E_G4_Fs4_V0"]] and pairs["extra"] == []
     assert doc["row_count_S15"]["ok"] is True
     assert doc["bundle_grade"]["grade"] is None and "S-15" in doc["bundle_grade"]["reason"]
+
+
+def test_c5_pair_found_in_the_manifest_only(mod, tmp_path):
+    """R19-6: names from the union of batch.json cases and the manifest rows."""
+    b, t45 = c5_bundle(mod, tmp_path)
+    b.entries = [e for e in b.entries if e["case"] != "E_G4_Fs4_V0"]
+    b.judged = [j for j in b.judged if j["case"] != "E_G4_Fs4_V0"]
+    b.manifest_extra = ["E_G4_Fs4_V0"]
+    b.add_rigid(entry("E_G4_Fs4_other", "C-5", "L2b_NSC"), runner_pass_rows(), rigid_items(),
+                "C5")
+    _, doc = run(mod, b, tmp_path, "C-5", "--t45", str(t45))
+    pairs = doc["vb_v0_pairs_S15"]
+    assert pairs["ok"] is True and len(pairs["found_in_batch_json"]) == 5
 
 
 def test_c5_six_pairs_found(mod, tmp_path):
@@ -591,22 +846,38 @@ def test_row_phrase_counts_safe_stop_apart(mod, tmp_path):
     assert doc["bundle_grade"]["status"] == "통과"
 
 
-def test_runner_t_lift_items_expected_only_c1(mod, tmp_path):
-    _, doc = run(mod, c1_bundle(tmp_path), tmp_path, "C-1")
-    summary = doc["runner_t_lift_items"]
-    assert summary["present"] == ["C1 D8 min true rod force"] and "warning" not in summary
-
-
-def test_runner_t_lift_items_warning(mod, tmp_path):
+def test_record_rows_status(mod, tmp_path):
+    """R19-2: C1-09 .. 12 are records; a hold there is 기록 불완전, not a bundle grade."""
     b = c1_bundle(tmp_path)
-    b.write()
-    path = b.runner_dir / "C1_D1C2_3.verify_S8C.json"
-    data = json.loads(path.read_text(encoding="utf-8"))
-    data["rows"].append({"case": "D1C2_3", "item": "3 F_min (1 ms)", "passed": True,
-                         "kind": "function"})
-    path.write_text(json.dumps(data), encoding="utf-8")
-    b.write = lambda: {"manifest": tmp_path / "manifest.json", "judge": tmp_path / "judge.json"}
-    code, doc = run(mod, b, tmp_path, "C-1")
-    summary = doc["runner_t_lift_items"]
-    assert summary["by_case"]["D1C2_3"] == ["C1 D8 min true rod force", "3 F_min (1 ms)"]
-    assert "3 F_min (1 ms)" in summary["warning"] and code == 0  # a warning, not a stop
+    b.judged[6]["items"]["C1_R40"] = {"status": "not_judgeable", "hold": True}
+    _, doc = run(mod, b, tmp_path, "C-1")
+    row = next(r for r in doc["rows"] if r["case"] == "D1C1_0")
+    assert row["role"] == "record" and row["record_status"] == "기록 불완전"
+    assert doc["bundle_grade"]["status"] == "통과"
+
+
+def test_psc_base_row_has_no_e_items(mod, tmp_path):
+    _, doc = run(mod, c2_bundle(tmp_path), tmp_path, "C-2")
+    base = next(r for r in doc["rows"] if r["case"] == "D1PSC_base")
+    assert base["role"] == "record" and not any(i["item"].startswith("E-") for i in base["items"])
+    event = next(r for r in doc["rows"] if r["case"] == "D1PSC_cslow")
+    window = next(i for i in event["record_items"] if i["item"] == "branch_window")
+    assert window["stop_reason"] == "max_after"
+
+
+def test_after_branch_record(mod, tmp_path):
+    b = c2_bundle(tmp_path)
+    folder = b.batch / "D1PSC_cslow"
+    t = np.round(np.arange(80.0, 160.0, 0.001), 6)
+    rows = np.zeros((t.size, 19))
+    rows[:, 0] = t
+    rows[:, 1:5] = 1000.0
+    rows[:, 5:9] = 50_000.0
+    rows[t > 83.2 + 60.0, 7] = 8_000.0  # after the branch end only
+    rows[(t > 83.2 + 60.0) & (t < 83.2 + 60.1), 3] = 0.0
+    np.savez(folder / "soil_event_series.npz", rows=rows)
+    _, doc = run(mod, b, tmp_path, "C-2")
+    event = next(r for r in doc["rows"] if r["case"] == "D1PSC_cslow")
+    after = next(i for i in event["record_items"] if i["item"] == "after_branch")
+    assert after["F_cyl_min_N"][2] == 8000.0 and after["lifted_samples"][2] > 0
+    assert event["grade"] == "pass"  # a record, not a gate
