@@ -1136,6 +1136,13 @@ OPENLOOP_KEY_PATHS = ("p3a.checks", "p3a.P3a-1_force_peak", "p3a.P3a-2_liftoff",
 """Rev12 R12-4: the open-loop ``result.json`` ``code_state.git_at_start`` (run_S9 machine, rev11 R11-4) is not a
 required key; :func:`gs_commit_identity` records it."""
 OPENLOOP_FILES = ("series.npz", "flow_series.npz")
+OPENLOOP_VB_ONLY_KEY_PATHS = ("args.flow_law", "v5_hydraulics.controller_options",
+                              "flow_limit.summary")
+OPENLOOP_VB_ONLY_FILES = ("flow_series.npz",)
+"""Open-loop keys / files of the v5 flow model, not required on a V0 row (``v5_setting`` ==
+``V0``): rules original 5.3 "V0라 유량 항목 해당 없음", user decision 2026-11-14 (z4372: V0 =
+flow and controller items not applicable)."""
+OPENLOOP_V0_SETTING = "V0"
 _GIT_HEAD_RE = re.compile(r"[0-9a-f]{40}")
 
 
@@ -1184,6 +1191,12 @@ def _gs_other(f: Path, e: dict[str, Any], kind: str, git_at_start: str) -> dict[
     c["progress_end_rc0"] = re.search(rf"^END {re.escape(e['case'])} \S+ rc=0\b", progress, re.M) is not None
     if kind == "openloop":
         case_dir, keys, files = f / e["case"], list(OPENLOOP_KEY_PATHS), OPENLOOP_FILES
+        if e.get("v5_setting") == OPENLOOP_V0_SETTING:
+            keys = [k for k in keys if k not in OPENLOOP_VB_ONLY_KEY_PATHS]
+            files = tuple(n for n in files if n not in OPENLOOP_VB_ONLY_FILES)
+            c["vb_items_not_required"] = {
+                "keys": list(OPENLOOP_VB_ONLY_KEY_PATHS), "files": list(OPENLOOP_VB_ONLY_FILES),
+                "reason": "V0 row: flow items not applicable (rules original 5.3)"}
     else:
         tail = script_tail(e.get("argv") or [])
         cid = tail[tail.index("--only") + 1]

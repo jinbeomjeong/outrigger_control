@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -46,12 +47,48 @@ def mod():
     return _import("chrono_rows_judge_4368")
 
 
+RULES_REL = Path("06_analysis") / "02_control" / "verif_matrix"
+RULES_DIRS = (PROJECT_ROOT / RULES_REL, MAIN_CHECKOUT / RULES_REL)
+REV15_SEAL_COMMIT = "cc0d9b8"
+"""rev15 seal commit S3: before the R3 merge the rev15 files are only in this commit's blobs."""
+REV15_NAME = "v5_resume_4368_rules_rev15.md"
+REV15_SHA256 = "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+_BUILT_RULES: dict[str, Path] = {}
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _rules_tmp(tmp_path_factory):
+    _BUILT_RULES.clear()
+    _BUILT_RULES["tmp"] = tmp_path_factory.mktemp("rules")
+
+
+def _rules_files(mod) -> list[str]:
+    return [f for n in mod.RULES_SEALS for f in (n, n.replace(".md", ".sha256"))]
+
+
+def _blob(path: Path) -> bytes | None:
+    """Bytes of ``path`` at the rev15 seal commit (None when the object is not in this repo)."""
+    spec = f"{REV15_SEAL_COMMIT}:{path.as_posix()}"
+    done = subprocess.run(["git", "-C", str(PROJECT_ROOT), "cat-file", "blob", spec],
+                          capture_output=True, check=False)
+    return done.stdout if done.returncode == 0 else None
+
+
 def _rules_dir(mod) -> Path:
-    for d in (PROJECT_ROOT / "06_analysis" / "02_control" / "verif_matrix",
-              MAIN_CHECKOUT / "06_analysis" / "02_control" / "verif_matrix"):
-        if all((d / n).exists() for n in mod.RULES_SEALS):
+    """A folder with every sealed rules file: the checkout's own, else one built from the checkout
+    files plus the seal commit blobs (rev15 before the R3 merge)."""
+    for d in RULES_DIRS:
+        if all((d / n).exists() for n in _rules_files(mod)):
             return d
-    pytest.skip("rules original .. rev6 not found")
+    built = _BUILT_RULES["tmp"]
+    if not all((built / n).exists() for n in _rules_files(mod)):
+        for name in _rules_files(mod):
+            data = next(((d / name).read_bytes() for d in RULES_DIRS if (d / name).exists()),
+                        None) or _blob(RULES_REL / name)
+            if data is None:
+                pytest.skip(f"{name} not found (checkout or {REV15_SEAL_COMMIT})")
+            (built / name).write_bytes(data)
+    return built
 
 
 # ------------------------------------------------------------------------------------------------- departure / t_D
@@ -299,7 +336,9 @@ def test_phase_time_base_mix_is_s11(mod, tmp_path):
     np.savez(d / "pads.npz", t=t, crawler_normal_N=np.zeros(t.size), F_cyl_min_interval=np.full((t.size, 4), 6e4),
              N=np.full((t.size, 4), 1e4))
     np.savez(d / "r8_series.npz", t=t0 + np.arange(1, 21) * 0.1)
-    res = {"settings": {"start_t_s": t0}, "phases": [[3.1, "check"], [4.5, "level"]], "event_t_s": None}  # absolute
+    # z4372: the engine comes from the record
+    res = {"settings": {"start_t_s": t0, "s8": {"engine": "L2b_NSC"}},
+           "phases": [[3.1, "check"], [4.5, "level"]], "event_t_s": None}  # absolute
     (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
     code, doc = _judge(mod, tmp_path, [d])
     assert code == 1 and doc["origin_failed"] == ["L2b_row"]
@@ -318,6 +357,155 @@ def test_fallback_log_leg_without_event_is_s11(mod, tmp_path):
     assert oc["fallback"]["fallback_legs_R6_B7"] == ["RR"]
 
 
+# ------------------------------------------------------------------------------------ engine (z4372)
+def _write_pads_row(d: Path, *, engine: str | None, crawler_1ms: bool,
+                    floor_normal: list[float] | None = None, record: bool = True) -> Path:
+    """A run_S8C-like row; ``crawler_1ms`` False = a V0 L2b row (``law_locked``, no
+    ``crawler_normal_N``). ``F_crawler`` z > 0 until 15.1 s, x > 0 until 16.1 s (so a tilted
+    floor normal moves the 10 Hz t_lift); ``floor_normal`` None = no ``floor_plane`` record."""
+    d.mkdir(parents=True)
+    (d / "record").mkdir()
+    t0 = 3.0
+    t = t0 + np.arange(1, 20001) * 1e-3
+    pads = {"t": t, "F_cyl_min_interval": np.full((t.size, 4), 6e4),
+            "N": np.full((t.size, 4), 1e4), "law_locked": np.ones((t.size, 4), dtype=np.int8)}
+    if crawler_1ms:
+        pads["crawler_normal_N"] = np.where(t < t0 + 10.0005, 5000.0, 0.0)
+    np.savez(d / "pads.npz", **pads)
+    tr = t0 + np.arange(1, 200) * 0.1
+    f_crawler = np.zeros((tr.size, 3))
+    f_crawler[:, 0] = np.where(tr < t0 + 13.05, 5000.0, 0.0)
+    f_crawler[:, 2] = np.where(tr < t0 + 12.05, 5000.0, 0.0)
+    if record:
+        np.savez(d / "record" / "record.npz", t=tr, F_crawler=f_crawler)
+    np.savez(d / "r8_series.npz", t=tr)
+    settings: dict = {"start_t_s": t0}
+    if engine is not None:
+        settings["s8"] = {"engine": engine}
+    # rev9 R9-1: the row tag and its true check (V0 tag, so no J-P3)
+    res = {"settings": settings, "phases": [[0.1, "check"], [5.0, "touch"], [8.0, "level"]],
+           "event_t_s": None, "args": {"expect_controller": "final_C4G2_LAS_K1"},
+           "expect_controller": {"name": "final_C4G2_LAS_K1", "ok": True}}
+    if floor_normal is not None:
+        res["floor_plane"] = {"normal_world": floor_normal}
+    (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    return d
+
+
+def test_engine_from_records_not_from_pads_keys(mod, tmp_path):
+    """z4372: a V0 L2b row (no crawler_normal_N) is L2b by its records; batch.json r4368.engine
+    counts too."""
+    v0 = _write_pads_row(tmp_path / "v0", engine="L2b_NSC", crawler_1ms=False)
+    row = mod.load_row(v0)
+    assert row["engine"] == "L2b"
+    assert row["engine_record"]["sources"] == {"result.json settings.s8.engine": "L2b_NSC"}
+    l1r = _write_pads_row(tmp_path / "l1r", engine=None, crawler_1ms=False)
+    row = mod.load_row(l1r, {"case": "X", "r4368": {"engine": "L1R"}})
+    assert row["engine"] == "L1R"
+    assert row["engine_record"]["sources"] == {"batch.json r4368.engine": "L1R"}
+    # a 1 ms crawler array does not make a recorded L1-R row L2b
+    assert mod.load_row(_write_pads_row(tmp_path / "l1r1ms", engine=None, crawler_1ms=True),
+                        {"r4368": {"engine": "L1R"}})["engine"] == "L1R"
+
+
+def test_engine_record_missing_unknown_or_conflicting_is_input_error(mod, tmp_path):
+    bare = _write_pads_row(tmp_path / "bare", engine=None, crawler_1ms=True)
+    with pytest.raises(mod.InputError, match="engine record"):
+        mod.load_row(bare)
+    with pytest.raises(mod.InputError, match="unknown engine"):
+        mod.load_row(bare, {"r4368": {"engine": "L2b_SMC"}})
+    v0 = _write_pads_row(tmp_path / "v0", engine="L2b_NSC", crawler_1ms=False)
+    with pytest.raises(mod.InputError, match="disagree"):
+        mod.load_row(v0, {"r4368": {"engine": "L1R"}})
+    with pytest.raises(mod.InputError, match="does not fit"):
+        mod.load_row(bare, {"r4368": {"engine": "SCM"}})
+    scm = _write_scm_row(tmp_path / "scm", sgs=False)
+    assert mod.load_row(scm, {"r4368": {"engine": "SCM"}})["engine"] == "SCM"
+    with pytest.raises(mod.InputError, match="does not fit"):
+        mod.load_row(scm, {"r4368": {"engine": "L2b_NSC"}})
+
+
+def test_v0_l2b_row_d29_by_10hz_bracket_r15_3(mod, tmp_path):
+    """Rev15 R15-3: a V0 L2b row (no 1 ms crawler normal) takes the R6-B1 10 Hz bracket t_b; C1 and
+    Q-14 are computed from it; a 1 ms row keeps the 1 ms t_lift."""
+    v0 = _write_pads_row(tmp_path / "E_G4_Fs4_V0", engine="L2b_NSC", crawler_1ms=False,
+                         floor_normal=[0.0, 0.0, 2.0])  # not unit length: normalised
+    vb = _write_pads_row(tmp_path / "E_G4_Fs4", engine="L2b_NSC", crawler_1ms=True,
+                         floor_normal=[0.0, 0.0, 1.0])
+    code, doc = _judge(mod, tmp_path, [v0, vb])
+    assert code == 0, doc["stops"]
+    rows = {r["case"]: r for r in doc["rows"]}
+    items = rows["E_G4_Fs4_V0"]["items"]
+    basis = items["D8_t_lift_basis"]
+    assert items["D8_t_lift_s_D-29_D-30"] == pytest.approx(15.1)
+    assert basis["basis"] == "bracket_10Hz" and basis["rule"] == mod.R15_3_RULE
+    assert basis["t_a_s"] == pytest.approx(15.0) and basis["t_b_s"] == pytest.approx(15.1)
+    assert basis["normal"] == "result.json floor_plane.normal_world"
+    assert items["C1_R40"]["status"] == "judged" and items["C1_R40"]["verdict"] == "pass"
+    assert items["C1_R40"]["t_lift_s"] == pytest.approx(15.1)
+    q14 = items["D8_no_pad_lift_Q-14"]
+    assert q14["t_from_s"] == pytest.approx(15.1) and q14["lifted"] is False
+    ok = rows["E_G4_Fs4"]["items"]
+    assert ok["D8_t_lift_basis"] == "pads.npz crawler_normal_N 1 ms"
+    assert ok["D8_t_lift_s_D-29_D-30"] == pytest.approx(13.001)
+    assert doc["l2b_bracket_rows_R15_3"] == ["E_G4_Fs4_V0"]
+
+
+def test_v0_l2b_bracket_uses_the_floor_normal(mod, tmp_path):
+    """R15-3 projects F_crawler on the floor normal: x > 0 lasts 1 s longer than z, so a 45-degree
+    normal moves t_b from 15.1 s to 16.1 s."""
+    d = _write_pads_row(tmp_path / "tilt", engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=[1.0, 0.0, 1.0])
+    t_lift, basis = mod.v0_l2b_bracket_lift(mod.load_row(d))
+    assert t_lift == pytest.approx(16.1) and basis["t_a_s"] == pytest.approx(16.0)
+
+
+def test_v0_l2b_bracket_without_inputs_is_not_judgeable(mod, tmp_path):
+    """R15-3 inputs missing (floor normal; record.npz): t_lift not judgeable, inputs named."""
+    no_floor = mod.load_row(_write_pads_row(tmp_path / "nf", engine="L2b_NSC", crawler_1ms=False))
+    t_lift, basis = mod.v0_l2b_bracket_lift(no_floor)
+    assert t_lift is None and basis["status"] == "not_judgeable"
+    assert basis["missing_inputs"] == ["result.json floor_plane.normal_world"]
+    no_rec = mod.load_row(_write_pads_row(tmp_path / "nr", engine="L2b_NSC", crawler_1ms=False,
+                                          floor_normal=[0.0, 0.0, 1.0], record=False))
+    t_lift, basis = mod.v0_l2b_bracket_lift(no_rec)
+    assert t_lift is None
+    assert basis["missing_inputs"] == ["record/record.npz F_crawler", "record/record.npz t"]
+    code, doc = _judge(mod, tmp_path, [tmp_path / "nf"])
+    items = doc["rows"][0]["items"]
+    assert code == 0 and items["C1_R40"]["status"] == "not_judgeable"
+    assert items["D8_no_pad_lift_Q-14"]["status"] == "not_judgeable"
+    assert doc["l2b_bracket_rows_R15_3"] == ["nf"]
+
+
+@pytest.mark.parametrize(("change", "problem"), [
+    ("F_crawler_2col", "F_crawler shape"),
+    ("t_short", "record/record.npz t shape"),
+    ("zero_normal", "floor_plane.normal_world"),
+])
+def test_v0_l2b_bracket_wrong_input_form_is_not_judgeable(mod, tmp_path, change, problem):
+    """Rev15 R15-3: F_crawler not [N, 3], t of another length or a zero normal = not judgeable."""
+    normal = [0.0, 0.0, 0.0] if change == "zero_normal" else [0.0, 0.0, 1.0]
+    d = _write_pads_row(tmp_path / change, engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=normal)
+    rec = dict(np.load(d / "record" / "record.npz"))
+    if change == "F_crawler_2col":
+        rec["F_crawler"] = rec["F_crawler"][:, :2]
+    elif change == "t_short":
+        rec["t"] = rec["t"][:-1]
+    np.savez(d / "record" / "record.npz", **rec)
+    t_lift, basis = mod.v0_l2b_bracket_lift(mod.load_row(d))
+    assert t_lift is None and basis["status"] == "not_judgeable"
+    assert len(basis["form_problems"]) == 1 and problem in basis["form_problems"][0]
+
+
+def test_v0_l2b_bracket_basis_names_its_inputs(mod, tmp_path):
+    d = _write_pads_row(tmp_path / "v0", engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=[0.0, 0.0, 1.0])
+    _, basis = mod.v0_l2b_bracket_lift(mod.load_row(d))
+    assert basis["inputs"] == list(mod.R15_3_SOURCES)
+
+
 # ------------------------------------------------------------------------------------------------- seals / CLI
 def test_seals(mod, tmp_path):
     src = _rules_dir(mod)
@@ -331,6 +519,35 @@ def test_seals(mod, tmp_path):
     assert not s["ok"] and not s["files"]["v5_resume_4368_rules_rev6.md"]["ok"]
     (tmp_path / "v5_resume_4368_rules_rev3.sha256").unlink()
     assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 2
+
+
+def test_rev15_in_the_seal_list(mod):
+    """Rev15 R15-7: the path 1 Chrono judge checks rev15 (rev13 / rev14 stay outside, R14-7)."""
+    assert mod.RULES_SEALS[REV15_NAME] == REV15_SHA256
+    assert "v5_resume_4368_rules_rev13.md" not in mod.RULES_SEALS
+    assert "v5_resume_4368_rules_rev14.md" not in mod.RULES_SEALS
+    assert "rev15" in mod.RULES_DESCRIPTION and "R15-3" in mod.RULES_DESCRIPTION
+
+
+def test_seals_command_checks_rev15(mod, tmp_path, capsys):
+    """``seals`` on the sealed files (rev15 from the seal commit blob before R3): exit 0 with rev15
+    matching; a changed rev15 is exit 1, a rev15 without its .sha256 is exit 2 (original 8.2
+    S-1)."""
+    src = _rules_dir(mod)
+    for name in _rules_files(mod):
+        shutil.copy2(src / name, tmp_path / name)
+    capsys.readouterr()
+    assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 0
+    entry = json.loads(capsys.readouterr().out.strip().splitlines()[-1])["files"][REV15_NAME]
+    assert entry == {"sha256": REV15_SHA256, "sealed": REV15_SHA256, "tool": REV15_SHA256,
+                     "ok": True}
+    rev15 = tmp_path / REV15_NAME
+    rev15.write_bytes(rev15.read_bytes() + b"\n")
+    assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 1
+    assert mod.seal_check(tmp_path)["files"][REV15_NAME]["ok"] is False
+    (tmp_path / REV15_NAME.replace(".md", ".sha256")).unlink()
+    assert mod.main(["seals", "--rules-dir", str(tmp_path)]) == 2
+    assert mod.seal_check(tmp_path)["missing"] == [REV15_NAME]
 
 
 def test_missing_input_exit_2(mod, tmp_path, capsys):

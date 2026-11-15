@@ -23,7 +23,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 - 열린 루프 행(C-6·C-7, `run_S9.py machine`, `series.npz` + `result.json` `p3a`)은 이 도구의 판정 대상이 아니다(원판 9.1: C-6·C-7 경로 1 = `result.json` `p3a`, 경로 2 = `openloop_compare.py` `analyse`. 원판 7.5·8.1: 기록 행. rev5 R5-A1: Chrono 경로 1 새 판 = C-1~C-5). 읽지 않고 `skipped_rows`(입력 sha256, 근거 규칙)에 적는다. 종료 코드에 영향 없음.
 - `--row`: 행 폴더를 직접 준다(배치 정보 없이). C-3 두 행은 이름으로 알아본다.
 - `--assume C-n=값`: 민감도 확인용이다. 출력에 `deviates_from_rev6`가 붙고, 그 출력은 경로 1 결과로 쓰지 않는다.
-- 엔진 구분: `step_series.npz`가 있으면 SCM(run_S9), `pads.npz`에 `crawler_normal_N`이 있으면 L2b, 없으면 L1-R, `series.npz`와 `p3a`가 있으면 열린 루프(건너뜀)다. `batch.json` `criteria_id`가 C-6·C-7·C-7a·C-7b여도 건너뛴다.
+- 엔진 구분(z4372, 2026-11-14): 파일로 행 형태를 정한다. `step_series.npz`가 있으면 SCM(run_S9), `pads.npz`가 있으면 L2b 또는 L1-R, `series.npz`와 `p3a`가 있으면 열린 루프(건너뜀)다. L2b와 L1-R은 명시 기록으로 가른다: `batch.json` 행의 `r4368.engine`·`engine`, `result.json` `settings.s8.engine`(`L2b_NSC` → L2b, `L1R` → L1-R, `SCM` → SCM). `pads.npz` 행에 기록이 없거나, 이름을 모르거나, 두 기록이 다르거나, 기록이 파일 형태와 맞지 않으면 입력 오류(종료 2)다. 예전 규칙(`crawler_normal_N`이 있으면 L2b)은 V0 L2b 행(`law_locked`는 있고 `crawler_normal_N`·`m2_*`는 없음)을 L1-R로 잘못 분류했다. 출력 행마다 `engine_record`(근거 기록)를 적는다. `batch.json` `criteria_id`가 C-6·C-7·C-7a·C-7b여도 건너뛴다.
 - 읽는 키: V0 행(SCM P3b_J2 시드 행, O-C5 Kc1 V0)과 L1-R 행에 없는 `extend_start_rule`·`extend_bound_check`·`v5_hydraulics.controller_tag`는 읽지 않는다. rev8 R8-2(아래 7절)부터 ③ 판별은 행 태그(`--expect-controller`)로 하므로, ③이 아닌 행에서는 이 키들이 없어도 결측으로 세지 않는다.
 
 ## 2. 종료 코드와 출력
@@ -49,7 +49,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 | D-26 | N-1 | `sgs_class` | 427.9 조건 1~5(첫 FAULT = `FAULT_LIFT_STROKE_LIMIT:soil`, `FAULT_STROKE_END` 없음, LEVEL 시작 뒤 부상(Q-14) 없음, t_D ~ 끝 참 F_cyl ≥ F_min, 이동 ≤ 180 bar·포화 0)이 모두 참이면 `stroke_limited_stop`(= `allowed_stop`). S-01·02·03·04(R6-B8) |
 | D-27 | N-2 | `ready_items` | P3-6: 한계(`p3b.P3-6_ready.limit_s`) 밖이면 FLAG(기록) |
 | D-28 | N-3 | `ready_items` | G6 관문 READY − 폐루프 시작 ≤ 120 s + 1e-9 |
-| D-29 | N-4 | `d8_lift_time` | L2b t_lift = 단계 ∉ {idle, check, touch} ∧ `pads.npz` `crawler_normal_N` ≤ 0인 첫 1 ms 표본. 단계는 `phases` + `settings.start_t_s`(R6-1) |
+| D-29 | N-4 | `d8_lift_time` | L2b t_lift = 단계 ∉ {idle, check, touch} ∧ `pads.npz` `crawler_normal_N` ≤ 0인 첫 1 ms 표본. 단계는 `phases` + `settings.start_t_s`(R6-1). `crawler_normal_N`이 없는 L2b 행(V0)은 rev15 R15-3(사용자 결정 2026-11-14)에 따라 L1-R과 같은 R6-B1 10 Hz 구간 대체를 쓴다(`v0_l2b_bracket_lift`): `record/record.npz` `F_crawler`를 `result.json` `floor_plane.normal_world`(정규화)에 사영, 시간축 `t`(0.1 s), 단계는 `phases` + `settings.start_t_s`. L1-R 경로와 달리 세계 z 대체는 없다. 세 입력 중 하나라도 없으면 t_lift는 `not_judgeable`이고 `missing_inputs`에 이름을 적는다. 그 행들은 출력 `l2b_bracket_rows_R15_3`에 적는다 |
 | D-30 | N-5 | `d8_lift_time`, `judge_rigid` | SCM: `step_series.npz` `scm_crawler_normal_N`. L1-R: 10 Hz 구간 대체(R6-B1). t_b = 단계 조건 ∧ `F_crawler`·바닥 법선 ≤ 0인 첫 `record.npz` 행, t_a = 그 앞 > 0인 마지막 행 |
 | D-31 | N-6 | `c1_block` | R40-2 보류(강체 크롤러, 원값 최소 < F_min + 5 kN, 그 시각 ≤ t_lift + 8 s, 같은 8 s 느린 성분 최소 ≥ 문턱) = 판정 불가 + 멈춤. L1 짝 해제는 사람이 한다(값만 낸다) |
 | D-32 | N-7 | `moving_pressure` | 10 Hz 제어 주기 행(R6-B5), 이동 = abs(u_applied) > 1e-9, p = F_cyl/A_p(YAML 다리별), 포화 = 신장 ∧ ≥ 210 bar. 사건 행(J-5·U58 창)은 이 판에 없다 → 판정 불가 |
@@ -96,7 +96,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 6. 봉인 대조 (요건 4)
 
-원판·rev1~rev12의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`, rev12 = `78f1f99b…`. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
+원판·rev1~rev12·rev15의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`, rev12 = `78f1f99b…`, rev15 = `0162561c…`(R15-7, 봉인 커밋 `cc0d9b8`). rev13·rev14는 목록에 없고 `tools/verif/seal_check.py`로 확인한다(rev13 R13-7, rev14 R14-7). 출력 `rules`는 설명 문자열(`RULES_DESCRIPTION`)이고, 대조 대상은 이 목록이다. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
 
 ## 7. rev8~rev10 반영: J-P3 범위, J11 입력·범위, LS 판별 (v3, python-expert 2026-11-13)
 
@@ -120,4 +120,4 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 8. 시험
 
-`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 32개 = 합성 입력 30개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.
+`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 43개 = 합성 입력 41개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개·z4372 엔진 기록 2개·rev15 R15-3 V0 L2b 10 Hz 구간 7개·rev15 봉인 2개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 rev8부터 종료 1(C-5 SCM 행 셋의 J11 멈춤, 기록 추가 전 배치), L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다. rev8·rev9 항목은 `test_resume4368_rev8.py`·`test_resume4368_rev9.py`, gs-check의 rev9 항목은 `test_v5_resume_4368_chrono_rows.py`.

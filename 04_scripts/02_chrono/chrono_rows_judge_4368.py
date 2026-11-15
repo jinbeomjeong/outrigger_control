@@ -12,7 +12,11 @@ rules rev6 R6-A D-26 .. D-39):
 * D-26 (N-1) :func:`sgs_class` - spec 427.9 soil-guard safe stop -> ``stroke_limited_stop`` (allowed stop), S-01..04.
 * D-27 / D-28 (N-2 / N-3) :func:`ready_items` - P3-6 FLAG (record), READY <= 120 s + 1e-9 (G6 gate).
 * D-29 (N-4) :func:`d8_lift_time` - D8 t_lift = first 1 ms sample, phase not idle / check / touch, crawler normal <= 0.
+  An L2b row without ``crawler_normal_N`` (V0) uses the R6-B1 10 Hz bracket (rev15 R15-3,
+  :func:`v0_l2b_bracket_lift`), listed in ``l2b_bracket_rows_R15_3``.
 * D-30 (N-5) SCM t_lift (same function on ``step_series.npz``); L1-R 10 Hz bracket t_b / t_a (R6-B1).
+* Engine kind (z4372): :func:`recorded_engine` (batch.json ``r4368.engine`` / ``engine``,
+  result.json ``settings.s8.engine``); a ``pads.npz`` row without a record is an input error.
 * D-31 / D-39 (N-6 / N-14) :func:`c1_block` - R40-1 / R40-2 on the D-29 t_lift with the S8-A2 judged force; hold =
   ``not_judgeable`` (resolution with the L1 pair is a person's step: values only, ``stop``).
 * D-32 (N-7) :func:`moving_pressure` - moving = |u_applied| > 1e-9 m/s on the 10 Hz control rows, p = F_cyl / A_p.
@@ -77,7 +81,9 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 TOOL_VERSION = ("chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows "
-                "skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked)")
+                "skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked; "
+                "python-expert 2026-11-14 z4372: engine from the batch.json / result.json records, "
+                "V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3)")
 
 # --- rules and seals (rev5 R5-A1 requirement 4) -----------------------------------------------------------------
 RULES_DIR_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix"
@@ -95,9 +101,16 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev10.md": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
     "v5_resume_4368_rules_rev11.md": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
     "v5_resume_4368_rules_rev12.md": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    # rev15 R15-7 (seal commit cc0d9b8, sealed 2026-11-15 00:08:30 +09:00); rev13 / rev14 are not
+    # in this list (rev13 R13-7, rev14 R14-7: checked by tools/verif/seal_check.py)
+    "v5_resume_4368_rules_rev15.md": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
-match (original 8.2 S-1)."""
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 of 2026-11-15);
+both the file and its ``.sha256`` must match (original 8.2 S-1)."""
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 (seal list; rev13 / rev14 "
+                     "by tools/verif/seal_check.py, rev15 R15-7): rev5 R5-A1, rev6 R6-A / R6-B, "
+                     "rev8 R8-2 / R8-3, rev9 .. rev12 items, rev15 R15-3 (V0 L2b D-29)")
+"""Output ``rules`` text (a description; the seal list above is what is checked)."""
 
 # --- disclosure (requirement 3) ---------------------------------------------------------------------------------
 DISCLOSE_PAIRS = (
@@ -151,6 +164,17 @@ new version to C-1 .. C-5. Such rows are listed in ``skipped_rows`` (exit code u
 OPENLOOP_FILES = ("series.npz", "flow_series.npz")
 OPENLOOP_SKIP_RULE = ("rules original 9.1 (C-6 / C-7 path 1 = result.json p3a, path 2 = openloop_compare.py analyse), "
                       "7.5 / 8.1 (record rows, no grade), rev5 R5-A1 (Chrono path 1 new version = C-1 .. C-5)")
+ENGINE_KINDS = {"SCM": "SCM", "L2b_NSC": "L2b", "L1R": "L1R"}
+"""Recorded engine name -> engine kind of this tool (z4372, 2026-11-14). The sources
+(:func:`recorded_engine`) are the batch.json entry ``r4368.engine`` / ``engine`` (s9_batch) and
+result.json ``settings.s8.engine`` (run_S8C). The ``pads.npz`` keys do not decide the engine: V0
+L2b rows write ``law_locked`` but no ``crawler_normal_N`` / ``m2_*``."""
+R15_3_RULE = ("rev15 R15-3 (user decision 2026-11-14): V0 L2b D-29 t_lift by the R6-B1 "
+              "10 Hz bracket")
+"""D-29 of an L2b row without the 1 ms ``pads.npz`` ``crawler_normal_N`` (V0 L2b rows)."""
+R15_3_SOURCES = ("record/record.npz F_crawler", "record/record.npz t",
+                 "result.json floor_plane.normal_world")
+"""Inputs R15-3 needs (same as L1-R R6-B1); a missing one = not judgeable, its name recorded."""
 LEGS = ("FL", "FR", "RL", "RR")
 G = 9.80665
 _EVENT_RE = re.compile(r"t_s=([-0-9.eE+]+), name='([^']*)'")
@@ -306,26 +330,77 @@ def npz(path: Path) -> dict[str, np.ndarray]:
         return {k: np.asarray(z[k]) for k in z.files}
 
 
-def load_row(d: Path) -> dict[str, Any]:
-    """Result, engine kind and series of one row folder."""
+def recorded_engine(meta: dict[str, Any] | None, res: dict[str, Any]) -> dict[str, Any]:
+    """Engine kind of a row from its explicit records (:data:`ENGINE_KINDS`).
+
+    Args:
+        meta: The batch.json entry of the row (``None`` for a ``--row`` input).
+        res: The row's result.json.
+
+    Returns:
+        ``{"kind": <SCM | L2b | L1R | None>, "sources": {<source>: <recorded name>}}``;
+        ``kind`` is ``None`` when no source records the engine.
+
+    Raises:
+        InputError: A recorded name is unknown, or two sources record different engines.
+    """
+    sources: dict[str, Any] = {}
+    entry = meta or {}
+    r4368 = entry.get("r4368")
+    if isinstance(r4368, dict) and r4368.get("engine") is not None:
+        sources["batch.json r4368.engine"] = r4368["engine"]
+    if entry.get("engine") is not None:
+        sources["batch.json engine"] = entry["engine"]
+    s8 = (res.get("settings") or {}).get("s8") or {}
+    if isinstance(s8, dict) and s8.get("engine") is not None:
+        sources["result.json settings.s8.engine"] = s8["engine"]
+    unknown = {src: name for src, name in sources.items() if str(name) not in ENGINE_KINDS}
+    if unknown:
+        raise InputError(f"unknown engine record {unknown} (known: {sorted(ENGINE_KINDS)})")
+    kinds = sorted({ENGINE_KINDS[str(name)] for name in sources.values()})
+    if len(kinds) > 1:
+        raise InputError(f"engine records disagree: {sources}")
+    return {"kind": kinds[0] if kinds else None, "sources": sources}
+
+
+def _check_engine_files(d: Path, record: dict[str, Any],
+                        file_kinds: tuple[str | None, ...]) -> None:
+    """The recorded engine must be one the row's files allow (``None`` = unrecorded allowed)."""
+    if record["kind"] not in file_kinds:
+        allowed = [k for k in file_kinds if k is not None]
+        raise InputError(f"engine record {record['sources'] or 'missing'} does not fit the files "
+                         f"of {d} (they allow {allowed})")
+
+
+def load_row(d: Path, meta: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Result, engine kind and series of one row folder.
+
+    The folder's files give the row form (``step_series.npz`` = SCM, ``pads.npz`` = L2b or L1-R,
+    ``p3a`` + ``series.npz`` = open loop); the L2b / L1-R split comes from the engine records
+    (:func:`recorded_engine`, z4372), which are required for a ``pads.npz`` row.
+    """
     rj = d / "result.json"
     if not rj.exists():
         raise InputError(f"result.json missing: {d}")
     res = json.loads(rj.read_text(encoding="utf-8"))
-    row: dict[str, Any] = {"dir": str(d), "name": d.name, "result": res, "files": {}}
+    engine_record = recorded_engine(meta, res)
+    row: dict[str, Any] = {"dir": str(d), "name": d.name, "result": res, "files": {},
+                           "engine_record": engine_record}
     for name in ("step_series.npz", "pads.npz", "r8_series.npz", "record/record.npz"):
         p = d / name
         if p.exists():
             row["files"][name] = {"sha256": sha256_file(p)}
     if "step_series.npz" in row["files"]:
+        _check_engine_files(d, engine_record, ("SCM", None))
         row["engine"] = "SCM"
         row["series"] = npz(d / "step_series.npz")
         phases = [(float(p["t_s"]), str(p["phase"])) for p in res.get("phases") or []]
         events = [(float(e["t_s"]), str(e["name"])) for e in res.get("events") or []]
         t0 = float((res.get("p3b") or {}).get("t_loop_start_s", phases[0][0] if phases else 0.0))
     elif "pads.npz" in row["files"]:
+        _check_engine_files(d, engine_record, ("L2b", "L1R"))
         pads = npz(d / "pads.npz")
-        row["engine"] = "L2b" if "crawler_normal_N" in pads else "L1R"
+        row["engine"] = engine_record["kind"]
         row["pads"] = pads
         t0 = float(res["settings"]["start_t_s"])
         # rev6 R6-1: run_S8C / run_S6C result.json phases are relative to settings.start_t_s (run_S8C 1876); a
@@ -340,6 +415,7 @@ def load_row(d: Path) -> dict[str, Any]:
         events = parse_events_json(ev) if ev.exists() else []
     elif "p3a" in res and (d / "series.npz").exists():
         # run_S9 ``machine`` open-loop row (C-6 / C-7): outside this tool (see :func:`openloop_skip`); recorded only
+        _check_engine_files(d, engine_record, ("SCM", None))
         for name in OPENLOOP_FILES:
             if (d / name).exists():
                 row["files"][name] = {"sha256": sha256_file(d / name)}
@@ -788,30 +864,86 @@ def g6_grade(p3b, t, cn, f_after, rc, p32, p38, ready, sgs, fault, f_min) -> dic
             "P3-6_record": ready["P3-6"]}
 
 
+def bracket_10hz_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
+    """Rev6 R6-B1 (revision 6 5 "10 Hz bracket", L1-R rows): (t_lift, basis).
+
+    t_b = first 10 Hz ``record.npz`` row (phase not idle / check / touch) with the crawler normal
+    <= 0, t_a = last row with the normal > 0 before it; normal = ``F_crawler`` projected on the
+    floor normal.
+    """
+    rec = row["record"]
+    tr = np.asarray(rec["t"], float)
+    nrm = (row["result"].get("floor_plane") or {}).get("normal_world")
+    n_src = ("result.json floor_plane.normal_world" if nrm is not None
+             else "world z (no floor_plane record)")
+    nrm = np.asarray(nrm if nrm is not None else [0.0, 0.0, 1.0], float)
+    fcn = np.asarray(rec["F_crawler"], float) @ (nrm / np.linalg.norm(nrm))
+    t_lift = d8_lift_time(tr, fcn, row["phases"])
+    t_a = None
+    if t_lift is not None:
+        k = np.flatnonzero((tr < t_lift - CMP_EPS) & (fcn > 0.0))
+        t_a = float(tr[k[-1]]) if k.size else None
+    return t_lift, {"basis": "bracket_10Hz", "t_a_s": t_a, "t_b_s": t_lift, "normal": n_src}
+
+
+def _missing_r15_3_sources(row: dict[str, Any]) -> list[str]:
+    rec = row["record"] or {}
+    present = {"record/record.npz F_crawler": "F_crawler" in rec,
+               "record/record.npz t": "t" in rec,
+               "result.json floor_plane.normal_world":
+                   (row["result"].get("floor_plane") or {}).get("normal_world") is not None}
+    return [name for name in R15_3_SOURCES if not present[name]]
+
+
+def _r15_3_form_problems(row: dict[str, Any]) -> list[str]:
+    """Rev15 R15-3 form checks: ``F_crawler`` [N, 3], ``t`` of the same length, normal not zero."""
+    force = np.asarray(row["record"]["F_crawler"])
+    times = np.asarray(row["record"]["t"])
+    normal = np.asarray(row["result"]["floor_plane"]["normal_world"], float)
+    problems = []
+    if force.ndim != 2 or force.shape[1] != 3:
+        problems.append(f"record/record.npz F_crawler shape {force.shape} (want [N, 3])")
+    elif times.ndim != 1 or times.shape[0] != force.shape[0]:
+        problems.append(f"record/record.npz t shape {times.shape} (want [{force.shape[0]}])")
+    if normal.shape != (3,) or not np.linalg.norm(normal) > 0.0:
+        problems.append(f"result.json floor_plane.normal_world {normal.tolist()} (want a nonzero "
+                        "3-vector)")
+    return problems
+
+
+def v0_l2b_bracket_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
+    """Rev15 R15-3: (t_lift, basis) of an L2b row without the 1 ms ``crawler_normal_N``.
+
+    Same inputs and rule as the L1-R R6-B1 bracket (:func:`bracket_10hz_lift`): ``F_crawler``
+    projected on the normalised ``floor_plane.normal_world``, 0.1 s ``t``, phases + start_t_s. A
+    missing input, or one of the wrong form (``F_crawler`` not [N, 3], ``t`` of another length,
+    zero normal), makes the t_lift not judgeable; the basis names the inputs. Unlike the L1-R path
+    there is no world-z fallback: R15-3 names the floor normal as an input.
+    """
+    missing = _missing_r15_3_sources(row)
+    if missing:
+        return None, {"status": "not_judgeable", "rule": R15_3_RULE, "missing_inputs": missing}
+    problems = _r15_3_form_problems(row)
+    if problems:
+        return None, {"status": "not_judgeable", "rule": R15_3_RULE, "form_problems": problems}
+    t_lift, basis = bracket_10hz_lift(row)
+    return t_lift, {**basis, "rule": R15_3_RULE, "inputs": list(R15_3_SOURCES)}
+
+
 def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]) -> dict[str, Any]:
     pads = row["pads"]
     t = np.asarray(pads["t"], float)
     f_min = params["F_min_N"]
     event_row = row["result"].get("event_t_s") is not None
     mp = moving_pressure(row["record"], params["head_area_m2"], event_row=event_row)
-    if row["engine"] == "L2b":
+    has_bracket_input = row["record"] is not None and "F_crawler" in row["record"]
+    if row["engine"] == "L2b" and "crawler_normal_N" in pads:
         t_lift = d8_lift_time(t, np.asarray(pads["crawler_normal_N"], float), row["phases"])
         lift_basis = "pads.npz crawler_normal_N 1 ms"
-    elif asm["C-1"] == "bracket_10hz" and row["record"] is not None and "F_crawler" in row["record"]:
-        # rev6 R6-B1: revision 6 5 "10 Hz bracket": t_b = first 10 Hz row (phase not idle / check / touch) with the
-        # crawler normal <= 0, t_a = last row with the normal > 0 before it; normal = floor normal projection
-        rec = row["record"]
-        tr = np.asarray(rec["t"], float)
-        nrm = (row["result"].get("floor_plane") or {}).get("normal_world")
-        n_src = "result.json floor_plane.normal_world" if nrm is not None else "world z (no floor_plane record)"
-        nrm = np.asarray(nrm if nrm is not None else [0.0, 0.0, 1.0], float)
-        fcn = np.asarray(rec["F_crawler"], float) @ (nrm / np.linalg.norm(nrm))
-        t_lift = d8_lift_time(tr, fcn, row["phases"])
-        t_a = None
-        if t_lift is not None:
-            k = np.flatnonzero((tr < t_lift - CMP_EPS) & (fcn > 0.0))
-            t_a = float(tr[k[-1]]) if k.size else None
-        lift_basis = {"basis": "bracket_10Hz", "t_a_s": t_a, "t_b_s": t_lift, "normal": n_src}
+    elif row["engine"] == "L2b":
+        t_lift, lift_basis = v0_l2b_bracket_lift(row)
+    elif asm["C-1"] == "bracket_10hz" and has_bracket_input:
+        t_lift, lift_basis = bracket_10hz_lift(row)
     else:
         t_lift, lift_basis = None, "C-1 override not_judgeable: L1-R has no 1 ms crawler normal"
     c1 = c1_block(row, t_lift, f_min, asm["C-2"])
@@ -1619,7 +1751,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         raise InputError("no --batch / --row given")
     rows, stops, origin_bad, skipped = [], [], [], []
     for d, meta in targets:
-        row = load_row(d)
+        row = load_row(d, meta)
         crit = (meta or {}).get("criteria_id")
         identity = commit_identity(meta, row, git_at_start)  # rev11 R11-4, every row incl. open loop
         if identity["status"] == COMMIT_STOP:
@@ -1641,7 +1773,8 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         body["items"]["J-P3_R8-2"] = j_p3_block(row, meta, manifest)
         body["items"]["J11_R8-3"] = j11_block(row, meta, manifest)
         oc = origin_check(row)
-        entry = {"dir": str(d), "case": (meta or {}).get("case", row["name"]), "engine": row["engine"], "row_id": rid,
+        entry = {"dir": str(d), "case": (meta or {}).get("case", row["name"]),
+                 "engine": row["engine"], "engine_record": row["engine_record"], "row_id": rid,
                  "criteria_id": (meta or {}).get("criteria_id"), "t0_s": row["t0"], "inputs": row["files"],
                  "row_dir": (meta or {}).get("_row_dir"), "origin_check_R5_B1": oc,
                  "commit_identity_R11_4": identity, **body}
@@ -1654,11 +1787,13 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     tds = [r["items"]["departure_t_D"] for r in rows if r["engine"] == "SCM"]
     td_diff = [abs(x["diff_from_runner_s"]) for x in tds if x.get("diff_from_runner_s") is not None]
     deviates = {k: v for k, v in asm.items() if ASSUMPTIONS[k] != v}
+    r15_3_rows = l2b_bracket_cases(rows)
     doc = {"tool": TOOL_VERSION,
-           "rules": "v5_resume_4368_rules.md + rev1 .. rev8 (rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3)",
+           "rules": RULES_DESCRIPTION,
            "definitions_C": asm, "deviates_from_rev6": deviates or None, "d_numbers": D_NUMBERS,
            "params": params, "seals": seals, "disclosure": disclose(), "rows": rows, "stops": stops,
            "origin_failed": origin_bad, "skipped_rows": skipped,
+           "l2b_bracket_rows_R15_3": r15_3_rows,
            "t_D_vs_runner_R6_B4": {"scm_rows": len(tds), "rows_differing": sum(1 for x in tds if x["differs_from_runner"]),
                                    "max_abs_diff_s": max(td_diff) if td_diff else None},
            "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")},
@@ -1677,8 +1812,19 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
                "grade_counts_R11_5": doc["grade_counts_R11_5"],
                "commit_identity_R11_4": {k: doc["commit_identity_R11_4"][k]
                                          for k in ("git_at_start", "counts", "s12_rows")},
-               "skipped": {s["case"]: s["skipped"] for s in skipped}, "out": str(args.out)}
+               "skipped": {s["case"]: s["skipped"] for s in skipped},
+               "l2b_bracket_rows_R15_3": r15_3_rows, "out": str(args.out)}
     return code, summary
+
+
+def l2b_bracket_cases(rows: list[dict[str, Any]]) -> list[str]:
+    """Cases whose D8 t_lift follows rev15 R15-3 (V0 L2b rows, judged or not judgeable)."""
+    cases = []
+    for r in rows:
+        basis = r["items"].get("D8_t_lift_basis")
+        if isinstance(basis, dict) and basis.get("rule") == R15_3_RULE:
+            cases.append(r["case"])
+    return cases
 
 
 def _json_default(x: Any) -> Any:

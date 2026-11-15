@@ -350,6 +350,43 @@ def test_gs_check_rev11_open_loop_code_at_launch(mod, tmp_path, capsys):
     assert c["commit_identity_R11_4"]["result_same_as_git_at_start"] is False
 
 
+def _drop_openloop_vb_items(mod, folder: Path) -> None:
+    """Remove the flow-model keys and files a V0 open-loop row does not write (C-7b
+    ``P3a_G1_B_V0_FB``)."""
+    res = folder / "LV" / "result.json"
+    doc = json.loads(res.read_text("utf-8"))
+    for dotted in mod.OPENLOOP_VB_ONLY_KEY_PATHS:
+        head, _, last = dotted.rpartition(".")
+        node = doc
+        for part in head.split("."):
+            node = node[part]
+        node.pop(last)
+    res.write_text(json.dumps(doc), "utf-8")
+    for name in mod.OPENLOOP_VB_ONLY_FILES:
+        (folder / "LV" / name).unlink()
+
+
+def test_gs_check_open_loop_v0_has_no_flow_items(mod, tmp_path, capsys):
+    """z4372 (user decision 2026-11-14, rules original 5.3 "V0라 유량 항목 해당 없음"): a V0
+    open-loop row needs no args.flow_law / v5_hydraulics.controller_options / flow_limit.summary /
+    flow_series.npz; a VB row still does."""
+    assert set(mod.OPENLOOP_VB_ONLY_KEY_PATHS) <= set(mod.OPENLOOP_KEY_PATHS)
+    assert set(mod.OPENLOOP_VB_ONLY_FILES) <= set(mod.OPENLOOP_FILES)
+    v0 = _openloop_folder(tmp_path / "v0", mod, {"v5_setting": "V0"})
+    _drop_openloop_vb_items(mod, v0)
+    assert _gs(mod, str(v0)) == 0
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["ok"] and c["result_missing"] == [] and c["files_missing"] == []
+    assert c["n_key_paths"] == len(mod.OPENLOOP_KEY_PATHS) - len(mod.OPENLOOP_VB_ONLY_KEY_PATHS)
+    assert c["vb_items_not_required"]["files"] == ["flow_series.npz"]
+    vb = _openloop_folder(tmp_path / "vb", mod, {"v5_setting": "VB"})
+    _drop_openloop_vb_items(mod, vb)
+    assert _gs(mod, str(vb)) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["result_missing"] == list(mod.OPENLOOP_VB_ONLY_KEY_PATHS)
+    assert c["files_missing"] == ["flow_series.npz"] and "vb_items_not_required" not in c
+
+
 def test_gs_check_rev12_git_at_start(mod, tmp_path, capsys):
     """Rev12 R12-3: gs-check needs --git-at-start and compares every row's code_at_launch.git.head (S-12 fails the
     row); dirty is recorded only (R12-2)."""
