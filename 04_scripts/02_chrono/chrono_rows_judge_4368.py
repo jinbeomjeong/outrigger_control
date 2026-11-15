@@ -22,6 +22,12 @@ rules rev6 R6-A D-26 .. D-39):
 * D-31 / D-39 (N-6 / N-14) :func:`c1_block` - R40-1 / R40-2 on the D-29 t_lift with the S8-A2 judged force; hold =
   ``not_judgeable`` (resolution with the L1 pair is a person's step: values only, ``stop``).
 * D-32 (N-7) :func:`moving_pressure` - moving = |u_applied| > 1e-9 m/s on the 10 Hz control rows, p = F_cyl / A_p.
+  Rules rev24 CD-3 (:func:`l2b_moving_pressure`, L2b rows): closed event-row test :func:`event_row_kind` (floor event
+  by ``settings.event``, fast settlement by the spec speed > v_max with a non-null ``event_t_s``), W
+  (:func:`event_window`), outside-W extension <= 180 bar, inside-W any state <= 350 bar, outside-W saturation
+  (:func:`event_pressure_items`) and the difference to the original judge's ``pressure_end_s``
+  (``--runner-judge-dir``, :func:`runner_event_window`). Rules rev24 CD-5: a run without READY (:func:`ready_items`,
+  G6 gates of :func:`g6_grade`).
 * D-33 (N-8) :func:`lift_samples` - pad normal <= 0 (Q-14).
 * D-34 / D-35 (N-9 / N-10) :func:`p38_block` - P3-8 window end min(first LOC, first soil mode); 377 (first LOC + 1 s)
   -> ``P3-8_demoted``, else U-S9-G6c ``P3-8_preloc_loss`` (G6-3 true, no FAULT), both in ``demoted_items``.
@@ -29,7 +35,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev23).
+* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev24).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -55,7 +61,8 @@ CLI (Chrono-dev, no simulation)::
 
     python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py judge --git-at-start <commit> --out out.json \
         [--batch <07_results/S9/batch_...>] [--row <row dir>] [--results-root <07_results>] \
-        [--rules-dir <verif_matrix>] [--params <rexome33.yaml>] [--assume C-n=value ...]
+        [--rules-dir <verif_matrix>] [--params <rexome33.yaml>] [--assume C-n=value ...] \
+        [--runner-judge-dir <runner_judge>]
     python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py disclose [--out f.json]
     python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-dir <dir>]
 
@@ -122,14 +129,17 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
     # rev23 R23-2 (seal commit S11 f40935a on S10 570a9c1)
     "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    # rev24 R24-3 (seal commit S12 b75d874 on S11 f40935a)
+    "v5_resume_4368_rules_rev24.md": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev23 of
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev24 of
 2026-11-15); both the file and its ``.sha256`` must match (original 8.2 S-1)."""
-RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev23 (seal list; "
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev24 (seal list; "
                      "rev13 / rev14 by tools/verif/seal_check.py, rev15 R15-7, rev18 R18-1 2, "
-                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2, rev22 R22-2, rev23 R23-2): "
+                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2, rev22 R22-2, rev23 R23-2, rev24 R24-3): "
                      "rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3, rev9 .. rev12 items, "
-                     "rev15 R15-3 (V0 L2b D-29), rev21 R21-1 (L2b D-29 = t_lift,sus)")
+                     "rev15 R15-3 (V0 L2b D-29), rev21 R21-1 (L2b D-29 = t_lift,sus), "
+                     "rev24 CD-3 (L2b item 4 event rows and W), CD-5 (run without READY)")
 """Output ``rules`` text (a description; the seal list above is what is checked)."""
 
 # --- disclosure (requirement 3) ---------------------------------------------------------------------------------
@@ -162,6 +172,30 @@ RUT_CLEARANCE_MIN_M = 0.025
 MOVING_PRESSURE_MAX_BAR, RELIEF_BAR = 180.0, 210.0
 MOVING_EPS_M_S = 1e-9
 """Rev3 Q-13: moving = applied command != 0 with the 7.6 allowance."""
+# --- rules rev24 CD-3: event rows of the L2b item 4 ---------------------------------------------------------------
+V_MAX_M_S = 20.924e-3
+"""Rules rev24 CD-3: v_max of the fast-settlement test (20.924 mm/s)."""
+FLOOR_EVENTS = ("settle_RR_30", "drop_RR_30", "drop_RR_30_probe")
+"""Rules rev24 CD-3: ``settings.event`` values of a floor-event row."""
+EVENT_KIND_FLOOR, EVENT_KIND_FAST = "floor", "fast"
+EVENT_WINDOW_CAP_S = 5.0
+EVENT_READY_DELAY_S = 5.0
+"""Rules rev24 CD-3: W ends at t_event + 5 s at the latest; a floor event without ``event_t_s`` starts at the first
+READY + 5 s."""
+TRANSIENT_PRESSURE_MAX_BAR = 350.0
+WINDOW_END_DIFF_MAX_S = 0.1
+"""Rules rev24 CD-3: |W end - runner ``pressure_end_s``| > 0.1 s (or a verdict changed by it) stops the bundle."""
+RR_LEG_INDEX = 3
+"""Index of RR in :data:`LEGS` (FL, FR, RL, RR)."""
+WINDOW_UNDECIDED = "사건 창 결정 불가"
+READY_MISSING = "READY 없음"
+NOT_APPLICABLE = "not_applicable"
+"""Rules rev24 CD-5: a G6 gate that does not apply (``해당 없음``), left out of the grade."""
+CD3_RULE = ("rules rev24 CD-3: event row = settings.event in settle_RR_30 / drop_RR_30 / drop_RR_30_probe (floor) "
+            "or result.json event.spec kind settle with leg, depth_m, a non-null event_t_s and depth_m / ramp_s > "
+            "v_max 20.924 mm/s (fast); outside W extension samples (u_applied > 1e-9 m/s) head F_cyl / A_p <= 180 "
+            "bar, inside W any state <= 350 bar, saturation = outside-W extension samples >= 210 bar; 10 Hz "
+            "record.npz rows")
 CONTROL_PERIOD_S = 0.1
 LOC_EVENT, SOIL_MODE_EVENT = "crawler_liftoff_confirmed", "soil_mode_start"
 LOC_REVOKE_EVENTS = ("FIX_LOC_REVOKE", "INFO_LOC_REVOKED")
@@ -647,6 +681,222 @@ def moving_pressure(rec: dict[str, np.ndarray] | None, head_area_m2: list[float]
     return out
 
 
+# =============================================================================================== rev24 CD-3 event rows
+def event_row_kind(res: dict[str, Any]) -> dict[str, Any]:
+    """Rules rev24 CD-3 closed test of an L2b row: ``kind`` floor, fast or None (an event-free row).
+
+    A non-null ``event_t_s`` is one of the fast-settlement conditions, never enough on its own; a settlement no
+    faster than v_max (``E_G4_`` rows) is an event-free row.
+    """
+    settings_event = (res.get("settings") or {}).get("event")
+    out: dict[str, Any] = {"kind": None, "settings_event": settings_event, "rule": CD3_RULE}
+    if settings_event in FLOOR_EVENTS:
+        return {**out, "kind": EVENT_KIND_FLOOR}
+    event = res.get("event")
+    spec = event.get("spec") if isinstance(event, dict) else None
+    if not isinstance(spec, dict) or spec.get("kind") != "settle":
+        return out
+    leg, depth, ramp = spec.get("leg"), spec.get("depth_m"), spec.get("ramp_s")
+    if leg not in LEGS or depth is None or res.get("event_t_s") is None:
+        return {**out, "note": "settle spec without leg / depth_m / non-null event_t_s: not a fast settlement"}
+    speed = math.inf if not ramp or float(ramp) <= 0.0 else float(depth) / float(ramp)
+    out.update(settle_leg=leg, depth_m=float(depth), ramp_s=None if ramp is None else float(ramp),
+               speed_mm_s=None if math.isinf(speed) else speed * 1e3, v_max_mm_s=V_MAX_M_S * 1e3)
+    if speed > V_MAX_M_S:
+        out["kind"] = EVENT_KIND_FAST
+    return out
+
+
+def _three_point_period_s(level: Any) -> float | None:
+    """CD-3 T_3 of the auger level (``s6_control.THREE_POINT_ROCKING_PERIOD_S``, top 0.82 s)."""
+    _coupled_imports()
+    from outrigger_sim.verify.s6_control import THREE_POINT_ROCKING_PERIOD_S  # noqa: PLC0415
+
+    value = THREE_POINT_ROCKING_PERIOD_S.get(str(level))
+    return None if value is None else float(value)
+
+
+def _rr_last_recontact_rel_s(pads: dict[str, np.ndarray], t_rel: np.ndarray, t_event: float
+                             ) -> tuple[float | None, bool]:
+    """(time of the 1 ms sample after the last RR pad normal <= 0 sample at or after ``t_event``, RR lifted);
+    ``t_event`` when RR never lifts, None when RR is lifted at the record end."""
+    after = t_rel >= t_event - CMP_EPS
+    lifted = np.asarray(pads["N"], float)[after, RR_LEG_INDEX] <= 0.0
+    if not lifted.any():
+        return t_event, False
+    last = int(np.flatnonzero(lifted)[-1])
+    times = t_rel[after]
+    return (float(times[last + 1]) if last + 1 < times.size else None), True
+
+
+def _floor_window_end(row: dict[str, Any], t_event: float, t3: float, window: dict[str, Any]) -> float | None:
+    pads = row["pads"]
+    if "N" not in pads:
+        window["undecided"] = "pads.npz N missing"
+        return None
+    t_rel = np.asarray(pads["t"], float) - row["t0"]
+    recontact, lifted = _rr_last_recontact_rel_s(pads, t_rel, t_event)
+    window.update(rr_last_recontact_rel_s=recontact, rr_lifted=lifted)
+    cap = t_event + EVENT_WINDOW_CAP_S
+    return cap if recontact is None else min(recontact + t3, cap)
+
+
+def _fast_window_end(row: dict[str, Any], kind: dict[str, Any], t_event: float, t3: float,
+                     window: dict[str, Any]) -> float:
+    """U-S8-32 split of the original judge (``s8_control.settle_lift_split``, pad ``airborne`` and ball centre of
+    the 1 ms record); without that record the window ends at t_event + 5 s (U-S8-43)."""
+    pads = row["pads"]
+    if "airborne" not in pads or "ball_centre_world" not in pads:
+        window["notes"].append("no_airborne_record")
+        return t_event + EVENT_WINDOW_CAP_S
+    _coupled_imports()
+    from outrigger_sim.verify.s8_control import settle_lift_split  # noqa: PLC0415
+
+    split = settle_lift_split(np.asarray(pads["t"], float) - row["t0"], pads["airborne"],
+                              np.asarray(pads["ball_centre_world"], float)[:, :, 2], t_event, kind["settle_leg"],
+                              kind["depth_m"], kind["ramp_s"] or 0.0, t3_s=t3, cap_s=EVENT_WINDOW_CAP_S)
+    window.update(primary_event_leg=split["primary"],
+                  event_legs_last_recontact_rel_s={leg: v["last_recontact_rel_s"]
+                                                   for leg, v in split["event"].items()})
+    return t_event + float(split["window_end_rel_s"])
+
+
+def event_window(row: dict[str, Any], kind: dict[str, Any]) -> dict[str, Any]:
+    """CD-3 W = [t_event, W end] of an event row, times relative to ``settings.start_t_s`` (``*_rel_s``) and on
+    the engine clock (``*_abs_s``); ``undecided`` names why W cannot be set (item not judgeable)."""
+    res = row["result"]
+    window: dict[str, Any] = {"kind": kind["kind"], "notes": []}
+    t_event = res.get("event_t_s")
+    window["t_event_source"] = "result.json event_t_s"
+    if t_event is None and kind["kind"] == EVENT_KIND_FLOOR:
+        t_ready = first_phase(row["phases"], "ready")
+        t_event = None if t_ready is None else t_ready - row["t0"] + EVENT_READY_DELAY_S
+        window["t_event_source"] = "first READY + 5 s (floor event without event_t_s)"
+    if t_event is None:
+        return {**window, "undecided": "no event_t_s (and no first READY for a floor event)"}
+    t_event = float(t_event)
+    level = (res.get("settings") or {}).get("level")
+    t3 = _three_point_period_s(level)
+    if t3 is None:
+        return {**window, "undecided": f"no T_3 for level {level!r}"}
+    window.update(t_event_rel_s=t_event, three_point_rocking_period_s=t3, level=level)
+    if kind["kind"] == EVENT_KIND_FLOOR:
+        end = _floor_window_end(row, t_event, t3, window)
+    else:
+        end = _fast_window_end(row, kind, t_event, t3, window)
+    if end is None:
+        return window
+    if end >= t_event + EVENT_WINDOW_CAP_S - CMP_EPS:
+        window["notes"].append("transient_window_capped")
+    window.update(end_rel_s=end, start_abs_s=t_event + row["t0"], end_abs_s=end + row["t0"])
+    return window
+
+
+def _peak(p: np.ndarray, mask: np.ndarray, t: np.ndarray, u: np.ndarray | None = None) -> dict[str, Any] | None:
+    """Largest ``p`` over ``mask`` with its leg and time, and the motion state when ``u`` is given (None when the
+    mask is empty)."""
+    if not mask.any():
+        return None
+    masked = np.where(mask, p, -np.inf)
+    k, leg = np.unravel_index(int(np.argmax(masked)), masked.shape)
+    peak = {"max_bar": float(masked[k, leg]), "leg": LEGS[leg], "t_s": float(t[k])}
+    if u is not None:
+        peak["state"] = _motion_state(float(u[k, leg]))
+    return peak
+
+
+def _motion_state(u: float) -> str:
+    if u > MOVING_EPS_M_S:
+        return "extending"
+    return "retracting" if u < -MOVING_EPS_M_S else "locked"
+
+
+def event_pressure_items(rec: dict[str, np.ndarray], head_area_m2: list[float], start_abs: float,
+                         end_abs: float) -> dict[str, Any]:
+    """CD-3 event-row items on the 10 Hz ``record.npz`` rows: outside W the extension samples <= 180 bar
+    (retraction maximum recorded), inside W every state <= 350 bar, saturation = outside-W extension samples
+    >= 210 bar (count 0)."""
+    t = np.asarray(rec["t"], float)
+    u = np.asarray(rec["u_applied"], float)
+    p = np.asarray(rec["F_cyl"], float) / np.asarray(head_area_m2, float)[None, :] / 1e5
+    in_window = ((t >= start_abs - CMP_EPS) & (t <= end_abs + CMP_EPS))[:, None]
+    extending_out = (u > MOVING_EPS_M_S) & ~in_window
+    retracting_out = (u < -MOVING_EPS_M_S) & ~in_window
+    inside = np.broadcast_to(in_window, p.shape)
+    outside = _peak(p, extending_out, t)
+    peak_in = _peak(p, inside, t, u)
+    saturated = int((extending_out & (p >= RELIEF_BAR - CMP_EPS)).sum())
+    return {"outside_extension": {**(outside or {"max_bar": None}),
+                                  "within": outside is None or le(outside["max_bar"], MOVING_PRESSURE_MAX_BAR),
+                                  "samples": int(extending_out.sum())},
+            "outside_retraction_record": _peak(p, retracting_out, t),
+            "inside": {**(peak_in or {"max_bar": None}),
+                       "within": peak_in is None or le(peak_in["max_bar"], TRANSIENT_PRESSURE_MAX_BAR),
+                       "samples": int(in_window.sum())},
+            "saturated_samples": saturated, "saturation_within": saturated == 0}
+
+
+def runner_event_window(runner_dir: Path | None, crit: Any, case: str, inner: str) -> dict[str, Any]:
+    """The window end the original judge recorded for the row (``verify_S8C`` ``metrics[]`` entry whose ``case`` is
+    the row's inner folder name, ``event_window.pressure_end_s``, relative to ``settings.start_t_s``)."""
+    if runner_dir is None:
+        return {"status": "no --runner-judge-dir"}
+    path = runner_dir / f"{str(crit).replace('-', '')}_{case}.verify_S8C.json"
+    if not path.is_file():
+        return {"status": "runner judge file missing", "file": path.name}
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    entries = [m for m in doc.get("metrics") or [] if isinstance(m, dict) and m.get("case") == inner]
+    if len(entries) != 1:
+        return {"status": f"{len(entries)} metrics entries of {inner}", "file": path.name}
+    window = entries[0].get("event_window")
+    if not isinstance(window, dict) or window.get("pressure_end_s") is None:
+        return {"status": "no event_window.pressure_end_s", "file": path.name}
+    return {"status": "found", "file": path.name, "sha256": sha256_file(path),
+            "pressure_end_rel_s": float(window["pressure_end_s"]), "start_rel_s": window.get("start_s")}
+
+
+def _window_difference(items: dict[str, Any], rec: dict[str, np.ndarray], head_area_m2: list[float],
+                       window: dict[str, Any], runner: dict[str, Any], t0: float) -> dict[str, Any]:
+    """CD-3: our W end against the original judge's ``pressure_end_s``; the items are re-run on the runner's end to
+    see whether the difference changes a verdict. ``stop`` = difference > 0.1 s or a changed verdict."""
+    if runner.get("status") != "found":
+        return {**runner, "difference_s": None, "stop": False}
+    diff = abs(window["end_rel_s"] - runner["pressure_end_rel_s"])
+    other = event_pressure_items(rec, head_area_m2, window["start_abs_s"], runner["pressure_end_rel_s"] + t0)
+    keys = (("outside_extension", "within"), ("inside", "within"), ("saturation_within",))
+    changed = [".".join(k) for k in keys if _dig(items, k) != _dig(other, k)]
+    stop = diff > WINDOW_END_DIFF_MAX_S + CMP_EPS or bool(changed)
+    return {**runner, "difference_s": diff, "verdicts_changed": changed, "stop": stop}
+
+
+def _dig(doc: dict[str, Any], keys: tuple[str, ...]) -> Any:
+    for key in keys:
+        doc = doc[key]
+    return doc
+
+
+def l2b_moving_pressure(row: dict[str, Any], params: dict[str, Any], runner_dir: Path | None,
+                        crit: Any, case: str) -> dict[str, Any]:
+    """Item 4 of an L2b row (rules rev24 CD-3): the D-32 rule on an event-free row, the W rule on an event row."""
+    kind = event_row_kind(row["result"])
+    if kind["kind"] is None:
+        return {**moving_pressure(row["record"], params["head_area_m2"], event_row=False), "event_test_CD_3": kind}
+    out: dict[str, Any] = {"event_test_CD_3": kind, "row_kind": kind["kind"], "rule": CD3_RULE,
+                           "basis": "record.npz 10 Hz rows (C-5)"}
+    rec = row["record"]
+    if rec is None or "u_applied" not in rec or "F_cyl" not in rec or "t" not in rec:
+        return {**out, "status": "not_judgeable", "reason": "원 입력 결측: record.npz t / u_applied / F_cyl"}
+    window = event_window(row, kind)
+    out["window"] = window
+    if "end_abs_s" not in window:
+        return {**out, "status": "not_judgeable", "reason": f"{WINDOW_UNDECIDED}: {window.get('undecided')}"}
+    items = event_pressure_items(rec, params["head_area_m2"], window["start_abs_s"], window["end_abs_s"])
+    runner = runner_event_window(runner_dir, crit, case, row["name"])
+    return {**out, **items, "status": "judged",
+            "runner_window_CD_3": _window_difference(items, rec, params["head_area_m2"], window, runner,
+                                                     row["t0"])}
+
+
 def d8_lift_time(t: np.ndarray, cn: np.ndarray, phases_abs: list[tuple[float, str]]) -> float | None:
     """N-4 / N-5 (rev3 R3-G5, rev6 5 t_lift): first sample whose phase is not idle / check / touch with the crawler
     normal <= 0."""
@@ -731,14 +981,19 @@ def sgs_class(row: dict[str, Any], s: dict[str, np.ndarray], dep: dict[str, Any]
 
 
 def ready_items(phases: list[tuple[float, str]], t0: float, p3b: dict[str, Any]) -> dict[str, Any]:
-    """N-2 / N-3: P3-6 (record; FLAG when outside the row limit), G6 gate READY <= 120 s + 1e-9."""
+    """N-2 / N-3: P3-6 (record; FLAG when outside the row limit), G6 gate READY <= 120 s + 1e-9. Rules rev24 CD-5:
+    a run without a first READY gives P3-6 and READY <= 120 s ``fail`` (READY reached items), with the reason."""
     t_ready = first_phase(phases, "ready")
     rel = None if t_ready is None else t_ready - t0
     p36 = p3b.get("P3-6_ready") or {}
     lim = p36.get("limit_s")
-    return {"t_ready_rel_s": rel, "P3-6_limit_s": lim,
-            "P3-6": None if rel is None or lim is None else ("pass" if le(rel, float(lim)) else "flag"),
-            "READY_le_120s": bool(rel is not None and le(rel, READY_GATE_S))}
+    out = {"t_ready_rel_s": rel, "P3-6_limit_s": lim,
+           "P3-6": None if rel is None or lim is None else ("pass" if le(rel, float(lim)) else "flag"),
+           "READY_le_120s": bool(rel is not None and le(rel, READY_GATE_S))}
+    if rel is None:
+        out.update({"P3-6": "fail", "ready_reached": False,
+                    "reason": f"{READY_MISSING} (rules rev24 CD-5: READY reached items P3-6 / READY <= 120 s fail)"})
+    return out
 
 
 FINE_DT_S = 1e-3
@@ -832,8 +1087,8 @@ def judge_scm(row: dict[str, Any], rid: str | None, params: dict[str, Any], asm:
     lift_level = lift_samples(t, s["scm_pad_normal_N"], first_phase(phases, "level"), f_cyl=f,
                               rod_weight_N=params["rod_weight_N"], rule=asm["C-9"])
     sgs_rows = [x.strip() for x in asm["C-8"].split(",") if x.strip()]
-    sgs = sgs_class(row, s, dep, f_min, mp, params, asm["C-9"]) if rid in sgs_rows else {"applies": None,
-                                                                                        "reason": "C-8: not a SGS row"}
+    sgs = sgs_class(row, s, dep, f_min, mp, params, asm["C-9"]) if rid in sgs_rows else {
+        "applies": None, "reason": "rev6 R6-B8: not a 427.9 soil-guard safe-stop row (rows S-01 .. S-04)"}
     items = {"departure_t_D": dep, "P3-3_after_t_D": p33, "P3-1_recontact_D-36": rc, "loc_timeline": tl,
              "P3-2_D-37_D-38": p32, "P3-8_D-34_D-35": p38, "ready_D-27_D-28": ready, "moving_pressure_D-32": mp,
              "D8_t_lift_s_D-30": t_lift, "lift_after_level_D-33": lift_level, "SGS_427_9_D-26": sgs}
@@ -869,19 +1124,38 @@ def g6_grade(p3b, t, cn, f_after, rc, p32, p38, ready, sgs, fault, f_min) -> dic
         "G6-7_preloc": p38["verdict"],
         "READY_le_120s": "pass" if ready["READY_le_120s"] else "fail",
     }
+    reasons = _g6_ready_missing(gates, rc) if t_r is None else {}
     if sgs.get("class") == "stroke_limited_stop":
         grade = "stroke_limited_stop"
         note = "427.9 safe stop: allowed stop (original allowed_stop), READY-dependent gates not used"
     elif sgs.get("class") == "fail":
         grade, note = "fail", "soil-guard stop without the 427.9 conditions"
     else:
-        vals = list(gates.values())
+        vals = [v for v in gates.values() if v != NOT_APPLICABLE]
         # original 274: not judgeable > fail > pass (FLAG is not a fail, rev3 R3-G7)
         grade = ("not_judgeable" if "not_judgeable" in vals else "fail" if "fail" in vals
                  else "flag" if "flag" in vals else "pass")
         note = ""
-    return {"gates": gates, "F_min_after_departure_N": f_after, "grade": grade, "grade_note": note,
-            "P3-6_record": ready["P3-6"]}
+    out = {"gates": gates, "F_min_after_departure_N": f_after, "grade": grade, "grade_note": note,
+           "P3-6_record": ready["P3-6"]}
+    if reasons:
+        out["gate_reasons_CD_5"] = reasons
+    return out
+
+
+def _g6_ready_missing(gates: dict[str, str], rc: dict[str, Any]) -> dict[str, str]:
+    """Rules rev24 CD-5 on the G6 gates of a run without a first READY: G6-1 keeps only the recontact condition (the
+    READY .. READY + 10 s crawler condition is not applicable), G6-4 (attitude) and G6-5 (rut / stroke) are not
+    applicable, G6-6 (FAULT 0 and READY reached) and READY <= 120 s fail. Changes ``gates``; returns the reasons."""
+    gates["G6-1_crawler"] = ("pass" if rc["pass"] and not rc["flags"] else "flag" if rc["pass"] else "fail")
+    gates["G6-4_att"] = NOT_APPLICABLE
+    gates["G6-5_rut_stroke"] = NOT_APPLICABLE
+    gates["G6-6_fault_ready"] = "fail"
+    gates["READY_le_120s"] = "fail"
+    return {"G6-1_crawler": f"{READY_MISSING}: READY .. READY + 10 s crawler condition 해당 없음, recontact judged",
+            "G6-4_att": f"해당 없음({READY_MISSING})", "G6-5_rut_stroke": f"해당 없음({READY_MISSING})",
+            "G6-6_fault_ready": f"{READY_MISSING}: READY reached item = fail",
+            "READY_le_120s": f"{READY_MISSING}: READY reached item = fail"}
 
 
 def bracket_10hz_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
@@ -1002,12 +1276,17 @@ def sustained_lift_10hz(row: dict[str, Any]) -> dict[str, Any]:
     return {"t_lift_sus_10Hz_s": t_sus, "status": "기록 결측" if t_sus is None else "recorded"}
 
 
-def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]) -> dict[str, Any]:
+def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str], runner_dir: Path | None = None,
+                crit: Any = None, case: str | None = None) -> dict[str, Any]:
+    """L2b / L1-R row items; item 4 by rules rev24 CD-3 (``runner_dir``: the original judge's window record)."""
     pads = row["pads"]
     t = np.asarray(pads["t"], float)
     f_min = params["F_min_N"]
-    event_row = row["result"].get("event_t_s") is not None
-    mp = moving_pressure(row["record"], params["head_area_m2"], event_row=event_row)
+    if row["engine"] == "L2b":
+        mp = l2b_moving_pressure(row, params, runner_dir, crit, case or row["name"])
+    else:
+        mp = moving_pressure(row["record"], params["head_area_m2"],
+                             event_row=row["result"].get("event_t_s") is not None)
     has_bracket_input = row["record"] is not None and "F_crawler" in row["record"]
     if row["engine"] == "L2b" and "crawler_normal_N" in pads:
         t_lift, sus_record = sustained_lift_1ms(row)
@@ -1849,7 +2128,8 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         if row["engine"] == "SCM":
             body = judge_scm(row, rid, params, asm)
         else:
-            body = judge_rigid(row, params, asm)
+            runner_dir = Path(args.runner_judge_dir) if getattr(args, "runner_judge_dir", None) else None
+            body = judge_rigid(row, params, asm, runner_dir, crit, (meta or {}).get("case", row["name"]))
         body["items"]["J-P3_R8-2"] = j_p3_block(row, meta, manifest)
         body["items"]["J11_R8-3"] = j11_block(row, meta, manifest)
         oc = origin_check(row)
@@ -1932,6 +2212,9 @@ def build_parser() -> argparse.ArgumentParser:
     j.add_argument("--manifest", default=str(MANIFEST_DEFAULT),
                    help="chrono_rows_manifest.json (LS rows for the J11 stop code, rev8 R8-3)")
     j.add_argument("--assume", action="append", help="C-n=value (see ASSUMPTIONS)")
+    j.add_argument("--runner-judge-dir",
+                   help="folder of <C1|C2|C5>_<case>.verify_S8C.json: the original judge's event window end "
+                        "(rules rev24 CD-3 difference check of the event rows; read only)")
     d = sub.add_parser("disclose")
     d.add_argument("--out")
     s = sub.add_parser("seals")

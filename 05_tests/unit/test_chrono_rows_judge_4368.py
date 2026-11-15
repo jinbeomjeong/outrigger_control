@@ -604,16 +604,17 @@ REV16_18_SHA256 = {
     "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
     "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
     "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "v5_resume_4368_rules_rev24.md": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
 }
-"""Rev18 R18-1 2 .. rev23 R23-2: rev16 .. rev23 in the Chrono judge seal list (sha of each
+"""Rev18 R18-1 2 .. rev24 R24-3: rev16 .. rev24 in the Chrono judge seal list (sha of each
 ``.sha256``)."""
 
 
 def test_rev16_to_rev18_in_the_seal_list(mod):
-    """Rev23 R23-2: the path 1 Chrono judge checks rev16 .. rev23; rev13 / rev14 stay out."""
+    """Rev24 R24-3: the path 1 Chrono judge checks rev16 .. rev24; rev13 / rev14 stay out."""
     for name, sha in REV16_18_SHA256.items():
         assert mod.RULES_SEALS[name] == sha
-    assert "rev15 .. rev23" in mod.RULES_DESCRIPTION and "R23-2" in mod.RULES_DESCRIPTION
+    assert "rev15 .. rev24" in mod.RULES_DESCRIPTION and "R24-3" in mod.RULES_DESCRIPTION
 
 
 def test_seals_command_checks_rev16_to_rev18(mod, capsys):
@@ -820,3 +821,184 @@ def test_gs_batch_082117_execution_path(mod, tmp_path):
     assert [s["criteria_id"] for s in doc["skipped_rows"]] == ["C-6"]
     l1r = next(r for r in doc["rows"] if r["engine"] == "L1R")
     assert l1r["row_dir"]["source"] == "case_log" and l1r["dir"].endswith("_082118\\D1C1_top_flat_crx3")
+
+
+# ------------------------------------------------------------- rules rev24 CD-3 / CD-5
+HEAD_AREA_M2 = [0.01] * 4
+"""Head area of the synthetic CD-3 rows: p [bar] = F_cyl [N] / 1000."""
+T0_S = 2.0
+EVENT_T_S = 10.0
+"""``event_t_s`` (relative to ``settings.start_t_s`` = :data:`T0_S`)."""
+
+
+def floor_result(**over) -> dict:
+    return {"settings": {"event": "drop_RR_30", "level": "top", "start_t_s": T0_S},
+            "event_t_s": EVENT_T_S, **over}
+
+
+def fast_result(*, depth: float = 0.05, ramp: float | None = 0.5, event_t_s=EVENT_T_S) -> dict:
+    return {"settings": {"event": None, "level": "top", "start_t_s": T0_S}, "event_t_s": event_t_s,
+            "event": {"spec": {"kind": "settle", "leg": "FL", "depth_m": depth, "ramp_s": ramp}}}
+
+
+def cd3_row(result: dict, *, rr_lift: tuple[float, float] | None = None, airborne: bool = True,
+            record_p_bar: float = 100.0) -> dict:
+    """A synthetic L2b row: 1 ms pads (RR pad normal <= 0 inside ``rr_lift``, relative times),
+    10 Hz record rows extending at ``record_p_bar`` on every leg."""
+    t = np.round(np.arange(0.0, 30.0, 0.001), 6) + T0_S
+    n = np.full((t.size, 4), 1e4)
+    if rr_lift is not None:
+        lifted = (t - T0_S >= rr_lift[0]) & (t - T0_S < rr_lift[1])
+        n[lifted, 3] = 0.0
+    pads = {"t": t, "N": n}
+    if airborne:
+        pads.update(airborne=np.zeros((t.size, 4), bool), ball_centre_world=np.zeros((t.size, 4, 3)))
+    tr = np.round(np.arange(0.0, 30.0, 0.1), 6) + T0_S
+    rec = {"t": tr, "u_applied": np.full((tr.size, 4), 1e-3),
+           "F_cyl": np.full((tr.size, 4), record_p_bar * 1e3)}
+    return {"result": result, "pads": pads, "record": rec, "t0": T0_S, "name": "inner_case",
+            "phases": [(T0_S + 1.0, "level"), (T0_S + 5.0, "ready")], "engine": "L2b"}
+
+
+@pytest.mark.parametrize(("result", "kind"), [
+    (floor_result(), "floor"),
+    (fast_result(), "fast"),                                   # 100 mm/s > v_max
+    (fast_result(ramp=0.0), "fast"),                           # zero ramp: infinitely fast
+    (fast_result(ramp=None), "fast"),
+    (fast_result(depth=0.0115, ramp=2.0), None),               # E_G4: 5.75 mm/s, event-free
+    (fast_result(event_t_s=None), None),                       # null event_t_s: not fast
+    ({"settings": {"event": "settle_RR"}, "event_t_s": EVENT_T_S}, None),  # event_t_s alone
+])
+def test_cd3_event_row_test(mod, result, kind):
+    """Rules rev24 CD-3: the closed test; a non-null event_t_s never makes an event row alone."""
+    assert mod.event_row_kind(result)["kind"] == kind
+
+
+@pytest.mark.parametrize(("rr_lift", "end_rel"), [
+    ((10.5, 11.0), 11.0 + 0.82),        # last re-contact 11.0 s + T_3
+    (None, EVENT_T_S + 0.82),           # no lift: t_event + T_3
+    ((10.5, 40.0), EVENT_T_S + 5.0),    # lifted to the record end: t_event + 5 s
+    ((10.5, 14.9), EVENT_T_S + 5.0),    # re-contact + T_3 past the cap
+])
+def test_cd3_floor_window(mod, rr_lift, end_rel):
+    row = cd3_row(floor_result(), rr_lift=rr_lift)
+    window = mod.event_window(row, mod.event_row_kind(row["result"]))
+    assert window["end_rel_s"] == pytest.approx(end_rel)
+    assert window["start_abs_s"] == pytest.approx(EVENT_T_S + T0_S)
+
+
+def test_cd3_floor_window_without_event_t_s(mod):
+    """A floor event without event_t_s starts at the first READY + 5 s."""
+    row = cd3_row(floor_result(event_t_s=None))
+    window = mod.event_window(row, mod.event_row_kind(row["result"]))
+    assert window["t_event_rel_s"] == pytest.approx(5.0 + 5.0)
+    assert window["t_event_source"].startswith("first READY")
+
+
+def test_cd3_fast_window(mod):
+    """Fast settlement: the U-S8-32 split (no event leg lifted: t_event + T_3); without the
+    airborne record W ends at t_event + 5 s."""
+    row = cd3_row(fast_result())
+    window = mod.event_window(row, mod.event_row_kind(row["result"]))
+    assert window["end_rel_s"] == pytest.approx(EVENT_T_S + 0.82)
+    row = cd3_row(fast_result(), airborne=False)
+    window = mod.event_window(row, mod.event_row_kind(row["result"]))
+    assert window["end_rel_s"] == pytest.approx(EVENT_T_S + 5.0)
+    assert "no_airborne_record" in window["notes"]
+
+
+def test_cd3_items_inside_and_outside(mod):
+    """Outside W: extension samples only (<= 180 bar), retraction recorded; inside W: any state
+    <= 350 bar; saturation counts outside-W extension samples >= 210 bar."""
+    row = cd3_row(floor_result())
+    rec = row["record"]
+    t = rec["t"]
+    start, end = EVENT_T_S + T0_S, EVENT_T_S + T0_S + 1.0
+    inside = (t >= start - 1e-9) & (t <= end + 1e-9)
+    rec["F_cyl"][inside, 2] = 300e3                     # 300 bar inside W: within 350
+    rec["u_applied"][inside, 2] = 0.0                   # locked
+    late = t > 25.0 + T0_S
+    rec["u_applied"][late, 0] = -1e-3                   # retraction outside W at 250 bar: report
+    rec["F_cyl"][late, 0] = 250e3
+    items = mod.event_pressure_items(rec, HEAD_AREA_M2, start, end)
+    assert items["outside_extension"]["within"] is True
+    assert items["outside_extension"]["max_bar"] == pytest.approx(100.0)
+    assert items["outside_retraction_record"]["max_bar"] == pytest.approx(250.0)
+    assert items["inside"]["max_bar"] == pytest.approx(300.0) and items["inside"]["state"] == "locked"
+    assert items["inside"]["within"] is True and items["saturated_samples"] == 0
+    rec["F_cyl"][inside, 2] = 360e3
+    rec["F_cyl"][~inside & ~late, 1] = 215e3            # extension outside W >= 210 bar
+    items = mod.event_pressure_items(rec, HEAD_AREA_M2, start, end)
+    assert items["inside"]["within"] is False and items["outside_extension"]["within"] is False
+    assert items["saturated_samples"] > 0 and items["saturation_within"] is False
+
+
+def write_runner_window(tmp_path: Path, end_rel: float, *, case: str = "E_X") -> Path:
+    folder = tmp_path / "runner_judge"
+    folder.mkdir(exist_ok=True)
+    (folder / f"C5_{case}.verify_S8C.json").write_text(json.dumps({"metrics": [
+        {"case": "inner_case", "event_window": {"start_s": EVENT_T_S, "pressure_end_s": end_rel}}]}),
+        encoding="utf-8")
+    return folder
+
+
+@pytest.mark.parametrize(("runner_end", "stop"), [
+    (EVENT_T_S + 0.82, False),          # same end
+    (EVENT_T_S + 0.82 + 0.15, True),    # > 0.1 s
+])
+def test_cd3_window_end_difference(mod, tmp_path, runner_end, stop):
+    row = cd3_row(floor_result())
+    params = {"head_area_m2": HEAD_AREA_M2}
+    block = mod.l2b_moving_pressure(row, params, write_runner_window(tmp_path, runner_end), "C-5", "E_X")
+    check = block["runner_window_CD_3"]
+    assert block["status"] == "judged" and check["status"] == "found" and check["stop"] is stop
+
+
+def test_cd3_window_difference_that_changes_a_verdict(mod, tmp_path):
+    """A difference <= 0.1 s that moves a 200 bar extension sample out of W: the outside-W
+    verdict changes, so the bundle stops."""
+    row = cd3_row(floor_result())
+    t = row["record"]["t"]
+    k = int(np.flatnonzero(np.isclose(t, EVENT_T_S + 0.8 + T0_S))[0])
+    row["record"]["F_cyl"][k, 1] = 200e3
+    block = mod.l2b_moving_pressure(row, {"head_area_m2": HEAD_AREA_M2},
+                                    write_runner_window(tmp_path, EVENT_T_S + 0.75), "C-5", "E_X")
+    check = block["runner_window_CD_3"]
+    assert check["difference_s"] < 0.1 and check["verdicts_changed"] and check["stop"] is True
+
+
+def test_cd3_window_undecided_and_runner_missing(mod, tmp_path):
+    row = cd3_row(floor_result())
+    del row["pads"]["N"]
+    block = mod.l2b_moving_pressure(row, {"head_area_m2": HEAD_AREA_M2}, None, "C-5", "E_X")
+    assert block["status"] == "not_judgeable" and block["reason"].startswith("사건 창 결정 불가")
+    row = cd3_row(floor_result())
+    block = mod.l2b_moving_pressure(row, {"head_area_m2": HEAD_AREA_M2}, tmp_path, "C-5", "E_X")
+    assert block["runner_window_CD_3"]["status"] == "runner judge file missing"
+    assert block["runner_window_CD_3"]["stop"] is False
+
+
+def test_cd3_event_free_row_keeps_the_d32_rule(mod):
+    row = cd3_row(fast_result(depth=0.0115, ramp=2.0))
+    block = mod.l2b_moving_pressure(row, {"head_area_m2": HEAD_AREA_M2}, None, "C-5", "E_G4_X")
+    assert block["status"] == "judged" and "row_kind" not in block
+    assert block["max_moving_bar"] == pytest.approx(100.0) and block["event_test_CD_3"]["kind"] is None
+
+
+def test_cd5_ready_items_without_ready(mod):
+    out = mod.ready_items([(1.0, "level")], 0.0, {"P3-6_ready": {"limit_s": 60.0}})
+    assert out["P3-6"] == "fail" and out["READY_le_120s"] is False
+    assert out["reason"].startswith("READY 없음")
+
+
+def test_cd5_g6_gates_without_ready(mod):
+    """No READY: G6-1 on the recontact condition, G6-4 / G6-5 not applicable (out of the grade),
+    G6-6 and READY <= 120 s fail."""
+    ready = {"t_ready_rel_s": None, "P3-6": "fail", "READY_le_120s": False}
+    rc = {"pass": True, "flags": []}
+    out = mod.g6_grade({"checks": {"P3-4_verdict": "pass"}}, np.zeros(3), np.zeros(3), 50e3, rc,
+                       {"within": True}, {"verdict": "pass"}, ready, {"class": None}, False, F_MIN)
+    gates = out["gates"]
+    assert gates["G6-1_crawler"] == "pass" and gates["G6-4_att"] == "not_applicable"
+    assert gates["G6-5_rut_stroke"] == "not_applicable" and gates["G6-6_fault_ready"] == "fail"
+    assert out["grade"] == "fail" and "G6-4_att" in out["gate_reasons_CD_5"]
