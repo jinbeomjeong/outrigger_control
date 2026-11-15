@@ -11,9 +11,11 @@ rules rev6 R6-A D-26 .. D-39):
 
 * D-26 (N-1) :func:`sgs_class` - spec 427.9 soil-guard safe stop -> ``stroke_limited_stop`` (allowed stop), S-01..04.
 * D-27 / D-28 (N-2 / N-3) :func:`ready_items` - P3-6 FLAG (record), READY <= 120 s + 1e-9 (G6 gate).
-* D-29 (N-4) :func:`d8_lift_time` - D8 t_lift = first 1 ms sample, phase not idle / check / touch, crawler normal <= 0.
-  An L2b row without ``crawler_normal_N`` (V0) uses the R6-B1 10 Hz bracket (rev15 R15-3,
-  :func:`v0_l2b_bracket_lift`), listed in ``l2b_bracket_rows_R15_3``.
+* D-29 (N-4) rev21 R21-1 :func:`sustained_lift_1ms` - D8 t_lift = t_lift,sus: first 1 ms sample, phase not
+  idle / check / touch, from which ``crawler_normal_N`` <= 0.01 W (376.7 kN) holds to the end (basis ``1ms_sus``;
+  the rev6 first-sample value is a record). An L2b row without ``crawler_normal_N`` (V0) uses the R6-B1 10 Hz
+  bracket (rev15 R15-3, :func:`v0_l2b_bracket_lift`), listed in ``l2b_bracket_rows_R15_3``, with the 10 Hz
+  t_lift,sus counterpart recorded (``D8_t_lift_sus_R21_1``).
 * D-30 (N-5) SCM t_lift (same function on ``step_series.npz``); L1-R 10 Hz bracket t_b / t_a (R6-B1).
 * Engine kind (z4372): :func:`recorded_engine` (batch.json ``r4368.engine`` / ``engine``,
   result.json ``settings.s8.engine``); a ``pads.npz`` row without a record is an input error.
@@ -27,7 +29,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev20).
+* rules seals :func:`seal_check` (original, rev1 .. rev12, rev15 .. rev21).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -83,7 +85,8 @@ ROOT = HERE.parents[1]
 TOOL_VERSION = ("chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows "
                 "skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked; "
                 "python-expert 2026-11-14 z4372: engine from the batch.json / result.json records, "
-                "V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3)")
+                "V0 L2b D-29 by the 10 Hz bracket, rev15 R15-3; python-expert 2026-11-15: L2b D-29 = "
+                "t_lift,sus, rev21 R21-1)")
 
 # --- rules and seals (rev5 R5-A1 requirement 4) -----------------------------------------------------------------
 RULES_DIR_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix"
@@ -113,14 +116,16 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev19.md": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
     # rev20 R20-4 2 (seal commit S8 4d8a95d on S7 38897f0)
     "v5_resume_4368_rules_rev20.md": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    # rev21 R21-3 2 (seal commit S9 da12622 on S8 4d8a95d)
+    "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
 }
-"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev20 of
+"""Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13, rev15 .. rev21 of
 2026-11-15); both the file and its ``.sha256`` must match (original 8.2 S-1)."""
-RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev20 (seal list; "
+RULES_DESCRIPTION = ("v5_resume_4368_rules.md + rev1 .. rev12 and rev15 .. rev21 (seal list; "
                      "rev13 / rev14 by tools/verif/seal_check.py, rev15 R15-7, rev18 R18-1 2, "
-                     "rev19 R19-8 2, rev20 R20-4 2): "
+                     "rev19 R19-8 2, rev20 R20-4 2, rev21 R21-3 2): "
                      "rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3, rev9 .. rev12 items, "
-                     "rev15 R15-3 (V0 L2b D-29)")
+                     "rev15 R15-3 (V0 L2b D-29), rev21 R21-1 (L2b D-29 = t_lift,sus)")
 """Output ``rules`` text (a description; the seal list above is what is checked)."""
 
 # --- disclosure (requirement 3) ---------------------------------------------------------------------------------
@@ -941,6 +946,58 @@ def v0_l2b_bracket_lift(row: dict[str, Any]) -> tuple[float | None, dict[str, An
     return t_lift, {**basis, "rule": R15_3_RULE, "inputs": list(R15_3_SOURCES)}
 
 
+SUSTAINED_LIFT_WEIGHT_N = 376.7e3
+"""Rev21 R21-1: W of the t_lift,sus threshold (v5 criteria revision 6 5, 376.7 kN)."""
+SUSTAINED_LIFT_FRACTION = 0.01
+T_LIFT_SUS_BASIS = "1ms_sus"
+"""Rev21 R21-1: ``D8_t_lift_basis`` of an L2b row with the 1 ms ``crawler_normal_N``."""
+R21_1_RULE = ("rev21 R21-1: D-29 t_lift = t_lift,sus = first 1 ms sample, phase not idle / check "
+              "/ touch, from which crawler_normal_N <= 0.01 W (W 376.7 kN) holds to the record end")
+
+
+def sustained_lift_time(t: np.ndarray, cn: np.ndarray, phases_abs: list[tuple[float, str]],
+                        threshold_N: float) -> float | None:
+    """Rev21 R21-1 t_lift,sus: the first sample whose phase is not idle / check / touch and from
+    which ``cn <= threshold_N`` holds at every sample to the end (None when there is none)."""
+    below = np.asarray(cn, float) <= threshold_N
+    # below_to_end[k]: every sample k .. end is below the threshold
+    below_to_end = np.flip(np.logical_and.accumulate(np.flip(below)))
+    ok = below_to_end & ~np.isin(phase_at(t, phases_abs), PRE_LIFT_PHASES)
+    k = np.flatnonzero(ok)
+    return float(t[k[0]]) if k.size else None
+
+
+def sustained_lift_1ms(row: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
+    """Rev21 R21-1 (t_lift, basis) of an L2b row with the 1 ms ``pads.npz`` ``crawler_normal_N``;
+    the old rev6 D-29 value (first sample <= 0) is kept as a record."""
+    pads = row["pads"]
+    t = np.asarray(pads["t"], float)
+    cn = np.asarray(pads["crawler_normal_N"], float)
+    threshold = SUSTAINED_LIFT_FRACTION * SUSTAINED_LIFT_WEIGHT_N
+    t_sus = sustained_lift_time(t, cn, row["phases"], threshold)
+    record = {"basis": T_LIFT_SUS_BASIS, "rule": R21_1_RULE, "threshold_N": threshold,
+              "t_lift_sus_s": t_sus, "t_lift_first_le0_rev6_record_s": d8_lift_time(t, cn,
+                                                                                   row["phases"])}
+    if t_sus is None:
+        record["status"] = "not_judgeable"
+        record["reason"] = "crawler normal does not stay <= 0.01 W to the record end (R21-1)"
+    return t_sus, record
+
+
+def sustained_lift_10hz(row: dict[str, Any]) -> dict[str, Any]:
+    """Rev21 R21-1 record for a V0 L2b row: the 10 Hz t_lift,sus counterpart (first ``record.npz``
+    row from which the floor-normal crawler force <= 0.01 W holds to the end)."""
+    rec = row["record"] or {}
+    nrm = (row["result"].get("floor_plane") or {}).get("normal_world")
+    if "F_crawler" not in rec or "t" not in rec or nrm is None:
+        return {"t_lift_sus_10Hz_s": None, "status": "기록 결측"}
+    nrm = np.asarray(nrm, float)
+    fcn = np.asarray(rec["F_crawler"], float) @ (nrm / np.linalg.norm(nrm))
+    t_sus = sustained_lift_time(np.asarray(rec["t"], float), fcn, row["phases"],
+                                SUSTAINED_LIFT_FRACTION * SUSTAINED_LIFT_WEIGHT_N)
+    return {"t_lift_sus_10Hz_s": t_sus, "status": "기록 결측" if t_sus is None else "recorded"}
+
+
 def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]) -> dict[str, Any]:
     pads = row["pads"]
     t = np.asarray(pads["t"], float)
@@ -949,17 +1006,25 @@ def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]
     mp = moving_pressure(row["record"], params["head_area_m2"], event_row=event_row)
     has_bracket_input = row["record"] is not None and "F_crawler" in row["record"]
     if row["engine"] == "L2b" and "crawler_normal_N" in pads:
-        t_lift = d8_lift_time(t, np.asarray(pads["crawler_normal_N"], float), row["phases"])
-        lift_basis = "pads.npz crawler_normal_N 1 ms"
+        t_lift, sus_record = sustained_lift_1ms(row)
+        lift_basis = T_LIFT_SUS_BASIS
     elif row["engine"] == "L2b":
         t_lift, lift_basis = v0_l2b_bracket_lift(row)
+        sus_record = {**sustained_lift_10hz(row), "rule": "rev21 R21-1 V0 L2b record"}
+        sus_record["differs_from_t_b"] = (sus_record["t_lift_sus_10Hz_s"] is not None
+                                          and t_lift is not None
+                                          and abs(sus_record["t_lift_sus_10Hz_s"] - t_lift)
+                                          > CMP_EPS)
     elif asm["C-1"] == "bracket_10hz" and has_bracket_input:
         t_lift, lift_basis = bracket_10hz_lift(row)
+        sus_record = None
     else:
         t_lift, lift_basis = None, "C-1 override not_judgeable: L1-R has no 1 ms crawler normal"
+        sus_record = None
     c1 = c1_block(row, t_lift, f_min, asm["C-2"])
     lift = lift_samples(t, pads["N"], t_lift)
-    items = {"D8_t_lift_s_D-29_D-30": t_lift, "D8_t_lift_basis": lift_basis, "C1_R40": c1,
+    items = {"D8_t_lift_s_D-29_D-30": t_lift, "D8_t_lift_basis": lift_basis,
+             "D8_t_lift_sus_R21_1": sus_record, "C1_R40": c1,
              "D8_no_pad_lift_Q-14": lift if t_lift is not None else {"status": "not_judgeable",
                                                                        "reason": str(lift_basis)},
              "moving_pressure_D-32": mp}

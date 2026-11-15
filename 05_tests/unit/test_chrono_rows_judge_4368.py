@@ -445,10 +445,76 @@ def test_v0_l2b_row_d29_by_10hz_bracket_r15_3(mod, tmp_path):
     assert items["C1_R40"]["t_lift_s"] == pytest.approx(15.1)
     q14 = items["D8_no_pad_lift_Q-14"]
     assert q14["t_from_s"] == pytest.approx(15.1) and q14["lifted"] is False
+    sus = items["D8_t_lift_sus_R21_1"]  # rev21 R21-1 record of the V0 row
+    assert sus["t_lift_sus_10Hz_s"] == pytest.approx(15.1) and sus["differs_from_t_b"] is False
     ok = rows["E_G4_Fs4"]["items"]
-    assert ok["D8_t_lift_basis"] == "pads.npz crawler_normal_N 1 ms"
+    assert ok["D8_t_lift_basis"] == "1ms_sus"  # rev21 R21-1
     assert ok["D8_t_lift_s_D-29_D-30"] == pytest.approx(13.001)
+    assert ok["D8_t_lift_sus_R21_1"]["t_lift_first_le0_rev6_record_s"] == pytest.approx(13.001)
     assert doc["l2b_bracket_rows_R15_3"] == ["E_G4_Fs4_V0"]
+
+
+# ------------------------------------------------------------------------------------ rev21 R21-1 t_lift,sus
+SUS_PHASES = [(0.0, "idle"), (1.0, "check"), (2.0, "touch"), (3.0, "level")]
+SUS_THRESHOLD = 0.01 * 376.7e3
+
+
+def _sus(mod, cn):
+    t = np.round(np.arange(0.0, 10.0, 0.001), 6)
+    return mod.sustained_lift_time(t, np.asarray(cn(t), float), SUS_PHASES, SUS_THRESHOLD)
+
+
+def test_t_lift_sus_held_to_the_end(mod):
+    assert _sus(mod, lambda t: np.where(t < 5.0, 1e5, 3000.0)) == pytest.approx(5.0)
+    assert mod.SUSTAINED_LIFT_FRACTION * mod.SUSTAINED_LIFT_WEIGHT_N == pytest.approx(3767.0)
+
+
+def test_t_lift_sus_after_a_recontact(mod):
+    """A dip to 0 at 4 s that recontacts above 0.01 W at 6 s does not count; the last stretch from
+    7 s does (the rev6 first-sample rule would give 4 s)."""
+    def cn(t):
+        return np.where(t < 4.0, 1e5, np.where(t < 6.0, 0.0, np.where(t < 7.0, 2e4, 0.0)))
+    assert _sus(mod, cn) == pytest.approx(7.0)
+
+
+def test_t_lift_sus_none_when_not_held(mod):
+    assert _sus(mod, lambda t: np.where(t < 9.999, 0.0, 1e4)) is None
+    assert _sus(mod, lambda t: np.full(t.size, 1e5)) is None
+
+
+def test_t_lift_sus_skips_pre_lift_phases(mod):
+    """Below 0.01 W from 1.5 s (in CHECK / TOUCH) to the end: t_lift,sus = first LEVEL sample."""
+    assert _sus(mod, lambda t: np.where(t < 1.5, 1e5, 0.0)) == pytest.approx(3.0)
+
+
+def test_v0_counterpart_differs_from_t_b(mod, tmp_path):
+    """R21-1 V0 record: z normal 2 kN (> 0, < 0.01 W) from 13.05 s, 0 from 15.05 s: t_b = 15.1 s,
+    the 10 Hz t_lift,sus counterpart = 13.1 s, flagged as differing."""
+    d = _write_pads_row(tmp_path / "E_G4_Fs4_V0", engine="L2b_NSC", crawler_1ms=False,
+                        floor_normal=[0.0, 0.0, 1.0])
+    rec = dict(np.load(d / "record" / "record.npz"))
+    tr = rec["t"]
+    rec["F_crawler"][:, 0] = 0.0
+    rec["F_crawler"][:, 2] = np.where(tr < 13.05, 5e4, np.where(tr < 15.05, 2000.0, 0.0))
+    np.savez(d / "record" / "record.npz", **rec)
+    code, doc = _judge(mod, tmp_path, [d])
+    items = doc["rows"][0]["items"]
+    assert items["D8_t_lift_s_D-29_D-30"] == pytest.approx(15.1)
+    sus = items["D8_t_lift_sus_R21_1"]
+    assert sus["t_lift_sus_10Hz_s"] == pytest.approx(13.1) and sus["differs_from_t_b"] is True
+
+
+def test_l2b_row_without_t_lift_sus_is_not_judgeable(mod, tmp_path):
+    d = _write_pads_row(tmp_path / "E_G4_Fs4", engine="L2b_NSC", crawler_1ms=True,
+                        floor_normal=[0.0, 0.0, 1.0])
+    pads = dict(np.load(d / "pads.npz"))
+    pads["crawler_normal_N"][-5:] = 1e4  # recontact at the record end
+    np.savez(d / "pads.npz", **pads)
+    _, doc = _judge(mod, tmp_path, [d])
+    items = doc["rows"][0]["items"]
+    assert items["D8_t_lift_s_D-29_D-30"] is None
+    assert items["D8_t_lift_sus_R21_1"]["status"] == "not_judgeable"
+    assert items["C1_R40"]["status"] == "not_judgeable"
 
 
 def test_v0_l2b_bracket_uses_the_floor_normal(mod, tmp_path):
@@ -535,6 +601,7 @@ REV16_18_SHA256 = {
     "v5_resume_4368_rules_rev18.md": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
     "v5_resume_4368_rules_rev19.md": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
     "v5_resume_4368_rules_rev20.md": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
 }
 """Rev18 R18-1 2 / rev19 R19-8 2 / rev20 R20-4 2: rev16 .. rev20 in the Chrono judge seal list
 (sha of each ``.sha256``)."""
@@ -544,7 +611,7 @@ def test_rev16_to_rev18_in_the_seal_list(mod):
     """Rev20 R20-4 2: the path 1 Chrono judge checks rev16 .. rev20; rev13 / rev14 stay out."""
     for name, sha in REV16_18_SHA256.items():
         assert mod.RULES_SEALS[name] == sha
-    assert "rev15 .. rev20" in mod.RULES_DESCRIPTION and "R20-4" in mod.RULES_DESCRIPTION
+    assert "rev15 .. rev21" in mod.RULES_DESCRIPTION and "R21-3" in mod.RULES_DESCRIPTION
 
 
 def test_seals_command_checks_rev16_to_rev18(mod, capsys):

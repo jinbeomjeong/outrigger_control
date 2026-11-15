@@ -71,11 +71,12 @@ import chrono_rows_judge_4368 as rows_judge  # noqa: E402 - needs the path above
 
 InputError = rows_judge.InputError
 
-TOOL_VERSION = "chrono_bundle_grade_4368 v2 (python-expert 2026-11-15, rules rev18 R18-2, rev19)"
+TOOL_VERSION = ("chrono_bundle_grade_4368 v3 (python-expert 2026-11-15, rules rev18 R18-2, rev19, "
+                "rev21)")
 RULES_TEXT = ("rules rev18 R18-2 (bundle grades of path 1), R18-2a, R18-4, rewritten by rev19 "
-              "R19-1 .. R19-6; original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; d1_selection_rules.md "
-              "7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; rev6 R6-A / R6-B4 / "
-              "R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py")
+              "R19-1 .. R19-6, rev21 R21-1 / R21-2; original 5.2 / 7.4 / 7.5 / 8.1 / 8.2 / 9.3; "
+              "d1_selection_rules.md 7 / 11 + rev1; v5 criteria revision 6 4.6, 12 / 12a / 12b; "
+              "rev6 R6-A / R6-B4 / R6-B5 / R6-B8 / R6-B9; seal list of chrono_rows_judge_4368.py")
 
 # --- bundles ---------------------------------------------------------------------------------
 EXPECTED_ROWS = {"C-1": 10, "C-2": 6, "C-3": 2, "C-5": 35, "C-6C7": 3, "C-8": 2}
@@ -174,8 +175,9 @@ checked instead)."""
 RUNNER_T_LIFT_ITEMS = tuple(name for name, _ in D8_ITEMS) + RUNNER_T_LIFT_KEPT
 T_LIFT_MAX_DIFF_S = 0.1
 """Rev19 R19-5: one control period; a difference > 0.1 s + 1e-9 s stops the bundle."""
-T_LIFT_1MS_BASIS = "pads.npz crawler_normal_N 1 ms"
-"""``chrono_rows_judge`` ``D8_t_lift_basis`` of the 1 ms D-29 t_lift (else the R15-3 bracket)."""
+T_LIFT_1MS_BASIS = rows_judge.T_LIFT_SUS_BASIS
+"""``chrono_rows_judge`` ``D8_t_lift_basis`` of the 1 ms D-29 t_lift,sus (rev21 R21-1; else the
+R15-3 bracket dict)."""
 S9_HANDLED_CRITERIA = ("C-8a",)
 S9_HANDLED_TEXT = ("S-9 handled by rules rev18 R18-5 (user decision 60 (A)): L-5 known limit, "
                    "cause to 436.9; C-8 is a record bundle, no grade")
@@ -514,12 +516,13 @@ def apply_d8_overrides(items: list[dict[str, Any]], judged_items: dict[str, Any]
 
 def t_lift_difference(doc: dict[str, Any], row: RowInput, judged_items: dict[str, Any],
                       record: dict[str, np.ndarray] | None) -> dict[str, Any]:
-    """Rev19 R19-5: |runner t_lift - D-29 t_lift| on the 10 Hz grid.
+    """Rev19 R19-5 with rev21 R21-2: |runner t_lift - D-29 t_lift| on the 10 Hz grid.
 
     Runner t_lift = ``verify_S8C`` ``s8_metrics.<case>.liftoff_s`` (``_times`` ``liftoff``,
-    relative to ``settings.start_t_s``) + the row's ``t0_s``; a 1 ms D-29 t_lift is raised to the
-    first 10 Hz ``record.npz`` ``t`` at or after it, a 10 Hz bracket (R15-3) one is used as it
-    is. Not computable or > 0.1 s + 1e-9 s = a stop.
+    relative to ``settings.start_t_s``) + the row's ``t0_s`` (engine absolute time); the 1 ms
+    t_lift,sus (basis ``1ms_sus``) is raised to the first 10 Hz ``record.npz`` ``t`` >= it - 1e-9
+    s (picked from the array, no ``ceil``), a 10 Hz bracket (R15-3) t_b is used as it is. Not
+    computable (an unknown basis included) or > 0.1 s + 1e-9 s = a stop.
     """
     judged = row.judged or {}
     metrics = (doc.get("s8_metrics") or {}).get(row.case) or {}
@@ -527,8 +530,14 @@ def t_lift_difference(doc: dict[str, Any], row: RowInput, judged_items: dict[str
     t0 = judged.get("t0_s")
     d29 = judged_items.get("D8_t_lift_s_D-29_D-30")
     basis = judged_items.get("D8_t_lift_basis")
+    is_bracket = isinstance(basis, dict) and basis.get("basis") == "bracket_10Hz"
     out: dict[str, Any] = {"runner_liftoff_rel_s": runner_rel, "t0_s": t0, "t_lift_D29_s": d29,
-                           "basis": "1ms" if basis == T_LIFT_1MS_BASIS else "bracket_10Hz"}
+                           "basis": T_LIFT_1MS_BASIS if basis == T_LIFT_1MS_BASIS else (
+                               "bracket_10Hz" if is_bracket else str(basis)),
+                           "t_lift_sus_record_R21_1": judged_items.get("D8_t_lift_sus_R21_1")}
+    if basis != T_LIFT_1MS_BASIS and not is_bracket:
+        return {**out, "ok": False,
+                "stop": f"t_lift difference not computable: D-29 basis {basis!r} (rev21 R21-2)"}
     if runner_rel is None or t0 is None or d29 is None:
         return {**out, "ok": False, "stop": "t_lift difference not computable (rev19 R19-5)"}
     aligned = float(d29)
@@ -593,6 +602,8 @@ def rigid_row(row: RowInput, bundle: str, runner_dir: Path | None) -> RigidResul
         record = load_npz(folder / "record" / "record.npz")
         t_lift = judged_items.get("D8_t_lift_s_D-29_D-30")
         out.overrides += apply_d8_overrides(out.items, judged_items, pads, t_lift)
+        if judged_items.get("D8_t_lift_basis") == T_LIFT_1MS_BASIS and t_lift is None:
+            out.stops.append("no t_lift,sus: D8 / D-39 not judgeable (rev21 R21-1)")
         if out.t_lift_items:
             out.t_lift_check = t_lift_difference(doc, row, judged_items, record)
             if out.t_lift_check.get("stop"):

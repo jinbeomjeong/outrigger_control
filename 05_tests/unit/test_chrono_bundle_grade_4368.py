@@ -179,7 +179,7 @@ def rigid_items(*, moving_bar: float = 98.0, c1: str = "pass", j_p3: str = "pass
             "J-P3_R8-2": {"status": j_p3, "breach_reads": 0},
             "J11_R8-3": {"status": "no_fallback_leg"},
             "D8_t_lift_s_D-29_D-30": D29_T_LIFT_S,
-            "D8_t_lift_basis": "pads.npz crawler_normal_N 1 ms"}
+            "D8_t_lift_basis": "1ms_sus"}
 
 
 def p3b_ok(**checks: Any) -> dict[str, Any]:
@@ -898,3 +898,52 @@ def test_safe_stop_row_keeps_identity_and_tag_stops(mod, tmp_path):
     assert reasons["D1S_S-01"].startswith("S-12") and reasons["D1S_S-02"].startswith("S-2")
     assert code == 1 and doc["bundle_grade"]["grade"] is None
     assert doc["commit_identity_R11_4"]["D1S_S-01"] == "S-12"
+
+
+# ------------------------------------------------------------- rev21 R21-1 / R21-2
+@pytest.mark.parametrize(("t_sus", "aligned", "stops"), [
+    (23.1, 23.1, False),       # on a 10 Hz row: that row (t >= t_sus - 1e-9)
+    (23.1005, 23.2, False),    # just after: the next row, difference 0.1 s (allowed, 7.6)
+    (23.0, 23.0, False),       # one period early: 0.1 s
+    (23.2001, 23.3, True),     # raised to 23.3: 0.2 s > 0.1 s + 1e-9
+])
+def test_t_lift_sus_rounding_boundary(mod, tmp_path, t_sus, aligned, stops):
+    """R21-2: the 1 ms t_lift,sus is raised to the first record.npz t >= t_sus - 1e-9 (picked from
+    the array); runner t_lift = liftoff_s + settings.start_t_s = 23.1 s."""
+    b = c1_bundle(tmp_path)
+    b.judged[0]["items"]["D8_t_lift_s_D-29_D-30"] = t_sus
+    code, doc = run(mod, b, tmp_path, "C-1")
+    check = doc["rows"][0]["t_lift_check_R19_5"]
+    assert check["basis"] == "1ms_sus"
+    assert check["t_lift_D29_10Hz_s"] == pytest.approx(aligned)
+    assert bool(check.get("stop")) is stops and (code == 1) is stops
+
+
+def test_no_t_lift_sus_stops_the_bundle(mod, tmp_path):
+    """R21-1: an L2b row without t_lift,sus: D8 / D-39 not judgeable and the bundle stops."""
+    b = c1_bundle(tmp_path)
+    b.judged[0]["items"].update({"D8_t_lift_s_D-29_D-30": None,
+                                 "C1_R40": {"status": "not_judgeable", "reason": "no t_lift"}})
+    code, doc = run(mod, b, tmp_path, "C-1")
+    reasons = [s["reason"] for s in doc["stops"] if s["case"] == "D1C2_0"]
+    assert code == 1 and any("t_lift,sus" in r for r in reasons)
+    assert doc["rows"][0]["grade"] == "not_judgeable"
+
+
+def test_old_basis_string_is_not_computable(mod, tmp_path):
+    """R21-2: a judge output with the pre-rev21 basis is not a valid D-29 input (stop)."""
+    b = c1_bundle(tmp_path)
+    b.judged[0]["items"]["D8_t_lift_basis"] = "pads.npz crawler_normal_N 1 ms"
+    code, doc = run(mod, b, tmp_path, "C-1")
+    assert code == 1 and "basis" in doc["rows"][0]["t_lift_check_R19_5"]["stop"]
+
+
+def test_v0_sus_record_is_passed_through(mod, tmp_path):
+    b = c1_bundle(tmp_path)
+    b.judged[0]["items"].update({
+        "D8_t_lift_s_D-29_D-30": 23.1, "D8_t_lift_basis": {"basis": "bracket_10Hz"},
+        "D8_t_lift_sus_R21_1": {"t_lift_sus_10Hz_s": 22.9, "differs_from_t_b": True}})
+    _, doc = run(mod, b, tmp_path, "C-1")
+    check = doc["rows"][0]["t_lift_check_R19_5"]
+    assert check["t_lift_D29_10Hz_s"] == 23.1  # graded on t_b (R15-3)
+    assert check["t_lift_sus_record_R21_1"]["differs_from_t_b"] is True
