@@ -881,3 +881,20 @@ def test_after_branch_record(mod, tmp_path):
     after = next(i for i in event["record_items"] if i["item"] == "after_branch")
     assert after["F_cyl_min_N"][2] == 8000.0 and after["lifted_samples"][2] > 0
     assert event["grade"] == "pass"  # a record, not a gate
+
+
+# ------------------------------------------------------------- rev20 R20-2
+def test_safe_stop_row_keeps_identity_and_tag_stops(mod, tmp_path):
+    """R20-2: an allowed_stop row still takes the 4.2 / 6 / 7.2 keys: the S-12 commit check and
+    the S-2 tag stop of chrono_rows_judge stay stops and withhold the bundle grade."""
+    b = c2_bundle(tmp_path)
+    s01 = next(e for e in b.entries if e["case"] == "D1S_S-01")
+    s01["code_at_launch"]["git"]["head"] = "0" * 40
+    b.stops = [{"case": "D1S_S-02", "reason": "S-2 (rev8 R8-2): expect_controller.ok false"}]
+    code, doc = run(mod, b, tmp_path, "C-2")
+    grades = {r["case"]: r["grade"] for r in doc["rows"]}
+    assert grades["D1S_S-01"] == "allowed_stop" and grades["D1S_S-02"] == "allowed_stop"
+    reasons = {s["case"]: s["reason"] for s in doc["stops"]}
+    assert reasons["D1S_S-01"].startswith("S-12") and reasons["D1S_S-02"].startswith("S-2")
+    assert code == 1 and doc["bundle_grade"]["grade"] is None
+    assert doc["commit_identity_R11_4"]["D1S_S-01"] == "S-12"
