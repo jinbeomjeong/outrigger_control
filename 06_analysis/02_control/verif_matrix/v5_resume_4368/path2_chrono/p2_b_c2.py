@@ -50,6 +50,7 @@ def judge_row(row, case, kind, params):
     if kind == "P3_S":
         items, keys, notes = K.items_p3(row, params, R.READY_SLOPE_S, ready_judged=True, g6=False,
                                         allow_stop=True)
+        CD.set_p3_6(items, keys, row, judged=True)   # rev25 CD-4: 421.1 limit (a 427.9 row records it)
         CD.add_p3_7(items, keys, row, params, judged=True)
         CD.apply_ready_none(items, keys, row)
         CD.scm_grade_guard(items, keys)
@@ -69,6 +70,7 @@ def _psc(row, params):
 def _psc_base(row, params):
     """rev19 R19-2: record row. No E items (no event: not missing); P3 and D8 values recorded, failures reported."""
     items, keys, notes = K.items_p3(row, params, R.READY_SLOPE_S, ready_judged=True, g6=False, allow_stop=True)
+    CD.set_p3_6(items, keys, row, judged=False)   # rev25 CD-4: P3-6 recorded on the PS-c base row
     CD.add_p3_7(items, keys, row, params, judged=False)
     CD.apply_ready_none(items, keys, row)
     d8, d8k, _ = K.items_d8p(row, params, judged=False, hold=False)

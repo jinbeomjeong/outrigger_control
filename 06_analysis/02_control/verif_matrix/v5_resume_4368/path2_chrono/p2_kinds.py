@@ -367,7 +367,10 @@ def jp3_item(row):
     differ from the tag's ③ -> S-2. Tag ③ off -> na (a missing `extend_start_rule` is not counted).
     Tag ③ on: `controller_meta.two_pressure.settings.extend_start_rule` missing -> 판정 불가 (9.3),
     other than `tracked_bound` -> S-2. A tag ③-off row whose running rule is `tracked_bound` is the
-    same tag / controller difference and is also S-2 (rules 8.2 S-2; path 2 reading, README 6)."""
+    same tag / controller difference and is also S-2 (rules 8.2 S-2; path 2 reading, README 6).
+    rev25 CD-1 (decision 101): grade item on the ③-on rows of C-1..C-5; v5 rev9 3.2 table: rod reading
+    (`rod_reading_present`) and `extend_bound_check` both present -> breach sum 0 pass, >= 1 미달 (H-7 label,
+    no stop); any other combination on a Chrono row (never head-only) -> setting defect stop."""
     tg = C.row_tag(row)
     argv_on = "--extend-start-tracked" in row.argv
     v5h = row.result.get("v5_hydraulics")
@@ -401,7 +404,8 @@ def jp3_item(row):
             out.update(verdict="indeterminate",
                        stop="S-2 (rev8 R8-2 / rules 8.2: tag ③ off but extend_start_rule = tracked_bound)")
             return out
-        out.update(verdict="na", reason="tag ③ off (rev8 R8-2: not applicable; extend_start_rule key not required)")
+        out.update(verdict="na", value=JP3_NA_OFF,
+                   reason="tag ③ off (rev8 R8-2 / rev25 CD-1: 해당 없음(③ 끔), extend_start_rule key not required)")
         return out
     if rule is None:
         out.update(verdict="indeterminate", reason="controller_meta.two_pressure.settings.extend_start_rule missing"
@@ -412,6 +416,14 @@ def jp3_item(row):
                    stop=f"S-2 (rev8 R8-2: tag ③ on but extend_start_rule = {rule!r})")
         return out
     ebc = (row.result.get("hydraulics_record") or {}).get("extend_bound_check")
+    rod = rod_reading_present(row)
+    out["rod_reading"] = rod
+    out["head_only_declared"] = False   # v5 rev9 3.1: only harness runs can be head-only; Chrono rows never are
+    if not rod:
+        # v5 rev9 3.2 #4 (no reading, not declared head-only) / #5 (no reading, record present): setting defect
+        out.update(verdict="indeterminate",
+                   stop="setting defect (v5 rev9 3.2 #%d: no rod reading on a Chrono row)" % (5 if ebc else 4))
+        return out
     if not ebc:
         out.update(verdict="indeterminate", stop="setting defect (rev9 3.2 #2)")
         return out
@@ -431,8 +443,24 @@ def jp3_item(row):
     out["flags"] = flags
     out["verdict"] = "pass" if s == 0 else "fail"
     if s > 0:
-        out["stop"] = "H-7 (rev8 3.2)"
+        out["original_rule_label"] = "H-7 (rev8 3.2; rev25 CD-1: 미달, 등급 항목)"
     return out
+
+
+JP3_NA_OFF = "해당 없음(③ 끔)"
+
+
+def rod_reading_present(row) -> bool:
+    """v5 rev9 3.1 '로드 판독 있음': the rod pressure reading the controller received (`record/record.npz`
+    `meas.rod_pressure`) is finite at least once; a missing record or key counts as no reading."""
+    import numpy as np
+    rp = row.folder / "record" / "record.npz"
+    if not rp.exists():
+        return False
+    with np.load(rp) as rec:
+        if "meas.rod_pressure" not in rec.files:
+            return False
+        return bool(np.isfinite(np.asarray(rec["meas.rod_pressure"], float)).any())
 
 
 def j11_item(row, tp, ls=None):

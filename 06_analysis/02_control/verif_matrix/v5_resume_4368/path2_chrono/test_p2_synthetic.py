@@ -187,6 +187,14 @@ def _set_npz(path: Path, **arrays):
     np.savez(path, **z)
 
 
+def write_rod_record(folder: Path, sp: dict, rod_value=5e5):
+    """record/record.npz with a finite (or NaN) `meas.rod_pressure` (v5 rev9 3.1 rod reading)."""
+    t10 = np.round(np.arange(sp["t0"] + 0.1, sp["t_end"] + 1e-9, 0.1), 6)
+    (folder / "record").mkdir(exist_ok=True)
+    np.savez(folder / "record" / "record.npz", t=t10, u_applied=np.zeros((len(t10), 4)),
+             F_cyl=np.full((len(t10), 4), 50000.0), **{"meas.rod_pressure": np.full((len(t10), 4), rod_value)})
+
+
 def t_rev8_jp3(tmp, sp, d18):
     """436.8 rev8 R8-2: J-P3 scope by the tag (rules 4.1 is_extend_start_tag), request record checks."""
     d_v0 = write_scm(tmp / "jp3_v0", copy.deepcopy(sp))
@@ -749,9 +757,10 @@ def t_scm(tmp):
     res["events"].append({"t_s": 30.0, "name": "INFO_ROD_PRESSURE_FAULT_REASON:RL:D2b_rate"})
     res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:FR"})
     (d18 / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    write_rod_record(d18, sp18)   # rev25 CD-1 / v5 rev9 3.2: a rod reading reached the controller
     it18, k18, _ = K.items_c5(C.load_row(d18, "scm", SCM_VB_ARGV), PARAMS)
-    check("J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)", it18["J-P3"]["verdict"] == "fail"
-          and it18["J-P3"].get("stop") == "H-7 (rev8 3.2)", it18["J-P3"])
+    check("J-P3 breach sum 1 -> 미달 (rev25 CD-1: grade item, H-7 label, no stop)", it18["J-P3"]["verdict"] == "fail"
+          and "stop" not in it18["J-P3"] and it18["J-P3"]["original_rule_label"].startswith("H-7"), it18["J-P3"])
     check("J11 SCM row without step_series law_locked -> 판정 불가 + stop (436.8 rev9 R9-5)",
           it18["J11_window"]["verdict"] == "indeterminate"
           and it18["J11_window"].get("stop", "").startswith("R9-5"), it18["J11_window"])
@@ -1108,7 +1117,7 @@ def t_seal(tmp, rules_repo=None):
           rel15 in R.RAW_ONLY and any(r == rel15 and w.startswith("0162561c") for r, w, role in R.SEALED)
           and not any(r.endswith(("rules_rev13.md", "rules_rev14.md")) for r, _, _ in R.SEALED))
     # rev18 R18-1 (다): rev16..rev18 in the Chrono tool list, raw only, seal sha = .sha256 first token; rev18 wins
-    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949", "22": "a48a81f9", "23": "fa72e172", "24": "f475cf77"}
+    want16 = {"16": "b3899194", "17": "9400660e", "18": "3693a69c", "19": "7f87b8bb", "20": "615a8fbd", "21": "ecd70949", "22": "a48a81f9", "23": "fa72e172", "24": "f475cf77", "25": "c0b778fd"}
     for n, pre in want16.items():
         reln = f"06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev{n}.md"
         check(f"seal: rev{n} listed, raw only, {pre}, match, = .sha256 first token (R18-1)",
@@ -1120,9 +1129,9 @@ def t_seal(tmp, rules_repo=None):
         pn.write_bytes(keepn + b"x")
         check(f"seal: rev{n} edited -> S-1", not R.seal_check(repo)["ok"])
         pn.write_bytes(keepn)
-    rel24 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev24.md"
-    check("seal: only rev24 wins (latest sealed revision)",
-          [r for r, w, role in R.SEALED if "wins" in role] == [rel24])
+    rel25 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev25.md"
+    check("seal: only rev25 wins (latest sealed revision)",
+          [r for r, w, role in R.SEALED if "wins" in role] == [rel25])
     check("seal: rev15 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel15] == "match"
           and R.sidecar_sha(repo / rel15) == next(w for r, w, _ in R.SEALED if r == rel15))
@@ -1220,8 +1229,10 @@ def t_cli(tmp):
     write_scm(bdir / "rowB", sp)
     for name in ("rowA", "rowB"):   # rev24 CD-4: P3-7 reads record.npz and c2_soil (no S-1 window -> no LOC)
         write_p37_record(bdir / name, sp, [])
-    batch = {"cases": [{"case": "rowA", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3", "code_at_launch": CAL},
-                       {"case": "rowB", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3",
+    v0 = ["--expect-controller", "final_C4G2_LAS_K1"]   # rev25 CD-1: non-③ tag -> J-P3 해당 없음(③ 끔)
+    batch = {"cases": [{"case": "rowA", "argv": ["python", "run_S9.py", "level"] + v0, "criteria_id": "C-3",
+                        "code_at_launch": CAL},
+                       {"case": "rowB", "argv": ["python", "run_S9.py", "level"] + v0, "criteria_id": "C-3",
                         "code_at_launch": CAL},
                        {"case": "gs", "argv": ["run_S9.py"], "criteria_id": "C-3", "r4368": {"role": "gs"}}]}
     (bdir / "batch.json").write_text(json.dumps(batch), encoding="utf-8")
@@ -2047,7 +2058,7 @@ def write_judge_doc(s8c: Path, folder: Path, rows, liftoff_rel=20.0, event_windo
     if event_window is not None:
         metric["event_window"] = event_window
     doc = {"meta": {"batch": str(folder.parent), "judge_revision": "synthetic"},
-           "rows": [dict(r, case=folder.name) for r in rows], "metrics": [metric]}
+           "rows": [dict(r, case="*" if r.get("case") == "*" else folder.name) for r in rows], "metrics": [metric]}
     (d / CD.JUDGE_REL_PATH).write_text(json.dumps(doc), encoding="utf-8")
     CD._DOCS.clear()
 
@@ -2327,9 +2338,10 @@ def t_rev24(tmp):
     s5 = write_scm(tmp / "r24" / "c5scm", sp)
     write_p37_record(s5, sp, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))
     i5s, k5s, _, _ = B5.judge_row(C.load_row(s5, "scm", SCM_VB_ARGV), {"case": "c5scm"}, "stage3", PARAMS)
-    check("CD-1 / CD-4 C-5 SCM row: P3-1..P3-5, P3-7, P3-8, FAULT0 graded; P3-6 / P3-9 records; T4 / T5 해당 없음",
-          {"P3-1", "P3-2", "P3-3", "P3-4", "P3-5", "P3-7", "P3-8", "FAULT0"} <= set(k5s)
-          and not {"P3-6", "P3-9", "T4", "identity"} & set(k5s) and i5s["T4"]["value"] == CD.NA_NOT_TARGET, k5s)
+    check("CD-1 / CD-4 C-5 SCM row: P3-1..P3-8 (rev25: P3-6 graded, 421.1 limit), FAULT0 graded; P3-9 record; "
+          "T4 / T5 해당 없음", {"P3-1", "P3-2", "P3-3", "P3-4", "P3-5", "P3-6", "P3-7", "P3-8", "FAULT0"} <= set(k5s)
+          and not {"P3-9", "T4", "identity"} & set(k5s) and i5s["T4"]["value"] == CD.NA_NOT_TARGET
+          and i5s["P3-6"]["judged"] is True, k5s)
     ec = B5.engine_counts([{"engine": "l2b"}] * 24 + [{"engine": "scm"}] * 10)
     check("CD-1 C-5 engine counts L2b 24 / SCM 10 -> S-15", "S-15" in ec.get("stop", ""), ec)
     # ---- CD-7 reasons, CD-11 item list
@@ -2346,11 +2358,15 @@ def t_rev24(tmp):
                                                "verdict": "record"}]},
                          "J-P3": {"verdict": "na"}}},
               {"case": "b", "status": "통과", "judged_keys": ["D2x"], "items": {"D2x": {"verdict": "record"}}}]
+    for e in rows11[0]["items"]["CD-2"]["entries"]:
+        e["table_line"] = CD._table_line(e["item"], e["handling"])
     lst = CD.item_list("C-5", rows11)
-    ids = [x["common_id"] for x in lst["rows"][0]["items"]]
-    check("CD-11: CD-2 expanded (counted judge items only, method 재계산, CD-3 sub id W 밖), row without a graded "
-          "item -> stop", ids == [CD.ITEM_P4_OUT, "J-P3"] and lst["rows"][0]["items"][0]["method"] == "재계산"
-          and lst["rows"][0]["items"][0]["cd3_sub_id"] == "W 밖" and "b: 등급 항목 0" in lst.get("stop", ""), lst)
+    by11 = {x["common_id"]: x for x in lst["rows"][0]["items"]}
+    check("CD-11: CD-2 expanded (counted judge item = 등급 항목 'CD-2 표 5줄', record kind = 기록), J-P3 등급 항목 "
+          "'CD-1 ①' (해당 없음), row without a graded item -> stop",
+          by11[CD.ITEM_P4_OUT]["class"] == CD.CLASS_GRADED and by11[CD.ITEM_P4_OUT]["clause_id"] == "CD-2 표 5줄"
+          and by11[CD.ITEM_P4_OUT]["method"] == "재계산" and by11["S8-L5"]["class"] == CD.CLASS_RECORD
+          and by11["J-P3"]["clause_id"] == "CD-1 ①" and "b: 등급 항목 0" in lst.get("stop", ""), lst)
     def fin(bundle, engine):
         rows_f = [{"case": "a", "engine": engine, "status": "판정 불가", "judged_keys": ["X"],
                    "items": {"X": {"verdict": "indeterminate"}}}]
@@ -2412,6 +2428,186 @@ def t_rev24(tmp):
     CD.CONTEXT.clear()
 
 
+def _jp3_scm_row(tmp, name, sp, rod=True, ebc=True, argv=None):
+    """SCM row with the ③ settings (tracked_bound, request on) for the rev25 J-P3 tests."""
+    f = write_scm(tmp / "r25" / name, copy.deepcopy(sp))
+    res = json.loads((f / "result.json").read_text(encoding="utf-8"))
+    res["controller_meta"]["two_pressure"] = {"settings": {"extend_start_rule": "tracked_bound"}}
+    res["v5_hydraulics"]["hydraulic_options"]["extend_start_tracked"] = True
+    if ebc:
+        res["hydraulics_record"]["extend_bound_check"] = {"rule": "ext_moving", "breach_reads": [0, 0, 0, 0],
+                                                          "margin_used_reads": [0, 0, 0, 0]}
+    (f / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    if rod is not None:
+        write_rod_record(f, sp, 5e5 if rod else np.nan)
+    return C.load_row(f, "scm", argv or SCM_VB_ARGV)
+
+
+def t_rev25(tmp):
+    """rev25 R25-2 [경로 2] 1 (rev25 definitions) and 2 (rev24 defect fixes (가)-(나); (다) is the K-10 comparator)."""
+    import types
+    import p2_b_c3 as B3
+    import p2_cd as CD
+    ns = types.SimpleNamespace
+    s8c = tmp / "r25_s8c"
+    CD.CONTEXT.clear()
+    CD.CONTEXT.update(repo=REPO, s8c_dir=str(s8c))
+    # ---- (가) case `*` items counted as the row's items, CD-11 id suffix
+    f1 = _l2b_case(tmp, "S8st_a")
+    write_judge_doc(s8c, f1, [_jr(CD.ITEM_C1), _jr("6 relevel time"), _jr("I1 star", passed=False, case="*"),
+                              _jr("S8-L5 crawler label", passed=None, kind="record", case="*")])
+    b1 = CD.cd2_items(C.load_row(f1, "l2b", L2B_ARGV), PARAMS)
+    star = [e for e in b1["entries"] if e["case_star"]]
+    check("(가) case `*` judged item passed False counted -> CD-2 미달; ids carry ' [case *]', table line 12",
+          b1["verdict"] == "fail" and len(star) == 2 and star[0]["common_id"] == "I1 star [case *]"
+          and star[0]["table_line"] == 12, b1["entries"])
+    # ---- CD-2 C1 event cut (decision 98 2)
+    def l2b_ev(group, dip_rel, event_rel):
+        def fn(r):
+            r["event_t_s"] = event_rel
+        f = _edit_result(_l2b_case(tmp, group + "_src", dip=(1, dip_rel, dip_rel + 0.05, 5000.0)),
+                         tmp / "r25" / group / "case", lambda r: (fn(r), r["settings"].update(
+                             s8={"crawler_contact": "nsc_compliant", "crawler_check_passed": True})))
+        write_judge_doc(s8c, f, [_jr(CD.ITEM_C1), _jr("6 relevel time")])
+        return CD.cd2_items(C.load_row(f, "l2b", L2B_ARGV), PARAMS)
+    b_after = l2b_ev("S8ev_after", 30.0, 28.0)
+    b_before = l2b_ev("S8ev_before", 22.0, 28.0)
+    b_none = l2b_ev("S8ev_none", 30.0, None)
+    c1a = b_after["entries"][0]["recalc"]
+    check("CD-2 C1 event cut: dip after event_t_s (numeric, non-event row) excluded -> pass; dip before -> 미달; "
+          "event_t_s null -> no cut -> 미달", b_after["verdict"] == "pass" and abs(c1a["event_cut_s"] - 31.0) < 1e-9
+          and b_after["event"]["class"] == "none" and b_before["verdict"] == "fail" and b_none["verdict"] == "fail",
+          (c1a, b_before["verdict"], b_none["verdict"]))
+    # ---- (나) P3-7 loaded threshold 0.01 x mass_scale x W_ref
+    sp = scm_spec()
+    sp.update(crawler=[("ramp", 19.0, 19.5)], recontacts=[(20.0, 23.0, 4000.0)])
+
+    def p37_scaled(name, scale):
+        f = write_scm(tmp / "r25" / name, copy.deepcopy(sp))
+        write_p37_record(f, sp, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))
+        res = json.loads((f / "result.json").read_text(encoding="utf-8"))
+        if scale is not None:
+            res["args"]["mass_scale"] = scale
+        (f / "result.json").write_text(json.dumps(res), encoding="utf-8")
+        return CD.p3_7(C.load_row(f, "scm", SCM_VB_ARGV), PARAMS)
+    p1, p11, pn = p37_scaled("p37_s1", 1.0), p37_scaled("p37_s11", 1.1), p37_scaled("p37_snone", None)
+    check("(나) P3-7 threshold 0.01 x mass_scale x W_ref: crawler 4000 N at window ends is loaded at x1 (3765.8 N), "
+          "not at x1.1 (4142.4 N); absent mass_scale = 1",
+          abs(p1["loaded_threshold_N"] - 0.01 * W_REF) < 1e-6 and abs(p1["rise_min_loaded_N"] - 6000.0) < 1e-3
+          and abs(p11["loaded_threshold_N"] - 0.011 * W_REF) < 1e-6 and p11["rise_min_loaded_N"] is None
+          and p11["verdict"] == "pass" and pn["mass_scale"] == 1.0, (p1, p11))
+    # ---- CD-4 P3-6 limit (spec 421.1) and role
+    lim = lambda a: CD.p3_6_limit(ns(result={"args": a}))[0]   # noqa: E731
+    check("CD-4 P3-6 limit: slope 120; flat B rear J1 100; flat B G1 with RL+RR:J1 patch 100; flat B G1 with FL:J1 "
+          "patch 90; pad A J1 90; unreadable patch -> None",
+          lim({"floor_roll": 0.5}) == 120.0 and lim({"pad_variant": "dwg_rear250", "soil": "J1"}) == 100.0
+          and lim({"pad_variant": "dwg_rear250", "soil": "G1", "soil_patch": "RL+RR:J1"}) == 100.0
+          and lim({"pad_variant": "dwg_rear250", "soil": "G1", "soil_patch": "FL:J1"}) == 90.0
+          and lim({"pad_variant": "cad330", "soil": "J1"}) == 90.0 and lim({"soil_patch": "nonsense"}) is None)
+    sp5 = scm_spec()
+    sp5["phases"] = [(8.1, "check"), (12.0, "touch"), (20.0, "level"), (30.0, "done")]
+    r5 = scm_row(tmp / "r25", sp5, "noready")
+    it5, k5, _ = K.items_p3(r5, PARAMS, R.READY_FLAT_S, ready_judged=False, g6=False, allow_stop=True)
+    CD.set_p3_6(it5, k5, r5, judged=True)
+    CD.apply_ready_none(it5, k5, r5)
+    it6, k6, _ = K.items_p3(r5, PARAMS, R.READY_FLAT_S, ready_judged=False, g6=False, allow_stop=True)
+    CD.set_p3_6(it6, k6, r5, judged=False)
+    CD.apply_ready_none(it6, k6, r5)
+    check("CD-5 P3-6 row: judged (C-5 SCM) without READY -> 미달 and graded; recorded -> 해당 없음(READY 없음), not "
+          "graded; limit 120 s (slope row)", it5["P3-6"]["verdict"] == "fail" and "P3-6" in k5
+          and it5["P3-6"]["limit_s"] == 120.0 and it6["P3-6"]["value_cd5"] == CD.NA_NO_READY and "P3-6" not in k6)
+    # ---- C-3 G6 table
+    g = copy.deepcopy(scm_spec())
+    g["floor"] = (0.0, 0.0)
+    rg = scm_row(tmp / "r25", g, "c3g6")
+    write_p37_record(rg.folder, g, [], meta=(None, None))
+    rg = C.load_row(rg.folder, "scm", SCM_V0_ARGV)
+    i3, k3, _, _ = B3.judge_row(rg, {}, "P3_G6", PARAMS)
+    check("C-3 G6 table: grade keys P3-1..P3-5, G6-6, P3-8, READY_le_120s, P3-7; FAULT0 / P3-6 records",
+          {"P3-1", "P3-2", "P3-3", "P3-4", "P3-5", "G6-6", "P3-8", "READY_le_120s", "P3-7"} <= set(k3)
+          and not {"FAULT0", "P3-6", "P3-9"} & set(k3) and i3["G6-6"]["verdict"] == "pass"
+          and i3["READY_le_120s"]["verdict"] == "pass" and i3["P3-6"]["judged"] is False, k3)
+    r5g = scm_row(tmp / "r25", copy.deepcopy(sp5), "c3g6_noready")
+    write_p37_record(r5g.folder, sp5, [], meta=(None, None))
+    i3n, k3n, _, _ = B3.judge_row(C.load_row(r5g.folder, "scm", SCM_V0_ARGV), {}, "P3_G6", PARAMS)
+    check("C-3 G6 table without READY: G6-4 / G6-5 (P3-4 / P3-5) 해당 없음, G6-6 and READY_le_120s 미달",
+          i3n["P3-4"]["verdict"] == "na" and i3n["P3-5"]["verdict"] == "na" and i3n["G6-6"]["verdict"] == "fail"
+          and i3n["READY_le_120s"]["verdict"] == "fail")
+    # ---- CD-1 J-P3 (v5 rev9 3.2) and CD-11 gates on C-1..C-3 rows
+    sp_j = scm_spec()
+    jp = K.jp3_item(_jp3_scm_row(tmp, "jp_ok", sp_j))
+    j5 = K.jp3_item(_jp3_scm_row(tmp, "jp_nan", sp_j, rod=False))
+    j4 = K.jp3_item(_jp3_scm_row(tmp, "jp_norec", sp_j, rod=None, ebc=False))
+    j2 = K.jp3_item(_jp3_scm_row(tmp, "jp_noebc", sp_j, ebc=False))
+    joff = K.jp3_item(_jp3_scm_row(tmp, "jp_off", sp_j, argv=SCM_V0_ARGV))
+    check("CD-1 J-P3 (v5 rev9 3.2): rod + record -> pass; NaN rod + record #5, no reading no record #4, rod without "
+          "record #2 -> setting-defect stops; ③ off -> 해당 없음(③ 끔)",
+          jp["verdict"] == "pass" and "#5" in j5.get("stop", "") and "#4" in j4.get("stop", "")
+          and "#2" in j2.get("stop", "") and joff.get("stop", "").startswith("S-2"), (jp, j5, j4, j2, joff))
+    d_off = _jp3_scm_row(tmp, "jp_off2", sp_j, argv=SCM_V0_ARGV)
+    res_off = json.loads((d_off.folder / "result.json").read_text(encoding="utf-8"))
+    res_off["controller_meta"]["two_pressure"]["settings"].pop("extend_start_rule")
+    res_off["v5_hydraulics"]["hydraulic_options"].pop("extend_start_tracked")
+    (d_off.folder / "result.json").write_text(json.dumps(res_off), encoding="utf-8")
+    jo = K.jp3_item(C.load_row(d_off.folder, "scm", SCM_V0_ARGV))
+    check("CD-1 J-P3 ③ off row -> na, value 해당 없음(③ 끔)", jo["verdict"] == "na" and jo["value"] == K.JP3_NA_OFF, jo)
+    row_j = _jp3_scm_row(tmp, "jp_gate", sp_j)
+    items_g = {"identity": {"verdict": "indeterminate", "reason": "4.2 check failed"},
+               "K1_class": {"verdict": "record", "cls": "inactive"}, "T4-0": {"verdict": "indeterminate"},
+               "R9-1_expect_controller": {"verdict": "pass"}, "P3-1": {"verdict": "pass"}}
+    keys_g = ["identity", "K1_class", "T4-0", "R9-1_expect_controller", "P3-1"]
+    CD.apply_rev25_row("C-3", row_j, items_g, keys_g, record_row=False)
+    check("CD-11 gates: identity / K1_class / T4-0 / R9-1 leave the grade; failing identity and T4-0 get stops; "
+          "J-P3 added as a grade item on a ③-on C-3 row",
+          keys_g == ["P3-1", "J-P3"] and items_g["identity"]["stop"].startswith("CD-11 관문 실패 (identity)")
+          and items_g["T4-0"]["stop"].startswith("CD-11 관문 실패 (T4-0)") and "stop" not in items_g["K1_class"]
+          and "stop" not in items_g["R9-1_expect_controller"], (keys_g, items_g))
+    items_r, keys_r = {}, []
+    CD.apply_rev25_row("C-2", row_j, items_r, keys_r, record_row=True)
+    check("CD-1 J-P3 on a record row (PS-c base) -> record only (not graded)", keys_r == [] and "J-P3" in items_r)
+    # ---- CD-11 list: classes, clause ids (C-3 G6, 427.9 expansion, gates)
+    rows_c3 = [{"case": "g", "status": "통과", "engine": "scm", "judged_keys": ["P3-1", "G6-6", "READY_le_120s", "P3-7"],
+                "items": {"P3-1": {"verdict": "pass"}, "G6-6": {"verdict": "pass"}, "READY_le_120s": {"verdict": "pass"},
+                          "P3-7": {"verdict": "pass", "interval": "x"}, "FAULT0": {"verdict": "pass"},
+                          "identity": {"verdict": "pass"}, "P3-9": {"verdict": "record"}}},
+               {"case": "s", "status": "통과", "engine": "scm", "judged_keys": ["safe_stop_427_9"],
+                "items": {"safe_stop_427_9": {"conditions": {c: True for c in CD.SAFE_STOP_CONDITIONS},
+                                              "verdict": "allowed_stop"}}}]
+    l3 = CD.item_list("C-3", rows_c3)
+    e3 = {x["common_id"]: x for x in l3["rows"][0]["items"]}
+    e_ss = [x["common_id"] for x in l3["rows"][1]["items"]]
+    check("CD-11 C-3: G6 ids 'CD-11 G6 대응표', P3-7 'CD-4 P3-7', FAULT0 기록, identity 관문 'CD-11 관문'; 427.9 row "
+          "expanded to 427.9-1..5 ('명세 427.9 조건 n')",
+          e3["P3-1"]["clause_id"] == "CD-11 G6 대응표" and e3["READY_le_120s"]["clause_id"] == "CD-11 G6 대응표"
+          and e3["P3-7"]["clause_id"] == "CD-4 P3-7" and e3["P3-7"]["interval"] == "x"
+          and e3["FAULT0"]["class"] == CD.CLASS_RECORD and e3["identity"]["class"] == CD.CLASS_GATE
+          and e3["identity"]["clause_id"] == "CD-11 관문" and e_ss == list(CD.SAFE_STOP_IDS)
+          and l3["rows"][1]["items"][2]["clause_id"] == "명세 427.9 조건 3" and not l3["problems"], l3)
+    l_rec = CD.item_list("C-2", [{"case": "base", "status": "기록 완료", "engine": "scm", "judged_keys": ["P3-1"],
+                                  "items": {"P3-1": {"verdict": "pass"}}}])
+    check("CD-11 record row (PS-c base) exempt from 'grade item >= 1', its items listed as 기록",
+          not l_rec["problems"] and l_rec["rows"][0]["items"][0]["class"] == CD.CLASS_RECORD, l_rec)
+    # ---- CD-8 values (decision 98 4 / 100 1)
+    import p2_b_c8 as B8
+    sp8 = copy.deepcopy(scm_spec())
+    sp8.update(crawler=[("ramp", 22.95, 23.0)], recontacts=[], dips=[(2, 23.5, 23.6, 20000.0), (2, 35.0, 35.1, 15000.0)])
+    r8 = scm_row(tmp / "r25", sp8, "oc5_rigid_Kc1_V0")
+    res8 = json.loads((r8.folder / "result.json").read_text(encoding="utf-8"))
+    res8["args"]["rigid_base"] = "FR"
+    (r8.folder / "result.json").write_text(json.dumps(res8), encoding="utf-8")
+    write_p37_record(r8.folder, sp8, [(20.0, 26.0)], _p37_profile(600.0), meta=(23.0, 24.0))
+    i8, _, _, _ = B8.judge_row(C.load_row(r8.folder, "scm", SCM_V0_ARGV), {"criteria_id": "C-8b"}, "OC5", PARAMS)
+    v8 = i8["CD-8_record"]["values"]
+    check("CD-8: F^a = min t_D..end (RL 15 kN at 35.0), F^t = min [t_D, t_D + 8 s) (RL 20 kN at 23.5); rigid_base P3-5 "
+          "해당 없음; SCM D8 t_lift / min / end attitude / pad lift; G6 values with READY_le_120s; 기록 완료",
+          v8["Fa_min_after_departure"]["min_N"][2] == 15000.0 and v8["Ft_min_transient_8s"]["min_N"][2] == 20000.0
+          and abs(v8["Ft_min_transient_8s"]["t_s"][2] - 23.5) < 1e-9 and v8["P3-5"] == CD.NA_RIGID_BASE
+          and v8["D8_t_lift_s"] is not None and v8["D8_min_after_t_lift"]["leg"] == "RL"
+          and v8["D8_pad_lift_samples"] == 0 and v8["G6"]["READY_le_120s"] == "pass"
+          and not i8["CD-8_record"]["missing"], (v8, i8["CD-8_record"]["missing"]))
+    CD.CONTEXT.clear()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tmp")
@@ -2439,6 +2635,7 @@ def main():
     t_cli(tmp)
     t_resolve(tmp)
     t_rev24(tmp)
+    t_rev25(tmp)
     n_fail = sum(1 for r in RESULTS if not r["ok"])
     tool_sha, per = p2_chrono.tool_sha(None)
     print(json.dumps({"tool": "test_p2_synthetic.py", "tests": len(RESULTS), "failed": n_fail,

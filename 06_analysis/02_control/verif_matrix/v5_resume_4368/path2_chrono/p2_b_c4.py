@@ -34,6 +34,8 @@ def judge_row(row, case, kind, params):
                         verdict="record" if rc else "indeterminate")
     if rc and R.gt(rc["R_c"], 1.0):
         items["P3-3"]["outside_start_condition"] = "R_c > 1: shortfall = L-5 known limit (7.4)"
+    CD.set_p3_6(items, keys, row, judged=False)   # rev25 CD-4: 421.1 limit, recorded on C-4
+    CD.g6_split(items, keys, row, graded=False)   # rev25 CD-11: G6-6 and READY_le_120s apart (records)
     CD.add_p3_7(items, keys, row, params, judged=False)
     CD.apply_ready_none(items, keys, row)
     items["CD-9_record"] = CD.c4_record(row, items)

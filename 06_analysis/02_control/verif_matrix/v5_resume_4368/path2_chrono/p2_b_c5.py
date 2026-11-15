@@ -8,6 +8,8 @@ rev24 CD-1 (closed item list of the C-5 row grade): all rows T4-0 / T4 / T5 (CD-
 other rows 해당 없음), J11 (`J11_window`), J-P3, D2 (record, as before) ; L2b rows the CD-2 block ; SCM rows the
 CD-4 P3 items (P3-1..P3-5, P3-7, P3-8, FAULT0 graded; P3-6 and P3-9 records; CD-5 without READY). H-9 and
 K1_class stay as records whose stops still stop the bundle. Row count 35 = L2b 24 + SCM 11, else S-15.
+rev25: P3-6 is a grade item on the SCM rows (421.1 limit); T4-0, K1_class, R9-1 and R11-4 are CD-11 gates (out of
+the grade, a failing gate stops the bundle, `p2_cd.apply_rev25_row`).
 """
 import json
 from pathlib import Path
@@ -55,7 +57,8 @@ def judge_row(row, case, kind, params):
     graded = [k for k in keys if k in CD1_ALL_ROWS]
     for k in CD1_RECORD_ONLY:
         if isinstance(items.get(k), dict):
-            items[k]["cd1_role"] = "record (CD-1 closed item list); a stop still stops the bundle"
+            items[k]["cd1_role"] = ("record (CD-1 closed item list); a stop still stops the bundle" if k == "H-9"
+                                    else "gate (rev25 CD-11); a failing gate stops the bundle")
     CD.apply_t45_targets(items, graded, row)
     if row.engine == "l2b":
         items["CD-2"] = CD.cd2_items(row, params)
@@ -66,13 +69,13 @@ def judge_row(row, case, kind, params):
 
 
 def _add_p3(items, graded, notes, row, params):
-    """CD-4: the P3 definitions used for the C-2 / C-3 / C-4 SCM rows (`items_p3`), P3-6 as the recorded READY
-    time (flat 90 / slope 120 s, as C-3 / C-4), plus P3-7; CD-5 without READY; CD-4 empty-grade guard."""
-    limit = R.READY_FLAT_S if row.flat else R.READY_SLOPE_S
-    p3, p3_keys, p3_notes = K.items_p3(row, params, limit, ready_judged=False, g6=False, allow_stop=True)
+    """CD-4: the P3 definitions used for the C-2 / C-3 / C-4 SCM rows (`items_p3`) plus P3-7; rev25 CD-4: P3-6 is
+    a grade item on the C-5 SCM rows with the spec 421.1 limit; CD-5 without READY; CD-4 empty-grade guard."""
+    p3, p3_keys, p3_notes = K.items_p3(row, params, R.READY_FLAT_S, ready_judged=False, g6=False, allow_stop=True)
     for k, v in p3.items():
         items.setdefault(k, v)
     graded += [k for k in p3_keys if k in CD.P3_KEYS or k == "safe_stop_427_9"]
+    CD.set_p3_6(items, graded, row, judged=True)
     CD.add_p3_7(items, graded, row, params, judged=True)
     CD.apply_ready_none(items, graded, row)
     CD.scm_grade_guard(items, graded)

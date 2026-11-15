@@ -1,7 +1,10 @@
-"""436.8 rev24 common definitions CD-1..CD-11, path 2 implementation (R24-2 [경로 2] 1).
+"""436.8 common definitions CD-1..CD-11, path 2 implementation (rev24 R24-2 [경로 2] 1, rev25 R25-2 [경로 2] 1-2;
+the rev25 common block, sha 0e082b9c..., replaces the rev24 block).
 
 Sources opened for this module (the 판정서 "읽은 것" list carries them with line ranges):
-- the rev24 handoff file (common block CD-1..CD-11 and the R24-2 / R24-3 path 2 lines),
+- the rev24 and rev25 handoff files (common blocks and the path 2 lines),
+- rev25 additions: spec 421.1 (P3-6 limits), 422.6 (P3-7 weight), v5 criteria rev8 / rev9 3.2 (J-P3), the G6 judge
+  `04_scripts/03_control/s8/r76_g6_chrono_judge.py` lines 4-9, 16, 341-348 (G6 gates),
 - spec `s6_control_spec.md` (284 P3 table, 285 P-S9-2, 282.4 S-1, 310, 314.1 C-S9-60-3, 419.1, R40-2),
 - 원판 7.4 / 8.1 / 8.2 / 9.1-9.3, v5 criteria rev6 3 and rev12 2.1-2.2,
 - original judge source `03_src/outrigger_sim/verify/` (`s8_control.py`, `s6_control.py`) for the item names,
@@ -87,8 +90,8 @@ P37_SPEED_FRACTION = 0.15
 P37_RISE_MAX_N = 2000.0
 P37_PLAUSIBILITY = 0.85
 P37_RISE_MIN_N = 4000.0                     # 284 P3-7: minimum rise of the loaded windows >= 4 kN
-P37_LOADED_FRACTION = 0.01                  # "> 0.01 W_ref"
-P37_RECORD_THRESHOLDS = (("gt1kN", 1000.0, None), ("gt0p05W", None, 0.05))
+P37_LOADED_FRACTION = 0.01                  # "> 0.01 x (mass_scale x W_ref)" (spec 422.6, rev25 R25-2 2 (나))
+P37_RECORD_THRESHOLDS = (("gt1kN", 1000.0, None), ("gt0p05W", None, 0.05))   # 0.05 W_ref record bucket (as before)
 P37_GATE_TOL_S = 1e-6                       # 314.1 reconstruction gate |diff| <= 1e-6 s
 LW_RESTART_MODES = ("restart", "lwa")       # 419.2 LWa: window restart while a re-approach is active
 LW_OFF_MODES = (None, "", "off", "none")
@@ -107,10 +110,26 @@ C5_ROWS_L2B = 24
 C5_ROWS_SCM = 11
 
 # ----------------------------------------------------------------------------- CD-11 common item ids
-COMMON_ID = {"J11_window": "J11", "J-P3": "J-P3", "D2": "D2", "T4-0": "T4-0", "T4": "T4", "T5": "T5",
-             "FAULT0": "FAULT0", "D8_FAULT0": "FAULT0", "G6-6": "READY ≤ 120 s (G6-6)",
+COMMON_ID = {"J11_window": "J11", "J11_record": "J11", "J-P3": "J-P3", "D2": "D2", "T4-0": "T4-0", "T4": "T4",
+             "T5": "T5", "FAULT0": "FAULT0", "D8_FAULT0": "FAULT0", "G6-6": "G6-6", "READY_le_120s": "READY_le_120s",
+             "identity": "identity", "K1_class": "K1_class", "R9-1_expect_controller": "R9-1",
+             "R11-4_commit": "R11-4",
              **{f"P3-{k}": f"P3-{k}" for k in range(1, 10)},
              **{f"E-{k}": f"E-{k}" for k in range(1, 8)}}
+
+# ----------------------------------------------------------------------------- rev25 CD-11 classes and clause ids
+CLASS_GRADED, CLASS_GATE, CLASS_RECORD = "등급 항목", "관문", "기록"
+GATE_KEYS = ("identity", "K1_class", "R9-1_expect_controller", "R11-4_commit", "T4-0")
+# CD-2 override table rows 1..12 (CD-11 clause id `CD-2 표 n줄`)
+CD2_TABLE_LINE = {ITEM_C1: 1, ITEM_D8_CYL: 2, ITEM_D8_LIFT: 3, ITEM_P4_MOVING: 4, ITEM_P4_OUT: 5, ITEM_P4_IN: 6,
+                  ITEM_P4_SAT: 7, ORIGINAL_EXACT_ITEMS[0]: 8, ORIGINAL_EXACT_ITEMS[1]: 9, ORIGINAL_EXACT_ITEMS[2]: 9,
+                  ORIGINAL_EXACT_ITEMS[3]: 10, ORIGINAL_EXACT_ITEMS[4]: 10}
+CD2_TABLE_PREFIX_LINE, CD2_TABLE_OTHER_LINE = 11, 12
+# C-3 G6 correspondence table (rev25 CD-11): G6 gate -> common id
+G6_TABLE = (("G6-1", "P3-1"), ("G6-2", "P3-2"), ("G6-3", "P3-3"), ("G6-4", "P3-4"), ("G6-5", "P3-5"),
+            ("G6-6", "G6-6"), ("G6-7", "P3-8"), ("READY_le_120s", "READY_le_120s"))
+G6_IDS = tuple(cid for _, cid in G6_TABLE)
+SAFE_STOP_IDS = tuple(f"427.9-{n}" for n in range(1, 6))
 
 
 def _judge_case_names(row) -> set:
@@ -163,9 +182,16 @@ def judge_doc_for(row):
     return _DOCS[p]
 
 
+STAR_CASE = "*"
+STAR_SUFFIX = " [case *]"   # rev25 CD-11: common item id of a case `*` item
+
+
 def judge_rows_of(doc, row) -> list:
+    """The original judge's items of the row: its own case rows and (rev25 R25-2 2 (가), a rev24 defect fix) the
+    batch-level case `*` rows of the row's batch folder (each judged folder holds the one row)."""
     names = _judge_case_names(row)
-    return [r for r in doc.get("rows") or [] if isinstance(r, dict) and str(r.get("case")) in names]
+    return [r for r in doc.get("rows") or [] if isinstance(r, dict)
+            and (str(r.get("case")) in names or str(r.get("case")) == STAR_CASE)]
 
 
 def judge_metric_of(doc, row):
@@ -201,15 +227,19 @@ def _is_rigid_crawler(row) -> bool:
 
 
 def _event_abs(row):
+    """`result.json` `event_t_s` (run-relative) as engine absolute time, when it is a number."""
     ev = row.result.get("event_t_s")
-    return None if ev is None else float(ev) + row.t_offset
+    if isinstance(ev, bool) or not isinstance(ev, (int, float)):
+        return None
+    return float(ev) + row.t_offset
 
 
 def recalc_c1(row, params, tl) -> dict:
     """CD-2 table row 1: raw 1 ms true rod force (path 2 `Row.F`: `F_cyl_min_interval`, airborne samples on the
-    20 ms mean) after (a) t_lift, outside REANCHOR, minimum >= F_min + 5 kN. R40-2 hold (rigid crawler, raw min
-    within 8 s of t_lift, slow 1 s centred mean min over the first 8 s >= limit) cannot be resolved here
-    (L1 pair / compliant rerun) -> 판정 불가."""
+    20 ms mean) after (a) t_lift, outside REANCHOR and (rev25, decision 98 2) before `event_t_s` when that is a
+    number (run-relative: engine time - start_t_s < event_t_s), minimum >= F_min + 5 kN. R40-2 hold (rigid
+    crawler, raw min within 8 s of t_lift, slow 1 s centred mean min over the first 8 s >= limit) cannot be
+    resolved here (L1 pair / compliant rerun) -> 판정 불가."""
     limit = params["F_min_N"] + C1_MARGIN_N
     out = {"definition": "CD-2 table row 1", "t_lift_s": tl, "limit_N": limit}
     if tl is None:
@@ -219,6 +249,12 @@ def recalc_c1(row, params, tl) -> dict:
     for a, b in _reanchor_windows(row):
         mask &= ~((row.tF >= a) & (row.tF <= b))
     out["reanchor_windows_s"] = _reanchor_windows(row)
+    ev = _event_abs(row)
+    if ev is not None:   # rev25 CD-2 row 1 event cut
+        mask &= row.tF < ev
+    out["event_cut_s"] = ev
+    out["interval"] = (f"t >= {tl:.6f} s" + ("" if ev is None else f", t < {ev:.6f} s (event_t_s)")
+                       + ", REANCHOR 밖 (engine absolute time)")
     if not mask.any():
         out.update(verdict="indeterminate", **{REASON_KEY: REASON_INPUT_MISSING + " (t_lift 뒤 표본 없음)"})
         return out
@@ -226,10 +262,6 @@ def recalc_c1(row, params, tl) -> dict:
     i, leg = np.unravel_index(int(np.argmin(Fm)), Fm.shape)
     vmin = float(Fm[i, leg])
     out.update(min_N=vmin, min_leg=R.LEGS[leg], min_t_s=float(row.tF[i]))
-    ev = _event_abs(row)
-    if ev is not None:   # record only: the original judge also masks t >= event_t_s (not in the CD-2 sentence)
-        m2 = mask & (row.tF < ev)
-        out["record_min_before_event_N"] = float(row.F[m2].min()) if m2.any() else None
     ok = R.ge(vmin, limit)
     out["verdict"] = "pass" if ok else "fail"
     if ok or not _is_rigid_crawler(row):
@@ -258,6 +290,7 @@ def recalc_d8_lift(row, tl) -> dict:
         return out
     sel = row.t_pad >= tl - R.CMP_TOL
     le0 = row.pad_n[sel] <= 0.0 + R.CMP_TOL
+    out["interval"] = f"t >= {tl:.6f} s to the record end"
     out["samples_per_leg"] = le0.sum(axis=0).astype(int).tolist()
     out["verdict"] = "pass" if not le0.any() else "fail"
     return out
@@ -398,10 +431,12 @@ def cd3_items(row, params, ev, win) -> dict:
         moving = ext | ret
         pk = _peak(t, p_bar, moving)
         out[ITEM_P4_MOVING] = dict(pk, definition="CD-3 non-event", limit_bar=R.MOVING_BAR,
+                                   interval="record.npz 전 표본, |u_applied| > 1e-9 m/s",
                                    verdict="pass" if pk["max_bar"] is None or R.le(pk["max_bar"], R.MOVING_BAR)
                                    else "fail")
         sat = ext & (p_bar >= R.SATURATION_BAR - R.CMP_TOL)
         out[ITEM_P4_SAT] = {"definition": "CD-3 saturation (non-event)", "count": int(sat.sum()),
+                            "interval": "record.npz 전 표본, u_applied > 1e-9 m/s",
                             "count_per_leg": sat.sum(axis=0).astype(int).tolist(),
                             "verdict": "pass" if not sat.any() else "fail"}
         return out
@@ -411,17 +446,21 @@ def cd3_items(row, params, ev, win) -> dict:
         return out
     inside = (t >= win["start_s"] - R.CMP_TOL) & (t <= win["end_s"] + R.CMP_TOL)
     outside = ~inside[:, None]
+    w_text = f"W = [{win['start_s']:.6f}, {win['end_s']:.6f}] s"
     pk_out = _peak(t, p_bar, outside & ext)
     out[ITEM_P4_OUT] = dict(pk_out, definition="CD-3 event W 밖 extension", limit_bar=R.MOVING_BAR,
+                            interval=f"{w_text} 밖, u_applied > 1e-9 m/s",
                             retract_record=_peak(t, p_bar, outside & ret),
                             verdict="pass" if pk_out["max_bar"] is None or R.le(pk_out["max_bar"], R.MOVING_BAR)
                             else "fail")
     pk_in = _peak(t, p_bar, np.repeat(inside[:, None], 4, axis=1), states=_state_of(u))
     out[ITEM_P4_IN] = dict(pk_in, definition="CD-3 event W 안 every state", limit_bar=IN_WINDOW_BAR,
+                           interval=f"{w_text} 안, 모든 상태",
                            verdict="pass" if pk_in["max_bar"] is None or R.le(pk_in["max_bar"], IN_WINDOW_BAR)
                            else "fail")
     sat = outside & ext & (p_bar >= R.SATURATION_BAR - R.CMP_TOL)
     out[ITEM_P4_SAT] = {"definition": "CD-3 saturation (event: outside W)", "count": int(sat.sum()),
+                        "interval": f"{w_text} 밖, u_applied > 1e-9 m/s",
                         "count_per_leg": sat.sum(axis=0).astype(int).tolist(),
                         "verdict": "pass" if not sat.any() else "fail"}
     return out
@@ -477,7 +516,7 @@ def cd2_items(row, params) -> dict:
     """CD-2 L2b row item block: the original judge's items of the row with the CD-2 count and the override table.
     Grade inside the block (CD-2 count): any judged-class `passed` False -> fail (미달); else any hold (or a
     recalculated item not computable) -> 판정 불가; judged-class passed True count 0 -> 판정 불가; else pass."""
-    out = {"clause": "CD-2 (rev24 common block)", "layer": "original judge run by path 2 + CD-2 overrides"}
+    out = {"clause": "CD-2 (rev25 common block)", "layer": "original judge run by path 2 + CD-2 overrides"}
     doc, why = judge_doc_for(row)
     if doc is None:
         out.update(verdict="indeterminate", entries=[], **{REASON_KEY: why})
@@ -568,13 +607,16 @@ def _entry(row, params, j, tl, ev, cd3, stops) -> dict:
     kind = j.get("kind")
     handling = classify_item(name)
     use = _use_of(kind)
+    star = str(j.get("case")) == STAR_CASE
     e = {"item": name, "kind": kind, "handling": handling, "orig_passed": j.get("passed"),
          "orig_value": j.get("value"), "orig_limit": j.get("limit"), "orig_note": str(j.get("note") or "")[:300],
-         "flag": _flag_of(j), "cd3_sub_id": CD3_SUB_ID.get(name)}
+         "flag": _flag_of(j), "cd3_sub_id": CD3_SUB_ID.get(name), "case_star": star,
+         "common_id": name + (STAR_SUFFIX if star else ""), "table_line": _table_line(name, handling)}
     passed = j.get("passed")
     if handling == "recalc":
         rc = _recalc(row, params, name, tl, ev, cd3, stops)
         e["recalc"] = rc
+        e["interval"] = rc.get("interval")
         if use == "record":
             e["recalc_record_only"] = "기록 종류로 나온 재계산 항목: 판정에 쓰지 않고 두 값만 남김"
         elif use in ("judged", "hold"):
@@ -601,6 +643,13 @@ def _entry(row, params, j, tl, ev, cd3, stops) -> dict:
     elif e["verdict"] == "runner_unjudged":
         e[REASON_KEY] = f"러너 미판정 (kind {kind!r}, passed {j.get('passed')!r}): " + (e["orig_note"][:120] or "-")
     return e
+
+
+def _table_line(name: str, handling: str) -> int:
+    """rev25 CD-11 clause id `CD-2 표 n줄`: the override-table row of the item (prefix row 11, other / case `*` 12)."""
+    if name in CD2_TABLE_LINE:
+        return CD2_TABLE_LINE[name]
+    return CD2_TABLE_PREFIX_LINE if handling == "original_tlift" else CD2_TABLE_OTHER_LINE
 
 
 def _recalc(row, params, name, tl, ev, cd3, stops) -> dict:
@@ -718,7 +767,8 @@ def _loaded_min(row, evals, threshold_N):
 def p3_7(row, params, judged=True) -> dict:
     """CD-4 P3-7 (spec 284 table, defined in 314.1 C-S9-60-3; path 2 had no definition): reading-based S-1
     windows (`record.npz` `meas.stroke` mean, sum p_h A_p - p_r A_ann); judged on the windows whose end crawler
-    true normal (first 1 ms `scm_crawler_normal_N` sample at or after the end) > 0.01 W_ref: min rise >= 4 kN;
+    true normal (first 1 ms `scm_crawler_normal_N` sample at or after the end) > 0.01 x mass_scale x W_ref (spec
+    422.6, rev25 R25-2 2 (나); S-1 plausibility stays 0.85 W_ref): min rise >= 4 kN;
     none -> "부담 창 없음" (pass). Reconstruction gate: t_P, t_LOC = meta `c2_soil.t_P_s`, `t_loc_s` within
     1e-6 s (t_P = first sample of the 10 mm tail, which reproduces the meta). Records: > 1 kN and > 0.05 W_ref
     minima, and the true-value version (`F_cyl`, `s_motor`, up to the LOC time)."""
@@ -754,10 +804,12 @@ def p3_7(row, params, judged=True) -> dict:
     evals, (tp, tl) = s1_windows(row, t, u, e, F, w_ref, v_max, lwa)
     gate_p = _same_time(tp, soil.get("t_P_s"))
     gate_l = _same_time(tl, soil.get("t_loc_s"))
-    thr = P37_LOADED_FRACTION * w_ref
+    scale = _mass_scale(row)
+    thr = P37_LOADED_FRACTION * scale * w_ref   # rev25 R25-2 2 (나): spec 422.6 W_plant = mass_scale x W_ref
     out.update(reconstruct_ok=gate_p and gate_l, t_P_rec_s=tp, t_loc_rec_s=tl,
                t_P_meta_s=soil.get("t_P_s"), t_loc_meta_s=soil.get("t_loc_s"), n_windows=len(evals),
-               loaded_threshold_N=thr, W_ref_N=w_ref)
+               loaded_threshold_N=thr, W_ref_N=w_ref, mass_scale=scale,
+               interval="LEVEL S-1 창(LOC까지), 창 끝 크롤러 참 법선 > 0.01 x mass_scale x W_ref")
     if not out["reconstruct_ok"]:
         out.update(verdict="indeterminate", **{REASON_KEY: "P3-7 재구성 관문 불일치 (t_P·t_LOC vs meta > 1e-6 s)"})
         return out
@@ -781,6 +833,12 @@ def p3_7(row, params, judged=True) -> dict:
         out["record_verdict"] = out["verdict"]
         out["verdict"] = "record"
     return out
+
+
+def _mass_scale(row) -> float:
+    """Run argument `mass_scale` (`result.json` `args.mass_scale`); absent -> 1 (rev25 CD-4)."""
+    v = (row.result.get("args") or {}).get("mass_scale")
+    return 1.0 if v is None else float(v)
 
 
 def _same_time(a, b) -> bool:
@@ -856,6 +914,149 @@ def scm_grade_guard(items, keys) -> dict | None:
     return guard
 
 
+# ============================================================================= rev25 CD-4 P3-6 (decision 98 1)
+P36_SOFT_SETS = ("J1", "J2", "S1")
+P36_PAD_B = "dwg_rear250"
+P36_SLOPE_S, P36_SOFT_REAR_S, P36_FLAT_S = 120.0, 100.0, 90.0
+REAR_LEGS = ("RL", "RR")
+
+
+def _patch_sets(text) -> dict | None:
+    """`soil_patch` "LEG:SET" entries (comma separated; legs joined by '+' allowed) -> {leg: set}; None if unreadable."""
+    out = {}
+    if text in (None, ""):
+        return out
+    for part in str(text).split(","):
+        if ":" not in part:
+            return None
+        legs, soil = part.split(":", 1)
+        for leg in legs.replace("/", "+").split("+"):
+            if leg.strip() not in R.LEGS:
+                return None
+            out[leg.strip()] = soil.strip()
+    return out
+
+
+def p3_6_limit(row):
+    """rev25 CD-4 P3-6 limit (spec 421.1, first matching line): floor slope (`floor_roll` or `floor_pitch` != 0)
+    120 s; flat, pad type B (`pad_variant` = dwg_rear250) and both rear pads on J1 / J2 / S1 (`soil_patch` set where
+    it covers the leg, else `soil`) 100 s; other flat 90 s. Returns (limit or None, basis)."""
+    a = row.result.get("args") or {}
+    if float(a.get("floor_roll") or 0.0) != 0.0 or float(a.get("floor_pitch") or 0.0) != 0.0:
+        return P36_SLOPE_S, "421.1 ① 바닥 경사"
+    patch = _patch_sets(a.get("soil_patch"))
+    if patch is None:
+        return None, f"soil_patch {a.get('soil_patch')!r} 읽기 불가"
+    rear = [patch.get(leg, a.get("soil")) for leg in REAR_LEGS]
+    if a.get("pad_variant") == P36_PAD_B and all(s in P36_SOFT_SETS for s in rear):
+        return P36_SOFT_REAR_S, f"421.1 ② 평지·패드 B·후방 {rear}"
+    return P36_FLAT_S, "421.1 ③ 그 밖 평지"
+
+
+def set_p3_6(items, keys, row, judged: bool):
+    """rev25 CD-4: P3-6 = first READY after the closed-loop start <= the 421.1 limit; judged on C-5 SCM rows (and the
+    C-2 S rows as before), recorded on C-3 G6 / C-4 / C-8 / PS-c base rows and on 427.9 safe-stop rows."""
+    limit, basis = p3_6_limit(row)
+    record_only = (items.get("P3-6") or {}).get("record_only")
+    if limit is None:
+        it = {"clause": "CD-4 P3-6 (spec 421.1)", "verdict": "indeterminate", "judged": judged, "limit_basis": basis,
+              REASON_KEY: REASON_INPUT_MISSING + f" ({basis})"}
+    else:
+        it = C.ready_item(row, limit, f"CD-4 P3-6 READY <= {limit:g} s (spec 421.1)", judged=judged)
+        it["limit_basis"] = basis
+        it["interval"] = f"폐루프 시작 ~ 첫 READY, 한계 {limit:g} s"
+    if record_only:
+        it["record_only"] = record_only
+    items["P3-6"] = it
+    graded = judged and not _safe_stop_row(items)
+    if graded and "P3-6" not in keys:
+        keys.append("P3-6")
+    elif not graded and "P3-6" in keys:
+        keys.remove("P3-6")
+
+
+# ============================================================================= rev25 CD-11 C-3 G6 correspondence
+def g6_split(items, keys, row, graded: bool):
+    """rev25 CD-11 G6 table: G6-6 = no FAULT and READY reached; `READY_le_120s` = first READY <= 120 s after the
+    closed-loop start (separate). On the C-3 G6 rows both are grade items (FAULT0 becomes a record there); on
+    C-4 / C-8 they are record values; on a 427.9 safe-stop row they are records."""
+    fault = C.fault_present(row)["any"]
+    t_R = C.first_phase_time(row, "ready")
+    rel = None if t_R is None else t_R - row.loop_start
+    items["G6-6"] = {"clause": "CD-11 G6 대응표 G6-6 (FAULT 없음 그리고 READY 도달)", "fault": fault,
+                     "ready_reached": t_R is not None, "verdict": "pass" if (not fault and t_R is not None) else "fail"}
+    items["READY_le_120s"] = {"clause": "CD-11 G6 대응표 READY_le_120s (폐루프 시작 기준 첫 READY <= 120 s)",
+                              "t_ready_rel_s": rel, "interval": "폐루프 시작 ~ 첫 READY, 한계 120 s",
+                              "verdict": "pass" if (rel is not None and R.le(rel, R.G6_READY_S)) else "fail"}
+    if t_R is None:
+        for k in ("G6-6", "READY_le_120s"):
+            items[k][REASON_KEY] = "CD-5: READY 없음 -> 미달"
+    safe = _safe_stop_row(items)
+    for k in ("G6-6", "READY_le_120s"):
+        if safe:
+            items[k]["record_only"] = "soil-guard stop row: grade by spec 427.9 conditions 1-5"
+        if graded and not safe:
+            if k not in keys:
+                keys.append(k)
+        elif k in keys:
+            keys.remove(k)
+    if graded and "FAULT0" in keys:
+        keys.remove("FAULT0")
+        items["FAULT0"]["cd11_role"] = "기록 (C-3: FAULT 없음은 G6-6 안)"
+
+
+# ============================================================================= rev25 CD-11 gates, CD-1 J-P3 on C-1..C-3
+def apply_rev25_row(bundle: str, row, items, keys, record_row: bool):
+    """rev25: (1) CD-1 J-P3 is a grade item of the ③-on rows of every judged bundle C-1..C-5 (C-1..C-3 get it here;
+    a record row keeps it as a record); (2) CD-11 gates (`identity`, `K1_class`, `R9-1`, `R11-4`, `T4-0`) leave the
+    grade; a failing gate gets a stop (the bundle stops before judgement)."""
+    import p2_kinds as K   # local import: p2_kinds imports this module's siblings only
+    if bundle in ("C-1", "C-2", "C-3") and "J-P3" not in items:
+        items["J-P3"] = K.jp3_item(row)
+        if not record_row and items["J-P3"].get("verdict") != "na":
+            keys.append("J-P3")
+    for g in GATE_KEYS:
+        if g in keys:
+            keys.remove(g)
+        it = items.get(g)
+        if not isinstance(it, dict):
+            continue
+        it["cd11_class"] = CLASS_GATE
+        failed = it.get("verdict") in ("indeterminate", "fail", "hold") or (
+            g == "K1_class" and it.get("cls") == "indeterminate")
+        if failed and not it.get("stop"):
+            it["stop"] = f"CD-11 관문 실패 ({g}): " + str(it.get("reason") or it.get(REASON_KEY) or "판정 불가")[:200]
+
+
+# ============================================================================= rev25 CD-8 SCM D8 values
+def scm_d8_values(row, params) -> dict:
+    """rev25 CD-8 8 (SCM row D8): (1) t_lift = t_lift,sus rule (CD-2 (a)) on the 1 ms crawler normal series that
+    t_D uses (`scm_crawler_normal_N`); (2) min 1 ms true F_cyl after t_lift to the record end with leg and time;
+    (3) last 5 s absolute max of the true deck roll / pitch (`step_series.npz` `roll_pitch_deg`, vs target) +
+    0.02 deg mount; (4) `scm_pad_normal_N` <= 0 1 ms samples after t_lift."""
+    tl = C.t_lift_sus_d29(row) if row.cr is not None else None
+    out = {"clause": "CD-8 8 (SCM D8)", "t_lift_s": tl,
+           "crawler_series": "step_series.npz scm_crawler_normal_N (t_D와 같은 계열)"}
+    if tl is not None:
+        sel = row.tF >= tl - R.CMP_TOL
+        Fs = np.where(sel[:, None], row.F, np.inf)
+        i, leg = np.unravel_index(int(np.argmin(Fs)), Fs.shape)
+        out["min_after_t_lift"] = {"min_N": float(Fs[i, leg]), "leg": R.LEGS[leg], "t_s": float(row.tF[i])}
+        selp = row.t_pad >= tl - R.CMP_TOL
+        le0 = row.pad_n[selp] <= 0.0 + R.CMP_TOL
+        out["pad_lift_samples"] = int(le0.sum())
+        out["pad_lift_samples_per_leg"] = le0.sum(axis=0).astype(int).tolist()
+    else:
+        out["min_after_t_lift"] = None
+        out["pad_lift_samples"] = None
+    w0 = row.t_end - R.D8_LAST_WINDOW_S
+    sel_a = row.t_att >= w0 - R.CMP_TOL
+    val = float(np.max(np.abs(row.att[sel_a] - np.array(row.target_deg)))) if sel_a.any() else None
+    out["end_attitude_with_mount_deg"] = None if val is None else val + R.D8_MOUNT_DEG
+    out["end_attitude_window_s"] = [w0, row.t_end]
+    return out
+
+
 # ============================================================================= CD-6 T4 / T5 target rows
 def apply_t45_targets(items, keys, row):
     """CD-6: T4-0 / T4 / T5 are graded only on the 18 rows of v5 rev6 3 (1-18); other C-5 rows 해당 없음."""
@@ -924,55 +1125,124 @@ def _first_stop(r):
 
 
 # ============================================================================= CD-11 item list
-def _interval_of(key, it) -> str:
-    if key == "CD-2":
-        return "원 판정기 항목 구간"
-    if key == "P3-7":
-        return "LEVEL S-1 창(LOC까지), 창 끝 크롤러 > 0.01 W_ref"
-    return str(it.get("clause") or "")[:120]
+SAFE_STOP_CONDITIONS = ("1_stop_reason_soil", "2_no_fault_stroke_end", "3_no_leg_lift_from_level_start",
+                        "4_min_after_departure_ge_Fmin", "5_moving_le_180bar_saturation0")
+RECORD_LIST_KEYS = ("D2", "P3-9", "J11_record") + P3_KEYS + G6_IDS + ("CD-8_record", "CD-9_record")
+
+
+def clause_id(common_id: str, cls: str, g6_row: bool, table_line=None) -> str:
+    """rev25 CD-11 clause id table."""
+    if cls == CLASS_GATE:
+        return "CD-11 관문"
+    if cls == CLASS_RECORD:
+        return "CD-11 기록"
+    if table_line is not None:
+        return f"CD-2 표 {table_line}줄"
+    if g6_row and common_id in G6_IDS:
+        return "CD-11 G6 대응표"
+    if common_id in ("T4", "T5"):
+        return "CD-6"
+    if common_id in ("J11", "J-P3"):
+        return "CD-1 ①"
+    if common_id.startswith("E-"):
+        return f"명세 426.3 {common_id}"
+    if common_id.startswith("427.9-"):
+        return f"명세 427.9 조건 {common_id.split('-')[-1]}"
+    if common_id.startswith("P3-") or common_id == "FAULT0":
+        return f"CD-4 {common_id}"
+    return "CD-4 마지막 문장" if common_id == "CD-4_grade_guard" else "-"
+
+
+def _entry_row(common_id, cls, path2, it, g6_row, method="재계산", table_line=None, verdict=None, reason=None):
+    return {"common_id": common_id, "class": cls, "path2_item": path2,
+            "clause_id": clause_id(common_id, cls, g6_row, table_line),
+            "description": str((it or {}).get("clause") or (it or {}).get("definition") or "")[:160],
+            "method": method, "interval": (it or {}).get("interval") or "",
+            "verdict": (it or {}).get("verdict") if verdict is None else verdict,
+            "reason": ((it or {}).get(REASON_KEY) or "") if reason is None else reason}
+
+
+def _cd2_entries(it, g6_row, record_row):
+    out = []
+    for e in it.get("entries") or []:
+        cls = CLASS_GRADED if (e["use"] in ("judged", "hold") and not record_row) else CLASS_RECORD
+        out.append(dict(_entry_row(e.get("common_id") or e["item"], cls, f"CD-2/{e['item']}",
+                                   {"clause": "CD-2 / 원 판정기 verify_S8C", "interval": e.get("interval")}, g6_row,
+                                   method="재계산" if e["handling"] == "recalc" else "원 판정기 실행",
+                                   table_line=None if cls == CLASS_RECORD else e.get("table_line"),
+                                   verdict=e["verdict"],
+                                   reason=e.get(REASON_KEY) or e.get("cd7_change_reason") or ""),
+                        cd3_sub_id=e.get("cd3_sub_id"), cd2_table_line=e.get("table_line")))
+    for name, key in (("t_lift 차 확인", "t_lift_check"), ("사건 창 끝 차 확인", "window")):
+        blk = it.get(key)
+        if isinstance(blk, dict) and (key != "window" or blk.get("diff_vs_judge_s") is not None):
+            ok = blk.get("ok") if key == "t_lift_check" else "CD-3: computed" not in str(it.get("stop", ""))
+            out.append(_entry_row(name, CLASS_GATE, f"CD-2/{key}", blk, g6_row, verdict="pass" if ok else "fail",
+                                  reason="" if ok else "멈춤"))
+    return out
+
+
+def _safe_stop_entries(ss, g6_row):
+    out = []
+    for n, cond in enumerate(SAFE_STOP_CONDITIONS, start=1):
+        v = (ss.get("conditions") or {}).get(cond)
+        word = "pass" if v is True else ("fail" if v is False else "indeterminate")
+        out.append(_entry_row(f"427.9-{n}", CLASS_GRADED, f"safe_stop_427_9.{cond}", ss, g6_row, verdict=word,
+                              reason="" if v is not None else ", ".join(ss.get("missing_inputs") or []) or
+                              "조건 계산 불가"))
+    return out
 
 
 def item_list(bundle: str, rows, record_bundle=False) -> dict:
-    """CD-11: per row the items used for the grade (CD-2 expanded into the original judge items that count),
-    with common id, path 2 name, definition source, method, interval, verdict, reason. Each row needs >= 1
-    graded item (record bundles: listed, not checked) and the list has one entry per bundle row."""
+    """rev25 CD-11: per row every item with its class (등급 항목 / 관문 / 기록), common id, path 2 name, clause id,
+    description, method, interval, verdict and reason. CD-2 is expanded into the original judge items (case `*`
+    items carry ` [case *]`), a 427.9 safe-stop row into 427.9-1..5. Each graded row needs >= 1 grade item
+    (verdict other than 해당 없음); record rows (rule / earlier-revision record rows, record bundles) and the
+    C-1 L1-R rows are exempt; the list has one entry per bundle row."""
     lst, problems = [], []
+    g6_row = bundle == "C-3"
     for r in rows:
-        entries = []
+        record_row = record_bundle or r["status"] in ("기록 완료", "기록 불완전")
+        entries, seen = [], set()
         for k in r["judged_keys"]:
             it = r["items"].get(k) or {}
+            seen.add(k)
             if k == "CD-2":
-                for e in it.get("entries") or []:
-                    if e["use"] not in ("judged", "hold"):
-                        continue
-                    entries.append({"common_id": e["item"], "cd3_sub_id": e.get("cd3_sub_id"),
-                                    "path2_item": f"CD-2/{e['item']}", "source": "CD-2 / 원 판정기 verify_S8C",
-                                    "method": "재계산" if e["handling"] == "recalc" else "원 판정기 실행",
-                                    "interval": _interval_of(k, it), "verdict": e["verdict"],
-                                    "reason": e.get(REASON_KEY) or e.get("cd7_change_reason") or ""})
-                continue
-            entries.append({"common_id": COMMON_ID.get(k, k), "path2_item": k,
-                            "source": str(it.get("clause") or "")[:120],
-                            "method": "원 판정기 실행" if k in T45_KEYS else "재계산",
-                            "interval": _interval_of(k, it), "verdict": it.get("verdict"),
-                            "reason": it.get(REASON_KEY) or ""})
-        for k in ("D2", "P3-9"):
+                entries += _cd2_entries(it, g6_row, record_row)
+            elif k == "safe_stop_427_9":
+                entries += _safe_stop_entries(it, g6_row)
+            else:
+                cls = CLASS_RECORD if record_row else CLASS_GRADED
+                entries.append(_entry_row(COMMON_ID.get(k, k), cls, k, it, g6_row,
+                                          method="원 판정기 실행" if k in T45_KEYS else "재계산"))
+        for k in ("T4", "T5", "J-P3"):   # 등급 항목 class even when 해당 없음 on this row
             it = r["items"].get(k)
-            if isinstance(it, dict) and k not in r["judged_keys"]:
-                entries.append({"common_id": k, "path2_item": k, "source": str(it.get("clause") or "")[:120],
-                                "method": "재계산", "interval": "", "verdict": it.get("verdict"),
-                                "reason": "기록 항목"})
-        graded = [x for x in entries if x["verdict"] not in ("record",)]
+            if isinstance(it, dict) and k not in seen:
+                seen.add(k)
+                entries.append(_entry_row(COMMON_ID.get(k, k), CLASS_RECORD if record_row else CLASS_GRADED, k, it,
+                                          g6_row, method="원 판정기 실행" if k in T45_KEYS else "재계산"))
+        for k in GATE_KEYS:
+            it = r["items"].get(k)
+            if isinstance(it, dict):
+                seen.add(k)
+                entries.append(_entry_row(COMMON_ID.get(k, k), CLASS_GATE, k, it, g6_row,
+                                          method="원 판정기 실행" if k in T45_KEYS else "재계산"))
+        for k in RECORD_LIST_KEYS:
+            it = r["items"].get(k)
+            if isinstance(it, dict) and k not in seen:
+                entries.append(_entry_row(COMMON_ID.get(k, k), CLASS_RECORD, k, it, g6_row,
+                                          verdict=it.get("record_verdict") or it.get("verdict")))
+        graded = [x for x in entries if x["class"] == CLASS_GRADED and x["verdict"] not in ("na", "record")]
         outside = r.get("engine") == "l1r"   # C-1 L1-R record rows: outside the common block (scope sentence)
-        if not record_bundle and not outside and not graded:
+        if not record_row and not outside and not graded:
             problems.append(f"{r['case']}: 등급 항목 0")
-        ent = {"row": r["case"], "status": r["status"], "items": entries}
+        ent = {"row": r["case"], "status": r["status"], "record_row": record_row, "items": entries}
         if outside:
             ent["scope"] = "L1-R 기록 행(공통 블록 적용 밖, 앞 판 그대로)"
         lst.append(ent)
     if len(lst) != len(rows):
         problems.append(f"목록 행 {len(lst)} != 묶음 행 {len(rows)}")
-    out = {"clause": "CD-11", "bundle": bundle, "rows": lst, "problems": problems}
+    out = {"clause": "CD-11 (rev25)", "bundle": bundle, "rows": lst, "problems": problems}
     if problems:
         out["stop"] = "CD-11: " + "; ".join(problems)
     return out
@@ -983,12 +1253,18 @@ C8A_TAG = ("Kc3", "VB")
 
 
 def c8_values(row, items, params) -> dict:
-    """CD-8 / 원판 7.4 record values of one O-C5 row; `missing` lists the absent ones (해당 없음 counts)."""
+    """rev25 CD-8 / 원판 7.4 record values of one O-C5 row; `missing` lists the absent ones (해당 없음 counts).
+    F^a = per-leg minimum of the 1 ms true F_cyl from t_D to the record end, F^t = the same series in
+    [t_D, t_D + 8 s) (each with its sample time); P3-5 on a rigid_base row = 해당 없음(rigid_base); D8 = SCM D8
+    values (1)-(4); G6 = the eight gate values (G6-1..G6-5, G6-7 = the P3 values; G6-6 and READY_le_120s apart)."""
     res = row.result
     t_D = items["departure"]["t_D_s"]
     vals = {}
     vals["Fa_min_after_departure"] = _per_leg_min(row, row.F, t_D)
-    vals["Ft_min_after_departure"] = _per_leg_min(row, row.F_inst, t_D)
+    vals["Ft_min_transient_8s"] = _per_leg_min(row, row.F, t_D, None if t_D is None else t_D + R.FMIN_REC_WINDOW_S)
+    if (res.get("args") or {}).get("rigid_base") and isinstance(items.get("P3-5"), dict):
+        items["P3-5"]["value_cd9"] = NA_RIGID_BASE
+        items["P3-5"][REASON_KEY] = NA_RIGID_BASE + " (사용자 결정 100의 1)"
     full = items.get("Fmin_time_full") or {}
     vals["t_below_Fmin_s"] = full.get("t_below_Fmin_s")
     vals["t_below_Fmin_plus2k_s"] = full.get("t_below_Fmin_plus2k_s")
@@ -1009,20 +1285,34 @@ def c8_values(row, items, params) -> dict:
     a = res.get("args") or {}
     vals["floor_deg"] = [a.get("floor_roll"), a.get("floor_pitch")]
     vals["crawler_kn_scale"] = _kn_scale(row)
-    for k in P3_KEYS + ("D8_F_after_liftoff", "D8_end_attitude", "D8_pressure", "G6-6"):
+    for k in P3_KEYS + ("G6-6", "READY_le_120s"):
         it = items.get(k)
-        if not isinstance(it, dict) or (it.get("verdict") == "indeterminate" and not it.get("value_cd5")):
+        na = it.get("value_cd9") or it.get("value_cd5") if isinstance(it, dict) else None
+        if not isinstance(it, dict) or (it.get("verdict") == "indeterminate" and not na):
             vals[k] = None
         else:
-            vals[k] = it.get("value_cd5") or it.get("record_verdict") or it.get("verdict")
-    missing = [k for k, v in vals.items() if v is None or (isinstance(v, list) and any(x is None for x in v))]
-    return {"clause": "CD-8 / 원판 7.4 기록 항목", "values": vals, "missing": missing}
+            vals[k] = na or it.get("record_verdict") or it.get("verdict")
+    d8 = scm_d8_values(row, params)
+    items["CD-8_D8"] = dict(d8, verdict="record")
+    vals["D8_t_lift_s"] = d8["t_lift_s"]
+    vals["D8_min_after_t_lift"] = d8["min_after_t_lift"]
+    vals["D8_end_attitude_with_mount_deg"] = d8["end_attitude_with_mount_deg"]
+    vals["D8_pad_lift_samples"] = d8["pad_lift_samples"]
+    vals["G6"] = {gate: vals.get(cid) for gate, cid in G6_TABLE}
+    missing = [k for k, v in vals.items() if v is None or (isinstance(v, list) and any(x is None for x in v))
+               or (k == "G6" and any(x is None for x in v.values()))]
+    return {"clause": "CD-8 / 원판 7.4 기록 항목 (rev25)", "values": vals, "missing": missing,
+            "note": "D8 t_lift 계열 = step_series.npz scm_crawler_normal_N (t_D와 같은 계열); 강체 바닥 쪽 크롤러 "
+                    "하중을 담는지는 판정서에 적는다"}
 
 
-def _per_leg_min(row, series, t0):
+def _per_leg_min(row, series, t0, t1=None):
+    """Per-leg minimum of a 1 ms series over [t0, t1) (t1 None = to the record end) and each minimum's time."""
     if t0 is None:
         return None
     sel = row.tF >= t0 - R.CMP_TOL
+    if t1 is not None:
+        sel &= row.tF < t1 - R.CMP_TOL
     if not sel.any():
         return None
     F = series[sel]

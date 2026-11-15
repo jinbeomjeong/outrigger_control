@@ -391,6 +391,8 @@ def judge(args) -> int:
             kind = mod.kind_of(case)
             items, keys, notes, record = mod.judge_row(row, case, kind, params)
             augment_items(args.bundle, row, items, keys, case, _result_of(d), git_ref, commit=True)
+            if args.bundle in CD11_BUNDLES and eng != "l1r":
+                CD.apply_rev25_row(args.bundle, row, items, keys, record)   # rev25 CD-11 gates, CD-1 J-P3
             st = C.row_status(items, keys)
             if record:
                 st = "기록 완료" if st != "판정 불가" else "기록 불완전"

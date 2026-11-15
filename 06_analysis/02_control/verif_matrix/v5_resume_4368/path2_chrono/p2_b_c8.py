@@ -7,6 +7,8 @@ F<F_min and F<F_min+2 kN times, P3-3_within, LAS-b start / end / reason, K1 deci
 floor angles, crawler stiffness factor k, P3-1..P3-9 / D8 / G6 values); a row is 기록 완료 when all are present.
 C-8a S-9 is handled by user decisions 60 (A) / 88 (L-5 known limit, not a stop) only when m and the minimum leg
 equal this path's R3d C-8 output (`--r3d-c8`), else 원판 7.4 stop.
+rev25 CD-8: F^a = minimum from t_D to the record end, F^t = minimum in [t_D, t_D + 8 s) (same 1 ms true F_cyl);
+P3-5 = 해당 없음(rigid_base); D8 = SCM D8 values (1)-(4); G6 = eight gate values (G6-6, READY_le_120s apart).
 """
 import p2_cd as CD
 import p2_core as C
@@ -62,16 +64,15 @@ def judge_row(row, case, kind, params):
 
 
 def _add_record_values(items, row, params):
-    """CD-8: P3-1..P3-9 / FAULT0 / G6-6 (P3-7 recorded) and D8 values of the row, as records."""
-    limit = R.READY_FLAT_S if row.flat else R.READY_SLOPE_S
-    p3, p3_keys, _ = K.items_p3(row, params, limit, ready_judged=False, g6=True, allow_stop=False)
+    """CD-8: P3-1..P3-9 / FAULT0 (P3-6 with the 421.1 limit, P3-7 recorded), G6-6 and READY_le_120s apart, as
+    records. The SCM D8 values (1)-(4) are written by `p2_cd.c8_values` (rev25 CD-8 8)."""
+    p3, p3_keys, _ = K.items_p3(row, params, R.READY_FLAT_S, ready_judged=False, g6=True, allow_stop=False)
     for k, v in p3.items():
         items.setdefault(k, v)
+    CD.set_p3_6(items, [], row, judged=False)
+    CD.g6_split(items, [], row, graded=False)
     CD.add_p3_7(items, [], row, params, judged=False)
     CD.apply_ready_none(items, [], row)
-    d8, _, _ = K.items_d8p(row, params, judged=False, hold=False)
-    for k in ("D8_F_after_liftoff", "D8_end_attitude", "D8_pressure"):
-        items.setdefault(k, d8[k])
 
 
 def _c8a_s9(items, rc, F_min, row):
