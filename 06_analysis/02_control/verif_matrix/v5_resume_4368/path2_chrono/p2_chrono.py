@@ -389,6 +389,9 @@ def judge(args) -> int:
                          "pool": case.get("pool"), "rc": case.get("rc"), "placement_record": plc,
                          "status": st, "judged_keys": keys, "items": items,
                          "notes": list(notes) + plc["notes"]})
+            if record:
+                # rev19 R19-2 / d1 11 "기록(D8·P 계산, 실패는 보고)": failed items of a record row are reported
+                rows[-1]["failures_reported"] = [k for k in keys if (items.get(k) or {}).get("verdict") == "fail"]
     bundle = mod.bundle_status(rows)
     if args.bundle not in ("C-5", "C-6C7"):
         bundle["rev9_R9_6_j11_record"] = r9_6_summary(rows)

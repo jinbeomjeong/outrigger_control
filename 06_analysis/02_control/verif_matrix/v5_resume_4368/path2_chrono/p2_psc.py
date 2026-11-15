@@ -1,16 +1,20 @@
-"""C-2 PS-c rows: spec 426.3 study A rows E-1..E-7 on one Chrono SCM row (rev4 R4-A2, rev18 R18-3 1).
+"""C-2 PS-c event rows: spec 426.3 study A rows E-1..E-7 on one Chrono SCM row (rev4 R4-A2, rev18 R18-3 1,
+rev19 R19-3).
 
 - E-1..E-6 are recomputed from the raw record (R4-A2 option b): `soil_event_series.npz` 1 ms rows (pad contact
-  normal, F_cyl, valve output, gap, true roll / pitch, crawler normal), `result.json` `phases` / `events` /
-  `s9_rows` / `soil_event.spec` / `soil_event.driver` / `soil_event.event_reached`, `step_series.npz`
-  `s_motor_m`. The runner's `soil_event.judgement` block is never read.
+  normal, F_cyl, valve output, gap, true roll / pitch, crawler normal), `result.json` `events` / `s9_rows`
+  (`c2_phase`, `crawler_gap_min_m`) / `soil_event.spec` / `soil_event.driver` / `soil_event.event_reached`,
+  `step_series.npz` `s_motor_m`. The runner's `soil_event.judgement` block is never read.
 - E-7 comes from the path 2 run of the designated tool (`p2_e7.py`, R4-A2 option c); path 2 applies the
   grade itself (bundles <= 1).
 - Any item that cannot be computed is `indeterminate`, so the row is 판정 불가 (R18-3: no empty item passes).
 
-Branch of 426.3 read on the Chrono row: from t_ev - 0.5 s; it ends at the first control instant
-t >= t_ev + max(12 s, ramp + 3 s) with READY held >= 3 s since the first READY instant after t_ev, else at
-t_ev + 60 s. The items use the rows of [t_ev - 0.5, branch end]; times below are relative to t_ev.
+Branch window (rev19 R19-3 = the original Chrono adapter `run_S9.judge_chrono_soil_event` / `soil_event_stop_s`):
+start = event - 0.5 s; the 10 Hz `s9_rows` `c2_phase` rows from the start, in event-relative time t: for t > 0,
+READY ("ready" in the phase) keeps / starts `ready_since`, any other phase clears it; the first row with
+t >= 60 s ends the branch (`max_after`), else the first row with t >= max(12 s, ramp + 3 s) and
+t - ready_since >= 3 s (`ready_held`); without either the record end (`run_end`). Rows after the end are not used by
+the E items (their per-leg minimum F_cyl and lift counts are recorded). "실행 끝" of the 426.3 text = this end.
 """
 from __future__ import annotations
 
@@ -34,7 +38,7 @@ def load_event(row) -> tuple[dict | None, str | None]:
     se = row.result.get("soil_event")
     p = row.folder / "soil_event_series.npz"
     if not isinstance(se, dict):
-        return None, "no soil_event block in result.json (row without a soil event, e.g. a PS-c base run)"
+        return None, "no soil_event block in result.json"
     if not p.exists():
         return None, "soil_event_series.npz missing"
     spec, drv = se.get("spec") or {}, se.get("driver") or {}
@@ -48,6 +52,9 @@ def load_event(row) -> tuple[dict | None, str | None]:
         return None, f"soil_event spec / driver key missing: {exc!r}"
     if leg not in R.LEGS:
         return None, f"event leg {leg!r}"
+    s9 = row.result.get("s9_rows")
+    if not isinstance(s9, list) or not s9:
+        return None, "result.json s9_rows missing (branch phases)"
     z = np.load(p)
     cols = [str(c) for c in z["columns"]] if "columns" in z.files else None
     if cols != list(R.E_ROW_COLUMNS) or "rows" not in z.files:
@@ -65,35 +72,31 @@ def load_event(row) -> tuple[dict | None, str | None]:
     speed = "slow" if eid in R.E_SLOW_EVENTS else ("fast" if eid in R.E_FAST_EVENTS else None)
     if speed is None:
         return None, f"event id {eid!r} not in 426.3 (slow {R.E_SLOW_EVENTS}, fast {R.E_FAST_EVENTS})"
+    t_b = t_ev - R.E_PRE_S
+    s9b = [r for r in s9 if isinstance(r, dict) and float(r["t_s"]) >= t_b - R.CMP_TOL]
+    phases_rel = [(round(float(r["t_s"]) - t_ev, 3), str(r.get("c2_phase"))) for r in s9b]
     return {"event_id": eid, "speed": speed, "leg": leg, "t_ev_s": t_ev, "depth_m": depth, "ramp_s": ramp,
-            "rows": rows, "series_end_s": float(t[-1])}, None
+            "rows": rows, "series_end_s": float(t[-1]), "phases_rel": phases_rel, "s9_branch": s9b}, None
 
 
 def branch_end(row, ev) -> dict:
-    """426.3 branch end on the 10 Hz control instants (see module docstring)."""
-    t_ev = ev["t_ev_s"]
+    """rev19 R19-3 branch end (adapter `soil_event_stop_s`), in event-relative seconds and absolute."""
     min_after = max(R.E_MIN_AFTER_S, ev["ramp_s"] + R.E_SLOW_TAIL_S)
-    tk = row.t10[(row.t10 > t_ev + R.CMP_TOL) & (row.t10 < t_ev + R.E_MAX_AFTER_S + R.CMP_TOL)]
-    ph = C.phase_at(row, tk) if tk.size else np.array([])
     ready_since = None
-    for t, p in zip(tk, ph):
-        if p != "ready":
-            ready_since = None
-            continue
-        if ready_since is None:
-            ready_since = float(t)
-        if t >= t_ev + min_after - R.CMP_TOL and t - ready_since >= R.E_READY_HOLD_S - R.CMP_TOL:
-            return {"t_end_s": float(t), "reason": "ready_held", "min_after_s": min_after}
-    return {"t_end_s": t_ev + R.E_MAX_AFTER_S, "reason": "max_60s", "min_after_s": min_after}
-
-
-def _runs(mask):
-    return C.runs_of(np.asarray(mask, bool))
+    for t, ph in ev["phases_rel"]:
+        if t > 0.0:
+            ready_since = (ready_since if ready_since is not None else t) if "ready" in ph else None
+        if t >= R.E_MAX_AFTER_S - 1e-9:
+            return {"t_end_rel_s": t, "t_end_s": ev["t_ev_s"] + t, "reason": "max_after", "min_after_s": min_after}
+        if t >= min_after - 1e-9 and ready_since is not None and t - ready_since >= R.E_READY_HOLD_S - 1e-9:
+            return {"t_end_rel_s": t, "t_end_s": ev["t_ev_s"] + t, "reason": "ready_held", "min_after_s": min_after}
+    t_rel = ev["series_end_s"] - ev["t_ev_s"]
+    return {"t_end_rel_s": t_rel, "t_end_s": ev["series_end_s"], "reason": "run_end", "min_after_s": min_after}
 
 
 def _lift_stats(lifted_col, t_rel):
     """Lift sum [s] (samples x 1 ms) and last touch-down [s after the event] of one leg after the event."""
-    runs = _runs(lifted_col)
+    runs = C.runs_of(np.asarray(lifted_col, bool))
     n = int(np.asarray(lifted_col, bool).sum())
     if not runs:
         return {"sum_s": 0.0, "n_runs": 0, "last_touch_s": 0.0, "lifted_at_end": False}
@@ -104,16 +107,16 @@ def _lift_stats(lifted_col, t_rel):
 
 
 def e_items(row, params, e7=None) -> tuple[dict, list]:
-    """Items E-1..E-7 (+ records) of one PS-c row and the judged keys."""
+    """Items E-1..E-7 (+ records) of one PS-c event row and the judged keys."""
     ev, why = load_event(row)
     if ev is None:
         items = {k: _ind(why, clause="426.3 / rev4 R4-A2") for k in E_KEYS}
         return items, list(E_KEYS)
     be = branch_end(row, ev)
     t_ev, rows = ev["t_ev_s"], ev["rows"]
-    t_end = be["t_end_s"]
-    truncated = ev["series_end_s"] < t_end - R.CMP_TOL
-    sel = rows[:, 0] <= t_end + R.CMP_TOL
+    stop_rel = be["t_end_rel_s"]
+    t_all = rows[:, 0] - t_ev
+    sel = t_all <= stop_rel + 1e-9
     rw = rows[sel]
     t_rel = rw[:, 0] - t_ev
     contact, F, valve, gap = rw[:, 1:5], rw[:, 5:9], rw[:, 9:13], rw[:, 13:17]
@@ -121,13 +124,17 @@ def e_items(row, params, e7=None) -> tuple[dict, list]:
     after = t_rel >= -R.CMP_TOL
     lifted = (contact <= R.CMP_TOL) & after[:, None]          # Q-14: pad normal <= 0 (7.6 tolerance)
     fast = ev["speed"] == "fast"
-    li = R.LEGS.index(ev["leg"])
     pair = [ev["leg"], R.E_DIAG[ev["leg"]]]
     adj = [g for g in R.LEGS if g not in pair]
     per_leg = {g: _lift_stats(lifted[:, R.LEGS.index(g)], t_rel) for g in R.LEGS}
-    base = {"event": {k: ev[k] for k in ("event_id", "speed", "leg", "t_ev_s", "depth_m", "ramp_s")},
-            "branch": dict(be, rows=int(sel.sum()), truncated_by_run_end=bool(truncated))}
-    items = {"E_branch": dict(base, verdict="record", clause="426.3 branch (path 2 reading on the Chrono row)")}
+    tail_rows = rows[~sel]
+    after_cut = {"rows": int(len(tail_rows)),
+                 "min_F_cyl_N": tail_rows[:, 5:9].min(axis=0).tolist() if len(tail_rows) else None,
+                 "lift_samples_per_leg": (tail_rows[:, 1:5] <= R.CMP_TOL).sum(axis=0).astype(int).tolist()
+                 if len(tail_rows) else None}
+    items = {"E_branch": {"verdict": "record", "clause": "426.3 branch = adapter window (rev19 R19-3)",
+                          "event": {k: ev[k] for k in ("event_id", "speed", "leg", "t_ev_s", "depth_m", "ramp_s")},
+                          "branch": dict(be, rows=int(sel.sum())), "after_branch_end_record": after_cut}}
 
     # E-1
     if fast:
@@ -135,7 +142,7 @@ def e_items(row, params, e7=None) -> tuple[dict, list]:
         sum_ok = all(R.le(v["sum_s"], R.E1_LIFT_SUM_S) for v in pl.values())
         touch_ok = all(v["last_touch_s"] is not None and R.le(v["last_touch_s"], R.E1_LAST_TOUCH_S)
                        for v in pl.values())
-        union = _runs(lifted[:, [R.LEGS.index(g) for g in pair]].any(axis=1))
+        union = C.runs_of(lifted[:, [R.LEGS.index(g) for g in pair]].any(axis=1))
         items["E-1"] = {"clause": "426.3 E-1 fast: event leg + diagonal, per leg lift sum <= 1.8 s, last touch-down "
                                   "<= event + 3.0 s (pair union recorded)", "pair": pair, "per_leg": pl,
                         "pair_union_s": sum(b - a + 1 for a, b in union) * 1e-3,
@@ -192,10 +199,12 @@ def e_items(row, params, e7=None) -> tuple[dict, list]:
         else:
             mins = F[post].min(axis=0)
             items["E-3"] = {"clause": "426.3 E-3: four legs 1 ms actual F_cyl >= F_min after W (fast) / after the "
-                                      "event (slow) to the end", "min_N": mins.tolist(), "F_min_N": params["F_min_N"],
+                                      "event (slow) to the branch end (rev19 R19-3)", "min_N": mins.tolist(),
+                            "F_min_N": params["F_min_N"],
                             "verdict": "pass" if R.ge(float(mins.min()), params["F_min_N"]) else "fail"}
 
-    # E-4
+    # E-4 (rev19 R19-3: inside = t >= event and <= W end; outside = t >= event, after W end, to the branch end;
+    # the 0.5 s before the event is in neither)
     if w_end is None:
         items["E-4"] = _ind("event window not defined", clause="426.3 E-4")
     else:
@@ -211,53 +220,54 @@ def e_items(row, params, e7=None) -> tuple[dict, list]:
         sat = int((outw[:, None] & ext & (p_bar >= R.SATURATION_BAR - R.CMP_TOL)).sum())
         ok = (wmax is not None and all(R.le(x, R.E4_WINDOW_BAR) for x in wmax)
               and (mmax is None or R.le(mmax, R.E4_MOVING_BAR)) and sat == 0)
-        items["E-4"] = {"clause": "426.3 E-4: in the event window F_cyl/A_p <= 350 bar per leg; outside it moving "
-                                  "samples (|u| > 1e-6 m/s) <= 180 bar and saturation 0 (extending, >= 210 bar)",
+        items["E-4"] = {"clause": "426.3 E-4: in the event window F_cyl/A_p <= 350 bar per leg; outside it (after the "
+                                  "event, to the branch end) moving 1 ms rows (|valve| > 1e-6 m/s) <= 180 bar and "
+                                  "saturation 0 (extending, >= 210 bar)",
                         "window_end_s": w_end, "window_max_bar": wmax, "moving_outside_max_bar": mmax,
                         "saturation_outside_ms": sat,
                         "verdict": "indeterminate" if wmax is None else ("pass" if ok else "fail")}
         if wmax is None:
             items["E-4"]["reason"] = "no row in the event window"
 
-    # E-5
-    ph_end = str(C.phase_at(row, np.array([t_end]))[0])
-    tail = rw[:, 0] >= t_end - R.E5_END_MEAN_S - R.CMP_TOL
-    m_att = np.abs(att[tail].mean(axis=0)) if tail.any() else None
-    fevs = [n for t, n in row.events if n.startswith("FAULT") and t <= t_end + R.CMP_TOL]
-    fph = [n for t, n in row.phases if n in R.FAULT_PHASES and t <= t_end + R.CMP_TOL]
-    smask = row.tF <= t_end + R.CMP_TOL
+    # E-5 (rev19 R19-3: last c2_phase at the branch end READY, end 1 s mean attitude <= 0.2 deg, FAULT periods in the
+    # window 0, run maximum stroke <= 684.8 mm; run_end judged on that record, reason written)
+    ph_in = [p for t, p in ev["phases_rel"] if t <= stop_rel + 1e-9]
+    ph_end = ph_in[-1] if ph_in else None
+    tail = rw[:, 0] >= rw[-1, 0] - R.E5_END_MEAN_S - R.CMP_TOL
+    m_att = np.abs(att[tail].mean(axis=0))
+    n_fault = sum(1 for p in ph_in if p in R.FAULT_PHASES)
+    smask = row.tF <= ev["t_ev_s"] + stop_rel + R.CMP_TOL
     smax = float(row.s_motor[smask].max()) if smask.any() else None
-    e5 = {"clause": "426.3 E-5: ends in READY, last 1 s mean |roll|, |pitch| <= 0.2 deg, FAULT 0, run maximum "
-                    "stroke <= 684.8 mm (start .. branch end)", "phase_at_end": ph_end,
-          "end_mean_abs_deg": None if m_att is None else m_att.tolist(), "fault_events": fevs,
-          "fault_phases": fph, "stroke_max_m": smax}
-    if truncated:
-        e5.update(verdict="indeterminate", reason="run ended before the 426.3 branch end")
-    elif m_att is None or smax is None:
-        e5.update(verdict="indeterminate", reason="no rows for the end state")
+    e5 = {"clause": "426.3 E-5 / r67 end_att, fault0: last c2_phase in the branch READY, last 1 s mean |roll|, "
+                    "|pitch| <= 0.2 deg, FAULT periods in the branch 0, run maximum stroke <= 684.8 mm",
+          "phase_at_end": ph_end, "end_mean_abs_deg": m_att.tolist(), "fault_periods_in_branch": n_fault,
+          "stroke_max_m": smax, "branch_end_reason": be["reason"]}
+    if ph_end is None or smax is None:
+        e5.update(verdict="indeterminate", reason="no phase row or stroke sample up to the branch end")
     else:
-        ok = (ph_end == "ready" and all(R.le(float(x), R.ATT_LIMIT_DEG) for x in m_att) and not fevs and not fph
+        ok = (ph_end == "ready" and all(R.le(float(x), R.ATT_LIMIT_DEG) for x in m_att) and n_fault == 0
               and R.le(smax, R.E5_STROKE_M))
         e5["verdict"] = "pass" if ok else "fail"
     items["E-5"] = e5
 
-    # E-6
-    loaded = after & np.array([R.gt(float(x), 0.0) for x in cr])
+    # E-6 (crawler clearance at the cut = s9_rows crawler_gap_min_m, as the adapter)
+    loaded = after & (cr > R.CMP_TOL)
     if w_end is None:
         items["E-6"] = _ind("W not defined", clause="426.3 E-6")
     else:
         in_ms = int((loaded & (t_rel <= w_end + R.CMP_TOL)).sum()) if fast else 0
         out_ms = int((loaded & (t_rel > w_end + R.CMP_TOL)).sum()) if fast else int(loaded.sum())
         end_load = float(cr[-1])
-        rut = [(t, c) for t, c in row.rut if c is not None and t <= t_end + R.CMP_TOL]
-        clear = float(rut[-1][1]) if rut else None
+        gaps = [r for r in ev["s9_branch"] if float(r["t_s"]) - t_ev <= stop_rel + 1e-9
+                and r.get("crawler_gap_min_m") is not None]
+        clear = float(gaps[-1]["crawler_gap_min_m"]) if gaps else None
         e6 = {"clause": "426.3 E-6 (confirmed 2026-10-30): recontact in W of a fast event FLAG; outside W / after a "
-                        "slow event 0; end crawler load 0 and all-node clearance >= 25 mm (0 < c < 25 mm FLAG)",
+                        "slow event 0; end crawler load 0 and all-node clearance (crawler_gap_min_m at the cut) "
+                        ">= 25 mm (0 < c < 25 mm FLAG)",
               "contact_in_W_ms": in_ms, "contact_outside_ms": out_ms, "end_load_N": end_load,
-              "end_clearance_m": clear, "end_clearance_t_s": rut[-1][0] if rut else None, "flags": []}
-        if truncated or clear is None:
-            e6.update(verdict="indeterminate", reason="run ended before the branch end" if truncated
-                      else "no s9_rows rut_clearance_m up to the branch end")
+              "end_clearance_m": clear, "end_clearance_t_s": float(gaps[-1]["t_s"]) if gaps else None, "flags": []}
+        if clear is None:
+            e6.update(verdict="indeterminate", reason="no s9_rows crawler_gap_min_m up to the branch end")
         elif out_ms > 0 or R.gt(end_load, 0.0) or R.le(clear, 0.0):
             e6["verdict"] = "fail"
         else:
@@ -287,8 +297,8 @@ def e7_item(row, doc) -> dict:
         return dict(out, **_ind("E-7 tool output not given (--aux e7=<e7_path2.json>)"))
     gate = doc.get("tool_gate") or {}
     if not gate.get("ok"):
-        return dict(out, **_ind("E-7 tool gate failed (rev4 R4-A2 condition 1)"),
-                    stop="S-11 (rev4 R4-A2 condition 1: E-7 tool gate)")
+        return dict(out, **_ind("E-7 tool gate failed (rev4 R4-A2 condition 1 / rev19 R19-7)"),
+                    stop="S-11 (rev4 R4-A2 condition 1 / rev19 R19-7: E-7 tool gate)")
     rec = (doc.get("rows") or {}).get(row_key(row.folder))
     if not isinstance(rec, dict):
         return dict(out, **_ind("row not in the E-7 tool output"))

@@ -192,21 +192,20 @@ def items_p3(row, params, ready_limit_s, ready_judged, g6=False, allow_stop=True
     sg = C.stroke_guard_class(row)
     row_class = None
     if allow_stop:
-        # rev18 R18-2 / rev6 R6-B8 (D-26): rows S-01..S-04 take the spec 427.9 safe-stop branch (conditions 1-5).
-        # allowed_stop replaces P3-5 / P3-6 / FAULT0 (only these three, R18-2); the other P3 items stay judged.
+        # rev6 R6-B8 (D-26), rev18 R18-2, rev19 R19-1: rows S-01..S-04 that stop on the lift stroke guard take
+        # the spec 427.9 branch. The row grade is conditions 1-5 only: P3-1..P3-9, FAULT0, P3-6 and G6-* (READY /
+        # DONE / end attitude items) become record only on this row (values kept). The 4.2 / 6 record check
+        # (identity) and the 7.2 K1 class are not P3 grade items and stay.
         items["stroke_guard"] = dict(sg, verdict="record")
         ss = C.safe_stop_427_9(row, t_D, params)
         if ss is not None:
             row_class = ss["class"]
             items["safe_stop_427_9"] = ss
-            if row_class == "allowed_stop":
-                for k in SAFE_STOP_REPLACES:
-                    if k in items:
-                        items[k]["superseded_by"] = "allowed_stop (spec 427.9, rev18 R18-2)"
-                keys = [k for k in keys if k not in SAFE_STOP_REPLACES]
-            keys.append("safe_stop_427_9")
-            ss["ready_dependent_items"] = {k: {"verdict": items[k]["verdict"], "reason": items[k].get("reason")}
-                                           for k in ("P3-1", "P3-2", "P3-4", "G6-6") if k in items}
+            rec_only = [k for k in keys if k not in SAFE_STOP_KEEP]
+            for k in rec_only:
+                items[k]["record_only"] = "soil-guard stop row: grade by spec 427.9 conditions 1-5 (rev19 R19-1)"
+            ss["recorded_items"] = {k: items[k]["verdict"] for k in rec_only}
+            keys = [k for k in keys if k in SAFE_STOP_KEEP] + ["safe_stop_427_9"]
         elif sg["warn_lift_stroke_limited"] > 0:
             row_class = _sl1_relax(items, fault, p33)
     else:
@@ -225,8 +224,9 @@ def items_p3(row, params, ready_limit_s, ready_judged, g6=False, allow_stop=True
     return items, keys, notes
 
 
-# rev18 R18-2: "그때 P3-5·P3-6·FAULT0은 이 조건으로 대신한다"
-SAFE_STOP_REPLACES = ("P3-5", "P3-6", "FAULT0")
+# rev19 R19-1: on a soil-guard stop row only these keys stay next to `safe_stop_427_9` (rev18 R18-2's
+# "P3-5·P3-6·FAULT0" is read as examples of the record list)
+SAFE_STOP_KEEP = ("identity", "K1_class")
 
 
 def _sl1_relax(items, fault, p33):
@@ -250,11 +250,17 @@ def safe_stop_summary(rows) -> dict:
         if not isinstance(ss, dict):
             continue
         per.append({"case": r["case"], "d1_id": r.get("d1_id"), "class": ss["class"], "conditions": ss["conditions"],
-                    "leg_lift_samples_after_t_D": ss["values"]["leg_lift_samples_after_t_D"],
+                    "leg_lift_samples_from_level_start": ss["values"]["leg_lift_samples_from_level_start"],
                     "moving_max_bar": ss["values"]["moving_max_bar"],
-                    "saturation_rows_per_leg": ss["values"]["saturation_rows_per_leg"]})
-    return {"clause": "spec 427.9 / rev6 R6-B8 / rev18 R18-2, R18-4", "rows": per,
-            "counts": {c: sum(1 for p in per if p["class"] == c) for c in R.SAFE_STOP_CLASSES}}
+                    "saturation_rows_per_leg": ss["values"]["saturation_rows_per_leg"],
+                    "missing_inputs": ss.get("missing_inputs", [])})
+    counts = {c: sum(1 for p in per if p["class"] == c) for c in R.SAFE_STOP_CLASSES}
+    # rev19 R19-1 (user decision 65): allowed_stop counts on the pass side; phrase "통과 n / 안전 종료 m"
+    safe = {p["case"] for p in per if p["class"] == "allowed_stop"}
+    n_pass = sum(1 for r in rows if r.get("status") == "통과" and r["case"] not in safe)
+    return {"clause": "spec 427.9 / rev6 R6-B8 / rev18 R18-2, R18-4 / rev19 R19-1", "rows": per, "counts": counts,
+            "phrase": f"통과 {n_pass} / 안전 종료 {len(safe)}",
+            "disclosure": "allowed_stop을 묶음 등급의 통과 쪽으로 센 것은 결과 본 뒤 정한 정의(사용자 결정 65, rev19 R19-1)"}
 
 
 def bundle_status(rows, expected_count=None, record_bundle=False, extra_stops=None):

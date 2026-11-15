@@ -47,7 +47,7 @@ run_v5 files mixing settings (VB -> VB, LS1..LS4 -> LS, other settings -> V0, no
 ``chrono`` after the b9f5707 judgement (decisions 19 and 2026-11-14): criteria_id C-7a / C-7b are C-7 open-loop
 rows (rev4, counted as C-7); a V0 open-loop row without a ``v5_hydraulics`` block is normal (5.3, recorded);
 OC5PROBE rows (``r4368.role`` probe) get no O-C5 main-row block (5.4, k procedure in ``oc5k``).
-rev18 (3693a69c...) R18-1: ``chrono`` also checks the rev16 / rev17 / rev18 seals (``CHRONO_SEALS``, S-1);
+rev18 (3693a69c...) R18-1 / rev19 (7f87b8bb...) R19-8: ``chrono`` also checks the rev16..rev19 seals (``CHRONO_SEALS``, S-1);
 the other sub-commands are unchanged (their list is the R4 harness tool's).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
@@ -1074,6 +1074,9 @@ CHRONO_SEALS = (
      _VM + "v5_resume_4368_rules_rev17.sha256"),
     (_VM + "v5_resume_4368_rules_rev18.md", "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
      _VM + "v5_resume_4368_rules_rev18.sha256"),
+    # rev19 R19-8 order 2: rev16..rev19 (S7 38897f0)
+    (_VM + "v5_resume_4368_rules_rev19.md", "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+     _VM + "v5_resume_4368_rules_rev19.sha256"),
 )
 
 
@@ -2536,8 +2539,8 @@ def main(argv=None):
     try:
         seals = check_seals(repo)
         if args.cmd == "chrono":    # rev18 R18-1: rev16..rev18 for the Chrono sub-command only
-            seals["chrono_rev16_18"] = check_chrono_seals(repo)
-            seals["ok"] &= seals["chrono_rev16_18"]["ok"]
+            seals["chrono_rev16_19"] = check_chrono_seals(repo)
+            seals["ok"] &= seals["chrono_rev16_19"]["ok"]
         if not seals["ok"]:
             report = {"seals": seals, "status": "stop", "stop_codes": ["S-1"]}
             status = "stop"
@@ -2550,7 +2553,7 @@ def main(argv=None):
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
             if args.cmd == "chrono":
-                report["seals"]["chrono_rev16_18_sha256"] = {Path(rel).stem: want for rel, want, _ in CHRONO_SEALS}
+                report["seals"]["chrono_rev16_19_sha256"] = {Path(rel).stem: want for rel, want, _ in CHRONO_SEALS}
         report.update(tool=TOOL_NAME, version=TOOL_VERSION, tool_sha256=tool_sha, cmd=args.cmd,
                       argv=sys.argv[1:] if argv is None else list(argv),
                       created=_dt.datetime.now().astimezone().isoformat(timespec="seconds"), status=status)
