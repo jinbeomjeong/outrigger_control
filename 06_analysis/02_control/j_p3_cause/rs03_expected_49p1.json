@@ -1,0 +1,23 @@
+{
+ "assumptions": {
+  "P_locked_49_bar": 53.9,
+  "p_head_49_bar": 35.2,
+  "bound4_49_bar": 70.0,
+  "u_prev_mm_s": 0.07490000000000001,
+  "u_ext_mm_s": 4.71
+ },
+ "u_hold_mm_s": 0.20924,
+ "m1c_VN_rod_check_open_ms": 70.0,
+ "m1c_VN_head_check_open_ms": 70.0,
+ "m1c_BL_head_check_open_ms": 64.0,
+ "hand_head_fill_cm3": 2.0634,
+ "hand_head_open_ms_k1": 112.58945043997325,
+ "hand_tracker_gate_open_ms_k0p8_eh5": 139.638784960899,
+ "tracker_p_hat_49p1_bar_gate0ms": 60.503681027097116,
+ "tracker_p_hat_49p1_bar_gate140ms": 70.0,
+ "tracker_p_hat_49p1_bar_gate100ms": 70.0,
+ "tracker_C_r_bar_m3_Pa": 3.5831120610272563e-12,
+ "plant_C_r_m3_Pa": 1.5863198867936439e-12,
+ "plant_p_tr_49p1_bar_open_at_m1c_head": 43.181403467009325,
+ "plant_p_tr_49p1_bar_open_67ms": 42.32170516590203
+}

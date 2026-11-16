@@ -1,0 +1,131 @@
+[start] c8a-i-endramp 2026-11-16T19:43:23 mask=0xFF priority=Normal
+hull hook: installed mode fast (default; chrono_hull_hook.dll cec997d7a549)
+{
+ "c2_soil": {
+  "settings": {
+   "enable": true,
+   "plateau_window_m": 0.01,
+   "plateau_mean_speed_fraction": 0.15,
+   "plateau_rise_max_N": 2000.0,
+   "plausibility_fraction": 0.85,
+   "push_speed_fraction": 0.25,
+   "corner_bias_deadzone_m": 0.02,
+   "max_push_m": 0.15,
+   "weight_record_range": [
+    0.9,
+    1.15
+   ],
+   "settle_tilt_samples": 10,
+   "loc_anchor_enable": true,
+   "loc_anchor_deadzone_m": 0.02,
+   "loc_anchor_offset_m": 0.005,
+   "mode_defer_periods": 0,
+   "mode_defer_stroke_m": 0.0,
+   "mode_defer_rise_factor": 4.0,
+   "mode_defer_shadow": false
+  },
+  "loc": true,
+  "soil_mode": false,
+  "t_P_s": 34.80000000003171,
+  "t_loc_s": 36.200000000078184,
+  "W_hat_N": 387839.0606713326,
+  "W_ratio": 1.0298884430884723,
+  "W_ref_N": 376583.56424339,
+  "corner_order": [
+   "RR",
+   "RL",
+   "FR",
+   "FL"
+  ],
+  "bias_corner_m": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "bias_corner_raw_m": [
+   0.005582193073578656,
+   -0.0015117974380756821,
+   -0.0007639655810569336,
+   -0.007857956092711272
+  ],
+  "clearance_at_P_m": 0.0028571255489788783,
+  "clearance_at_loc_m": 0.004090671927911904,
+  "settle_attitude_rad": [
+   0.037557788573272397,
+   0.02587559626004572
+  ],
+  "soil_mode_t_s": null,
+  "soil_mode_start_stroke_m": null,
+  "defer": {
+   "settings": {
+    "mode_defer_periods": 0,
+    "mode_defer_stroke_m": 0.0,
+    "mode_defer_rise_factor": 4.0,
+    "mode_defer_shadow": false
+   },
+   "deferral": null,
+   "shadow": null,
+   "checks": []
+  },
+  "mode_starts": [],
+  "deferrals": [],
+  "push_m": null,
+  "restored_from": null,
+  "loc_anchor_applied": false,
+  "loc_anchor_bias_mm": null
+ },
+ "checks": {
+  "P3-1_crawler_zero_after_ready": true,
+  "P3-1_recontact": null,
+  "P3-1_recontact_pass": true,
+  "P3-1_flags": [],
+  "P3-1_recontact_classes": [],
+  "P3-2_within": true,
+  "P3-2_within_2s_record": true,
+  "P3-2_loc_minus_departure_s": 1.4510000000481682,
+  "P3-2_limit_s": 2.91165281234524,
+  "P3-2_late_loc_reapproach": false,
+  "P3-2_late_loc_revoked": false,
+  "P3-2_verdict": "pass",
+  "t_loc_first_s": 36.200000000078184,
+  "t_loc_final_s": 36.200000000078184,
+  "loc_revokes": 0,
+  "P3-3_within": true,
+  "P3-4_within_0p2": true,
+  "P3-4_verdict": "pass",
+  "P3-4_absmax_deg": 0.02286987715799244,
+  "P3-4_window_s": [
+   81.6540000015871,
+   168.00000000445348
+  ],
+  "P3-4_flags": [],
+  "P3-4_window_short": false,
+  "P3-4_creep_vibration_suspect": false,
+  "P3-4_sensor_allowance_left_deg": 0.15713012284200759,
+  "P3-4_budget_residual_le_0p04_record": true,
+  "reapproach_limit_fired_FLAG": 0,
+  "reapproach_limit_by_cause": {
+   "time": 0,
+   "travel": 0,
+   "unknown": 0
+  },
+  "P3-5_within": null,
+  "P3-5_within_after_departure_record": false,
+  "P3-5_rut_clearance_min_after_first_ready_m": null,
+  "P3-6_within": true,
+  "P3-7_within": true,
+  "P3-7_rise_min_loaded_N": null,
+  "P3-7_reconstruct_ok": true,
+  "P3-8_within": true,
+  "P3-8_within_first": true,
+  "P3-9_flags": 0,
+  "pre_liftoff_flag": false,
+  "W61_warnings": 0,
+  "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (\uac00)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+  "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+ },
+ "us_per_step": 2466.922082916669
+}
+-> C:\workspace\outrigger_control\07_results\S9\level_J1_dwg_rear250_top_Fs4_20261116_205231
+[end] c8a-i-endramp exit=0 wall_s=4150

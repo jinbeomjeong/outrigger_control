@@ -1,0 +1,386 @@
+{
+ "base": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-RESUME-K1-OC5_20261114_210626\\OC5_mixed_rigid_J1FR_Kc3_VB_top",
+  "t_D_s": 34.546,
+  "RL_min_N": 5869.6,
+  "RL_min_t_rel_s": 0.74,
+  "RL_min_minus_Fmin_N": -3545.0,
+  "RL_below_Fmin_s": 0.158,
+  "RL_below_Fmin_plus2k_s": 0.212,
+  "leg_min_N": [
+   136324.7,
+   82974.1,
+   5869.6,
+   95240.4
+  ],
+  "f_mode_Hz": 1.816,
+  "period_s": 0.551,
+  "QS_mean_at_min_kN": 13.602,
+  "dynamic_at_min_kN": -7.732,
+  "QS_mean_min_kN_tD0p1_2": 13.412,
+  "band_env_max_kN_tD0p1_2": 9.428,
+  "band_env_max_t_rel_s": 0.395,
+  "RL_window_min_kN": [
+   [
+    0.0,
+    0.35,
+    12.25,
+    0.16
+   ],
+   [
+    0.35,
+    1.2,
+    5.87,
+    0.74
+   ],
+   [
+    1.2,
+    3.0,
+    12.396,
+    1.276
+   ]
+  ],
+  "FR_rate_at_tD_mm_s": 18.09,
+  "leg_rate_at_tD_mm_s": [
+   8.05,
+   18.09,
+   4.72,
+   1.92
+  ],
+  "t_half_W_to_tD_s": 1.343,
+  "crawler_release_rate_last0p2s_kN_s": 126.8,
+  "LAS_enable": true,
+  "LAS_beta": 3.5,
+  "LAS_end_ramp_periods": 0,
+  "LAS_start_s": 34.40000000001843,
+  "LAS_lead_s": 0.146,
+  "LAS_end_s": 34.90000000003503,
+  "LAS_end_rel_s": 0.354,
+  "LAS_end_reason": "sum",
+  "LAS_ramp": {
+   "n_r": 0,
+   "start_factor": null,
+   "periods_applied": 0,
+   "scaled_periods": 0,
+   "end_t_s": null,
+   "end_reason": null
+  },
+  "expect_controller": "final_C4G2_P3_LAS_K1",
+  "las_candidate": null,
+  "phases": [
+   {
+    "t_s": 8.099999999994461,
+    "phase": "check"
+   },
+   {
+    "t_s": 12.799999999983507,
+    "phase": "touch"
+   },
+   {
+    "t_s": 33.59999999999187,
+    "phase": "level"
+   },
+   {
+    "t_s": 69.20000000117366,
+    "phase": "done"
+   },
+   {
+    "t_s": 69.30000000117698,
+    "phase": "probe"
+   },
+   {
+    "t_s": 81.20000000157202,
+    "phase": "ready"
+   }
+  ],
+  "c2_soil_tP_tloc": [
+   34.50000000002175,
+   35.900000000068225
+  ],
+  "P3_checks": {
+   "P3-1_crawler_zero_after_ready": true,
+   "P3-1_recontact": null,
+   "P3-1_recontact_pass": true,
+   "P3-2_within": true,
+   "P3-2_within_2s_record": true,
+   "P3-2_loc_minus_departure_s": 1.3540000000449481,
+   "P3-2_limit_s": 2.91165281234524,
+   "P3-2_late_loc_reapproach": false,
+   "P3-2_late_loc_revoked": false,
+   "P3-2_verdict": "pass",
+   "P3-3_within": false,
+   "P3-4_within_0p2": true,
+   "P3-4_verdict": "pass",
+   "P3-4_absmax_deg": 0.0224687646343684,
+   "P3-4_window_short": false,
+   "P3-4_creep_vibration_suspect": false,
+   "P3-4_sensor_allowance_left_deg": 0.15753123536563163,
+   "P3-4_budget_residual_le_0p04_record": true,
+   "P3-5_within": null,
+   "P3-5_within_after_departure_record": false,
+   "P3-5_rut_clearance_min_after_first_ready_m": null,
+   "P3-6_within": true,
+   "P3-7_within": true,
+   "P3-7_rise_min_loaded_N": null,
+   "P3-7_reconstruct_ok": true,
+   "P3-8_within": true,
+   "P3-8_within_first": true,
+   "P3-9_flags": 0
+  }
+ },
+ "armI": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S9\\level_J1_dwg_rear250_top_Fs4_20261116_205231",
+  "t_D_s": 34.749,
+  "RL_min_N": 15625.3,
+  "RL_min_t_rel_s": 0.783,
+  "RL_min_minus_Fmin_N": 6210.7,
+  "RL_below_Fmin_s": 0.0,
+  "RL_below_Fmin_plus2k_s": 0.0,
+  "leg_min_N": [
+   136160.6,
+   89376.0,
+   15625.3,
+   94919.7
+  ],
+  "f_mode_Hz": 1.602,
+  "period_s": 0.624,
+  "QS_mean_at_min_kN": 19.006,
+  "dynamic_at_min_kN": -3.38,
+  "QS_mean_min_kN_tD0p1_2": 17.332,
+  "band_env_max_kN_tD0p1_2": 3.211,
+  "band_env_max_t_rel_s": 0.855,
+  "RL_window_min_kN": [
+   [
+    0.0,
+    0.35,
+    16.311,
+    0.347
+   ],
+   [
+    0.35,
+    1.2,
+    15.625,
+    0.783
+   ],
+   [
+    1.2,
+    3.0,
+    22.344,
+    1.374
+   ]
+  ],
+  "FR_rate_at_tD_mm_s": 7.0,
+  "leg_rate_at_tD_mm_s": [
+   2.79,
+   7.0,
+   0.59,
+   1.89
+  ],
+  "t_half_W_to_tD_s": 1.546,
+  "crawler_release_rate_last0p2s_kN_s": 85.1,
+  "LAS_enable": true,
+  "LAS_beta": 4.5,
+  "LAS_end_ramp_periods": 4,
+  "LAS_start_s": 34.20000000001179,
+  "LAS_lead_s": 0.549,
+  "LAS_end_s": 35.00000000003835,
+  "LAS_end_rel_s": 0.251,
+  "LAS_end_reason": "sum",
+  "LAS_ramp": {
+   "n_r": 4,
+   "start_factor": 0.3366349888235576,
+   "periods_applied": 4,
+   "scaled_periods": 4,
+   "end_t_s": 35.30000000004831,
+   "end_reason": "done"
+  },
+  "expect_controller": "final_C4G2_P3_LAS_K1",
+  "las_candidate": "P5r4",
+  "phases": [
+   {
+    "t_s": 8.099999999994461,
+    "phase": "check"
+   },
+   {
+    "t_s": 12.799999999983507,
+    "phase": "touch"
+   },
+   {
+    "t_s": 33.59999999999187,
+    "phase": "level"
+   },
+   {
+    "t_s": 69.20000000117366,
+    "phase": "done"
+   },
+   {
+    "t_s": 69.30000000117698,
+    "phase": "probe"
+   },
+   {
+    "t_s": 81.20000000157202,
+    "phase": "ready"
+   }
+  ],
+  "c2_soil_tP_tloc": [
+   34.80000000003171,
+   36.200000000078184
+  ],
+  "P3_checks": {
+   "P3-1_crawler_zero_after_ready": true,
+   "P3-1_recontact": null,
+   "P3-1_recontact_pass": true,
+   "P3-2_within": true,
+   "P3-2_within_2s_record": true,
+   "P3-2_loc_minus_departure_s": 1.4510000000481682,
+   "P3-2_limit_s": 2.91165281234524,
+   "P3-2_late_loc_reapproach": false,
+   "P3-2_late_loc_revoked": false,
+   "P3-2_verdict": "pass",
+   "P3-3_within": true,
+   "P3-4_within_0p2": true,
+   "P3-4_verdict": "pass",
+   "P3-4_absmax_deg": 0.02286987715799244,
+   "P3-4_window_short": false,
+   "P3-4_creep_vibration_suspect": false,
+   "P3-4_sensor_allowance_left_deg": 0.15713012284200759,
+   "P3-4_budget_residual_le_0p04_record": true,
+   "P3-5_within": null,
+   "P3-5_within_after_departure_record": false,
+   "P3-5_rut_clearance_min_after_first_ready_m": null,
+   "P3-6_within": true,
+   "P3-7_within": true,
+   "P3-7_rise_min_loaded_N": null,
+   "P3-7_reconstruct_ok": true,
+   "P3-8_within": true,
+   "P3-8_within_first": true,
+   "P3-9_flags": 0
+  }
+ },
+ "armII": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S9\\level_J1_dwg_rear250_top_Fs4_20261116_205043",
+  "t_D_s": 34.544,
+  "RL_min_N": 5715.7,
+  "RL_min_t_rel_s": 0.175,
+  "RL_min_minus_Fmin_N": -3698.9,
+  "RL_below_Fmin_s": 0.142,
+  "RL_below_Fmin_plus2k_s": 0.17,
+  "leg_min_N": [
+   135720.8,
+   84036.5,
+   5715.7,
+   94207.3
+  ],
+  "f_mode_Hz": 1.801,
+  "period_s": 0.555,
+  "QS_mean_at_min_kN": 15.9,
+  "dynamic_at_min_kN": -10.185,
+  "QS_mean_min_kN_tD0p1_2": 15.377,
+  "band_env_max_kN_tD0p1_2": 10.113,
+  "band_env_max_t_rel_s": 0.294,
+  "RL_window_min_kN": [
+   [
+    0.0,
+    0.35,
+    5.716,
+    0.175
+   ],
+   [
+    0.35,
+    1.2,
+    12.631,
+    0.808
+   ],
+   [
+    1.2,
+    3.0,
+    17.53,
+    1.289
+   ]
+  ],
+  "FR_rate_at_tD_mm_s": 19.98,
+  "leg_rate_at_tD_mm_s": [
+   9.07,
+   19.98,
+   5.53,
+   2.86
+  ],
+  "t_half_W_to_tD_s": 1.341,
+  "crawler_release_rate_last0p2s_kN_s": 129.0,
+  "LAS_enable": false,
+  "LAS_beta": 3.5,
+  "LAS_end_ramp_periods": 0,
+  "LAS_start_s": null,
+  "LAS_lead_s": null,
+  "LAS_end_s": null,
+  "LAS_end_rel_s": null,
+  "LAS_end_reason": null,
+  "LAS_ramp": null,
+  "expect_controller": "final_C4G2_P3_K1",
+  "las_candidate": null,
+  "phases": [
+   {
+    "t_s": 8.099999999994461,
+    "phase": "check"
+   },
+   {
+    "t_s": 12.799999999983507,
+    "phase": "touch"
+   },
+   {
+    "t_s": 33.59999999999187,
+    "phase": "level"
+   },
+   {
+    "t_s": 69.20000000117366,
+    "phase": "done"
+   },
+   {
+    "t_s": 69.30000000117698,
+    "phase": "probe"
+   },
+   {
+    "t_s": 81.20000000157202,
+    "phase": "ready"
+   }
+  ],
+  "c2_soil_tP_tloc": [
+   34.50000000002175,
+   35.500000000054946
+  ],
+  "P3_checks": {
+   "P3-1_crawler_zero_after_ready": true,
+   "P3-1_recontact": null,
+   "P3-1_recontact_pass": true,
+   "P3-2_within": true,
+   "P3-2_within_2s_record": true,
+   "P3-2_loc_minus_departure_s": 0.9560000000317359,
+   "P3-2_limit_s": 2.91165281234524,
+   "P3-2_late_loc_reapproach": false,
+   "P3-2_late_loc_revoked": false,
+   "P3-2_verdict": "pass",
+   "P3-3_within": false,
+   "P3-4_within_0p2": true,
+   "P3-4_verdict": "pass",
+   "P3-4_absmax_deg": 0.021887974525142923,
+   "P3-4_window_short": false,
+   "P3-4_creep_vibration_suspect": false,
+   "P3-4_sensor_allowance_left_deg": 0.1581120254748571,
+   "P3-4_budget_residual_le_0p04_record": true,
+   "P3-5_within": null,
+   "P3-5_within_after_departure_record": false,
+   "P3-5_rut_clearance_min_after_first_ready_m": null,
+   "P3-6_within": true,
+   "P3-7_within": true,
+   "P3-7_rise_min_loaded_N": null,
+   "P3-7_reconstruct_ok": true,
+   "P3-8_within": true,
+   "P3-8_within_first": true,
+   "P3-9_flags": 0
+  }
+ },
+ "first_issued_diff_base_vs_armI_s": 34.30000000001511,
+ "first_RL_1ms_diff_base_vs_armI_s": 34.301000000015144,
+ "first_issued_diff_base_vs_armII_s": 34.50000000002175,
+ "first_RL_1ms_diff_base_vs_armII_s": 34.50100000002178
+}
