@@ -132,6 +132,14 @@ only and those lines stay in the H-8 RD-9 number (3-1, 3-2); list values ``min_g
 one is null (3-3); H-10 is every line of ``h10_reuse_rerun.jsonl`` (3-4); a grid run's setting is
 ``results[i].v5_setting`` only and a missing one makes its J11 판정 불가 (3-6); a ``@`` token is a
 patch only with a leg name after it (3-7, ``GROUND_TOKEN``).
+R4 supplement 4 (de45d301, user decisions 127 / 128): ``r4-inputs`` checks the 43 original result
+files (named, no glob), 5 key sources and 4 stored V0 grids, the per-line kind (``job.setting``,
+``setting``, u6 ``controller``) against the tag (S-2; missing input S-11; u6 ABL on one side S-3)
+and the S-15 counts of every bundle and H-9 part (4-1 .. 4-4); ``r4-lists`` reads the named files
+and adds the H-9 V0 sample runs to the 멈춤 S-6 scope; ``family-f`` is 4-5 (64 lines, 2 x 16 x
+V0 / VB cells, k by the two gates, R-3 by ``fault_events`` / ``final_phase``, R-4 against the V0
+line of the same (key, offset_s), 판정 불가 never a pass; with ``--vb-dir`` / ``--v0-dir`` the
+application of the 12 family F rows); ``head-check --r4`` without ``--files`` is S-11.
 
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
@@ -2367,43 +2375,170 @@ def family_f_trigger(args: argparse.Namespace) -> dict:
             "exit_code": 1 if problems else 0}
 
 
+FAMILY_F_OFFSETS = 16
+FAMILY_F_SETTINGS = ("V0", "VB")
+FAMILY_F_GRID_ROWS = 12
+"""Supplement 4-5: the family F rows of the VB grid (grid_r67_main 2 phases x 2 keys +
+grid_r67_top 4 phases x 2 keys)."""
+FAMILY_F_RESULT_PASS, FAMILY_F_RESULT_FAIL = "통과", "실패"
+
+
+def family_f_shape_problems(lines: list[dict]) -> list[str]:
+    """Supplement 4-5 form check (S-15): 64 lines, every ``event`` FS24, and the 64 cells
+    (2 keys x 16 offsets x V0 / VB) one line each."""
+    problems = []
+    if len(lines) != FAMILY_F_RUNS:
+        problems.append(f"{len(lines)} lines, {FAMILY_F_RUNS} expected")
+    events = {line.get("event") for line in lines}
+    if events != {FAMILY_F_EVENT}:
+        problems.append(f"event values {sorted(map(str, events))}, only {FAMILY_F_EVENT} allowed")
+    cells = Counter((line.get("key"), line.get("offset_s"), line.get("setting")) for line in lines)
+    offsets = {cell[1] for cell in cells}
+    if {cell[0] for cell in cells} != set(FAMILY_F_KEYS) or len(offsets) != FAMILY_F_OFFSETS \
+            or {cell[2] for cell in cells} != set(FAMILY_F_SETTINGS):
+        problems.append("keys / offsets / settings are not 2 x 16 x (V0, VB)")
+    doubled = [cell for cell, n in cells.items() if n != 1]
+    if doubled or len(cells) != FAMILY_F_RUNS:
+        problems.append(f"{len(cells)} distinct cells, {len(doubled)} with more than one line")
+    return [f"S-15: {problem} (supplement 4-5, rev4 R4-B5)" for problem in problems]
+
+
+def _gate(line: dict, name: str) -> bool | None:
+    gates = line.get("gates")
+    value = gates.get(name) if isinstance(gates, dict) else None
+    return value if isinstance(value, bool) else None
+
+
+def family_f_k(lines: list[dict]) -> tuple[dict[tuple[str, str], int], list[dict]]:
+    """Criteria revision 5 5.2: per (setting, key) the phases where ``Fmin_after_W`` or
+    ``U57_outside`` failed; a missing / non-bool gate is 판정 불가 (listed)."""
+    k: dict[tuple[str, str], int] = {(s, key): 0 for s in FAMILY_F_SETTINGS
+                                     for key in FAMILY_F_KEYS}
+    undecided = []
+    for line in lines:
+        values = [_gate(line, name) for name in FAMILY_F_GATES]
+        cell = (line.get("setting"), line.get("key"))
+        if any(value is None for value in values) or cell not in k:
+            undecided.append({"key": line.get("key"), "offset_s": line.get("offset_s"),
+                              "setting": line.get("setting"), "item": "k (two gates)"})
+            continue
+        k[cell] += not all(values)
+    return k, undecided
+
+
+def family_f_r3(vb_lines: list[dict]) -> tuple[list[dict], list[dict]]:
+    """R-3: every VB line has an empty ``fault_events`` list and ``final_phase`` ``ready``."""
+    bad, undecided = [], []
+    for line in vb_lines:
+        place = {"key": line.get("key"), "offset_s": line.get("offset_s")}
+        faults, phase = line.get("fault_events"), line.get("final_phase")
+        if not isinstance(faults, list) or not isinstance(phase, str):
+            undecided.append({**place, "setting": "VB", "item": "R-3"})
+        elif faults or phase != "ready":
+            bad.append({**place, "fault_events": len(faults), "final_phase": phase})
+    return bad, undecided
+
+
+def family_f_r4(vb_lines: list[dict], v0_by_cell: dict[tuple, dict]) -> tuple[list, list]:
+    """R-4: per VB line the gates outside the two that are false in VB and true in the V0 line
+    of the same (key, offset_s); a gate name on one side only makes that line 판정 불가."""
+    bad, undecided = [], []
+    for line in vb_lines:
+        place = {"key": line.get("key"), "offset_s": line.get("offset_s")}
+        other = v0_by_cell.get((line.get("key"), line.get("offset_s")))
+        vb_gates = line.get("gates")
+        v0_gates = None if other is None else other.get("gates")
+        if not isinstance(vb_gates, dict) or not isinstance(v0_gates, dict):
+            undecided.append({**place, "setting": "VB", "item": "R-4 (gates or V0 pair)"})
+            continue
+        names = (set(vb_gates) | set(v0_gates)) - set(FAMILY_F_GATES)
+        if any(name not in vb_gates or name not in v0_gates for name in names) or any(
+                not isinstance(vb_gates[n], bool) or not isinstance(v0_gates[n], bool)
+                for n in names):
+            undecided.append({**place, "setting": "VB", "item": "R-4 (gate names differ)"})
+            continue
+        new = sorted(n for n in names if vb_gates[n] is False and v0_gates[n] is True)
+        if new:
+            bad.append({**place, "gates": new})
+    return bad, undecided
+
+
+def family_f_tag_problems(numbered: list[tuple[int, dict]]) -> dict[str, list]:
+    """Supplement 4-3 for ``h9_family_F.jsonl``: the line's ``setting`` decides the kind, its
+    ``controller_tag`` must be that kind's tag (missing setting or tag S-11, other tag S-2)."""
+    problems: dict[str, list] = {"S-11": [], "S-2": []}
+    for number, line in numbered:
+        verdict = kind_tag_problem(kind_of_setting(line.get("setting")),
+                                   line.get("controller_tag"))
+        if verdict is not None:
+            problems[verdict[0]].append({"location": f"line {number}", "reason": verdict[1]})
+    return problems
+
+
+def family_f_application(args: argparse.Namespace) -> dict | None:
+    """Supplement 4-5 application: does the VB grid show a pass -> fail of a family F row by the
+    two gates only (R3-E2 first bullet); the family F VB rows must be 12."""
+    if not (getattr(args, "vb_dir", None) and getattr(args, "v0_dir", None)):
+        return None
+    trigger = family_f_trigger(args)
+    rows = trigger["family_rows_with_duplicates"]
+    return {"condition": trigger["trigger"], "family_rows": rows,
+            "rows_ok": rows == FAMILY_F_GRID_ROWS, "trigger_rows": trigger["rows"]}
+
+
 def family_f(args: argparse.Namespace) -> dict:
-    """v5 criteria rev5 5.2 R-1 .. R-4 on ``h9_family_F.jsonl`` (64 lines)."""
-    lines = read_records(Path(args.lines))
-    by = {(line.get("setting"), line.get("key"), float(line.get("offset_s"))): line
-          for line in lines}
-    problems = [] if len(lines) == FAMILY_F_RUNS == len(by) else [
-        f"{len(lines)} lines ({len(by)} distinct), {FAMILY_F_RUNS} expected (S-15)"]
+    """Criteria revision 5 5.2 R-1 .. R-4 on ``h9_family_F.jsonl`` (64 lines, supplement 4-5).
 
-    def fails(line: dict) -> bool:
-        return bool(_failed_gates(line) & set(FAMILY_F_GATES))
-
-    k = {(s, key): sum(fails(line) for (s2, key2, _), line in by.items() if (s2, key2) == (s, key))
-         for s in ("V0", "VB") for key in FAMILY_F_KEYS}
+    The values (k per key and setting, the four conditions, the violation lists) are always
+    given; a missing or mistyped field is 판정 불가 and R-1 .. R-4 are then not a pass. With
+    ``--vb-dir`` / ``--v0-dir`` the application is decided too: condition true and pass = the
+    12 rows leave the v5 criteria H-10 count for the two gates; true and fail / 판정 불가 =
+    stop H-10 and ask; false = record only.
+    """
+    numbered = [(n, line) for n, line in _numbered_jsonl(Path(args.lines))]
+    lines = [line for _, line in numbered]
+    shape = family_f_shape_problems(lines)
+    tags = family_f_tag_problems(numbered)
+    k, undecided = family_f_k(lines)
+    vb_lines = [line for line in lines if line.get("setting") == "VB"]
+    v0_by_cell = {(line.get("key"), line.get("offset_s")): line for line in lines
+                  if line.get("setting") == "V0"}
+    r3_bad, r3_undecided = family_f_r3(vb_lines)
+    r4_bad, r4_undecided = family_f_r4(vb_lines, v0_by_cell)
+    undecided += r3_undecided + r4_undecided
     r1 = {key: k[("VB", key)] <= k[("V0", key)] + FAMILY_F_M for key in FAMILY_F_KEYS}
     r2 = (sum(k[("VB", key)] for key in FAMILY_F_KEYS)
           <= sum(k[("V0", key)] for key in FAMILY_F_KEYS) + FAMILY_F_M_SUM)
-    vb_lines = [line for (s, _, _), line in by.items() if s == "VB"]
-    r3_bad = [(line["key"], line["offset_s"]) for line in vb_lines
-              if (line.get("gates") or {}).get("fault0") is False
-              or line.get("final_phase") != "ready"]
-    r4_bad = []
-    for (s, key, offset), line in by.items():
-        if s != "VB":
-            continue
-        other = by.get(("V0", key, offset))
-        new = _failed_gates(line) - set(FAMILY_F_GATES)
-        old = set() if other is None else _failed_gates(other)
-        if new - old:
-            r4_bad.append({"key": key, "offset_s": offset, "gates": sorted(new - old)})
-    is_pass = all(r1.values()) and r2 and not r3_bad and not r4_bad and not problems
-    return {"rules": RULES_REV3_NAME, "section": "R3-E2 / rev5 5.2",
-            "k": {f"{s}|{key}": n for (s, key), n in k.items()},
-            "R-1": r1, "R-2": r2, "R-3_violations": r3_bad, "R-4_violations": r4_bad,
-            "m": FAMILY_F_M, "m_sum": FAMILY_F_M_SUM, "pass": is_pass,
-            "decision": "the 12 family F rows leave H-10 for the two gates" if is_pass
-            else "H-10: stop and ask", "problems": problems,
-            "exit_code": 0 if is_pass else 1}
+    stops = shape + [f"S-11 {p['location']}: {p['reason']}" for p in tags["S-11"]] + [
+        f"S-2 {p['location']}: {p['reason']}" for p in tags["S-2"]]
+    if undecided or stops:
+        result = NOT_JUDGEABLE_WORD
+    elif all(r1.values()) and r2 and not r3_bad and not r4_bad:
+        result = FAMILY_F_RESULT_PASS
+    else:
+        result = FAMILY_F_RESULT_FAIL
+    out = {"rules": RULES_REV3_NAME, "section": "R3-E2 / rev4 R4-B5 / rev5 5.2, supplement 4-5",
+           "lines": len(lines), "k": {f"{s}|{key}": n for (s, key), n in k.items()},
+           "R-1": r1, "R-2": r2, "R-3": not r3_bad, "R-4": not r4_bad,
+           "R-3_violations": r3_bad, "R-4_violations": r4_bad, "not_judgeable": undecided,
+           "m": FAMILY_F_M, "m_sum": FAMILY_F_M_SUM, "result": result,
+           "pass": result == FAMILY_F_RESULT_PASS, "problems": stops, "tag_check_4_3": tags}
+    application = family_f_application(args)
+    if application is None:
+        decision, is_stop = "application not decided (no --vb-dir / --v0-dir)", result != \
+            FAMILY_F_RESULT_PASS
+    elif not application["rows_ok"]:
+        decision, is_stop = (f"family F rows {application['family_rows']} != "
+                             f"{FAMILY_F_GRID_ROWS}: stop and ask"), True
+    elif not application["condition"]:
+        decision, is_stop = "condition false: R-1 .. R-4 are a record (no grade)", False
+    elif result == FAMILY_F_RESULT_PASS:
+        decision, is_stop = ("the 12 family F rows leave the v5 criteria H-10 count for "
+                             "Fmin_after_W / U57_outside"), False
+    else:
+        decision, is_stop = "v5 criteria H-10: stop and ask", True
+    return {**out, "application": application, "decision": decision,
+            "exit_code": 1 if stops or is_stop else 0}
 
 
 # --------------------------------------------------------------------- rev3 R3-B5 IND_LAS
@@ -2953,6 +3088,10 @@ SUPPLEMENT_3_SHA256 = "5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee07
 """R4 supplement 3 (user decisions 125 / 126; same bytes for the three writers): 3-1 H-8 RD-9,
 3-2 dg3 exclusion scope, 3-3 list values as recorded, 3-4 H-10 scope, 3-5 bundle labels, 3-6 grid
 setting, 3-7 patch token."""
+SUPPLEMENT_4_SHA256 = "de45d30170e44a5987e815c41e6cd9580c5f6df89a065803ab0fd2ae7257b497"
+"""R4 supplement 4 (user decisions 127 / 128; same bytes for the three writers): 4-1 original
+files as they are, 4-2 input table, 4-3 per-line kinds, 4-4 no empty pass, 4-5 family F R-1 ..
+R-4."""
 R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
 """RD-1 5 / rev16 R16-14: the run commit of the R2 outputs and of H-11 / H-12 / C-9 .. C-11."""
 HULL_DLL_SHA256 = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
@@ -2975,23 +3114,31 @@ def _coupled_modules():
 
 
 # ------------------------------------------------------------------ RD-7 / RD-8 / RD-9 / RD-10
+U3_NAMES = ("C", "D", "g6", "g8", "h6", "h9", "p3b", "slope", "x426b")
+U3_STRUCTURE = {"C": 34, "D": 33, "g6": 116, "g8": 516, "h6": 26, "h9": 24, "p3b": 171,
+                "slope": 110, "x426b": 84}
+"""Supplement 4-2: the 9 U-3 output names and their items per file (V0 and VB alike)."""
+U3_FILES = tuple(f"u3_{name}_{setting}.json" for name in U3_NAMES for setting in ("V0", "VB"))
+U6_FILES = ("u6_b5_main_VB.json", "u6_b5_wide_VB.json", "u6_b5_main_VB_IND_LAS.json",
+            "u6_b5_wide_VB_IND_LAS.json")
+GRID_NAMES = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
 BUNDLE_FILES = {
     "H-1": (f"{RESUME_K1_DIR}/h1_d1.jsonl",),
-    "H-3": (f"{LAS_K1_DIR}/u3_*.json",),
-    "H-4": (f"{LAS_K1_DIR}/u6_*.json",),
+    "H-3": tuple(f"{LAS_K1_DIR}/{name}" for name in U3_FILES),
+    "H-4": tuple(f"{LAS_K1_DIR}/{name}" for name in U6_FILES),
     "H-5": (f"{RESUME_K1_DIR}/h5_u9_v0.jsonl",),
     "H-6": (f"{RESUME_K1_DIR}/h6_dg3_v4on.json",),
     "H-7": (f"{RESUME_K1_DIR}/h7_dg3_off.json",),
     "H-8": (f"{RESUME_K1_DIR}/h8_noise_VB.json", f"{RESUME_K1_DIR}/h8_noise_V0.json",
             f"{RESUME_K1_DIR}/h8_seedext_VB.json", f"{RESUME_K1_DIR}/h8_seedext_V0.json"),
-    "H-9": (f"{RESUME_K1_DIR}/h9_stage1.jsonl", f"{RESUME_K1_DIR}/h9_grid/grid_r67_main.json",
-            f"{RESUME_K1_DIR}/h9_grid/grid_r67_top.json",
-            f"{RESUME_K1_DIR}/h9_grid/grid_r69_bottom.json",
-            f"{RESUME_K1_DIR}/h9_grid/grid_r69_top.json"),
+    "H-9": (f"{RESUME_K1_DIR}/h9_stage1.jsonl",
+            *(f"{RESUME_K1_DIR}/h9_grid/{name}.json" for name in GRID_NAMES),
+            *(f"{RESUME_K1_DIR}/h9_grid_v0_sample/{name}.json" for name in GRID_NAMES)),
     "H-10": (f"{RESUME_K1_DIR}/h10_reuse_rerun.jsonl",),
 }
-"""Original 4.3 and rev1 RV1-3.3 final outputs of each bundle (RD-7 3); ``*.partial.jsonl``,
-``*.identity.json`` and the family files ``h9_family_F_*.json`` are never results here (RD-7 1)."""
+"""Supplement 4-1 / 4-2: the original R2 result files of each bundle, named one by one (no glob,
+no split or merged copy); ``*.partial.jsonl``, ``*.identity.json`` and the family F files are
+never list inputs (RD-7 1). The H-9 V0 sample runs are in the 멈춤 S-6 scope (supplement 4-2)."""
 J_P3_LIST_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
 J11_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
 """RD-7 1 / RD-10: J-P3 lists and J11 for these bundles only; supplement 2-2: J11 and RD-10 also
@@ -3029,13 +3176,9 @@ class ListUnit:
 
 
 def bundle_paths(root: Path, bundle: str) -> list[Path]:
-    paths: list[Path] = []
-    for pattern in BUNDLE_FILES[bundle]:
-        if "*" in pattern:
-            paths += sorted((root / pattern).parent.glob(Path(pattern).name))
-        else:
-            paths.append(root / pattern)
-    return paths
+    """The named original result files of one bundle (supplement 4-2; a missing one is reported
+    by the caller)."""
+    return [root / name for name in BUNDLE_FILES[bundle]]
 
 
 def _json_units(common, bundle: str, path: Path, root: Path) -> list[ListUnit]:
@@ -3285,6 +3428,247 @@ def r4_lists(args: argparse.Namespace) -> dict:
             "supplement_3_sha256": SUPPLEMENT_3_SHA256,
             "lists": lists, "bundles": bundles, "markers": markers, "missing_files": missing,
             "exit_code": 1 if markers or missing else 0}
+
+
+# ------------------------------------------------- supplement 4: inputs, kinds, counts (4-1 .. 4-4)
+NOT_JUDGEABLE_WORD = "판정 불가"
+KIND_P3_VB, KIND_P3_LS, KIND_NONE = "③ 켬(VB)", "③ 켬(LS)", "③ 없음"
+KIND_ABL, KIND_IND, KIND_IND_LAS = "ABL", "IND", "IND_LAS"
+KIND_TAGS = {KIND_P3_VB: TAG_P3, KIND_P3_LS: TAG_P3, KIND_NONE: TAG_V0, KIND_ABL: TAG_ABL,
+             KIND_IND: "IND", KIND_IND_LAS: "IND_LAS"}
+"""Supplement 4-2 / original 4.1: the expected tag of each line kind."""
+LS_NAMES = ("LS1", "LS2", "LS3", "LS4")
+U6_CONTROLLER_KINDS = {"C2": KIND_P3_VB, "ABL": KIND_ABL, "IND": KIND_IND}
+"""Supplement 4-3: u6 ``controller`` -> kind (any other value cannot be decided, S-11)."""
+
+
+def kind_of_setting(value: Any) -> str | None:
+    """Supplement 4-3: ``job.setting`` / ``setting`` -> kind; None when missing or empty."""
+    if not isinstance(value, str) or not value:
+        return None
+    if value == VB_SETTING:
+        return KIND_P3_VB
+    return KIND_P3_LS if value in LS_NAMES else KIND_NONE
+
+
+def kind_tag_problem(kind: str | None, tag: Any) -> tuple[str, str] | None:
+    """Supplement 4-3: (stop, reason) of one line, or None: no kind or no tag = S-11, a tag
+    other than the kind's = S-2."""
+    if kind is None:
+        return "S-11", "kind input missing or not decidable"
+    if not isinstance(tag, str):
+        return "S-11", "controller_tag missing"
+    if tag != KIND_TAGS[kind]:
+        return "S-2", f"tag {tag!r} != {KIND_TAGS[kind]!r} of {kind}"
+    return None
+
+
+@dataclass(frozen=True)
+class InputFile:
+    """One original result file of supplement 4-2.
+
+    Attributes:
+        bundle: ``H-n``.
+        part: The H-9 part (``본``, ``V0 표본``, ``𝓕 원 실행``, ``𝓕 판정 입력``) or ``""``.
+        name: Path relative to the repository root.
+        kind: The kind of every line (one per file), or None for a per-line field.
+        field: The per-line kind field (``job.setting``, ``setting``, ``controller``).
+        expected: Expected units (lines, items or grid runs) of the file, None = only a sum.
+        expected_results: Expected ``results[]`` items of a grid file (V0 sample).
+    """
+
+    bundle: str
+    part: str
+    name: str
+    kind: str | None = None
+    field: str | None = None
+    expected: int | None = None
+    expected_results: int | None = None
+
+
+RK, LK = RESUME_K1_DIR, LAS_K1_DIR
+V0_SAMPLE_RUNS = {"grid_r67_main": 12, "grid_r67_top": 24, "grid_r69_bottom": 24,
+                  "grid_r69_top": 24}
+INPUT_FILES = (
+    InputFile("H-1", "", f"{RK}/h1_d1.jsonl", field="job.setting", expected=868),
+    *(InputFile("H-3", "", f"{LK}/u3_{name}_{setting}.json",
+                kind=KIND_NONE if setting == "V0" else KIND_P3_VB, expected=U3_STRUCTURE[name])
+      for name in U3_NAMES for setting in ("V0", "VB")),
+    InputFile("H-4", "", f"{LK}/u6_b5_main_VB.json", field="controller", expected=48),
+    InputFile("H-4", "", f"{LK}/u6_b5_wide_VB.json", field="controller", expected=678),
+    InputFile("H-4", "", f"{LK}/u6_b5_main_VB_IND_LAS.json", kind=KIND_IND_LAS, expected=16),
+    InputFile("H-4", "", f"{LK}/u6_b5_wide_VB_IND_LAS.json", kind=KIND_IND_LAS, expected=226),
+    InputFile("H-5", "", f"{RK}/h5_u9_v0.jsonl", kind=KIND_NONE, expected=14),
+    InputFile("H-6", "", f"{RK}/h6_dg3_v4on.json", kind=KIND_P3_VB, expected=135),
+    InputFile("H-7", "", f"{RK}/h7_dg3_off.json", kind=KIND_NONE, expected=135),
+    InputFile("H-8", "", f"{RK}/h8_noise_VB.json", kind=KIND_P3_VB, expected=1503),
+    InputFile("H-8", "", f"{RK}/h8_noise_V0.json", kind=KIND_NONE, expected=1503),
+    InputFile("H-8", "", f"{RK}/h8_seedext_VB.json", kind=KIND_P3_VB, expected=50),
+    InputFile("H-8", "", f"{RK}/h8_seedext_V0.json", kind=KIND_NONE, expected=50),
+    InputFile("H-9", "본", f"{RK}/h9_stage1.jsonl", kind=KIND_NONE, expected=908),
+    *(InputFile("H-9", "본", f"{RK}/h9_grid/{name}.json", kind=KIND_P3_VB, expected=192)
+      for name in GRID_NAMES),
+    *(InputFile("H-9", "V0 표본", f"{RK}/h9_grid_v0_sample/{name}.json", kind=KIND_NONE,
+                expected=V0_SAMPLE_RUNS[name], expected_results=2) for name in GRID_NAMES),
+    InputFile("H-9", "𝓕 원 실행", f"{RK}/h9_family_F_VB.json", kind=KIND_P3_VB, expected=96),
+    InputFile("H-9", "𝓕 원 실행", f"{RK}/h9_family_F_V0.json", kind=KIND_NONE, expected=96),
+    InputFile("H-9", "𝓕 판정 입력", f"{RK}/h9_family_F.jsonl", field="setting", expected=64),
+    InputFile("H-10", "", f"{RK}/h10_reuse_rerun.jsonl", field="job.setting", expected=440),
+)
+"""Supplement 4-2: the 43 original result files (RK 21, LK 22) with their kind rule and
+counts. The H-4 u6 C2 / ABL / IND counts are 242 each (main 16 + wide 226), checked below."""
+KEY_SOURCES = ("06_analysis/03_hydraulic/coupled/v5/dg3/dg3_v4_on.json",
+               "06_analysis/03_hydraulic/coupled/v5/noise_vb/r79_VB_L1L2L3.json",
+               "06_analysis/03_hydraulic/coupled/v5/noise_v0/r79_V0_L1L2L3.json",
+               "06_analysis/03_hydraulic/coupled/v5/seedext/r79_VB_seedext.json",
+               "06_analysis/03_hydraulic/coupled/v5/seedext/r79_V0_seedext.json")
+V0_STORED_GRID = tuple(f"06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/{name}.json"
+                       for name in GRID_NAMES)
+V0_768_OUTPUT = tuple(f"{RK}/h9_grid_v0/{name}.json" for name in GRID_NAMES)
+"""Supplement 4-2: needed only when the V0 sample hashes differ (``grid-v0-sample``)."""
+INPUT_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")
+H9_PARTS = {"본": 1676, "V0 표본": 84, "𝓕 원 실행": 192, "𝓕 판정 입력": 64}
+"""Supplement 4-2: the H-9 parts and their unit counts (본 908 lines + 768 grid runs)."""
+KIND_COUNT_CHECKS = (("H-1", "", {KIND_NONE: 434, KIND_P3_VB: 434}),
+                     ("H-4", "", {KIND_P3_VB: 242, KIND_ABL: 242, KIND_IND: 242,
+                                  KIND_IND_LAS: 242}),
+                     ("H-9", "𝓕 판정 입력", {KIND_NONE: 32, KIND_P3_VB: 32}))
+"""Supplement 4-2: the kind counts compared as S-15 (H-10 kind counts are a record)."""
+
+
+def _numbered_jsonl(path: Path) -> list[tuple[int, dict]]:
+    """(physical line number from 1, record) of a jsonl file (blank lines counted)."""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    return [(n, json.loads(line)) for n, line in enumerate(text.split("\n"), start=1)
+            if line.strip()]
+
+
+def input_units(path: Path) -> tuple[list[tuple[str, dict, dict | None]], int | None]:
+    """(location, unit, its grid ``results[i]`` or None) of every unit of one original file and
+    the number of ``results[]`` items of a grid file (None otherwise)."""
+    if path.suffix == ".jsonl":
+        return [(f"line {n}", record, None) for n, record in _numbered_jsonl(path)], None
+    document = read_json(path)
+    if is_grid_document(document):
+        units = [(f"results[{i}].runs[{j}]", run, job)
+                 for i, job in enumerate(document["results"])
+                 for j, run in enumerate(job["runs"])]
+        return units, len(document["results"])
+    container = "records" if isinstance(document.get("records"), list) else "results"
+    return [(f"{container}[{i}]", item, None)
+            for i, item in enumerate(document.get(container) or [])], None
+
+
+def unit_kind_check(spec: InputFile, unit: dict, job: dict | None) -> tuple[str | None, list]:
+    """Supplement 4-3: the unit's kind and its stops ([(stop, reason)])."""
+    tag = job.get("controller_tag") if job is not None else read_controller_tag(unit)
+    if spec.kind is not None:
+        kind = spec.kind
+    elif spec.field == "controller":
+        controller = unit.get("controller")
+        is_abl_name, is_abl_tag = controller == KIND_ABL, tag == TAG_ABL
+        if is_abl_name != is_abl_tag:  # rev16 R16-3: S-3, not counted again as S-2
+            return None, [("S-3", f"controller {controller!r} and tag {tag!r} disagree on ABL")]
+        kind = U6_CONTROLLER_KINDS.get(controller) if isinstance(controller, str) else None
+    else:
+        kind = kind_of_setting(get_path(unit, spec.field)[1])
+    problem = kind_tag_problem(kind, tag)
+    return kind, [] if problem is None else [problem]
+
+
+def check_input_file(spec: InputFile, root: Path) -> dict:
+    """Supplement 4-1 .. 4-3 for one original file: units, kinds and tag stops."""
+    path = root / spec.name
+    out: dict[str, Any] = {"bundle": spec.bundle, "part": spec.part, "result_file": spec.name,
+                           "exists": path.is_file()}
+    if not path.is_file():
+        return out
+    units, n_results = input_units(path)
+    kinds: Counter = Counter()
+    stops: list[dict] = []
+    for location, unit, job in units:
+        kind, problems = unit_kind_check(spec, unit, job)
+        kinds[str(kind)] += 1
+        stops += [{"location": location, "stop": stop, "reason": reason}
+                  for stop, reason in problems]
+    out.update(sha256=file_sha256(path), units=len(units), results=n_results,
+               kinds=dict(kinds), stops=stops)
+    if spec.name.endswith("h9_family_F.jsonl"):
+        out["events"] = dict(Counter(str(unit.get("event")) for _, unit, _ in units))
+    if "h9_family_F_V" in spec.name:
+        out["fs24_runs"] = sum(unit.get("event") == FAMILY_F_EVENT for _, unit, _ in units)
+    return out
+
+
+def input_count_checks(files: list[dict]) -> list[dict]:
+    """Supplement 4-2 / 4-4 S-15 checks: per file, the H-4 / H-1 / 𝓕 kind counts, the H-9
+    parts, the bundle set and no zero bundle or part."""
+    checks = []
+
+    def add(what: str, actual: Any, expected: Any) -> None:
+        checks.append({"check": what, "actual": actual, "expected": expected,
+                       "ok": actual == expected})
+
+    by_name = {f["result_file"]: f for f in files}
+    for spec in INPUT_FILES:
+        found = by_name[spec.name]
+        if spec.expected is not None:
+            add(f"units {spec.name}", found.get("units"), spec.expected)
+        if spec.expected_results is not None:
+            add(f"results {spec.name}", found.get("results"), spec.expected_results)
+        if "h9_family_F_V" in spec.name:
+            add(f"FS24 runs {spec.name}", found.get("fs24_runs"), 32)
+        if spec.name.endswith("h9_family_F.jsonl"):
+            add(f"events {spec.name}", found.get("events"), {FAMILY_F_EVENT: 64})
+    for bundle, part, wanted in KIND_COUNT_CHECKS:
+        counts: Counter = Counter()
+        for f in files:
+            if (f["bundle"], f["part"]) == (bundle, part):
+                counts.update(f.get("kinds") or {})
+        add(f"kinds {bundle} {part}".strip(), {k: counts.get(k, 0) for k in wanted}, wanted)
+    for part, expected in H9_PARTS.items():
+        add(f"units H-9 {part}", sum(f.get("units") or 0 for f in files
+                                     if (f["bundle"], f["part"]) == ("H-9", part)), expected)
+    totals = Counter()
+    for f in files:
+        totals[f["bundle"]] += f.get("units") or 0
+    add("bundle set", sorted(b for b in totals if totals[b] > 0), sorted(INPUT_BUNDLES))
+    add("H-3 total", totals["H-3"], 2228)
+    add("H-4 total (C2 / ABL / IND + IND_LAS)", totals["H-4"], 726 + 242)
+    return checks
+
+
+def r4_inputs(args: argparse.Namespace) -> dict:
+    """Supplement 4-1 .. 4-4: the 43 original files, 5 key sources and 4 stored V0 grids exist;
+    per-line kinds and tags (4-3: S-2 / S-3 / S-11); the S-15 counts and the bundle set."""
+    root = Path(args.root)
+    files = [check_input_file(spec, root) for spec in INPUT_FILES]
+    missing = [f["result_file"] for f in files if not f["exists"]]
+    missing += [name for name in (*KEY_SOURCES, *V0_STORED_GRID) if not (root / name).is_file()]
+    checks = input_count_checks(files)
+    stops = Counter(stop["stop"] for f in files for stop in f.get("stops") or [])
+    markers = []
+    if missing:
+        markers.append(f"S-15 (supplement 4-4: {len(missing)} input files missing)")
+    if any(not check["ok"] for check in checks):
+        markers.append("S-15 (supplement 4-2 / 4-4 counts)")
+    markers += [f"{stop} ({n} lines, supplement 4-3)" for stop, n in sorted(stops.items())]
+    h10 = next(f for f in files if f["result_file"].endswith("h10_reuse_rerun.jsonl"))
+    return {"rules": RULES_NAME, "section": "R4 supplement 4 (4-1 .. 4-4)",
+            "supplement_4_sha256": SUPPLEMENT_4_SHA256, "root": str(root),
+            "files": files, "file_count": {"RK": sum(f["result_file"].startswith(RK)
+                                                     for f in files),
+                                           "LK": sum(f["result_file"].startswith(LK)
+                                                     for f in files)},
+            "key_sources": {name: (root / name).is_file() for name in KEY_SOURCES},
+            "v0_stored_grid": {name: (root / name).is_file() for name in V0_STORED_GRID},
+            "v0_768_output_present": {name: (root / name).is_file() for name in V0_768_OUTPUT},
+            "h10_kinds_record": h10.get("kinds"), "checks": checks,
+            "failed_checks": [c for c in checks if not c["ok"]], "missing": missing,
+            "markers": markers, "exit_code": 1 if markers else 0}
 
 
 # --------------------------------------------------------------------------- H-11 (rev16 R16-8)
@@ -4015,7 +4399,8 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
          "rev16 R16-6, R4 RD-7·RD-10, 보충 2-2·3-6", ITEM_GATE),
         ("P-7 L1 해시", "Q-S4", ITEM_GATE),
         ("pressure_only 끝 단계", "v5 기준", ITEM_RECORD),
-        ("family F R-1~R-4", "rev3 R3-E2, rev4 R4-B5", ITEM_GRADE),
+        ("family F R-1~R-4(h9_family_F.jsonl 64줄, 적용 조건 𝓕 12행)",
+         "rev3 R3-E2, rev4 R4-B5, v5 기준 개정 5 5.2, 보충 4-5", ITEM_GRADE),
         ("③ 켬 줄·run 수(S-8)", "R4 RD-9", ITEM_GATE),
         ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
     ),
@@ -4085,6 +4470,11 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
 }
 """RD-13: per bundle (item, basis clause, kind); the bases of definitions not handed to path 1
 come from the tools' docstrings / README (RD-13: no earlier section opened for them)."""
+INPUT_ITEM = ("원 결과 파일·줄 수(S-15)·줄 단위 판과 태그(S-2·S-3·S-11)",
+              "원판 4.1·8.2, 보충 4-1~4-4", ITEM_GATE)
+"""Supplement 4: the ``r4-inputs`` gate of every harness bundle."""
+for _bundle in INPUT_BUNDLES:
+    ITEM_LISTS[_bundle] = (*ITEM_LISTS[_bundle], INPUT_ITEM)
 
 
 def item_list_document(bundle: str) -> dict:
@@ -4163,6 +4553,8 @@ def head_check(args: argparse.Namespace) -> dict:
                               "head": head, "expected_head": args.expect, "markers": []}
     if head != args.expect:
         result["markers"].append("S-12 (HEAD is not M4)")
+    if args.r4 is not None and not args.files:  # pre-run audit A-4: no empty pass (all([]))
+        result["markers"].append("S-11 (RD-1 4: --r4 without --files)")
     if args.r4:
         blobs = []
         for name in args.files or []:
@@ -4173,11 +4565,11 @@ def head_check(args: argparse.Namespace) -> dict:
             blobs.append({"file": name, "M4": shas[args.expect], "R4": shas[args.r4],
                           "same": shas[args.expect] is not None
                           and shas[args.expect] == shas[args.r4]})
-        _, diff = _git(root, "diff", "--name-only", f"{R2_COMMIT}..{args.expect}", "--",
-                       "03_src", "02_params")
+        diff_status, diff = _git(root, "diff", "--name-only", f"{R2_COMMIT}..{args.expect}",
+                                 "--", "03_src", "02_params")
         changed = [line for line in diff.decode("utf-8").splitlines() if line.strip()]
-        result.update(blobs=blobs, src_params_changed=changed)
-        if not all(blob["same"] for blob in blobs) or changed:
+        result.update(blobs=blobs, src_params_changed=changed, diff_exit=diff_status)
+        if not blobs or not all(blob["same"] for blob in blobs) or changed or diff_status != 0:
             result["markers"].append("S-11 (RD-1 4)")
     result["exit_code"] = 1 if result["markers"] else 0
     return result
@@ -4249,7 +4641,10 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--v0-dir", type=Path, required=True, help="the V0 pair grid folder")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("family-f", help="rev3 R3-E2: rev5 5.2 R-1 .. R-4 on h9_family_F.jsonl")
-    p.add_argument("--lines", type=Path, required=True)
+    p.add_argument("--lines", type=Path, required=True, help="resume_k1/h9_family_F.jsonl")
+    p.add_argument("--vb-dir", type=Path, default=None,
+                   help="resume_k1/h9_grid (supplement 4-5 application condition)")
+    p.add_argument("--v0-dir", type=Path, default=None, help="the V0 pair grid folder")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("ind-las", help="rev3 R3-B5: IND_LAS gate and the IND hash")
     p.add_argument("--harness", nargs="+", type=Path, required=True,
@@ -4285,6 +4680,9 @@ def _parser() -> argparse.ArgumentParser:
 
 def _add_r4_parsers(sub) -> None:
     """The R4 subcommands (R4 common block e451f067, rev16 .. rev25)."""
+    p = sub.add_parser("r4-inputs", help="supplement 4-1 .. 4-4: inputs, kinds, S-15 counts")
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
+    p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("r4-lists", help="RD-7 lists, RD-8 / RD-9 / RD-10 counts (R2 results)")
     p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
     p.add_argument("--family-table", type=Path, required=True,
@@ -4343,6 +4741,7 @@ COMMANDS = {
     "ind-las": ind_las,
     "reagg-items": reagg_items,
     "stroke-exposure": stroke_exposure,
+    "r4-inputs": r4_inputs,
     "r4-lists": r4_lists,
     "h11": h11,
     "h12": h12,

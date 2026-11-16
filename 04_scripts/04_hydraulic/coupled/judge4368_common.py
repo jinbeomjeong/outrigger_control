@@ -631,8 +631,13 @@ def dotted(node: Any, path: str) -> Any:
     return node
 
 
+GRID_FOLDERS = ("", "h9_grid", "h9_grid_v0_sample")
+"""Folders of the grid result files (RD-7 3 key / setting of ``results[i]``; supplement 4-2:
+the H-9 V0 sample files have the same form)."""
+
+
 def is_grid_file(name: str, parent: str = "") -> bool:
-    return name.startswith("grid_") and name.endswith(".json") and (parent in ("", "h9_grid"))
+    return name.startswith("grid_") and name.endswith(".json") and parent in GRID_FOLDERS
 
 
 def key_and_setting(file_name: str, item: dict, parent_dir: str = "") -> tuple[Any, Any]:

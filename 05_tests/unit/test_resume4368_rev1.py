@@ -1192,13 +1192,16 @@ def test_rev3_family_f_trigger_and_rules(tmp_path) -> None:
                 gates = dict(good)
                 if setting == "VB" and i < 5:  # 5 VB failures per key vs V0 0: R-1 fails (> 4)
                     gates["U57_outside"] = False
-                lines.append(
+                lines.append(  # supplement 4-5 fields: event, fault_events, controller_tag
                     {
                         "setting": setting,
                         "key": key,
                         "offset_s": i * 0.00625,
+                        "event": "FS24",
                         "gates": gates,
+                        "fault_events": [],
                         "final_phase": "ready",
+                        "controller_tag": judge.TAG_P3 if setting == "VB" else judge.TAG_V0,
                     }
                 )
     path = _jsonl(tmp_path / "f.jsonl", lines)
