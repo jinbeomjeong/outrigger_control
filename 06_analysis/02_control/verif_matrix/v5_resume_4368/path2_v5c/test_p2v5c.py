@@ -26,11 +26,11 @@ def fast_run(**kw):
          "adj_lift_sum_W_s": 0.0, "adj_max_gap_W_mm": 0.0, "adj_lift_outside_W_s": 0.0,
          "min_F_after_W_kN": {"FL": 20.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}, "fault_periods": 0,
          "fault_events": [], "final_phase": "ready", "att_end_deg": [0.01, -0.02], "twist": {"n_bundles": 0},
-         "pass": True, "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"},
+         "pass": True, "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"}, "commands_sha256": "h",
          "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0],
                                "extend_bound_check": {"breach_reads": [0, 0, 0, 0]}},
          "hydraulic_options": {"m2_law": "flow_limited_r5"},
-         "lock_window_alignment": {"n_late_fallback": 0}}
+         "lock_window_alignment": {"fallback_legs": {}, "n_late_fallback_by_leg": {}}}   # RD-10: no fallback leg
     r.update(kw)
     r["gates"] = {k: v for k, v in gr.gates_p2(r, CORE).items()}
     return r
@@ -77,25 +77,79 @@ class TestGridGates(unittest.TestCase):
 
 
 def write_grid(folder, setting, mutate=None, n=192):
+    """Four grid files <folder>/<setting>/<stem>.json. results[0] / [1] = family F keys FR / FL; in grid_r67_top
+    their FS24 runs have four phases (0, 0.025, 0.05, 0.075), in grid_r67_main two (0, 0.05): 12 family F rows."""
     paths = {}
+    (Path(folder) / setting).mkdir(parents=True, exist_ok=True)
     for stem in gr.STEMS:
         results = []
         for i in range(n // 6):
-            key = "screen|top|0.0|ready|FR" if i == 0 else f"screen|bottom|0.0|level|K{i}"
-            runs = [fast_run(offset_s=o) for o in (0.0, 0.05)] * 3
-            for j, ev in enumerate(("FS24", "FS24", "RE1bF", "RE1bF", "G4", "G4")):
-                runs[j] = copy.deepcopy(runs[j])
-                runs[j]["event"] = ev
+            key = ("screen|top|0.0|ready|FR", "screen|top|0.0|ready|FL")[i] if i < 2 else f"screen|bottom|0.0|level|K{i}"
+            if stem == "grid_r67_top" and i < 2:
+                plan = (("FS24", 0.0), ("FS24", 0.025), ("FS24", 0.05), ("FS24", 0.075), ("G4", 0.0), ("G4", 0.05))
+            else:
+                plan = (("FS24", 0.0), ("FS24", 0.05), ("RE1bF", 0.0), ("RE1bF", 0.05), ("G4", 0.0), ("G4", 0.05))
+            runs = []
+            for ev, off in plan:
+                run = fast_run(offset_s=off, event=ev)
                 if ev == "G4":
-                    runs[j].update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
-            results.append({"key": key, "runs": runs})
+                    run.update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
+                    run["gates"] = gr.gates_p2(run, CORE)
+                run["pass"] = all(run["gates"].values())          # supplement 5-2: pass = conjunction of gates
+                runs.append(run)
+            results.append({"key": key, "v5_setting": setting, "runs": runs,   # supplement 3-6: results[i] setting
+                            "controller_tag": "final_C4G2_P3_LAS_K1" if setting == "VB" else "final_C4G2_LAS_K1"})
         if mutate:
             mutate(stem, results)
-        p = Path(folder) / f"{setting}_{stem}.json"
+        p = Path(folder) / setting / f"{stem}.json"
         p.write_text(json.dumps({"meta": {"spec": gr.FAMILY_F_EVENT and "rev. 67 (G1 / G2 / G7 reduced screen)",
                                           "v5_setting": setting}, "results": results}), "utf-8")
         paths[stem] = str(p)
     return paths
+
+
+def ff_lines(vb_bad=0, v0_bad=0):
+    """Synthetic h9_family_F.jsonl (supplement 4-5 fields): 2 keys x 16 phases x V0 / VB, the first ``*_bad``
+    phases with Fmin_after_W false."""
+    gates = {k: True for k in gr.gates_p2(fast_run(), CORE)}
+    out = []
+    for key in sorted(gr.FAMILY_F_KEYS):
+        for s, nbad in (("VB", vb_bad), ("V0", v0_bad)):
+            for i in range(16):
+                g = dict(gates, Fmin_after_W=i >= nbad)
+                out.append({"key": key, "setting": s, "offset_s": i * 0.00625, "event": "FS24", "gates": g,
+                            "fault_events": [], "final_phase": "ready",
+                            "controller_tag": "final_C4G2_P3_LAS_K1" if s == "VB" else "final_C4G2_LAS_K1"})
+    return out
+
+
+def write_sample(folder, stored, edit=None):
+    """Same-commit V0 sample (rev4 R4-B4): the first and the last results[] item of each stored file (8 jobs)."""
+    out = {}
+    (Path(folder) / "sample").mkdir(parents=True, exist_ok=True)
+    for stem, p in stored.items():
+        d = json.loads(Path(p).read_text("utf-8"))
+        d["results"] = d["results"][:1] + d["results"][-1:]
+        if edit:
+            edit(stem, d["results"])
+        q = Path(folder) / "sample" / f"{stem}.json"
+        q.write_text(json.dumps(d), "utf-8")
+        out[stem] = str(q)
+    return out
+
+
+def fail_gate(run, *names):
+    """Set recorded gates false and the recorded pass to their conjunction (supplement 5-2 rows)."""
+    for n in names:
+        run["gates"][n] = False
+    run["pass"] = all(run["gates"].values())
+
+
+def write_ff(folder, lines, name="h9_family_F.jsonl"):
+    p = Path(folder) / "ff" / name
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text("\n".join(json.dumps(x) for x in lines) + "\n", "utf-8")
+    return str(p)
 
 
 class Args:
@@ -107,63 +161,105 @@ REPO = cm.REPO_DEFAULT
 
 
 class TestGridCmd(unittest.TestCase):
-    def run_grid(self, mut_vb=None, mut_v0=None, n=192, family_f=None):
+    def run_grid(self, mut_vb=None, mut_v0=None, n=192, family_f=None, ff_name="h9_family_F.jsonl", stored=True):
+        """VB grid + stored V0 grid (the pair: the same-commit sample has equal hashes, supplement 5-1)."""
         with tempfile.TemporaryDirectory() as td:
             vb = write_grid(td, "VB", mut_vb, n)
-            v0 = write_grid(td, "V0", mut_v0, n)
-            ff = None
-            if family_f is not None:
-                ff = str(Path(td) / "ff.jsonl")
-                Path(ff).write_text("\n".join(json.dumps(x) for x in family_f) + "\n", "utf-8")
-            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_new=[f"{k}={v}" for k, v in v0.items()],
-                     v0_stored=None, v0_sample=None, family_f=ff)
+            st = write_grid(td, "stored", mut_v0, n) if stored else {}
+            sm = write_sample(td, st) if stored else {}
+            ff = write_ff(td, ff_lines() if family_f is None else family_f, ff_name)
+            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_new=None,
+                     v0_stored=[f"{k}={v}" for k, v in st.items()], v0_sample=[f"{k}={v}" for k, v in sm.items()],
+                     family_f=ff)
             return gr.cmd_grid(a, REPO, V5J, CORE)
 
     def test_v0_sample(self):
+        """Supplement 6-2: same x 8 = stored (V0 tags not compared); different = new V0 768 (tags compared: 3-none,
+        S-2 / S-11); different without the new V0 = source undecidable; an undecidable job wins over a different one;
+        no sample = undecidable. An undecidable source is a record: no pairing, application condition undecidable,
+        no H-10 term."""
         with tempfile.TemporaryDirectory() as td:
-            st = write_grid(td, "V0", None)
-            sm = write_grid(td, "S", None)
+            def bad_tag(stem, res):
+                if stem == "grid_r67_top":
+                    res[4]["controller_tag"] = "final_C4G2_P3_LAS_K1"        # a V0 item with the 3-on tag
+            st = write_grid(td, "stored", bad_tag)
             vb = write_grid(td, "VB", None)
-            for stem, p in sm.items():   # give every run a hash; same as stored
-                for q in (st[stem], p):
-                    d = json.loads(Path(q).read_text("utf-8"))
-                    for r in d["results"]:
-                        for i, run in enumerate(r["runs"]):
-                            run["commands_sha256"] = f"{r['key']}{i}"
-                    Path(q).write_text(json.dumps(d), "utf-8")
-            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_stored=[f"{k}={v}" for k, v in st.items()],
-                     v0_sample=[f"{k}={v}" for k, v in sm.items()], v0_new=None, family_f=None)
-            body, s = gr.cmd_grid(a, REPO, V5J, CORE)
-            self.assertEqual(body["v0_pair"]["sample"]["same"], 8)
-            self.assertTrue(body["v0_pair"]["pair"].startswith("stored"))
-            d = json.loads(Path(sm["grid_r69_top"]).read_text("utf-8"))
-            d["results"][0]["runs"][0]["commands_sha256"] = "changed"
-            Path(sm["grid_r69_top"]).write_text(json.dumps(d), "utf-8")
-            body, s = gr.cmd_grid(a, REPO, V5J, CORE)
-            self.assertEqual(body["v0_pair"]["sample"]["same"], 7)
-            self.assertEqual(s, "undecidable")
+            nw = write_grid(td, "V0", bad_tag)
+            ff = write_ff(td, ff_lines())
 
-    def _ff(self, vb_bad, v0_bad):
-        lines = []
-        for key in sorted(gr.FAMILY_F_KEYS):
-            for s, nbad in (("VB", vb_bad), ("V0", v0_bad)):
-                for i in range(16):
-                    run = fast_run(offset_s=i * 0.00625)
-                    if i < nbad:
-                        run["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
-                    lines.append({"key": key, "setting": s, "run": run})
-        return lines
+            def run(sample, new=None):
+                a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_stored=[f"{k}={v}" for k, v in st.items()],
+                         v0_sample=None if sample is None else [f"{k}={v}" for k, v in sample.items()],
+                         v0_new=None if new is None else [f"{k}={v}" for k, v in new.items()], family_f=ff)
+                return gr.cmd_grid(a, REPO, V5J, CORE)
+            body, s = run(write_sample(td, st))
+            self.assertEqual((body["v0_pair"]["sample"]["same"], body["v0_pair"]["source"]), (8, "stored"))
+            self.assertNotIn("S-2", body["stop_codes"])                      # stored V0 tags not compared
+            self.assertEqual(s, "pass")
+
+            def diff(stem, res):
+                if stem == "grid_r69_top":
+                    res[0]["runs"][0]["commands_sha256"] = "changed"
+            body, s = run(write_sample(td, st, diff))
+            self.assertEqual((body["v0_pair"]["sample"]["different"], body["v0_pair"]["source"]), (1, "undecidable"))
+            self.assertEqual(body["grid"]["family_F_applicable"], "undecidable")
+            self.assertEqual((body["grid"]["h10_grid_term"]["uses"], body["grid"]["N_raw"]), ("none", 0))
+            body, s = run(write_sample(td, st, diff), nw)
+            self.assertEqual(body["v0_pair"]["source"], "new")
+            self.assertEqual([x["code"] for x in body["grid"]["stops"]], ["S-2"] * 6)   # new V0 tags compared
+
+            def miss(stem, res):
+                diff(stem, res)
+                if stem == "grid_r67_main":
+                    res[0]["runs"][1]["commands_sha256"] = None              # hash missing: undecidable wins
+            body, s = run(write_sample(td, st, miss), nw)
+            self.assertEqual((body["v0_pair"]["sample"]["undecidable"], body["v0_pair"]["source"]), (1, "undecidable"))
+            body, s = run(None)
+            self.assertEqual(body["v0_pair"]["source"], "undecidable")
 
     def test_family_F_rule(self):
+        """Supplement 4-5: R-1..R-4 always computed from h9_family_F.jsonl; applied (pass = excluded, fail /
+        undecidable = v5 H-10) only with a two-gate-only transition in the 12 family F rows; else a record."""
         def m(stem, res):
             if stem == "grid_r67_top":
-                res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
-        body, st = self.run_grid(mut_vb=m, family_f=self._ff(4, 1))   # 4 <= 1 + 4, sum 8 <= 2 + 6
-        self.assertEqual(body["grid"]["family_F_rule"]["result"], "pass")
+                fail_gate(res[0]["runs"][0], "Fmin_after_W")
+        body, st = self.run_grid(mut_vb=m, family_f=ff_lines(4, 1))   # 4 <= 1 + 4, sum 8 <= 2 + 6
+        fr = body["grid"]["family_F_rule"]
+        self.assertEqual((fr["result"], fr["k"]["screen|top|0.0|ready|FL|VB"], body["grid"]["family_F_rows"]),
+                         ("pass", 4, 12))
+        self.assertEqual((body["grid"]["N_raw"], body["grid"]["N_F"], body["grid"]["h10_grid_term"]["uses"]),
+                         (1, 0, "N_F"))
         self.assertEqual(st, "pass")
-        body, st = self.run_grid(mut_vb=m, family_f=self._ff(6, 1))   # 6 > 5
+        body, st = self.run_grid(mut_vb=m, family_f=ff_lines(6, 1))   # 6 > 5
         self.assertEqual(body["grid"]["family_F_rule"]["result"], "fail")
+        self.assertFalse(body["grid"]["family_F_rule"]["R1"]["screen|top|0.0|ready|FR"])
         self.assertIn("H-10", body["stop_codes"])
+        bad = ff_lines(0, 0)
+        del bad[3]["gates"]["U57_outside"]                              # a VB line field missing -> undecidable
+        body, st = self.run_grid(mut_vb=m, family_f=bad)
+        self.assertEqual(body["grid"]["family_F_rule"]["result"], "undecidable")
+        self.assertIn("H-10", body["stop_codes"])                      # applicable + undecidable = v5 H-10
+        body, st = self.run_grid(family_f=ff_lines(6, 1))              # not applicable: R fail is a record
+        self.assertEqual((body["grid"]["family_F_rule"]["result"], st), ("fail", "pass"))
+        r4 = ff_lines(0, 0)
+        r4[0]["gates"]["U57_sum"] = False                              # VB FL phase 0: R-4 violation
+        r4[1]["fault_events"] = ["FAULT_X"]                            # VB FL phase 1: R-3 violation
+        fr = self.run_grid(family_f=r4)[0]["grid"]["family_F_rule"]
+        self.assertEqual((fr["R3"]["ok"], fr["R4"]["ok"], fr["R4"]["violations"][0][2]), (False, False, ["U57_sum"]))
+
+    def test_family_F_form_and_plate(self):
+        """Supplement 4-5 form (64 cells) = S-15; supplement 4-3: setting missing = S-11, tag of another plate = S-2."""
+        body, st = self.run_grid(family_f=ff_lines()[:-1])
+        self.assertIn("S-15", body["stop_codes"])
+        self.assertEqual(body["grid"]["family_F_rule"]["result"], "undecidable")
+        x = ff_lines()
+        x[0]["controller_tag"] = "final_C4G2_LAS_K1"                   # VB line with the 3-none tag
+        body, st = self.run_grid(family_f=x)
+        self.assertEqual(body["stop_codes"], ["S-2"])
+        x = ff_lines()
+        x[5]["setting"] = None
+        body, st = self.run_grid(family_f=x)
+        self.assertIn("S-11", body["stop_codes"])
 
     def test_all_pass(self):
         body, st = self.run_grid()
@@ -172,25 +268,39 @@ class TestGridCmd(unittest.TestCase):
     def test_transition_outside_family(self):
         def m(stem, res):
             if stem == "grid_r67_main":
-                res[1]["runs"][0]["pair_union_s"] = 2.5
+                fail_gate(res[2]["runs"][0], "U832_pair_union")
         body, st = self.run_grid(mut_vb=m)
         self.assertEqual(st, "stop")
         self.assertIn("H-10", body["stop_codes"])
-        self.assertEqual(len(body["grid"]["pass_to_fail_outside_F"]), 1)
+        a = body["grid"]["a_pass_to_fail_raw"]
+        self.assertEqual((body["grid"]["N_raw"], body["grid"]["h10_grid_term"]["uses"]), (1, "N_raw"))
+        self.assertEqual((Path(a[0]["file"]).name, a[0]["event"], a[0]["vb_false_gates"], a[0]["v0_false_gates"]),
+                         ("grid_r67_main.json", "FS24", ["U832_pair_union"], []))      # file: path (supplement 6-1)
 
     def test_family_F_only(self):
+        """Supplement 4-4: the family file and the four stored V0 grids must exist with their names (S-15)."""
         def m(stem, res):
             if stem == "grid_r67_top":
-                res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+                fail_gate(res[0]["runs"][0], "Fmin_after_W")
         body, st = self.run_grid(mut_vb=m)
-        self.assertEqual(st, "undecidable")
-        self.assertEqual(len(body["grid"]["family_F"]), 1)
+        self.assertEqual(st, "pass")                                   # default family file passes R-1..R-4
+        self.assertTrue(body["grid"]["family_F_applicable"])
+        body, st = self.run_grid(ff_name="h9_family_F_copy.jsonl")
+        self.assertEqual(body["stop_codes"], ["S-15"])
+        body, st = self.run_grid(stored=False)
+        self.assertEqual(body["stop_codes"], ["S-15"])
+        self.assertFalse(body["inputs"]["supplement_4-4"]["ok"])
+        with self.assertRaises(SystemExit), __import__("contextlib").redirect_stderr(__import__("io").StringIO()):
+            gr.build_parser().parse_args(["--expect-head", "x", "grid", "--vb", "a=b"])   # --family-f required
 
     def test_fault_and_count(self):
-        def m(stem, res):
-            res[2]["runs"][2]["fault_periods"] = 3
+        def m(stem, res):   # supplement 5-2: FAULT = non-empty fault_events (both sides fail: no transition)
+            res[2]["runs"][2]["fault_events"] = ["FAULT_X"]
+            fail_gate(res[2]["runs"][2], "fault0")
         body, st = self.run_grid(mut_vb=m, mut_v0=m)
-        self.assertEqual(st, "fail")
+        self.assertEqual(st, "pass")                                      # supplement 6-4: FAULT is a count, no grade
+        self.assertEqual((body["grid"]["grid_records"]["N_fault"], body["grid"]["grid_records"]["fail_to_fail"]), (4, 4))
+        self.assertEqual(body["grid"]["supplement6_inputs"]["N_fault"], 4)
         body, st = self.run_grid(n=186)
         self.assertIn("S-15", body["stop_codes"])
 
@@ -204,34 +314,95 @@ class TestGridCmd(unittest.TestCase):
         """rev8 R8-2: a VB grid run with a non-3 tag -> S-2, J-P3 not counted as undecidable."""
         def m(stem, res):
             if stem == "grid_r67_main":
-                res[0]["runs"][0]["resume_k1"] = {"controller_tag": "final_C4G2_LAS_K1"}
+                res[3]["controller_tag"] = "final_C4G2_LAS_K1"                 # results[i] tag, not 3 on
         body, st = self.run_grid(mut_vb=m)
         self.assertEqual(st, "stop")
         self.assertIn("S-2", body["stop_codes"])
         self.assertFalse(any("J-P3" in u["why"] for u in body["grid"]["undecidable"]))
 
     def test_r81_grid_tag_from_job(self):
-        """rev8 R8-1 (user decision 19): a grid run without a tag reads the tag of its job record results[i];
-        the run tag wins; neither -> J-P3 not applicable + S-2 (R8-2)."""
-        def m(stem, res):
-            for r in res:
-                r["controller_tag"] = "final_C4G2_P3_LAS_K1"
-                for run in r["runs"]:
-                    run.pop("resume_k1", None)
-        body, st = self.run_grid(mut_vb=m)
+        """Supplement 4-3 / 5-1 (user decision 129): the grid run tag is only results[i].controller_tag; a run's own
+        tag fields are not read. Missing = S-11 (plate check) + J-P3 not applicable S-2; other tag = S-2."""
+        body, st = self.run_grid()
         self.assertNotIn("S-2", body["stop_codes"])
         self.assertEqual(body["inputs"]["vb"]["grid_r67_main"]["tags"], {"final_C4G2_P3_LAS_K1": 192})
 
         def m2(stem, res):
-            m(stem, res)
             if stem == "grid_r67_main":
-                res[0]["runs"][0]["controller_tag"] = "final_C4G2_LAS_K1"   # run tag wins (not 3)
-                res[1]["runs"][0]["controller_tag"] = "final_C4G2_P3_LAS_K1"
-                res[1].pop("controller_tag")
-                res[2].pop("controller_tag")                                # neither for res[2] runs
+                res[0]["runs"][0]["controller_tag"] = "final_C4G2_LAS_K1"     # run's own tag: not read
+                res[1]["controller_tag"] = "final_C4G2_LAS_K1"                # results[i] tag, 3 none: 6 runs
+                res[2].pop("controller_tag")                                   # no results[i] tag: 6 runs
+                for run in res[2]["runs"]:
+                    run["controller_tag"] = "final_C4G2_P3_LAS_K1"            # run tags present, not read
         body, st = self.run_grid(mut_vb=m2)
-        s2 = [s for s in body["grid"]["stops"] if s["code"] == "S-2"]
-        self.assertEqual(len(s2), 1 + 5 + 6)   # res[0] run 0; res[1] runs 1..5; res[2] all six
+        codes = [s["code"] for s in body["grid"]["stops"]]
+        self.assertEqual((codes.count("S-2"), codes.count("S-11")), (6 + 6 + 6, 6))   # plate S-2 + R8-2 S-2 per run
+        self.assertEqual(body["inputs"]["vb"]["grid_r67_main"]["tags"],
+                         {"final_C4G2_P3_LAS_K1": 180, "final_C4G2_LAS_K1": 6, "None": 6})
+        self.assertEqual(body["R4"]["RD-9"]["H-9"]["p3_on"], 768 - 12)
+
+    def test_supplement5_rows_pairs_option_b(self):
+        """Supplement 5: pairing (exactly one V0 run, V0-only listed), pass vs gates, (a) / (b) / (c) option B."""
+        def vb(stem, res):
+            if stem == "grid_r67_main":
+                fail_gate(res[0]["runs"][0], "Fmin_after_W")                 # F row: two-gate-only (applicable)
+                fail_gate(res[1]["runs"][1], "U57_sum")                      # F row: VB fails another gate
+        def v0(stem, res):
+            if stem == "grid_r67_main":
+                fail_gate(res[1]["runs"][1], "Fmin_after_W")                 # ... where V0 fails a family gate
+        body, st = self.run_grid(mut_vb=vb, mut_v0=v0)
+        g = body["grid"]
+        self.assertEqual((g["N_raw"], g["N_F"], g["family_F_applicable"], g["h10_grid_term"]),
+                         (1, 1, True, {"uses": "N_F", "value": 1}))
+        self.assertEqual(g["c_pass_to_fail_family_F_excluded"][0]["vb_false_gates"], ["U57_sum"])
+        self.assertEqual(g["grid_records"]["fail_to_fail"], 1)
+        fb = [r for r in g["b_family_F_table"] if r["file"].endswith("/VB/grid_r67_main.json") and r["offset_s"] == 0.05
+              and r["key"].endswith("FL")][0]
+        self.assertEqual((fb["v0_pass"], fb["vb_pass"], fb["v0_pass_without_two"], fb["vb_pass_without_two"]),
+                         (False, False, True, False))
+        self.assertIn("H-10", body["stop_codes"])
+
+        def dup(stem, res):   # a second V0 run with the same key / event / offset (within 1e-9 s) -> 2 and 0 pairs
+            if stem == "grid_r69_top":
+                res[5]["runs"][1] = dict(res[5]["runs"][0], offset_s=res[5]["runs"][0]["offset_s"] + 5e-10)
+                res[6]["runs"].append(dict(res[6]["runs"][0], offset_s=0.07))   # a V0-only run
+        body, st = self.run_grid(mut_v0=dup)
+        whys = [u["why"] for u in body["grid"]["grid_records"]["undecidable_rows"]]
+        self.assertEqual(sorted(whys), sorted(["2 V0 pair runs (exactly 1 needed)", "0 V0 pair runs (exactly 1 needed)",
+                                               "V0 run without a VB row"]))
+        self.assertEqual((st, body["grid"]["supplement6_inputs"]["N_undecidable"]), ("pass", 3))   # 6-4: a count
+
+        def bad(stem, res):
+            if stem == "grid_r69_bottom":
+                res[4]["runs"][3]["pass"] = False                             # pass != conjunction of gates
+        body, st = self.run_grid(mut_vb=bad)
+        self.assertEqual(body["grid"]["grid_records"]["undecidable_rows"][0]["why"],
+                         "pass differs from the conjunction of gates")
+        self.assertEqual(st, "pass")
+
+    def test_supplement6_notation_and_application(self):
+        """Supplement 6-1: file = repository-relative path ('/'), (c) keeps every false gate; 6-3: an undecidable
+        family F row (no true row) makes the application condition "undecidable": no H-10 grid term, no marker."""
+        def vb(stem, res):
+            if stem == "grid_r67_main":
+                fail_gate(res[0]["runs"][0], "Fmin_after_W", "U57_sum")       # F row, not two-gate-only
+        body, st = self.run_grid(mut_vb=vb)
+        g = body["grid"]
+        self.assertEqual((g["N_raw"], g["N_F"], g["family_F_applicable"]), (1, 1, False))
+        self.assertEqual(g["c_pass_to_fail_family_F_excluded"][0]["vb_false_gates"], ["Fmin_after_W", "U57_sum"])
+        self.assertTrue(g["a_pass_to_fail_raw"][0]["file"].endswith("/VB/grid_r67_main.json"))
+        self.assertNotIn("\\", g["a_pass_to_fail_raw"][0]["file"])
+        self.assertIn("H-10", body["stop_codes"])                           # condition false: N_raw 1
+
+        def und(stem, res):
+            vb(stem, res)
+            if stem == "grid_r67_top":
+                res[1]["runs"][2]["pass"] = False                             # F row: pass != conjunction (undecidable)
+        body, st = self.run_grid(mut_vb=und)
+        g = body["grid"]
+        self.assertEqual((g["family_F_applicable"], g["h10_grid_term"]), ("undecidable", {"uses": "none", "value": None}))
+        self.assertNotIn("H-10", body["stop_codes"])
+        self.assertEqual(sum(fr["applicable"] == "undecidable" for fr in g["b_family_F_table"]), 1)
 
     def test_r121_grid_t4h(self):
         """rev12 R12-1: a VB grid run that recorded t4h_file with no T4h folder -> S-2 (J-P3 not judged)."""
@@ -490,8 +661,8 @@ class TestRev3(unittest.TestCase):
         r = cm.check_rev3(REPO)
         self.assertTrue(r["ok"], r)
         self.assertEqual([i["path"].rsplit("_", 1)[1] for i in r["items"]],
-                         ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md", "rev8.md", "rev9.md",
-                          "rev10.md", "rev11.md", "rev12.md"])
+                         [f"rev{n}.md" for n in range(3, 26)])            # R4 RD-2: rev3 ~ rev25 here
+        r = {"items": r["items"][:10]}                                     # rev3 ~ rev12 checks below
         rev7 = r["items"][-6]
         self.assertEqual(rev7["want"], "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502")
         self.assertEqual(rev7["seal_file_sha"], rev7["want"])
@@ -649,6 +820,336 @@ class TestRev3(unittest.TestCase):
         self.assertEqual(s1.fl_guard_cycle(g), 300)
         self.assertIsNone(s1.fl_guard_cycle(line("S7", "VB", events=[])))
         self.assertEqual(s1.fl_guard_cycle({"job": {}}), "no_events")
+
+
+P3_TAG, V0_TAG = "final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1"
+
+
+def ebc(br, **kw):
+    return {"breach_reads": br, **kw}
+
+
+def r79(tag, setting, br=None, lwa="ok", **kw):
+    """Synthetic r79 record (H-6 / H-8 form) with an RD-10 J11 block."""
+    r = {"key": kw.pop("key", "k"), "v5_setting": setting, "resume_k1": {"controller_tag": tag},
+         "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0]},
+         "hydraulic_options": {"m2_law": "flow_limited_r5"} if setting == "VB" else {}}
+    if br is not None:
+        r["hydraulics_record"]["extend_bound_check"] = ebc(br, **kw.pop("ebc_kw", {}))
+    if lwa == "ok":
+        r["lock_window_alignment"] = {"fallback_legs": {}, "n_late_fallback_by_leg": {}}
+    elif isinstance(lwa, dict):
+        r["lock_window_alignment"] = lwa
+    r.update(kw)
+    return r
+
+
+class TestR4(unittest.TestCase):
+    """R4 common block (e451f067...) and supplements 2-1 / 2-2 on synthetic inputs only."""
+
+    def test_rd2_union(self):
+        seals = CORE.check_seals(REPO)
+        u = cm.rd2_union(seals)
+        self.assertTrue(u["ok"], u)
+        self.assertEqual((u["sheets"], u["want_sheets"]), (26, 26))
+        self.assertEqual(len(cm.RD2_SEALS), 26)
+        self.assertEqual(cm.RD2_SEALS[0][0], "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md")
+        self.assertEqual(cm.RD2_SEALS[25][1], "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233")
+        # the imported list and this folder's list agree with RD-2 sheet by sheet
+        for rel, sha, _s in cm.RD2_SEALS:
+            if rel in seals["rules"]:
+                self.assertEqual(seals["rules"][rel]["want"], sha)
+        bad = copy.deepcopy(seals)
+        first = next(iter(bad["rules"]))
+        del bad["rules"][first]                                  # the original sheet not checked anywhere
+        self.assertEqual(cm.rd2_union(bad)["missing"], [first])
+        bad = copy.deepcopy(seals)
+        bad["rules"][cm.RD2_SEALS[20][0]]["want"] = "0" * 64      # a sheet checked with another value
+        self.assertFalse(cm.rd2_union(bad)["ok"])
+
+    def test_head_check_s12(self):
+        """RD-1 5: --expect-head is required; another commit = S-12, exit 2, nothing judged."""
+        import contextlib  # noqa: PLC0415
+        import io  # noqa: PLC0415
+        with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
+            s1.build_parser().parse_args(["merge", "--part", "x.json"])
+        for bad in ("0" * 40, "HEAD"):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                code = s1.main(["--expect-head", bad, "merge", "--part", "nofile.json"])
+            summary = json.loads(buf.getvalue().strip().splitlines()[-1])
+            self.assertEqual((code, summary["status"], summary["stop_codes"]), (2, "stop", ["S-12"]))
+        head = cm.git_head(REPO)
+        self.assertTrue(CORE.head_check(REPO, head)["ok"])
+
+    def test_rd7_rows_and_order(self):
+        rec = {"hydraulics_record": {"extend_bound_check": ebc(
+            [0, 2, 0, 1], min_gap_bar=[0.5, -0.75, 0.1, -0.01], first_breach_t_s=[None, 12.3, None, 20.0])}}
+        rows = cm.jp3_rows("H-8", "f.json", "results[3]", rec, "key|a", "VB", CORE)
+        self.assertEqual([(r["leg"], r["breach_reads"], r["min_gap_bar"], r["first_breach_t_s"]) for r in rows],
+                         [("FR", 2, -0.75, 12.3), ("RR", 1, -0.01, 20.0)])
+        e = rec["hydraulics_record"]["extend_bound_check"]
+        e["min_gap_Pa"] = [0.0, -150000.0, 0.0, -1000.0]                       # supplement 3-3: not read
+        e["min_gap_bar"][1], e["first_breach_t_s"][3] = float("inf"), float("nan")   # not finite -> null
+        rows = cm.jp3_rows("H-8", "f.json", "results[3]", rec, "key|a", "VB", CORE)
+        self.assertEqual([(r["min_gap_bar"], r["first_breach_t_s"]) for r in rows], [(None, 12.3), (-0.01, None)])
+        del e["min_gap_bar"]
+        self.assertEqual([r["min_gap_bar"] for r in cm.jp3_rows("H-8", "f", "p", rec, "k", "VB", CORE)], [None, None])
+        mixed = [{"bundle": "H-10", "file": "a/h10_reuse_rerun.jsonl", "position": "line 1", "leg": "FL"},
+                 {"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 10", "leg": "FL"},
+                 {"bundle": "H-9", "file": "x/h9_grid/grid_r67_main.json", "position": "results[10].runs[2]",
+                  "leg": "RR"},
+                 {"bundle": "H-9", "file": "x/h9_grid/grid_r67_main.json", "position": "results[9].runs[5]",
+                  "leg": "FL"},
+                 {"bundle": "H-6", "file": "z.json", "position": "results[2]", "leg": "RL"},
+                 {"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 9", "leg": "RL"},
+                 {"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 9", "leg": "FR"}]
+        self.assertEqual([(r["bundle"], r["position"], r["leg"]) for r in cm.rd7_sort(mixed, CORE.bundle_key)],
+                         [("H-6", "results[2]", "RL"), ("H-9", "results[9].runs[5]", "FL"),
+                          ("H-9", "results[10].runs[2]", "RR"), ("H-9", "line 9", "FR"), ("H-9", "line 9", "RL"),
+                          ("H-9", "line 10", "FL"), ("H-10", "line 1", "FL")])          # supplement 3-5: H-9 < H-10
+        self.assertEqual(cm.rd7_markers([], [{"marker": "L-e"}]), ["L-e"])
+        self.assertEqual(cm.rd7_markers([{"x": 1}], [{"marker": "H-7"}]), ["멈춤 H-7"])
+
+    def test_rd13_lists(self):
+        lists = cm.rd13_lists()
+        self.assertEqual(sorted(lists), sorted(cm.RD7_BUNDLES))
+        for b, v in lists.items():
+            self.assertEqual(v["sha256"], cm.canon_sha(v["items"]))
+            kinds = {x["구분"] for x in v["items"]}
+            self.assertTrue(kinds <= {"등급 항목", "기록", "관문"}, kinds)
+            names = [x["항목"] for x in v["items"]]
+            self.assertEqual(len(names), len(set(names)), b)
+            self.assertTrue(any(n.startswith("J-P3 ext_moving") for n in names))
+            self.assertTrue(any(n.startswith("J11 실제 대체 다리") for n in names))
+
+    # ---------------------------------------------------------------- grid (H-9, supplement 2-2)
+    def run_grid(self, mut):
+        return TestGridCmd.run_grid(self, mut_vb=mut)
+
+    def test_grid_rd8_undecidable_never_pass(self):
+        for br, kind in (([0, 0, 0], "format"), ([0, True, 0, 0], "format"), ([0, -1, 0, 0], "format")):
+            def m(stem, res, br=br):
+                if stem == "grid_r67_main":
+                    res[3]["runs"][1]["hydraulics_record"]["extend_bound_check"]["breach_reads"] = br
+            body, st = self.run_grid(m)
+            self.assertEqual(st, "undecidable", br)
+            self.assertEqual(body["R4"]["RD-8"]["H-9"][kind], 1)
+            self.assertEqual(body["R4"]["RD-7"]["J-P3"]["H-9"], [])
+            self.assertNotIn("H-7", body["stop_codes"])
+
+        def m2(stem, res):
+            if stem == "grid_r67_main":
+                res[3]["runs"][1]["extend_bound_check"] = {"breach_reads": [0, 0, 0, 1]}   # top level differs
+        body, st = self.run_grid(m2)
+        self.assertEqual(st, "undecidable")
+        self.assertEqual(body["R4"]["RD-8"]["H-9"]["top_level_mismatch"], 1)
+
+    def test_grid_jp3_and_j11_rows(self):
+        def m(stem, res):
+            if stem == "grid_r69_top":
+                res[3]["v5_setting"] = "VB"
+                run = res[3]["runs"][1]
+                run["hydraulics_record"]["extend_bound_check"] = ebc([0, 0, 4, 0], min_gap_bar=[1.0, 1.0, -0.5, 1.0],
+                                                                     first_breach_t_s=[None, None, 33.3, None])
+                res[1]["runs"][2]["lock_window_alignment"] = {"fallback_legs": {"RL": {"x": 1}},
+                                                              "n_late_fallback_by_leg": {"RL": 2}}
+        body, st = self.run_grid(m)
+        self.assertEqual(st, "stop")
+        jp, j11 = body["R4"]["RD-7"]["J-P3"]["H-9"], body["R4"]["RD-7"]["J11"]["H-9"]
+        self.assertEqual([(r["position"], r["leg"], r["key"], r["setting"], r["breach_reads"], r["min_gap_bar"],
+                           r["first_breach_t_s"]) for r in jp],
+                         [("results[3].runs[1]", "RL", "screen|bottom|0.0|level|K3", "VB", 4, -0.5, 33.3)])
+        self.assertEqual([(r["position"], r["leg"], r["n_late_fallback_by_leg"], r["marker"], r["setting"])
+                          for r in j11], [("results[1].runs[2]", "RL", 2, "H-7", "VB")])
+        self.assertEqual(body["R4"]["markers"]["H-9"], ["멈춤 H-7"])
+        self.assertEqual(body["R4"]["RD-9"]["H-9"], {"p3_on": 768, "scanned": 768})
+
+    def test_grid_j11_block_and_old_key(self):
+        def m(stem, res):
+            if stem == "grid_r67_top":
+                del res[0]["runs"][0]["lock_window_alignment"]             # RD-10: undecidable on VB
+                res[0]["runs"][1]["lock_window_alignment"]["n_late_fallback"] = 3   # old key: no stop any more
+        body, st = self.run_grid(m)
+        self.assertEqual(st, "undecidable")
+        self.assertEqual(body["R4"]["RD-10"]["H-9"]["undecidable"], 1)
+        self.assertNotIn("H-7", body["stop_codes"])
+
+        def m3(stem, res):   # supplement 3-6: no results[i].v5_setting -> J11 undecidable (file meta VB not used)
+            if stem == "grid_r67_top":
+                del res[1]["v5_setting"]
+                res[1]["runs"][0]["lock_window_alignment"] = {"fallback_legs": {"RL": {}},
+                                                              "n_late_fallback_by_leg": {"RL": 2}}
+        body, st = self.run_grid(m3)
+        self.assertEqual(st, "undecidable")
+        self.assertEqual(body["R4"]["RD-10"]["H-9"]["undecidable"], 6)
+        self.assertEqual(body["R4"]["RD-7"]["J11"]["H-9"], [])
+        self.assertNotIn("H-7", body["stop_codes"])
+
+    # ---------------------------------------------------------------- noise (H-6 / H-8, supplement 2-1)
+    def test_noise_lists_and_dg3_skip(self):
+        is_p3, _ = CORE.load_is_extend_start(REPO)
+        rd, f = cm.RdCounter(CORE.bundle_key), CORE.Findings()
+        vb = {"k1": r79(P3_TAG, "VB", [0, 0, 0, 2], key="k1", ebc_kw={"min_gap_bar": [1, 1, 1, -0.2],
+                                                                     "first_breach_t_s": [None, None, None, 7.0]}),
+              "k2": r79(P3_TAG, "VB", [1, 0, 0, 0], key="k2"),                      # dg3 key: H-6 line
+              "k3": r79(P3_TAG, "VB", [0, 0, 0, 0], key="k3",
+                        lwa={"fallback_legs": ["RR"], "n_late_fallback_by_leg": {"RR": 1}})}
+        nz.run_checks("noise_VB", vb, CORE, V5J, is_p3, True, f, [], {}, rd=rd, bundle="H-8",
+                      rfile="r/h8_noise_VB.json", pos={"k1": 0, "k2": 1, "k3": 2}, skip={"k2"})
+        jp, j11 = rd.as_dict(["H-8"])["RD-7"]["J-P3"]["H-8"], rd.as_dict(["H-8"])["RD-7"]["J11"]["H-8"]
+        self.assertEqual([(r["position"], r["leg"], r["breach_reads"], r["min_gap_bar"]) for r in jp],
+                         [("results[0]", "RR", 2, -0.2)])
+        self.assertEqual([(r["position"], r["leg"], r["n_late_fallback_by_leg"]) for r in j11], [("results[2]", "RR", 1)])
+        self.assertEqual(rd.p3["H-8"], 3)                                  # RD-9 counts k2 (file line) ...
+        self.assertEqual(rd.as_dict(["H-8"])["RD-10"]["H-8"]["results"], {"pass": 1, "stop": 1})   # ... not judged
+        self.assertFalse(any("k2" in s["where"] for s in f.stops))
+        self.assertEqual(sorted(s["code"] for s in f.stops), ["H-7", "H-7"])
+        # V0 file: J11 is a record (no stop), block missing = input missing, a 3-on tag on a V0 line = S-2
+        rd, f = cm.RdCounter(CORE.bundle_key), CORE.Findings()
+        v0 = {"a": r79(V0_TAG, "V0", key="a", lwa={"fallback_legs": {"FL": {}}, "n_late_fallback_by_leg": {"FL": 4}}),
+              "b": r79(V0_TAG, "V0", key="b", lwa=None),
+              "c": r79(P3_TAG, "V0", key="c")}
+        nz.run_checks("noise_V0", v0, CORE, V5J, is_p3, False, f, rd=rd, bundle="H-8", rfile="r/v0.json",
+                      pos={"a": 0, "b": 1, "c": 2})
+        d = rd.as_dict(["H-8"])
+        self.assertEqual(d["RD-7"]["J11"]["H-8"], [])
+        self.assertEqual(d["RD-10"]["H-8"]["input_missing"], 1)
+        self.assertEqual([s["code"] for s in f.stops], ["S-2"])
+        # RD-8 format defect on an H-6 line: undecidable, counted, not a pass
+        rd, f = cm.RdCounter(CORE.bundle_key), CORE.Findings()
+        nz.run_checks("H-6", {"x": r79(P3_TAG, "VB", [0, 0, 1.0, 0], key="x")}, CORE, V5J, is_p3, True, f, [], {},
+                      rd=rd, bundle="H-6", rfile="r/h6.json", pos={"x": 0})
+        self.assertEqual(f.status(), "undecidable")
+        self.assertEqual(rd.as_dict(["H-6"])["RD-8"]["H-6"]["format"], 1)
+
+    def test_dg3_key_source(self):
+        keys, rec = nz.dg3_keys(REPO, None, CORE)
+        if (REPO / nz.DG3_KEY_SOURCE).is_file():
+            self.assertTrue(rec["ok"], rec)
+            self.assertEqual(len(keys), 135)
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "dg3.json"
+            p.write_text(json.dumps({"results": [{"key": "a"}]}), "utf-8")
+            keys, rec = nz.dg3_keys(REPO, str(p), CORE)
+            self.assertIsNone(keys)
+            self.assertFalse(rec["ok"])
+
+    # ---------------------------------------------------------------- stage1 (H-9 main / pressure_only, H-10)
+    def test_stage1_rd_scan(self):
+        def ev(case, st, **kw):   # event line: rod reading by configuration (R3-C8)
+            return line(case, st, t_event_s=10.0, controller_tag=P3_TAG if st in ("VB", "LS1") else V0_TAG, **kw)
+        ok_lwa = {"fallback_legs": {}, "n_late_fallback_by_leg": {}}
+        h9 = [ev("R12", "V0", lock_window_alignment={"fallback_legs": {"RL": {}}, "n_late_fallback_by_leg": {"RL": 5}}),
+              ev("R14", "V0"),
+              {"job": {"case": "R12", "setting": "V0", "contact": "p"}, "controller_tag": V0_TAG}]
+        h10 = [ev("R12", "VB", lock_window_alignment=ok_lwa,
+                  hydraulics_record={"extend_bound_check": ebc([0, 0, 3, 0], min_gap_bar=[1, 1, -1.25, 1],
+                                                               first_breach_t_s=[None, None, 12.3, None])}),
+               None,
+               ev("R14", "LS1", lock_window_alignment={"fallback_legs": {"FR": {}}, "n_late_fallback_by_leg": {"FR": 2}},
+                  hydraulics_record={"extend_bound_check": ebc([0, 0, 0, 0])}),
+               ev("S2", "VB", hydraulics_record={"extend_bound_check": ebc([1, 0, 0, 0], min_gap_Pa=[-2.0e5, 0, 0, 0],
+                                                                          first_breach_t_s=[5.5, None, None, None])})]
+        h10[3]["job"]["u9_metrics"] = True
+        with tempfile.TemporaryDirectory() as td:
+            p9, p10 = Path(td) / "h9_stage1.jsonl", Path(td) / "h10_reuse_rerun.jsonl"
+            p9.write_text("\n".join(json.dumps(x) for x in h9) + "\n", "utf-8")
+            p10.write_text("\n".join("" if x is None else json.dumps(x) for x in h10) + "\n", "utf-8")
+            lines, nums = cm.read_jsonl_numbered(p10)
+            self.assertEqual(nums, [1, 3, 4])                              # blank line counted (RD-7 3)
+            import argparse  # noqa: PLC0415
+            ns = argparse.Namespace(h9=str(p9), h10=str(p10), overlap_ta=None, t4h_root=None)
+            body, st = s1.cmd_stage1(ns, REPO, V5J, CORE)
+        r4 = body["R4"]
+        jp = r4["RD-7"]["J-P3"]["H-10"]
+        self.assertEqual([(r["position"], r["leg"], r["key"], r["setting"], r["breach_reads"], r["min_gap_bar"],
+                           r["first_breach_t_s"]) for r in jp],
+                         [("line 1", "RL", "R12", "VB", 3, -1.25, 12.3),
+                          ("line 4", "FL", "S2", "VB", 1, None, 5.5)])          # no min_gap_bar -> null (3-3)
+        self.assertEqual([(r["position"], r["leg"], r["n_late_fallback_by_leg"], r["marker"])
+                          for r in r4["RD-7"]["J11"]["H-10"]], [("line 3", "FR", 2, "L-e")])
+        self.assertEqual(r4["RD-7"]["J11"]["H-9"], [])                     # V0 J11 = record (rev16:103)
+        self.assertEqual(r4["RD-10"]["H-9"]["input_missing"], 2)
+        self.assertEqual(r4["RD-10"]["H-10"]["undecidable"], 1)            # U-9 VB line without the block
+        self.assertEqual((r4["RD-9"]["H-9"]["p3_on"], r4["RD-9"]["H-10"]["p3_on"]), (0, 3))
+        self.assertEqual(r4["markers"]["H-10"], ["L-e", "멈춤 H-7"])
+        self.assertFalse(any("V0" in str(s["where"]) and s["code"] == "H-7" for s in body["H-9_stage1"]["stops"]))
+        self.assertIn("L-e", body["H-10"]["stop_codes"])
+        self.assertEqual(sorted(body["RD-13"]), ["H-10", "H-9"])
+        # supplement 4-3: plate by job.setting (h10) / one plate (h9_stage1), tag compared
+        self.assertEqual(r4["supplement_4-3_plates"], {"h10": {"VB": 2, "LS": 1}, "h9_stage1": {"none": 3}})
+        self.assertNotIn("S-11", body["stop_codes"])
+        f = CORE.Findings()
+        self.assertIsNone(cm.plate_check(f, "w", None, P3_TAG))                     # field missing = S-11
+        self.assertEqual(cm.plate_check(f, "w", "LS2", None), "LS")                  # tag missing = S-11
+        self.assertEqual(cm.plate_check(f, "w", "V3", P3_TAG), "none")               # 3-none plate, 3-on tag = S-2
+        self.assertEqual(cm.plate_check(f, "w", "VB", P3_TAG), "VB")                 # match
+        self.assertEqual([s["code"] for s in f.stops], ["S-11", "S-11", "S-2"])
+
+    def test_stage1_rd8_never_pass(self):
+        """RD-8 through judge_pair (judged VB line) and through rd_scan (U-9 VB line): undecidable, counted."""
+        is_p3, _ = CORE.load_is_extend_start(REPO)
+        ok_lwa = {"fallback_legs": {}, "n_late_fallback_by_leg": {}}
+        vb = line("R12", "VB", t_event_s=10.0, controller_tag=P3_TAG, lock_window_alignment=ok_lwa,
+                  hydraulics_record={"extend_bound_check": ebc([0, 0, 0])})
+        v0 = line("R12", "V0", t_event_s=10.0, controller_tag=V0_TAG)
+        u9 = line("S2", "VB", t_event_s=10.0, controller_tag=P3_TAG, lock_window_alignment=ok_lwa,
+                  hydraulics_record={"extend_bound_check": ebc([0, 0, "1", 0])})
+        u9["job"]["u9_metrics"] = True
+        by_id = {}
+        out = s1.judge_all(V5J, CORE, [vb], {V5J.pair_key(v0["job"]): v0}, {}, is_p3, [], "h10", {}, by_id)
+        items, f = out[("VB", V5J.pair_key(vb["job"]))]
+        self.assertEqual(items["J-P3"]["result"], "undecidable")
+        self.assertTrue(any(u["why"].startswith("J-P3: RD-8") for u in f.undecidable))
+        rd, f10 = cm.RdCounter(CORE.bundle_key), CORE.Findings()
+        s1.rd_scan(V5J, CORE, is_p3, rd, "H-10", "r/h10.jsonl", [vb, u9], [1, 2], by_id, [], f10, {})
+        self.assertEqual(rd.as_dict(["H-10"])["RD-8"]["H-10"]["format"], 2)
+        self.assertEqual(rd.as_dict(["H-10"])["RD-7"]["J-P3"]["H-10"], [])
+        self.assertEqual(f10.status(), "undecidable")                      # the U-9 line, never a pass
+
+    # ---------------------------------------------------------------- merge
+    def test_merge(self):
+        here = Path(s1.__file__).resolve().parent
+        head = "a" * 40
+
+        def part(tool, bundles, rows=(), p3=None):
+            rd = cm.RdCounter(CORE.bundle_key)
+            for b in bundles:
+                for _ in range((p3 or {}).get(b, 1)):
+                    rd.line(b, True)
+            rd.jp3 += list(rows)
+            return {"tool": tool, "tool_sha256": cm.sha256_file(here / tool),
+                    "common_sha256": cm.sha256_file(here / "p2v5c_common.py"), "head_check": {"head": head},
+                    "status": "pass", "R4": rd.as_dict(list(bundles)),
+                    "RD-13": {b: cm.rd13_lists()[b] for b in bundles}}
+        row = {"leg": "FL", "key": "k", "setting": "VB", "breach_reads": 1, "min_gap_bar": -0.1, "first_breach_t_s": 1.0}
+        parts = [part("p2v5c_noise.py", ("H-6", "H-8")),
+                 part("p2v5c_stage1.py", ("H-9", "H-10"),
+                      [dict(row, bundle="H-9", file="r/h9_stage1.jsonl", position="line 5")], {"H-9": 0}),
+                 part("p2v5c_grid.py", ("H-9",),
+                      [dict(row, bundle="H-9", file="r/h9_grid/grid_r67_main.json", position="results[2].runs[1]")])]
+        with tempfile.TemporaryDirectory() as td:
+            paths = []
+            for i, p in enumerate(parts):
+                q = Path(td) / f"p{i}.json"
+                q.write_text(json.dumps(p, ensure_ascii=False), "utf-8")
+                paths.append(str(q))
+            body, st = s1.cmd_merge(Args(part=paths, expect_head=head), REPO, V5J, CORE)
+            self.assertEqual([r["position"] for r in body["RD-7"]["J-P3"]["H-9"]], ["results[2].runs[1]", "line 5"])
+            self.assertEqual(body["RD-9"]["H-9"]["p3_on"], 1)               # stage1 0 + grid 1
+            self.assertEqual(body["markers"]["H-9"], ["멈춤 H-7"])
+            self.assertEqual(st, "stop")
+            self.assertNotIn("S-8", body["stop_codes"])
+            self.assertEqual(body["RD-7_sha256"]["J-P3"]["H-9"], cm.canon_sha(body["RD-7"]["J-P3"]["H-9"]))
+            body, st = s1.cmd_merge(Args(part=paths[:2], expect_head=head), REPO, V5J, CORE)   # grid missing
+            self.assertEqual((st, body["stop_codes"]), ("stop", ["S-11"]))
+            body, st = s1.cmd_merge(Args(part=paths, expect_head="b" * 40), REPO, V5J, CORE)  # other HEAD
+            self.assertIn("S-12", body["stop_codes"])
+            parts[2]["R4"]["RD-9"]["H-9"]["p3_on"] = 0                      # H-9 sum 0 -> S-8
+            Path(paths[2]).write_text(json.dumps(parts[2], ensure_ascii=False), "utf-8")
+            body, st = s1.cmd_merge(Args(part=paths, expect_head=head), REPO, V5J, CORE)
+            self.assertIn("S-8", body["stop_codes"])
 
 
 if __name__ == "__main__":
