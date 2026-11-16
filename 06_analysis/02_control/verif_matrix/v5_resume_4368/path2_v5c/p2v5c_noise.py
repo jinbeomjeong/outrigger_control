@@ -16,6 +16,14 @@ Layers (436.8 rev3 R3-E3, rev4 R4-A2 option c, R4-B3/B6, rev7 R7-2):
   is rebuilt with 13.2 / 419.8 (``S4_late_loc``) and 423.1 independently of the judge's own ``pass``
   and tables; then L2 fail count / CP grade (H-10), L3 record, seedext k/25 / CP / Fisher phrase,
   H-6 grade (R4-B6). Every item that is re-aggregated (not recomputed) is listed in ``TABLE_REAGG``.
+
+R4 (436.8 R4 common block sha256 e451f067..., supplement 2-1; 2-terra author, a new agent run without the earlier
+authors' context): J-P3 on every VB-file record by ``p2_v5j.jp3`` (row tag; RD-8 format defect / RD-7 3 top-level
+mismatch = undecidable, never a pass); J11 by ``p2_v5j.j11_item(rec, setting=results[i].v5_setting)`` (VB = stop
+setting, V0 = record; RD-10), replacing the old ``n_late_fallback`` stop. The 135 dg3-substituted keys (keys of
+the key source ``v5/dg3/dg3_v4_on.json``, sha = rev1 appendix B) are judged as H-6 lines: the H-8 noise VB lines
+of those keys are not judged here and are in no H-8 RD-7 list. Output ``R4``: RD-7 J-P3 / J11 rows of H-6 and
+H-8 (RD-7 3 columns and order), RD-8 / RD-9 / RD-10 counts (RD-9 0 = S-8), ``RD-13`` item lists.
 """
 from __future__ import annotations
 
@@ -29,7 +37,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_noise.py"
-TOOL_VERSION = "4"
+TOOL_VERSION = "5"
 JUDGE_REL = "04_scripts/03_control/s8/r79_sensor_judge.py"
 SEAL_BASE = "f46b5ab"                                   # R4-A2 condition 1
 RELATED_MODULES = ("04_scripts/03_control/s9/late_loc_rule.py",          # imported by the judge
@@ -52,6 +60,38 @@ FISHER_P = 0.05                                           # rev6 9
 def load(path):
     d = json.loads(Path(path).read_text("utf-8"))
     return d, {r.get("key"): r for r in d.get("results") or []}
+
+
+def positions(d):
+    """R4 RD-7 3: {key: i} of ``results[i]`` (first occurrence) and the keys that occur more than once."""
+    pos, dup = {}, []
+    for i, r in enumerate(d.get("results") or []):
+        k = r.get("key")
+        if k in pos:
+            dup.append(k)
+        else:
+            pos[k] = i
+    return pos, dup
+
+
+DG3_KEY_SOURCE = "06_analysis/03_hydraulic/coupled/v5/dg3/dg3_v4_on.json"   # rev1 RV1-3.2, supplement 2-1
+DG3_APPENDIX_B = "dg3/dg3_v4_on.json"                                       # rev1 appendix B name (sha)
+
+
+def dg3_keys(repo, path, core):
+    """Supplement 2-1: the dg3-substituted key set (L3 134 + L2 1) = the keys of the key source
+    ``v5/dg3/dg3_v4_on.json`` (rev1 RV1-3.2 table); its sha256 must be the rev1 appendix B value. Returns
+    (key set or None, record)."""
+    p = Path(path) if path else Path(repo) / DG3_KEY_SOURCE
+    want = core.APPENDIX_B.get(DG3_APPENDIX_B)
+    rec = {"path": str(p), "sha256": cm.sha256_file(p) if p.is_file() else None, "want": want}
+    rec["ok"] = rec["sha256"] is not None and rec["sha256"] == want
+    if not rec["ok"]:
+        return None, rec
+    d = json.loads(p.read_text("utf-8"))
+    keys = [r.get("key") for r in d.get("results") or []]
+    rec.update(keys=len(keys), unique=len(set(keys)))
+    return set(keys), rec
 
 
 def h(rec):
@@ -280,26 +320,55 @@ def grade_set(recs, jruns, core, fnd):
 
 
 # ----------------------------------------------------------------- checks
-def run_checks(name, recs, core, v5j, is_p3, vb, fnd, t4h_dirs=None, t4h_log=None):
+def run_checks(name, recs, core, v5j, is_p3, vb, fnd, t4h_dirs=None, t4h_log=None, rd=None, bundle=None,
+               rfile=None, pos=None, skip=frozenset()):
     """``t4h_dirs``: rev11 R11-2 search folders of this input file (rev12 R12-1: a recorded ``t4h_file``
-    is read from them, found 0 or 2+ = S-2 and J-P3 not judged; no key = configuration, R3-C8)."""
+    is read from them, found 0 or 2+ = S-2 and J-P3 not judged; no key = configuration, R3-C8).
+
+    R4: ``rd`` (``common.RdCounter``) collects for ``bundle`` the RD-9 3-on count (row tag), RD-8 counts, RD-7
+    J-P3 rows (VB files) and J11 rows, RD-10 counts; ``rfile`` / ``pos`` give the RD-7 3 result file and
+    ``results[i]``. ``skip``: keys not judged in this bundle (supplement 2-1: the dg3-substituted keys of the H-8
+    noise VB file are judged as H-6 lines). J11 = ``p2_v5j.j11_item(rec, setting=results[i].v5_setting)``
+    (VB: stop setting; V0: record, rev16:103); the old ``lock_window_alignment.n_late_fallback`` stop is gone."""
     jp = {}
+    pos = pos or {}
     for k, r in recs.items():
+        tag = v5j.tag_of(r)
+        p3 = is_p3 is not None and isinstance(tag, str) and bool(is_p3(tag))
+        if k in skip:
+            if rd is not None:   # RD-9 counts every line of the bundle's result files (row tag); not judged here
+                rd.line(bundle, p3)
+            continue
         where = f"{name}|{k}"
+        rset = r.get("v5_setting") if isinstance(r.get("v5_setting"), str) else None   # RD-7 3 setting
+        rpos = f"results[{pos[k]}]" if k in pos else None
+        if rd is not None:
+            rd.line(bundle, p3)
         if vb:
             # R3-C8 configuration: two-pressure screen = rod reading (True); rev12 R12-1 T4h first
             rod, ok = cm.jp3_rod_input(fnd, where, r, t4h_dirs, v5j, True,
                                        t4h_log if t4h_log is not None else {})
             res, why = v5j.jp3(r, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
             jp[res] = jp.get(res, 0) + 1
-            if not ok:
-                pass
-            elif cm.jp3_tag_scope(fnd, where, res, "VB"):   # rev8 R8-2: not applicable + S-2
-                pass
-            elif res == "H-7":
-                fnd.stop("H-7", where, f"J-P3 {why}")
-            elif res == "setting_defect":
-                fnd.stop("J-P3-defect", where, why)
+            if ok:
+                if rd is not None:
+                    rd.jp3_result(bundle, res, why)
+                cm.jp3_apply(fnd, where, res, why, "VB")   # rev8 R8-2 S-2; RD-8 undecidable kept
+                if res == "H-7" and rd is not None:
+                    rd.jp3 += cm.jp3_rows(bundle, rfile, rpos, r, k, rset, core)
+        elif p3:
+            # a V0 file line run with a 3-on tag: the line runs another controller than its setting (4.1 / 8.2)
+            fnd.stop("S-2", where, "3-on tag on a V0 line (original 4.1 / 8.2 S-2)")
+        if vb and rset is None:
+            item = {"result": "undecidable", "list": [], "why": "v5_setting missing"}
+            fnd.undec(where, "J11: results[i].v5_setting missing")
+        else:
+            item = v5j.j11_item(r, setting=rset if rset is not None else "V0")
+            v5j.apply_j11(item, where, fnd)
+            if rd is not None:
+                rd.j11 += cm.j11_rows(bundle, rfile, rpos, item, k, rset)
+        if rd is not None:
+            rd.j11_result(bundle, item)
         hr = r.get("hydraulics_record") or {}
         post = hr.get("m2_clipped_steps_post_lift")
         law = (r.get("hydraulic_options") or {}).get("m2_law")
@@ -310,9 +379,6 @@ def run_checks(name, recs, core, v5j, is_p3, vb, fnd, t4h_dirs=None, t4h_log=Non
                 fnd.stop("H-9", where, f"m2_clipped_steps_post_lift {post}")
         elif law is not None:
             fnd.undec(where, f"V0 run with m2_law {law!r}")
-        nlf = core.dig(r, "lock_window_alignment.n_late_fallback", None)
-        if isinstance(nlf, int) and nlf > 0:
-            fnd.stop("H-7", where, f"n_late_fallback {nlf}")
     return jp
 
 
@@ -414,9 +480,22 @@ def cmd_noise(args, repo, v5j, core):
         body.update(judge_tool=jtool, not_judged=["H-6", "H-8"])
         return body, st
     t4h_log = {}
+    # supplement 2-1: the dg3-substituted keys (judged as H-6 lines, not in the H-8 J-P3 / J11 lists)
+    dg3, dg3_rec = dg3_keys(repo, getattr(args, "dg3_key_source", None), core)
+    if dg3 is None:
+        fnd.stop("S-11", "dg3 key source", f"sha256 {dg3_rec['sha256']} != rev1 appendix B {dg3_rec['want']}")
+        return {"judge_tool": jtool, "dg3_key_source": dg3_rec, **fnd.as_dict(), "not_judged": ["H-6", "H-8"],
+                "stop_codes": ["S-11"]}, "stop"
     d_vb, vb = load(args.noise_vb)
     d_v0, v0 = load(args.noise_v0)
     d_h6, h6 = load(args.h6)
+    pos_vb, pos_v0, pos_h6 = positions(d_vb), positions(d_v0), positions(d_h6)
+    for nm, (_p, dup) in (("noise_VB", pos_vb), ("noise_V0", pos_v0), ("H-6", pos_h6)):
+        if dup:
+            fnd.stop("S-15", nm, f"{len(dup)} duplicate result keys (RD-7 3 position not unique)")
+    if dg3 != set(h6):
+        fnd.stop("S-15", "H-6", f"H-6 key set differs from the dg3 key source ({len(dg3 ^ set(h6))} keys, RV1-3.2)")
+    rd = cm.RdCounter()
     lv_vb, lv_v0, lv_h6 = levels(vb), levels(v0), levels(h6)
     if lv_vb != LEVEL_COUNTS or lv_v0 != LEVEL_COUNTS:
         fnd.stop("S-15", "noise", f"levels VB {lv_vb} V0 {lv_v0} != {LEVEL_COUNTS}")
@@ -428,9 +507,17 @@ def cmd_noise(args, repo, v5j, core):
         fnd.stop("S-15", "H-6", f"{len(set(h6) - set(vb))} dg3 keys not in the noise VB keys")
     sub = [{"key": k, "same_hash": h(r) is not None and h(r) == h(vb.get(k, {})),
             "hash_missing": h(r) is None or h(vb.get(k, {})) is None} for k, r in h6.items()]
-    jp = {"noise_VB": run_checks("noise_VB", vb, core, v5j, is_p3, True, fnd, places[str(args.noise_vb)], t4h_log),
-          "H-6": run_checks("H-6", h6, core, v5j, is_p3, True, fnd, places[str(args.h6)], t4h_log)}
-    run_checks("noise_V0", v0, core, v5j, is_p3, False, fnd)
+    rf = {k: cm.rel_file(p, repo) for k, p in (("vb", args.noise_vb), ("v0", args.noise_v0), ("h6", args.h6))}
+    jp = {"noise_VB": run_checks("noise_VB", vb, core, v5j, is_p3, True, fnd, places[str(args.noise_vb)], t4h_log,
+                                 rd=rd, bundle="H-8", rfile=rf["vb"], pos=pos_vb[0], skip=dg3),
+          "H-6": run_checks("H-6", h6, core, v5j, is_p3, True, fnd, places[str(args.h6)], t4h_log,
+                            rd=rd, bundle="H-6", rfile=rf["h6"], pos=pos_h6[0])}
+    run_checks("noise_V0", v0, core, v5j, is_p3, False, fnd, rd=rd, bundle="H-8", rfile=rf["v0"], pos=pos_v0[0])
+    subst = [k for k in vb if k in dg3]
+    subst_p3 = sum(1 for k in subst if isinstance(v5j.tag_of(vb[k]), str) and is_p3 is not None
+                   and is_p3(v5j.tag_of(vb[k])))
+    if rd.p3.get("H-6", 0) == 0:   # RD-9: H-6 has VB (3-on) lines by definition; 0 = S-8
+        fnd.stop("S-8", "H-6|RD-9", "no 3-on line in H-6 (original 8.2 S-8, R4 RD-9)")
     # judge runs (own outputs): VB with the dg3 keys merged (rev8 #6), V0 as is
     jrec = {}
     p_vb, jrec["VB_with_H6"] = run_judge(repo, judge_dir, "judge_VB_with_H6", [args.noise_vb], merged=args.h6)
@@ -508,9 +595,15 @@ def cmd_noise(args, repo, v5j, core):
     if args.seedext_vb and args.seedext_v0:
         sv_doc, sv = load(args.seedext_vb)
         s0_doc, s0 = load(args.seedext_v0)
+        pos_sv, pos_s0 = positions(sv_doc), positions(s0_doc)
+        for nm, (_p, dup) in (("seedext_VB", pos_sv), ("seedext_V0", pos_s0)):
+            if dup:
+                fnd.stop("S-15", nm, f"{len(dup)} duplicate result keys (RD-7 3 position not unique)")
         jp["seedext_VB"] = run_checks("seedext_VB", sv, core, v5j, is_p3, True, fnd,
-                                      places[str(args.seedext_vb)], t4h_log)
-        run_checks("seedext_V0", s0, core, v5j, is_p3, False, fnd)
+                                      places[str(args.seedext_vb)], t4h_log, rd=rd, bundle="H-8",
+                                      rfile=cm.rel_file(args.seedext_vb, repo), pos=pos_sv[0])
+        run_checks("seedext_V0", s0, core, v5j, is_p3, False, fnd, rd=rd, bundle="H-8",
+                   rfile=cm.rel_file(args.seedext_v0, repo), pos=pos_s0[0])
         se["VB"] = seedext("seedext_VB", sv, vb, fnd)
         se["V0"] = seedext("seedext_V0", s0, v0, fnd)
         gs = {}
@@ -524,6 +617,8 @@ def cmd_noise(args, repo, v5j, core):
             gs[s] = grade_set(recs, judge_runs(pj)[1], core, fnd)
         if len(gs) == 2:
             se["record"] = seedext_record(gs["VB"], gs["V0"])
+    if rd.p3.get("H-8", 0) == 0:   # RD-9: H-8 has VB (3-on) lines by definition; 0 = S-8
+        fnd.stop("S-8", "H-8|RD-9", "no 3-on line judged in H-8 (original 8.2 S-8, R4 RD-9)")
     reagg = [{"bundle": b, "set": s, "item": f"{g} (judge item row)", "source": "r79_sensor_judge --s4-late-loc",
               "lines": n} for b, s, n in (("H-8", "noise_VB+H-6", len(g_vb)), ("H-8", "noise_V0", len(g_v0)))
              for g in GATES]
@@ -556,7 +651,17 @@ def cmd_noise(args, repo, v5j, core):
                              "line_grades": {"noise_VB_with_H6": g_vb, "noise_V0": g_v0}},
             "H-6": {"grade": lab[h6f.status()], "new_fault": new_fault, "L3_fail_record": h6_l3_fail,
                     **h6f.as_dict()},
-            "TABLE_REAGG": reagg, **fnd.as_dict()}
+            "TABLE_REAGG": reagg,
+            # R4: RD-7 J-P3 / J11 rows (H-6: h6 lines; H-8: noise VB without the dg3 keys + seedext VB), RD-8,
+            # RD-9 (3-on lines of every result file of the bundle, row tag; the dg3-substituted H-8 noise VB lines
+            # are in the H-8 count and recorded apart in ``H-8_dg3_substituted``), RD-10 (J11 of the judged lines:
+            # VB undecidable / V0 input missing), RD-13
+            "R4": {**rd.as_dict(["H-6", "H-8"]), "dg3_key_source": dg3_rec,
+                   "H-8_dg3_substituted": {"keys_in_noise_VB": len(subst), "p3_on": subst_p3,
+                                           "p3_on_judged_in_H-8": rd.p3.get("H-8", 0) - subst_p3,
+                                           "judged_as": "H-6 lines (rev1 RV1-3.2, supplement 2-1)"}},
+            "RD-13": {b: cm.rd13_lists()[b] for b in ("H-6", "H-8")},
+            **fnd.as_dict()}
     st = fnd.status()
     body["grades_436_8"] = {"H-6": lab[h6f.status()], "H-8": lab[st]}
     body["stop_codes"] = sorted(set(fnd.as_dict()["stop_codes"]) | set(h6f.as_dict()["stop_codes"]))
@@ -580,6 +685,9 @@ def build_parser():
     n.add_argument("--t4h-root", action="append", default=None,
                    help="T4h folder (rev12 R12-1 / rev11 R11-2): only when none of the J-P3 input files "
                         "(noise VB, H-6, seedext VB) has a convention folder <stem>_t4h/ or t4h/, at most one")
+    n.add_argument("--dg3-key-source", default=None,
+                   help=f"dg3-substituted key source (supplement 2-1, default <repo>/{DG3_KEY_SOURCE}); its sha256 "
+                        "must be the rev1 appendix B value (else S-11, not judged)")
     return ap
 
 

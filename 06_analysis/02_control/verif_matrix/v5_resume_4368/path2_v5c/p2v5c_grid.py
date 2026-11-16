@@ -15,8 +15,14 @@ Rules (rule -> function):
   rev8 3.2 / rev9 3.2 J-P3 on every VB run (two-pressure event path: rod reading assumed)
                                                            -> ``p2_v5j.jp3`` (imported)
   rev2 2.1 / rev6 J9 (post-lift M2 clip) on every VB run   -> ``cmd_grid``
-  v5 8 window rule / H-7: n_late_fallback > 0              -> ``cmd_grid``
   436.8 rev1 RV1-12 S-15 count (192 runs per file, 768)    -> ``cmd_grid``
+R4 (436.8 R4 common block sha256 e451f067..., supplement 2-2; 2-terra author, a new agent run without the earlier
+authors' context): every one of the 768 runs (``results[i].runs[j]``) is a row of RD-7. J-P3 = ``p2_v5j.jp3(run,
+is_p3, rod, tag=<run tag, else results[i] tag>)``; an RD-8 input-format defect or an RD-7 3 top-level mismatch is
+J-P3 undecidable (never a pass, ``common.jp3_apply``). J11 = ``p2_v5j.j11_item(run, setting=results[i].v5_setting)``
+(RD-10 block missing = undecidable on VB); the old ``lock_window_alignment.n_late_fallback`` stop is replaced by
+it (rev16:102 ``n_late_fallback_by_leg`` of the actual fallback legs). Output ``R4``: RD-7 J-P3 / J11 rows
+(RD-7 3 columns and order), RD-8 / RD-9 / RD-10 counts of the grid part; ``RD-13`` the H-9 item list.
 """
 from __future__ import annotations
 
@@ -29,7 +35,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_grid.py"
-TOOL_VERSION = "1"
+TOOL_VERSION = "2"
 STEMS = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
 RUNS_PER_FILE = 192
 FAST_EVENTS = {"RE1bF", "FS24"}
@@ -94,6 +100,13 @@ def runs_of(doc):
     for r in doc.get("results") or []:
         for run in r.get("runs") or []:
             yield r, run
+
+
+def runs_indexed(doc):
+    """(i, j, results[i], results[i].runs[j]) in file order (R4 RD-7 3 position ``results[i].runs[j]``)."""
+    for i, r in enumerate(doc.get("results") or []):
+        for j, run in enumerate(r.get("runs") or []):
+            yield i, j, r, run
 
 
 def run_tag_view(v5j, r, run):
@@ -244,14 +257,19 @@ def cmd_grid(args, repo, v5j, core):
         body["not_judged"] = ["H-9 grid"]
         return body, st
     t4h_log = {}
+    rd = cm.RdCounter()   # R4 RD-7 / RD-8 / RD-9 / RD-10 (bundle H-9, grid part; supplement 2-2)
     for stem, path in vb_files.items():
         d = json.loads(Path(path).read_text("utf-8"))
         meta = d.get("meta") or {}
+        rfile = cm.rel_file(path, repo)
         n = 0
         tags = {}
-        for r, run in runs_of(d):
+        for i, j, r, run in runs_indexed(d):
             n += 1
             k = run_key(stem, r, run)
+            pos = f"results[{i}].runs[{j}]"                   # RD-7 3 position
+            rkey = r.get("key") if isinstance(r.get("key"), str) else None             # RD-7 3: results[i].key
+            rset = r.get("v5_setting") if isinstance(r.get("v5_setting"), str) else None   # results[i].v5_setting
             g = gates_p2(run, core)
             rec_g = run.get("gates") or {}
             p = run_pass(g)
@@ -286,16 +304,29 @@ def cmd_grid(args, repo, v5j, core):
             rows.append(row)
             # J-P3 (configuration: two-pressure event path = rod reading, rev9 3.2 #4); rev12 R12-1: a
             # recorded t4h_file is read first (found 0 or 2+ = S-2, J-P3 not judged)
+            # R4: jp3 gets the tag of the run view (run tag, else results[i] tag; supplement 2-2); RD-8 format
+            # defects and RD-7 3 top-level mismatches stay undecidable (cm.jp3_apply), never a pass.
+            tag = v5j.tag_of(run_t)
+            rd.line("H-9", is_p3 is not None and isinstance(tag, str) and bool(is_p3(tag)))   # RD-9
             rod, ok = cm.jp3_rod_input(fnd, k, run, places[str(path)], v5j, True, t4h_log)
-            res, why = v5j.jp3(run_t, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
-            if not ok:
-                pass
-            elif cm.jp3_tag_scope(fnd, k, res, "VB"):   # rev8 R8-2: not applicable + S-2
-                pass
-            elif res == "H-7":
-                fnd.stop("H-7", k, f"J-P3 {why}")
-            elif res == "setting_defect":
-                fnd.stop("J-P3-defect", k, why)
+            res, why = v5j.jp3(run, is_p3, rod, tag=tag) if ok else ("t4h_unresolved", "R12-1 S-2")
+            if ok:
+                rd.jp3_result("H-9", res, why)
+                cm.jp3_apply(fnd, k, res, why, "VB")   # rev8 R8-2: non-3 tag = not applicable + S-2
+                if res == "H-7":
+                    rd.jp3 += cm.jp3_rows("H-9", rfile, pos, run, rkey, rset, core)
+            # J11 (RD-10, rev16:102~103, supplement 2-2): per run, setting = results[i].v5_setting (the file
+            # meta v5_setting when the job record has none; neither = J11 undecidable)
+            j11_set = rset if rset is not None else (meta.get("v5_setting") if isinstance(meta.get("v5_setting"), str)
+                                                     else None)
+            if j11_set is None:
+                item = {"result": "undecidable", "list": [], "why": "no v5_setting for the J11 setting"}
+                fnd.undec(k, "J11: no v5_setting in results[i] or the file meta")
+            else:
+                item = v5j.j11_item(run, setting=j11_set)
+                v5j.apply_j11(item, k, fnd)
+                rd.j11 += cm.j11_rows("H-9", rfile, pos, item, rkey, rset)
+            rd.j11_result("H-9", item)
             hr = run.get("hydraulics_record") or r.get("hydraulics_record") or {}
             post = hr.get("m2_clipped_steps_post_lift")
             if isinstance(post, list) and sum(post) > 0:
@@ -305,9 +336,6 @@ def cmd_grid(args, repo, v5j, core):
             law = (run.get("hydraulic_options") or r.get("hydraulic_options") or {}).get("m2_law")
             if law != M2_LAW:
                 fnd.undec(k, f"m2_law {law!r} (rev6 #9: rerun)")
-            nlf = core.dig(run, "lock_window_alignment.n_late_fallback", None)
-            if isinstance(nlf, int) and nlf > 0:
-                fnd.stop("H-7", k, f"n_late_fallback {nlf}")
         if n != RUNS_PER_FILE:
             fnd.stop("S-15", stem, f"runs {n} != {RUNS_PER_FILE}")
         out_files[stem] = {"path": path, "sha256": cm.sha256_file(path), "runs": n, "tags": tags,
@@ -333,7 +361,10 @@ def cmd_grid(args, repo, v5j, core):
                      "family_F_rule": fam_rule if fam_F else "not applicable (no family-F-only transition)",
                      "fault_runs": fault_runs,
                      "recorded_gate_differences": gate_diff, **fnd.as_dict()},
-            "per_run": rows}
+            "per_run": rows,
+            # R4: RD-7 J-P3 / J11 rows of the grid part of H-9 (merged with the stage1 H-9 rows by ``stage1 merge``),
+            # RD-8 / RD-9 / RD-10 counts of the grid part (RD-9 S-8 is decided on the H-9 sum in ``merge``), RD-13
+            "R4": rd.as_dict(["H-9"]), "RD-13": {"H-9": cm.rd13_lists()["H-9"]}}
     st = fnd.status()
     body["grades_436_8"] = {"H-9_grid": {"pass": "통과", "fail": "미달", "undecidable": "판정 불가",
                                           "stop": "멈춤"}[st]}

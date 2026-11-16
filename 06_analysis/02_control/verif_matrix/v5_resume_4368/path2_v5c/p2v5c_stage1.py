@@ -26,6 +26,16 @@ Rules applied (v5 criteria original + revisions 1~12b read through the 436.8 rul
   rev4 #4 / rev5 #1 / rev6 #9 m2_law key (flow_limited_r5)           -> ``m2_law_check``
   rev1 RV1-2 / RV1-12 line counts (S-15)                             -> ``split_lines``
 U-9 VB (28 lines of H-10) is graded by ``p2_v5j.py u9`` (dynamics-expert); this tool only counts them.
+
+R4 (436.8 R4 common block sha256 e451f067..., supplement 2-1 / 2-2; 2-terra author, a new agent run without the
+earlier authors' context): every line of ``h9_stage1.jsonl`` (bundle H-9: main + pressure_only) and of
+``h10_reuse_rerun.jsonl`` (bundle H-10, U-9 VB lines included) is a row of the RD-7 scan (``rd_scan``, position
+``line N`` = physical line number): J-P3 rows of the 3-on lines (row tag, ``p2_v5j.jp3``; RD-8 format defect =
+undecidable, never a pass), J11 rows by ``p2_v5j.j11_item`` (stop settings VB / LS1~LS4, item8 and overlap VB;
+records V0~V8, L1, L2, pressure_only; rev16:102~103, RD-10), RD-9 3-on counts (H-10 0 = S-8; H-9 0 = S-8 on the
+sum with the grid part, ``merge``). The old V0 ``n_late_fallback`` H-7 stop is removed (the V0 J11 is a record).
+H-9 3-on lines read a recorded T4h only from the convention folders of ``--h9`` (R12-1). ``merge`` collates the
+noise / stage1 / grid outputs into one RD-7 / RD-8 / RD-9 / RD-10 / RD-13 file.
 """
 from __future__ import annotations
 
@@ -39,7 +49,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_stage1.py"
-TOOL_VERSION = "1"
+TOOL_VERSION = "2"
 
 M2_ON = {"V1", "V3", "VB", "V4", "V5", "V6", "V7", "V8", "LS1", "LS2", "LS3", "LS4"}   # v5 8
 M2_LAW = "flow_limited_r5"                                                         # rev6 #9
@@ -214,10 +224,18 @@ def fl_guard_cycle(ln):
     return None
 
 
-def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_dirs, where, t4h_log=None):
+def is_p3_line(v5j, is_p3, ln):
+    """3 on by the row tag only (original 4.1, rev8 R8-2)."""
+    t = v5j.tag_of(ln)
+    return is_p3 is not None and isinstance(t, str) and bool(is_p3(t))
+
+
+def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_dirs, where, t4h_log=None, by_id=None, p3_only=False):
     """judge_pair for every line; returns {pair_key: (items, findings)}. ``t4h_dirs`` = the rev11 R11-2
     search folders of the result file (None: no T4h reading, configuration only); ``t4h_log`` counts the
-    lookup status (``ok``, ``no_t4h_file``, ``not_found``, ``several``)."""
+    lookup status (``ok``, ``no_t4h_file``, ``not_found``, ``several``). R4: ``by_id`` receives
+    {id(line): items} of the lines judged with a V0 partner (the RD-7 scan reuses their J-P3 / J11);
+    ``p3_only``: the T4h lookup only on lines whose tag is 3 on (H-9 main / pressure_only lines)."""
     out = {}
     for ln in lines:
         pk = v5j.pair_key(ln["job"])
@@ -228,7 +246,8 @@ def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_dirs, where, t4h_log=No
             out[(setting(ln), pk)] = ({}, f)
             continue
         f_t4h, rod, ok = core.Findings(), None, True
-        if t4h_dirs is not None:   # rev11 R11-2 3 / rev12 R12-1: recorded t4h_file found 0 or 2+ = S-2
+        if t4h_dirs is not None and (not p3_only or is_p3_line(v5j, is_p3, ln)):
+            # rev11 R11-2 3 / rev12 R12-1: recorded t4h_file found 0 or 2+ = S-2
             rod, ok = cm.jp3_rod_input(f_t4h, f"{where}|{pk}", ln, t4h_dirs, v5j, None,
                                        t4h_log if t4h_log is not None else {})
         items, f = v5j.judge_pair(ln, v0, nrev.get(v5j.row_key(ln["job"])), is_p3, rod)
@@ -239,7 +258,44 @@ def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_dirs, where, t4h_log=No
         if setting(ln) in ("VB",) + LS_SETTINGS:   # rev8 R8-2: non-3 tag = J-P3 not applicable + S-2
             cm.jp3_tag_scope(f, f"{where}|{pk}", items.get("J-P3", {}).get("result"), setting(ln))
         out[(setting(ln), pk)] = (items, f)
+        if by_id is not None:
+            by_id[id(ln)] = items
     return out
+
+
+def rd_scan(v5j, core, is_p3, rd, bundle, rfile, lines, nums, judged_by_id, dirs, fx, t4h_log):
+    """R4 RD-7 / RD-8 / RD-9 / RD-10 over every line of one result file of ``bundle`` (position ``line N``, key
+    ``job.case``, setting ``job.setting``, RD-7 3). Lines judged by ``judge_pair`` reuse its J-P3 / J11 items;
+    the other lines (V0 partners, pressure_only, U-9 VB of H-10, lines without a V0 partner) get J-P3 (3-on tag or
+    a 3-on setting VB / LS) and J11 here, with their findings on ``fx``."""
+    for ln, n in zip(lines, nums):
+        pos = f"line {n}"
+        key = core.dig(ln, "job.case", None)
+        key = key if isinstance(key, str) else None
+        st = setting(ln) if isinstance(setting(ln), str) else None
+        p3 = is_p3_line(v5j, is_p3, ln)
+        rd.line(bundle, p3)
+        items = judged_by_id.get(id(ln))
+        if items:
+            res, why = (items.get("J-P3") or {}).get("result"), (items.get("J-P3") or {}).get("why")
+            j11 = items.get("J11")
+        else:
+            where = f"{bundle}|{rfile}|{pos}"
+            res = why = None
+            if p3 or st in ("VB",) + LS_SETTINGS:
+                rod, ok = cm.jp3_rod_input(fx, where, ln, dirs, v5j, None, t4h_log)
+                res, why = v5j.jp3(ln, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
+                if ok:
+                    cm.jp3_apply(fx, where, res, why, st if st in ("VB",) + LS_SETTINGS else None)
+            j11 = v5j.j11_item(ln)
+            v5j.apply_j11(j11, where, fx)
+        if res is not None:
+            rd.jp3_result(bundle, res, why)
+        if res == "H-7":
+            rd.jp3 += cm.jp3_rows(bundle, rfile, pos, ln, key, st, core)
+        if isinstance(j11, dict):
+            rd.j11_result(bundle, j11)
+            rd.j11 += cm.j11_rows(bundle, rfile, pos, j11, key, st)
 
 
 def line_failed(items, names=J_FAIL_ITEMS):
@@ -458,9 +514,12 @@ def cmd_stage1(args, repo, v5j, core):
                     not_judged=["H-10", "H-9_stage1"], grades_436_8={"H-10": "멈춤", "H-9_stage1": "멈춤"})
         return body, st
     t4h_dirs = places[str(args.h10)]
-    t4h_log = {}
-    h9 = core.read_jsonl(args.h9)
-    h10 = core.read_jsonl(args.h10)
+    t4h_log, t4h_log9 = {}, {}
+    # R4: H-9 main / pressure_only lines whose tag is 3 on read a recorded T4h only from the runner convention
+    # folders of --h9 (rev12 R12-1 for every T4h read; --t4h-root belongs to --h10)
+    dirs9 = v5j.t4h_convention_dirs(args.h9)
+    h9, nums9 = cm.read_jsonl_numbered(args.h9)      # RD-7 3: physical line numbers
+    h10, nums10 = cm.read_jsonl_numbered(args.h10)
     is_p3, mod = core.load_is_extend_start(repo)
     f10, f9 = core.Findings(), core.Findings()
     parts, counts = split_lines(h9, h10, f10)
@@ -476,17 +535,22 @@ def cmd_stage1(args, repo, v5j, core):
     nrev = v5j.nrev_max_by_row(v0_main + v0_it8)
     for ln in main9 + main10 + it8 + ov:
         _LINE_CACHE[(setting(ln), v5j.pair_key(ln["job"]))] = ln
-    # V0 lines: J11 stop (n_late counted on every row, v5 8 window rule) and J9 not applicable
-    for ln in v0_main + v0_it8 + v0_ov:
-        nlf = core.dig(ln, "lock_window_alignment.n_late_fallback", None)
-        if isinstance(nlf, int) and nlf > 0:
-            f9.stop("H-7", v5j.pair_key(ln["job"]), f"V0 n_late_fallback {nlf}")
-    j9 = judge_all(v5j, core, [x for x in main9 if setting(x) != "V0"], v0_idx, nrev, is_p3, None, "h9")
+    # R4 (rev16:103 = P2-14, RD-10): the J11 of V0 lines is a record (the old V0 n_late_fallback H-7 stop is
+    # removed); every line's J11 is ``p2_v5j.j11_item`` (in judge_pair, or in rd_scan below)
+    by_id = {}
+    j9 = judge_all(v5j, core, [x for x in main9 if setting(x) != "V0"], v0_idx, nrev, is_p3, dirs9, "h9",
+                   t4h_log9, by_id, p3_only=True)
     j10 = judge_all(v5j, core, main10 + [x for x in it8 if setting(x) != "V0"], v0_idx, nrev, is_p3,
-                    t4h_dirs, "h10", t4h_log)
+                    t4h_dirs, "h10", t4h_log, by_id)
     ov_idx = index_by_pair(v5j, v0_ov, "overlap V0", f10)
     jov = judge_all(v5j, core, [x for x in ov if setting(x) != "V0"], ov_idx, nrev, is_p3, t4h_dirs, "ov",
-                    t4h_log)
+                    t4h_log, by_id)
+    # R4 RD-7 / RD-8 / RD-9 / RD-10 over every line of the two result files (H-9 main + pressure_only, H-10)
+    rd = cm.RdCounter()
+    rd_scan(v5j, core, is_p3, rd, "H-9", cm.rel_file(args.h9, repo), h9, nums9, by_id, dirs9, f9, t4h_log9)
+    rd_scan(v5j, core, is_p3, rd, "H-10", cm.rel_file(args.h10, repo), h10, nums10, by_id, t4h_dirs, f10, t4h_log)
+    if rd.p3.get("H-10", 0) == 0:   # RD-9: H-10 has VB (3-on) lines by definition; 0 = S-8
+        f10.stop("S-8", "H-10|RD-9", "no 3-on line in H-10 (original 8.2 S-8, R4 RD-9)")
     # S8 F-5 and the rest of SA-4 (v5 6, rev3 R3-E5 Q-S6) - decided first because an F-5 record
     # line does not count its clause fail as a new fail
     f5, f5_record = [], set()
@@ -550,6 +614,9 @@ def cmd_stage1(args, repo, v5j, core):
         if s in ("L1", "L2", "V1", "V2", "V3") and f.undecidable:
             for u in f.undecidable:
                 f9.note(f"{s}|{u['where']}"[:200], u["why"])
+        for u in f.undecidable:   # R4 RD-8: a 3-on line's J-P3 undecidable stays undecidable on H-9
+            if str(u["why"]).startswith("J-P3"):
+                f9.undec(f"{s}|{u['where']}"[:200], u["why"])
     for (s, pk), (items, f) in jov.items():
         for st in f.stops:
             f10.stop(st["code"], f"overlap|{st['where']}"[:200], st["why"])
@@ -588,7 +655,8 @@ def cmd_stage1(args, repo, v5j, core):
     body = {
         "inputs": {"h9": [args.h9, cm.sha256_file(args.h9)], "h10": [args.h10, cm.sha256_file(args.h10)],
                    "t4h_root": args.t4h_root, "overlap_ta": args.overlap_ta},
-        "R11-2_t4h": {"search_dirs": [str(d) for d in t4h_dirs], "lookup": t4h_log},
+        "R11-2_t4h": {"search_dirs": [str(d) for d in t4h_dirs], "lookup": t4h_log,
+                      "h9_search_dirs": [str(d) for d in dirs9], "h9_lookup": t4h_log9},
         "v5_options": mod, "counts": counts,
         "H-10": {"VB_and_LS": summarize(j10, {"VB"} | set(LS_SETTINGS)), "LS_conditions": ls,
                  "R12_event_passes": r12, "S7": s7, "item8_13_1": i8, "overlap_13_3": ovr,
@@ -599,6 +667,10 @@ def cmd_stage1(args, repo, v5j, core):
         "S8_F5": f5,
         "per_line": {f"{s}|{pk}": {n: v.get("result") for n, v in items.items()}
                      for (s, pk), (items, f) in {**j9, **j10, **jov}.items()},
+        # R4: RD-7 J-P3 / J11 rows of H-9 (main + pressure_only part; the grid part is in the grid output and the
+        # two are merged by ``merge``) and H-10, RD-8 / RD-9 / RD-10 counts (H-9 S-8 on the sum in ``merge``), RD-13
+        "R4": rd.as_dict(["H-9", "H-10"]),
+        "RD-13": {b: cm.rd13_lists()[b] for b in ("H-9", "H-10")},
     }
     g = {"H-10": f10.status(), "H-9_stage1": f9.status()}
     body["grades_436_8"] = {k: {"pass": "통과", "fail": "미달", "undecidable": "판정 불가", "stop": "멈춤"}[v]
@@ -609,10 +681,84 @@ def cmd_stage1(args, repo, v5j, core):
     return body, status
 
 
+MERGE_TOOLS = {"p2v5c_noise.py": ("H-6", "H-8"), "p2v5c_stage1.py": ("H-9", "H-10"), "p2v5c_grid.py": ("H-9",)}
+
+
+def cmd_merge(args, repo, v5j, core):
+    """R4 RD-7 / RD-9 / RD-8 / RD-10 / RD-13 of this folder in one file: the three finished tool outputs
+    (noise, stage1, grid) of the same checkout are collated. H-9 = stage1 rows (main + pressure_only) + grid rows,
+    re-sorted by RD-7 3; RD-9 S-8 on each bundle count (H-9 on the sum). Nothing is re-judged here.
+    Input checks (else not merged): one output of each tool (S-11), each with an ``R4`` block (S-11), its
+    ``tool_sha256`` / ``common_sha256`` equal to the files of this checkout (S-11) and its HEAD equal to this
+    run's HEAD (S-12)."""
+    fnd = core.Findings()
+    here = Path(__file__).resolve().parent
+    parts, by_tool = [], {}
+    for p in args.part:
+        d = json.loads(Path(p).read_text("utf-8"))
+        t = d.get("tool")
+        rec = {"path": p, "sha256": cm.sha256_file(p), "tool": t, "status": d.get("status"),
+               "stop_codes": d.get("stop_codes"), "tool_sha256": d.get("tool_sha256"),
+               "head": (d.get("head_check") or {}).get("head")}
+        parts.append(rec)
+        if t not in MERGE_TOOLS or t in by_tool:
+            fnd.stop("S-11", p, f"tool {t!r}: one output of each of {sorted(MERGE_TOOLS)} is needed")
+            continue
+        by_tool[t] = d
+        if not isinstance(d.get("R4"), dict):
+            fnd.stop("S-11", p, f"no R4 block (status {d.get('status')}, stop codes {d.get('stop_codes')})")
+        if d.get("tool_sha256") != cm.sha256_file(here / t) or d.get("common_sha256") != cm.sha256_file(here / "p2v5c_common.py"):
+            fnd.stop("S-11", p, "tool / common sha256 differ from the files of this checkout")
+        if rec["head"] != args.expect_head.lower():
+            fnd.stop("S-12", p, f"output HEAD {rec['head']} != {args.expect_head}")
+    if set(by_tool) != set(MERGE_TOOLS):
+        fnd.stop("S-11", "parts", f"missing outputs {sorted(set(MERGE_TOOLS) - set(by_tool))}")
+    if fnd.stops:
+        return {"parts": parts, "not_merged": True, **fnd.as_dict()}, "stop"
+    bundles = cm.RD7_BUNDLES
+    lists = {"J-P3": {b: [] for b in bundles}, "J11": {b: [] for b in bundles}}
+    rd9 = {b: {"p3_on": 0, "scanned": 0} for b in bundles}
+    rd8 = {b: {"format": 0, "top_level_mismatch": 0} for b in bundles}
+    rd10 = {b: {"undecidable": 0, "input_missing": 0} for b in bundles}
+    for t, d in by_tool.items():
+        r4 = d["R4"]
+        for b in MERGE_TOOLS[t]:
+            for li in ("J-P3", "J11"):
+                lists[li][b] += r4["RD-7"][li].get(b, [])
+            for k in ("p3_on", "scanned"):
+                rd9[b][k] += r4["RD-9"][b][k]
+            for k in ("format", "top_level_mismatch"):
+                rd8[b][k] += r4["RD-8"][b][k]
+            for k in ("undecidable", "input_missing"):
+                rd10[b][k] += r4["RD-10"][b][k]
+        for b, item in (d.get("RD-13") or {}).items():
+            if item.get("sha256") != cm.rd13_lists()[b]["sha256"]:
+                fnd.stop("S-11", t, f"RD-13 list of {b} differs from this checkout")
+    out_lists = {li: {b: cm.rd7_sort(v) for b, v in per.items()} for li, per in lists.items()}
+    for b in bundles:
+        if rd9[b]["p3_on"] == 0:
+            fnd.stop("S-8", f"{b}|RD-9", "no 3-on line / run in the bundle (original 8.2 S-8, R4 RD-9)")
+    markers = {b: cm.rd7_markers(out_lists["J-P3"][b], out_lists["J11"][b]) for b in bundles}
+    for b, ms in markers.items():
+        for m in ms:
+            fnd.stop(m.replace("멈춤 ", ""), f"{b}|RD-7", f"{m}: see the RD-7 list of {b}")
+    rd13 = cm.rd13_lists()
+    body = {"parts": parts, "bundles": list(bundles),
+            "RD-7": out_lists,
+            "RD-7_sha256": {li: {b: cm.canon_sha(v) for b, v in per.items()} for li, per in out_lists.items()},
+            "markers": markers, "RD-8": rd8, "RD-9": rd9, "RD-10": rd10,
+            "RD-13": rd13, "RD-13_sha256": {b: v["sha256"] for b, v in rd13.items()},
+            **fnd.as_dict()}
+    return body, fnd.status()
+
+
 def build_parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     cm.add_common_args(ap)
     sub = ap.add_subparsers(dest="cmd", required=True)
+    mg = sub.add_parser("merge", help="R4 RD-7 / RD-9 / RD-8 / RD-10 / RD-13 of the noise, stage1 and grid outputs")
+    mg.add_argument("--part", action="append", required=True,
+                    help="finished output JSON of p2v5c_noise.py noise / p2v5c_stage1.py stage1 / p2v5c_grid.py grid")
     s = sub.add_parser("stage1")
     s.add_argument("--h9", required=True, help="resume_k1/h9_stage1.jsonl")
     s.add_argument("--h10", required=True, help="resume_k1/h10_reuse_rerun.jsonl")
@@ -625,7 +771,8 @@ def build_parser():
 
 
 def main(argv=None):
-    return cm.run_main(TOOL_NAME, TOOL_VERSION, Path(__file__), argv, build_parser, {"stage1": cmd_stage1})
+    return cm.run_main(TOOL_NAME, TOOL_VERSION, Path(__file__), argv, build_parser,
+                       {"stage1": cmd_stage1, "merge": cmd_merge})
 
 
 if __name__ == "__main__":
