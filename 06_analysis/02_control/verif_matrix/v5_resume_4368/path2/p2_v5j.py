@@ -13,6 +13,15 @@ folders of its ``--vb`` file (``<stem>_t4h/``, ``t4h/``); one ``--t4h-root`` onl
 exists (else, or two or more, input error S-11, exit 2); the recorded ``t4h_file`` found 0 or 2+ times = S-2.
 Author: dynamics-expert (path 2, second author of the 436.8 path 2). Path-1 tools and outputs were not opened
 (436.8 9.2); the J-item reading below is built from the rule sentences and the line field names only.
+R4 (436.8 R4 common block sha256 e451f067..., rules rev25 c0b778fd...; third path-2 author, new agent run without
+the earlier authors' context): RD-8 ``breach_reads`` must be a list of exactly four non-negative JSON integers
+(FL, FR, RL, RR), else the J-P3 of that line / run is undecidable (input format defect), never a 0-sum pass;
+a top-level ``extend_bound_check`` with a different ``breach_reads`` = undecidable (RD-7 3). RD-10 / rev16:102~103
+J11 (``j11_item``): n_late = ``lock_window_alignment.n_late_fallback_by_leg`` of the actual fallback legs
+(``fallback_legs`` keys); stop settings VB / LS1~LS4 (item8 and overlap VB lines carry setting VB): block missing
+or not an object = undecidable, a fallback leg without an integer n_late = undecidable, n_late > 0 = stop (VB H-7,
+LS L-e); record settings (V0~V8, L1, L2, pressure_only): block missing = "input missing" record. ``--expect-head``
+(RD-1 5: HEAD of the judging checkout = M4 full hash, else S-12).
 
 J items (v5 criteria 3, rev2 2.1, rev8 3.2, rev9 3; one line = one row x phase x setting, paired with the
 V0 line of the same job without the setting keys):
@@ -29,8 +38,9 @@ V0 line of the same job without the setting keys):
   J9  ``hydraulics_record.m2_clipped_steps_post_lift`` > 0 -> stop (H-9)
   J10 moving pressure: steady ``values.pressure.max_moving_bar`` <= 180; event
       ``event_output.pressure.moving_outside_max_bar`` <= 180
-  J11 ``lock_window_alignment.n_late_fallback`` > 0 -> stop (H-7); n_late recorded
-  J-P3 (VB / LS, ③ by ``is_extend_start_tag``): rev9 3.2 table on ``hydraulics_record.extend_bound_check``
+  J11 ``lock_window_alignment.n_late_fallback_by_leg`` of a fallback leg > 0 -> stop (VB H-7, LS L-e), RD-10
+  J-P3 (VB / LS, ③ by ``is_extend_start_tag``): rev9 3.2 table on ``hydraulics_record.extend_bound_check``,
+      ``breach_reads`` format by RD-8
 
 Exit codes: 0 nothing failed, stopped or undecidable; 1 a fail or an undecidable item; 2 a stop (H-*, S-*)
 or a rules sha mismatch; 3 tool error. Last stdout line: JSON summary with ``tool_sha256`` / ``out_sha256``.
@@ -81,6 +91,13 @@ ETA_BASE, ETA_LOW = 0.85, 0.80
 T3A_DEG, T3B_DEG, T3C_DEG = 0.10, 0.05, 0.10
 T4_FLOOR_S, T4_ADD_S = 20.0, 5.0
 AB_LONGEST_S = 0.5
+
+# R4 (RD-8, RD-10, rev16:102~103)
+LEGS = ("FL", "FR", "RL", "RR")
+LS_SETTINGS = ("LS1", "LS2", "LS3", "LS4")
+J11_STOP_SETTINGS = ("VB",) + LS_SETTINGS     # VB, LS1~LS4, item8(VB), overlap(VB): the line setting is VB
+J11_BLOCK_PATHS = ("lock_window_alignment", "v5.lock_window_alignment")
+EBC_PATHS = ("hydraulics_record.extend_bound_check", "v5.hydraulics_record.extend_bound_check")   # RD-7 3
 
 
 # ----------------------------------------------------------------- line helpers
@@ -223,14 +240,25 @@ def head_only_declared(line):
     return (case_of(line) in STEADY_CASES and not is_event(line)), "configuration"
 
 
+breach_reads_format = core.breach_reads_format      # RD-8 (one definition, in p2_4368.py)
+breach_reads_input = core.breach_reads_input        # RD-8 / RD-7 3
+
+
+def ebc_of(line):
+    """RD-7 3 J-P3 input field: ``hydraulics_record.extend_bound_check`` (u3 / u6 items: under ``v5.``).
+    Returns (block or MISSING, path)."""
+    return core.first_path(line, EBC_PATHS)
+
+
 def jp3(line, is_p3, rod_reading):
     """rev9 3.2 table with the two inputs of rev3 R3-C8 (rod reading: T4h, else configuration; declaration:
-    field, else configuration; the declaration is never inverted into a rod-reading assumption)."""
+    field, else configuration; the declaration is never inverted into a rod-reading assumption).
+    R4 RD-8: a ``breach_reads`` that is not a list of four integers >= 0 makes the J-P3 undecidable (input format
+    defect), never a pass; a top-level copy that differs is undecidable too (RD-7 3)."""
     tag = tag_of(line)
     if is_p3 is None or not isinstance(tag, str) or not is_p3(tag):
         return "not_applicable_tag", None
-    hr = line.get("hydraulics_record") if isinstance(line.get("hydraulics_record"), dict) else None
-    ebc = hr.get("extend_bound_check", core.MISSING) if hr is not None else core.MISSING
+    ebc, _p = ebc_of(line)
     declared, _src = head_only_declared(line)
     rod = rod_reading if rod_reading is not None else rod_reading_by_config(line)
     if rod is None:
@@ -238,15 +266,126 @@ def jp3(line, is_p3, rod_reading):
     if rod:
         if not isinstance(ebc, dict):
             return "setting_defect", "#2 rod reading, extend_bound_check missing / null"
-        br = ebc.get("breach_reads")
-        if not (isinstance(br, list) and all(isinstance(x, int) for x in br)):
-            return "setting_defect", "breach_reads unreadable"
+        if ebc.get("breach_reads") is None:
+            # rev4 R4-A2: key missing or null -> rev9 3.2 table (#2: record missing on a rod-reading run)
+            return "setting_defect", "#2 rod reading, breach_reads missing / null"
+        bi = breach_reads_input(line)
+        if not bi["ok"]:
+            return "undecidable", f"RD-8 input format defect: {bi['why']}"
+        if bi["mismatch"]:
+            return "undecidable", "RD-7 3: top-level extend_bound_check.breach_reads differs from the input field"
+        br = bi["value"]
         return ("pass", None) if sum(br) == 0 else ("H-7", f"ext_moving breach_reads {br}")
     if not declared:
         return "setting_defect", "#4 no rod reading without a head-only declaration"
     if isinstance(ebc, dict):
         return "setting_defect", "#5 no rod reading but a record"
     return "no_rod_reading", None
+
+
+def j11_setting(line, setting=None):
+    """The J11 setting of a line / item / run: explicit, else ``job.setting``, ``v5_setting``, ``v5.v5_setting``."""
+    if isinstance(setting, str) and setting:
+        return setting
+    for p in ("job.setting", "v5_setting", "v5.v5_setting"):
+        v = core.dig(line, p, None)
+        if isinstance(v, str) and v:
+            return v
+    return None
+
+
+def _fallback_legs(fl):
+    """``fallback_legs`` recorded as a dict keyed by leg (R2 record fact) or a list of legs; None if malformed."""
+    legs = list(fl.keys()) if isinstance(fl, dict) else (list(fl) if isinstance(fl, list) else None)
+    if legs is None or any(leg not in LEGS for leg in legs):
+        return None
+    return [leg for leg in LEGS if leg in legs]
+
+
+def fallback_event_legs(line):
+    """Legs named by ``WARN_ROD_PRESSURE_FALLBACK:<leg>`` events of the line (evidence of a fallback leg)."""
+    names, _r, _t = names_of(line)
+    out = set()
+    for n in names:
+        parts = n.split(":")
+        if parts[0] == "WARN_ROD_PRESSURE_FALLBACK":
+            out.update(p for p in parts[1:] if p in LEGS)
+    return sorted(out)
+
+
+def j11_item(line, setting=None):
+    """J11 of one harness line / run (RD-10, rev16:102~103 = P2-13 / P2-14, rev3 R3-C7, rev5 R5-B3).
+
+    n_late = ``lock_window_alignment.n_late_fallback_by_leg`` of the actual fallback legs (``fallback_legs``).
+    Stop settings (VB, LS1~LS4; item8 / overlap lines carry setting VB): block missing or not an object =
+    undecidable; a fallback leg whose n_late is missing / None / not an integer = undecidable; a fallback leg with
+    n_late > 0 = stop (``H-7`` on VB, ``L-e`` on LS). Record settings (V0~V8, L1, L2, pressure_only): values are a
+    record; a missing block is "input missing". ``list`` holds one row per (line, leg) with n_late > 0 on a stop
+    setting (the RD-7 J11 list is drawn by ``path2_v5c`` from these rows)."""
+    st = j11_setting(line, setting)
+    stop_app = st in J11_STOP_SETTINGS
+    marker = ("L-e" if st in LS_SETTINGS else "H-7") if stop_app else None
+    out = {"result": None, "setting": st, "stop_applicable": stop_app, "marker": marker, "fallback_legs": None,
+           "n_late_fallback_by_leg": None, "list": [], "why": None}
+    lwa, _p = core.first_path(line, J11_BLOCK_PATHS)
+    if not isinstance(lwa, dict):
+        if stop_app:
+            out.update(result="undecidable", why="RD-10: lock_window_alignment block missing or not an object")
+        else:
+            out.update(result="input_missing", why="RD-10: record setting without lock_window_alignment (입력 없음)")
+        return out
+    fl = lwa.get("fallback_legs", core.MISSING)
+    nl = lwa.get("n_late_fallback_by_leg")
+    out["n_late_fallback_by_leg"] = nl if isinstance(nl, dict) else None
+    if fl is core.MISSING:
+        ev_legs = fallback_event_legs(line)
+        if ev_legs:
+            # the events show a fallback leg but the block has no fallback-leg record: n_late of that leg unknown
+            out.update(result="undecidable" if stop_app else "record_incomplete",
+                       why=f"fallback event leg(s) {ev_legs} but lock_window_alignment.fallback_legs missing (R3-C7)")
+            return out
+        if lwa.get("n_late") is None and isinstance(lwa.get("reason"), str):
+            # the line records why no window was aligned (steady path, no rod reading = no fallback leg)
+            out.update(result="not_computed", why=lwa["reason"])
+        else:
+            out.update(result="undecidable" if stop_app else "record_incomplete",
+                       why="lock_window_alignment.fallback_legs missing")
+        return out
+    legs = _fallback_legs(fl)
+    if legs is None:
+        out.update(result="undecidable" if stop_app else "record_incomplete",
+                   why="lock_window_alignment.fallback_legs malformed")
+        return out
+    out["fallback_legs"] = legs
+    vals, bad = [], []
+    for leg in legs:
+        v = nl.get(leg) if isinstance(nl, dict) else None
+        if v is None or isinstance(v, bool) or not isinstance(v, int):
+            bad.append(leg)
+        else:
+            vals.append((leg, v))
+    if bad:
+        out.update(result="undecidable" if stop_app else "record_incomplete",
+                   why=f"n_late_fallback_by_leg missing / None / not an integer for fallback leg(s) {bad} "
+                       "(rev3 R3-C7, rev16:102)")
+        return out
+    hits = [(leg, v) for leg, v in vals if v > 0]
+    if stop_app:
+        out["result"] = "stop" if hits else "pass"
+        out["list"] = [{"leg": leg, "n_late_fallback_by_leg": v, "marker": marker} for leg, v in hits]
+    else:
+        out["result"] = "record"
+        out["record_hits"] = [{"leg": leg, "n_late_fallback_by_leg": v} for leg, v in hits]
+    return out
+
+
+def apply_j11(item, where, fnd):
+    """Findings of one ``j11_item`` result (undecidable / stop H-7 or L-e)."""
+    if item["result"] == "undecidable":
+        fnd.undec(where, f"J11: {item['why']}")
+    elif item["result"] == "stop":
+        legs = [(r["leg"], r["n_late_fallback_by_leg"]) for r in item["list"]]
+        fnd.stop(item["marker"], where, f"J11 fallback leg n_late > 0 {legs}")
 
 
 def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
@@ -350,31 +489,8 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
             fnd.stop("H-9", where, f"m2_clipped_steps_post_lift {post}")
     okp = (lambda x: None if x is None else not core.t_gt(x, MOVING_BAR))
     rel("J10", okp(a["press"]), okp(b["press"]), {"v0_bar": a["press"], "set_bar": b["press"]})
-    lwa = line.get("lock_window_alignment")
-    has_fb = any(n.startswith("WARN_ROD_PRESSURE_FALLBACK") for n in n1)
-    if isinstance(lwa, dict) and lwa.get("n_late_fallback") is None and lwa.get("n_late") is None and has_fb:
-        # rev3 R3-C7: a fallback leg with n_late None -> the J11 stop condition cannot be checked
-        it["J11"] = {"result": "undecidable", "why": "fallback leg present, n_late None"}
-        fnd.undec(where, "J11: fallback leg present but n_late missing (R3-C7)")
-    elif not isinstance(lwa, dict):
-        lc_on = isinstance(core.dig(line, "hydraulic_options.lock_closure", None), dict)
-        it["J11"] = {"result": "undecidable" if lc_on else "not_applicable"}
-        if lc_on:
-            fnd.undec(where, "J11: lock_window_alignment missing")
-    else:
-        nlf = lwa.get("n_late_fallback")
-        if "n_late_fallback" not in lwa and lwa.get("n_late") is None and isinstance(lwa.get("reason"), str):
-            # the line records why no window was aligned (steady path: "no rod reading" = no fallback leg)
-            it["J11"] = {"result": "not_computed", "reason": lwa["reason"]}
-        elif not isinstance(nlf, int):
-            it["J11"] = {"result": "undecidable"}
-            fnd.undec(where, "J11: n_late_fallback missing")
-        else:
-            it["J11"] = {"result": "stop" if nlf else "pass", "n_late_fallback": nlf,
-                         "n_late_by_leg": lwa.get("n_late_by_leg")}
-            if nlf:   # rev5 R5-B3: on LS rows the same violation is L-e (v5 criteria 8), on VB rows H-7
-                code = "L-e" if str(core.dig(line, "job.setting", "")).startswith("LS") else "H-7"
-                fnd.stop(code, where, f"n_late_fallback {nlf}")
+    it["J11"] = j11_item(line)
+    apply_j11(it["J11"], where, fnd)
     res, why = jp3(line, is_p3, rod_reading)
     it["J-P3"] = {"result": res, "why": why, "rod_reading_source": "t4h" if rod_reading is not None else "configuration",
                   "declaration_source": head_only_declared(line)[1]}
@@ -676,6 +792,8 @@ def main(argv=None):
                    help="T4h folder of the VB lines (rev9 3.1 rod reading). 436.8 rev11 R11-2: the runner "
                         "convention folders <vb stem>_t4h/ and t4h/ next to each --vb file are used; another "
                         "folder only when none exists, at most one (else input error, S-11, exit 2)")
+    u.add_argument("--expect-head", required=True,
+                   help="full 40-hex M4 commit; the judging checkout HEAD must equal it, else S-12 (R4 RD-1 5)")
     args = ap.parse_args(argv)
     repo = Path(args.repo) if args.repo else _HERE.parents[4]
     tool_sha = core.sha256_file(Path(__file__))
@@ -684,11 +802,15 @@ def main(argv=None):
     try:
         seals = core.check_seals(repo)
         rs = {rel: core.sha256_file(repo / rel) if (repo / rel).is_file() else None for rel in U9_RULES}
+        hc = core.head_check(repo, args.expect_head)
         if not seals["ok"] or any(rs[r] != w for r, w in U9_RULES.items()):
             report, code = {"seals": seals, "u9_rules": rs, "stop_codes": ["S-1"]}, 2
+        elif not hc["ok"]:
+            report, code = {"head_check": hc, "stop_codes": ["S-12"]}, 2
         else:
             is_p3, mod = core.load_is_extend_start(repo)
-            report = {"u9_rules": rs, "v5_options": mod, "seals_eol_only": seals.get("eol_only", [])}
+            report = {"u9_rules": rs, "v5_options": mod, "seals_eol_only": seals.get("eol_only", []),
+                      "head_check": hc, "r4_rev13_25_sha256": {Path(r).stem: w for r, w, _ in core.R4_SEALS_EXTRA}}
             places, perr = t4h_places(args.vb, args.t4h_root)
             report["R11-2_t4h_places"] = ({k: [str(d) for d in v] for k, v in places.items()} if places
                                           else {"input_error": perr})

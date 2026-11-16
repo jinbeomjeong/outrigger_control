@@ -49,6 +49,18 @@ rows (rev4, counted as C-7); a V0 open-loop row without a ``v5_hydraulics`` bloc
 OC5PROBE rows (``r4368.role`` probe) get no O-C5 main-row block (5.4, k procedure in ``oc5k``).
 rev18 (3693a69c...) R18-1 / rev19 (7f87b8bb...) R19-8 / rev20 (615a8fbd...) R20-4 / rev21 (ecd70949...) R21-3: ``chrono`` also checks the rev16..rev21 seals (``CHRONO_SEALS``, S-1);
 the other sub-commands are unchanged (their list is the R4 harness tool's).
+R4 (436.8 R4 common block sha256 e451f067..., rules rev25 c0b778fd...; written by a third path-2 author, a new agent
+run without the earlier authors' context, only from the R4 handoff for path 2-dyn): RD-2 every sub-command but
+``chrono`` checks the original + rev1~rev25 (26 sheets, ``R4_SEALS_EXTRA``); RD-1 5 ``harness`` / ``anchors`` / ``jp``
+need ``--expect-head <M4 full hash>`` = ``git rev-parse HEAD`` (else S-12, nothing judged); ``harness``: RD-9 ③-on
+line / run count per bundle (0 in H-1 / H-3 / H-4 / H-6 / H-8 / H-9 / H-10 = S-8), RD-8 recorded-state J-P3 input
+check of H-1 / H-3 / H-4 (``breach_reads`` not four integers >= 0, or a recorded VB pass without ``breach_reads``
+= that line's J-P3 undecidable and the gate marker ``J-P3 입력 형식(RD-8)``), RD-7 stop S-6 list (columns and
+notation of RD-7 3, family runs excluded), rev16 R16-5 key-source hash record of unchanged lines (P2-12, never
+S-5), rev16 R16-10 2 (c) u6 family by the inner-key ground token, u3 screen files with ``results[]`` read;
+``jp``: RD-11 (row set from the two ``batch.json`` cases, fixed 12 = else S-15; strict ``C2Event`` list; base-name
+count; shadow lines per run id = 1 else "그림자 판독 불가"; no reuse value while a stop marker is present).
+The ``chrono`` / ``oc5k`` / ``openloop`` / ``compare`` code paths are not changed in R4.
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -129,6 +141,30 @@ REV11_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11
 REV12_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md"
 REV12_SHA = "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
 REV12_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.sha256"
+# R4 RD-2 (R4 common block sha256 e451f067...): the R4 harness tools check the original + rev1~rev25 (26 sheets);
+# rev13~rev25 are added here (raw sha = constant = first token of the same-folder .sha256, LF, no BOM). The
+# ``chrono`` sub-command keeps its own list (original~rev12 + CHRONO_SEALS): it is not an R4 sub-command (RD-3 2).
+R4_SEALS_EXTRA = tuple(
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev%d.md" % n, sha,
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev%d.sha256" % n)
+    for n, sha in (
+        (13, "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"),
+        (14, "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"),
+        (15, "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"),
+        (16, "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"),
+        (17, "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"),
+        (18, "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"),
+        (19, "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"),
+        (20, "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"),
+        (21, "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"),
+        (22, "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"),
+        (23, "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"),
+        (24, "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"),
+        (25, "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"),
+    ))
+R4_BLOCK_SHA = "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800"   # R4 common block (record)
+R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"     # RD-1 5: git_at_start of the harness runs (rev16:40)
+R4_CMDS = ("harness", "anchors", "jp")                      # R4 sub-commands: HEAD check (RD-1 5)
 EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
@@ -462,9 +498,13 @@ class Findings:
 
 
 # ----------------------------------------------------------------- seal (S-1, A-2)
-def check_seals(repo, appendix=True):
-    """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha."""
+def check_seals(repo, appendix=True, r4=True):
+    """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha.
+    ``r4`` (default): also rev13~rev25 (R4 RD-2, 26 sheets). The ``chrono`` sub-command passes ``r4=False``."""
     out = {"rules": {}, "appendix_a": {}, "ok": True}
+    extra = R4_SEALS_EXTRA if r4 else ()
+    if r4:
+        out["r4_seal_list"] = "original + rev1~rev25 (RD-2)"
     for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL),
                             (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL),
                             (REV4_REL, REV4_SHA, REV4_SEAL_REL),
@@ -474,7 +514,7 @@ def check_seals(repo, appendix=True):
                             (REV9_REL, REV9_SHA, REV9_SEAL_REL),
                             (REV10_REL, REV10_SHA, REV10_SEAL_REL),
                             (REV11_REL, REV11_SHA, REV11_SEAL_REL),
-                            (REV12_REL, REV12_SHA, REV12_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7, R12-6)
+                            (REV12_REL, REV12_SHA, REV12_SEAL_REL)) + extra:   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7, R12-6, RD-2)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -506,6 +546,39 @@ def check_seals(repo, appendix=True):
     return out
 
 
+# ----------------------------------------------------------------- R4 RD-1 5: HEAD of the judging checkout
+_HEX40 = re.compile(r"^[0-9a-f]{40}$")
+
+
+def git_head(repo):
+    """``git rev-parse HEAD`` of ``repo`` (None if git fails)."""
+    import subprocess   # noqa: PLC0415
+    try:
+        r = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True,
+                           timeout=60, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    h = r.stdout.strip().lower()
+    return h if r.returncode == 0 and _HEX40.match(h) else None
+
+
+def head_check(repo, expect):
+    """RD-1 5: the judging tool runs on the M4 checkout; ``expect`` must be the full 40-hex M4 hash and equal
+    ``git rev-parse HEAD``. Returns dict(ok, expect, head, why); not ok = S-12 (the run is not judged)."""
+    out = {"expect": expect, "head": None, "ok": False, "why": None}
+    if not isinstance(expect, str) or not _HEX40.match(expect.lower()):
+        out["why"] = "--expect-head must be the full 40-hex M4 commit (RD-1 5)"
+        return out
+    out["head"] = git_head(repo)
+    if out["head"] is None:
+        out["why"] = "git rev-parse HEAD failed"
+    elif out["head"] != expect.lower():
+        out["why"] = "HEAD differs from the expected M4 commit"
+    else:
+        out["ok"] = True
+    return out
+
+
 # ----------------------------------------------------------------- tag ③ judgement (4.1)
 def load_is_extend_start(repo):
     """``v5_options.is_extend_start_tag`` (rules 4.1: the only allowed ③ judgement)."""
@@ -525,7 +598,7 @@ def load_is_extend_start(repo):
 
 
 # ----------------------------------------------------------------- K1 classification (7.2)
-def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_ok=False):
+def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_ok=False, s6_stop=True):
     """Classification of one line / row from its LAS-b and order-gate blocks.
 
     ``las``: liftoff_approach_slow dict (MISSING if absent); ``order_gate``: slope_clearance_margin
@@ -598,7 +671,10 @@ def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_o
     else:
         res["class"] = "both"
     if blocked > 0 and family in ("uniform", "unresolved"):
-        fnd.stop("S-6", where, f"K1 block on a {family} soft-ground line (7.2 / RV1-6)")
+        if s6_stop:
+            fnd.stop("S-6", where, f"K1 block on a {family} soft-ground line (7.2 / RV1-6)")
+        else:   # R4 RD-7 1: family runs are not in the stop S-6 list (decision 122 1); recorded only
+            fnd.note(where, f"K1 block on a {family} soft-ground family run (not in the stop S-6 list, RD-7 1)")
     return res
 
 
@@ -642,9 +718,11 @@ def family_grid(run, file_meta):
     return "unresolved"          # treated as uniform soft (S-6 on a K1 block)
 
 
-def family_harness(rec, fmt, parent=None, file_meta=None):
+def family_harness(rec, fmt, parent=None, file_meta=None, name=None):
     if fmt == "grid_json":
         return family_grid(rec, file_meta or {})
+    if fmt == "u3_json" and isinstance(name, str) and name.startswith("u6_"):
+        return family_u6(rec.get("case"))      # rev16 R16-10 2 (c)
     if fmt == "run_v5_jsonl":
         f = family_d1(rec.get("job"))
         if f is not None:
@@ -704,15 +782,17 @@ def harness_records(path, fmt):
     p = Path(path)
     if fmt == "run_v5_jsonl":
         with open(p, encoding="utf-8") as f:
-            for i, line in enumerate(f):
+            for i, line in enumerate(f):     # RD-7 3: physical line number, from 1, blank lines counted
                 line = line.strip()
                 if line:
-                    yield json.loads(line), None, f"line{i + 1}"
+                    yield json.loads(line), None, f"line {i + 1}"
         return
     data = json.loads(p.read_text("utf-8"))
     if fmt == "u3_json":
-        for i, r in enumerate(data.get("records", [])):
-            yield r, data, f"records[{i}]"
+        # wrapper files carry records[]; screen files (study C, D) carry results[] (R4: both read)
+        cont = "records" if isinstance(data.get("records"), list) else "results"
+        for i, r in enumerate(data.get(cont) or []):
+            yield r, data, f"{cont}[{i}]"
     elif fmt == "r79_json":
         for i, r in enumerate(data.get("results", [])):
             yield r, data, f"results[{i}]"
@@ -768,6 +848,135 @@ def skipped_count_harness(rec, rk):
     return None, None
 
 
+# ----------------------------------------------------------------- R4 harness layer (RD-4, RD-7, RD-8, RD-9)
+EBC_PATHS = ("hydraulics_record.extend_bound_check", "v5.hydraulics_record.extend_bound_check")   # RD-7 3
+JP3_RECORDED_PATHS = ("d1.j_p3", "v5.j_p3")        # RD-8: recorded J-P3 state (h1_d1 lines, u3 / u6 items)
+RD8_BUNDLES = ("H-1", "H-3", "H-4")                # J-P3 judged from the recorded state (RD-8)
+RD8_MARKER = "J-P3 입력 형식(RD-8)"
+RD9_BUNDLES = ("H-1", "H-3", "H-4", "H-6", "H-8", "H-9", "H-10")   # VB (③ on) lines in the bundle definition
+S6_LIST_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")   # RD-7 1 (decision 122 1)
+FAMILY_KO = {"rigid": "강체", "patch": "패치·처방 침하", "uniform": "균일 연약", "unresolved": "균일 연약"}
+RUN_V5_KEY_CASE = ("h5_u9_v0.jsonl", "h9_stage1.jsonl", "h10_reuse_rerun.jsonl")
+R79_NAMES = ("h6_dg3_v4on.json", "h7_dg3_off.json", "h8_noise_VB.json", "h8_noise_V0.json", "h8_seedext_VB.json",
+             "h8_seedext_V0.json", "h9_family_F_VB.json", "h9_family_F_V0.json")
+FAMILY_RUN_PREFIX = "h9_family_F"                  # RD-7 1: family runs are in no RD-7 list and no RD-9 count
+
+
+def breach_reads_format(br):
+    """RD-8: ``breach_reads`` is a list of exactly four JSON integers >= 0 (FL, FR, RL, RR); bool is not an
+    integer here. Returns (ok, why)."""
+    if not isinstance(br, list):
+        return False, f"breach_reads is {type(br).__name__}, not a list"
+    if len(br) != 4:
+        return False, f"breach_reads has {len(br)} elements (4 required)"
+    for i, x in enumerate(br):
+        if isinstance(x, bool) or not isinstance(x, int):
+            return False, f"breach_reads[{i}] = {x!r} is not an integer"
+        if x < 0:
+            return False, f"breach_reads[{i}] = {x} < 0"
+    return True, None
+
+
+def breach_reads_input(rec):
+    """RD-8 / RD-7 3 reading of one line, item or run: dict(present, ok, why, value, mismatch). ``present`` = the
+    input field ``extend_bound_check`` (``hydraulics_record``, u3 / u6 items under ``v5.``) has a non-null
+    ``breach_reads``; ``mismatch`` = a top-level ``extend_bound_check.breach_reads`` differs (J-P3 undecidable)."""
+    ebc, _p = first_path(rec, EBC_PATHS)
+    out = {"present": False, "ok": None, "why": None, "value": None, "mismatch": False}
+    if not isinstance(ebc, dict) or ebc.get("breach_reads") is None:
+        return out
+    br = ebc["breach_reads"]
+    out.update(present=True, value=br)
+    out["ok"], out["why"] = breach_reads_format(br)
+    top = rec.get("extend_bound_check")
+    if isinstance(top, dict) and "breach_reads" in top and top.get("breach_reads") != br:
+        out["mismatch"] = True
+    return out
+
+
+def rel_posix(path, repo):
+    """RD-7 3: result file relative to the repository root with '/' separators."""
+    try:
+        return Path(path).resolve().relative_to(Path(repo).resolve()).as_posix()
+    except ValueError:
+        return Path(path).as_posix()
+
+
+def rd7_key_setting(rec, parent, fmt, name):
+    """RD-7 3 key and setting fields by file form (``None`` when the form is not in the table or the field is
+    absent)."""
+    def s(v):
+        return v if v is not MISSING else None
+    if fmt == "run_v5_jsonl":
+        if name == "h1_d1.jsonl":
+            return s(dig(rec, "job.d1.key")), s(dig(rec, "job.setting"))
+        if name in RUN_V5_KEY_CASE:
+            return s(dig(rec, "job.case")), s(dig(rec, "job.setting"))
+        return None, None
+    if fmt in ("r79_json", "grid_json"):
+        if name in R79_NAMES or (fmt == "grid_json" and name.startswith("grid_")):
+            src = parent if (fmt == "grid_json" and isinstance(parent, dict)) else rec
+            return s(dig(src, "key")), s(dig(src, "v5_setting"))
+        return None, None
+    if fmt == "u3_json":
+        if name.startswith("u6_"):
+            return s(dig(rec, "case")), s(dig(rec, "v5.v5_setting"))
+        if name.startswith("u3_"):
+            k = rec.get("key")
+            if k is None:
+                k = rec.get("id") if isinstance(rec.get("id"), str) else None
+            return k, s(dig(rec, "v5.v5_setting"))
+    return None, None
+
+
+def family_u6(case):
+    """rev16 R16-10 2 (c): a u6 key is classified by the ground token of its inner key. ``+<soil>@<leg>`` = patch,
+    a soil token alone = uniform, ``rigid`` = rigid; no ground token = unresolved (treated as uniform, RV1-6).
+    Inner key = the key without its one-letter bundle prefix (``S|``, ``G|``) and the controller suffix; the b5 main
+    form ``<case>-<ground>`` (``A1-J1``) reads the part after the last '-' as the ground token (path-2 reading)."""
+    if not isinstance(case, str) or not case:
+        return "unresolved"
+    toks = [t for t in case.split("|") if t]
+    if toks and len(toks[0]) == 1 and toks[0].isalpha() and toks[0].isupper():
+        toks = toks[1:]
+    if toks and toks[-1] in ("C2", "ABL", "IND", "IND_LAS"):
+        toks = toks[:-1]
+    ground = []
+    for t in toks:
+        ground.append(t)
+        if "-" in t:
+            ground.append(t.rsplit("-", 1)[1])
+    if any("@" in t for t in ground):
+        return "patch"
+    if any(t == "rigid" for t in ground):
+        return "rigid"
+    if any(t in SOIL_NAMES for t in ground):
+        return "uniform"
+    return "unresolved"
+
+
+def norm_key(k):
+    """Key of a key-source line: a leading ``cand=<x>#`` is not part of the key (rev3 R3-D1 reading)."""
+    if isinstance(k, str) and k.startswith("cand=") and "#" in k:
+        return k.split("#", 1)[1]
+    return k
+
+
+def key_source_index(path, fmt, repo):
+    """rev16 R16-5 2 (P2-12): key -> list of ``base.commands_sha256`` (None = no stored hash) of a key source."""
+    p = Path(path)
+    if not p.is_absolute():
+        p = repo / p
+    idx = {}
+    for rec, par, lab in harness_records(p, fmt):
+        if "error" in rec:
+            continue
+        k = norm_key(harness_key(rec, par, fmt, lab))
+        h = dig(rec, "base.commands_sha256", None)
+        idx.setdefault(k, []).append(h if isinstance(h, str) and h else None)
+    return idx, str(p), sha256_file(p)
+
+
 GS_BUNDLE_PREFIX = "GS-"      # harness --gs: bundle names GS-H-n, rules-5.1 line counts (S-15) skipped
 KIND_AUTO = "auto"            # harness --gs: per-line kind from job.setting (run_v5_jsonl)
 _EXT_SETTINGS = ("VB",) + ("LS1", "LS2", "LS3", "LS4")
@@ -790,6 +999,7 @@ def cmd_harness(args, repo):
     fnd_all = {}
     files_out = []
     bundles = {}
+    s6_rows = []          # R4 RD-7: stop S-6 list (원판 8.2 멈춤 S-6, not the r79 gate S-6)
     for entry in manifest["files"]:
         bundle, kind, fmt = entry["bundle"], entry["kind"], entry["format"]
         file_kind = kind
@@ -826,10 +1036,29 @@ def cmd_harness(args, repo):
         classes = {}
         hash_cmp = {"compared": 0, "equal": 0, "differ": [], "no_anchor": 0}
         keys_seen = set()
+        # --- R4 per-file set-up
+        base_bundle = bundle[len(GS_BUNDLE_PREFIX):] if bundle.startswith(GS_BUNDLE_PREFIX) else bundle
+        rel = rel_posix(path, repo)
+        family_run = entry.get("family_run") is True or path.name.startswith(FAMILY_RUN_PREFIX)
+        r4b = b.setdefault("r4", {"rd9_p3_on": 0, "family_run_lines": 0,
+                                  "rd8": {"breach_reads_bad_format": 0, "jp3_pass_without_breach_reads": 0,
+                                          "breach_reads_mismatch": 0, "lines_present": 0, "lines": []},
+                                  "key_source": {"compared": 0, "same": 0, "differ": 0, "no_stored_hash": 0,
+                                                 "no_key_source_line": 0, "several_key_source_lines": 0,
+                                                 "differ_keys": []}})
+        ks_idx, ks_files = {}, []
+        for ks_name in ("key_source", "key_source_override"):
+            if entry.get(ks_name):
+                idx, ks_path, ks_sha = key_source_index(entry[ks_name], entry.get(ks_name + "_format", fmt), repo)
+                ks_idx[ks_name] = idx
+                ks_files.append({"role": ks_name, "path": ks_path, "sha256": ks_sha})
         for rec, parent, label in harness_records(path, fmt):
             n_file += 1
             key = harness_key(rec, parent, fmt, label)
             where = f"{bundle}:{path.name}:{label}:{key}"
+            rd7_key, rd7_setting = rd7_key_setting(rec, parent, fmt, path.name)
+            if family_run:
+                r4b["family_run_lines"] += 1
             if key in keys_seen:
                 fnd.stop("S-15", where, "duplicate line key")
             keys_seen.add(key)
@@ -866,6 +1095,33 @@ def cmd_harness(args, repo):
                 fnd.stop("S-2", where, f"tag {tag!r} != expected {want_tag!r} ({kind})")
             elif is_p3 is not None and KIND_P3.get(kind) is not None and is_p3(tag) != KIND_P3[kind]:
                 fnd.stop("S-2", where, f"is_extend_start_tag({tag}) = {is_p3(tag)} for kind {kind}")
+            # R4 RD-9: ③-on lines / runs by the 4.1 tag reading (family runs not counted)
+            p3_on = bool(is_p3 is not None and isinstance(tag, str) and is_p3(tag))
+            if p3_on and not family_run:
+                r4b["rd9_p3_on"] += 1
+            # R4 RD-8: H-1 / H-3 / H-4 J-P3 is the recorded state; the input field is read here
+            if base_bundle in RD8_BUNDLES and not family_run:
+                rd8 = r4b["rd8"]
+                bi = breach_reads_input(rec)
+                if bi["present"]:
+                    rd8["lines_present"] += 1
+                    if not bi["ok"]:
+                        rd8["breach_reads_bad_format"] += 1
+                        rd8["lines"].append({"result_file": rel, "position": label, "key": rd7_key,
+                                             "what": "breach_reads format", "detail": bi["why"]})
+                        fnd.undec(where, f"J-P3 undecidable: input format defect (RD-8): {bi['why']}")
+                    if bi["mismatch"]:
+                        rd8["breach_reads_mismatch"] += 1
+                        rd8["lines"].append({"result_file": rel, "position": label, "key": rd7_key,
+                                             "what": "top-level breach_reads differs", "detail": None})
+                        fnd.undec(where, "J-P3 undecidable: top-level extend_bound_check.breach_reads differs (RD-7 3)")
+                elif p3_on:
+                    st, _sp = first_path(rec, JP3_RECORDED_PATHS)
+                    if st == "pass":
+                        rd8["jp3_pass_without_breach_reads"] += 1
+                        rd8["lines"].append({"result_file": rel, "position": label, "key": rd7_key,
+                                             "what": "recorded J-P3 pass without breach_reads", "detail": None})
+                        fnd.undec(where, "J-P3 undecidable: recorded pass without breach_reads (RD-8)")
             if kind in ("H6", "H7"):
                 # rev8 R8-1b: the record key is one dotted key, controller_settings["two_pressure.extend_start_rule"]
                 cs = rec.get("controller_settings")
@@ -904,15 +1160,47 @@ def cmd_harness(args, repo):
             las = rk.get("liftoff_approach_slow", MISSING)
             check_las_settings(las.get("settings") if isinstance(las, dict) else None, where, fnd,
                                abl=(kind == "ABL"))
-            fam = family_harness(rec, fmt, parent, file_meta)
+            fam = family_harness(rec, fmt, parent, file_meta, name=path.name)
             b["families"][fam] = b["families"].get(fam, 0) + 1
             sk, sk_src = skipped_count_harness(rec, rk)
             ec = dig(rk, "event_counts.flat_soil_margin_skipped_order", None)
             if sk_src != "resume_k1.event_counts" and isinstance(ec, int) and sk is not None and ec != sk:
                 fnd.note(where, f"skipped:order {sk} ({sk_src}) vs resume_k1.event_counts {ec}")
-            c = classify_k1(las, scm.get("order_gate", MISSING), sk, fam, where, fnd)
+            c = classify_k1(las, scm.get("order_gate", MISSING), sk, fam, where, fnd, s6_stop=not family_run)
             cl = c.get("class") or "undecidable"
             classes[cl] = classes.get(cl, 0) + 1
+            # R4 RD-7: stop S-6 list, one row per blocked decision (would_block and r4_due_without_gate) of a
+            # uniform soft-ground (or unresolved) line / run; family runs are not listed
+            decs = dig(scm, "order_gate.decisions", None)
+            if (fam in ("uniform", "unresolved") and not family_run and base_bundle in S6_LIST_BUNDLES
+                    and isinstance(decs, list) and c.get("class") in ("k1_block", "both")):
+                for kk, d in enumerate(decs):
+                    if isinstance(d, dict) and d.get("would_block") is True and d.get("r4_due_without_gate") is True:
+                        s6_rows.append({"bundle": base_bundle, "result_file": rel, "position": label, "k": kk,
+                                        "key": rd7_key, "setting": rd7_setting, "family": FAMILY_KO[fam],
+                                        "t_loc_s": d.get("t_loc_s"), "n_P": d.get("n_P"), "n_S": d.get("n_S"),
+                                        "dP": d.get("dP")})
+            # R4 rev16 R16-5 2 (P2-12): unchanged lines vs the key source (record, never S-5)
+            if cl == "unchanged" and ks_idx:
+                kn = norm_key(key)
+                src = ks_idx.get("key_source_override", {}) if kn in ks_idx.get("key_source_override", {}) else \
+                    ks_idx.get("key_source", {})
+                ks = r4b["key_source"]
+                cands = src.get(kn, [])
+                h_new, _ = first_path(rec, HASH_PATHS[:1])     # top-level commands_sha256 of the new line
+                if not cands:
+                    ks["no_key_source_line"] += 1
+                elif len(cands) > 1:
+                    ks["several_key_source_lines"] += 1
+                elif cands[0] is None:
+                    ks["no_stored_hash"] += 1
+                else:
+                    ks["compared"] += 1
+                    if isinstance(h_new, str) and h_new == cands[0]:
+                        ks["same"] += 1
+                    else:
+                        ks["differ"] += 1
+                        ks["differ_keys"].append({"result_file": rel, "position": label, "key": rd7_key})
             if fsm is not None and not same_value(fsm, 0.03):
                 fnd.note(where, f"flat_soil_margin_m = {fsm}")
             # unchanged lines: stored hash (7.2)
@@ -941,19 +1229,45 @@ def cmd_harness(args, repo):
         b["lines"] += n_file
         for k, v in classes.items():
             b["classes"][k] = b["classes"].get(k, 0) + v
-        b["files"].append({"path": str(path), "sha256": sha256_file(path), "kind": kind, "format": fmt,
-                           "lines": n_file, "classes": classes, "stored_hash": hash_cmp if stored else None,
-                           "stored": entry.get("stored")})
+        b["files"].append({"path": str(path), "result_file": rel, "sha256": sha256_file(path), "kind": kind,
+                           "format": fmt, "lines": n_file, "classes": classes,
+                           "stored_hash": hash_cmp if stored else None, "stored": entry.get("stored"),
+                           "family_run": family_run, "key_sources": ks_files})
         files_out.append(str(path))
     for bundle, b in bundles.items():
-        want = None if bundle.startswith(GS_BUNDLE_PREFIX) else HARNESS_COUNTS.get(bundle)
+        base_bundle = bundle[len(GS_BUNDLE_PREFIX):] if bundle.startswith(GS_BUNDLE_PREFIX) else bundle
+        gs_b = bundle.startswith(GS_BUNDLE_PREFIX)
+        want = None if gs_b else HARNESS_COUNTS.get(bundle)
         if want is not None and b["lines"] != want:
             fnd_all[bundle].stop("S-15", bundle, f"{b['lines']} lines, rules (rev1) say {want}")
+        r4b = b.get("r4", {})
+        gates = []
+        # RD-9: a judged bundle whose definition has VB (③ on) lines stops with S-8 when the count is 0
+        if base_bundle in RD9_BUNDLES and not gs_b and r4b.get("rd9_p3_on", 0) == 0:
+            fnd_all[bundle].stop("S-8", bundle, "③-on line / run count 0 (RD-9)")
+        # RD-8: gate marker of the recorded-state J-P3 bundles
+        rd8 = r4b.get("rd8")
+        if base_bundle in RD8_BUNDLES and rd8 is not None:
+            if rd8["breach_reads_bad_format"] or rd8["jp3_pass_without_breach_reads"]:
+                gates.append(RD8_MARKER)
+        else:
+            r4b.pop("rd8", None)
+        b["gates"] = gates
         b.update(fnd_all[bundle].as_dict())
         b["grade_scope"] = "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+    s6_rows.sort(key=lambda r: (r["bundle"], r["result_file"], _pos_key(r["position"]), r["k"]))
     codes = sorted({c for b in bundles.values() for c in b["stop_codes"]})
-    return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes},
+    return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes,
+             "stop_S6_list": {"name": "멈춤 S-6 (원판 8.2, 원판 7.2 균일 연약 지면 계열의 K1 막힘; r79 관문 S-6 아님)",
+                              "columns": ["bundle", "result_file", "position", "k", "key", "setting", "family",
+                                          "t_loc_s", "n_P", "n_S", "dP"],
+                              "n_rows": len(s6_rows), "rows": s6_rows}},
             combine(b["status"] for b in bundles.values()))
+
+
+def _pos_key(pos):
+    """RD-7 3 sort of positions: the numbers of ``line N`` / ``results[i].runs[j]`` in order."""
+    return tuple(int(x) for x in re.findall(r"\d+", pos or ""))
 
 
 # ----------------------------------------------------------------- anchors (P-1 / P-2, RV1-5)
@@ -2293,58 +2607,131 @@ def cmd_oc5k(args, repo):
 
 
 # ----------------------------------------------------------------- J_P reuse (7.3)
+JP_ROWS = 12                     # RD-11 2: fixed, not an argument
+JP_STOP_S15 = "S-15"
+JP_STOP_EVENTS = "사건 기록 판독 불가"
+JP_STOP_SHADOW = "그림자 판독 불가"
+
+
+def jp_result_json(bd, case, repo):
+    """RD-11 3: the row's result.json: ``s8c_check.result_json``, ``s6c_check.result_json``, ``result_json`` in this
+    order, the first that is a file (a path containing ``07_results/`` that is not a file is looked up under
+    ``<repo>/07_results/`` with its tail); else ``<batch>/<case>/result.json``. Returns (path or None, source)."""
+    for src in ("s8c_check.result_json", "s6c_check.result_json", "result_json"):
+        v = dig(case, src, None)
+        if not isinstance(v, str) or not v:
+            continue
+        p = Path(v)
+        if p.is_file():
+            return p, src
+        s = v.replace("\\", "/")
+        if "07_results/" in s:
+            q = Path(repo) / "07_results" / s.split("07_results/", 1)[1]
+            if q.is_file():
+                return q, src + " (relocated)"
+    name = case.get("case")
+    if isinstance(name, str) and name:
+        p = Path(bd) / name / "result.json"
+        if p.is_file():
+            return p, "<batch>/<case>/result.json"
+    return None, None
+
+
+def jp_events(ev_path):
+    """RD-11 4: (names, reason). The file is a JSON list whose every element is a string that, stripped, is
+    exactly ``C2Event(t_s=<number>, name=<Python string literal>)``; else (None, reason)."""
+    if not ev_path.is_file():
+        return None, "controller_events.json missing"
+    try:
+        raw = json.loads(ev_path.read_text("utf-8"))
+    except (OSError, ValueError) as exc:
+        return None, f"controller_events.json unreadable ({type(exc).__name__})"
+    if not isinstance(raw, list):
+        return None, f"controller_events.json is {type(raw).__name__}, not a list"
+    names = []
+    for i, e in enumerate(raw):
+        if not isinstance(e, str):
+            return None, f"element {i} is {type(e).__name__}, not a string"
+        p = parse_c2event(e)
+        if p is None:
+            return None, f"element {i} is not C2Event(t_s=<number>, name=<string>)"
+        names.append(p[1])
+    return names, None
+
+
 def cmd_jp(args, repo):
+    """J_P reuse reading (original 7.3) by the R4 common definition RD-11 1~8."""
     fnd = Findings()
-    shadow = read_jsonl(args.shadow)
     sh = {}
-    for s in shadow:
-        run = dig(s, "job.chrono_run", None)
-        if run:
-            sh.setdefault(run.replace("\\", "/"), []).append(s)
-    runs = []
-    for bd in args.batch:
-        batch, cases = batch_rows(bd)
-        for row in cases:
-            rpath = resolve_result(bd, row, repo)
-            where = f"{Path(bd).name}:{row.get('case')}"
-            item = {"case": row.get("case"), "batch": Path(bd).name}
-            if rpath is None:
-                item["readable"] = False
-                fnd.note(where, "result.json not found")
-                runs.append(item)
+    with open(args.shadow, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
                 continue
-            run_id = f"{rpath.parent.parent.name}/{rpath.parent.name}"
-            ev_path = rpath.parent / "controller_events.json"
-            item["chrono_run"] = run_id
-            if not ev_path.is_file():
-                item["readable"] = False
-                runs.append(item)
+            s = json.loads(line)
+            if not isinstance(s, dict):
                 continue
-            raw = json.loads(ev_path.read_text("utf-8"))
-            parsed = [parse_c2event(s) if isinstance(s, str) else None for s in raw]
-            item["events_sha256"] = sha256_file(ev_path)
-            item["n_events"] = len(raw)
-            if any(p is None for p in parsed):
-                item["readable"] = False
-                item["unparsed"] = sum(p is None for p in parsed)
-                runs.append(item)
-                continue
-            item["readable"] = True
-            names = [event_name_split(p[1])[0] for p in parsed]
-            item["n_flat_soil_margin"] = sum(1 for nm in names if nm == EV_FLAT)
-            item["n_soil_mode_start"] = sum(1 for nm in names if nm == EV_SOIL_START)
-            s = sh.get(run_id, [])
-            item["shadow_entries"] = len(s)
-            item["shadow_silent"] = (len(s) == 1 and s[0].get("status") == "silent" and s[0].get("first_fire_t_s") is None)
-            item["cond1"] = item["shadow_silent"]
-            item["cond2"] = item["n_flat_soil_margin"] == 0 and item["n_soil_mode_start"] == 0
-            runs.append(item)
-    n = len(runs)
-    reuse = (n == 12 and all(r.get("readable") and r.get("cond1") and r.get("cond2") for r in runs))
-    if n != 12:
-        fnd.note("jp", f"{n} J_P runs read (rules: 12)")
-    out = {"runs": runs, "n_runs": n, "reuse": reuse, "shadow_sha256": sha256_file(args.shadow),
-           "decision": "reuse stored judgement" if reuse else "rerun J_P 12 rows in bundle JP (5.2)", **fnd.as_dict()}
+            run = dig(s, "job.chrono_run", None)       # RD-11 6: top-level job.chrono_run, '\\' -> '/'
+            if isinstance(run, str):
+                sh.setdefault(run.replace("\\", "/"), []).append(s)
+    rows = []
+    batches = []
+    for bd in args.batch:                               # RD-11 2: batch order as given (VB, then V0)
+        bdata = json.loads((Path(bd) / "batch.json").read_text("utf-8"))
+        cases = bdata.get("cases") if isinstance(bdata.get("cases"), list) else []
+        batches.append({"batch": Path(bd).name, "batch_json_name": bdata.get("batch"), "n_cases": len(cases),
+                        "batch_json_sha256": sha256_file(Path(bd) / "batch.json")})
+        for case in cases:
+            rows.append((bd, case))
+    out = {"n_rows": len(rows), "n_rows_expected": JP_ROWS, "batches": batches,
+           "shadow_sha256": sha256_file(args.shadow), "rows": []}
+    markers = []
+    if len(rows) != JP_ROWS:
+        # RD-11 2: input problem, not a reading result: no reading, stop S-15 (not "reuse false")
+        fnd.stop(JP_STOP_S15, "jp", f"{len(rows)} rows in the two batch.json cases (fixed {JP_ROWS})")
+        out.update(stop_markers=[JP_STOP_S15], **fnd.as_dict())
+        return out, "stop"
+    for bd, case in rows:
+        name = case.get("case")
+        where = f"{Path(bd).name}:{name}"
+        item = {"batch": Path(bd).name, "case": name, "run_id": None, "events_unreadable": False,
+                "events_unreadable_reason": None, "n_events": None, "n_r4c30": None, "n_soil_mode_start": None,
+                "n_shadow_lines": None, "shadow_unreadable": False, "cond1": None, "cond2": None}
+        rpath, src = jp_result_json(bd, case, repo)
+        item["result_json_source"] = src
+        if rpath is None:
+            item.update(events_unreadable=True, events_unreadable_reason="result.json not found (RD-11 3)")
+        else:
+            item["run_id"] = f"{rpath.parent.parent.name}/{rpath.parent.name}"
+            names, why = jp_events(rpath.parent / "controller_events.json")
+            if names is None:
+                item.update(events_unreadable=True, events_unreadable_reason=why)
+            else:
+                bases = [event_name_split(nm)[0] for nm in names]
+                item["n_events"] = len(names)
+                item["n_r4c30"] = sum(1 for b_ in bases if b_ == EV_FLAT)        # RD-11 5: base name exact
+                item["n_soil_mode_start"] = sum(1 for b_ in bases if b_ == EV_SOIL_START)
+                item["cond2"] = item["n_r4c30"] == 0 and item["n_soil_mode_start"] == 0
+        if item["events_unreadable"]:
+            fnd.stop(JP_STOP_EVENTS, where, item["events_unreadable_reason"])
+        if item["run_id"] is not None:
+            s = sh.get(item["run_id"], [])
+            item["n_shadow_lines"] = len(s)
+            if len(s) != 1:
+                item["shadow_unreadable"] = True
+                item["shadow_unreadable_reason"] = f"그림자 줄 수 {len(s)}"
+                fnd.stop(JP_STOP_SHADOW, where, item["shadow_unreadable_reason"])
+            else:
+                item["cond1"] = (s[0].get("status") == "silent" and "first_fire_t_s" in s[0]
+                                 and s[0]["first_fire_t_s"] is None)
+        out["rows"].append(item)
+    markers = sorted({s["code"] for s in fnd.stops})
+    out["stop_markers"] = markers
+    if not markers:      # RD-11 7: read only when no input problem
+        out["reuse"] = all(r["cond1"] for r in out["rows"]) and all(r["cond2"] for r in out["rows"])
+        out["decision"] = ("reuse stored judgement (7.3)" if out["reuse"]
+                           else "reuse false: stop and ask (RD-11 9, rev16:315)")
+    out.update(fnd.as_dict())
     return out, "pass" if not fnd.stops else "stop"
 
 
@@ -2495,14 +2882,17 @@ def build_parser():
     ap.add_argument("--out", default=None, help="output JSON path")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("seal")
+    head_help = "full 40-hex M4 commit; the judging checkout HEAD must equal it, else S-12 (R4 RD-1 5)"
     h = sub.add_parser("harness")
     h.add_argument("--manifest", required=True)
     h.add_argument("--gs", action="store_true",
                    help="G-S (11.2): bundles reported as GS-<bundle>, rules-5.1 line counts (S-15) skipped; "
                         "manifest kind 'auto' reads a run_v5 file mixing settings per line by job.setting")
+    h.add_argument("--expect-head", required=True, help=head_help)
     a = sub.add_parser("anchors")
     a.add_argument("--h1", default=None, help="h1_d1.jsonl (omit: anchor selection counts only)")
     a.add_argument("--v5-root", default=None)
+    a.add_argument("--expect-head", required=True, help=head_help)
     c = sub.add_parser("chrono")
     c.add_argument("--batch", action="append", required=True)
     c.add_argument("--gs", action="store_true", help="G-S key presence only")
@@ -2521,7 +2911,8 @@ def build_parser():
     o.add_argument("--probe", action="append", required=True, help="probe result.json, in run order")
     j = sub.add_parser("jp")
     j.add_argument("--shadow", required=True)
-    j.add_argument("--batch", action="append", required=True)
+    j.add_argument("--batch", action="append", required=True, help="V5-JP-VB batch first, then V5-JP-V0 (RD-11 2)")
+    j.add_argument("--expect-head", required=True, help=head_help)
     ol = sub.add_parser("openloop")
     ol.add_argument("--run", action="append", required=True, help="label=run_dir")
     ol.add_argument("--script", default=None)
@@ -2543,12 +2934,19 @@ def main(argv=None):
     tool_sha = sha256_file(Path(__file__))
     summary = {"tool": TOOL_NAME, "version": TOOL_VERSION, "tool_sha256": tool_sha, "cmd": args.cmd}
     try:
-        seals = check_seals(repo)
+        r4_cmd = args.cmd != "chrono"     # R4 RD-2: 26 sheets for every sub-command but chrono (RD-3 2)
+        seals = check_seals(repo, r4=r4_cmd)
         if args.cmd == "chrono":    # rev18 R18-1: rev16..rev18 for the Chrono sub-command only
             seals["chrono_rev16_21"] = check_chrono_seals(repo)
             seals["ok"] &= seals["chrono_rev16_21"]["ok"]
+        hc = head_check(repo, getattr(args, "expect_head", None)) if args.cmd in R4_CMDS else None
         if not seals["ok"]:
             report = {"seals": seals, "status": "stop", "stop_codes": ["S-1"]}
+            status = "stop"
+        elif hc is not None and not hc["ok"]:
+            # R4 RD-1 5: not the M4 checkout -> S-12, nothing judged
+            report = {"head_check": hc, "status": "stop", "stop_codes": ["S-12"],
+                      "stops": [{"code": "S-12", "where": "HEAD", "why": hc["why"]}]}
             status = "stop"
         elif args.cmd == "seal":
             report, status = {"seals": seals}, "pass"
@@ -2558,6 +2956,11 @@ def main(argv=None):
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
+            if r4_cmd:
+                report["seals"]["r4_rev13_25_sha256"] = {Path(rel).stem: want for rel, want, _ in R4_SEALS_EXTRA}
+                report["seals"]["r4_common_block_sha256"] = R4_BLOCK_SHA
+            if hc is not None:
+                report["head_check"] = hc
             if args.cmd == "chrono":
                 report["seals"]["chrono_rev16_21_sha256"] = {Path(rel).stem: want for rel, want, _ in CHRONO_SEALS}
         report.update(tool=TOOL_NAME, version=TOOL_VERSION, tool_sha256=tool_sha, cmd=args.cmd,

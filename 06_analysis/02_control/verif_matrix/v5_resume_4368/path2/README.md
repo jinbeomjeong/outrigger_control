@@ -588,7 +588,7 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 
 - **rev21 R21-3(2026-11-15, 브랜치 `z4375-p2chrono`)**: `CHRONO_SEALS`에 rev21(`ecd70949…`)을 더했다(rev16~rev21). 출력 키는 `seals.chrono_rev16_21`·`seals.chrono_rev16_21_sha256`. 봉인 값 어긋남 시험에 rev21을 더했다(139개).
 
-### 도구 sha256 (rev21 판, LF 바이트, 현재 값)
+### 도구 sha256 (rev21 판, LF 바이트; 이력 값, 현재 값은 아래 "R4" 절 표)
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -632,3 +632,129 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 - 코드: `03_src/outrigger_sim/hydraulics/v5_options.py`(태그 상수와 `is_extend_start_tag`, 4.1이 지정), `06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/openloop_compare.py`(`analyse`, 9.1이 지정), 선례 `verif_matrix/p5k_path2/p5k_chrono_recount.py`의 머리 주석과 상수 이름(다른 판정의 경로 2, 436.8 경로 1 아님).
 - 보지 않은 것: `verif_matrix/scripts/resume4368_judge.py`, `04_scripts/04_hydraulic/coupled/u3_judge_k1.py`, `resume_k1_record.py`, `resume_k1_steps.py`, `verif_matrix/v5_resume_4368/gs_check_*.txt`·`chrono_rows_check.json`(경로 1 또는 행 생성기 출력일 수 있어 열지 않음), 행 정의 모듈 `v5_resume_4368_chrono_rows.py`, 러너 코드.
 - rev9 판에서 더 읽은 것: `v5_resume_4368_rules_rev9.md`. `chrono_rows_manifest.json`은 rev8 판까지 열지 않았다. rev9 R9-4가 LS 판별의 입력으로 정했으므로(두 경로 공통 입력) 이 판에서 도구 입력으로 쓴다. 작성 중에 사람이 본 것은 키 구조뿐이다: 최상위 키, `batches`의 묶음 이름, 묶음의 키(`rows` 등), 행 키 이름, `v5_setting` 값 집합(`LS1`·`LS4`·`None`·`S6SEED`·`V0`·`V0v`·`VB`). 행별 값은 보지 않았다. 참고 실행(G-S `…_082117`)의 행 결과는 판정에 쓰지 않는다.
+
+## R4 (436.8 R4 하네스 재판정, 경로 2-dyn 몫, 2026-11-16)
+
+- **작성자 공개**: 앞 경로 2 작성자들의 맥락이 없는 새 작성자(dynamics-expert, 새 에이전트 실행)가 썼다. 받은 것은 지시문 `r4_handoff_path2_dyn.md`(sha256 `54b1305e…`, 1,239줄) 하나다. 그 안의 R4 공통 블록 sha256은 `e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800`(표지 사이 줄, LF, 끝 줄바꿈 포함으로 다시 계산해 일치)이고, rules rev25 sha256은 `c0b778fd…`이다. 경로 1의 코드·출력·출력 폴더·보고는 열지 않았다(RD-6). 이 사실은 판정서에 공개한다.
+- 브랜치 `z4373-p2harness`(R3f `8a0c843`에서 가름). 고친 파일은 R4 허용 목록 (라)의 `path2/` 몫뿐이다: `p2_4368.py`, `p2_u3.py`, `p2_v5j.py`, `test_p2_4368.py`, `test_p2_u3.py`, `test_p2_v5j.py`, `README.md`, 새 `p2_x16.py`·`test_p2_x16.py`. `p2_d1.py`·`p2_t3k.py`·`path2_chrono/`·`path2_v5c/`는 고치지 않았다.
+- `p2_4368.py`의 `chrono`·`oc5k`·`openloop`·`compare` 코드 경로는 바꾸지 않았다. 공용 `check_seals`는 `chrono`에서 `r4=False`로 불려 앞 판과 같은 목록(원판~rev12)을 확인하고, `CHRONO_SEALS`(rev16~rev21)도 그대로다.
+
+### 반영 표
+
+| R4 정의·규칙 | 도구 | 반영 |
+|---|---|---|
+| RD-1 5 HEAD 확인 | `p2_4368.py harness`·`anchors`·`jp`, `p2_u3.py`, `p2_v5j.py u9`, `p2_x16.py g3`·`c16` | `--expect-head <M4 40자리>`(필수). `git rev-parse HEAD`와 다르거나 40자리가 아니면 **S-12**, 아무것도 판정하지 않음(종료 2). 출력 `head_check`(expect, head, ok, why) |
+| RD-2 봉인 26판 | `p2_4368.check_seals`(모든 도구 공통) | 원판~rev12에 rev13~rev25(`R4_SEALS_EXTRA`) 더함. raw sha = 코드 값 = 같은 폴더 `.sha256` 첫 토큰, LF, BOM 없음. 하나라도 어긋나면 S-1(종료 2). 출력 `seals.r4_rev13_25_sha256`, `seals.r4_common_block_sha256`. `chrono`는 제외(RD-3 2) |
+| RD-7 멈춤 S-6 목록 | `p2_4368.py harness` | 출력 `stop_S6_list`(이름 "멈춤 S-6", r79 관문 S-6 아님, RD-4). 줄 = 막힌 결정 항목(`would_block` ∧ `r4_due_without_gate`) 하나, 대상 = 묶음 H-1·H-3~H-10 줄·run 가운데 계열이 균일 연약(또는 미분류). 열: `bundle`, `result_file`(저장소 루트 상대, `/`), `position`(`line N` 물리 줄 번호, `records[i]`·`results[i]`·`results[i].runs[j]`), `k`, `key`, `setting`(RD-7 3 파일 꼴 표), `family`(`균일 연약`), `t_loc_s`, `n_P`, `n_S`, `dP`. 정렬 = 묶음 → 파일 → 위치 수 → k. family run(`h9_family_F*` 또는 목록 `family_run: true`)은 목록·S-6 멈춤·RD-9 수에서 뺌(기록만) |
+| RD-7 G-5·G-6 목록 | `p2_u3.py` | `G-5_list`(VB 고유 실패 u3 기록), `G-6_list`(`u3_g8_VB.json`에서 `v5.rod_pressure_fallback_events` ≥ 1인 기록). 열: `bundle`(H-3), `result_file`, `position`, `key`(항목 `key`, 없으면 문자열 `id`) |
+| RD-7 G-3 거짓 목록 | `p2_x16.py g3` | `G-3_false_list` 열: `script`, `key`, `field`, `none_hash`, `compare_hash`, `none_lines`, `compare_lines`. 표지 `G-3(H-11) 거짓`(멈춤, 종료 2), `consequence` = H-3·H-4 판정 안 함 |
+| RD-8 J-P3 입력 형식 | `p2_4368.breach_reads_format`·`breach_reads_input`(정의 한 곳), `p2_v5j.jp3` | `breach_reads`는 0 이상 JSON 정수 4개 목록(FL, FR, RL, RR, bool 아님). 아니면 그 줄·run의 J-P3 = **판정 불가**(입력 형식 결함), 합 0 통과 없음. 키 없음·null은 앞 판대로 rev9 3.2 표(#2 설정 결함). 최상위 `extend_bound_check.breach_reads`가 입력 필드와 다르면 판정 불가(RD-7 3). `path2_v5c`가 `jp3`를 불러 쓰므로 그 폴더 판정에도 들어감 |
+| RD-8 H-1·H-3·H-4 | `p2_4368.py harness` | 묶음별 `r4.rd8`: `breach_reads_bad_format`(기록에 있는 줄 가운데 형식 틀림), `jp3_pass_without_breach_reads`(③ 켬 줄 가운데 기록 J-P3 `d1.j_p3`/`v5.j_p3` = `pass`인데 `breach_reads` 없음), `breach_reads_mismatch`, `lines_present`, 줄 목록. 앞 두 수 중 하나라도 ≥ 1이면 묶음 `gates`에 `J-P3 입력 형식(RD-8)`. 해당 줄은 판정 불가로 적음 |
+| RD-9 ③ 켬 줄 수 | `p2_4368.py harness` | 묶음별 `r4.rd9_p3_on` = `is_extend_start_tag(태그)` 참인 줄·run 수(family run 제외, 원판 4.1). H-1·H-3·H-4·H-6·H-8·H-9·H-10에서 0이면 **S-8** |
+| RD-10 J11 | `p2_v5j.j11_item`·`apply_j11`(`judge_pair`가 씀) | n_late = `lock_window_alignment.n_late_fallback_by_leg`의 실제 대체 다리(`fallback_legs`의 키; R2 기록은 다리를 키로 한 dict) 값. 멈춤 설정 VB·LS1~LS4(item8·overlap의 VB 줄은 설정 VB): 블록 없음·객체 아님 = 판정 불가, 대체 다리 값 없음·None·정수 아님 = 판정 불가, > 0 = 멈춤(VB `H-7`, LS `L-e`), 줄마다 `list`(다리, 값, 표지). 기록 설정(V0~V8·L1·L2·pressure_only): 블록 없음 = `input_missing`(입력 없음), 값은 `record`. `fallback_legs`가 없고 `WARN_ROD_PRESSURE_FALLBACK:<다리>` 사건이 있으면 판정 불가(R3-C7). J11 목록(RD-7)은 `path2_v5c` 작성자가 이 `list`로 낸다 |
+| RD-11 J_P 판독 | `p2_4368.py jp` | 행 = 두 `batch.json`의 `cases`(인자 순서 VB → V0), 12 고정, 아니면 **S-15**(판독 없음). `result.json` = `s8c_check.result_json` → `s6c_check.result_json` → `result_json`(파일이 아니고 `07_results/`가 있으면 `<repo>/07_results/<뒷부분>`) → `<배치>/<case>/result.json`. run id = `<행 폴더 부모>/<행 폴더>`. 사건 = 모든 원소가 문자열이고 `C2Event(t_s=<수>, name=<문자열>)` 꼴, 아니면 **사건 기록 판독 불가**. 기본 이름(첫 `:` 앞) 비교로 R4c30·토양 모드 시작 수. 그림자 = 최상위 `job.chrono_run`(`\`→`/`)이 같은 줄 수 n, n ≠ 1이면 **그림자 판독 불가**(사유 "그림자 줄 수 n"). 멈춤 표지가 있으면 `reuse`를 내지 않음. 행 항목 = RD-11 8 |
+| RD-13 항목 목록 | `p2_x16.py items` | 아래 절 |
+| rev16 R16-10 2 (a) | `p2_u3.settle_v2_recount` | `residual_deg`·`attitude_error_deg` 축별 [roll, pitch], `attitude_tol_deg` 축별 max(0.005°, 잔차 + 0.002°), 축별 \|오차\| ≤ 허용. 기록 `gap_ok`·`attitude_ok`가 bool이면 모든 패드·축의 참과, 목록이면 원소별로 대조. 앞 판은 bool 기록을 목록과 비교해 모두 판정 불가가 났다 |
+| (b) r72 계열 | `p2_u3.grade_r72` | g6(u3 래퍼 `v5.r72.*`)·연구 C(r72 스크린 최상위)를 `verdict`·`pass` 없이 등급: G6-3~G6-6 거짓 = 실패. G6-7 거짓 → R6-C3 세 분기(`preloc_flag_ok` 참 = FLAG `P3-8_demoted`, 거짓 ∧ G6-3 참 ∧ `final_phase` ∉ {fault, fault_reground} = FLAG `P3-8_preloc_loss`, 없음 = 판정 불가, 그 밖 실패). G6-2 거짓 → 419.8 다섯 조건(`late_loc_reapproach.conditions`) 모두 참 = FLAG `G6-2_late_loc_reapproach`. G6-1 → 재접촉 사건 재분류(U-S9-G6d: LOC 전에 끝남 ∧ ≤ 0.5 s ∧ ≤ 0.15 W = transient FLAG; 423.3: LOC 뒤 0 < Δt ≤ 1.0 s ∧ ≤ 0.1 s ∧ ≤ 1.2 × 문턱 = chatter FLAG; READY 뒤·그 밖 = strict 실패). 게이트 참인데 strict가 재계산되면 판정 불가. **424.11.2 강등은 넘겨받은 글에서 G6 규칙을 찾지 못해 적용하지 않음(확인 필요)** |
+| (c) u6 계열 | `p2_4368.family_u6` | 안쪽 키(한 글자 묶음 접두 `S|`·`G|`와 제어기 접미 제외)의 지면 토큰: `@` = 패치, `rigid` = 강체, 토양 이름 = 균일, 없음 = 미분류(균일로 다룸). b5 main 꼴 `A1-J1`은 마지막 `-` 뒤를 지면 토큰으로 읽음(경로 2 읽기, 공개) |
+| (d) 키 원본 대조 | `p2_4368.py harness` 목록 `key_source`(+ `key_source_override`) | 미작동 줄의 최상위 `commands_sha256`과 키 원본 같은 키 줄의 `base.commands_sha256`을 비교해 `r4.key_source`(compared·same·differ·no_stored_hash·no_key_source_line·several, differ 줄 목록)로 기록. S-5 아님. 키 비교는 앞의 `cand=<x>#`를 뗀 키. H-8 VB 잡음은 `key_source_override` = `v5/dg3/dg3_v4_on.json`(그 파일에 있는 키는 override가 먼저) |
+| (e) J11 | 위 RD-10 | |
+| (f) 봉인 목록 | 위 RD-2 | rev13~rev25 |
+| (g) C-9~C-11 | `p2_x16.py c16` | 아래 절 |
+| (h) H-11 G-3 | `p2_x16.py g3` | 아래 절 |
+| 그 밖 | `p2_4368.py harness` | u3 스크린 꼴 파일(연구 C·D, `results[]`)도 읽음(앞 판은 `records[]`만 읽었다) |
+
+### `p2_x16.py`
+
+- `g3 --h11-dir <OUT>\H-11 [--las-k1-dir <v5_rerun/las_k1>] --expect-head <M4>`: rev16 R16-8 8쌍(`G3_PAIRS`). 옵션 없음 출력과 비교 대상(H-3 V0 출력, b5는 H-11의 `u6_b5_A1_V0.json` 짝)에서 키마다 정확히 1줄, 같은 필드 해시 같음. H-11 실행 6개(`u3_{p3b,g8,C,D}_none`, `u6_b5_A1_none`, `u6_b5_A1_V0`)의 `<stem>.identity.json` 모든 start·end 기록이 `git.head` = R2(`b9f5707d…`)이고 clean이어야 함, 아니면 S-12.
+- `c16 --out-root <OUT> --identity-dir <정체성 파일 폴더> --expect-head <M4>`: rev16 R16-11 행 8개(`C16_ROWS`). 행 폴더 파일(R16-11b 2) sha, result.json 정체성(`code_state.git_at_start.head` = R2, `num_threads_chrono` 4, `placement.omp_wait_policy` PASSIVE, `hull_hook` fast·검증·DLL `cec997d7…`; 어긋나면 S-12·S-4), 시작·끝 정체성 파일. 기록 항목: C-9 두 팔 `decisions`(dP 포함)·토양 모드 시작·LOC 시각·`controller_commands.npz` sha 같음·최대 행정(`step_series` `s_motor_m` 최대 × 1000)·끝 rut 틈·P3-1~P3-9(`p3b.checks`)·첫 READY·rc·마지막 표본 시각, P-18 전제(두 팔 rc 0, 마지막 표본 ≥ `--duration` − 0.1 s, 첫 READY 있음, 스레드 4, `placement.requested` = pcore); C-10 다리별 F^a_min·F^t_min·시각·F<F_min·F<F_min+2 kN 시간(`series_force_recount`, 1 ms 참 F_cyl, 원판 7.4 정의)·P3-3·끝 단계·최대 행정·패치 다리 끝 침하; C-11 첫 LOC·LOC 주기((t_LOC − 0.1 s, t_LOC], 419.8.1 조건 3) 1 ms 크롤러 법선 최대와 /W·0.01 W 위아래·LOC 취소 수. 빠지면 `기록 불완전`(등급 없음).
+- `items`: RD-13 항목 목록(아래).
+
+### RD-13 항목 목록 (p2_x16.py `RD13_ITEMS`)
+
+- 열: 항목(경로 2 이름), 근거 조항, 구분(`등급 항목`/`기록`/`관문`). 넘겨받지 않은 앞 판 정의의 근거 조항은 도구 주석·이 README 인용에서 옮겼다(결정 117의 2). 목록 sha256 = `json.dumps(목록, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` UTF-8의 sha256.
+- H-6~H-10은 이 작성자 몫(436.8 층, 키 원본 기록)만 적었다. v5 기준 등급 항목은 `path2_v5c` 작성자가 낸다.
+
+| 묶음 | 목록 sha256 |
+|---|---|
+| H-1 | `da90f03e80e93e1ebadeeb4c8b9fe0a97d0a4e0ce4b1b5b82f106e7b86f93067` |
+| H-2 | `7c6c9e74eb0004bfe712888fcb59639e987910601a1aac280981bdfc0a508678` |
+| H-3 | `8df43593d61e22641fe40cf683e2e933116537ac300e3407ef4497a3e28d2823` |
+| H-4 | `2d04e92b4b3d3383d4d50302f3f9969964e414b6642b773cf6cb15d4cf7b1207` |
+| H-5 | `be207770492289685b884132a7c2c8d5d56dc7c1c1ee210d76e4e0e72a9a6e19` |
+| H-6·H-7·H-8·H-9 | `462768fe5a138aa31601c4bd8be68c9927fb64538527cb79ecfbdf892aaf3a42` |
+| H-10 | `4096bf19901393bcda60eab1fc33c9771e37d4bccd708d353e41c49120494605` |
+| H-11 | `92537e366cb26cefe5aa06dcd6b6cf6f960ec03bc9810f65fe211a614c4dd576` |
+| C-9 | `883736082ff1f7b33fe4a14e7c2fbf2f38e3efce4abda0384af8dc1c9a3384a6` |
+| C-10 | `8fe42d8e8ba0db5329c4006cfb037c409750a688d0c3867b6cadcc069b3ec314` |
+| C-11 | `f066fc6f3f77b4e0324e8ae4f389bf801792b29a00aebee614ac184a8777b951` |
+| J_P 판독 | `f580f1cb2787065129d27df5419ba549192e09bb87d3b2a6b998ed3eed6140ba` |
+
+### RD-5 키 대응표 초안 (K-10 대조에서 빼는 키, 결과를 보기 전에 정함)
+
+| 범주 | 키(출력 JSON 경로) | 만드는 곳 |
+|---|---|---|
+| 실행 정체성(체크아웃 커밋) | `head_check.head`, `head_check.expect` | `p2_4368.head_check` |
+| 실행 정체성(실행 시각) | `created` | 각 도구 `main` |
+| 실행 정체성(출력 위치) | `argv`의 `--out` 값 원소, 요약 줄 `out`·`out_sha256` | 각 도구 `main` |
+| 봉인 블록 | `seals`(전체), `u3_rules`, `u9_rules`, `r4_rev13_25_sha256`, `seals_eol_only` | `check_seals`, 각 `main` |
+| 도구 판·규칙 설명 문자열 | `tool`, `version`, `cmd`, `grade_scope`, `stop_S6_list.name`·`columns`, `G-5_list.name`, `G-6_list.name`, `r72_family_grade.rule`, `sha_rule`, `note`, `kinds`, `columns` | 각 도구 |
+| 도구 sha·공개 블록 | `tool_sha256`, `core_sha256`, `v5_options`(경로·sha) | 각 `main`, `load_is_extend_start` |
+| 입력 파일 경로·sha256 블록 | `bundles.*.files[].path`·`sha256`·`stored`·`key_sources`, `H-5.inputs`, `shadow_sha256`, `batches[].batch_json_sha256`, `h1`·`h1_sha256`·`appendix_b`, `identity.*.file`·`sha256`, `rows.*.folder`·`files`, `out_root`, `identity_dir`, `pairs[].none_file`·`compare_file`, `result_json_source` | `cmd_harness`, `cmd_jp`, `cmd_anchors`, `cmd_g3`, `cmd_c16`, `recount_u3` |
+| 자유 문장 사유 키 | `why`, `what`, `detail`, `note`, `stops[].why`, `undecidable[].why`, `fails[].why`, `records[].what`, `events_unreadable_reason`, `shadow_unreadable_reason`, `decision`, `consequence`, `G6_why`, `424.11.2`, `incomplete[].why`, `C-9_P-18.why` | `Findings`, 각 판독 함수 |
+
+- 위치(`position`)와 결과 파일(`result_file`)은 RD-7 3의 줄 식별이므로 빼지 않는다. `result_file`은 저장소 루트 상대 경로라 checkout 위치와 무관하다.
+
+### 실행 예 (R4, 판정은 M4 checkout에서 메인 세션이 돌린다)
+
+```powershell
+$t = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2'
+$o = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_<M4 짧은 해시>\harness_path2'
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$t\p2_4368.py" --out "$o\harness.json" harness --manifest "$o\manifest.json" --expect-head <M4>
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$t\p2_4368.py" --out "$o\jp.json" jp --shadow <repo>\06_analysis\03_hydraulic\coupled\v5\las\shadow_jp_b0.jsonl --batch <repo>\07_results\S9\batch_V5-JP-VB_20261108_115631 --batch <repo>\07_results\S9\batch_V5-JP-V0_20261108_131212 --expect-head <M4>
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$t\p2_u3.py" --out "$o\u3.json" --u3 V0=<…_V0.json> --u3 VB=<…_VB.json> … --u6 ALL=<…> --h1 <resume_k1\h1_d1.jsonl> --expect-head <M4>
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$t\p2_x16.py" --out "$o\g3.json" g3 --h11-dir <OUT>\H-11 --expect-head <M4>
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$t\p2_x16.py" --out "$o\c16.json" c16 --out-root <OUT> --identity-dir <정체성 파일 폴더> --expect-head <M4>
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$t\p2_x16.py" --out "$o\rd13_items.json" items
+```
+
+- 목록 파일 항목 더함: `key_source`, `key_source_override`(+ `_format`), `family_run`.
+
+### 확인 필요 (R4, 이 작성자)
+
+1. `p2_4368.py`에는 Chrono 판정 도구로 쓰인 `chrono` 하위 명령이 있다(R3b~R3c 커밋이 이 파일을 Chrono 쪽으로 고쳤다). RD-1 2의 "Chrono 판정 도구(두 경로) R3f..R4 diff 0"에 이 파일이 드는지 넘겨받은 글로는 정할 수 없다. 허용 목록 (라)에 이 파일이 있어 고쳤고, `chrono` 코드 경로는 바꾸지 않았다.
+2. 424.11.2 강등(u3 원판 4절, rev16:194 (b))의 G6 규칙을 넘겨받은 글과 명세 424.11.2에서 찾지 못했다. 적용하지 않고 출력에 적었다.
+3. C-9~C-11 정체성 파일(`<OUT>\_identity\*_pre.json`·`*_post.json`)은 열어도 되는 목록 밖이라 열지 않았다. 키 이름이 넘겨받은 글에 없어 후보 경로(`git.head`/`head`, `git.status_porcelain`, `env`, `forbidden`, `dll_sha256`, `git.reflog`, `rc`)로 읽고, 못 찾으면 `기록 불완전`이다. rc 위치도 같다. 열람 허락이나 키 이름이 필요하다.
+4. C-10 기록 항목 G6-1~G6-7은 result.json에 블록이 없고 Chrono G6 정의도 넘겨받지 않아 `null`로 둔다(기록 불완전으로 세지 않음).
+5. C-11 LOC 주기 창은 `p3b` 시각과 `step_series.npz` `t_s`가 같은 시간 기준이라고 가정한다(실데이터로 확인하지 않음).
+6. `<OUT>\H-11\g3_pairs_check.json`은 다른 경로나 점검 도구의 G-3 판정일 수 있어 열지 않았다.
+
+### 도구 sha256 (R4 판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `8be1f18425ca32a4477e6842fa3316e98ab3478c3f43381707946e967fef5904` | 바뀜 |
+| `p2_u3.py` | `e94770a4cf0cf64c77dc96b69c7bca06c4c940884538119acce661fe2728bfac` | 바뀜 |
+| `p2_v5j.py` | `e10706a852bb5ab5d93428ce94e22876bd2844f2381ecc512b7bbc13d6281ade` | 바뀜 |
+| `p2_x16.py` | `5ff297d65cea1e1acc1b16ce80ab03e984b12101e8f98d166735189c3a00d795` | 새 파일 |
+| `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 그대로 |
+| `p2_t3k.py` | `44141c9f74a6e8099218722fd731888e9c765832614e788114ef6089da8b9a79` | 그대로 |
+| `test_p2_4368.py` | `1d2976697116b84373368689da44495cbc1e9711a98cd3c0bd6788b8a81a5cce` | 바뀜(161개) |
+| `test_p2_u3.py` | `be42ec6ba8912623e1aa25190b0c817559193c075217cb5ef6db18727ab24ac5` | 바뀜(16개) |
+| `test_p2_v5j.py` | `94bc5b7235d2d2e8ff9bfeef777b2a1cc6380f97acdbc940b31f57bdb0840e58` | 바뀜(24개) |
+| `test_p2_x16.py` | `1687f57d2ad7ce532527ea1ec1cf533c0600d29046112c09cc6c5170f8045e74` | 새 파일(10개) |
+| `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 그대로(17개) |
+| `test_p2_t3k.py` | `e6b5e11a15b2530e56481897f29360761df8a2dd4c49336c284334e94962899c` | 그대로(38개) |
+
+- 자체 시험은 여섯 파일 266개(앞 판 다섯 파일 226개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). 더한 것 40개: `test_p2_4368.py` 22개(26판 봉인과 rev13·19·25 어긋남, HEAD 확인, RD-8 형식·H-1 수·표지, RD-9 S-8, 멈춤 S-6 목록 열·물리 줄 번호, family run 제외·r79 키·설정, u6 계열, 키 원본 기록, u3 스크린 `results[]`, RD-11 재사용·접미·12행 S-15·사건 꼴 3가지·dict 원소·파일 없음·그림자 줄 수·옮겨 찾기), `test_p2_u3.py` 5개(축별 정착, r72 분기, 재접촉 분류, G-5·G-6 목록, CLI HEAD), `test_p2_v5j.py` 3개(RD-8 형식, J-P3 판정 불가, RD-10 J11), `test_p2_x16.py` 10개. 기존 시험의 `run_main`은 R4 하위 명령에 `--expect-head`를 붙이고 `git_head`를 시험용 값으로 바꾼다. `test_jp`는 RD-11 9대로 "재사용 거짓 = 묻기"로 고쳤고, `test_p2_v5j.py`의 합성 줄 `lock_window_alignment`는 R2 기록 꼴(`fallback_legs` dict, `n_late_fallback_by_leg`)로 바꿨다.
+- `path2_v5c`(33개)는 고정 sha 시험 1개만 실패한다(32/33). `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`·`P2_V5J_SHA`를 위 `p2_4368.py`·`p2_v5j.py` 값으로 다시 고정하는 일은 `path2_v5c/` 작성자 몫이다(지시문 순서).
+
+### 읽은 것 (R4 작성자, 판정서 9.2 목록용)
+
+- 지시문 `r4_handoff_path2_dyn.md` 1~1,239줄 전부(머리, R4 공통 블록, 2-dyn 몫, 뽑은 글머리 C-00~C-24, P2-01~P2-50).
+- 원 규칙(부록 A): `u3_u6_rerun_rules.md` 1~125줄, `_rev1.md` 1~33줄, `_rev2.md` 1~78줄. 규칙 원판~rev25는 바이트(sha256·LF·BOM)만.
+- 명세 `00_docs/04_control/s6_control_spec.md`: 14278~14290(377), 14444~14449(393 U-S9-G6d), 14529~14553(398.3), 15138~15160(423.3·423.4), 16940~16975(419.8·419.8.1), 17274~17281(426.5), 그리고 `424.11.2`·`G6-7`·`P3-8`·`강등` 검색 줄(15900~16300 범위의 검색 결과 줄).
+- 원 판정기 `04_scripts/03_control/s8/r72_judge.py` 1~149줄.
+- 코드: 이 폴더 `p2_4368.py`(1~90, 136~1073, 1590~1651, 2290~2359, 2440~2586과 고친 곳), `p2_v5j.py`·`p2_u3.py` 전부, `test_p2_4368.py`(1~45, 190~284, 570~639, 끝 12줄, 함수 이름 목록), `test_p2_u3.py`·`test_p2_v5j.py` 전부, 이 README 전부. `../path2_v5c/*.py`는 `p2_v5j`·`p2_4368` 함수 사용 줄과 `judge_pair`·`jp3`·`J11`·`n_late`·`breach_reads`·`check_seals` 검색 줄만.
+- 원 데이터(키 구조·형만, 값은 출력하지 않음; 판정에 쓰지 않음): `v5_rerun/las_k1/` 폴더 목록과 `u3_g6_VB.json`(키 구조), `u3_g6_{VB,V0}.json`·`u3_C_{VB,V0}.json`의 재접촉 사건 원소 키(비어 있지 않은 기록 수 VB 5·V0 8·C 0이 함께 출력됨), `u3_C_VB.json`(첫 2항목 키 구조), `u3_D_VB.json`·`u6_b5_main_VB.json`·`u6_b5_wide_VB.json`·`u3_slope_VB.json`(첫 항목 키와 식별자 `id`·`case`·`controller`·`v5_setting`), `u3_slope_VB.json` `settle_v2` 키·형 합집합; `resume_k1/` 폴더 목록과 `h1_d1.jsonl` 첫 3줄 키 구조(같이 출력된 값: `job.setting` = VB, `d1.j_p3` = `no_rod_reading`), `h10_reuse_rerun.jsonl`·`h6_dg3_v4on.json`·`h9_grid/grid_r67_main.json`의 `lock_window_alignment` 키·형 합집합(같이 출력된 것: `fallback_legs` 다리 조합별 항목 수, `late` 목록 길이별 수), `h10_reuse_rerun.jsonl` `hydraulics_record.extend_bound_check` 키·형 합집합; J_P 배치 `batch_V5-JP-VB_20261108_115631` 폴더 목록과 `batch.json` 키 구조, `shadow_jp_b0.jsonl` 첫 2줄 키 구조; `<OUT>` 폴더 목록, `<OUT>\_identity`·`<OUT>\_tools` 파일 이름 목록(내용은 열지 않음), `<OUT>\H-11` 파일의 키 구조(`u3_C_none.identity.json`, `u3_C_none.env_guard.json`, `h11_key_selection.json`, `u3_{D,p3b,C,g8}_none.json`·`u6_b5_A1_{none,V0}.json` 첫 항목 키와 식별자), `<OUT>\C-9\R4368X_G1_B_top_Fs4_V0_gateon` 파일 목록, `result.json` 키 구조, npz 키·모양, `record/meta.json` 최상위 키.
+- 보지 않은 것: 경로 1 도구(`las_judge`, `run_v5.py`, `d1_select.py`, `u3_judge*`, 각 경로 1 판정 도구)와 출력, `v5_resume_4368/` 아래 이 폴더 둘 밖의 폴더(첫 하네스 두 경로 판정 출력 포함), `run_b9f5707/run_harness.ps1`, `<OUT>\H-11\g3_pairs_check.json`, `<OUT>\_identity\*`·`<OUT>\_tools\*` 내용, `s9_slope_fix_candidates.py`·`r72_g6_screen.py`, scratchpad의 `r4-p1`·`r4-handoff`·`r4-source`·`main`과 `r4-p2`의 다른 파일. 하네스 결과 값으로 도구를 맞추지 않았고 실데이터 재판정을 돌리지 않았다.

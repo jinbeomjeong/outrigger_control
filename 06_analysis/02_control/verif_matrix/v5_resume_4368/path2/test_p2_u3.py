@@ -186,3 +186,133 @@ def test_rev4_settle_table_target_and_tolerance():
     assert u3.settle_v2_recount(b)["status"] == "checked"
     b["tolerances"]["gap_mm"] = 1.0 + 1e-6
     assert u3.settle_v2_recount(b)["status"] == "tolerance_differs"
+
+
+# ------------------------------------------------------------------ R4 (rev16 R16-10 2 (a) (b), RD-7 G-5 / G-6)
+def settle_axes(err=(0.004, 0.0075), res=(0.001, 0.006), gap_ok_bool=True):
+    """R2 record form: per-axis residual / error lists, result attitude_tol_deg list, gap_ok / attitude_ok bool."""
+    b = settle_block()
+    b["tolerances"] = {"gap_mm": 1.0, "attitude_min_deg": 0.005, "attitude_residual_margin_deg": 0.002}
+    b["inputs"]["residual_deg"] = list(res)
+    b["inputs"]["attitude_error_deg"] = list(err)
+    tol = [max(0.005, r + 0.002) for r in res]
+    ok_axes = [e <= t for e, t in zip(err, tol)]
+    b["result"]["attitude_tol_deg"] = tol
+    b["result"]["attitude_ok"] = all(ok_axes)
+    if gap_ok_bool:
+        b["result"]["gap_ok"] = all(b["result"]["gap_ok"])
+    b["result"]["ok"] = all(ok_axes) and (b["result"]["gap_ok"] if gap_ok_bool else True)
+    return b
+
+
+def test_r4_settle_v2_per_axis():
+    r = u3.settle_v2_recount(settle_axes())
+    assert r["status"] == "checked" and r["ok"] is True and r["attitude_tol_deg"] == [0.005, 0.008]
+    r = u3.settle_v2_recount(settle_axes(err=(0.004, 0.0081)))       # pitch error over its own tolerance
+    assert r["status"] == "checked" and r["ok"] is False
+    b = settle_axes()
+    b["result"]["attitude_tol_deg"] = [0.005, 0.005]                 # recorded tolerance not per axis
+    assert "attitude_tol_deg differs" in u3.settle_v2_recount(b)["issues"]
+    b = settle_axes()
+    b["result"]["attitude_ok"] = False                               # recorded bool differs from all axes
+    assert "attitude_ok differs" in u3.settle_v2_recount(b)["issues"]
+    b = settle_axes(gap_ok_bool=False)                               # per-pad list form still accepted
+    assert u3.settle_v2_recount(b)["status"] == "checked"
+    b = settle_axes()
+    b["inputs"]["residual_deg"] = [0.001]                            # axis count mismatch -> incomplete
+    assert u3.settle_v2_recount(b)["status"] == "undecidable"
+
+
+def g6rec(gates=None, preloc=True, fp="ready", conds=None, events=None, t_ready=None, wrapper=True):
+    g = {k: True for k in u3.G6_GATES}
+    g.update(gates or {})
+    llr = {"conditions": {c: True for c in u3.LATE_LOC_CONDITIONS}}
+    if conds:
+        llr["conditions"].update(conds)
+    rce = {"events": list(events or []), "t_ready_s": t_ready}
+    if wrapper:     # u3 g6 wrapper form
+        return {"final_phase": fp, "late_loc_reapproach": llr, "verdict": "pass", "passed": True,
+                "metrics": {"crawler_recontact": {"recontact_events": rce}},
+                "v5": {"r72": {"gates": g, "preloc_flag_ok": preloc, "verdict": None, "pass": True}}}
+    return {"final_phase": fp, "late_loc_reapproach": llr, "gates": g, "preloc_flag_ok": preloc, "pass": True,
+            "crawler_recontact": {"recontact_events": rce}}
+
+
+def ev(t0=40.0, dur=0.05, ow=0.012, ol=1.1, sal=0.2, ebl=False):
+    return {"t_start_s": t0, "t_end_s": t0 + dur, "duration_s": dur, "max_over_W": ow, "max_over_limit": ol,
+            "max_normal_N": 1.0, "start_after_loc_s": sal, "ended_before_loc": ebl, "class": "ignored"}
+
+
+def test_r4_grade_r72_branches():
+    assert u3.grade_r72(g6rec())[0] == "pass"
+    assert u3.grade_r72(g6rec(wrapper=False))[0] == "pass"            # study C screen form
+    g, _, d = u3.grade_r72(g6rec({"G6-7_preloc": False}, preloc=True))
+    assert g == "flag" and d["flags"] == ["P3-8_demoted"]
+    g, _, d = u3.grade_r72(g6rec({"G6-7_preloc": False}, preloc=False))
+    assert g == "flag" and d["flags"] == ["P3-8_preloc_loss"]
+    assert u3.grade_r72(g6rec({"G6-7_preloc": False, "G6-3_Fmin": False}, preloc=False))[0] == "fail"
+    assert u3.grade_r72(g6rec({"G6-7_preloc": False}, preloc=False, fp="fault"))[0] == "fail"
+    assert u3.grade_r72(g6rec({"G6-7_preloc": False}, preloc=None))[0] is None       # R6-C3 3: undecidable
+    g, _, d = u3.grade_r72(g6rec({"G6-2_loc": False}))
+    assert g == "flag" and "G6-2_late_loc_reapproach" in d["flags"]
+    assert u3.grade_r72(g6rec({"G6-2_loc": False}, conds={"4_load_strict": False}))[0] == "fail"
+    # the recorded verdict / pass are not used
+    r = g6rec({"G6-4_att": False})
+    r["verdict"], r["v5"]["r72"]["pass"] = "pass", True
+    assert u3.grade_r72(r)[0] == "fail"
+
+
+def test_r4_grade_r72_recontact_classes():
+    assert u3.classify_recontact(ev(ebl=True, sal=-0.3, dur=0.4, ow=0.1), None) == "transient_flag"
+    assert u3.classify_recontact(ev(ebl=True, sal=-0.3, dur=0.6, ow=0.1), None) == "strict_fail"
+    assert u3.classify_recontact(ev(sal=0.1, dur=0.07, ol=1.06), None) == "threshold_chatter"
+    assert u3.classify_recontact(ev(sal=0.1, dur=0.11, ol=1.06), None) == "strict_fail"     # 423.4 test 2
+    assert u3.classify_recontact(ev(sal=0.1, dur=0.07, ol=1.21), None) == "strict_fail"     # 423.4 test 3
+    assert u3.classify_recontact(ev(sal=1.05, dur=0.07, ol=1.06), None) == "strict_fail"    # 423.4 test 4
+    assert u3.classify_recontact(ev(t0=70.0, sal=0.1, dur=0.07, ol=1.06), 60.0) == "strict_fail"   # after READY
+    assert u3.classify_recontact({"t_start_s": 1.0}, None) is None
+    g, _, d = u3.grade_r72(g6rec({"G6-1_crawler": False}, events=[ev(sal=0.1, dur=0.07, ol=1.06)]))
+    assert g == "flag" and d["flags"] == ["P3-1_threshold_chatter"]
+    assert u3.grade_r72(g6rec({"G6-1_crawler": False}, events=[ev(sal=2.0)]))[0] == "fail"
+    assert u3.grade_r72(g6rec({"G6-1_crawler": False}, events=[]))[0] == "fail"
+    assert u3.grade_r72(g6rec(events=[ev(sal=2.0)]))[0] is None          # gate true but strict recounted
+
+
+def g6full(i, setting="V0", **kw):
+    r = rec(i, suite="g6", setting=setting)
+    gr = g6rec(**kw)
+    r["v5"]["r72"] = gr["v5"]["r72"]
+    r.update({k: v for k, v in gr.items() if k != "v5"})
+    return r
+
+
+def test_r4_g5_g6_lists_and_r72_in_transition(tmp_path):
+    v0 = write(tmp_path, "u3_g6_V0.json", [g6full(1), g6full(2)])
+    vb = write(tmp_path, "u3_g6_VB.json", [g6full(1, "VB"), g6full(2, "VB", gates={"G6-5_rut_stroke": False})])
+    out, f = u3.recount_u3([{"setting": "V0", "path": v0}, {"setting": "VB", "path": vb}], None, IS_P3,
+                           repo=None)
+    assert out["vb_unique_fail"] == ["g6|H1|J1|B|top|k2"]
+    rows = out["G-5_list"]["rows"]
+    assert rows == [{"bundle": "H-3", "result_file": Path(vb).as_posix(), "position": "records[1]",
+                     "key": "H1|J1|B|top|k2"}]
+    assert out["r72_family_grade"]["graded"] == 4
+    g8v0 = write(tmp_path, "u3_g8_V0.json", [rec(1, suite="g8"), rec(2, suite="g8")])
+    g8vb = write(tmp_path, "u3_g8_VB.json", [rec(1, suite="g8", setting="VB", rod=True, j_p3="pass", fb=0),
+                                             rec(2, suite="g8", setting="VB", rod=True, j_p3="pass", fb=2)])
+    out, f = u3.recount_u3([{"setting": "V0", "path": g8v0}, {"setting": "VB", "path": g8vb}], None, IS_P3)
+    assert [r["position"] for r in out["G-6_list"]["rows"]] == ["records[1]"]
+    assert "G-6" in {s["code"] for s in f.stops}
+
+
+def test_r4_cli_head_check(tmp_path, capsys):
+    v0 = write(tmp_path, "u3_slope_V0.json", [rec(1)])
+    u3.core.git_head = lambda repo: "4" * 40
+    code = u3.main(["--repo", str(HERE.parents[4]), "--out", str(tmp_path / "o.json"), "--u3", f"V0={v0}",
+                    "--expect-head", "5" * 40])
+    rep = json.loads((tmp_path / "o.json").read_text("utf-8"))
+    assert code == 2 and rep["stop_codes"] == ["S-12"] and rep["head_check"]["why"].startswith("HEAD differs")
+    code = u3.main(["--repo", str(HERE.parents[4]), "--out", str(tmp_path / "o.json"), "--u3", f"V0={v0}",
+                    "--expect-head", "4" * 40])
+    rep = json.loads((tmp_path / "o.json").read_text("utf-8"))
+    assert rep["head_check"]["ok"] and "rev25" in "".join(rep["r4_rev13_25_sha256"])
+    capsys.readouterr()

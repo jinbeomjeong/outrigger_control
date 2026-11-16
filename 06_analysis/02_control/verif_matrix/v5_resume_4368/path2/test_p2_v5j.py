@@ -13,6 +13,8 @@ sys.modules["p2_v5j"] = vj
 spec.loader.exec_module(vj)
 core = vj.core
 IS_P3 = lambda t: t is not None and "_P3" in t   # noqa: E731 - stand-in for v5_options in unit tests
+FAKE_M4 = "4" * 40
+core.git_head = lambda repo: FAKE_M4              # R4 RD-1 5: tests stand in for the M4 checkout HEAD
 
 
 def steady(case="S2", eps=0.0, setting="V0", eta=None, cls="pass", minf=50.0, ready=80.0, att=0.05,
@@ -35,7 +37,10 @@ def steady(case="S2", eps=0.0, setting="V0", eta=None, cls="pass", minf=50.0, re
         ln["hydraulic_options"] = {"m2_law": "flow_limited_r5", "lock_closure": {}}
         ln["hydraulics_record"] = {"m2_clipped_steps_post_lift": list(post), "m2_clipped_steps_pre_lift": [25] * 4,
                                    "extend_bound_check": ebc}
-        ln["lock_window_alignment"] = {"n_late_fallback": nlf, "n_late_by_leg": {}}
+        # R2 record form (keys only, R4 reading): fallback_legs keyed by leg, n_late per leg
+        ln["lock_window_alignment"] = {"fallback_legs": ({"FR": {}} if nlf else {}), "n_late_fallback": nlf,
+                                       "n_late_fallback_by_leg": {"FL": 0, "FR": nlf, "RL": 0, "RR": 0},
+                                       "n_late_by_leg": {}}
     return ln
 
 
@@ -315,6 +320,72 @@ def test_decision24_t4h_file_value_defects(tmp_path):
         assert body["R11-2_t4h_lookup"]["bad_t4h_file"] == 1
 
 
+# ------------------------------------------------------------------ R4 RD-8 (J-P3 breach_reads) / RD-10 (J11)
+def _rod_line(br, top=None):
+    ln = steady(setting="VB", ebc=({"breach_reads": br} if br is not None else {"rule": "ext_moving"}))
+    ln["head_only_declared"] = False
+    if top is not None:
+        ln["extend_bound_check"] = {"breach_reads": top}
+    return ln
+
+
+def test_r4_rd8_breach_reads_format():
+    ok = vj.breach_reads_format
+    assert ok([0, 0, 0, 0]) == (True, None) and ok([0, 3, 0, 1])[0]
+    for bad in ([], [0, 0, 0], [0, 0, 0, 0, 0], [0, 1.0, 0, 0], [True, 0, 0, 0], [0, -1, 0, 0], "0000", None):
+        assert ok(bad)[0] is False, bad
+
+
+def test_r4_rd8_jp3_input_format_is_undecidable_not_pass():
+    assert vj.jp3(_rod_line([0, 0, 0, 0]), IS_P3, True)[0] == "pass"
+    assert vj.jp3(_rod_line([0, 0, 1, 0]), IS_P3, True)[0] == "H-7"
+    for bad in ([], [0, 0, 0], [0, 0.0, 0, 0], [0, False, 0, 0], [0, 0, 0, -1]):
+        res, why = vj.jp3(_rod_line(bad), IS_P3, True)
+        assert res == "undecidable" and why.startswith("RD-8"), (bad, res)
+    assert vj.jp3(_rod_line(None), IS_P3, True)[0] == "setting_defect"     # key missing: rev9 3.2 table #2
+    res, why = vj.jp3(_rod_line([0, 0, 0, 0], top=[0, 1, 0, 0]), IS_P3, True)
+    assert res == "undecidable" and "RD-7 3" in why
+    assert vj.jp3(_rod_line([0, 0, 0, 0], top=[0, 0, 0, 0]), IS_P3, True)[0] == "pass"
+    it, f = vj.judge_pair(_rod_line([0, 0]), steady(setting="V0"), 14, IS_P3, rod_reading=True)
+    assert it["J-P3"]["result"] == "undecidable" and f.status() == "undecidable"
+
+
+def _lwa(legs, by_leg):
+    return {"fallback_legs": {leg: {} for leg in legs}, "n_late_fallback_by_leg": by_leg, "n_late_fallback": 0}
+
+
+def test_r4_rd10_j11_stop_and_record_settings():
+    vb = steady(setting="VB")
+    vb.pop("lock_window_alignment")
+    assert vj.j11_item(vb)["result"] == "undecidable"                     # stop setting, block missing
+    v3 = steady(setting="V3")
+    v3.pop("lock_window_alignment", None)
+    assert vj.j11_item(v3)["result"] == "input_missing"                   # record setting: 입력 없음
+    vb["lock_window_alignment"] = "x"
+    assert vj.j11_item(vb)["result"] == "undecidable"                     # not an object
+    vb["lock_window_alignment"] = _lwa(["FR"], {"FL": 0, "FR": None, "RL": 0, "RR": 0})
+    assert vj.j11_item(vb)["result"] == "undecidable"                     # fallback leg n_late None
+    vb["lock_window_alignment"] = _lwa(["FR"], {"FL": 3, "FR": 0, "RL": 0, "RR": 0})
+    assert vj.j11_item(vb)["result"] == "pass"                            # n_late on a non-fallback leg ignored
+    vb["lock_window_alignment"] = _lwa(["FR", "RL"], {"FL": 0, "FR": 2, "RL": 1, "RR": 0})
+    it = vj.j11_item(vb)
+    assert it["result"] == "stop" and it["marker"] == "H-7"
+    assert it["list"] == [{"leg": "FR", "n_late_fallback_by_leg": 2, "marker": "H-7"},
+                          {"leg": "RL", "n_late_fallback_by_leg": 1, "marker": "H-7"}]
+    ls = steady(setting="LS2")
+    ls["lock_window_alignment"] = _lwa(["FL"], {"FL": 1, "FR": 0, "RL": 0, "RR": 0})
+    assert vj.j11_item(ls)["marker"] == "L-e" and vj.j11_item(ls)["result"] == "stop"
+    v4 = steady(setting="V4")
+    v4["lock_window_alignment"] = _lwa(["FL"], {"FL": 1, "FR": 0, "RL": 0, "RR": 0})
+    it = vj.j11_item(v4)
+    assert it["result"] == "record" and it["record_hits"] and not it["list"]
+    r79 = {"v5_setting": "VB", "lock_window_alignment": {"fallback_legs": ["RR"],
+                                                         "n_late_fallback_by_leg": {"RR": 4}}}
+    assert vj.j11_item(r79)["result"] == "stop"                            # r79 item setting, list form of legs
+    _, f = vj.judge_pair(vb, steady(setting="V0"), 14, IS_P3)
+    assert "H-7" in f.as_dict()["stop_codes"]
+
+
 def test_rev11_r112_cli_input_error(tmp_path, capsys):
     import json  # noqa: PLC0415
     vb = tmp_path / "vb.jsonl"
@@ -324,7 +395,7 @@ def test_rev11_r112_cli_input_error(tmp_path, capsys):
     v0.write_text("", "utf-8")
     out = tmp_path / "o.json"
     code = vj.main(["--repo", str(HERE.parents[4]), "--out", str(out), "u9", "--v0", str(v0), "--vb", str(vb),
-                    "--t4h-root", str(tmp_path / "elsewhere")])
+                    "--t4h-root", str(tmp_path / "elsewhere"), "--expect-head", FAKE_M4])
     rep = json.loads(out.read_text("utf-8"))
     assert code == 2 and rep["stop_codes"] == ["S-11"] and rep["H-5"]["not_judged"] is True
     assert "input_error" in rep["R11-2_t4h_places"]
