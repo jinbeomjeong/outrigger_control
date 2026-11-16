@@ -1250,7 +1250,7 @@ def cmd_harness(args, repo):
         b["gates"] = gates
         b.update(fnd_all[bundle].as_dict())
         b["grade_scope"] = "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
-    s6_rows.sort(key=lambda r: (r["bundle"], r["result_file"], _pos_key(r["position"]), r["k"]))
+    s6_rows.sort(key=lambda r: (bundle_key(r["bundle"]), r["result_file"], _pos_key(r["position"]), r["k"]))
     codes = sorted({c for b in bundles.values() for c in b["stop_codes"]})
     return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes,
              "stop_S6_list": {"name": "멈춤 S-6 (원판 8.2, 원판 7.2 균일 연약 지면 계열의 K1 막힘; r79 관문 S-6 아님)",
@@ -1263,6 +1263,16 @@ def cmd_harness(args, repo):
 def _pos_key(pos):
     """RD-7 3 sort of positions: the numbers of ``line N`` / ``results[i].runs[j]`` in order."""
     return tuple(int(x) for x in re.findall(r"\d+", pos or ""))
+
+
+_BUNDLE_RE = re.compile(r"^H-(\d+)$")
+
+
+def bundle_key(b):
+    """R4 supplement 3-5: the bundle column ``H-n`` sorts by its number (``H-9`` < ``H-10``); any other value sorts
+    after, by its text."""
+    m = _BUNDLE_RE.match(b or "")
+    return (0, int(m.group(1)), "") if m else (1, 0, str(b))
 
 
 # ----------------------------------------------------------------- anchors (P-1 / P-2, RV1-5)

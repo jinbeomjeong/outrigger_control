@@ -1735,6 +1735,21 @@ def test_r4_family_u6_inner_key_is_src():
     assert p2.family_harness(rec, "u3_json", name="u6_b5_main_VB.json") == "uniform"
 
 
+def test_r4_supplement_3_5_bundle_sort_numeric(tmp_path, capsys):
+    assert sorted(["H-10", "H-9", "H-1", "H-3"], key=p2.bundle_key) == ["H-1", "H-3", "H-9", "H-10"]
+    items = {}
+    for bundle, name in (("H-10", "h10_reuse_rerun.jsonl"), ("H-9", "h9_stage1.jsonl")):
+        d = tmp_path / bundle
+        d.mkdir()
+        ln = d1_line(1, "H-S-0", "J1", p2.TAG_V0, decisions=[dec(True, True)], skipped=1)
+        ln["job"]["case"] = "S2"
+        write_jsonl(d / name, [ln])
+        items[bundle] = {"bundle": bundle, "path": str(d / name), "format": "run_v5_jsonl", "kind": "V0"}
+    code, s, rep = _h(tmp_path, capsys, [items["H-10"], items["H-9"]])
+    rows = rep["stop_S6_list"]["rows"]
+    assert [r["bundle"] for r in rows] == ["H-9", "H-10"] and rows[0]["key"] == "S2" and rows[0]["setting"] == "V0"
+
+
 def test_r4_slope_scale_token_is_not_a_patch():
     # R4 finding: an '@' that does not name a leg (slope scale) is not a patch; uniform soil stays uniform
     assert p2.family_from_tokens(["H3|J1|B|top|nose_down@k0.875"]) == "uniform"

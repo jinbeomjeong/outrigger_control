@@ -316,7 +316,7 @@ def fallback_event_legs(line):
     return sorted(out)
 
 
-def j11_item(line, setting=None):
+def j11_item(line, setting=None, setting_required=False):
     """J11 of one harness line / run (RD-10, rev16:102~103 = P2-13 / P2-14, rev3 R3-C7, rev5 R5-B3).
 
     n_late = ``lock_window_alignment.n_late_fallback_by_leg`` of the actual fallback legs (``fallback_legs``).
@@ -324,8 +324,17 @@ def j11_item(line, setting=None):
     undecidable; a fallback leg whose n_late is missing / None / not an integer = undecidable; a fallback leg with
     n_late > 0 = stop (``H-7`` on VB, ``L-e`` on LS). Record settings (V0~V8, L1, L2, pressure_only): values are a
     record; a missing block is "input missing". ``list`` holds one row per (line, leg) with n_late > 0 on a stop
-    setting (the RD-7 J11 list is drawn by ``path2_v5c`` from these rows)."""
-    st = j11_setting(line, setting)
+    setting (the RD-7 J11 list is drawn by ``path2_v5c`` from these rows).
+    ``setting_required`` (grid runs, R4 supplement 3-6): the setting is only the given ``results[i].v5_setting``
+    (no fallback to the run's own fields or the file meta); None or empty = J11 undecidable (applicability unknown)."""
+    if setting_required:
+        st = setting if isinstance(setting, str) and setting else None
+        if st is None:
+            return {"result": "undecidable", "setting": None, "stop_applicable": None, "marker": None,
+                    "fallback_legs": None, "n_late_fallback_by_leg": None, "list": [],
+                    "why": "grid run: results[i].v5_setting missing, J11 applicability unknown (supplement 3-6)"}
+    else:
+        st = j11_setting(line, setting)
     stop_app = st in J11_STOP_SETTINGS
     marker = ("L-e" if st in LS_SETTINGS else "H-7") if stop_app else None
     out = {"result": None, "setting": st, "stop_applicable": stop_app, "marker": marker, "fallback_legs": None,

@@ -639,7 +639,7 @@ def recount_u3(files, h1_path, is_p3, repo=None):
 
 def _row_sort(r):
     """RD-7 3 sort: bundle, result file, position numbers."""
-    return (r["bundle"], r["result_file"], core._pos_key(r["position"]))
+    return (core.bundle_key(r["bundle"]), r["result_file"], core._pos_key(r["position"]))   # supplement 3-5
 
 
 def event_names_of(rec):

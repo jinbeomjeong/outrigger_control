@@ -808,3 +808,32 @@ $o = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_<M4
 | C-11 | `7e973d44b7e83c79c64f7f93e0f7bada2e8559668a5baa5b15fa79c407450b9f` |
 
 - 그 밖 묶음의 목록 sha는 앞 R4 표와 같다.
+
+## R4 보충 2판 (사용자 결정 125·126, 2026-11-16)
+
+- 받은 것: `r4_supplement_2_common.md`(sha256 `62721996…`), 보충 3 구간 sha256 `5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8`(표지 줄 사이, LF).
+
+| 보충 | `path2/` | 반영 |
+|---|---|---|
+| 3-1 H-8 RD-9 수 | `p2_4368.py harness` | 바꿀 것 없음: H-8 결과 파일의 ③ 켬 줄을 dg3 대체 키 줄까지 모두 센다. 목록에서 뺀 줄 수 기록은 `path2_v5c` 몫 |
+| 3-2 dg3 제외 범위 | 목록 파일 | 바꿀 것 없음: 키 원본 `key_source_override`(`dg3_v4_on.json`)는 목록 파일에서 `h8_noise_VB.json` 항목에만 준다(seedext 항목에는 주지 않음) |
+| 3-3 최소 간격·첫 위반 시각 | – | `path2/`에 J-P3 위반 목록을 만드는 곳이 없다(`path2_v5c` 몫) |
+| 3-4 H-10 범위 | `p2_v5j.j11_item` | 바꿀 것 없음: 설정은 `job.setting`이 먼저다 |
+| 3-5 `묶음` 열 | `p2_4368.bundle_key`, 멈춤 S-6 목록 정렬, `p2_u3` G-5·G-6 정렬 | `H-n`의 숫자 부분을 수 순서로 정렬(`H-9` < `H-10`). 앞 판은 문자열 순서라 `H-10`이 `H-3` 앞에 왔다. 값 표기는 이미 `H-n` |
+| 3-6 격자 run 설정 | `p2_v5j.j11_item(..., setting_required=True)` | 격자 run은 넘겨받은 `results[i].v5_setting`만 쓰고(run 자신의 필드나 파일 `meta`로 대신하지 않음), 없으면 J11 판정 불가. `path2_v5c`가 격자 run에서 이 인자를 쓰면 된다 |
+| 3-7 패치 토큰 | `p2_4368.PATCH_TOKEN_RE` | 보충 1판에서 반영함 |
+
+### 도구 sha256 (R4 보충 2판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `dd3f266ee34bb2b75f8ac66b6995170ca067a65b3372df03f42f6c6938d7c9cb` | 바뀜 |
+| `p2_u3.py` | `7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72` | 바뀜 |
+| `p2_v5j.py` | `b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8` | 바뀜 |
+| `p2_x16.py` | `80cf8ee92a8c60543000fe586d7cc91ade41e977ec3ac1e631901669bb2b59bc` | 그대로 |
+| `test_p2_4368.py` | `513cc9cfe799b70d4df6dbbc728de968c80067f48f3b469b1fda88a0018e6f99` | 바뀜(163개) |
+| `test_p2_v5j.py` | `017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092` | 바뀜(26개) |
+| 그 밖 시험 | 보충 1판 표와 같음 | 그대로(u3 17, x16 12, d1 17, t3k 38) |
+
+- 자체 시험 여섯 파일 273개 통과. RD-13 목록은 바뀌지 않았다.
+- `path2_v5c`(`41f99a4`에서 `da1e00e` 값으로 고정됨)는 이 커밋 뒤 고정 sha 두 시험만 실패한다. 위 `p2_4368.py`·`p2_v5j.py` 값으로 다시 고정해야 한다.

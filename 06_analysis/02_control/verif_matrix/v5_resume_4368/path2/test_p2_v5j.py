@@ -407,6 +407,16 @@ def test_r4_supplement_2_1_2_2_h8_items_and_grid_runs():
     assert vj.j11_item(bare, setting="VB")["result"] == "undecidable"      # RD-10 per grid run
 
 
+def test_r4_supplement_3_6_grid_run_setting_required():
+    lwa = {"fallback_legs": {}, "n_late_fallback_by_leg": {"FL": 0, "FR": 0, "RL": 0, "RR": 0}}
+    run = {"lock_window_alignment": lwa, "v5_setting": "VB", "job": {"setting": "VB"}}
+    for missing in (None, ""):
+        it = vj.j11_item(run, setting=missing, setting_required=True)   # no fallback to the run's own fields
+        assert it["result"] == "undecidable" and "3-6" in it["why"]
+    assert vj.j11_item(run, setting="VB", setting_required=True)["result"] == "pass"
+    assert vj.j11_item(run, setting="V0", setting_required=True)["result"] == "record"
+
+
 def test_rev11_r112_cli_input_error(tmp_path, capsys):
     import json  # noqa: PLC0415
     vb = tmp_path / "vb.jsonl"
