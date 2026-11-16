@@ -22,6 +22,11 @@ replaces only the definitions listed below (rev5 R5-A3):
         ``d1_key`` names exactly one ``d1.key`` line of the H-1 output (rev3 R3-B3).
 A ``판정 불가`` line makes its bundle ``판정 불가`` (rules 8.1); it is not a VB-only failure.
 
+R4 (R4 common block e451f067): a ``--g3`` record (the ``resume4368_judge h11`` report) whose
+``pass`` is not true stops before any grading (rev16 R16-8: H-3 / H-4 are not judged); the report
+lists G-5 (VB-only failures) and G-6 (g8 VB fallback records) in the RD-7 3 notation under
+``R4`` and per bundle (``G-5_list_RD7``, ``G-6_list_RD7``).
+
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/u3_judge_4368.py --out <report.json>
       --u3-dir <resume_k1 U-3 folder> --v4-dir 06_analysis/02_control/s9 --h1-d1 <h1_d1.jsonl>
@@ -316,8 +321,12 @@ def judge_bundle(bundle: Bundle4368, u3_dir: Path, v4_dir: Path, d1_keys, table_
     )
     graded, values, keysets, errors, gate2, commits = {}, {}, {}, {}, [], {}
     j_p3_stops, fallback_stops, reuse = [], [], None
+    vb_places: dict[str, dict] = {}
     for setting in base.v5_rerun.SETTINGS:
-        payload = common.read_json(u3_dir / f"u3_{bundle.name}_{setting}.json")
+        path = u3_dir / f"u3_{bundle.name}_{setting}.json"
+        payload = common.read_json(path)
+        if setting == "VB":
+            vb_places = item_places(path, payload)
         commits[setting] = base._file_commit(payload)  # noqa: SLF001
         items = base.entries_of(payload, bundle.suite)
         keys = [base.v5_rerun.entry_key(e) for e in items]
@@ -344,7 +353,7 @@ def judge_bundle(bundle: Bundle4368, u3_dir: Path, v4_dir: Path, d1_keys, table_
             reuse = (reuse or {}) | {
                 setting: reuse_check(payload, items, bundle.suite or bundle.name, d1_keys)
             }
-    return _bundle_report(
+    report = _bundle_report(
         bundle,
         graded,
         values,
@@ -357,6 +366,38 @@ def judge_bundle(bundle: Bundle4368, u3_dir: Path, v4_dir: Path, d1_keys, table_
         fallback_stops,
         reuse,
     )
+    report["G-5_list_RD7"] = list_rows(
+        [entry["key"] for entry in report["classes"]["vb_only_failure"]], vb_places)
+    report["G-6_list_RD7"] = (list_rows([s["key"] for s in fallback_stops if "key" in s],
+                                        vb_places) if bundle.name == G6_BUNDLE else [])
+    return report
+
+
+# --------------------------------------------------------------------- RD-7 lists (G-5, G-6)
+LIST_BUNDLE = "H-3"
+G6_BUNDLE = "g8"
+"""RD-7 1: the G-6 list is the g8 VB file only (``v5_rerun/las_k1/u3_g8_VB.json``)."""
+
+
+def item_places(path: Path, payload: dict) -> dict[str, dict]:
+    """``v5_rerun.entry_key`` -> the RD-7 3 place (result file, ``records[i]`` / ``results[i]``,
+    key) of every item of one U-3 file (all suites; the first item of a repeated key)."""
+    container = "records" if payload.get("records") else "results"
+    result_file = common.repo_relative(path)
+    places: dict[str, dict] = {}
+    for index, item in enumerate(payload.get(container) or []):
+        key, _ = common.key_and_setting(Path(path).name, item)
+        places.setdefault(base.v5_rerun.entry_key(item), {
+            "bundle": LIST_BUNDLE, "result_file": result_file,
+            "location": common.json_location(container, index), "key": key})
+    return places
+
+
+def list_rows(keys: list[str], places: dict[str, dict]) -> list[dict]:
+    """RD-7 G-5 / G-6 rows (bundle, result file, location, key) of the listed entry keys."""
+    rows = [places.get(key) or {"bundle": LIST_BUNDLE, "result_file": None,
+                                "location": None, "key": key} for key in keys]
+    return sorted(rows, key=common.list_sort_key)
 
 
 def _settle_counts(graded: dict) -> dict:
@@ -499,6 +540,11 @@ def compare_with_k1(report: dict, k1_report_path: Path | None) -> dict | None:
 
 # --------------------------------------------------------------------------------------- main
 def judge(args: argparse.Namespace) -> dict:
+    if args.g3:  # rev16 R16-8 / RD-7 1: a false G-3 (H-11) means H-3 / H-4 are not judged
+        g3_record = common.read_json(Path(args.g3))
+        if g3_record.get("pass") is not True:
+            return {"G-3": g3_record, "status": "멈춤 (G-3 거짓: H-3·H-4 판정 안 함, u3 원판 7절)",
+                    "findings": ["G-3 false (H-11): H-3 / H-4 not judged (rev16 R16-8)"]}
     names = [n for n in (args.bundles or "").split(",") if n]
     bundles = [b for b in BUNDLES if not names or b.name in names]
     u3_dir, v4_dir = Path(args.u3_dir), Path(args.v4_dir)
@@ -516,6 +562,14 @@ def judge(args: argparse.Namespace) -> dict:
     table_sha256: dict[str, str | None] = {}
     report: dict[str, Any] = {
         "u3": {b.name: judge_bundle(b, u3_dir, v4_dir, d1_keys, table_sha256) for b in bundles}
+    }
+    report["R4"] = {
+        "G-5_list_RD7": sorted((row for part in report["u3"].values()
+                                for row in part["G-5_list_RD7"]), key=common.list_sort_key),
+        "G-6_list_RD7": sorted((row for part in report["u3"].values()
+                                for row in part["G-6_list_RD7"]), key=common.list_sort_key),
+        "note": "RD-7 1: G-5 = u3 original 5.1 VB-only failures, G-6 = u3 rev1 #5 g8 VB "
+                "WARN_ROD_PRESSURE_FALLBACK records (columns bundle, result file, location, key)",
     }
     if any(b.name == "x426b" for b in bundles):
         report["study_B_keyset"] = study_b_keyset_record(v4_dir)

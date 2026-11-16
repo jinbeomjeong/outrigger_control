@@ -99,6 +99,25 @@ R11-2 lookup here; only a run without the ``t4h_file`` key is recomputed (R8-1),
 unusable or unfound name is S-2. R12-1 in the J-P3 rod reading and R12-2 .. R12-5 are in the
 ``*_4368.py`` judges, ``chrono_rows_judge_4368`` and ``v5_resume_4368_chrono_rows.py gs-check``.
 
+R4 (436.8 harness re-judgement; R4 common block sha256 e451f067, rules rev13 .. rev25): every
+subcommand checks the 26 seals of RD-2 (original, rev1 .. rev25) raw first (S-1). Changed:
+``record-check`` reads an ABL line (``controller`` ABL and tag ``ABL_LAS_K1`` together; one of
+them alone is a kind-input defect) with ``require_soil_response`` = False (rev16 R16-3); the R8-1
+tag recomputation reads a V0 result without ``hydraulic_options`` as ③ off (rev16 R16-4);
+``jp-reuse`` is RD-11 (the two stored J_P batches, 12 rows fixed, string ``C2Event`` elements only,
+base-name event counts, exactly one shadow line per run; input problems are stop markers and
+withhold the reuse value). New:
+  r4-lists       RD-7 J-P3 / J11 / 멈춤 S-6 lists in the RD-7 3 notation, RD-8 form counts and
+                 marker ``J-P3 입력 형식(RD-8)`` (H-1, H-3, H-4), RD-9 ③ counts (S-8), RD-10
+                 J11 counts, over the R2 result files of every bundle
+  h11            rev16 R16-8 G-3 gate (8 pairs, count check, commit identity)
+  h12            rev16 R16-9 6 with rev17 R17-2a: forced four-leg and actual fallback-leg ranges,
+                 marker ``R17-2a 범위 공백`` when their H-7 conclusions differ, empty-window guard
+  x16-records    rev16 R16-11 / R16-11b: C-9 .. C-11 record items and identity
+  item-list      RD-13 per-bundle item lists (fixed bytes, sha256)
+  key-map        RD-5 draft of the identity keys left out of the K-10 comparison
+  head-check     RD-1 5 (HEAD = M4, else S-12) and with ``--r4`` RD-1 4 (M4 / R4 blobs, S-11)
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -178,14 +197,46 @@ RULES_REV12_NAME = "v5_resume_4368_rules_rev12.md"
 RULES_REV12_SHA256 = "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
 """Rev12 (sealed, master 61f066f): R12-1 T4h lookup for every T4h judgement (here already the
 R11-2 lookup); R12-2 .. R12-5 are in the Chrono tools; this seal is checked (R12-6)."""
-SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
+RULES_REV13_TO_REV25 = (
+    ("v5_resume_4368_rules_rev13.md",
+     "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"),
+    ("v5_resume_4368_rules_rev14.md",
+     "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"),
+    ("v5_resume_4368_rules_rev15.md",
+     "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"),
+    ("v5_resume_4368_rules_rev16.md",
+     "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"),
+    ("v5_resume_4368_rules_rev17.md",
+     "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"),
+    ("v5_resume_4368_rules_rev18.md",
+     "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"),
+    ("v5_resume_4368_rules_rev19.md",
+     "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"),
+    ("v5_resume_4368_rules_rev20.md",
+     "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"),
+    ("v5_resume_4368_rules_rev21.md",
+     "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"),
+    ("v5_resume_4368_rules_rev22.md",
+     "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"),
+    ("v5_resume_4368_rules_rev23.md",
+     "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"),
+    ("v5_resume_4368_rules_rev24.md",
+     "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"),
+    ("v5_resume_4368_rules_rev25.md",
+     "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"),
+)
+"""R4 common block RD-2 (rev16 R16-13, the R4 bullets of rev17 .. rev25): the R4 harness tools
+also check rev13 .. rev25."""
+SEALED_REVISIONS = ((RULES_NAME, RULES_SHA256),
+                    (RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
                     (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256),
                     (RULES_REV9_NAME, RULES_REV9_SHA256), (RULES_REV10_NAME, RULES_REV10_SHA256),
-                    (RULES_REV11_NAME, RULES_REV11_SHA256), (RULES_REV12_NAME, RULES_REV12_SHA256))
-"""The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
-normalisation)."""
+                    (RULES_REV11_NAME, RULES_REV11_SHA256), (RULES_REV12_NAME, RULES_REV12_SHA256),
+                    *RULES_REV13_TO_REV25)
+"""The 26 revisions every subcommand checks raw (R4 common block RD-2: the original and rev1 ..
+rev25; R2-9: sealed rule files are ``-text``, no LF normalisation)."""
 RECORD_KEY = "resume_k1"
 """``04_scripts/04_hydraulic/coupled/resume_k1_record.RECORD_KEY``."""
 
@@ -437,6 +488,9 @@ def harness_record_problems(record: dict) -> list[str]:
     kind = harness_line_kind(record)
     if kind.defect is not None:
         return [*problems, kind.defect]
+    is_abl, abl_defect = abl_line(record)
+    if abl_defect is not None:
+        return [*problems, abl_defect]
     if kind.is_request_checked and block.get("k1_order_gate_request") != "preset":
         problems.append(f"k1_order_gate_request {block.get('k1_order_gate_request')!r} != 'preset'")
     if block.get("k1_order_gate_effective") != kind.is_gate_on:
@@ -446,11 +500,36 @@ def harness_record_problems(record: dict) -> list[str]:
     if gate is not kind.is_gate_on:
         problems.append(f"flat_soil_margin_order_gate {gate!r} != {kind.is_gate_on!r}")
     _, settings = get_path(block, "liftoff_approach_slow.settings")
-    problems += _las_setting_problems(settings, expect_on=kind.is_las_on)
+    problems += _las_setting_problems(settings, expect_on=kind.is_las_on,
+                                      expected=ABL_LAS_EXPECTATIONS if is_abl else LAS_PRESET)
     return problems
 
 
-def _las_setting_problems(settings: Any, *, expect_on: bool) -> list[str]:
+ABL_CONTROLLER = "ABL"
+ABL_LAS_EXPECTATIONS = {**LAS_PRESET, "require_soil_response": False}
+"""Rev16 R16-3: an ABL line expects the LAS-b preset values except ``require_soil_response`` =
+False (``b5_baseline_compare.ablation_config``); the K1 gate and its effective value stay the
+preset; ``slope_clearance_margin.settings.flat_soil_margin_m`` = 0 is the ABL definition value
+(not a 4.2 key, so not compared)."""
+
+
+def abl_line(record: dict) -> tuple[bool, str | None]:
+    """Rev16 R16-3 kind of one harness line: (is an ABL line, kind defect).
+
+    The line is ABL when its ``controller`` field is ``ABL`` and its tag is ``ABL_LAS_K1``; only
+    one of the two is a kind-input defect (S-3, in G-S S-11: the rev11 R11-1 form)."""
+    is_name = record.get("controller") == ABL_CONTROLLER
+    is_tag = read_controller_tag(record) == TAG_ABL
+    if is_name and is_tag:
+        return True, None
+    if is_name or is_tag:
+        return False, (f"{KIND_DEFECT_PREFIX}: controller {record.get('controller')!r} and tag "
+                       f"{read_controller_tag(record)!r} disagree on ABL (rev16 R16-3)")
+    return False, None
+
+
+def _las_setting_problems(settings: Any, *, expect_on: bool,
+                          expected: dict[str, Any] | None = None) -> list[str]:
     if not isinstance(settings, dict):
         return ["liftoff_approach_slow.settings missing"]
     if not expect_on:
@@ -460,7 +539,7 @@ def _las_setting_problems(settings: Any, *, expect_on: bool) -> list[str]:
             else [f"LAS-b enable {settings.get('enable')!r} != False"]
         )
     problems = []
-    for name, want in LAS_PRESET.items():
+    for name, want in (LAS_PRESET if expected is None else expected).items():
         got = settings.get(name)
         same = (
             (got is want)
@@ -582,12 +661,13 @@ def _is_c4_off(row: dict) -> bool:
 def _harness_record_row(path: Path, where: str, record: dict) -> dict:
     """One harness run of ``record-check`` with its rev11 R11-1 line kind."""
     kind = harness_line_kind(record)
+    is_abl, abl_defect = abl_line(record)
     row = {
         "file": str(path),
         "where": where,
         "key": record_key(record),
-        "line_kind": kind.name,
-        "kind_input_defect": kind.defect,
+        "line_kind": "ABL" if is_abl and kind.name == LINE_KIND_PRESET else kind.name,
+        "kind_input_defect": kind.defect or abl_defect,
         "problems": harness_record_problems(record),
     }
     if kind.defect is None and not kind.is_request_checked:  # R-0 / R-0K: record only
@@ -1001,79 +1081,180 @@ def k1_class(args: argparse.Namespace) -> dict:
 
 
 # -------------------------------------------------------------------------------------------- 7.3
+JP_BATCHES = ("batch_V5-JP-VB_20261108_115631", "batch_V5-JP-V0_20261108_131212")
+"""RD-11 1: the two stored J_P batches under ``07_results/S9`` (order VB, V0)."""
+JP_SHADOW = Path("06_analysis/03_hydraulic/coupled/v5/las/shadow_jp_b0.jsonl")
+"""RD-11 1: the LAS-b shadow record of the J_P rows."""
+JP_EXPECTED_ROWS = 12
+"""RD-11 2: the row count is fixed (no argument changes it); another count is S-15."""
+JP_RESULT_KEYS = ("s8c_check.result_json", "s6c_check.result_json", "result_json")
+"""RD-11 3: the case record keys tried in order for the row's ``result.json``."""
+RESULTS_ROOT_PART = "07_results/"
+EVENT_FORM = re.compile(r"C2Event\(t_s=(?P<t>[^,]+), name=(?P<name>.+)\)")
+"""RD-11 4: the whole stripped element must be ``C2Event(t_s=<number>, name=<Python string>)``."""
+R4C30_BASE_NAME = "INFO_LOC_FLAT_SOIL_MARGIN"
+SOIL_MODE_START_BASE_NAME = "soil_mode_start"
+JP_STOP_S15 = "S-15"
+JP_STOP_EVENTS = "사건 기록 판독 불가"
+JP_STOP_SHADOW = "그림자 판독 불가"
+
+
+def parse_controller_event(item: Any) -> tuple[float, str] | None:
+    """RD-11 4: (t_s, name) of one ``controller_events.json`` element, None when it is not a
+    string of the exact ``repr(C2Event)`` form (a dict element is not that form)."""
+    if not isinstance(item, str):
+        return None
+    match = EVENT_FORM.fullmatch(item.strip())
+    if match is None:
+        return None
+    try:
+        t_s = float(match.group("t"))
+        name = ast.literal_eval(match.group("name"))
+    except (ValueError, SyntaxError):
+        return None
+    return (t_s, name) if isinstance(name, str) else None
+
+
 def parse_controller_events(items: Any) -> tuple[list[tuple[float, str]] | None, list[str]]:
-    """``controller_events.json`` (a list of ``repr(C2Event)`` strings, or of ``{t_s, name}`` dicts) as
-    (t_s, name) pairs; (None, unreadable items) when any item does not parse."""
+    """RD-11 4: ``controller_events.json`` as (t_s, name) pairs; (None, problems) when it is not a
+    list or any element is not the ``repr(C2Event)`` string form."""
     if not isinstance(items, list):
         return None, ["not a list"]
     events, bad = [], []
     for item in items:
-        if isinstance(item, dict) and "name" in item:
-            events.append((float(item.get("t_s", math.nan)), str(item["name"])))
-            continue
-        match = EVENT_PATTERN.fullmatch(str(item)) if isinstance(item, str) else None
-        if match is None:
+        parsed = parse_controller_event(item)
+        if parsed is None:
             bad.append(str(item)[:120])
-            continue
-        events.append((float(match.group(1)), match.group(2)))
+        else:
+            events.append(parsed)
     return (None, bad) if bad else (events, [])
 
 
+def event_base_name(name: str) -> str:
+    """RD-11 5: the part of an event name before its first ``:`` (the whole name without one)."""
+    return name.split(":", 1)[0]
+
+
 def jp_row_conditions(events: list[tuple[float, str]]) -> dict:
-    """Rules 7.3 condition 2 of one row: R4c30 applied events and soil-mode starts."""
-    applied = [name for _, name in events if name.startswith(APPLIED_EVENT_PREFIX)]
-    soil = [name for _, name in events if name == SOIL_MODE_START_EVENT]
-    return {
-        "events": len(events),
-        "flat_soil_margin_applied": len(applied),
-        "soil_mode_start": len(soil),
-        "k1_no_effect": not applied and not soil,
-    }
+    """RD-11 5 / 7: R4c30 applied events and soil-mode starts by base name; condition 2."""
+    bases = [event_base_name(name) for _, name in events]
+    applied = sum(base == R4C30_BASE_NAME for base in bases)
+    soil = sum(base == SOIL_MODE_START_BASE_NAME for base in bases)
+    return {"events": len(events), "flat_soil_margin_applied": applied,
+            "soil_mode_start": soil, "k1_no_effect": applied == 0 and soil == 0}
+
+
+def _existing_result(value: Any, root: Path) -> Path | None:
+    """RD-11 3: a recorded ``result_json`` path as is (relative = under the checkout), else the
+    part from ``07_results/`` on under the checkout."""
+    if not isinstance(value, str) or not value:
+        return None
+    text = value.replace("\\", "/")
+    path = Path(text)
+    candidate = path if path.is_absolute() else root / path
+    if candidate.is_file():
+        return candidate
+    if RESULTS_ROOT_PART in text:
+        moved = root / (RESULTS_ROOT_PART + text.split(RESULTS_ROOT_PART, 1)[1])
+        if moved.is_file():
+            return moved
+    return None
+
+
+def jp_row_folder(case: dict, batch_dir: Path, root: Path) -> Path | None:
+    """RD-11 3: the row folder (the folder of the row's ``result.json``) of one case record."""
+    for dotted_key in JP_RESULT_KEYS:
+        found = _existing_result(get_path(case, dotted_key)[1], root)
+        if found is not None:
+            return found.parent
+    fallback = batch_dir / str(case.get("case")) / "result.json"
+    return fallback.parent if fallback.is_file() else None
+
+
+def jp_shadow_lines(path: Path) -> dict[str, list[dict]]:
+    """RD-11 6: shadow lines grouped by run id (top-level ``job.chrono_run``, ``\\`` -> ``/``)."""
+    groups: dict[str, list[dict]] = {}
+    for line in read_records(path):
+        if not isinstance(line, dict):
+            continue
+        run = get_path(line, "job.chrono_run")[1]
+        if run is not None:
+            groups.setdefault(str(run).replace("\\", "/"), []).append(line)
+    return groups
+
+
+def jp_events(folder: Path | None) -> tuple[list[tuple[float, str]] | None, str | None]:
+    """RD-11 3 / 4: the parsed events of a row folder, or (None, reason)."""
+    if folder is None:
+        return None, "result.json not found (RD-11 3)"
+    path = folder / "controller_events.json"
+    if not path.is_file():
+        return None, "controller_events.json missing"
+    events, bad = parse_controller_events(read_json(path))
+    if events is None:
+        return None, f"elements not in the C2Event string form: {bad[:3]}"
+    return events, None
+
+
+def jp_row(batch_name: str, case: dict, batch_dir: Path, root: Path,
+           shadow: dict[str, list[dict]]) -> dict:
+    """RD-11 8 items of one J_P row."""
+    folder = jp_row_folder(case, batch_dir, root)
+    run_id = None if folder is None else f"{folder.parent.name}/{folder.name}"
+    events, reason = jp_events(folder)
+    lines = shadow.get(run_id, []) if run_id is not None else []
+    row: dict[str, Any] = {"batch": batch_name, "case": case.get("case"), "run_id": run_id,
+                           "events_unreadable": events is None, "events_unreadable_reason": reason,
+                           "shadow_lines": len(lines), "shadow_unreadable": len(lines) != 1}
+    if events is not None:
+        conditions = jp_row_conditions(events)
+        row.update(events=conditions["events"],
+                   flat_soil_margin_applied=conditions["flat_soil_margin_applied"],
+                   soil_mode_start=conditions["soil_mode_start"],
+                   condition2_k1_no_effect=conditions["k1_no_effect"])
+    if len(lines) == 1:
+        line = lines[0]
+        row["condition1_shadow_silent"] = (line.get("status") == "silent"
+                                           and "first_fire_t_s" in line
+                                           and line["first_fire_t_s"] is None)
+    else:
+        row["shadow_unreadable_reason"] = f"그림자 줄 수 {len(lines)}"
+    return row
 
 
 def jp_reuse(args: argparse.Namespace) -> dict:
-    shadow = {}
-    for record in read_records(Path(args.shadow)):
-        for _, line in run_records(record):
-            run = get_path(line, "job.chrono_run")[1]
-            if run is not None:
-                shadow[str(run).replace("\\", "/")] = line
-    rows = []
-    for folder in args.rows:
-        folder = Path(folder)
-        run_id = f"{folder.parent.name}/{folder.name}"
-        line = shadow.get(run_id)
-        silent = (
-            line is not None
-            and line.get("status") == "silent"
-            and line.get("first_fire_t_s") is None
-        )
-        path = folder / "controller_events.json"
-        events, bad = (
-            parse_controller_events(read_json(path)) if path.is_file() else (None, ["file missing"])
-        )
-        condition2 = None if events is None else jp_row_conditions(events)
-        rows.append(
-            {
-                "row": run_id,
-                "shadow_status": None if line is None else line.get("status"),
-                "condition1_shadow_silent": silent,
-                "condition2": condition2,
-                "condition3_readable": events is not None,
-                "unreadable": bad[:5],
-                "reusable": bool(silent and condition2 and condition2["k1_no_effect"]),
-            }
-        )
-    is_reuse = len(rows) == args.expected and all(row["reusable"] for row in rows)
-    return {
-        "rules": RULES_NAME,
-        "section": "7.3",
-        "rows": rows,
-        "expected_rows": args.expected,
-        "reuse": is_reuse,
-        "decision": "재사용" if is_reuse else "묶음 JP 재실행",
-        "exit_code": 0 if is_reuse else 1,
-    }
+    """RD-11: the 7.3 J_P reuse reading of the 12 stored J_P rows (conditions 1 and 2).
+
+    Input problems (row count other than 12, an unreadable event record, a shadow line count other
+    than 1) are stop markers, never "재사용 거짓"; the reuse value is given only without them.
+    """
+    root = Path(args.root)
+    out: dict[str, Any] = {"rules": RULES_NAME, "section": "7.3 (R4 common block RD-11)",
+                           "batches": list(JP_BATCHES), "shadow": JP_SHADOW.as_posix(),
+                           "expected_rows": JP_EXPECTED_ROWS}
+    cases = []
+    for name in JP_BATCHES:
+        batch_dir = root / "07_results" / "S9" / name
+        document = read_json(batch_dir / "batch.json")
+        cases += [(name, batch_dir, case) for case in document.get("cases") or []]
+    out["rows_count"] = len(cases)
+    if len(cases) != JP_EXPECTED_ROWS:
+        return {**out, "stop_markers": [JP_STOP_S15], "rows": [],
+                "note": "row count is not 12: no reading (RD-11 2)", "exit_code": 1}
+    shadow = jp_shadow_lines(root / JP_SHADOW)
+    rows = [jp_row(name, case, batch_dir, root, shadow) for name, batch_dir, case in cases]
+    markers = []
+    if any(row["events_unreadable"] for row in rows):
+        markers.append(JP_STOP_EVENTS)
+    if any(row["shadow_unreadable"] for row in rows):
+        markers.append(JP_STOP_SHADOW)
+    out.update(rows=rows, stop_markers=markers)
+    if markers:
+        return {**out, "note": "stop markers: the reuse value is not given (RD-11 7)",
+                "exit_code": 1}
+    is_reuse = all(row["condition1_shadow_silent"] and row["condition2_k1_no_effect"]
+                   for row in rows)
+    return {**out, "reuse": is_reuse, "exit_code": 0 if is_reuse else 1}
 
 
 # -------------------------------------------------------------------------------------------- 7.4
@@ -1611,10 +1792,18 @@ def _switch_pair(block: Any, where: str, *, need_applicable: bool) -> tuple[bool
     return values[0], values[1]
 
 
+V0_SETTING = "V0"
+"""Rev16 R16-4: an r79 result with ``v5_setting`` V0 has no ``hydraulic_options`` block (V0 =
+every v5 plant option off), which reads as ③ off."""
+
+
 def _extend_start_switch(record: dict) -> bool:
     """R8-1b ③: ``hydraulic_options.extend_start_tracked`` true = on; the block without the key
-    = off (``HydraulicOptions.to_dict`` keeps the key only when on)."""
+    = off (``HydraulicOptions.to_dict`` keeps the key only when on). Rev16 R16-4: no block on a
+    ``v5_setting`` V0 result = off; no block otherwise is not computable (S-2)."""
     options = record.get(HYDRAULIC_OPTIONS_KEY)
+    if options is None and record.get("v5_setting") == V0_SETTING:  # absent or null
+        return False
     if not isinstance(options, dict):
         raise TagNotComputable(f"{HYDRAULIC_OPTIONS_KEY} block missing")
     return options.get(EXTEND_START_OPTION_KEY) is True
@@ -2739,6 +2928,1048 @@ def stroke_exposure(args: argparse.Namespace) -> dict:
             "exit_code": 0}
 
 
+# ===================================================================================== R4 (436.8)
+R4_BLOCK_SHA256 = "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800"
+"""The R4 common block these subcommands implement (both paths receive the same bytes)."""
+R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+"""RD-1 5 / rev16 R16-14: the run commit of the R2 outputs and of H-11 / H-12 / C-9 .. C-11."""
+HULL_DLL_SHA256 = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+FORBIDDEN_IDENTITY_ENV = ("OUTRIGGER_LOC_SHADOW", "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED",
+                          "OUTRIGGER_HULL_HOOK_DLL", "OUTRIGGER_HULL_HOOK", "MIXED_HULL_MODE")
+"""Rev16 R16-11b 1 / R16-14 3: the five env keys that must be absent at the start and the end."""
+RESUME_K1_DIR = "06_analysis/03_hydraulic/coupled/v5/resume_k1"
+LAS_K1_DIR = "06_analysis/02_control/v5_rerun/las_k1"
+COUPLED_DIR = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+
+
+def _coupled_modules():
+    """``judge4368_common`` and ``judge_stage1_4368`` (the path 1 harness judges' shared code)."""
+    if str(COUPLED_DIR) not in sys.path:
+        sys.path.append(str(COUPLED_DIR))
+    import judge4368_common
+    import judge_stage1_4368
+
+    return judge4368_common, judge_stage1_4368
+
+
+# ------------------------------------------------------------------ RD-7 / RD-8 / RD-9 / RD-10
+BUNDLE_FILES = {
+    "H-1": (f"{RESUME_K1_DIR}/h1_d1.jsonl",),
+    "H-3": (f"{LAS_K1_DIR}/u3_*.json",),
+    "H-4": (f"{LAS_K1_DIR}/u6_*.json",),
+    "H-5": (f"{RESUME_K1_DIR}/h5_u9_v0.jsonl",),
+    "H-6": (f"{RESUME_K1_DIR}/h6_dg3_v4on.json",),
+    "H-7": (f"{RESUME_K1_DIR}/h7_dg3_off.json",),
+    "H-8": (f"{RESUME_K1_DIR}/h8_noise_VB.json", f"{RESUME_K1_DIR}/h8_noise_V0.json",
+            f"{RESUME_K1_DIR}/h8_seedext_VB.json", f"{RESUME_K1_DIR}/h8_seedext_V0.json"),
+    "H-9": (f"{RESUME_K1_DIR}/h9_stage1.jsonl", f"{RESUME_K1_DIR}/h9_grid/grid_r67_main.json",
+            f"{RESUME_K1_DIR}/h9_grid/grid_r67_top.json",
+            f"{RESUME_K1_DIR}/h9_grid/grid_r69_bottom.json",
+            f"{RESUME_K1_DIR}/h9_grid/grid_r69_top.json"),
+    "H-10": (f"{RESUME_K1_DIR}/h10_reuse_rerun.jsonl",),
+}
+"""Original 4.3 and rev1 RV1-3.3 final outputs of each bundle (RD-7 3); ``*.partial.jsonl``,
+``*.identity.json`` and the family files ``h9_family_F_*.json`` are never results here (RD-7 1)."""
+J_P3_LIST_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
+J11_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
+"""RD-7 1 / RD-10: J-P3 lists and J11 for these bundles only; J11 on lines, not grid runs."""
+S6_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")
+RD8_BUNDLES = ("H-1", "H-3", "H-4")
+P3_STOP_BUNDLES = ("H-1", "H-3", "H-4", "H-6", "H-8", "H-9", "H-10")
+"""RD-9: bundles with VB (③) lines by definition; a ③ count of 0 is S-8."""
+FAMILY_LABELS = {"uniform": "균일 연약", "patch_or_sink": "패치·처방 침하", "rigid": "강체"}
+"""RD-7 3 family words (``·`` is U+00B7); an unplaced key reads as 균일 연약 (rev1 RV1-6)."""
+RECORDED_J_P3_PATHS = ("d1.j_p3", "v5.j_p3")
+"""RD-8: the recorded J-P3 state of an H-1 line (``d1.j_p3``) and of a U-3 / U-6 item."""
+VB_SETTING = "VB"
+
+
+@dataclass
+class ListUnit:
+    """One line, item or grid run of a bundle result file, with its RD-7 3 place."""
+
+    bundle: str
+    result_file: str
+    location: str
+    record: dict
+    key: Any
+    setting: Any
+    tag: Any
+    owner: str | None = None
+    grid_family: str | None = None
+    is_grid_run: bool = False
+    is_jsonl: bool = False
+
+
+def bundle_paths(root: Path, bundle: str) -> list[Path]:
+    paths: list[Path] = []
+    for pattern in BUNDLE_FILES[bundle]:
+        if "*" in pattern:
+            paths += sorted((root / pattern).parent.glob(Path(pattern).name))
+        else:
+            paths.append(root / pattern)
+    return paths
+
+
+def _json_units(common, bundle: str, path: Path, root: Path) -> list[ListUnit]:
+    document = read_json(path)
+    result_file = common.repo_relative(path, root)
+    name, parent = path.name, path.parent.name
+    units = []
+    if is_grid_document(document):
+        is_spec = (document.get("meta") or {}).get("spec") == GRID_SPEC
+        for index, job in enumerate(document["results"]):
+            key, setting = common.key_and_setting(name, job, parent)
+            for run_index, run in enumerate(job["runs"]):
+                family = ("patch_or_sink" if is_spec and run.get("event") in GRID_FLOOR_EVENTS
+                          else None)
+                units.append(ListUnit(bundle, result_file,
+                                      common.json_location("results", index, run_index), run,
+                                      key, setting, job.get("controller_tag"), _own_key(job),
+                                      family, is_grid_run=True))
+        return units
+    container = "records" if isinstance(document.get("records"), list) else "results"
+    for index, item in enumerate(document.get(container) or []):
+        key, setting = common.key_and_setting(name, item, parent)
+        units.append(ListUnit(bundle, result_file, common.json_location(container, index), item,
+                              key, setting, read_controller_tag(item), _own_key(item)))
+    return units
+
+
+def bundle_units(common, bundle: str, path: Path, root: Path) -> list[ListUnit]:
+    """Every line / item / grid run of one result file (RD-7 3 places)."""
+    if path.suffix != ".jsonl":
+        return _json_units(common, bundle, path, root)
+    result_file = common.repo_relative(path, root)
+    units = []
+    for number, record in common.read_jsonl_numbered(path):
+        key, setting = common.key_and_setting(path.name, record)
+        units.append(ListUnit(bundle, result_file, common.jsonl_location(number), record, key,
+                              setting, read_controller_tag(record), None, is_jsonl=True))
+    return units
+
+
+def _place(unit: ListUnit) -> dict:
+    return {"bundle": unit.bundle, "result_file": unit.result_file, "location": unit.location,
+            "key": unit.key, "setting": unit.setting}
+
+
+def unit_j_p3(common, stage1, unit: ListUnit, t4h_folders) -> dict:
+    """J-P3 of one unit by the path 1 judge reading of its file form (lines: the stage 1 judge;
+    r79 results: rod reading by T4h or the configuration rule; grid runs: configuration rule)."""
+    if unit.is_jsonl:
+        return stage1.j_p3_assessment(stage1.j_p3_inputs(unit.record, t4h_folders))
+    if unit.is_grid_run:
+        return common.assess_j_p3(unit.record, tag=unit.tag, rod_reading=True,
+                                  rod_basis=common.ROD_BASIS_GRID,
+                                  head_only_declared=bool(unit.record.get("head_only_declared")))
+    return common.r79_j_p3(unit.record, t4h_folders)
+
+
+def unit_family(unit: ListUnit, table: dict[str, str | None]) -> str | None:
+    if unit.is_grid_run:
+        return unit.grid_family
+    return table_family(unit.record, unit.owner, table)[0]
+
+
+def s6_rows(unit: ListUnit, table: dict[str, str | None]) -> list[dict]:
+    """RD-7 1 멈춤 S-6 rows of one unit: blocked decisions (``would_block`` and
+    ``r4_due_without_gate``) on a uniform (or unplaced) family, one row per decision k."""
+    block = record_block(unit.record)
+    if not isinstance(block, dict) or block.get("applicable") is False:
+        return []
+    decisions = get_path(block, "slope_clearance_margin.order_gate.decisions")[1]
+    if not isinstance(decisions, list):
+        return []
+    family = unit_family(unit, table)
+    if family not in ("uniform", None):
+        return []
+    rows = []
+    for k, decision in enumerate(decisions):
+        if not isinstance(decision, dict):
+            continue
+        if decision.get("would_block") is True and decision.get("r4_due_without_gate") is True:
+            rows.append({**_place(unit), "k": k, "family": FAMILY_LABELS["uniform"],
+                         "t_loc_s": decision.get("t_loc_s"), "n_P": decision.get("n_P"),
+                         "n_S": decision.get("n_S"), "dP": decision.get("dP")})
+    return rows
+
+
+def rd8_unit(common, unit: ListUnit) -> dict:
+    """RD-8 facts of one H-1 / H-3 / H-4 unit: ``breach_reads`` present and its form, the
+    RD-7 3 top-level mismatch, and a VB "pass" without ``breach_reads``."""
+    bound, mismatch = common.j_p3_bound(unit.record)
+    has_reads = isinstance(bound, dict) and "breach_reads" in bound
+    recorded = next((value for path in RECORDED_J_P3_PATHS
+                     if (value := get_path(unit.record, path)[1]) is not None), None)
+    return {"has_breach_reads": has_reads,
+            "form_problem": common.breach_reads_problem(bound) if has_reads else None,
+            "top_level_mismatch": mismatch,
+            "vb_pass_without_breach_reads": (unit.setting == VB_SETTING and recorded == "pass"
+                                             and not has_reads)}
+
+
+def _bundle_lists(common, stage1, bundle: str, root: Path, table) -> dict:
+    """RD-7 lists and RD-8 / RD-9 / RD-10 counts of one bundle."""
+    out: dict[str, Any] = {"files": [], "missing_files": [], "units": 0, "p3_units_RD9": 0,
+                           "J-P3": [], "J11": [], "S-6": [], "markers": []}
+    counts: Counter = Counter()
+    for path in bundle_paths(root, bundle):
+        if not path.is_file():
+            out["missing_files"].append(common.repo_relative(path, root))
+            continue
+        units = bundle_units(common, bundle, path, root)
+        out["files"].append({"result_file": common.repo_relative(path, root),
+                             "sha256": file_sha256(path), "units": len(units)})
+        records = [unit.record for unit in units if not unit.is_grid_run]
+        folders = tuple(common.t4h_folders(path, records)) if bundle in J_P3_LIST_BUNDLES else ()
+        for unit in units:
+            out["units"] += 1
+            if "error" in unit.record:
+                counts["error_units"] += 1
+                continue
+            out["p3_units_RD9"] += bool(is_extend_start_tag(unit.tag))
+            if bundle in J_P3_LIST_BUNDLES:
+                assessed = unit_j_p3(common, stage1, unit, folders)
+                out["J-P3"] += common.j_p3_list_rows(assessed, **_place(unit))
+                counts["j_p3_rd8"] += bool(assessed["rd8_problem"])
+                counts["j_p3_not_judgeable"] += assessed["status"] == common.NOT_JUDGEABLE
+                counts["j_p3_s2"] += assessed["status"] == common.J_P3_S2
+            if bundle in J11_BUNDLES and not unit.is_grid_run:
+                j11 = common.assess_j11(unit.record.get("lock_window_alignment"), unit.setting)
+                out["J11"] += common.j11_list_rows(j11, **_place(unit))
+                counts["j11_not_judgeable"] += j11["state"] == common.NOT_JUDGEABLE
+                counts["j11_no_input"] += j11["state"] == common.J11_NO_INPUT
+            if bundle in S6_BUNDLES:
+                out["S-6"] += s6_rows(unit, table)
+            if bundle in RD8_BUNDLES:
+                facts = rd8_unit(common, unit)
+                counts["rd8_with_breach_reads"] += facts["has_breach_reads"]
+                counts["rd8_wrong_form"] += bool(facts["form_problem"])
+                counts["rd8_top_level_mismatch"] += bool(facts["top_level_mismatch"])
+                counts["rd8_vb_pass_without_breach_reads"] += facts[
+                    "vb_pass_without_breach_reads"]
+    out["error_units"] = counts["error_units"]
+    if bundle in J_P3_LIST_BUNDLES:
+        out["J-P3_not_judgeable"] = {"RD-8": counts["j_p3_rd8"],
+                                     "all": counts["j_p3_not_judgeable"],
+                                     "S-2": counts["j_p3_s2"]}
+    if bundle in J11_BUNDLES:
+        out["J11_RD10"] = {"not_judgeable": counts["j11_not_judgeable"],
+                           "no_input": counts["j11_no_input"]}
+    if bundle in RD8_BUNDLES:
+        out["RD-8"] = {"lines_with_breach_reads": counts["rd8_with_breach_reads"],
+                       "wrong_form": counts["rd8_wrong_form"],
+                       "top_level_mismatch_RD7_3": counts["rd8_top_level_mismatch"],
+                       "vb_pass_without_breach_reads": counts["rd8_vb_pass_without_breach_reads"]}
+        if counts["rd8_wrong_form"] or counts["rd8_vb_pass_without_breach_reads"]:
+            out["markers"].append(common.MARKER_JP3_FORM)
+    if out["J-P3"]:
+        out["markers"].append(f"J-P3 {common.STOP_H7}")
+    for marker in sorted({row["marker"] for row in out["J11"]}):
+        out["markers"].append(f"J11 {common.STOP_H7 if marker == 'H-7' else marker}")
+    if out["S-6"]:
+        out["markers"].append("멈춤 S-6")
+    if bundle in P3_STOP_BUNDLES and out["p3_units_RD9"] == 0 and out["files"]:
+        out["markers"].append("S-8 (RD-9: ③ 켬 줄·run 0)")
+    for name in ("J-P3", "J11", "S-6"):
+        out[name] = sorted(out[name], key=common.list_sort_key)
+    return out
+
+
+def r4_lists(args: argparse.Namespace) -> dict:
+    """RD-7 J-P3 / J11 / 멈춤 S-6 lists, RD-8 form counts (H-1, H-3, H-4), RD-9 ③ counts and
+    RD-10 J11 counts of the R2 harness results (stop markers and lists, never grades)."""
+    common, stage1 = _coupled_modules()
+    root = Path(args.root)
+    table = read_family_table(Path(args.family_table))
+    names = [name for name in BUNDLE_FILES if not args.bundles or name in args.bundles]
+    bundles = {name: _bundle_lists(common, stage1, name, root, table) for name in names}
+    lists = {name: sorted((row for part in bundles.values() for row in part[name]),
+                          key=common.list_sort_key) for name in ("J-P3", "J11", "S-6")}
+    markers = [f"{name}: {marker}" for name, part in bundles.items()
+               for marker in part["markers"]]
+    missing = [path for part in bundles.values() for path in part["missing_files"]]
+    for part in bundles.values():
+        for name in ("J-P3", "J11", "S-6"):
+            part[f"{name}_rows"] = len(part.pop(name))
+    return {"rules": RULES_NAME, "section": "R4 common block RD-7 / RD-8 / RD-9 / RD-10",
+            "r4_block_sha256": R4_BLOCK_SHA256, "root": str(root),
+            "family_table": {"path": str(args.family_table),
+                             "sha256": file_sha256(Path(args.family_table))},
+            "lists": lists, "bundles": bundles, "markers": markers, "missing_files": missing,
+            "exit_code": 1 if markers or missing else 0}
+
+
+# --------------------------------------------------------------------------- H-11 (rev16 R16-8)
+@dataclass(frozen=True)
+class G3Pair:
+    """One rev16 R16-8 comparison pair: the no-option output vs its comparison target."""
+
+    script: str
+    new_file: str
+    target_file: str
+    target_in_h11: bool
+    key_field: str
+    compare_field: str
+    key: str
+    controller: str | None = None
+
+
+H11_PAIRS = (
+    G3Pair("s9_slope_fix_candidates.py", "u3_p3b_none.json", "u3_p3b_V0.json", False, "id",
+           "hash", "base|G1|B|top|Fs0"),
+    G3Pair("s9_slope_fix_candidates.py", "u3_g8_none.json", "u3_g8_V0.json", False, "id",
+           "hash", "slope|edge|top|4.0|ref|none|0|proj"),
+    G3Pair("r72_g6_screen.py", "u3_C_none.json", "u3_C_V0.json", False, "key",
+           "commands_sha256", "g6|G1+J1@FL|top|Fs8"),
+    G3Pair("r72_g6_screen.py", "u3_C_none.json", "u3_C_V0.json", False, "key",
+           "commands_sha256", "g6r|rigid+J1@FL|top|Fs8"),
+    G3Pair("s9_soil_slope.py", "u3_D_none.json", "u3_D_V0.json", False, "id",
+           "run.commands_sha256", "H8|rigid|B|top|flat"),
+    G3Pair("s9_soil_slope.py", "u3_D_none.json", "u3_D_V0.json", False, "id",
+           "run.commands_sha256", "H8|G1|B|top|flat|FL:g20"),
+    G3Pair("b5_baseline_compare.py", "u6_b5_A1_none.json", "u6_b5_A1_V0.json", True, "case",
+           "commands_sha256", "A1-rigid", "C2"),
+    G3Pair("b5_baseline_compare.py", "u6_b5_A1_none.json", "u6_b5_A1_V0.json", True, "case",
+           "commands_sha256", "A1-J1", "C2"),
+)
+"""Rev16 R16-8 run / pair table (8 keys) with its key narrowing and compare fields."""
+H11_RUN_FILES = ("u3_p3b_none.json", "u3_g8_none.json", "u3_C_none.json", "u3_D_none.json",
+                 "u6_b5_A1_none.json", "u6_b5_A1_V0.json")
+"""Rev16 R16-8: the H-11 outputs (6 runs, 10 keys); each has a ``.identity.json`` sidecar."""
+
+
+def _matching_items(document: dict, pair: G3Pair) -> list[dict]:
+    rows = []
+    for name in ("records", "results"):
+        for item in document.get(name) or []:
+            if not isinstance(item, dict) or item.get(pair.key_field) != pair.key:
+                continue
+            if pair.controller is not None and item.get("controller") != pair.controller:
+                continue
+            rows.append(item)
+    return rows
+
+
+def g3_pair(pair: G3Pair, h11_dir: Path, las_k1_dir: Path) -> dict:
+    """R16-8 count check and hash comparison of one pair (exactly one line on each side)."""
+    target_dir = h11_dir if pair.target_in_h11 else las_k1_dir
+    new_rows = _matching_items(read_json(h11_dir / pair.new_file), pair)
+    target_rows = _matching_items(read_json(target_dir / pair.target_file), pair)
+    new_hash = get_path(new_rows[0], pair.compare_field)[1] if len(new_rows) == 1 else None
+    target_hash = (get_path(target_rows[0], pair.compare_field)[1] if len(target_rows) == 1
+                   else None)
+    is_count_ok = len(new_rows) == 1 and len(target_rows) == 1
+    same = is_count_ok and new_hash is not None and new_hash == target_hash
+    return {"script": pair.script, "key": pair.key, "compare_field": pair.compare_field,
+            "new_file": pair.new_file, "target_file": pair.target_file,
+            "no_option_hash": new_hash, "target_hash": target_hash,
+            "no_option_lines": len(new_rows), "target_lines": len(target_rows),
+            "count_ok": is_count_ok, "same": same}
+
+
+def identity_problems(sidecar: Path, expected_head: str) -> list[str]:
+    """Rev16 R16-8 commit identity: every ``start`` / ``end`` entry of a ``resume_k1_identity``
+    sidecar has ``git.head`` = R2 and ``git.is_clean`` true (else S-12)."""
+    if not sidecar.is_file():
+        return [f"{sidecar.name} missing"]
+    document = read_json(sidecar)
+    problems = []
+    for moment in ("start", "end"):
+        entries = document.get(moment)
+        if not isinstance(entries, list) or not entries:
+            problems.append(f"{sidecar.name}: no {moment} entry")
+            continue
+        for entry in entries:
+            head = get_path(entry, "git.head")[1]
+            if head != expected_head:
+                problems.append(f"{sidecar.name} {moment}: git.head {head!r} is not R2")
+            if get_path(entry, "git.is_clean")[1] is not True:
+                problems.append(f"{sidecar.name} {moment}: git.is_clean is not true")
+    return problems
+
+
+def h11(args: argparse.Namespace) -> dict:
+    """Rev16 R16-8: G-3 gate of U-3 / U-6 (8 pairs); false = H-3 / H-4 are not judged."""
+    h11_dir, las_k1_dir = Path(args.h11_dir), Path(args.las_k1_dir)
+    pairs = [g3_pair(pair, h11_dir, las_k1_dir) for pair in H11_PAIRS]
+    identity = {name: identity_problems(h11_dir / name.replace(".json", ".identity.json"),
+                                        args.expected_head) for name in H11_RUN_FILES}
+    identity_bad = {name: problems for name, problems in identity.items() if problems}
+    is_g3 = all(pair["same"] for pair in pairs)
+    false_pairs = [{key: pair[key] for key in ("script", "key", "compare_field",
+                                                  "no_option_hash", "target_hash",
+                                                  "no_option_lines", "target_lines")}
+                   for pair in pairs if not pair["same"]]
+    markers = [] if is_g3 else ["G-3 거짓 (H-3·H-4 판정 안 함)"]
+    if identity_bad:
+        markers.append("S-12 (H-11 commit identity)")
+    return {"rules": "v5_resume_4368_rules_rev16.md", "section": "R16-8 (H-11, u3 original 7 G-3)",
+            "pairs": pairs, "G-3": is_g3, "pass": is_g3 and not identity_bad,
+            "false_pairs_RD7": false_pairs, "identity": identity, "markers": markers,
+            "exit_code": 0 if is_g3 and not identity_bad else 1}
+
+
+# --------------------------------------------------------------------- H-12 (R16-9 6, R17-2a)
+H12_EXPECTED_FILES = 3
+H12_LOCKED_LIMIT_N = 600.0
+RECORDED_LOWER_TOL_N = 1e-6
+"""Rev17 R17-1: the own-event replay difference allowance (recorded here, it gates the staging)."""
+H12_GAP_MARKER = "R17-2a 범위 공백"
+STOP_H7_TEXT = "멈춤 H-7"
+"""RD-4: the v5 criteria stop H-7 (not the bundle H-7)."""
+H12_RECORD_COMPLETE = "기록 완료"
+H12_RECORD_INCOMPLETE = "기록 불완전"
+
+
+def _t4h_arrays(path: Path) -> tuple[dict, dict]:
+    import numpy as np
+
+    with np.load(path, allow_pickle=False) as data:
+        arrays = {name: np.asarray(data[name]) for name in ("t_s", "locked", "command_m_s")
+                  if name in data.files}
+        meta = json.loads(str(data["meta_json"].item())) if "meta_json" in data.files else {}
+    return arrays, meta
+
+
+def locked_samples_after(arrays: dict, start_s: float, leg_index: int) -> int:
+    """R16-9 6 empty-window guard: judged samples (T4h ``locked`` = 1 and acting command 0, the
+    acting command being the previous period's ``command_m_s`` as in ``t4h_replay``) of one leg
+    at or after ``start_s`` (7.6 allowance)."""
+    import numpy as np
+
+    t = np.asarray(arrays["t_s"], float)
+    command = np.asarray(arrays["command_m_s"], float)
+    acting = np.zeros_like(command)
+    acting[1:] = command[:-1]
+    locked = np.asarray(arrays["locked"]).astype(bool)
+    after = t >= float(start_s) - COMPARE_EPS
+    return int((after & locked[:, leg_index] & (acting[:, leg_index] == 0.0)).sum())
+
+
+def h12_key(path: Path, replay_row: dict | None) -> dict:
+    """R16-9 6 per T4h file: the forced four-leg range, the actual fallback-leg range and the
+    empty-window count of the actual fallback legs."""
+    legs = list(LEG_NAMES)
+    arrays, meta = _t4h_arrays(path)
+    starts = meta.get("fallback_start_s")
+    actual = ([leg for leg, start in zip(legs, starts, strict=True) if start is not None]
+              if isinstance(starts, list) and len(starts) == len(legs) else [])
+    row: dict[str, Any] = {"file": path.name, "key": get_path(meta, "job.key")[1],
+                           "fallback_start_s": starts, "actual_fallback_legs": actual}
+    missing_arrays = [name for name in ("t_s", "locked", "command_m_s") if name not in arrays]
+    if missing_arrays or not actual:
+        return {**row, "judged": False,
+                "reason": f"no T4h arrays {missing_arrays}" if missing_arrays
+                else "no actual fallback leg (fallback_start_s)"}
+    counts = {leg: locked_samples_after(arrays, starts[legs.index(leg)], legs.index(leg))
+              for leg in actual}
+    row["locked_samples_after_fallback"] = counts
+    if any(count == 0 for count in counts.values()):
+        return {**row, "judged": False, "reason": "empty window (R16-9 6, 사용자 결정 55의 2)"}
+    if replay_row is None:
+        return {**row, "judged": False, "reason": "no t4h_replay row for this file"}
+    over = replay_row.get("over_0p6kN_by_leg") or {}
+    row.update(over_0p6kN_by_leg=over, max_excess_N=replay_row.get("max_excess_N"),
+               unlocked_tail_over_0p6kN_by_leg=replay_row.get("unlocked_tail_over_0p6kN_by_leg"),
+               recorded_lower_max_abs_N=replay_row.get("recorded_lower_max_abs_N"),
+               settings_equal=replay_row.get("settings_equal"),
+               forced_four_legs_over=sum(int(over.get(leg) or 0) for leg in legs),
+               actual_legs_over=sum(int(over.get(leg) or 0) for leg in actual))
+    row["judged"] = True
+    return row
+
+
+def h12(args: argparse.Namespace) -> dict:
+    """Rev16 R16-9 6 (record bundle) with rev17 R17-2a: the H-7 reading of the official T4h
+    files in two ranges (forced four legs, actual fallback legs); different conclusions are the
+    marker ``R17-2a 범위 공백`` (the range is not chosen here)."""
+    t4h_dir = Path(args.h12_dir) / "t4h"
+    files = sorted(t4h_dir.glob("*.npz"))
+    replay = read_json(Path(args.replay))
+    by_file = {row.get("file"): row for row in replay.get("rows") or []}
+    keys = [h12_key(path, by_file.get(path.name)) for path in files]
+    judged = [row for row in keys if row["judged"]]
+    is_four_h7 = any(row["forced_four_legs_over"] > 0 for row in judged)
+    is_actual_h7 = any(row["actual_legs_over"] > 0 for row in judged)
+    markers = []
+    if len(files) != H12_EXPECTED_FILES:
+        markers.append(f"S-15 (H-12 T4h files {len(files)} != {H12_EXPECTED_FILES})")
+    if is_four_h7 != is_actual_h7:
+        markers.append(H12_GAP_MARKER)
+    elif is_four_h7:
+        markers.append(STOP_H7_TEXT)
+    state = (H12_RECORD_COMPLETE if len(judged) == len(keys) == H12_EXPECTED_FILES
+             else H12_RECORD_INCOMPLETE)
+    differences = [row.get("recorded_lower_max_abs_N") for row in judged]
+    return {"rules": "v5_resume_4368_rules_rev16.md", "section": "R16-9 6, rev17 R17-2a",
+            "t4h_dir": str(t4h_dir), "replay": {"path": str(args.replay),
+                                                "sha256": file_sha256(Path(args.replay))},
+            "files": [{"file": path.name, "sha256": file_sha256(path)} for path in files],
+            "keys": keys, "range_forced_four_legs_H7": is_four_h7,
+            "range_actual_fallback_legs_H7": is_actual_h7, "markers": markers,
+            "recorded_lower_max_abs_N_max": max((d for d in differences if d is not None),
+                                                default=None),
+            "recorded_lower_tol_N": RECORDED_LOWER_TOL_N, "state": state,
+            "exit_code": 1 if markers or state != H12_RECORD_COMPLETE else 0}
+
+
+# ------------------------------------------------------------- C-9 .. C-11 (R16-11, R16-11b)
+X16_ROWS = {
+    "R4368X_G1_B_top_Fs4_V0_gateon": ("C-9", "Y1", 0x000F),
+    "R4368X_G1_B_top_Fs4_V0_gateoff": ("C-9", "Y2", 0x00F0),
+    "R4368X_rigidS1FL_B_top_Fs4_V0": ("C-10", "Y2", 0x00F0),
+    "R4368X_rigidS1FL_B_top_Fs4_VB": ("C-10", "X1", 0x0F00),
+    "R4368X_rigidS1FR_B_top_Fs4_V0": ("C-10", "X2", 0xF000),
+    "R4368X_rigidS1FR_B_top_Fs4_VB": ("C-10", "Y1", 0x000F),
+    "R4368X_J2_B_top_Fs0_L2_V0": ("C-11", "X1", 0x0F00),
+    "R4368X_J2_B_top_Fs0_L2_VB": ("C-11", "X2", 0xF000),
+}
+"""Rev16 R16-11 row names with their bundle and rev16 R16-14 5 cell and mask."""
+X16_GATE_ON_ROW = "R4368X_G1_B_top_Fs4_V0_gateon"
+X16_GATE_OFF_ROW = "R4368X_G1_B_top_Fs4_V0_gateoff"
+X16_REQUIRED_FILES = ("result.json", "controller_commands.npz", "step_series.npz",
+                      "r8_series.npz", "completion_series.npz", "record/record.npz",
+                      "record/meta.json")
+"""Rev16 R16-11b 2 row-folder files (``flow_series.npz`` too on VB rows)."""
+DONE_EXIT = re.compile(r"\bexit=(-?\d+)")
+X16_LAST_SAMPLE_TOL_S = 0.1
+"""Rev16 R16-11 1 P-18 premise: the last sample at or after ``--duration`` - 0.1 s."""
+X16_LOC_WINDOW_S = 0.1
+"""C-11 "LOC 주기": the controller period ending at the first LOC (T_s = 0.1 s)."""
+X16_LOC_FRACTION_W = 0.01
+
+
+def _int_mask(value: Any) -> int | None:
+    try:
+        return int(str(value), 0)
+    except (TypeError, ValueError):
+        return None
+
+
+def x16_identity(row_id: str, case: str, cell_mask: int, identity_dir: Path,
+                 result: dict) -> dict:
+    """Rev16 R16-11b 1 identity of one row: the start / end identity files and the
+    ``result.json`` values; problems split into S-12 (commit) and S-4 (SCM identity)."""
+    s12, s4 = [], []
+    pre_path, post_path = identity_dir / f"{row_id}_pre.json", identity_dir / f"{row_id}_post.json"
+    pre = read_json(pre_path) if pre_path.is_file() else None
+    post = read_json(post_path) if post_path.is_file() else None
+    if pre is None or post is None:
+        s12.append(f"identity file missing: pre {pre is not None}, post {post is not None}")
+    else:
+        if pre.get("ok") is not True or pre.get("dry") is not False:
+            s12.append("start identity not ok or a dry record")
+        if pre.get("head") != R2_COMMIT or post.get("head") != R2_COMMIT:
+            s12.append(f"HEAD start {pre.get('head')} / end {post.get('head')} is not R2")
+        if pre.get("tracked_status") or post.get("tracked_status"):
+            s12.append("git status --porcelain --untracked-files=no not empty")
+        if post.get("reflog_new_since_pre"):
+            s12.append("new reflog entries since the start identity")
+        if post.get("ok") is not True:
+            s12.append("end identity not ok")
+        for name in FORBIDDEN_IDENTITY_ENV:
+            for moment, document in (("start", pre), ("end", post)):
+                if (document.get("forbidden_env") or {}).get(name) is not None:
+                    s4.append(f"{moment} env {name} set")
+        if pre.get("dll_sha256") != HULL_DLL_SHA256:
+            s4.append("start identity DLL sha256 is not the validated one")
+    if get_path(result, "code_state.git_at_start.head")[1] != R2_COMMIT:
+        s12.append("result.json code_state.git_at_start.head is not R2")
+    checks = {"num_threads_chrono": 4, "placement.omp_wait_policy": "PASSIVE",
+              "hull_hook.mode": "fast", "hull_hook.dll_sha_validated": True,
+              "hull_hook.dll_sha256": HULL_DLL_SHA256}
+    for dotted_key, want in checks.items():
+        if get_path(result, dotted_key)[1] != want:
+            s4.append(f"result.json {dotted_key} != {want!r}")
+    if _int_mask(get_path(result, "placement.affinity_mask_process")[1]) != cell_mask:
+        s4.append(f"result.json placement mask is not the cell mask 0x{cell_mask:04X}")
+    return {"row": row_id, "case": case, "S-12": s12, "S-4": s4, "ok": not s12 and not s4}
+
+
+def run_exit_code(runner_dir: Path, cell: str, row_id: str) -> int | None:
+    """rc of one row: ``exit=N`` of ``<runner>/logs_<cell>/<id>_run.done`` (None: no record)."""
+    path = runner_dir / f"logs_{cell}" / f"{row_id}_run.done"
+    if not path.is_file():
+        return None
+    match = DONE_EXIT.search(path.read_text(encoding="utf-8"))
+    return None if match is None else int(match.group(1))
+
+
+def _series(path: Path, names: tuple[str, ...]) -> dict:
+    import numpy as np
+
+    with np.load(path, allow_pickle=False) as data:
+        return {name: np.asarray(data[name]) for name in names if name in data.files}
+
+
+def _first_phase_s(result: dict, phase: str) -> float | None:
+    for entry in result.get("phases") or []:
+        if isinstance(entry, dict) and entry.get("phase") == phase:
+            return float(entry["t_s"])
+    return None
+
+
+def _last_phase(result: dict) -> str | None:
+    phases = [entry for entry in result.get("phases") or [] if isinstance(entry, dict)]
+    return phases[-1].get("phase") if phases else None
+
+
+def _mm(values: Any) -> Any:
+    if isinstance(values, list):
+        return [None if v is None else float(v) * 1e3 for v in values]
+    return None if values is None else float(values) * 1e3
+
+
+def x16_common_items(folder: Path, result: dict, rc: int | None) -> dict:
+    """Items every C-9 .. C-11 row records: first READY [s], rc, last sample time [s]."""
+    series = _series(folder / "step_series.npz", ("t_s",))
+    t_s = series.get("t_s")
+    return {"first_ready_s": _first_phase_s(result, "ready"), "rc": rc,
+            "last_sample_s": None if t_s is None or not len(t_s) else float(t_s[-1])}
+
+
+def c9_items(folder: Path, result: dict) -> dict:
+    """Rev16 R16-11 1 record items of one C-9 row (``controller_commands.npz`` sha in the pair)."""
+    p35 = get_path(result, "p3b.P3-5_clearance_stroke")[1] or {}
+    checks = get_path(result, "p3b.checks")[1] or {}
+    return {"decisions": get_path(result,
+                                  "controller_meta.slope_clearance_margin.order_gate.decisions")[1],
+            "soil_mode_start_s": get_path(result, "c2_soil.soil_mode_t_s")[1],
+            "loc_s": get_path(result, "c2_soil.t_loc_s")[1],
+            "controller_commands_sha256": file_sha256(folder / "controller_commands.npz"),
+            "max_stroke_mm": _mm(p35.get("s_motor_max_m")),
+            "end_rut_gap_mm": _mm(p35.get("rut_clearance_end_m")),
+            "P3": {name: checks.get(key) for name, key in P3_CHECK_KEYS.items()}}
+
+
+P3_CHECK_KEYS = {"P3-1": "P3-1_crawler_zero_after_ready", "P3-2": "P3-2_within",
+                 "P3-3": "P3-3_within", "P3-4": "P3-4_within_0p2", "P3-5": "P3-5_within",
+                 "P3-6": "P3-6_within", "P3-7": "P3-7_within", "P3-8": "P3-8_within",
+                 "P3-9": "P3-9_flags"}
+"""``result.json`` ``p3b.checks`` key of each P3 item (P3-9: the deferred FLAG count)."""
+
+
+def c10_items(folder: Path, result: dict) -> dict:
+    """Rev16 R16-11 2 record items of one C-10 row: leg forces and times, the original 7.4
+    F < F_min / F < F_min + 2 kN times (1 ms ``F_cyl_N`` in [t_D, t_D + 8 s], RV1-7 / R2-5),
+    G6-1 .. G6-7 (the path 1 Chrono G6 gate code), P3-3, end phase, stroke, patch-leg sinkage."""
+    force = get_path(result, "p3b.P3-3_leg_force")[1] or {}
+    p35 = get_path(result, "p3b.P3-5_clearance_stroke")[1] or {}
+    patch_leg = get_path(result, "args.rigid_base")[1]
+    sinkage = get_path(result, "p3b_ext.pad_sinkage")[1] or {}
+    return {"F_min_after_N": force.get("F_min_after_N"),
+            "t_min_after_s": force.get("t_min_after_s"),
+            "F_min_transient_N": force.get("F_min_transient_N"),
+            **fmin_times(folder, result), "G6": g6_gates(folder),
+            "P3-3_within": get_path(result, "p3b.checks.P3-3_within")[1],
+            "end_phase": _last_phase(result), "max_stroke_mm": _mm(p35.get("s_motor_max_m")),
+            "patch_leg": patch_leg,
+            "patch_leg_sinkage_end_mm": (sinkage.get("end_mm") or {}).get(str(patch_leg)),
+            "patch_leg_sinkage_max_mm": (sinkage.get("max_mm") or {}).get(str(patch_leg))}
+
+
+def fmin_times(folder: Path, result: dict) -> dict:
+    """Original 7.4 times of one row (the ``fmin-time`` definition, RV1-7 / R2-5)."""
+    import numpy as np
+
+    weight = get_path(result, "p3b.weight_N")[1]
+    series = _series(folder / SERIES_FILE, ("t_s", "F_cyl_N", CRAWLER_NORMAL_KEY))
+    if not isinstance(weight, (int, float)) or len(series) != 3:
+        return {"t_D_s": None, "times_note": "p3b.weight_N or a series column missing"}
+    t_s = np.asarray(series["t_s"], float)
+    t_dep = departure_time(t_s, series[CRAWLER_NORMAL_KEY], float(weight))
+    if t_dep is None:
+        return {"t_D_s": None, "times_note": "t_D not defined (R2-5)"}
+    below = below_durations(t_s, series["F_cyl_N"], t_dep, F_MIN_N)
+    guard = below_durations(t_s, series["F_cyl_N"], t_dep, F_MIN_N + OC5_GUARD_N)
+    return {"t_D_s": t_dep, "F_below_F_min_ms": below["ms"],
+            "F_below_F_min_plus_2kN_ms": guard["ms"],
+            "window_complete": float(t_s[-1]) >= t_dep + FMIN_WINDOW_S - COMPARE_EPS}
+
+
+def g6_gates(folder: Path) -> dict | None:
+    """G6-1 .. G6-7 of one SCM row by the path 1 Chrono judge's G6 gate code (the row read as a
+    G6 row; read only, ``chrono_rows_judge_4368`` is not changed)."""
+    chrono_dir = ROOT / "04_scripts" / "02_chrono"
+    if str(chrono_dir) not in sys.path:
+        sys.path.append(str(chrono_dir))
+    import chrono_rows_judge_4368 as chrono
+
+    try:
+        row = chrono.load_row(folder)
+        params = chrono.load_params(ROOT / "02_params" / "rexome33.yaml")
+        judged = chrono.judge_scm(row, chrono.G6_IDS[0], params, dict(chrono.ASSUMPTIONS))
+    except (chrono.InputError, KeyError, IndexError, TypeError, ValueError) as exc:
+        # a record item that cannot be computed leaves the row 기록 불완전 (R16-11b 2)
+        print(f"G6 gates of {folder} not computable: {exc!r}", file=sys.stderr)
+        return None
+    gates = judged.get("gates") or {}
+    return {name: value for name, value in gates.items() if name.startswith("G6-")}
+
+
+def c11_items(folder: Path, result: dict) -> dict:
+    """Rev16 R16-11 3 record items of one C-11 row: first LOC, the 1 ms crawler normal maximum in
+    the LOC period (the controller period ending at the first LOC) and its fraction of W, the
+    0.01 W comparison and the LOC cancel count."""
+    import numpy as np
+
+    t_loc = get_path(result, "p3b.P3-2_loc.t_loc_first_s")[1]
+    weight = get_path(result, "p3b.weight_N")[1]
+    out: dict[str, Any] = {"first_loc_s": t_loc,
+                           "loc_cancels": get_path(result, "p3b.checks.loc_revokes")[1]}
+    series = _series(folder / SERIES_FILE, ("t_s", CRAWLER_NORMAL_KEY))
+    if t_loc is None or not isinstance(weight, (int, float)) or len(series) != 2:
+        return {**out, "loc_period_crawler_max_N": None}
+    t_s = np.asarray(series["t_s"], float)
+    window = (t_s > float(t_loc) - X16_LOC_WINDOW_S + COMPARE_EPS) & (
+        t_s <= float(t_loc) + COMPARE_EPS)
+    if not window.any():
+        return {**out, "loc_period_crawler_max_N": None}
+    peak = float(np.asarray(series[CRAWLER_NORMAL_KEY], float)[window].max())
+    return {**out, "loc_period_crawler_max_N": peak, "loc_period_crawler_max_over_W":
+            peak / float(weight),
+            "loc_period_ge_0p01W": peak >= X16_LOC_FRACTION_W * float(weight) - COMPARE_EPS}
+
+
+X16_ITEMS = {"C-9": c9_items, "C-10": c10_items, "C-11": c11_items}
+
+
+def x16_row(row: dict, out_root: Path, identity_dir: Path, runner_dir: Path) -> dict:
+    """One C-9 .. C-11 row: identity, required files and the record items of its bundle."""
+    case, row_id = row.get("case"), row.get("id")
+    bundle, cell, mask = X16_ROWS[case]
+    folder = out_root / bundle / case
+    out: dict[str, Any] = {"bundle": bundle, "case": case, "id": row_id, "cell": cell,
+                           "problems": []}
+    if row.get("cell") != cell or _int_mask(row.get("mask")) != mask:
+        out["problems"].append(f"rows.json cell / mask {row.get('cell')} / {row.get('mask')} "
+                               f"is not rev16 R16-14 5 ({cell}, 0x{mask:04X})")
+    need = list(X16_REQUIRED_FILES) + (["flow_series.npz"] if "--flow-eta-v" in
+                                       (row.get("argv") or []) else [])
+    missing = [name for name in need if not (folder / name).is_file()]
+    if missing:
+        return {**out, "problems": out["problems"] + [f"files missing: {missing}"],
+                "record_state": "기록 불완전"}
+    result = read_json(folder / "result.json")
+    out["identity"] = x16_identity(row_id, case, mask, identity_dir, result)
+    out["duration_s"] = get_path(result, "args.duration")[1]
+    out["threads"] = get_path(result, "num_threads_chrono")[1]
+    out["placement_mode"] = get_path(result, "placement.mode")[1]
+    out["items"] = {**x16_common_items(folder, result, run_exit_code(runner_dir, cell, row_id)),
+                    **X16_ITEMS[bundle](folder, result)}
+    out["files_sha256"] = {name: file_sha256(folder / name) for name in need}
+    out["problems"] += [f"record item {name} not computable" for name in
+                        X16_REQUIRED_ITEMS[bundle] if out["items"].get(name) is None]
+    out["record_state"] = "기록" if out["identity"]["ok"] and not out["problems"] else "기록 불완전"
+    return out
+
+
+X16_REQUIRED_ITEMS = {"C-9": ("rc", "last_sample_s", "decisions"),
+                      "C-10": ("rc", "last_sample_s", "G6", "t_D_s", "F_min_after_N"),
+                      "C-11": ("rc", "last_sample_s", "first_loc_s", "loc_period_crawler_max_N")}
+"""Items without which a row is ``기록 불완전`` (a missing first READY is a recorded value)."""
+
+
+def p18_premise(on: dict, off: dict) -> dict:
+    """Rev16 R16-11 1 P-18 reading premise: both arms rc 0, last sample >= duration - 0.1 s,
+    a first READY, 4 threads and pcore."""
+    problems = []
+    for arm, row in (("on", on), ("off", off)):
+        items = row.get("items") or {}
+        if items.get("rc") != 0:
+            problems.append(f"{arm}: rc {items.get('rc')!r}")
+        last, duration = items.get("last_sample_s"), row.get("duration_s")
+        if last is None or duration is None or last < float(duration) - X16_LAST_SAMPLE_TOL_S - \
+                COMPARE_EPS:
+            problems.append(f"{arm}: last sample {last} s < duration {duration} - 0.1 s")
+        if items.get("first_ready_s") is None:
+            problems.append(f"{arm}: no first READY")
+        if row.get("threads") != 4 or row.get("placement_mode") != "pcore":
+            problems.append(f"{arm}: threads {row.get('threads')} / placement "
+                            f"{row.get('placement_mode')}")
+    return {"holds": not problems, "problems": problems}
+
+
+def x16_records(args: argparse.Namespace) -> dict:
+    """Rev16 R16-11 / R16-11b: C-9 .. C-11 record items and identity of the 8 rows (record
+    bundles: ``기록`` / ``기록 불완전``, never a grade, R16-11a)."""
+    out_root = Path(args.out_root)
+    rows_doc = read_json(Path(args.rows_json) if args.rows_json else
+                         out_root / "_tools" / "rows.json")
+    rows = [row for row in rows_doc.get("rows") or [] if row.get("case") in X16_ROWS]
+    missing_rows = sorted(set(X16_ROWS) - {row.get("case") for row in rows})
+    identity_dir = Path(args.identity_dir) if args.identity_dir else out_root / "_identity"
+    runner_dir = Path(args.runner_dir) if args.runner_dir else out_root / "_runners"
+    done = {row["case"]: x16_row(row, out_root, identity_dir, runner_dir) for row in rows}
+    bundles: dict[str, dict] = {}
+    for name in ("C-9", "C-10", "C-11"):
+        members = [done[case] for case, (bundle, _, _) in X16_ROWS.items()
+                   if bundle == name and case in done]
+        complete = len(members) == sum(b == name for b, _, _ in X16_ROWS.values()) and all(
+            row["record_state"] == "기록" for row in members)
+        bundles[name] = {"rows": [row["case"] for row in members],
+                         "state": "기록 완료" if complete else "기록 불완전"}
+    if X16_GATE_ON_ROW in done and X16_GATE_OFF_ROW in done:
+        on, off = done[X16_GATE_ON_ROW], done[X16_GATE_OFF_ROW]
+        premise = p18_premise(on, off)
+        sha_on = (on.get("items") or {}).get("controller_commands_sha256")
+        sha_off = (off.get("items") or {}).get("controller_commands_sha256")
+        bundles["C-9"].update(p18_premise=premise, controller_commands_same=(
+            None if sha_on is None or sha_off is None else sha_on == sha_off))
+        if not premise["holds"]:
+            bundles["C-9"]["state"] = "기록 불완전"
+    identity_stops = {case: {"S-12": row["identity"]["S-12"], "S-4": row["identity"]["S-4"]}
+                      for case, row in done.items()
+                      if "identity" in row and not row["identity"]["ok"]}
+    return {"rules": "v5_resume_4368_rules_rev16.md", "section": "R16-11 / R16-11b (C-9 .. C-11)",
+            "out_root": str(out_root), "rows": done, "missing_rows": missing_rows,
+            "bundles": bundles, "identity_stops": identity_stops,
+            "exit_code": 1 if missing_rows or identity_stops or any(
+                b["state"] != "기록 완료" for b in bundles.values()) else 0}
+
+
+# -------------------------------------------------------------------- RD-13 item lists
+ITEM_GRADE, ITEM_RECORD, ITEM_GATE = "등급 항목", "기록", "관문"
+ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
+    "H-1": (
+        ("d1 판정 블록(H-S P3·G6·E, H-R 잠김 350 bar·G6, G6-7 377·U-S9-G6c)",
+         "d1_selection_rules 11절, rev6 R6-C3", ITEM_GRADE),
+        ("J-P3 기록 상태(d1.j_p3)", "rev3 R3-C8, rev8 R8-2", ITEM_GRADE),
+        ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9, 원판 8.2 S-8", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+        ("P-1·P-2 비트 앵커(S-7)", "rev1 RV1-5, rev13 R13-3", ITEM_GATE),
+        ("4.2 기록 확인(S-3)", "원판 4.2, rev11 R11-1", ITEM_GATE),
+        ("7.2 K1 분류(S-5)", "원판 7.2, rev2 R2-1·R2-2", ITEM_GATE),
+    ),
+    "H-2": (
+        ("D-1 선별 G-1~G-5", "d1_selection_rules, rev1", ITEM_GRADE),
+        ("G-3 면제 줄 기록(가정 경계 미성립)", "rev3 R3-A1", ITEM_RECORD),
+    ),
+    "H-3": (
+        ("U-3 묶음 등급(통과·FLAG·안전 종료·실패)", "u3 원판 4·5절", ITEM_GRADE),
+        ("정착 v2 재계산", "rev3 R3-B6, rev4 R4-C2", ITEM_GRADE),
+        ("G-1 키 집합", "u3 원판 7절", ITEM_GATE),
+        ("G-2 v5 기록 필드·태그", "u3 원판 7절, rev2 #4", ITEM_GATE),
+        ("G-3(H-11)", "u3 원판 7절, rev16 R16-8", ITEM_GATE),
+        ("G-4 J-P3 기록 상태", "u3 원판 7절, rev1 4, rev2 #5", ITEM_GATE),
+        ("G-5 VB 고유 실패 목록", "u3 원판 5.1, R4 RD-7", ITEM_GATE),
+        ("G-6 g8 VB WARN_ROD_PRESSURE_FALLBACK 목록", "u3 rev1 #5, R4 RD-7", ITEM_GATE),
+        ("재사용 대조", "rev3 R3-B3", ITEM_GATE),
+        ("정착 허용값(S-11)", "rev4 R4-C2", ITEM_GATE),
+        ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-4": (
+        ("U-6 묶음 등급(C2·ABL·IND)", "u3 원판 4절, rev3 R3-B4", ITEM_GRADE),
+        ("IND_LAS 관문·IND 해시", "rev3 R3-B5", ITEM_RECORD),
+        ("G-3(H-11)", "u3 원판 7절, rev16 R16-8", ITEM_GATE),
+        ("4.2 ABL 기대값", "rev16 R16-3", ITEM_GATE),
+        ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-5": (
+        ("U-9 V0 판정(H0 ① 기준 포함)", "u9_targeted_rules_rev1, rev3 R3-C1", ITEM_GRADE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-6": (
+        ("J-P3(ext_moving breach_reads)", "rev3 R3-C8, rev4 R4-A2, rev8 R8-2, R4 RD-7·RD-8",
+         ITEM_GATE),
+        ("J9 잘림(m2_clipped_steps_post_lift)", "v5 기준 개정 2", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
+        ("새 FAULT(S-6 근거)", "rev4 R4-B6", ITEM_GRADE),
+        ("L3 실패 수", "rev4 R4-B6", ITEM_RECORD),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-7": (
+        ("dg3 끔 집계(기록 1회)", "원판 9.1", ITEM_RECORD),
+        ("H-6·H-7 명령 해시·③ 갈림", "rev11 R11-3", ITEM_RECORD),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-8": (
+        ("r79 관문 S-1~S-6 줄 등급", "rev3 R3-E3, rev4 R4-B3, rev5 R5-C2", ITEM_GRADE),
+        ("L2 CP 3 %(H-10)", "r79·v5 기준", ITEM_GRADE),
+        ("L1 게이트 네 개수 대조", "rev4 R4-B3, rev5 R5-C1", ITEM_GATE),
+        ("seedext k/25·Fisher·문구", "개정 6 9절", ITEM_RECORD),
+        ("seedext 시드 0~4 해시(H-15)", "rev3 F-6", ITEM_GATE),
+        ("J-P3 위반 목록", "R4 RD-7·RD-8", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-7·RD-10", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-9": (
+        ("J1~J10 VB 외 설정 기록(V0 대비)", "v5 기준, rev3 R3-C3~C6", ITEM_RECORD),
+        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
+        ("J-P3(main·pressure_only ③ 줄)", "rev3 R3-C8, R4 RD-7·RD-8", ITEM_GATE),
+        ("격자 J-P3 등급(768 run)", "rev16 R16-7, R4 RD-7", ITEM_GATE),
+        ("P-7 L1 해시", "Q-S4", ITEM_GATE),
+        ("pressure_only 끝 단계", "v5 기준", ITEM_RECORD),
+        ("family F R-1~R-4", "rev3 R3-E2, rev4 R4-B5", ITEM_GRADE),
+        ("③ 켬 줄·run 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-10": (
+        ("J1~J10 VB(V0 대비, H-2)", "v5 기준, rev3 R3-C3~C6", ITEM_GRADE),
+        ("LS 대비 VB·L-d", "Q-S9", ITEM_RECORD),
+        ("H-8 S7 FL 가드 주기", "Q-S7", ITEM_GATE),
+        ("S8 SA-4 일곱 항목", "Q-S6, rev6 R6-C1", ITEM_GRADE),
+        ("13.1 순서", "Q-S5", ITEM_GRADE),
+        ("item8·overlap J", "Q-S8", ITEM_GRADE),
+        ("U-9 VB 줄 수(S-15)", "Q-S10", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
+        ("J-P3", "rev3 R3-C8, R4 RD-7·RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-11": (
+        ("G-3 8쌍 해시 같음", "rev16 R16-8", ITEM_GATE),
+        ("수 검사(키마다 양쪽 1줄)", "rev16 R16-8", ITEM_GATE),
+        ("커밋 정체성(R2·clean, S-12)", "rev16 R16-8", ITEM_GATE),
+    ),
+    "H-12": (
+        ("잠긴 표본 하한 − 진값 > 0.6 kN(강제 대체 네 다리)", "rev16 R16-9 6, rev17 R17-2a",
+         ITEM_GATE),
+        ("같은 판독(실제 대체 다리)", "rev16 R16-9 6, rev17 R17-2a", ITEM_GATE),
+        ("R17-2a 범위 공백 표지", "rev17 R17-2a, R4 RD-7", ITEM_GATE),
+        ("빈 창 막기(실제 대체 다리 잠긴 표본 수)", "rev16 R16-9 6", ITEM_RECORD),
+        ("잠기지 않은 꼬리 초과", "rev16 R16-9 6", ITEM_RECORD),
+        ("자기 사건 재생 차(recorded_lower_max_abs_N)", "rev17 R17-1", ITEM_RECORD),
+        ("T4h 파일 수(S-15)", "rev16 R16-2", ITEM_GATE),
+    ),
+    "C-9": (
+        ("decisions(dP), 토양 모드 시작, LOC 시각", "rev16 R16-11 1", ITEM_RECORD),
+        ("두 팔 controller_commands.npz sha256 같음", "rev16 R16-11 1", ITEM_RECORD),
+        ("최대 행정, 끝 rut 틈, P3-1~P3-9, 첫 READY, rc, 마지막 표본 시각", "rev16 R16-11 1",
+         ITEM_RECORD),
+        ("P-18 읽기 전제", "rev16 R16-11 1", ITEM_RECORD),
+        ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
+    ),
+    "C-10": (
+        ("다리별 F^a_min·F^t_min·시각", "rev16 R16-11 2", ITEM_RECORD),
+        ("F < F_min, F < F_min + 2 kN 시간", "rev16 R16-11 2, 원판 7.4, rev1 RV1-7", ITEM_RECORD),
+        ("G6-1~G6-7, P3-3, 끝 단계, 최대 행정, 패치 다리 침하", "rev16 R16-11 2", ITEM_RECORD),
+        ("rc, 마지막 표본 시각", "rev16 R16-11 2", ITEM_RECORD),
+        ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
+    ),
+    "C-11": (
+        ("첫 LOC, LOC 주기 크롤러 법선 최대·/W·0.01 W", "rev16 R16-11 3", ITEM_RECORD),
+        ("LOC 취소 수, 첫 READY, rc, 마지막 표본 시각", "rev16 R16-11 3", ITEM_RECORD),
+        ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
+    ),
+    "J_P": (
+        ("행 수 12(S-15)", "R4 RD-11 2", ITEM_GATE),
+        ("사건 기록 판독 불가", "R4 RD-11 4·7", ITEM_GATE),
+        ("그림자 판독 불가", "R4 RD-11 6·7", ITEM_GATE),
+        ("조건 1 LAS-b 그림자 미작동", "원판 7.3 1, R4 RD-11 6", ITEM_RECORD),
+        ("조건 2 K1 무영향(R4c30 0, 토양 모드 0)", "원판 7.3 2, R4 RD-11 5", ITEM_RECORD),
+        ("재사용 참거짓", "원판 7.3, R4 RD-11 7", ITEM_RECORD),
+    ),
+}
+"""RD-13: per bundle (item, basis clause, kind); the bases of definitions not handed to path 1
+come from the tools' docstrings / README (RD-13: no earlier section opened for them)."""
+
+
+def item_list_document(bundle: str) -> dict:
+    return {"bundle": bundle, "path": "경로 1", "r4_block_sha256": R4_BLOCK_SHA256,
+            "columns": ["항목", "근거 조항", "구분"],
+            "items": [{"항목": item, "근거 조항": basis, "구분": kind}
+                      for item, basis, kind in ITEM_LISTS[bundle]]}
+
+
+def item_list_bytes(bundle: str) -> bytes:
+    """The fixed bytes of one item list (sorted keys, LF, UTF-8): its sha256 does not depend on
+    the run."""
+    text = json.dumps(item_list_document(bundle), ensure_ascii=False, indent=1, sort_keys=True)
+    return (text + "\n").encode("utf-8")
+
+
+def item_list(args: argparse.Namespace) -> dict:
+    """RD-13: write ``items_<bundle>.json`` per bundle and report their sha256."""
+    folder = Path(args.out_dir)
+    folder.mkdir(parents=True, exist_ok=True)
+    files = {}
+    for bundle in ITEM_LISTS:
+        data = item_list_bytes(bundle)
+        path = folder / f"items_{bundle}.json"
+        path.write_bytes(data)
+        files[bundle] = {"file": path.name, "sha256": hashlib.sha256(data).hexdigest(),
+                         "items": len(ITEM_LISTS[bundle])}
+    return {"rules": RULES_NAME, "section": "R4 common block RD-13", "out_dir": str(folder),
+            "lists": files, "exit_code": 0}
+
+
+# ------------------------------------------------------------------------- RD-5 key map draft
+IDENTITY_KEYS = (
+    ("script / script_sha256", "judge4368_common.run_judge (도구 sha)", "도구 sha·공개 블록"),
+    ("rules_seal, rules_sha256, rules_rev*_sha256", "run_judge, resume4368_judge.main",
+     "봉인 블록"),
+    ("definition_changes, diff_vs_existing", "run_judge", "도구 판·규칙 설명 문자열"),
+    ("inputs.* (path, sha256, t4h_folders_*)", "각 판정기 judge()", "입력 파일 경로·sha256 블록"),
+    ("files[].sha256, family_table, replay, root, out_root, t4h_dir",
+     "resume4368_judge r4-lists·h12·x16-records", "입력 파일 경로·sha256 블록"),
+    ("out (요약 줄), --out 경로", "run_judge._finish, resume4368_judge.main", "출력 위치"),
+    ("rules, section, rule, note, method, *_note, reason, problems, findings 문장",
+     "모든 하위 명령", "자유 문장 사유 키·규칙 설명 문자열"),
+    ("head_check.head, expected_head", "resume4368_judge head-check", "판정 도구 checkout 커밋"),
+    ("r4_block_sha256", "resume4368_judge R4 하위 명령", "도구 판·규칙 설명 문자열"),
+    ("judge_run (명령·종료 코드)", "h6_judge_4368, h8_noise_judge_4368", "도구 판·실행 기록"),
+)
+"""RD-5 draft: the path 1 output keys left out of the K-10 comparison and where they are made
+(written before any run; no key is added after seeing results)."""
+
+
+def key_map(args: argparse.Namespace) -> dict:
+    rows = [{"keys": keys, "made_by": made_by, "category": category}
+            for keys, made_by, category in IDENTITY_KEYS]
+    return {"rules": RULES_NAME, "section": "R4 common block RD-5 (key map draft, path 1)",
+            "rows": rows, "exit_code": 0}
+
+
+# --------------------------------------------------------------------- RD-1 5 / RD-1 4 checks
+def _git(root: Path, *arguments: str) -> tuple[int, bytes]:
+    import subprocess
+
+    completed = subprocess.run(["git", "-C", str(root), *arguments],  # noqa: S603, S607
+                               capture_output=True, check=False)
+    return completed.returncode, completed.stdout
+
+
+def head_check(args: argparse.Namespace) -> dict:
+    """RD-1 5: the judgement checkout's ``HEAD`` is the full M4 hash (else S-12); with ``--r4``
+    also RD-1 4: every listed file has the same LF-byte sha256 at M4 and R4, and
+    ``git diff --name-only b9f5707..M4 -- 03_src 02_params`` is empty (else S-11)."""
+    root = Path(args.root)
+    code, out = _git(root, "rev-parse", "HEAD")
+    head = out.decode("utf-8").strip() if code == 0 else None
+    result: dict[str, Any] = {"rules": RULES_NAME, "section": "R4 common block RD-1 5 / RD-1 4",
+                              "head": head, "expected_head": args.expect, "markers": []}
+    if head != args.expect:
+        result["markers"].append("S-12 (HEAD is not M4)")
+    if args.r4:
+        blobs = []
+        for name in args.files or []:
+            shas = {}
+            for commit in (args.expect, args.r4):
+                status, data = _git(root, "show", f"{commit}:{name}")
+                shas[commit] = (lf_normalised_sha256(data) if status == 0 else None)
+            blobs.append({"file": name, "M4": shas[args.expect], "R4": shas[args.r4],
+                          "same": shas[args.expect] is not None
+                          and shas[args.expect] == shas[args.r4]})
+        _, diff = _git(root, "diff", "--name-only", f"{R2_COMMIT}..{args.expect}", "--",
+                       "03_src", "02_params")
+        changed = [line for line in diff.decode("utf-8").splitlines() if line.strip()]
+        result.update(blobs=blobs, src_params_changed=changed)
+        if not all(blob["same"] for blob in blobs) or changed:
+            result["markers"].append("S-11 (RD-1 4)")
+    result["exit_code"] = 1 if result["markers"] else 0
+    return result
+
+
 # --------------------------------------------------------------------------------------------- main
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -2762,12 +3993,9 @@ def _parser() -> argparse.ArgumentParser:
                            help="anchor-map report (RV1-5 selection, the only anchor input)")
             p.add_argument("--family-table", type=Path, default=None,
                            help="resume_k1_family.py table (RV1-6; a key not in it = uniform)")
-    p = sub.add_parser("jp-reuse", help="7.3")
-    p.add_argument("--shadow", type=Path, required=True, help="v5/las/shadow_jp_b0.jsonl")
-    p.add_argument(
-        "--rows", nargs="+", type=Path, required=True, help="07_results/S8/v5jp_*/<case> folders"
-    )
-    p.add_argument("--expected", type=int, default=12)
+    p = sub.add_parser("jp-reuse", help="7.3 by RD-11 (the two stored J_P batches, 12 rows fixed)")
+    p.add_argument("--root", type=Path, default=ROOT,
+                   help="checkout with 07_results/S9/<J_P batches> and the shadow record")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("oc5", help="7.4 path 1")
     p.add_argument("--result", type=Path, required=True)
@@ -2838,7 +4066,49 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--harness", nargs="*", type=Path)
     p.add_argument("--chrono", nargs="*", type=Path)
     p.add_argument("--out", type=Path, required=True)
+    _add_r4_parsers(sub)
     return parser
+
+
+def _add_r4_parsers(sub) -> None:
+    """The R4 subcommands (R4 common block e451f067, rev16 .. rev25)."""
+    p = sub.add_parser("r4-lists", help="RD-7 lists, RD-8 / RD-9 / RD-10 counts (R2 results)")
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
+    p.add_argument("--family-table", type=Path, required=True,
+                   help="resume_k1_family.py table (rev1 RV1-6; a key not in it = 균일 연약)")
+    p.add_argument("--bundles", nargs="*", default=[], help="limit to these bundles (H-1 ...)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("h11", help="rev16 R16-8: H-11 G-3 gate (8 pairs)")
+    p.add_argument("--h11-dir", type=Path, required=True, help="<OUT>/H-11")
+    p.add_argument("--las-k1-dir", type=Path, default=ROOT / LAS_K1_DIR,
+                   help="R2 U-3 outputs (06_analysis/02_control/v5_rerun/las_k1)")
+    p.add_argument("--expected-head", default=R2_COMMIT, help="R2 (the run commit)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("h12", help="rev16 R16-9 6 / rev17 R17-2a: H-12 record (two ranges)")
+    p.add_argument("--h12-dir", type=Path, required=True, help="<OUT>/H-12 (reads t4h/ only)")
+    p.add_argument("--replay", type=Path, required=True,
+                   help="t4h_replay.py <json> <OUT>/H-12/t4h --check-recorded output")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("x16-records", help="rev16 R16-11 / R16-11b: C-9 .. C-11 records")
+    p.add_argument("--out-root", type=Path, required=True, help="<OUT> (C-9/, C-10/, C-11/)")
+    p.add_argument("--rows-json", type=Path, default=None, help="default <OUT>/_tools/rows.json")
+    p.add_argument("--identity-dir", type=Path, default=None,
+                   help="default <OUT>/_identity (x16_identity pre / post files)")
+    p.add_argument("--runner-dir", type=Path, default=None,
+                   help="default <OUT>/_runners (logs_<cell>/<id>_run.done: rc)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("item-list", help="RD-13: per-bundle item lists (fixed bytes, sha256)")
+    p.add_argument("--out-dir", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("key-map", help="RD-5: identity keys left out of K-10 (draft)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("head-check", help="RD-1 5 HEAD = M4 (S-12); with --r4 RD-1 4 (S-11)")
+    p.add_argument("--root", type=Path, default=ROOT)
+    p.add_argument("--expect", required=True, help="M4 full hash")
+    p.add_argument("--r4", default=None, help="R4 full hash (RD-1 4 blob comparison)")
+    p.add_argument("--files", nargs="*", default=[],
+                   help="R4 allow-list files of both paths (RD-1 4)")
+    p.add_argument("--out", type=Path, required=True)
 
 
 COMMANDS = {
@@ -2860,6 +4130,13 @@ COMMANDS = {
     "ind-las": ind_las,
     "reagg-items": reagg_items,
     "stroke-exposure": stroke_exposure,
+    "r4-lists": r4_lists,
+    "h11": h11,
+    "h12": h12,
+    "x16-records": x16_records,
+    "item-list": item_list,
+    "key-map": key_map,
+    "head-check": head_check,
 }
 
 
@@ -2889,7 +4166,8 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev12 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """The 26 seals of RD-2 (original, rev1 .. rev25, :data:`SEALED_REVISIONS`); any problem is
+    ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2902,7 +4180,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     seal = sealed_rules_check()
     if seal["stop_S1"]:  # no judgement under an unsealed or changed revision
-        report = {"rules": RULES_NAME, "section": "8.2 S-1 (rev1 / rev2 seal)",
+        report = {"rules": RULES_NAME, "section": "8.2 S-1 (RD-2: original .. rev25 seals)",
                   "rules_seal": seal, "exit_code": 1}
     else:
         try:
@@ -2930,6 +4208,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev10_sha256"] = RULES_REV10_SHA256
     report["rules_rev11_sha256"] = RULES_REV11_SHA256
     report["rules_rev12_sha256"] = RULES_REV12_SHA256
+    report["rules_rev13_to_rev25_sha256"] = dict(RULES_REV13_TO_REV25)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"
