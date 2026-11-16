@@ -147,6 +147,13 @@ the V0 run of the same (file, key, event, offset_s within 1e-9 s) from the sourc
 list N_raw, the family F table, the list N_F with the family F rows judged on both sides without
 ``Fmin_after_W`` / ``U57_outside``, the records (fail -> pass, fail -> fail, FAULT, 판정 불가) and
 the v5 criteria H-10 grid term per application case (5-1 .. 5-4).
+R4 supplement 6 (0ad43866): list "file" = the repository path of the VB file, pair key by file
+stem, order result file / key / event (code points) / offset_s, false gate lists in full (6-1);
+the R3-E1 / R4-B4 sample is 같음 / 다름 / 판정 불가 per job and any 판정 불가 leaves the pair source
+undecided (``grid-v0-sample``), the stored V0 grid is never tag-checked (6-2); the application
+condition is true / false / 판정 불가 on that one pairing in ``grid-h10``, ``family-f
+--grid-root`` and ``family-f-trigger --grid-root`` alike, with the 판정 불가 row of the 5-4 table
+(6-3); the only marker is ``멈춤 H-10`` (6-4).
 
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
@@ -2297,49 +2304,97 @@ def _results_by_key(path: Path) -> dict[str, dict]:
     return {row.get("key"): row for row in read_json(path).get("results") or []}
 
 
-def _run_hashes(result: dict | None) -> dict[tuple, Any]:
-    """(event, offset) -> ``commands_sha256`` of a grid result's runs."""
-    return {(run.get("event"), float(run.get("offset_s"))): run.get("commands_sha256")
-            for run in (result or {}).get("runs") or []}
+SAMPLE_SAME, SAMPLE_DIFFER = "같음", "다름"
+SAMPLE_UNDECIDED = "판정 불가"
+
+
+def _is_finite_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _same_phase_runs(run: dict, runs: list[dict]) -> list[dict]:
+    """The runs of ``runs`` with the event of ``run`` and its ``offset_s`` within 1e-9 s."""
+    offset = run.get("offset_s")
+    if not _is_finite_number(offset):
+        return []
+    return [other for other in runs if other.get("event") == run.get("event")
+            and _is_finite_number(other.get("offset_s"))
+            and abs(other["offset_s"] - offset) <= COMPARE_EPS]
+
+
+def _phase_name(run: dict) -> str:
+    return f"{run.get('event')}@{run.get('offset_s')}"
 
 
 def sample_job_runs(stored: dict, sample: dict | None) -> dict:
-    """Rev4 R4-B4: one sample job = one stored result; every run is paired by (event, offset)
-    and must have the same hash."""
-    old, new = _run_hashes(stored), _run_hashes(sample)
-    missing = sum(1 for k in old if old[k] is None or new.get(k) is None) + len(set(new) - set(old))
-    differ = sum(1 for k in old if old[k] is not None and new.get(k) is not None
-                 and old[k] != new[k])
-    return {"runs": len(old), "differ": differ, "missing": missing}
+    """Rev4 R4-B4 with supplement 6-2: one sample job = one stored result.
+
+    같음 = every run on both sides has exactly one pair and the same string ``commands_sha256``;
+    다름 = all pairs single, both hashes strings, some differ. A missing or double pair or a
+    missing / non-string hash makes the job 판정 불가 (never read as 같음 or 다름).
+    """
+    stored_runs = [run for run in stored.get("runs") or [] if isinstance(run, dict)]
+    sample_runs = [] if sample is None else [
+        run for run in sample.get("runs") or [] if isinstance(run, dict)]
+    reasons = [] if sample is not None else ["no single sample job with this key"]
+    differ = 0
+    for run in sample_runs:
+        pairs = _same_phase_runs(run, stored_runs)
+        if len(pairs) != 1:
+            reasons.append(f"sample run {_phase_name(run)}: {len(pairs)} stored pairs")
+            continue
+        hashes = (run.get(R79_HASH_KEY), pairs[0].get(R79_HASH_KEY))
+        if not all(isinstance(value, str) for value in hashes):
+            reasons.append(f"sample run {_phase_name(run)}: commands_sha256 missing or not a "
+                           "string")
+        elif hashes[0] != hashes[1]:
+            differ += 1
+    for run in stored_runs:
+        if sample is not None and len(_same_phase_runs(run, sample_runs)) != 1:
+            reasons.append(f"stored run {_phase_name(run)}: no single sample pair")
+    state = SAMPLE_UNDECIDED if reasons else (SAMPLE_DIFFER if differ else SAMPLE_SAME)
+    return {"runs": len(stored_runs), "differ": differ, "state": state,
+            "not_judgeable": reasons}
 
 
 def grid_v0_sample(args: argparse.Namespace) -> dict:
-    """R3-E1 / R4-B4: the 8-job V0 sample (per stored file the first and the last result; every
-    run of the job, paired by (stem, key, event, offset)) against the stored V0 grid by
-    ``commands_sha256``; all same -> the stored V0 is the pair, otherwise V0 768 runs
-    (``resume_k1/h9_grid_v0/``)."""
+    """R3-E1 / R4-B4 with supplement 6-2: the 8-job V0 sample against the stored V0 grid.
+
+    Per stored file the first and the last result are the sample jobs; every run of a job is
+    paired by (stem, key, event, offset_s within 1e-9 s) and compared by ``commands_sha256``.
+    All 8 같음 -> the stored V0 is the pair; else any 다름 -> V0 768 (``resume_k1/h9_grid_v0/``).
+    A 판정 불가 job (it comes before any 다름) or other than 8 jobs leaves the source undecided
+    (``v0_768_required`` None; the H-9 grid judgement is 판정 불가, stop and ask).
+    """
     rows, problems = [], []
     for name in GRID_FILES:
         stored_path = Path(args.stored_dir) / f"{name}.json"
         stored = read_json(stored_path).get("results") or []
-        sample = _results_by_key(Path(args.sample_dir) / f"{name}.json")
+        sample_jobs = read_json(Path(args.sample_dir) / f"{name}.json").get("results") or []
         for row in (stored[0], stored[-1]) if stored else ():
             key = row.get("key")
-            compared = sample_job_runs(row, sample.get(key))
-            if compared["missing"]:
-                problems.append(f"{name} {key}: {compared['missing']} runs without a pair or hash")
+            matches = [job for job in sample_jobs if job.get("key") == key]
+            compared = sample_job_runs(row, matches[0] if len(matches) == 1 else None)
             rows.append({"file": name, "key": key, "stored_sha256_file": file_sha256(stored_path),
-                         **compared,
-                         "same": None if compared["missing"] else compared["differ"] == 0})
+                         "sample_jobs_with_key": len(matches), **compared,
+                         "same": compared["state"] == SAMPLE_SAME})
     if len(rows) != 2 * len(GRID_FILES):
         problems.append(f"{len(rows)} sample jobs, 8 expected")
-    is_all_same = not problems and all(row["same"] for row in rows)
-    return {"rules": RULES_REV3_NAME, "section": "R3-E1", "jobs": len(rows),
-            "same": sum(row["same"] is True for row in rows), "rows": rows,
-            "decision": ("stored V0 is the pair (저장(옛 V0 제어기), 표본 해시 같음)" if is_all_same
-                         else "run V0 768: steps_conditional_h9_grid_v0.json"),
-            "v0_768_required": not is_all_same, "problems": problems,
-            "exit_code": 1 if problems else 0}
+    problems += [f"{row['file']} {row['key']}: {reason}" for row in rows
+                 for reason in row["not_judgeable"]]
+    if problems:
+        source, required = SAMPLE_UNDECIDED, None
+        decision = f"{SAMPLE_UNDECIDED}: V0 pair source undecided, stop and ask"
+    elif all(row["same"] for row in rows):
+        source, required = "stored", False
+        decision = "stored V0 is the pair (저장(옛 V0 제어기), 표본 해시 같음)"
+    else:
+        source, required = "v0_768", True
+        decision = "run V0 768: steps_conditional_h9_grid_v0.json"
+    return {"rules": RULES_REV3_NAME, "section": "R3-E1 / R4-B4, supplement 6-2",
+            "jobs": len(rows), "same": sum(row["same"] for row in rows), "rows": rows,
+            "pair_source": source, "decision": decision, "v0_768_required": required,
+            "problems": problems, "exit_code": 1 if problems else 0}
 
 
 def _family_rows(grid_dir: Path) -> dict[tuple[str, float], list[dict]]:
@@ -2361,7 +2416,16 @@ def _failed_gates(run: dict) -> set[str]:
 
 def family_f_trigger(args: argparse.Namespace) -> dict:
     """R3-E2: a family F row (12 = 4 phases x 2 keys) with V0 pass and VB fail by
-    ``Fmin_after_W`` / ``U57_outside`` only starts the conditional 64 runs."""
+    ``Fmin_after_W`` / ``U57_outside`` only starts the conditional 64 runs.
+
+    With ``--grid-root`` (supplement 6-3) the trigger is the application condition on the one
+    5-1 / 6-2 V0 pairing (true, false, 판정 불가), the same value ``family-f`` and ``grid-h10``
+    give; ``--vb-dir`` / ``--v0-dir`` keep the R3-E2 form for a fixed V0 folder.
+    """
+    if getattr(args, "grid_root", None) is not None:
+        return _family_f_trigger_on_pairing(Path(args.grid_root))
+    if args.vb_dir is None or args.v0_dir is None:
+        raise InputError("family-f-trigger needs --grid-root or both --vb-dir and --v0-dir")
     vb, v0 = _family_rows(Path(args.vb_dir)), _family_rows(Path(args.v0_dir))
     rows = []
     for (key, offset), vb_runs in sorted(vb.items()):
@@ -2380,6 +2444,25 @@ def family_f_trigger(args: argparse.Namespace) -> dict:
             "decision": "run steps_conditional_h9_family_f.json (64 runs)" if is_trigger
             else "5.2 runs 해당 없음", "problems": problems,
             "exit_code": 1 if problems else 0}
+
+
+def _family_f_trigger_on_pairing(root: Path) -> dict:
+    pairing = grid_pairing(root)
+    condition = application_condition(pairing)
+    rows = [{"result_file": row.vb.result_file, "location": row.vb.location, "key": row.vb.key,
+             "offset_s": row.vb.offset_s,
+             "condition": condition_word(family_f_row_condition(row))}
+            for row in pairing.rows if row.is_family_f]
+    problems = [] if len(rows) == FAMILY_F_GRID_ROWS else [
+        f"{len(rows)} family F rows, {FAMILY_F_GRID_ROWS} expected"]
+    decisions = {True: "run steps_conditional_h9_family_f.json (64 runs)",
+                 False: "5.2 runs 해당 없음",
+                 None: f"{NOT_JUDGEABLE_WORD}: stop and ask"}
+    return {"rules": RULES_REV3_NAME, "section": "R3-E2, supplement 6-3 (5-1 V0 pairing)",
+            "v0_pair_source": pairing.source, "rows": sorted(rows, key=grid_sort_key),
+            "trigger": condition_word(condition), "decision": decisions[condition],
+            "problems": problems + pairing.input_stops,
+            "exit_code": 1 if problems or pairing.input_stops or condition is None else 0}
 
 
 FAMILY_F_OFFSETS = 16
@@ -2483,14 +2566,15 @@ def family_f_tag_problems(numbered: list[tuple[int, dict]]) -> dict[str, list]:
 
 
 def family_f_application(args: argparse.Namespace) -> dict | None:
-    """Supplement 4-5 application: does the VB grid show a pass -> fail of a family F row by the
-    two gates only (R3-E2 first bullet); the family F VB rows must be 12."""
-    if not (getattr(args, "vb_dir", None) and getattr(args, "v0_dir", None)):
+    """Supplement 4-5 application with 6-3: the condition (true, false, 판정 불가) on the one
+    V0 pairing of supplement 5-1 / 6-2 (``--grid-root``); the family F VB rows must be 12."""
+    if getattr(args, "grid_root", None) is None:
         return None
-    trigger = family_f_trigger(args)
-    rows = trigger["family_rows_with_duplicates"]
-    return {"condition": trigger["trigger"], "family_rows": rows,
-            "rows_ok": rows == FAMILY_F_GRID_ROWS, "trigger_rows": trigger["rows"]}
+    pairing = grid_pairing(Path(args.grid_root))
+    rows = sum(row.is_family_f for row in pairing.rows)
+    return {"condition": condition_word(application_condition(pairing)),
+            "v0_pair_source": pairing.source["source"], "family_rows": rows,
+            "rows_ok": rows == FAMILY_F_GRID_ROWS}
 
 
 def family_f(args: argparse.Namespace) -> dict:
@@ -2498,9 +2582,9 @@ def family_f(args: argparse.Namespace) -> dict:
 
     The values (k per key and setting, the four conditions, the violation lists) are always
     given; a missing or mistyped field is 판정 불가 and R-1 .. R-4 are then not a pass. With
-    ``--vb-dir`` / ``--v0-dir`` the application is decided too: condition true and pass = the
-    12 rows leave the v5 criteria H-10 count for the two gates; true and fail / 판정 불가 =
-    stop H-10 and ask; false = record only.
+    ``--grid-root`` the application is decided too (supplement 6-3, the 5-1 V0 pairing):
+    condition true and pass = the 12 rows leave the v5 criteria H-10 count for the two gates;
+    true and fail / 판정 불가 = 멈춤 H-10; false = record only; 판정 불가 = H-9 grid 판정 불가.
     """
     numbered = [(n, line) for n, line in _numbered_jsonl(Path(args.lines))]
     lines = [line for _, line in numbered]
@@ -2532,8 +2616,11 @@ def family_f(args: argparse.Namespace) -> dict:
            "pass": result == FAMILY_F_RESULT_PASS, "problems": stops, "tag_check_4_3": tags}
     application = family_f_application(args)
     if application is None:
-        decision, is_stop = "application not decided (no --vb-dir / --v0-dir)", result != \
+        decision, is_stop = "application not decided (no --grid-root)", result != \
             FAMILY_F_RESULT_PASS
+    elif application["condition"] == NOT_JUDGEABLE_WORD:
+        decision, is_stop = (f"condition {NOT_JUDGEABLE_WORD}: H-9 grid {NOT_JUDGEABLE_WORD}, "
+                             "stop and ask"), True
     elif not application["rows_ok"]:
         decision, is_stop = (f"family F rows {application['family_rows']} != "
                              f"{FAMILY_F_GRID_ROWS}: stop and ask"), True
@@ -2543,7 +2630,7 @@ def family_f(args: argparse.Namespace) -> dict:
         decision, is_stop = ("the 12 family F rows leave the v5 criteria H-10 count for "
                              "Fmin_after_W / U57_outside"), False
     else:
-        decision, is_stop = "v5 criteria H-10: stop and ask", True
+        decision, is_stop = f"{H10_MARKER} (v5 criteria H-10: stop and ask)", True
     return {**out, "application": application, "decision": decision,
             "exit_code": 1 if stops or is_stop else 0}
 
@@ -3678,18 +3765,21 @@ def r4_inputs(args: argparse.Namespace) -> dict:
             "markers": markers, "exit_code": 1 if markers else 0}
 
 
-# ------------------------------- supplement 5: grid pass -> fail, v5 criteria H-10 grid term
+# -------------------------- supplements 5 / 6: grid pass -> fail, v5 criteria H-10 grid term
 SUPPLEMENT_5_SHA256 = "89cb422d93374bf9cbc99f9a1db90d1d4ee47b153058ce2313a7dffdec7f40e7"
 GRID_VB_DIR = f"{RK}/h9_grid"
 GRID_V0_SAMPLE_DIR = f"{RK}/h9_grid_v0_sample"
 GRID_V0_STORED_DIR = "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid"
 GRID_V0_768_DIR = f"{RK}/h9_grid_v0"
 GRID_ROWS = 768
-FAMILY_F_GRID_FILES = ("grid_r67_main.json", "grid_r67_top.json")
+FAMILY_F_GRID_STEMS = ("grid_r67_main", "grid_r67_top")
 FAMILY_F_LINES = f"{RK}/h9_family_F.jsonl"
 GRID_BUNDLE = "H-9"
 V0_SOURCE_STORED, V0_SOURCE_768 = "저장 V0 격자", "V0 768(h9_grid_v0)"
 H10_STOP = "H-10, 멈추고 묻는다"
+H10_MARKER = "멈춤 H-10"
+"""Supplement 6-4: the only marker of the H-9 grid calculation."""
+SUPPLEMENT_6_SHA256 = "0ad43866b82e7f342bfe7e1fb30295b5c47c113c2d02fad5739f8cc40a245fc0"
 
 
 @dataclass(frozen=True)
@@ -3697,8 +3787,10 @@ class GridRun:
     """One grid run ``results[i].runs[j]`` with its supplement 5-1 key and RD-7 3 place.
 
     Attributes:
-        file: The grid file name (``grid_r67_main.json``), first part of the row key.
-        result_file: The file relative to the repository root (RD-7 3).
+        stem: The grid file name without ``.json`` (supplement 6-1: the file part of the pair
+            key; VB and V0 files lie in different folders).
+        result_file: The file relative to the repository root, ``/`` separated (RD-7 3; the
+            "file name" column of the lists, supplement 6-1).
         location: ``results[i].runs[j]``.
         key: ``results[i].key``.
         setting: ``results[i].v5_setting`` (record).
@@ -3708,7 +3800,7 @@ class GridRun:
         run: The run itself (``pass``, ``gates``, ``fault_events``).
     """
 
-    file: str
+    stem: str
     result_file: str
     location: str
     key: Any
@@ -3717,10 +3809,6 @@ class GridRun:
     event: Any
     offset_s: Any
     run: dict
-
-
-def _is_finite_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
 def read_grid_runs(folder: Path, root: Path) -> tuple[list[GridRun], list[str]]:
@@ -3734,11 +3822,11 @@ def read_grid_runs(folder: Path, root: Path) -> tuple[list[GridRun], list[str]]:
             continue
         document = read_json(path)
         if not is_grid_document(document):
-            problems.append(f"S-15: {path.name} is not a grid file (results[].runs)")
+            problems.append(f"S-15: {common.repo_relative(path, root)} is not a grid file")
             continue
         for i, job in enumerate(document["results"]):
             for j, run in enumerate(job["runs"]):
-                runs.append(GridRun(path.name, common.repo_relative(path, root),
+                runs.append(GridRun(path.stem, common.repo_relative(path, root),
                                     f"results[{i}].runs[{j}]", job.get("key"),
                                     job.get("v5_setting"), job.get("controller_tag"),
                                     run.get("event"), run.get("offset_s"), run))
@@ -3749,14 +3837,15 @@ def _pair_index(runs: list[GridRun]) -> dict[tuple, list[GridRun]]:
     index: dict[tuple, list[GridRun]] = {}
     for run in runs:
         if isinstance(run.key, str) and isinstance(run.event, str):
-            index.setdefault((run.file, run.key, run.event), []).append(run)
+            index.setdefault((run.stem, run.key, run.event), []).append(run)
     return index
 
 
 def pair_grid_runs(vb_runs: list[GridRun], v0_runs: list[GridRun]
                    ) -> tuple[list[tuple[GridRun, GridRun | None, str | None]], list[GridRun]]:
-    """Supplement 5-1: per VB run the V0 run of the same (file, key, event, offset_s within
-    1e-9 s); 0 or 2+ pairs give a reason (판정 불가). Also the V0 runs no VB run paired."""
+    """Supplement 5-1 / 6-1: per VB run the V0 run of the same (file stem, key, event,
+    offset_s within 1e-9 s); 0 or 2+ pairs give a reason (판정 불가). Also the V0 runs no VB
+    run paired."""
     index = _pair_index(v0_runs)
     paired: set[int] = set()
     pairs: list[tuple[GridRun, GridRun | None, str | None]] = []
@@ -3765,7 +3854,7 @@ def pair_grid_runs(vb_runs: list[GridRun], v0_runs: list[GridRun]
                 and _is_finite_number(vb.offset_s)):
             pairs.append((vb, None, "VB key / event / offset_s missing or mistyped"))
             continue
-        found = [v0 for v0 in index.get((vb.file, vb.key, vb.event), [])
+        found = [v0 for v0 in index.get((vb.stem, vb.key, vb.event), [])
                  if _is_finite_number(v0.offset_s)
                  and abs(v0.offset_s - vb.offset_s) <= COMPARE_EPS]
         paired.update(id(v0) for v0 in found)
@@ -3788,6 +3877,8 @@ def run_pass(run: dict) -> tuple[bool | None, str | None]:
 
 
 def false_gates(run: dict) -> list[str]:
+    """Supplement 6-1: every false gate name of the run, in code point order (the two family F
+    gates included)."""
     gates = run.get("gates")
     return sorted(name for name, ok in gates.items() if ok is False) if isinstance(
         gates, dict) else []
@@ -3799,7 +3890,7 @@ def pass_without_two_gates(run: dict) -> bool:
 
 
 def is_family_f_run(run: GridRun) -> bool:
-    return (run.file in FAMILY_F_GRID_FILES and run.key in FAMILY_F_KEYS
+    return (run.stem in FAMILY_F_GRID_STEMS and run.key in FAMILY_F_KEYS
             and run.event == FAMILY_F_EVENT)
 
 
@@ -3861,11 +3952,12 @@ def assess_grid_row(vb: GridRun, v0: GridRun | None, pair_reason: str | None) ->
 
 
 def grid_list_row(row: GridRow) -> dict:
-    """Supplement 5-3 list line in the RD-7 3 notation (file, key, event, phase, the false gates
-    of each side) with the bundle, result file and location of both runs."""
+    """Supplement 5-3 / 6-1 list line: the VB result file (repository path, the "file name"
+    column), key, event, phase, the false gates of each side, with the bundle and both
+    locations (RD-7 3)."""
     return {"bundle": GRID_BUNDLE, "result_file": row.vb.result_file,
-            "location": row.vb.location, "file": row.vb.file, "key": row.vb.key,
-            "setting": row.vb.setting, "event": row.vb.event, "offset_s": row.vb.offset_s,
+            "location": row.vb.location, "key": row.vb.key, "setting": row.vb.setting,
+            "event": row.vb.event, "offset_s": row.vb.offset_s,
             "vb_false_gates": false_gates(row.vb.run),
             "v0_false_gates": [] if row.v0 is None else false_gates(row.v0.run),
             "v0_result_file": None if row.v0 is None else row.v0.result_file,
@@ -3873,9 +3965,10 @@ def grid_list_row(row: GridRow) -> dict:
 
 
 def grid_sort_key(row: dict) -> tuple:
-    """Supplement 5-3: file name, key, event, phase."""
+    """Supplement 6-1: result file path, key, event (code point order), then the phase
+    ``offset_s`` as a number; the location only breaks a tie of identical keys."""
     offset = row.get("offset_s")
-    return (str(row.get("file")), str(row.get("key")), str(row.get("event")),
+    return (str(row.get("result_file")), str(row.get("key")), str(row.get("event")),
             offset if _is_finite_number(offset) else math.inf, str(row.get("location")))
 
 
@@ -3895,17 +3988,30 @@ def is_excluded_pass_to_fail(row: GridRow) -> bool:
     return row.is_judged and row.v0_pass_without_two is True and row.vb_pass_without_two is False
 
 
-def family_f_condition(rows: list[GridRow]) -> bool:
-    """Supplement 4-5 (rev3 R3-E2): a family F row with V0 pass and VB failing by the two gates
-    only."""
-    return any(row.is_judged and row.v0_pass is True and row.vb_pass is False
-               and set(false_gates(row.vb.run)) <= set(FAMILY_F_GATES)
-               for row in rows if row.is_family_f)
+def family_f_row_condition(row: GridRow) -> bool | None:
+    """Supplement 6-3: is this family F row a pass -> fail by the two gates only (None =
+    판정 불가 by 5-1 / 5-2 / 5-3 (나))."""
+    if not row.is_judged:
+        return None
+    return (row.v0_pass is True and row.vb_pass is False
+            and set(false_gates(row.vb.run)) <= set(FAMILY_F_GATES))
+
+
+def combine_conditions(values: list[bool | None]) -> bool | None:
+    """Supplement 6-3: any true -> true; else any 판정 불가 -> 판정 불가 (None); else false."""
+    if any(value is True for value in values):
+        return True
+    return None if any(value is None for value in values) else False
+
+
+def condition_word(value: bool | None) -> bool | str:
+    """Supplement 6-3: the three values as written (true, false, ``판정 불가``)."""
+    return NOT_JUDGEABLE_WORD if value is None else value
 
 
 def family_f_table(rows: list[GridRow]) -> list[dict]:
     """Supplement 5-3 (나): the family F rows (key, both passes, both false gate lists, both
-    passes without the two gates)."""
+    passes without the two gates) with the row's condition value (6-3)."""
     table = []
     for row in rows:
         if not row.is_family_f:
@@ -3913,44 +4019,50 @@ def family_f_table(rows: list[GridRow]) -> list[dict]:
         table.append({**grid_list_row(row), "vb_pass": row.vb_pass, "v0_pass": row.v0_pass,
                       "vb_pass_without_two": row.vb_pass_without_two,
                       "v0_pass_without_two": row.v0_pass_without_two,
+                      "condition": condition_word(family_f_row_condition(row)),
                       "not_judgeable": row.reasons})
     return sorted(table, key=grid_sort_key)
 
 
-def h10_grid_table(n_raw: int, n_f: int) -> list[dict]:
-    """Supplement 5-4: the count each application case uses and its processing."""
+def h10_grid_table(n_raw: int | None, n_f: int | None) -> list[dict]:
+    """Supplement 5-4 with the 6-3 row: the count each application case uses and whether the
+    case carries the one marker ``멈춤 H-10`` (6-4)."""
     return [
         {"condition": False, "R-1..R-4": "(기록)", "count": "N_raw", "value": n_raw,
-         "processing": "N_raw ≥ 1이면 " + H10_STOP, "stop": n_raw >= 1},
+         "processing": "N_raw ≥ 1이면 " + H10_STOP, "h10_marker": bool(n_raw)},
         {"condition": True, "R-1..R-4": FAMILY_F_RESULT_PASS, "count": "N_F", "value": n_f,
-         "processing": "N_F ≥ 1이면 " + H10_STOP, "stop": n_f >= 1},
+         "processing": "N_F ≥ 1이면 " + H10_STOP, "h10_marker": bool(n_f)},
         {"condition": True, "R-1..R-4": f"{FAMILY_F_RESULT_FAIL} 또는 {NOT_JUDGEABLE_WORD}",
-         "count": None, "value": None, "processing": H10_STOP, "stop": True},
+         "count": None, "value": None, "processing": H10_STOP, "h10_marker": True},
+        {"condition": NOT_JUDGEABLE_WORD, "R-1..R-4": "(기록)", "count": None, "value": None,
+         "processing": f"H-9 격자 {NOT_JUDGEABLE_WORD}, 멈추고 묻는다", "h10_marker": False},
     ]
 
 
-def select_h10_row(table: list[dict], condition: bool, family_result: str | None) -> dict:
+def select_h10_row(table: list[dict], condition: bool | None, family_result: str | None
+                   ) -> dict:
+    if condition is None:
+        return table[3]
     if not condition:
         return table[0]
     return table[1] if family_result == FAMILY_F_RESULT_PASS else table[2]
 
 
 def v0_pair_source(root: Path) -> dict:
-    """Supplement 5-1: the R3-E1 sample hashes all same -> the stored V0 grid, otherwise V0 768;
-    a sample check with problems leaves the source undecided."""
+    """Supplement 5-1 / 6-2: the R3-E1 / R4-B4 sample decides the V0 pair source (stored V0
+    grid, V0 768, or 판정 불가 = undecided)."""
     sample = grid_v0_sample(argparse.Namespace(sample_dir=root / GRID_V0_SAMPLE_DIR,
                                                stored_dir=root / GRID_V0_STORED_DIR))
-    if sample["problems"]:
-        return {"source": None, "folder": None, "sample_problems": sample["problems"]}
-    is_stored = not sample["v0_768_required"]
-    return {"source": V0_SOURCE_STORED if is_stored else V0_SOURCE_768,
-            "folder": GRID_V0_STORED_DIR if is_stored else GRID_V0_768_DIR,
+    folders = {"stored": GRID_V0_STORED_DIR, "v0_768": GRID_V0_768_DIR}
+    words = {"stored": V0_SOURCE_STORED, "v0_768": V0_SOURCE_768}
+    source = sample["pair_source"]
+    return {"source": words.get(source, NOT_JUDGEABLE_WORD), "folder": folders.get(source),
             "sample_jobs_same": sample["same"], "sample_jobs": sample["jobs"],
-            "sample_problems": []}
+            "sample_problems": sample["problems"]}
 
 
 def grid_tag_stops(runs: list[GridRun], kind: str) -> list[dict]:
-    """Supplement 5-1 / 4-3: the tag of a grid run is its ``results[i].controller_tag``."""
+    """Supplement 5-1 / 4-3 / 6-2: the tag of a grid run is its ``results[i].controller_tag``."""
     stops = []
     for run in runs:
         problem = kind_tag_problem(kind, run.tag)
@@ -3960,83 +4072,119 @@ def grid_tag_stops(runs: list[GridRun], kind: str) -> list[dict]:
     return stops
 
 
+@dataclass
+class GridPairing:
+    """Supplement 5-1 / 6-2: the V0 pair source, the VB rows with their pairs, the V0 runs no
+    VB run paired, and the input stops (S-15 form, S-2 / S-11 tags)."""
+
+    source: dict
+    rows: list[GridRow]
+    v0_only: list[GridRun]
+    input_stops: list[str]
+
+    @property
+    def is_source_decided(self) -> bool:
+        return self.source["folder"] is not None
+
+
+def grid_pairing(root: Path) -> GridPairing:
+    """The one V0 pairing every application condition and the grid lists use (supplement 6-3);
+    no rows when the pair source is undecided."""
+    source = v0_pair_source(root)
+    if source["folder"] is None:
+        return GridPairing(source, [], [], [])
+    vb_runs, vb_problems = read_grid_runs(root / GRID_VB_DIR, root)
+    v0_runs, v0_problems = read_grid_runs(root / source["folder"], root)
+    tags = grid_tag_stops(vb_runs, KIND_P3_VB)
+    if source["source"] == V0_SOURCE_768:  # 6-2: the stored (old) V0 grid is not tag-checked
+        tags += grid_tag_stops(v0_runs, KIND_NONE)
+    stops = vb_problems + v0_problems
+    if len(vb_runs) != GRID_ROWS:
+        stops.append(f"S-15: {len(vb_runs)} VB grid runs, {GRID_ROWS} expected")
+    stops += [f"{tag['stop']} {tag['result_file']} {tag['location']}: {tag['reason']}"
+              for tag in tags]
+    pairs, v0_only = pair_grid_runs(vb_runs, v0_runs)
+    return GridPairing(source, [assess_grid_row(*pair) for pair in pairs], v0_only, stops)
+
+
+def application_condition(pairing: GridPairing) -> bool | None:
+    """Supplement 4-5 / 6-3 on the 5-1 pairing: true, false or 판정 불가 (None; also when the
+    pair source is undecided)."""
+    if not pairing.is_source_decided:
+        return None
+    return combine_conditions([family_f_row_condition(row) for row in pairing.rows
+                               if row.is_family_f])
+
+
 def _family_f_result(root: Path) -> tuple[str | None, str | None]:
     path = root / FAMILY_F_LINES
     if not path.is_file():
-        return None, f"{FAMILY_F_LINES} missing"
-    report = family_f(argparse.Namespace(lines=path, vb_dir=None, v0_dir=None))
+        return None, f"S-15: {FAMILY_F_LINES} missing"
+    report = family_f(argparse.Namespace(lines=path, grid_root=None))
     return report["result"], None
 
 
-def grid_rows_and_stops(root: Path, source: dict) -> tuple[list[GridRow], list[GridRun], dict]:
-    """The 768 VB rows with their V0 pairs, the unpaired V0 runs and the form / tag stops."""
-    vb_runs, vb_problems = read_grid_runs(root / GRID_VB_DIR, root)
-    v0_runs, v0_problems = read_grid_runs(root / source["folder"], root)
-    stops = {"form": vb_problems + v0_problems,
-             "tags": grid_tag_stops(vb_runs, KIND_P3_VB)}
-    if source["source"] == V0_SOURCE_768:  # the stored V0 grid is the old V0 controller
-        stops["tags"] += grid_tag_stops(v0_runs, KIND_NONE)
-    if len(vb_runs) != GRID_ROWS:
-        stops["form"].append(f"S-15: {len(vb_runs)} VB grid runs, {GRID_ROWS} expected")
-    pairs, v0_only = pair_grid_runs(vb_runs, v0_runs)
-    return [assess_grid_row(*pair) for pair in pairs], v0_only, stops
+def _not_judgeable_rows(pairing: GridPairing) -> list[dict]:
+    rows = [{**grid_list_row(row), "reasons": row.reasons}
+            for row in pairing.rows if not row.is_judged]
+    rows += [{"bundle": GRID_BUNDLE, "result_file": run.result_file, "location": run.location,
+              "key": run.key, "setting": run.setting, "event": run.event,
+              "offset_s": run.offset_s, "reasons": ["V0 run without a VB row (supplement 5-1)"]}
+             for run in pairing.v0_only]
+    return sorted(rows, key=grid_sort_key)
 
 
-def grid_h10(args: argparse.Namespace) -> dict:
-    """Supplement 5 (user decision 129): the VB grid pass -> fail rows against the V0 pair
-    (5-1, 5-2), the raw list N_raw, the family F table and the list N_F without the two gates
-    (5-3), and the v5 criteria H-10 grid term by the application case (5-4)."""
-    root = Path(args.root)
-    out: dict[str, Any] = {"rules": RULES_NAME, "section": "R4 supplement 5 (5-1 .. 5-4)",
-                           "supplement_5_sha256": SUPPLEMENT_5_SHA256, "root": str(root)}
-    source = v0_pair_source(root)
-    out["v0_pair_source"] = source
-    if source["source"] is None:
-        out.update(markers=["V0 pair source undecided (R3-E1 sample problems): stop and ask"],
-                   exit_code=1)
-        return out
-    rows, v0_only, stops = grid_rows_and_stops(root, source)
+def grid_lists(pairing: GridPairing) -> dict:
+    """Supplement 5-3 (가) .. (다) and the records of one pairing."""
+    rows = pairing.rows
+    judged = [row for row in rows if row.is_judged]
     raw = [row for row in rows if is_raw_pass_to_fail(row)]
     excluded = [row for row in rows if is_excluded_pass_to_fail(row)]
-    judged = [row for row in rows if row.is_judged]
-    undecided = [{**grid_list_row(row), "reasons": row.reasons}
-                 for row in rows if not row.is_judged]
-    undecided += [{"bundle": GRID_BUNDLE, "result_file": run.result_file,
-                   "location": run.location, "file": run.file, "key": run.key,
-                   "event": run.event, "offset_s": run.offset_s,
-                   "reasons": ["V0 run without a VB row (supplement 5-1)"]} for run in v0_only]
     faults = [row for row in rows if row.is_fault]
-    family_table = family_f_table(rows)
-    condition = family_f_condition(rows)
-    family_result, family_problem = _family_f_result(root)
-    table = h10_grid_table(len(raw), len(excluded))
-    selected = select_h10_row(table, condition, family_result)
-    markers = list(stops["form"]) + [f"{stop['stop']} {stop['result_file']} {stop['location']}"
-                                     for stop in stops["tags"]]
-    if family_problem:
-        markers.append(f"family F R-1 .. R-4 not available: {family_problem}")
-    if len(family_table) != FAMILY_F_GRID_ROWS:
-        markers.append(f"S-15: {len(family_table)} family F rows, {FAMILY_F_GRID_ROWS} expected")
-    if undecided:
-        markers.append(f"H-9 grid {NOT_JUDGEABLE_WORD} ({len(undecided)} rows): stop and ask")
-    if selected["stop"]:
-        markers.append(f"v5 criteria H-10 grid term ({selected['count']}): {H10_STOP}")
-    if faults:
-        markers.append(f"v5 criteria 10 grid FAULT 0 violated ({len(faults)} rows)")
-    out.update(
-        rows=len(rows), judged_rows=len(judged), stops=stops,
-        raw_pass_to_fail=_sorted_rows(raw), N_raw=len(raw),
-        family_f_rows=family_table, family_f_condition=condition,
-        family_f_result=family_result,
-        excluded_pass_to_fail=_sorted_rows(excluded), N_F=len(excluded),
-        record={"fail_to_pass": sum(r.v0_pass is False and r.vb_pass is True for r in judged),
+    return {"rows": len(rows), "judged_rows": len(judged),
+            "raw_pass_to_fail": _sorted_rows(raw), "N_raw": len(raw),
+            "family_f_rows": family_f_table(rows),
+            "excluded_pass_to_fail": _sorted_rows(excluded), "N_F": len(excluded),
+            "record": {
+                "fail_to_pass": sum(r.v0_pass is False and r.vb_pass is True for r in judged),
                 "fail_to_fail": sum(r.v0_pass is False and r.vb_pass is False for r in judged),
                 "pass_to_pass": sum(r.v0_pass is True and r.vb_pass is True for r in judged),
                 "fault": len(faults), "fault_rows": _sorted_rows(faults),
-                "not_judgeable": sorted(undecided, key=grid_sort_key)},
-        h10_grid_table=table, h10_grid_selected=selected, markers=markers,
-        exit_code=1 if markers else 0)
-    return out
+                "not_judgeable": _not_judgeable_rows(pairing)}}
+
+
+def grid_h10(args: argparse.Namespace) -> dict:
+    """Supplements 5 and 6 (user decision 129): the VB grid pass -> fail rows against the V0
+    pair (5-1, 6-2), the raw list N_raw, the family F table and the list N_F (5-3, 6-1), the
+    application condition (6-3) and the v5 criteria H-10 grid term (5-4).
+
+    The only marker is ``멈춤 H-10`` (6-4); FAULT and 판정 불가 rows are counts and lists. Exit
+    1 when the marker, an input stop, FAULT >= 1 or any 판정 불가 (rows, pair source,
+    condition) is there, else 0 (README).
+    """
+    root = Path(args.root)
+    pairing = grid_pairing(root)
+    condition = application_condition(pairing)
+    family_result, family_problem = _family_f_result(root)
+    stops = pairing.input_stops + ([family_problem] if family_problem else [])
+    lists = grid_lists(pairing) if pairing.is_source_decided else {}
+    if lists and len(lists["family_f_rows"]) != FAMILY_F_GRID_ROWS:
+        stops.append(f"S-15: {len(lists['family_f_rows'])} family F rows, "
+                     f"{FAMILY_F_GRID_ROWS} expected")
+    table = h10_grid_table(lists.get("N_raw"), lists.get("N_F"))
+    selected = select_h10_row(table, condition, family_result)
+    marker = H10_MARKER if selected["h10_marker"] else None
+    record = lists.get("record") or {}
+    is_finding = bool(marker or stops or condition is None or record.get("fault")
+                      or record.get("not_judgeable"))
+    return {"rules": RULES_NAME, "section": "R4 supplements 5 / 6",
+            "supplement_5_sha256": SUPPLEMENT_5_SHA256,
+            "supplement_6_sha256": SUPPLEMENT_6_SHA256, "root": str(root),
+            "v0_pair_source": pairing.source, "input_stops": stops, **lists,
+            "application_condition": condition_word(condition),
+            "family_f_result": family_result, "h10_grid_table": table,
+            "h10_grid_selected": selected, "h10_marker": marker,
+            "exit_code": 1 if is_finding else 0}
 
 
 # --------------------------------------------------------------------------- H-11 (rev16 R16-8)
@@ -4768,13 +4916,16 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
         ("P-7 L1 해시", "Q-S4", ITEM_GATE),
         ("pressure_only 끝 단계", "v5 기준", ITEM_RECORD),
         ("family F R-1~R-4(h9_family_F.jsonl 64줄, 적용 조건 𝓕 12행)",
-         "rev3 R3-E2, rev4 R4-B5, v5 기준 개정 5 5.2, 보충 4-5", ITEM_GRADE),
+         "rev3 R3-E2, rev4 R4-B5, v5 기준 개정 5 5.2, 보충 4-5·6-3", ITEM_GRADE),
+        ("격자 V0 짝 출처(표본 같음·다름·판정 불가)와 V0 768 태그",
+         "rev3 R3-E1, rev4 R4-B4, 보충 5-1·6-2", ITEM_GATE),
         ("격자 통과→실패(768 run, V0 짝, 원 목록 N_raw·𝓕 12행 표·𝓕 제외 목록 N_F)",
-         "v5 기준 3절 J1·10절, rev3 R3-C3, 개정 5 5절, 보충 5-1~5-3", ITEM_GATE),
-        ("격자 실패→통과·실패→실패·FAULT·판정 불가 행", "v5 기준 10절, 원판 9.3, 보충 5-2·5-3",
-         ITEM_RECORD),
-        ("v5 기준 H-10 격자 항(적용 조건별 수)·격자 FAULT 0", "v5 기준 10·11절, 보충 5-4",
-         ITEM_GRADE),
+         "v5 기준 3절 J1·10절, rev3 R3-C3, 개정 5 5절, 보충 5-1~5-3·6-1", ITEM_GATE),
+        ("격자 실패→통과·실패→실패·FAULT·판정 불가 행(수·목록, 표지 없음)",
+         "v5 기준 10절, 원판 9.3, 보충 5-2·5-3·6-4", ITEM_RECORD),
+        ("𝓕 적용 조건(참·거짓·판정 불가, 5-1 짝)", "보충 4-5·6-3", ITEM_GATE),
+        ("v5 기준 H-10 격자 항(적용 조건별 수, 표지 멈춤 H-10)·격자 FAULT 0",
+         "v5 기준 10·11절, 보충 5-4·6-3·6-4", ITEM_GRADE),
         ("③ 켬 줄·run 수(S-8)", "R4 RD-9", ITEM_GATE),
         ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
     ),
@@ -5011,14 +5162,15 @@ def _parser() -> argparse.ArgumentParser:
                    help="06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("family-f-trigger", help="rev3 R3-E2: does family F start the 64 runs")
-    p.add_argument("--vb-dir", type=Path, required=True, help="resume_k1/h9_grid")
-    p.add_argument("--v0-dir", type=Path, required=True, help="the V0 pair grid folder")
+    p.add_argument("--grid-root", type=Path, default=None,
+                   help="checkout: the supplement 5-1 / 6-2 V0 pairing decides (6-3)")
+    p.add_argument("--vb-dir", type=Path, default=None, help="resume_k1/h9_grid (no --grid-root)")
+    p.add_argument("--v0-dir", type=Path, default=None, help="a fixed V0 grid folder")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("family-f", help="rev3 R3-E2: rev5 5.2 R-1 .. R-4 on h9_family_F.jsonl")
     p.add_argument("--lines", type=Path, required=True, help="resume_k1/h9_family_F.jsonl")
-    p.add_argument("--vb-dir", type=Path, default=None,
-                   help="resume_k1/h9_grid (supplement 4-5 application condition)")
-    p.add_argument("--v0-dir", type=Path, default=None, help="the V0 pair grid folder")
+    p.add_argument("--grid-root", type=Path, default=None,
+                   help="checkout: the application condition on the 5-1 / 6-2 V0 pairing")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("ind-las", help="rev3 R3-B5: IND_LAS gate and the IND hash")
     p.add_argument("--harness", nargs="+", type=Path, required=True,

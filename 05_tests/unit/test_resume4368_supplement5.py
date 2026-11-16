@@ -96,26 +96,32 @@ def _run(root: Path, i: int, j: int, name: str = "grid_r67_main", folder: str | 
     _edit(root, folder or judge.GRID_VB_DIR, name, change)
 
 
-def _grid_h10(root: Path) -> tuple[int, dict]:
-    out = root / "grid_h10.json"
-    code = judge.main(["grid-h10", "--root", str(root), "--out", str(out)])
+def _report(root: Path, *argv: str) -> tuple[int, dict]:
+    out = root / "report.json"
+    code = judge.main([*argv, "--out", str(out)])
     return code, json.loads(out.read_text(encoding="utf-8"))
 
 
+def _grid_h10(root: Path) -> tuple[int, dict]:
+    return _report(root, "grid-h10", "--root", str(root))
+
+
 FAMILY_FR = 6  # results index of FAMILY_F_KEYS[0] in grid_r67_* files
+NJ = "판정 불가"
 
 
+# ------------------------------------------------------------------------ 5-3, 5-4, 6-1, 6-4
 def test_all_pass_is_no_finding(tmp_path: Path) -> None:
     _build(tmp_path)
     code, report = _grid_h10(tmp_path)
-    assert code == 0, report["markers"]
+    assert code == 0, report["input_stops"]
     assert report["v0_pair_source"]["source"] == judge.V0_SOURCE_STORED
     assert (report["rows"], report["judged_rows"], report["N_raw"], report["N_F"]) == (
         768, 768, 0, 0)
-    assert len(report["family_f_rows"]) == 12 and report["family_f_condition"] is False
-    assert report["record"]["pass_to_pass"] == 768
+    assert len(report["family_f_rows"]) == 12 and report["application_condition"] is False
+    assert report["record"]["pass_to_pass"] == 768 and report["h10_marker"] is None
     assert report["h10_grid_selected"]["count"] == "N_raw"
-    assert [row["count"] for row in report["h10_grid_table"]] == ["N_raw", "N_F", None]
+    assert [row["condition"] for row in report["h10_grid_table"]] == [False, True, True, NJ]
 
 
 def test_raw_pass_to_fail_row_in_rd7_notation(tmp_path: Path) -> None:
@@ -126,44 +132,60 @@ def test_raw_pass_to_fail_row_in_rd7_notation(tmp_path: Path) -> None:
     assert code == 1 and report["N_raw"] == 1 and report["N_F"] == 1
     row = report["raw_pass_to_fail"][0]
     assert row == {"bundle": "H-9", "result_file": f"{judge.GRID_VB_DIR}/grid_r69_top.json",
-                   "location": "results[2].runs[3]", "file": "grid_r69_top.json",
-                   "key": "k2", "setting": "VB", "event": "G4", "offset_s": 3 * 0.025,
-                   "vb_false_gates": ["end_att"], "v0_false_gates": [],
+                   "location": "results[2].runs[3]", "key": "k2", "setting": "VB",
+                   "event": "G4", "offset_s": 3 * 0.025, "vb_false_gates": ["end_att"],
+                   "v0_false_gates": [],
                    "v0_result_file": f"{judge.GRID_V0_STORED_DIR}/grid_r69_top.json",
                    "v0_location": "results[2].runs[3]"}
-    assert any("H-10" in marker for marker in report["markers"])
+    assert report["h10_marker"] == "멈춤 H-10"
 
 
 def _family_two_gate_fail(root: Path) -> None:
     _run(root, FAMILY_FR, 0, **{"pass": False, "gates": {**GOOD_GATES, "Fmin_after_W": False}})
 
 
-@pytest.mark.parametrize("fail_r1, selected, code", [(False, "N_F", 0), (True, None, 1)])
-def test_family_f_condition_selects_the_count(tmp_path, fail_r1, selected, code) -> None:
+@pytest.mark.parametrize("fail_r1, selected, marker", [(False, "N_F", None),
+                                                       (True, None, "멈춤 H-10")])
+def test_family_f_condition_selects_the_count(tmp_path, fail_r1, selected, marker) -> None:
     _build(tmp_path)
     _family_two_gate_fail(tmp_path)
     if fail_r1:
         _write(tmp_path / judge.FAMILY_F_LINES, _family_lines(fail_r1=True))
-    got, report = _grid_h10(tmp_path)
-    assert report["family_f_condition"] is True and (report["N_raw"], report["N_F"]) == (1, 0)
-    assert report["h10_grid_selected"]["count"] == selected and got == code
-    assert report["family_f_result"] == ("실패" if fail_r1 else "통과")
+    code, report = _grid_h10(tmp_path)
+    assert report["application_condition"] is True
+    assert (report["N_raw"], report["N_F"]) == (1, 0)
+    assert report["h10_grid_selected"]["count"] == selected and report["h10_marker"] == marker
+    assert code == (0 if marker is None else 1)
     table_row = next(r for r in report["family_f_rows"] if r["location"] == "results[6].runs[0]")
     assert (table_row["vb_pass"], table_row["v0_pass"], table_row["vb_pass_without_two"],
-            table_row["v0_pass_without_two"]) == (False, True, True, True)
+            table_row["v0_pass_without_two"], table_row["condition"]) == (
+        False, True, True, True, True)
 
 
-def test_family_f_rows_are_judged_again_on_both_sides(tmp_path: Path) -> None:
-    """Supplement 5-3 (다): V0 failed by a two gate, VB by another gate = fail -> fail in (가)
-    but pass -> fail without the two gates."""
+def test_family_f_rows_are_judged_again_with_full_gate_lists(tmp_path: Path) -> None:
+    """5-3 (다) / 6-1: V0 failed by a two gate, VB by another gate = fail -> fail in (가) but
+    pass -> fail without the two gates; the gate columns keep every false gate."""
     _build(tmp_path)
     _run(tmp_path, FAMILY_FR, 1, folder=judge.GRID_V0_STORED_DIR,
          **{"pass": False, "gates": {**GOOD_GATES, "U57_outside": False}})
-    _run(tmp_path, FAMILY_FR, 1, **{"pass": False, "gates": {**GOOD_GATES, "end_att": False}})
+    _run(tmp_path, FAMILY_FR, 1, **{"pass": False, "gates": {**GOOD_GATES, "end_att": False,
+                                                           "Fmin_after_W": False}})
     _, report = _grid_h10(tmp_path)
     assert report["N_raw"] == 0 and report["N_F"] == 1
     assert report["record"]["fail_to_fail"] == 1
-    assert report["excluded_pass_to_fail"][0]["v0_false_gates"] == ["U57_outside"]
+    row = report["excluded_pass_to_fail"][0]
+    assert (row["vb_false_gates"], row["v0_false_gates"]) == (
+        ["Fmin_after_W", "end_att"], ["U57_outside"])
+
+
+def test_fault_and_not_judgeable_rows_carry_no_marker(tmp_path: Path) -> None:
+    """6-4: FAULT and 판정 불가 rows are counts and lists only."""
+    _build(tmp_path)
+    _run(tmp_path, 0, 0, name="grid_r67_top", fault_events=["FAULT_X"])
+    _run(tmp_path, 1, 1, **{"pass": 1})
+    code, report = _grid_h10(tmp_path)
+    assert report["record"]["fault"] == 1 and len(report["record"]["not_judgeable"]) == 1
+    assert report["h10_marker"] is None and report["input_stops"] == [] and code == 1
 
 
 def test_pairing_tolerance_duplicates_and_v0_only(tmp_path: Path) -> None:
@@ -176,10 +198,13 @@ def test_pairing_tolerance_duplicates_and_v0_only(tmp_path: Path) -> None:
         runs.append({**runs[7], "offset_s": 99.0})  # V0 only
     _edit(tmp_path, judge.GRID_V0_STORED_DIR, "grid_r69_bottom", change)
     code, report = _grid_h10(tmp_path)
-    reasons = {(r["location"], tuple(r["reasons"])) for r in report["record"]["not_judgeable"]}
-    assert reasons == {("results[1].runs[6]", ("2 V0 pairs (supplement 5-1)",)),
-                       ("results[1].runs[25]",("V0 run without a VB row (supplement 5-1)",))}
+    reasons = {(r["result_file"].rsplit("/", 2)[-2], r["location"], tuple(r["reasons"]))
+               for r in report["record"]["not_judgeable"]}
+    assert reasons == {("h9_grid", "results[1].runs[6]", ("2 V0 pairs (supplement 5-1)",)),
+                       ("grid", "results[1].runs[25]",
+                        ("V0 run without a VB row (supplement 5-1)",))}
     assert code == 1 and report["judged_rows"] == 767
+    assert report["application_condition"] is False  # not a family F row
 
 
 @pytest.mark.parametrize("values, reason", [
@@ -194,49 +219,113 @@ def test_row_pass_form_is_not_judgeable(tmp_path, values, reason) -> None:
     _run(tmp_path, 1, 1, **values)
     code, report = _grid_h10(tmp_path)
     assert [r["reasons"] for r in report["record"]["not_judgeable"]] == [[reason]]
-    assert code == 1 and any("판정 불가" in m for m in report["markers"])
+    assert code == 1
 
 
-def test_fault_rows_are_counted(tmp_path: Path) -> None:
-    _build(tmp_path)
-    _run(tmp_path, 0, 0, name="grid_r67_top", fault_events=["FAULT_X"])
-    code, report = _grid_h10(tmp_path)
-    assert report["record"]["fault"] == 1 and code == 1
-    assert any("FAULT 0" in marker for marker in report["markers"])
-
-
-def test_family_f_gate_names_must_match(tmp_path: Path) -> None:
+# ------------------------------------------------------------------------------------ 6-3
+def test_family_f_row_not_judgeable_makes_the_condition_not_judgeable(tmp_path: Path) -> None:
     _build(tmp_path)
     _run(tmp_path, FAMILY_FR, 0, gates={**GOOD_GATES, "extra": True})
-    _, report = _grid_h10(tmp_path)
+    code, report = _grid_h10(tmp_path)
     assert [r["reasons"] for r in report["record"]["not_judgeable"]] == [
         ["family F: VB and V0 gate names differ"]]
+    assert report["application_condition"] == NJ
+    assert report["h10_grid_selected"]["condition"] == NJ and report["h10_marker"] is None
+    assert code == 1
 
 
+def test_a_true_row_wins_over_a_not_judgeable_row(tmp_path: Path) -> None:
+    _build(tmp_path)
+    _family_two_gate_fail(tmp_path)
+    _run(tmp_path, FAMILY_FR, 1, gates={**GOOD_GATES, "extra": True})
+    _, report = _grid_h10(tmp_path)
+    assert report["application_condition"] is True
+
+
+@pytest.mark.parametrize("change, expected, decision_part", [
+    (None, False, "record"),
+    ("two_gate_fail", True, "leave the v5 criteria H-10"),
+    ("not_judgeable", NJ, "stop and ask"),
+])
+def test_family_f_and_trigger_use_the_same_pairing(tmp_path, change, expected,
+                                                   decision_part) -> None:
+    _build(tmp_path)
+    if change == "two_gate_fail":
+        _family_two_gate_fail(tmp_path)
+    elif change == "not_judgeable":
+        _run(tmp_path, FAMILY_FR, 0, gates={**GOOD_GATES, "extra": True})
+    lines = str(tmp_path / judge.FAMILY_F_LINES)
+    _, family = _report(tmp_path, "family-f", "--lines", lines, "--grid-root", str(tmp_path))
+    _, trigger = _report(tmp_path, "family-f-trigger", "--grid-root", str(tmp_path))
+    _, grid = _grid_h10(tmp_path)
+    assert family["application"]["condition"] == trigger["trigger"] == expected
+    assert grid["application_condition"] == expected
+    assert family["application"]["family_rows"] == 12 and decision_part in family["decision"]
+
+
+def test_family_f_fail_on_true_condition_is_the_h10_marker(tmp_path: Path) -> None:
+    _build(tmp_path)
+    _family_two_gate_fail(tmp_path)
+    _write(tmp_path / judge.FAMILY_F_LINES, _family_lines(fail_r1=True))
+    code, family = _report(tmp_path, "family-f", "--lines", str(tmp_path / judge.FAMILY_F_LINES),
+                           "--grid-root", str(tmp_path))
+    assert family["result"] == "실패" and "멈춤 H-10" in family["decision"] and code == 1
+
+
+# ------------------------------------------------------------------------------------ 6-2
 def test_tags_and_the_v0_768_source(tmp_path: Path) -> None:
     _build(tmp_path, sample_differs=True)
     _edit(tmp_path, judge.GRID_VB_DIR, "grid_r69_top",
           lambda d: d["results"][0].update(controller_tag=judge.TAG_V0))
+    _edit(tmp_path, judge.GRID_V0_768_DIR, "grid_r69_top",
+          lambda d: d["results"][1].pop("controller_tag"))
     code, report = _grid_h10(tmp_path)
     assert report["v0_pair_source"]["source"] == judge.V0_SOURCE_768
-    assert {s["stop"] for s in report["stops"]["tags"]} == {"S-2"}
-    assert len(report["stops"]["tags"]) == 24 and code == 1
+    stops = [stop.split(" ", 1)[0] for stop in report["input_stops"]]
+    assert stops.count("S-2") == 24 and stops.count("S-11") == 24 and code == 1
 
 
-def test_sample_problem_leaves_the_source_undecided(tmp_path: Path) -> None:
+def test_stored_v0_tags_are_not_compared(tmp_path: Path) -> None:
     _build(tmp_path)
-    _edit(tmp_path, judge.GRID_V0_SAMPLE_DIR, "grid_r67_top",
-          lambda d: d["results"][0]["runs"].pop())
+    _edit(tmp_path, judge.GRID_V0_STORED_DIR, "grid_r69_top",
+          lambda d: d["results"][1].pop("controller_tag"))
     code, report = _grid_h10(tmp_path)
-    assert code == 1 and report["v0_pair_source"]["source"] is None
-    assert "raw_pass_to_fail" not in report
+    assert report["input_stops"] == [] and code == 0
 
 
-def test_list_order_is_file_key_event_phase() -> None:
-    rows = [{"file": "grid_r69_top.json", "key": "a", "event": "G4", "offset_s": 0.1},
-            {"file": "grid_r67_top.json", "key": "b", "event": "G4", "offset_s": 0.05},
-            {"file": "grid_r67_top.json", "key": "b", "event": "FS24", "offset_s": 0.1},
-            {"file": "grid_r67_top.json", "key": "b", "event": "FS24", "offset_s": 0.025}]
+@pytest.mark.parametrize("break_sample", ["missing_run", "hash_not_string", "two_jobs"])
+def test_sample_not_judgeable_leaves_the_source_undecided(tmp_path, break_sample) -> None:
+    _build(tmp_path, sample_differs=True)  # the other jobs differ: 판정 불가 still comes first
+
+    def change(document: dict) -> None:
+        job = document["results"][0]
+        if break_sample == "missing_run":
+            job["runs"].pop()
+        elif break_sample == "hash_not_string":
+            job["runs"][0]["commands_sha256"] = 7
+        else:
+            document["results"].append(copy.deepcopy(job))
+    _edit(tmp_path, judge.GRID_V0_SAMPLE_DIR, "grid_r67_top", change)
+    code, report = _grid_h10(tmp_path)
+    assert report["v0_pair_source"]["source"] == NJ and report["application_condition"] == NJ
+    assert report["h10_grid_selected"]["condition"] == NJ and report["h10_marker"] is None
+    assert "raw_pass_to_fail" not in report and code == 1
+    _, sample = _report(tmp_path, "grid-v0-sample",
+                        "--sample-dir", str(tmp_path / judge.GRID_V0_SAMPLE_DIR),
+                        "--stored-dir", str(tmp_path / judge.GRID_V0_STORED_DIR))
+    assert sample["v0_768_required"] is None and sample["pair_source"] == NJ
+
+
+def test_list_order_is_path_key_event_phase() -> None:
+    vb = judge.GRID_VB_DIR
+    rows = [{"result_file": f"{vb}/grid_r69_top.json", "key": "a", "event": "G4",
+             "offset_s": 0.1},
+            {"result_file": f"{vb}/grid_r67_top.json", "key": "b", "event": "G4",
+             "offset_s": 0.05},
+            {"result_file": f"{vb}/grid_r67_top.json", "key": "b", "event": "FS24",
+             "offset_s": 0.1},
+            {"result_file": f"{vb}/grid_r67_top.json", "key": "b", "event": "FS24",
+             "offset_s": 0.025}]
     ordered = sorted(rows, key=judge.grid_sort_key)
-    assert [(r["file"][5:8], r["event"], r["offset_s"]) for r in ordered] == [
+    assert [(r["result_file"][-12:-9], r["event"], r["offset_s"]) for r in ordered] == [
         ("r67", "FS24", 0.025), ("r67", "FS24", 0.1), ("r67", "G4", 0.05), ("r69", "G4", 0.1)]

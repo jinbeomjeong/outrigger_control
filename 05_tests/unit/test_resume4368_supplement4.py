@@ -232,39 +232,8 @@ def test_family_f_shape_and_tag_stops(tmp_path: Path) -> None:
     assert code == 1 and "S-15" in problems and "S-2 line 64" in problems
 
 
-def _family_grid(folder: Path, gates: dict) -> None:
-    for name, offsets in (("grid_r67_main", (0.0, 0.05)),
-                          ("grid_r67_top", (0.0, 0.025, 0.05, 0.075))):
-        rows = [{"key": key, "runs": [{"event": "FS24", "offset_s": o, "gates": gates,
-                                       "pass": all(gates.values())} for o in offsets]}
-                for key in judge.FAMILY_F_KEYS]
-        _write(folder / f"{name}.json", {"results": rows})
-
-
-@pytest.mark.parametrize("fail_r1, decision_part, code", [
-    (False, "leave the v5 criteria H-10", 0), (True, "stop and ask", 1)])
-def test_family_f_application(tmp_path: Path, fail_r1, decision_part, code) -> None:
-    vb, v0 = tmp_path / "vb", tmp_path / "v0"
-    _family_grid(vb, {**GOOD_GATES, "Fmin_after_W": False})
-    _family_grid(v0, GOOD_GATES)
-    lines = _family_lines()
-    if fail_r1:
-        for i in range(32, 37):
-            lines[i]["gates"]["U57_outside"] = False
-    got, report = _family(tmp_path, lines, "--vb-dir", str(vb), "--v0-dir", str(v0))
-    assert report["application"]["family_rows"] == 12 and report["application"]["condition"]
-    assert decision_part in report["decision"] and got == code
-
-
-def test_family_f_condition_false_is_a_record(tmp_path: Path) -> None:
-    vb, v0 = tmp_path / "vb", tmp_path / "v0"
-    _family_grid(vb, GOOD_GATES)
-    _family_grid(v0, GOOD_GATES)
-    lines = _family_lines()
-    for i in range(32, 37):
-        lines[i]["gates"]["U57_outside"] = False
-    code, report = _family(tmp_path, lines, "--vb-dir", str(vb), "--v0-dir", str(v0))
-    assert report["result"] == "실패" and code == 0 and "record" in report["decision"]
+# The family F application (--grid-root, supplement 6-3) is tested with the full synthetic grid
+# in test_resume4368_supplement5.py.
 
 
 # --------------------------------------------------------------------------- audit A-4
