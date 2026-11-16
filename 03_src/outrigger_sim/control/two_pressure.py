@@ -1031,6 +1031,9 @@ class LockStartSource(StrEnum):
     RETRACT_HOLD = "retract_hold"
     """③ revision 5 R5-2 rule (i): a retracting hold or carry period, ``max(retract moving
     model, p_ret)`` at its head reading (``jp3_remedy_spec.md`` 2.3)."""
+    RETRACT_TRACKER = "retract_tracker"
+    """③ revision 5 R5-7: the term ``p_hat + delta_m`` of the lock start model after a
+    retraction won (spec 2.10; appended last, edition 4a J4a-4)."""
 
 
 STRETCH_CLOSED_ABOVE_HOLD = "above_hold"
@@ -1109,6 +1112,26 @@ class _LockStretch:
     seed_after_Pa: float = math.nan
     inherited_candidates: int = 0
     """Candidates taken over from a carry run whose gate never opened (``carry_end_rule``)."""
+    # ③ revision 5 edition 4 records (immutable defaults: class attributes for pickles)
+    candidate_times: tuple[float, ...] = ()
+    """Per candidate, the read time it was added (an inherited one keeps its own time)."""
+    candidate_inherited: tuple[bool, ...] = ()
+    """Per candidate, whether it came from a carry run (R5-6)."""
+    model_bound_index: int = -1
+    """Index of the candidate behind :attr:`model_bound_Pa` (-1 = none)."""
+    previous_tracker_max_Pa: float = -math.inf
+    """Largest R5-7 moving start value of the lookback before ``k0`` (source record only)."""
+    ret_gate_t_s: float = math.nan
+    """Retract run since the last stretch: read time from which the plant may move (the gate
+    seen open after a carry, or the first retract period after a reversal)."""
+    ret_last_t_s: float = math.nan
+    """Read time of the run's last ``ret`` period."""
+    ret_travel_m: float = 0.0
+    """``sum |u| T`` of the run's ``ret`` periods."""
+    ret_after_gate_s: float = math.nan
+    """Edition 4.1 record of the stretch: ``ret`` time after the gate opened (NaN = the stretch
+    did not follow a retraction)."""
+    ret_mean_speed_m_s: float = math.nan
 
     def summary(self, leg: int, with_hold: bool = False) -> dict[str, Any]:
         """Meta row of the stretch (10.4 ⑦); ``extend_bound_Pa`` only with the ③ option, the
@@ -1151,6 +1174,9 @@ class _CarryState:
         bound_Pa: ④c of the last carry period.
         gate_open_t_s: Read time at which the tracker gate was first seen open.
         log_row: The ``stretch_log`` row of the closed stretch (carry columns filled here).
+        candidate_times: Per candidate, the read time it was added.
+        travel_m: ``sum |u| T`` of the carry periods (``carry_log``).
+        need_ub_m: The gate's retract ``need_ub`` of the last carry period (None = none).
     """
 
     candidates: list[tuple[float, float]]
@@ -1162,6 +1188,11 @@ class _CarryState:
     bound_Pa: float = math.nan
     gate_open_t_s: float | None = None
     log_row: dict[str, Any] | None = None
+    candidate_times: tuple[float, ...] = ()
+    travel_m: float = 0.0
+    need_ub_m: float | None = None
+    last_t_s: float = math.nan
+    """Read time of the last carry period."""
 
 
 def _finite_or_none(value: float) -> float | None:
@@ -1297,6 +1328,8 @@ class TwoPressureMonitor:
     """Per-read trace of the last read (:meth:`extend_bound_trace_row`)."""
     _stretch_log: list[dict[str, Any]] | None = None
     """Closed stretches of every leg (``extend_start_record.stretch_log``)."""
+    _carry_log: list[dict[str, Any]] | None = None
+    """Ended carry runs of every leg (``extend_start_record.carry_log``, edition 4)."""
     _premise_record: PremiseRecord | None = None
     """Review records of the ③ premises (meta ``review_record``, option on or off); created on
     first use, so a monitor pickled before it carries none."""
@@ -1331,6 +1364,9 @@ class TwoPressureMonitor:
         self.period_s = float(period_s)
         self.load_estimate = LoadEstimate(load_estimate)
         self.settings = settings or TwoPressureSettings()
+        if self.settings.extend_start_bound is not None:
+            # edition 4a 13.7: a bound pickled with a test-only rule skipped __post_init__
+            self.settings.extend_start_bound.check_allowed()
         weight = self.settings.rod_weight_N
         if weight is None:
             weight = ROD_WEIGHT_WITHOUT_YAML_N if rod_weight_N is None else rod_weight_N
@@ -1426,7 +1462,7 @@ class TwoPressureMonitor:
         self._step_rule_suspended_by = None
         self.__dict__.pop("_extend_tracker", None)
         self.__dict__.pop("_premise_record", None)
-        for name in ("_carry_states", "_extend_trace_row", "_stretch_log"):
+        for name in ("_carry_states", "_extend_trace_row", "_stretch_log", "_carry_log"):
             self.__dict__.pop(name, None)
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
@@ -1602,6 +1638,9 @@ class TwoPressureMonitor:
                                                   is_locked_phase, seal_friction_sum_N)
         self._update_rod_estimates(t_s, head_pressure_Pa, rod, commanded_m_s, stroke_m)
         forces = self._forces(head_pressure_Pa, rod, head_only)
+        if self._uses_extend_hold and self._extend_trace_row is not None:
+            # record only (edition 4.1 false-drop count): the lower force of this read
+            self._extend_trace_row["lower_force_N"] = [float(value) for value in forces.lower]
         self._collect_load_sample(forces.nominal)
         if self.settings.diagnostics:
             self._check_locked(t_s, rod, forces, is_locked_phase, seal_band_N)
@@ -2422,11 +2461,13 @@ class TwoPressureMonitor:
             carries[leg] = carry
         carry.direction = math.copysign(1.0, command_m_s)
         if command_m_s < 0.0:
+            # R5-2 carry candidate: no p_hat term (R5-7 does not apply here, R9)
             model_Pa = self._lock_start_model_Pa(leg, -1.0, head_Pa)
-            carry.candidates.append((model_Pa, head_Pa))
-            carry.candidate_sources = (*carry.candidate_sources,
-                                       LockStartSource.RETRACT_HOLD.value)
+            self._append_candidate(carry, model_Pa, head_Pa,
+                                   LockStartSource.RETRACT_HOLD.value, t_s)
         carry.periods += 1
+        carry.travel_m += abs(command_m_s) * self.period_s
+        carry.last_t_s = t_s
         carry.bound_Pa = self._candidate_bound_Pa(leg, carry.candidates,
                                                   carry.stroke_window_max_m, head_Pa)
         return carry.bound_Pa
@@ -2440,7 +2481,8 @@ class TwoPressureMonitor:
         stretch.seed_after_Pa = float(tracker.pressure_Pa[leg])
         return _CarryState(candidates=list(stretch.candidates),
                            candidate_sources=tuple(stretch.candidate_sources),
-                           stroke_window_max_m=stretch.stroke_window_max_m, start_t_s=t_s)
+                           stroke_window_max_m=stretch.stroke_window_max_m, start_t_s=t_s,
+                           candidate_times=tuple(stretch.candidate_times))
 
     def _candidate_bound_Pa(self, leg, candidates, stroke_window_max_m, head_Pa) -> float:
         """``max_j [M_j + R_ub (p_h,j - p_h)^+]`` (the ④ model bound; NaN without a candidate or
@@ -2457,7 +2499,7 @@ class TwoPressureMonitor:
         watch, stretch = self._legs[leg], self._stretch_states()[leg]
         if period_class.is_locked:
             inherited = self._carry_to_inherit(leg)
-            self._end_carry(leg)
+            self._end_carry(leg, t_s, period_class, inherited is not None)
             self._update_locked_stretch(leg, stretch, t_s, head_Pa, rod_Pa, command_m_s,
                                         stroke_m, period_class, inherited)
             watch.rod_estimate_Pa = self._locked_upper_bound_Pa(leg, stretch, head_Pa)
@@ -2466,8 +2508,9 @@ class TwoPressureMonitor:
                 self._close_stretch_for_carry(leg, stretch, t_s)
                 self._note_gate_opening(leg, t_s)
             else:
-                self._end_carry(leg)
+                self._end_carry(leg, t_s, period_class)
                 self._close_lock_stretch(leg, stretch)
+            self._note_retract_run(leg, stretch, t_s, command_m_s, period_class)
             self._track_moving_leg(leg, stretch, t_s, head_Pa, command_m_s)
             watch.rod_estimate_Pa = self._hold_moving_estimate_Pa(leg, period_class, head_Pa)
             watch.lock_rod_estimate_Pa = None
@@ -2493,25 +2536,36 @@ class TwoPressureMonitor:
         if not stretch.is_open:
             self._open_lock_stretch(leg, stretch, t_s)
             if inherited is not None:
-                stretch.candidates.extend(inherited.candidates)
-                stretch.candidate_sources = (*stretch.candidate_sources,
-                                             *inherited.candidate_sources)
-                stretch.stroke_window_max_m = max(stretch.stroke_window_max_m,
-                                                  inherited.stroke_window_max_m)
-                stretch.inherited_candidates = len(inherited.candidates)
+                self._inherit_carry_candidates(stretch, inherited)
         if t_s < stretch.window_end_s - 1e-9 or not stretch.candidates:
-            self._add_lock_candidate(leg, stretch, head_Pa, stroke_m)
+            self._add_lock_candidate(leg, stretch, head_Pa, stroke_m, t_s)
         if period_class is PeriodClass.HOLD:
             stretch.hold_periods += 1
             if command_m_s < 0.0:
+                # R5-2 hold candidate: no p_hat term (R5-7 does not apply here, R9)
                 model_Pa = self._lock_start_model_Pa(leg, -1.0, head_Pa)
-                stretch.candidates.append((model_Pa, head_Pa))
-                stretch.candidate_sources = (*stretch.candidate_sources,
-                                             LockStartSource.RETRACT_HOLD.value)
+                self._append_candidate(stretch, model_Pa, head_Pa,
+                                       LockStartSource.RETRACT_HOLD.value, t_s)
                 stretch.retract_hold_candidates += 1
         self._track_valid_reading(leg, stretch, t_s, head_Pa, rod_Pa, stroke_m)
         if self._is_tracking_online_ratio and period_class is PeriodClass.LOCK:
             self._track_online_ratio(leg, stretch, t_s, head_Pa, rod_Pa, stroke_m)
+
+    @staticmethod
+    def _inherit_carry_candidates(stretch, carry: _CarryState) -> None:
+        """R5-6: the new stretch takes over all candidates of the carry run whose gate never
+        opened (the union with the window candidates; ``s_w`` the larger one)."""
+        count = len(carry.candidates)
+        times = tuple(carry.candidate_times)
+        if len(times) != count:  # a carry restored from an older pickle
+            times = (math.nan,) * count
+        stretch.candidates.extend(carry.candidates)
+        stretch.candidate_sources = (*stretch.candidate_sources, *carry.candidate_sources)
+        stretch.candidate_times = (*stretch.candidate_times, *times)
+        stretch.candidate_inherited = (*stretch.candidate_inherited, *([True] * count))
+        stretch.stroke_window_max_m = max(stretch.stroke_window_max_m,
+                                          carry.stroke_window_max_m)
+        stretch.inherited_candidates = count
 
     def _hold_moving_estimate_Pa(self, leg, period_class: PeriodClass, head_Pa) -> float:
         """Spec 2.6: extension and carry extension ``max(13 bar, p_hat + delta_m)``, carry
@@ -2553,13 +2607,17 @@ class TwoPressureMonitor:
     def _note_gate_opening(self, leg, t_s) -> None:
         carry = self._carry_state_list()[leg]
         tracker = self._extend_tracker
-        if carry is None or carry.gate_open_t_s is not None or tracker is None:
+        if carry is None or tracker is None:
             return
-        if tracker.gate.is_open[leg]:
+        if carry.direction < 0.0:
+            carry.need_ub_m = tracker.gate.last_retract_need_m(leg)
+        if carry.gate_open_t_s is None and tracker.gate.is_open[leg]:
             carry.gate_open_t_s = t_s
 
-    def _end_carry(self, leg) -> None:
-        """A lock, hold or moving period after a carry run: its log columns, then no carry."""
+    def _end_carry(self, leg, t_s: float, end_class: PeriodClass,
+                   is_inherited: bool = False) -> None:
+        """A lock, hold or moving period after a carry run: its log columns and its
+        ``carry_log`` row, then no carry."""
         carries = self._carry_state_list()
         carry = carries[leg]
         if carry is None:
@@ -2567,7 +2625,34 @@ class TwoPressureMonitor:
         if carry.log_row is not None:
             carry.log_row["carry_periods"] = carry.periods
             carry.log_row["gate_open_t_s"] = carry.gate_open_t_s
+        self._append_carry_log(self._carry_log_row(leg, carry, end_class.value, is_inherited))
         carries[leg] = None
+
+    @staticmethod
+    def _carry_log_row(leg, carry: _CarryState, end_class: str,
+                       is_inherited: bool) -> dict[str, Any]:
+        """Edition 4 ``carry_log`` row (spec 6.3)."""
+        return {"leg": LEG_ORDER[leg], "t_start_s": carry.start_t_s,
+                "t_end_s": _finite_or_none(carry.last_t_s),
+                "direction": carry.direction, "periods": carry.periods,
+                "sum_abs_u_T_m": carry.travel_m,
+                "gate_opened": carry.gate_open_t_s is not None,
+                "gate_open_t_s": carry.gate_open_t_s, "need_ub_m_at_end": carry.need_ub_m,
+                "end_class": end_class, "inherited_to_stretch": is_inherited}
+
+    def _append_carry_log(self, row: dict[str, Any]) -> None:
+        if self._carry_log is None:
+            self._carry_log = []
+        if len(self._carry_log) < MAX_STRETCH_LOG_ROWS:
+            self._carry_log.append(row)
+
+    def _carry_log_meta(self) -> list[dict[str, Any]]:
+        """Ended carry runs plus the open ones as ``run_end`` rows."""
+        rows = [dict(row) for row in self._carry_log or []]
+        for leg, carry in enumerate(self._carry_states or []):
+            if carry is not None and len(rows) < MAX_STRETCH_LOG_ROWS:
+                rows.append(self._carry_log_row(leg, carry, STRETCH_OPEN_AT_RUN_END, False))
+        return rows
 
     def _hold_trace_row(self, t_s, head, commanded, classes: list[PeriodClass],
                         carry_bound_Pa: NDArray[np.float64]) -> dict[str, Any]:
@@ -2593,7 +2678,42 @@ class TwoPressureMonitor:
                 "carry_bound_Pa": carry_bound_Pa.tolist(), "used_bound_Pa": used_Pa,
                 "gate_open": tracker.gate.is_open.tolist(),
                 "gate_fill_m": tracker.gate.fill_m.tolist(),
-                "head_read_Pa": [float(value) for value in head]}
+                "head_read_Pa": [float(value) for value in head],
+                **self._dominant_candidate_columns(t_s, classes),
+                "is_fallback": [state is RodSensorState.FALLBACK for state in self.rod_state],
+                "f_min_N": self.F_min_N,
+                "identity": self.settings.extend_start_bound.identity()}
+
+    def _dominant_candidate_columns(self, t_s: float,
+                                    classes: list[PeriodClass]) -> dict[str, list[Any]]:
+        """Edition 4 per-read records of the candidate behind ④ (lock and hold reads only):
+        source, age, head, R5-6 inheritance, and for an R5-7 candidate the ret time after the
+        gate of the run before the stretch (spec 6.3)."""
+        columns: dict[str, list[Any]] = {
+            name: [] for name in ("model_bound_source", "model_bound_age_s",
+                                  "model_bound_head_Pa", "model_bound_inherited",
+                                  "ret_after_gate_s", "ret_mean_speed_m_s",
+                                  "stretch_t_open_s")}
+        for stretch, period_class in zip(self._stretch_states(), classes, strict=True):
+            index = stretch.model_bound_index
+            has_candidate = (period_class.is_locked and stretch.is_open
+                             and 0 <= index < len(stretch.candidates))
+            source = stretch.model_bound_source if has_candidate else None
+            times, inherited = stretch.candidate_times, stretch.candidate_inherited
+            is_tracker = source == LockStartSource.RETRACT_TRACKER.value
+            columns["model_bound_source"].append(source)
+            columns["model_bound_age_s"].append(
+                t_s - times[index] if has_candidate and index < len(times) else math.nan)
+            columns["model_bound_head_Pa"].append(
+                stretch.candidates[index][1] if has_candidate else math.nan)
+            columns["model_bound_inherited"].append(
+                bool(has_candidate and index < len(inherited) and inherited[index]))
+            columns["ret_after_gate_s"].append(stretch.ret_after_gate_s if is_tracker
+                                               else math.nan)
+            columns["ret_mean_speed_m_s"].append(stretch.ret_mean_speed_m_s if is_tracker
+                                                 else math.nan)
+            columns["stretch_t_open_s"].append(stretch.start_t_s if has_candidate else None)
+        return columns
 
     def extend_bound_trace_row(self) -> dict[str, Any] | None:
         """③ revision 5 trace of the last read (``jp3_remedy_spec.md`` 6.3: per leg the class,
@@ -2686,6 +2806,8 @@ class TwoPressureMonitor:
             record["hold_speed_m_s"] = self.settings.extend_start_bound.hold_speed_m_s(
                 self.max_speed_m_s)
             record["stretch_log"] = self._stretch_log_meta()
+            record["carry_log"] = self._carry_log_meta()
+            record.update(self.settings.extend_start_bound.identity())
         return {"extend_start_record": record}
 
     # --- review records of the ③ premises (criteria rev. 6 14.5), with the option on or off ---
@@ -2790,13 +2912,46 @@ class TwoPressureMonitor:
         of the new direction at this head."""
         stretch.last_sign = math.copysign(1.0, command_m_s)
         stretch.last_command_m_s = command_m_s
+        lookback_start_s = t_s - self.settings.locked_start_lookback_s - self.period_s
         if start_Pa is None:
             start_Pa = self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa)
+            # R5-7 application point 1: the start value of a ret / carry_ret period
+            tracker_Pa = self._retract_tracker_term_Pa(leg, stretch.last_sign)
+            if tracker_Pa > start_Pa:
+                start_Pa = tracker_Pa
+                self._tracker_moving_starts(stretch).append((t_s, tracker_Pa))
         history = stretch.moving_starts
         history.append((t_s, start_Pa))
-        lookback_start_s = t_s - self.settings.locked_start_lookback_s - self.period_s
         while history and history[0][0] < lookback_start_s:
             history.popleft()
+        tracker_history = stretch.__dict__.get("tracker_moving_starts")
+        while tracker_history and tracker_history[0][0] < lookback_start_s:
+            tracker_history.popleft()
+
+    @staticmethod
+    def _tracker_moving_starts(stretch: _LockStretch) -> deque[tuple[float, float]]:
+        """(t, R5-7 start value) of the lookback's moving samples whose ``p_hat + delta_m``
+        term won (source record only; created on first use, also for old pickles)."""
+        history = stretch.__dict__.get("tracker_moving_starts")
+        if history is None:
+            history = deque()
+            stretch.__dict__["tracker_moving_starts"] = history
+        return history
+
+    def _retract_tracker_term_Pa(self, leg: int, sign: float) -> float:
+        """R5-7 term ``p_hat + delta_m`` of a lock start after a retraction (``sign < 0``);
+        ``-inf`` where it does not apply (revision 4, ``model_only``, after an extension)."""
+        bound = self.settings.extend_start_bound
+        if sign >= 0.0 or not self._uses_extend_hold or not bound.uses_retract_tracker_start:
+            return -math.inf
+        return self._extend_bound_Pa(leg)
+
+    def _retract_lock_start_model_Pa(self, leg: int, head_Pa: float) -> float:
+        """R5-7 (spec 2.10): ``M_ret = max(retract model, p_ret, p_hat + delta_m)``. Only the
+        start values of ret / carry_ret periods and the window candidates after a retraction
+        use it; the R5-2 hold and carry candidates keep :meth:`_lock_start_model_Pa` (R9)."""
+        return max(self._lock_start_model_Pa(leg, -1.0, head_Pa),
+                   self._retract_tracker_term_Pa(leg, -1.0))
 
     # --- CB moving estimate (P-S8-15, hydraulics 11.2) ---
 
@@ -2904,7 +3059,53 @@ class TwoPressureMonitor:
             stretch.seed_before_Pa = math.nan
             stretch.seed_after_Pa = math.nan
             stretch.inherited_candidates = 0
+            stretch.candidate_times = ()
+            stretch.candidate_inherited = ()
+            stretch.model_bound_index = -1
+            tracker_recent = [value for sample_t_s, value
+                              in stretch.__dict__.get("tracker_moving_starts") or ()
+                              if sample_t_s >= lookback_start_s]
+            stretch.previous_tracker_max_Pa = max(tracker_recent, default=-math.inf)
+            self._close_retract_run(stretch)
         self._seed_from_old_anchor(leg, stretch)
+
+    def _note_retract_run(self, leg, stretch, t_s, command_m_s,
+                          period_class: PeriodClass) -> None:
+        """Edition 4.1 record (T-JR-12 ``ret_after_gate_s``): the retract run since the last
+        stretch; called before the period's command sets ``last_sign``."""
+        if command_m_s >= 0.0:
+            return
+        if stretch.last_sign >= 0.0:  # a new retract run (after an extension or the start)
+            self._reset_retract_run(stretch)
+        if period_class is not PeriodClass.RET:
+            return
+        if math.isnan(stretch.ret_gate_t_s):
+            # the read before the first ret period: the gate was seen open there (carry), or
+            # the reversal started the move (no lock to leave)
+            stretch.ret_gate_t_s = t_s - self.period_s
+        stretch.ret_last_t_s = t_s
+        stretch.ret_travel_m += abs(command_m_s) * self.period_s
+
+    def _close_retract_run(self, stretch) -> None:
+        """At a stretch opening: the ret time after the gate of the run before it (0 when the
+        run had no ret period, NaN when the stretch did not follow a retraction)."""
+        if stretch.last_sign < 0.0:
+            after_s = 0.0
+            if math.isfinite(stretch.ret_last_t_s) and math.isfinite(stretch.ret_gate_t_s):
+                after_s = max(stretch.ret_last_t_s - stretch.ret_gate_t_s, 0.0)
+            stretch.ret_after_gate_s = after_s
+            stretch.ret_mean_speed_m_s = (stretch.ret_travel_m / after_s if after_s > 0.0
+                                          else math.nan)
+        else:
+            stretch.ret_after_gate_s = math.nan
+            stretch.ret_mean_speed_m_s = math.nan
+        self._reset_retract_run(stretch)
+
+    @staticmethod
+    def _reset_retract_run(stretch) -> None:
+        stretch.ret_gate_t_s = math.nan
+        stretch.ret_last_t_s = math.nan
+        stretch.ret_travel_m = 0.0
 
     def _seed_from_old_anchor(self, leg, stretch) -> None:
         """A monitor pickled before P-S8-13 inside a stretch keeps its old lock anchor as one
@@ -2913,9 +3114,8 @@ class TwoPressureMonitor:
         if stretch.last_sign != 0.0 or watch.lock_rod_estimate_Pa is None:
             return
         if watch.lock_head_Pa is not None:
-            stretch.candidates.append((watch.lock_rod_estimate_Pa, watch.lock_head_Pa))
-            stretch.candidate_sources = (*stretch.candidate_sources,
-                                         LockStartSource.PREVIOUS_MOVING.value)
+            self._append_candidate(stretch, watch.lock_rod_estimate_Pa, watch.lock_head_Pa,
+                                   LockStartSource.PREVIOUS_MOVING.value, math.nan)
 
     def _close_lock_stretch(self, leg, stretch) -> None:
         if not stretch.is_open:
@@ -2926,19 +3126,39 @@ class TwoPressureMonitor:
                 self._fallback_lock_log = []
             self._fallback_lock_log.append(stretch.summary(leg, with_hold=self._uses_extend_hold))
 
-    def _add_lock_candidate(self, leg, stretch, head_Pa, stroke_m) -> None:
+    def _add_lock_candidate(self, leg, stretch, head_Pa, stroke_m, t_s: float = math.nan) -> None:
+        """A window candidate ``(M_j, p_h,j)``. After a retraction R5-7 adds the term
+        ``p_hat + delta_m`` (application point 2; paired with this window head, A4)."""
         model_Pa = self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa)
-        start_Pa = max(model_Pa, stretch.previous_moving_max_Pa)
-        stretch.candidates.append((start_Pa, head_Pa))
-        stretch.candidate_sources = (*stretch.candidate_sources,
-                                     self._lock_start_source(leg, stretch, head_Pa, model_Pa))
+        tracker_Pa = self._retract_tracker_term_Pa(leg, stretch.last_sign)
+        start_Pa = max(model_Pa, tracker_Pa, stretch.previous_moving_max_Pa)
+        source = self._lock_start_source(leg, stretch, head_Pa, model_Pa, tracker_Pa)
+        self._append_candidate(stretch, start_Pa, head_Pa, source, t_s)
         if math.isfinite(stroke_m):
             stretch.stroke_window_max_m = max(stretch.stroke_window_max_m, stroke_m)
 
-    def _lock_start_source(self, leg, stretch, head_Pa, model_Pa) -> str:
+    def _append_candidate(self, holder: _LockStretch | _CarryState, start_Pa: float,
+                          head_Pa: float, source: str, t_s: float,
+                          is_inherited: bool = False) -> None:
+        """One candidate with its source; revision 5 also keeps its time (and, on a stretch,
+        the R5-6 inheritance flag) for the per-read records."""
+        holder.candidates.append((start_Pa, head_Pa))
+        holder.candidate_sources = (*holder.candidate_sources, source)
+        if not self._uses_extend_hold:
+            return
+        holder.candidate_times = (*holder.candidate_times, t_s)
+        if isinstance(holder, _LockStretch):
+            holder.candidate_inherited = (*holder.candidate_inherited, is_inherited)
+
+    def _lock_start_source(self, leg, stretch, head_Pa, model_Pa,
+                           tracker_Pa: float = -math.inf) -> str:
         """Record only (``tension_premise.md`` 6.4): the term behind ``M_j``."""
-        if stretch.previous_moving_max_Pa > model_Pa:
+        if stretch.previous_moving_max_Pa > max(model_Pa, tracker_Pa):
+            if stretch.previous_tracker_max_Pa >= stretch.previous_moving_max_Pa:
+                return LockStartSource.RETRACT_TRACKER.value
             return LockStartSource.PREVIOUS_MOVING.value
+        if tracker_Pa > model_Pa:
+            return LockStartSource.RETRACT_TRACKER.value
         if (self._uses_extend_bound and stretch.last_sign > 0.0
                 and self._extend_bound_Pa(leg) > self._extend_rod_estimate_Pa(
                     head_Pa, self.settings.locked_start_extend_Pa)):
@@ -2962,15 +3182,18 @@ class TwoPressureMonitor:
         ratio = self._level_ratio(leg, self._ratio_bound(leg, stretch.stroke_window_max_m))
         best_Pa, best_start_Pa, best_head_Pa = -math.inf, math.nan, math.nan
         sources = stretch.candidate_sources
-        best_source = None
+        best_source, best_index = None, -1
         for index, (start_Pa, candidate_head_Pa) in enumerate(stretch.candidates):
             bound_Pa = start_Pa + ratio * max(candidate_head_Pa - head_Pa, 0.0)
             if bound_Pa > best_Pa:
                 best_Pa, best_start_Pa, best_head_Pa = bound_Pa, start_Pa, candidate_head_Pa
                 best_source = sources[index] if index < len(sources) else None
+                best_index = index
         # record only (tension_premise.md 6.4): ④ before the ⑤ reading bound joins
         stretch.model_bound_Pa = best_Pa if math.isfinite(best_Pa) else math.nan
         stretch.model_bound_source = best_source
+        if self._uses_extend_hold:
+            stretch.model_bound_index = best_index
         stretch.ratio_bound = ratio
         stretch.ratio_stroke_m = stretch.stroke_window_max_m
         stretch.estimate_source = EstimateSource.MODEL

@@ -156,7 +156,9 @@ def run_config(meta: dict, extend_start: str | None = None,
         if extend_start == EXTEND_START_TRACKED_RULE and revision is not None:
             from outrigger_sim.control.extend_start_bound import ExtendStartBound
 
-            changes["extend_start_bound"] = ExtendStartBound(revision=int(revision))
+            rule = RETRACT_START_OVERRIDE[0] if int(revision) == 5 else None
+            changes["extend_start_bound"] = ExtendStartBound(
+                revision=int(revision), **({} if rule is None else {"retract_start_rule": rule}))
         config = replace(config, two_pressure=replace(config.two_pressure, **changes))
     return closed_loop, config
 
@@ -279,8 +281,18 @@ def checked_run_config(path_name: str, meta: dict, extend_start: str | None = No
 
     stored = meta["two_pressure_settings"]
     check_extend_start_meta(stored)
+    stored_bound = stored.get("extend_start_bound") or {}
+    is_edition_3_record = (stored_bound.get("revision") == 5
+                           and "retract_start_rule" not in stored_bound)
+    if is_edition_3_record and RETRACT_START_OVERRIDE[0] is None:
+        # edition 4a R7: never re-read an edition 3 record under the new rule silently
+        raise RuntimeError(f"{path_name}: a revision 5 record without retract_start_rule "
+                           f"(edition 3 code): replay refused; only --retract-start-rule "
+                           f"model_only (test constant, own output folder, not judged)")
     closed_loop, config = run_config(meta, extend_start, extend_start_revision)
     rebuilt = _plain(config.two_pressure.to_meta())
+    if is_edition_3_record:
+        rebuilt["extend_start_bound"].pop("retract_start_rule", None)
     if (_settings_for_comparison(rebuilt, stored, extend_start, extend_start_revision)
             != _settings_for_comparison(stored, stored, extend_start, extend_start_revision)):
         raise RuntimeError(f"{path_name}: rebuilt two_pressure settings differ from the record")
@@ -348,6 +360,7 @@ def replay_values(path: Path, extend_start: str | None = None,
             # criteria revision 9 (j_p3_inputs): which runs J-P3 must cover and their declaration
             "p3_expected": is_p3_expected(meta.get("controller_tag"),
                                           (meta.get("job") or {}).get("setting")),
+            "setting": (meta.get("job") or {}).get("setting"),
             "has_rod_reading": bool(np.isfinite(arrays["rod_pressure_Pa"]).any()),
             "head_only_declared": harness_head_only_declared(meta),
             **({} if "extend_start_rule" not in stored
@@ -377,6 +390,21 @@ def record_name(extend_start: str | None) -> str:
     return "T4h-const" if extend_start == "constant" else "T4h"
 
 
+RETRACT_START_OVERRIDE: list[str | None] = [None]
+"""Edition 4a R7: ``--retract-start-rule model_only`` replays an edition 3 revision 5 record
+(no ``retract_start_rule`` in its meta) with the test-only rule; None = such records are
+refused. Set only by :func:`main` (with the ``extend_start_bound`` test constant)."""
+RETRACT_START_TEST_RULE = "model_only"
+
+
+def enable_model_only_retract_start() -> None:
+    """The test-only R7 path: the module constant of ``extend_start_bound`` and the override."""
+    from outrigger_sim.control import extend_start_bound
+
+    extend_start_bound.ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST = True
+    RETRACT_START_OVERRIDE[0] = RETRACT_START_TEST_RULE
+
+
 def _override_revision(extend_start: str | None, revision: int | None = None) -> int | None:
     """Bound revision of a ``tracked_bound`` override (None otherwise); ``revision`` = the
     ``--extend-start-revision`` choice (None = 4)."""
@@ -398,6 +426,10 @@ def _parse_arguments() -> argparse.Namespace:
     parser.add_argument("--extend-start-revision", type=int, choices=(4, 5), default=None,
                         help="③ bound revision of a --extend-start tracked_bound replay "
                              "(436.9 Dg-2: 5; default 4)")
+    parser.add_argument("--retract-start-rule", choices=(RETRACT_START_TEST_RULE,),
+                        default=None,
+                        help="test only (edition 4a R7): replay edition 3 revision 5 records "
+                             "with the model_only rule; write to an own folder, never judged")
     args = parser.parse_args()
     if args.extend_start_revision is not None and args.extend_start != "tracked_bound":
         parser.error("--extend-start-revision belongs to --extend-start tracked_bound")
@@ -409,6 +441,8 @@ def main() -> int:
         print(__doc__)
         return 2
     args = _parse_arguments()
+    if args.retract_start_rule is not None:
+        enable_model_only_retract_start()
     try:
         rows = [replay_values(path, args.extend_start, args.check_recorded,
                               args.extend_start_revision)
@@ -424,6 +458,9 @@ def main() -> int:
               "extend_start_rule": args.extend_start,
               "extend_start_revision": _override_revision(args.extend_start,
                                                           args.extend_start_revision),
+              **({} if args.retract_start_rule is None
+                 else {"test_only_retract_start_rule": args.retract_start_rule,
+                       "judged": False}),
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
               "offset_allowance_runs": sum(any(value != 0.0 for value in
                                                row["offset_allowance_N"]) for row in rows),

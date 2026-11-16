@@ -23,7 +23,11 @@ RUNNER = Path(__file__).resolve().with_name("v5_setting_run_runner.py")
 TIMEOUT_S = 900
 FAILURE_ALLOWANCE_N = (5500.0, 5500.0, 4000.0, 4000.0)
 """``ZeroCalibrationSettings.failure_allowance_N`` (front 5.5, rear 4.0 kN)."""
-V5_RESULTS = PROJECT_ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5"
+RECORDS_ROOT_ENV = "OUTRIGGER_RECORDS_ROOT"
+"""Project root holding the git-ignored stored records (default this checkout): a worktree run
+points it at the main checkout (436.9 edition 4a 13.10, M7: the three record tests run)."""
+RECORDS_ROOT = Path(os.environ.get(RECORDS_ROOT_ENV) or PROJECT_ROOT)
+V5_RESULTS = RECORDS_ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5"
 V5_MAIN_JSONL = V5_RESULTS / "main.jsonl"
 VB_JOB = {"case": "R6", "eps": 0.001, "setting": "VB"}
 VB_STORED_HASH = "d0eaa3a019e18bd6ee572666848bac3114432264ac2b4d305a261b300ea0925c"
@@ -140,7 +144,7 @@ def test_j_p3_judgement() -> None:
 @pytest.mark.skipif(not V5_MAIN_JSONL.is_file(), reason="stored main.jsonl not present")
 def test_p3_hash_batch_is_the_22_cases_of_revision_8(run_v5) -> None:
     """Revision 8 7.2: per case the first VB line of ``main.jsonl`` (22 cases, its table)."""
-    jobs = run_v5.p3_hash_jobs()
+    jobs = run_v5.p3_hash_jobs(V5_MAIN_JSONL)
     assert len(jobs) == 22
     lines = dict((job["case"], number) for number, job in jobs)
     assert lines["R1"] == 1111 and lines["R12"] == 397 and lines["S8"] == 445

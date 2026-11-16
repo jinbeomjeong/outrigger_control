@@ -22,6 +22,7 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
+from outrigger_sim.control import extend_start_bound as esb
 from outrigger_sim.control.extend_start_bound import (
     EXTEND_HOLD_REVISION,
     ExtendBoundCheck,
@@ -173,31 +174,39 @@ class LegPlant:
         self.locked, self.lock_Pa, self.lock_force_N = True, anchor_Pa, self.force_N
 
 
-def _monitor(revision: int, leg: int = RR) -> TwoPressureMonitor:
-    bound = ExtendStartBound(revision=revision)
+def _monitor(revision: int, leg: int = RR, bound_changes: dict | None = None,
+             retract_floor_Pa: tuple | None = None) -> TwoPressureMonitor:
+    bound = ExtendStartBound(revision=revision, **(bound_changes or {}))
     settings = replace(TwoPressureSettings().with_r8_period(), extend_start_rule="tracked_bound",
                        extend_start_bound=bound)
+    floor = RETRACT_ANCHOR_PA if retract_floor_Pa is None else retract_floor_Pa
     monitor = TwoPressureMonitor(HEAD_AREA, ANNULUS, V_MAX, 9414.59, PERIOD_S,
                                  settings=settings, stroke_max_m=STROKE_MAX_M,
-                                 retract_lock_rod_pressure_Pa=RETRACT_ANCHOR_PA)
+                                 retract_lock_rod_pressure_Pa=floor)
     monitor.rod_state[leg] = RodSensorState.FALLBACK
     return monitor
 
 
 def _closed_loop(plant: LegPlant, commands_m_s, forces_N, revision: int,
-                 lower_N: list | None = None) -> dict:
+                 lower_N: list | None = None, *, bound_changes: dict | None = None,
+                 retract_floor_Pa: tuple | None = None, head_read_error_Pa: float = 0.0,
+                 reads: list | None = None, monitors: list | None = None) -> dict:
     """Run the schedule (acting command and end force per period); returns the J-P3 record
     (revision 5 keys with revision 5, the revision 4 ``breach_reads`` otherwise).
-    ``lower_N`` collects ``(class, plant state, p_tr, p*, lower force)`` of the leg per read."""
+    ``lower_N`` collects ``(class, plant state, p_tr, p*, lower force)`` of the leg per read;
+    ``reads`` collects ``(t, class, used bound, p_tr, true head, trace row)`` of the leg (edition
+    4 cases); ``head_read_error_Pa`` is added to the leg's head reading."""
     leg = plant.leg
-    monitor = _monitor(revision, leg)
+    monitor = _monitor(revision, leg, bound_changes, retract_floor_Pa)
+    if monitors is not None:
+        monitors.append(monitor)
     tolerance = 600.0 / ANNULUS
     rev5, rev4 = ExtendBoundCheckRev5(tolerance, "ideal"), ExtendBoundCheck(ANNULUS)
     for period, (command, force) in enumerate(zip(commands_m_s, forces_N, strict=True)):
         plant.period(command, force)
         head = np.full(4, OTHER_LEGS_HEAD_PA)
         rod = np.full(4, OTHER_LEGS_ROD_PA)
-        head[leg], rod[leg] = plant.head_Pa(), plant.truth_Pa()
+        head[leg], rod[leg] = plant.head_Pa() + head_read_error_Pa, plant.truth_Pa()
         commanded = np.zeros(4)
         commanded[leg] = command
         forces = monitor.read((period + 1) * PERIOD_S, head, rod, commanded, False, 2e3,
@@ -218,6 +227,10 @@ def _closed_loop(plant: LegPlant, commands_m_s, forces_N, revision: int,
             if lower_N is not None:
                 lower_N.append((row["class"][leg], states[leg], plant.truth_Pa(),
                                 plant.last_target_Pa, float(forces.lower[leg])))
+            if reads is not None:
+                reads.append(((period + 1) * PERIOD_S, row["class"][leg],
+                              row["used_bound_Pa"][leg], plant.truth_Pa(), plant.head_Pa(),
+                              row))
         else:
             rev4.add((period + 1) * PERIOD_S, monitor.extend_bound_Pa(), plant_rod,
                      extend_bound_states(locked, direction), monitor.locked_model_bound_Pa())
@@ -370,3 +383,302 @@ def test_t_jr_04_random_schedules_hold_the_bound_on_the_new_plant() -> None:
             failures.append((sequence, record["jp3a_min_gap_bar"][RR],
                              record["jp3b_min_gap_bar"][RR], record["jp3c_min_gap_bar"][RR]))
     assert failures == []
+
+
+# --- edition 4 cases (jp3_remedy_spec.md 5.2, 5.7, 13.3; J4a-12) -------------------------------
+
+BOTH_TEST_RULES = {"carry_end_rule": "fresh_stretch", "retract_start_rule": "model_only"}
+"""Edition 4a 13.3: the counterexample arm turns both test-only rules on (edition 3 rev 5)."""
+LOW_RETRACT_FLOOR_PA = (5.0e5,) * 4
+"""``p_ret`` below the retract model (the ⑪b premise "p_ret floor <= retract model")."""
+HEAD_FALL_PA_S = 30.0e5
+
+
+def _allow_test_rules(monkeypatch) -> None:
+    monkeypatch.setattr(esb, "ALLOW_FRESH_STRETCH_FOR_TEST", True)
+    monkeypatch.setattr(esb, "ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST", True)
+
+
+def _force_step_for_head_rate_N(plant: LegPlant, head_rate_Pa_s: float) -> float:
+    """Force change per period of a locked leg whose head moves at ``head_rate_Pa_s``."""
+    return head_rate_Pa_s * PERIOD_S * plant.head_area / (1.0 - plant.share)
+
+
+def _case_11(plant: LegPlant):
+    """⑪: an extension lock (head 73 bar, p_tr 31 bar), the load leaving the locked leg (head
+    -30 bar/s) through -1.4 u_hold for 2 periods (gate need not reached) and -0.99 u_hold for 3
+    periods (hold)."""
+    hold_m_s = 0.01 * V_MAX
+    commands = [0.0] * 3 + [-1.4 * hold_m_s] * 2 + [-0.99 * hold_m_s] * 3
+    step_N = _force_step_for_head_rate_N(plant, -HEAD_FALL_PA_S)
+    forces = [plant.force_N + step_N * (k + 1) for k in range(len(commands))]
+    return commands, forces
+
+
+def _plant_11() -> LegPlant:
+    force_N = 73.0e5 * HEAD_AREA[RR] - 31.0e5 * ANNULUS[RR]
+    return LegPlant(31.0e5, force_N, **NEW_PLANT)
+
+
+def test_t_jr_04_case_11_r5_6_keeps_the_hold_above_the_locked_truth() -> None:
+    """⑪ (edition 4): R5-6 covers the hold reads (J-P3b 0) and the stretch inherits."""
+    plant = _plant_11()
+    commands, forces = _case_11(plant)
+    reads, monitors = [], []
+    record = _closed_loop(plant, commands, forces, EXTEND_HOLD_REVISION, reads=reads,
+                          monitors=monitors)
+    assert plant.locked  # P1: the micro commands never left the lock
+    hold_gaps = [used - truth for _, cls, used, truth, _, _ in reads if cls == "hold"]
+    assert len(hold_gaps) == 3 and min(hold_gaps) >= 0.0
+    assert record["jp3b_breach_over_tol_reads"][RR] == 0
+    assert monitors[0]._lock_stretches[RR].inherited_candidates >= 1
+
+
+def test_t_jr_04_case_11_counterexample_arm_needs_both_test_rules(monkeypatch) -> None:
+    """⑪ edition 4a 13.3: with ``fresh_stretch`` and ``model_only`` the first hold read's ④ is
+    the retract model and ``p_tr - ④ > 0.6 kN / A_ann`` (counterexample, record). The
+    ``fresh_stretch``-only arm is a record (13.3: not judged); in this unit case the load keeps
+    leaving the leg through the hold, so its ``p_hat + delta_m`` (raised to ④c in the carry)
+    falls behind the truth too: 1 read over the tolerance (see the edition 4a report)."""
+    _allow_test_rules(monkeypatch)
+    plant = _plant_11()
+    commands, forces = _case_11(plant)
+    reads = []
+    record = _closed_loop(plant, commands, forces, EXTEND_HOLD_REVISION,
+                          bound_changes=BOTH_TEST_RULES, reads=reads)
+    _, _, used, truth, head, row = next(read for read in reads if read[1] == "hold")
+    assert row["model_bound_source"][RR] in ("pilot_model", "previous_moving")
+    assert used == pytest.approx(13.0e5 + head / 3.0, abs=2e5)
+    assert truth - used > 600.0 / ANNULUS[RR]
+    assert record["jp3b_breach_over_tol_reads"][RR] >= 1
+
+
+class HookedLegPlant(LegPlant):
+    """⑪b test hook (spec 5.2): the leg stays locked until ``release_at_s`` (the tracker gate
+    opening sub-step, the worst case the comparison principle allows), then the base law."""
+
+    def __init__(self, *args, release_at_s: float = math.inf, compliance: float | None = None,
+                 **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.release_at_s = release_at_s
+        self.chunk_start_s = 0.0
+        if compliance is not None:
+            self.compliance = compliance
+
+    def _gated_speed(self, mean_m_s: float) -> float:
+        start_s = self.chunk_start_s
+        self.chunk_start_s += CHUNK_S
+        return 0.0 if start_s < self.release_at_s - 1e-12 else mean_m_s
+
+
+RETRACT_HOOK_COMPLIANCE_M3_PA = 1.586e-12
+"""``C_r`` of the P4-6 table (review ``cr09``)."""
+
+
+def _locked_by_load_drop(leg: int, truth_Pa: float, force_N: float, periods: int = 10):
+    """Commands and forces of a lock from 2 bar whose load leaves until the locked truth is
+    ``truth_Pa`` at ``force_N`` (④ follows with ``R_ub``: the premise A1 ④ >= p_tr)."""
+    probe = LegPlant(P_EXT_PA, force_N, gate=False, r6=True, continuous_anchor=True, leg=leg)
+    start_N = force_N + (truth_Pa - P_EXT_PA) * probe.annulus / probe.share
+    forces = list(np.linspace(start_N, force_N, periods)) + [force_N] * 3
+    return start_N, [0.0] * len(forces), forces
+
+
+CARRY_PERIODS_MAX = 200
+
+
+def _hooked_run(start_N: float, commands: list, forces: list, release_at_s: float,
+                rules: dict | None) -> tuple[list, TwoPressureMonitor]:
+    plant = HookedLegPlant(P_EXT_PA, start_N, gate=False, r6=True, continuous_anchor=True,
+                           release_at_s=release_at_s, compliance=RETRACT_HOOK_COMPLIANCE_M3_PA)
+    monitors, reads = [], []
+    _closed_loop(plant, commands, forces, EXTEND_HOLD_REVISION, bound_changes=rules,
+                 retract_floor_Pa=LOW_RETRACT_FLOOR_PA, reads=reads, monitors=monitors)
+    return reads, monitors[0]
+
+
+def _gate_open_s(reads: list, monitor: TwoPressureMonitor) -> float:
+    carry_start_s = next(t for t, cls, *_ in reads if cls == "carry_ret") - PERIOD_S
+    return carry_start_s + monitor._extend_tracker.gate_open_substeps[RR][0] * CHUNK_S
+
+
+def _run_11b(speed_m_s, after_gate_s, force_N, truth_Pa, rules) -> list:
+    """Pass 1 finds the tracker gate opening with the plant held locked; pass 2 releases the
+    plant at that sub-step, retracts ``after_gate_s`` more, then 0 for 1 s. Returns the reads
+    after the retraction."""
+    start_N, commands, forces = _locked_by_load_drop(RR, truth_Pa, force_N)
+    probe_commands = commands + [-speed_m_s] * CARRY_PERIODS_MAX
+    probe_forces = forces + [force_N] * CARRY_PERIODS_MAX
+    reads, monitor = _hooked_run(start_N, probe_commands, probe_forces, math.inf, rules)
+    open_s = _gate_open_s(reads, monitor)
+    open_read = next(k for k, read in enumerate(reads) if read[5]["gate_open"][RR])
+    end_read = open_read + 1 + round(after_gate_s / PERIOD_S)
+    run_commands = probe_commands[:end_read] + [0.0] * 10
+    run_forces = probe_forces[:end_read] + [force_N] * 10
+    reads, monitor = _hooked_run(start_N, run_commands, run_forces, open_s, rules)
+    assert _gate_open_s(reads, monitor) == pytest.approx(open_s)  # the release keeps it
+    return reads[end_read:]
+
+
+P4_6_TABLE = [
+    # F kN, speed m/s, time after the gate s, HOLD start p_tr bar, edition 3 gap bar, lower gap
+    (14.8e3, 0.3e-3, 0.1, 58.52, -33.88, 1.88),
+    (14.8e3, 0.3e-3, 0.2, 57.15, -32.66, 3.25),
+    (14.8e3, 0.3e-3, 0.5, 53.13, -29.08, 7.27),
+    (14.8e3, 1.0e-3, 0.1, 55.35, -31.06, 5.05),
+    (14.8e3, 1.0e-3, 0.2, 50.95, -27.14, 9.45),
+    (5.0e3, 0.3e-3, 0.2, 57.92, -36.78, 2.58),
+]
+P4_6_TRUTH_PA = {14.8e3: 59.9e5, 5.0e3: 60.0e5}
+P4_6_OPENING_ROWS = [row for row in P4_6_TABLE if row[1] >= 1.0e-3]
+"""Rows whose retract speed opens the tracker gate (below, see the 0.3 mm/s test)."""
+
+
+def _p4_6_run(force_N, speed_m_s, after_s):
+    truth_Pa = P4_6_TRUTH_PA[force_N]
+    after = _run_11b(speed_m_s, after_s, force_N, truth_Pa, None)
+    old_after = _run_11b(speed_m_s, after_s, force_N, truth_Pa,
+                         {"retract_start_rule": "model_only"})
+    return after, old_after
+
+
+@pytest.mark.parametrize(("force_N", "speed_m_s", "after_s", "start_bar", "old_gap_bar",
+                          "lower_gap_bar"), P4_6_OPENING_ROWS)
+def test_t_jr_04_case_11b_r5_7_covers_the_trapped_pressure_after_a_retraction(
+        monkeypatch, force_N, speed_m_s, after_s, start_bar, old_gap_bar, lower_gap_bar) -> None:
+    """⑪b (P4-6): the plant leaves its lock at the gate opening sub-step, retracts, then
+    stops: R5-7 keeps every lock / hold read at or above ``p_tr`` (gap >= the table's lower
+    gap, an R5-7 candidate behind ④); ``model_only`` breaks by <= -20 bar."""
+    _allow_test_rules(monkeypatch)
+    after, old_after = _p4_6_run(force_N, speed_m_s, after_s)
+    gaps = [(used - truth) / BAR for _, cls, used, truth, _, _ in after
+            if cls in ("lock", "hold")]
+    assert gaps and min(gaps) >= lower_gap_bar - 1e-6
+    assert after[0][5]["model_bound_source"][RR] == "retract_tracker"
+    assert (old_after[0][2] - old_after[0][3]) / BAR <= -20.0
+
+
+@pytest.mark.xfail(strict=True, reason=(
+    "P4-6 table (cr09) integrates P3 (c) for exactly the RET time; the plant here keeps "
+    "retracting on the 0.1 s valve tail after the command ends, so the first lock read's "
+    "p_tr is about 7 bar lower (1 mm/s rows): reported to control-expert"))
+@pytest.mark.parametrize(("force_N", "speed_m_s", "after_s", "start_bar", "old_gap_bar",
+                          "lower_gap_bar"), P4_6_OPENING_ROWS)
+def test_t_jr_04_case_11b_start_pressure_of_the_p4_6_table(
+        monkeypatch, force_N, speed_m_s, after_s, start_bar, old_gap_bar, lower_gap_bar) -> None:
+    """P4-6 stop condition: start ``p_tr`` and the ``model_only`` gap within +-2 bar."""
+    _allow_test_rules(monkeypatch)
+    after, old_after = _p4_6_run(force_N, speed_m_s, after_s)
+    assert after[0][3] / BAR == pytest.approx(start_bar, abs=2.0)
+    assert (old_after[0][2] - old_after[0][3]) / BAR == pytest.approx(old_gap_bar, abs=2.0)
+
+
+def test_t_jr_04_case_11b_slow_rows_never_open_the_tracker_gate() -> None:
+    """The 0.3 mm/s rows of P4-6: ``kappa_x`` 0.8 x 0.3 mm/s = 1.15 % ``v_max`` lies below the
+    VN drain cut-off (``c_v`` 2 %), so the tracker gate never opens within 20 s and the hooked
+    plant never leaves its lock (the rows cannot be built as written; reported)."""
+    for force_N in (14.8e3, 5.0e3):
+        start_N, commands, forces = _locked_by_load_drop(RR, P4_6_TRUTH_PA[force_N], force_N)
+        commands += [-0.3e-3] * CARRY_PERIODS_MAX
+        forces += [force_N] * CARRY_PERIODS_MAX
+        reads, monitor = _hooked_run(start_N, commands, forces, math.inf, None)
+        assert monitor._extend_tracker.gate_open_substeps[RR] == []
+        assert not any(read[5]["gate_open"][RR] for read in reads)
+
+
+HR11_EXCESS_BAR = 27.4
+HR11_READ_ERROR_PA = -4.62e5
+HR11_MARGIN_BAR = 4.30
+
+
+def _run_11b_p1(n_ret: int, rules: dict | None, band_N: float):
+    """⑪b-P1 (hydraulics review 11.1 model): FL, F 2 kN, locked p_r0 60 bar, P1 + P3 plant,
+    -0.5 mm/s for ``n_ret`` periods then 0; head reading = truth - 4.62 bar."""
+    force_N, truth_Pa = 2.0e3, 60.0e5
+    start_N, commands, forces = _locked_by_load_drop(FL, truth_Pa, force_N)
+    commands += [-0.5e-3] * n_ret + [0.0] * 8
+    forces += [force_N] * (n_ret + 8)
+    plant = BandLegPlant(P_EXT_PA, start_N, leg=FL, band_N=band_N, **NEW_PLANT)
+    monitors, reads = [], []
+    _closed_loop(plant, commands, forces, EXTEND_HOLD_REVISION, bound_changes=rules,
+                 retract_floor_Pa=LOW_RETRACT_FLOOR_PA, head_read_error_Pa=HR11_READ_ERROR_PA,
+                 reads=reads, monitors=monitors)
+    lead = len(commands) - n_ret - 8
+    return reads, lead, monitors[0]
+
+
+class BandLegPlant(LegPlant):
+    """The P1 plant with a seal band ``F_band`` in the gate inputs (⑪b-P1 band variants)."""
+
+    def __init__(self, *args, band_N: float = 0.0, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.band_N = band_N
+
+    def _gated_speed(self, mean_m_s: float) -> float:
+        u = np.zeros(4)
+        u[self.leg] = mean_m_s
+        locked = np.zeros(4, bool)
+        locked[self.leg] = self.locked
+        band = np.zeros(4)
+        band[self.leg] = self.band_N
+        inputs = CheckDelayInputs(0.0, CHUNK_S, u, np.full(4, self.head_Pa()),
+                                  np.full(4, self.truth_Pa()), locked, np.zeros(4), band,
+                                  np.full(4, E_OP_BY_LEG_M[self.leg]))
+        output = self.gate.filter(inputs)
+        seed_Pa = float(output.opening_rod_pressure_Pa[self.leg])
+        if math.isfinite(seed_Pa):
+            self.seed_Pa = seed_Pa
+        return float(output.speed_m_s[self.leg])
+
+
+def _shortest_ret(band_N: float) -> tuple[int, list, int]:
+    """The smallest N whose tracker gate opens inside the retraction (review q1)."""
+    reads, lead, _ = _run_11b_p1(80, None, band_N)
+    open_read = next(k for k, read in enumerate(reads[lead:]) if read[5]["gate_open"][FL])
+    return open_read + 1, reads, lead
+
+
+@pytest.mark.parametrize("band_N", [0.0, 4.0e3], ids=["band0", "band4kN"])
+def test_t_jr_04_case_11b_p1_physical_size_and_r5_7_margin(monkeypatch, band_N) -> None:
+    """⑪b-P1 (P4-7): R5-7 keeps every lock / hold read above ``p_tr`` with a margin >= 4.30
+    bar. The plant's first post-retraction excess over the retract model ``13 + p_h / 3``
+    (hydraulics q1 definition, true head) is recorded per band; its larger value is checked
+    against +27.4 +-0.5 bar in :func:`test_t_jr_04_case_11b_p1_excess_of_the_review`."""
+    _allow_test_rules(monkeypatch)
+    n_ret, _, _ = _shortest_ret(band_N)
+    reads, lead, _ = _run_11b_p1(n_ret, None, band_N)
+    after = reads[lead + n_ret:]
+    margins = [(used - truth) / BAR for _, cls, used, truth, _, _ in after
+               if cls in ("lock", "hold")]
+    assert margins and min(margins) >= HR11_MARGIN_BAR
+
+
+def _first_excess_bar(after: list) -> float:
+    _, _, _, truth, head, _ = after[0]
+    return (truth - (13.0e5 + head / 3.0)) / BAR
+
+
+HR11_N_RET = 14
+"""N of the review model q1 at this point (its gate keeps ``p_h0 - 4.62 bar + e_h``)."""
+MONITOR_N_RET = 12
+"""N with the monitor's gate: its ``p_h_ub`` follows the head reading, which falls once the P1
+plant has left its lock (242 ms), so the gate opens about 0.13 s earlier than q1's."""
+MONITOR_EXCESS_BAR = 29.19
+
+
+def test_t_jr_04_case_11b_p1_excess_of_the_review(monkeypatch) -> None:
+    """P4-7 with the review's inputs: at q1's N = 14 the plant's first-read excess over the
+    retract model is +27.4 +-0.5 bar (both bands: the light leg's need does not depend on the
+    band). With the monitor's own N = 12 the excess is +29.19 bar (recorded; the P4-7 stop
+    condition was checked against q1: the N differs, see :data:`MONITOR_N_RET`)."""
+    _allow_test_rules(monkeypatch)
+    excess = []
+    for band_N in (0.0, 4.0e3):
+        reads, lead, _ = _run_11b_p1(HR11_N_RET, {"retract_start_rule": "model_only"}, band_N)
+        excess.append(_first_excess_bar(reads[lead + HR11_N_RET:]))
+    assert max(excess) == pytest.approx(HR11_EXCESS_BAR, abs=0.5), excess
+    n_ret, _, _ = _shortest_ret(0.0)
+    assert n_ret == MONITOR_N_RET
+    reads, lead, _ = _run_11b_p1(n_ret, {"retract_start_rule": "model_only"}, 0.0)
+    assert _first_excess_bar(reads[lead + n_ret:]) == pytest.approx(MONITOR_EXCESS_BAR,
+                                                                     abs=0.05)

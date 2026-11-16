@@ -16,6 +16,7 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
+from outrigger_sim.control import extend_start_bound as esb
 from outrigger_sim.control.extend_start_bound import (
     EXTEND_HOLD_REVISION,
     GATE_ROD_FLOOR_PA,
@@ -297,25 +298,48 @@ def test_t_jr_05_d_carry_raises_with_a_falling_head() -> None:
     assert monitor._extend_tracker.carry_raises[RR] >= 1
 
 
-@pytest.mark.parametrize("rule", ["inherit_when_gate_shut", "fresh_stretch"])
-def test_t_jr_05_h_carry_ending_in_a_hold_keeps_the_lock_candidates(rule) -> None:
-    """``carry_end_rule`` (implementer addition, case replay E LSJ4 FL 49.0 s): a short retract
-    carry whose gate never opened, then a hold: with the inherit rule the new stretch keeps
-    the carried candidates (④ stays at the carry's ④c); the spec 2.1 form starts afresh."""
-    bound = ExtendStartBound(revision=EXTEND_HOLD_REVISION, carry_end_rule=rule)
+def _carry_ret_then_hold(monkeypatch, carry_end_rule: str = "inherit_when_gate_shut",
+                         retract_start_rule: str = "with_tracker"):
+    """Extension, lock with a falling head, a short retract carry whose gate never opens,
+    then a hold (T-JR-05 (h), case replay E LSJ4 FL 49.0 s)."""
+    monkeypatch.setattr(esb, "ALLOW_FRESH_STRETCH_FOR_TEST", True)
+    monkeypatch.setattr(esb, "ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST", True)
+    bound = ExtendStartBound(revision=EXTEND_HOLD_REVISION, carry_end_rule=carry_end_rule,
+                             retract_start_rule=retract_start_rule)
     monitor = _monitor(replace(_hold_settings(), extend_start_bound=bound))
     _run(monitor, [0.5 * V_MAX] * 20)
     _run(monitor, [0.0] * 4, heads=[90.0, 80.0, 70.0, 60.0], t0_s=2.0)
     rows = _run(monitor, [-0.015 * V_MAX] * 2 + [-0.2e-3], heads=[58.0, 56.0, 54.0], t0_s=2.4)
     assert [row["class"][RR] for row in rows] == ["carry_ret", "carry_ret", "hold"]
-    carry_bound = rows[1]["carry_bound_Pa"][RR]
+    return monitor, rows
+
+
+def test_t_jr_05_h_carry_ending_in_a_hold_inherits_the_carry_candidates(monkeypatch) -> None:
+    """(h) R5-6: the new stretch's candidates = window candidates + all carry candidates (count
+    and values), ``s_w`` the larger one; ④ >= the carry's ④c; inherited flags per read."""
+    monitor, rows = _carry_ret_then_hold(monkeypatch)
     stretch = monitor._lock_stretches[RR]
-    if rule == "inherit_when_gate_shut":
-        assert stretch.inherited_candidates > 0
-        assert rows[2]["model_bound_Pa"][RR] >= carry_bound
-    else:
-        assert stretch.inherited_candidates == 0
-        assert rows[2]["model_bound_Pa"][RR] < carry_bound
+    carry_bound = rows[1]["carry_bound_Pa"][RR]
+    assert stretch.inherited_candidates > 0
+    assert stretch.candidate_inherited.count(True) == stretch.inherited_candidates
+    assert len(stretch.candidates) == len(stretch.candidate_times) == len(
+        stretch.candidate_inherited)
+    assert rows[2]["model_bound_Pa"][RR] >= carry_bound
+    log = monitor._carry_log
+    assert log[-1]["end_class"] == "hold" and log[-1]["gate_opened"] is False
+    assert log[-1]["inherited_to_stretch"] is True
+
+
+def test_t_jr_05_h_fresh_stretch_needs_model_only_to_lose_the_carry(monkeypatch) -> None:
+    """Edition 4a 13.3: ``fresh_stretch`` alone is covered by R5-7 (④ >= ④c, no inherited
+    candidate); with ``model_only`` too (the counterexample arm) ④ drops below ④c."""
+    monitor, rows = _carry_ret_then_hold(monkeypatch, "fresh_stretch")
+    carry_bound = rows[1]["carry_bound_Pa"][RR]
+    assert monitor._lock_stretches[RR].inherited_candidates == 0
+    assert rows[2]["model_bound_Pa"][RR] >= carry_bound
+    assert rows[2]["model_bound_source"][RR] == "retract_tracker"
+    monitor, rows = _carry_ret_then_hold(monkeypatch, "fresh_stretch", "model_only")
+    assert rows[2]["model_bound_Pa"][RR] < rows[1]["carry_bound_Pa"][RR]
 
 
 def test_t_jr_05_e_hold_does_not_teach_the_online_ratio(monkeypatch) -> None:
@@ -361,7 +385,9 @@ def test_t_jr_05_g_revision_5_keys_only_with_revision_5() -> None:
                              "saturation_stop_periods", "lock_seed_raises"}
     assert set(record_5) - set(record_4) == {
         "rule_revision", "retract_seed_raises", "carry_raises", "hold_periods", "carry_periods",
-        "gate_open_substeps", "gate_never_opened_carries", "hold_speed_m_s", "stretch_log"}
+        "gate_open_substeps", "gate_never_opened_carries", "hold_speed_m_s", "stretch_log",
+        "carry_log", "spec_edition", "carry_end_rule", "retract_start_rule"}
+    assert record_5["spec_edition"] == esb.JP3_SPEC_EDITION == "8be9de22"
     assert revision_4.extend_bound_trace_row() is None
     assert "hold_periods" not in (revision_4.meta()["fallback_lock_current"] or [{}])[0]
     assert "hold_periods" in revision_5.meta()["fallback_lock_current"][0]
@@ -564,10 +590,36 @@ def test_t_jr_03_case_values_of_spec_2_4() -> None:
         if gate.advance_substep(RR, mean, 1e-3, head_ub_Pa, 70.0 * BAR, 0.395, 1):
             t_tracker = (sub + 1) * 1e-3
             break
-    # +-1 ms (the review's 148 ms is the hand fill without the VN drain of the first ~9 ms,
-    # which the gate keeps: 149 ms here); 1e-9 s absorbs the float sum of the 1 ms steps
+    # edition 4 (J4a-11): the gate opens at the end of sub-step 149 (tolerance 0), the first
+    # 1 ms boundary after the continuous ODE time t_B1 = 148.013 ms (review cr04)
     assert t_plant == pytest.approx(0.070, abs=1e-3 + 1e-9)
-    assert t_tracker == pytest.approx(0.148, abs=1e-3 + 1e-9)
+    assert round(t_tracker / 1e-3) == 149
+    t_continuous = _continuous_gate_open_s(gate, RR, 0.0749e-3, 4.71e-3, head_ub_Pa, 70.0 * BAR)
+    assert t_continuous == pytest.approx(0.148013, abs=5e-6)
+    assert t_continuous <= t_tracker <= t_continuous + 1e-3
+
+
+def _continuous_gate_open_s(gate: LineFillGateBound, leg: int, valve_start_m_s: float,
+                            command_m_s: float, head_ub_Pa: float, rod_ub_Pa: float,
+                            step_s: float = 1e-6) -> float:
+    """The extension gate ODE of ``LineFillGateBound`` (fill ``kappa_x u_v`` minus the VN drain)
+    with the exact valve lag, 1 us Euler steps: the continuous opening time ``t_B1``."""
+    params = gate.params
+    head_area = float(gate.head_area_m2[leg])
+    stiffness_Pa_m = head_area * params.hose_bulk_modulus_Pa / params.line_volume_m3
+    open_Pa = max(head_ub_Pa + params.crack_pressure_Pa, params.tank_pressure_Pa + (
+        rod_ub_Pa + params.crack_pressure_Pa - params.tank_pressure_Pa) / params.pilot_ratio)
+    closing_m_s = params.vent_closing_opening * V_MAX
+    fill_m, t_s = 0.0, 0.0
+    while params.tank_pressure_Pa + fill_m * stiffness_Pa_m < open_Pa:
+        valve_m_s = command_m_s + (valve_start_m_s - command_m_s) * math.exp(
+            -(t_s + 0.5 * step_s) / TAU_V_S)
+        gate_factor = max(1.0 - abs(valve_m_s) / closing_m_s, 0.0)
+        drain_m_s = (float(gate.neutral_coefficient[leg]) * gate_factor
+                     * math.sqrt(fill_m * stiffness_Pa_m) / head_area)
+        fill_m = max(fill_m + (params.fill_speed_factor * valve_m_s - drain_m_s) * step_s, 0.0)
+        t_s += step_s
+    return t_s
 
 
 def test_gate_values_of_decision_147() -> None:
@@ -892,10 +944,14 @@ def test_rev5_check_splits_trapped_and_fill_shares() -> None:
     assert check.trace.arrays()["jp3_p_star_ret_Pa"].shape == (1, 4)
 
 
+IDENTITY = {"spec_edition": "8be9de22", "carry_end_rule": "inherit_when_gate_shut",
+            "retract_start_rule": "with_tracker"}
+
+
 def test_rev5_judgement_sums_the_judged_keys_and_refuses_revision_4_records() -> None:
     passing = {"rule_revision": 5, "jp3a_breach_reads": [0, 0, 0, 0],
                "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0],
-               "jp3b_breach_reads": [0, 2, 0, 0], "sensor_grade": "ideal"}
+               "jp3b_breach_reads": [0, 2, 0, 0], "sensor_grade": "ideal", **IDENTITY}
     assert j_p3_judgement_rev5([passing])["status"] == "pass"
     assert j_p3_judgement_rev5([passing])["jp3b_breach_reads_flag"] == 2
     breached = {**passing, "jp3c_breach_reads": [0, 0, 0, 1]}
@@ -905,11 +961,40 @@ def test_rev5_judgement_sums_the_judged_keys_and_refuses_revision_4_records() ->
     assert j_p3_judgement_rev5([])["status"] == "no_p3_runs"
 
 
+@pytest.mark.parametrize("change", [
+    {"spec_edition": None}, {"spec_edition": "f2f7dfad"}, {"carry_end_rule": "fresh_stretch"},
+    {"retract_start_rule": "model_only"}, {"identity_consistent": False}])
+def test_rev5_judgement_refuses_rows_of_another_identity(change) -> None:
+    """Edition 4a 13.6 (J4a-8): a test-only rule or another edition's row = setting defect."""
+    passing = {"rule_revision": 5, "jp3a_breach_reads": [0] * 4,
+               "jp3b_breach_over_tol_reads": [0] * 4, "jp3c_breach_reads": [0] * 4,
+               "sensor_grade": "normal", **IDENTITY}
+    result = j_p3_judgement_rev5([passing, {**passing, **change}])
+    assert result["status"] == "setting_defect"
+    assert result["runs_by_case"][esb.J_P3_DEFECT_IDENTITY] == 1
+
+
+def test_rev5_judgement_without_judged_rows_is_not_judgeable() -> None:
+    """Edition 4a 13.2 (J4a-10): no judged row (only record-only grades) = ``no_judged_runs``;
+    a batch with a fixed judged count (T-JR-12: 1) that differs is not judgeable either."""
+    row = {"rule_revision": 5, "jp3a_breach_reads": [0] * 4,
+           "jp3b_breach_over_tol_reads": [0] * 4, "jp3c_breach_reads": [0] * 4, **IDENTITY}
+    conservative = {**row, "sensor_grade": "conservative"}
+    assert j_p3_judgement_rev5([conservative])["status"] == "no_judged_runs"
+    normal = {**row, "sensor_grade": "normal"}
+    assert j_p3_judgement_rev5([normal, conservative], expected_judged_runs=1)["status"] == "pass"
+    assert j_p3_judgement_rev5([normal, normal], expected_judged_runs=1)["status"] == (
+        "no_judged_runs")
+    defect = {**normal, "retract_start_rule": "model_only"}
+    assert j_p3_judgement_rev5([defect])["status"] == "setting_defect"  # the defect first
+
+
 def test_rev5_judgement_records_only_the_conservative_and_old_worst_rows() -> None:
     """Decisions 147 / 148: J-P3 judges the ideal and normal rows; conservative and old_worst
     rows are recorded; a row without a grade is a setting defect."""
     passing = {"rule_revision": 5, "jp3a_breach_reads": [0, 0, 0, 0],
-               "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0]}
+               "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0],
+               **IDENTITY}
     breached = {**passing, "jp3a_breach_reads": [1, 0, 0, 0]}
     result = j_p3_judgement_rev5([passing, breached, breached], None, None,
                                  ["normal", "conservative", "old_worst"])

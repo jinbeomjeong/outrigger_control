@@ -31,18 +31,40 @@ def _run_check(check: str, tmp_path: Path) -> dict:
 
 
 def test_t_jr_06_micro_command_keeps_the_lock_and_a_real_command_releases(tmp_path) -> None:
-    """+-2 um/s for 1 s: no release with P1 (the base law alone releases); 4.7 mm/s through
-    the valve lag releases no later than the hand fill of the head check without the
-    ``psi p_B`` help (path B upper bound, +5 ms; the released rod check lets M1c open a few ms
-    earlier) and not at once. The spec's "within 0.1 s" is the R12 RR head of 35 bar; the
-    stand-in FL stands at about 87 bar, where the fill takes about 0.15 s."""
+    """+-2 um/s for 1 s: no release with P1 (the base law alone releases). Edition 4 (J4a-11):
+    4.7 mm/s through the valve lag releases between the M1c rod check release and path B
+    ``t_B`` + 5 ms, ``t_B`` = the head check fill without the ``psi p_B`` help and with the VN
+    drain (front 87 bar 160.16 ms, review ``cr04``; without the drain 160.08 ms; the R12 RR
+    case at 35.2 bar 94.02 ms, its plant release 70 ms)."""
     report = _run_check("p1_gate", tmp_path)
-    assert report["p1"]["micro_unlocked_steps"] == 0
-    release_s, hand_s = report["p1"]["release_after_s"], report["p1"]["hand_head_check_open_s"]
-    assert release_s is not None
-    assert 0.5 * hand_s <= release_s <= hand_s + 5e-3
-    assert report["p1"]["gate_summary_mode"] == "gate_only"
+    p1 = report["p1"]
+    assert p1["micro_unlocked_steps"] == 0
+    release_s, path_b_s = p1["release_after_s"], p1["hand_head_check_open_drain_s"]
+    assert release_s is not None and p1["rod_check_release_after_s"] is not None
+    assert p1["rod_check_release_after_s"] <= release_s <= path_b_s + 5e-3
+    assert p1["gate_summary_mode"] == "gate_only"
     assert report["off"]["micro_unlocked_steps"] > 0
+    reference = report["path_b_reference_s"]
+    assert reference["front_87bar_drain"] == pytest.approx(0.16016, abs=5e-5)
+    assert reference["front_87bar_no_drain"] == pytest.approx(0.16008, abs=5e-5)
+    # cr04's 94.02 ms at 35.2 bar is the front head area (the rear area of R12 RR gives
+    # about 114 ms); both lie above the R12 RR plant release of 70 ms (the psi p_B help)
+    assert reference["front_area_35p2bar_drain"] == pytest.approx(0.09402, abs=5e-5)
+    assert reference["rear_area_35p2bar_drain"] >= 0.070
+
+
+def test_t_jr_15_retract_seed_rows_and_net_force(tmp_path) -> None:
+    """T-JR-15 / T-JR-18 (edition 4): one ``p1_retract_seed_log`` row per counted seed, the
+    read net force continuous at each seed instant (<= 1 N; the whole release step, which
+    also holds the lag's first relax, is the record column ``net_force_release_step_N``)."""
+    report = _run_check("p1_seed", tmp_path)
+    assert report["seed_count"] >= 1
+    assert len(report["seed_log"]) == report["seed_count"]
+    columns = report["seed_log_columns"]
+    for row in report["seed_log"]:
+        values = dict(zip(columns, row, strict=True))
+        assert values["step_Pa"] == pytest.approx(values["seed_Pa"] - values["p_r_locked_Pa"])
+        assert abs(values["net_force_step_N"]) <= 1.0
 
 
 def test_t_jr_07_relock_is_continuous_with_p2(tmp_path) -> None:

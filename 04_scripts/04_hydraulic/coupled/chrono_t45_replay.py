@@ -183,9 +183,41 @@ def run_config(result: dict, extend_start: str | None = None,
         if extend_start == EXTEND_START_TRACKED_RULE and revision is not None:
             from outrigger_sim.control.extend_start_bound import ExtendStartBound
 
-            changes["extend_start_bound"] = ExtendStartBound(revision=int(revision))
+            _refuse_edition_3_record(stored_settings, result)
+            rule = RETRACT_START_OVERRIDE[0] if int(revision) == 5 else None
+            changes["extend_start_bound"] = ExtendStartBound(
+                revision=int(revision), **({} if rule is None else {"retract_start_rule": rule}))
         config = replace(config, two_pressure=replace(config.two_pressure, **changes))
     return config
+
+
+RETRACT_START_OVERRIDE: list[str | None] = [None]
+"""Edition 4a R7 (as ``t4h_replay``): ``--retract-start-rule model_only`` replays an edition 3
+revision 5 record with the test-only rule; None = such records are refused."""
+RETRACT_START_TEST_RULE = "model_only"
+
+
+def _refuse_edition_3_record(stored_settings: dict, result: dict) -> None:
+    """Edition 4a R7: a revision 5 record without ``retract_start_rule`` (edition 3 code) is
+    never re-read under the new rule silently.
+
+    Raises:
+        RuntimeError: Such a record without the test-only override.
+    """
+    bound = stored_settings.get("extend_start_bound") or {}
+    if (bound.get("revision") == 5 and "retract_start_rule" not in bound
+            and RETRACT_START_OVERRIDE[0] is None):
+        raise RuntimeError(f"{result.get('case', 'record')}: a revision 5 record without "
+                           f"retract_start_rule (edition 3 code): replay refused; only "
+                           f"--retract-start-rule model_only (test constant, own folder)")
+
+
+def enable_model_only_retract_start() -> None:
+    """The test-only R7 path: the module constant of ``extend_start_bound`` and the override."""
+    from outrigger_sim.control import extend_start_bound
+
+    extend_start_bound.ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST = True
+    RETRACT_START_OVERRIDE[0] = RETRACT_START_TEST_RULE
 
 
 def load_case(case_dir: Path, extend_start: str | None = None,
@@ -1033,6 +1065,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         default=DEFAULT_CRITERIA,
                         help=("T4 / T5 judgement revision (default rev7: E exclusion, guard, "
                               "B1; rev6 reproduces the stage 3 judgement)"))
+    parser.add_argument("--retract-start-rule", choices=(RETRACT_START_TEST_RULE,),
+                        default=None,
+                        help="test only (edition 4a R7): replay edition 3 revision 5 records "
+                             "with the model_only rule; write to an own folder, never judged")
     args = parser.parse_args(argv)
     if args.extend_start_revision is not None and args.extend_start != "tracked_bound":
         parser.error("--extend-start-revision belongs to --extend-start tracked_bound")
@@ -1041,6 +1077,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    if args.retract_start_rule is not None:
+        enable_model_only_retract_start()
     try:
         rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start,
                             criteria=args.criteria,

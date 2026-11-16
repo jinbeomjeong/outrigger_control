@@ -230,6 +230,14 @@ RELOCK_STEP_COUNTED_PA = 1.0e5
 """Hydraulics 7 recommendation: a lock whose truth steps by more than 1 bar is counted."""
 RELEASE_BY_GATE = "gate"
 RELEASE_BY_COMMAND = "command"
+SEED_LOG_COLUMNS = ("t_s", "leg", "p_h_Pa", "p_r_locked_Pa", "seed_Pa", "step_Pa",
+                    "dp_h_read_Pa", "net_force_step_N", "net_force_release_step_N")
+"""Edition 4 ``p1_retract_seed_log`` row (spec 6.3; ``leg`` = index as in ``lock_log``).
+``net_force_step_N`` = the read net force step at the seed instant, ``dp_h_read A_h - step
+A_ann`` (5.4 #12: the head reading moves with the rod step, the net force stays; the seed
+re-anchors the M2 shift, so the plant force does not step either). The added column
+``net_force_release_step_N`` is the plant force change over the whole release step, which
+also holds the lag's first relax step (a record)."""
 
 
 class _LockLog:
@@ -249,11 +257,27 @@ class _LockLog:
         self.retract_seed_step_max_Pa = 0.0
         """T-JR-15: the P1 retract M2 seed steps the rod pressure at a release (not a lock
         step, counted apart)."""
+        self.seed_rows: list[dict] = []
+        self._pending_seed_rows: list[dict] = []
 
-    def on_retract_seed(self, step_Pa: float) -> None:
+    def on_retract_seed(self, step_Pa: float, row: dict | None = None) -> None:
+        """One P1 retract seed; ``row`` = its ``p1_retract_seed_log`` values (edition 4,
+        spec 6.3) without ``net_force_step_N``, which :meth:`finish_seed_rows` adds after
+        the M2 reference shift of the same inner step."""
         self.retract_seed_count += 1
         if abs(step_Pa) > abs(self.retract_seed_step_max_Pa):
             self.retract_seed_step_max_Pa = step_Pa
+        if row is not None and len(self.seed_rows) < MAX_LOGGED_LOCK_EVENTS:
+            self.seed_rows.append(row)
+            self._pending_seed_rows.append(row)
+
+    def finish_seed_rows(self, net_force_N) -> None:
+        """The net force after the M2 shift of the release step (``net_force_release_step_N``:
+        the seed instant plus the lag's first relax step towards ``p*``, a record)."""
+        for row in self._pending_seed_rows:
+            row["net_force_release_step_N"] = (float(net_force_N[row["leg"]])
+                                               - row.pop("net_force_before_N"))
+        self._pending_seed_rows = []
 
     def on_lock(self, plant, leg: int, p_tr_before_Pa: float, monitor_trace: dict | None) -> None:
         annulus = float(plant.A_ann[leg])
@@ -310,7 +334,10 @@ class _LockLog:
                 "relock_step_over_1bar_count": self.step_over_1bar_count,
                 "max_abs_dp_tr_step_bar": self.max_abs_step_Pa / BAR,
                 "p1_retract_seed_count": self.retract_seed_count,
-                "p1_retract_seed_step_max_bar": self.retract_seed_step_max_Pa / BAR}
+                "p1_retract_seed_step_max_bar": self.retract_seed_step_max_Pa / BAR,
+                "p1_retract_seed_log": [[row.get(column) for column in SEED_LOG_COLUMNS]
+                                        for row in self.seed_rows],
+                "p1_retract_seed_log_columns": list(SEED_LOG_COLUMNS)}
 
 
 def with_plant_truth_pressures(plant, m, ha):
@@ -482,7 +509,9 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 "trace_row": trace,
                 # 3rd edition 6.3: the target of the last moving step; NaN on locked legs
                 "p_star_ret_Pa": np.where(np.asarray(self.locked, bool), np.nan,
-                                          self.rod_pressure_lag.last_target_Pa)}
+                                          self.rod_pressure_lag.last_target_Pa),
+                # edition 4.1 record: the false-drop count of retract_tracker reads
+                "true_force_N": np.asarray(self.pressure(), float).copy()}
             self.extend_bound_check.add(t_s, bound_Pa, plant_Pa,
                                         extend_bound_states(self.locked, self.last_dir),
                                         locked_model_bound_Pa, locked_sources, **revision_5)
@@ -645,7 +674,8 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             weight = np.zeros(LEG_COUNT)
             for i in np.flatnonzero(~self.locked):
                 if was_locked[i]:
-                    self._start_release(i, float(pressure_Pa[i]), float(rod_force_N[i]))
+                    self._start_release(i, float(pressure_Pa[i]), float(rod_force_N[i]),
+                                        float(net_force_N[i]))
                 pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]),
                                            float(speed_m_s[i]))
                 weight[i] = release_weight(float(self.t - self.t_rel[i]), float(self.tau))
@@ -653,15 +683,27 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
                 self.geo.stroke - self.sref, release_weight=weight, t_s=float(self.t))
             self.sref += shift_m
+            if self.lock_log is not None:
+                self.lock_log.finish_seed_rows(self.pressure())
 
         def _start_release(self, leg: int, locked_pressure_Pa: float,
-                           release_force_N: float) -> None:
+                           release_force_N: float, net_force_N: float = math.nan) -> None:
             """The lag starts at the locked pressure or the M1c seed; ``Delta = Gr(t_rel) /
             A_ann`` (= ``p_r0 - p_r,rel``; ``Gr`` is ``r0`` in the release step)."""
             seed_Pa = self.rod_pressure_seed_Pa[leg]
             start_Pa = locked_pressure_Pa if np.isnan(seed_Pa) else float(seed_Pa)
             if self.lock_log is not None and not np.isnan(seed_Pa):
-                self.lock_log.on_retract_seed(start_Pa - locked_pressure_Pa)
+                step_Pa = start_Pa - locked_pressure_Pa
+                annulus = float(self.A_ann[leg])
+                head_area = float(self.flow_limiter.params.A_h[leg])
+                self.lock_log.on_retract_seed(step_Pa, {
+                    "t_s": round(float(self.t), 6), "leg": leg,
+                    "p_h_Pa": (net_force_N + locked_pressure_Pa * annulus) / head_area,
+                    "p_r_locked_Pa": locked_pressure_Pa, "seed_Pa": start_Pa,
+                    "step_Pa": step_Pa, "dp_h_read_Pa": step_Pa * annulus / head_area,
+                    "net_force_step_N": (step_Pa * annulus / head_area) * head_area
+                    - step_Pa * annulus,
+                    "net_force_before_N": net_force_N})
             self.rod_pressure_seed_Pa[leg] = np.nan
             self.rod_pressure_lag.start(leg, start_Pa)
             self.rod_release.release(

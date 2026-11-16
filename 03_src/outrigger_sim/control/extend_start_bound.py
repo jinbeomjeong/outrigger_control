@@ -85,6 +85,7 @@ from outrigger_sim.hydraulics.check_open_delay import (
     retract_dead,
 )
 from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw, flow_limited_rod_pressure
+from outrigger_sim.params import LEG_ORDER
 
 BAR_PA = 1.0e5
 LEG_COUNT = 4
@@ -147,16 +148,35 @@ RETRACT_HOLD_RULE = "retract_model_candidate"
 """R5-2 rule (i): a retracting hold or carry period adds ``(max(retract model, p_ret), p_h)``."""
 EXIT_SEED_RULE = "both"
 """R5-3: the first carry period after a lock seeds ``max(p, ④)`` in both directions."""
+JP3_SPEC_EDITION = "8be9de22"
+"""First 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec.md`` edition 4a (13.6): the
+``spec_edition`` of every revision 5 ``extend_bound_check``; the judgement refuses other values
+(output of an older edition's code)."""
 CARRY_END_INHERIT = "inherit_when_gate_shut"
-"""Implementer addition to spec 2.1 (CONFIRMATION NEEDED, control-expert): a carry run that
-ends in a lock or hold period before the tracker gate opened hands its candidates to the new
-stretch (the plant may never have left its lock). Found by case replay E (LSJ4 FL 49.0 s:
-carry_ret -> hold, the fresh stretch's ④ 35.3 bar below the locked truth 46.0 bar)."""
+"""R5-6 (spec 2.9, user decision 152): a carry run that ends in a lock or hold period before
+the tracker gate opened hands its candidates to the new stretch (the plant may never have left
+its lock; case replay E, LSJ4 FL 49.0 s)."""
 CARRY_END_SPEC_2_1 = "fresh_stretch"
-"""Spec 2.1 as written: the new stretch starts with new candidates only."""
-CARRY_END_RULES = (CARRY_END_INHERIT, CARRY_END_SPEC_2_1)
+"""Edition 3 spec 2.1: the new stretch starts with new candidates only. Unsound (counterexample
+⑪); accepted only with :data:`ALLOW_FRESH_STRETCH_FOR_TEST`."""
+CARRY_END_RULES = (CARRY_END_INHERIT,)
+"""The settable ``carry_end_rule`` values (edition 4a 13.7)."""
+RETRACT_START_WITH_TRACKER = "with_tracker"
+"""R5-7 (spec 2.10): after a retraction the lock start model is ``max(retract model, p_ret,
+p_hat + delta_m)``."""
+RETRACT_START_MODEL_ONLY = "model_only"
+"""Edition 3 behaviour (no ``p_hat`` term); accepted only with
+:data:`ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST`."""
+RETRACT_START_RULES = (RETRACT_START_WITH_TRACKER,)
+"""The settable ``retract_start_rule`` values (edition 4a 13.7)."""
+ALLOW_FRESH_STRETCH_FOR_TEST = False
+"""Test only (edition 4a 13.7): accept ``carry_end_rule = "fresh_stretch"``. No option, preset
+or CLI path sets it; rows built with it run under a ``*_X11`` setting name in their own folder
+and the judgement refuses them."""
+ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST = False
+"""Test only (edition 4a 13.7): accept ``retract_start_rule = "model_only"`` (as above)."""
 REVISION_5_FIELDS = ("hold_speed_ratio", "retract_hold_rule", "exit_seed_rule",
-                     "line_fill_gate", "carry_end_rule")
+                     "line_fill_gate", "carry_end_rule", "retract_start_rule")
 """Fields of :class:`ExtendStartBound` that a revision 4 meta does not carry."""
 GATE_HEAD_READING_MARGIN_PA = 9.0e5
 """``e_h`` of the gate, normal sensor grade (user decision 147; ``hydraulics_remedy_review.md``
@@ -244,8 +264,10 @@ class ExtendStartBound:
         retract_hold_rule: Revision 5 R5-2 rule (only :data:`RETRACT_HOLD_RULE`).
         exit_seed_rule: Revision 5 R5-3 rule (only :data:`EXIT_SEED_RULE`).
         line_fill_gate: Revision 5 R5-4 gate; None on revision 5 = the defaults.
-        carry_end_rule: Revision 5 end of a carry run in a lock or hold period
-            (:data:`CARRY_END_RULES`; default :data:`CARRY_END_INHERIT`).
+        carry_end_rule: Revision 5 end of a carry run in a lock or hold period, R5-6
+            (:data:`CARRY_END_RULES`; ``fresh_stretch`` only under the test constant).
+        retract_start_rule: Revision 5 lock start model after a retraction, R5-7
+            (:data:`RETRACT_START_RULES`; ``model_only`` only under the test constant).
     """
 
     bulk_modulus_Pa: float = BOUND_BULK_MODULUS_PA
@@ -268,6 +290,7 @@ class ExtendStartBound:
     exit_seed_rule: str = EXIT_SEED_RULE
     line_fill_gate: LineFillGateParams | None = None
     carry_end_rule: str = CARRY_END_INHERIT
+    retract_start_rule: str = RETRACT_START_WITH_TRACKER
 
     def __post_init__(self) -> None:
         if self.revision not in SUPPORTED_REVISIONS:
@@ -295,10 +318,42 @@ class ExtendStartBound:
                              f"{RETRACT_HOLD_RULE!r} (rule (i), decision 146)")
         if self.exit_seed_rule != EXIT_SEED_RULE:
             raise ValueError(f"exit_seed_rule {self.exit_seed_rule!r}: only {EXIT_SEED_RULE!r}")
-        if self.carry_end_rule not in CARRY_END_RULES:
-            raise ValueError(f"carry_end_rule {self.carry_end_rule!r}: one of {CARRY_END_RULES}")
+        self.check_allowed()
         if self.line_fill_gate is None:
             object.__setattr__(self, "line_fill_gate", LineFillGateParams())
+
+    def check_allowed(self) -> None:
+        """Refuse the test-only rule values unless their test constant is on (edition 4a
+        13.7). A pickle restores without ``__post_init__``, so the monitor calls this again
+        when it builds or reopens its revision 5 state.
+
+        Raises:
+            ValueError: An unknown value, or a test-only value with its constant off.
+        """
+        rules = (("carry_end_rule", CARRY_END_RULES, CARRY_END_SPEC_2_1,
+                  ALLOW_FRESH_STRETCH_FOR_TEST, "ALLOW_FRESH_STRETCH_FOR_TEST"),
+                 ("retract_start_rule", RETRACT_START_RULES, RETRACT_START_MODEL_ONLY,
+                  ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST,
+                  "ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST"))
+        for name, allowed, test_value, is_test_allowed, constant in rules:
+            # getattr: a bound pickled before the field has the class default
+            value = getattr(self, name)
+            if value in allowed or (value == test_value and is_test_allowed):
+                continue
+            if value == test_value:
+                raise ValueError(f"{name} {value!r} is a test-only value (module constant "
+                                 f"{constant} is off)")
+            raise ValueError(f"{name} {value!r}: one of {allowed}")
+
+    @property
+    def uses_retract_tracker_start(self) -> bool:
+        """R5-7 is on (revision 5 with ``retract_start_rule`` ``with_tracker``)."""
+        return self.is_hold_revision and self.retract_start_rule == RETRACT_START_WITH_TRACKER
+
+    def identity(self) -> dict[str, str]:
+        """Edition 4a 13.6: the rule identity a revision 5 record carries."""
+        return {"spec_edition": JP3_SPEC_EDITION, "carry_end_rule": self.carry_end_rule,
+                "retract_start_rule": self.retract_start_rule}
 
     @property
     def is_hold_revision(self) -> bool:
@@ -435,6 +490,7 @@ class LineFillGateBound:
         self.fill_m[leg] = 0.0
         self.direction[leg] = 0
         self.is_open[leg] = False
+        self._last_need_array()[leg] = np.nan
 
     def advance_substep(self, leg: int, mean_valve_m_s: float, step_s: float,
                         head_ub_Pa: float, rod_ub_Pa: float, stroke_m: float,
@@ -491,6 +547,7 @@ class LineFillGateBound:
         if not math.isfinite(head_ub_Pa):
             return False
         need_m, open_pressure_Pa = self.retract_need_m(leg, head_ub_Pa, stroke_m)
+        self._last_need_array()[leg] = need_m
         rise_Pa = max(open_pressure_Pa - self.params.tank_pressure_Pa, 0.0)
         level = min(self.fill_m[leg] / need_m, 1.0) if need_m > 0.0 else 0.0
         drain_m_s = (self.neutral_coefficient[leg] * self._gate_factor(mean_valve_m_s)
@@ -498,6 +555,18 @@ class LineFillGateBound:
         fill_rate_m_s = self.params.fill_speed_factor * max(-mean_valve_m_s, 0.0) - drain_m_s
         self.fill_m[leg] = max(self.fill_m[leg] + fill_rate_m_s * step_s, 0.0)
         return self.fill_m[leg] >= need_m
+
+    def _last_need_array(self) -> NDArray[np.float64]:
+        """``need_ub`` of the last retract sub-step per leg (a gate pickled before it gets
+        NaN values)."""
+        if "last_need_m" not in self.__dict__:
+            self.last_need_m = np.full(LEG_COUNT, np.nan)
+        return self.last_need_m
+
+    def last_retract_need_m(self, leg: int) -> float | None:
+        """``need_ub`` of the leg's last retract sub-step (``carry_log``); None = none yet."""
+        value = float(self._last_need_array()[leg])
+        return value if math.isfinite(value) else None
 
     def retract_need_m(self, leg: int, head_ub_Pa: float, stroke_m: float) -> tuple[float, float]:
         """``(need_ub, p_open)`` of a retraction: the M1c ``retract_dead`` need at the
@@ -621,8 +690,13 @@ class ExtendStartTracker:
 
     def ensure_hold_state(self) -> None:
         """Create the revision 5 state when a revision 5 bound meets a tracker built without it
-        (a monitor pickled with revision 4, then refreshed: empty state, 10.4 ⑧ precedent)."""
-        if self.bound.is_hold_revision and "gate" not in self.__dict__:
+        (a monitor pickled with revision 4, then refreshed: empty state, 10.4 ⑧ precedent).
+        Every call checks the test-only rule values again (edition 4a 13.7: a pickle skips
+        ``__post_init__``)."""
+        if not self.bound.is_hold_revision:
+            return
+        self.bound.check_allowed()
+        if "gate" not in self.__dict__:
             self._init_hold_state()
 
     def advance(self, command_m_s: ArrayLike, stroke_m: ArrayLike,
@@ -1059,7 +1133,8 @@ class ExtendBoundCheck:
             used_bounds: ArrayLike | None = None,
             plant_states: Sequence[str] | None = None,
             trace_row: Mapping[str, Any] | None = None,
-            p_star_ret_Pa: ArrayLike | None = None) -> None:
+            p_star_ret_Pa: ArrayLike | None = None,
+            true_force_N: ArrayLike | None = None) -> None:
         """One controller read.
 
         Args:
@@ -1077,12 +1152,14 @@ class ExtendBoundCheck:
             trace_row: Revision 5: the monitor's ``extend_bound_trace_row()`` (per-read trace).
             p_star_ret_Pa: Revision 5: the plant retract target ``p*_ret(F)`` per leg at the
                 read (2nd edition 6.2: the trapped and the fill share of J-P3c and RET).
+            true_force_N: Revision 5: the plant net force per leg (edition 4.1 false-drop
+                count); None = unknown.
         """
         if period_classes is not None:
             if self.rev5 is None:
                 self.rev5 = ExtendBoundCheckRev5(self.locked_tolerance_Pa, self.sensor_grade)
             self.rev5.add(t_s, period_classes, used_bounds, plant_rod_Pa, plant_states,
-                          trace_row, p_star_ret_Pa)
+                          trace_row, p_star_ret_Pa, true_force_N)
         bound = np.asarray(bound_Pa, float)
         plant = np.asarray(plant_rod_Pa, float)
         model = (np.full(LEG_COUNT, np.nan) if locked_model_bound_Pa is None
@@ -1158,6 +1235,13 @@ class ExtendBoundCheck:
 PLANT_STATES = ("moving_ext", "moving_ret", "locked_ext", "locked_ret")
 """Plant leg states of the revision 5 record (a record column, not a judged set; spec 6.2)."""
 PLANT_STATE_CODES = {state: code for code, state in enumerate(PLANT_STATES)}
+JP3_SOURCE_NAMES = ("extend_bound", "pilot_model", "previous_moving", "retract_hold",
+                    "retract_tracker")
+"""Table of ``jp3_model_bound_source`` (the ``LockStartSource`` values of ``two_pressure`` in
+their order; edition 4 J4a-4 appends ``retract_tracker`` at the end)."""
+JP3_SOURCE_CODES = {name: code for code, name in enumerate(JP3_SOURCE_NAMES)}
+RETRACT_TRACKER_SOURCE = "retract_tracker"
+MAX_RETRACT_TRACKER_STRETCH_ROWS = 2000
 TRACE_EXCERPT_GAP_PA = 2.0e5
 """Spec 6.3: an excerpt row is a read with a gap below 2 bar, a breach or a class change."""
 TRACE_EXCERPT_CONTEXT_READS = 2
@@ -1225,16 +1309,20 @@ class ExtendBoundTrace:
 
     EXCERPT_COLUMNS = ("t_s", "leg", "class", "plant_state", "u_m_s", "used_bound_Pa",
                        "ext_bound_Pa", "model_bound_Pa", "p_tr_Pa", "p_star_ret_Pa",
-                       "head_read_Pa", "gap_Pa", "gate_open")
+                       "head_read_Pa", "gap_Pa", "gate_open", "model_source", "model_age_s")
     PER_LEG_FIELDS = ("u_m_s", "ext_bound_Pa", "model_bound_Pa", "carry_bound_Pa",
                       "used_bound_Pa", "p_tr_Pa", "p_star_ret_Pa", "head_read_Pa",
-                      "gate_fill_m")
+                      "gate_fill_m", "model_bound_age_s", "model_bound_head_Pa",
+                      "ret_after_gate_s")
 
     def __init__(self) -> None:
         self.t_s: list[float] = []
         self.classes: list[list[int]] = []
         self.plant_states: list[list[int]] = []
         self.gate_open: list[list[bool]] = []
+        self.sources: list[list[int]] = []
+        """Edition 4 per-read ``jp3_model_bound_source`` (:data:`JP3_SOURCE_CODES`, -1 none)."""
+        self.inherited: list[list[bool]] = []
         self.values: dict[str, list[list[float]]] = {name: [] for name in self.PER_LEG_FIELDS}
 
     def add(self, t_s: float, classes: Sequence[PeriodClass | None], plant_states: Sequence[str],
@@ -1247,6 +1335,10 @@ class ExtendBoundTrace:
                              for value in classes])
         self.plant_states.append([PLANT_STATE_CODES.get(state, -1) for state in plant_states])
         self.gate_open.append([bool(value) for value in row.get("gate_open", [False] * LEG_COUNT)])
+        self.sources.append([JP3_SOURCE_CODES.get(value, -1) for value in
+                             row.get("model_bound_source", [None] * LEG_COUNT)])
+        self.inherited.append([bool(value) for value in
+                               row.get("model_bound_inherited", [False] * LEG_COUNT)])
         given = {"used_bound_Pa": used_bounds, "p_tr_Pa": plant_rod_Pa,
                  "p_star_ret_Pa": p_star_ret_Pa}
         for name in self.PER_LEG_FIELDS:
@@ -1265,7 +1357,12 @@ class ExtendBoundTrace:
                                           dtype=np.int8).reshape(count, LEG_COUNT),
             "jp3_gate_open": np.asarray(self.gate_open, dtype=bool).reshape(count, LEG_COUNT),
             "jp3_class_names": np.asarray([value.value for value in PeriodClass]),
-            "jp3_plant_state_names": np.asarray(PLANT_STATES)}
+            "jp3_plant_state_names": np.asarray(PLANT_STATES),
+            "jp3_model_bound_source": np.asarray(self.sources,
+                                                 dtype=np.int8).reshape(count, LEG_COUNT),
+            "jp3_source_names": np.asarray(JP3_SOURCE_NAMES),
+            "jp3_model_bound_inherited": np.asarray(self.inherited,
+                                                    dtype=bool).reshape(count, LEG_COUNT)}
         for name in self.PER_LEG_FIELDS:
             arrays[f"jp3_{name}"] = np.asarray(self.values[name],
                                                dtype=float).reshape(count, LEG_COUNT)
@@ -1308,11 +1405,108 @@ class ExtendBoundTrace:
                 _plain_float(self.values["p_tr_Pa"][read][leg]),
                 _plain_float(self.values["p_star_ret_Pa"][read][leg]),
                 _plain_float(self.values["head_read_Pa"][read][leg]),
-                _plain_float(gap[read, leg]), self.gate_open[read][leg]]
+                _plain_float(gap[read, leg]), self.gate_open[read][leg],
+                self.source_name(read, leg),
+                _plain_float(self.values["model_bound_age_s"][read][leg])]
+
+    def source_name(self, read: int, leg: int) -> str | None:
+        """``jp3_model_bound_source`` of one read as its name (None = no ④ candidate)."""
+        code = self.sources[read][leg]
+        return None if code < 0 else JP3_SOURCE_NAMES[code]
 
 
 def _plain_float(value: float) -> float | None:
     return float(value) if math.isfinite(value) else None
+
+
+class _DominatedReads:
+    """Edition 4.1 T-JR-12 records (spec 5.5, 6.3): lock and hold reads of a fallback leg whose
+    ④ comes from an R5-7 ``retract_tracker`` candidate, per leg and per stretch.
+
+    A read is over-conservative when ``④ - p_tr > 0.6 kN / A_ann`` (the jp3b tolerance) and a
+    false drop when the true force is at or above ``F_min`` while the monitor's lower force is
+    below it.
+    """
+
+    def __init__(self, tolerance_Pa: NDArray[np.float64]) -> None:
+        self.tolerance_Pa = tolerance_Pa
+        self.reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.over_tol_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.false_drop_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.stretches: dict[tuple[int, float], dict[str, Any]] = {}
+
+    def add(self, classes: Sequence[PeriodClass | None], used_Pa: NDArray[np.float64],
+            plant_Pa: NDArray[np.float64], row: Mapping[str, Any],
+            true_force_N: ArrayLike | None) -> None:
+        sources = row.get("model_bound_source") or [None] * LEG_COUNT
+        fallback = row.get("is_fallback") or [False] * LEG_COUNT
+        for leg, period_class in enumerate(classes):
+            is_counted = (period_class is not None and period_class.is_locked
+                          and bool(fallback[leg]) and sources[leg] == RETRACT_TRACKER_SOURCE)
+            if is_counted:
+                self._count(leg, float(used_Pa[leg] - plant_Pa[leg]), row, true_force_N)
+
+    def _count(self, leg: int, gap_Pa: float, row: Mapping[str, Any],
+               true_force_N: ArrayLike | None) -> None:
+        self.reads[leg] += 1
+        self.over_tol_reads[leg] += int(gap_Pa > self.tolerance_Pa[leg])
+        self.false_drop_reads[leg] += int(self._is_false_drop(leg, row, true_force_N))
+        stretch = self._stretch_row(leg, row)
+        stretch["dominated_reads"] += 1
+        if math.isfinite(gap_Pa):
+            # 0.6 kN / tolerance = A_ann
+            over_kN = gap_Pa * (600.0 / self.tolerance_Pa[leg]) / 1000.0
+            previous = stretch["max_over_kN"]
+            stretch["max_over_kN"] = over_kN if previous is None else max(previous, over_kN)
+
+    @staticmethod
+    def _is_false_drop(leg: int, row: Mapping[str, Any], true_force_N: ArrayLike | None) -> bool:
+        lower = row.get("lower_force_N")
+        f_min_N = row.get("f_min_N")
+        if true_force_N is None or lower is None or f_min_N is None:
+            return False
+        truth_N = float(np.asarray(true_force_N, dtype=float)[leg])
+        return truth_N >= f_min_N and float(lower[leg]) < f_min_N
+
+    def _stretch_row(self, leg: int, row: Mapping[str, Any]) -> dict[str, Any]:
+        opened = row.get("stretch_t_open_s") or [None] * LEG_COUNT
+        key = (leg, opened[leg])
+        stretch = self.stretches.get(key)
+        if stretch is None:
+            after = row.get("ret_after_gate_s") or [None] * LEG_COUNT
+            speed = row.get("ret_mean_speed_m_s") or [None] * LEG_COUNT
+            stretch = {"leg": LEG_ORDER[leg], "t_open_s": opened[leg],
+                       "ret_after_gate_s": _finite_value(after[leg]),
+                       "ret_mean_speed_m_s": _finite_value(speed[leg]),
+                       "dominated_reads": 0, "max_over_kN": None}
+            if len(self.stretches) < MAX_RETRACT_TRACKER_STRETCH_ROWS:
+                self.stretches[key] = stretch
+        return stretch
+
+    def record(self) -> dict[str, object]:
+        rows = list(self.stretches.values())
+        after = [row["ret_after_gate_s"] for row in rows if row["ret_after_gate_s"] is not None]
+        return {"retract_tracker_dominated_reads": self.reads.tolist(),
+                "retract_tracker_over_tol_reads": self.over_tol_reads.tolist(),
+                "retract_tracker_false_drop_reads": self.false_drop_reads.tolist(),
+                "retract_tracker_ret_after_gate_s": _distribution(after),
+                "retract_tracker_stretch_log": rows,
+                "retract_tracker_stretch_log_columns": [
+                    "leg", "t_open_s", "ret_after_gate_s", "ret_mean_speed_m_s",
+                    "dominated_reads", "max_over_kN"]}
+
+
+def _finite_value(value: float | None) -> float | None:
+    return None if value is None or not math.isfinite(float(value)) else float(value)
+
+
+def _distribution(values: list[float]) -> dict[str, float | None]:
+    """p50 / p90 / max of a list (None values without data)."""
+    if not values:
+        return {"p50": None, "p90": None, "max": None, "count": 0}
+    array = np.asarray(values, dtype=float)
+    return {"p50": float(np.percentile(array, 50)), "p90": float(np.percentile(array, 90)),
+            "max": float(array.max()), "count": len(values)}
 
 
 class ExtendBoundCheckRev5:
@@ -1352,11 +1546,20 @@ class ExtendBoundCheckRev5:
         self.class_reads = {value.value: np.zeros(LEG_COUNT, dtype=np.int64)
                             for value in PeriodClass}
         self.trace = ExtendBoundTrace()
+        self.identity: dict[str, Any] | None = None
+        """Edition 4a 13.6: ``spec_edition``, ``carry_end_rule``, ``retract_start_rule`` of the
+        monitor (from its trace rows); None = no row carried one."""
+        self.is_identity_consistent = True
+        self.dominated = _DominatedReads(self.tolerance_Pa)
 
     def add(self, t_s: float, period_classes: Sequence[PeriodClass | str | None],
             used_bounds: ArrayLike | None, plant_rod_Pa: ArrayLike,
             plant_states: Sequence[str] | None, trace_row: Mapping[str, Any] | None,
-            p_star_ret_Pa: ArrayLike | None = None) -> None:
+            p_star_ret_Pa: ArrayLike | None = None,
+            true_force_N: ArrayLike | None = None) -> None:
+        """Count one read (see the class docstring); ``true_force_N`` = the plant's net force
+        per leg (the false-drop count of ``retract_tracker_dominated_reads``; None = unknown)."""
+        self._note_identity(trace_row)
         classes = [None if value is None else PeriodClass(value) for value in period_classes]
         used = (np.full(LEG_COUNT, np.nan) if used_bounds is None
                 else np.asarray(used_bounds, dtype=float))
@@ -1377,7 +1580,18 @@ class ExtendBoundCheckRev5:
                     period_class is PeriodClass.CARRY_RET and is_locked_plant)
                 self._compare(leg, t_s, period_class, states[leg], float(used[leg] - plant[leg]),
                               is_fill)
+        if trace_row is not None:
+            self.dominated.add(classes, used, plant, trace_row, true_force_N)
         self.trace.add(t_s, classes, states, used, plant, trace_row, target)
+
+    def _note_identity(self, trace_row: Mapping[str, Any] | None) -> None:
+        identity = None if trace_row is None else trace_row.get("identity")
+        if identity is None:
+            return
+        if self.identity is None:
+            self.identity = dict(identity)
+        elif dict(identity) != self.identity:
+            self.is_identity_consistent = False
 
     def _compare(self, leg: int, t_s: float, period_class: PeriodClass, plant_state: str,
                  gap_Pa: float, is_fill: bool = False) -> None:
@@ -1404,9 +1618,15 @@ class ExtendBoundCheckRev5:
     def record(self) -> dict[str, object]:
         excerpt, is_truncated = self.trace.excerpt()
         jp3a, jp3b, jp3c = self.jp3a, self.jp3b, self.jp3c
+        identity = self.identity or {}
         return {
             "rule_revision": EXTEND_HOLD_REVISION,
             "rule_rev5": EXTEND_BOUND_CHECK_REV5_RULE,
+            "spec_edition": identity.get("spec_edition"),
+            "carry_end_rule": identity.get("carry_end_rule"),
+            "retract_start_rule": identity.get("retract_start_rule"),
+            "identity_consistent": self.is_identity_consistent,
+            **self.dominated.record(),
             "jp3a_reads": jp3a.reads.tolist(),
             "jp3a_breach_reads": jp3a.breach_reads.tolist(),
             "jp3a_margin_used_reads": jp3a.margin_used_reads.tolist(),
@@ -1567,6 +1787,20 @@ JUDGED_SENSOR_GRADES = ("ideal", "normal")
 J_P3_RECORD_ONLY_GRADES = ("conservative", "old_worst")
 
 
+J_P3_DEFECT_IDENTITY = "defect_rule_identity_not_default"
+"""Edition 4a 13.6: a revision 5 row of a test-only rule (``fresh_stretch``, ``model_only``) or
+of another spec edition's code (``spec_edition`` missing or not :data:`JP3_SPEC_EDITION`)."""
+
+
+def is_default_rule_identity(record: Mapping[str, Any] | None) -> bool:
+    """The revision 5 record carries the sealed edition and the default rules (13.6)."""
+    record = record or {}
+    return (record.get("spec_edition") == JP3_SPEC_EDITION
+            and record.get("carry_end_rule") == CARRY_END_INHERIT
+            and record.get("retract_start_rule") == RETRACT_START_WITH_TRACKER
+            and record.get("identity_consistent", True) is True)
+
+
 def is_judged_sensor_grade(grade: str | None) -> bool:
     """``jp3_judged_row`` of a row grade (2nd edition 6.1)."""
     return grade in JUDGED_SENSOR_GRADES
@@ -1575,9 +1809,15 @@ def is_judged_sensor_grade(grade: str | None) -> bool:
 def j_p3_judgement_rev5(records: list[dict[str, object] | None],
                         has_rod_reading: list[bool] | None = None,
                         head_only_declared: list[bool] | None = None,
-                        sensor_grades: list[str | None] | None = None) -> dict[str, object]:
+                        sensor_grades: list[str | None] | None = None,
+                        expected_judged_runs: int | None = None) -> dict[str, object]:
     """J-P3 of 436.9 over the revision 5 rows (spec 6.1, 6.2): the judged keys summed over the
     legs of every judged row; FLAG keys are reported, they do not change the status.
+
+    Edition 4a: a judged row whose rule identity is not the sealed default (``spec_edition``
+    :data:`JP3_SPEC_EDITION`, ``carry_end_rule`` and ``retract_start_rule`` defaults) is
+    :data:`J_P3_DEFECT_IDENTITY` (13.6); no judged row, or not ``expected_judged_runs`` of them
+    (a batch with a fixed count, T-JR-12), is ``no_judged_runs`` (13.2).
 
     The run cases are those of :func:`j_p3_run_case` (criteria revision 9 3.2 table). A judged
     row whose record is not a revision 5 record is a setting defect (a revision 4 row is judged
@@ -1587,8 +1827,9 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     known grade is :data:`J_P3_DEFECT_GRADE_MISSING` (2nd edition 6.1, decision 148).
 
     Returns:
-        ``status`` ``"pass"``, ``"H-7"``, ``"setting_defect"`` or ``"no_p3_runs"``; the judged
-        sums per key, ``runs_with_breach``, the FLAG sums and ``record_only_grade_sums``.
+        ``status`` ``"pass"``, ``"H-7"``, ``"setting_defect"``, ``"no_judged_runs"`` or
+        ``"no_p3_runs"``; the judged sums per key, ``runs_with_breach``, the FLAG sums and
+        ``record_only_grade_sums``.
     """
     rod = [True] * len(records) if has_rod_reading is None else list(has_rod_reading)
     declared = [False] * len(records) if head_only_declared is None else list(head_only_declared)
@@ -1601,6 +1842,9 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     cases = [J_P3_DEFECT_NOT_REVISION_5
              if case == J_P3_JUDGED and record.get("rule_revision") != EXTEND_HOLD_REVISION
              else case for record, case in zip(records, cases, strict=True)]
+    cases = [J_P3_DEFECT_IDENTITY
+             if case == J_P3_JUDGED and not is_default_rule_identity(record) else case
+             for record, case in zip(records, cases, strict=True)]
     cases = [_graded_case(case, grade) for case, grade in zip(cases, grades, strict=True)]
     judged = [record for record, case in zip(records, cases, strict=True)
               if case == J_P3_JUDGED]
@@ -1614,21 +1858,25 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     record_only_sums = {key: sum(total(record, key) for record in record_only)
                         for key in J_P3_REV5_JUDGED_KEYS}
     defects = sum(case in (*J_P3_DEFECT_CASES, J_P3_DEFECT_NOT_REVISION_5,
-                           J_P3_DEFECT_GRADE_MISSING) for case in cases)
+                           J_P3_DEFECT_GRADE_MISSING, J_P3_DEFECT_IDENTITY) for case in cases)
+    is_count_wrong = expected_judged_runs is not None and len(judged) != expected_judged_runs
     if not records:
         status = "no_p3_runs"
     elif defects:
         status = "setting_defect"
+    elif not judged or is_count_wrong:
+        # edition 4a 13.2: no judged row (or not the fixed number) = not judgeable
+        status = "no_judged_runs"
     elif any(sums.values()):
         status = "H-7"
     else:
         status = "pass"
     return {"name": J_P3_REV5_NAME, "status": status, "runs": len(records),
-            "runs_judged": len(judged),
+            "runs_judged": len(judged), "expected_judged_runs": expected_judged_runs,
             "runs_by_case": {name: cases.count(name) for name in
                              (J_P3_JUDGED, J_P3_NO_ROD_READING, *J_P3_DEFECT_CASES,
                               J_P3_DEFECT_NOT_REVISION_5, J_P3_DEFECT_GRADE_MISSING,
-                              J_P3_RECORD_ONLY_GRADE)},
+                              J_P3_DEFECT_IDENTITY, J_P3_RECORD_ONLY_GRADE)},
             **sums, "record_only_grade_sums": record_only_sums,
             "runs_with_breach": sum(any(total(record, key) for key in J_P3_REV5_JUDGED_KEYS)
                                     for record in judged),
@@ -1699,4 +1947,6 @@ __all__ = ["EXTEND_HOLD_REVISION", "EXTEND_START_REVISION", "SUPPORTED_REVISIONS
            "ExtendBoundTrace", "ExtendStartBound", "ExtendStartTracker", "LineFillGateBound",
            "LineFillGateParams", "PeriodClass", "PremiseRecord", "TensionTruthCounter",
            "check_extend_start_meta", "extend_bound_states", "initial_pressure_Pa",
-           "j_p3_judgement_rev5", "period_class_of", "plant_leg_states"]
+           "j_p3_judgement_rev5", "period_class_of", "plant_leg_states",
+           "ALLOW_FRESH_STRETCH_FOR_TEST", "ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST",
+           "JP3_SPEC_EDITION", "JP3_SOURCE_NAMES", "is_default_rule_identity"]

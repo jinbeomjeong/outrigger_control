@@ -42,6 +42,17 @@ RULE_KEY = "run_extend_start_rule"
 REVISION_KEY = "run_extend_start_revision"
 """Row key of a ③ revision 5 record (present only then: revision 4 rows keep their keys)."""
 HOLD_REVISION = 5
+TEST_ONLY_SETTINGS = ("VBG4", "VBG5")
+"""Case replay settings under a test constant (``jp3_case_replay.py``: C and D)."""
+TEST_ONLY_SETTING_SUFFIX = "_X11"
+"""Edition 4a 13.3 counterexample arm (both test-only rules, its own folder)."""
+
+
+def is_test_only_setting(setting: str | None) -> bool:
+    """Edition 4a R6 / 13.6: a setting built under a test constant; never a judged row (the
+    ``VB`` / ``LS`` prefix test alone would take it)."""
+    return setting is not None and (setting in TEST_ONLY_SETTINGS
+                                    or setting.endswith(TEST_ONLY_SETTING_SUFFIX))
 
 
 def is_p3_expected(controller_tag: str | None, setting: str | None) -> bool:
@@ -73,10 +84,13 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
     """J-P3 of the expected rows (``p3_expected`` True, or a ``tracked_bound`` own rule).
 
     Row keys read: ``p3_expected``, :data:`RULE_KEY`, ``extend_bound_check``,
-    ``has_rod_reading`` (default True), ``head_only_declared`` (default False).
+    ``has_rod_reading`` (default True), ``head_only_declared`` (default False), ``setting``
+    (a test-only setting, :func:`is_test_only_setting`, makes the whole set a setting defect:
+    edition 4a 13.6; the revision 5 rule identity is checked by ``j_p3_judgement_rev5``).
     """
     from outrigger_sim.control.extend_start_bound import j_p3_judgement, j_p3_judgement_rev5
 
+    test_only_runs = sum(is_test_only_setting(row.get("setting")) for row in rows)
     expected = [row for row in rows
                 if row.get("p3_expected") or row.get(RULE_KEY) == P3_RULE]
     with_rule = [row for row in expected if row.get(RULE_KEY) == P3_RULE]
@@ -89,9 +103,10 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
         # are recorded only, a row without a grade is a setting defect
         judgement["rev5"] = j_p3_judgement_rev5(*_judgement_inputs(revision_5))
         judgement["status"] = _worse_status(judgement["status"], judgement["rev5"]["status"])
-    if rule_missing:
+    if rule_missing or test_only_runs:
         judgement["status"] = "setting_defect"
-    judgement.update(runs_expected=len(expected), rule_missing_runs=rule_missing)
+    judgement.update(runs_expected=len(expected), rule_missing_runs=rule_missing,
+                     test_only_setting_runs=test_only_runs)
     return judgement
 
 
@@ -101,9 +116,10 @@ def _judgement_inputs(rows: list[dict]) -> tuple[list, list[bool], list[bool]]:
             [bool(row.get("head_only_declared", False)) for row in rows])
 
 
-STATUS_ORDER = ("no_p3_runs", "pass", "H-7", "setting_defect")
+STATUS_ORDER = ("no_p3_runs", "pass", "H-7", "no_judged_runs", "setting_defect")
 
 
 def _worse_status(first: str, second: str) -> str:
-    """The more severe of two J-P3 statuses (``no_p3_runs`` < pass < H-7 < setting_defect)."""
+    """The more severe of two J-P3 statuses (``no_p3_runs`` < pass < H-7 < ``no_judged_runs``
+    (edition 4a 13.2: not judgeable) < setting_defect)."""
     return max(first, second, key=STATUS_ORDER.index)

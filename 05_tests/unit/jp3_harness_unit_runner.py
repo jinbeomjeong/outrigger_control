@@ -59,6 +59,9 @@ def _drive(plant, leg: int, speeds_m_s) -> list[dict]:
         plant.step(command, 1)
         locked = np.asarray(plant.locked, bool)
         row = {"t_s": float(plant.t), "locked": bool(locked[leg])}
+        gate = getattr(plant, "line_fill_gate", None)
+        if gate is not None:
+            row["rod_released"] = bool(gate.rod_released[leg])
         if locked[leg] and not was_locked[leg]:
             truth_after = float(plant.p_r0[leg] - plant.Gr_lock[leg] / plant.A_ann[leg])
             row.update(relock=True, lag_before_Pa=float(lag_before[leg]),
@@ -83,27 +86,43 @@ def _micro_then_release(options, leg: int) -> dict:
             for k in range(round(0.3 / base.KERNEL_STEP_S))]
     release_rows = _drive(plant, leg, ramp)
     t_release = next((row["t_s"] for row in release_rows if not row["locked"]), None)
+    t_rod_check = next((row["t_s"] for row in release_rows if row.get("rod_released")), None)
     head_area = float(plant.flow_limiter.params.A_h[leg])
     return {"micro_unlocked_steps": sum(not row["locked"] for row in micro_rows),
             "release_after_s": None if t_release is None else t_release - t_start,
+            "rod_check_release_after_s": None if t_rod_check is None else t_rod_check - t_start,
             "head_bar": head_Pa / BAR, "rod_bar": rod_Pa / BAR,
             "hand_head_check_open_s": _hand_fill_time_s(head_Pa, head_area),
+            "hand_head_check_open_drain_s": _hand_fill_time_s(head_Pa, head_area, True),
             "gate_summary_mode": (None if plant.line_fill_gate is None
                                   else plant.line_fill_gate.summary()["mode"])}
 
 
-def _hand_fill_time_s(head_Pa: float, head_area_m2: float) -> float:
-    """Path B of the release time: the line oil ``V_line (p_h + p_cr - p_T) / beta_hose``
-    delivered by ``A_h u_v`` with ``u_v`` the 0.1 s lag of the 4.71 mm/s step from rest (no
-    neutral leak: the VN drain only delays the plant)."""
-    volume_m3 = 285e-6 / 0.5e9 * (head_Pa + 3e5 - 2e5)
-    low, high = 0.0, 2.0
-    for _ in range(200):
-        middle = 0.5 * (low + high)
-        stroke_m = RELEASE_SPEED_M_S * (middle - base.VALVE_TAU_S
-                                        * (1.0 - np.exp(-middle / base.VALVE_TAU_S)))
-        low, high = (middle, high) if head_area_m2 * stroke_m < volume_m3 else (low, middle)
-    return high
+LINE_VOLUME_M3, HOSE_BULK_MODULUS_PA = 285e-6, 0.5e9
+CRACK_PRESSURE_PA, TANK_PRESSURE_PA = 3e5, 2e5
+NEUTRAL_FRACTION, COMPENSATOR_DROP_PA, VENT_CLOSING_OPENING = 0.05, 10e5, 0.02
+DRAIN_STEP_S = 1e-6
+
+
+def _hand_fill_time_s(head_Pa: float, head_area_m2: float, with_drain: bool = False) -> float:
+    """Path B of the release time (edition 4 T-JR-06): the line oil ``V_line (p_h + p_cr -
+    p_T) / beta_hose`` delivered by ``A_h u_v``, ``u_v`` the 0.1 s lag of the 4.71 mm/s step
+    from rest, no ``psi p_B`` help; ``with_drain`` subtracts the VN neutral drain ``K_n g
+    sqrt(p_A - p_T) / A_h`` (continuous ODE, 1 us Euler steps; review ``cr04``: 87 bar front
+    160.16 ms with the drain, 160.08 ms without, 35.2 bar rear 94.02 ms)."""
+    target_Pa = head_Pa + CRACK_PRESSURE_PA
+    stiffness_Pa_m = head_area_m2 * HOSE_BULK_MODULUS_PA / LINE_VOLUME_M3
+    drain_coefficient = (NEUTRAL_FRACTION * head_area_m2 * V_MAX_M_S
+                         / np.sqrt(COMPENSATOR_DROP_PA)) if with_drain else 0.0
+    fill_m, t_s = 0.0, 0.0
+    while TANK_PRESSURE_PA + fill_m * stiffness_Pa_m < target_Pa:
+        t_mid_s = t_s + 0.5 * DRAIN_STEP_S
+        valve_m_s = RELEASE_SPEED_M_S * (1.0 - np.exp(-t_mid_s / base.VALVE_TAU_S))
+        gate = max(1.0 - valve_m_s / (VENT_CLOSING_OPENING * V_MAX_M_S), 0.0)
+        drain_m_s = drain_coefficient * gate * np.sqrt(fill_m * stiffness_Pa_m) / head_area_m2
+        fill_m = max(fill_m + (valve_m_s - drain_m_s) * DRAIN_STEP_S, 0.0)
+        t_s += DRAIN_STEP_S
+    return t_s
 
 
 def check_p1_gate() -> dict:
@@ -112,7 +131,31 @@ def check_p1_gate() -> dict:
     out = {}
     for name, options in (("p1", _options(gate=True)), ("off", _options())):
         out[name] = _micro_then_release(options, base.FRONT_LEFT)
+    front_area, rear_area = 1.3273229e-2, 9.50331778e-3
+    out["path_b_reference_s"] = {
+        "front_87bar_drain": _hand_fill_time_s(87.0 * BAR, front_area, True),
+        "front_87bar_no_drain": _hand_fill_time_s(87.0 * BAR, front_area, False),
+        "front_area_35p2bar_drain": _hand_fill_time_s(35.2 * BAR, front_area, True),
+        "rear_area_35p2bar_drain": _hand_fill_time_s(35.2 * BAR, rear_area, True)}
     return out
+
+
+def check_p1_seed() -> dict:
+    """T-JR-15 / T-JR-18 (edition 4): a loaded locked leg released by a retraction with P1,
+    P2 and P3: the retract M2 seed rows of ``p1_retract_seed_log`` (one per counted seed) and
+    the net force step of each."""
+    options = _options(gate=True, lock_anchor_continuous=True, rod_flow_cap_all=True)
+    plant = base._lifted_leg_plant(options)
+    leg = base.FRONT_LEFT
+    _drive(plant, leg, [0.0] * round(0.2 / base.KERNEL_STEP_S))
+    ramp = [-RELEASE_SPEED_M_S * (1.0 - np.exp(-(k + 1) * base.KERNEL_STEP_S
+                                                / base.VALVE_TAU_S))
+            for k in range(round(0.6 / base.KERNEL_STEP_S))]
+    _drive(plant, leg, ramp)
+    record = plant.lock_log.record()
+    return {"seed_count": record["p1_retract_seed_count"],
+            "seed_log": record["p1_retract_seed_log"],
+            "seed_log_columns": record["p1_retract_seed_log_columns"]}
 
 
 def _relock_after_short_move(options) -> dict:
@@ -148,7 +191,7 @@ def check_p2_anchor() -> dict:
             "r5": _relock_after_short_move(_options())}
 
 
-CHECKS = {"p1_gate": check_p1_gate, "p2_anchor": check_p2_anchor}
+CHECKS = {"p1_gate": check_p1_gate, "p2_anchor": check_p2_anchor, "p1_seed": check_p1_seed}
 
 
 def main() -> None:
