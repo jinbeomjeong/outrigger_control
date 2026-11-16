@@ -98,8 +98,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # p2_v5j.j11_item(setting_required=True) for grid runs (3-6)); before: p2_v5j 4a036b00..., p2_4368 92f6e0d4...
 # R4 supplement 4 version of p2_4368 (2-dyn commit 8824499, user decisions 127 / 128); p2_v5j unchanged (b815771d...);
 # before: p2_4368 dd3f266e... (2aa0a40)
+# p2_4368 after 2-dyn commit 6139bb2 (user decision 129: grid run tag from results[i].controller_tag only);
+# p2_v5j unchanged; before: p2_4368 76d561cc... (8824499)
 P2_V5J_SHA = "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8"
-P2_CORE_SHA = "76d561cce80c44ea02c4109ed893bb1b577c130b87f8702c972defc242f34ea6"
+P2_CORE_SHA = "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -458,16 +460,21 @@ RD13_ITEMS = {
         ("줄 수 main 812·pressure_only 96(S-15)", "원판 5.1, rev1 RV1-12 (C-16)", "관문"),
         ("격자 행 통과 = 기록 pass(gates 논리곱과 대조), 통과→실패 (가) 목록·N_raw",
          "v5 기준 3 J1·10, rev3 R3-C3, 보충 5-2·5-3", "관문"),
-        ("격자 FAULT 0(fault_events 빈 목록)", "v5 기준 10, 보충 5-2·5-4", "등급 항목"),
-        ("격자 V0 짝: 표본 해시 8개 같음 = 저장 V0, 아니면 h9_grid_v0, (파일, 키, 사건, 위상 ±1e-9 s) 정확히 1개",
-         "rev3 R3-E1, rev4 R4-B4, 보충 5-1", "관문"),
-        ("격자 판정 불가 행(짝 0·2개 이상, V0에만 있음, pass·gates 꼴, fault_events 꼴)", "원판 9.3, 보충 5-1·5-2·5-4", "관문"),
-        ("격자 기록: 실패→통과·실패→실패·FAULT 행·판정 불가 행", "v5 기준 10, 보충 5-3", "기록"),
+        ("격자 FAULT 수·행 목록(fault_events 빈 목록 아님, 등급은 판정서)", "v5 기준 10, 보충 5-2·5-4·6-4", "기록"),
+        ("격자 V0 짝 출처: 표본 8작업 같음 = 저장 V0, 다름 = h9_grid_v0, 짝 결측·해시 결측 = 판정 불가(다름보다 앞섬); "
+         "짝 = (stem, 키, 사건, 위상 ±1e-9 s) 정확히 1개; V0 태그는 h9_grid_v0일 때만 대조",
+         "rev3 R3-E1, rev4 R4-B4, 보충 5-1·6-1·6-2", "기록"),
+        ("격자 판정 불가 행 목록(짝 0·2개 이상, V0에만 있음, pass·gates 꼴, fault_events 꼴, 등급은 판정서)",
+         "원판 9.3, 보충 5-1·5-2·5-4·6-4", "기록"),
+        ("격자 기록: 실패→통과·실패→실패 수", "v5 기준 10, 보충 5-3", "기록"),
+        ("격자 목록 표기: 파일 = 저장소 상대 경로, 정렬 경로·키·사건·위상, 관문 이름 정렬, (다) 거짓 관문 전부",
+         "R4 RD-7 3, 보충 6-1", "기록"),
         ("계열 𝓕 R-1~R-4(h9_family_F.jsonl 64줄, 짝 (key, offset_s), 늘 냄)",
          "v5 기준 개정 5 5.2, rev3 R3-E2, rev4 R4-B5, 보충 4-5", "기록"),
-        ("계열 𝓕 행 표 (나)와 적용 조건", "보충 4-5, 보충 5-3", "기록"),
+        ("계열 𝓕 행 표 (나)와 적용 조건(참·거짓·undecidable, V0는 5-1 짝)", "보충 4-5, 보충 5-3, 보충 6-3", "기록"),
         ("v5 H-10 격자 항: 조건 거짓 = N_raw, 참·R 통과 = N_F((다) B안: V0·VB 두 관문 뺀 논리곱), "
-         "참·R 실패·판정 불가 = 멈춤 H-10", "v5 기준 개정 5 5.1·5.2·11, rev3 R3-E2, 보충 4-5·5-3·5-4, 사용자 결정 129", "관문"),
+         "참·R 실패·판정 불가 = 멈춤 H-10, 조건 판정 불가 = 쓰는 수 없음(표지 없음)",
+         "v5 기준 개정 5 5.1·5.2·11, rev3 R3-E2, 보충 4-5·5-3·5-4·6-3·6-4, 사용자 결정 129", "관문"),
         ("계열 𝓕 판정 입력 꼴 64칸·판 판별(setting)·태그 대조(S-15·S-11·S-2)", "rev4 R4-B5, 보충 4-3·4-5", "관문"),
         ("h9_stage1 판(③ 없음)·태그 대조(S-11·S-2)", "원판 4.1, 보충 4-2·4-3", "관문"),
         ("입력 파일 있음: V0 저장 격자 4·h9_family_F.jsonl(S-15)", "보충 4-2·4-4", "관문"),

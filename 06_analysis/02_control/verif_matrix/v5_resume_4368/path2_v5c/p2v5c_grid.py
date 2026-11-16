@@ -40,6 +40,12 @@ gates, application condition), (c) the list with family F rows re-judged on V0 a
 (option B) + N_F, records (fail -> pass, fail -> fail, FAULT rows = non-empty ``fault_events``, undecidable rows).
 v5 H-10 grid term by the supplement 5-4 table (condition false: N_raw; true + R pass: N_F; true + R fail /
 undecidable: H-10). The grid run tag is ``results[i].controller_tag`` only (``job_tag``, plate check 4-3).
+R4 supplement 6: file column = repository-relative path of the VB grid file, pairs matched by file stem, rows
+sorted by path, key, event (code points) then offset_s, gate lists sorted, (c) gate columns keep every false gate;
+pair source by the sample comparison (``sample_compare``: same / different / undecidable, undecidable wins), the
+V0 tags compared (3 none) only for the new V0 768; application condition true / false / ``"undecidable"``
+(condition undecidable: no H-10 grid term, no marker); FAULT rows, undecidable rows and an undecidable pair source
+are counts and lists only (no grade, no new marker): the only stop marker of this computation is ``H-10``.
 """
 from __future__ import annotations
 
@@ -52,7 +58,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_grid.py"
-TOOL_VERSION = "4"
+TOOL_VERSION = "5"
 STEMS = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
 RUNS_PER_FILE = 192
 FAST_EVENTS = {"RE1bF", "FS24"}
@@ -168,54 +174,94 @@ F_PHASES = 16                                   # rev5 5.2: 0, 0.00625, ..., 0.0
 F_M, F_M_SUM = 4, 6                             # rev5 5.2 R-1 / R-2
 
 
-def sample_jobs(stored):
-    """rev3 R3-E1 + rev4 R4-B4: per file the first and the last ``results[]`` item; one job = one item,
-    all its runs (matched by stem, key, event, offset_s). Returns {job: {run_key: hash}}."""
-    out = {}
-    for stem, path in stored.items():
-        res = json.loads(Path(path).read_text("utf-8")).get("results") or []
-        for r in (res[:1] + res[-1:]) if res else []:
-            out[f"{stem}|{r.get('key')}"] = {run_key(stem, r, run): run.get("commands_sha256")
-                                            for run in r.get("runs") or []}
-    return out
+UNDECIDABLE = "undecidable"   # supplement 6-3: the third value next to true / false (never null)
+
+
+def _pair_index(docs):
+    """{(stem, results[i].key, event): [(offset_s, run, results[i]), ...]} of {stem: doc}."""
+    idx = {}
+    for stem, d in docs.items():
+        for r, run in runs_of(d):
+            idx.setdefault((stem, r.get("key"), run.get("event")), []).append((_f_num(run.get("offset_s")), run, r))
+    return idx
+
+
+def _pairs(idx, stem, key, event, off):
+    """Supplement 5-1 / 6-1: entries with the same (stem, key, event) and offset_s within 1e-9 s."""
+    return [e for e in idx.get((stem, key, event), [])
+            if off is not None and e[0] is not None and abs(e[0] - off) <= OFFSET_TOL_S]
+
+
+def sample_compare(stored_docs, sample_docs):
+    """rev3 R3-E1 / rev4 R4-B4 / supplement 6-2: one job = one ``results[i]`` item of a sample file (first and last
+    item of each stored file, 8 jobs). Every sample run must find exactly one stored V0 run with the same (stem,
+    key, event, offset_s within 1e-9 s), both ``commands_sha256`` strings. Job: ``same`` (all equal), ``different``
+    (all paired with hashes, at least one differs) or ``undecidable`` (a run without exactly one pair or a hash
+    missing / not a string)."""
+    idx = _pair_index(stored_docs)
+    jobs = []
+    for stem, d in sample_docs.items():
+        for i, r in enumerate(d.get("results") or []):
+            st, why = "same", []
+            for j, run in enumerate(r.get("runs") or []):
+                c = _pairs(idx, stem, r.get("key"), run.get("event"), _f_num(run.get("offset_s")))
+                h1 = run.get("commands_sha256")
+                h0 = c[0][1].get("commands_sha256") if len(c) == 1 else None
+                if len(c) != 1:
+                    st = UNDECIDABLE
+                    why.append(f"runs[{j}]: {len(c)} stored V0 pairs")
+                elif not isinstance(h1, str) or not isinstance(h0, str):
+                    st = UNDECIDABLE
+                    why.append(f"runs[{j}]: commands_sha256 missing / not a string")
+                elif h1 != h0 and st == "same":
+                    st = "different"
+                    why.append(f"runs[{j}]: hash differs")
+                elif h1 != h0:
+                    why.append(f"runs[{j}]: hash differs")
+            jobs.append({"stem": stem, "results_index": i, "key": r.get("key"), "runs": len(r.get("runs") or []),
+                         "status": st, "why": why})
+    return jobs
 
 
 def v0_pair(args, fnd):
-    """rev3 R3-E1 / supplement 5-1: the stored V0 grid (same four names) is the pair only if the same-commit 8-job
-    sample hashes all match (then a given new V0 768 is not used); otherwise the new V0 768
-    (``resume_k1/h9_grid_v0/``) is the pair, and without it the grid is undecidable. The sample files are never
-    the pair."""
+    """rev3 R3-E1 / supplement 5-1 / 6-2: the pair source is decided by the sample comparison. Any undecidable job
+    (or no sample / no stored V0) = source ``undecidable`` (it wins over a different job; nothing is paired); all
+    8 jobs same = the stored V0 grid (same four names; a given new V0 768 is not used); a different job = the new V0
+    768 (``resume_k1/h9_grid_v0/``), without it the source is ``undecidable``. The sample files are never the pair.
+    The source being undecidable is a record (supplement 6-4: no grade, no new stop marker); only the job count
+    (8) is an input-structure S-15."""
     stored = dict(x.split("=", 1) for x in (args.v0_stored or []))
     new = dict(x.split("=", 1) for x in (args.v0_new or []))
-    rec = {"stored": stored, "new": new, "sample": None, "pair": None}
-    if stored and args.v0_sample:
-        want = sample_jobs(stored)
-        got = {}
-        for x in args.v0_sample:
-            stem, path = x.split("=", 1)
-            for r, run in runs_of(json.loads(Path(path).read_text("utf-8"))):
-                got[run_key(stem, r, run)] = run.get("commands_sha256")
-        cmp_ = []
-        for job, runs in sorted(want.items()):
-            diff = [k for k, hh in runs.items() if not (isinstance(hh, str) and got.get(k) == hh)]
-            cmp_.append({"job": job, "runs": len(runs), "runs_differing": diff, "same": bool(runs) and not diff})
-        rec["sample"] = {"jobs": len(cmp_), "same": sum(c["same"] for c in cmp_), "detail": cmp_}
-        if len(cmp_) != 8:
-            fnd.stop("S-15", "V0 sample", f"{len(cmp_)} sample jobs != 8")
-    if rec["sample"] is None:
-        fnd.undec("V0 pair", "R3-E1: V0 8-job sample (and stored V0) not given: the pair source is not decided")
+    rec = {"stored": stored, "new": new, "sample": None, "source": UNDECIDABLE, "why": None}
+    sample = dict(x.split("=", 1) for x in (args.v0_sample or []))
+    if not stored or not sample or any(not Path(p).is_file() for p in list(stored.values()) + list(sample.values())):
+        rec["why"] = "sample or stored V0 grid not given / missing (supplement 6-2: undecidable, ask)"
         return {}, rec
-    if rec["sample"]["same"] == 8 and rec["sample"]["jobs"] == 8:
-        rec["pair"] = "stored (sample hashes all equal, supplement 5-1)"
+    jobs = sample_compare({s: json.loads(Path(p).read_text("utf-8")) for s, p in stored.items()},
+                          {s: json.loads(Path(p).read_text("utf-8")) for s, p in sample.items()})
+    rec["sample"] = {"jobs": len(jobs), "same": sum(j["status"] == "same" for j in jobs),
+                     "different": sum(j["status"] == "different" for j in jobs),
+                     "undecidable": sum(j["status"] == UNDECIDABLE for j in jobs), "detail": jobs}
+    if len(jobs) != 8:
+        fnd.stop("S-15", "V0 sample", f"{len(jobs)} sample jobs != 8")
+        rec["why"] = "sample job count != 8"
+        return {}, rec
+    if rec["sample"]["undecidable"]:
+        rec["why"] = "a sample comparison is undecidable (supplement 6-2: wins over 'different', ask)"
+        return {}, rec
+    if rec["sample"]["same"] == 8:
+        rec["source"] = "stored"
+        rec["why"] = "저장(옛 V0 제어기), 표본 해시 같음 (rev3 R3-E1 2)"
         if new:
             fnd.note("V0 pair", "sample hashes all equal: the stored V0 is the pair, the new V0 768 is not used")
         return stored, rec
-    if new:
-        rec["pair"] = "new (a sample hash differs, supplement 5-1)"
+    if new and all(Path(p).is_file() for p in new.values()):
+        rec["source"] = "new"
+        rec["why"] = "a sample job differs: resume_k1/h9_grid_v0/ (rev3 R3-E1 3)"
         if set(new) != set(STEMS):
             fnd.stop("S-15", "V0 new", f"stems {sorted(new)}")
         return new, rec
-    fnd.undec("V0 pair", "R3-E1: sample hash differs -> V0 768 (resume_k1/h9_grid_v0/) required")
+    rec["why"] = "a sample job differs but resume_k1/h9_grid_v0/ is not given (rev3 R3-E1 3: undecidable, ask)"
     return {}, rec
 
 
@@ -355,18 +401,25 @@ def cmd_grid(args, repo, v5j, core):
     v0_files, pair_rec = v0_pair(args, fnd)
     if set(vb_files) != set(STEMS):
         fnd.stop("S-15", "files", f"VB stems {sorted(vb_files)} != {list(STEMS)}")
-    # supplement 5-1: V0 pair index by (file name, results[i].key, event); offsets matched within 1e-9 s
+    # supplement 5-1 / 6-1: V0 pair index by (file stem, results[i].key, event); offsets matched within 1e-9 s.
+    # Supplement 6-2: V0 run tags are compared (3-none tag, S-11 / S-2) only when the source is the new V0 768.
     v0_idx, v0_meta, v0_all = {}, {}, []
     for stem, path in v0_files.items():
         d = json.loads(Path(path).read_text("utf-8"))
+        v0_rfile = cm.rel_file(path, repo)
         v0_meta[stem] = {"path": path, "sha256": cm.sha256_file(path),
                          "v5_setting": (d.get("meta") or {}).get("v5_setting"),
-                         "tags": sorted({str(job_tag(r)) for r, _run in runs_of(d)})}
+                         "tags": sorted({str(job_tag(r)) for r, _run in runs_of(d)}),
+                         "tag_check": "compared (new V0 768)" if pair_rec["source"] == "new"
+                         else "not compared (stored V0, supplement 6-2)"}
         for i, j, r, run in runs_indexed(d):
-            ent = {"file": f"{stem}.json", "key": r.get("key"), "event": run.get("event"),
+            ent = {"file": v0_rfile, "key": r.get("key"), "event": run.get("event"),
                    "offset_s": _f_num(run.get("offset_s")), "run": run, "matched": 0}
-            v0_idx.setdefault((ent["file"], ent["key"], ent["event"]), []).append(ent)
+            v0_idx.setdefault((stem, ent["key"], ent["event"]), []).append(ent)
             v0_all.append(ent)
+            if pair_rec["source"] == "new":
+                cm.plate_check(fnd, f"V0|{v0_rfile}|results[{i}].runs[{j}]", None, job_tag(r), fixed_plate="none",
+                               field="results[i].controller_tag")
     out_files, rows = {}, []
     gate_diff, fault_rows, undec_rows = [], [], []
     raw, nf, f_table = [], [], []
@@ -392,8 +445,10 @@ def cmd_grid(args, repo, v5j, core):
             pos = f"results[{i}].runs[{j}]"                   # RD-7 3 position
             rkey = r.get("key") if isinstance(r.get("key"), str) else None             # RD-7 3: results[i].key
             rset = r.get("v5_setting") if isinstance(r.get("v5_setting"), str) else None   # results[i].v5_setting
-            fname, off = f"{stem}.json", _f_num(run.get("offset_s"))
-            ident = {"file": fname, "key": r.get("key"), "event": run.get("event"), "offset_s": run.get("offset_s")}
+            off = _f_num(run.get("offset_s"))
+            # supplement 6-1: the file column = the repository-relative path of the VB grid file ('/')
+            ident = {"file": rfile, "key": r.get("key"), "event": run.get("event"), "offset_s": run.get("offset_s")}
+            n_undec0 = len(undec_rows)
             # record only: the spec 342.3 gates recomputed from the raw fields vs the recorded gates
             g_p2, rec_g = gates_p2(run, core), (run.get("gates") if isinstance(run.get("gates"), dict) else {})
             diff = sorted(x for x in g_p2 if x in rec_g and g_p2[x] is not None and rec_g[x] != g_p2[x])
@@ -412,8 +467,8 @@ def cmd_grid(args, repo, v5j, core):
             tag = job_tag(r)
             tags[str(tag)] = tags.get(str(tag), 0) + 1
             cm.plate_check(fnd, k, None, tag, fixed_plate="VB", field="results[i].controller_tag")
-            # supplement 5-1: the V0 pair = exactly one V0 run with the same (file, key, event, offset_s)
-            cands = [e for e in v0_idx.get((fname, r.get("key"), run.get("event")), [])
+            # supplement 5-1 / 6-1: the V0 pair = exactly one V0 run with the same (stem, key, event, offset_s)
+            cands = [e for e in v0_idx.get((stem, r.get("key"), run.get("event")), [])
                      if off is not None and e["offset_s"] is not None and abs(e["offset_s"] - off) <= OFFSET_TOL_S]
             for e in cands:
                 e["matched"] += 1
@@ -437,9 +492,9 @@ def cmd_grid(args, repo, v5j, core):
                     raw.append({**ident, "vb_false_gates": false_gates(g), "v0_false_gates": false_gates(v0g)})
                     if not in_F:
                         nf.append(raw[-1])
-            if in_F:   # supplement 5-3 (b) / (c), user decision 129 option B
+            if in_F:   # supplement 5-3 (b) / (c), user decision 129 option B; 6-3 three-valued application
                 fr = {**ident, "vb_pass": p, "v0_pass": v0p, "vb_false_gates": None, "v0_false_gates": None,
-                      "vb_pass_without_two": None, "v0_pass_without_two": None, "applicable": None}
+                      "vb_pass_without_two": None, "v0_pass_without_two": None, "applicable": UNDECIDABLE}
                 if both:
                     fr.update(vb_false_gates=false_gates(g), v0_false_gates=false_gates(v0g))
                     if set(g) != set(v0g) or not FAMILY_F_GATES <= set(g):
@@ -447,9 +502,13 @@ def cmd_grid(args, repo, v5j, core):
                                            "why": "VB / V0 gate names differ or a family gate is missing"})
                     else:
                         fr.update(vb_pass_without_two=reduced_pass(g), v0_pass_without_two=reduced_pass(v0g))
-                        fr["applicable"] = (v0p is True and p is False and set(false_gates(g)) <= FAMILY_F_GATES)
                         if fr["v0_pass_without_two"] and not fr["vb_pass_without_two"]:
+                            # supplement 6-1: the gate columns keep every false gate (the two family gates too)
                             nf.append({**ident, "vb_false_gates": false_gates(g), "v0_false_gates": false_gates(v0g)})
+                # supplement 6-3: undecidable when the row is undecidable anywhere in 5-1 / 5-2 / 5-3 (b) or the
+                # pair source is undecidable; true = V0 pass, VB fail, VB false gates within the two; else false
+                if pair_rec["source"] != UNDECIDABLE and both and len(undec_rows) == n_undec0:
+                    fr["applicable"] = (v0p is True and p is False and set(false_gates(g)) <= FAMILY_F_GATES)
                 f_table.append(fr)
             rows.append({**ident, "pass": p, "v0_pass": v0p, "family_F": in_F})
             # J-P3 (configuration: two-pressure event path = rod reading, rev9 3.2 #4); rev12 R12-1: a
@@ -507,9 +566,21 @@ def cmd_grid(args, repo, v5j, core):
     undec_rows.sort(key=_row_sort)
     fault_rows.sort(key=_row_sort)
     f_table.sort(key=_row_sort)
-    applicable = any(fr["applicable"] is True for fr in f_table)   # supplement 4-5 application condition
-    # supplement 5-4: the v5 H-10 grid term
-    if not applicable:
+    # supplement 6-3: application condition true / false / "undecidable" (any true row wins, then any undecidable
+    # row, else false; an undecidable pair source makes it undecidable)
+    if pair_rec["source"] == UNDECIDABLE:
+        applicable = UNDECIDABLE
+    elif any(fr["applicable"] is True for fr in f_table):
+        applicable = True
+    elif any(fr["applicable"] == UNDECIDABLE for fr in f_table):
+        applicable = UNDECIDABLE
+    else:
+        applicable = False
+    # supplement 5-4 (+ the 6-3 row): the v5 H-10 grid term; the only stop marker here is "H-10" (6-4)
+    if applicable == UNDECIDABLE:
+        term, term_n = "none", None
+        fam_rule["application"] = "record (application condition undecidable: no H-10 grid term, ask; 6-3)"
+    elif applicable is False:
         term, term_n = "N_raw", len(raw)
         fam_rule["application"] = "record (no two-gate-only pass -> fail in the 12 family F rows)"
         if raw:
@@ -523,10 +594,8 @@ def cmd_grid(args, repo, v5j, core):
         term, term_n = "none", None
         fam_rule["application"] = f"R-1..R-4 {fam_rule['result']}: v5 criteria stop H-10 (ask)"
         fnd.stop("H-10", "family_F", f"rev5 5.2 R-1..R-4 {fam_rule['result']} with the application condition true")
-    if fault_rows:   # v5 10 grid row "FAULT 0" (supplement 5-4: written with the H-10 term)
-        fnd.fail("grid FAULT", f"{len(fault_rows)} VB rows with fault_events (v5 10: FAULT 0)")
-    for u in undec_rows:   # supplement 5-4: an undecidable row makes this grid item undecidable (ask)
-        fnd.undec(f"{u['file']}|{u['key']}|{u['event']}|{u['offset_s']}", f"{u['side']}: {u['why']}")
+    # supplement 6-4: FAULT rows, undecidable rows and an undecidable pair source are counts and lists only (no
+    # grade, no new stop marker); the judgement document grades them (undecidable > fail > pass)
     body = {"inputs": {"vb": out_files, "v0": v0_meta, "supplement_4-4": inputs_44}, "v5_options": mod,
             "v0_pair": pair_rec,
             "R11-2_t4h": {"search_dirs": {k: [str(d) for d in v] for k, v in places.items()}, "lookup": t4h_log},
@@ -539,7 +608,12 @@ def cmd_grid(args, repo, v5j, core):
                      "c_pass_to_fail_family_F_excluded": nf, "N_F": len(nf),
                      "h10_grid_term": {"uses": term, "value": term_n},
                      "grid_records": {**tally, "fault_rows": fault_rows, "N_fault": len(fault_rows),
-                                 "undecidable_rows": undec_rows, "N_undecidable": len(undec_rows)},
+                                      "undecidable_rows": undec_rows, "N_undecidable": len(undec_rows),
+                                      "pair_source": pair_rec["source"]},
+                     # supplement 6-4: what the judgement document grades from (the tool does not grade these)
+                     "supplement6_inputs": {"pair_source": pair_rec["source"], "application": applicable,
+                                            "N_undecidable": len(undec_rows), "N_fault": len(fault_rows),
+                                            "h10_marker": "H-10" in fnd.as_dict()["stop_codes"]},
                      "family_F_rule": fam_rule,
                      "recorded_gate_differences": gate_diff, **fnd.as_dict()},
             "per_run": rows,
@@ -547,8 +621,11 @@ def cmd_grid(args, repo, v5j, core):
             # RD-8 / RD-9 / RD-10 counts of the grid part (RD-9 S-8 is decided on the H-9 sum in ``merge``), RD-13
             "R4": rd.as_dict(["H-9"]), "RD-13": {"H-9": cm.rd13_lists()["H-9"]}}
     st = fnd.status()
+    # the tool status covers the other grid items (J-P3, J9, J11, m2_law, tags, S-15 ...) and the H-10 marker; the
+    # supplement 5 FAULT / undecidable rows / pair source are not in it (supplement 6-4, graded by the judgement)
     body["grades_436_8"] = {"H-9_grid": {"pass": "통과", "fail": "미달", "undecidable": "판정 불가",
-                                          "stop": "멈춤"}[st]}
+                                          "stop": "멈춤"}[st],
+                            "scope": "supplement 5 FAULT / undecidable rows / pair source excluded (6-4)"}
     body["stop_codes"] = fnd.as_dict()["stop_codes"]
     return body, st
 
