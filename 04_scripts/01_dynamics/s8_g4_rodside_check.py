@@ -104,6 +104,11 @@ def make_plant_class(cl):
             self.r0 = np.zeros(4); self.t_rel = np.full(4, -1e9)
             self.last_dir = np.ones(4)
 
+        def _locked_knee_m(self, i):
+            """Oil of the locked rod spring until the rod pressure reaches the floor (the
+            anchor ``p_r0`` minus the floor); 436.9 P2 overrides it in the harness plant."""
+            return (self.p_r0[i] - self.p_floor) * self.A_ann[i] / self.kr[i]
+
         def _rod_force(self, u):
             c = self.sref - self.x
             Gr = np.zeros(4)
@@ -112,10 +117,10 @@ def make_plant_class(cl):
                 if abs(u[i]) > self.eps:
                     self.last_dir[i] = 1.0 if u[i] > 0 else -1.0
                 if self.locked[i] and still:
-                    knee = (self.p_r0[i] - self.p_floor) * self.A_ann[i] / self.kr[i]
+                    knee = self._locked_knee_m(i)
                     Gr[i] = self.Gr_lock[i] + self.kr[i] * min(c[i] - self.c_lock[i], knee)
                 elif self.locked[i] and not still:            # release
-                    knee = (self.p_r0[i] - self.p_floor) * self.A_ann[i] / self.kr[i]
+                    knee = self._locked_knee_m(i)
                     self.r0[i] = self.Gr_lock[i] + self.kr[i] * min(c[i] - self.c_lock[i], knee)
                     self.t_rel[i] = self.t; self.locked[i] = False; self.n_release_events += 1
                     Gr[i] = self.r0[i]

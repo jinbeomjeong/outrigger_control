@@ -213,7 +213,10 @@ def reused_record(plan_: Plan, job: dict, decision: Decision) -> dict:
     """The U-3 record of a key that reuses its D-1 run (the D-1 ``u3`` block and its v5 keys)."""
     import v5_rerun
 
-    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+    from outrigger_sim.hydraulics.v5_options import (
+        extend_start_revision_of_tag,
+        is_extend_start_tag,
+    )
 
     line = plan_.lines[job["id"]]
     d1 = line["d1"]
@@ -236,10 +239,10 @@ def reused_record(plan_: Plan, job: dict, decision: Decision) -> dict:
         v5["extend_bound_check"] = bound
     if is_extend_start_tag(v5["controller_tag"]):
         # the D-1 worker refused a VB run whose preset rule was not the bound
-        # (harness_hydraulics.check_last_extend_start); this code runs revision 4 only
-        from outrigger_sim.control.extend_start_bound import EXTEND_START_REVISION
-
-        v5["extend_start"] = {"rule": "tracked_bound", "revision": EXTEND_START_REVISION,
+        # (harness_hydraulics.check_last_extend_start, which also checks the revision of the
+        # options); the revision is the tag's (436.9: never re-labelled as revision 4)
+        v5["extend_start"] = {"rule": "tracked_bound",
+                              "revision": extend_start_revision_of_tag(v5["controller_tag"]),
                               "source": "D-1 run check (check_last_extend_start)"}
     return {"suite": job["suite"], "id": job["id"], "candidate": job["candidate"],
             **d1["u3"], "reuse": "d1", "d1_key": d1["key"], "v5": v5, "wall_s": 0.0}

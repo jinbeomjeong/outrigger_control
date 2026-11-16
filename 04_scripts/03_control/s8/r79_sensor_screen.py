@@ -137,13 +137,14 @@ LEVELS = {
 }
 
 
-ROD_MODELS = ("dyn_map", "harness", "extend_vent")
-"""Rod reading of the L1+ levels (default ``dyn_map``, the other two kept for comparison):
+ROD_MODELS = ("dyn_map", "harness", "extend_vent", "plant_truth")
+"""Rod reading of the L1+ levels (default ``dyn_map``, the others kept for comparison):
 ``dyn_map`` = the dynamics-expert mapping of the RodSidePlant state (``DynMapRodModel``);
 ``harness`` = ``r64.with_two_pressures`` (p_r = p_r0 - Gr / A_ann; after a retraction lock
 p_r0 = p_r0_after_retract, about 31-35 bar, which an extending leg keeps while it moves);
-``extend_vent`` = the same, but a released extending leg reads p_r0_after_extend (2 bar). All three
-keep the net force F_net."""
+``extend_vent`` = the same, but a released extending leg reads p_r0_after_extend (2 bar);
+``plant_truth`` = 436.9 P4, the M2 plant truth ``plant_rod_pressure_Pa()`` (needs a v5 harness
+plant with M2; ``harness_hydraulics.with_plant_truth_pressures``). All keep the net force F_net."""
 DEFAULT_ROD_MODEL = "dyn_map"
 ROD_LAG_S = 0.05
 """tau_v of the moving rod pressure (rod_side_pressure.md 7.3, ``RodSideParams``)."""
@@ -267,9 +268,24 @@ def rod_split_function(rod_model: str):
         return DynMapRodModel()
     if rod_model == "extend_vent":
         return split_extend_vent
+    if rod_model == "plant_truth":
+        coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+        if str(coupled_dir) not in sys.path:
+            sys.path.insert(0, str(coupled_dir))
+        import harness_hydraulics
+
+        return harness_hydraulics.with_plant_truth_pressures
     import r64_g4_closed_loop as r64
 
     return r64.with_two_pressures
+
+
+def _declare_jp3_sensor_grade(level: SensorLevel) -> None:
+    """436.9 row grade of the J-P3 record (2nd edition 6.1): L0 / L1 ``ideal``, the others
+    their pressure grade. Only with the v5 harness adapter in this process (record only)."""
+    module = sys.modules.get("harness_hydraulics")
+    if module is not None and hasattr(module, "declare_sensor_grade"):
+        module.declare_sensor_grade(level.pressure_grade or "ideal")
 
 
 def case_seed(group: int, seed_index: int, case_index: int) -> int:
@@ -896,6 +912,7 @@ def run_job(key: str) -> dict:
     # v5 X-1: flow setting and plant options first, so that the LC overlap cut sits inside the
     # ChunkProbe and the r72 recorders that wrap ``_lagged_step`` later in the job
     v5_options = _install_v5_setting()
+    _declare_jp3_sensor_grade(level)
     t4h_dir = _install_t4h_log()
     _install_command_log()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),

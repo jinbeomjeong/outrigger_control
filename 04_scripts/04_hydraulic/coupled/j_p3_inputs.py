@@ -36,14 +36,22 @@ P3_CONTROLLER_TAGS = EXTEND_START_TAGS
 list for records; :func:`is_p3_expected` judges by the base tag instead."""
 P3_RULE = "tracked_bound"
 P3_SETTING_PREFIXES = ("VB", "LS")
+P3_OFF_SETTINGS = ("VBJ0",)
+"""436.9 VBJ0: the VBJ plant with ③ off by definition (T8 / H-7 pair), never a J-P3 row."""
 RULE_KEY = "run_extend_start_rule"
+REVISION_KEY = "run_extend_start_revision"
+"""Row key of a ③ revision 5 record (present only then: revision 4 rows keep their keys)."""
+HOLD_REVISION = 5
 
 
 def is_p3_expected(controller_tag: str | None, setting: str | None) -> bool:
-    """A VB / LS run: a tag whose base is ``final_C4G2_P3`` with any LAS-b / K1 suffixes
-    (``v5_options.is_extend_start_tag``), or setting ``VB`` / ``LS<n>``."""
+    """A VB / LS run: a tag whose base is ``final_C4G2_P3`` or ``final_C4G2_P3H`` with any
+    LAS-b / K1 suffixes (``v5_options.is_extend_start_tag``), or setting ``VB`` / ``LS<n>`` /
+    the 436.9 ``VBH``, ``VBJ``, ``LSH<n>``, ``LSJ<n>`` (not ``VBJ0``, ③ off)."""
     if is_extend_start_tag(controller_tag):
         return True
+    if setting in P3_OFF_SETTINGS:
+        return False
     return setting is not None and setting.startswith(P3_SETTING_PREFIXES)
 
 
@@ -67,16 +75,35 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
     Row keys read: ``p3_expected``, :data:`RULE_KEY`, ``extend_bound_check``,
     ``has_rod_reading`` (default True), ``head_only_declared`` (default False).
     """
-    from outrigger_sim.control.extend_start_bound import j_p3_judgement
+    from outrigger_sim.control.extend_start_bound import j_p3_judgement, j_p3_judgement_rev5
 
     expected = [row for row in rows
                 if row.get("p3_expected") or row.get(RULE_KEY) == P3_RULE]
     with_rule = [row for row in expected if row.get(RULE_KEY) == P3_RULE]
     rule_missing = len(expected) - len(with_rule)
-    judgement = j_p3_judgement([row.get("extend_bound_check") for row in with_rule],
-                               [bool(row.get("has_rod_reading", True)) for row in with_rule],
-                               [bool(row.get("head_only_declared", False)) for row in with_rule])
+    revision_4 = [row for row in with_rule if row.get(REVISION_KEY) != HOLD_REVISION]
+    revision_5 = [row for row in with_rule if row.get(REVISION_KEY) == HOLD_REVISION]
+    judgement = j_p3_judgement(*_judgement_inputs(revision_4))
+    if revision_5:  # 436.9 6.1: the revision 5 rows apart, never mixed into one sum
+        # decisions 147 / 148: the record's sensor_grade decides; conservative / old_worst rows
+        # are recorded only, a row without a grade is a setting defect
+        judgement["rev5"] = j_p3_judgement_rev5(*_judgement_inputs(revision_5))
+        judgement["status"] = _worse_status(judgement["status"], judgement["rev5"]["status"])
     if rule_missing:
         judgement["status"] = "setting_defect"
     judgement.update(runs_expected=len(expected), rule_missing_runs=rule_missing)
     return judgement
+
+
+def _judgement_inputs(rows: list[dict]) -> tuple[list, list[bool], list[bool]]:
+    return ([row.get("extend_bound_check") for row in rows],
+            [bool(row.get("has_rod_reading", True)) for row in rows],
+            [bool(row.get("head_only_declared", False)) for row in rows])
+
+
+STATUS_ORDER = ("no_p3_runs", "pass", "H-7", "setting_defect")
+
+
+def _worse_status(first: str, second: str) -> str:
+    """The more severe of two J-P3 statuses (``no_p3_runs`` < pass < H-7 < setting_defect)."""
+    return max(first, second, key=STATUS_ORDER.index)

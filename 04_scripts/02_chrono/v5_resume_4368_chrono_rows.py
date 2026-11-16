@@ -181,8 +181,16 @@ def _v5opt() -> ModuleType:
 
 
 def k1_tag_of(former: str | None) -> str:
-    """Rules 4.1: ``final_C4G2_P3_LAS_K1`` when ``is_extend_start_tag(former)``, else ``final_C4G2_LAS_K1``."""
-    return VB_TAG if _v5opt().is_extend_start_tag(former) else V0_TAG
+    """Rules 4.1: ``final_C4G2_P3_LAS_K1`` when ``is_extend_start_tag(former)``, else ``final_C4G2_LAS_K1``.
+
+    Raises:
+        ValueError: ``former`` is a ③ revision 5 tag (436.9 ``final_C4G2_P3H*``): a revision 5 row
+            must never be re-tagged as the revision 4 ``VB_TAG`` (``jp3_remedy_spec.md`` 4.3).
+    """
+    v5o = _v5opt()
+    if v5o.extend_start_revision_of_tag(former) == 5:
+        raise ValueError(f"{former!r} is a ③ revision 5 tag: no 436.8 re-tag (436.9 rows keep it)")
+    return VB_TAG if v5o.is_extend_start_tag(former) else V0_TAG
 
 
 def script_tail(argv: list[str]) -> list[str]:

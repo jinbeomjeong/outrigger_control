@@ -136,11 +136,14 @@ def align_truth(t_pads: np.ndarray, t_s: np.ndarray) -> tuple[np.ndarray, np.nda
     return clipped, has_truth
 
 
-def run_config(result: dict, extend_start: str | None = None):
+def run_config(result: dict, extend_start: str | None = None,
+               extend_start_revision: int | None = None):
     """The run's controller setting: R8 preset, valve lag of the plant, controller options of
     the stored v5 options (read only, ``HydraulicOptions.from_stored``: lock window and, for a
     criteria revision 8 VB / LS run, the ③ start bound; a ③-on run without the option key
-    takes the stored monitor rule), L2b ratio source. ``extend_start`` overrides the rule."""
+    takes the stored monitor rule), L2b ratio source. ``extend_start`` overrides the rule,
+    ``extend_start_revision`` the bound revision of a ``tracked_bound`` replay (436.9; None =
+    the stored revision)."""
     from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
     from outrigger_sim.control.c2 import C2Config
     from outrigger_sim.hydraulics.v5_options import (
@@ -166,18 +169,27 @@ def run_config(result: dict, extend_start: str | None = None):
     if options is not None:
         config = apply_controller_options(config, options,
                                           load_params().actuator.max_speed_m_s, valve_tau_s)
-    stored_rule = (((result.get("controller_meta") or {}).get("two_pressure") or {})
-                   .get("settings") or {}).get("extend_start_rule")
+    stored_settings = (((result.get("controller_meta") or {}).get("two_pressure") or {})
+                       .get("settings") or {})
+    stored_rule = stored_settings.get("extend_start_rule")
     if extend_start is None and stored_rule == EXTEND_START_TRACKED_RULE:
         extend_start = stored_rule
     if extend_start is not None:
-        check_extend_start(options, extend_start)
-        config = replace(config, two_pressure=replace(config.two_pressure,
-                                                      extend_start_rule=extend_start))
+        changes = {"extend_start_rule": extend_start}
+        revision = extend_start_revision
+        if extend_start == EXTEND_START_TRACKED_RULE and revision is None:
+            revision = (stored_settings.get("extend_start_bound") or {}).get("revision")
+        check_extend_start(options, extend_start, revision)
+        if extend_start == EXTEND_START_TRACKED_RULE and revision is not None:
+            from outrigger_sim.control.extend_start_bound import ExtendStartBound
+
+            changes["extend_start_bound"] = ExtendStartBound(revision=int(revision))
+        config = replace(config, two_pressure=replace(config.two_pressure, **changes))
     return config
 
 
-def load_case(case_dir: Path, extend_start: str | None = None) -> CaseRecord:
+def load_case(case_dir: Path, extend_start: str | None = None,
+              extend_start_revision: int | None = None) -> CaseRecord:
     from outrigger_sim.contact_episode import (
         MachineConstants,
         build_episode,
@@ -204,7 +216,7 @@ def load_case(case_dir: Path, extend_start: str | None = None) -> CaseRecord:
     acting = np.zeros_like(np.asarray(episode["command_m_s"], float))
     acting[1:] = np.asarray(episode["command_m_s"], float)[:-1]
     return CaseRecord(case_dir, result, events, episode, geometry,
-                      run_config(result, extend_start),
+                      run_config(result, extend_start, extend_start_revision),
                       offset_allowance(result["controller_meta"], events), truth, truth_min,
                       law.astype(int), airborne.astype(bool), acting)
 
@@ -822,22 +834,26 @@ def ext_lock_counters(hydraulics: dict, params) -> dict:
 
 # --------------------------------------------------------------------------------- driver
 def replay_case(case_dir: Path, *, with_t5: bool = False,
-                extend_start: str | None = None, criteria: str = DEFAULT_CRITERIA) -> dict:
+                extend_start: str | None = None, criteria: str = DEFAULT_CRITERIA,
+                extend_start_revision: int | None = None) -> dict:
     """All values of one case folder (module docstring); ``criteria`` picks the T4 / T5
-    judgement (``rev6`` or ``rev7``)."""
+    judgement (``rev6`` or ``rev7``); ``extend_start_revision`` the bound revision of a
+    ``tracked_bound`` override (436.9, ``--extend-start-revision``)."""
     from outrigger_sim.control.extend_start_bound import check_extend_start_meta
     from outrigger_sim.control.r5_fallback_replay import monitor_setting_differences
     from outrigger_sim.params import load_params
 
-    record = load_case(case_dir, extend_start)
+    record = load_case(case_dir, extend_start, extend_start_revision)
     stored_settings = record.result["controller_meta"]["two_pressure"]["settings"]
-    check_extend_start_meta(stored_settings)
+    stored_revision = check_extend_start_meta(stored_settings)
     differences, notes = monitor_setting_differences(record.result["controller_meta"],
                                                      record.config, record.geometry)
-    # an override of another rule changes only the ③ start keys; the same rule compares them
-    # all, the bound revision included
+    # an override of another rule (or bound revision) changes only the ③ start keys; the same
+    # rule and revision compares them all
     stored_rule = stored_settings.get("extend_start_rule", "constant")
-    if extend_start is not None and extend_start != stored_rule:
+    is_other_revision = (extend_start_revision is not None
+                         and extend_start_revision != stored_revision)
+    if extend_start is not None and (extend_start != stored_rule or is_other_revision):
         differences = [d for d in differences if ".extend_start_" not in d]
     replay_settings = record.config.two_pressure.to_meta()
     row = {"case": Path(case_dir).name, "settings_equal": not differences,
@@ -1010,18 +1026,25 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--t5", action="store_true")
     parser.add_argument("--extend-start", choices=("constant", "tracked_bound"), default=None,
                         help="override the ③ start rule (constant: record T4-const)")
+    parser.add_argument("--extend-start-revision", type=int, choices=(4, 5), default=None,
+                        help="③ bound revision of a --extend-start tracked_bound replay "
+                             "(436.9 Chrono VB rows with the rev 5 controller)")
     parser.add_argument("--criteria", choices=(CRITERIA_REV6, CRITERIA_REV7),
                         default=DEFAULT_CRITERIA,
                         help=("T4 / T5 judgement revision (default rev7: E exclusion, guard, "
                               "B1; rev6 reproduces the stage 3 judgement)"))
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    if args.extend_start_revision is not None and args.extend_start != "tracked_bound":
+        parser.error("--extend-start-revision belongs to --extend-start tracked_bound")
+    return args
 
 
 def main() -> int:
     args = parse_args()
     try:
         rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start,
-                            criteria=args.criteria)
+                            criteria=args.criteria,
+                            extend_start_revision=args.extend_start_revision)
                 for folder in case_folders(args.cases)]
     except IdealRecordError as exc:
         print(f"input error: {exc}")

@@ -427,10 +427,15 @@ def j_p3_status(tag: str, bound_check: dict | None, rod_reading: bool,
     """J-P3 of one run (v5 criteria revision 8 / 9): ``pass`` / ``H-7`` / ``no_rod_reading`` /
     ``setting_defect`` with the ③ bound (``v5_options.is_extend_start_tag``: base tag
     ``final_C4G2_P3`` with any LAS-b / K1 suffixes), else ``not_applicable``."""
-    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+    from outrigger_sim.hydraulics.v5_options import (
+        extend_start_revision_of_tag,
+        is_extend_start_tag,
+    )
 
     if not is_extend_start_tag(tag):
         return J_P3_NOT_APPLICABLE
+    if extend_start_revision_of_tag(tag) != 4:  # 436.9: revision 5 rows are not judged here
+        return "setting_defect"
     from outrigger_sim.control.extend_start_bound import (
         J_P3_JUDGED,
         J_P3_NO_ROD_READING,

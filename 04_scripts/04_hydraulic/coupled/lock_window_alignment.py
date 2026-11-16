@@ -81,14 +81,20 @@ def acting_commands(applied_output_m_s: np.ndarray) -> np.ndarray:
 
 
 def rebuild_stretches(t_s: np.ndarray, acting_m_s: np.ndarray,
-                      settings: WindowSettings) -> list[Stretch]:
-    """Command-free stretches of every leg as the monitor opens and closes them."""
+                      settings: WindowSettings,
+                      hold_speed_m_s: float | None = None) -> list[Stretch]:
+    """Command-free stretches of every leg as the monitor opens and closes them.
+
+    ``hold_speed_m_s`` (③ revision 5, ``jp3_remedy_spec.md`` 2.2): the monitor keeps its
+    stretch open for ``|u| <= u_hold`` and closes it above; ``u_last`` is the last command
+    above ``u_hold``. None = the zero-command stretches (criteria J11 and revision 4)."""
     stretches = []
     for leg in range(len(LEGS)):
         last_command_m_s = 0.0
         current = None
         for t_k, command in zip(t_s, acting_m_s[:, leg], strict=True):
-            if command != 0.0:
+            is_moving = command != 0.0 if hold_speed_m_s is None else abs(command) > hold_speed_m_s
+            if is_moving:
                 if current is not None:
                     current.close_s = float(t_k)
                     current = None
@@ -222,14 +228,49 @@ def lock_window_alignment(t_s, applied_output_m_s, lock_events, monitor_meta: di
         return {"n_late": None, "reason": reason}
     settings = WindowSettings.from_meta(settings_meta, period_s)
     t = np.asarray(t_s, float)
-    stretches = rebuild_stretches(t, acting_commands(applied_output_m_s), settings)
+    acting = acting_commands(applied_output_m_s)
+    stretches = rebuild_stretches(t, acting, settings)
     monitor_entries = (list(monitor_meta.get("fallback_lock_log") or [])
                        + list(monitor_meta.get("fallback_lock_current") or []))
-    match = _match_monitor_log(stretches, monitor_entries)
+    hold_speed_m_s = monitor_hold_speed_m_s(monitor_meta)
+    if hold_speed_m_s is None:
+        match = _match_monitor_log(stretches, monitor_entries)
+        fallback_ids = match["matched_ids"]
+    else:  # ③ revision 5: the monitor's stretches are the hold stretches
+        hold_stretches = rebuild_stretches(t, acting, settings, hold_speed_m_s)
+        match = _match_monitor_log(hold_stretches, monitor_entries)
+        fallback_ids = _zero_stretches_inside(
+            stretches, [s for s in hold_stretches if id(s) in match["matched_ids"]])
     history = PlantLockHistory(lock_events)
-    rows = [_stretch_row(s, history, float(t_end_s), id(s) in match["matched_ids"],
+    rows = [_stretch_row(s, history, float(t_end_s), id(s) in fallback_ids,
                          settings.period_s) for s in stretches]
-    return _summary(rows, match["window_check"], fallback_legs(events))
+    summary = _summary(rows, match["window_check"], fallback_legs(events))
+    if hold_speed_m_s is not None:
+        summary["monitor_stretch_rule"] = {"rule": "hold (|u| <= u_hold)",
+                                           "hold_speed_m_s": hold_speed_m_s}
+    return summary
+
+
+def monitor_hold_speed_m_s(monitor_meta: dict) -> float | None:
+    """``u_hold`` of a ③ revision 5 run (``extend_start_record.hold_speed_m_s``); None for the
+    other runs (zero-command stretches)."""
+    record = monitor_meta.get("extend_start_record") or {}
+    if record.get("rule_revision") != 5:
+        return None
+    return float(record["hold_speed_m_s"])
+
+
+def _zero_stretches_inside(zero_stretches: list[Stretch], hold_stretches: list[Stretch]) -> set:
+    """Ids of the zero-command stretches that lie inside a matched hold stretch of their leg
+    (the fallback flag of the J11 rows of a revision 5 run)."""
+    inside = set()
+    for zero in zero_stretches:
+        for hold in hold_stretches:
+            ends_s = math.inf if hold.close_s is None else hold.close_s
+            if zero.leg == hold.leg and hold.start_s <= zero.start_s < ends_s:
+                inside.add(id(zero))
+                break
+    return inside
 
 
 def _per_leg(rows, condition) -> dict[str, int]:

@@ -92,11 +92,18 @@ def j_p3(run: dict, t4h_dirs: tuple[Path, ...]) -> dict:
     ``breach_reads`` (RD-7 3) or ``breach_reads`` that are not 4 integers >= 0 (RD-8) make the
     J-P3 ``판정 불가`` (``missing``), never a sum-0 pass (:func:`judge4368_common.r79_j_p3`).
     """
-    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+    from outrigger_sim.hydraulics.v5_options import (
+        extend_start_revision_of_tag,
+        is_extend_start_tag,
+    )
 
     if not is_extend_start_tag(run.get("controller_tag")):
         return {"case": J_P3_NOT_APPLICABLE, "stop": None,
                 "reason": f"controller_tag {run.get('controller_tag')!r} is not ③ (rev8 R8-2)"}
+    if extend_start_revision_of_tag(run.get("controller_tag")) != 4:
+        return {"case": J_P3_NOT_JUDGEABLE, "stop": None, "missing": False,
+                "reason": f"controller_tag {run.get('controller_tag')!r} is ③ revision 5 "
+                          "(436.9 J-P3, not the 436.8 definition)"}
     if (run.get("controller_settings") or {}).get(EXTEND_START_SETTING) is None:
         return {"case": J_P3_NOT_JUDGEABLE, "stop": None, "missing": True,
                 "reason": f"③ line without {EXTEND_START_SETTING} (rev8 R8-2, original 9.3)"}

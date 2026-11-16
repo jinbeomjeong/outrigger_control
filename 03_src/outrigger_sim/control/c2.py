@@ -4801,6 +4801,11 @@ class C2Controller:
         """Source of the ``M_j`` behind each leg's ④ bound (read only)."""
         return self._pressures.locked_model_bound_sources()
 
+    def extend_bound_trace_row(self) -> dict[str, Any] | None:
+        """③ revision 5 per-read trace of the last update
+        (:meth:`TwoPressureMonitor.extend_bound_trace_row`; None otherwise). Read only."""
+        return self._pressures.extend_bound_trace_row()
+
     def meta(self) -> dict[str, Any]:
         """Name, settings and current friction band (JSON-serialisable, new dict per call)."""
         geometry = self.geometry

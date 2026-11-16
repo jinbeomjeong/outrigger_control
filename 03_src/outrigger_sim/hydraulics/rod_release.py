@@ -55,6 +55,10 @@ keep ``p_ret``. The anchor is set by the plant laws (L2b ``l2b_rod_side``, harne
 ``harness_hydraulics``); this module carries the name of the law and its snapshot marker
 (:data:`LAW_REVISION_KEY`).
 
+Revision 6 (``flow_limited_r6``, 436.9 P3 ``rod_flow_cap_all``, harness only; hydraulics-expert
+``hydraulics_remedy_review.md`` 1): the r5 lag-only branches get a flow cap too
+(:func:`flow_limited_rod_pressure_r6`); r5 stays as it is.
+
 Units SI; gauge pressures; arrays per leg.
 """
 
@@ -83,8 +87,13 @@ FLOW_LIMITED_LAW = "flow_limited_r5"
 lag, revision 4 release-decay compensation and the revision 5 extension lock anchor."""
 LAW_REVISION = 5
 """Revision number of :data:`FLOW_LIMITED_LAW` (snapshot marker)."""
-STORED_LAWS = ("flow_limited_r3", "flow_limited_r4", FLOW_LIMITED_LAW)
-"""M2 law names stored results may carry; only :data:`FLOW_LIMITED_LAW` can be rerun."""
+FLOW_LIMITED_R6_LAW = "flow_limited_r6"
+"""436.9 plant option P3 (``rod_flow_cap_all``, ``jp3_remedy_spec.md`` 3): the r5 law with a flow
+cap on all four branches (:func:`flow_limited_rod_pressure_r6`). Harness only."""
+STORED_LAWS = ("flow_limited_r3", "flow_limited_r4", FLOW_LIMITED_LAW, FLOW_LIMITED_R6_LAW)
+"""M2 law names stored results may carry; only :data:`RERUNNABLE_LAWS` can be rerun."""
+RERUNNABLE_LAWS = (FLOW_LIMITED_LAW, FLOW_LIMITED_R6_LAW)
+"""Laws this code runs: r5 (M2 on) and r6 (M2 with ``rod_flow_cap_all``)."""
 _M2_STATE_KEYS = (PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY, RELEASE_DROP_KEY)
 METER_OUT_RATIO = 1.0
 """``b_T``: meter-out (A -> T) over meter-in (P -> A) opening at the same spool stroke
@@ -93,6 +102,18 @@ SPOOL_REFERENCE_DROP_PA = 10.0e5
 """``dp_c``: spool drop at which the opening passes ``A_h |u|`` (compensator drop, ASSUMPTION)."""
 TANK_PRESSURE_PA = 2.0e5
 """``p_T``: return line pressure, gauge (ASSUMPTION)."""
+
+# --- P3 (flow_limited_r6), hydraulics_remedy_review.md 1 / 5 (hydraulics-expert 2026-11-16) ------
+R6_LAW_REVISION = 6
+"""Snapshot marker of :data:`FLOW_LIMITED_R6_LAW` (review 1.5: a r5 snapshot never continues r6)."""
+RETRACT_DRAIN_MIN_DROP_PA = 0.5e5
+"""Guard of branch (c): ``p_bA - p_T`` below this raises (review 1.5, no silent clip)."""
+R6_RULE = ("r5 branches (a) retract rise and (b) extend relief unchanged; (c) retract relief "
+           "p >= p - A_ann |u| (sqrt((p_h - p_T)+ / (p_bA - p_T)) - 1)+ dt / C_r, "
+           "p_h = (F + A_ann p) / A_h, A->T calibrated on p_bA (b_T,ret = sqrt(dp_c / "
+           "(p_bA - p_T)) = 1.826); (d) extend rise p <= max(p + A_ann |u| dt / C_r, lag to "
+           "p_F = -F / A_ann when p_F > p)")
+"""Meta rule of the r6 branches (review 1.1)."""
 
 
 def flow_limited_rod_pressure(
@@ -139,6 +160,74 @@ def flow_limited_rod_pressure(
                       * math.sqrt(orifice_drop_Pa / spool_reference_drop_Pa))
         return max(lagged_Pa, previous_Pa - drain_m3_s * step_s / compliance_m3_Pa)
     return lagged_Pa
+
+
+def flow_limited_rod_pressure_r6(
+    previous_Pa: float,
+    target_Pa: float,
+    speed_m_s: float,
+    step_s: float,
+    lag_s: float,
+    compliance_m3_Pa: float,
+    head_area_m2: float,
+    annulus_area_m2: float,
+    is_retract: bool,
+    cylinder_force_N: float,
+    head_back_retract_Pa: float,
+    *,
+    meter_out_ratio: float = METER_OUT_RATIO,
+    spool_reference_drop_Pa: float = SPOOL_REFERENCE_DROP_PA,
+    tank_pressure_Pa: float = TANK_PRESSURE_PA,
+) -> float:
+    """Moving rod pressure after one step of the r6 law (P3, ``rod_flow_cap_all``;
+    ``hydraulics_remedy_review.md`` 1.1, reference ``hr01_p3_flow_law.r6``)::
+
+        (a) retract, p* > p:  r5 (meter-in fill cap)
+        (b) extend,  p* < p:  r5 (meter-out drain cap)
+        (c) retract, p* < p:  max(lag, p - A_ann |u| f dt / C_r),
+                              f = (sqrt((p_h - p_T)+ / (p_bA - p_T)) - 1)+
+                              p_h = (F + A_ann p) / A_h      (fixed-load two-chamber balance)
+        (d) extend,  p* > p:  min(lag, max(p + A_ann |u| dt / C_r, lag_F)),
+                              lag_F = the lag towards p_F = -F / A_ann if p_F > p, else -inf
+                              (a tension load pulls the rod side up; no valve flow limits it)
+
+    A cap never passes the lagged value, so the step stays increasing in ``p^(k-1)`` (the ③
+    bound argument; review 1.3: smallest slope 0.980).
+
+    Args:
+        previous_Pa .. is_retract: As :func:`flow_limited_rod_pressure`.
+        cylinder_force_N: Net cylinder force ``F`` of the step.
+        head_back_retract_Pa: ``p_bA`` (``RodChamberLegParams.p_head_back_retract_Pa``).
+
+    Returns:
+        ``p_r^k`` [Pa gauge].
+
+    Raises:
+        ValueError: Branch (c) with ``p_bA - p_T`` below :data:`RETRACT_DRAIN_MIN_DROP_PA`.
+    """
+    if (is_retract and target_Pa >= previous_Pa) or (not is_retract
+                                                     and target_Pa <= previous_Pa):
+        return flow_limited_rod_pressure(
+            previous_Pa, target_Pa, speed_m_s, step_s, lag_s, compliance_m3_Pa, head_area_m2,
+            annulus_area_m2, is_retract, meter_out_ratio=meter_out_ratio,
+            spool_reference_drop_Pa=spool_reference_drop_Pa, tank_pressure_Pa=tank_pressure_Pa)
+    keep = math.exp(-step_s / lag_s) if lag_s > 0.0 else 0.0
+    lagged_Pa = target_Pa + (previous_Pa - target_Pa) * keep
+    speed = abs(speed_m_s)
+    if is_retract:  # (c)
+        drain_drop_Pa = head_back_retract_Pa - tank_pressure_Pa
+        if drain_drop_Pa < RETRACT_DRAIN_MIN_DROP_PA:
+            raise ValueError(f"p_bA - p_T = {drain_drop_Pa} Pa < {RETRACT_DRAIN_MIN_DROP_PA} Pa "
+                             "(flow_limited_r6 branch (c))")
+        head_Pa = (cylinder_force_N + annulus_area_m2 * previous_Pa) / head_area_m2
+        factor = max(math.sqrt(max(head_Pa - tank_pressure_Pa, 0.0) / drain_drop_Pa) - 1.0, 0.0)
+        return max(lagged_Pa, previous_Pa - annulus_area_m2 * speed * factor * step_s
+                   / compliance_m3_Pa)
+    tension_Pa = -cylinder_force_N / annulus_area_m2  # (d)
+    lag_tension_Pa = (tension_Pa + (previous_Pa - tension_Pa) * keep if tension_Pa > previous_Pa
+                      else -math.inf)
+    return min(lagged_Pa, max(previous_Pa + annulus_area_m2 * speed * step_s / compliance_m3_Pa,
+                              lag_tension_Pa))
 
 
 def release_weight(elapsed_s: float, decay_s: float) -> float:
@@ -229,17 +318,46 @@ class RodPressureFlowLaw:
                 "status": "ASSUMPTION b_T, dp_c, p_T (coupled/params.py values)"}
 
 
-def _check_law_revision(arrays: Mapping[str, NDArray[Any]]) -> None:
+@dataclass(frozen=True)
+class RodPressureFlowLawR6(RodPressureFlowLaw):
+    """P3 law ``flow_limited_r6`` (:func:`flow_limited_rod_pressure_r6`); the harness picks it
+    with ``rod_flow_cap_all``. The r5 class and its function stay as they are (the ③ tracker
+    and the plants without P3 call them)."""
+
+    name: ClassVar[str] = FLOW_LIMITED_R6_LAW
+    law_revision: ClassVar[int] = R6_LAW_REVISION
+
+    def rod_pressure_with_force_Pa(self, previous_Pa: float, target_Pa: float,
+                                   speed_m_s: float, step_s: float, lag_s: float,
+                                   compliance_m3_Pa: float, head_area_m2: float,
+                                   annulus_area_m2: float, is_retract: bool,
+                                   cylinder_force_N: float,
+                                   head_back_retract_Pa: float) -> float:
+        """:func:`flow_limited_rod_pressure_r6` with these constants."""
+        return flow_limited_rod_pressure_r6(
+            previous_Pa, target_Pa, speed_m_s, step_s, lag_s, compliance_m3_Pa, head_area_m2,
+            annulus_area_m2, is_retract, cylinder_force_N, head_back_retract_Pa,
+            meter_out_ratio=self.meter_out_ratio,
+            spool_reference_drop_Pa=self.spool_reference_drop_Pa,
+            tank_pressure_Pa=self.tank_pressure_Pa)
+
+    def meta(self) -> dict[str, Any]:
+        return {**super().meta(), "law": self.name, "rule_r6": R6_RULE,
+                "b_T_ret_equivalent": "sqrt(dp_c / (p_bA - p_T)) = 1.826 at p_bA 5 bar",
+                "status": "ASSUMPTION b_T, dp_c, p_T, p_bA (hydraulics_remedy_review.md 1, 5)"}
+
+
+def _check_law_revision(arrays: Mapping[str, NDArray[Any]],
+                        expected: int = LAW_REVISION) -> None:
     """Refuse M2 state of another law revision; a snapshot without M2 keys passes."""
     if not any(key in arrays for key in _M2_STATE_KEYS):
         return
     if LAW_REVISION_KEY not in arrays:
         raise ValueError(f"snapshot M2 state has no law marker (revision 4 or older), "
-                         f"this code runs {FLOW_LIMITED_LAW!r}")
+                         f"this code runs revision {expected}")
     stored = np.asarray(arrays[LAW_REVISION_KEY]).reshape(-1)
-    if stored.size != 1 or int(stored[0]) != LAW_REVISION:
-        raise ValueError(f"snapshot M2 law revision {stored.tolist()} is not {LAW_REVISION} "
-                         f"({FLOW_LIMITED_LAW!r})")
+    if stored.size != 1 or int(stored[0]) != expected:
+        raise ValueError(f"snapshot M2 law revision {stored.tolist()} is not {expected}")
 
 
 class RodReleaseShift:
@@ -247,9 +365,15 @@ class RodReleaseShift:
 
     Args:
         annulus_area_m2: ``A_ann`` per leg.
+        law_revision: Snapshot marker of the moving law (:data:`LAW_REVISION`, or
+            :data:`R6_LAW_REVISION` with P3).
     """
 
-    def __init__(self, annulus_area_m2: ArrayLike) -> None:
+    _law_revision: int = LAW_REVISION
+    """Class default for objects pickled before the marker became per instance."""
+
+    def __init__(self, annulus_area_m2: ArrayLike, law_revision: int = LAW_REVISION) -> None:
+        self._law_revision = int(law_revision)
         self._annulus_area_m2 = np.array(annulus_area_m2, dtype=float).reshape(-1)
         leg_count = self._annulus_area_m2.size
         self._previous_pressure_Pa: NDArray[np.float64] | None = None
@@ -342,7 +466,7 @@ class RodReleaseShift:
         arrays: dict[str, NDArray[Any]] = {SHIFT_TOTAL_KEY: self._shift_total_m.copy(),
                                            CLIPPED_STEPS_KEY: self._clipped_steps.copy(),
                                            RELEASE_DROP_KEY: self._release_drop_Pa.copy(),
-                                           LAW_REVISION_KEY: np.array([LAW_REVISION])}
+                                           LAW_REVISION_KEY: np.array([self._law_revision])}
         if self._previous_pressure_Pa is not None:
             arrays[PREVIOUS_PRESSURE_KEY] = self._previous_pressure_Pa.copy()
         return arrays
@@ -355,7 +479,7 @@ class RodReleaseShift:
             ValueError: The snapshot has M2 keys of another law revision (a snapshot without
                 the marker is revision 4 or older).
         """
-        _check_law_revision(arrays)
+        _check_law_revision(arrays, self._law_revision)
         leg_count = self._annulus_area_m2.size
         self._clip_times_s = [[] for _ in range(leg_count)]
         self._previous_pressure_Pa = None
@@ -374,8 +498,10 @@ class RodReleaseShift:
                 "m2_clipped_steps": self._clipped_steps.tolist()}
 
 
-__all__ = ["CLIPPED_STEPS_KEY", "FLOW_LIMITED_LAW", "LAW_REVISION", "LAW_REVISION_KEY",
-           "METER_OUT_RATIO", "PREVIOUS_PRESSURE_KEY", "RELEASE_DROP_KEY", "SHIFT_TOTAL_KEY",
-           "STORED_LAWS", "SPOOL_REFERENCE_DROP_PA", "TANK_PRESSURE_PA",
-           "ReleaseStart", "RodPressureFlowLaw", "RodReleaseShift", "compensated_rod_pressure_Pa",
-           "flow_limited_rod_pressure", "release_weight"]
+__all__ = ["CLIPPED_STEPS_KEY", "FLOW_LIMITED_LAW", "FLOW_LIMITED_R6_LAW", "LAW_REVISION",
+           "LAW_REVISION_KEY", "METER_OUT_RATIO", "PREVIOUS_PRESSURE_KEY", "RELEASE_DROP_KEY",
+           "R6_LAW_REVISION", "RERUNNABLE_LAWS", "RETRACT_DRAIN_MIN_DROP_PA", "SHIFT_TOTAL_KEY",
+           "STORED_LAWS", "SPOOL_REFERENCE_DROP_PA",
+           "TANK_PRESSURE_PA", "ReleaseStart", "RodPressureFlowLaw", "RodPressureFlowLawR6",
+           "RodReleaseShift", "compensated_rod_pressure_Pa", "flow_limited_rod_pressure",
+           "flow_limited_rod_pressure_r6", "release_weight"]
