@@ -117,6 +117,15 @@ withhold the reuse value). New:
   item-list      RD-13 per-bundle item lists (fixed bytes, sha256)
   key-map        RD-5 draft of the identity keys left out of the K-10 comparison
   head-check     RD-1 5 (HEAD = M4, else S-12) and with ``--r4`` RD-1 4 (M4 / R4 blobs, S-11)
+R4 supplement 2 (a9a15a13, user decision 124): ``r4-lists`` leaves the dg3-replaced 135 keys out of
+the H-8 VB J-P3 / J11 lists (2-1), applies J11 / RD-10 to every H-9 grid run (2-2) and classifies
+U-6 b5 records by the ground token of ``src`` (2-7); ``x16-records`` takes rc from the first line of
+the only ``_runners/logs_*/<short>_run.done`` (short name by the ``case`` of
+``_identity/<short>_pre.json``; missing, double or no ``exit=`` = 기록 불완전, 2-4), C-10 G6 by
+the rev25 CD-11 P3 table (2-5) and
+C-11 LOC-period values at the first LOC and, after a cancellation, the final LOC (2-6). The r72
+G6-2 demotion (2-3) is in the r72 records' gates already (``r72_g6_screen``, six conditions of
+``late_loc_rule.late_loc_revoked``), read unchanged by ``u3_judge_4368``.
 
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
@@ -2931,6 +2940,9 @@ def stroke_exposure(args: argparse.Namespace) -> dict:
 # ===================================================================================== R4 (436.8)
 R4_BLOCK_SHA256 = "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800"
 """The R4 common block these subcommands implement (both paths receive the same bytes)."""
+SUPPLEMENT_2_SHA256 = "a9a15a139843e796c73fd9046cd8cd92ed0dcaeaa14bd41c7cd591aaef9c6452"
+"""R4 supplement 2 (user decision 124; same bytes for both paths): 2-1 H-8 lists, 2-2 grid J11,
+2-3 G6-2 demotion, 2-4 rc source, 2-5 C-10 G6 by P3, 2-6 C-11 LOC, 2-7 u6 ``src``."""
 R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
 """RD-1 5 / rev16 R16-14: the run commit of the R2 outputs and of H-11 / H-12 / C-9 .. C-11."""
 HULL_DLL_SHA256 = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
@@ -2972,7 +2984,12 @@ BUNDLE_FILES = {
 ``*.identity.json`` and the family files ``h9_family_F_*.json`` are never results here (RD-7 1)."""
 J_P3_LIST_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
 J11_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
-"""RD-7 1 / RD-10: J-P3 lists and J11 for these bundles only; J11 on lines, not grid runs."""
+"""RD-7 1 / RD-10: J-P3 lists and J11 for these bundles only; supplement 2-2: J11 and RD-10 also
+apply to every H-9 grid run (one row = (run, leg))."""
+DG3_KEY_SOURCE = "06_analysis/03_hydraulic/coupled/v5/dg3/dg3_v4_on.json"
+"""Supplement 2-1 / rev1 RV1-3.2: the key source of the 135 keys dg3 replaces in H-8 VB; those
+keys are judged by their H-6 lines, so their H-8 VB lines leave the H-8 J-P3 / J11 lists."""
+H8_BUNDLE = "H-8"
 S6_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")
 RD8_BUNDLES = ("H-1", "H-3", "H-4")
 P3_STOP_BUNDLES = ("H-1", "H-3", "H-4", "H-6", "H-8", "H-9", "H-10")
@@ -3066,10 +3083,47 @@ def unit_j_p3(common, stage1, unit: ListUnit, t4h_folders) -> dict:
     return common.r79_j_p3(unit.record, t4h_folders)
 
 
+GROUND_TOKEN = re.compile(r"^(rigid|[A-Z][0-9])(\+[A-Z][0-9]@(FL|FR|RL|RR))?$")
+"""Supplement 2-7: a ground token of a u6 ``src`` field (``rigid``, a soil set, either with a
+``+<soil>@<leg>`` patch)."""
+H4_BUNDLE = "H-4"
+
+
+def u6_src_family(item: dict) -> str | None:
+    """Supplement 2-7 / rev16 R16-10 2 (c): the family of a U-6 b5 record from the ground token
+    of its ``src`` field (the inner key; the ``case`` name is not read): a ``+<soil>@<leg>`` patch
+    = patch, ``rigid`` = rigid, a soil token only = uniform; no ground token = unplaced (None)."""
+    for field_text in str(item.get("src") or "").split("|"):
+        match = GROUND_TOKEN.fullmatch(field_text)
+        if match is None:
+            continue
+        if match.group(2):
+            return "patch_or_sink"
+        return "rigid" if match.group(1) == "rigid" else "uniform"
+    return None
+
+
 def unit_family(unit: ListUnit, table: dict[str, str | None]) -> str | None:
     if unit.is_grid_run:
         return unit.grid_family
+    if unit.bundle == H4_BUNDLE and "src" in unit.record:  # supplement 2-7
+        return u6_src_family(unit.record)
     return table_family(unit.record, unit.owner, table)[0]
+
+
+def read_dg3_keys(root: Path) -> set[str] | None:
+    """Supplement 2-1: the dg3-replaced keys (``results[].key`` of :data:`DG3_KEY_SOURCE`,
+    ``cand=current#`` dropped); None when the file is missing."""
+    path = root / DG3_KEY_SOURCE
+    if not path.is_file():
+        return None
+    return {r79_key(row.get("key")) for row in read_json(path).get("results") or []}
+
+
+def is_dg3_replaced(unit: ListUnit, dg3_keys: set[str] | None) -> bool:
+    """An H-8 VB line whose key dg3 replaced (judged by its H-6 line, supplement 2-1)."""
+    return (unit.bundle == H8_BUNDLE and unit.setting == VB_SETTING and bool(dg3_keys)
+            and r79_key(unit.key) in dg3_keys)
 
 
 def s6_rows(unit: ListUnit, table: dict[str, str | None]) -> list[dict]:
@@ -3109,10 +3163,13 @@ def rd8_unit(common, unit: ListUnit) -> dict:
                                              and not has_reads)}
 
 
-def _bundle_lists(common, stage1, bundle: str, root: Path, table) -> dict:
+def _bundle_lists(common, stage1, bundle: str, root: Path, table,
+                  dg3_keys: set[str] | None = None) -> dict:
     """RD-7 lists and RD-8 / RD-9 / RD-10 counts of one bundle."""
     out: dict[str, Any] = {"files": [], "missing_files": [], "units": 0, "p3_units_RD9": 0,
                            "J-P3": [], "J11": [], "S-6": [], "markers": []}
+    if bundle == H8_BUNDLE:
+        out["dg3_replaced_excluded"] = {}
     counts: Counter = Counter()
     for path in bundle_paths(root, bundle):
         if not path.is_file():
@@ -3129,13 +3186,17 @@ def _bundle_lists(common, stage1, bundle: str, root: Path, table) -> dict:
                 counts["error_units"] += 1
                 continue
             out["p3_units_RD9"] += bool(is_extend_start_tag(unit.tag))
-            if bundle in J_P3_LIST_BUNDLES:
+            replaced = is_dg3_replaced(unit, dg3_keys)
+            if replaced:  # supplement 2-1: judged by its H-6 line
+                excluded = out["dg3_replaced_excluded"]
+                excluded[unit.result_file] = excluded.get(unit.result_file, 0) + 1
+            if bundle in J_P3_LIST_BUNDLES and not replaced:
                 assessed = unit_j_p3(common, stage1, unit, folders)
                 out["J-P3"] += common.j_p3_list_rows(assessed, **_place(unit))
                 counts["j_p3_rd8"] += bool(assessed["rd8_problem"])
                 counts["j_p3_not_judgeable"] += assessed["status"] == common.NOT_JUDGEABLE
                 counts["j_p3_s2"] += assessed["status"] == common.J_P3_S2
-            if bundle in J11_BUNDLES and not unit.is_grid_run:
+            if bundle in J11_BUNDLES and not replaced:
                 j11 = common.assess_j11(unit.record.get("lock_window_alignment"), unit.setting)
                 out["J11"] += common.j11_list_rows(j11, **_place(unit))
                 counts["j11_not_judgeable"] += j11["state"] == common.NOT_JUDGEABLE
@@ -3184,12 +3245,16 @@ def r4_lists(args: argparse.Namespace) -> dict:
     root = Path(args.root)
     table = read_family_table(Path(args.family_table))
     names = [name for name in BUNDLE_FILES if not args.bundles or name in args.bundles]
-    bundles = {name: _bundle_lists(common, stage1, name, root, table) for name in names}
+    dg3_keys = read_dg3_keys(root) if H8_BUNDLE in names else None
+    bundles = {name: _bundle_lists(common, stage1, name, root, table, dg3_keys)
+               for name in names}
     lists = {name: sorted((row for part in bundles.values() for row in part[name]),
                           key=common.list_sort_key) for name in ("J-P3", "J11", "S-6")}
     markers = [f"{name}: {marker}" for name, part in bundles.items()
                for marker in part["markers"]]
     missing = [path for part in bundles.values() for path in part["missing_files"]]
+    if H8_BUNDLE in names and dg3_keys is None:
+        missing.append(DG3_KEY_SOURCE)
     for part in bundles.values():
         for name in ("J-P3", "J11", "S-6"):
             part[f"{name}_rows"] = len(part.pop(name))
@@ -3197,6 +3262,10 @@ def r4_lists(args: argparse.Namespace) -> dict:
             "r4_block_sha256": R4_BLOCK_SHA256, "root": str(root),
             "family_table": {"path": str(args.family_table),
                              "sha256": file_sha256(Path(args.family_table))},
+            "dg3_key_source": None if dg3_keys is None else {
+                "path": DG3_KEY_SOURCE, "sha256": file_sha256(root / DG3_KEY_SOURCE),
+                "keys": len(dg3_keys)},
+            "supplement_2_sha256": SUPPLEMENT_2_SHA256,
             "lists": lists, "bundles": bundles, "markers": markers, "missing_files": missing,
             "exit_code": 1 if markers or missing else 0}
 
@@ -3488,13 +3557,41 @@ def x16_identity(row_id: str, case: str, cell_mask: int, identity_dir: Path,
     return {"row": row_id, "case": case, "S-12": s12, "S-4": s4, "ok": not s12 and not s4}
 
 
-def run_exit_code(runner_dir: Path, cell: str, row_id: str) -> int | None:
-    """rc of one row: ``exit=N`` of ``<runner>/logs_<cell>/<id>_run.done`` (None: no record)."""
-    path = runner_dir / f"logs_{cell}" / f"{row_id}_run.done"
-    if not path.is_file():
-        return None
-    match = DONE_EXIT.search(path.read_text(encoding="utf-8"))
-    return None if match is None else int(match.group(1))
+X16_SHORT_NAMES = ("C9on", "C9off", "C10FLV0", "C10FLVB", "C10FRV0", "C10FRVB", "C11V0", "C11VB")
+"""Supplement 2-4: the short row names of the runner marks and identity files."""
+
+
+def short_names_by_case(identity_dir: Path) -> dict[str, str]:
+    """Supplement 2-4: row name -> short row name, from ``<short>_pre.json`` ``case``."""
+    names = {}
+    for short in X16_SHORT_NAMES:
+        path = identity_dir / f"{short}_pre.json"
+        if path.is_file():
+            case = read_json(path).get("case")
+            if isinstance(case, str):
+                names[case] = short
+    return names
+
+
+def run_exit_code(runner_dir: Path, short: str | None) -> tuple[int | None, str | None]:
+    """Supplement 2-4: rc of one row = N of ``exit=N`` on the first line of its only
+    ``<runner>/logs_*/<short>_run.done`` (the ``.log`` is not read).
+
+    Returns:
+        (rc, None), or (None, reason) when the mark is missing, found twice or more, or its
+        first line has no ``exit=`` (the row is then ``기록 불완전``).
+    """
+    if short is None:
+        return None, "no short row name (no <short>_pre.json with this case)"
+    hits = sorted(runner_dir.glob(f"logs_*/{short}_run.done"))
+    if len(hits) != 1:
+        return None, f"{len(hits)} {short}_run.done marks (exactly one needed)"
+    with hits[0].open(encoding="utf-8") as handle:
+        first_line = handle.readline()
+    match = DONE_EXIT.search(first_line)
+    if match is None:
+        return None, f"no exit= on the first line of {hits[0].name}"
+    return int(match.group(1)), None
 
 
 def _series(path: Path, names: tuple[str, ...]) -> dict:
@@ -3554,7 +3651,8 @@ P3_CHECK_KEYS = {"P3-1": "P3-1_crawler_zero_after_ready", "P3-2": "P3-2_within",
 def c10_items(folder: Path, result: dict) -> dict:
     """Rev16 R16-11 2 record items of one C-10 row: leg forces and times, the original 7.4
     F < F_min / F < F_min + 2 kN times (1 ms ``F_cyl_N`` in [t_D, t_D + 8 s], RV1-7 / R2-5),
-    G6-1 .. G6-7 (the path 1 Chrono G6 gate code), P3-3, end phase, stroke, patch-leg sinkage."""
+    G6-1 .. G6-7 by the CD-11 table (supplement 2-5), P3-3, end phase, stroke, patch-leg
+    sinkage."""
     force = get_path(result, "p3b.P3-3_leg_force")[1] or {}
     p35 = get_path(result, "p3b.P3-5_clearance_stroke")[1] or {}
     patch_leg = get_path(result, "args.rigid_base")[1]
@@ -3562,7 +3660,7 @@ def c10_items(folder: Path, result: dict) -> dict:
     return {"F_min_after_N": force.get("F_min_after_N"),
             "t_min_after_s": force.get("t_min_after_s"),
             "F_min_transient_N": force.get("F_min_transient_N"),
-            **fmin_times(folder, result), "G6": g6_gates(folder),
+            **fmin_times(folder, result), "G6": g6_gates(folder, result),
             "P3-3_within": get_path(result, "p3b.checks.P3-3_within")[1],
             "end_phase": _last_phase(result), "max_stroke_mm": _mm(p35.get("s_motor_max_m")),
             "patch_leg": patch_leg,
@@ -3589,56 +3687,131 @@ def fmin_times(folder: Path, result: dict) -> dict:
             "window_complete": float(t_s[-1]) >= t_dep + FMIN_WINDOW_S - COMPARE_EPS}
 
 
-def g6_gates(folder: Path) -> dict | None:
-    """G6-1 .. G6-7 of one SCM row by the path 1 Chrono judge's G6 gate code (the row read as a
-    G6 row; read only, ``chrono_rows_judge_4368`` is not changed)."""
+G6_P3_MAP = (("G6-1", "P3-1"), ("G6-2", "P3-2"), ("G6-3", "P3-3"), ("G6-4", "P3-4"),
+             ("G6-5", "P3-5"), ("G6-7", "P3-8"))
+"""Supplement 2-5 / rules rev25 CD-11 G6 table: the G6 gates replaced by the row's P3 value."""
+G6_FAIL_WORD = "fail"
+G6_PASS_WORD = "pass"
+G6_NOT_JUDGEABLE_WORD = "not_judgeable"
+
+
+def _chrono_modules():
+    """The path 1 Chrono judge modules (read only: ``chrono_rows_judge_4368`` for the row
+    reading and D items, ``chrono_bundle_grade_4368`` for the CD-4 / CD-5 P3 items)."""
     chrono_dir = ROOT / "04_scripts" / "02_chrono"
     if str(chrono_dir) not in sys.path:
         sys.path.append(str(chrono_dir))
-    import chrono_rows_judge_4368 as chrono
+    import chrono_bundle_grade_4368
+    import chrono_rows_judge_4368
 
+    return chrono_rows_judge_4368, chrono_bundle_grade_4368
+
+
+def scm_p3_items(folder: Path, result: dict) -> tuple[list[dict], dict] | None:
+    """Rules rev25 CD-4: the P3 items of one SCM row by the path 1 definition used for the
+    C-2 .. C-4 SCM rows (``chrono_bundle_grade_4368.p3_items`` on the
+    ``chrono_rows_judge_4368.judge_scm`` D items; ``--rigid-base`` rows get P3-5 해당 없음, CD-9).
+
+    Returns:
+        (P3 items, D items), or None when the row cannot be read (the row is 기록 불완전).
+    """
+    rows_judge, bundle = _chrono_modules()
     try:
-        row = chrono.load_row(folder)
-        params = chrono.load_params(ROOT / "02_params" / "rexome33.yaml")
-        judged = chrono.judge_scm(row, chrono.G6_IDS[0], params, dict(chrono.ASSUMPTIONS))
-    except (chrono.InputError, KeyError, IndexError, TypeError, ValueError) as exc:
-        # a record item that cannot be computed leaves the row 기록 불완전 (R16-11b 2)
-        print(f"G6 gates of {folder} not computable: {exc!r}", file=sys.stderr)
+        row = rows_judge.load_row(folder)
+        params = rows_judge.load_params(ROOT / "02_params" / "rexome33.yaml")
+        judged = rows_judge.judge_scm(row, None, params, dict(rows_judge.ASSUMPTIONS))
+        items = bundle.p3_items(result.get("p3b") or {}, judged["items"],
+                                rigid_base=bool(get_path(result, "args.rigid_base")[1]),
+                                args=result.get("args"))
+    except (rows_judge.InputError, KeyError, IndexError, TypeError, ValueError) as exc:
+        print(f"P3 items of {folder} not computable: {exc!r}", file=sys.stderr)
         return None
-    gates = judged.get("gates") or {}
-    return {name: value for name, value in gates.items() if name.startswith("G6-")}
+    return items, judged["items"]
+
+
+def g6_from_p3(p3_items: list[dict], judged_items: dict) -> dict:
+    """Supplement 2-5 (rules rev25 CD-11 G6 table): G6-1 .. G6-5 and G6-7 = the row's P3-1 .. P3-5
+    and P3-8 values (a 해당 없음 P3 value is kept as its text); G6-6 = no FAULT and READY reached
+    (no READY = fail); ``READY_le_120s`` = first READY <= 120 s after the closed-loop start (no
+    READY = fail). Record values, no grade (R16-11a)."""
+    by_name = {entry["item"]: entry for entry in p3_items}
+    gates: dict[str, Any] = {}
+    for gate, p3 in G6_P3_MAP:
+        entry = by_name.get(p3) or {}
+        verdict = entry.get("verdict")
+        gates[gate] = {"P3": p3, "value": verdict if verdict is not None else entry.get("value")}
+    ready = judged_items.get("ready_D-27_D-28") or {}
+    fault = (judged_items.get("P3-8_D-34_D-35") or {}).get("fault")
+    has_ready = ready.get("t_ready_rel_s") is not None
+    if not has_ready:
+        g66 = G6_FAIL_WORD
+    elif fault is None:
+        g66 = G6_NOT_JUDGEABLE_WORD
+    else:
+        g66 = G6_FAIL_WORD if fault else G6_PASS_WORD
+    gates["G6-6"] = {"P3": None, "value": g66}
+    gates["READY_le_120s"] = {"P3": None, "value": G6_PASS_WORD
+                              if has_ready and ready.get("READY_le_120s") else G6_FAIL_WORD}
+    return gates
+
+
+def g6_gates(folder: Path, result: dict) -> dict | None:
+    """C-10 G6 record values (supplement 2-5); None when the P3 items cannot be computed."""
+    computed = scm_p3_items(folder, result)
+    return None if computed is None else g6_from_p3(*computed)
+
+
+def loc_period_values(t_s, crawler_N, t_loc: float, weight_N: float) -> dict:
+    """Spec 419.8.1 (supplement 2-6): the largest crawler true normal of the 1 ms samples in
+    (t_LOC - 0.1 s, t_LOC], its fraction of W (``p3b.weight_N``) and the 0.01 W comparison
+    (7.6 allowance); ``t_s`` and the ``p3b`` LOC times are the same absolute time base."""
+    import numpy as np
+
+    t = np.asarray(t_s, float)
+    window = (t > float(t_loc) - X16_LOC_WINDOW_S + COMPARE_EPS) & (t <= float(t_loc) +
+                                                                      COMPARE_EPS)
+    if not window.any():
+        return {"crawler_max_N": None}
+    peak = float(np.asarray(crawler_N, float)[window].max())
+    return {"crawler_max_N": peak, "crawler_max_over_W": peak / float(weight_N),
+            "ge_0p01W": peak >= X16_LOC_FRACTION_W * float(weight_N) - COMPARE_EPS}
 
 
 def c11_items(folder: Path, result: dict) -> dict:
-    """Rev16 R16-11 3 record items of one C-11 row: first LOC, the 1 ms crawler normal maximum in
-    the LOC period (the controller period ending at the first LOC) and its fraction of W, the
-    0.01 W comparison and the LOC cancel count."""
-    import numpy as np
-
-    t_loc = get_path(result, "p3b.P3-2_loc.t_loc_first_s")[1]
+    """Rev16 R16-11 3 record items of one C-11 row (supplement 2-6): the LOC period values at the
+    first LOC (``P3-2_loc.t_loc_first_s``) and, when a LOC was cancelled (``t_loc_final_s`` not
+    the first LOC), the same three values at the final LOC; the LOC cancel count."""
+    t_first = get_path(result, "p3b.P3-2_loc.t_loc_first_s")[1]
+    t_final = get_path(result, "p3b.P3-2_loc.t_loc_final_s")[1]
     weight = get_path(result, "p3b.weight_N")[1]
-    out: dict[str, Any] = {"first_loc_s": t_loc,
-                           "loc_cancels": get_path(result, "p3b.checks.loc_revokes")[1]}
+    out: dict[str, Any] = {"first_loc_s": t_first, "final_loc_s": t_final,
+                           "loc_cancels": get_path(result, "p3b.checks.loc_revokes")[1],
+                           "loc_period_crawler_max_N": None}
     series = _series(folder / SERIES_FILE, ("t_s", CRAWLER_NORMAL_KEY))
-    if t_loc is None or not isinstance(weight, (int, float)) or len(series) != 2:
-        return {**out, "loc_period_crawler_max_N": None}
-    t_s = np.asarray(series["t_s"], float)
-    window = (t_s > float(t_loc) - X16_LOC_WINDOW_S + COMPARE_EPS) & (
-        t_s <= float(t_loc) + COMPARE_EPS)
-    if not window.any():
-        return {**out, "loc_period_crawler_max_N": None}
-    peak = float(np.asarray(series[CRAWLER_NORMAL_KEY], float)[window].max())
-    return {**out, "loc_period_crawler_max_N": peak, "loc_period_crawler_max_over_W":
-            peak / float(weight),
-            "loc_period_ge_0p01W": peak >= X16_LOC_FRACTION_W * float(weight) - COMPARE_EPS}
+    if t_first is None or not isinstance(weight, (int, float)) or len(series) != 2:
+        return out
+    first = loc_period_values(series["t_s"], series[CRAWLER_NORMAL_KEY], t_first, weight)
+    out.update(loc_period_crawler_max_N=first["crawler_max_N"],
+               loc_period_crawler_max_over_W=first.get("crawler_max_over_W"),
+               loc_period_ge_0p01W=first.get("ge_0p01W"))
+    is_cancelled = t_final is not None and abs(float(t_final) - float(t_first)) > COMPARE_EPS
+    out["final_loc_differs"] = is_cancelled
+    if is_cancelled:
+        final = loc_period_values(series["t_s"], series[CRAWLER_NORMAL_KEY], t_final, weight)
+        out.update(final_loc_period_crawler_max_N=final["crawler_max_N"],
+                   final_loc_period_crawler_max_over_W=final.get("crawler_max_over_W"),
+                   final_loc_period_ge_0p01W=final.get("ge_0p01W"))
+    return out
 
 
 X16_ITEMS = {"C-9": c9_items, "C-10": c10_items, "C-11": c11_items}
 
 
-def x16_row(row: dict, out_root: Path, identity_dir: Path, runner_dir: Path) -> dict:
+def x16_row(row: dict, out_root: Path, identity_dir: Path, runner_dir: Path,
+            short_names: dict[str, str]) -> dict:
     """One C-9 .. C-11 row: identity, required files and the record items of its bundle."""
-    case, row_id = row.get("case"), row.get("id")
+    case = row.get("case")
+    row_id = short_names.get(case)  # supplement 2-4: the pre identity's case names the row
     bundle, cell, mask = X16_ROWS[case]
     folder = out_root / bundle / case
     out: dict[str, Any] = {"bundle": bundle, "case": case, "id": row_id, "cell": cell,
@@ -3646,6 +3819,9 @@ def x16_row(row: dict, out_root: Path, identity_dir: Path, runner_dir: Path) -> 
     if row.get("cell") != cell or _int_mask(row.get("mask")) != mask:
         out["problems"].append(f"rows.json cell / mask {row.get('cell')} / {row.get('mask')} "
                                f"is not rev16 R16-14 5 ({cell}, 0x{mask:04X})")
+    if row.get("id") != row_id:
+        out["problems"].append(f"rows.json id {row.get('id')!r} != short name {row_id!r} of "
+                               "the pre identity (supplement 2-4)")
     need = list(X16_REQUIRED_FILES) + (["flow_series.npz"] if "--flow-eta-v" in
                                        (row.get("argv") or []) else [])
     missing = [name for name in need if not (folder / name).is_file()]
@@ -3653,12 +3829,14 @@ def x16_row(row: dict, out_root: Path, identity_dir: Path, runner_dir: Path) -> 
         return {**out, "problems": out["problems"] + [f"files missing: {missing}"],
                 "record_state": "기록 불완전"}
     result = read_json(folder / "result.json")
-    out["identity"] = x16_identity(row_id, case, mask, identity_dir, result)
+    out["identity"] = x16_identity(str(row_id), case, mask, identity_dir, result)
     out["duration_s"] = get_path(result, "args.duration")[1]
     out["threads"] = get_path(result, "num_threads_chrono")[1]
     out["placement_mode"] = get_path(result, "placement.mode")[1]
-    out["items"] = {**x16_common_items(folder, result, run_exit_code(runner_dir, cell, row_id)),
-                    **X16_ITEMS[bundle](folder, result)}
+    rc, rc_problem = run_exit_code(runner_dir, row_id)
+    if rc_problem is not None:
+        out["problems"].append(f"rc: {rc_problem} (supplement 2-4)")
+    out["items"] = {**x16_common_items(folder, result, rc), **X16_ITEMS[bundle](folder, result)}
     out["files_sha256"] = {name: file_sha256(folder / name) for name in need}
     out["problems"] += [f"record item {name} not computable" for name in
                         X16_REQUIRED_ITEMS[bundle] if out["items"].get(name) is None]
@@ -3702,7 +3880,9 @@ def x16_records(args: argparse.Namespace) -> dict:
     missing_rows = sorted(set(X16_ROWS) - {row.get("case") for row in rows})
     identity_dir = Path(args.identity_dir) if args.identity_dir else out_root / "_identity"
     runner_dir = Path(args.runner_dir) if args.runner_dir else out_root / "_runners"
-    done = {row["case"]: x16_row(row, out_root, identity_dir, runner_dir) for row in rows}
+    short_names = short_names_by_case(identity_dir)
+    done = {row["case"]: x16_row(row, out_root, identity_dir, runner_dir, short_names)
+            for row in rows}
     bundles: dict[str, dict] = {}
     for name in ("C-9", "C-10", "C-11"):
         members = [done[case] for case, (bundle, _, _) in X16_ROWS.items()
@@ -3750,6 +3930,8 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
     ),
     "H-3": (
         ("U-3 묶음 등급(통과·FLAG·안전 종료·실패)", "u3 원판 4·5절", ITEM_GRADE),
+        ("r72 G6 강등(G6-7 377·U-S9-G6c, G6-2_late_loc_revoked 424.11.2)",
+         "u3 원판 53·58행, rev6 R6-C3, 보충 2-3", ITEM_GRADE),
         ("정착 v2 재계산", "rev3 R3-B6, rev4 R4-C2", ITEM_GRADE),
         ("G-1 키 집합", "u3 원판 7절", ITEM_GATE),
         ("G-2 v5 기록 필드·태그", "u3 원판 7절, rev2 #4", ITEM_GATE),
@@ -3770,7 +3952,8 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
         ("4.2 ABL 기대값", "rev16 R16-3", ITEM_GATE),
         ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
         ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
-        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+        ("멈춤 S-6 목록(계열 = src 지면 토큰)", "R4 RD-7, 원판 7.2, rev16 R16-10 2 (c), 보충 2-7",
+         ITEM_GATE),
     ),
     "H-5": (
         ("U-9 V0 판정(H0 ① 기준 포함)", "u9_targeted_rules_rev1, rev3 R3-C1", ITEM_GRADE),
@@ -3797,16 +3980,21 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
         ("L1 게이트 네 개수 대조", "rev4 R4-B3, rev5 R5-C1", ITEM_GATE),
         ("seedext k/25·Fisher·문구", "개정 6 9절", ITEM_RECORD),
         ("seedext 시드 0~4 해시(H-15)", "rev3 F-6", ITEM_GATE),
-        ("J-P3 위반 목록", "R4 RD-7·RD-8", ITEM_GATE),
-        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-7·RD-10", ITEM_GATE),
+        ("J-P3 위반 목록(VB 줄, dg3 대체 135키 제외)", "R4 RD-7·RD-8, rev8 R8-2, 보충 2-1",
+         ITEM_GATE),
+        ("J11 실제 대체 다리 n_late(VB 줄, dg3 대체 135키 제외)",
+         "rev16 R16-6, R4 RD-7·RD-10, 보충 2-1", ITEM_GATE),
+        ("J11 값(V0 줄)", "rev16 R16-6 2, 보충 2-1", ITEM_RECORD),
         ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
         ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
     ),
     "H-9": (
         ("J1~J10 VB 외 설정 기록(V0 대비)", "v5 기준, rev3 R3-C3~C6", ITEM_RECORD),
-        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late(main·pressure_only 줄)", "rev16 R16-6, R4 RD-10", ITEM_GATE),
         ("J-P3(main·pressure_only ③ 줄)", "rev3 R3-C8, R4 RD-7·RD-8", ITEM_GATE),
         ("격자 J-P3 등급(768 run)", "rev16 R16-7, R4 RD-7", ITEM_GATE),
+        ("격자 J11 실제 대체 다리 n_late(768 run)", "rev16 R16-6, R4 RD-7·RD-10, 보충 2-2",
+         ITEM_GATE),
         ("P-7 L1 해시", "Q-S4", ITEM_GATE),
         ("pressure_only 끝 단계", "v5 기준", ITEM_RECORD),
         ("family F R-1~R-4", "rev3 R3-E2, rev4 R4-B5", ITEM_GRADE),
@@ -3844,21 +4032,27 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
     "C-9": (
         ("decisions(dP), 토양 모드 시작, LOC 시각", "rev16 R16-11 1", ITEM_RECORD),
         ("두 팔 controller_commands.npz sha256 같음", "rev16 R16-11 1", ITEM_RECORD),
-        ("최대 행정, 끝 rut 틈, P3-1~P3-9, 첫 READY, rc, 마지막 표본 시각", "rev16 R16-11 1",
+        ("최대 행정, 끝 rut 틈, P3-1~P3-9, 첫 READY, 마지막 표본 시각", "rev16 R16-11 1",
          ITEM_RECORD),
+        ("rc(_run.done 첫 줄 exit=)", "rev16 R16-11 1, 보충 2-4", ITEM_RECORD),
         ("P-18 읽기 전제", "rev16 R16-11 1", ITEM_RECORD),
         ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
     ),
     "C-10": (
         ("다리별 F^a_min·F^t_min·시각", "rev16 R16-11 2", ITEM_RECORD),
         ("F < F_min, F < F_min + 2 kN 시간", "rev16 R16-11 2, 원판 7.4, rev1 RV1-7", ITEM_RECORD),
-        ("G6-1~G6-7, P3-3, 끝 단계, 최대 행정, 패치 다리 침하", "rev16 R16-11 2", ITEM_RECORD),
-        ("rc, 마지막 표본 시각", "rev16 R16-11 2", ITEM_RECORD),
+        ("G6-1~G6-7·READY_le_120s(P3 값 갈음)", "rev16 R16-11 2, rev25 CD-11, 보충 2-5",
+         ITEM_RECORD),
+        ("P3-3, 끝 단계, 최대 행정, 패치 다리 침하", "rev16 R16-11 2", ITEM_RECORD),
+        ("rc(_run.done 첫 줄 exit=), 마지막 표본 시각", "rev16 R16-11 2, 보충 2-4", ITEM_RECORD),
         ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
     ),
     "C-11": (
-        ("첫 LOC, LOC 주기 크롤러 법선 최대·/W·0.01 W", "rev16 R16-11 3", ITEM_RECORD),
-        ("LOC 취소 수, 첫 READY, rc, 마지막 표본 시각", "rev16 R16-11 3", ITEM_RECORD),
+        ("첫 LOC, LOC 주기 크롤러 법선 최대·/W·0.01 W", "rev16 R16-11 3, 명세 419.8.1, 보충 2-6",
+         ITEM_RECORD),
+        ("최종 LOC 기준 같은 세 값(LOC 취소가 있을 때)", "보충 2-6", ITEM_RECORD),
+        ("LOC 취소 수, 첫 READY, 마지막 표본 시각", "rev16 R16-11 3", ITEM_RECORD),
+        ("rc(_run.done 첫 줄 exit=)", "rev16 R16-11 3, 보충 2-4", ITEM_RECORD),
         ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
     ),
     "J_P": (

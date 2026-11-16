@@ -41,7 +41,8 @@ R4 (436.8 harness re-judgement, R4 common block e451f067):
         without the block is ``판정 불가``, a record-setting line without it "입력 없음".
   R16-7  ``--grid``: the J-P3 of every ``h9_grid/grid_*.json`` run (tag of ``results[i]``, rod
         reading by the configuration rule); a breach is the marker ``멈춤 H-7`` with the RD-7
-        violation list, never ``미달``.
+        violation list, never ``미달``. R4 supplement 2-2 (a9a15a13): J11 with RD-10 per grid
+        run too (its own ``lock_window_alignment``, setting VB).
   RD-7 / RD-9  the report's ``R4`` block lists, per bundle (H-9 lines + grid, H-10 lines), the
         J-P3 violations and J11 stops in the RD-7 3 notation, the RD-8 / RD-10 counts and the ③
         line / run count (0 = S-8 marker).
@@ -680,7 +681,7 @@ def grid_grade(paths: list[Path]) -> dict:
     """
     from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
 
-    files, rows, counts = [], [], Counter()
+    files, rows, j11_rows, counts = [], [], [], Counter()
     for path in sorted(paths, key=lambda p: Path(p).as_posix()):
         document = common.read_json(path)
         result_file, name = common.repo_relative(path), Path(path).name
@@ -689,11 +690,17 @@ def grid_grade(paths: list[Path]) -> dict:
         for entry in assessed_runs:
             key, setting = common.key_and_setting(name, entry["job"], "h9_grid")
             location = common.json_location("results", entry["index"], entry["run_index"])
-            rows += common.j_p3_list_rows(entry["j_p3"], bundle=GRID_BUNDLE,
-                                          result_file=result_file, location=location, key=key,
-                                          setting=setting)
+            place = {"bundle": GRID_BUNDLE, "result_file": result_file, "location": location,
+                     "key": key, "setting": setting}
+            rows += common.j_p3_list_rows(entry["j_p3"], **place)
             counts["rd8_not_judgeable"] += bool(entry["j_p3"]["rd8_problem"])
             counts["p3_runs"] += bool(is_extend_start_tag(entry["job"].get("controller_tag")))
+            # supplement 2-2: J11 and RD-10 per grid run (its own lock_window_alignment)
+            run = document["results"][entry["index"]]["runs"][entry["run_index"]]
+            j11 = common.assess_j11(run.get("lock_window_alignment"), setting)
+            j11_rows += common.j11_list_rows(j11, **place)
+            counts["j11_not_judgeable"] += j11["state"] == common.NOT_JUDGEABLE
+            counts["j11_no_input"] += j11["state"] == common.J11_NO_INPUT
         counts.update(statuses)
         files.append({"result_file": result_file, "runs": len(assessed_runs),
                       "j_p3_status": dict(statuses)})
@@ -702,16 +709,23 @@ def grid_grade(paths: list[Path]) -> dict:
         markers.append(common.STOP_H7)
     if counts[common.J_P3_SETTING_DEFECT]:
         markers.append("J-P3 setting_defect (revision 9 3.2: stop)")
-    grade = (common.NOT_JUDGEABLE if counts[common.NOT_JUDGEABLE] or counts[common.J_P3_S2]
-             else "markers" if markers else "통과")
+    for marker in sorted({row["marker"] for row in j11_rows}):
+        markers.append(f"J11 {common.STOP_H7 if marker == 'H-7' else marker}")
+    is_undecided = (counts[common.NOT_JUDGEABLE] or counts[common.J_P3_S2]
+                    or counts["j11_not_judgeable"])
+    grade = common.NOT_JUDGEABLE if is_undecided else "markers" if markers else "통과"
     return {"rule": "rev16 R16-7: R3-C8 / R4-A2 / R8-2 J-P3 per grid run (tag = results[i] "
-                    "controller_tag, rod reading = configuration rule, RD-8 form)",
+                    "controller_tag, rod reading = configuration rule, RD-8 form); supplement "
+                    "2-2: R16-6 J11 with RD-10 per grid run",
             "files": files, "runs": sum(f["runs"] for f in files),
             "p3_runs_RD9": counts["p3_runs"],
             "J-P3_not_judgeable_RD8": counts["rd8_not_judgeable"],
             "J-P3_not_judgeable_all": counts[common.NOT_JUDGEABLE],
             "J-P3_S2": counts[common.J_P3_S2],
             "J-P3_violations_RD7": sorted(rows, key=common.list_sort_key),
+            "J11_stops_RD7": sorted(j11_rows, key=common.list_sort_key),
+            "J11_RD10": {"not_judgeable": counts["j11_not_judgeable"],
+                         "no_input": counts["j11_no_input"]},
             "markers": markers, "grade": grade}
 
 
@@ -720,9 +734,10 @@ def r4_markers(bundle: str, block: dict, grid: dict | None = None) -> list[str]:
     markers = []
     if block["J-P3_violations_RD7"] or (grid and grid["J-P3_violations_RD7"]):
         markers.append(f"{bundle} J-P3: {common.STOP_H7}")
-    if any(row["marker"] == "H-7" for row in block["J11_stops_RD7"]):
+    j11_rows = block["J11_stops_RD7"] + (grid["J11_stops_RD7"] if grid else [])
+    if any(row["marker"] == "H-7" for row in j11_rows):
         markers.append(f"{bundle} J11: {common.STOP_H7}")
-    if any(row["marker"] == common.STOP_LE for row in block["J11_stops_RD7"]):
+    if any(row["marker"] == common.STOP_LE for row in j11_rows):
         markers.append(f"{bundle} J11: {common.STOP_LE}")
     p3 = block["p3_lines_RD9"] + (grid["p3_runs_RD9"] if grid else 0)
     if p3 == 0:
@@ -820,7 +835,7 @@ def judge(args: argparse.Namespace) -> dict:
     report["findings"] = findings_of(report)
     report["findings"] += [f"R4 marker: {marker}" for marker in report["R4"]["markers"]]
     if grid is not None and grid["grade"] == common.NOT_JUDGEABLE:
-        report["findings"].append("H-9 grid J-P3: 판정 불가 runs (R16-7)")
+        report["findings"].append("H-9 grid J-P3 / J11: 판정 불가 runs (R16-7, supplement 2-2)")
     for name, block in blocks.items():
         if block["J11_RD10"]["not_judgeable"]:
             report["findings"].append(f"{name}: {block['J11_RD10']['not_judgeable']} J11 "

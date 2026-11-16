@@ -220,10 +220,12 @@ def test_list_order_bundle_number_file_location_leg_k() -> None:
 
 
 # --------------------------------------------------------------------------- R16-7 grid grade
-def _grid(runs_reads, tag=TAG_P3, event="G4") -> dict:
+def _grid(runs_reads, tag=TAG_P3, event="G4", lwa=None) -> dict:
+    blocks = lwa if lwa is not None else [_lwa()] * len(runs_reads)
     runs = [{"event": event, "offset_s": float(i), "commands_sha256": "h",
              "hydraulics_record": {"extend_bound_check": _bound(reads)},
-             "resume_k1": {"applicable": True}} for i, reads in enumerate(runs_reads)]
+             "lock_window_alignment": block, "resume_k1": {"applicable": True}}
+            for i, (reads, block) in enumerate(zip(runs_reads, blocks, strict=True))]
     return {"meta": {"spec": judge.GRID_SPEC, "v5_setting": "VB"},
             "results": [{"key": "screen|top|0.0|level|FR", "v5_setting": "VB",
                          "controller_tag": tag, "runs": runs}]}
@@ -241,6 +243,18 @@ def test_grid_grade_marker_list_and_not_judgeable(tmp_path: Path) -> None:
     clean = stage1.grid_grade([_write_json(tmp_path / "h9_grid" / "grid_r69_top.json",
                                            _grid([[0, 0, 0, 0]]))])
     assert clean["grade"] == "통과" and clean["markers"] == []
+
+
+def test_grid_runs_get_j11_and_rd10(tmp_path: Path) -> None:
+    """Supplement 2-2: J11 per grid run (setting VB), RD-10 block missing = 판정 불가."""
+    path = _write_json(tmp_path / "h9_grid" / "grid_r67_top.json",
+                       _grid([[0] * 4, [0] * 4, [0] * 4],
+                             lwa=[_lwa(RL=2), None, _lwa()]))
+    out = stage1.grid_grade([path])
+    assert [(r["location"], r["leg"], r["marker"]) for r in out["J11_stops_RD7"]] == [
+        ("results[0].runs[0]", "RL", "H-7")]
+    assert out["J11_RD10"] == {"not_judgeable": 1, "no_input": 0}
+    assert "J11 멈춤 H-7" in out["markers"] and out["grade"] == common.NOT_JUDGEABLE
 
 
 def _stage1_line(case: str, setting: str, tag: str, reads, lwa, t4h: str | None) -> dict:
@@ -397,6 +411,54 @@ def test_r4_lists_end_to_end(tmp_path: Path) -> None:
     assert report["bundles"]["H-9"]["missing_files"]  # the other grid files and h9_stage1
 
 
+def _r79_line(key: str, setting: str, tag: str, reads, lwa) -> dict:
+    bound = None if reads is None else _bound(reads)
+    return {"key": key, "v5_setting": setting, "seed_index": 0, "harness": "g6", "inner": "x",
+            "controller_tag": tag, "head_only_declared": False,
+            "hydraulics_record": {"extend_bound_check": bound}, "extend_bound_check": bound,
+            "lock_window_alignment": lwa, "resume_k1": _resume_block()}
+
+
+def test_r4_lists_h8_leaves_out_the_dg3_keys_and_v0_records(tmp_path: Path) -> None:
+    """Supplement 2-1: dg3-replaced keys leave the H-8 VB lists; V0 J11 is a record."""
+    resume = tmp_path / judge.RESUME_K1_DIR
+    replaced, kept = "L3|s0|g6|1|ref|J1|top|Fs0", "L3|s1|g6|1|ref|J1|top|Fs0"
+    _write_json(tmp_path / judge.DG3_KEY_SOURCE, {"results": [{"key": f"cand=current#{replaced}"}]})
+    _write_json(resume / "h8_noise_VB.json", {"results": [
+        _r79_line(f"cand=current#{replaced}", "VB", TAG_P3, [0, 1, 0, 0], _lwa(RL=1)),
+        _r79_line(f"cand=current#{kept}", "VB", TAG_P3, [1, 0, 0, 0], _lwa(RL=1))]})
+    _write_json(resume / "h8_noise_V0.json", {"results": [
+        _r79_line(kept, "V0", TAG_V0, None, _lwa(RL=3))]})
+    table = _write_json(tmp_path / "family.json", {"rows": []})
+    _, report = _main(["r4-lists", "--root", str(tmp_path), "--family-table", str(table),
+                       "--bundles", "H-8"], tmp_path / "lists.json")
+    assert [(r["location"], r["leg"]) for r in report["lists"]["J-P3"]] == [("results[1]", "FL")]
+    assert [(r["result_file"].rsplit("/", 1)[-1], r["location"]) for r in report["lists"]["J11"]
+            ] == [("h8_noise_VB.json", "results[1]")]
+    excluded = report["bundles"]["H-8"]["dg3_replaced_excluded"]
+    assert list(excluded.values()) == [1] and report["dg3_key_source"]["keys"] == 1
+
+
+def test_r4_lists_grid_runs_are_in_the_j11_list(tmp_path: Path) -> None:
+    grid = tmp_path / judge.RESUME_K1_DIR / "h9_grid" / "grid_r69_bottom.json"
+    _write_json(grid, _grid([[0] * 4, [0] * 4], lwa=[_lwa(), _lwa(("FR",), FR=1)]))
+    table = _write_json(tmp_path / "family.json", {"rows": []})
+    _, report = _main(["r4-lists", "--root", str(tmp_path), "--family-table", str(table),
+                       "--bundles", "H-9"], tmp_path / "lists.json")
+    assert [(r["location"], r["leg"], r["setting"]) for r in report["lists"]["J11"]] == [
+        ("results[0].runs[1]", "FR", "VB")]
+
+
+@pytest.mark.parametrize("src, family", [
+    ("g6|G1+J1@FL|top|Fs0", "patch_or_sink"), ("slope|J1|top|4.0", "uniform"),
+    ("g6|rigid|top|Fs8", "rigid"), ("g6|rigid+S1@FR|top|Fs4", "patch_or_sink"),
+    ("drop_RR_30|top", None), ("", None),
+])
+def test_u6_src_ground_token_family(src, family) -> None:
+    """Supplement 2-7: the inner key is ``src``, not the case name."""
+    assert judge.u6_src_family({"case": "A1-J1", "src": src}) == family
+
+
 def test_r4_lists_patch_family_is_no_s6(tmp_path: Path) -> None:
     table = _build_root(tmp_path, family="패치·처방 침하")
     _, report = _main(["r4-lists", "--root", str(tmp_path), "--family-table", str(table),
@@ -521,8 +583,9 @@ def test_locked_samples_use_the_previous_period_command() -> None:
 
 
 # -------------------------------------------------------------- C-9 .. C-11 (R16-11 / R16-11b)
-def _identity_files(folder: Path, row_id: str, *, head=judge.R2_COMMIT, env=None) -> None:
-    pre = {"ok": True, "dry": False, "head": head, "tracked_status": [],
+def _identity_files(folder: Path, row_id: str, *, head=judge.R2_COMMIT, env=None,
+                    case: str = "c") -> None:
+    pre = {"ok": True, "dry": False, "head": head, "tracked_status": [], "case": case,
            "forbidden_env": {name: None for name in judge.FORBIDDEN_IDENTITY_ENV},
            "dll_sha256": judge.HULL_DLL_SHA256}
     post = {"ok": True, "head": head, "tracked_status": [], "reflog_new_since_pre": [],
@@ -551,12 +614,55 @@ def test_x16_identity_ok_and_its_stops(tmp_path: Path) -> None:
     assert bad["S-12"] and bad["S-4"]
 
 
-def test_run_exit_code_from_the_done_file(tmp_path: Path) -> None:
+def test_run_exit_code_from_the_first_line_of_the_only_done_mark(tmp_path: Path) -> None:
+    """Supplement 2-4: logs_*/<short>_run.done, first line only; 0 or 2+ marks or no exit= on
+    the first line = no rc (the row is 기록 불완전)."""
     (tmp_path / "logs_Y1").mkdir()
-    (tmp_path / "logs_Y1" / "C9on_run.done").write_text("2026 exit=0 wall_s=5\n",
+    (tmp_path / "logs_Y1" / "C9on_run.done").write_text("2026 exit=0 wall_s=5\nexit=3\n",
                                                         encoding="utf-8")
-    assert judge.run_exit_code(tmp_path, "Y1", "C9on") == 0
-    assert judge.run_exit_code(tmp_path, "Y1", "C9off") is None
+    assert judge.run_exit_code(tmp_path, "C9on") == (0, None)
+    assert judge.run_exit_code(tmp_path, "C9off")[0] is None
+    assert judge.run_exit_code(tmp_path, None)[0] is None
+    (tmp_path / "logs_X1").mkdir()
+    (tmp_path / "logs_X1" / "C9on_run.done").write_text("exit=0\n", encoding="utf-8")
+    rc, reason = judge.run_exit_code(tmp_path, "C9on")
+    assert rc is None and reason.startswith("2 ")
+    (tmp_path / "logs_X1" / "C11VB_run.done").write_text("started\nexit=0\n", encoding="utf-8")
+    assert judge.run_exit_code(tmp_path, "C11VB")[0] is None
+
+
+def test_short_names_come_from_the_pre_identity_case(tmp_path: Path) -> None:
+    _identity_files(tmp_path, "C9on", case="R4368X_G1_B_top_Fs4_V0_gateon")
+    _identity_files(tmp_path, "C11VB", case="R4368X_J2_B_top_Fs0_L2_VB")
+    assert judge.short_names_by_case(tmp_path) == {"R4368X_G1_B_top_Fs4_V0_gateon": "C9on",
+                                                    "R4368X_J2_B_top_Fs0_L2_VB": "C11VB"}
+
+
+def _p3(name, verdict=None, value=None) -> dict:
+    return {"item": name, "verdict": verdict, "value": value}
+
+
+def test_scm_p3_items_uses_the_path1_chrono_code_and_fails_soft(tmp_path: Path) -> None:
+    rows_judge, bundle = judge._chrono_modules()
+    assert callable(bundle.p3_items) and callable(rows_judge.judge_scm)
+    assert judge.scm_p3_items(tmp_path, {}) is None  # no result.json: 기록 불완전, no crash
+    assert judge.g6_gates(tmp_path, {}) is None
+
+
+def test_g6_from_p3_by_the_cd11_table() -> None:
+    items = [_p3("P3-1", "pass"), _p3("P3-2", "flag"), _p3("P3-3", "fail"), _p3("P3-4", "pass"),
+             _p3("P3-5", None, "해당 없음(rigid_base)"), _p3("P3-8", "flag")]
+    judged = {"ready_D-27_D-28": {"t_ready_rel_s": 70.0, "READY_le_120s": True},
+              "P3-8_D-34_D-35": {"fault": False}}
+    gates = judge.g6_from_p3(items, judged)
+    assert {name: gate["value"] for name, gate in gates.items()} == {
+        "G6-1": "pass", "G6-2": "flag", "G6-3": "fail", "G6-4": "pass",
+        "G6-5": "해당 없음(rigid_base)", "G6-7": "flag", "G6-6": "pass", "READY_le_120s": "pass"}
+    no_ready = judge.g6_from_p3(items, {"ready_D-27_D-28": {"t_ready_rel_s": None},
+                                        "P3-8_D-34_D-35": {"fault": False}})
+    assert no_ready["G6-6"]["value"] == "fail" and no_ready["READY_le_120s"]["value"] == "fail"
+    faulted = judge.g6_from_p3(items, {**judged, "P3-8_D-34_D-35": {"fault": True}})
+    assert faulted["G6-6"]["value"] == "fail"
 
 
 def test_p18_premise() -> None:
@@ -577,6 +683,14 @@ def test_c11_loc_period_crawler_maximum(tmp_path: Path) -> None:
     items = judge.c11_items(tmp_path, result)
     assert items["loc_period_crawler_max_N"] == 2000.0
     assert items["loc_period_ge_0p01W"] is True and items["loc_cancels"] == 0
+    assert "final_loc_period_crawler_max_N" not in items
+    # supplement 2-6: a cancelled LOC also records the final-LOC values
+    result["p3b"]["P3-2_loc"]["t_loc_final_s"] = 15.0
+    result["p3b"]["checks"]["loc_revokes"] = 1
+    items = judge.c11_items(tmp_path, result)
+    assert items["final_loc_differs"] is True
+    assert items["final_loc_period_crawler_max_N"] == 0.0
+    assert items["final_loc_period_ge_0p01W"] is False
 
 
 X16_IDS = {"R4368X_G1_B_top_Fs4_V0_gateon": "C9on", "R4368X_G1_B_top_Fs4_V0_gateoff": "C9off",
@@ -614,7 +728,8 @@ def _x16_row_folder(out: Path, case: str, bundle: str, mask: int, *, commands: b
 
 
 def test_x16_records_end_to_end(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setattr(judge, "g6_gates", lambda folder: {"G6-3_Fmin": "fail"})
+    monkeypatch.setattr(judge, "g6_gates",
+                        lambda folder, result: {"G6-3": {"P3": "P3-3", "value": "fail"}})
     out = tmp_path / "OUT"
     rows = []
     for case, (bundle, cell, mask) in judge.X16_ROWS.items():
@@ -624,7 +739,7 @@ def test_x16_records_end_to_end(tmp_path: Path, monkeypatch) -> None:
         rows.append({"id": row_id, "case": case, "cell": cell, "mask": f"0x{mask:08X}",
                      "argv": argv})
         _x16_row_folder(out, case, bundle, mask, commands=b"same")
-        _identity_files(out / "_identity", row_id)
+        _identity_files(out / "_identity", row_id, case=case)
         done = out / "_runners" / f"logs_{cell}" / f"{row_id}_run.done"
         done.parent.mkdir(parents=True, exist_ok=True)
         done.write_text("t exit=0 wall_s=1\n", encoding="utf-8")
@@ -641,6 +756,13 @@ def test_x16_records_end_to_end(tmp_path: Path, monkeypatch) -> None:
     (out / "C-11" / "R4368X_J2_B_top_Fs0_L2_VB" / "flow_series.npz").unlink()
     code, report = _main(["x16-records", "--out-root", str(out)], tmp_path / "x16.json")
     assert code == 1 and report["bundles"]["C-11"]["state"] == "기록 불완전"
+    # supplement 2-4: a second _run.done mark of a row leaves it 기록 불완전
+    extra = out / "_runners" / "logs_extra" / "C10FLV0_run.done"
+    extra.parent.mkdir(parents=True)
+    extra.write_text("t exit=0\n", encoding="utf-8")
+    _, report = _main(["x16-records", "--out-root", str(out)], tmp_path / "x16.json")
+    assert report["bundles"]["C-10"]["state"] == "기록 불완전"
+    assert any("rc:" in p for p in report["rows"]["R4368X_rigidS1FL_B_top_Fs4_V0"]["problems"])
 
 
 # ---------------------------------------------------------------------- RD-13 / RD-5 / RD-1
