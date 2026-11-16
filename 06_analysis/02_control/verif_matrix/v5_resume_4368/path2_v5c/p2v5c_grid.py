@@ -18,7 +18,7 @@ Rules (rule -> function):
   436.8 rev1 RV1-12 S-15 count (192 runs per file, 768)    -> ``cmd_grid``
 R4 (436.8 R4 common block sha256 e451f067..., supplement 2-2; 2-terra author, a new agent run without the earlier
 authors' context): every one of the 768 runs (``results[i].runs[j]``) is a row of RD-7. J-P3 = ``p2_v5j.jp3(run,
-is_p3, rod, tag=<run tag, else results[i] tag>)``; an RD-8 input-format defect or an RD-7 3 top-level mismatch is
+is_p3, rod, tag=<results[i] tag>)`` (user decision 129; no tag = not applicable + S-2); an RD-8 input-format defect or an RD-7 3 top-level mismatch is
 J-P3 undecidable (never a pass, ``common.jp3_apply``). J11 = ``p2_v5j.j11_item(run, setting=results[i].v5_setting,
 setting_required=True)`` (supplement 3-6: ``results[i].v5_setting`` only, missing = J11 undecidable; RD-10 block
 missing = undecidable on VB); the old ``lock_window_alignment.n_late_fallback`` stop is replaced by
@@ -31,6 +31,15 @@ plate by ``setting`` + tag = S-11 / S-2). Family F rows = the two keys' FS24 run
 ``grid_r67_top`` only, 12 (else S-15). Applied only when one of them has a two-gate-only pass -> fail: pass = those
 two-gate failures leave the v5 H-10 count, fail / undecidable = v5 stop H-10; else a record. Supplement 4-4: the
 four stored V0 grids (``<stem>.json``) and ``h9_family_F.jsonl`` must exist (``input_files_check``, S-15).
+R4 supplement 5 (user decision 129): row = one VB run, key (file name, ``results[i].key``, event, offset_s within
+1e-9 s); V0 pair = the stored V0 grid when all 8 sample hashes match, else ``h9_grid_v0/``; 0 or 2+ pairs, a V0-only
+run, a ``pass`` that is not a bool, ``gates`` not name -> bool, ``pass`` != conjunction of ``gates``, or
+``fault_events`` not a list = undecidable row. Row pass = the recorded ``pass`` (``gates_p2`` is a record only).
+Outputs: (a) raw pass -> fail list + N_raw, (b) family F table (pass, false gates, pass without the two family
+gates, application condition), (c) the list with family F rows re-judged on V0 and VB without the two gates
+(option B) + N_F, records (fail -> pass, fail -> fail, FAULT rows = non-empty ``fault_events``, undecidable rows).
+v5 H-10 grid term by the supplement 5-4 table (condition false: N_raw; true + R pass: N_F; true + R fail /
+undecidable: H-10). The grid run tag is ``results[i].controller_tag`` only (``job_tag``, plate check 4-3).
 """
 from __future__ import annotations
 
@@ -43,7 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_grid.py"
-TOOL_VERSION = "3"
+TOOL_VERSION = "4"
 STEMS = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
 RUNS_PER_FILE = 192
 FAST_EVENTS = {"RE1bF", "FS24"}
@@ -144,14 +153,11 @@ def runs_indexed(doc):
             yield i, j, r, run
 
 
-def run_tag_view(v5j, r, run):
-    """rev8 R8-1 ("top-level controller_tag", user decision 19): a grid run carries no tag; its job record
-    ``results[i]`` holds the run's controller tag. The run's own tag wins; the run is not changed (a shallow
-    copy gets ``controller_tag``). Neither = no tag (J-P3 not applicable + S-2 on a VB run, R8-2)."""
-    if v5j.tag_of(run) is not None:
-        return run
-    t = v5j.tag_of(r)
-    return run if t is None else {**run, "controller_tag": t}
+def job_tag(r):
+    """Supplement 4-3 / 5-1 (user decision 129): the tag of a grid run is only the top-level ``controller_tag`` of
+    the ``results[i]`` item that holds it (a run's own tag fields are not read); None if absent / not a string."""
+    t = r.get("controller_tag") if isinstance(r, dict) else None
+    return t if isinstance(t, str) and t else None
 
 
 def run_key(stem, r, run):
@@ -175,8 +181,10 @@ def sample_jobs(stored):
 
 
 def v0_pair(args, fnd):
-    """rev3 R3-E1: stored V0 grid is the pair only if the same-commit 8-job sample hashes all match;
-    otherwise the new V0 768 (resume_k1/h9_grid_v0/) is the pair."""
+    """rev3 R3-E1 / supplement 5-1: the stored V0 grid (same four names) is the pair only if the same-commit 8-job
+    sample hashes all match (then a given new V0 768 is not used); otherwise the new V0 768
+    (``resume_k1/h9_grid_v0/``) is the pair, and without it the grid is undecidable. The sample files are never
+    the pair."""
     stored = dict(x.split("=", 1) for x in (args.v0_stored or []))
     new = dict(x.split("=", 1) for x in (args.v0_new or []))
     rec = {"stored": stored, "new": new, "sample": None, "pair": None}
@@ -194,19 +202,19 @@ def v0_pair(args, fnd):
         rec["sample"] = {"jobs": len(cmp_), "same": sum(c["same"] for c in cmp_), "detail": cmp_}
         if len(cmp_) != 8:
             fnd.stop("S-15", "V0 sample", f"{len(cmp_)} sample jobs != 8")
+    if rec["sample"] is None:
+        fnd.undec("V0 pair", "R3-E1: V0 8-job sample (and stored V0) not given: the pair source is not decided")
+        return {}, rec
+    if rec["sample"]["same"] == 8 and rec["sample"]["jobs"] == 8:
+        rec["pair"] = "stored (sample hashes all equal, supplement 5-1)"
+        if new:
+            fnd.note("V0 pair", "sample hashes all equal: the stored V0 is the pair, the new V0 768 is not used")
+        return stored, rec
     if new:
-        rec["pair"] = "new"
+        rec["pair"] = "new (a sample hash differs, supplement 5-1)"
         if set(new) != set(STEMS):
             fnd.stop("S-15", "V0 new", f"stems {sorted(new)}")
-        if rec["sample"] and rec["sample"]["same"] == 8:
-            fnd.note("V0 pair", "sample hashes all equal but the new V0 768 was given: new V0 used (record)")
         return new, rec
-    if rec["sample"] is None:
-        fnd.undec("V0 pair", "R3-E1: V0 8-job sample (and stored V0) not given")
-        return {}, rec
-    if rec["sample"]["same"] == 8:
-        rec["pair"] = "stored (old V0 controller, sample hashes equal)"
-        return stored, rec
     fnd.undec("V0 pair", "R3-E1: sample hash differs -> V0 768 (resume_k1/h9_grid_v0/) required")
     return {}, rec
 
@@ -309,6 +317,36 @@ def family_f_rule(path, core, fnd, v5j):
     return out
 
 
+OFFSET_TOL_S = 1e-9          # supplement 5-1: offset_s equal when |a - b| <= 1e-9 s
+
+
+def row_state(run):
+    """Supplement 5-2: (pass, gates, why) of one grid run from its record. ``pass`` must be a bool and ``gates`` a
+    gate name -> bool dict whose conjunction equals ``pass``; otherwise (None, gates or None, reason) =
+    the row is undecidable (9.3)."""
+    p, g = run.get("pass"), run.get("gates")
+    if not isinstance(p, bool):
+        return None, None, "pass is not a bool"
+    if not isinstance(g, dict) or any(not isinstance(v, bool) for v in g.values()):
+        return None, None, "gates is not a gate name -> bool dict"
+    if p != all(g.values()):
+        return None, g, "pass differs from the conjunction of gates"
+    return p, g, None
+
+
+def false_gates(g):
+    return sorted(x for x, v in g.items() if v is False)
+
+
+def reduced_pass(g):
+    """Supplement 5-3 (b): the conjunction of the gates without Fmin_after_W and U57_outside."""
+    return all(v for x, v in g.items() if x not in FAMILY_F_GATES)
+
+
+def _row_sort(x):
+    return (x["file"], str(x["key"]), str(x["event"]), x["offset_s"] if isinstance(x["offset_s"], (int, float)) else 0.0)
+
+
 def cmd_grid(args, repo, v5j, core):
     is_p3, mod = core.load_is_extend_start(repo)
     fnd = core.Findings()
@@ -317,19 +355,22 @@ def cmd_grid(args, repo, v5j, core):
     v0_files, pair_rec = v0_pair(args, fnd)
     if set(vb_files) != set(STEMS):
         fnd.stop("S-15", "files", f"VB stems {sorted(vb_files)} != {list(STEMS)}")
-    v0_runs, v0_meta = {}, {}
+    # supplement 5-1: V0 pair index by (file name, results[i].key, event); offsets matched within 1e-9 s
+    v0_idx, v0_meta, v0_all = {}, {}, []
     for stem, path in v0_files.items():
         d = json.loads(Path(path).read_text("utf-8"))
         v0_meta[stem] = {"path": path, "sha256": cm.sha256_file(path),
                          "v5_setting": (d.get("meta") or {}).get("v5_setting"),
-                         "tags": sorted({str(v5j.tag_of(run_tag_view(v5j, r, run))) for r, run in runs_of(d)})}
-        for r, run in runs_of(d):
-            g = gates_p2(run, core)
-            v0_runs[run_key(stem, r, run)] = {"pass_p2": run_pass(g), "pass_rec": run.get("pass"),
-                                              "gates_p2": g}
+                         "tags": sorted({str(job_tag(r)) for r, _run in runs_of(d)})}
+        for i, j, r, run in runs_indexed(d):
+            ent = {"file": f"{stem}.json", "key": r.get("key"), "event": run.get("event"),
+                   "offset_s": _f_num(run.get("offset_s")), "run": run, "matched": 0}
+            v0_idx.setdefault((ent["file"], ent["key"], ent["event"]), []).append(ent)
+            v0_all.append(ent)
     out_files, rows = {}, []
-    trans_all, trans_nonF, fault_runs, gate_diff = [], [], [], []
-    fam_F = []
+    gate_diff, fault_rows, undec_rows = [], [], []
+    raw, nf, f_table = [], [], []
+    tally = {"pass_to_pass": 0, "fail_to_pass": 0, "fail_to_fail": 0}
     # rev11 R11-2 / rev12 R12-1: T4h search places of the VB grid files (input error = S-11, exit 2)
     places, perr = v5j.t4h_places(list(vb_files.values()), getattr(args, "t4h_root", None))
     if places is None:
@@ -351,48 +392,78 @@ def cmd_grid(args, repo, v5j, core):
             pos = f"results[{i}].runs[{j}]"                   # RD-7 3 position
             rkey = r.get("key") if isinstance(r.get("key"), str) else None             # RD-7 3: results[i].key
             rset = r.get("v5_setting") if isinstance(r.get("v5_setting"), str) else None   # results[i].v5_setting
-            g = gates_p2(run, core)
-            rec_g = run.get("gates") or {}
-            p = run_pass(g)
-            if p is None:
-                fnd.undec(k, f"gate field missing {[x for x, v in g.items() if v is None]}")
-            diff = sorted(x for x in g if x in rec_g and g[x] is not None and rec_g[x] != g[x])
-            if diff or (p is not None and run.get("pass") is not None and p != run.get("pass")):
-                gate_diff.append({"run": k, "gates": diff, "pass_p2": p, "pass_rec": run.get("pass")})
-            if g.get("fault0") is False:
-                fault_runs.append(k)
-                fnd.fail(k, "FAULT in a VB grid run (v5 10: FAULT 0)")
-            run_t = run_tag_view(v5j, r, run)   # rev8 R8-1: tag from the job record when the run has none
-            t = str(v5j.tag_of(run_t))
-            tags[t] = tags.get(t, 0) + 1
-            v0 = v0_runs.get(k)
-            row = {"run": k, "pass_p2": p, "v0_pass_p2": None if v0 is None else v0["pass_p2"]}
+            fname, off = f"{stem}.json", _f_num(run.get("offset_s"))
+            ident = {"file": fname, "key": r.get("key"), "event": run.get("event"), "offset_s": run.get("offset_s")}
+            # record only: the spec 342.3 gates recomputed from the raw fields vs the recorded gates
+            g_p2, rec_g = gates_p2(run, core), (run.get("gates") if isinstance(run.get("gates"), dict) else {})
+            diff = sorted(x for x in g_p2 if x in rec_g and g_p2[x] is not None and rec_g[x] != g_p2[x])
+            if diff:
+                gate_diff.append({**ident, "gates": diff})
+            # supplement 5-2: row pass = the recorded pass, checked against the conjunction of the recorded gates
+            p, g, why_p = row_state(run)
+            if why_p:
+                undec_rows.append({**ident, "side": "VB", "why": why_p})
+            fe = run.get("fault_events")
+            if not isinstance(fe, list):
+                undec_rows.append({**ident, "side": "VB", "why": "fault_events is not a list"})
+            elif fe:
+                fault_rows.append({**ident, "fault_events": fe})
+            # supplement 4-3 / 5-1 (user decision 129): the run tag = results[i].controller_tag only
+            tag = job_tag(r)
+            tags[str(tag)] = tags.get(str(tag), 0) + 1
+            cm.plate_check(fnd, k, None, tag, fixed_plate="VB", field="results[i].controller_tag")
+            # supplement 5-1: the V0 pair = exactly one V0 run with the same (file, key, event, offset_s)
+            cands = [e for e in v0_idx.get((fname, r.get("key"), run.get("event")), [])
+                     if off is not None and e["offset_s"] is not None and abs(e["offset_s"] - off) <= OFFSET_TOL_S]
+            for e in cands:
+                e["matched"] += 1
+            v0p = v0g = None
+            if v0_files and len(cands) != 1:
+                undec_rows.append({**ident, "side": "pair", "why": f"{len(cands)} V0 pair runs (exactly 1 needed)"})
+            elif cands:
+                v0p, v0g, why0 = row_state(cands[0]["run"])
+                if why0:
+                    undec_rows.append({**ident, "side": "V0", "why": why0})
             # family F rows (v5 revision 5 5.1, supplement 4-5): the two keys' FS24 runs of grid_r67_main / _top
             in_F = stem in F_STEMS and r.get("key") in FAMILY_F_KEYS and run.get("event") == FAMILY_F_EVENT
             n_F += in_F
-            if v0 is None:
-                if v0_files:
-                    fnd.undec(k, "no V0 run with the same key / event / offset")
-            elif v0["pass_p2"] is True and p is False:
-                failed = sorted(x for x, v in g.items() if v is False)
-                trans_all.append({"run": k, "failed_gates": failed})
-                v0f = sorted(x for x, v in v0["gates_p2"].items() if v is False)
-                if in_F and set(failed) <= FAMILY_F_GATES:
-                    fam_F.append({"run": k, "failed_gates": failed, "v0_failed": v0f})
-                else:
-                    trans_nonF.append({"run": k, "failed_gates": failed})
-                    fnd.fail(k, f"grid pass -> fail {failed}")
-            if in_F:
-                row["family_F"] = True
-            rows.append(row)
+            both = p is not None and v0p is not None
+            if both:
+                tally_key = {(True, True): "pass_to_pass", (False, True): "fail_to_pass",
+                             (False, False): "fail_to_fail"}.get((v0p, p))
+                if tally_key:
+                    tally[tally_key] += 1
+                else:   # supplement 5-2 / 5-3 (a): V0 pass, VB fail
+                    raw.append({**ident, "vb_false_gates": false_gates(g), "v0_false_gates": false_gates(v0g)})
+                    if not in_F:
+                        nf.append(raw[-1])
+            if in_F:   # supplement 5-3 (b) / (c), user decision 129 option B
+                fr = {**ident, "vb_pass": p, "v0_pass": v0p, "vb_false_gates": None, "v0_false_gates": None,
+                      "vb_pass_without_two": None, "v0_pass_without_two": None, "applicable": None}
+                if both:
+                    fr.update(vb_false_gates=false_gates(g), v0_false_gates=false_gates(v0g))
+                    if set(g) != set(v0g) or not FAMILY_F_GATES <= set(g):
+                        undec_rows.append({**ident, "side": "family F",
+                                           "why": "VB / V0 gate names differ or a family gate is missing"})
+                    else:
+                        fr.update(vb_pass_without_two=reduced_pass(g), v0_pass_without_two=reduced_pass(v0g))
+                        fr["applicable"] = (v0p is True and p is False and set(false_gates(g)) <= FAMILY_F_GATES)
+                        if fr["v0_pass_without_two"] and not fr["vb_pass_without_two"]:
+                            nf.append({**ident, "vb_false_gates": false_gates(g), "v0_false_gates": false_gates(v0g)})
+                f_table.append(fr)
+            rows.append({**ident, "pass": p, "v0_pass": v0p, "family_F": in_F})
             # J-P3 (configuration: two-pressure event path = rod reading, rev9 3.2 #4); rev12 R12-1: a
-            # recorded t4h_file is read first (found 0 or 2+ = S-2, J-P3 not judged)
-            # R4: jp3 gets the tag of the run view (run tag, else results[i] tag; supplement 2-2); RD-8 format
-            # defects and RD-7 3 top-level mismatches stay undecidable (cm.jp3_apply), never a pass.
-            tag = v5j.tag_of(run_t)
+            # recorded t4h_file is read first (found 0 or 2+ = S-2, J-P3 not judged). The tag is results[i]'s
+            # only (no tag = J-P3 not applicable + S-2); RD-8 format defects and RD-7 3 top-level mismatches stay
+            # undecidable (cm.jp3_apply), never a pass.
             rd.line("H-9", is_p3 is not None and isinstance(tag, str) and bool(is_p3(tag)))   # RD-9
             rod, ok = cm.jp3_rod_input(fnd, k, run, places[str(path)], v5j, True, t4h_log)
-            res, why = v5j.jp3(run, is_p3, rod, tag=tag) if ok else ("t4h_unresolved", "R12-1 S-2")
+            if not ok:
+                res, why = "t4h_unresolved", "R12-1 S-2"
+            elif tag is None:
+                res, why = "not_applicable_tag", None
+            else:
+                res, why = v5j.jp3(run, is_p3, rod, tag=tag)
             if ok:
                 rd.jp3_result("H-9", res, why)
                 cm.jp3_apply(fnd, k, res, why, "VB")   # rev8 R8-2: non-3 tag = not applicable + S-2
@@ -424,26 +495,52 @@ def cmd_grid(args, repo, v5j, core):
     # R-1..R-4 always computed (supplement 4-5); applied only when a family-F row has a two-gate-only transition
     fam_rule = (family_f_rule(args.family_f, core, fnd, v5j) if Path(args.family_f).is_file()
                 else {"input": [args.family_f, None], "result": "undecidable", "why": "file missing (4-4 S-15)"})
-    applicable = bool(fam_F)
+    # supplement 5-1: V0 runs without a VB row are listed as undecidable too
+    if v0_files:
+        for e in v0_all:
+            if e["matched"] == 0:
+                undec_rows.append({"file": e["file"], "key": e["key"], "event": e["event"],
+                                   "offset_s": e["run"].get("offset_s"), "side": "V0 only",
+                                   "why": "V0 run without a VB row"})
+    raw.sort(key=_row_sort)
+    nf.sort(key=_row_sort)
+    undec_rows.sort(key=_row_sort)
+    fault_rows.sort(key=_row_sort)
+    f_table.sort(key=_row_sort)
+    applicable = any(fr["applicable"] is True for fr in f_table)   # supplement 4-5 application condition
+    # supplement 5-4: the v5 H-10 grid term
     if not applicable:
+        term, term_n = "N_raw", len(raw)
         fam_rule["application"] = "record (no two-gate-only pass -> fail in the 12 family F rows)"
+        if raw:
+            fnd.stop("H-10", "grid", f"N_raw = {len(raw)} pass -> fail rows (supplement 5-4)")
     elif fam_rule["result"] == "pass":
-        fam_rule["application"] = (f"R-1..R-4 pass: the two-gate failures of {len(fam_F)} family F rows are taken "
-                                   "out of the v5 H-10 count (other gates stay per row)")
+        term, term_n = "N_F", len(nf)
+        fam_rule["application"] = "R-1..R-4 pass: the H-10 grid term is N_F (option B, supplement 5-3 (c))"
+        if nf:
+            fnd.stop("H-10", "grid", f"N_F = {len(nf)} pass -> fail rows after the family F exclusion (5-4)")
     else:
+        term, term_n = "none", None
         fam_rule["application"] = f"R-1..R-4 {fam_rule['result']}: v5 criteria stop H-10 (ask)"
-        fnd.stop("H-10", "family_F", f"rev5 5.2 R-1..R-4 {fam_rule['result']} with {len(fam_F)} family F transitions")
-    if trans_nonF:
-        fnd.stop("H-10", "grid", f"pass -> fail {len(trans_nonF)} (outside family F)")
+        fnd.stop("H-10", "family_F", f"rev5 5.2 R-1..R-4 {fam_rule['result']} with the application condition true")
+    if fault_rows:   # v5 10 grid row "FAULT 0" (supplement 5-4: written with the H-10 term)
+        fnd.fail("grid FAULT", f"{len(fault_rows)} VB rows with fault_events (v5 10: FAULT 0)")
+    for u in undec_rows:   # supplement 5-4: an undecidable row makes this grid item undecidable (ask)
+        fnd.undec(f"{u['file']}|{u['key']}|{u['event']}|{u['offset_s']}", f"{u['side']}: {u['why']}")
     body = {"inputs": {"vb": out_files, "v0": v0_meta, "supplement_4-4": inputs_44}, "v5_options": mod,
             "v0_pair": pair_rec,
             "R11-2_t4h": {"search_dirs": {k: [str(d) for d in v] for k, v in places.items()}, "lookup": t4h_log},
-            "grid": {"runs": len(rows), "pass_p2": sum(1 for x in rows if x["pass_p2"] is True),
-                     "fail_p2": sum(1 for x in rows if x["pass_p2"] is False),
-                     "pass_to_fail_all": trans_all, "pass_to_fail_outside_F": trans_nonF,
-                     "family_F": fam_F, "family_F_rows": n_F, "family_F_applicable": applicable,
+            "grid": {"runs": len(rows), "pass": sum(1 for x in rows if x["pass"] is True),
+                     "fail": sum(1 for x in rows if x["pass"] is False),
+                     # supplement 5-3: (a) raw list + N_raw, (b) family F table + application condition,
+                     # (c) list after the family F exclusion (option B) + N_F, records
+                     "a_pass_to_fail_raw": raw, "N_raw": len(raw),
+                     "b_family_F_table": f_table, "family_F_rows": n_F, "family_F_applicable": applicable,
+                     "c_pass_to_fail_family_F_excluded": nf, "N_F": len(nf),
+                     "h10_grid_term": {"uses": term, "value": term_n},
+                     "grid_records": {**tally, "fault_rows": fault_rows, "N_fault": len(fault_rows),
+                                 "undecidable_rows": undec_rows, "N_undecidable": len(undec_rows)},
                      "family_F_rule": fam_rule,
-                     "fault_runs": fault_runs,
                      "recorded_gate_differences": gate_diff, **fnd.as_dict()},
             "per_run": rows,
             # R4: RD-7 J-P3 / J11 rows of the grid part of H-9 (merged with the stage1 H-9 rows by ``stage1 merge``),

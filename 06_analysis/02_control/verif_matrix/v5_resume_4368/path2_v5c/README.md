@@ -8,7 +8,7 @@
     - 두 목록을 합친 것이 RD-2의 26판과 정확히 같아야 한다(`rd2_union`: 빠진 판, 다른 sha로 확인한 판이 없어야 함).
   - 어긋나거나 `.sha256`이 없으면 종료 2(S-1)다(rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3, rev11 R11-7, rev12 R12-6, R4 RD-2 봉인 확인).
 - 작성자: terramechanics-expert(경로 2, 사용자 결정 2026-11-13). 경로 1 도구를 만들거나 고친 적이 없다. 읽은 것은 아래 "독립성 공개"에 적었다.
-  - R4 판(2-terra 몫)은 앞 작성자의 맥락을 받지 않은 새 작성자(terramechanics-expert의 새 실행)가 R4 지시문(경로 2-terra)과 보충 1·2, 보충 2판(보충 3), 보충 3판(보충 4)만으로 고쳤다. 읽은 것은 "독립성 공개 — R4 작성자" 절.
+  - R4 판(2-terra 몫)은 앞 작성자의 맥락을 받지 않은 새 작성자(terramechanics-expert의 새 실행)가 R4 지시문(경로 2-terra)과 보충 1·2, 보충 2판(보충 3), 보충 3판(보충 4), 보충 4판(보충 5)만으로 고쳤다. 읽은 것은 "독립성 공개 — R4 작성자" 절.
 - 환경: `conda run -n dynamics-dev python -I -B <도구> ...`. 쓰는 것은 표준 라이브러리, numpy, scipy, 그리고 git(`log`·`rev-parse` 조회만)이다.
 - 공통 CLI:
   - 인자: `--repo`, `--out <JSON>`, `--p2-dir`, `--allow-import-sha`, `--expect-head <M4 40자리>`(필수, R4 RD-1 5: `git rev-parse HEAD`와 다르면 S-12, 판정 안 함).
@@ -31,15 +31,16 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 
 - 이 폴더의 rev7 판(c6a1b47)은 고정값 `dc631509…`였고, 이 브랜치에 dynamics-expert rev7 판(`69b563f`, `e033ca4b…`)이 병합된 뒤로는 맞지 않았다(`--allow-import-sha` 없이 실행하면 `P2-SHA` 멈춤). rev8 판에서 `bebed9f1…`로 맞췄다. 그 사이에 436.8 본 결과를 낸 적은 없다(R8-0).
 
-## 도구와 sha256 (R4 보충 4 판, 2026-11-16, 이 폴더 커밋 전 작업본 바이트 = blob, `-text`)
+## 도구와 sha256 (R4 보충 5 판, 2026-11-16, 이 폴더 커밋 전 작업본 바이트 = blob, `-text`)
 
-| 도구 | 묶음 | R4 보충 4 판 sha256 | 앞 판: 보충 3 판(`e268b26`) / R4 판(`41f99a4`) / rev12 + 사용자 결정 24·19 |
+| 도구 | 묶음 | R4 보충 5 판 sha256 | 앞 판: 보충 4 판(`8130954`) / 보충 3 판(`e268b26`) / R4 판(`41f99a4`) |
 |---|---|---|---|
-| `p2v5c_common.py` | 공통 | `6e46600e9f2a8bb1600330773486b2a16d82e95057216c3344efd5eadb127b44` | `8785db56…` / `c68f896f…` / `86e922f1…` |
-| `p2v5c_stage1.py stage1`·`merge` | H-10, H-9(main·pressure_only), RD 묶음 합치기 | `d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996` | `67f3eaf6…` / `2cd47c0f…` / `c50495d2…` |
-| `p2v5c_grid.py grid` | H-9(격자 768, 계열 𝓕 R-1~R-4) | `162f55b891c2dcabe75ec1377205187965b390c876e9fab7c785eadd6f2f640b` | `863cbe83…` / `aaa0a0b8…` / `762100a5…` |
-| `p2v5c_noise.py noise` | H-6, H-8 | `7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1`(보충 3 판과 같음) | `7fa4153f…` / `95528d1c…` / `11ee8d15…` |
-| `test_p2v5c.py` | 자체 시험 46개(R4 `TestR4` 12개, 계열 𝓕 꼴·판 시험 1개 추가, 고정 sha 시험 `TestImports.test_pinned_sha` 포함) | `1e2b7ce6f720dd4c3869c929c769ffc6bb65283ba75cec251d6e0ccd24637280` | `cdd4a48e…`(45) / `fd658c36…`(45) / `677f4ac3…`(33) |
+| `p2v5c_common.py` | 공통 | `c499e36f9780497ed62787117c34ee90578e029af3c9752b7ef9882f651d432f` | `6e46600e…` / `8785db56…` / `c68f896f…` |
+| `p2v5c_stage1.py stage1`·`merge` | H-10, H-9(main·pressure_only), RD 묶음 합치기 | `d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996`(보충 4 판과 같음) | `d49cf4e6…` / `67f3eaf6…` / `2cd47c0f…` |
+| `p2v5c_grid.py grid` | H-9(격자 768, 계열 𝓕 R-1~R-4, 보충 5 격자 항) | `874fc5fbcb3dd291fc723b7a80b8f25b83a7680812fc2b3048d215d00a05faa3` | `162f55b8…` / `863cbe83…` / `aaa0a0b8…` |
+| `p2v5c_noise.py noise` | H-6, H-8 | `7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1`(보충 3 판부터 같음) | `7fa4153f…` / `7fa4153f…` / `95528d1c…` |
+| `test_p2v5c.py` | 자체 시험 47개(보충 5 시험 1개 추가, 고정 sha 시험 `TestImports.test_pinned_sha` 포함) | `f1a026d29063b671a7aba5f65560dbe1ef04bbfe8afc5e28dbde11b6dffea2a1` | `1e2b7ce6…`(46) / `cdd4a48e…`(45) / `fd658c36…`(45) |
+- `path2/` 고정값은 바뀌지 않았다: `P2_V5J_SHA` `b815771d…`, `P2_CORE_SHA` `76d561cc…`(`8824499` blob과 같음, 이 판에서 다시 확인).
 
 - 실행 기록의 `common_sha256`과 세 도구의 `tool_sha256`으로 판을 가른다. 판정에는 R4 blob과 같은 도구만 쓴다(RD-1 2).
 
@@ -73,7 +74,7 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 | RD-10 | 묶음마다 J11 `undecidable`(멈춤 설정의 블록 결측·대체 다리 값 결측) 수와 `input_missing`(기록 설정의 블록 결측) 수 | `RdCounter.j11_result` |
 | RD-13 | 묶음 H-6·H-8·H-9·H-10의 항목 목록(항목, 근거 조항, 구분)과 sha256(정렬 키·`,`·`:` 구분 UTF-8 JSON). 넘겨받지 않은 앞 판 정의의 근거 조항은 이 폴더 코드 주석·README 인용에서 옮겼다 | `common.RD13_ITEMS`, `common.rd13_lists` |
 | 보충 2-1 | H-8 ③ 켬 줄(`h8_noise_VB.json`·`h8_seedext_VB.json`)이 J-P3·J11 목록 대상. V0 줄은 J-P3 해당 없음, J11 기록. dg3 대체 135키(키 원본 `v5/dg3/dg3_v4_on.json`, sha = rev1 부록 B `5f912ca0…`, 다르면 S-11)의 H-8 VB 줄은 H-8에서 판정하지 않고(J-P3·J9·m2_law·J11 모두) H-6 줄로 판정한다. 키 원본 키 집합 ≠ H-6 키 집합이면 S-15 | `noise.dg3_keys`, `noise.run_checks(skip=)` |
-| 보충 2-2 | 격자 768 run마다 J11 = `j11_item(run, setting=results[i].v5_setting, setting_required=True)`, J-P3 = `jp3(run, …, tag=<run 태그, 없으면 results[i] 태그>)` | `grid.cmd_grid`, `grid.runs_indexed` |
+| 보충 2-2 | 격자 768 run마다 J11 = `j11_item(run, setting=results[i].v5_setting, setting_required=True)`, J-P3 = `jp3(run, …, tag=<results[i].controller_tag>)`(사용자 결정 129로 run 자체 태그를 먼저 쓰던 앞 판 동작은 뺐다. 태그 없음 = J-P3 해당 없음 + S-2, 판 대조 S-11) | `grid.cmd_grid`, `grid.job_tag`, `grid.runs_indexed` |
 | 보충 3-1 | H-8 RD-9 수 = H-8 결과 파일의 ③ 켬 줄 전부(dg3 대체 줄 포함), S-8은 이 수로 판단. 목록에서 뺀 줄 수는 `R4.H-8_dg3_substituted`에 기록(앞 판 구현 그대로) | `noise.run_checks`, `noise.cmd_noise` |
 | 보충 3-2 | dg3 대체 키 제외는 `h8_noise_VB.json` 줄에만. seedext 줄은 키가 같아도 seedext 줄로 판정·기록(앞 판 구현 그대로; 저장 키 원본에서 dg3 ∩ seedext 키는 0) | `noise.cmd_noise` |
 | 보충 3-3(사용자 결정 126) | `min_gap_bar`·`first_breach_t_s`의 그 다리 원소를 계산 없이 옮긴다. 없음·수 아님·비유한 = `null`. 앞 판의 `min_gap_Pa` ÷ 10⁵ 대체 경로를 뺐다 | `common.jp3_rows` |
@@ -85,8 +86,31 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 | 보충 4-3 | 줄마다 판: `h10_reuse_rerun.jsonl`은 `job.setting`, `h9_family_F.jsonl`은 최상위 `setting`(VB·LS1~LS4 = ③ 켬, 그 밖 = ③ 없음). `h9_stage1.jsonl`은 파일 하나의 판(③ 없음). 판별 필드 없음(null·빈 값) = S-11, 태그 없음 = S-11, 판의 기대 태그(`final_C4G2_P3_LAS_K1` / `final_C4G2_LAS_K1`)와 다르면 S-2. `h10`·`h9_stage1` 판별 수는 `R4.supplement_4-3_plates`에 기록. ③ 켬 판별(RD-9, J-P3 목록)은 앞 판대로 태그로 한다 | `common.plate_check`, `stage1.cmd_stage1`, `grid.family_f_rule` |
 | 보충 4-4(이 폴더 몫) | V0 저장 격자 4개(`--v0-stored`, 파일 이름 `<stem>.json`, `*_off.json` 아님)와 `h9_family_F.jsonl`(`--family-f`, 필수)이 있어야 한다. 없거나 이름이 다르면 S-15. 하네스 입력 42개 확인은 `path2/` 몫 | `grid.input_files_check` |
 | 보충 4-5 | 계열 𝓕 R-1~R-4를 늘 낸다. 입력은 `h9_family_F.jsonl` 64줄(`key`, `setting`, `offset_s`, `event`, `gates`, `fault_events`, `final_phase`, `controller_tag`), 짝 단위 (key, offset_s). 꼴(64줄·FS24·2키 × 16위상 × V0·VB 한 줄씩) 아니면 S-15. k = `gates.Fmin_after_W` 또는 `gates.U57_outside` 거짓인 위상 수. R-1 k_VB ≤ k_V0 + 4(키마다), R-2 합 ≤ +6, R-3 VB `fault_events` = [] ∧ `final_phase` = ready, R-4 두 관문 밖 관문이 VB 거짓·같은 짝 V0 참인 수 = 0(관문 이름이 한쪽에만 있으면 그 줄 판정 불가). 필드 없음·형 다름 = 판정 불가(통과로 읽지 않음). 𝓕 행 = `grid_r67_main`·`grid_r67_top`의 두 키 FS24 run, 12행(아니면 S-15). 적용 조건 = 𝓕 행에 두 관문만의 통과→실패(V0 통과, VB 거짓 관문이 모두 두 관문 안). 참 ∧ 통과 = 그 두 관문 실패를 v5 H-10 셈에서 뺌, 참 ∧ 실패·판정 불가 = 멈춤 H-10(v5 기준), 거짓 = 기록. 다른 계열의 통과→실패는 앞 판대로 H-10 | `grid.family_f_rule`, `grid.cmd_grid` |
+| 보충 5(사용자 결정 129) | 격자 행·짝·통과·출력을 아래 "보충 5 대조" 표대로 고쳤다. 격자 run 태그는 `results[i].controller_tag`만 | `grid.row_state`, `grid.reduced_pass`, `grid.v0_pair`, `grid.job_tag`, `grid.cmd_grid` |
 | rev16:102~103 | 앞 판의 `lock_window_alignment.n_late_fallback` > 0 멈춤(stage1 V0 줄, grid, noise)을 뺐다. J11은 실제 대체 다리의 `n_late_fallback_by_leg`이고, V0~V8·L1·L2·pressure_only는 기록이다 | 같음 |
 | 묶음 합치기 | `p2v5c_stage1.py merge --part <noise> --part <stage1> --part <grid>`: 세 출력의 RD-7 목록을 묶음별로 합쳐 다시 정렬하고(H-9 = stage1 + grid), RD-8·RD-9·RD-10을 더하고, RD-13과 각 목록의 sha256을 한 파일에 낸다. 다시 판정하지 않는다. 출력마다 도구·공통 sha가 이 checkout 파일과 같고(아니면 S-11) HEAD가 `--expect-head`와 같아야 한다(아니면 S-12) | `stage1.cmd_merge` |
+
+### 보충 5 대조 (보충 4 판 `grid`가 계산하던 것 ↔ 보충 5-1~5-4, 규칙 문장만으로 대조)
+
+보충 5 sha256 `89cb422d…`(`r4_supplement_4_common.md` sha256 `7bd7cb17…`). "앞 판"은 보충 4 판(`8130954`) `grid`다.
+
+| 항목 | 보충 5 | 앞 판 | 이 판 |
+|---|---|---|---|
+| 행 | VB 격자 run 하나, 768 | 같음 | 같음 |
+| 행·짝 열쇠 | (파일 이름, `results[i].key`, `runs[j].event`, `runs[j].offset_s`), 위상은 \|a − b\| ≤ 10⁻⁹ s면 같음 | 문자열 열쇠 `<stem>\|<key>\|<event>\|<offset_s>`(위상은 글자 그대로 같아야 함) | 5-1대로(`OFFSET_TOL_S` = 1e-9, 파일 이름 `<stem>.json`) |
+| V0 짝 출처 | 표본 해시가 모두 같으면 저장 V0 격자, 하나라도 다르면 `h9_grid_v0/`, 표본 파일은 짝 아님 | `--v0-new`가 있으면 표본과 상관없이 새 V0, 없으면 표본 같을 때 저장 V0 | 5-1대로. 표본 8개 모두 같으면 저장 V0(새 V0가 주어져도 쓰지 않고 기록), 아니면 새 V0, 없으면 판정 불가 |
+| 짝 0개·2개 이상 | 그 행 판정 불가, V0에만 있는 열쇠도 판정 불가 목록 | 짝 0개만 판정 불가(사전이라 2개 이상은 드러나지 않음), V0에만 있는 열쇠는 보지 않음 | 5-1대로(`grid_records.undecidable_rows`의 `side` = `pair` / `V0 only`) |
+| 행 통과 | 기록 `pass`. `pass`가 bool이 아니거나 `gates`가 이름 → bool 사전이 아니거나 `pass` ≠ `gates` 논리곱이면 판정 불가 | 원시 필드로 관문을 다시 계산한 값(`gates_p2`)의 논리곱. 기록 `pass`·`gates`는 대조 기록뿐 | 5-2대로(`row_state`). `gates_p2` 재계산은 기록(`recorded_gate_differences`)으로만 남김 |
+| 통과→실패 | V0 짝 통과 참 ∧ VB 통과 거짓. 실패→통과·실패→실패·통과→통과는 기록 | 같은 뜻(통과 값만 위와 다름) | 5-2대로. 기록 수는 `grid_records` |
+| FAULT | VB 행 가운데 `fault_events`가 빈 목록 아님. 목록 아니면 판정 불가 | `gates_p2`의 `fault0` 거짓(`fault_periods` ≠ 0 또는 `fault_events` 있음) | 5-2대로 |
+| (가) 원 통과→실패 | 768행 목록, 한 줄 = (파일 이름, 키, 사건, 위상, VB 거짓 관문, V0 거짓 관문), 정렬 파일 → 키 → 사건 → 위상, N_raw | 문자열 열쇠와 VB 거짓 관문만, 정렬 없음 | `a_pass_to_fail_raw`, `N_raw` |
+| (나) 𝓕 행 표 | 𝓕 12행마다 열쇠, VB·V0 `pass`, 거짓 관문, 두 관문 뺀 통과(VB·V0), 적용 조건. 관문 이름 집합이 다르거나 두 관문이 없으면 판정 불가 | 없음(𝓕 통과→실패만 따로 모음) | `b_family_F_table`, `family_F_applicable` |
+| (다) 𝓕 제외 목록 | 𝓕 밖 = (가). 𝓕 행은 V0·VB 모두 두 관문 뺀 논리곱으로 다시 판정(B안), V0 참 ∧ VB 거짓만. N_F | 𝓕 행 가운데 VB 거짓 관문이 두 관문 안인 통과→실패를 뺀 목록(V0는 다시 판정하지 않음) | `c_pass_to_fail_family_F_excluded`, `N_F`(B안) |
+| 기록 | 실패→통과·실패→실패 수, FAULT 수와 행, 판정 불가 행 | FAULT 행, 기록 관문 차이 | `grid_records`(`pass_to_pass`, `fail_to_pass`, `fail_to_fail`, `fault_rows`, `N_fault`, `undecidable_rows`, `N_undecidable`) |
+| v5 H-10 격자 항(5-4) | 조건 거짓: N_raw ≥ 1이면 H-10. 참 ∧ R 통과: N_F ≥ 1이면 H-10. 참 ∧ R 실패·판정 불가: H-10 | 𝓕 밖 통과→실패가 있으면 H-10, 𝓕만이면 R 실패일 때 H-10(조건 거짓일 때 N_raw로 보지 않고 𝓕 밖 수로 봄) | 5-4 표대로. 쓴 수는 `h10_grid_term`(`N_raw` / `N_F` / `none`) |
+| FAULT ≥ 1 | v5 기준 10절 위반, H-10 격자 항과 함께 적음 | 미달(행마다) | 미달 한 건(`grid FAULT`)과 행 목록 |
+| 판정 불가 행 ≥ 1 | 이 항목 판정 불가, 멈추고 묻는다 | 행마다 판정 불가 | 행마다 판정 불가(묶음 등급 `판정 불가`) |
+| 격자 run 태그 | `results[i]`의 최상위 `controller_tag`만(사용자 결정 129) | run 자체 태그가 있으면 그것, 없으면 `results[i]` 태그 | 5-1대로(`job_tag`), 판 대조(보충 4-3) 없음 = S-11·다름 = S-2 |
 
 ### 읽기 공개 (블록·보충이 글자로 정하지 않아 이 작성자가 정한 곳)
 
@@ -98,6 +122,9 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 6. **noise VB 파일 줄의 `v5_setting` 없음**: J11 판정 불가. V0 파일 줄은 기록(`setting` 없으면 V0로 읽음).
 7. **V0 파일 줄의 ③ 태그**: J-P3를 판정하지 않고 S-2(줄 설정과 태그가 다름, 원판 4.1·8.2)로 멈춘다.
 8. **`bundle` 열 값**(보충 3-5로 확정): `H-6`·`H-8`·`H-9`·`H-10`(ASCII `H`, U+002D, 숫자), 정렬은 숫자 순.
+9. **보충 5 "파일 이름"**: (가)~(다)와 기록 행의 `file`은 격자 파일 이름 `grid_<…>.json`(`<stem>.json`)이다. VB와 V0 짝은 같은 이름끼리 맞춘다. `offset_s`는 기록 수를 그대로 적는다.
+10. **보충 5-4 FAULT·판정 불가의 등급 표기**: FAULT ≥ 1은 묶음 H-9 격자 등급 `미달`(발견 한 건 `grid FAULT`)로, 판정 불가 행은 행마다 판정 불가 발견으로 둔다. 따로 멈춤 코드를 만들지 않는다. "멈추고 묻는다"는 판정서가 이 등급·목록으로 한다.
+11. **보충 5-3 (나)의 적용 조건 행**: (나) 표의 `applicable`은 그 행의 VB·V0 `pass`가 모두 판정 가능하고 관문 이름 집합이 같을 때만 참·거짓을 적고, 아니면 `null`이다. 묶음의 적용 조건은 `applicable`이 참인 행이 하나라도 있으면 참이다.
 
 ### RD-5 키 대응표 초안 (K-10 대조에서 빼는 키, 결과 보기 전 확정)
 
@@ -114,15 +141,16 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 
 - 대조하는 것: 묶음 등급(`grades_436_8`), `stop_codes`, RD-7 목록(줄 식별 = 묶음·파일·위치·다리, 값 열은 같은 줄에서 함께), `markers`, RD-8·RD-9·RD-10 수, 그 밖 수·참거짓.
 
-### RD-13 항목 목록 sha256 (이 판 `common` `6e46600e…`)
+### RD-13 항목 목록 sha256 (이 판 `common` `c499e36f…`)
 
-| 묶음 | 항목 수 | sha256 | 앞 판: 보충 3 판(`e268b26`) / R4 판(`41f99a4`) |
+| 묶음 | 항목 수 | sha256 | 앞 판: 보충 4 판(`8130954`) / 보충 3 판(`e268b26`) / R4 판(`41f99a4`) |
 |---|---|---|---|
-| H-6 | 18 | `11a421a528c253c62bc1f03e32609348bb4027fbf362cd7d65ac306621329ee4`(보충 3 판과 같음) | `11a421a5…` / `6f927367…` |
-| H-8 | 21 | `a7f1e82f50cdef5252b7e22a076ad2b61470db0cefef31c91211c20b19ca0839`(보충 3 판과 같음) | `a7f1e82f…` / `396b534a…` |
-| H-9 | 30 | `648a64b896616a936984dd5e4ecfbabf479bfa615d4a23501ad3bea16aa816e7` | `71f541d4…`(26) / `d05543ac…`(25) |
-| H-10 | 23 | `35d2ca0106f7d2ecdd2e8f8f43053857d906514fff628127ee6382783829a47b` | `fd46e7ff…`(22) / `8b52d2c8…` |
+| H-6 | 18 | `11a421a528c253c62bc1f03e32609348bb4027fbf362cd7d65ac306621329ee4`(보충 3 판부터 같음) | 같음 / 같음 / `6f927367…` |
+| H-8 | 21 | `a7f1e82f50cdef5252b7e22a076ad2b61470db0cefef31c91211c20b19ca0839`(보충 3 판부터 같음) | 같음 / 같음 / `396b534a…` |
+| H-9 | 33 | `55ac9287e0101d5aaa6ca1d7aa2ab98f8a943c253c3f13cdc60f429a7c81c3aa` | `648a64b8…`(30) / `71f541d4…`(26) / `d05543ac…`(25) |
+| H-10 | 23 | `35d2ca0106f7d2ecdd2e8f8f43053857d906514fff628127ee6382783829a47b`(보충 4 판과 같음) | 같음 / `fd46e7ff…`(22) / `8b52d2c8…` |
 
+- 보충 5 판에서 바뀐 것(H-9만, 30 → 33): "격자 run 관문 342.3"을 "격자 행 통과 = 기록 pass(gates 대조), (가)·N_raw"(관문)로, "격자 FAULT 0"을 "fault_events 빈 목록"으로, "격자 V0 짝"에 열쇠·정확히 1개와 보충 5-1을, 격자 run 태그 항목을 "`results[i].controller_tag`만(사용자 결정 129)"으로 고쳤다. "계열 𝓕 적용"을 "v5 H-10 격자 항(5-4 표, (다) B안)"으로 고쳤다. "격자 판정 불가 행", "격자 기록", "계열 𝓕 행 표 (나)"를 더했다.
 - 보충 4 판에서 바뀐 것
   - H-9: 계열 𝓕 항목을 "R-1~R-4 늘 냄(기록)"과 "적용(관문, 멈춤 H-10)" 둘로 나누고 근거에 "보충 4-5"를 더했다. "계열 𝓕 판정 입력 꼴·판 판별·태그 대조", "h9_stage1 판·태그 대조", "입력 파일 있음(V0 저장 격자 4·h9_family_F.jsonl)"을 더했다(26 → 30).
   - H-10: "줄마다 판 판별(job.setting)·태그 대조, 판별 수 기록"(보충 4-2·4-3)을 더했다(22 → 23).
@@ -371,7 +399,7 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
 ## 독립성 공개 — R4 작성자 (2-terra 몫, 2026-11-16)
 
 - 작성자: terramechanics-expert의 새 실행. 앞 작성자의 맥락(대화·메모)을 받지 않았다. 경로 1 도구를 만들거나 고친 적이 없다.
-- 지시문(전부 읽음): `r4_handoff_path2_terra.md`(sha256 `bafbdd52…`, 1~1,243행 전부; R4 공통 블록 sha256 `e451f067…`를 표지 사이 바이트로 다시 계산해 같음 확인), `r4_supplement_1_path2.md`(sha256 `f3651bf5…`, 1~130행 전부; 보충 1 `8736f68d…`·보충 2 `a9a15a13…` 다시 계산해 같음), `r4_supplement_2_common.md`(sha256 `62721996…`, 1~69행 전부; 보충 3 구간 `5360becf…` 다시 계산해 같음), `r4_supplement_3_common.md`(sha256 `92b62dcc…`, 1~107행 전부; 보충 4 구간 `de45d301…` 다시 계산해 같음).
+- 지시문(전부 읽음): `r4_handoff_path2_terra.md`(sha256 `bafbdd52…`, 1~1,243행 전부; R4 공통 블록 sha256 `e451f067…`를 표지 사이 바이트로 다시 계산해 같음 확인), `r4_supplement_1_path2.md`(sha256 `f3651bf5…`, 1~130행 전부; 보충 1 `8736f68d…`·보충 2 `a9a15a13…` 다시 계산해 같음), `r4_supplement_2_common.md`(sha256 `62721996…`, 1~69행 전부; 보충 3 구간 `5360becf…` 다시 계산해 같음), `r4_supplement_3_common.md`(sha256 `92b62dcc…`, 1~107행 전부; 보충 4 구간 `de45d301…` 다시 계산해 같음), `r4_supplement_4_common.md`(sha256 `7bd7cb17…`, 1~51행 전부; 보충 5 구간 `89cb422d…` 다시 계산해 같음). 보충 5 대조는 이 폴더 `grid` 코드와 보충 5 문장만으로 했다(규칙 원문 절을 새로 열지 않음).
 - 같은 경로 2(`path2/`, 읽기만, import·sha 확인 대상): `p2_v5j.py` 1~589행; `p2_4368.py` 40~239·290~599·805~953·1,269~1,283행과 grep 결과 줄(54~55, 105~107, 147, 231, 298, 320, 363, 382, 465, 502, 571, 813, 869, 884, 2,886~2,955행의 검색 줄만; RD-9 셈 확인 grep 857~866·1,034~1,041·1,091~1,116·1,238~1,244행). 보충 3 반영 때(`2aa0a40` 판) `p2_4368.py` `bundle_key` 1,271~1,276행과 `p2_v5j.py` `j11_item` 319~342행(grep 결과)만 더 읽었다. 보충 4 반영 때는 `path2/`를 더 열지 않았다(`git diff --stat 2aa0a40 8824499`의 파일 목록과 두 파일 sha만 봄). 시험 `path2/` 전체는 실행만 했다.
 - 자기 폴더 `path2_v5c/`: 여섯 파일 전부.
 - `03_src`(기록 키의 뜻): `outrigger_sim/control/extend_start_bound.py` 20~49·480~639행과 723~724행; `03_src` 전체 grep(`breach_reads`·`extend_bound_check`, `_bar_or_none`·`BAR_PA`)의 결과 줄과 앞뒤 5행(`verify/s6_control.py` 2,989~2,994·3,085~3,090행, `control/two_pressure.py` 130~135행, `sensors/pressure_error.py` 35~40행, `chrono/l2b_actuator.py` 513·630~631·660~662행).

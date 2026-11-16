@@ -26,7 +26,7 @@ def fast_run(**kw):
          "adj_lift_sum_W_s": 0.0, "adj_max_gap_W_mm": 0.0, "adj_lift_outside_W_s": 0.0,
          "min_F_after_W_kN": {"FL": 20.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}, "fault_periods": 0,
          "fault_events": [], "final_phase": "ready", "att_end_deg": [0.01, -0.02], "twist": {"n_bundles": 0},
-         "pass": True, "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"},
+         "pass": True, "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"}, "commands_sha256": "h",
          "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0],
                                "extend_bound_check": {"breach_reads": [0, 0, 0, 0]}},
          "hydraulic_options": {"m2_law": "flow_limited_r5"},
@@ -94,8 +94,11 @@ def write_grid(folder, setting, mutate=None, n=192):
                 run = fast_run(offset_s=off, event=ev)
                 if ev == "G4":
                     run.update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
+                    run["gates"] = gr.gates_p2(run, CORE)
+                run["pass"] = all(run["gates"].values())          # supplement 5-2: pass = conjunction of gates
                 runs.append(run)
-            results.append({"key": key, "v5_setting": setting, "runs": runs})   # supplement 3-6: results[i] setting
+            results.append({"key": key, "v5_setting": setting, "runs": runs,   # supplement 3-6: results[i] setting
+                            "controller_tag": "final_C4G2_P3_LAS_K1" if setting == "VB" else "final_C4G2_LAS_K1"})
         if mutate:
             mutate(stem, results)
         p = Path(folder) / setting / f"{stem}.json"
@@ -120,6 +123,13 @@ def ff_lines(vb_bad=0, v0_bad=0):
     return out
 
 
+def fail_gate(run, *names):
+    """Set recorded gates false and the recorded pass to their conjunction (supplement 5-2 rows)."""
+    for n in names:
+        run["gates"][n] = False
+    run["pass"] = all(run["gates"].values())
+
+
 def write_ff(folder, lines, name="h9_family_F.jsonl"):
     p = Path(folder) / "ff" / name
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -137,13 +147,15 @@ REPO = cm.REPO_DEFAULT
 
 class TestGridCmd(unittest.TestCase):
     def run_grid(self, mut_vb=None, mut_v0=None, n=192, family_f=None, ff_name="h9_family_F.jsonl", stored=True):
+        """VB grid + stored V0 grid (the pair: the same-commit sample has equal hashes, supplement 5-1)."""
         with tempfile.TemporaryDirectory() as td:
             vb = write_grid(td, "VB", mut_vb, n)
-            v0 = write_grid(td, "V0", mut_v0, n)
-            st = write_grid(td, "stored", None, n) if stored else {}
+            st = write_grid(td, "stored", mut_v0, n) if stored else {}
+            sm = write_grid(td, "sample", mut_v0, n) if stored else {}
             ff = write_ff(td, ff_lines() if family_f is None else family_f, ff_name)
-            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_new=[f"{k}={v}" for k, v in v0.items()],
-                     v0_stored=[f"{k}={v}" for k, v in st.items()], v0_sample=None, family_f=ff)
+            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_new=None,
+                     v0_stored=[f"{k}={v}" for k, v in st.items()], v0_sample=[f"{k}={v}" for k, v in sm.items()],
+                     family_f=ff)
             return gr.cmd_grid(a, REPO, V5J, CORE)
 
     def test_v0_sample(self):
@@ -176,11 +188,13 @@ class TestGridCmd(unittest.TestCase):
         undecidable = v5 H-10) only with a two-gate-only transition in the 12 family F rows; else a record."""
         def m(stem, res):
             if stem == "grid_r67_top":
-                res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+                fail_gate(res[0]["runs"][0], "Fmin_after_W")
         body, st = self.run_grid(mut_vb=m, family_f=ff_lines(4, 1))   # 4 <= 1 + 4, sum 8 <= 2 + 6
         fr = body["grid"]["family_F_rule"]
         self.assertEqual((fr["result"], fr["k"]["screen|top|0.0|ready|FL|VB"], body["grid"]["family_F_rows"]),
                          ("pass", 4, 12))
+        self.assertEqual((body["grid"]["N_raw"], body["grid"]["N_F"], body["grid"]["h10_grid_term"]["uses"]),
+                         (1, 0, "N_F"))
         self.assertEqual(st, "pass")
         body, st = self.run_grid(mut_vb=m, family_f=ff_lines(6, 1))   # 6 > 5
         self.assertEqual(body["grid"]["family_F_rule"]["result"], "fail")
@@ -220,20 +234,23 @@ class TestGridCmd(unittest.TestCase):
     def test_transition_outside_family(self):
         def m(stem, res):
             if stem == "grid_r67_main":
-                res[1]["runs"][0]["pair_union_s"] = 2.5
+                fail_gate(res[2]["runs"][0], "U832_pair_union")
         body, st = self.run_grid(mut_vb=m)
         self.assertEqual(st, "stop")
         self.assertIn("H-10", body["stop_codes"])
-        self.assertEqual(len(body["grid"]["pass_to_fail_outside_F"]), 1)
+        a = body["grid"]["a_pass_to_fail_raw"]
+        self.assertEqual((body["grid"]["N_raw"], body["grid"]["h10_grid_term"]["uses"]), (1, "N_raw"))
+        self.assertEqual((a[0]["file"], a[0]["event"], a[0]["vb_false_gates"], a[0]["v0_false_gates"]),
+                         ("grid_r67_main.json", "FS24", ["U832_pair_union"], []))
 
     def test_family_F_only(self):
         """Supplement 4-4: the family file and the four stored V0 grids must exist with their names (S-15)."""
         def m(stem, res):
             if stem == "grid_r67_top":
-                res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+                fail_gate(res[0]["runs"][0], "Fmin_after_W")
         body, st = self.run_grid(mut_vb=m)
         self.assertEqual(st, "pass")                                   # default family file passes R-1..R-4
-        self.assertEqual(len(body["grid"]["family_F"]), 1)
+        self.assertTrue(body["grid"]["family_F_applicable"])
         body, st = self.run_grid(ff_name="h9_family_F_copy.jsonl")
         self.assertEqual(body["stop_codes"], ["S-15"])
         body, st = self.run_grid(stored=False)
@@ -243,10 +260,12 @@ class TestGridCmd(unittest.TestCase):
             gr.build_parser().parse_args(["--expect-head", "x", "grid", "--vb", "a=b"])   # --family-f required
 
     def test_fault_and_count(self):
-        def m(stem, res):
-            res[2]["runs"][2]["fault_periods"] = 3
+        def m(stem, res):   # supplement 5-2: FAULT = non-empty fault_events (both sides fail: no transition)
+            res[2]["runs"][2]["fault_events"] = ["FAULT_X"]
+            fail_gate(res[2]["runs"][2], "fault0")
         body, st = self.run_grid(mut_vb=m, mut_v0=m)
         self.assertEqual(st, "fail")
+        self.assertEqual((body["grid"]["grid_records"]["N_fault"], body["grid"]["grid_records"]["fail_to_fail"]), (4, 4))
         body, st = self.run_grid(n=186)
         self.assertIn("S-15", body["stop_codes"])
 
@@ -260,34 +279,71 @@ class TestGridCmd(unittest.TestCase):
         """rev8 R8-2: a VB grid run with a non-3 tag -> S-2, J-P3 not counted as undecidable."""
         def m(stem, res):
             if stem == "grid_r67_main":
-                res[0]["runs"][0]["resume_k1"] = {"controller_tag": "final_C4G2_LAS_K1"}
+                res[3]["controller_tag"] = "final_C4G2_LAS_K1"                 # results[i] tag, not 3 on
         body, st = self.run_grid(mut_vb=m)
         self.assertEqual(st, "stop")
         self.assertIn("S-2", body["stop_codes"])
         self.assertFalse(any("J-P3" in u["why"] for u in body["grid"]["undecidable"]))
 
     def test_r81_grid_tag_from_job(self):
-        """rev8 R8-1 (user decision 19): a grid run without a tag reads the tag of its job record results[i];
-        the run tag wins; neither -> J-P3 not applicable + S-2 (R8-2)."""
-        def m(stem, res):
-            for r in res:
-                r["controller_tag"] = "final_C4G2_P3_LAS_K1"
-                for run in r["runs"]:
-                    run.pop("resume_k1", None)
-        body, st = self.run_grid(mut_vb=m)
+        """Supplement 4-3 / 5-1 (user decision 129): the grid run tag is only results[i].controller_tag; a run's own
+        tag fields are not read. Missing = S-11 (plate check) + J-P3 not applicable S-2; other tag = S-2."""
+        body, st = self.run_grid()
         self.assertNotIn("S-2", body["stop_codes"])
         self.assertEqual(body["inputs"]["vb"]["grid_r67_main"]["tags"], {"final_C4G2_P3_LAS_K1": 192})
 
         def m2(stem, res):
-            m(stem, res)
             if stem == "grid_r67_main":
-                res[0]["runs"][0]["controller_tag"] = "final_C4G2_LAS_K1"   # run tag wins (not 3)
-                res[1]["runs"][0]["controller_tag"] = "final_C4G2_P3_LAS_K1"
-                res[1].pop("controller_tag")
-                res[2].pop("controller_tag")                                # neither for res[2] runs
+                res[0]["runs"][0]["controller_tag"] = "final_C4G2_LAS_K1"     # run's own tag: not read
+                res[1]["controller_tag"] = "final_C4G2_LAS_K1"                # results[i] tag, 3 none: 6 runs
+                res[2].pop("controller_tag")                                   # no results[i] tag: 6 runs
+                for run in res[2]["runs"]:
+                    run["controller_tag"] = "final_C4G2_P3_LAS_K1"            # run tags present, not read
         body, st = self.run_grid(mut_vb=m2)
-        s2 = [s for s in body["grid"]["stops"] if s["code"] == "S-2"]
-        self.assertEqual(len(s2), 1 + 5 + 6)   # res[0] run 0; res[1] runs 1..5; res[2] all six
+        codes = [s["code"] for s in body["grid"]["stops"]]
+        self.assertEqual((codes.count("S-2"), codes.count("S-11")), (6 + 6 + 6, 6))   # plate S-2 + R8-2 S-2 per run
+        self.assertEqual(body["inputs"]["vb"]["grid_r67_main"]["tags"],
+                         {"final_C4G2_P3_LAS_K1": 180, "final_C4G2_LAS_K1": 6, "None": 6})
+        self.assertEqual(body["R4"]["RD-9"]["H-9"]["p3_on"], 768 - 12)
+
+    def test_supplement5_rows_pairs_option_b(self):
+        """Supplement 5: pairing (exactly one V0 run, V0-only listed), pass vs gates, (a) / (b) / (c) option B."""
+        def vb(stem, res):
+            if stem == "grid_r67_main":
+                fail_gate(res[0]["runs"][0], "Fmin_after_W")                 # F row: two-gate-only (applicable)
+                fail_gate(res[1]["runs"][1], "U57_sum")                      # F row: VB fails another gate
+        def v0(stem, res):
+            if stem == "grid_r67_main":
+                fail_gate(res[1]["runs"][1], "Fmin_after_W")                 # ... where V0 fails a family gate
+        body, st = self.run_grid(mut_vb=vb, mut_v0=v0)
+        g = body["grid"]
+        self.assertEqual((g["N_raw"], g["N_F"], g["family_F_applicable"], g["h10_grid_term"]),
+                         (1, 1, True, {"uses": "N_F", "value": 1}))
+        self.assertEqual(g["c_pass_to_fail_family_F_excluded"][0]["vb_false_gates"], ["U57_sum"])
+        self.assertEqual(g["grid_records"]["fail_to_fail"], 1)
+        fb = [r for r in g["b_family_F_table"] if r["file"] == "grid_r67_main.json" and r["offset_s"] == 0.05
+              and r["key"].endswith("FL")][0]
+        self.assertEqual((fb["v0_pass"], fb["vb_pass"], fb["v0_pass_without_two"], fb["vb_pass_without_two"]),
+                         (False, False, True, False))
+        self.assertIn("H-10", body["stop_codes"])
+
+        def dup(stem, res):   # a second V0 run with the same key / event / offset (within 1e-9 s) -> 2 and 0 pairs
+            if stem == "grid_r69_top":
+                res[5]["runs"][1] = dict(res[5]["runs"][0], offset_s=res[5]["runs"][0]["offset_s"] + 5e-10)
+                res[6]["runs"].append(dict(res[6]["runs"][0], offset_s=0.07))   # a V0-only run
+        body, st = self.run_grid(mut_v0=dup)
+        whys = [u["why"] for u in body["grid"]["grid_records"]["undecidable_rows"]]
+        self.assertEqual(sorted(whys), sorted(["2 V0 pair runs (exactly 1 needed)", "0 V0 pair runs (exactly 1 needed)",
+                                               "V0 run without a VB row"]))
+        self.assertEqual(st, "undecidable")
+
+        def bad(stem, res):
+            if stem == "grid_r69_bottom":
+                res[4]["runs"][3]["pass"] = False                             # pass != conjunction of gates
+        body, st = self.run_grid(mut_vb=bad)
+        self.assertEqual(body["grid"]["grid_records"]["undecidable_rows"][0]["why"],
+                         "pass differs from the conjunction of gates")
+        self.assertEqual(st, "undecidable")
 
     def test_r121_grid_t4h(self):
         """rev12 R12-1: a VB grid run that recorded t4h_file with no T4h folder -> S-2 (J-P3 not judged)."""
