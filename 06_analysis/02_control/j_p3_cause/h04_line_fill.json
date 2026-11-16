@@ -1,0 +1,98 @@
+{
+ "runs": [
+  {
+   "overlap_ratio": 0.0,
+   "u_ol_mm_s": 0.0,
+   "first_open_s": {
+    "volume_A_at_49.0_cm3": 0.053446296819966675,
+    "p_A_at_49.0_bar": 2.9376543301748548,
+    "ext_rod_check": 49.067,
+    "ext_head_check": 49.098
+   },
+   "line_volume_cm3": {
+    "A": 9.220974275678147,
+    "B": 0.0003044636321725296
+   },
+   "p_A_end_bar": 163.7714785206694,
+   "p_B_end_bar": 2.0053414672310947,
+   "vol_to_open_rod_check_ext_cm3": 0.8059799999999999
+  },
+  {
+   "overlap_ratio": 0.01,
+   "u_ol_mm_s": 0.20924,
+   "first_open_s": {
+    "volume_A_at_49.0_cm3": 0.0,
+    "p_A_at_49.0_bar": 2.0,
+    "ext_rod_check": 49.0696,
+    "ext_head_check": 49.1001
+   },
+   "line_volume_cm3": {
+    "A": 9.163382706430813,
+    "B": 0.0
+   },
+   "p_A_end_bar": 162.76110011282148,
+   "p_B_end_bar": 2.0,
+   "vol_to_open_rod_check_ext_cm3": 0.8059799999999999
+  },
+  {
+   "overlap_ratio": 0.02,
+   "u_ol_mm_s": 0.41848,
+   "first_open_s": {
+    "volume_A_at_49.0_cm3": 0.0,
+    "p_A_at_49.0_bar": 2.0,
+    "ext_rod_check": 49.0702,
+    "ext_head_check": 49.1006
+   },
+   "line_volume_cm3": {
+    "A": 9.149001216891845,
+    "B": 0.0
+   },
+   "p_A_end_bar": 162.50879327880455,
+   "p_B_end_bar": 2.0,
+   "vol_to_open_rod_check_ext_cm3": 0.8059799999999999
+  },
+  {
+   "overlap_ratio": 0.05,
+   "u_ol_mm_s": 1.0462000000000002,
+   "first_open_s": {
+    "volume_A_at_49.0_cm3": 0.0,
+    "p_A_at_49.0_bar": 2.0,
+    "ext_rod_check": 49.075,
+    "ext_head_check": 49.1045
+   },
+   "line_volume_cm3": {
+    "A": 9.037691783674454,
+    "B": 0.0
+   },
+   "p_A_end_bar": 160.55599620481527,
+   "p_B_end_bar": 2.0,
+   "vol_to_open_rod_check_ext_cm3": 0.8059799999999999
+  }
+ ],
+ "one_period_opening_speed": {
+  "p_r 2.0 bar": {
+   "ext_rod_check_u_mm_s": 0.051410616800404436
+  },
+  "p_r 13.0 bar": {
+   "ext_rod_check_u_mm_s": 0.23991621173522074
+  },
+  "p_r 30.6 bar": {
+   "ext_rod_check_u_mm_s": 0.5415251636309267
+  },
+  "p_r 54.0 bar": {
+   "ext_rod_check_u_mm_s": 0.9425279746740813
+  },
+  "p_h 35.5 bar": {
+   "ret_head_check_u_mm_s": 1.8921249091582184,
+   "ext_head_check_u_mm_s": 1.7693820615472529
+  },
+  "p_h 47.4 bar": {
+   "ret_head_check_u_mm_s": 2.5090094685824043,
+   "ext_head_check_u_mm_s": 2.4831327914595347
+  },
+  "p_h 77.0 bar": {
+   "ret_head_check_u_mm_s": 4.043445011351809,
+   "ext_head_check_u_mm_s": 4.258512758300168
+  }
+ }
+}

@@ -1,0 +1,56 @@
+[
+ {
+  "setting": "VB",
+  "error": null,
+  "tb": null,
+  "wall_s": 54.6,
+  "commands_sha256": "295d0e7c93101b9fb46dade631c942ec7d72bb949abb37cb84d231b38fdd8d7d",
+  "stored_sha256": "295d0e7c93101b9fb46dade631c942ec7d72bb949abb37cb84d231b38fdd8d7d",
+  "same_run": true,
+  "rows": 2200,
+  "plants": [
+   2464250034128
+  ],
+  "bound_check_RR": {
+   "breach_reads": 2,
+   "min_gap_bar": -9.805922386165648,
+   "min_gap_t_s": 48.9
+  }
+ },
+ {
+  "setting": "LS2",
+  "error": null,
+  "tb": null,
+  "wall_s": 54.7,
+  "commands_sha256": "875ad53bccc336c440c31c24274619388113e80e07fb192a264f383859827214",
+  "stored_sha256": "875ad53bccc336c440c31c24274619388113e80e07fb192a264f383859827214",
+  "same_run": true,
+  "rows": 2200,
+  "plants": [
+   1835851809568
+  ],
+  "bound_check_RR": {
+   "breach_reads": 3,
+   "min_gap_bar": -9.643296298788957,
+   "min_gap_t_s": 48.8
+  }
+ },
+ {
+  "setting": "LS3",
+  "error": null,
+  "tb": null,
+  "wall_s": 59.2,
+  "commands_sha256": "53ae7c735918f1277e070d71d5817d70473060a0e34620becb76a7f455d93469",
+  "stored_sha256": "53ae7c735918f1277e070d71d5817d70473060a0e34620becb76a7f455d93469",
+  "same_run": true,
+  "rows": 2200,
+  "plants": [
+   2149903219024
+  ],
+  "bound_check_RR": {
+   "breach_reads": 4,
+   "min_gap_bar": -26.33430043317365,
+   "min_gap_t_s": 48.8
+  }
+ }
+]

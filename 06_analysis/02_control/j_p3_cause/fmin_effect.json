@@ -1,0 +1,130 @@
+{
+ "rows": [
+  {
+   "line": "h10 line 28 R12 VB",
+   "leg": "RR",
+   "breach_reads": 2,
+   "min_gap_bar": -9.805922386165648,
+   "min_gap_t_s": 48.9,
+   "A_ann_m2": 0.0031415926535897933,
+   "optimism_kN": 3.0806213730049694,
+   "implied_p_tr_bar": 40.89692238616565,
+   "p_ret_plus_dm_bar": 31.091,
+   "true_min_after_event_kN": 13.222,
+   "lightest_leg": "RR",
+   "margin_over_F_min_kN": 3.807410889999998,
+   "breach_leg_true_force_kN": {
+    "48.7": 29.703,
+    "48.8": 22.69,
+    "48.9": 17.911,
+    "49.0": 16.777,
+    "49.1": 20.99,
+    "49.2": 28.897
+   },
+   "breach_leg_true_force_min_kN": {
+    "48.7": 27.983,
+    "48.8": 22.69,
+    "48.9": 17.911,
+    "49.0": 16.777,
+    "49.1": 16.642,
+    "49.2": 21.065
+   }
+  },
+  {
+   "line": "h10 line 172 R12 LS2",
+   "leg": "RR",
+   "breach_reads": 3,
+   "min_gap_bar": -9.643296298788957,
+   "min_gap_t_s": 48.8,
+   "A_ann_m2": 0.0031415926535897933,
+   "optimism_kN": 3.029530880866503,
+   "implied_p_tr_bar": 40.73429629878896,
+   "p_ret_plus_dm_bar": 31.091,
+   "true_min_after_event_kN": 13.2119,
+   "lightest_leg": "RR",
+   "margin_over_F_min_kN": 3.7973108899999986,
+   "breach_leg_true_force_kN": {
+    "48.7": 29.676,
+    "48.8": 22.81,
+    "48.9": 17.94,
+    "49.0": 16.788,
+    "49.1": 21.0,
+    "49.2": 28.938
+   },
+   "breach_leg_true_force_min_kN": {
+    "48.7": 28.05,
+    "48.8": 22.81,
+    "48.9": 17.94,
+    "49.0": 16.788,
+    "49.1": 16.636,
+    "49.2": 21.075
+   }
+  },
+  {
+   "line": "h10 line 245 R12 LS3",
+   "leg": "RR",
+   "breach_reads": 4,
+   "min_gap_bar": -26.33430043317365,
+   "min_gap_t_s": 48.8,
+   "A_ann_m2": 0.0031415926535897933,
+   "optimism_kN": 8.273164477828484,
+   "implied_p_tr_bar": 57.425300433173646,
+   "p_ret_plus_dm_bar": 31.091,
+   "true_min_after_event_kN": 12.0826,
+   "lightest_leg": "RR",
+   "margin_over_F_min_kN": 2.668010889999998,
+   "breach_leg_true_force_kN": {
+    "48.7": 28.682,
+    "48.8": 21.691,
+    "48.9": 17.491,
+    "49.0": 15.633,
+    "49.1": 20.386,
+    "49.2": 29.165
+   },
+   "breach_leg_true_force_min_kN": {
+    "48.7": 27.342,
+    "48.8": 21.69,
+    "48.9": 17.491,
+    "49.0": 15.633,
+    "49.1": 15.511,
+    "49.2": 20.468
+   }
+  },
+  {
+   "line": "grid_r67_top results[13].runs[3] screen|top|8.0|ready|FR",
+   "leg": "FR",
+   "breach_reads": 3,
+   "min_gap_bar": -0.9000863000219455,
+   "min_gap_t_s": 48.7,
+   "A_ann_m2": 0.003769911184307754,
+   "optimism_kN": 0.33932454092949166,
+   "implied_p_tr_bar": 35.75208630002194,
+   "p_ret_plus_dm_bar": 34.852,
+   "true_min_after_event_kN": 14.6,
+   "lightest_leg": "RL",
+   "margin_over_F_min_kN": 5.185410889999998
+  },
+  {
+   "line": "grid_r69_bottom results[12].runs[0] screen|bottom|4.0|ready|FL",
+   "leg": "RR",
+   "breach_reads": 2,
+   "min_gap_bar": -9.805922386165648,
+   "min_gap_t_s": 48.9,
+   "A_ann_m2": 0.0031415926535897933,
+   "optimism_kN": 3.0806213730049694,
+   "implied_p_tr_bar": 40.89692238616565,
+   "p_ret_plus_dm_bar": 31.091,
+   "true_min_after_event_kN": 13.22,
+   "lightest_leg": "RR",
+   "margin_over_F_min_kN": 3.805410889999999
+  }
+ ],
+ "vb_48p8_uncounted": {
+  "read_t_s": 48.800000000050986,
+  "rod_reading_locked_bar": 41.00940068757242,
+  "gap_bar_vs_p_ret_plus_dm": -9.918400687572426,
+  "optimism_kN": 3.1159574699832477,
+  "note": "rod reading of a locked harness leg = p_r0 - Gr/A_ann = plant p_tr"
+ },
+ "F_min_N": 9414.58911
+}
