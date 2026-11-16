@@ -88,7 +88,7 @@ def write_grid(folder, setting, mutate=None, n=192):
                 runs[j]["event"] = ev
                 if ev == "G4":
                     runs[j].update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
-            results.append({"key": key, "runs": runs})
+            results.append({"key": key, "v5_setting": setting, "runs": runs})   # supplement 3-6: results[i] setting
         if mutate:
             mutate(stem, results)
         p = Path(folder) / f"{setting}_{stem}.json"
@@ -717,10 +717,15 @@ class TestR4(unittest.TestCase):
         rows = cm.jp3_rows("H-8", "f.json", "results[3]", rec, "key|a", "VB", CORE)
         self.assertEqual([(r["leg"], r["breach_reads"], r["min_gap_bar"], r["first_breach_t_s"]) for r in rows],
                          [("FR", 2, -0.75, 12.3), ("RR", 1, -0.01, 20.0)])
-        rec["hydraulics_record"]["extend_bound_check"]["min_gap_Pa"] = [0.0, -150000.0, 0.0, -1000.0]
+        e = rec["hydraulics_record"]["extend_bound_check"]
+        e["min_gap_Pa"] = [0.0, -150000.0, 0.0, -1000.0]                       # supplement 3-3: not read
+        e["min_gap_bar"][1], e["first_breach_t_s"][3] = float("inf"), float("nan")   # not finite -> null
         rows = cm.jp3_rows("H-8", "f.json", "results[3]", rec, "key|a", "VB", CORE)
-        self.assertEqual([r["min_gap_bar"] for r in rows], [-1.5, -0.01])            # recorded Pa / 1e5
-        mixed = [{"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 10", "leg": "FL"},
+        self.assertEqual([(r["min_gap_bar"], r["first_breach_t_s"]) for r in rows], [(None, 12.3), (-0.01, None)])
+        del e["min_gap_bar"]
+        self.assertEqual([r["min_gap_bar"] for r in cm.jp3_rows("H-8", "f", "p", rec, "k", "VB", CORE)], [None, None])
+        mixed = [{"bundle": "H-10", "file": "a/h10_reuse_rerun.jsonl", "position": "line 1", "leg": "FL"},
+                 {"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 10", "leg": "FL"},
                  {"bundle": "H-9", "file": "x/h9_grid/grid_r67_main.json", "position": "results[10].runs[2]",
                   "leg": "RR"},
                  {"bundle": "H-9", "file": "x/h9_grid/grid_r67_main.json", "position": "results[9].runs[5]",
@@ -728,10 +733,10 @@ class TestR4(unittest.TestCase):
                  {"bundle": "H-6", "file": "z.json", "position": "results[2]", "leg": "RL"},
                  {"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 9", "leg": "RL"},
                  {"bundle": "H-9", "file": "x/h9_stage1.jsonl", "position": "line 9", "leg": "FR"}]
-        self.assertEqual([(r["bundle"], r["position"], r["leg"]) for r in cm.rd7_sort(mixed)],
+        self.assertEqual([(r["bundle"], r["position"], r["leg"]) for r in cm.rd7_sort(mixed, CORE.bundle_key)],
                          [("H-6", "results[2]", "RL"), ("H-9", "results[9].runs[5]", "FL"),
                           ("H-9", "results[10].runs[2]", "RR"), ("H-9", "line 9", "FR"), ("H-9", "line 9", "RL"),
-                          ("H-9", "line 10", "FL")])
+                          ("H-9", "line 10", "FL"), ("H-10", "line 1", "FL")])          # supplement 3-5: H-9 < H-10
         self.assertEqual(cm.rd7_markers([], [{"marker": "L-e"}]), ["L-e"])
         self.assertEqual(cm.rd7_markers([{"x": 1}], [{"marker": "H-7"}]), ["멈춤 H-7"])
 
@@ -785,7 +790,7 @@ class TestR4(unittest.TestCase):
                            r["first_breach_t_s"]) for r in jp],
                          [("results[3].runs[1]", "RL", "screen|bottom|0.0|level|K3", "VB", 4, -0.5, 33.3)])
         self.assertEqual([(r["position"], r["leg"], r["n_late_fallback_by_leg"], r["marker"], r["setting"])
-                          for r in j11], [("results[1].runs[2]", "RL", 2, "H-7", None)])
+                          for r in j11], [("results[1].runs[2]", "RL", 2, "H-7", "VB")])
         self.assertEqual(body["R4"]["markers"]["H-9"], ["멈춤 H-7"])
         self.assertEqual(body["R4"]["RD-9"]["H-9"], {"p3_on": 768, "scanned": 768})
 
@@ -799,10 +804,21 @@ class TestR4(unittest.TestCase):
         self.assertEqual(body["R4"]["RD-10"]["H-9"]["undecidable"], 1)
         self.assertNotIn("H-7", body["stop_codes"])
 
+        def m3(stem, res):   # supplement 3-6: no results[i].v5_setting -> J11 undecidable (file meta VB not used)
+            if stem == "grid_r67_top":
+                del res[1]["v5_setting"]
+                res[1]["runs"][0]["lock_window_alignment"] = {"fallback_legs": {"RL": {}},
+                                                              "n_late_fallback_by_leg": {"RL": 2}}
+        body, st = self.run_grid(m3)
+        self.assertEqual(st, "undecidable")
+        self.assertEqual(body["R4"]["RD-10"]["H-9"]["undecidable"], 6)
+        self.assertEqual(body["R4"]["RD-7"]["J11"]["H-9"], [])
+        self.assertNotIn("H-7", body["stop_codes"])
+
     # ---------------------------------------------------------------- noise (H-6 / H-8, supplement 2-1)
     def test_noise_lists_and_dg3_skip(self):
         is_p3, _ = CORE.load_is_extend_start(REPO)
-        rd, f = cm.RdCounter(), CORE.Findings()
+        rd, f = cm.RdCounter(CORE.bundle_key), CORE.Findings()
         vb = {"k1": r79(P3_TAG, "VB", [0, 0, 0, 2], key="k1", ebc_kw={"min_gap_bar": [1, 1, 1, -0.2],
                                                                      "first_breach_t_s": [None, None, None, 7.0]}),
               "k2": r79(P3_TAG, "VB", [1, 0, 0, 0], key="k2"),                      # dg3 key: H-6 line
@@ -819,7 +835,7 @@ class TestR4(unittest.TestCase):
         self.assertFalse(any("k2" in s["where"] for s in f.stops))
         self.assertEqual(sorted(s["code"] for s in f.stops), ["H-7", "H-7"])
         # V0 file: J11 is a record (no stop), block missing = input missing, a 3-on tag on a V0 line = S-2
-        rd, f = cm.RdCounter(), CORE.Findings()
+        rd, f = cm.RdCounter(CORE.bundle_key), CORE.Findings()
         v0 = {"a": r79(V0_TAG, "V0", key="a", lwa={"fallback_legs": {"FL": {}}, "n_late_fallback_by_leg": {"FL": 4}}),
               "b": r79(V0_TAG, "V0", key="b", lwa=None),
               "c": r79(P3_TAG, "V0", key="c")}
@@ -830,7 +846,7 @@ class TestR4(unittest.TestCase):
         self.assertEqual(d["RD-10"]["H-8"]["input_missing"], 1)
         self.assertEqual([s["code"] for s in f.stops], ["S-2"])
         # RD-8 format defect on an H-6 line: undecidable, counted, not a pass
-        rd, f = cm.RdCounter(), CORE.Findings()
+        rd, f = cm.RdCounter(CORE.bundle_key), CORE.Findings()
         nz.run_checks("H-6", {"x": r79(P3_TAG, "VB", [0, 0, 1.0, 0], key="x")}, CORE, V5J, is_p3, True, f, [], {},
                       rd=rd, bundle="H-6", rfile="r/h6.json", pos={"x": 0})
         self.assertEqual(f.status(), "undecidable")
@@ -878,7 +894,8 @@ class TestR4(unittest.TestCase):
         jp = r4["RD-7"]["J-P3"]["H-10"]
         self.assertEqual([(r["position"], r["leg"], r["key"], r["setting"], r["breach_reads"], r["min_gap_bar"],
                            r["first_breach_t_s"]) for r in jp],
-                         [("line 1", "RL", "R12", "VB", 3, -1.25, 12.3), ("line 4", "FL", "S2", "VB", 1, -2.0, 5.5)])
+                         [("line 1", "RL", "R12", "VB", 3, -1.25, 12.3),
+                          ("line 4", "FL", "S2", "VB", 1, None, 5.5)])          # no min_gap_bar -> null (3-3)
         self.assertEqual([(r["position"], r["leg"], r["n_late_fallback_by_leg"], r["marker"])
                           for r in r4["RD-7"]["J11"]["H-10"]], [("line 3", "FR", 2, "L-e")])
         self.assertEqual(r4["RD-7"]["J11"]["H-9"], [])                     # V0 J11 = record (rev16:103)
@@ -905,7 +922,7 @@ class TestR4(unittest.TestCase):
         items, f = out[("VB", V5J.pair_key(vb["job"]))]
         self.assertEqual(items["J-P3"]["result"], "undecidable")
         self.assertTrue(any(u["why"].startswith("J-P3: RD-8") for u in f.undecidable))
-        rd, f10 = cm.RdCounter(), CORE.Findings()
+        rd, f10 = cm.RdCounter(CORE.bundle_key), CORE.Findings()
         s1.rd_scan(V5J, CORE, is_p3, rd, "H-10", "r/h10.jsonl", [vb, u9], [1, 2], by_id, [], f10, {})
         self.assertEqual(rd.as_dict(["H-10"])["RD-8"]["H-10"]["format"], 2)
         self.assertEqual(rd.as_dict(["H-10"])["RD-7"]["J-P3"]["H-10"], [])
@@ -917,7 +934,7 @@ class TestR4(unittest.TestCase):
         head = "a" * 40
 
         def part(tool, bundles, rows=(), p3=None):
-            rd = cm.RdCounter()
+            rd = cm.RdCounter(CORE.bundle_key)
             for b in bundles:
                 for _ in range((p3 or {}).get(b, 1)):
                     rd.line(b, True)

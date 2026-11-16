@@ -546,7 +546,7 @@ def cmd_stage1(args, repo, v5j, core):
     jov = judge_all(v5j, core, [x for x in ov if setting(x) != "V0"], ov_idx, nrev, is_p3, t4h_dirs, "ov",
                     t4h_log, by_id)
     # R4 RD-7 / RD-8 / RD-9 / RD-10 over every line of the two result files (H-9 main + pressure_only, H-10)
-    rd = cm.RdCounter()
+    rd = cm.RdCounter(core.bundle_key)   # supplement 3-5: bundle order by p2_4368.bundle_key
     rd_scan(v5j, core, is_p3, rd, "H-9", cm.rel_file(args.h9, repo), h9, nums9, by_id, dirs9, f9, t4h_log9)
     rd_scan(v5j, core, is_p3, rd, "H-10", cm.rel_file(args.h10, repo), h10, nums10, by_id, t4h_dirs, f10, t4h_log)
     if rd.p3.get("H-10", 0) == 0:   # RD-9: H-10 has VB (3-on) lines by definition; 0 = S-8
@@ -734,7 +734,7 @@ def cmd_merge(args, repo, v5j, core):
         for b, item in (d.get("RD-13") or {}).items():
             if item.get("sha256") != cm.rd13_lists()[b]["sha256"]:
                 fnd.stop("S-11", t, f"RD-13 list of {b} differs from this checkout")
-    out_lists = {li: {b: cm.rd7_sort(v) for b, v in per.items()} for li, per in lists.items()}
+    out_lists = {li: {b: cm.rd7_sort(v, core.bundle_key) for b, v in per.items()} for li, per in lists.items()}
     for b in bundles:
         if rd9[b]["p3_on"] == 0:
             fnd.stop("S-8", f"{b}|RD-9", "no 3-on line / run in the bundle (original 8.2 S-8, R4 RD-9)")

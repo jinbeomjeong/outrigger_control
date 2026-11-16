@@ -495,7 +495,7 @@ def cmd_noise(args, repo, v5j, core):
             fnd.stop("S-15", nm, f"{len(dup)} duplicate result keys (RD-7 3 position not unique)")
     if dg3 != set(h6):
         fnd.stop("S-15", "H-6", f"H-6 key set differs from the dg3 key source ({len(dg3 ^ set(h6))} keys, RV1-3.2)")
-    rd = cm.RdCounter()
+    rd = cm.RdCounter(core.bundle_key)   # supplement 3-5: bundle order by p2_4368.bundle_key
     lv_vb, lv_v0, lv_h6 = levels(vb), levels(v0), levels(h6)
     if lv_vb != LEVEL_COUNTS or lv_v0 != LEVEL_COUNTS:
         fnd.stop("S-15", "noise", f"levels VB {lv_vb} V0 {lv_v0} != {LEVEL_COUNTS}")

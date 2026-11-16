@@ -19,8 +19,9 @@ Rules (rule -> function):
 R4 (436.8 R4 common block sha256 e451f067..., supplement 2-2; 2-terra author, a new agent run without the earlier
 authors' context): every one of the 768 runs (``results[i].runs[j]``) is a row of RD-7. J-P3 = ``p2_v5j.jp3(run,
 is_p3, rod, tag=<run tag, else results[i] tag>)``; an RD-8 input-format defect or an RD-7 3 top-level mismatch is
-J-P3 undecidable (never a pass, ``common.jp3_apply``). J11 = ``p2_v5j.j11_item(run, setting=results[i].v5_setting)``
-(RD-10 block missing = undecidable on VB); the old ``lock_window_alignment.n_late_fallback`` stop is replaced by
+J-P3 undecidable (never a pass, ``common.jp3_apply``). J11 = ``p2_v5j.j11_item(run, setting=results[i].v5_setting,
+setting_required=True)`` (supplement 3-6: ``results[i].v5_setting`` only, missing = J11 undecidable; RD-10 block
+missing = undecidable on VB); the old ``lock_window_alignment.n_late_fallback`` stop is replaced by
 it (rev16:102 ``n_late_fallback_by_leg`` of the actual fallback legs). Output ``R4``: RD-7 J-P3 / J11 rows
 (RD-7 3 columns and order), RD-8 / RD-9 / RD-10 counts of the grid part; ``RD-13`` the H-9 item list.
 """
@@ -257,7 +258,7 @@ def cmd_grid(args, repo, v5j, core):
         body["not_judged"] = ["H-9 grid"]
         return body, st
     t4h_log = {}
-    rd = cm.RdCounter()   # R4 RD-7 / RD-8 / RD-9 / RD-10 (bundle H-9, grid part; supplement 2-2)
+    rd = cm.RdCounter(core.bundle_key)   # R4 RD-7 / RD-8 / RD-9 / RD-10 (bundle H-9, grid part; supplement 2-2)
     for stem, path in vb_files.items():
         d = json.loads(Path(path).read_text("utf-8"))
         meta = d.get("meta") or {}
@@ -315,17 +316,11 @@ def cmd_grid(args, repo, v5j, core):
                 cm.jp3_apply(fnd, k, res, why, "VB")   # rev8 R8-2: non-3 tag = not applicable + S-2
                 if res == "H-7":
                     rd.jp3 += cm.jp3_rows("H-9", rfile, pos, run, rkey, rset, core)
-            # J11 (RD-10, rev16:102~103, supplement 2-2): per run, setting = results[i].v5_setting (the file
-            # meta v5_setting when the job record has none; neither = J11 undecidable)
-            j11_set = rset if rset is not None else (meta.get("v5_setting") if isinstance(meta.get("v5_setting"), str)
-                                                     else None)
-            if j11_set is None:
-                item = {"result": "undecidable", "list": [], "why": "no v5_setting for the J11 setting"}
-                fnd.undec(k, "J11: no v5_setting in results[i] or the file meta")
-            else:
-                item = v5j.j11_item(run, setting=j11_set)
-                v5j.apply_j11(item, k, fnd)
-                rd.j11 += cm.j11_rows("H-9", rfile, pos, item, rkey, rset)
+            # J11 (RD-10, rev16:102~103, supplement 2-2 / 3-6): per run, setting = results[i].v5_setting only
+            # (no file-meta fallback); missing = J11 undecidable (p2_v5j.j11_item setting_required=True)
+            item = v5j.j11_item(run, setting=rset, setting_required=True)
+            v5j.apply_j11(item, k, fnd)
+            rd.j11 += cm.j11_rows("H-9", rfile, pos, item, rkey, rset)
             rd.j11_result("H-9", item)
             hr = run.get("hydraulics_record") or r.get("hydraulics_record") or {}
             post = hr.get("m2_clipped_steps_post_lift")

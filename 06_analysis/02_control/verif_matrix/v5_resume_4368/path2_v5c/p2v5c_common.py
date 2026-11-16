@@ -92,8 +92,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # R4 versions (2-dyn author, branch z4373-p2harness commits 361e559 / da1e00e: RD-2 26 seals in
 # check_seals, RD-1 5 head_check, RD-8 breach_reads_format / breach_reads_input, RD-10 j11_item, jp3 tag
 # argument); before: p2_v5j 69d0e747..., p2_4368 0ccc5186...
-P2_V5J_SHA = "4a036b00a8faa7c6ac6034ca238478a8e8bbfc4021b559ac7869649e2953808b"
-P2_CORE_SHA = "92f6e0d49622754dc08baf47cc26e7bc1ac8c3ecad632c49b667a615ba66c9fc"
+# R4 supplement 3 versions (2-dyn commit 2aa0a40: p2_4368.bundle_key numeric bundle sort (3-5),
+# p2_v5j.j11_item(setting_required=True) for grid runs (3-6)); before: p2_v5j 4a036b00..., p2_4368 92f6e0d4...
+P2_V5J_SHA = "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8"
+P2_CORE_SHA = "dd3f266ee34bb2b75f8ac66b6995170ca067a65b3372df03f42f6c6938d7c9cb"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -218,8 +220,7 @@ def rd2_union(core_seals):
 # ----------------------------------------------------------------- R4 harness layer (RD-7, RD-8, RD-9, RD-10, RD-13)
 LEGS = ("FL", "FR", "RL", "RR")
 RD7_BUNDLES = ("H-6", "H-8", "H-9", "H-10")      # bundles of this folder's RD-7 J-P3 / J11 lists (2-terra share)
-MIN_GAP_PA_KEY, MIN_GAP_BAR_KEY, FIRST_BREACH_KEY = "min_gap_Pa", "min_gap_bar", "first_breach_t_s"
-PA_PER_BAR = 1.0e5
+MIN_GAP_BAR_KEY, FIRST_BREACH_KEY = "min_gap_bar", "first_breach_t_s"   # supplement 3-3 (decision 126)
 
 
 def read_jsonl_numbered(path):
@@ -263,8 +264,9 @@ def _num_elem(seq, i):
 def jp3_rows(bundle, rfile, pos, rec, key, setting, core):
     """RD-7 1 / 3 J-P3 violation rows of one line / run whose J-P3 result is ``H-7`` (``breach_reads`` valid by
     RD-8, sum >= 1): one row per leg with ``breach_reads`` >= 1. Columns: bundle, result file, position, leg, key,
-    setting, reads (that leg's ``breach_reads``), minimum gap [bar] (recorded Pa / 1e5; the plant record keeps
-    ``min_gap_bar`` = Pa / 1e5 already and that number is copied), first breach time [s] (copied)."""
+    setting, reads (that leg's ``breach_reads``), minimum gap [bar] and first breach time [s]: supplement 3-3
+    (user decision 126) - the leg element of the record's ``min_gap_bar`` / ``first_breach_t_s`` copied without
+    any computation or rounding; missing, not a number or not finite = None (JSON null)."""
     ebc, _p = core.first_path(rec, ("hydraulics_record.extend_bound_check", "v5.hydraulics_record.extend_bound_check"))
     ebc = ebc if isinstance(ebc, dict) else {}
     br = ebc.get("breach_reads")
@@ -273,10 +275,9 @@ def jp3_rows(bundle, rfile, pos, rec, key, setting, core):
         n = _int_elem(br, i)
         if n is None or n < 1:
             continue
-        pa = _num_elem(ebc.get(MIN_GAP_PA_KEY), i)
-        gap = (pa / PA_PER_BAR) if pa is not None else _num_elem(ebc.get(MIN_GAP_BAR_KEY), i)
         out.append({"bundle": bundle, "file": rfile, "position": pos, "leg": leg, "key": key, "setting": setting,
-                    "breach_reads": n, "min_gap_bar": gap, "first_breach_t_s": _num_elem(ebc.get(FIRST_BREACH_KEY), i)})
+                    "breach_reads": n, "min_gap_bar": _num_elem(ebc.get(MIN_GAP_BAR_KEY), i),
+                    "first_breach_t_s": _num_elem(ebc.get(FIRST_BREACH_KEY), i)})
     return out
 
 
@@ -294,18 +295,18 @@ def position_sort_key(pos):
     return tuple(int(x) for x in re.findall(r"\d+", str(pos)))
 
 
-def rd7_sort(rows):
-    """RD-7 3 order: bundle -> result file (string order) -> position (numbers) -> leg (FL, FR, RL, RR) -> k."""
-    border = {b: i for i, b in enumerate(("H-1", "H-2", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10",
-                                          "H-11", "H-12"))}
-    return sorted(rows, key=lambda r: (border.get(r["bundle"], 99), r["file"], position_sort_key(r["position"]),
+def rd7_sort(rows, bundle_key):
+    """RD-7 3 order: bundle (``bundle_key`` = ``p2_4368.bundle_key``, number of ``H-n``, supplement 3-5) -> result
+    file (string order) -> position (numbers) -> leg (FL, FR, RL, RR) -> k."""
+    return sorted(rows, key=lambda r: (bundle_key(r["bundle"]), r["file"], position_sort_key(r["position"]),
                                        LEGS.index(r["leg"]) if r.get("leg") in LEGS else 9, r.get("k", 0)))
 
 
 class RdCounter:
-    """Per-bundle RD-8 / RD-9 / RD-10 counts and RD-7 rows of one tool run."""
+    """Per-bundle RD-8 / RD-9 / RD-10 counts and RD-7 rows of one tool run (``bundle_key``: ``p2_4368.bundle_key``)."""
 
-    def __init__(self):
+    def __init__(self, bundle_key):
+        self.bundle_key = bundle_key
         self.jp3, self.j11 = [], []
         self.p3 = {}            # RD-9: 3-on lines / runs by the row tag (original 4.1)
         self.lines = {}         # lines / runs scanned per bundle
@@ -331,8 +332,9 @@ class RdCounter:
         d[item["result"]] = d.get(item["result"], 0) + 1
 
     def as_dict(self, bundles):
-        out = {"RD-7": {"J-P3": {b: rd7_sort([r for r in self.jp3 if r["bundle"] == b]) for b in bundles},
-                        "J11": {b: rd7_sort([r for r in self.j11 if r["bundle"] == b]) for b in bundles}},
+        bk = self.bundle_key
+        out = {"RD-7": {"J-P3": {b: rd7_sort([r for r in self.jp3 if r["bundle"] == b], bk) for b in bundles},
+                        "J11": {b: rd7_sort([r for r in self.j11 if r["bundle"] == b], bk) for b in bundles}},
                "RD-9": {b: {"p3_on": self.p3.get(b, 0), "scanned": self.lines.get(b, 0)} for b in bundles},
                "RD-8": {b: {"format": self.rd8.get(b, {}).get("format", 0),
                             "top_level_mismatch": self.rd8.get(b, {}).get("top_level_mismatch", 0)} for b in bundles},
@@ -380,12 +382,14 @@ _COMMON_ITEMS = (
     ("판정 checkout HEAD = M4(S-12)", "R4 RD-1 5", "관문"),
     ("import 고정 sha(P2-SHA)", "rev19:93 (P2-49), 지시문 2-terra 재고정 순서", "관문"),
 )
-_JP3 = (("J-P3 ext_moving breach_reads(멈춤 H-7, 위반 목록)", "rev3 R3-C8, rev4:54, rev8 R8-2, R4 RD-7 1·3", "관문"),
+_JP3 = (("J-P3 ext_moving breach_reads(멈춤 H-7, 위반 목록)",
+         "rev3 R3-C8, rev4:54, rev8 R8-2, R4 RD-7 1·3, 보충 3-3·3-5", "관문"),
         ("J-P3 입력 형식(판정 불가 수)", "R4 RD-8", "관문"),
         ("J-P3 태그 범위(③ 켬 설정의 ③ 아닌 태그 = S-2)", "rev8 R8-2, 원판 4.1", "관문"),
         ("J-P3 T4h 찾기(0개·2개 이상 = S-2)", "rev12 R12-1 (C-14), rev11 R11-2 (C-23a~c)", "관문"),
-        ("③ 켬 줄 수(0 = S-8)", "R4 RD-9, 원판 8.2 S-8", "관문"))
-_J11 = (("J11 실제 대체 다리 n_late > 0(멈춤 H-7 / L-e, 목록)", "rev16:102~103 (P2-13·P2-14), rev3 R3-C7, R4 RD-7 1", "관문"),
+        ("③ 켬 줄 수(0 = S-8)", "R4 RD-9, 원판 8.2 S-8, 보충 3-1", "관문"))
+_J11 = (("J11 실제 대체 다리 n_late > 0(멈춤 H-7 / L-e, 목록)",
+         "rev16:102~103 (P2-13·P2-14), rev3 R3-C7, R4 RD-7 1, 보충 3-5", "관문"),
         ("J11 블록 결측(판정 불가 수·입력 없음 수)", "R4 RD-10", "기록"))
 RD13_ITEMS = {
     "H-6": _COMMON_ITEMS + _JP3 + _J11 + (
@@ -405,7 +409,8 @@ RD13_ITEMS = {
         ("L3 기록", "v5 기준 10", "기록"),
         ("seedext 시드 0~4 해시 = 잡음 L2(멈춤 H-15)", "v5 기준 개정 6 9", "관문"),
         ("seedext k/25·CP·Fisher 문구", "v5 기준 개정 6 9", "기록"),
-        ("dg3 대체 135키 = H-6 줄로 판정(H-8 J-P3·J11 목록에서 뺌)", "rev1 RV1-3.2 (C-01), 보충 2-1", "관문"),
+        ("dg3 대체 135키 = H-6 줄로 판정(h8_noise_VB만, H-8 J-P3·J11 목록에서 뺌, 뺀 수 기록)",
+         "rev1 RV1-3.2 (C-01), 보충 2-1, 보충 3-1·3-2", "관문"),
         ("J9 m2_clipped_steps_post_lift > 0(멈춤 H-9)", "v5 기준 개정 2 2.1, 개정 6", "관문"),
         ("m2_law 키(flow_limited_r5)", "v5 기준 개정 6 #9", "등급 항목"),
         ("수준별 줄 수 L1 167·L2 835·L3 501, VB/V0 키 집합(S-15)", "v5 기준 개정 3 #1, rev1 RV1-12 (C-16)", "관문")),
@@ -424,6 +429,7 @@ RD13_ITEMS = {
         ("격자 V0 짝(8작업 표본 해시, 아니면 V0 768)", "rev3 R3-E1, rev4 R4-B4", "관문"),
         ("계열 𝓕 R-1~R-4(family run, 실패 = 멈춤 H-10)", "v5 기준 개정 5 5.2, rev3 R3-E2, rev4 R4-B5", "관문"),
         ("격자 run 태그 = run 태그, 없으면 results[i] 태그", "rev8 R8-1, 사용자 결정 19, 보충 2-2", "관문"),
+        ("격자 run J11 설정 = results[i].v5_setting만(없으면 J11 판정 불가)", "보충 2-2, 보충 3-6", "관문"),
         ("격자 run 수 192 × 4(S-15)", "rev1 RV1-3.2·RV1-12 (C-01·C-16)", "관문")),
     "H-10": _COMMON_ITEMS + _JP3 + _J11 + (
         ("J1~J8·J10 V0 짝 대비(VB 실패 = 멈춤 H-2)", "v5 기준 3·11", "관문"),
@@ -435,7 +441,7 @@ RD13_ITEMS = {
         ("S8 F-5 조항과 SA-4 나머지(멈춤 H-5, VB 실패 = H-2)", "v5 기준 6, rev3 R3-E5, rev4 R4-B1, rev6 R6-C1", "관문"),
         ("item8 순서(VB 뒤집힘 = 멈춤 H-11)", "v5 기준 13.1", "관문"),
         ("overlap FLAG_overlap", "v5 기준 13.3", "기록"),
-        ("U-9 VB 줄 수(등급은 p2_v5j u9)", "rev1 RV1-2", "기록"),
+        ("U-9 VB 줄 수(J-P3·J11 목록 대상, 등급은 p2_v5j u9)", "rev1 RV1-2, 보충 3-4", "기록"),
         ("m2_law 키(flow_limited_r5)", "v5 기준 개정 6 #9", "등급 항목"),
         ("줄 수 440(S-15)", "rev1 RV1-2·RV1-12 (C-16)", "관문")),
 }
@@ -515,8 +521,9 @@ def import_record(p2_dir):
             "used": ["p2_v5j.judge_pair", "p2_v5j.j_values", "p2_v5j.jp3", "p2_v5j.j11_item", "p2_v5j.apply_j11",
                      "p2_v5j.nrev_max_by_row",
                      "p2_v5j.pair_key", "p2_v5j.row_key", "p2_v5j.t4h_places", "p2_v5j.rod_reading_lookup",
-                     "p2_v5j.tag_of", "p2_v5j.breach_reads_input",
-                     "p2_v5j.is_event", "core.check_seals", "core.head_check", "core.load_is_extend_start",
+                     "p2_v5j.tag_of", "p2_v5j.breach_reads_input", "p2_v5j.t4h_convention_dirs",
+                     "p2_v5j.is_event", "core.check_seals", "core.head_check", "core.bundle_key",
+                     "core.load_is_extend_start",
                      "core.Findings", "core.first_path", "core.APPENDIX_B",
                      "core.t_ge/t_lt/t_gt", "core.num", "core.dig", "core.read_jsonl", "core.F_MIN_N"]}
 
