@@ -1735,6 +1735,65 @@ def test_r4_family_u6_inner_key_is_src():
     assert p2.family_harness(rec, "u3_json", name="u6_b5_main_VB.json") == "uniform"
 
 
+def test_r4_b1_by_setting_mixed_run_v5_file(tmp_path, capsys):
+    # B-1 (user decision 127 (a)): one original h1_d1.jsonl with VB and V0 lines, kind by job.setting
+    f = tmp_path / "h1_d1.jsonl"
+    v0 = d1_line(1, "H-S-0", "J1", p2.TAG_V0, decisions=[dec(True, True)], skipped=1)
+    vb = vb_h1(2, j_p3="no_rod_reading", ebc=None)
+    write_jsonl(f, [v0, vb])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "by_setting"}])
+    b = rep["bundles"]["H-1"]
+    assert b["kind_lines"] == {"V0": 1, "VB": 1} and b["files"][0]["kind_lines"] == {"V0": 1, "VB": 1}
+    assert "S-2" not in b["stop_codes"] and b["r4"]["rd9_p3_on"] == 1
+    assert any("V0 lines, rules 5.1 say 434" in x["why"] for x in b["stops"])
+    row = rep["stop_S6_list"]["rows"][0]
+    assert row["result_file"] == f.as_posix() and row["position"] == "line 1" and row["setting"] == "V0"
+    vb["controller_tag"] = p2.TAG_V0                                   # tag checked against the line's kind
+    nos = d1_line(3, "H-R-0", "rigid", p2.TAG_V0)
+    nos["job"].pop("setting")
+    write_jsonl(f, [v0, vb, nos])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "by_setting"}])
+    codes = rep["bundles"]["H-1"]["stop_codes"]
+    assert "S-2" in codes and "S-11" in codes
+
+
+def test_r4_b1_by_setting_u6_controller_and_h4_kind_counts(tmp_path, capsys):
+    def u6(case, ctrl, tag):
+        return {"case": case, "controller": ctrl, "src": "H1|J1|B|top|flat",
+                "v5": {"controller_tag": tag, "v5_setting": "VB",
+                       "resume_k1": rk_block(applicable=ctrl != "IND")}}
+    main = tmp_path / "u6_b5_main_VB.json"
+    main.write_text(json.dumps({"records": [u6("A1-J1", "C2", p2.TAG_VB), u6("A1-J1", "ABL", p2.TAG_ABL),
+                                            u6("A1-J1", "IND", p2.TAG_IND)]}), "utf-8")
+    wide = tmp_path / "u6_b5_wide_VB.json"
+    wide.write_text(json.dumps({"records": [u6("S|H1|J1|B|top|flat", "IND", p2.TAG_IND)]}), "utf-8")
+    il = tmp_path / "u6_b5_main_VB_IND_LAS.json"
+    il.write_text(json.dumps({"records": [u6("A1-J1", "IND", p2.TAG_IND_LAS)]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [
+        {"bundle": "H-4", "path": str(main), "format": "u3_json", "kind": "by_setting"},
+        {"bundle": "H-4", "path": str(wide), "format": "u3_json", "kind": "by_setting"},
+        {"bundle": "H-4", "path": str(il), "format": "u3_json", "kind": "IND_LAS"}])
+    b = rep["bundles"]["H-4"]
+    assert b["kind_lines"] == {"VB": 1, "ABL": 1, "IND": 2, "IND_LAS": 1}
+    assert "S-2" not in b["stop_codes"] and b["classes"].get("n/a") == 3
+    whys = " ".join(x["why"] for x in b["stops"])
+    assert "2 IND lines, rules 5.1 say 242" in whys and "1 IND_LAS lines, rules 5.1 say 242" in whys
+    assert rep["stop_S6_list"]["n_rows"] == 0
+
+
+def test_r4_b1_missing_bundle_stops(tmp_path, capsys):
+    f = tmp_path / "h.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-5", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}])
+    for miss in ("H-1", "H-3", "H-4", "H-6", "H-7", "H-8", "H-9", "H-10"):
+        bb = rep["bundles"][miss]
+        assert bb["missing_from_manifest"] and bb["stop_codes"] == ["S-15"], miss      # no S-8 on a missing bundle
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "TEST", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}])
+    assert set(rep["bundles"]) == {"TEST"}                          # no rules-5.1 bundle: no completeness check
+
+
 def test_r4_supplement_3_5_bundle_sort_numeric(tmp_path, capsys):
     assert sorted(["H-10", "H-9", "H-1", "H-3"], key=p2.bundle_key) == ["H-1", "H-3", "H-9", "H-10"]
     items = {}

@@ -18,6 +18,8 @@ Sub-commands:
          the ``p3b`` P3 values (2-5), C-11 at the first LOC and, with a revoke, also at the final LOC (2-6).
   items  RD-13 item lists of the bundles the path-2 tools judge or record (item, rule clause, kind); one JSON file,
          per-bundle sha256 of the canonical list.
+  d1     RD-1 5 HEAD check (``--expect-head``), then ``p2_d1.py`` (H-1 / H-2) unchanged with the arguments after
+         ``--`` (p2_d1.py is outside the R4 edit list; R4 B-1 / audit A-2).
 
 Exit codes: 0 nothing stopped / incomplete; 1 a record incomplete or an undecidable item; 2 a stop (S-*, G-3 false)
 or a rules sha mismatch / not the M4 checkout (S-12); 3 tool error. Last stdout line: JSON summary with
@@ -491,12 +493,14 @@ _LAYER = [  # p2_4368.py harness (436.8 layer), every harness bundle
     ("LAS-b start_s 읽기", "rev2 R2-2", R),
     ("결측 = 판정 불가", "원판 9.3", R),
     ("묶음 줄 수 S-15", "rev1 RV1-12", K),
+    ("목록 파일에 묶음이 빠짐 = S-15", "원판 8.2 S-15", K),
     ("RD-9 ③ 켬 줄 수", "원판 4.1", K),
 ]
 _RD8 = [("RD-8 J-P3 입력 형식(breach_reads 4정수, 기록 pass 빈 통과)", "rev4 R4-A2", K)]
 _KS = [("키 원본 해시 대조(미작동 확인, 기록)", "rev16:87", R)]
 RD13_ITEMS = {
     "H-1": _LAYER + _RD8 + [
+        ("종류별 줄 수(V0 434·VB 434, 원 파일 한 개에서 줄 단위 판별)", "원판 5.1", K),
         ("P-1·P-2 비트 앵커 대조(anchors)", "rev1 RV1-5", K),
         ("D-1 관문 G-1~G-4(p2_d1)", "d1_selection_rules 10", K),
         ("H-R 다섯 항목 재판정(p2_d1)", "d1_selection_rules 11", G),
@@ -520,6 +524,7 @@ RD13_ITEMS = {
         ("D-1 재사용", "rev3 R3-B3", R),
     ],
     "H-4": _LAYER + _RD8 + [
+        ("종류별 줄 수(IND 242·IND_LAS 242, main·wide 원 파일 함께)", "u3 rev2 3", K),
         ("U-6 G-1 사례 수", "u3 원판 7", K),
         ("U-6 G-2 태그(③는 C2만)", "u3 rev2 #4", K),
         ("U-6 제어기별 표", "u3 원판 5.2", R),
@@ -594,12 +599,36 @@ def build_parser():
                    help="folder holding logs_*\\<short>_run.done (rc, supplement 2-4; default <OUT>\\_runners)")
     c.add_argument("--expect-head", required=True, help=head_help)
     sub.add_parser("items")
+    d = sub.add_parser("d1", help="RD-1 5 HEAD check, then p2_d1.py (H-1 / H-2) with the arguments after '--'")
+    d.add_argument("--expect-head", required=True, help=head_help)
+    d.add_argument("d1_args", nargs=argparse.REMAINDER, help="-- <p2_d1.py arguments> (--h1 ..., --out ...)")
     return ap
+
+
+def run_d1(args, repo):
+    """R4 B-1 / audit A-2: ``p2_d1.py`` (H-1 / H-2) is outside the R4 edit list (rev16:325 (라)), so its RD-1 5 HEAD
+    check is made here: S-12 (exit 2, p2_d1 not run) unless HEAD = the M4 commit; then ``p2_d1.main`` runs unchanged
+    with the arguments after ``--`` (its own summary is the last stdout line, its exit code is returned)."""
+    hc = core.head_check(repo, args.expect_head)
+    rest = [a for a in (args.d1_args or []) if a != "--"]
+    if "--repo" not in rest:
+        rest = ["--repo", str(repo)] + rest
+    print(json.dumps({"tool": TOOL_NAME, "cmd": "d1", "head_check": hc, "p2_d1_argv": rest}, ensure_ascii=True))
+    if not hc["ok"]:
+        print(json.dumps({"tool": TOOL_NAME, "cmd": "d1", "status": "stop", "exit": 2, "stop_codes": ["S-12"],
+                          "why": hc["why"]}, ensure_ascii=True))
+        return 2
+    spec = importlib.util.spec_from_file_location("p2_d1_r4", _HERE / "p2_d1.py")
+    d1 = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(d1)
+    return d1.main(rest)
 
 
 def main(argv=None):
     args = build_parser().parse_args(argv)
     repo = Path(args.repo) if args.repo else _HERE.parents[4]
+    if args.cmd == "d1":
+        return run_d1(args, repo)
     tool_sha = core.sha256_file(Path(__file__))
     summary = {"tool": TOOL_NAME, "version": TOOL_VERSION, "tool_sha256": tool_sha, "cmd": args.cmd,
                "core_sha256": core.sha256_file(_HERE / "p2_4368.py")}

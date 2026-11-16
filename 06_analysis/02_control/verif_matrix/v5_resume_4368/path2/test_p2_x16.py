@@ -281,6 +281,22 @@ def test_c11_final_loc_with_revoke(tmp_path, capsys):
 
 
 # ------------------------------------------------------------------ RD-13 items, HEAD, seals
+def test_d1_wrapper_head_check(tmp_path, capsys):
+    # B-1 / audit A-2: p2_d1.py is outside the R4 edit list; the d1 sub-command checks HEAD first
+    h1 = tmp_path / "h1.jsonl"
+    h1.write_text("", "utf-8")
+    code = x16.main(["--repo", str(REPO), "d1", "--expect-head", "5" * 40, "--", "--h1", str(h1),
+                     "--out", str(tmp_path / "d1.json")])
+    lines = capsys.readouterr().out.strip().splitlines()
+    assert code == 2 and json.loads(lines[-1])["stop_codes"] == ["S-12"] and not (tmp_path / "d1.json").exists()
+    code = x16.main(["--repo", str(REPO), "d1", "--expect-head", FAKE_M4, "--", "--h1", str(h1),
+                     "--out", str(tmp_path / "d1.json")])
+    lines = capsys.readouterr().out.strip().splitlines()
+    first, last = json.loads(lines[0]), json.loads(lines[-1])
+    assert first["head_check"]["ok"] and first["p2_d1_argv"][:2] == ["--repo", str(REPO)]
+    assert last.get("tool") == "p2_d1.py" and code == last.get("exit")
+
+
 def test_items_lists_and_sha(tmp_path, capsys):
     out = tmp_path / "items.json"
     code, s = run(["--out", str(out), "items"], capsys)

@@ -61,6 +61,10 @@ S-5), rev16 R16-10 2 (c) u6 family by the inner-key ground token, u3 screen file
 ``jp``: RD-11 (row set from the two ``batch.json`` cases, fixed 12 = else S-15; strict ``C2Event`` list; base-name
 count; shadow lines per run id = 1 else "그림자 판독 불가"; no reuse value while a stop marker is present).
 The ``chrono`` / ``oc5k`` / ``openloop`` / ``compare`` code paths are not changed in R4.
+R4 B-1 (pre-run audit, user decision 127 (a)): ``harness`` reads the original result files that mix settings /
+controllers with manifest kind ``by_setting`` (per line: run_v5 ``job.setting``, u6 b5 ``controller``); rules-5.1
+per-kind counts H-1 V0 434 / VB 434 and H-4 IND 242 / IND_LAS 242 are counted over the bundle's files (S-15); outside
+G-S a rules-5.1 bundle missing from the manifest is S-15.
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -272,7 +276,6 @@ LAS_EXTRA_ZERO = ("min_active_periods", "end_ramp_periods")   # P5r4 extras: mus
 # --- line counts (5.1 + RV1-2 / RV1-3 / RV1-12) ---
 HARNESS_COUNTS = {"H-1": 868, "H-3": 2228, "H-4": 968, "H-5": 14, "H-6": 135, "H-7": 135,
                   "H-8": 3106, "H-9": 1676, "H-10": 440}
-HARNESS_FILE_COUNTS = {("H-4", "IND_LAS"): 242, ("H-4", "IND"): 242}
 C2_FIXED = {"C2-03", "C2-07", "S-01", "S-02"}   # rules 5.2 C-2 fixed rows (rev2 R2-8)
 CHRONO_COUNTS = {"C-1": (10, 10), "C-3": (2, 2), "C-4": (4, 4), "C-5": (35, 35), "C-6": (1, 1),
                  "C-7": (2, 2), "C-8a": (1, 1), "C-8b": (1, 1)}
@@ -988,6 +991,26 @@ def auto_kind(rec):
     return "LS" if st in _EXT_SETTINGS else "V0"
 
 
+# R4 B-1 (user decision 127 (a)): the original result files mixing settings / controllers are read as they are;
+# manifest kind "by_setting" resolves the kind of each line from its definition field (never from its tag, which is
+# then checked against the kind, 4.1 / S-2): run_v5 lines by ``job.setting`` (as ``auto_kind``), u6 b5 records by
+# ``controller`` (C2 = VB kind ③ on, ABL, IND). Missing / unknown field = S-11 for that line.
+KIND_BY_SETTING = "by_setting"
+U6_CONTROLLER_KIND = {"C2": "VB", "ABL": "ABL", "IND": "IND"}
+# rules 5.1 per-kind line counts that the bundle total does not show (S-15): H-1 V0 434 + VB 434; H-4 IND 242 and
+# record column IND_LAS 242 (main 16 + wide 226, counted over the files of the bundle)
+BUNDLE_KIND_COUNTS = {"H-1": {"V0": 434, "VB": 434}, "H-4": {"IND": 242, "IND_LAS": 242}}
+
+
+def line_kind(rec, fmt):
+    """Kind of one line of a ``by_setting`` file (None = the defining field is missing or unknown)."""
+    if fmt == "run_v5_jsonl":
+        return auto_kind(rec)
+    if fmt == "u3_json":
+        return U6_CONTROLLER_KIND.get(rec.get("controller"))
+    return None
+
+
 def cmd_harness(args, repo):
     manifest = json.loads(Path(args.manifest).read_text("utf-8"))
     is_p3, mod_info = load_is_extend_start(repo)
@@ -1010,6 +1033,10 @@ def cmd_harness(args, repo):
         if kind == KIND_AUTO:
             if not gs or fmt != "run_v5_jsonl":
                 raise ValueError(f"kind {KIND_AUTO!r} needs --gs and format run_v5_jsonl ({path})")
+            want_tag = None
+        elif kind == KIND_BY_SETTING:
+            if fmt not in ("run_v5_jsonl", "u3_json"):
+                raise ValueError(f"kind {KIND_BY_SETTING!r} needs format run_v5_jsonl or u3_json ({path})")
             want_tag = None
         else:
             want_tag = KIND_TAG.get(kind)
@@ -1047,6 +1074,7 @@ def cmd_harness(args, repo):
                 idx, ks_path, ks_sha = key_source_index(entry[ks_name], entry.get(ks_name + "_format", fmt), repo)
                 ks_idx[ks_name] = idx
                 ks_files.append({"role": ks_name, "path": ks_path, "sha256": ks_sha})
+        file_kinds = {}
         for rec, parent, label in harness_records(path, fmt):
             n_file += 1
             key = harness_key(rec, parent, fmt, label)
@@ -1054,6 +1082,10 @@ def cmd_harness(args, repo):
             rd7_key, rd7_setting = rd7_key_setting(rec, parent, fmt, path.name)
             if family_run:
                 r4b["family_run_lines"] += 1
+            lk = line_kind(rec, fmt) if file_kind == KIND_BY_SETTING else file_kind
+            kl = b.setdefault("kind_lines", {})
+            kl[str(lk)] = kl.get(str(lk), 0) + 1
+            file_kinds[str(lk)] = file_kinds.get(str(lk), 0) + 1
             if key in keys_seen:
                 fnd.stop("S-15", where, "duplicate line key")
             keys_seen.add(key)
@@ -1076,6 +1108,12 @@ def cmd_harness(args, repo):
                     continue
                 want_tag = KIND_TAG[kind]
                 b.setdefault("auto_kinds", {})[kind] = b.setdefault("auto_kinds", {}).get(kind, 0) + 1
+            elif file_kind == KIND_BY_SETTING:
+                kind = lk
+                if kind is None:
+                    fnd.stop("S-11", where, "by_setting kind: job.setting / controller missing or unknown")
+                    continue
+                want_tag = KIND_TAG[kind]
             # tag (4.1)
             tag, tag_path = first_path(rec, TAG_PATHS)
             if tag is MISSING and fmt == "grid_json" and isinstance(parent, dict):
@@ -1216,9 +1254,7 @@ def cmd_harness(args, repo):
                         hash_cmp["differ"].append(key)
                         fnd.stop("S-5", where, "unchanged line: commands_sha256 differs from the stored line")
         kind = file_kind
-        want_n = None if gs else HARNESS_FILE_COUNTS.get((bundle, kind))
-        if want_n is not None and n_file != want_n:
-            fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines, rules say {want_n} for {kind}")
+        # (the per-file IND / IND_LAS 242 check of the earlier sheets is now the per-kind bundle count, B-1)
         if entry.get("expect_lines") is not None and n_file != int(entry["expect_lines"]):
             fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines, manifest expects {entry['expect_lines']}")
         b["lines"] += n_file
@@ -1227,18 +1263,32 @@ def cmd_harness(args, repo):
         b["files"].append({"path": str(path), "result_file": rel, "sha256": sha256_file(path), "kind": kind,
                            "format": fmt, "lines": n_file, "classes": classes,
                            "stored_hash": hash_cmp if stored else None, "stored": entry.get("stored"),
-                           "family_run": family_run, "key_sources": ks_files})
+                           "family_run": family_run, "key_sources": ks_files, "kind_lines": file_kinds})
         files_out.append(str(path))
+    # R4 B-1 (user decision 127 (a)) 2: a judged harness bundle missing from the manifest would skip its S-15 / S-8
+    # checks silently; outside G-S every bundle of the rules-5.1 table must be present when any of them is
+    gs_run = bool(getattr(args, "gs", False))
+    present = set(bundles)
+    if not gs_run and present & set(HARNESS_COUNTS):
+        for miss in sorted(set(HARNESS_COUNTS) - present, key=bundle_key):
+            fnd_all.setdefault(miss, Findings()).stop("S-15", miss, "bundle missing from the manifest (B-1)")
+            bundles[miss] = {"lines": 0, "classes": {}, "families": {}, "tags": {}, "errors": 0, "missing": 0,
+                             "files": [], "missing_from_manifest": True}
     for bundle, b in bundles.items():
         base_bundle = bundle[len(GS_BUNDLE_PREFIX):] if bundle.startswith(GS_BUNDLE_PREFIX) else bundle
         gs_b = bundle.startswith(GS_BUNDLE_PREFIX)
         want = None if gs_b else HARNESS_COUNTS.get(bundle)
-        if want is not None and b["lines"] != want:
+        if want is not None and b["lines"] != want and not b.get("missing_from_manifest"):
             fnd_all[bundle].stop("S-15", bundle, f"{b['lines']} lines, rules (rev1) say {want}")
+        for kname, kwant in ({} if gs_b else BUNDLE_KIND_COUNTS.get(bundle, {})).items():
+            got = b.get("kind_lines", {}).get(kname, 0)
+            if got != kwant and not b.get("missing_from_manifest"):
+                fnd_all[bundle].stop("S-15", bundle, f"{got} {kname} lines, rules 5.1 say {kwant}")
         r4b = b.get("r4", {})
         gates = []
         # RD-9: a judged bundle whose definition has VB (③ on) lines stops with S-8 when the count is 0
-        if base_bundle in RD9_BUNDLES and not gs_b and r4b.get("rd9_p3_on", 0) == 0:
+        if base_bundle in RD9_BUNDLES and not gs_b and r4b.get("rd9_p3_on", 0) == 0 \
+                and not b.get("missing_from_manifest"):
             fnd_all[bundle].stop("S-8", bundle, "③-on line / run count 0 (RD-9)")
         # RD-8: gate marker of the recorded-state J-P3 bundles
         rd8 = r4b.get("rd8")
