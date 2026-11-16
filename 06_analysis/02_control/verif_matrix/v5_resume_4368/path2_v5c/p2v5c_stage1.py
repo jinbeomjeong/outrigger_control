@@ -36,6 +36,9 @@ records V0~V8, L1, L2, pressure_only; rev16:102~103, RD-10), RD-9 3-on counts (H
 sum with the grid part, ``merge``). The old V0 ``n_late_fallback`` H-7 stop is removed (the V0 J11 is a record).
 H-9 3-on lines read a recorded T4h only from the convention folders of ``--h9`` (R12-1). ``merge`` collates the
 noise / stage1 / grid outputs into one RD-7 / RD-8 / RD-9 / RD-10 / RD-13 file.
+R4 supplement 4-3: ``h10_reuse_rerun.jsonl`` lines get their plate from ``job.setting`` (VB / LS1~LS4 = 3 on, other
+= 3 none, missing = S-11), ``h9_stage1.jsonl`` is one plate (3 none); the row tag is compared with the plate's
+expected tag (missing = S-11, other = S-2, ``common.plate_check``); plate counts are recorded.
 """
 from __future__ import annotations
 
@@ -49,7 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_stage1.py"
-TOOL_VERSION = "2"
+TOOL_VERSION = "3"
 
 M2_ON = {"V1", "V3", "VB", "V4", "V5", "V6", "V7", "V8", "LS1", "LS2", "LS3", "LS4"}   # v5 8
 M2_LAW = "flow_limited_r5"                                                         # rev6 #9
@@ -525,6 +528,15 @@ def cmd_stage1(args, repo, v5j, core):
     parts, counts = split_lines(h9, h10, f10)
     for s in f10.stops:
         f9.stop(s["code"], s["where"], s["why"])
+    # supplement 4-3: h10_reuse_rerun.jsonl = plate per line by job.setting (VB / LS = 3 on, other = 3 none; field
+    # missing = S-11), h9_stage1.jsonl = one plate (3 none); the tag is compared with the plate's tag (missing =
+    # S-11, other = S-2); the H-10 plate counts are a record (supplement 4-2)
+    plates = {"h10": {}, "h9_stage1": {}}
+    for nm, lines, nums, fx, fixed in (("h10", h10, nums10, f10, None), ("h9_stage1", h9, nums9, f9, "none")):
+        rf = cm.rel_file(args.h10 if nm == "h10" else args.h9, repo)
+        for ln, n in zip(lines, nums):
+            pl = cm.plate_check(fx, f"{rf}|line {n}", setting(ln), v5j.tag_of(ln), fixed_plate=fixed)
+            plates[nm][str(pl)] = plates[nm].get(str(pl), 0) + 1
     main9, main10 = parts["h9"].get("main", []), parts["h10"].get("main", [])
     po = parts["h9"].get("pressure_only", [])
     it8, ov = parts["h10"].get("item8", []), parts["h10"].get("overlap", [])
@@ -669,7 +681,7 @@ def cmd_stage1(args, repo, v5j, core):
                      for (s, pk), (items, f) in {**j9, **j10, **jov}.items()},
         # R4: RD-7 J-P3 / J11 rows of H-9 (main + pressure_only part; the grid part is in the grid output and the
         # two are merged by ``merge``) and H-10, RD-8 / RD-9 / RD-10 counts (H-9 S-8 on the sum in ``merge``), RD-13
-        "R4": rd.as_dict(["H-9", "H-10"]),
+        "R4": {**rd.as_dict(["H-9", "H-10"]), "supplement_4-3_plates": plates},
         "RD-13": {b: cm.rd13_lists()[b] for b in ("H-9", "H-10")},
     }
     g = {"H-10": f10.status(), "H-9_stage1": f9.status()}

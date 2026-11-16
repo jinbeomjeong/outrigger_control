@@ -42,6 +42,8 @@ exactly ``RD2_SEALS`` (``rd2_union``), else S-1. RD-1 5: ``--expect-head`` (requ
 (``p2_4368.head_check``), else S-12 and nothing is judged. RD-7 / RD-8 / RD-9 / RD-10 helpers: ``RdCounter``,
 ``jp3_rows`` / ``j11_rows`` (RD-7 3 columns), ``rd7_sort`` (RD-7 3 order), ``jp3_apply`` (an undecidable J-P3 stays
 undecidable), ``read_jsonl_numbered`` (``line N``). RD-13: ``RD13_ITEMS`` / ``rd13_lists`` (item lists and sha256).
+Supplement 4-3: ``plate_check`` (plate from the discrimination field or a one-plate file, tag compared with the
+plate's expected tag; field / tag missing = S-11, other tag = S-2).
 
 Both files are located with ``--p2-dir`` (default: ``../path2`` next to this folder, else the
 dynamics-expert worktree). Their sha256 values are checked against ``P2_V5J_SHA`` / ``P2_CORE_SHA``;
@@ -94,8 +96,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # argument); before: p2_v5j 69d0e747..., p2_4368 0ccc5186...
 # R4 supplement 3 versions (2-dyn commit 2aa0a40: p2_4368.bundle_key numeric bundle sort (3-5),
 # p2_v5j.j11_item(setting_required=True) for grid runs (3-6)); before: p2_v5j 4a036b00..., p2_4368 92f6e0d4...
+# R4 supplement 4 version of p2_4368 (2-dyn commit 8824499, user decisions 127 / 128); p2_v5j unchanged (b815771d...);
+# before: p2_4368 dd3f266e... (2aa0a40)
 P2_V5J_SHA = "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8"
-P2_CORE_SHA = "dd3f266ee34bb2b75f8ac66b6995170ca067a65b3372df03f42f6c6938d7c9cb"
+P2_CORE_SHA = "76d561cce80c44ea02c4109ed893bb1b577c130b87f8702c972defc242f34ea6"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -353,6 +357,34 @@ def rd7_markers(jp3_list, j11_list):
     return sorted(m)
 
 
+P3_TAG, NOP3_TAG = "final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1"   # original 4.1 expected tags (436.8)
+LS_PLATES = ("LS1", "LS2", "LS3", "LS4")
+
+
+def plate_of_setting(s):
+    """Supplement 4-3: plate of a run_v5 ``job.setting`` / family ``setting`` value: ``VB`` = 3 on (VB), ``LS1``~``LS4``
+    = 3 on (LS), any other value = 3 none; missing / null / empty = None (S-11)."""
+    if not isinstance(s, str) or not s:
+        return None
+    return "VB" if s == "VB" else ("LS" if s in LS_PLATES else "none")
+
+
+def plate_check(fnd, where, setting, tag, fixed_plate=None, field="job.setting"):
+    """Supplement 4-3: the plate comes from the discrimination field (or ``fixed_plate`` for a one-plate file), never
+    from the tag; the tag is compared with the plate's expected tag. Field missing = S-11, tag missing = S-11, tag
+    different = S-2. Returns the plate (None when the field is missing)."""
+    plate = fixed_plate if fixed_plate is not None else plate_of_setting(setting)
+    if plate is None:
+        fnd.stop("S-11", where, f"supplement 4-3: discrimination field {field} missing")
+        return None
+    want = P3_TAG if plate in ("VB", "LS") else NOP3_TAG
+    if not isinstance(tag, str) or not tag:
+        fnd.stop("S-11", where, "supplement 4-3: tag missing")
+    elif tag != want:
+        fnd.stop("S-2", where, f"supplement 4-3: tag {tag} != {want} of plate {plate}")
+    return plate
+
+
 def jp3_apply(fnd, where, res, why, setting_name=None):
     """Findings of one J-P3 result outside ``judge_pair`` (noise / grid / stage1 scan): ``undecidable`` (RD-8 input
     format, RD-7 3 top-level mismatch, no rod basis) stays undecidable (never a pass), ``H-7`` stop, setting defect
@@ -427,7 +459,13 @@ RD13_ITEMS = {
         ("격자 run 관문 342.3(V0 짝 대비 통과→실패 0)", "v5 기준 10, spec 342.3", "등급 항목"),
         ("격자 FAULT 0", "v5 기준 10", "등급 항목"),
         ("격자 V0 짝(8작업 표본 해시, 아니면 V0 768)", "rev3 R3-E1, rev4 R4-B4", "관문"),
-        ("계열 𝓕 R-1~R-4(family run, 실패 = 멈춤 H-10)", "v5 기준 개정 5 5.2, rev3 R3-E2, rev4 R4-B5", "관문"),
+        ("계열 𝓕 R-1~R-4(h9_family_F.jsonl 64줄, 짝 (key, offset_s), 늘 냄)",
+         "v5 기준 개정 5 5.2, rev3 R3-E2, rev4 R4-B5, 보충 4-5", "기록"),
+        ("계열 𝓕 적용(𝓕 12행에 두 관문만의 통과→실패가 있으면 R-1~R-4 통과 = 두 관문 뺌, "
+         "실패·판정 불가 = 멈춤 H-10)", "v5 기준 개정 5 5.1·5.2, rev3 R3-E2, 보충 4-5", "관문"),
+        ("계열 𝓕 판정 입력 꼴 64칸·판 판별(setting)·태그 대조(S-15·S-11·S-2)", "rev4 R4-B5, 보충 4-3·4-5", "관문"),
+        ("h9_stage1 판(③ 없음)·태그 대조(S-11·S-2)", "원판 4.1, 보충 4-2·4-3", "관문"),
+        ("입력 파일 있음: V0 저장 격자 4·h9_family_F.jsonl(S-15)", "보충 4-2·4-4", "관문"),
         ("격자 run 태그 = run 태그, 없으면 results[i] 태그", "rev8 R8-1, 사용자 결정 19, 보충 2-2", "관문"),
         ("격자 run J11 설정 = results[i].v5_setting만(없으면 J11 판정 불가)", "보충 2-2, 보충 3-6", "관문"),
         ("격자 run 수 192 × 4(S-15)", "rev1 RV1-3.2·RV1-12 (C-01·C-16)", "관문")),
@@ -442,6 +480,7 @@ RD13_ITEMS = {
         ("item8 순서(VB 뒤집힘 = 멈춤 H-11)", "v5 기준 13.1", "관문"),
         ("overlap FLAG_overlap", "v5 기준 13.3", "기록"),
         ("U-9 VB 줄 수(J-P3·J11 목록 대상, 등급은 p2_v5j u9)", "rev1 RV1-2, 보충 3-4", "기록"),
+        ("줄마다 판 판별(job.setting)·태그 대조(S-11·S-2), 판별 수 기록", "원판 4.1, 보충 4-2·4-3", "관문"),
         ("m2_law 키(flow_limited_r5)", "v5 기준 개정 6 #9", "등급 항목"),
         ("줄 수 440(S-15)", "rev1 RV1-2·RV1-12 (C-16)", "관문")),
 }

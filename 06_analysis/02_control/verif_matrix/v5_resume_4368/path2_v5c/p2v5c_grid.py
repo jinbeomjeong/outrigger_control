@@ -24,6 +24,13 @@ setting_required=True)`` (supplement 3-6: ``results[i].v5_setting`` only, missin
 missing = undecidable on VB); the old ``lock_window_alignment.n_late_fallback`` stop is replaced by
 it (rev16:102 ``n_late_fallback_by_leg`` of the actual fallback legs). Output ``R4``: RD-7 J-P3 / J11 rows
 (RD-7 3 columns and order), RD-8 / RD-9 / RD-10 counts of the grid part; ``RD-13`` the H-9 item list.
+R4 supplement 4 (user decisions 127 / 128): ``--family-f`` (original ``resume_k1/h9_family_F.jsonl``) is required
+and R-1..R-4 are always computed from its 64 lines (``family_f_rule``: fields ``key``, ``setting``, ``offset_s``,
+``event``, ``gates``, ``fault_events``, ``final_phase``, ``controller_tag``; pairs by (key, offset_s); form = S-15;
+plate by ``setting`` + tag = S-11 / S-2). Family F rows = the two keys' FS24 runs of ``grid_r67_main`` /
+``grid_r67_top`` only, 12 (else S-15). Applied only when one of them has a two-gate-only pass -> fail: pass = those
+two-gate failures leave the v5 H-10 count, fail / undecidable = v5 stop H-10; else a record. Supplement 4-4: the
+four stored V0 grids (``<stem>.json``) and ``h9_family_F.jsonl`` must exist (``input_files_check``, S-15).
 """
 from __future__ import annotations
 
@@ -36,7 +43,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_grid.py"
-TOOL_VERSION = "2"
+TOOL_VERSION = "3"
 STEMS = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
 RUNS_PER_FILE = 192
 FAST_EVENTS = {"RE1bF", "FS24"}
@@ -48,7 +55,34 @@ MAX_BUNDLES = 1                               # 342.3 recurrence (+20 J bundles 
 FAMILY_F_KEYS = {"screen|top|0.0|ready|FR", "screen|top|0.0|ready|FL"}   # rev5 5.1
 FAMILY_F_EVENT = "FS24"
 FAMILY_F_GATES = {"Fmin_after_W", "U57_outside"}
+F_STEMS = ("grid_r67_main", "grid_r67_top")      # rev5 5.1: the family F rows overlap in these two files
+F_ROWS = 12                                        # supplement 4-5: 2 phases x 2 keys + 4 phases x 2 keys
+FAMILY_F_NAME = "h9_family_F.jsonl"                # supplement 4-2 / 4-5: the original judgement input
 M2_LAW = "flow_limited_r5"
+
+
+def input_files_check(args, fnd):
+    """Supplement 4-4 (this folder's part): the stored V0 grids (``--v0-stored``, one per stem, file name
+    ``<stem>.json``, never ``*_off.json``) and ``--family-f`` = ``h9_family_F.jsonl`` must exist; a missing file or
+    another name = S-15 (the bundle stops)."""
+    out = {"v0_stored": {}, "family_f": None, "ok": True}
+    stored = dict(x.split("=", 1) for x in (args.v0_stored or []))
+    for stem in STEMS:
+        p = stored.get(stem)
+        ok = p is not None and Path(p).is_file() and Path(p).name == f"{stem}.json"
+        out["v0_stored"][stem] = {"path": p, "ok": ok}
+        if not ok:
+            fnd.stop("S-15", f"v0_stored|{stem}", f"supplement 4-4: stored V0 grid {p!r} missing or not {stem}.json")
+    extra = sorted(set(stored) - set(STEMS))
+    if extra:
+        fnd.stop("S-15", "v0_stored", f"supplement 4-4: unexpected stems {extra}")
+    ff = getattr(args, "family_f", None)
+    ok = isinstance(ff, str) and Path(ff).is_file() and Path(ff).name == FAMILY_F_NAME
+    out["family_f"] = {"path": ff, "ok": ok}
+    if not ok:
+        fnd.stop("S-15", "family_F input", f"supplement 4-4: {ff!r} missing or not {FAMILY_F_NAME}")
+    out["ok"] = not extra and ok and all(v["ok"] for v in out["v0_stored"].values())
+    return out
 
 
 def gates_p2(run, core):
@@ -177,57 +211,101 @@ def v0_pair(args, fnd):
     return {}, rec
 
 
-def family_f_rule(path, core, fnd):
-    """rev5 5.2 R-1..R-4 on the 64 conditional runs (rev3 R3-E2)."""
-    lines = core.read_jsonl(path)
-    runs, other_events = {}, 0
-    for ln in lines:   # rev4 R4-B5: one line = one runner run; only event FS24 is judged and counted
-        run = ln.get("run") if isinstance(ln.get("run"), dict) else ln
-        s = ln.get("setting") or ln.get("v5_setting") or (ln.get("job") or {}).get("setting")
-        key = ln.get("key") or (ln.get("job") or {}).get("key")
-        off = run.get("offset_s", ln.get("offset_s"))
-        if (run.get("event") or ln.get("event")) != FAMILY_F_EVENT:
-            other_events += 1
-            continue
-        runs[(key, s, round(float(off), 6) if off is not None else None)] = run
-    out = {"lines": len(lines), "runs": len(runs), "non_FS24_lines_excluded": other_events}
-    if len(runs) != 2 * 2 * F_PHASES or {k[0] for k in runs} != FAMILY_F_KEYS or {k[1] for k in runs} != {"V0", "VB"}:
-        fnd.stop("S-15", "family_F", f"runs {len(runs)} keys {sorted({str(k[0]) for k in runs})}")
+def _f_num(x):
+    return float(x) if isinstance(x, (int, float)) and not isinstance(x, bool) else None
+
+
+def family_f_rule(path, core, fnd, v5j):
+    """R4 supplement 4-5 (user decision 127): v5 criteria revision 5 5.2 R-1..R-4 on the original
+    ``resume_k1/h9_family_F.jsonl`` (64 lines, rev3 R3-E2, rev4 R4-B5), always computed.
+
+    Read per line: ``key``, ``setting``, ``offset_s``, ``event``, ``gates`` (gate -> bool, True = pass),
+    ``fault_events`` (list), ``final_phase`` (str), ``controller_tag``. Form: 64 lines, ``event`` all FS24, the
+    2 keys x 16 ``offset_s`` x V0 / VB cells one line each, else S-15 (result undecidable). Plate by ``setting``
+    and tag check (supplement 4-3: S-11 / S-2). k = phases with ``gates.Fmin_after_W`` or ``gates.U57_outside``
+    False per key and setting. R-1 k_VB <= k_V0 + 4 per key; R-2 sums, m_sum 6; R-3 every VB line
+    ``fault_events`` == [] and ``final_phase`` == ready; R-4 per VB line, gates outside the two that are False in VB
+    and True in the V0 line of the same (key, offset_s) = 0 (a gate name on one side only = that line undecidable).
+    A missing field / wrong type = that item undecidable (9.3); the result is then ``undecidable``, never pass.
+    Only the S-15 / S-11 / S-2 stops go to ``fnd``; the R-1..R-4 values are a record until ``cmd_grid`` applies
+    them."""
+    lines, nums = cm.read_jsonl_numbered(path)
+    out = {"input": [str(path), cm.sha256_file(path)], "lines": len(lines)}
+    cells, form = {}, []
+    for ln, n in zip(lines, nums):
+        where = f"family_F|line {n}"
+        cm.plate_check(fnd, where, ln.get("setting"), v5j.tag_of(ln), field="setting")   # supplement 4-3
+        if ln.get("event") != FAMILY_F_EVENT:
+            form.append(f"line {n}: event {ln.get('event')!r}")
+        cells.setdefault((ln.get("key"), ln.get("setting"), _f_num(ln.get("offset_s"))), []).append(ln)
+    offs = sorted({c[2] for c in cells if c[2] is not None})
+    want = {(k, s, o) for k in FAMILY_F_KEYS for s in ("V0", "VB") for o in offs}
+    if len(lines) != 2 * 2 * F_PHASES:
+        form.append(f"{len(lines)} lines != 64")
+    if len(offs) != F_PHASES:
+        form.append(f"{len(offs)} offset_s values != 16")
+    if set(cells) != want:
+        form.append(f"cells {len(set(cells) ^ want)} differ from 2 keys x 16 offsets x V0 / VB")
+    dup = [list(c) for c, v in cells.items() if len(v) != 1]
+    if dup:
+        form.append(f"{len(dup)} cells with more than one line")
+    out["form"] = {"ok": not form, "problems": form}
+    if form:
+        fnd.stop("S-15", "family_F", f"supplement 4-5 / R4-B5 form: {form[:5]}")
         out["result"] = "undecidable"
         return out
+    one = {c: v[0] for c, v in cells.items()}
+    undec = []
+
+    def gate(ln, name):
+        g = ln.get("gates")
+        v = g.get(name) if isinstance(g, dict) else None
+        return v if isinstance(v, bool) else None
+
     k = {}
-    r3, r4 = [], []
-    used_recorded = 0
-
-    def gates_of(run):
-        nonlocal used_recorded
-        g = gates_p2(run, core)
-        rec = run.get("gates") if isinstance(run.get("gates"), dict) else {}
-        if any(v is None for v in g.values()) and rec and all(isinstance(rec.get(x), bool) for x in g):
-            used_recorded += 1   # R4-B5 line holds the recorded gates; raw fields absent -> recorded gates
-            return {x: rec[x] for x in g}
-        return g
-
-    for (key, s, off), run in runs.items():
-        g = gates_of(run)
-        if any(v is None for v in g.values()):
-            fnd.undec(f"family_F|{key}|{s}|{off}", "gate field missing")
-        bad = any(g.get(x) is False for x in FAMILY_F_GATES)
-        k[(key, s)] = k.get((key, s), 0) + bad
-        if s == "VB":
-            if g.get("fault0") is not True or run.get("final_phase") != "ready":
-                r3.append([key, off])
-            v0g = gates_of(runs.get((key, "V0", off), {}))
-            others = [x for x, v in g.items() if x not in FAMILY_F_GATES and v is False and v0g.get(x) is not False]
-            if others:
-                r4.append([key, off, others])
-    r1 = {key: k.get((key, "VB"), 0) <= k.get((key, "V0"), 0) + F_M for key in FAMILY_F_KEYS}
-    tv = sum(k.get((key, "VB"), 0) for key in FAMILY_F_KEYS)
-    t0 = sum(k.get((key, "V0"), 0) for key in FAMILY_F_KEYS)
-    r2 = tv <= t0 + F_M_SUM
-    ok = all(r1.values()) and r2 and not r3 and not r4
-    out.update(k={f"{a}|{b}": v for (a, b), v in sorted(k.items())}, R1=r1, R2={"VB": tv, "V0": t0, "ok": r2},
-               R3=r3, R4=r4, recorded_gates_used=used_recorded, result="pass" if ok else "fail")
+    for (key, s, off), ln in sorted(one.items(), key=lambda x: (x[0][0], x[0][1], x[0][2])):
+        a, b = gate(ln, "Fmin_after_W"), gate(ln, "U57_outside")
+        if a is None or b is None:   # this key / setting k is undecidable (9.3)
+            undec.append({"item": "k", "key": key, "setting": s, "offset_s": off, "why": "gate missing / not bool"})
+            k[(key, s)] = None
+        elif not ((key, s) in k and k[(key, s)] is None):
+            k[(key, s)] = k.get((key, s), 0) + (a is False or b is False)
+    r1 = {}
+    for key in sorted(FAMILY_F_KEYS):
+        kv, k0 = k.get((key, "VB")), k.get((key, "V0"))
+        r1[key] = None if kv is None or k0 is None else kv <= k0 + F_M
+    kvs = [k.get((key, "VB")) for key in FAMILY_F_KEYS]
+    k0s = [k.get((key, "V0")) for key in FAMILY_F_KEYS]
+    tv = None if None in kvs else sum(kvs)
+    t0 = None if None in k0s else sum(k0s)
+    r2 = None if tv is None or t0 is None else tv <= t0 + F_M_SUM
+    r3_v, r3_u, r4_v, r4_u = [], [], [], []
+    for (key, s, off), ln in sorted(one.items(), key=lambda x: (x[0][0], x[0][1], x[0][2])):
+        if s != "VB":
+            continue
+        fe, fp = ln.get("fault_events"), ln.get("final_phase")
+        if not isinstance(fe, list) or not isinstance(fp, str):
+            r3_u.append([key, off])
+        elif fe or fp != "ready":
+            r3_v.append([key, off, len(fe), fp])
+        g1, g0 = ln.get("gates"), one[(key, "V0", off)].get("gates")
+        if not isinstance(g1, dict) or not isinstance(g0, dict):
+            r4_u.append([key, off, "gates missing"])
+            continue
+        n1, n0 = set(g1) - FAMILY_F_GATES, set(g0) - FAMILY_F_GATES
+        if n1 != n0 or any(not isinstance(g1[x], bool) or not isinstance(g0[x], bool) for x in n1):
+            r4_u.append([key, off, "gate names differ or not bool"])
+            continue
+        new = sorted(x for x in n1 if g1[x] is False and g0[x] is True)
+        if new:
+            r4_v.append([key, off, new])
+    r3 = None if r3_u else not r3_v
+    r4 = None if r4_u else not r4_v
+    conds = list(r1.values()) + [r2, r3, r4]
+    result = "undecidable" if (undec or None in conds) else ("pass" if all(conds) else "fail")
+    out.update(k={f"{a}|{b}": v for (a, b), v in sorted(k.items())}, R1=r1,
+               R2={"VB": tv, "V0": t0, "ok": r2}, R3={"ok": r3, "violations": r3_v, "undecidable": r3_u},
+               R4={"ok": r4, "violations": r4_v, "undecidable": r4_u}, undecidable=undec, result=result)
     return out
 
 
@@ -235,6 +313,7 @@ def cmd_grid(args, repo, v5j, core):
     is_p3, mod = core.load_is_extend_start(repo)
     fnd = core.Findings()
     vb_files = dict(x.split("=", 1) for x in args.vb)
+    inputs_44 = input_files_check(args, fnd)          # supplement 4-4 (S-15)
     v0_files, pair_rec = v0_pair(args, fnd)
     if set(vb_files) != set(STEMS):
         fnd.stop("S-15", "files", f"VB stems {sorted(vb_files)} != {list(STEMS)}")
@@ -259,6 +338,7 @@ def cmd_grid(args, repo, v5j, core):
         return body, st
     t4h_log = {}
     rd = cm.RdCounter(core.bundle_key)   # R4 RD-7 / RD-8 / RD-9 / RD-10 (bundle H-9, grid part; supplement 2-2)
+    n_F = 0
     for stem, path in vb_files.items():
         d = json.loads(Path(path).read_text("utf-8"))
         meta = d.get("meta") or {}
@@ -287,7 +367,9 @@ def cmd_grid(args, repo, v5j, core):
             tags[t] = tags.get(t, 0) + 1
             v0 = v0_runs.get(k)
             row = {"run": k, "pass_p2": p, "v0_pass_p2": None if v0 is None else v0["pass_p2"]}
-            in_F = r.get("key") in FAMILY_F_KEYS and run.get("event") == FAMILY_F_EVENT
+            # family F rows (v5 revision 5 5.1, supplement 4-5): the two keys' FS24 runs of grid_r67_main / _top
+            in_F = stem in F_STEMS and r.get("key") in FAMILY_F_KEYS and run.get("event") == FAMILY_F_EVENT
+            n_F += in_F
             if v0 is None:
                 if v0_files:
                     fnd.undec(k, "no V0 run with the same key / event / offset")
@@ -336,24 +418,31 @@ def cmd_grid(args, repo, v5j, core):
         out_files[stem] = {"path": path, "sha256": cm.sha256_file(path), "runs": n, "tags": tags,
                            "meta_spec": meta.get("spec"), "meta_script": meta.get("script"),
                            "v5_setting": meta.get("v5_setting")}
-    fam_rule = None
-    if fam_F:   # rev3 R3-E2 (Q-E2 = A): conditional 64 runs judged by rev5 5.2 R-1..R-4
-        if not args.family_f:
-            fnd.undec("family_F", f"{len(fam_F)} family-F transitions: resume_k1/h9_family_F.jsonl (64 runs) needed")
-        else:
-            fam_rule = family_f_rule(args.family_f, core, fnd)
-            fam_rule["input"] = [args.family_f, cm.sha256_file(args.family_f)]
-            if fam_rule["result"] == "fail":
-                fnd.stop("H-10", "family_F", "rev5 5.2 R-1..R-4 failed")
+    # supplement 4-5: the family F rows must be 12 (grid_r67_main 2 phases + grid_r67_top 4 phases, x 2 keys)
+    if n_F != F_ROWS:
+        fnd.stop("S-15", "family_F rows", f"{n_F} family F rows in the VB grid != {F_ROWS} (supplement 4-5: ask)")
+    # R-1..R-4 always computed (supplement 4-5); applied only when a family-F row has a two-gate-only transition
+    fam_rule = (family_f_rule(args.family_f, core, fnd, v5j) if Path(args.family_f).is_file()
+                else {"input": [args.family_f, None], "result": "undecidable", "why": "file missing (4-4 S-15)"})
+    applicable = bool(fam_F)
+    if not applicable:
+        fam_rule["application"] = "record (no two-gate-only pass -> fail in the 12 family F rows)"
+    elif fam_rule["result"] == "pass":
+        fam_rule["application"] = (f"R-1..R-4 pass: the two-gate failures of {len(fam_F)} family F rows are taken "
+                                   "out of the v5 H-10 count (other gates stay per row)")
+    else:
+        fam_rule["application"] = f"R-1..R-4 {fam_rule['result']}: v5 criteria stop H-10 (ask)"
+        fnd.stop("H-10", "family_F", f"rev5 5.2 R-1..R-4 {fam_rule['result']} with {len(fam_F)} family F transitions")
     if trans_nonF:
         fnd.stop("H-10", "grid", f"pass -> fail {len(trans_nonF)} (outside family F)")
-    body = {"inputs": {"vb": out_files, "v0": v0_meta}, "v5_options": mod, "v0_pair": pair_rec,
+    body = {"inputs": {"vb": out_files, "v0": v0_meta, "supplement_4-4": inputs_44}, "v5_options": mod,
+            "v0_pair": pair_rec,
             "R11-2_t4h": {"search_dirs": {k: [str(d) for d in v] for k, v in places.items()}, "lookup": t4h_log},
             "grid": {"runs": len(rows), "pass_p2": sum(1 for x in rows if x["pass_p2"] is True),
                      "fail_p2": sum(1 for x in rows if x["pass_p2"] is False),
                      "pass_to_fail_all": trans_all, "pass_to_fail_outside_F": trans_nonF,
-                     "family_F": fam_F,
-                     "family_F_rule": fam_rule if fam_F else "not applicable (no family-F-only transition)",
+                     "family_F": fam_F, "family_F_rows": n_F, "family_F_applicable": applicable,
+                     "family_F_rule": fam_rule,
                      "fault_runs": fault_runs,
                      "recorded_gate_differences": gate_diff, **fnd.as_dict()},
             "per_run": rows,
@@ -374,12 +463,15 @@ def build_parser():
     g = sub.add_parser("grid")
     g.add_argument("--vb", action="append", required=True, help="<stem>=<resume_k1/h9_grid/<stem>.json>")
     g.add_argument("--v0-stored", action="append", default=None,
-                   help="<stem>=<stored V0 grid json> (acceptance/c4g2_only/grid, R3-E1)")
+                   help="<stem>=<stored V0 grid json> (touch_phase/acceptance/c4g2_only/grid/<stem>.json, R3-E1); "
+                        "all four are required (supplement 4-4, else S-15)")
     g.add_argument("--v0-sample", action="append", default=None,
                    help="<stem>=<same-commit V0 8-job sample json> (R3-E1)")
     g.add_argument("--v0-new", action="append", default=None,
                    help="<stem>=<resume_k1/h9_grid_v0/<stem>.json> (R3-E1, when the sample differs)")
-    g.add_argument("--family-f", default=None, help="resume_k1/h9_family_F.jsonl (R3-E2, 64 runs)")
+    g.add_argument("--family-f", required=True,
+                   help="resume_k1/h9_family_F.jsonl (required, supplement 4-4 / 4-5: R-1..R-4 always computed; "
+                        "missing or another name = S-15)")
     g.add_argument("--t4h-root", action="append", default=None,
                    help="T4h folder (rev12 R12-1 / rev11 R11-2): only when no --vb file has a convention "
                         "folder <stem>_t4h/ or t4h/, at most one")

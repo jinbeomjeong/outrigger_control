@@ -77,25 +77,54 @@ class TestGridGates(unittest.TestCase):
 
 
 def write_grid(folder, setting, mutate=None, n=192):
+    """Four grid files <folder>/<setting>/<stem>.json. results[0] / [1] = family F keys FR / FL; in grid_r67_top
+    their FS24 runs have four phases (0, 0.025, 0.05, 0.075), in grid_r67_main two (0, 0.05): 12 family F rows."""
     paths = {}
+    (Path(folder) / setting).mkdir(parents=True, exist_ok=True)
     for stem in gr.STEMS:
         results = []
         for i in range(n // 6):
-            key = "screen|top|0.0|ready|FR" if i == 0 else f"screen|bottom|0.0|level|K{i}"
-            runs = [fast_run(offset_s=o) for o in (0.0, 0.05)] * 3
-            for j, ev in enumerate(("FS24", "FS24", "RE1bF", "RE1bF", "G4", "G4")):
-                runs[j] = copy.deepcopy(runs[j])
-                runs[j]["event"] = ev
+            key = ("screen|top|0.0|ready|FR", "screen|top|0.0|ready|FL")[i] if i < 2 else f"screen|bottom|0.0|level|K{i}"
+            if stem == "grid_r67_top" and i < 2:
+                plan = (("FS24", 0.0), ("FS24", 0.025), ("FS24", 0.05), ("FS24", 0.075), ("G4", 0.0), ("G4", 0.05))
+            else:
+                plan = (("FS24", 0.0), ("FS24", 0.05), ("RE1bF", 0.0), ("RE1bF", 0.05), ("G4", 0.0), ("G4", 0.05))
+            runs = []
+            for ev, off in plan:
+                run = fast_run(offset_s=off, event=ev)
                 if ev == "G4":
-                    runs[j].update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
+                    run.update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
+                runs.append(run)
             results.append({"key": key, "v5_setting": setting, "runs": runs})   # supplement 3-6: results[i] setting
         if mutate:
             mutate(stem, results)
-        p = Path(folder) / f"{setting}_{stem}.json"
+        p = Path(folder) / setting / f"{stem}.json"
         p.write_text(json.dumps({"meta": {"spec": gr.FAMILY_F_EVENT and "rev. 67 (G1 / G2 / G7 reduced screen)",
                                           "v5_setting": setting}, "results": results}), "utf-8")
         paths[stem] = str(p)
     return paths
+
+
+def ff_lines(vb_bad=0, v0_bad=0):
+    """Synthetic h9_family_F.jsonl (supplement 4-5 fields): 2 keys x 16 phases x V0 / VB, the first ``*_bad``
+    phases with Fmin_after_W false."""
+    gates = {k: True for k in gr.gates_p2(fast_run(), CORE)}
+    out = []
+    for key in sorted(gr.FAMILY_F_KEYS):
+        for s, nbad in (("VB", vb_bad), ("V0", v0_bad)):
+            for i in range(16):
+                g = dict(gates, Fmin_after_W=i >= nbad)
+                out.append({"key": key, "setting": s, "offset_s": i * 0.00625, "event": "FS24", "gates": g,
+                            "fault_events": [], "final_phase": "ready",
+                            "controller_tag": "final_C4G2_P3_LAS_K1" if s == "VB" else "final_C4G2_LAS_K1"})
+    return out
+
+
+def write_ff(folder, lines, name="h9_family_F.jsonl"):
+    p = Path(folder) / "ff" / name
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text("\n".join(json.dumps(x) for x in lines) + "\n", "utf-8")
+    return str(p)
 
 
 class Args:
@@ -107,16 +136,14 @@ REPO = cm.REPO_DEFAULT
 
 
 class TestGridCmd(unittest.TestCase):
-    def run_grid(self, mut_vb=None, mut_v0=None, n=192, family_f=None):
+    def run_grid(self, mut_vb=None, mut_v0=None, n=192, family_f=None, ff_name="h9_family_F.jsonl", stored=True):
         with tempfile.TemporaryDirectory() as td:
             vb = write_grid(td, "VB", mut_vb, n)
             v0 = write_grid(td, "V0", mut_v0, n)
-            ff = None
-            if family_f is not None:
-                ff = str(Path(td) / "ff.jsonl")
-                Path(ff).write_text("\n".join(json.dumps(x) for x in family_f) + "\n", "utf-8")
+            st = write_grid(td, "stored", None, n) if stored else {}
+            ff = write_ff(td, ff_lines() if family_f is None else family_f, ff_name)
             a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_new=[f"{k}={v}" for k, v in v0.items()],
-                     v0_stored=None, v0_sample=None, family_f=ff)
+                     v0_stored=[f"{k}={v}" for k, v in st.items()], v0_sample=None, family_f=ff)
             return gr.cmd_grid(a, REPO, V5J, CORE)
 
     def test_v0_sample(self):
@@ -124,6 +151,7 @@ class TestGridCmd(unittest.TestCase):
             st = write_grid(td, "V0", None)
             sm = write_grid(td, "S", None)
             vb = write_grid(td, "VB", None)
+            ff = write_ff(td, ff_lines())
             for stem, p in sm.items():   # give every run a hash; same as stored
                 for q in (st[stem], p):
                     d = json.loads(Path(q).read_text("utf-8"))
@@ -132,7 +160,7 @@ class TestGridCmd(unittest.TestCase):
                             run["commands_sha256"] = f"{r['key']}{i}"
                     Path(q).write_text(json.dumps(d), "utf-8")
             a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_stored=[f"{k}={v}" for k, v in st.items()],
-                     v0_sample=[f"{k}={v}" for k, v in sm.items()], v0_new=None, family_f=None)
+                     v0_sample=[f"{k}={v}" for k, v in sm.items()], v0_new=None, family_f=ff)
             body, s = gr.cmd_grid(a, REPO, V5J, CORE)
             self.assertEqual(body["v0_pair"]["sample"]["same"], 8)
             self.assertTrue(body["v0_pair"]["pair"].startswith("stored"))
@@ -143,27 +171,47 @@ class TestGridCmd(unittest.TestCase):
             self.assertEqual(body["v0_pair"]["sample"]["same"], 7)
             self.assertEqual(s, "undecidable")
 
-    def _ff(self, vb_bad, v0_bad):
-        lines = []
-        for key in sorted(gr.FAMILY_F_KEYS):
-            for s, nbad in (("VB", vb_bad), ("V0", v0_bad)):
-                for i in range(16):
-                    run = fast_run(offset_s=i * 0.00625)
-                    if i < nbad:
-                        run["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
-                    lines.append({"key": key, "setting": s, "run": run})
-        return lines
-
     def test_family_F_rule(self):
+        """Supplement 4-5: R-1..R-4 always computed from h9_family_F.jsonl; applied (pass = excluded, fail /
+        undecidable = v5 H-10) only with a two-gate-only transition in the 12 family F rows; else a record."""
         def m(stem, res):
             if stem == "grid_r67_top":
                 res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
-        body, st = self.run_grid(mut_vb=m, family_f=self._ff(4, 1))   # 4 <= 1 + 4, sum 8 <= 2 + 6
-        self.assertEqual(body["grid"]["family_F_rule"]["result"], "pass")
+        body, st = self.run_grid(mut_vb=m, family_f=ff_lines(4, 1))   # 4 <= 1 + 4, sum 8 <= 2 + 6
+        fr = body["grid"]["family_F_rule"]
+        self.assertEqual((fr["result"], fr["k"]["screen|top|0.0|ready|FL|VB"], body["grid"]["family_F_rows"]),
+                         ("pass", 4, 12))
         self.assertEqual(st, "pass")
-        body, st = self.run_grid(mut_vb=m, family_f=self._ff(6, 1))   # 6 > 5
+        body, st = self.run_grid(mut_vb=m, family_f=ff_lines(6, 1))   # 6 > 5
         self.assertEqual(body["grid"]["family_F_rule"]["result"], "fail")
+        self.assertFalse(body["grid"]["family_F_rule"]["R1"]["screen|top|0.0|ready|FR"])
         self.assertIn("H-10", body["stop_codes"])
+        bad = ff_lines(0, 0)
+        del bad[3]["gates"]["U57_outside"]                              # a VB line field missing -> undecidable
+        body, st = self.run_grid(mut_vb=m, family_f=bad)
+        self.assertEqual(body["grid"]["family_F_rule"]["result"], "undecidable")
+        self.assertIn("H-10", body["stop_codes"])                      # applicable + undecidable = v5 H-10
+        body, st = self.run_grid(family_f=ff_lines(6, 1))              # not applicable: R fail is a record
+        self.assertEqual((body["grid"]["family_F_rule"]["result"], st), ("fail", "pass"))
+        r4 = ff_lines(0, 0)
+        r4[0]["gates"]["U57_sum"] = False                              # VB FL phase 0: R-4 violation
+        r4[1]["fault_events"] = ["FAULT_X"]                            # VB FL phase 1: R-3 violation
+        fr = self.run_grid(family_f=r4)[0]["grid"]["family_F_rule"]
+        self.assertEqual((fr["R3"]["ok"], fr["R4"]["ok"], fr["R4"]["violations"][0][2]), (False, False, ["U57_sum"]))
+
+    def test_family_F_form_and_plate(self):
+        """Supplement 4-5 form (64 cells) = S-15; supplement 4-3: setting missing = S-11, tag of another plate = S-2."""
+        body, st = self.run_grid(family_f=ff_lines()[:-1])
+        self.assertIn("S-15", body["stop_codes"])
+        self.assertEqual(body["grid"]["family_F_rule"]["result"], "undecidable")
+        x = ff_lines()
+        x[0]["controller_tag"] = "final_C4G2_LAS_K1"                   # VB line with the 3-none tag
+        body, st = self.run_grid(family_f=x)
+        self.assertEqual(body["stop_codes"], ["S-2"])
+        x = ff_lines()
+        x[5]["setting"] = None
+        body, st = self.run_grid(family_f=x)
+        self.assertIn("S-11", body["stop_codes"])
 
     def test_all_pass(self):
         body, st = self.run_grid()
@@ -179,12 +227,20 @@ class TestGridCmd(unittest.TestCase):
         self.assertEqual(len(body["grid"]["pass_to_fail_outside_F"]), 1)
 
     def test_family_F_only(self):
+        """Supplement 4-4: the family file and the four stored V0 grids must exist with their names (S-15)."""
         def m(stem, res):
             if stem == "grid_r67_top":
                 res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
         body, st = self.run_grid(mut_vb=m)
-        self.assertEqual(st, "undecidable")
+        self.assertEqual(st, "pass")                                   # default family file passes R-1..R-4
         self.assertEqual(len(body["grid"]["family_F"]), 1)
+        body, st = self.run_grid(ff_name="h9_family_F_copy.jsonl")
+        self.assertEqual(body["stop_codes"], ["S-15"])
+        body, st = self.run_grid(stored=False)
+        self.assertEqual(body["stop_codes"], ["S-15"])
+        self.assertFalse(body["inputs"]["supplement_4-4"]["ok"])
+        with self.assertRaises(SystemExit), __import__("contextlib").redirect_stderr(__import__("io").StringIO()):
+            gr.build_parser().parse_args(["--expect-head", "x", "grid", "--vb", "a=b"])   # --family-f required
 
     def test_fault_and_count(self):
         def m(stem, res):
@@ -906,6 +962,15 @@ class TestR4(unittest.TestCase):
         self.assertFalse(any("V0" in str(s["where"]) and s["code"] == "H-7" for s in body["H-9_stage1"]["stops"]))
         self.assertIn("L-e", body["H-10"]["stop_codes"])
         self.assertEqual(sorted(body["RD-13"]), ["H-10", "H-9"])
+        # supplement 4-3: plate by job.setting (h10) / one plate (h9_stage1), tag compared
+        self.assertEqual(r4["supplement_4-3_plates"], {"h10": {"VB": 2, "LS": 1}, "h9_stage1": {"none": 3}})
+        self.assertNotIn("S-11", body["stop_codes"])
+        f = CORE.Findings()
+        self.assertIsNone(cm.plate_check(f, "w", None, P3_TAG))                     # field missing = S-11
+        self.assertEqual(cm.plate_check(f, "w", "LS2", None), "LS")                  # tag missing = S-11
+        self.assertEqual(cm.plate_check(f, "w", "V3", P3_TAG), "none")               # 3-none plate, 3-on tag = S-2
+        self.assertEqual(cm.plate_check(f, "w", "VB", P3_TAG), "VB")                 # match
+        self.assertEqual([s["code"] for s in f.stops], ["S-11", "S-11", "S-2"])
 
     def test_stage1_rd8_never_pass(self):
         """RD-8 through judge_pair (judged VB line) and through rd_scan (U-9 VB line): undecidable, counted."""
