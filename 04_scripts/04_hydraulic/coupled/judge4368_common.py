@@ -330,7 +330,6 @@ def control_period_index(t_s: float) -> int:
 
 # --------------------------------------------------------------------- R4 shared J-P3 (RD-7, RD-8)
 LEGS = ("FL", "FR", "RL", "RR")
-BAR_PA = 1e5
 MARKER_JP3_FORM = "J-P3 입력 형식(RD-8)"
 """RD-8: the bundle gate marker of a J-P3 input form defect (both paths use this name)."""
 STOP_H7 = "멈춤 H-7"
@@ -387,18 +386,22 @@ def breach_reads_problem(bound: Any) -> str | None:
 
 
 def _per_leg(bound: dict, name: str, index: int) -> Any:
+    """R4 supplement 3-3: one leg's element of a recorded per-leg list, copied as recorded (no
+    rounding, no conversion); None when it is missing, not a number or not finite."""
     values = bound.get(name)
-    return values[index] if isinstance(values, list) and len(values) == len(LEGS) else None
+    if not isinstance(values, list) or len(values) != len(LEGS):
+        return None
+    value = values[index]
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return value if math.isfinite(value) else None
 
 
 def min_gap_bar(bound: dict, index: int) -> float | None:
-    """RD-7 3 minimum gap [bar] of one leg: the record's ``min_gap_bar`` (= Pa / 1e5, written by
-    ``ExtendBoundCheck.record``), else ``min_gap_Pa`` / 1e5."""
-    value = _per_leg(bound, "min_gap_bar", index)
-    if value is not None:
-        return value
-    pascal = _per_leg(bound, "min_gap_Pa", index)
-    return None if pascal is None else float(pascal) / BAR_PA
+    """R4 supplement 3-3 (RD-7 3 read anew, user decision 126): the minimum gap [bar] of one leg
+    is the element of the record's ``min_gap_bar`` moved without a calculation (the harness
+    record has no Pa key)."""
+    return _per_leg(bound, "min_gap_bar", index)
 
 
 def breach_leg_rows(bound: dict) -> list[dict]:
@@ -578,6 +581,9 @@ def assess_j11(block: Any, setting: str | None) -> dict:
     out: dict[str, Any] = {"setting": setting, "stop_setting": is_stop_setting, "marker": None,
                            "fallback_legs": [], "late_by_leg": {}, "late_legs": [],
                            "reason": None}
+    if setting is None:  # R4 supplement 3-6: whether J11 stops cannot be decided
+        return {**out, "state": NOT_JUDGEABLE,
+                "reason": "setting missing: J11 scope undecidable (supplement 3-6)"}
     if not isinstance(block, dict):
         if is_stop_setting:
             return {**out, "state": NOT_JUDGEABLE,

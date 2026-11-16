@@ -138,8 +138,17 @@ def test_u3_item_input_is_under_v5() -> None:
     assert bound["breach_reads"] == [1, 0, 0, 0] and problem is None
 
 
-def test_min_gap_from_pascal_when_bar_is_absent() -> None:
-    assert common.min_gap_bar({"min_gap_Pa": [1e5, 2e5, 3e5, -4e5]}, 3) == -4.0
+def test_list_values_are_the_recorded_elements_or_null() -> None:
+    """Supplement 3-3: min_gap_bar / first_breach_t_s elements moved as recorded; a missing,
+    non-number or non-finite element is null; no Pa key is converted."""
+    bound = {"min_gap_bar": [0.123456789012345, float("nan"), "x", float("inf")],
+             "first_breach_t_s": [12.3456789, None, True, 1],
+             "min_gap_Pa": [1e5, 2e5, 3e5, 4e5]}
+    assert [common.min_gap_bar(bound, i) for i in range(4)] == [0.123456789012345, None, None,
+                                                                None]
+    assert [common._per_leg(bound, "first_breach_t_s", i) for i in range(4)] == [12.3456789,
+                                                                                 None, None, 1]
+    assert common.min_gap_bar({"min_gap_Pa": [1e5, 2e5, 3e5, -4e5]}, 3) is None
 
 
 def test_h6_and_stage1_use_the_rd8_form() -> None:
@@ -255,6 +264,15 @@ def test_grid_runs_get_j11_and_rd10(tmp_path: Path) -> None:
         ("results[0].runs[0]", "RL", "H-7")]
     assert out["J11_RD10"] == {"not_judgeable": 1, "no_input": 0}
     assert "J11 멈춤 H-7" in out["markers"] and out["grade"] == common.NOT_JUDGEABLE
+
+
+def test_grid_setting_is_the_job_v5_setting_only(tmp_path: Path) -> None:
+    """Supplement 3-6: no meta fallback; a job without v5_setting makes its runs' J11 판정 불가."""
+    document = _grid([[0] * 4, [0] * 4])
+    del document["results"][0]["v5_setting"]
+    out = stage1.grid_grade([_write_json(tmp_path / "h9_grid" / "grid_r69_top.json", document)])
+    assert out["J11_RD10"]["not_judgeable"] == 2 and out["grade"] == common.NOT_JUDGEABLE
+    assert common.assess_j11(_lwa(), None)["state"] == common.NOT_JUDGEABLE
 
 
 def _stage1_line(case: str, setting: str, tag: str, reads, lwa, t4h: str | None) -> dict:
@@ -420,7 +438,8 @@ def _r79_line(key: str, setting: str, tag: str, reads, lwa) -> dict:
 
 
 def test_r4_lists_h8_leaves_out_the_dg3_keys_and_v0_records(tmp_path: Path) -> None:
-    """Supplement 2-1: dg3-replaced keys leave the H-8 VB lists; V0 J11 is a record."""
+    """Supplement 2-1 with 3-1 / 3-2: dg3-replaced keys leave the h8_noise_VB lists only (a
+    seedext VB line with the same key stays), they still count in RD-9; V0 J11 is a record."""
     resume = tmp_path / judge.RESUME_K1_DIR
     replaced, kept = "L3|s0|g6|1|ref|J1|top|Fs0", "L3|s1|g6|1|ref|J1|top|Fs0"
     _write_json(tmp_path / judge.DG3_KEY_SOURCE, {"results": [{"key": f"cand=current#{replaced}"}]})
@@ -429,14 +448,19 @@ def test_r4_lists_h8_leaves_out_the_dg3_keys_and_v0_records(tmp_path: Path) -> N
         _r79_line(f"cand=current#{kept}", "VB", TAG_P3, [1, 0, 0, 0], _lwa(RL=1))]})
     _write_json(resume / "h8_noise_V0.json", {"results": [
         _r79_line(kept, "V0", TAG_V0, None, _lwa(RL=3))]})
+    _write_json(resume / "h8_seedext_VB.json", {"results": [
+        _r79_line(f"cand=current#{replaced}", "VB", TAG_P3, [0, 0, 2, 0], _lwa())]})
     table = _write_json(tmp_path / "family.json", {"rows": []})
     _, report = _main(["r4-lists", "--root", str(tmp_path), "--family-table", str(table),
                        "--bundles", "H-8"], tmp_path / "lists.json")
-    assert [(r["location"], r["leg"]) for r in report["lists"]["J-P3"]] == [("results[1]", "FL")]
+    assert [(r["result_file"].rsplit("/", 1)[-1], r["location"], r["leg"])
+            for r in report["lists"]["J-P3"]] == [("h8_noise_VB.json", "results[1]", "FL"),
+                                                  ("h8_seedext_VB.json", "results[0]", "RL")]
     assert [(r["result_file"].rsplit("/", 1)[-1], r["location"]) for r in report["lists"]["J11"]
             ] == [("h8_noise_VB.json", "results[1]")]
-    excluded = report["bundles"]["H-8"]["dg3_replaced_excluded"]
-    assert list(excluded.values()) == [1] and report["dg3_key_source"]["keys"] == 1
+    bundle = report["bundles"]["H-8"]
+    assert list(bundle["dg3_replaced_excluded"].values()) == [1]
+    assert bundle["p3_units_RD9"] == 3 and report["dg3_key_source"]["keys"] == 1
 
 
 def test_r4_lists_grid_runs_are_in_the_j11_list(tmp_path: Path) -> None:

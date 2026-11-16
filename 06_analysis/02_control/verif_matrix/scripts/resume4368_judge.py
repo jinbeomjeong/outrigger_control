@@ -126,6 +126,12 @@ the rev25 CD-11 P3 table (2-5) and
 C-11 LOC-period values at the first LOC and, after a cancellation, the final LOC (2-6). The r72
 G6-2 demotion (2-3) is in the r72 records' gates already (``r72_g6_screen``, six conditions of
 ``late_loc_rule.late_loc_revoked``), read unchanged by ``u3_judge_4368``.
+R4 supplement 3 (5360becf, user decisions 125 / 126): the dg3 exclusion is ``h8_noise_VB.json``
+only and those lines stay in the H-8 RD-9 number (3-1, 3-2); list values ``min_gap_bar`` /
+``first_breach_t_s`` are the recorded elements as they are, a missing / non-number / non-finite
+one is null (3-3); H-10 is every line of ``h10_reuse_rerun.jsonl`` (3-4); a grid run's setting is
+``results[i].v5_setting`` only and a missing one makes its J11 판정 불가 (3-6); a ``@`` token is a
+patch only with a leg name after it (3-7, ``GROUND_TOKEN``).
 
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
@@ -2943,6 +2949,10 @@ R4_BLOCK_SHA256 = "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259
 SUPPLEMENT_2_SHA256 = "a9a15a139843e796c73fd9046cd8cd92ed0dcaeaa14bd41c7cd591aaef9c6452"
 """R4 supplement 2 (user decision 124; same bytes for both paths): 2-1 H-8 lists, 2-2 grid J11,
 2-3 G6-2 demotion, 2-4 rc source, 2-5 C-10 G6 by P3, 2-6 C-11 LOC, 2-7 u6 ``src``."""
+SUPPLEMENT_3_SHA256 = "5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8"
+"""R4 supplement 3 (user decisions 125 / 126; same bytes for the three writers): 3-1 H-8 RD-9,
+3-2 dg3 exclusion scope, 3-3 list values as recorded, 3-4 H-10 scope, 3-5 bundle labels, 3-6 grid
+setting, 3-7 patch token."""
 R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
 """RD-1 5 / rev16 R16-14: the run commit of the R2 outputs and of H-11 / H-12 / C-9 .. C-11."""
 HULL_DLL_SHA256 = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
@@ -3120,9 +3130,15 @@ def read_dg3_keys(root: Path) -> set[str] | None:
     return {r79_key(row.get("key")) for row in read_json(path).get("results") or []}
 
 
+DG3_REPLACED_FILE = "h8_noise_VB.json"
+"""Supplement 3-2: the dg3 replacement is the H-8 VB noise file only (seedext lines keep theirs)."""
+
+
 def is_dg3_replaced(unit: ListUnit, dg3_keys: set[str] | None) -> bool:
-    """An H-8 VB line whose key dg3 replaced (judged by its H-6 line, supplement 2-1)."""
-    return (unit.bundle == H8_BUNDLE and unit.setting == VB_SETTING and bool(dg3_keys)
+    """An ``h8_noise_VB.json`` line whose key dg3 replaced (judged by its H-6 line, supplement
+    2-1 with 3-2; such lines still count in the RD-9 ③ number, supplement 3-1)."""
+    return (unit.bundle == H8_BUNDLE and unit.result_file.endswith("/" + DG3_REPLACED_FILE)
+            and unit.setting == VB_SETTING and bool(dg3_keys)
             and r79_key(unit.key) in dg3_keys)
 
 
@@ -3266,6 +3282,7 @@ def r4_lists(args: argparse.Namespace) -> dict:
                 "path": DG3_KEY_SOURCE, "sha256": file_sha256(root / DG3_KEY_SOURCE),
                 "keys": len(dg3_keys)},
             "supplement_2_sha256": SUPPLEMENT_2_SHA256,
+            "supplement_3_sha256": SUPPLEMENT_3_SHA256,
             "lists": lists, "bundles": bundles, "markers": markers, "missing_files": missing,
             "exit_code": 1 if markers or missing else 0}
 
@@ -3960,8 +3977,8 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
         ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
     ),
     "H-6": (
-        ("J-P3(ext_moving breach_reads)", "rev3 R3-C8, rev4 R4-A2, rev8 R8-2, R4 RD-7·RD-8",
-         ITEM_GATE),
+        ("J-P3(ext_moving breach_reads)",
+         "rev3 R3-C8, rev4 R4-A2, rev8 R8-2, R4 RD-7·RD-8, 보충 3-3", ITEM_GATE),
         ("J9 잘림(m2_clipped_steps_post_lift)", "v5 기준 개정 2", ITEM_GATE),
         ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
         ("새 FAULT(S-6 근거)", "rev4 R4-B6", ITEM_GRADE),
@@ -3980,21 +3997,22 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
         ("L1 게이트 네 개수 대조", "rev4 R4-B3, rev5 R5-C1", ITEM_GATE),
         ("seedext k/25·Fisher·문구", "개정 6 9절", ITEM_RECORD),
         ("seedext 시드 0~4 해시(H-15)", "rev3 F-6", ITEM_GATE),
-        ("J-P3 위반 목록(VB 줄, dg3 대체 135키 제외)", "R4 RD-7·RD-8, rev8 R8-2, 보충 2-1",
-         ITEM_GATE),
-        ("J11 실제 대체 다리 n_late(VB 줄, dg3 대체 135키 제외)",
-         "rev16 R16-6, R4 RD-7·RD-10, 보충 2-1", ITEM_GATE),
+        ("J-P3 위반 목록(VB 줄, h8_noise_VB의 dg3 대체 135키 제외)",
+         "R4 RD-7·RD-8, rev8 R8-2, 보충 2-1·3-2·3-3", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late(VB 줄, h8_noise_VB의 dg3 대체 135키 제외)",
+         "rev16 R16-6, R4 RD-7·RD-10, 보충 2-1·3-2", ITEM_GATE),
         ("J11 값(V0 줄)", "rev16 R16-6 2, 보충 2-1", ITEM_RECORD),
-        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("dg3 대체로 목록에서 뺀 줄 수", "보충 3-1", ITEM_RECORD),
+        ("③ 켬 줄 수(S-8, dg3 대체 줄 포함)", "R4 RD-9, 보충 3-1", ITEM_GATE),
         ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
     ),
     "H-9": (
         ("J1~J10 VB 외 설정 기록(V0 대비)", "v5 기준, rev3 R3-C3~C6", ITEM_RECORD),
         ("J11 실제 대체 다리 n_late(main·pressure_only 줄)", "rev16 R16-6, R4 RD-10", ITEM_GATE),
-        ("J-P3(main·pressure_only ③ 줄)", "rev3 R3-C8, R4 RD-7·RD-8", ITEM_GATE),
-        ("격자 J-P3 등급(768 run)", "rev16 R16-7, R4 RD-7", ITEM_GATE),
-        ("격자 J11 실제 대체 다리 n_late(768 run)", "rev16 R16-6, R4 RD-7·RD-10, 보충 2-2",
-         ITEM_GATE),
+        ("J-P3(main·pressure_only ③ 줄)", "rev3 R3-C8, R4 RD-7·RD-8, 보충 3-3", ITEM_GATE),
+        ("격자 J-P3 등급(768 run)", "rev16 R16-7, R4 RD-7, 보충 3-3", ITEM_GATE),
+        ("격자 J11 실제 대체 다리 n_late(768 run, 설정 = results[i].v5_setting)",
+         "rev16 R16-6, R4 RD-7·RD-10, 보충 2-2·3-6", ITEM_GATE),
         ("P-7 L1 해시", "Q-S4", ITEM_GATE),
         ("pressure_only 끝 단계", "v5 기준", ITEM_RECORD),
         ("family F R-1~R-4", "rev3 R3-E2, rev4 R4-B5", ITEM_GRADE),
@@ -4009,8 +4027,9 @@ ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
         ("13.1 순서", "Q-S5", ITEM_GRADE),
         ("item8·overlap J", "Q-S8", ITEM_GRADE),
         ("U-9 VB 줄 수(S-15)", "Q-S10", ITEM_GATE),
-        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
-        ("J-P3", "rev3 R3-C8, R4 RD-7·RD-8", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late(모든 줄, U-9 VB 포함)", "rev16 R16-6, R4 RD-10, 보충 3-4",
+         ITEM_GATE),
+        ("J-P3(모든 ③ 줄, U-9 VB 포함)", "rev3 R3-C8, R4 RD-7·RD-8, 보충 3-3·3-4", ITEM_GATE),
         ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
         ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
     ),
