@@ -106,6 +106,10 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 | 보충 4-1~4-4 | `resume4368_judge r4-inputs` | 4-2 표의 원 결과 파일 43개(RK 21, LK 22, 이름으로 하나씩), 키 원본 5개, V0 저장 격자 4개가 있는지(없으면 S-15). 줄 단위 판: run_v5 줄 `job.setting`, 𝓕 판정 입력 `setting`, u6 `controller`(C2·ABL·IND), 그 밖 파일은 파일마다 하나. 판의 기대 태그와 대조(다르면 S-2, 판별 입력·태그 없음 S-11, u6 ABL 이름·태그 한쪽만 S-3). 파일별 줄 수, H-1(V0 434·VB 434)·H-4(C2·ABL·IND·IND_LAS 각 242)·𝓕(V0 32·VB 32) 판 수, H-9 네 부분(본 1,676, V0 표본 run 84·결과 8, 𝓕 원 실행 192·FS24 각 32, 𝓕 판정 입력 64), 묶음 집합과 0줄 묶음(S-15). H-10 판 수는 기록. `h9_grid_v0/`(V0 768) 있음 여부도 기록 |
 | 보충 4-1·4-2 | `r4-lists` | 4-2 표의 파일 이름을 하나씩 읽는다(u3·u6 글롭 없앰). H-9에 V0 표본 4파일을 더해 멈춤 S-6 범위에 넣는다(격자 키·설정 읽기를 `h9_grid_v0_sample/`에도) |
 | 보충 4-5(감사 B-2) | `resume4368_judge family-f` | 입력 `h9_family_F.jsonl` 64줄. 꼴(2키 × 16위상 × V0·VB 한 줄씩, `event` FS24, 아니면 S-15), 태그(4-3), k(두 관문 거짓 위상 수), R-1·R-2(m 4, m_Σ 6), R-3(`fault_events` 빈 목록 ∧ `final_phase` ready), R-4(같은 (`key`, `offset_s`) V0에서 참이던 두 관문 밖 관문이 VB에서 거짓, 한쪽에만 있는 관문 이름은 판정 불가). 필드 없음·형 다름은 판정 불가이고 통과로 읽지 않는다. `--vb-dir`·`--v0-dir`이 있으면 적용(𝓕 VB 행 12개 확인, 조건 참 ∧ 통과 = 12행 두 관문 실패를 v5 기준 H-10 계산에서 뺌, 조건 참 ∧ 실패·판정 불가 = 멈춤 H-10, 조건 거짓 = 기록) |
+| 보충 5-1 | `resume4368_judge grid-h10` | 행 = VB 격자 `h9_grid/grid_*.json`의 run 768개. 짝 열쇠 (파일 이름, `results[i].key`, `event`, `offset_s` ±1e-9 s). V0 짝 출처는 R3-E1(`grid-v0-sample`을 안에서 다시 계산): 표본 해시가 모두 같으면 저장 V0 격자, 하나라도 다르면 `h9_grid_v0/`, 표본 대조에 짝·해시 결측이 있으면 출처를 정하지 않고 멈춘다. 짝 0개·2개 이상, V0 쪽에만 있는 run은 판정 불가. 태그는 `results[i].controller_tag`만(VB ③ 태그, V0 768이면 V0 태그) |
+| 보충 5-2 | `grid-h10` | 행 통과 = run `pass`. `pass`가 bool이 아니거나 `gates`가 이름 → bool 사전이 아니거나 `pass` ≠ `gates` 논리곱이면 판정 불가(VB·V0 양쪽). FAULT = VB `fault_events`가 비어 있지 않음(목록이 아니면 판정 불가) |
+| 보충 5-3 | `grid-h10` | (가) 원 통과→실패 목록·N_raw, (나) 𝓕 12행 표(양쪽 `pass`·거짓 관문·두 관문 뺀 통과, 관문 이름 집합이 다르거나 두 관문 결측이면 판정 불가), (다) 𝓕 제외 목록·N_F(𝓕 행만 V0·VB 모두 두 관문 뺀 논리곱으로 다시 판정, B안), 기록(실패→통과·실패→실패·통과→통과 수, FAULT 행, 판정 불가 행). 목록 줄은 RD-7 3 꼴(묶음 H-9, 결과 파일, 위치)에 (파일 이름, 키, 사건, 위상, VB 거짓 관문, V0 거짓 관문)과 V0 짝 위치. 정렬은 파일 이름, 키, 사건, 위상 |
+| 보충 5-4 | `grid-h10` | 적용 조건(짝지은 𝓕 행에서 V0 통과 ∧ VB가 두 관문만으로 실패)별 세 줄 표(거짓 → N_raw, 참·통과 → N_F, 참·실패/판정 불가 → 쓰지 않음, 멈춤)와 고른 줄. R-1~R-4 결과는 `family-f`를 `h9_family_F.jsonl`에 안에서 다시 돌려 얻는다. FAULT ≥ 1, 판정 불가 행, 고른 줄의 멈춤은 표지로 남긴다 |
 | 감사 A-4 | `resume4368_judge head-check` | `--r4`인데 `--files`가 비면 S-11(`all([])` 빈 통과 막기). `git diff`가 실패해도 S-11 |
 | 보충 3-7 | (확인, 변경 없음) | `r4-lists`의 u6 `src` 토큰은 `^(rigid|[A-Z][0-9])(\+[A-Z][0-9]@(FL|FR|RL|RR))?$`만 지면 토큰으로 본다(`roll_pos@k0.75` 같은 경사·축척 토큰은 무시). RV1-6 계열 표(`resume_k1_family.py`)는 키 글자가 아니라 러너의 지면 정의(사례 dict `soil`, `r72_g6_screen.parse_soil`, D-1 행, 사건)를 읽으므로 `@k0.75` 토큰을 패치로 읽지 않는다. 경사 키 `H3|J1|B|top|roll_pos@k0.75` 꼴은 사례 `soil`(`J1`)로 균일 연약이다 |
 | 보충 2-2 | `r4-lists`, `judge_stage1_4368.grid_grade` | 격자 768 run에도 run 단위 J11과 RD-10(블록 결측 = 판정 불가) |
@@ -127,6 +131,7 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 8. C-9~C-11 기록 항목의 원본 키: decisions = `controller_meta.slope_clearance_margin.order_gate.decisions`, 토양 모드 시작 = `c2_soil.soil_mode_t_s`, LOC = `c2_soil.t_loc_s`, 최대 행정 = `p3b.P3-5_clearance_stroke.s_motor_max_m`×10³, 끝 rut 틈 = `rut_clearance_end_m`×10³, P3-1~P3-9 = `p3b.checks`, 첫 READY = `phases`의 첫 `ready`, rc = 보충 2-4(위 표), 마지막 표본 = `step_series.npz` `t_s` 끝. C-10 F < F_min 시간 = `fmin-time` 정의(RV1-7·R2-5), G6 = 보충 2-5(경로 1 CD-4 P3 값: `chrono_rows_judge_4368.judge_scm`(행 id 없음)의 D 항목 위에 `chrono_bundle_grade_4368.p3_items`, `--rigid-base` 행의 P3-5는 CD-9대로 `해당 없음(rigid_base)`이고 G6-5도 그 글자 그대로, 두 모듈은 읽기만), 패치 다리 = `args.rigid_base`, 침하 = `p3b_ext.pad_sinkage`. C-11 LOC 주기 = (t_LOC − 0.1 s, t_LOC]의 1 ms 표본(명세 419.8.1), t_LOC = 첫 LOC(`p3b.P3-2_loc.t_loc_first_s`)와 취소가 있을 때 최종 LOC(`t_loc_final_s`, 보충 2-6), W = `p3b.weight_N`, 크롤러 법선 = `step_series.npz` `scm_crawler_normal_N`, LOC 취소 = `p3b.checks.loc_revokes`.
 9. `u3_judge_4368`에 `--g3`를 주지 않으면 이전처럼 판정하고 "G-3 not passed" 발견을 남긴다(개발용). R4 판정에서는 `h11` 보고서를 준다.
 10. (보충 3-2로 바뀜) dg3 대체 키 제외는 `h8_noise_VB.json` 줄에만 쓴다. `815a78a`에서는 VB 파일 둘 모두에 썼고, `60fc72e`에서 고쳤다. 키 비교는 `cand=current#` 접두를 뗀 키(rev3 R3-D1)다.
+11. 보충 5: 저장 V0 격자(옛 V0 제어기)의 run에는 태그 대조를 하지 않는다(5-1의 태그 확인은 VB 격자 run과, 짝 출처가 V0 768일 때 그 run에만 적용). (다) 목록의 거짓 관문 열은 𝓕 행에서도 두 관문을 포함한 그대로의 거짓 관문 이름이다(열 정의가 바뀌지 않으므로). V0 표본 대조에 짝·해시 결측이 있으면 5-1의 "모두 같음"도 "하나라도 다름"도 아니므로 출처를 정하지 않고 멈춘다. 적용 조건은 5-1로 짝지은 𝓕 행에서 계산한다(`family-f-trigger`의 저장 V0 고정 입력이 아니라 5-1의 짝 출처).
 
 ### RD-5 키 대응표 초안 (`resume4368_judge key-map`)
 
@@ -155,7 +160,7 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 | H-6 | 8 | `13883157e913bbfa661467663c3f933540cdf9a036f379b27c8353ea0a395b16` |
 | H-7 | 4 | `15d59085520959510f4a7e47009cb3f9e6229a720d594aa539b4f26523ab239e` |
 | H-8 | 12 | `5986162223eacbf4f2bcf811c1d6082c4b35cdab366ee5cb30aa975cf0e52e52` |
-| H-9 | 11 | `ef3cc8da8b051263286f4cd3ba3c32e59ea58d27777dad19afcce64498bbc256` |
+| H-9 | 14 | `cfa8321297290835600d12adea3373e38d1016c0ca88f3dfe446b3fa28054233` |
 | H-10 | 12 | `f1ac00fd4b8765fe5da5908a03859283356a43cafe8e39d878926ab3995e0ef8` |
 | H-11 | 3 | `13f6732a777e00f0f38fc3724951424e1ea4ab566b9359c25ff0df09162d11a8` |
 | H-12 | 7 | `f8a9a72bf1c045e62486e33d090d20a845521faa5541febdcc268747aa1bcc30` |
@@ -169,16 +174,16 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 완성본은 메인 세션에 넘긴 `run_judgement_path1_draft.ps1`(경로 1 scratchpad `r4-p1\`)이다. 첫 경로 1 판정 스크립트(`first_judge_harness_b9f5707.ps1`)와 같은 단계 꼴(`Invoke-Logged`, `<Out>/logs/rc.tsv`)이고, 출력은 모두 새 폴더 `judge_<M4 짧은 해시>/harness_path1/`이다. 자리 표시는 `M4_FULL_HASH`, `R4_FULL_HASH` 둘뿐이다.
 
 0. 시작 전에 u3 글롭 18개·u6 글롭 4개를 단언하고, `git status --porcelain --untracked-files=no`가 비었는지 본다(끝에서도 다시). rc.tsv에 `RUNSTART` 줄을 남긴다(감사 A-4).
-1. `head-check --expect M4 --r4 R4 --files <경로 1 허용 목록 (다) 13개>`. `-Only`를 줘도 건너뛰지 않는다(감사 A-3). 종료 0이 아니면 아무것도 판정하지 않는다. 경로 2 파일의 RD-1 4 blob 대조는 메인 세션이 git으로 따로 한다.
+1. `head-check --expect M4 --r4 R4 --files <경로 1 허용 목록 (다) 14개>`. `-Only`를 줘도 건너뛰지 않는다(감사 A-3). 종료 0이 아니면 아무것도 판정하지 않는다. 경로 2 파일의 RD-1 4 blob 대조는 메인 세션이 git으로 따로 한다.
 1b. `r4-inputs`(보충 4-1~4-4). `-Only`와 무관하게 돌고, 종료 0이 아니면 아무것도 판정하지 않는다.
 2. `key-map`, `item-list`(판정 출력보다 먼저).
 3. 첫 판정의 rev1~rev12 하위 명령을 같은 인자로 새 폴더에: `log_errors.py`, `import-check`, `appendix-a`, `overlap`, 첫 판정 `sidecars.py`의 보존 사본(사본이 없거나 `resume_k1/` 아래 `*.identity.json`이 0개면 멈춘다, 감사 A-4), `resume_k1_family.py <Out>/family_table.json`(계열 표를 이번에 새로 만든다), `anchor-map`, `record-check`, `k1-class`.
 4. R4: `h11`, `x16-records`(python-dev), dynamics-dev `t4h_replay.py <Out>/h12_t4h_replay.json <OUT>/H-12/t4h --check-recorded`, `h12`, `jp-reuse --root .`, `r4-lists --family-table <Out>/family_table.json`.
-5. 묶음 판정기: `d1_judge_4368 --regraded <Out>/h1_d1_regraded.jsonl`(이번에 새로 만든다), `u3_judge_k1 judge`, `u3_judge_4368 --g3 <Out>/h11.json --k1-report …`, `ind-las`, `u9_judge_4368`, `h8_noise_judge_4368 --run-judge`, `h6_judge_4368 --run-judge`, `dg3-hash`, `keyset` 10개, `judge_stage1_4368 … --grid <격자 4개>`, `grid-v0-sample`, `family-f-trigger`, `family-f --lines h9_family_F.jsonl --vb-dir h9_grid --v0-dir <저장 V0 격자>`(보충 4-5, 감사 B-2), `reagg-items`, `stroke-exposure` 9개.
+5. 묶음 판정기: `d1_judge_4368 --regraded <Out>/h1_d1_regraded.jsonl`(이번에 새로 만든다), `u3_judge_k1 judge`, `u3_judge_4368 --g3 <Out>/h11.json --k1-report …`, `ind-las`, `u9_judge_4368`, `h8_noise_judge_4368 --run-judge`, `h6_judge_4368 --run-judge`, `dg3-hash`, `keyset` 10개, `judge_stage1_4368 … --grid <격자 4개>`, `grid-v0-sample`, `family-f-trigger`, `family-f --lines h9_family_F.jsonl --vb-dir h9_grid --v0-dir <저장 V0 격자>`(보충 4-5, 감사 B-2), `grid-h10 --root .`(보충 5: 격자 768 run 통과→실패, N_raw·𝓕 표·N_F, v5 기준 H-10 격자 항), `reagg-items`, `stroke-exposure` 9개.
 6. 모든 출력의 sha256을 `sha256_manifest.txt`에(대조 전, RD-6).
 7. 끝에서 작업 트리가 깨끗한지 다시 보고, rc.tsv의 마지막 `RUNSTART` 뒤 단계 가운데 종료 코드가 0이 아닌 것이 있으면 그 단계들을 적고 종료 1로 끝낸다(감사 A-3, rc.tsv 관문). 판정 도구의 종료 1은 "발견"일 수도 있으므로 각 보고서를 읽어 가린다.
 
-### sha256 (커밋 `c8197f6`의 blob, LF 바이트)
+### sha256 (커밋 `5125134`의 blob, LF 바이트)
 
 | 파일 | sha256 |
 |---|---|
@@ -187,13 +192,14 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 | `04_scripts/04_hydraulic/coupled/h6_judge_4368.py` | `e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e` |
 | `04_scripts/04_hydraulic/coupled/u3_judge_4368.py` | `b46cfa7cc80211905c1c83c9bce5e8b16c2d567e2cc267b08c68d3854766096e` |
 | `04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py`(변경 없음) | `c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69` |
-| `06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py` | `a58145e5c640aa0c51b477e0f4eb5b7bdb7b9b0b2129c5f380fde985f776952b` |
+| `06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py` | `2ec12b67f2daa310f5a000e25804eeecb729d3b31e16083b2d640f8cdd304e6e` |
 | `05_tests/unit/test_judges_4368.py` | `d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703` |
 | `05_tests/unit/test_judges_4368_h6_h8.py` | `ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259` |
 | `05_tests/unit/test_resume4368.py` | `b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498` |
 | `05_tests/unit/test_resume4368_rev1.py` | `407699a71b2ef6ce06aebe1be0cfd3c53cfe7a67ee513ed02901ae692975cc13` |
 | `05_tests/unit/test_resume4368_rev16.py`(새 파일) | `761f3d110da9958453faf35f71e147511e363465ce7509047d4798d3c4f1acc2` |
 | `05_tests/unit/test_resume4368_supplement4.py`(새 파일) | `acfb53de8e81630cffce5594bce2c0294ff18c6b480d5ed7d8e98c6373b3ef17` |
+| `05_tests/unit/test_resume4368_supplement5.py`(새 파일) | `e52fece06f58f8693e58127f8351ef53b7c11911cc977b19e1418bab0e95e317` |
 
 이 README 자신의 sha256은 이 표에 넣을 수 없다. R4 blob 표(RD-1 2)는 R4를 만든 뒤 메인 세션이 낸다.
 
@@ -205,5 +211,5 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 4. `<OUT>` 준비물: `_tools/x16_identity.py`, `_tools/harness/h12_t4h_capture.py`, `_tools/rows.json`(키 구조), `_runners/steps_X1.json`, `_runners/logs_X1` 파일 이름과 `.done` 한 줄 형식.
 5. R2 결과(`resume_k1/`, `v5_rerun/las_k1/`), `<OUT>/H-11`, `<OUT>/C-9`·`C-10` 한 행의 `result.json`: 키 경로·자료형·건수만 보는 스크립트로 구조를 확인했다(값은 출력하지 않음). 구조 확인 출력에는 일부 키의 자료형(null 여부)과 H-11 8키의 양쪽 건수(각 1)가 있었다. 판정 값은 보지 않았다.
 6. 보충 1판(`r4_supplement_1_path1.md`, sha256 `c09aa88991363bff93bd62c3f26995c0ab665e5ac9e2248a82470d2c71a2e510`) 전부. 보충 2 구간 sha256 `a9a15a139843e796c73fd9046cd8cd92ed0dcaeaa14bd41c7cd591aaef9c6452`을 다시 계산해 같았다. 메인 세션이 준 첫 경로 1 판정 스크립트 사본 `first_judge_harness_b9f5707.ps1`·`first_judge_helps_b9f5707.ps1`(명령만). 보충을 반영하며 더 읽은 코드: `chrono_bundle_grade_4368.py`의 `p3_items`·`p36_item`·`_p31_item`·`_p32_item`, `chrono_rows_judge_4368.ready_items`, `r72_g6_screen.py`의 G6 관문·강등 부분, `b5_official.demote_preloc_gate`, `late_loc_rule.py` 머리, `resume_k1_family.py` 머리·u6 줄.
-7. 보충 2판(`r4_supplement_2_common.md`, sha256 `62721996ee5b16edb83cb944ce6a12440315ddabb4b83a50f217038fa5fe55e6`) 전부. 보충 3 구간 sha256 `5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8`을 다시 계산해 같았다. 3-7 확인을 위해 `resume_k1_family.py`의 지면 판별 함수 전부를 더 읽었다. 보충 3판(`r4_supplement_3_common.md`, sha256 `92b62dcc708fa714850476f1cf03879c3d7e38037ebffe8b4c5a2c0c0f593677`) 전부, 보충 4 구간 sha256 `de45d30170e44a5987e815c41e6cd9580c5f6df89a065803ab0fd2ae7257b497`을 다시 계산해 같았다. 실행 전 감사 A-3·A-4·B-2 지적은 메인 세션의 전달문으로만 받았다(감사 리포트 원문은 열지 않음).
+7. 보충 2판(`r4_supplement_2_common.md`, sha256 `62721996ee5b16edb83cb944ce6a12440315ddabb4b83a50f217038fa5fe55e6`) 전부. 보충 3 구간 sha256 `5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8`을 다시 계산해 같았다. 3-7 확인을 위해 `resume_k1_family.py`의 지면 판별 함수 전부를 더 읽었다. 보충 3판(`r4_supplement_3_common.md`, sha256 `92b62dcc708fa714850476f1cf03879c3d7e38037ebffe8b4c5a2c0c0f593677`) 전부, 보충 4 구간 sha256 `de45d30170e44a5987e815c41e6cd9580c5f6df89a065803ab0fd2ae7257b497`을 다시 계산해 같았다. 실행 전 감사 A-3·A-4·B-2 지적은 메인 세션의 전달문으로만 받았다(감사 리포트 원문은 열지 않음). 보충 4판(`r4_supplement_4_common.md`, sha256 `7bd7cb1742132623f51e475b78df5687d88857c334ea68ecbece0450292be888`) 전부, 보충 5 구간 sha256 `89cb422d93374bf9cbc99f9a1db90d1d4ee47b153058ce2313a7dffdec7f40e7`을 다시 계산해 같았다. 보충 5를 위해 코드는 이 도구 안의 `grid-v0-sample`·`family-f-trigger`만 더 읽었다.
 8. 열지 않은 것: 첫 판정 세션 scratchpad의 `judge_b9f5707\sidecars.py`(있는지만 확인), 경로 2 폴더 전부, `judge_b9f5707/`, `h0_judge*`, `gs_harness_*`, scratchpad의 `r4-p2`·`r4-handoff`·`r4-source`·`main`, `<OUT>/H-11/g3_pairs_check.json`.
