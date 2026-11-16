@@ -1780,7 +1780,86 @@ def test_r4_b1_by_setting_u6_controller_and_h4_kind_counts(tmp_path, capsys):
     assert "S-2" not in b["stop_codes"] and b["classes"].get("n/a") == 3
     whys = " ".join(x["why"] for x in b["stops"])
     assert "2 IND lines, rules 5.1 say 242" in whys and "1 IND_LAS lines, rules 5.1 say 242" in whys
+    assert "1 VB lines, rules 5.1 say 242" in whys and "1 ABL lines, rules 5.1 say 242" in whys   # 4-2, decision 128 (b)
     assert rep["stop_S6_list"]["n_rows"] == 0
+    # supplement 4-3 / R16-3 (decision 128 (a)): controller ABL xor tag ABL_LAS_K1 = S-3, not S-2
+    main.write_text(json.dumps({"records": [u6("A1-J1", "ABL", p2.TAG_VB), u6("A1-G1", "C2", p2.TAG_ABL),
+                                            u6("A1-J2", "C2", p2.TAG_V0)]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-4", "path": str(main), "format": "u3_json",
+                                          "kind": "by_setting"}])
+    st = rep["bundles"]["H-4"]["stops"]
+    s3 = [x for x in st if x["code"] == "S-3" and "only one is ABL" in x["why"]]
+    s2 = [x for x in st if x["code"] == "S-2"]
+    assert len(s3) == 2 and len(s2) == 1 and "A1-J2" in s2[0]["where"]
+
+
+def test_r4_supplement_4_input_table():
+    rows = p2.R4_INPUTS
+    assert len(rows) == 42
+    assert sum(1 for r in rows if r.startswith(p2._RK)) == 20 and sum(1 for r in rows if r.startswith(p2._LK)) == 22
+    ks = {v[k] for v in rows.values() for k in ("key_source", "key_source_override") if v[k]}
+    assert len(ks) == 5
+    assert sum(v["count"] for v in rows.values() if v["bundle"] == "H-9" and v["part"] == "main") == 1676
+    assert sum(v["count"] for v in rows.values() if v["part"] == "V0-sample") == 84
+    assert sum(v["count"] for v in rows.values() if v["part"] == "family-F") == 192
+    for b, n in p2.HARNESS_COUNTS.items():
+        assert sum(v["count"] for v in rows.values() if v["bundle"] == b and v["part"] == "main") == n, b
+
+
+def _fake_inputs(repo):
+    files = []
+    for rel, v in p2.R4_INPUTS.items():
+        for p in (rel, v["key_source"], v["key_source_override"]):
+            if p:
+                (repo / p).parent.mkdir(parents=True, exist_ok=True)
+                (repo / p).write_text("{}", "utf-8")
+        e = {"bundle": v["bundle"], "path": rel, "format": v["format"], "kind": v["kind"]}
+        if v["part"] != "main":
+            e["part"] = v["part"]
+        for k in ("key_source", "key_source_override"):
+            if v[k]:
+                e[k] = v[k]
+        files.append(e)
+    return files
+
+
+def test_r4_supplement_4_input_check(tmp_path):
+    files = _fake_inputs(tmp_path)
+    stops, rec = p2.r4_input_check(files, tmp_path)
+    assert stops == [] and rec["expected_files"] == 42 and rec["expected_key_sources"] == 5
+    bad = [dict(e) for e in files]
+    bad[0]["kind"] = "VB"                                                 # h1_d1 must be by_setting
+    bad = [e for e in bad if not e["path"].endswith("h9_grid_v0_sample/grid_r69_top.json")]   # a V0-sample file gone
+    bad.append({"bundle": "H-8", "path": p2._RK + "h8_noise_VB_split.json", "format": "r79_json", "kind": "VB"})
+    h8 = next(e for e in bad if e["path"].endswith("h8_noise_VB.json"))
+    h8.pop("key_source_override")                                          # dg3 override missing
+    (tmp_path / p2._RK / "h5_u9_v0.jsonl").unlink()                       # file missing on disk
+    stops, _ = p2.r4_input_check(bad, tmp_path)
+    whys = " | ".join(f"{b}: {w}" for b, w in stops)
+    assert "H-1: " in whys and "['kind'] differ" in whys
+    assert "0 manifest entries for " + p2._RK + "h9_grid_v0_sample/grid_r69_top.json" in whys
+    assert "not in the supplement-4 input table" in whys and "['key_source_override'] differ" in whys
+    assert "input file missing: " + p2._RK + "h5_u9_v0.jsonl" in whys
+
+
+def test_r4_supplement_4_h9_parts_counted_apart(tmp_path, capsys):
+    f = tmp_path / "h9_stage1.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    g = tmp_path / "grid_r67_main.json"
+    g.write_text(json.dumps({"meta": {}, "results": [{"key": "screen|top|0.0|ready|FR", "v5_setting": "V0",
+                                                      "controller_tag": p2.TAG_V0,
+                                                      "runs": [{"event": "FS24", "resume_k1": rk_block()}]}]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [
+        {"bundle": "H-9", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"},
+        {"bundle": "H-9", "part": "V0-sample", "path": str(g), "format": "grid_json", "kind": "V0"}])
+    b = rep["bundles"]["H-9"]
+    assert b["parts"] == {"main": 1, "V0-sample": 1} and b["lines"] == 1
+    whys = " ".join(x["why"] for x in b["stops"])
+    assert "1 lines, rules (rev1) say 1676" in whys and "supplement 4-2 says 84" in whys
+    assert "0 lines / runs, supplement 4-2 says 192" in whys                # family-F part missing
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-5", "part": "x", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "V0"}])
+    assert any("unknown part" in x["why"] for x in rep["bundles"]["H-5"]["stops"])
 
 
 def test_r4_b1_missing_bundle_stops(tmp_path, capsys):

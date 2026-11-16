@@ -65,6 +65,11 @@ R4 B-1 (pre-run audit, user decision 127 (a)): ``harness`` reads the original re
 controllers with manifest kind ``by_setting`` (per line: run_v5 ``job.setting``, u6 b5 ``controller``); rules-5.1
 per-kind counts H-1 V0 434 / VB 434 and H-4 IND 242 / IND_LAS 242 are counted over the bundle's files (S-15); outside
 G-S a rules-5.1 bundle missing from the manifest is S-15.
+R4 supplement 4 (sha de45d301..., user decision 128): u6 controller ABL vs tag ABL_LAS_K1 single match = S-3 (R16-3,
+not S-2); H-4 per-kind 242 for C2 (VB) / ABL / IND / IND_LAS; manifest field ``part`` for the H-9 parts (main,
+V0-sample, family-F; family-F raw runs read with format grid_json); outside G-S the table-4-2 input files
+(``R4_INPUTS``: path, bundle, part, kind, format, per-file count, key sources) must all be in the manifest, exist, and
+match (S-15), with no other file in a rules bundle.
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -997,9 +1002,88 @@ def auto_kind(rec):
 # ``controller`` (C2 = VB kind ③ on, ABL, IND). Missing / unknown field = S-11 for that line.
 KIND_BY_SETTING = "by_setting"
 U6_CONTROLLER_KIND = {"C2": "VB", "ABL": "ABL", "IND": "IND"}
-# rules 5.1 per-kind line counts that the bundle total does not show (S-15): H-1 V0 434 + VB 434; H-4 IND 242 and
-# record column IND_LAS 242 (main 16 + wide 226, counted over the files of the bundle)
-BUNDLE_KIND_COUNTS = {"H-1": {"V0": 434, "VB": 434}, "H-4": {"IND": 242, "IND_LAS": 242}}
+# rules 5.1 per-kind line counts that the bundle total does not show (S-15): H-1 V0 434 + VB 434; H-4 C2 (VB kind),
+# ABL, IND and the record column IND_LAS 242 each (main 16 + wide 226, counted over the files of the bundle;
+# supplement 4-2, user decision 128 (b))
+BUNDLE_KIND_COUNTS = {"H-1": {"V0": 434, "VB": 434}, "H-4": {"VB": 242, "ABL": 242, "IND": 242, "IND_LAS": 242}}
+
+# R4 supplement 4 (sha de45d301..., user decision 128): the harness input files of table 4-2 (the family-F judgement
+# input h9_family_F.jsonl is read by path2_v5c, not here). Per file: bundle, part, kind, format, count as yielded by
+# the reader (lines / items / grid runs), key sources (R16-5 1). Outside G-S, when the manifest holds a rules-5.1
+# bundle, every file below must be in it with these fields and exist, no other file may be in a rules bundle, and
+# each file's count must match (4-4, S-15). H-9 parts (manifest field ``part``, default "main"): "main" (h9_stage1 +
+# grid, 1,676), "V0-sample" (84 runs), "family-F" (192 runs); a missing part = S-15.
+_RK = "06_analysis/03_hydraulic/coupled/v5/resume_k1/"
+_LK = "06_analysis/02_control/v5_rerun/las_k1/"
+_DG3 = _V5 + "dg3/dg3_v4_on.json"
+H9_PARTS = {"main": 1676, "V0-sample": 84, "family-F": 192}
+_U3_COUNTS = {"C": 34, "D": 33, "g6": 116, "g8": 516, "h6": 26, "h9": 24, "p3b": 171, "slope": 110, "x426b": 84}
+
+
+def _r4_inputs():
+    t = [(_RK + "h1_d1.jsonl", "H-1", "main", "by_setting", "run_v5_jsonl", 868, None, None)]
+    for nm, n in _U3_COUNTS.items():
+        for st in ("V0", "VB"):
+            t.append((_LK + f"u3_{nm}_{st}.json", "H-3", "main", st, "u3_json", n, None, None))
+    t += [(_LK + "u6_b5_main_VB.json", "H-4", "main", "by_setting", "u3_json", 48, None, None),
+          (_LK + "u6_b5_wide_VB.json", "H-4", "main", "by_setting", "u3_json", 678, None, None),
+          (_LK + "u6_b5_main_VB_IND_LAS.json", "H-4", "main", "IND_LAS", "u3_json", 16, None, None),
+          (_LK + "u6_b5_wide_VB_IND_LAS.json", "H-4", "main", "IND_LAS", "u3_json", 226, None, None),
+          (_RK + "h5_u9_v0.jsonl", "H-5", "main", "V0", "run_v5_jsonl", 14, None, None),
+          (_RK + "h6_dg3_v4on.json", "H-6", "main", "H6", "r79_json", 135, _DG3, None),
+          (_RK + "h7_dg3_off.json", "H-7", "main", "H7", "r79_json", 135, None, None),
+          (_RK + "h8_noise_VB.json", "H-8", "main", "VB", "r79_json", 1503, _V5 + "noise_vb/r79_VB_L1L2L3.json", _DG3),
+          (_RK + "h8_noise_V0.json", "H-8", "main", "V0", "r79_json", 1503, _V5 + "noise_v0/r79_V0_L1L2L3.json", None),
+          (_RK + "h8_seedext_VB.json", "H-8", "main", "VB", "r79_json", 50, _V5 + "seedext/r79_VB_seedext.json", None),
+          (_RK + "h8_seedext_V0.json", "H-8", "main", "V0", "r79_json", 50, _V5 + "seedext/r79_V0_seedext.json", None),
+          (_RK + "h9_stage1.jsonl", "H-9", "main", "V0", "run_v5_jsonl", 908, None, None)]
+    for g, nv0 in (("r67_main", 12), ("r67_top", 24), ("r69_bottom", 24), ("r69_top", 24)):
+        t.append((_RK + f"h9_grid/grid_{g}.json", "H-9", "main", "VB", "grid_json", 192, None, None))
+        t.append((_RK + f"h9_grid_v0_sample/grid_{g}.json", "H-9", "V0-sample", "V0", "grid_json", nv0, None, None))
+    t += [(_RK + "h9_family_F_VB.json", "H-9", "family-F", "VB", "grid_json", 96, None, None),
+          (_RK + "h9_family_F_V0.json", "H-9", "family-F", "V0", "grid_json", 96, None, None),
+          (_RK + "h10_reuse_rerun.jsonl", "H-10", "main", "by_setting", "run_v5_jsonl", 440, None, None)]
+    keys = ("path", "bundle", "part", "kind", "format", "count", "key_source", "key_source_override")
+    return {row[0]: dict(zip(keys, row)) for row in t}
+
+
+R4_INPUTS = _r4_inputs()       # resume_k1 20 files + las_k1 22 files; key sources 5 distinct (4-4)
+
+
+def _rel_entry_path(p, repo):
+    if not p:
+        return None
+    q = Path(p)
+    return rel_posix(q if q.is_absolute() else Path(repo) / q, repo)
+
+
+def r4_input_check(manifest_files, repo):
+    """Supplement 4-4 on the manifest: (stops [(bundle, why)], record). Every R4_INPUTS file listed once with its
+    bundle / part / kind / format / key sources, existing on disk; no other file in a rules-5.1 bundle."""
+    stops, seen = [], {}
+    for e in manifest_files:
+        rel = _rel_entry_path(e.get("path"), repo)
+        seen.setdefault(rel, []).append(e)
+        if e.get("bundle") in HARNESS_COUNTS and rel not in R4_INPUTS:
+            stops.append((e.get("bundle"), f"file not in the supplement-4 input table: {rel}"))
+    for rel, want in R4_INPUTS.items():
+        es = seen.get(rel, [])
+        if len(es) != 1:
+            stops.append((want["bundle"], f"{len(es)} manifest entries for {rel} (exactly one, supplement 4-4)"))
+            continue
+        e = es[0]
+        got = {"bundle": e.get("bundle"), "part": e.get("part", "main"), "kind": e.get("kind"),
+               "format": e.get("format"), "key_source": _rel_entry_path(e.get("key_source"), repo),
+               "key_source_override": _rel_entry_path(e.get("key_source_override"), repo)}
+        diff = [k for k, v in got.items() if v != want[k]]
+        if diff:
+            stops.append((want["bundle"], f"{rel}: manifest {diff} differ from supplement 4-2"))
+        for p in (rel, want["key_source"], want["key_source_override"]):
+            if p and not (Path(repo) / p).is_file():
+                stops.append((want["bundle"], f"input file missing: {p}"))
+    return stops, {"expected_files": len(R4_INPUTS),
+                   "expected_key_sources": len({v[k] for v in R4_INPUTS.values()
+                                                for k in ("key_source", "key_source_override") if v[k]})}
 
 
 def line_kind(rec, fmt):
@@ -1030,6 +1114,7 @@ def cmd_harness(args, repo):
         fnd = fnd_all.setdefault(bundle, Findings())
         b = bundles.setdefault(bundle, {"lines": 0, "classes": {}, "families": {}, "tags": {},
                                          "errors": 0, "missing": 0, "files": []})
+        part = entry.get("part", "main")          # supplement 4-2: H-9 parts; every other file is "main"
         if kind == KIND_AUTO:
             if not gs or fmt != "run_v5_jsonl":
                 raise ValueError(f"kind {KIND_AUTO!r} needs --gs and format run_v5_jsonl ({path})")
@@ -1122,8 +1207,14 @@ def cmd_harness(args, repo):
                 tag, tag_path = first_path(parent, TAG_PATHS)
             b["tags"][str(tag if tag is not MISSING else None)] = b["tags"].get(
                 str(tag if tag is not MISSING else None), 0) + 1
+            # R16-3 / supplement 4-3 (user decision 128 (a)): on u6 records the controller ABL and the tag ABL_LAS_K1
+            # must match together; one alone is a line-kind input defect, S-3 (not counted again as S-2)
+            abl_conflict = (file_kind == KIND_BY_SETTING and fmt == "u3_json" and isinstance(tag, str)
+                            and (rec.get("controller") == "ABL") != (tag == TAG_ABL))
             if tag is MISSING or tag is None:
                 fnd.stop("S-11", where, "controller_tag missing (RV1-3.2: stop and ask)")
+            elif abl_conflict:
+                fnd.stop("S-3", where, f"controller {rec.get('controller')!r} and tag {tag!r}: only one is ABL (R16-3)")
             elif tag != want_tag:
                 fnd.stop("S-2", where, f"tag {tag!r} != expected {want_tag!r} ({kind})")
             elif is_p3 is not None and KIND_P3.get(kind) is not None and is_p3(tag) != KIND_P3[kind]:
@@ -1257,11 +1348,16 @@ def cmd_harness(args, repo):
         # (the per-file IND / IND_LAS 242 check of the earlier sheets is now the per-kind bundle count, B-1)
         if entry.get("expect_lines") is not None and n_file != int(entry["expect_lines"]):
             fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines, manifest expects {entry['expect_lines']}")
-        b["lines"] += n_file
+        want_file = None if gs else R4_INPUTS.get(rel)
+        if want_file is not None and n_file != want_file["count"]:
+            fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines / runs, supplement 4-2 says {want_file['count']}")
+        if part == "main":
+            b["lines"] += n_file              # the rules-5.1 bundle count (H-9: main part only, RV1-12 1,676)
+        b.setdefault("parts", {})[part] = b.setdefault("parts", {}).get(part, 0) + n_file
         for k, v in classes.items():
             b["classes"][k] = b["classes"].get(k, 0) + v
         b["files"].append({"path": str(path), "result_file": rel, "sha256": sha256_file(path), "kind": kind,
-                           "format": fmt, "lines": n_file, "classes": classes,
+                           "format": fmt, "part": part, "lines": n_file, "classes": classes,
                            "stored_hash": hash_cmp if stored else None, "stored": entry.get("stored"),
                            "family_run": family_run, "key_sources": ks_files, "kind_lines": file_kinds})
         files_out.append(str(path))
@@ -1269,7 +1365,22 @@ def cmd_harness(args, repo):
     # checks silently; outside G-S every bundle of the rules-5.1 table must be present when any of them is
     gs_run = bool(getattr(args, "gs", False))
     present = set(bundles)
+    input_check = None
     if not gs_run and present & set(HARNESS_COUNTS):
+        # supplement 4-4 (user decision 128 (c) (d)): the input files of table 4-2 and the H-9 parts
+        stops, input_check = r4_input_check(manifest["files"], repo)
+        for bb, why in stops:
+            fnd_all.setdefault(bb, Findings()).stop("S-15", bb, why)
+            input_check.setdefault("stops", []).append({"bundle": bb, "why": why})
+        if "H-9" in bundles:
+            for pn, pwant in H9_PARTS.items():
+                pgot = bundles["H-9"].get("parts", {}).get(pn, 0)
+                if pgot != pwant:
+                    fnd_all["H-9"].stop("S-15", f"H-9 part {pn}", f"{pgot} lines / runs, supplement 4-2 says {pwant}")
+        for bb, b in bundles.items():
+            bad = sorted(set(b.get("parts", {})) - (set(H9_PARTS) if bb == "H-9" else {"main"}))
+            if bad:
+                fnd_all[bb].stop("S-15", bb, f"unknown part(s) {bad} (supplement 4-2)")
         for miss in sorted(set(HARNESS_COUNTS) - present, key=bundle_key):
             fnd_all.setdefault(miss, Findings()).stop("S-15", miss, "bundle missing from the manifest (B-1)")
             bundles[miss] = {"lines": 0, "classes": {}, "families": {}, "tags": {}, "errors": 0, "missing": 0,
@@ -1302,7 +1413,7 @@ def cmd_harness(args, repo):
         b["grade_scope"] = "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
     s6_rows.sort(key=lambda r: (bundle_key(r["bundle"]), r["result_file"], _pos_key(r["position"]), r["k"]))
     codes = sorted({c for b in bundles.values() for c in b["stop_codes"]})
-    return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes,
+    return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes, "r4_input_check": input_check,
              "stop_S6_list": {"name": "멈춤 S-6 (원판 8.2, 원판 7.2 균일 연약 지면 계열의 K1 막힘; r79 관문 S-6 아님)",
                               "columns": ["bundle", "result_file", "position", "k", "key", "setting", "family",
                                           "t_loc_s", "n_P", "n_S", "dP"],

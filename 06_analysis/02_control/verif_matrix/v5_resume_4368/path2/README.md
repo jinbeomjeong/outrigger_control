@@ -868,7 +868,7 @@ $o = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_<M4
 - `p2_4368.py anchors --v5-root <폴더>`: 부록 B 앵커 파일을 읽을 v5 폴더(기본 `<repo>/06_analysis/03_hydraulic/coupled/v5`).
 - `p2_4368.py openloop --script <파일>`: `analyse` 정의를 꺼낼 `openloop_compare.py` 경로(기본은 저장소의 그 파일; R4 뒤에는 돌리지 않는 Chrono 쪽 하위 명령).
 
-### 도구 sha256 (R4 B-1 판, LF 바이트, 현재 값)
+### 도구 sha256 (R4 B-1 판, LF 바이트, 이력 값; 현재 값은 마지막 "R4 보충 3판" 절)
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -897,3 +897,50 @@ $o = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_<M4
 | H-10 | `7765c92281449a1e9d925af3c258afe22287dfd7f51c7f7145b7e18186a6e9ce` |
 
 - 바뀐 이유: 모든 하네스 묶음에 "목록 파일에 묶음이 빠짐 = S-15", H-1·H-4에 종류별 줄 수 항목을 더했다. H-2, H-11, C-9~C-11, J_P는 그대로다.
+- (이 절의 H-4 종류별 수·목록 파일 형식은 아래 "R4 보충 3판" 절이 고쳐 쓴다.)
+
+## R4 보충 3판 (보충 4, 사용자 결정 128, 2026-11-16)
+
+- 받은 것: `r4_supplement_3_common.md`(sha256 `92b62dcc…`), 보충 4 구간 sha256 `de45d30170e44a5987e815c41e6cd9580c5f6df89a065803ab0fd2ae7257b497`(표지 줄 사이, LF, 끝 줄바꿈 포함으로 다시 계산해 일치). manifest 초안 `p2_manifest_draft.json`(받은 판 sha256 `a069ce97…`).
+
+| 결정 128 / 보충 4 | 도구 | 반영 |
+|---|---|---|
+| (a) 4-3 u6 ABL 짝 | `p2_4368.py harness` | `by_setting` u6 기록에서 `controller` = `ABL`과 태그 = `ABL_LAS_K1` 가운데 하나만 참이면 **S-3**(R16-3). 그 줄은 S-2로 다시 세지 않는다. 판은 `controller`로 정하고 태그는 그 판의 기대 태그와 대조한다(그 밖 S-2) |
+| (b) 4-2 H-4 종류별 수 | 같음 | C2(kind VB)·ABL·IND·IND_LAS 각 242를 묶음 안 파일 합으로 센다(S-15). H-1은 V0·VB 각 434 그대로 |
+| (c) 4-2 H-9 부분 | 같음 | **목록 파일 필드 `part`**로 정했다. 묶음 문자열은 `H-9` 하나이고 `part` ∈ {`main`(없으면 기본), `V0-sample`, `family-F`}. 묶음 H-9 줄 수(원판 5.1·RV1-12 1,676)는 `main` 부분만 센다. 부분별 대조: `main` 1,676, `V0-sample` run 84, `family-F` run 192. 부분이 빠지거나 수가 다르면 S-15. H-9 밖 묶음의 `part`는 `main`만(아니면 S-15). 출력 `bundles.H-9.parts`, `files[].part`. 계열 𝓕 원 실행 두 파일은 `format` `grid_json`으로 run(파일마다 96)을 읽고 태그는 `results[i]`의 것이다. 판정 입력 `h9_family_F.jsonl`(64줄)은 이 목록에 넣지 않는다(`path2_v5c`가 읽음) |
+| (d) 4-4 입력 파일 | 같음(`R4_INPUTS`, `r4_input_check`) | G-S가 아니고 목록에 원판 5.1 묶음이 있으면, 4-2 표의 하네스 입력 42개(`resume_k1` 20 + `las_k1` 22)가 목록에 한 번씩 있고 묶음·부분·판(kind)·형식·키 원본(5개)이 표와 같으며 파일이 있어야 한다. 원판 5.1 묶음에 표 밖 파일이 있어도 S-15. 파일마다 읽은 줄·run 수가 표의 값과 같아야 한다(S-15). 출력 `r4_input_check`. 4-4의 V0 저장 격자 4개와 `h9_family_F.jsonl`은 하네스 입력이 아니라 이 확인에 넣지 않았다(`path2_v5c`·메인 몫) |
+
+### 목록 파일(manifest) 형식 (보충 3판, 현재)
+
+- 필드: `bundle`(`H-n`), 선택 `part`(H-9만: `main`·`V0-sample`·`family-F`), `path`(저장소 상대 `/` 또는 절대), `format`(`run_v5_jsonl` / `u3_json` / `r79_json` / `grid_json`), `kind`(고정 kind 또는 `by_setting`), 선택 `expect_lines`, `key_source`·`key_source_override`(+ `_format`), `family_run`. `stored`는 쓰지 않는다(R16-5 1).
+- 표 4-2와의 대응은 `p2_4368.R4_INPUTS`가 정본이다. 메인에 넘긴 manifest(`scratchpad\r4-p2\p2_manifest_draft.json`, 커밋 밖)는 이 표에서 만들었다.
+
+### 도구 sha256 (R4 보충 3판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `76d561cce80c44ea02c4109ed893bb1b577c130b87f8702c972defc242f34ea6` | 바뀜 |
+| `p2_u3.py` | `7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72` | 그대로 |
+| `p2_v5j.py` | `b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8` | 그대로 |
+| `p2_x16.py` | `e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5` | 바뀜(RD-13 목록) |
+| `p2_d1.py`·`p2_t3k.py` | 앞 표와 같음 | 그대로 |
+| `test_p2_4368.py` | `bc2e6b665dd59ced419bc6d1a6dcd31085a35d6e10ac5a8a35cf59b4f4fc9cb7` | 바뀜(169개) |
+| 그 밖 시험 | B-1 판 표와 같음 | 그대로(u3 17, v5j 26, x16 13, d1 17, t3k 38) |
+
+- 자체 시험 여섯 파일 280개 통과. 더한 것: ABL 짝 S-3(S-2 아님)과 C2·ABL 종류별 수, 입력 표 42개·키 원본 5개·부분 합, `r4_input_check` 통과와 다섯 결함(판 다름, 파일 빠짐, 표 밖 파일, 키 원본 다름, 디스크에 없음), H-9 부분별 수와 모르는 부분.
+- `path2_v5c`는 `p2_4368.py`가 바뀌어 `P2_CORE_SHA`를 다시 고정해야 한다(`P2_V5J_SHA`는 그대로).
+
+### RD-13 목록 sha256 (보충 3판에서 바뀐 것)
+
+| 묶음 | 목록 sha256 |
+|---|---|
+| H-1 | `a2fc1643a231051a54f3f1a0d8acce5c0bfae56414b1f3d30479ece480633fb3` |
+| H-3 | `ce2f2f1624043474514a3a396a5de4575f41f24fa5493dafc7e4fe90c3124832` |
+| H-4 | `1014f17ab2fb1ec2c487e079cae94b9366eb86e1f31d5437e6b0a5a426cfd415` |
+| H-5 | `ce77a1e8b120118201568764496bf37a5da80b508b8b68f94ba5a5c4d878c2e0` |
+| H-6·H-8 | `c84d8a2251981ea3e3b937488a9e10f921a10651e3b692f5b138e0d1cd946c39` |
+| H-7 | `6feb81694cdedbd4443eab92bc9f5cb65d590d7484582ca381cf773840975672` |
+| H-9 | `98ec9a53f6f9ad85cee522decaf7b88e89ea45209d231d3ca6a76c09e9797ab0` |
+| H-10 | `98682211583a90953518c64c8b02195789647a9cc8d9db3e9981d260fefb8447` |
+
+- 바뀐 이유: 모든 하네스 묶음에 입력 파일 표 관문을 더했다. H-4는 종류별 수를 넷으로, ABL 짝 S-3 항목을 더했다. H-7·H-9는 키 원본 대조 항목을 뺐다(4-2 "없음"). H-9에 부분별 수, H-10에 판별 수(기록)를 더했다. H-2, H-11, C-9~C-11, J_P는 그대로다.

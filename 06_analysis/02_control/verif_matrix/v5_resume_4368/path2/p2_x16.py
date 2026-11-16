@@ -494,6 +494,7 @@ _LAYER = [  # p2_4368.py harness (436.8 layer), every harness bundle
     ("결측 = 판정 불가", "원판 9.3", R),
     ("묶음 줄 수 S-15", "rev1 RV1-12", K),
     ("목록 파일에 묶음이 빠짐 = S-15", "원판 8.2 S-15", K),
+    ("입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)", "원판 8.2 S-15", K),
     ("RD-9 ③ 켬 줄 수", "원판 4.1", K),
 ]
 _RD8 = [("RD-8 J-P3 입력 형식(breach_reads 4정수, 기록 pass 빈 통과)", "rev4 R4-A2", K)]
@@ -524,7 +525,8 @@ RD13_ITEMS = {
         ("D-1 재사용", "rev3 R3-B3", R),
     ],
     "H-4": _LAYER + _RD8 + [
-        ("종류별 줄 수(IND 242·IND_LAS 242, main·wide 원 파일 함께)", "u3 rev2 3", K),
+        ("종류별 줄 수(C2·ABL·IND·IND_LAS 각 242, main·wide 원 파일 함께)", "u3 rev2 3", K),
+        ("u6 controller ABL과 태그 ABL_LAS_K1 짝(하나만 맞으면 S-3)", "rev16:69", K),
         ("U-6 G-1 사례 수", "u3 원판 7", K),
         ("U-6 G-2 태그(③는 C2만)", "u3 rev2 #4", K),
         ("U-6 제어기별 표", "u3 원판 5.2", R),
@@ -539,7 +541,9 @@ RD13_ITEMS = {
         ("J-P3(RD-8 형식)", "rev3 R3-C8", G),
         ("T3·T4·4.1 분류(η_v 0.80)", "rev3 R3-C2", R),
     ],
-    "H-6": _LAYER + _KS, "H-7": _LAYER + _KS, "H-8": _LAYER + _KS, "H-9": _LAYER + _KS, "H-10": _LAYER,
+    "H-6": _LAYER + _KS, "H-7": _LAYER, "H-8": _LAYER + _KS,
+    "H-9": _LAYER + [("부분별 줄 수(본 1,676·V0 표본 run 84·계열 𝓕 원 실행 run 192)", "rev1 RV1-12", K)],
+    "H-10": _LAYER + [("판별 수(VB·LS1~LS4·V0·V3, 기록)", "rev1 RV1-2", R)],
     "H-11": [("G-3 8쌍 해시 같음", "rev16:142", K), ("수 검사(키마다 1줄)", "rev16:141", K),
              ("커밋 정체성(R2, clean)", "rev16:143", K), ("G-3 거짓 짝 목록", "rev16:142", K)],
     "C-9": [("두 팔 decisions(dP)·토양 모드 시작·LOC 시각", "rev16:250", R),
