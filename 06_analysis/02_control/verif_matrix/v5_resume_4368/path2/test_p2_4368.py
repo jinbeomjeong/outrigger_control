@@ -1424,9 +1424,30 @@ def test_harness_grid_run_reads_parent_tag(tmp_path, capsys):
     grid_file(f, parent_tag=None)                                       # neither run nor job tag -> S-11
     code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
     assert code == 2 and s["stop_codes"] == ["S-11"]
-    grid_file(f, parent_tag=p2.TAG_V0, run_tag=p2.TAG_VB)               # a run's own tag wins over the job's
+    # user decision 129 (supplement 4-3 / 5-1): only results[i].controller_tag; a run's own tag is not read
+    grid_file(f, parent_tag=p2.TAG_V0, run_tag=p2.TAG_VB)
+    code, s, rep = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 2 and s["stop_codes"] == ["S-2"] and rep["bundles"]["G"]["tags"] == {p2.TAG_V0: 3}
+    grid_file(f, parent_tag=None, run_tag=p2.TAG_VB)                    # run tag alone does not count -> S-11
     code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
-    assert code == 0, s
+    assert code == 2 and s["stop_codes"] == ["S-11"]
+
+
+def test_r4_decision_129_grid_tag_only_top_level_of_results_i(tmp_path, capsys):
+    f = tmp_path / "grid.json"
+    grid_file(f, parent_tag=None)
+    data = json.loads(f.read_text("utf-8"))
+    data["results"][0]["v5"] = {"controller_tag": p2.TAG_VB}            # results[i].v5.controller_tag only
+    for r in data["results"][0]["runs"]:
+        r["resume_k1"]["controller_tag"] = p2.TAG_VB                    # and the run's resume_k1 block
+    f.write_text(json.dumps(data), "utf-8")
+    code, s, rep = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 2 and s["stop_codes"] == ["S-11"] and rep["bundles"]["G"]["tags"] == {"None": 3}
+    assert rep["bundles"]["G"]["r4"]["rd9_p3_on"] == 0                  # no tag read -> not counted ③ on
+    data["results"][0]["controller_tag"] = None                          # null = S-11 as well
+    f.write_text(json.dumps(data), "utf-8")
+    code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert s["stop_codes"] == ["S-11"]
 
 
 def test_harness_gs_skips_line_counts(tmp_path, capsys):

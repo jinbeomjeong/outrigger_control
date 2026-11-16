@@ -465,7 +465,7 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 
 | 항목 | 도구 | 반영 |
 |---|---|---|
-| 격자 run 태그 | `p2_4368.py harness` | `grid_json`의 run(`results[i].runs[j]`)에 `controller_tag`가 없으면 그 job 기록 `results[i]`의 `controller_tag`를 읽는다. rev8 R8-1이 격자 job 기록의 태그를 "top-level controller_tag"로 정했기 때문이다. run에 자기 태그가 있으면 그것을 쓴다. 둘 다 없으면 앞 판대로 S-11이다. 앞 판은 run만 읽어서 `bbacfd7` G-S의 격자 6줄에 S-11을 냈다 |
+| 격자 run 태그 | `p2_4368.py harness` | `grid_json`의 run(`results[i].runs[j]`)에 `controller_tag`가 없으면 그 job 기록 `results[i]`의 `controller_tag`를 읽는다. rev8 R8-1이 격자 job 기록의 태그를 "top-level controller_tag"로 정했기 때문이다. ~~run에 자기 태그가 있으면 그것을 쓴다.~~ (R4 결정 129로 바뀜: 격자 run 태그는 `results[i]`의 최상위 `controller_tag`만 읽고 run 자신의 필드·`resume_k1` 블록은 읽지 않는다. 아래 "R4 결정 129" 절) 둘 다 없으면 앞 판대로 S-11이다. 앞 판은 run만 읽어서 `bbacfd7` G-S의 격자 6줄에 S-11을 냈다 |
 | `harness --gs` | 같음 | G-S(원판 11.2)용이다. 묶음을 `GS-<묶음>`으로 적고, 규칙 5.1 줄 수 대조를 하지 않는다. 묶음 합(`HARNESS_COUNTS`)과 H-4 파일별 242줄이 여기에 든다(S-15 생략). manifest `expect_lines`와 줄 키 중복(S-15)은 그대로 본다. 목록 파일의 `kind`에 `"auto"`를 주면 run_v5 jsonl 한 파일 안의 여러 판을 줄마다 `job.setting`으로 읽는다. `VB`이면 VB, `LS1`~`LS4`이면 LS(둘 다 ③ 태그)이고, 그 밖의 설정(V0·V1~V8·V0v·L1·L2 …)은 V0(③ 아닌 태그)다. 설정이 없는 줄은 S-11이다. 나눈 입력 파일을 따로 만들 필요가 없다. 출력 묶음에 `auto_kinds`(줄 종류별 수)가 들어간다. `auto`를 `--gs` 없이 쓰거나 run_v5가 아닌 형식에 쓰면 도구 오류(종료 3)다 |
 
 - `bbacfd7` G-S 하네스 출력에 `harness --gs --manifest gs_harness_bbacfd7\p2h_manifest_gs_auto.json`을 돌린 결과(참고, 인용하지 않음): 종료 0, 멈춤 0. 격자 6줄은 부모 태그 `final_C4G2_P3_LAS_K1`로 통과했다. GS-H-9는 25줄(V0 14, VB 1, LS 4, 격자 6)이고, 다른 묶음도 모두 통과했다.
@@ -487,7 +487,7 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 | `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
 | `test_p2_v5j.py` | `1380d01eb0c0f28bc13ff62c2b2276f225b679a2fb2ab895647b3415d9a67b2a` | 그대로(21개) |
 
-- 자체 시험은 다섯 파일 208개(앞 판 205개)다. `test_p2_4368.py`에 3개를 더했다. 격자 부모 태그 시험은 부모 태그로 통과, 부모 태그가 틀리면 S-2, 둘 다 없으면 S-11, run 태그 우선을 본다. `--gs` 시험은 주 실행 S-15와 `--gs` 생략, 중복 키 S-15 유지를 본다. `auto` 시험은 판 섞임 6줄 분류, LS 줄 비③ 태그 S-2, 설정 없음 S-11, `--gs` 없는 `auto`는 종료 3인 것을 본다.
+- 자체 시험은 다섯 파일 208개(앞 판 205개)다. `test_p2_4368.py`에 3개를 더했다. 격자 부모 태그 시험은 부모 태그로 통과, 부모 태그가 틀리면 S-2, 둘 다 없으면 S-11, run 태그 우선을 본다(이 마지막 항목은 R4 결정 129로 "run 태그를 읽지 않음"으로 바뀌었다). `--gs` 시험은 주 실행 S-15와 `--gs` 생략, 중복 키 S-15 유지를 본다. `auto` 시험은 판 섞임 6줄 분류, LS 줄 비③ 태그 S-2, 설정 없음 S-11, `--gs` 없는 `auto`는 종료 3인 것을 본다.
 - `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `424e12f9…`, `P2_V5J_SHA` = `69d0e747…`로 맞춰야 한다(그 폴더 작성자 몫).
 
 ## K-0 sidecar 리스트 (`p2_t3k.py`, H-0 본 실행 전, 사용자 결정 19: 새 rev 없이 도구만)
@@ -915,7 +915,7 @@ $o = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_<M4
 - 필드: `bundle`(`H-n`), 선택 `part`(H-9만: `main`·`V0-sample`·`family-F`), `path`(저장소 상대 `/` 또는 절대), `format`(`run_v5_jsonl` / `u3_json` / `r79_json` / `grid_json`), `kind`(고정 kind 또는 `by_setting`), 선택 `expect_lines`, `key_source`·`key_source_override`(+ `_format`), `family_run`. `stored`는 쓰지 않는다(R16-5 1).
 - 표 4-2와의 대응은 `p2_4368.R4_INPUTS`가 정본이다. 메인에 넘긴 manifest(`scratchpad\r4-p2\p2_manifest_draft.json`, 커밋 밖)는 이 표에서 만들었다.
 
-### 도구 sha256 (R4 보충 3판, LF 바이트, 현재 값)
+### 도구 sha256 (R4 보충 3판, LF 바이트, 이력 값; 현재 값은 마지막 "R4 결정 129" 절)
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -944,3 +944,21 @@ $o = '<M4 checkout>\06_analysis\02_control\verif_matrix\v5_resume_4368\judge_<M4
 | H-10 | `98682211583a90953518c64c8b02195789647a9cc8d9db3e9981d260fefb8447` |
 
 - 바뀐 이유: 모든 하네스 묶음에 입력 파일 표 관문을 더했다. H-4는 종류별 수를 넷으로, ABL 짝 S-3 항목을 더했다. H-7·H-9는 키 원본 대조 항목을 뺐다(4-2 "없음"). H-9에 부분별 수, H-10에 판별 수(기록)를 더했다. H-2, H-11, C-9~C-11, J_P는 그대로다.
+
+## R4 결정 129 (보충 4판 보충 5-1·보충 4-3, 2026-11-16)
+
+- 보충 5 구간 sha256 `89cb422d…`(5-1 해당 줄만 읽음). 2-terra 커밋 `f3bd686` 위에 올렸다.
+- `p2_4368.py harness`: 격자 run(`grid_json`: H-9 격자, V0 표본, 계열 𝓕 원 실행)의 태그는 그 run이 든 `results[i]`의 최상위 `controller_tag` **하나만** 읽는다. run 자신의 필드, run의 `resume_k1` 블록, `results[i].v5.*` 경로로 대신하지 않는다. 키가 없거나 null이면 S-11이다. 이 태그로 원판 4.1 대조(S-2·S-11), `tags` 집계, RD-9 ③ 켬 수를 낸다. run의 `resume_k1` 블록을 쓰는 다른 확인(원판 4.2 기록 확인, K1 분류)은 그대로다. 앞 판은 run 자신의 태그를 먼저 읽고, 없을 때만 부모의 네 경로(`controller_tag`·`v5.controller_tag`·`v5_hydraulics.controller_tag`·`resume_k1.controller_tag`)를 봤다.
+- `p2_v5j.py`는 바꾸지 않았다(`jp3(..., tag=)`로 `results[i]` 태그를 넘기는 쪽은 `path2_v5c`). RD-13 목록도 그대로다.
+
+### 도구 sha256 (R4 결정 129 판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6` | 바뀜 |
+| `p2_v5j.py` | `b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8` | 그대로 |
+| `test_p2_4368.py` | `cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985` | 바뀜(170개) |
+| 그 밖 | 보충 3판 표와 같음 | 그대로 |
+
+- 자체 시험 여섯 파일 281개 통과. `test_harness_grid_run_reads_parent_tag`의 "run 태그 우선" 단언을 "run 태그를 읽지 않음(부모 V0 태그면 S-2, 부모 태그 없으면 run 태그가 있어도 S-11)"으로 바꿨고, 부모에 `v5.controller_tag`만 있거나 run `resume_k1`에만 태그가 있을 때·부모 태그 null일 때 S-11인 시험을 더했다.
+- `path2_v5c`는 `P2_CORE_SHA`를 위 값으로 다시 고정해야 한다(`P2_V5J_SHA`는 그대로).

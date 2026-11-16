@@ -70,6 +70,9 @@ not S-2); H-4 per-kind 242 for C2 (VB) / ABL / IND / IND_LAS; manifest field ``p
 V0-sample, family-F; family-F raw runs read with format grid_json); outside G-S the table-4-2 input files
 (``R4_INPUTS``: path, bundle, part, kind, format, per-file count, key sources) must all be in the manifest, exist, and
 match (S-15), with no other file in a rules bundle.
+R4 supplement 5-1 / 4-3 (user decision 129): ``harness`` reads the tag of a grid run (``grid_json``: H-9 grid,
+V0 sample, family-F raw runs) only from ``results[i].controller_tag``; the run's own fields and its ``resume_k1`` block
+are not read for the tag (the other ``resume_k1`` checks, 4.2 and the K1 classification, stay on the run).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -1200,11 +1203,14 @@ def cmd_harness(args, repo):
                     continue
                 want_tag = KIND_TAG[kind]
             # tag (4.1)
-            tag, tag_path = first_path(rec, TAG_PATHS)
-            if tag is MISSING and fmt == "grid_json" and isinstance(parent, dict):
-                # rev8 R8-1: a grid run carries no tag; its job record (results[i]) has the top-level
-                # controller_tag of the run
-                tag, tag_path = first_path(parent, TAG_PATHS)
+            if fmt == "grid_json":
+                # supplement 4-3 / 5-1 (user decision 129, before rev1 RV1-3.2 "run resume_k1 block"): the tag of a
+                # grid run is only the top-level controller_tag of its job record results[i] (rev8 R8-1); the run's
+                # own fields, its resume_k1 block and results[i].v5.* are not read; absent / null = S-11 below
+                tag = parent.get("controller_tag", MISSING) if isinstance(parent, dict) else MISSING
+                tag_path = "results[i].controller_tag"
+            else:
+                tag, tag_path = first_path(rec, TAG_PATHS)
             b["tags"][str(tag if tag is not MISSING else None)] = b["tags"].get(
                 str(tag if tag is not MISSING else None), 0) + 1
             # R16-3 / supplement 4-3 (user decision 128 (a)): on u6 records the controller ABL and the tag ABL_LAS_K1
