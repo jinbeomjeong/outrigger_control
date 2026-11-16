@@ -1,0 +1,4747 @@
+{
+ "script": "04_scripts/04_hydraulic/coupled/u3_judge_4368.py",
+ "script_sha256": "b46cfa7cc80211905c1c83c9bce5e8b16c2d567e2cc267b08c68d3854766096e",
+ "rules_seal": {
+  "rules_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix",
+  "revisions": {
+   "v5_resume_4368_rules.md": {
+    "pinned_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "seal_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "pinned_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "seal_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "pinned_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "seal_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "pinned_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "seal_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "pinned_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "seal_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "pinned_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "seal_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "pinned_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "seal_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "pinned_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "seal_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "pinned_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "seal_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "pinned_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "seal_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "pinned_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "seal_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "pinned_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "seal_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "pinned_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "seal_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   "v5_resume_4368_rules_rev13.md": {
+    "pinned_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "seal_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"
+   },
+   "v5_resume_4368_rules_rev14.md": {
+    "pinned_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "seal_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "pinned_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "seal_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "pinned_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "seal_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "pinned_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "seal_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "pinned_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "seal_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "pinned_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "seal_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "pinned_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "seal_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "pinned_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "seal_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   "v5_resume_4368_rules_rev22.md": {
+    "pinned_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "seal_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   "v5_resume_4368_rules_rev23.md": {
+    "pinned_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "seal_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   "v5_resume_4368_rules_rev24.md": {
+    "pinned_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "seal_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+   },
+   "v5_resume_4368_rules_rev25.md": {
+    "pinned_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "seal_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+   }
+  },
+  "problems": [],
+  "stop_S1": false
+ },
+ "definition_changes": [
+  {
+   "id": "D-01",
+   "bundle": "H-3",
+   "item": "정착 v2 기준",
+   "old_tool": "저장 v4 재판정 파일 기준",
+   "new_version": "그 실행의 settle_v2 기록으로 398.3 재계산(R3-B6, R4-C2)"
+  },
+  {
+   "id": "D-02",
+   "bundle": "H-3",
+   "item": "h9·연구 D의 v2",
+   "old_tool": "하지 않음",
+   "new_version": "적용(R3-B6)"
+  },
+  {
+   "id": "D-03",
+   "bundle": "H-3",
+   "item": "연구 D 시작 틈 목표",
+   "old_tool": "표 목표",
+   "new_version": "시작 틈 목표(R3-B7)"
+  },
+  {
+   "id": "D-04",
+   "bundle": "H-3",
+   "item": "settle_v2.status·gate 처리",
+   "old_tool": "없음",
+   "new_version": "R3-B6 상태·gate 규칙"
+  },
+  {
+   "id": "D-05",
+   "bundle": "H-3",
+   "item": "연구 B 입력·셈",
+   "old_tool": "finB2_x426b_rejudged.json, suite 필터",
+   "new_version": "finB2_x426b.json 키 집합, suite 이름 안 씀(R3-B2). 두 파일 키 집합이 같은지 기록"
+  },
+  {
+   "id": "D-06",
+   "bundle": "H-3",
+   "item": "재사용 대조",
+   "old_tool": "개수만",
+   "new_version": "meta.v5.reuse_d1 개수·d1_key 유일성(R3-B3)"
+  }
+ ],
+ "diff_vs_existing": [
+  {
+   "old": "04_scripts/04_hydraulic/coupled/u3_judge_k1.py",
+   "new": "04_scripts/04_hydraulic/coupled/u3_judge_4368.py",
+   "old_sha256": "d237eb7c2eba55622418a6f3c704731f5799aca07d6a64501294969a7ccd1f37",
+   "new_sha256": "b46cfa7cc80211905c1c83c9bce5e8b16c2d567e2cc267b08c68d3854766096e",
+   "added_lines": 561,
+   "removed_lines": 586
+  }
+ ],
+ "u3": {
+  "slope": {
+   "bundle": "slope",
+   "kind": "record",
+   "v4_file": "rev85/finB2_harness_rejudged.json",
+   "settle_v2": true,
+   "status": "judged",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 57,
+    "flag": 0,
+    "safe_stop": 42,
+    "fail": 11,
+    "not_judgeable": 0
+   },
+   "phrase": "VB 통과 57 / FLAG 0 / 안전 종료 42 / 실패 11(그중 VB 고유 0)",
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 56,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 1,
+     "flag": 0,
+     "safe_stop": 42,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 11,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 58,
+     "NA": 52,
+     "mean": 1.332758620696019,
+     "min": -6.100000000029127,
+     "max": 4.000000000019099
+    },
+    "min_force_kN": {
+     "n": 110,
+     "NA": 0,
+     "mean": -0.38144254932409133,
+     "min": -3.0257508275110325,
+     "max": 1.4012041746556747
+    },
+    "max_stroke_mm": {
+     "n": 110,
+     "NA": 0,
+     "mean": -0.06914975995772052,
+     "min": -20.183552591993134,
+     "max": 12.484839223115046
+    },
+    "rut_ready_mm": {
+     "n": 58,
+     "NA": 52,
+     "mean": -0.6948537082136568,
+     "min": -7.796215831601245,
+     "max": 3.357360417456931
+    },
+    "att_end_deg": {
+     "n": 110,
+     "NA": 0,
+     "mean": 0.00014161126322703854,
+     "min": -0.057419403492454384,
+     "max": 0.06378834129796218
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [
+     "H1|J1|B|top|edge_nd",
+     "H1|J2|B|top|roll_pos",
+     "H1|J2|B|top|roll_neg",
+     "H1|J2|B|top|edge_nu",
+     "H1|S1|B|top|roll_pos",
+     "H1|S1|B|top|roll_neg",
+     "H2|J2|B|bottom|roll_neg",
+     "H2|S1|B|bottom|roll_pos",
+     "H2|S1|B|bottom|roll_neg",
+     "H3|J2|B|top|roll_pos@k0.5",
+     "H3|J2|B|top|roll_pos@k0.875"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": [
+     {
+      "key": "H2|J1|B|bottom|edge_nd",
+      "v0": "safe_stop",
+      "vb": "pass"
+     }
+    ]
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {
+      "ok": 100,
+      "not_applicable": 10
+     },
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {
+      "ok": 100,
+      "not_applicable": 10
+     },
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 110,
+     "counts": {
+      "V0": 110,
+      "VB": 110
+     },
+     "v4_keys": 110,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    },
+    "R3-B3 reuse": {
+     "pass": true,
+     "V0": {
+      "reused": 12,
+      "meta_reused": 12,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     },
+     "VB": {
+      "reused": 12,
+      "meta_reused": 12,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     }
+    }
+   },
+   "grades": {
+    "V0": {
+     "H1|G1|B|top|flat": "pass",
+     "H1|G1|B|top|nose_down": "pass",
+     "H1|G1|B|top|nose_up": "pass",
+     "H1|G1|B|top|roll_pos": "pass",
+     "H1|G1|B|top|roll_neg": "pass",
+     "H1|G1|B|top|edge_nd": "pass",
+     "H1|G1|B|top|edge_nu": "pass",
+     "H1|G1|B|top|rpB": "pass",
+     "H1|J1|B|top|flat": "pass",
+     "H1|J1|B|top|nose_down": "safe_stop",
+     "H1|J1|B|top|nose_up": "safe_stop",
+     "H1|J1|B|top|roll_pos": "safe_stop",
+     "H1|J1|B|top|roll_neg": "safe_stop",
+     "H1|J1|B|top|edge_nd": "fail",
+     "H1|J1|B|top|edge_nu": "safe_stop",
+     "H1|J1|B|top|rpB": "safe_stop",
+     "H1|J2|B|top|flat": "pass",
+     "H1|J2|B|top|nose_down": "safe_stop",
+     "H1|J2|B|top|nose_up": "safe_stop",
+     "H1|J2|B|top|roll_pos": "fail",
+     "H1|J2|B|top|roll_neg": "fail",
+     "H1|J2|B|top|edge_nd": "safe_stop",
+     "H1|J2|B|top|edge_nu": "fail",
+     "H1|J2|B|top|rpB": "safe_stop",
+     "H1|S1|B|top|flat": "pass",
+     "H1|S1|B|top|nose_down": "safe_stop",
+     "H1|S1|B|top|nose_up": "safe_stop",
+     "H1|S1|B|top|roll_pos": "fail",
+     "H1|S1|B|top|roll_neg": "fail",
+     "H1|S1|B|top|edge_nd": "safe_stop",
+     "H1|S1|B|top|edge_nu": "safe_stop",
+     "H1|S1|B|top|rpB": "safe_stop",
+     "H2|G1|B|bottom|flat": "pass",
+     "H2|G1|B|bottom|nose_down": "pass",
+     "H2|G1|B|bottom|nose_up": "pass",
+     "H2|G1|B|bottom|roll_pos": "pass",
+     "H2|G1|B|bottom|roll_neg": "pass",
+     "H2|G1|B|bottom|edge_nd": "pass",
+     "H2|G1|B|bottom|edge_nu": "pass",
+     "H2|G1|B|bottom|rpB": "pass",
+     "H2|J1|B|bottom|flat": "pass",
+     "H2|J1|B|bottom|nose_down": "pass",
+     "H2|J1|B|bottom|nose_up": "safe_stop",
+     "H2|J1|B|bottom|roll_pos": "pass",
+     "H2|J1|B|bottom|roll_neg": "safe_stop",
+     "H2|J1|B|bottom|edge_nd": "safe_stop",
+     "H2|J1|B|bottom|edge_nu": "pass",
+     "H2|J1|B|bottom|rpB": "pass",
+     "H2|J2|B|bottom|flat": "pass",
+     "H2|J2|B|bottom|nose_down": "safe_stop",
+     "H2|J2|B|bottom|nose_up": "safe_stop",
+     "H2|J2|B|bottom|roll_pos": "safe_stop",
+     "H2|J2|B|bottom|roll_neg": "fail",
+     "H2|J2|B|bottom|edge_nd": "safe_stop",
+     "H2|J2|B|bottom|edge_nu": "safe_stop",
+     "H2|J2|B|bottom|rpB": "safe_stop",
+     "H2|S1|B|bottom|flat": "pass",
+     "H2|S1|B|bottom|nose_down": "safe_stop",
+     "H2|S1|B|bottom|nose_up": "safe_stop",
+     "H2|S1|B|bottom|roll_pos": "fail",
+     "H2|S1|B|bottom|roll_neg": "fail",
+     "H2|S1|B|bottom|edge_nd": "safe_stop",
+     "H2|S1|B|bottom|edge_nu": "safe_stop",
+     "H2|S1|B|bottom|rpB": "safe_stop",
+     "H3|J1|B|top|nose_down@k0.5": "pass",
+     "H3|J1|B|top|nose_down@k0.75": "pass",
+     "H3|J1|B|top|nose_down@k0.875": "pass",
+     "H3|J1|B|top|roll_pos@k0.5": "pass",
+     "H3|J1|B|top|roll_pos@k0.75": "pass",
+     "H3|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|J1|B|top|edge_nd@k0.5": "pass",
+     "H3|J1|B|top|edge_nd@k0.75": "pass",
+     "H3|J1|B|top|edge_nd@k0.875": "pass",
+     "H3|J2|B|top|nose_down@k0.5": "pass",
+     "H3|J2|B|top|nose_down@k0.75": "pass",
+     "H3|J2|B|top|nose_down@k0.875": "pass",
+     "H3|J2|B|top|roll_pos@k0.5": "fail",
+     "H3|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|top|roll_pos@k0.875": "fail",
+     "H3|J2|B|top|edge_nd@k0.5": "pass",
+     "H3|J2|B|top|edge_nd@k0.75": "pass",
+     "H3|J2|B|top|edge_nd@k0.875": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.5": "pass",
+     "H3|S1|B|top|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.875": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5": "pass",
+     "H3|S1|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5": "pass",
+     "H3|S1|B|top|edge_nd@k0.75": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.875": "safe_stop",
+     "H4|G1|B|top|nose_down": "pass",
+     "H4|G1|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_down": "safe_stop",
+     "H4|J1|B|top|nose_down_2p8": "pass",
+     "H4|J2|B|top|nose_down": "safe_stop",
+     "H4|J2|B|top|nose_down_2p8": "pass",
+     "H4|S1|B|top|nose_down": "safe_stop",
+     "H4|S1|B|top|nose_down_2p8": "safe_stop",
+     "H4|rigid|B|top|nose_down": "pass",
+     "H4|rigid|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_up": "safe_stop",
+     "H5|rigid|B|top|flat": "pass",
+     "H5|rigid|B|top|nose_down": "pass",
+     "H5|rigid|B|top|nose_up": "pass",
+     "H5|rigid|B|top|roll_pos": "pass",
+     "H5|rigid|B|top|roll_neg": "pass",
+     "H5|rigid|B|top|edge_nd": "pass",
+     "H5|rigid|B|top|edge_nu": "pass",
+     "H5|rigid|B|top|rpB": "pass"
+    },
+    "VB": {
+     "H1|G1|B|top|flat": "pass",
+     "H1|G1|B|top|nose_down": "pass",
+     "H1|G1|B|top|nose_up": "pass",
+     "H1|G1|B|top|roll_pos": "pass",
+     "H1|G1|B|top|roll_neg": "pass",
+     "H1|G1|B|top|edge_nd": "pass",
+     "H1|G1|B|top|edge_nu": "pass",
+     "H1|G1|B|top|rpB": "pass",
+     "H1|J1|B|top|flat": "pass",
+     "H1|J1|B|top|nose_down": "safe_stop",
+     "H1|J1|B|top|nose_up": "safe_stop",
+     "H1|J1|B|top|roll_pos": "safe_stop",
+     "H1|J1|B|top|roll_neg": "safe_stop",
+     "H1|J1|B|top|edge_nd": "fail",
+     "H1|J1|B|top|edge_nu": "safe_stop",
+     "H1|J1|B|top|rpB": "safe_stop",
+     "H1|J2|B|top|flat": "pass",
+     "H1|J2|B|top|nose_down": "safe_stop",
+     "H1|J2|B|top|nose_up": "safe_stop",
+     "H1|J2|B|top|roll_pos": "fail",
+     "H1|J2|B|top|roll_neg": "fail",
+     "H1|J2|B|top|edge_nd": "safe_stop",
+     "H1|J2|B|top|edge_nu": "fail",
+     "H1|J2|B|top|rpB": "safe_stop",
+     "H1|S1|B|top|flat": "pass",
+     "H1|S1|B|top|nose_down": "safe_stop",
+     "H1|S1|B|top|nose_up": "safe_stop",
+     "H1|S1|B|top|roll_pos": "fail",
+     "H1|S1|B|top|roll_neg": "fail",
+     "H1|S1|B|top|edge_nd": "safe_stop",
+     "H1|S1|B|top|edge_nu": "safe_stop",
+     "H1|S1|B|top|rpB": "safe_stop",
+     "H2|G1|B|bottom|flat": "pass",
+     "H2|G1|B|bottom|nose_down": "pass",
+     "H2|G1|B|bottom|nose_up": "pass",
+     "H2|G1|B|bottom|roll_pos": "pass",
+     "H2|G1|B|bottom|roll_neg": "pass",
+     "H2|G1|B|bottom|edge_nd": "pass",
+     "H2|G1|B|bottom|edge_nu": "pass",
+     "H2|G1|B|bottom|rpB": "pass",
+     "H2|J1|B|bottom|flat": "pass",
+     "H2|J1|B|bottom|nose_down": "pass",
+     "H2|J1|B|bottom|nose_up": "safe_stop",
+     "H2|J1|B|bottom|roll_pos": "pass",
+     "H2|J1|B|bottom|roll_neg": "safe_stop",
+     "H2|J1|B|bottom|edge_nd": "pass",
+     "H2|J1|B|bottom|edge_nu": "pass",
+     "H2|J1|B|bottom|rpB": "pass",
+     "H2|J2|B|bottom|flat": "pass",
+     "H2|J2|B|bottom|nose_down": "safe_stop",
+     "H2|J2|B|bottom|nose_up": "safe_stop",
+     "H2|J2|B|bottom|roll_pos": "safe_stop",
+     "H2|J2|B|bottom|roll_neg": "fail",
+     "H2|J2|B|bottom|edge_nd": "safe_stop",
+     "H2|J2|B|bottom|edge_nu": "safe_stop",
+     "H2|J2|B|bottom|rpB": "safe_stop",
+     "H2|S1|B|bottom|flat": "pass",
+     "H2|S1|B|bottom|nose_down": "safe_stop",
+     "H2|S1|B|bottom|nose_up": "safe_stop",
+     "H2|S1|B|bottom|roll_pos": "fail",
+     "H2|S1|B|bottom|roll_neg": "fail",
+     "H2|S1|B|bottom|edge_nd": "safe_stop",
+     "H2|S1|B|bottom|edge_nu": "safe_stop",
+     "H2|S1|B|bottom|rpB": "safe_stop",
+     "H3|J1|B|top|nose_down@k0.5": "pass",
+     "H3|J1|B|top|nose_down@k0.75": "pass",
+     "H3|J1|B|top|nose_down@k0.875": "pass",
+     "H3|J1|B|top|roll_pos@k0.5": "pass",
+     "H3|J1|B|top|roll_pos@k0.75": "pass",
+     "H3|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|J1|B|top|edge_nd@k0.5": "pass",
+     "H3|J1|B|top|edge_nd@k0.75": "pass",
+     "H3|J1|B|top|edge_nd@k0.875": "pass",
+     "H3|J2|B|top|nose_down@k0.5": "pass",
+     "H3|J2|B|top|nose_down@k0.75": "pass",
+     "H3|J2|B|top|nose_down@k0.875": "pass",
+     "H3|J2|B|top|roll_pos@k0.5": "fail",
+     "H3|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|top|roll_pos@k0.875": "fail",
+     "H3|J2|B|top|edge_nd@k0.5": "pass",
+     "H3|J2|B|top|edge_nd@k0.75": "pass",
+     "H3|J2|B|top|edge_nd@k0.875": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.5": "pass",
+     "H3|S1|B|top|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.875": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5": "pass",
+     "H3|S1|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5": "pass",
+     "H3|S1|B|top|edge_nd@k0.75": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.875": "safe_stop",
+     "H4|G1|B|top|nose_down": "pass",
+     "H4|G1|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_down": "safe_stop",
+     "H4|J1|B|top|nose_down_2p8": "pass",
+     "H4|J2|B|top|nose_down": "safe_stop",
+     "H4|J2|B|top|nose_down_2p8": "pass",
+     "H4|S1|B|top|nose_down": "safe_stop",
+     "H4|S1|B|top|nose_down_2p8": "safe_stop",
+     "H4|rigid|B|top|nose_down": "pass",
+     "H4|rigid|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_up": "safe_stop",
+     "H5|rigid|B|top|flat": "pass",
+     "H5|rigid|B|top|nose_down": "pass",
+     "H5|rigid|B|top|nose_up": "pass",
+     "H5|rigid|B|top|roll_pos": "pass",
+     "H5|rigid|B|top|roll_neg": "pass",
+     "H5|rigid|B|top|edge_nd": "pass",
+     "H5|rigid|B|top|edge_nu": "pass",
+     "H5|rigid|B|top|rpB": "pass"
+    }
+   },
+   "G-5_list_RD7": [],
+   "G-6_list_RD7": []
+  },
+  "h6": {
+   "bundle": "h6",
+   "kind": "record",
+   "v4_file": "rev85/finB2_harness_rejudged.json",
+   "settle_v2": true,
+   "status": "judged",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 20,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 6,
+    "not_judgeable": 0
+   },
+   "phrase": "VB 통과 20 / FLAG 0 / 안전 종료 0 / 실패 6(그중 VB 고유 0)",
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 20,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 6,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 20,
+     "NA": 6,
+     "mean": -0.49500000000236355,
+     "min": -10.800000000051568,
+     "max": 3.4000000000162345
+    },
+    "min_force_kN": {
+     "n": 26,
+     "NA": 0,
+     "mean": -0.6948618281629375,
+     "min": -7.964416473735334,
+     "max": 4.861862499442218
+    },
+    "max_stroke_mm": {
+     "n": 26,
+     "NA": 0,
+     "mean": 2.2819031542870984,
+     "min": 0.1932343265026475,
+     "max": 12.484839223115046
+    },
+    "rut_ready_mm": {
+     "n": 20,
+     "NA": 6,
+     "mean": -0.07989801465915462,
+     "min": -2.7654253766589036,
+     "max": 3.357360417456931
+    },
+    "att_end_deg": {
+     "n": 26,
+     "NA": 0,
+     "mean": -0.003289423022414263,
+     "min": -0.04352855472494664,
+     "max": 0.011932784028161454
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [
+     "H6|J1|B|top|flat|Fs0|m1.2",
+     "H6|J1|B|top|flat|m1.2",
+     "H6|J1|B|middle|flat|Fs0|m1.2",
+     "H6|J1|B|middle|flat|m1.2",
+     "H6|J1|B|bottom|flat|Fs0|m1.2",
+     "H6|J1|B|bottom|flat|m1.2"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {
+      "ok": 8,
+      "record_only": 16,
+      "not_applicable": 2
+     },
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {
+      "ok": 8,
+      "record_only": 16,
+      "not_applicable": 2
+     },
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 26,
+     "counts": {
+      "V0": 26,
+      "VB": 26
+     },
+     "v4_keys": 26,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    },
+    "R3-B3 reuse": {
+     "pass": true,
+     "V0": {
+      "reused": 0,
+      "meta_reused": null,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     },
+     "VB": {
+      "reused": 0,
+      "meta_reused": null,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     }
+    }
+   },
+   "grades": {
+    "V0": {
+     "H6|J1|B|top|flat|Fs0": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|top|flat": "pass",
+     "H6|J1|B|top|flat|m1.1": "pass",
+     "H6|J1|B|top|flat|m1.2": "fail",
+     "H6|J1|B|middle|flat|Fs0": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|middle|flat": "pass",
+     "H6|J1|B|middle|flat|m1.1": "pass",
+     "H6|J1|B|middle|flat|m1.2": "fail",
+     "H6|J1|B|bottom|flat|Fs0": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|bottom|flat": "pass",
+     "H6|J1|B|bottom|flat|m1.1": "pass",
+     "H6|J1|B|bottom|flat|m1.2": "fail",
+     "H6|J2|B|top|flat": "pass",
+     "H6|J2|B|top|flat|m1.1": "pass",
+     "H6|J2|B|bottom|flat": "pass",
+     "H6|J2|B|bottom|flat|m1.1": "pass",
+     "H6|G1|B|top|flat|m1.2": "pass",
+     "H6|G1|B|bottom|flat|m1.2": "pass",
+     "H6|rigid|B|top|flat|Fs0|m1.2": "pass",
+     "H6|rigid|B|top|flat|m1.2": "pass"
+    },
+    "VB": {
+     "H6|J1|B|top|flat|Fs0": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|top|flat": "pass",
+     "H6|J1|B|top|flat|m1.1": "pass",
+     "H6|J1|B|top|flat|m1.2": "fail",
+     "H6|J1|B|middle|flat|Fs0": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|middle|flat": "pass",
+     "H6|J1|B|middle|flat|m1.1": "pass",
+     "H6|J1|B|middle|flat|m1.2": "fail",
+     "H6|J1|B|bottom|flat|Fs0": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|bottom|flat": "pass",
+     "H6|J1|B|bottom|flat|m1.1": "pass",
+     "H6|J1|B|bottom|flat|m1.2": "fail",
+     "H6|J2|B|top|flat": "pass",
+     "H6|J2|B|top|flat|m1.1": "pass",
+     "H6|J2|B|bottom|flat": "pass",
+     "H6|J2|B|bottom|flat|m1.1": "pass",
+     "H6|G1|B|top|flat|m1.2": "pass",
+     "H6|G1|B|bottom|flat|m1.2": "pass",
+     "H6|rigid|B|top|flat|Fs0|m1.2": "pass",
+     "H6|rigid|B|top|flat|m1.2": "pass"
+    }
+   },
+   "G-5_list_RD7": [],
+   "G-6_list_RD7": []
+  },
+  "h9": {
+   "bundle": "h9",
+   "kind": "record",
+   "v4_file": "rev85/finB2_h9.json",
+   "settle_v2": true,
+   "status": "stopped",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 9,
+    "flag": 1,
+    "safe_stop": 10,
+    "fail": 4,
+    "not_judgeable": 0
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 7,
+     "flag": 1,
+     "safe_stop": 0,
+     "fail": 1,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 2,
+     "flag": 0,
+     "safe_stop": 10,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 3,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 10,
+     "NA": 14,
+     "mean": 4.7100000000224895,
+     "min": -1.7000000000081172,
+     "max": 20.30000000009693
+    },
+    "min_force_kN": {
+     "n": 24,
+     "NA": 0,
+     "mean": -0.500304385465574,
+     "min": -3.4215575602790267,
+     "max": 0.1420914535608091
+    },
+    "max_stroke_mm": {
+     "n": 24,
+     "NA": 0,
+     "mean": 0.9666537463983644,
+     "min": -1.6136674844736945,
+     "max": 18.67934700217245
+    },
+    "rut_ready_mm": {
+     "n": 10,
+     "NA": 14,
+     "mean": -1.0854772003437443,
+     "min": -7.181447537797034,
+     "max": 17.866192661942506
+    },
+    "att_end_deg": {
+     "n": 24,
+     "NA": 0,
+     "mean": -0.01887128463966146,
+     "min": -0.6808151417507746,
+     "max": 0.06378834129796218
+    }
+   },
+   "classes": {
+    "vb_only_failure": [
+     {
+      "key": "H9|J1|B|top|roll_pos@k0.6",
+      "v0": "pass",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     }
+    ],
+    "baseline_failure": [
+     "H9|J1|B|top|roll_pos@k0.65",
+     "H9|J2|B|top|roll_pos@k0.875",
+     "H9|J2|B|top|roll_neg@k0.875"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": [
+     {
+      "key": "H9|J1|B|top|roll_neg@k0.7",
+      "v0": "safe_stop",
+      "vb": "pass"
+     },
+     {
+      "key": "H9|J2|B|top|roll_pos@k0.7",
+      "v0": "safe_stop",
+      "vb": "pass"
+     }
+    ]
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {
+      "ok": 24
+     },
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {
+      "ok": 24
+     },
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 24,
+     "counts": {
+      "V0": 24,
+      "VB": 24
+     },
+     "v4_keys": 24,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": false,
+     "vb_only_failures": [
+      {
+       "key": "H9|J1|B|top|roll_pos@k0.6",
+       "v0": "pass",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      }
+     ]
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    },
+    "R3-B3 reuse": {
+     "pass": true,
+     "V0": {
+      "reused": 1,
+      "meta_reused": 1,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     },
+     "VB": {
+      "reused": 1,
+      "meta_reused": 1,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     }
+    }
+   },
+   "grades": {
+    "V0": {
+     "H9|J1|B|top|roll_pos@k0.6": "pass",
+     "H9|J1|B|top|roll_pos@k0.65": "fail",
+     "H9|J1|B|top|roll_pos@k0.7": "pass",
+     "H9|J1|B|top|roll_pos@k0.75": "pass",
+     "H9|J1|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.6": "pass",
+     "H9|J1|B|top|roll_neg@k0.65": "pass",
+     "H9|J1|B|top|roll_neg@k0.7": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.875": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.6": "pass",
+     "H9|J2|B|top|roll_pos@k0.65": "pass",
+     "H9|J2|B|top|roll_pos@k0.7": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.875": "fail",
+     "H9|J2|B|top|roll_neg@k0.6": "pass",
+     "H9|J2|B|top|roll_neg@k0.65": "pass",
+     "H9|J2|B|top|roll_neg@k0.7": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.875": "fail"
+    },
+    "VB": {
+     "H9|J1|B|top|roll_pos@k0.6": "fail",
+     "H9|J1|B|top|roll_pos@k0.65": "fail",
+     "H9|J1|B|top|roll_pos@k0.7": "pass",
+     "H9|J1|B|top|roll_pos@k0.75": "pass",
+     "H9|J1|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.6": "flag",
+     "H9|J1|B|top|roll_neg@k0.65": "pass",
+     "H9|J1|B|top|roll_neg@k0.7": "pass",
+     "H9|J1|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.875": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.6": "pass",
+     "H9|J2|B|top|roll_pos@k0.65": "pass",
+     "H9|J2|B|top|roll_pos@k0.7": "pass",
+     "H9|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.875": "fail",
+     "H9|J2|B|top|roll_neg@k0.6": "pass",
+     "H9|J2|B|top|roll_neg@k0.65": "pass",
+     "H9|J2|B|top|roll_neg@k0.7": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.875": "fail"
+    }
+   },
+   "G-5_list_RD7": [
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h9_VB.json",
+     "location": "records[0]",
+     "key": "H9|J1|B|top|roll_pos@k0.6"
+    }
+   ],
+   "G-6_list_RD7": []
+  },
+  "g6": {
+   "bundle": "g6",
+   "kind": "g6",
+   "v4_file": "rev85/finB2_p0.json",
+   "settle_v2": false,
+   "status": "stopped",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 97,
+    "flag": 17,
+    "safe_stop": 0,
+    "fail": 2,
+    "not_judgeable": 0
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 95,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 2,
+     "flag": 16,
+     "safe_stop": 0,
+     "fail": 2,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 1,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 116,
+     "NA": 0,
+     "mean": 1.42241379311024,
+     "min": -4.200000000020054,
+     "max": 18.900000000090245
+    },
+    "min_force_kN": {
+     "n": 116,
+     "NA": 0,
+     "mean": 0.05365773286138365,
+     "min": -5.714781675880727,
+     "max": 8.862249462271777
+    },
+    "max_stroke_mm": {
+     "n": 116,
+     "NA": 0,
+     "mean": 0.026285949527746766,
+     "min": -50.86912712811409,
+     "max": 20.77157160901379
+    },
+    "rut_ready_mm": {
+     "n": 116,
+     "NA": 0,
+     "mean": -0.854160831036754,
+     "min": -50.63463550791391,
+     "max": 14.517638528017102
+    },
+    "att_end_deg": {
+     "n": 116,
+     "NA": 0,
+     "mean": 0.003622645414597039,
+     "min": -0.0050576277568495885,
+     "max": 0.03226348282403237
+    }
+   },
+   "classes": {
+    "vb_only_failure": [
+     {
+      "key": "g6r|rigid+S1@FL|top|Fs4",
+      "v0": "flag",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     },
+     {
+      "key": "g6r|rigid+S1@FR|top|Fs4",
+      "v0": "flag",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     }
+    ],
+    "baseline_failure": [],
+    "vb_improvement": [
+     {
+      "key": "g6r|rigid+J2@FL|top|Fs0",
+      "vb": "flag"
+     }
+    ],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {},
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {},
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 116,
+     "counts": {
+      "V0": 116,
+      "VB": 116
+     },
+     "v4_keys": 116,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": false,
+     "vb_only_failures": [
+      {
+       "key": "g6r|rigid+S1@FL|top|Fs4",
+       "v0": "flag",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      },
+      {
+       "key": "g6r|rigid+S1@FR|top|Fs4",
+       "v0": "flag",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      }
+     ]
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    }
+   },
+   "grades": {
+    "V0": {
+     "g6|G1+J1@FL|top|Fs0": "pass",
+     "g6|G1+J1@FL|top|Fs4": "pass",
+     "g6|G1+J1@FL|bottom|Fs0": "pass",
+     "g6|G1+J1@FL|bottom|Fs4": "pass",
+     "g6|G1+J1@FR|top|Fs0": "pass",
+     "g6|G1+J1@FR|top|Fs4": "pass",
+     "g6|G1+J1@FR|bottom|Fs0": "pass",
+     "g6|G1+J1@FR|bottom|Fs4": "pass",
+     "g6|G1+J1@RL|top|Fs0": "pass",
+     "g6|G1+J1@RL|top|Fs4": "pass",
+     "g6|G1+J1@RL|bottom|Fs0": "pass",
+     "g6|G1+J1@RL|bottom|Fs4": "pass",
+     "g6|G1+J1@RR|top|Fs0": "pass",
+     "g6|G1+J1@RR|top|Fs4": "pass",
+     "g6|G1+J1@RR|bottom|Fs0": "pass",
+     "g6|G1+J1@RR|bottom|Fs4": "pass",
+     "g6|G1+J2@FL|top|Fs0": "pass",
+     "g6|G1+J2@FL|top|Fs4": "pass",
+     "g6|G1+J2@FL|bottom|Fs0": "pass",
+     "g6|G1+J2@FL|bottom|Fs4": "pass",
+     "g6|G1+J2@FR|top|Fs0": "pass",
+     "g6|G1+J2@FR|top|Fs4": "pass",
+     "g6|G1+J2@FR|bottom|Fs0": "pass",
+     "g6|G1+J2@FR|bottom|Fs4": "pass",
+     "g6|G1+J2@RL|top|Fs0": "pass",
+     "g6|G1+J2@RL|top|Fs4": "pass",
+     "g6|G1+J2@RL|bottom|Fs0": "pass",
+     "g6|G1+J2@RL|bottom|Fs4": "pass",
+     "g6|G1+J2@RR|top|Fs0": "pass",
+     "g6|G1+J2@RR|top|Fs4": "pass",
+     "g6|G1+J2@RR|bottom|Fs0": "pass",
+     "g6|G1+J2@RR|bottom|Fs4": "pass",
+     "g6|G1+S1@FL|top|Fs0": "flag",
+     "g6|G1+S1@FL|top|Fs4": "flag",
+     "g6|G1+S1@FL|bottom|Fs0": "flag",
+     "g6|G1+S1@FL|bottom|Fs4": "flag",
+     "g6|G1+S1@FR|top|Fs0": "flag",
+     "g6|G1+S1@FR|top|Fs4": "flag",
+     "g6|G1+S1@FR|bottom|Fs0": "flag",
+     "g6|G1+S1@FR|bottom|Fs4": "flag",
+     "g6|G1+S1@RL|top|Fs0": "flag",
+     "g6|G1+S1@RL|top|Fs4": "pass",
+     "g6|G1+S1@RL|bottom|Fs0": "pass",
+     "g6|G1+S1@RL|bottom|Fs4": "pass",
+     "g6|G1+S1@RR|top|Fs0": "flag",
+     "g6|G1+S1@RR|top|Fs4": "flag",
+     "g6|G1+S1@RR|bottom|Fs0": "pass",
+     "g6|G1+S1@RR|bottom|Fs4": "pass",
+     "ref|G1|top|Fs0": "pass",
+     "ref|G1|top|Fs4": "pass",
+     "ref|G1|bottom|Fs0": "pass",
+     "ref|G1|bottom|Fs4": "pass",
+     "ref|J1|top|Fs0": "pass",
+     "ref|J1|top|Fs4": "pass",
+     "ref|J1|bottom|Fs0": "pass",
+     "ref|J1|bottom|Fs4": "pass",
+     "ref|J2|top|Fs0": "pass",
+     "ref|J2|top|Fs4": "pass",
+     "ref|J2|bottom|Fs0": "pass",
+     "ref|J2|bottom|Fs4": "pass",
+     "ref|S1|top|Fs0": "pass",
+     "ref|S1|top|Fs4": "pass",
+     "ref|S1|bottom|Fs0": "pass",
+     "ref|S1|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FL|top|Fs0": "pass",
+     "g6r|rigid+J1@FL|top|Fs4": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FR|top|Fs0": "pass",
+     "g6r|rigid+J1@FR|top|Fs4": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RL|top|Fs0": "pass",
+     "g6r|rigid+J1@RL|top|Fs4": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RR|top|Fs0": "pass",
+     "g6r|rigid+J1@RR|top|Fs4": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FL|top|Fs0": "fail",
+     "g6r|rigid+J2@FL|top|Fs4": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FR|top|Fs0": "flag",
+     "g6r|rigid+J2@FR|top|Fs4": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RL|top|Fs0": "pass",
+     "g6r|rigid+J2@RL|top|Fs4": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RR|top|Fs0": "pass",
+     "g6r|rigid+J2@RR|top|Fs4": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs4": "pass",
+     "g6r|rigid+S1@FL|top|Fs0": "flag",
+     "g6r|rigid+S1@FL|top|Fs4": "flag",
+     "g6r|rigid+S1@FL|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FL|bottom|Fs4": "flag",
+     "g6r|rigid+S1@FR|top|Fs0": "flag",
+     "g6r|rigid+S1@FR|top|Fs4": "flag",
+     "g6r|rigid+S1@FR|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FR|bottom|Fs4": "flag",
+     "g6r|rigid+S1@RL|top|Fs0": "pass",
+     "g6r|rigid+S1@RL|top|Fs4": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+S1@RR|top|Fs0": "pass",
+     "g6r|rigid+S1@RR|top|Fs4": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs4": "pass",
+     "ref|rigid|top|Fs0": "pass",
+     "ref|rigid|top|Fs4": "pass",
+     "ref|rigid|bottom|Fs0": "pass",
+     "ref|rigid|bottom|Fs4": "pass"
+    },
+    "VB": {
+     "g6|G1+J1@FL|top|Fs0": "pass",
+     "g6|G1+J1@FL|top|Fs4": "pass",
+     "g6|G1+J1@FL|bottom|Fs0": "pass",
+     "g6|G1+J1@FL|bottom|Fs4": "pass",
+     "g6|G1+J1@FR|top|Fs0": "pass",
+     "g6|G1+J1@FR|top|Fs4": "pass",
+     "g6|G1+J1@FR|bottom|Fs0": "pass",
+     "g6|G1+J1@FR|bottom|Fs4": "pass",
+     "g6|G1+J1@RL|top|Fs0": "pass",
+     "g6|G1+J1@RL|top|Fs4": "pass",
+     "g6|G1+J1@RL|bottom|Fs0": "pass",
+     "g6|G1+J1@RL|bottom|Fs4": "pass",
+     "g6|G1+J1@RR|top|Fs0": "pass",
+     "g6|G1+J1@RR|top|Fs4": "pass",
+     "g6|G1+J1@RR|bottom|Fs0": "pass",
+     "g6|G1+J1@RR|bottom|Fs4": "pass",
+     "g6|G1+J2@FL|top|Fs0": "pass",
+     "g6|G1+J2@FL|top|Fs4": "pass",
+     "g6|G1+J2@FL|bottom|Fs0": "pass",
+     "g6|G1+J2@FL|bottom|Fs4": "pass",
+     "g6|G1+J2@FR|top|Fs0": "pass",
+     "g6|G1+J2@FR|top|Fs4": "pass",
+     "g6|G1+J2@FR|bottom|Fs0": "pass",
+     "g6|G1+J2@FR|bottom|Fs4": "pass",
+     "g6|G1+J2@RL|top|Fs0": "pass",
+     "g6|G1+J2@RL|top|Fs4": "pass",
+     "g6|G1+J2@RL|bottom|Fs0": "pass",
+     "g6|G1+J2@RL|bottom|Fs4": "pass",
+     "g6|G1+J2@RR|top|Fs0": "pass",
+     "g6|G1+J2@RR|top|Fs4": "pass",
+     "g6|G1+J2@RR|bottom|Fs0": "pass",
+     "g6|G1+J2@RR|bottom|Fs4": "pass",
+     "g6|G1+S1@FL|top|Fs0": "flag",
+     "g6|G1+S1@FL|top|Fs4": "flag",
+     "g6|G1+S1@FL|bottom|Fs0": "flag",
+     "g6|G1+S1@FL|bottom|Fs4": "flag",
+     "g6|G1+S1@FR|top|Fs0": "flag",
+     "g6|G1+S1@FR|top|Fs4": "flag",
+     "g6|G1+S1@FR|bottom|Fs0": "flag",
+     "g6|G1+S1@FR|bottom|Fs4": "flag",
+     "g6|G1+S1@RL|top|Fs0": "flag",
+     "g6|G1+S1@RL|top|Fs4": "pass",
+     "g6|G1+S1@RL|bottom|Fs0": "pass",
+     "g6|G1+S1@RL|bottom|Fs4": "pass",
+     "g6|G1+S1@RR|top|Fs0": "flag",
+     "g6|G1+S1@RR|top|Fs4": "pass",
+     "g6|G1+S1@RR|bottom|Fs0": "pass",
+     "g6|G1+S1@RR|bottom|Fs4": "pass",
+     "ref|G1|top|Fs0": "pass",
+     "ref|G1|top|Fs4": "pass",
+     "ref|G1|bottom|Fs0": "pass",
+     "ref|G1|bottom|Fs4": "pass",
+     "ref|J1|top|Fs0": "pass",
+     "ref|J1|top|Fs4": "pass",
+     "ref|J1|bottom|Fs0": "pass",
+     "ref|J1|bottom|Fs4": "pass",
+     "ref|J2|top|Fs0": "pass",
+     "ref|J2|top|Fs4": "pass",
+     "ref|J2|bottom|Fs0": "pass",
+     "ref|J2|bottom|Fs4": "pass",
+     "ref|S1|top|Fs0": "pass",
+     "ref|S1|top|Fs4": "pass",
+     "ref|S1|bottom|Fs0": "pass",
+     "ref|S1|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FL|top|Fs0": "pass",
+     "g6r|rigid+J1@FL|top|Fs4": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FR|top|Fs0": "pass",
+     "g6r|rigid+J1@FR|top|Fs4": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RL|top|Fs0": "pass",
+     "g6r|rigid+J1@RL|top|Fs4": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RR|top|Fs0": "pass",
+     "g6r|rigid+J1@RR|top|Fs4": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FL|top|Fs0": "flag",
+     "g6r|rigid+J2@FL|top|Fs4": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FR|top|Fs0": "pass",
+     "g6r|rigid+J2@FR|top|Fs4": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RL|top|Fs0": "pass",
+     "g6r|rigid+J2@RL|top|Fs4": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RR|top|Fs0": "pass",
+     "g6r|rigid+J2@RR|top|Fs4": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs4": "pass",
+     "g6r|rigid+S1@FL|top|Fs0": "flag",
+     "g6r|rigid+S1@FL|top|Fs4": "fail",
+     "g6r|rigid+S1@FL|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FL|bottom|Fs4": "flag",
+     "g6r|rigid+S1@FR|top|Fs0": "flag",
+     "g6r|rigid+S1@FR|top|Fs4": "fail",
+     "g6r|rigid+S1@FR|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FR|bottom|Fs4": "flag",
+     "g6r|rigid+S1@RL|top|Fs0": "pass",
+     "g6r|rigid+S1@RL|top|Fs4": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+S1@RR|top|Fs0": "pass",
+     "g6r|rigid+S1@RR|top|Fs4": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs4": "pass",
+     "ref|rigid|top|Fs0": "pass",
+     "ref|rigid|top|Fs4": "pass",
+     "ref|rigid|bottom|Fs0": "pass",
+     "ref|rigid|bottom|Fs4": "pass"
+    }
+   },
+   "G-5_list_RD7": [
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_VB.json",
+     "location": "records[97]",
+     "key": "g6r|rigid+S1@FL|top|Fs4"
+    },
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_VB.json",
+     "location": "records[101]",
+     "key": "g6r|rigid+S1@FR|top|Fs4"
+    }
+   ],
+   "G-6_list_RD7": []
+  },
+  "g8": {
+   "bundle": "g8",
+   "kind": "g8",
+   "v4_file": "rev85/finB2_p0.json",
+   "settle_v2": false,
+   "status": "stopped",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 512,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 4,
+    "not_judgeable": 0
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 506,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 2,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 6,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 2,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 516,
+     "NA": 0,
+     "mean": 1.4379844961308972,
+     "min": -1.2000000000057298,
+     "max": 4.300000000020532
+    },
+    "min_force_kN": {
+     "n": 516,
+     "NA": 0,
+     "mean": -1.5394379844961241,
+     "min": -5.899999999999999,
+     "max": 0.7299999999999969
+    },
+    "max_stroke_mm": {
+     "n": 516,
+     "NA": 0,
+     "mean": 1.163333333333332,
+     "min": -38.60999999999996,
+     "max": 53.99000000000001
+    },
+    "rut_ready_mm": {
+     "n": 0,
+     "NA": 516,
+     "mean": null,
+     "min": null,
+     "max": null
+    },
+    "att_end_deg": {
+     "n": 516,
+     "NA": 0,
+     "mean": 0.002404263565891473,
+     "min": -0.007300000000000001,
+     "max": 0.013000000000000001
+    }
+   },
+   "classes": {
+    "vb_only_failure": [
+     {
+      "key": "slope|edge|top|4.0|RL|raised|20.0|proj",
+      "v0": "pass",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RR|raised|20.0|proj",
+      "v0": "pass",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     }
+    ],
+    "baseline_failure": [
+     "slope|rpB|top|4.0|RL|raised|20.0|proj",
+     "slope|rpB|top|4.0|RR|raised|20.0|proj"
+    ],
+    "vb_improvement": [
+     {
+      "key": "slope|edge|top|4.0|RL|raised|140.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|rpB|top|4.0|RR|raised|170.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|rpB|top|4.0|RR|raised|230.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RL|raised|140.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RL|raised|230.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RR|raised|140.0|proj",
+      "vb": "pass"
+     }
+    ],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {},
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {},
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 516,
+     "counts": {
+      "V0": 516,
+      "VB": 516
+     },
+     "v4_keys": 516,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": false,
+     "vb_only_failures": [
+      {
+       "key": "slope|edge|top|4.0|RL|raised|20.0|proj",
+       "v0": "pass",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      },
+      {
+       "key": "slope|edgeMr|top|4.0|RR|raised|20.0|proj",
+       "v0": "pass",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      }
+     ]
+    },
+    "G-6": {
+     "pass": false,
+     "stops": [
+      {
+       "key": "slope|edge|top|4.0|FR|raised|20.0|proj",
+       "suite": "g8",
+       "fallback_events": 1
+      },
+      {
+       "key": "slope|rpB|top|4.0|FR|raised|20.0|proj",
+       "suite": "g8",
+       "fallback_events": 1
+      },
+      {
+       "key": "slope|edgeMr|top|4.0|FL|raised|20.0|proj",
+       "suite": "g8",
+       "fallback_events": 1
+      }
+     ]
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    }
+   },
+   "grades": {
+    "V0": {
+     "slope|edge|top|4.0|ref|none|0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|140.0|proj": "fail",
+     "slope|edge|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|ref|none|0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|170.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|230.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|ref|none|0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|ref|none|0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|140.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|230.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|140.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|ref|none|0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|ref|none|0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|ref|none|0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|150.0|proj": "pass"
+    },
+    "VB": {
+     "slope|edge|top|4.0|ref|none|0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|20.0|proj": "fail",
+     "slope|edge|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|ref|none|0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|ref|none|0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|ref|none|0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|20.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|ref|none|0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|ref|none|0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|ref|none|0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|150.0|proj": "pass"
+    }
+   },
+   "G-5_list_RD7": [
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "location": "records[15]",
+     "key": "slope|edge|top|4.0|RL|raised|20.0|proj"
+    },
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "location": "records[138]",
+     "key": "slope|edgeMr|top|4.0|RR|raised|20.0|proj"
+    }
+   ],
+   "G-6_list_RD7": [
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "location": "records[8]",
+     "key": "slope|edge|top|4.0|FR|raised|20.0|proj"
+    },
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "location": "records[37]",
+     "key": "slope|rpB|top|4.0|FR|raised|20.0|proj"
+    },
+    {
+     "bundle": "H-3",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "location": "records[117]",
+     "key": "slope|edgeMr|top|4.0|FL|raised|20.0|proj"
+    }
+   ]
+  },
+  "p3b": {
+   "bundle": "p3b",
+   "kind": "record",
+   "v4_file": "rev85/finB2_p0.json",
+   "settle_v2": false,
+   "status": "judged",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 171,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 0,
+    "not_judgeable": 0
+   },
+   "phrase": "VB 통과 171 / FLAG 0 / 안전 종료 0 / 실패 0(그중 VB 고유 0)",
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 171,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 171,
+     "NA": 0,
+     "mean": 1.7695906432833033,
+     "min": -2.8000000000133696,
+     "max": 4.300000000020532
+    },
+    "min_force_kN": {
+     "n": 171,
+     "NA": 0,
+     "mean": -0.8445518790847416,
+     "min": -3.2715619395274302,
+     "max": 1.5792275694954228
+    },
+    "max_stroke_mm": {
+     "n": 171,
+     "NA": 0,
+     "mean": 0.5695768088442682,
+     "min": -0.8441555183734977,
+     "max": 20.77157160901379
+    },
+    "rut_ready_mm": {
+     "n": 171,
+     "NA": 0,
+     "mean": -0.3409194182238738,
+     "min": -2.3668744684055696,
+     "max": 1.8071054994825744
+    },
+    "att_end_deg": {
+     "n": 171,
+     "NA": 0,
+     "mean": 0.0009839413445552488,
+     "min": -0.005406384320682894,
+     "max": 0.03226348282403237
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {},
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {},
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 171,
+     "counts": {
+      "V0": 171,
+      "VB": 171
+     },
+     "v4_keys": 171,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    }
+   },
+   "grades": {
+    "V0": {
+     "base|G1|B|top|Fs0": "pass",
+     "base|G1|B|top|Fs4": "pass",
+     "base|G1|B|top|Fs8": "pass",
+     "base|G1|B|middle|Fs0": "pass",
+     "base|G1|B|middle|Fs4": "pass",
+     "base|G1|B|middle|Fs8": "pass",
+     "base|G1|B|bottom|Fs0": "pass",
+     "base|G1|B|bottom|Fs4": "pass",
+     "base|G1|B|bottom|Fs8": "pass",
+     "base|J1|B|top|Fs0": "pass",
+     "base|J1|B|top|Fs4": "pass",
+     "base|J1|B|top|Fs8": "pass",
+     "base|J1|B|middle|Fs0": "pass",
+     "base|J1|B|middle|Fs4": "pass",
+     "base|J1|B|middle|Fs8": "pass",
+     "base|J1|B|bottom|Fs0": "pass",
+     "base|J1|B|bottom|Fs4": "pass",
+     "base|J1|B|bottom|Fs8": "pass",
+     "base|J2|B|top|Fs0": "pass",
+     "base|J2|B|top|Fs4": "pass",
+     "base|J2|B|top|Fs8": "pass",
+     "base|J2|B|middle|Fs0": "pass",
+     "base|J2|B|middle|Fs4": "pass",
+     "base|J2|B|middle|Fs8": "pass",
+     "base|J2|B|bottom|Fs0": "pass",
+     "base|J2|B|bottom|Fs4": "pass",
+     "base|J2|B|bottom|Fs8": "pass",
+     "base|S1|B|top|Fs0": "pass",
+     "base|S1|B|top|Fs4": "pass",
+     "base|S1|B|top|Fs8": "pass",
+     "base|S1|B|middle|Fs0": "pass",
+     "base|S1|B|middle|Fs4": "pass",
+     "base|S1|B|middle|Fs8": "pass",
+     "base|S1|B|bottom|Fs0": "pass",
+     "base|S1|B|bottom|Fs4": "pass",
+     "base|S1|B|bottom|Fs8": "pass",
+     "base|rigid|0,0|top|Fs0|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b1": "pass",
+     "base|rigid|0,0|top|Fs8|b1": "pass",
+     "base|rigid|0,0|middle|Fs0|b1": "pass",
+     "base|rigid|0,0|middle|Fs4|b1": "pass",
+     "base|rigid|0,0|middle|Fs8|b1": "pass",
+     "base|rigid|0,0|bottom|Fs0|b1": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1": "pass",
+     "base|rigid|0,0|bottom|Fs8|b1": "pass",
+     "base|rigid|4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs8|b1": "pass",
+     "base|rigid|5.5,0|top|Fs0|b1": "pass",
+     "base|rigid|5.5,0|top|Fs4|b1": "pass",
+     "base|rigid|5.5,0|top|Fs8|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs0|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs4|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs8|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs0|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs4|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b0.69": "pass",
+     "base|rigid|0,0|top|Fs4|b1.6": "pass",
+     "base|rigid|0,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|top|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|top|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1.6": "pass"
+    },
+    "VB": {
+     "base|G1|B|top|Fs0": "pass",
+     "base|G1|B|top|Fs4": "pass",
+     "base|G1|B|top|Fs8": "pass",
+     "base|G1|B|middle|Fs0": "pass",
+     "base|G1|B|middle|Fs4": "pass",
+     "base|G1|B|middle|Fs8": "pass",
+     "base|G1|B|bottom|Fs0": "pass",
+     "base|G1|B|bottom|Fs4": "pass",
+     "base|G1|B|bottom|Fs8": "pass",
+     "base|J1|B|top|Fs0": "pass",
+     "base|J1|B|top|Fs4": "pass",
+     "base|J1|B|top|Fs8": "pass",
+     "base|J1|B|middle|Fs0": "pass",
+     "base|J1|B|middle|Fs4": "pass",
+     "base|J1|B|middle|Fs8": "pass",
+     "base|J1|B|bottom|Fs0": "pass",
+     "base|J1|B|bottom|Fs4": "pass",
+     "base|J1|B|bottom|Fs8": "pass",
+     "base|J2|B|top|Fs0": "pass",
+     "base|J2|B|top|Fs4": "pass",
+     "base|J2|B|top|Fs8": "pass",
+     "base|J2|B|middle|Fs0": "pass",
+     "base|J2|B|middle|Fs4": "pass",
+     "base|J2|B|middle|Fs8": "pass",
+     "base|J2|B|bottom|Fs0": "pass",
+     "base|J2|B|bottom|Fs4": "pass",
+     "base|J2|B|bottom|Fs8": "pass",
+     "base|S1|B|top|Fs0": "pass",
+     "base|S1|B|top|Fs4": "pass",
+     "base|S1|B|top|Fs8": "pass",
+     "base|S1|B|middle|Fs0": "pass",
+     "base|S1|B|middle|Fs4": "pass",
+     "base|S1|B|middle|Fs8": "pass",
+     "base|S1|B|bottom|Fs0": "pass",
+     "base|S1|B|bottom|Fs4": "pass",
+     "base|S1|B|bottom|Fs8": "pass",
+     "base|rigid|0,0|top|Fs0|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b1": "pass",
+     "base|rigid|0,0|top|Fs8|b1": "pass",
+     "base|rigid|0,0|middle|Fs0|b1": "pass",
+     "base|rigid|0,0|middle|Fs4|b1": "pass",
+     "base|rigid|0,0|middle|Fs8|b1": "pass",
+     "base|rigid|0,0|bottom|Fs0|b1": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1": "pass",
+     "base|rigid|0,0|bottom|Fs8|b1": "pass",
+     "base|rigid|4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs8|b1": "pass",
+     "base|rigid|5.5,0|top|Fs0|b1": "pass",
+     "base|rigid|5.5,0|top|Fs4|b1": "pass",
+     "base|rigid|5.5,0|top|Fs8|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs0|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs4|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs8|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs0|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs4|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b0.69": "pass",
+     "base|rigid|0,0|top|Fs4|b1.6": "pass",
+     "base|rigid|0,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|top|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|top|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1.6": "pass"
+    }
+   },
+   "G-5_list_RD7": [],
+   "G-6_list_RD7": []
+  },
+  "x426b": {
+   "bundle": "x426b",
+   "kind": "record",
+   "v4_file": "rev85/finB2_x426b.json",
+   "settle_v2": true,
+   "status": "judged",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 54,
+    "flag": 0,
+    "safe_stop": 16,
+    "fail": 14,
+    "not_judgeable": 0
+   },
+   "phrase": "VB 통과 54 / FLAG 0 / 안전 종료 16 / 실패 14(그중 VB 고유 0)",
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 54,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 16,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 14,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 62,
+     "NA": 22,
+     "mean": 3.7241935484048794,
+     "min": -3.8000000000181444,
+     "max": 21.40000000010218
+    },
+    "min_force_kN": {
+     "n": 84,
+     "NA": 0,
+     "mean": -0.40080374990990447,
+     "min": -6.141971638340216,
+     "max": 1.7498167803057427
+    },
+    "max_stroke_mm": {
+     "n": 84,
+     "NA": 0,
+     "mean": 0.19959642027999366,
+     "min": -3.63170235993789,
+     "max": 5.791485876265028
+    },
+    "rut_ready_mm": {
+     "n": 62,
+     "NA": 22,
+     "mean": -1.859789377111584,
+     "min": -14.047179347490683,
+     "max": 0.6543282827403374
+    },
+    "att_end_deg": {
+     "n": 84,
+     "NA": 0,
+     "mean": 0.006139217959679278,
+     "min": -0.044997770158380766,
+     "max": 0.06962772542362228
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [
+     "H3|J2|B|top|roll_pos@k0.5|Fs0",
+     "H3|J2|B|top|roll_pos@k0.5|Fs8",
+     "H3|J2|B|middle|roll_pos@k0.5",
+     "H3|J1|B|top|nose_down@k0.5|m1.1",
+     "H3|J1|B|top|nose_down@k0.75|m1.1",
+     "H3|J1|B|top|roll_pos@k0.75|m1.1",
+     "H3|J1|B|top|edge_nd@k0.5|m1.1",
+     "H3|J2|B|top|nose_down@k0.75|m1.1",
+     "H3|J2|B|top|roll_pos@k0.5|m1.1",
+     "H3|J2|B|top|roll_pos@k0.75|m1.1",
+     "H3|J2|B|top|edge_nd@k0.5|m1.1",
+     "H3|J2|B|top|edge_nd@k0.75|m1.1",
+     "H3|S1|B|top|edge_nd@k0.5|m1.1",
+     "H3|S1|B|top|edge_nd@k0.75|m1.1"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {
+      "ok": 63,
+      "record_only": 21
+     },
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {
+      "ok": 63,
+      "record_only": 21
+     },
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 84,
+     "counts": {
+      "V0": 84,
+      "VB": 84
+     },
+     "v4_keys": 84,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    },
+    "R3-B3 reuse": {
+     "pass": true,
+     "V0": {
+      "reused": 0,
+      "meta_reused": null,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     },
+     "VB": {
+      "reused": 0,
+      "meta_reused": null,
+      "count_equal": true,
+      "id_field": "d1.key",
+      "d1_key_not_unique": [],
+      "pass": true
+     }
+    }
+   },
+   "grades": {
+    "V0": {
+     "H1|G1|B|top|nose_down|Fs0": "pass",
+     "H1|G1|B|top|roll_pos|Fs0": "pass",
+     "H1|G1|B|top|edge_nd|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs0": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs0": "safe_stop",
+     "H1|G1|B|top|nose_down|Fs8": "pass",
+     "H1|G1|B|top|roll_pos|Fs8": "pass",
+     "H1|G1|B|top|edge_nd|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs8": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs8": "safe_stop",
+     "H1|G1|B|middle|nose_down": "pass",
+     "H1|G1|B|middle|roll_pos": "pass",
+     "H1|G1|B|middle|edge_nd": "pass",
+     "H3|J1|B|middle|nose_down@k0.5": "pass",
+     "H3|J1|B|middle|nose_down@k0.75": "pass",
+     "H3|J1|B|middle|roll_pos@k0.5": "pass",
+     "H3|J1|B|middle|roll_pos@k0.75": "pass",
+     "H3|J1|B|middle|edge_nd@k0.5": "pass",
+     "H3|J1|B|middle|edge_nd@k0.75": "pass",
+     "H3|J2|B|middle|nose_down@k0.5": "pass",
+     "H3|J2|B|middle|nose_down@k0.75": "pass",
+     "H3|J2|B|middle|roll_pos@k0.5": "fail",
+     "H3|J2|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|middle|edge_nd@k0.5": "pass",
+     "H3|J2|B|middle|edge_nd@k0.75": "pass",
+     "H3|S1|B|middle|nose_down@k0.5": "pass",
+     "H3|S1|B|middle|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|middle|roll_pos@k0.5": "pass",
+     "H3|S1|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|middle|edge_nd@k0.5": "pass",
+     "H3|S1|B|middle|edge_nd@k0.75": "safe_stop",
+     "H1|G1|B|top|nose_down|m1.1": "pass",
+     "H1|G1|B|top|roll_pos|m1.1": "pass",
+     "H1|G1|B|top|edge_nd|m1.1": "pass",
+     "H3|J1|B|top|nose_down@k0.5|m1.1": "fail",
+     "H3|J1|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J1|B|top|roll_pos@k0.5|m1.1": "safe_stop",
+     "H3|J1|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.75|m1.1": "safe_stop",
+     "H3|J2|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|J2|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.5|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.75|m1.1": "fail",
+     "H3|S1|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|S1|B|top|nose_down@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|m1.1": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|S1|B|top|edge_nd@k0.75|m1.1": "fail"
+    },
+    "VB": {
+     "H1|G1|B|top|nose_down|Fs0": "pass",
+     "H1|G1|B|top|roll_pos|Fs0": "pass",
+     "H1|G1|B|top|edge_nd|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs0": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs0": "safe_stop",
+     "H1|G1|B|top|nose_down|Fs8": "pass",
+     "H1|G1|B|top|roll_pos|Fs8": "pass",
+     "H1|G1|B|top|edge_nd|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs8": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs8": "safe_stop",
+     "H1|G1|B|middle|nose_down": "pass",
+     "H1|G1|B|middle|roll_pos": "pass",
+     "H1|G1|B|middle|edge_nd": "pass",
+     "H3|J1|B|middle|nose_down@k0.5": "pass",
+     "H3|J1|B|middle|nose_down@k0.75": "pass",
+     "H3|J1|B|middle|roll_pos@k0.5": "pass",
+     "H3|J1|B|middle|roll_pos@k0.75": "pass",
+     "H3|J1|B|middle|edge_nd@k0.5": "pass",
+     "H3|J1|B|middle|edge_nd@k0.75": "pass",
+     "H3|J2|B|middle|nose_down@k0.5": "pass",
+     "H3|J2|B|middle|nose_down@k0.75": "pass",
+     "H3|J2|B|middle|roll_pos@k0.5": "fail",
+     "H3|J2|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|middle|edge_nd@k0.5": "pass",
+     "H3|J2|B|middle|edge_nd@k0.75": "pass",
+     "H3|S1|B|middle|nose_down@k0.5": "pass",
+     "H3|S1|B|middle|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|middle|roll_pos@k0.5": "pass",
+     "H3|S1|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|middle|edge_nd@k0.5": "pass",
+     "H3|S1|B|middle|edge_nd@k0.75": "safe_stop",
+     "H1|G1|B|top|nose_down|m1.1": "pass",
+     "H1|G1|B|top|roll_pos|m1.1": "pass",
+     "H1|G1|B|top|edge_nd|m1.1": "pass",
+     "H3|J1|B|top|nose_down@k0.5|m1.1": "fail",
+     "H3|J1|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J1|B|top|roll_pos@k0.5|m1.1": "safe_stop",
+     "H3|J1|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.75|m1.1": "safe_stop",
+     "H3|J2|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|J2|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.5|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.75|m1.1": "fail",
+     "H3|S1|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|S1|B|top|nose_down@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|m1.1": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|S1|B|top|edge_nd@k0.75|m1.1": "fail"
+    }
+   },
+   "G-5_list_RD7": [],
+   "G-6_list_RD7": []
+  },
+  "C": {
+   "bundle": "C",
+   "kind": "r72",
+   "v4_file": "rev85/fin_x426_C.json",
+   "settle_v2": false,
+   "status": "judged",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 29,
+    "flag": 5,
+    "safe_stop": 0,
+    "fail": 0,
+    "not_judgeable": 0
+   },
+   "phrase": "VB 통과 29 / FLAG 5 / 안전 종료 0 / 실패 0(그중 VB 고유 0)",
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 29,
+     "flag": 1,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 4,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 34,
+     "NA": 0,
+     "mean": 0.9529411764751384,
+     "min": -5.000000000023874,
+     "max": 3.300000000015757
+    },
+    "min_force_kN": {
+     "n": 34,
+     "NA": 0,
+     "mean": -0.4742013077033272,
+     "min": -5.8661122669562715,
+     "max": 4.329793731356062
+    },
+    "max_stroke_mm": {
+     "n": 34,
+     "NA": 0,
+     "mean": 1.289868783042012,
+     "min": -3.841770153092739,
+     "max": 20.606359272296572
+    },
+    "rut_ready_mm": {
+     "n": 34,
+     "NA": 0,
+     "mean": 0.057963508509788354,
+     "min": -3.8737670244200046,
+     "max": 12.024438238982256
+    },
+    "att_end_deg": {
+     "n": 34,
+     "NA": 0,
+     "mean": 0.003138425550288738,
+     "min": -0.004584324554037596,
+     "max": 0.009498476204566873
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {},
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {},
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 34,
+     "counts": {
+      "V0": 34,
+      "VB": 34
+     },
+     "v4_keys": 34,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    }
+   },
+   "grades": {
+    "V0": {
+     "g6|G1+J1@FL|top|Fs8": "pass",
+     "g6|G1+J1@RR|top|Fs8": "pass",
+     "g6|G1+J2@FL|top|Fs8": "pass",
+     "g6|G1+J2@RR|top|Fs8": "pass",
+     "g6|G1+S1@FL|top|Fs8": "flag",
+     "g6|G1+S1@RR|top|Fs8": "pass",
+     "g6r|rigid+J1@FL|top|Fs8": "pass",
+     "g6r|rigid+J1@RR|top|Fs8": "pass",
+     "g6r|rigid+J2@FL|top|Fs8": "pass",
+     "g6r|rigid+J2@RR|top|Fs8": "pass",
+     "g6r|rigid+S1@FL|top|Fs8": "flag",
+     "g6r|rigid+S1@RR|top|Fs8": "pass",
+     "g6|G1+J1@FL|middle|Fs4": "pass",
+     "g6|G1+J1@RR|middle|Fs4": "pass",
+     "g6|G1+J2@FL|middle|Fs4": "pass",
+     "g6|G1+J2@RR|middle|Fs4": "pass",
+     "g6|G1+S1@FL|middle|Fs4": "flag",
+     "g6|G1+S1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J1@FL|middle|Fs4": "pass",
+     "g6r|rigid+J1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J2@FL|middle|Fs4": "pass",
+     "g6r|rigid+J2@RR|middle|Fs4": "pass",
+     "g6r|rigid+S1@FL|middle|Fs4": "flag",
+     "g6r|rigid+S1@RR|middle|Fs4": "pass",
+     "ref|G1|top|Fs8": "pass",
+     "ref|J1|top|Fs8": "pass",
+     "ref|J2|top|Fs8": "pass",
+     "ref|S1|top|Fs8": "pass",
+     "ref|rigid|top|Fs8": "pass",
+     "ref|G1|middle|Fs4": "pass",
+     "ref|J1|middle|Fs4": "pass",
+     "ref|J2|middle|Fs4": "pass",
+     "ref|S1|middle|Fs4": "pass",
+     "ref|rigid|middle|Fs4": "pass"
+    },
+    "VB": {
+     "g6|G1+J1@FL|top|Fs8": "pass",
+     "g6|G1+J1@RR|top|Fs8": "pass",
+     "g6|G1+J2@FL|top|Fs8": "pass",
+     "g6|G1+J2@RR|top|Fs8": "pass",
+     "g6|G1+S1@FL|top|Fs8": "flag",
+     "g6|G1+S1@RR|top|Fs8": "pass",
+     "g6r|rigid+J1@FL|top|Fs8": "pass",
+     "g6r|rigid+J1@RR|top|Fs8": "pass",
+     "g6r|rigid+J2@FL|top|Fs8": "flag",
+     "g6r|rigid+J2@RR|top|Fs8": "pass",
+     "g6r|rigid+S1@FL|top|Fs8": "flag",
+     "g6r|rigid+S1@RR|top|Fs8": "pass",
+     "g6|G1+J1@FL|middle|Fs4": "pass",
+     "g6|G1+J1@RR|middle|Fs4": "pass",
+     "g6|G1+J2@FL|middle|Fs4": "pass",
+     "g6|G1+J2@RR|middle|Fs4": "pass",
+     "g6|G1+S1@FL|middle|Fs4": "flag",
+     "g6|G1+S1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J1@FL|middle|Fs4": "pass",
+     "g6r|rigid+J1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J2@FL|middle|Fs4": "pass",
+     "g6r|rigid+J2@RR|middle|Fs4": "pass",
+     "g6r|rigid+S1@FL|middle|Fs4": "flag",
+     "g6r|rigid+S1@RR|middle|Fs4": "pass",
+     "ref|G1|top|Fs8": "pass",
+     "ref|J1|top|Fs8": "pass",
+     "ref|J2|top|Fs8": "pass",
+     "ref|S1|top|Fs8": "pass",
+     "ref|rigid|top|Fs8": "pass",
+     "ref|G1|middle|Fs4": "pass",
+     "ref|J1|middle|Fs4": "pass",
+     "ref|J2|middle|Fs4": "pass",
+     "ref|S1|middle|Fs4": "pass",
+     "ref|rigid|middle|Fs4": "pass"
+    }
+   },
+   "G-5_list_RD7": [],
+   "G-6_list_RD7": []
+  },
+  "D": {
+   "bundle": "D",
+   "kind": "slope_result",
+   "v4_file": "rev85/fin_x426_D.json",
+   "settle_v2": true,
+   "status": "judged",
+   "not_judgeable_keys": [],
+   "vb_counts": {
+    "pass": 33,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 0,
+    "not_judgeable": 0
+   },
+   "phrase": "VB 통과 33 / FLAG 0 / 안전 종료 0 / 실패 0(그중 VB 고유 0)",
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 33,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    },
+    "not_judgeable": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0,
+     "not_judgeable": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 33,
+     "NA": 0,
+     "mean": 1.5121212121284322,
+     "min": -2.300000000010982,
+     "max": 4.400000000021009
+    },
+    "min_force_kN": {
+     "n": 33,
+     "NA": 0,
+     "mean": -1.1657761763088867,
+     "min": -2.6742143789476813,
+     "max": -0.02738345108528506
+    },
+    "max_stroke_mm": {
+     "n": 33,
+     "NA": 0,
+     "mean": 1.3949778215716064,
+     "min": -15.610707236957978,
+     "max": 20.77157160901379
+    },
+    "rut_ready_mm": {
+     "n": 33,
+     "NA": 0,
+     "mean": 0.36739320269234227,
+     "min": -15.355437627789478,
+     "max": 5.93283397200166
+    },
+    "att_end_deg": {
+     "n": 33,
+     "NA": 0,
+     "mean": 0.007549019936675071,
+     "min": -0.014433855409278277,
+     "max": 0.043508877625555324
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "settle_v2_counts": {
+    "V0": {
+     "states": {
+      "not_applicable": 33
+     },
+     "tolerance_S11": []
+    },
+    "VB": {
+     "states": {
+      "not_applicable": 33
+     },
+     "tolerance_S11": []
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 33,
+     "counts": {
+      "V0": 33,
+      "VB": 33
+     },
+     "v4_keys": 33,
+     "errors": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    },
+    "S-11 settle tolerances": {
+     "pass": true
+    }
+   },
+   "grades": {
+    "V0": {
+     "H8|G1|B|top|flat": "pass",
+     "H8|G1|B|top|flat|FL:g20": "pass",
+     "H8|G1|B|top|flat|FL:g55": "pass",
+     "H8|G1|B|top|flat|FL:g110": "pass",
+     "H8|G1|B|top|flat|FL:d60": "pass",
+     "H8|G1|B|top|flat|FL:d150": "pass",
+     "H8|G1|B|top|flat|RR:g20": "pass",
+     "H8|G1|B|top|flat|RR:g55": "pass",
+     "H8|G1|B|top|flat|RR:g110": "pass",
+     "H8|G1|B|top|flat|RR:d60": "pass",
+     "H8|G1|B|top|flat|RR:d150": "pass",
+     "H8|J2|B|top|flat": "pass",
+     "H8|J2|B|top|flat|FL:g20": "pass",
+     "H8|J2|B|top|flat|FL:g55": "pass",
+     "H8|J2|B|top|flat|FL:g110": "pass",
+     "H8|J2|B|top|flat|FL:d60": "pass",
+     "H8|J2|B|top|flat|FL:d150": "pass",
+     "H8|J2|B|top|flat|RR:g20": "pass",
+     "H8|J2|B|top|flat|RR:g55": "pass",
+     "H8|J2|B|top|flat|RR:g110": "pass",
+     "H8|J2|B|top|flat|RR:d60": "pass",
+     "H8|J2|B|top|flat|RR:d150": "pass",
+     "H8|rigid|B|top|flat": "pass",
+     "H8|rigid|B|top|flat|FL:g20": "pass",
+     "H8|rigid|B|top|flat|FL:g55": "pass",
+     "H8|rigid|B|top|flat|FL:g110": "pass",
+     "H8|rigid|B|top|flat|FL:d60": "pass",
+     "H8|rigid|B|top|flat|FL:d150": "pass",
+     "H8|rigid|B|top|flat|RR:g20": "pass",
+     "H8|rigid|B|top|flat|RR:g55": "pass",
+     "H8|rigid|B|top|flat|RR:g110": "pass",
+     "H8|rigid|B|top|flat|RR:d60": "pass",
+     "H8|rigid|B|top|flat|RR:d150": "pass"
+    },
+    "VB": {
+     "H8|G1|B|top|flat": "pass",
+     "H8|G1|B|top|flat|FL:g20": "pass",
+     "H8|G1|B|top|flat|FL:g55": "pass",
+     "H8|G1|B|top|flat|FL:g110": "pass",
+     "H8|G1|B|top|flat|FL:d60": "pass",
+     "H8|G1|B|top|flat|FL:d150": "pass",
+     "H8|G1|B|top|flat|RR:g20": "pass",
+     "H8|G1|B|top|flat|RR:g55": "pass",
+     "H8|G1|B|top|flat|RR:g110": "pass",
+     "H8|G1|B|top|flat|RR:d60": "pass",
+     "H8|G1|B|top|flat|RR:d150": "pass",
+     "H8|J2|B|top|flat": "pass",
+     "H8|J2|B|top|flat|FL:g20": "pass",
+     "H8|J2|B|top|flat|FL:g55": "pass",
+     "H8|J2|B|top|flat|FL:g110": "pass",
+     "H8|J2|B|top|flat|FL:d60": "pass",
+     "H8|J2|B|top|flat|FL:d150": "pass",
+     "H8|J2|B|top|flat|RR:g20": "pass",
+     "H8|J2|B|top|flat|RR:g55": "pass",
+     "H8|J2|B|top|flat|RR:g110": "pass",
+     "H8|J2|B|top|flat|RR:d60": "pass",
+     "H8|J2|B|top|flat|RR:d150": "pass",
+     "H8|rigid|B|top|flat": "pass",
+     "H8|rigid|B|top|flat|FL:g20": "pass",
+     "H8|rigid|B|top|flat|FL:g55": "pass",
+     "H8|rigid|B|top|flat|FL:g110": "pass",
+     "H8|rigid|B|top|flat|FL:d60": "pass",
+     "H8|rigid|B|top|flat|FL:d150": "pass",
+     "H8|rigid|B|top|flat|RR:g20": "pass",
+     "H8|rigid|B|top|flat|RR:g55": "pass",
+     "H8|rigid|B|top|flat|RR:g110": "pass",
+     "H8|rigid|B|top|flat|RR:d60": "pass",
+     "H8|rigid|B|top|flat|RR:d150": "pass"
+    }
+   },
+   "G-5_list_RD7": [],
+   "G-6_list_RD7": []
+  }
+ },
+ "R4": {
+  "G-5_list_RD7": [
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_VB.json",
+    "location": "records[97]",
+    "key": "g6r|rigid+S1@FL|top|Fs4"
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_VB.json",
+    "location": "records[101]",
+    "key": "g6r|rigid+S1@FR|top|Fs4"
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+    "location": "records[15]",
+    "key": "slope|edge|top|4.0|RL|raised|20.0|proj"
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+    "location": "records[138]",
+    "key": "slope|edgeMr|top|4.0|RR|raised|20.0|proj"
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h9_VB.json",
+    "location": "records[0]",
+    "key": "H9|J1|B|top|roll_pos@k0.6"
+   }
+  ],
+  "G-6_list_RD7": [
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+    "location": "records[8]",
+    "key": "slope|edge|top|4.0|FR|raised|20.0|proj"
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+    "location": "records[37]",
+    "key": "slope|rpB|top|4.0|FR|raised|20.0|proj"
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+    "location": "records[117]",
+    "key": "slope|edgeMr|top|4.0|FL|raised|20.0|proj"
+   }
+  ],
+  "note": "RD-7 1: G-5 = u3 original 5.1 VB-only failures, G-6 = u3 rev1 #5 g8 VB WARN_ROD_PRESSURE_FALLBACK records (columns bundle, result file, location, key)"
+ },
+ "study_B_keyset": {
+  "input": "rev85/finB2_x426b.json",
+  "keys": 84,
+  "old_file": "rev85/finB2_x426b_rejudged.json",
+  "old_keys": 84,
+  "same_key_set": true,
+  "only_new": [],
+  "only_old": []
+ },
+ "u6": {
+  "b5_wide": {
+   "VB": {
+    "C2": {
+     "runs": 226,
+     "lite_pass": 169,
+     "safe_stop": 42,
+     "crawler_liftoff_fail": 0,
+     "official": {
+      "pass": 171,
+      "stroke_limited_stop": 42,
+      "fail": 13
+     },
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 226,
+     "lite_pass": 94,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 53,
+     "official": {
+      "fail": 226
+     },
+     "errors": 0
+    },
+    "IND": {
+     "runs": 226,
+     "lite_pass": 129,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 14,
+     "official": {
+      "pass": 124,
+      "fail": 102
+     },
+     "errors": 0
+    }
+   },
+   "v4_same_keys_record": {
+    "C2": {
+     "runs": 226,
+     "lite_pass": 168,
+     "safe_stop": 43,
+     "crawler_liftoff_fail": 0,
+     "official": {
+      "pass": 172,
+      "stroke_limited_stop": 43,
+      "fail": 11
+     },
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 226,
+     "lite_pass": 96,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 51,
+     "official": {
+      "fail": 226
+     },
+     "errors": 0
+    },
+    "IND": {
+     "runs": 226,
+     "lite_pass": 140,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 13,
+     "official": {
+      "pass": 138,
+      "fail": 88
+     },
+     "errors": 0
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "runs": 678,
+     "cases": 226,
+     "expected_cases": 226
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    }
+   }
+  },
+  "b5_main": {
+   "VB": {
+    "C2": {
+     "runs": 16,
+     "lite_pass": 16,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 0,
+     "official": {},
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 16,
+     "lite_pass": 9,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 4,
+     "official": {},
+     "errors": 0
+    },
+    "IND": {
+     "runs": 16,
+     "lite_pass": 9,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 2,
+     "official": {},
+     "errors": 0
+    }
+   },
+   "v4_same_keys_record": {
+    "C2": {
+     "runs": 16,
+     "lite_pass": 16,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 0,
+     "official": {},
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 16,
+     "lite_pass": 9,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 4,
+     "official": {},
+     "errors": 0
+    },
+    "IND": {
+     "runs": 16,
+     "lite_pass": 10,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 2,
+     "official": {},
+     "errors": 0
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "runs": 48,
+     "cases": 16,
+     "expected_cases": 16
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    }
+   }
+  }
+ },
+ "G-3": {
+  "rules": "v5_resume_4368_rules_rev16.md",
+  "section": "R16-8 (H-11, u3 original 7 G-3)",
+  "pairs": [
+   {
+    "script": "s9_slope_fix_candidates.py",
+    "key": "base|G1|B|top|Fs0",
+    "compare_field": "hash",
+    "new_file": "u3_p3b_none.json",
+    "target_file": "u3_p3b_V0.json",
+    "no_option_hash": "5227fcd4047444d4d75438178c8c3a6f2f76d1abea50a3653648296213e61ae0",
+    "target_hash": "5227fcd4047444d4d75438178c8c3a6f2f76d1abea50a3653648296213e61ae0",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "s9_slope_fix_candidates.py",
+    "key": "slope|edge|top|4.0|ref|none|0|proj",
+    "compare_field": "hash",
+    "new_file": "u3_g8_none.json",
+    "target_file": "u3_g8_V0.json",
+    "no_option_hash": "79ef1bd6723f5c5b",
+    "target_hash": "79ef1bd6723f5c5b",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "r72_g6_screen.py",
+    "key": "g6|G1+J1@FL|top|Fs8",
+    "compare_field": "commands_sha256",
+    "new_file": "u3_C_none.json",
+    "target_file": "u3_C_V0.json",
+    "no_option_hash": "0632b5c6d39243bcc9a0e48464dd2131942ffafa08f4ef4de725db999d37e902",
+    "target_hash": "0632b5c6d39243bcc9a0e48464dd2131942ffafa08f4ef4de725db999d37e902",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "r72_g6_screen.py",
+    "key": "g6r|rigid+J1@FL|top|Fs8",
+    "compare_field": "commands_sha256",
+    "new_file": "u3_C_none.json",
+    "target_file": "u3_C_V0.json",
+    "no_option_hash": "3c1bb15ce7930aaecdd567cfb6d44b7617011dd78a79007bb52efd6e333167b3",
+    "target_hash": "3c1bb15ce7930aaecdd567cfb6d44b7617011dd78a79007bb52efd6e333167b3",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "s9_soil_slope.py",
+    "key": "H8|rigid|B|top|flat",
+    "compare_field": "run.commands_sha256",
+    "new_file": "u3_D_none.json",
+    "target_file": "u3_D_V0.json",
+    "no_option_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+    "target_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "s9_soil_slope.py",
+    "key": "H8|G1|B|top|flat|FL:g20",
+    "compare_field": "run.commands_sha256",
+    "new_file": "u3_D_none.json",
+    "target_file": "u3_D_V0.json",
+    "no_option_hash": "2665f2046b1ce4f9659431fb174fe8498fbe5a513600b9cfc25e79880f83c90d",
+    "target_hash": "2665f2046b1ce4f9659431fb174fe8498fbe5a513600b9cfc25e79880f83c90d",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "b5_baseline_compare.py",
+    "key": "A1-rigid",
+    "compare_field": "commands_sha256",
+    "new_file": "u6_b5_A1_none.json",
+    "target_file": "u6_b5_A1_V0.json",
+    "no_option_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+    "target_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   },
+   {
+    "script": "b5_baseline_compare.py",
+    "key": "A1-J1",
+    "compare_field": "commands_sha256",
+    "new_file": "u6_b5_A1_none.json",
+    "target_file": "u6_b5_A1_V0.json",
+    "no_option_hash": "2a3b8618080698f7bd95258c100000b57d7de413f473be45a63989e0d1fe66c4",
+    "target_hash": "2a3b8618080698f7bd95258c100000b57d7de413f473be45a63989e0d1fe66c4",
+    "no_option_lines": 1,
+    "target_lines": 1,
+    "count_ok": true,
+    "same": true
+   }
+  ],
+  "G-3": true,
+  "pass": true,
+  "false_pairs_RD7": [],
+  "identity": {
+   "u3_p3b_none.json": [],
+   "u3_g8_none.json": [],
+   "u3_C_none.json": [],
+   "u3_D_none.json": [],
+   "u6_b5_A1_none.json": [],
+   "u6_b5_A1_V0.json": []
+  },
+  "markers": [],
+  "exit_code": 0,
+  "rules_seal": {
+   "revisions": {
+    "v5_resume_4368_rules.md": {
+     "expected_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+     "seal_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+     "rules_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+    },
+    "v5_resume_4368_rules_rev1.md": {
+     "expected_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+     "seal_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+     "rules_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+    },
+    "v5_resume_4368_rules_rev2.md": {
+     "expected_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+     "seal_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+     "rules_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+    },
+    "v5_resume_4368_rules_rev3.md": {
+     "expected_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+     "seal_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+     "rules_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+    },
+    "v5_resume_4368_rules_rev4.md": {
+     "expected_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+     "seal_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+     "rules_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+    },
+    "v5_resume_4368_rules_rev5.md": {
+     "expected_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+     "seal_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+     "rules_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+    },
+    "v5_resume_4368_rules_rev6.md": {
+     "expected_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+     "seal_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+     "rules_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+    },
+    "v5_resume_4368_rules_rev7.md": {
+     "expected_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+     "seal_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+     "rules_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+    },
+    "v5_resume_4368_rules_rev8.md": {
+     "expected_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+     "seal_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+     "rules_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+    },
+    "v5_resume_4368_rules_rev9.md": {
+     "expected_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+     "seal_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+     "rules_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+    },
+    "v5_resume_4368_rules_rev10.md": {
+     "expected_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+     "seal_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+     "rules_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+    },
+    "v5_resume_4368_rules_rev11.md": {
+     "expected_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+     "seal_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+     "rules_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+    },
+    "v5_resume_4368_rules_rev12.md": {
+     "expected_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+     "seal_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+     "rules_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+    },
+    "v5_resume_4368_rules_rev13.md": {
+     "expected_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+     "seal_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+     "rules_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"
+    },
+    "v5_resume_4368_rules_rev14.md": {
+     "expected_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+     "seal_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+     "rules_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"
+    },
+    "v5_resume_4368_rules_rev15.md": {
+     "expected_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+     "seal_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+     "rules_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+    },
+    "v5_resume_4368_rules_rev16.md": {
+     "expected_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+     "seal_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+     "rules_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+    },
+    "v5_resume_4368_rules_rev17.md": {
+     "expected_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+     "seal_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+     "rules_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+    },
+    "v5_resume_4368_rules_rev18.md": {
+     "expected_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+     "seal_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+     "rules_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+    },
+    "v5_resume_4368_rules_rev19.md": {
+     "expected_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+     "seal_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+     "rules_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+    },
+    "v5_resume_4368_rules_rev20.md": {
+     "expected_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+     "seal_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+     "rules_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+    },
+    "v5_resume_4368_rules_rev21.md": {
+     "expected_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+     "seal_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+     "rules_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+    },
+    "v5_resume_4368_rules_rev22.md": {
+     "expected_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+     "seal_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+     "rules_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+    },
+    "v5_resume_4368_rules_rev23.md": {
+     "expected_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+     "seal_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+     "rules_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+    },
+    "v5_resume_4368_rules_rev24.md": {
+     "expected_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+     "seal_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+     "rules_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+    },
+    "v5_resume_4368_rules_rev25.md": {
+     "expected_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+     "seal_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+     "rules_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+    }
+   },
+   "problems": [],
+   "stop_S1": false
+  },
+  "rules_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+  "rules_rev1_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+  "rules_rev2_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+  "rules_rev3_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+  "rules_rev4_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+  "rules_rev7_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+  "rules_rev8_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+  "rules_rev9_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+  "rules_rev10_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+  "rules_rev11_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+  "rules_rev12_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+  "rules_rev13_to_rev25_sha256": {
+   "v5_resume_4368_rules_rev13.md": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+   "v5_resume_4368_rules_rev14.md": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+   "v5_resume_4368_rules_rev15.md": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+   "v5_resume_4368_rules_rev16.md": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+   "v5_resume_4368_rules_rev17.md": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+   "v5_resume_4368_rules_rev18.md": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+   "v5_resume_4368_rules_rev19.md": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+   "v5_resume_4368_rules_rev20.md": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+   "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+   "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+   "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+   "v5_resume_4368_rules_rev24.md": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+   "v5_resume_4368_rules_rev25.md": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+  }
+ },
+ "vs_u3_judge_k1": {
+  "slope": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "h6": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "h9": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "g6": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "g8": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "p3b": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "x426b": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "C": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  },
+  "D": {
+   "n_differ": 0,
+   "lines": [],
+   "explained_by": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04",
+    "D-05",
+    "D-06"
+   ]
+  }
+ },
+ "findings": [
+  "h9: G-5 not passed",
+  "g6: G-5 not passed",
+  "g8: G-5 not passed",
+  "g8: G-6 not passed"
+ ],
+ "exit_code": 1
+}

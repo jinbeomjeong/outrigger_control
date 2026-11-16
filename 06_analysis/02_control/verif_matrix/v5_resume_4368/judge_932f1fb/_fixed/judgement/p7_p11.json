@@ -1,0 +1,402 @@
+{
+ "P-7": {
+  "D1S_G1_B_middle_Fs4_spJ1FL": {
+   "new": "07_results/S9/batch_V5-RESUME-K1-C3_20261114_010541/D1S_G1_B_middle_Fs4_spJ1FL",
+   "stored": "07_results/S9/batch_D1-CHRONO_20261108_131710/D1S_G1_B_middle_Fs4_spJ1FL",
+   "new_npz_sha256": "0e0bc2f5b03b2bd7b0aa3ca52128782cf0bf08ae8e0e6c71ffc85de04c3d9c50",
+   "stored_npz_sha256": "0e0bc2f5b03b2bd7b0aa3ca52128782cf0bf08ae8e0e6c71ffc85de04c3d9c50",
+   "array_names_same": true,
+   "arrays_equal": {
+    "t_s": true,
+    "issued_u_m_s": true
+   },
+   "bits_equal": true,
+   "first_differing_period": null,
+   "threads": [
+    4,
+    4
+   ],
+   "placement_new": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "affinity_mask_env": "0x0000FF00",
+    "affinity_mask_requested": "0x0000FF00",
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "requested": "pcore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "pcore",
+    "omp_wait_policy": "PASSIVE"
+   },
+   "placement_stored": {
+    "mode": "ecore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27
+    ],
+    "power_throttling_off_ok": true,
+    "requested": "ecore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "ecore"
+   }
+  },
+  "D1S_G1_B_bottom_Fs4_spJ1FL": {
+   "new": "07_results/S9/batch_V5-RESUME-K1-C3_20261114_010541/D1S_G1_B_bottom_Fs4_spJ1FL",
+   "stored": "07_results/S9/batch_D1-CHRONO_20261108_131710/D1S_G1_B_bottom_Fs4_spJ1FL",
+   "new_npz_sha256": "e2cb202f347dfa50a29806911e3a85b8652f95abb136c4cd0ce81cefd41ec41b",
+   "stored_npz_sha256": "e2cb202f347dfa50a29806911e3a85b8652f95abb136c4cd0ce81cefd41ec41b",
+   "array_names_same": true,
+   "arrays_equal": {
+    "t_s": true,
+    "issued_u_m_s": true
+   },
+   "bits_equal": true,
+   "first_differing_period": null,
+   "threads": [
+    4,
+    4
+   ],
+   "placement_new": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "affinity_mask_env": "0x0000FF00",
+    "affinity_mask_requested": "0x0000FF00",
+    "affinity_mask_process": "0x0000FF00",
+    "affinity_mask_ok": true,
+    "power_throttling_off_ok": true,
+    "requested": "pcore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "pcore",
+    "omp_wait_policy": "PASSIVE"
+   },
+   "placement_stored": {
+    "mode": "ecore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27
+    ],
+    "power_throttling_off_ok": true,
+    "requested": "ecore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "ecore"
+   }
+  }
+ },
+ "P-11_P-11b": {
+  "v_max_m_s": 0.0209243016,
+  "P3a_G1_B_VB_FB": {
+   "series_keys": {
+    "t_s": [
+     39930
+    ],
+    "scm_crawler_normal_N": [
+     39930
+    ],
+    "scm_pad_normal_N": [
+     39930,
+     4
+    ],
+    "pad_sinkage_geometric_m": [
+     39930,
+     4
+    ],
+    "body_pos_m": [
+     39930,
+     3
+    ],
+    "roll_pitch_deg": [
+     39930,
+     2
+    ],
+    "s_motor_m": [
+     39930,
+     4
+    ],
+    "F_cyl_N": [
+     39930,
+     4
+    ],
+    "scm_contact_patches": [
+     39930
+    ],
+    "body_omega_world_rad_s": [
+     39930,
+     3
+    ],
+    "gravity_factor": [
+     39930
+    ],
+    "scm_ray_hits": [
+     39930
+    ],
+    "pad_tilt_deg": [
+     39930,
+     4
+    ],
+    "rut_clearance_m": [
+     39930
+    ],
+    "track_utilisation": [
+     39930,
+     2
+    ],
+    "node_t_s": [
+     399
+    ],
+    "node_sinkage_mean_contact_m": [
+     399,
+     4
+    ],
+    "node_n_contact": [
+     399,
+     4
+    ]
+   },
+   "t_key": "t_s",
+   "s_key": "s_motor_m",
+   "t_first": 10.00099999999003,
+   "t_last": 19.99999999996673,
+   "r_v": [
+    0.876909188844174,
+    0.8769091888428038,
+    0.8769062079771749,
+    0.8769062079770626
+   ],
+   "r_v_minus_0p8769": [
+    9.188844174001787e-06,
+    9.18884280376453e-06,
+    6.207977174876866e-06,
+    6.207977062633319e-06
+   ]
+  },
+  "P3a_G1_B_V0_FB": {
+   "series_keys": {
+    "t_s": [
+     39930
+    ],
+    "scm_crawler_normal_N": [
+     39930
+    ],
+    "scm_pad_normal_N": [
+     39930,
+     4
+    ],
+    "pad_sinkage_geometric_m": [
+     39930,
+     4
+    ],
+    "body_pos_m": [
+     39930,
+     3
+    ],
+    "roll_pitch_deg": [
+     39930,
+     2
+    ],
+    "s_motor_m": [
+     39930,
+     4
+    ],
+    "F_cyl_N": [
+     39930,
+     4
+    ],
+    "scm_contact_patches": [
+     39930
+    ],
+    "body_omega_world_rad_s": [
+     39930,
+     3
+    ],
+    "gravity_factor": [
+     39930
+    ],
+    "scm_ray_hits": [
+     39930
+    ],
+    "pad_tilt_deg": [
+     39930,
+     4
+    ],
+    "rut_clearance_m": [
+     39930
+    ],
+    "track_utilisation": [
+     39930,
+     2
+    ],
+    "node_t_s": [
+     399
+    ],
+    "node_sinkage_mean_contact_m": [
+     399,
+     4
+    ],
+    "node_n_contact": [
+     399,
+     4
+    ]
+   },
+   "t_key": "t_s",
+   "s_key": "s_motor_m",
+   "t_first": 10.00099999999003,
+   "t_last": 19.99999999996673,
+   "r_v": [
+    0.8769091892493682,
+    0.8769091891990157,
+    0.8769062085393802,
+    0.8769062084965797
+   ],
+   "r_v_minus_0p8769": [
+    9.189249368213304e-06,
+    9.189199015713356e-06,
+    6.208539380159195e-06,
+    6.208496579729328e-06
+   ]
+  },
+  "P3a_G1_B_VB_prop": {
+   "series_keys": {
+    "t_s": [
+     36000
+    ],
+    "scm_crawler_normal_N": [
+     36000
+    ],
+    "scm_pad_normal_N": [
+     36000,
+     4
+    ],
+    "pad_sinkage_geometric_m": [
+     36000,
+     4
+    ],
+    "body_pos_m": [
+     36000,
+     3
+    ],
+    "roll_pitch_deg": [
+     36000,
+     2
+    ],
+    "s_motor_m": [
+     36000,
+     4
+    ],
+    "F_cyl_N": [
+     36000,
+     4
+    ],
+    "scm_contact_patches": [
+     36000
+    ],
+    "body_omega_world_rad_s": [
+     36000,
+     3
+    ],
+    "gravity_factor": [
+     36000
+    ],
+    "scm_ray_hits": [
+     36000
+    ],
+    "pad_tilt_deg": [
+     36000,
+     4
+    ],
+    "rut_clearance_m": [
+     36000
+    ],
+    "track_utilisation": [
+     36000,
+     2
+    ],
+    "node_t_s": [
+     360
+    ],
+    "node_sinkage_mean_contact_m": [
+     360,
+     4
+    ],
+    "node_n_contact": [
+     360,
+     4
+    ]
+   },
+   "t_key": "t_s",
+   "s_key": "s_motor_m",
+   "t_first": 10.00099999999003,
+   "t_last": 19.99999999996673,
+   "r_v": [
+    0.8948074239756385,
+    0.894807423974271,
+    0.8948043830803344,
+    0.8948043830800568
+   ],
+   "r_v_minus_0p8769": [
+    0.017907423975638492,
+    0.01790742397427103,
+    0.017904383080334374,
+    0.017904383080056818
+   ]
+  }
+ }
+}

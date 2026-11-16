@@ -1,0 +1,862 @@
+{
+ "tool": "compare_r4.py",
+ "tool_sha256": "8ff3d32ba0aaf5612f007591d03374470327acb3af4e95fc1b967addc155e193",
+ "column_map_sha256": "5f7ec6faed47e178fbc4566d9d79ec8d3d096d82e19000c94663d6e52e70341a",
+ "baseline_sha256_fixed": "a5627304037729330e1afa5f6a38dbd14fa6aa88210aea3326d5bb9e01b63f29",
+ "rule": "re-audit M-1; R4 block RD-5 K-10, RD-7..RD-11, JD-1..JD-8, supplements 4-6",
+ "inputs": [
+  {
+   "side": "path1",
+   "name": "r4_lists",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\r4_lists.json",
+   "sha256": "f1a3cf5dec93df3531eaa3a15709428cfa6f978a3d2be6bdea415d51017cc2fa"
+  },
+  {
+   "side": "path1",
+   "name": "u3",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\u3_judge.json",
+   "sha256": "8794234bee1f316fc6a581c2962394cca12b1145f38ad5049cf572cf1ec71df8"
+  },
+  {
+   "side": "path1",
+   "name": "h11",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h11.json",
+   "sha256": "c19e49d254946c171b7ae8143eff5c3dc081bf6a95a6edeb4ec967910dae32af"
+  },
+  {
+   "side": "path1",
+   "name": "grid",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\grid_h10.json",
+   "sha256": "5d35ae3cbdb0a341973937a081771ff3aa685f9f28bf5a1d97b43b029d21ed85"
+  },
+  {
+   "side": "path1",
+   "name": "family_f",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\family_f.json",
+   "sha256": "4ed034b58dff377d3e944cbc8d0280ad907d77e93b0516a69e6b51dafcd343b2"
+  },
+  {
+   "side": "path1",
+   "name": "jp",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\jp_reuse.json",
+   "sha256": "f895c431a620c7aaac4416a3beb87facf8470ba78f78b373aa459771cd3df917"
+  },
+  {
+   "side": "path1",
+   "name": "x16",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\x16_records.json",
+   "sha256": "18caaadcfa25c7424dc2694535715a03c1e39b670bbc52bbf9d19db8edc5ce8d"
+  },
+  {
+   "side": "path1",
+   "name": "item_list",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\item_list.json",
+   "sha256": "9e9c0d4d0929ee7b2cab48a9f921341c0668870a11922f0ba85b70d86608d2d5"
+  },
+  {
+   "side": "path2",
+   "name": "harness",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\harness.json",
+   "sha256": "62910051663ac39878545fd03ce59a96382ec5f288a94f0edd616448aec19e7b"
+  },
+  {
+   "side": "path2",
+   "name": "merge",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\p2v5c_merge.json",
+   "sha256": "3d981bc4167eece01c2d5247208e52ea15d3806a0ef399827edb34d65b528fd3"
+  },
+  {
+   "side": "path2",
+   "name": "grid",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\p2v5c_grid.json",
+   "sha256": "e6c47d76b120c1b3ff70c2c2f57a52da743bb819c42b972e0479d6f84f2c3176"
+  },
+  {
+   "side": "path2",
+   "name": "u3",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\u3.json",
+   "sha256": "e2944ad37fcd17ddb584c7cc62b8e8bf0d41df870a93dac76687b6b8baada939"
+  },
+  {
+   "side": "path2",
+   "name": "g3",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\g3.json",
+   "sha256": "58bafd594f52f6f2064f5380e9eeb683b7c955ab473e135923dcf204fb6caf10"
+  },
+  {
+   "side": "path2",
+   "name": "jp",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\jp.json",
+   "sha256": "5d43e366f1a5df4e003d9e9dc79da2d2dad93f2da8dbac8bbdefdcfacf33a5fc"
+  },
+  {
+   "side": "path2",
+   "name": "c16",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\c16.json",
+   "sha256": "3c000cb9429d354d11f0ba413a903f2069e08e1a37e8ea8907ffa4b7da884e63"
+  },
+  {
+   "side": "path2",
+   "name": "noise",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\p2v5c_noise.json",
+   "sha256": "8c06ebdb85ba705f96f51b8ffb968743e962b6e45bd16b4cb47a1e27140e424c"
+  },
+  {
+   "side": "path2",
+   "name": "items",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\rd13_items.json",
+   "sha256": "c800cc9e6876dbebc0473554e303d2e72cbaea765745b933678b586b7ff9c1ad"
+  },
+  {
+   "side": "baseline",
+   "name": "baseline",
+   "path": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\main\\r4_baseline_sets.json",
+   "sha256": "a5627304037729330e1afa5f6a38dbd14fa6aa88210aea3326d5bb9e01b63f29"
+  }
+ ],
+ "rd13_sha256": {
+  "path1": {
+   "H-1": "ded5c3f00fb0ada368825b857c3d2ee2491acff010aeb925feda69d0b10f6498",
+   "H-2": "f8943efa4091a0faa761dad6617792f6ec293f00d470c07351cdbb458b1f2e8d",
+   "H-3": "0128087ad3ce752de80533aa3ca18fc0e771338d818d634ac98e4c514bed2e4c",
+   "H-4": "a4ea2f5454680990b3e0507c5006bb1605d6c8b652d136ec3335b54068ec1f45",
+   "H-5": "fd3a629f4966383e87c910a3ba088169e3ed2138561e573a6021e180496b32eb",
+   "H-6": "13883157e913bbfa661467663c3f933540cdf9a036f379b27c8353ea0a395b16",
+   "H-7": "15d59085520959510f4a7e47009cb3f9e6229a720d594aa539b4f26523ab239e",
+   "H-8": "5986162223eacbf4f2bcf811c1d6082c4b35cdab366ee5cb30aa975cf0e52e52",
+   "H-9": "7af7f2b43342d4baf9a5d0621e000224caea0447b6a3e45a8acd82617a2458a2",
+   "H-10": "f1ac00fd4b8765fe5da5908a03859283356a43cafe8e39d878926ab3995e0ef8",
+   "H-11": "13f6732a777e00f0f38fc3724951424e1ea4ab566b9359c25ff0df09162d11a8",
+   "H-12": "f8a9a72bf1c045e62486e33d090d20a845521faa5541febdcc268747aa1bcc30",
+   "C-9": "e06fe2dc2551ab6576c9f74d28b25fcd2038b208a87f4c5881bcc76509c6418b",
+   "C-10": "a58d467f0321c32ecb01357652b25823d4420b60208824741776d93c496f7e56",
+   "C-11": "d4b88ae520526a1be368ed6569495b40fb3f28bc4fc5042bb3913609147e4d5c",
+   "J_P": "aff3b5c0665a2465aa3749063fd37d7d5f1d398ad89a15055275336f542e3f58"
+  },
+  "path2": {
+   "H-1": "a2fc1643a231051a54f3f1a0d8acce5c0bfae56414b1f3d30479ece480633fb3",
+   "H-2": "7c6c9e74eb0004bfe712888fcb59639e987910601a1aac280981bdfc0a508678",
+   "H-3": "ce2f2f1624043474514a3a396a5de4575f41f24fa5493dafc7e4fe90c3124832",
+   "H-4": "1014f17ab2fb1ec2c487e079cae94b9366eb86e1f31d5437e6b0a5a426cfd415",
+   "H-5": "ce77a1e8b120118201568764496bf37a5da80b508b8b68f94ba5a5c4d878c2e0",
+   "H-6": "c84d8a2251981ea3e3b937488a9e10f921a10651e3b692f5b138e0d1cd946c39",
+   "H-7": "6feb81694cdedbd4443eab92bc9f5cb65d590d7484582ca381cf773840975672",
+   "H-8": "c84d8a2251981ea3e3b937488a9e10f921a10651e3b692f5b138e0d1cd946c39",
+   "H-9": "98ec9a53f6f9ad85cee522decaf7b88e89ea45209d231d3ca6a76c09e9797ab0",
+   "H-10": "98682211583a90953518c64c8b02195789647a9cc8d9db3e9981d260fefb8447",
+   "H-11": "92537e366cb26cefe5aa06dcd6b6cf6f960ec03bc9810f65fe211a614c4dd576",
+   "C-9": "883736082ff1f7b33fe4a14e7c2fbf2f38e3efce4abda0384af8dc1c9a3384a6",
+   "C-10": "a9d2ca7b7f1800c5bdaa2f285e51ab12198a6cb363f76c631afb6f1373b4ed3b",
+   "C-11": "7e973d44b7e83c79c64f7f93e0f7bada2e8559668a5baa5b15fa79c407450b9f",
+   "J_P": "f580f1cb2787065129d27df5419ba549192e09bb87d3b2a6b998ed3eed6140ba"
+  },
+  "path2_v5c": {
+   "H-6": "11a421a528c253c62bc1f03e32609348bb4027fbf362cd7d65ac306621329ee4",
+   "H-8": "a7f1e82f50cdef5252b7e22a076ad2b61470db0cefef31c91211c20b19ca0839",
+   "H-9": "d2577764d72c0050edbd820d5fefd8c3157ee1e9a66335b2cda4f6c25e35c4ac",
+   "H-10": "35d2ca0106f7d2ecdd2e8f8f43053857d906514fff628127ee6382783829a47b"
+  }
+ },
+ "items": [
+  {
+   "item": "RD-7 J-P3 list (RD-7 2)",
+   "status": "equal",
+   "detail": {
+    "rows_path1": 5,
+    "rows_path2": 5,
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "RD-7 J11 list (RD-7 2)",
+   "status": "equal",
+   "detail": {
+    "rows_path1": 0,
+    "rows_path2": 0,
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "RD-7 S-6 list (RD-7 2)",
+   "status": "equal",
+   "detail": {
+    "rows_path1": 67,
+    "rows_path2": 67,
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "JD-1 J-P3 = jp_base",
+   "status": "equal",
+   "detail": {
+    "baseline_rows": 5,
+    "path1": {
+     "equal": true,
+     "only_path": [],
+     "only_baseline": []
+    },
+    "path2": {
+     "equal": true,
+     "only_path": [],
+     "only_baseline": []
+    }
+   }
+  },
+  {
+   "item": "JD-3 S-6 = s6_base",
+   "status": "equal",
+   "detail": {
+    "baseline_rows": 67,
+    "path1": {
+     "equal": true,
+     "only_path": [],
+     "only_baseline": []
+    },
+    "path2": {
+     "equal": true,
+     "only_path": [],
+     "only_baseline": []
+    }
+   }
+  },
+  {
+   "item": "JD-2 G-5 (5 keys)",
+   "status": "equal",
+   "detail": {
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": [],
+    "key_sets": {
+     "path1": {
+      "equal": true,
+      "only_path": [],
+      "only_block": []
+     },
+     "path2": {
+      "equal": true,
+      "only_path": [],
+      "only_block": []
+     }
+    }
+   }
+  },
+  {
+   "item": "JD-7 G-6 (3 keys)",
+   "status": "equal",
+   "detail": {
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": [],
+    "key_sets": {
+     "path1": {
+      "equal": true,
+      "only_path": [],
+      "only_block": []
+     },
+     "path2": {
+      "equal": true,
+      "only_path": [],
+      "only_block": []
+     }
+    }
+   }
+  },
+  {
+   "item": "JD-8 RD-8 marker H-1 / H-3 / H-4",
+   "status": "equal",
+   "detail": {
+    "presence": {
+     "H-1": {
+      "path1": false,
+      "path2": false
+     },
+     "H-3": {
+      "path1": false,
+      "path2": false
+     },
+     "H-4": {
+      "path1": false,
+      "path2": false
+     }
+    }
+   }
+  },
+  {
+   "item": "S6-2 V0 pair source",
+   "status": "equal",
+   "detail": {
+    "pair_source": {
+     "path1": "stored",
+     "path2": "stored"
+    },
+    "sample_jobs": {
+     "path1": 8,
+     "path2": 8
+    },
+    "sample_same": {
+     "path1": 8,
+     "path2": 8
+    }
+   }
+  },
+  {
+   "item": "S5-3 (a) raw pass->fail, N_raw",
+   "status": "equal",
+   "detail": {
+    "counts": {
+     "path1": 2,
+     "path2": 2
+    },
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "S5-3 (c) family F excluded pass->fail, N_F",
+   "status": "equal",
+   "detail": {
+    "counts": {
+     "path1": 0,
+     "path2": 0
+    },
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "S5-3 (b) family F table and application condition",
+   "status": "equal",
+   "detail": {
+    "application": {
+     "path1": true,
+     "path2": true
+    },
+    "rows_path1": 12,
+    "rows_path2": 12,
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "S5-3 records (fail->pass, fail->fail, FAULT, undecidable rows)",
+   "status": "equal",
+   "detail": {
+    "pass_to_pass": {
+     "path1": 666,
+     "path2": 666
+    },
+    "fail_to_pass": {
+     "path1": 19,
+     "path2": 19
+    },
+    "fail_to_fail": {
+     "path1": 81,
+     "path2": 81
+    },
+    "n_fault": {
+     "path1": 0,
+     "path2": 0
+    },
+    "fault_rows": {
+     "path1": [],
+     "path2": []
+    },
+    "undecidable_rows": {
+     "path1": [],
+     "path2": []
+    }
+   }
+  },
+  {
+   "item": "S5-4 / S6-4 stop H-10 marker and grid term",
+   "status": "equal",
+   "detail": {
+    "h10_marker": {
+     "path1": false,
+     "path2": false
+    },
+    "h10_term": {
+     "path1": "N_F",
+     "path2": "N_F"
+    },
+    "h10_value": {
+     "path1": 0,
+     "path2": 0
+    }
+   }
+  },
+  {
+   "item": "S4-5 family F R-1 .. R-4",
+   "status": "equal",
+   "detail": {
+    "result": {
+     "path1": "pass",
+     "path2": "pass"
+    },
+    "differences": {}
+   }
+  },
+  {
+   "item": "RD-11 J_P reading",
+   "status": "equal",
+   "detail": {
+    "rows_count": {
+     "path1": 12,
+     "path2": 12
+    },
+    "stop_markers": {
+     "path1": [],
+     "path2": []
+    },
+    "reuse": {
+     "path1": true,
+     "path2": true
+    },
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "H-11 G-3 and false pairs",
+   "status": "equal",
+   "detail": {
+    "G-3": {
+     "path1": true,
+     "path2": true
+    },
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "RD-8 undecidable counts and marker",
+   "status": "equal",
+   "detail": {
+    "H-1": {
+     "path1": {
+      "lines_with_breach_reads": 72,
+      "wrong_form": 0,
+      "top_level_mismatch": 0,
+      "pass_without_breach_reads": 0,
+      "marker": false
+     },
+     "path2": {
+      "lines_with_breach_reads": 72,
+      "wrong_form": 0,
+      "top_level_mismatch": 0,
+      "pass_without_breach_reads": 0,
+      "marker": false
+     }
+    },
+    "H-3": {
+     "path1": {
+      "lines_with_breach_reads": 516,
+      "wrong_form": 0,
+      "top_level_mismatch": 0,
+      "pass_without_breach_reads": 0,
+      "marker": false
+     },
+     "path2": {
+      "lines_with_breach_reads": 516,
+      "wrong_form": 0,
+      "top_level_mismatch": 0,
+      "pass_without_breach_reads": 0,
+      "marker": false
+     }
+    },
+    "H-4": {
+     "path1": {
+      "lines_with_breach_reads": 0,
+      "wrong_form": 0,
+      "top_level_mismatch": 0,
+      "pass_without_breach_reads": 0,
+      "marker": false
+     },
+     "path2": {
+      "lines_with_breach_reads": 0,
+      "wrong_form": 0,
+      "top_level_mismatch": 0,
+      "pass_without_breach_reads": 0,
+      "marker": false
+     }
+    },
+    "H-6": {
+     "path1": {
+      "wrong_form": 0
+     },
+     "path2": {
+      "wrong_form": 0
+     }
+    },
+    "H-8": {
+     "path1": {
+      "wrong_form": 0
+     },
+     "path2": {
+      "wrong_form": 0
+     }
+    },
+    "H-9": {
+     "path1": {
+      "wrong_form": 0
+     },
+     "path2": {
+      "wrong_form": 0
+     }
+    },
+    "H-10": {
+     "path1": {
+      "wrong_form": 0
+     },
+     "path2": {
+      "wrong_form": 0
+     }
+    }
+   }
+  },
+  {
+   "item": "RD-9 ③-on counts and H-8 dg3 substitution",
+   "status": "equal",
+   "detail": {
+    "H-1": {
+     "path1": 434,
+     "path2": 434
+    },
+    "H-3": {
+     "path1": 1114,
+     "path2": 1114
+    },
+    "H-4": {
+     "path1": 242,
+     "path2": 242
+    },
+    "H-5": {
+     "path1": 0,
+     "path2": 0
+    },
+    "H-6": {
+     "path1": 135,
+     "path2": 135,
+     "path2_v5c": 135
+    },
+    "H-7": {
+     "path1": 0,
+     "path2": 0
+    },
+    "H-8": {
+     "path1": 1553,
+     "path2": 1553,
+     "path2_v5c": 1553
+    },
+    "H-9": {
+     "path1": 768,
+     "path2": 768,
+     "path2_v5c": 768
+    },
+    "H-10": {
+     "path1": 426,
+     "path2": 426,
+     "path2_v5c": 426
+    },
+    "H-8 dg3 substitution": {
+     "path1": {
+      "substituted": 135,
+      "rd9_without_substituted": 1418
+     },
+     "path2": {
+      "substituted": 135,
+      "rd9_without_substituted": 1418
+     }
+    }
+   }
+  },
+  {
+   "item": "RD-10 J11 undecidable / input missing",
+   "status": "differ",
+   "detail": {
+    "H-6": {
+     "path1": {
+      "undecidable": 0,
+      "input_missing": 0
+     },
+     "path2": {
+      "undecidable": 0,
+      "input_missing": 0
+     }
+    },
+    "H-8": {
+     "path1": {
+      "undecidable": 0,
+      "input_missing": 1553
+     },
+     "path2": {
+      "undecidable": 0,
+      "input_missing": 1553
+     }
+    },
+    "H-9": {
+     "path1": {
+      "undecidable": 0,
+      "input_missing": 288
+     },
+     "path2": {
+      "undecidable": 0,
+      "input_missing": 204
+     }
+    },
+    "H-10": {
+     "path1": {
+      "undecidable": 0,
+      "input_missing": 10
+     },
+     "path2": {
+      "undecidable": 0,
+      "input_missing": 10
+     }
+    }
+   }
+  },
+  {
+   "item": "C-9 .. C-11 records (K-10, CD-10 keys excluded)",
+   "status": "differ",
+   "detail": {
+    "bundles": {
+     "path1": {
+      "C-9": "기록 완료",
+      "C-10": "기록 완료",
+      "C-11": "기록 완료",
+      "C-9 P-18 premise": true,
+      "C-9 commands same": true
+     },
+     "path2": {
+      "C-9": "기록 완료",
+      "C-10": "기록 완료",
+      "C-11": "기록 완료",
+      "C-9 P-18 premise": true,
+      "C-9 commands same": true
+     }
+    },
+    "identity_stops": {
+     "path1": [],
+     "path2": []
+    },
+    "rows": 8,
+    "item_differences": [
+     {
+      "row": "R4368X_G1_B_top_Fs4_V0_gateoff",
+      "item": "max_stroke_mm",
+      "path1": [
+       402.58920863100303,
+       402.45351469820923,
+       391.87206804744204,
+       391.73205033619035
+      ],
+      "path2": 402.58920863100303
+     },
+     {
+      "row": "R4368X_G1_B_top_Fs4_V0_gateon",
+      "item": "max_stroke_mm",
+      "path1": [
+       402.58920863100303,
+       402.45351469820923,
+       391.87206804744204,
+       391.73205033619035
+      ],
+      "path2": 402.58920863100303
+     },
+     {
+      "row": "R4368X_J2_B_top_Fs0_L2_V0",
+      "item": "loc_period_crawler_max_N",
+      "path1": 4754.983135314149,
+      "path2": 4755.644570052513
+     },
+     {
+      "row": "R4368X_J2_B_top_Fs0_L2_V0",
+      "item": "loc_period_crawler_max_over_W",
+      "path1": 0.012509396509299577,
+      "path2": 0.012511136609983797
+     },
+     {
+      "row": "R4368X_J2_B_top_Fs0_L2_VB",
+      "item": "loc_period_crawler_max_N",
+      "path1": 5081.850699833115,
+      "path2": 5084.168785825655
+     },
+     {
+      "row": "R4368X_J2_B_top_Fs0_L2_VB",
+      "item": "loc_period_crawler_max_over_W",
+      "path1": 0.013369318795927553,
+      "path2": 0.013375417210159135
+     },
+     {
+      "row": "R4368X_rigidS1FL_B_top_Fs4_V0",
+      "item": "G6",
+      "path1": {
+       "G6-1": "flag",
+       "G6-2": "fail",
+       "G6-3": "fail",
+       "G6-4": "pass",
+       "G6-5": "해당 없음(rigid_base)",
+       "G6-7": "fail",
+       "G6-6": "pass",
+       "READY_le_120s": "pass"
+      },
+      "path2": {
+       "G6-1": "pass",
+       "G6-2": "fail",
+       "G6-3": "fail",
+       "G6-4": "pass",
+       "G6-5": "not_judgeable",
+       "G6-6": "pass",
+       "G6-7": "fail",
+       "READY_le_120s": "pass"
+      }
+     },
+     {
+      "row": "R4368X_rigidS1FL_B_top_Fs4_V0",
+      "item": "max_stroke_mm",
+      "path1": [
+       609.5750111212868,
+       476.3743454579084,
+       464.6641447134521,
+       464.2697664483014
+      ],
+      "path2": 609.5750111212868
+     },
+     {
+      "row": "R4368X_rigidS1FL_B_top_Fs4_VB",
+      "item": "G6",
+      "path1": {
+       "G6-1": "flag",
+       "G6-2": "flag",
+       "G6-3": "pass",
+       "G6-4": "pass",
+       "G6-5": "해당 없음(rigid_base)",
+       "G6-7": "flag",
+       "G6-6": "pass",
+       "READY_le_120s": "pass"
+      },
+      "path2": {
+       "G6-1": "pass",
+       "G6-2": "fail",
+       "G6-3": "pass",
+       "G6-4": "pass",
+       "G6-5": "not_judgeable",
+       "G6-6": "pass",
+       "G6-7": "fail",
+       "READY_le_120s": "pass"
+      }
+     },
+     {
+      "row": "R4368X_rigidS1FL_B_top_Fs4_VB",
+      "item": "max_stroke_mm",
+      "path1": [
+       584.3461049839353,
+       463.3293655012855,
+       451.5453086621826,
+       451.9690183402916
+      ],
+      "path2": 584.3461049839353
+     },
+     {
+      "row": "R4368X_rigidS1FR_B_top_Fs4_V0",
+      "item": "G6",
+      "path1": {
+       "G6-1": "flag",
+       "G6-2": "fail",
+       "G6-3": "fail",
+       "G6-4": "pass",
+       "G6-5": "해당 없음(rigid_base)",
+       "G6-7": "fail",
+       "G6-6": "pass",
+       "READY_le_120s": "pass"
+      },
+      "path2": {
+       "G6-1": "pass",
+       "G6-2": "fail",
+       "G6-3": "fail",
+       "G6-4": "pass",
+       "G6-5": "not_judgeable",
+       "G6-6": "pass",
+       "G6-7": "fail",
+       "READY_le_120s": "pass"
+      }
+     },
+     {
+      "row": "R4368X_rigidS1FR_B_top_Fs4_V0",
+      "item": "max_stroke_mm",
+      "path1": [
+       464.8647477241254,
+       590.6615238179226,
+       458.7172749287593,
+       453.0980636218967
+      ],
+      "path2": 590.6615238179226
+     },
+     {
+      "row": "R4368X_rigidS1FR_B_top_Fs4_VB",
+      "item": "G6",
+      "path1": {
+       "G6-1": "flag",
+       "G6-2": "flag",
+       "G6-3": "pass",
+       "G6-4": "pass",
+       "G6-5": "해당 없음(rigid_base)",
+       "G6-7": "flag",
+       "G6-6": "pass",
+       "READY_le_120s": "pass"
+      },
+      "path2": {
+       "G6-1": "pass",
+       "G6-2": "fail",
+       "G6-3": "pass",
+       "G6-4": "pass",
+       "G6-5": "not_judgeable",
+       "G6-6": "pass",
+       "G6-7": "fail",
+       "READY_le_120s": "pass"
+      }
+     },
+     {
+      "row": "R4368X_rigidS1FR_B_top_Fs4_VB",
+      "item": "max_stroke_mm",
+      "path1": [
+       467.4752099799875,
+       586.9025177177314,
+       456.5825433433729,
+       455.5043119690247
+      ],
+      "path2": 586.9025177177314
+     }
+    ]
+   }
+  }
+ ],
+ "counts": {
+  "equal": 19,
+  "differ": 2,
+  "missing": 0
+ },
+ "exit_code": 1
+}

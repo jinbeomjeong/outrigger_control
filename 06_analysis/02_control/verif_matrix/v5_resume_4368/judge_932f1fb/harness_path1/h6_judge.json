@@ -1,0 +1,6000 @@
+{
+ "script": "04_scripts/04_hydraulic/coupled/h6_judge_4368.py",
+ "script_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+ "rules_seal": {
+  "rules_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix",
+  "revisions": {
+   "v5_resume_4368_rules.md": {
+    "pinned_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "seal_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "pinned_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "seal_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "pinned_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "seal_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "pinned_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "seal_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "pinned_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "seal_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "pinned_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "seal_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "pinned_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "seal_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "pinned_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "seal_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "pinned_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "seal_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "pinned_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "seal_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "pinned_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "seal_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "pinned_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "seal_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "pinned_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "seal_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   "v5_resume_4368_rules_rev13.md": {
+    "pinned_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "seal_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"
+   },
+   "v5_resume_4368_rules_rev14.md": {
+    "pinned_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "seal_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "pinned_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "seal_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "pinned_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "seal_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "pinned_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "seal_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "pinned_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "seal_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "pinned_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "seal_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "pinned_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "seal_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "pinned_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "seal_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   "v5_resume_4368_rules_rev22.md": {
+    "pinned_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "seal_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   "v5_resume_4368_rules_rev23.md": {
+    "pinned_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "seal_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   "v5_resume_4368_rules_rev24.md": {
+    "pinned_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "seal_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+   },
+   "v5_resume_4368_rules_rev25.md": {
+    "pinned_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "seal_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+   }
+  },
+  "problems": [],
+  "stop_S1": false
+ },
+ "definition_changes": [
+  {
+   "id": "D-19",
+   "bundle": "H-6",
+   "item": "등급",
+   "old_tool": "없음",
+   "new_version": "개정 8 #6 항목(R4-B6)"
+  }
+ ],
+ "diff_vs_existing": [],
+ "R4": {
+  "J-P3_violations_RD7": [],
+  "J11_stops_RD7": [],
+  "J-P3_not_judgeable_RD8": 0,
+  "J-P3_not_judgeable_all": 0,
+  "p3_lines_RD9": 135,
+  "J11_RD10": {
+   "not_judgeable": 0,
+   "no_input": 0
+  },
+  "markers": []
+ },
+ "inputs": {
+  "h6": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"
+  },
+  "l1_ref": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+   "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43"
+  },
+  "judge": {
+   "path": "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_r79_judge.json",
+   "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b"
+  },
+  "t4h_folders_R12_1": [
+   "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on_t4h"
+  ]
+ },
+ "judge_run": {
+  "command": [
+   "-I",
+   "-B",
+   "C:\\workspace\\outrigger_control\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+   "judge",
+   "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_r79_judge.json",
+   "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_L1_reference.json",
+   "--s4-late-loc"
+  ],
+  "exit_code": 0,
+  "last_line": "unmatched 0 errors 0 -> 06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_r79_judge.json",
+  "stderr_tail": []
+ },
+ "existing_tool": "없음 (rev5 R5-A1 표: H-6 등급 코드 없음, diff 대상 없음)",
+ "status": "통과",
+ "lines": {
+  "L2": 1,
+  "L3": 134
+ },
+ "L3_record": {
+  "failures": 10,
+  "failed_keys": [
+   "L3|s0|g6|104|g6r|rigid+S1@RL|top|Fs0",
+   "L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+   "L3|s0|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+   "L3|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0",
+   "L3|s1|g6|56|ref|J2|top|Fs0",
+   "L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4",
+   "L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+   "L3|s1|ref|2|rigid|B|-4.4,0",
+   "L3|s1|ref|7|rigid|B|2.2,-1.6",
+   "L3|s2|g6|62|ref|S1|bottom|Fs0"
+  ]
+ },
+ "L2_to_H8": [
+  {
+   "key": "L2|s0|g6|52|ref|J1|top|Fs0",
+   "grade": "pass"
+  }
+ ],
+ "judge_s6_differs": [],
+ "j_p3_cases": {
+  "judged": 135
+ },
+ "rod_reading_basis": {
+  "T4h rod_pressure_Pa": 135
+ },
+ "line_details": [
+  {
+   "key": "L2|s0|g6|52|ref|J1|top|Fs0",
+   "level": "L2",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|5|g6|G1+J1@FR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|11|g6|G1+J1@RL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|13|g6|G1+J1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|24|g6|G1+J2@RL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|26|g6|G1+J2@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|31|g6|G1+J2@RR|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|40|g6|G1+S1@RL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|41|g6|G1+S1@RL|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|42|g6|G1+S1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|45|g6|G1+S1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|46|g6|G1+S1@RR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|47|g6|G1+S1@RR|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|48|ref|G1|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL",
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0,
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|52|ref|J1|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|58|ref|J2|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|61|ref|S1|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|63|ref|S1|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|68|g6r|rigid+J1@FR|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band",
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|78|g6r|rigid+J1@RR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|81|g6r|rigid+J2@FL|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|93|g6r|rigid+J2@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band",
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|104|g6r|rigid+S1@RL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-3"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1",
+     "S-3"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|113|ref|rigid|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL",
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0,
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g6|115|ref|rigid|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|2|slope|edge|top|4.0|FL|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|5|slope|edge|top|4.0|FR|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|13|slope|edge|top|4.0|RR|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|16|slope|edge|top|4.0|RR|raised|230.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|20|slope|rpB|top|4.0|FL|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1"
+    ],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|33|slope|rpB|top|4.0|RR|raised|230.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|34|main|flat|top|4.0|FL|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|35|main|flat|top|4.0|FL|raised|290.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|36|main|flat|top|4.0|FL|raised|320.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|38|main|flat|top|4.0|FR|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|g8|47|main|flat|top|4.0|RR|raised|290.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|ref|1|rigid|B|4.4,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|ref|11|rigid|B|0,3.5",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|ref|16|J1|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s0|ref|18|J2|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|3|g6|G1+J1@FL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|6|g6|G1+J1@FR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|10|g6|G1+J1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|21|g6|G1+J2@FR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|28|g6|G1+J2@RR|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [],
+    "n_late_fallback_by_leg": {},
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|41|g6|G1+S1@RL|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|42|g6|G1+S1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR",
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0,
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|43|g6|G1+S1@RL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|52|ref|J1|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|54|ref|J1|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|55|ref|J1|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|56|ref|J2|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-5"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|57|ref|J2|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|58|ref|J2|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|64|g6r|rigid+J1@FL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|65|g6r|rigid+J1@FL|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band",
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|72|g6r|rigid+J1@RL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|75|g6r|rigid+J1@RL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|77|g6r|rigid+J1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|81|g6r|rigid+J2@FL|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|82|g6r|rigid+J2@FL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|86|g6r|rigid+J2@FR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|88|g6r|rigid+J2@RL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|92|g6r|rigid+J2@RR|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|94|g6r|rigid+J2@RR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1",
+     "S-3"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|110|g6r|rigid+S1@RR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g6|112|ref|rigid|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR",
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0,
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|1|slope|edge|top|4.0|FL|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|2|slope|edge|top|4.0|FL|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|6|slope|edge|top|4.0|FR|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|9|slope|edge|top|4.0|RL|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|11|slope|edge|top|4.0|RL|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|18|slope|rpB|top|4.0|FL|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|24|slope|rpB|top|4.0|FR|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|26|slope|rpB|top|4.0|RL|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|34|main|flat|top|4.0|FL|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|36|main|flat|top|4.0|FL|raised|320.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|37|main|flat|top|4.0|FL|lowered|150.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|38|main|flat|top|4.0|FR|raised|200.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|g8|47|main|flat|top|4.0|RR|raised|290.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|ref|2|rigid|B|-4.4,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [
+     "miss"
+    ],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1",
+     "S-4"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|ref|6|rigid|B|-2.2,1.6",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|ref|7|rigid|B|2.2,-1.6",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-1"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|ref|16|J1|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s1|ref|20|S1|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|13|g6|G1+J1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|14|g6|G1+J1@RR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|15|g6|G1+J1@RR|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL",
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0,
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|16|g6|G1+J2@FL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [],
+    "n_late_fallback_by_leg": {},
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|43|g6|G1+S1@RL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|45|g6|G1+S1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|46|g6|G1+S1@RR|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL",
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0,
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|53|ref|J1|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|55|ref|J1|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|59|ref|J2|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|60|ref|S1|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|62|ref|S1|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [
+     "misfire_new"
+    ],
+    "s4_unexplained": false,
+    "grade": "fail",
+    "failed_gates": [
+     "S-4"
+    ],
+    "flags": [],
+    "judge_pass": false
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|63|ref|S1|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|69|g6r|rigid+J1@FR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band",
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|71|g6r|rigid+J1@FR|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|74|g6r|rigid+J1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|77|g6r|rigid+J1@RR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|79|g6r|rigid+J1@RR|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|80|g6r|rigid+J2@FL|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|85|g6r|rigid+J2@FR|top|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|91|g6r|rigid+J2@RL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S3_true_over_band"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|107|g6r|rigid+S1@RL|bottom|Fs4",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g6|112|ref|rigid|top|Fs0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR",
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0,
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|1|slope|edge|top|4.0|FL|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|2|slope|edge|top|4.0|FL|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|13|slope|edge|top|4.0|RR|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|14|slope|edge|top|4.0|RR|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|18|slope|rpB|top|4.0|FL|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|22|slope|rpB|top|4.0|FR|raised|140.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|23|slope|rpB|top|4.0|FR|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|44|main|flat|top|4.0|RL|raised|320.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|g8|49|main|flat|top|4.0|RR|lowered|150.0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|ref|0|rigid|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RL"
+    ],
+    "n_late_fallback_by_leg": {
+     "RL": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|ref|2|rigid|B|-4.4,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "flag",
+    "failed_gates": [],
+    "flags": [
+     "S4_baseline"
+    ],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|ref|7|rigid|B|2.2,-1.6",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|ref|14|G1|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|ref|18|J2|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "FR"
+    ],
+    "n_late_fallback_by_leg": {
+     "FR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  },
+  {
+   "key": "L3|s2|ref|20|S1|B|0,0",
+   "level": "L3",
+   "problems": [],
+   "stops": [],
+   "extend_start_rule": "tracked_bound",
+   "j_p3": {
+    "case": "judged",
+    "status": "pass",
+    "rod_reading_basis": "T4h rod_pressure_Pa",
+    "has_rod_reading_field": true,
+    "rd8_problem": null,
+    "violation_legs": [],
+    "breach_reads": 0,
+    "stop": null
+   },
+   "j9": {
+    "post_lift_clipped": 0,
+    "stop": null
+   },
+   "j11": {
+    "fallback_legs": [
+     "RR"
+    ],
+    "n_late_fallback_by_leg": {
+     "RR": 0
+    },
+    "state": "pass",
+    "reason": null,
+    "stop": null
+   },
+   "new_fault": [],
+   "line_grade": {
+    "s4_causes": [],
+    "s4_unexplained": false,
+    "grade": "pass",
+    "failed_gates": [],
+    "flags": [],
+    "judge_pass": true
+   },
+   "judge_s6_same": true
+  }
+ ],
+ "findings": [],
+ "exit_code": 0
+}

@@ -1,0 +1,944 @@
+{
+ "seals": {
+  "ok": true,
+  "r4_rev13_25_sha256": {
+   "v5_resume_4368_rules_rev13": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+   "v5_resume_4368_rules_rev14": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+   "v5_resume_4368_rules_rev15": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+   "v5_resume_4368_rules_rev16": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+   "v5_resume_4368_rules_rev17": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+   "v5_resume_4368_rules_rev18": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+   "v5_resume_4368_rules_rev19": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+   "v5_resume_4368_rules_rev20": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+   "v5_resume_4368_rules_rev21": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+   "v5_resume_4368_rules_rev22": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+   "v5_resume_4368_rules_rev23": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+   "v5_resume_4368_rules_rev24": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+   "v5_resume_4368_rules_rev25": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+  },
+  "r4_common_block_sha256": "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800",
+  "eol_only": []
+ },
+ "columns": [
+  "item",
+  "clause",
+  "kind"
+ ],
+ "kinds": [
+  "등급 항목",
+  "기록",
+  "관문"
+ ],
+ "lists": {
+  "H-1": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-8 J-P3 입력 형식(breach_reads 4정수, 기록 pass 빈 통과)",
+    "clause": "rev4 R4-A2",
+    "kind": "관문"
+   },
+   {
+    "item": "종류별 줄 수(V0 434·VB 434, 원 파일 한 개에서 줄 단위 판별)",
+    "clause": "원판 5.1",
+    "kind": "관문"
+   },
+   {
+    "item": "P-1·P-2 비트 앵커 대조(anchors)",
+    "clause": "rev1 RV1-5",
+    "kind": "관문"
+   },
+   {
+    "item": "D-1 관문 G-1~G-4(p2_d1)",
+    "clause": "d1_selection_rules 10",
+    "kind": "관문"
+   },
+   {
+    "item": "H-R 다섯 항목 재판정(p2_d1)",
+    "clause": "d1_selection_rules 11",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "d1.verdict 재집계(p2_d1)",
+    "clause": "rev3 R3-A2",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "READY 원점(p2_d1)",
+    "clause": "rev4 R4-C1",
+    "kind": "기록"
+   },
+   {
+    "item": "강등 항목 집합(p2_d1)",
+    "clause": "rev4 R4-C3",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "G6-7 세 분기(p2_d1)",
+    "clause": "rev6 R6-C3",
+    "kind": "등급 항목"
+   }
+  ],
+  "H-2": [
+   {
+    "item": "D-1 선별(후보 등급·여유 m·순위, S1~S3, 크롤러 ×3)(p2_d1)",
+    "clause": "d1_selection_rules 4",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "C-2 행 수(p2_d1)",
+    "clause": "rev1 RV1-10 g",
+    "kind": "관문"
+   }
+  ],
+  "H-3": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-8 J-P3 입력 형식(breach_reads 4정수, 기록 pass 빈 통과)",
+    "clause": "rev4 R4-A2",
+    "kind": "관문"
+   },
+   {
+    "item": "U-3 G-1 실행 오류·키 수",
+    "clause": "u3 원판 7",
+    "kind": "관문"
+   },
+   {
+    "item": "U-3 G-2 meta·태그",
+    "clause": "u3 rev2 #4",
+    "kind": "관문"
+   },
+   {
+    "item": "U-3 G-4 J-P3 선택(파일 설정)",
+    "clause": "u3 rev2 #5",
+    "kind": "관문"
+   },
+   {
+    "item": "U-3 G-6 g8 VB 대체 사건 목록",
+    "clause": "u3 rev1 #5",
+    "kind": "관문"
+   },
+   {
+    "item": "U-3 G-5 VB 고유 실패 목록",
+    "clause": "u3 원판 5.1",
+    "kind": "관문"
+   },
+   {
+    "item": "U-3 등급 이동 4×4·묶음 문구",
+    "clause": "u3 원판 5.1",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "정착 v2 재계산(축별)",
+    "clause": "rev16:194",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "r72 계열 등급(g6·연구 C)",
+    "clause": "rev16:194",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "r72 G6-2 LOC 취소 강등(G6-2_late_loc_revoked, 조건 1~6, 424.11.2 강등)",
+    "clause": "rev3 R3-G12",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "D-1 재사용",
+    "clause": "rev3 R3-B3",
+    "kind": "기록"
+   }
+  ],
+  "H-4": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-8 J-P3 입력 형식(breach_reads 4정수, 기록 pass 빈 통과)",
+    "clause": "rev4 R4-A2",
+    "kind": "관문"
+   },
+   {
+    "item": "종류별 줄 수(C2·ABL·IND·IND_LAS 각 242, main·wide 원 파일 함께)",
+    "clause": "u3 rev2 3",
+    "kind": "관문"
+   },
+   {
+    "item": "u6 controller ABL과 태그 ABL_LAS_K1 짝(하나만 맞으면 S-3)",
+    "clause": "rev16:69",
+    "kind": "관문"
+   },
+   {
+    "item": "U-6 G-1 사례 수",
+    "clause": "u3 원판 7",
+    "kind": "관문"
+   },
+   {
+    "item": "U-6 G-2 태그(③는 C2만)",
+    "clause": "u3 rev2 #4",
+    "kind": "관문"
+   },
+   {
+    "item": "U-6 제어기별 표",
+    "clause": "u3 원판 5.2",
+    "kind": "기록"
+   },
+   {
+    "item": "IND_LAS 관문·해시 동일",
+    "clause": "rev3 R3-B5",
+    "kind": "기록"
+   },
+   {
+    "item": "u6 키 계열(안쪽 키 = src의 지면 토큰)",
+    "clause": "rev16:197",
+    "kind": "기록"
+   }
+  ],
+  "H-5": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "U-9 키·태그",
+    "clause": "u9_targeted_rules_rev1 2",
+    "kind": "관문"
+   },
+   {
+    "item": "U-9 H0",
+    "clause": "u9_targeted_rules_rev1 4",
+    "kind": "관문"
+   },
+   {
+    "item": "T1 J1~J10(η_v 0.85)",
+    "clause": "v5_criteria 3",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "J11 대체 다리 n_late",
+    "clause": "rev16:102",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "J-P3(RD-8 형식)",
+    "clause": "rev3 R3-C8",
+    "kind": "등급 항목"
+   },
+   {
+    "item": "T3·T4·4.1 분류(η_v 0.80)",
+    "clause": "rev3 R3-C2",
+    "kind": "기록"
+   }
+  ],
+  "H-6": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "키 원본 해시 대조(미작동 확인, 기록)",
+    "clause": "rev16:87",
+    "kind": "기록"
+   }
+  ],
+  "H-7": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   }
+  ],
+  "H-8": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "키 원본 해시 대조(미작동 확인, 기록)",
+    "clause": "rev16:87",
+    "kind": "기록"
+   }
+  ],
+  "H-9": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "부분별 줄 수(본 1,676·V0 표본 run 84·계열 𝓕 원 실행 run 192)",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   }
+  ],
+  "H-10": [
+   {
+    "item": "태그(4.1 표, is_extend_start_tag)",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "4.2 금지 토큰·기록 확인",
+    "clause": "원판 4.2",
+    "kind": "관문"
+   },
+   {
+    "item": "7.2 K1 분류(미작동·LAS-b 작동·K1 막힘·둘 다)",
+    "clause": "원판 7.2",
+    "kind": "기록"
+   },
+   {
+    "item": "7.2 기록 모순(would_block ∧ ¬r4_due, applied ∧ ¬r4_due, _SKIPPED:order 수)",
+    "clause": "rev2 R2-1",
+    "kind": "관문"
+   },
+   {
+    "item": "멈춤 S-6 목록(균일 연약 계열 K1 막힘)",
+    "clause": "원판 8.2 S-6",
+    "kind": "관문"
+   },
+   {
+    "item": "계열 판정(강체·패치·처방 침하·균일 연약)",
+    "clause": "rev1 RV1-6",
+    "kind": "기록"
+   },
+   {
+    "item": "LAS-b start_s 읽기",
+    "clause": "rev2 R2-2",
+    "kind": "기록"
+   },
+   {
+    "item": "결측 = 판정 불가",
+    "clause": "원판 9.3",
+    "kind": "기록"
+   },
+   {
+    "item": "묶음 줄 수 S-15",
+    "clause": "rev1 RV1-12",
+    "kind": "관문"
+   },
+   {
+    "item": "목록 파일에 묶음이 빠짐 = S-15",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "입력 파일 표(원 파일·묶음·부분·판·형식·파일별 줄 수·키 원본, 보충 4-2·4-4)",
+    "clause": "원판 8.2 S-15",
+    "kind": "관문"
+   },
+   {
+    "item": "RD-9 ③ 켬 줄 수",
+    "clause": "원판 4.1",
+    "kind": "관문"
+   },
+   {
+    "item": "판별 수(VB·LS1~LS4·V0·V3, 기록)",
+    "clause": "rev1 RV1-2",
+    "kind": "기록"
+   }
+  ],
+  "H-11": [
+   {
+    "item": "G-3 8쌍 해시 같음",
+    "clause": "rev16:142",
+    "kind": "관문"
+   },
+   {
+    "item": "수 검사(키마다 1줄)",
+    "clause": "rev16:141",
+    "kind": "관문"
+   },
+   {
+    "item": "커밋 정체성(R2, clean)",
+    "clause": "rev16:143",
+    "kind": "관문"
+   },
+   {
+    "item": "G-3 거짓 짝 목록",
+    "clause": "rev16:142",
+    "kind": "관문"
+   }
+  ],
+  "C-9": [
+   {
+    "item": "두 팔 decisions(dP)·토양 모드 시작·LOC 시각",
+    "clause": "rev16:250",
+    "kind": "기록"
+   },
+   {
+    "item": "두 팔 controller_commands.npz sha 같음",
+    "clause": "rev16:250",
+    "kind": "기록"
+   },
+   {
+    "item": "최대 행정·끝 rut 틈·P3-1~P3-9·첫 READY·rc·마지막 표본 시각",
+    "clause": "rev16:250",
+    "kind": "기록"
+   },
+   {
+    "item": "P-18 읽기 전제",
+    "clause": "rev16:254",
+    "kind": "기록"
+   },
+   {
+    "item": "정체성(시작·끝 파일, result.json)",
+    "clause": "rev16:280",
+    "kind": "관문"
+   }
+  ],
+  "C-10": [
+   {
+    "item": "다리별 F^a_min·F^t_min·시각, F<F_min·F<F_min+2kN 시간(1 ms)",
+    "clause": "rev16:257",
+    "kind": "기록"
+   },
+   {
+    "item": "G6-1~G6-7·READY_le_120s(p3b P3 값으로 갈음, G6-6 따로)",
+    "clause": "rev25:99",
+    "kind": "기록"
+   },
+   {
+    "item": "P3-3·끝 단계·최대 행정·패치 다리 침하·rc(.done exit=)·마지막 표본 시각",
+    "clause": "rev16:257",
+    "kind": "기록"
+   },
+   {
+    "item": "정체성(시작·끝 파일, result.json)",
+    "clause": "rev16:280",
+    "kind": "관문"
+   }
+  ],
+  "C-11": [
+   {
+    "item": "첫 LOC·LOC 주기 1 ms 크롤러 법선 최대와 /W·0.01 W 위아래·LOC 취소 수",
+    "clause": "rev16:264",
+    "kind": "기록"
+   },
+   {
+    "item": "LOC 취소가 있으면 최종 LOC 기준 같은 세 값",
+    "clause": "rev16:264",
+    "kind": "기록"
+   },
+   {
+    "item": "첫 READY·rc·마지막 표본 시각",
+    "clause": "rev16:264",
+    "kind": "기록"
+   },
+   {
+    "item": "정체성(시작·끝 파일, result.json)",
+    "clause": "rev16:280",
+    "kind": "관문"
+   }
+  ],
+  "J_P": [
+   {
+    "item": "행 집합(두 batch.json cases, 12 고정)",
+    "clause": "원판 7.3",
+    "kind": "관문"
+   },
+   {
+    "item": "사건 기록 꼴(C2Event 문자열)",
+    "clause": "원판 7.3",
+    "kind": "관문"
+   },
+   {
+    "item": "R4c30 적용 수(기본 이름)·토양 모드 시작 수",
+    "clause": "원판 7.3",
+    "kind": "기록"
+   },
+   {
+    "item": "그림자 줄 수·조건 1",
+    "clause": "원판 7.3",
+    "kind": "관문"
+   },
+   {
+    "item": "조건 2·재사용 참거짓",
+    "clause": "원판 7.3",
+    "kind": "기록"
+   }
+  ]
+ },
+ "list_sha256": {
+  "H-1": "a2fc1643a231051a54f3f1a0d8acce5c0bfae56414b1f3d30479ece480633fb3",
+  "H-2": "7c6c9e74eb0004bfe712888fcb59639e987910601a1aac280981bdfc0a508678",
+  "H-3": "ce2f2f1624043474514a3a396a5de4575f41f24fa5493dafc7e4fe90c3124832",
+  "H-4": "1014f17ab2fb1ec2c487e079cae94b9366eb86e1f31d5437e6b0a5a426cfd415",
+  "H-5": "ce77a1e8b120118201568764496bf37a5da80b508b8b68f94ba5a5c4d878c2e0",
+  "H-6": "c84d8a2251981ea3e3b937488a9e10f921a10651e3b692f5b138e0d1cd946c39",
+  "H-7": "6feb81694cdedbd4443eab92bc9f5cb65d590d7484582ca381cf773840975672",
+  "H-8": "c84d8a2251981ea3e3b937488a9e10f921a10651e3b692f5b138e0d1cd946c39",
+  "H-9": "98ec9a53f6f9ad85cee522decaf7b88e89ea45209d231d3ca6a76c09e9797ab0",
+  "H-10": "98682211583a90953518c64c8b02195789647a9cc8d9db3e9981d260fefb8447",
+  "H-11": "92537e366cb26cefe5aa06dcd6b6cf6f960ec03bc9810f65fe211a614c4dd576",
+  "C-9": "883736082ff1f7b33fe4a14e7c2fbf2f38e3efce4abda0384af8dc1c9a3384a6",
+  "C-10": "a9d2ca7b7f1800c5bdaa2f285e51ab12198a6cb363f76c631afb6f1373b4ed3b",
+  "C-11": "7e973d44b7e83c79c64f7f93e0f7bada2e8559668a5baa5b15fa79c407450b9f",
+  "J_P": "f580f1cb2787065129d27df5419ba549192e09bb87d3b2a6b998ed3eed6140ba"
+ },
+ "sha_rule": "sha256 of json.dumps(list, ensure_ascii=False, sort_keys=True, separators=(',', ':')) UTF-8",
+ "note": "path-2 item names; clauses of earlier sheets not handed over are copied from the tool comments / README (RD-13, decision 117 2)",
+ "tool": "p2_x16.py",
+ "version": "1",
+ "tool_sha256": "e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5",
+ "cmd": "items",
+ "argv": [
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\rd13_items.json",
+  "items"
+ ],
+ "created": "2026-11-16T16:31:44+09:00",
+ "status": "pass"
+}

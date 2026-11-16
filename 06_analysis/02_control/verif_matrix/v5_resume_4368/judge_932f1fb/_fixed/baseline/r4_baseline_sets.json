@@ -1,0 +1,2409 @@
+{
+  "status": "fixed",
+  "jp_base": [
+    {
+      "bundle": "H-9",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json",
+      "location": "results[13].runs[3]",
+      "info": {
+        "key": "screen|top|8.0|ready|FR",
+        "setting": "VB",
+        "event": "G4",
+        "offset_s": 0.075,
+        "breach_reads_leg": 3
+      },
+      "leg": "FR"
+    },
+    {
+      "bundle": "H-9",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_bottom.json",
+      "location": "results[12].runs[0]",
+      "info": {
+        "key": "screen|bottom|4.0|ready|FL",
+        "setting": "VB",
+        "event": "G4",
+        "offset_s": 0.0,
+        "breach_reads_leg": 2
+      },
+      "leg": "RR"
+    },
+    {
+      "bundle": "H-10",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+      "location": "line 28",
+      "info": {
+        "key": "R12",
+        "setting": "VB",
+        "breach_reads_leg": 2
+      },
+      "leg": "RR"
+    },
+    {
+      "bundle": "H-10",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+      "location": "line 172",
+      "info": {
+        "key": "R12",
+        "setting": "LS2",
+        "breach_reads_leg": 3
+      },
+      "leg": "RR"
+    },
+    {
+      "bundle": "H-10",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+      "location": "line 245",
+      "info": {
+        "key": "R12",
+        "setting": "LS3",
+        "breach_reads_leg": 4
+      },
+      "leg": "RR"
+    }
+  ],
+  "s6_base": [
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+      "location": "results[24]",
+      "info": {
+        "key": "ref|G1|top|Fs8",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+      "location": "results[29]",
+      "info": {
+        "key": "ref|G1|middle|Fs4",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_VB.json",
+      "location": "results[24]",
+      "info": {
+        "key": "ref|G1|top|Fs8",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+      "location": "results[0]",
+      "info": {
+        "key": "H8|G1|B|top|flat",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+      "location": "records[48]",
+      "info": {
+        "key": "ref|G1|top|Fs0",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+      "location": "records[49]",
+      "info": {
+        "key": "ref|G1|top|Fs4",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+      "location": "records[50]",
+      "info": {
+        "key": "ref|G1|bottom|Fs0",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+      "location": "records[51]",
+      "info": {
+        "key": "ref|G1|bottom|Fs4",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[0]",
+      "info": {
+        "key": "base|G1|B|top|Fs0",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[1]",
+      "info": {
+        "key": "base|G1|B|top|Fs4",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[2]",
+      "info": {
+        "key": "base|G1|B|top|Fs8",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[3]",
+      "info": {
+        "key": "base|G1|B|middle|Fs0",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[4]",
+      "info": {
+        "key": "base|G1|B|middle|Fs4",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[5]",
+      "info": {
+        "key": "base|G1|B|middle|Fs8",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[6]",
+      "info": {
+        "key": "base|G1|B|bottom|Fs0",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[7]",
+      "info": {
+        "key": "base|G1|B|bottom|Fs4",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "location": "records[8]",
+      "info": {
+        "key": "base|G1|B|bottom|Fs8",
+        "setting": "V0"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+      "location": "records[2]",
+      "info": {
+        "key": "base|G1|B|top|Fs8",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+      "location": "records[5]",
+      "info": {
+        "key": "base|G1|B|middle|Fs8",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-3",
+      "file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+      "location": "records[8]",
+      "info": {
+        "key": "base|G1|B|bottom|Fs8",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[40]",
+      "info": {
+        "key": "cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[40]:cand=current#L1|s0|g6|48|ref|G1|top|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[41]",
+      "info": {
+        "key": "cand=current#L1|s0|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[41]:cand=current#L1|s0|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[42]",
+      "info": {
+        "key": "cand=current#L1|s0|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[42]:cand=current#L1|s0|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[43]",
+      "info": {
+        "key": "cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[43]:cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[163]",
+      "info": {
+        "key": "cand=current#L1|s0|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[163]:cand=current#L1|s0|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[208]",
+      "info": {
+        "key": "cand=current#L2|s0|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[208]:cand=current#L2|s0|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[209]",
+      "info": {
+        "key": "cand=current#L2|s0|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[209]:cand=current#L2|s0|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[210]",
+      "info": {
+        "key": "cand=current#L2|s0|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[210]:cand=current#L2|s0|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[330]",
+      "info": {
+        "key": "cand=current#L2|s0|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[330]:cand=current#L2|s0|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[375]",
+      "info": {
+        "key": "cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[375]:cand=current#L2|s1|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[376]",
+      "info": {
+        "key": "cand=current#L2|s1|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[376]:cand=current#L2|s1|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[497]",
+      "info": {
+        "key": "cand=current#L2|s1|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[497]:cand=current#L2|s1|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[541]",
+      "info": {
+        "key": "cand=current#L2|s2|g6|48|ref|G1|top|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[541]:cand=current#L2|s2|g6|48|ref|G1|top|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[542]",
+      "info": {
+        "key": "cand=current#L2|s2|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[542]:cand=current#L2|s2|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[543]",
+      "info": {
+        "key": "cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[543]:cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[544]",
+      "info": {
+        "key": "cand=current#L2|s2|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[544]:cand=current#L2|s2|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[664]",
+      "info": {
+        "key": "cand=current#L2|s2|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[664]:cand=current#L2|s2|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[709]",
+      "info": {
+        "key": "cand=current#L2|s3|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[709]:cand=current#L2|s3|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[710]",
+      "info": {
+        "key": "cand=current#L2|s3|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[710]:cand=current#L2|s3|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[711]",
+      "info": {
+        "key": "cand=current#L2|s3|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[711]:cand=current#L2|s3|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[831]",
+      "info": {
+        "key": "cand=current#L2|s3|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[831]:cand=current#L2|s3|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[875]",
+      "info": {
+        "key": "cand=current#L2|s4|g6|48|ref|G1|top|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[875]:cand=current#L2|s4|g6|48|ref|G1|top|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[876]",
+      "info": {
+        "key": "cand=current#L2|s4|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[876]:cand=current#L2|s4|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[877]",
+      "info": {
+        "key": "cand=current#L2|s4|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[877]:cand=current#L2|s4|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[878]",
+      "info": {
+        "key": "cand=current#L2|s4|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[878]:cand=current#L2|s4|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[998]",
+      "info": {
+        "key": "cand=current#L2|s4|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[998]:cand=current#L2|s4|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1043]",
+      "info": {
+        "key": "cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1043]:cand=current#L3|s0|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1044]",
+      "info": {
+        "key": "cand=current#L3|s0|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1044]:cand=current#L3|s0|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1045]",
+      "info": {
+        "key": "cand=current#L3|s0|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1045]:cand=current#L3|s0|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1165]",
+      "info": {
+        "key": "cand=current#L3|s0|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1165]:cand=current#L3|s0|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1210]",
+      "info": {
+        "key": "cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1210]:cand=current#L3|s1|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1211]",
+      "info": {
+        "key": "cand=current#L3|s1|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1211]:cand=current#L3|s1|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1332]",
+      "info": {
+        "key": "cand=current#L3|s1|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1332]:cand=current#L3|s1|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1377]",
+      "info": {
+        "key": "cand=current#L3|s2|g6|49|ref|G1|top|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1377]:cand=current#L3|s2|g6|49|ref|G1|top|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1378]",
+      "info": {
+        "key": "cand=current#L3|s2|g6|50|ref|G1|bottom|Fs0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1378]:cand=current#L3|s2|g6|50|ref|G1|bottom|Fs0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1379]",
+      "info": {
+        "key": "cand=current#L3|s2|g6|51|ref|G1|bottom|Fs4",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1379]:cand=current#L3|s2|g6|51|ref|G1|bottom|Fs4"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "location": "results[1499]",
+      "info": {
+        "key": "cand=current#L3|s2|ref|14|G1|B|0,0",
+        "setting": "V0",
+        "path2_why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)",
+        "path2_where": "H-8:h8_noise_V0.json:results[1499]:cand=current#L3|s2|ref|14|G1|B|0,0"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[40]",
+      "info": {
+        "key": "cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[43]",
+      "info": {
+        "key": "cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[330]",
+      "info": {
+        "key": "cand=current#L2|s0|ref|14|G1|B|0,0",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[375]",
+      "info": {
+        "key": "cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[497]",
+      "info": {
+        "key": "cand=current#L2|s1|ref|14|G1|B|0,0",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[543]",
+      "info": {
+        "key": "cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[998]",
+      "info": {
+        "key": "cand=current#L2|s4|ref|14|G1|B|0,0",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[1043]",
+      "info": {
+        "key": "cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[1165]",
+      "info": {
+        "key": "cand=current#L3|s0|ref|14|G1|B|0,0",
+        "setting": "VB"
+      }
+    },
+    {
+      "bundle": "H-8",
+      "file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "location": "results[1210]",
+      "info": {
+        "key": "cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+        "setting": "VB"
+      }
+    }
+  ],
+  "counts": {
+    "jp_base_entries": 5,
+    "jp_base_units": 5,
+    "s6_base_lines": 67
+  },
+  "checks": {
+    "jp_scenarios": {
+      "units": 5,
+      "h10_settings": [
+        "LS2",
+        "LS3",
+        "VB"
+      ],
+      "h10_case_R12": true,
+      "grid_files": [
+        "grid_r67_top.json",
+        "grid_r69_bottom.json"
+      ],
+      "matches_5_lines_2_scenarios": true
+    },
+    "s6_source_counts": {
+      "path1": 67,
+      "path2_A": 104,
+      "path2_B": 108
+    }
+  },
+  "extracted_by": "python-expert (메인 세션 MD-3 위임, R4 도구 작성자 아님)",
+  "extracted_at": "2026-11-16T11:35:36+09:00",
+  "extract_script": {
+    "path": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\main\\r4_baseline_extract.py",
+    "sha256": "e1e5fdab89bc6a7261c772d53e639ce36ae041a2bb86847c3ae10e85998121c1"
+  },
+  "procedure": {
+    "source": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\r4-handoff\\r4_common_block_draft.md",
+    "source_sha256": "d4788a6069f1c9036a4da8106dc8baba21c184ab2463b102e348593730aabf96",
+    "text": "- **[메인] MD-3 기준 집합 뽑기**(결정 118의 2; 재감사 권고 \"기준 집합 고정\"): R4 판정 실행 전에 메인 세션이 한다. 결과는 R4 도구 작성자에게 넘기지 않는다.\n  1. 출처: 첫 하네스 두 경로 판정 출력(`06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/`, `harness_path2/`의 A판·B판)과, 위치·다리를 정하려고 읽는 R2 결과 파일(RD-7 3의 최종 출력). 출처 파일마다 sha256을 적는다. 아래 출처 규칙은 출처를 열기 전에 정한 것이다(결정 119의 2).\n     - 격자 run(묶음 H-9 `h9_grid/grid_*.json`)의 J-P3 위반은 경로 2 출력만 출처로 쓴다. 경로 1 첫 출력은 격자에 J-P3를 적용하지 않았다(rev16 R16-7이 고친 결함).\n     - 경로 1 첫 판정 결함 범위인 묶음 H-8 V0 S-2 줄(noise V0 1,503줄과 seedext V0 50줄, rev16:76; R16-4가 고친 결함)의 S-6은 경로 2 출력만 출처로 쓴다. 이 규칙도 출처를 열기 전에 정했고 JD-6에 공개한다(결정 120의 2).\n     - 경로 2에 B판이 없는 출력 파일은 A판 하나를 그 파일의 출처로 본다.\n     - 다리는 출처 출력이 아니라 R2 결과 파일의 그 줄·run에서 `breach_reads`(RD-7 3 입력 필드) 값이 1 이상인 다리로 정한다.\n     - 이 예외 밖은 경로 1 출력과 경로 2 출력(A판·B판)이 같아야 고정한다.\n  2. JP-base: 각 출처에서 J-P3 위반(그 다리의 `breach_reads` ≥ 1)으로 적힌 줄·run을 모두 모아 (묶음, 결과 파일, 위치, 다리)로 적는다. 그 집합이 R16-0 3·R16-15 2의 서술(\"5줄, 2개 시나리오\"; \"5줄\"은 (묶음, 결과 파일, 위치) 단위로 센다: 묶음 H-10의 R12 bottom FL Fs4 VB·LS2·LS3과 격자 run 둘)과 맞는지 본다.\n  3. S6-base: 각 출처에서 S-6(원판 7.2 균일 연약 지면 계열의 K1 막힘)으로 적힌 줄을 모두 모아 (묶음, 결과 파일, 위치)로 적는다. 줄 수가 67인지 본다(rev16:17·24).\n  4. 표기는 RD-7 3과 같다. 첫 출력이 위치 없이 키만 적었으면, RD-7 3의 키 필드로 R2 결과 파일에서 그 키를 찾아 위치로 바꾼다. 한 키가 위치 둘 이상에 맞으면 첫 출력의 설정·쌍·오프셋 필드로 좁히고, 그래도 하나가 아니면 멈추고 묻는다.\n  5. 출처 사이 대조: 1의 출처 규칙을 적용한 뒤 경로 1 출력과 경로 2 출력(A판·B판)에서 뽑은 집합이 서로 같고 2·3의 서술과 맞으면 고정한다. 하나라도 다르면 R4 판정 전에 멈추고 묻는다(첫 판정 때 두 경로가 갈린 묶음이 있었다, rev16:7). 멈춘 뒤 사용자가 출처를 고르면, 그것은 출처를 본 뒤의 선택이므로 JD-6에 공개한다.\n  6. 고정: `scratchpad\\main\\r4_baseline_sets.json`(JSON, 키 `jp_base`, `s6_base`, `sources`(경로와 sha256), `extracted_by`, `extracted_at`, `procedure` = 이 글머리)에 쓰고, 그 sha256을 R4 판정 출력이 나오기 전에 판정서 초안과 JD-6 공개 줄에 적는다. 뽑는 스크립트도 scratchpad에 두고 sha256을 함께 적는다."
+  },
+  "applied_exception_rules": [
+    "격자 run(묶음 H-9 h9_grid/grid_*.json)의 J-P3 위반은 경로 2 출력만 출처로 쓴다 (결정 119의 2, MD-3 1).",
+    "묶음 H-8 V0 S-2 줄(noise V0, seedext V0)의 S-6은 경로 2 출력만 출처로 쓴다 (결정 120의 2, MD-3 1).",
+    "경로 2에 B판이 없는 출력 파일은 A판 하나를 그 파일의 출처로 본다 (MD-3 1).",
+    "다리는 R2 결과 파일의 그 줄·run에서 breach_reads 값이 1 이상인 다리로 정한다 (MD-3 1).",
+    "'5줄'은 (묶음, 결과 파일, 위치) 단위로 센다 (결정 119의 2, MD-3 2).",
+    "이 예외 밖은 경로 1 출력과 경로 2 출력(A판·B판)이 같아야 고정한다 (MD-3 1·5).",
+    "묶음 H-4 u6 결과(u6_b5_main_VB.json·u6_b5_wide_VB.json)에서 경로 2(A판·B판)만 S-6으로 적은 패치 키(`+<토양>@<다리>`) 줄은 S6-base에서 뺀다. 근거: rev16 R16-10 2 (c)가 이 줄의 계열 분류를 경로 2 결함으로 정함. 사용자 결정 123, 출처를 본 뒤의 선택, 공개.",
+    "묶음 H-3 u3_C·u3_D 결과(u3_C_V0.json·u3_C_VB.json·u3_D_V0.json·u3_D_VB.json)의 S-6은 경로 2 A판을 출처로 쓰지 않고 경로 1과 경로 2 B판(서로 같아야 함)으로 정한다. 근거: 경로 1과 B판이 일치하고 A판에만 4줄이 빠짐. 사용자 결정 123, 출처를 본 뒤의 선택, 공개."
+  ],
+  "public_notes": [
+    "시나리오 ①(묶음 H-10 R12 bottom FL Fs4의 VB·LS2·LS3, 격자 grid_r69_bottom `screen|bottom|4.0|ready|FL`)에서 키의 FL은 twin 다리(사건을 거는 다리)이고, J-P3 실제 위반 다리는 R2 breach_reads가 1 이상인 RR이다. 시나리오 ②(격자 grid_r67_top `screen|top|8.0|ready|FR`)의 위반 다리는 FR이다 (사용자 결정 123의 3).",
+    "S6-base의 H-4 제외와 H-3 u3_C·u3_D 출처 선택은 출처를 본 뒤 사용자 결정 123으로 정했다. 판정서 JD-6 공개 목록에 싣는다."
+  ],
+  "decision_123_excluded_from_path2": {
+    "path2_A": [
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+        "location": "records[24]",
+        "info": {
+          "key": "A3-G1+J1@RR",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[234]:A3-G1+J1@RR|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+        "location": "records[27]",
+        "info": {
+          "key": "A3-G1+J1@FL",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[235]:A3-G1+J1@FL|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[330]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[110]:G|g6|G1+J1@FL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[333]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[111]:G|g6|G1+J1@FL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[336]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[112]:G|g6|G1+J1@FL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[339]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[113]:G|g6|G1+J1@FL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[342]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[114]:G|g6|G1+J1@FR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[345]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[115]:G|g6|G1+J1@FR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[348]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[116]:G|g6|G1+J1@FR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[351]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[117]:G|g6|G1+J1@FR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[354]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[118]:G|g6|G1+J1@RL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[357]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[119]:G|g6|G1+J1@RL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[360]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[120]:G|g6|G1+J1@RL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[363]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[121]:G|g6|G1+J1@RL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[369]",
+        "info": {
+          "key": "G|g6|G1+J1@RR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[123]:G|g6|G1+J1@RR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[372]",
+        "info": {
+          "key": "G|g6|G1+J1@RR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[124]:G|g6|G1+J1@RR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[375]",
+        "info": {
+          "key": "G|g6|G1+J1@RR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[125]:G|g6|G1+J1@RR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[378]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[126]:G|g6|G1+J2@FL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[381]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[127]:G|g6|G1+J2@FL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[384]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[128]:G|g6|G1+J2@FL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[387]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[129]:G|g6|G1+J2@FL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[390]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[130]:G|g6|G1+J2@FR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[393]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[131]:G|g6|G1+J2@FR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[396]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[132]:G|g6|G1+J2@FR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[399]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[133]:G|g6|G1+J2@FR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[402]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[134]:G|g6|G1+J2@RL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[405]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[135]:G|g6|G1+J2@RL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[408]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[136]:G|g6|G1+J2@RL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[411]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[137]:G|g6|G1+J2@RL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[414]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[138]:G|g6|G1+J2@RR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[417]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[139]:G|g6|G1+J2@RR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[420]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[140]:G|g6|G1+J2@RR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[423]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[141]:G|g6|G1+J2@RR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[450]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[150]:G|g6|G1+S1@RL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[453]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[151]:G|g6|G1+S1@RL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[456]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[152]:G|g6|G1+S1@RL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[459]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[153]:G|g6|G1+S1@RL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[462]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[154]:G|g6|G1+S1@RR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[465]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[155]:G|g6|G1+S1@RR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[468]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[156]:G|g6|G1+S1@RR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[471]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[157]:G|g6|G1+S1@RR|bottom|Fs4|C2"
+        }
+      }
+    ],
+    "path2_B": [
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+        "location": "records[24]",
+        "info": {
+          "key": "A3-G1+J1@RR",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[234]:A3-G1+J1@RR|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+        "location": "records[27]",
+        "info": {
+          "key": "A3-G1+J1@FL",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[235]:A3-G1+J1@FL|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[330]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[110]:G|g6|G1+J1@FL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[333]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[111]:G|g6|G1+J1@FL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[336]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[112]:G|g6|G1+J1@FL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[339]",
+        "info": {
+          "key": "G|g6|G1+J1@FL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[113]:G|g6|G1+J1@FL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[342]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[114]:G|g6|G1+J1@FR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[345]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[115]:G|g6|G1+J1@FR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[348]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[116]:G|g6|G1+J1@FR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[351]",
+        "info": {
+          "key": "G|g6|G1+J1@FR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[117]:G|g6|G1+J1@FR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[354]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[118]:G|g6|G1+J1@RL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[357]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[119]:G|g6|G1+J1@RL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[360]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[120]:G|g6|G1+J1@RL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[363]",
+        "info": {
+          "key": "G|g6|G1+J1@RL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[121]:G|g6|G1+J1@RL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[369]",
+        "info": {
+          "key": "G|g6|G1+J1@RR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[123]:G|g6|G1+J1@RR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[372]",
+        "info": {
+          "key": "G|g6|G1+J1@RR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[124]:G|g6|G1+J1@RR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[375]",
+        "info": {
+          "key": "G|g6|G1+J1@RR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[125]:G|g6|G1+J1@RR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[378]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[126]:G|g6|G1+J2@FL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[381]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[127]:G|g6|G1+J2@FL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[384]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[128]:G|g6|G1+J2@FL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[387]",
+        "info": {
+          "key": "G|g6|G1+J2@FL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[129]:G|g6|G1+J2@FL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[390]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[130]:G|g6|G1+J2@FR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[393]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[131]:G|g6|G1+J2@FR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[396]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[132]:G|g6|G1+J2@FR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[399]",
+        "info": {
+          "key": "G|g6|G1+J2@FR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[133]:G|g6|G1+J2@FR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[402]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[134]:G|g6|G1+J2@RL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[405]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[135]:G|g6|G1+J2@RL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[408]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[136]:G|g6|G1+J2@RL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[411]",
+        "info": {
+          "key": "G|g6|G1+J2@RL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[137]:G|g6|G1+J2@RL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[414]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[138]:G|g6|G1+J2@RR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[417]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[139]:G|g6|G1+J2@RR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[420]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[140]:G|g6|G1+J2@RR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[423]",
+        "info": {
+          "key": "G|g6|G1+J2@RR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[141]:G|g6|G1+J2@RR|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[450]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[150]:G|g6|G1+S1@RL|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[453]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[151]:G|g6|G1+S1@RL|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[456]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[152]:G|g6|G1+S1@RL|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[459]",
+        "info": {
+          "key": "G|g6|G1+S1@RL|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[153]:G|g6|G1+S1@RL|bottom|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[462]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|top|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[154]:G|g6|G1+S1@RR|top|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[465]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|top|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[155]:G|g6|G1+S1@RR|top|Fs4|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[468]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|bottom|Fs0",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[156]:G|g6|G1+S1@RR|bottom|Fs0|C2"
+        }
+      },
+      {
+        "bundle": "H-4",
+        "file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+        "location": "records[471]",
+        "info": {
+          "key": "G|g6|G1+S1@RR|bottom|Fs4",
+          "setting": "VB",
+          "controller": "C2",
+          "path2_why": "K1 block on a unresolved soft-ground line (7.2 / RV1-6)",
+          "path2_where": "H-4:u6_b5_VB.C2.json:records[157]:G|g6|G1+S1@RR|bottom|Fs4|C2"
+        }
+      }
+    ]
+  },
+  "identity_units": {
+    "jp_base": [
+      "bundle",
+      "file",
+      "location",
+      "leg"
+    ],
+    "s6_base": [
+      "bundle",
+      "file",
+      "location"
+    ],
+    "note": "info 아래 값(key, setting 등)은 식별에 쓰지 않는 참고 값이다 (RD-7 3)."
+  },
+  "sources": [
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+      "sha256": "4e3aa79cfc2a079ca740cf217a56cf3c3b5fd0d46be91fdee869457483584ed5",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u3_C_VB.json",
+      "sha256": "b2d06de98a0fa2d51efe39d94ce8707b0a1e1a69e56b865b5ad36d17c01646e2",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+      "sha256": "80a0a273fe7cdceba373841fbf8a5f667567c07939bbeb983108a3898c796eaa",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+      "sha256": "df91a50d22275aad6d074b4e5e3f4e5cf286ea9a8706adc1decaaa6dc6251d3a",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+      "sha256": "b73743a5303adca480e0376ee96c674ee9555235f122ac6243172140ee1bb3f8",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+      "sha256": "871ebffe92774bcf58ec144833c1a4d9cb3a1abb97fbc207ef9b3949dccfd1a4",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+      "sha256": "1eccdbbdc651f0249acf449e145f43bced0e6c972c64991233165236e9d7201c",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+      "sha256": "e987b614efacb133fe3d82a81f8ef71840a6d6c41677145e171cddc0ed80f046",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/anchor_map.json",
+      "sha256": "6c8e603b73b4a52891beec41dfd45140d42ec72a33bfb27be58415ad3ab8b3ea",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/appendix_a.json",
+      "sha256": "e401f9da558bd9080be7e23b46ecbac73b0facebc591f69310ea46f9dcea4b19",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/d1_judge.json",
+      "sha256": "c1b885f2b5dfbb5cd879b4fae291ce18245793fb349040bd796e7fe7e80b0a76",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/dg3_hash.json",
+      "sha256": "7dc1e4e1e90e9a6389287124759930e28d01f9c3aeb8a6a813e31dd2487f5be5",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/family_f_trigger.json",
+      "sha256": "5901cd6eaf6e5d12f79e00c97fb5528892d2add45438bc77e6449420da360ff5",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/family_table.json",
+      "sha256": "01dfa81901558f03303c06c02262b9ae367a505398d209888eae1afbc748e393",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/grid_v0_sample.json",
+      "sha256": "044b10c51fdae9dbc8cc82da61d38b2bf9329f116c00a05bd18519729a1ce104",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h1_d1_regraded.jsonl",
+      "sha256": "055973e1c3d4e91d04bff08614e2605fb5e921e1d50a7c390c472da1c576bd78",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h2_select.json",
+      "sha256": "7c377e0aa14dda8cf21f8cb0d66a3beae42772c5551c78260ddd88071d8f3bfe",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h6_L1_reference.json",
+      "sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h6_judge.json",
+      "sha256": "1137e9b30de8bb9d29d07fa7abc038582821bea6538ad2fa787b8587cf69072f",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h6_r79_judge.json",
+      "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_noise_judge.json",
+      "sha256": "38e54c78a4dc7e28eb50b417027e7766965aa1d0a72f31ce49ce7158598f1f9f",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_r79_judge/h8_noise_V0_L1.json",
+      "sha256": "e141a70413a4aaef4dc1b53baedeff1489759d1995ee55034406378733873e39",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_r79_judge/h8_noise_VB_L1.json",
+      "sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_r79_judge/judge_h8_noise_V0.json",
+      "sha256": "93114dde4cb0e5fba9f23204989866c860030e64f59166a40c3424db3dcf465e",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_r79_judge/judge_h8_noise_VB.json",
+      "sha256": "fba1c7e2eb740ac14fd43765def8eaf95b8b535aa2a53a6a17b91a3125fc8bbb",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_r79_judge/judge_h8_seedext_V0.json",
+      "sha256": "2dd5d27ae6aab5fdfbfd16022bba56f57762ade954e1cd84b0a02ae1ed90b063",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/h8_r79_judge/judge_h8_seedext_VB.json",
+      "sha256": "012810960bcd310e02fb65853041dd23bca6d16336c9dd1d6cdf746a6e73e0d0",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/import_check.json",
+      "sha256": "a09a7bb397dfda58dd987ea18a3b2508045be2bc8bd9f56dafd372753d3b4d35",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/ind_las.json",
+      "sha256": "84c517c9f349254c150089f7931c80cbd0dcbf85408a0b140a73be63b1a036e8",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/k1_class.json",
+      "sha256": "c3785b9a1e367324e5b5e26138741e068ae2cbc8632e5ee5334d415389d73070",
+      "roles": [
+        "경로 1 S-6"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_grid_r67_main.json",
+      "sha256": "81752a9ef01728114f513be3133bebff65e763df5eabdf8bdd6d8b222f266138",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_grid_r67_top.json",
+      "sha256": "02a1da113b121e8f756b4dacbc21276ab776d593fb6057fb0056b32f9452276a",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_grid_r69_bottom.json",
+      "sha256": "8ed773f8c674b542675d6327635a041e4926473a5010bb2b55f15278982a8d69",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_grid_r69_top.json",
+      "sha256": "0f0fe19fdc2d4c53fe2f247f4422a5f4e94a70ccd1fa3424de943c4682e3b01e",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_h6.json",
+      "sha256": "5c035dcf7b115e181490813ca5856ee92750aea6c4a31a92203017ace514f16b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_h7.json",
+      "sha256": "ecd911aeac1f9a7bee824648487bab5ad3ec8a5cf19c5c3836d29e1a8de247e1",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_h8_noise_V0.json",
+      "sha256": "1b78c631128c78f8f2d0a208939e1614b6a5029a5e9ef5c090e177a08bf2c2d4",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_h8_noise_VB.json",
+      "sha256": "975222cfb783731bd363ca3ffc0b120fc4a38caedf7bd11606935b296dc09b8a",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_h8_seedext_V0.json",
+      "sha256": "63d689a151b0f04aa2eccd0fbe91ceb9d371b11178f0f2f77d7ffcec54597ba2",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/keyset_h8_seedext_VB.json",
+      "sha256": "c608204a29bed0521471825cbea26880388e9e88cbd12e4bd1cf394aece0a3ef",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/log_errors_run_harness.json",
+      "sha256": "a691ca279f6bffd03d8d338947efe45f48220ed441acad47947ef8e0cb91507b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/overlap_steps.json",
+      "sha256": "951f6eaa183584cc2698a7e838a8c4162be7847427b1f16a5ffeada8a3c2987b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/reagg_items.json",
+      "sha256": "d7b6216d2a4b0b5ee38de9f0bf21643b5267d4255b4ca3222d1979e0eda9ceb6",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/record_check.json",
+      "sha256": "f27d73c5d54192540af7252135217e433e83ea1d56eff5a5d9c294c635602a6e",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/sidecars.json",
+      "sha256": "aaffbad80acb095cd6d5420d863667715d153040d22180d3cbc14db29e35001c",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stage1_judge.json",
+      "sha256": "36e97eefe73abb11e020fff53afeedfc10588a32d1c49bc2a7c40a056b979cee",
+      "roles": [
+        "경로 1 J-P3(H-9 1단계·H-10)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-1.json",
+      "sha256": "62e6fdb45cadd76f1f295eabc4dbee190d8895fb139fc79afe7126a725b094e2",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-10.json",
+      "sha256": "f67196d17b6440c15b82eb1afeebf25b2a33551b1f1be9021a36baffa0ec71b7",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-3.json",
+      "sha256": "49f3faab186800a5f21f78f6889ed2fb28a705d29ea669ba5d90d9e7b8be836b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-4.json",
+      "sha256": "347371ce3f76a620805b7abaafb156e20116ca85fac4eaf51fa4223c3388e3df",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-5.json",
+      "sha256": "08dbeef12e8615760f6d0d57ca8f114f6a9b0f7e10002150e3aa27791327a4cd",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-6.json",
+      "sha256": "ba97fab0fd379feb15e031060745ec4f7ea77e0e88cdf39569fdac5b4c3c798b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-7.json",
+      "sha256": "03b7f17944c028f4c481f589cd4689bc5911e1dda26597db627aae72b3667db6",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-8.json",
+      "sha256": "7c4bb970f64522b379b19693458cebb940b29da5605588b0deefe5676c156a47",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/stroke_H-9.json",
+      "sha256": "a84cc1c8b93e738834bde9666b33f092a735653e3beb7fa471bd4c7124bd7758",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/u3_judge.json",
+      "sha256": "21e93d65c8eff2e87baab5ede46080bec76cfbb46db17075add74a22fbb25d58",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/u3_judge_k1.json",
+      "sha256": "4ac5b93935359ef569e40de7edfc2f5972391246197fde65ce122b5a2e22b3d1",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path1/u9_judge.json",
+      "sha256": "a4c32ded817da27e3fc5ec25b284feb30c3064ad6d1dc22ab1b9ba8fd4dc6e0b",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_anchors.json",
+      "sha256": "ed5592d1ec0e62c916e4888250ba4256e7f431dd1424754ea5015da93814c65f",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_d1.json",
+      "sha256": "855448ca57e94bbc63c1b2e50c2f5b16ba9a624a3f6cdec95fbb8370bf10e3fb",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_harness.json",
+      "sha256": "6368d91d7f6ebc7f652e794792d3ba66f00397b3eca8211819768fd985933bab",
+      "roles": [
+        "경로 2 S-6 (p2h_harness.json)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_harness_b.json",
+      "sha256": "bb4833510200560b5685c84963a9f00884ce3a78c53cf7c1430cec2ba06111ea",
+      "roles": [
+        "경로 2 S-6 (p2h_harness_b.json)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_head_tally.json",
+      "sha256": "3aeb11fbbf65fac9e8c26816e50955741bc069300ecb5c334758c2a7e596bcab",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_k0_sidecars_h9_grid.json",
+      "sha256": "836f7a413628677c6102a7a3094551e13a7e2f31ba45ce867cb14f7381323d52",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_k0_sidecars_h9_grid_v0_sample.json",
+      "sha256": "836f7a413628677c6102a7a3094551e13a7e2f31ba45ce867cb14f7381323d52",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_k0_sidecars_resume_k1.json",
+      "sha256": "bd79bc3292e20a9c2e09c85783ad92d1e1b54333702254283d8d49c4b1355304",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_manifest_harness.json",
+      "sha256": "5242866fbe6a28420f24277bd8d6eceeab1bf45e30684d6130feb27729faad9e",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_manifest_harness_b.json",
+      "sha256": "47f09cb579e09f221495c6cdd3c58606a9f1144217cd815839c11bc7ebd92e63",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_seal.json",
+      "sha256": "3f7d499c83b20ecd6c1ee2a16647f1846995d7165a904f8f45c67bf65afba3a4",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_settle_v2_axis.json",
+      "sha256": "420fdd58bba3349cabe257b2a04b00c50de93c3d3e3a3283f87277cad04e30bb",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_survey.json",
+      "sha256": "9f1e6db0c25a9ad7e25642a0586ac4d8fe04be76637285c42ab2f00d96547703",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_t4h_lookup.json",
+      "sha256": "3aa81557b26aad544815f29aad6f744cd69b26b432f3aa517b49b9e4a48b7c96",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_u3.json",
+      "sha256": "121bff1dfc78cfa634ecbd57377d407a561cef54f7e885e1755d83c34ee45aa9",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_u3_b.json",
+      "sha256": "40c691867e6794926021287db33a789481febb7f2c7afa9152e277edb2a74e02",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_v5c_grid.json",
+      "sha256": "015f23d98a3503af67790f3a6b54112ae18a32c2c82ea590788b5024dd5d21ba",
+      "roles": [
+        "경로 2 J-P3(H-9 격자)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_v5c_noise.json",
+      "sha256": "3b5a5687844fba2bb974ad02b63eb2c89cb37103e9ccb09af682201daaa79573",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_v5c_stage1.json",
+      "sha256": "20999dc6c9c4d4833ae56d105b40b49feee26757bbbd5a68059946ad260de990",
+      "roles": [
+        "경로 2 J-P3(H-9 1단계·H-10)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/p2h_v5j_u9.json",
+      "sha256": "443d15f8992c2a08464593bf2ed50cd1efd4856e953ab06e06b4a02fe2b3e462",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/v5c_noise_judge/judge_V0.json",
+      "sha256": "93114dde4cb0e5fba9f23204989866c860030e64f59166a40c3424db3dcf465e",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/v5c_noise_judge/judge_VB_with_H6.json",
+      "sha256": "6ab337d6c45960f452de5742fb1c74d5a6e392bbbe36dc0b32a9bf21237c62d4",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/v5c_noise_judge/judge_seedext_V0.json",
+      "sha256": "383fe3d08a2b984c1c57a12d10e46112495db60fa8173d072a674d1f5719980f",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_b9f5707/harness_path2/v5c_noise_judge/judge_seedext_VB.json",
+      "sha256": "3ac57651e261865f237bbcb8cd731d8300f90d6d8e50823a5000d9c61057768d",
+      "roles": [
+        "범위 확인 스캔(출처 아님)"
+      ]
+    },
+    {
+      "path": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+      "sha256": "ce526b1f71e635e6b80d538f36841ece01710af46f02acb4b3fa1355a5a4dcb3",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+      "sha256": "54d1731611a27982a9e618ac734b6ccb5ab06d6dfed182b30eadb25682a3709e",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+      "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json",
+      "sha256": "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    },
+    {
+      "path": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_bottom.json",
+      "sha256": "6c06741fdc44d565265773a7d15157065631d631022da9c4034653273de11799",
+      "roles": [
+        "R2 위치·다리"
+      ]
+    }
+  ]
+}

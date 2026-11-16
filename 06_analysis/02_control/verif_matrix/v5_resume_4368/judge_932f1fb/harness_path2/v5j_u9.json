@@ -1,0 +1,3585 @@
+{
+ "u9_rules": {
+  "06_analysis/02_control/verif_matrix/u9_targeted_rules_rev1.md": "644005b706ba46cebba11b975ded474226cc4eab5030ee18e9f91dacd2d14587"
+ },
+ "v5_options": {
+  "path": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\hydraulics\\v5_options.py",
+  "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "loaded": true
+ },
+ "seals_eol_only": [],
+ "head_check": {
+  "expect": "932f1fb1724f074e4ee93a9c02193c7c840d13c4",
+  "head": "932f1fb1724f074e4ee93a9c02193c7c840d13c4",
+  "ok": true,
+  "why": null
+ },
+ "r4_rev13_25_sha256": {
+  "v5_resume_4368_rules_rev13": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+  "v5_resume_4368_rules_rev14": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+  "v5_resume_4368_rules_rev15": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+  "v5_resume_4368_rules_rev16": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+  "v5_resume_4368_rules_rev17": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+  "v5_resume_4368_rules_rev18": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+  "v5_resume_4368_rules_rev19": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+  "v5_resume_4368_rules_rev20": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+  "v5_resume_4368_rules_rev21": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+  "v5_resume_4368_rules_rev22": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+  "v5_resume_4368_rules_rev23": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+  "v5_resume_4368_rules_rev24": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+  "v5_resume_4368_rules_rev25": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+ },
+ "R11-2_t4h_places": {
+  "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun.jsonl": [
+   "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h"
+  ]
+ },
+ "H-5": {
+  "H0": {
+   "checked": [
+    {
+     "key": [
+      "R3",
+      0.0
+     ],
+     "result": "same",
+     "ref_job": {
+      "case": "R3",
+      "eps": 0.0,
+      "setting": "VB"
+     }
+    },
+    {
+     "key": [
+      "S2",
+      0.002
+     ],
+     "result": "same",
+     "ref_job": {
+      "case": "S2",
+      "eps": 0.002,
+      "setting": "VB"
+     }
+    },
+    {
+     "key": [
+      "S3",
+      0.0
+     ],
+     "result": "same",
+     "ref_job": {
+      "case": "S3",
+      "eps": 0.0,
+      "setting": "VB"
+     }
+    },
+    {
+     "key": [
+      "S5",
+      0.0
+     ],
+     "result": "same",
+     "ref_job": {
+      "case": "S5",
+      "eps": 0.0,
+      "setting": "VB"
+     }
+    }
+   ],
+   "record_main": [
+    {
+     "key": [
+      "R3",
+      0.0
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "R3",
+      0.001
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "R3",
+      0.002
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "R3",
+      0.003
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S2",
+      0.0
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S2",
+      0.001
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S2",
+      0.002
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S2",
+      0.003
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S3",
+      0.0
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S3",
+      0.002
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S5",
+      0.0
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S5",
+      0.001
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S5",
+      0.002
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S5",
+      0.003
+     ],
+     "same": true
+    }
+   ],
+   "record_stored_p3": [
+    {
+     "key": [
+      "R3",
+      0.0
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S2",
+      0.002
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S3",
+      0.0
+     ],
+     "same": true
+    },
+    {
+     "key": [
+      "S5",
+      0.0
+     ],
+     "same": true
+    }
+   ]
+  },
+  "keys": [
+   {
+    "key": [
+     "R3",
+     0.0
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4766,
+      "minF_set_kN": 53.8404
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 56.5
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01485,
+      "set_deg": 0.01452
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.534,
+      "set_bar": 99.144
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4766,
+      "minF_set_kN": 53.8453
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 57.6
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01485,
+      "set_deg": 0.0141
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.534,
+      "set_bar": 99.137
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.0,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 0.0,
+     "E2_level_min_r": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL+FR": 0.008,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 17.313,
+      "gallery_bar_while_saturated": [
+       11.527,
+       15.856
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.1000000000000014,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 3.2817,
+     "eta0p85": 3.27552
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 24.6,
+     "eta0p85": 24.77
+    }
+   },
+   {
+    "key": [
+     "R3",
+     0.001
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4744,
+      "minF_set_kN": 53.845
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 56.6
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01492,
+      "set_deg": 0.01415
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.532,
+      "set_bar": 99.137
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4744,
+      "minF_set_kN": 53.8458
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 57.7
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01492,
+      "set_deg": 0.01405
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.532,
+      "set_bar": 99.136
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.0,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 0.0,
+     "E2_level_min_r": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL+FR": 0.008,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 17.313,
+      "gallery_bar_while_saturated": [
+       11.527,
+       15.856
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.1000000000000014,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 3.31163,
+     "eta0p85": 3.29565
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 24.7,
+     "eta0p85": 24.77
+    }
+   },
+   {
+    "key": [
+     "R3",
+     0.002
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4766,
+      "minF_set_kN": 53.8406
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 56.5
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01474,
+      "set_deg": 0.01449
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.533,
+      "set_bar": 99.144
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4766,
+      "minF_set_kN": 53.8432
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 57.6
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01474,
+      "set_deg": 0.01426
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.533,
+      "set_bar": 99.139
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.0,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 0.0,
+     "E2_level_min_r": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL+FR": 0.008,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 17.313,
+      "gallery_bar_while_saturated": [
+       11.527,
+       15.856
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.1000000000000014,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 3.29665,
+     "eta0p85": 3.28081
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 24.7,
+     "eta0p85": 24.67
+    }
+   },
+   {
+    "key": [
+     "R3",
+     0.003
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4766,
+      "minF_set_kN": 53.8456
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 56.6
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01484,
+      "set_deg": 0.01405
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.534,
+      "set_bar": 99.137
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 54.4766,
+      "minF_set_kN": 53.8421
+     },
+     "J3": {
+      "result": "record",
+      "limit_s": 120.0,
+      "floor_slope": true,
+      "t_ready_set": 57.7
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.01484,
+      "set_deg": 0.01436
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 8.0,
+      "n_off_max": 8.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 98.534,
+      "set_bar": 99.141
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.0,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 0.0,
+     "E2_level_min_r": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL+FR": 0.008,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 17.313,
+      "gallery_bar_while_saturated": [
+       11.527,
+       15.856
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.1000000000000014,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 3.32722,
+     "eta0p85": 3.26784
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 24.8,
+     "eta0p85": 24.67
+    }
+   },
+   {
+    "key": [
+     "S2",
+     0.0
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.8262,
+      "minF_set_kN": 67.023
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.4,
+      "t_ready_set": 64.3
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.0316,
+      "set_deg": 0.04438
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.156,
+      "set_bar": 91.069
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.8262,
+      "minF_set_kN": 66.5161
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.4,
+      "t_ready_set": 65.4
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.0316,
+      "set_deg": 0.05135
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.156,
+      "set_bar": 91.023
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.162,
+      "2": 2.532,
+      "3": 0.003,
+      "4": 0.72
+     },
+     "longest_ge3_s": 0.723,
+     "longest_eq4_s": 0.72,
+     "E1_level_short_s": 3.417,
+     "E2_level_min_r": {
+      "FL": 0.69188,
+      "FR": 0.8398,
+      "RL": 0.94433,
+      "RR": 0.947
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.406,
+       "FL+FR": 1.012,
+       "FL+FR+RL": 0.002,
+       "FL+FR+RL+RR": 17.31
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 20.73,
+      "gallery_bar_while_saturated": [
+       11.527,
+       106.85
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.1000000000000085,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.36769,
+     "eta0p85": 0.33322
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 12.3,
+     "eta0p85": 12.69
+    }
+   },
+   {
+    "key": [
+     "S2",
+     0.001
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.837,
+      "minF_set_kN": 67.0249
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.4,
+      "t_ready_set": 64.2
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03143,
+      "set_deg": 0.04319
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.136,
+      "set_bar": 91.059
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.837,
+      "minF_set_kN": 66.517
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.4,
+      "t_ready_set": 65.4
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03143,
+      "set_deg": 0.04997
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.136,
+      "set_bar": 91.037
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.163,
+      "2": 2.521,
+      "3": 0.004,
+      "4": 0.678
+     },
+     "longest_ge3_s": 0.682,
+     "longest_eq4_s": 0.678,
+     "E1_level_short_s": 3.366,
+     "E2_level_min_r": {
+      "FL": 0.69302,
+      "FR": 0.84309,
+      "RL": 0.95525,
+      "RR": 0.95774
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.4,
+       "FL+FR": 0.974,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 20.679,
+      "gallery_bar_while_saturated": [
+       11.527,
+       106.873
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.2000000000000028,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.36767,
+     "eta0p85": 0.33293
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 12.31,
+     "eta0p85": 12.69
+    }
+   },
+   {
+    "key": [
+     "S2",
+     0.002
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.8235,
+      "minF_set_kN": 67.0225
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.5,
+      "t_ready_set": 64.3
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03169,
+      "set_deg": 0.04466
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.161,
+      "set_bar": 91.071
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.8235,
+      "minF_set_kN": 66.5122
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.5,
+      "t_ready_set": 65.4
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03169,
+      "set_deg": 0.05161
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.161,
+      "set_bar": 91.03
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.162,
+      "2": 2.517,
+      "3": 0.003,
+      "4": 0.706
+     },
+     "longest_ge3_s": 0.709,
+     "longest_eq4_s": 0.706,
+     "E1_level_short_s": 3.388,
+     "E2_level_min_r": {
+      "FL": 0.69195,
+      "FR": 0.84128,
+      "RL": 0.95017,
+      "RR": 0.95271
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.404,
+       "FL+FR": 0.986,
+       "FL+FR+RL": 0.002,
+       "FL+FR+RL+RR": 17.309
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 20.701,
+      "gallery_bar_while_saturated": [
+       11.527,
+       106.92
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.1000000000000085,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.36765,
+     "eta0p85": 0.33328
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 12.3,
+     "eta0p85": 12.69
+    }
+   },
+   {
+    "key": [
+     "S2",
+     0.003
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.8261,
+      "minF_set_kN": 67.0237
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.5,
+      "t_ready_set": 64.3
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03161,
+      "set_deg": 0.04396
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.156,
+      "set_bar": 91.065
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 68.8261,
+      "minF_set_kN": 66.5161
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.5,
+      "t_ready_set": 65.5
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03161,
+      "set_deg": 0.04997
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 91.156,
+      "set_bar": 91.044
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.164,
+      "2": 2.523,
+      "3": 0.003,
+      "4": 0.652
+     },
+     "longest_ge3_s": 0.655,
+     "longest_eq4_s": 0.652,
+     "E1_level_short_s": 3.342,
+     "E2_level_min_r": {
+      "FL": 0.69354,
+      "FR": 0.84535,
+      "RL": 0.95928,
+      "RR": 0.96171
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.397,
+       "FL+FR": 0.953,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 20.655,
+      "gallery_bar_while_saturated": [
+       11.527,
+       106.957
+      ]
+     }
+    },
+    "T5_ready_diff_s": 1.2000000000000028,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.36772,
+     "eta0p85": 0.33312
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 12.31,
+     "eta0p85": 12.69
+    }
+   },
+   {
+    "key": [
+     "S3",
+     0.0
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 69.3382,
+      "minF_set_kN": 68.5397
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.2,
+      "t_ready_set": 68.8
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.02695,
+      "set_deg": 0.03303
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 90.717,
+      "set_bar": 90.712
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 69.3382,
+      "minF_set_kN": 67.7091
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.2,
+      "t_ready_set": 65.5
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.02695,
+      "set_deg": 0.05636
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 90.717,
+      "set_bar": 90.717
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.106,
+      "2": 2.532,
+      "3": 0.002,
+      "4": 0.711
+     },
+     "longest_ge3_s": 0.713,
+     "longest_eq4_s": 0.711,
+     "E1_level_short_s": 3.351,
+     "E2_level_min_r": {
+      "FL": 0.71743,
+      "FR": 0.8406,
+      "RL": 0.94376,
+      "RR": 0.94633
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.346,
+       "FL+FR": 0.954,
+       "FL+FR+RL": 0.011,
+       "FL+FR+RL+RR": 17.353
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 20.664,
+      "gallery_bar_while_saturated": [
+       11.527,
+       106.447
+      ]
+     }
+    },
+    "T5_ready_diff_s": -3.299999999999997,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.31755,
+     "eta0p85": 0.29477
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 12.36,
+     "eta0p85": 17.06
+    }
+   },
+   {
+    "key": [
+     "S3",
+     0.002
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 69.3596,
+      "minF_set_kN": 68.5393
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.3,
+      "t_ready_set": 68.8
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.02739,
+      "set_deg": 0.03642
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 90.75,
+      "set_bar": 90.718
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 69.3596,
+      "minF_set_kN": 67.7937
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 66.3,
+      "t_ready_set": 65.7
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.02739,
+      "set_deg": 0.06419
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 16.0,
+      "increase": false
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 90.75,
+      "set_bar": 90.72
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": false,
+    "T2": {
+     "level_count_s": {
+      "1": 0.119,
+      "2": 2.514,
+      "3": 0.004,
+      "4": 0.688
+     },
+     "longest_ge3_s": 0.692,
+     "longest_eq4_s": 0.688,
+     "E1_level_short_s": 3.325,
+     "E2_level_min_r": {
+      "FL": 0.72013,
+      "FR": 0.84191,
+      "RL": 0.94719,
+      "RR": 0.94972
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.342,
+       "FL+FR": 0.952,
+       "FL+FR+RL": 0.009,
+       "FL+FR+RL+RR": 17.335
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 20.638,
+      "gallery_bar_while_saturated": [
+       11.527,
+       106.412
+      ]
+     }
+    },
+    "T5_ready_diff_s": -3.0999999999999943,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.31887,
+     "eta0p85": 0.29457
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 12.67,
+     "eta0p85": 16.96
+    }
+   },
+   {
+    "key": [
+     "S5",
+     0.0
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 75.0062,
+      "minF_set_kN": 74.2763
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.5,
+      "t_ready_set": 78.8
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03866,
+      "set_deg": 0.03528
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.783,
+      "set_bar": 101.739
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 75.0062,
+      "minF_set_kN": 73.1268
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.5,
+      "t_ready_set": 95.2
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03866,
+      "set_deg": 0.05245
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 24.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.783,
+      "set_bar": 101.806
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": true,
+    "T2": {
+     "level_count_s": {
+      "1": 0.316,
+      "2": 3.127,
+      "3": 0.016,
+      "4": 0.349
+     },
+     "longest_ge3_s": 0.365,
+     "longest_eq4_s": 0.349,
+     "E1_level_short_s": 3.808,
+     "E2_level_min_r": {
+      "FL": 0.73782,
+      "FR": 0.77947,
+      "RL": 0.99746,
+      "RR": 0.99792
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.407,
+       "FL+FR": 1.409,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 21.121,
+      "gallery_bar_while_saturated": [
+       11.527,
+       116.801
+      ]
+     }
+    },
+    "T5_ready_diff_s": 16.400000000000006,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.48118,
+     "eta0p85": 0.43643
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 13.73,
+     "eta0p85": 18.54
+    }
+   },
+   {
+    "key": [
+     "S5",
+     0.001
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 74.9965,
+      "minF_set_kN": 74.2942
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.5,
+      "t_ready_set": 78.0
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03869,
+      "set_deg": 0.03514
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.777,
+      "set_bar": 101.739
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 74.9965,
+      "minF_set_kN": 73.1213
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.5,
+      "t_ready_set": 95.2
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03869,
+      "set_deg": 0.05236
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 24.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.777,
+      "set_bar": 101.804
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": true,
+    "T2": {
+     "level_count_s": {
+      "1": 0.312,
+      "2": 3.374,
+      "3": 0.051,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.051,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 3.737,
+     "E2_level_min_r": {
+      "FL": 0.73711,
+      "FR": 0.77792,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.408,
+       "FL+FR": 1.337,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 21.05,
+      "gallery_bar_while_saturated": [
+       11.527,
+       116.855
+      ]
+     }
+    },
+    "T5_ready_diff_s": 17.200000000000003,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.4783,
+     "eta0p85": 0.43409
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 13.63,
+     "eta0p85": 17.65
+    }
+   },
+   {
+    "key": [
+     "S5",
+     0.002
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 75.0116,
+      "minF_set_kN": 74.2802
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.5,
+      "t_ready_set": 78.0
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.04039,
+      "set_deg": 0.0352
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.761,
+      "set_bar": 101.733
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 75.0116,
+      "minF_set_kN": 73.1199
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.5,
+      "t_ready_set": 95.2
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.04039,
+      "set_deg": 0.05267
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 24.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.761,
+      "set_bar": 101.844
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": true,
+    "T2": {
+     "level_count_s": {
+      "1": 0.329,
+      "2": 3.369,
+      "3": 0.0,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.0,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 3.698,
+     "E2_level_min_r": {
+      "FL": 0.73946,
+      "FR": 0.77164,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.399,
+       "FR": 0.264,
+       "FL+FR": 1.043,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 21.011,
+      "gallery_bar_while_saturated": [
+       11.527,
+       116.682
+      ]
+     }
+    },
+    "T5_ready_diff_s": 17.200000000000003,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.48621,
+     "eta0p85": 0.43379
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 13.84,
+     "eta0p85": 17.65
+    }
+   },
+   {
+    "key": [
+     "S5",
+     0.003
+    ],
+    "T1_VB0p85": "pass",
+    "T1_VB0p80": "pass",
+    "V0_J1_ok": true,
+    "cause_fail": false,
+    "J_VB0p85": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 75.0057,
+      "minF_set_kN": 74.2775
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.6,
+      "t_ready_set": 78.8
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03868,
+      "set_deg": 0.03528
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 16.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.783,
+      "set_bar": 101.736
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "J_VB0p80": {
+     "J1": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "class_v0": "pass",
+      "class_set": "pass"
+     },
+     "J2": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "minF_v0_kN": 75.0057,
+      "minF_set_kN": 73.1313
+     },
+     "J3": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "limit_s": 100.0,
+      "t_ready_v0": 77.6,
+      "t_ready_set": 95.1
+     },
+     "J4": {
+      "result": "pass",
+      "v0": "ready",
+      "set": "ready",
+      "same": true
+     },
+     "J5": {
+      "result": "not_applicable"
+     },
+     "J6": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_deg": 0.03868,
+      "set_deg": 0.05249
+     },
+     "J7": {
+      "result": "pass",
+      "new_names": [],
+      "new_reasons": [],
+      "fallback_time_differs": []
+     },
+     "J8": {
+      "result": "pass",
+      "n_rev": 24.0,
+      "n_off_max": 14.0,
+      "increase": true
+     },
+     "J9": {
+      "result": "pass",
+      "post_lift": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "pre_lift": [
+       25,
+       25,
+       28,
+       28
+      ]
+     },
+     "J10": {
+      "result": "pass",
+      "v0": true,
+      "set": true,
+      "v0_bar": 101.783,
+      "set_bar": 101.809
+     },
+     "J11": {
+      "result": "not_computed",
+      "setting": "VB",
+      "stop_applicable": true,
+      "marker": "H-7",
+      "fallback_legs": null,
+      "n_late_fallback_by_leg": null,
+      "list": [],
+      "why": "no rod reading"
+     },
+     "J-P3": {
+      "result": "no_rod_reading",
+      "why": null,
+      "rod_reading_source": "t4h",
+      "declaration_source": "field"
+     }
+    },
+    "T3a": true,
+    "T3b": true,
+    "T3c": true,
+    "T4": true,
+    "T4_FLAG_integral_limit": true,
+    "T2": {
+     "level_count_s": {
+      "1": 0.314,
+      "2": 3.411,
+      "3": 0.0,
+      "4": 0.0
+     },
+     "longest_ge3_s": 0.0,
+     "longest_eq4_s": 0.0,
+     "E1_level_short_s": 3.725,
+     "E2_level_min_r": {
+      "FL": 0.73773,
+      "FR": 0.77692,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "E4": {
+      "sample_period_s": 0.001,
+      "tie_width_bar": 0.5,
+      "group_time_s": {
+       "FL": 2.406,
+       "FL+FR": 1.327,
+       "FL+FR+RL+RR": 17.305
+      },
+      "disjoint_swaps": 0,
+      "max_disjoint_swaps_in_1s": 0,
+      "saturated_s": 21.038,
+      "gallery_bar_while_saturated": [
+       11.527,
+       117.113
+      ]
+     }
+    },
+    "T5_ready_diff_s": 16.299999999999997,
+    "attitude_after_liftoff_deg": {
+     "eta0p80": 0.47941,
+     "eta0p85": 0.43569
+    },
+    "E5_back_in_band_s": {
+     "eta0p80": 13.73,
+     "eta0p85": 18.44
+    }
+   }
+  ],
+  "classification": "A",
+  "classification_is_record": true,
+  "ask_user_before_v5_sentence": false,
+  "eta0p80_record_findings": {
+   "stops": [],
+   "undecidable": []
+  },
+  "class_flags": {
+   "cause_fail": [],
+   "baseline_or_v0_fail": [],
+   "T3a": [],
+   "T3b": [],
+   "T3c": [],
+   "T4": [],
+   "T4_flag_integral": [
+    "S5|eps 0.0",
+    "S5|eps 0.001",
+    "S5|eps 0.002",
+    "S5|eps 0.003"
+   ]
+  },
+  "D_keys_recorded_separately": [],
+  "longest_ge3_s_max": 0.723,
+  "status_4368": "통과",
+  "counts": {
+   "V0": 14,
+   "VB0p85": 14,
+   "VB0p80": 14
+  },
+  "R11-2_t4h_lookup": {
+   "ok": 28,
+   "no_t4h_file": 0,
+   "not_found": 0,
+   "several": 0,
+   "bad_t4h_file": 0
+  },
+  "status": "pass",
+  "stops": [],
+  "undecidable": [],
+  "fails": [],
+  "records": [],
+  "stop_codes": [],
+  "inputs": {
+   "v0": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h5_u9_v0.jsonl",
+    "661198e6b806ce4d063ab6031a411ae76e5d2a444cc69befde43a39932c0f44c"
+   ],
+   "vb": [
+    [
+     "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun.jsonl",
+     "ce526b1f71e635e6b80d538f36841ece01710af46f02acb4b3fa1355a5a4dcb3"
+    ]
+   ]
+  }
+ },
+ "stop_codes": [],
+ "tool": "p2_v5j.py",
+ "version": "1",
+ "tool_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+ "created": "2026-11-16T16:31:39+09:00"
+}

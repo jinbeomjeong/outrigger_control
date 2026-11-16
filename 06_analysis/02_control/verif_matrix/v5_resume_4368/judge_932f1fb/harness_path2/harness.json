@@ -1,0 +1,3715 @@
+{
+ "seals": {
+  "ok": true,
+  "rules_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+  "rev1_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+  "rev2_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+  "rev3_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+  "rev4_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+  "rev5_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+  "rev6_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+  "rev7_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+  "rev8_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+  "rev9_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+  "rev10_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+  "rev11_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+  "rev12_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+  "eol_only": [],
+  "eol_only_detail": {},
+  "r4_rev13_25_sha256": {
+   "v5_resume_4368_rules_rev13": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+   "v5_resume_4368_rules_rev14": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+   "v5_resume_4368_rules_rev15": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+   "v5_resume_4368_rules_rev16": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+   "v5_resume_4368_rules_rev17": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+   "v5_resume_4368_rules_rev18": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+   "v5_resume_4368_rules_rev19": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+   "v5_resume_4368_rules_rev20": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+   "v5_resume_4368_rules_rev21": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+   "v5_resume_4368_rules_rev22": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+   "v5_resume_4368_rules_rev23": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+   "v5_resume_4368_rules_rev24": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+   "v5_resume_4368_rules_rev25": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+  },
+  "r4_common_block_sha256": "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800"
+ },
+ "bundles": {
+  "H-1": {
+   "lines": 868,
+   "classes": {
+    "unchanged": 760,
+    "las": 103,
+    "both": 3,
+    "k1_block": 2
+   },
+   "families": {
+    "rigid": 264,
+    "patch": 376,
+    "uniform": 228
+   },
+   "tags": {
+    "final_C4G2_P3_LAS_K1": 434,
+    "final_C4G2_LAS_K1": 434
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h1_d1.jsonl",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h1_d1.jsonl",
+     "sha256": "412e5b360d748e2552e42784c806c423adf48e4712b72477f6869ea8f25b3f56",
+     "kind": "by_setting",
+     "format": "run_v5_jsonl",
+     "part": "main",
+     "lines": 868,
+     "classes": {
+      "unchanged": 760,
+      "las": 103,
+      "both": 3,
+      "k1_block": 2
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 434,
+      "V0": 434
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 434,
+    "family_run_lines": 0,
+    "rd8": {
+     "breach_reads_bad_format": 0,
+     "jp3_pass_without_breach_reads": 0,
+     "breach_reads_mismatch": 0,
+     "lines_present": 72,
+     "lines": []
+    },
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "VB": 434,
+    "V0": 434
+   },
+   "parts": {
+    "main": 868
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-3": {
+   "lines": 2228,
+   "classes": {
+    "k1_block": 77,
+    "both": 43,
+    "las": 97,
+    "unchanged": 1985
+   },
+   "families": {
+    "patch": 240,
+    "uniform": 602,
+    "rigid": 328,
+    "unresolved": 1032
+   },
+   "tags": {
+    "final_C4G2_LAS_K1": 1114,
+    "final_C4G2_P3_LAS_K1": 1114
+   },
+   "errors": 0,
+   "missing": 26,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_C_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+     "sha256": "4e3aa79cfc2a079ca740cf217a56cf3c3b5fd0d46be91fdee869457483584ed5",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 34,
+     "classes": {
+      "k1_block": 8,
+      "both": 4,
+      "las": 11,
+      "unchanged": 11
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 34
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_C_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_VB.json",
+     "sha256": "b2d06de98a0fa2d51efe39d94ce8707b0a1e1a69e56b865b5ad36d17c01646e2",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 34,
+     "classes": {
+      "k1_block": 8,
+      "both": 4,
+      "las": 9,
+      "unchanged": 13
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 34
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_D_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+     "sha256": "80a0a273fe7cdceba373841fbf8a5f667567c07939bbeb983108a3898c796eaa",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 33,
+     "classes": {
+      "k1_block": 1,
+      "unchanged": 32
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 33
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_D_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_VB.json",
+     "sha256": "9a068f9dacc50f3517ca57c076de96fe74d5cd6df30e68ce4573c34ce41bd79c",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 33,
+     "classes": {
+      "unchanged": 33
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 33
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_g6_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+     "sha256": "df91a50d22275aad6d074b4e5e3f4e5cf286ea9a8706adc1decaaa6dc6251d3a",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 116,
+     "classes": {
+      "both": 19,
+      "k1_block": 25,
+      "las": 39,
+      "unchanged": 33
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 116
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_g6_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_VB.json",
+     "sha256": "9a3dd41b5d4643f62638b2ebf4c211f2409d1d2aec918aa07d9777f18253f387",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 116,
+     "classes": {
+      "both": 16,
+      "k1_block": 23,
+      "unchanged": 39,
+      "las": 38
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 116
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_g8_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_V0.json",
+     "sha256": "aaf4b20d8f062aa414de9450acf66df333bfa45a3d6fc77c9c711681c61b0f0d",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 516,
+     "classes": {
+      "unchanged": 516
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 516
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_g8_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "sha256": "39cfbc4a5d220ced427ac355be5e2b5c2fb9d5fa930eb8cd6b6c452afaee3a1e",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 516,
+     "classes": {
+      "unchanged": 516
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 516
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_h6_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h6_V0.json",
+     "sha256": "41bda1c3a312c435a6c72c74c150e3c31661a64523c5a236644db39d2133cdd4",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 26,
+     "classes": {
+      "unchanged": 26
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 26
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_h6_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h6_VB.json",
+     "sha256": "b259f7ec176d161d7c0802a64409510d247501938f5e9be1265e6d1bbb707bcd",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 26,
+     "classes": {
+      "unchanged": 26
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 26
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_h9_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h9_V0.json",
+     "sha256": "53782f4aa767e0fcb4f01757388e96832e06bd0e055bcac0ab70ca36b81d68fd",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 24,
+     "classes": {
+      "unchanged": 23
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 24
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_h9_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h9_VB.json",
+     "sha256": "0ad2ce2441a772e432f8afeb27af5a922defd72622721d2504bc89cb44a3f8e5",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 24,
+     "classes": {
+      "unchanged": 23
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 24
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_p3b_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+     "sha256": "b73743a5303adca480e0376ee96c674ee9555235f122ac6243172140ee1bb3f8",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 171,
+     "classes": {
+      "k1_block": 9,
+      "unchanged": 162
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 171
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_p3b_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+     "sha256": "871ebffe92774bcf58ec144833c1a4d9cb3a1abb97fbc207ef9b3949dccfd1a4",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 171,
+     "classes": {
+      "unchanged": 168,
+      "k1_block": 3
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 171
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_slope_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_slope_V0.json",
+     "sha256": "502dc0ab5368962264215f10cfb90a837d96b75d4a09ce15daa362068613efb5",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 110,
+     "classes": {
+      "unchanged": 98
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 110
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_slope_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_slope_VB.json",
+     "sha256": "229cd5800aba24e0acd517b4e9a4cf8131dedf200a6f7b51a2c8a5f429ba97fd",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 110,
+     "classes": {
+      "unchanged": 98
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 110
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_x426b_V0.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_x426b_V0.json",
+     "sha256": "47f6ff189d61945e6951f067a285160563531cb2aec703f4c058923cc3698050",
+     "kind": "V0",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 84,
+     "classes": {
+      "unchanged": 84
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 84
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u3_x426b_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_x426b_VB.json",
+     "sha256": "351ed507cc5125b1a2fc5de460a70b03712efaab2d1bbcd857fc374b690970dc",
+     "kind": "VB",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 84,
+     "classes": {
+      "unchanged": 84
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 84
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 1114,
+    "family_run_lines": 0,
+    "rd8": {
+     "breach_reads_bad_format": 0,
+     "jp3_pass_without_breach_reads": 0,
+     "breach_reads_mismatch": 0,
+     "lines_present": 516,
+     "lines": []
+    },
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "V0": 1114,
+    "VB": 1114
+   },
+   "parts": {
+    "main": 2228
+   },
+   "gates": [],
+   "status": "stop",
+   "stops": [
+    {
+     "code": "S-6",
+     "where": "H-3:u3_C_V0.json:results[24]:ref|G1|top|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_C_V0.json:results[29]:ref|G1|middle|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_C_VB.json:results[24]:ref|G1|top|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_D_V0.json:results[0]:H8|G1|B|top|flat",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_g6_V0.json:records[48]:ref|G1|top|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_g6_V0.json:records[49]:ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_g6_V0.json:records[50]:ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_g6_V0.json:records[51]:ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[0]:base|G1|B|top|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[1]:base|G1|B|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[2]:base|G1|B|top|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[3]:base|G1|B|middle|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[4]:base|G1|B|middle|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[5]:base|G1|B|middle|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[6]:base|G1|B|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[7]:base|G1|B|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_V0.json:records[8]:base|G1|B|bottom|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_VB.json:records[2]:base|G1|B|top|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_VB.json:records[5]:base|G1|B|middle|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-3:u3_p3b_VB.json:records[8]:base|G1|B|bottom|Fs8",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    }
+   ],
+   "undecidable": [
+    {
+     "where": "H-3:u3_h9_V0.json:records[18]:H9|J2|B|top|roll_neg@k0.6",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_h9_VB.json:records[18]:H9|J2|B|top|roll_neg@k0.6",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[8]:H1|J1|B|top|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[16]:H1|J2|B|top|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[32]:H2|G1|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[40]:H2|J1|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[48]:H2|J2|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[56]:H2|S1|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[75]:H3|J2|B|top|nose_down@k0.875",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[76]:H3|J2|B|top|roll_pos@k0.5",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[81]:H3|J2|B|top|edge_nd@k0.875",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[92]:H4|G1|B|top|nose_down_2p8",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[94]:H4|J1|B|top|nose_down_2p8",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_V0.json:records[96]:H4|J2|B|top|nose_down_2p8",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[8]:H1|J1|B|top|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[16]:H1|J2|B|top|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[32]:H2|G1|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[40]:H2|J1|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[48]:H2|J2|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[56]:H2|S1|B|bottom|flat",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[75]:H3|J2|B|top|nose_down@k0.875",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[76]:H3|J2|B|top|roll_pos@k0.5",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[81]:H3|J2|B|top|edge_nd@k0.875",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[92]:H4|G1|B|top|nose_down_2p8",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[94]:H4|J1|B|top|nose_down_2p8",
+     "why": "resume_k1 block missing (9.3)"
+    },
+    {
+     "where": "H-3:u3_slope_VB.json:records[96]:H4|J2|B|top|nose_down_2p8",
+     "why": "resume_k1 block missing (9.3)"
+    }
+   ],
+   "fails": [],
+   "records": [],
+   "stop_codes": [
+    "S-6"
+   ],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-4": {
+   "lines": 968,
+   "classes": {
+    "unchanged": 340,
+    "n/a": 484,
+    "k1_block": 25,
+    "both": 16,
+    "las": 103
+   },
+   "families": {
+    "rigid": 40,
+    "uniform": 248,
+    "patch": 196
+   },
+   "tags": {
+    "final_C4G2_P3_LAS_K1": 242,
+    "ABL_LAS_K1": 242,
+    "IND": 242,
+    "IND_LAS": 242
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u6_b5_main_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+     "sha256": "1eccdbbdc651f0249acf449e145f43bced0e6c972c64991233165236e9d7201c",
+     "kind": "by_setting",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 48,
+     "classes": {
+      "unchanged": 30,
+      "n/a": 16,
+      "k1_block": 2
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 16,
+      "ABL": 16,
+      "IND": 16
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u6_b5_wide_VB.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+     "sha256": "e987b614efacb133fe3d82a81f8ef71840a6d6c41677145e171cddc0ed80f046",
+     "kind": "by_setting",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 678,
+     "classes": {
+      "unchanged": 310,
+      "n/a": 226,
+      "both": 16,
+      "las": 103,
+      "k1_block": 23
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 226,
+      "ABL": 226,
+      "IND": 226
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u6_b5_main_VB_IND_LAS.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB_IND_LAS.json",
+     "sha256": "a31461f9b1f2f7799e30f4ef19471196ca3b9998593bd9643cf067f64f1ddbed",
+     "kind": "IND_LAS",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 16,
+     "classes": {
+      "n/a": 16
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "IND_LAS": 16
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\v5_rerun\\las_k1\\u6_b5_wide_VB_IND_LAS.json",
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB_IND_LAS.json",
+     "sha256": "3fe4b35f0b02090b16209736e13880917124548f9fdde55fa1973604b5befbc2",
+     "kind": "IND_LAS",
+     "format": "u3_json",
+     "part": "main",
+     "lines": 226,
+     "classes": {
+      "n/a": 226
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "IND_LAS": 226
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 242,
+    "family_run_lines": 0,
+    "rd8": {
+     "breach_reads_bad_format": 0,
+     "jp3_pass_without_breach_reads": 0,
+     "breach_reads_mismatch": 0,
+     "lines_present": 0,
+     "lines": []
+    },
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "VB": 242,
+    "ABL": 242,
+    "IND": 242,
+    "IND_LAS": 242
+   },
+   "parts": {
+    "main": 968
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[1]:A1-rigid|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[4]:A1-G1|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[7]:A1-J1|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[10]:A1-J2|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[13]:A2-rigid-roll4.4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[16]:A2-J1B-roll0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[19]:A2-J1B-nd0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[22]:A2-J1B-edge0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[25]:A3-G1+J1@RR|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[28]:A3-G1+J1@FL|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[31]:A4-G4RR-Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[34]:A4-G4RR-Fs8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[37]:B1-J2B-bottom|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[40]:B2-rigid-Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[43]:B2-rigid-Fs8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_main_VB.json:records[46]:B3-J1A|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[1]:S|H1|G1|B|top|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[4]:S|H1|G1|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[7]:S|H1|G1|B|top|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[10]:S|H1|G1|B|top|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[13]:S|H1|G1|B|top|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[16]:S|H1|G1|B|top|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[19]:S|H1|G1|B|top|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[22]:S|H1|G1|B|top|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[25]:S|H1|J1|B|top|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[28]:S|H1|J1|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[31]:S|H1|J1|B|top|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[34]:S|H1|J1|B|top|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[37]:S|H1|J1|B|top|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[40]:S|H1|J1|B|top|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[43]:S|H1|J1|B|top|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[46]:S|H1|J1|B|top|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[49]:S|H1|J2|B|top|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[52]:S|H1|J2|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[55]:S|H1|J2|B|top|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[58]:S|H1|J2|B|top|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[61]:S|H1|J2|B|top|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[64]:S|H1|J2|B|top|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[67]:S|H1|J2|B|top|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[70]:S|H1|J2|B|top|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[73]:S|H1|S1|B|top|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[76]:S|H1|S1|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[79]:S|H1|S1|B|top|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[82]:S|H1|S1|B|top|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[85]:S|H1|S1|B|top|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[88]:S|H1|S1|B|top|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[91]:S|H1|S1|B|top|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[94]:S|H1|S1|B|top|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[97]:S|H2|G1|B|bottom|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[100]:S|H2|G1|B|bottom|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[103]:S|H2|G1|B|bottom|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[106]:S|H2|G1|B|bottom|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[109]:S|H2|G1|B|bottom|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[112]:S|H2|G1|B|bottom|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[115]:S|H2|G1|B|bottom|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[118]:S|H2|G1|B|bottom|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[121]:S|H2|J1|B|bottom|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[124]:S|H2|J1|B|bottom|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[127]:S|H2|J1|B|bottom|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[130]:S|H2|J1|B|bottom|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[133]:S|H2|J1|B|bottom|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[136]:S|H2|J1|B|bottom|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[139]:S|H2|J1|B|bottom|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[142]:S|H2|J1|B|bottom|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[145]:S|H2|J2|B|bottom|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[148]:S|H2|J2|B|bottom|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[151]:S|H2|J2|B|bottom|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[154]:S|H2|J2|B|bottom|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[157]:S|H2|J2|B|bottom|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[160]:S|H2|J2|B|bottom|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[163]:S|H2|J2|B|bottom|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[166]:S|H2|J2|B|bottom|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[169]:S|H2|S1|B|bottom|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[172]:S|H2|S1|B|bottom|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[175]:S|H2|S1|B|bottom|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[178]:S|H2|S1|B|bottom|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[181]:S|H2|S1|B|bottom|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[184]:S|H2|S1|B|bottom|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[187]:S|H2|S1|B|bottom|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[190]:S|H2|S1|B|bottom|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[193]:S|H3|J1|B|top|nose_down@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[196]:S|H3|J1|B|top|nose_down@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[199]:S|H3|J1|B|top|nose_down@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[202]:S|H3|J1|B|top|roll_pos@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[205]:S|H3|J1|B|top|roll_pos@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[208]:S|H3|J1|B|top|roll_pos@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[211]:S|H3|J1|B|top|edge_nd@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[214]:S|H3|J1|B|top|edge_nd@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[217]:S|H3|J1|B|top|edge_nd@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[220]:S|H3|J2|B|top|nose_down@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[223]:S|H3|J2|B|top|nose_down@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[226]:S|H3|J2|B|top|nose_down@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[229]:S|H3|J2|B|top|roll_pos@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[232]:S|H3|J2|B|top|roll_pos@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[235]:S|H3|J2|B|top|roll_pos@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[238]:S|H3|J2|B|top|edge_nd@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[241]:S|H3|J2|B|top|edge_nd@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[244]:S|H3|J2|B|top|edge_nd@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[247]:S|H3|S1|B|top|nose_down@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[250]:S|H3|S1|B|top|nose_down@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[253]:S|H3|S1|B|top|nose_down@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[256]:S|H3|S1|B|top|roll_pos@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[259]:S|H3|S1|B|top|roll_pos@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[262]:S|H3|S1|B|top|roll_pos@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[265]:S|H3|S1|B|top|edge_nd@k0.5|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[268]:S|H3|S1|B|top|edge_nd@k0.75|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[271]:S|H3|S1|B|top|edge_nd@k0.875|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[274]:S|H4|G1|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[277]:S|H4|G1|B|top|nose_down_2p8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[280]:S|H4|J1|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[283]:S|H4|J1|B|top|nose_down_2p8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[286]:S|H4|J2|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[289]:S|H4|J2|B|top|nose_down_2p8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[292]:S|H4|S1|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[295]:S|H4|S1|B|top|nose_down_2p8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[298]:S|H4|rigid|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[301]:S|H4|rigid|B|top|nose_down_2p8|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[304]:S|H4|J1|B|top|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[307]:S|H5|rigid|B|top|flat|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[310]:S|H5|rigid|B|top|nose_down|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[313]:S|H5|rigid|B|top|nose_up|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[316]:S|H5|rigid|B|top|roll_pos|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[319]:S|H5|rigid|B|top|roll_neg|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[322]:S|H5|rigid|B|top|edge_nd|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[325]:S|H5|rigid|B|top|edge_nu|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[328]:S|H5|rigid|B|top|rpB|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[331]:G|g6|G1+J1@FL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[334]:G|g6|G1+J1@FL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[337]:G|g6|G1+J1@FL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[340]:G|g6|G1+J1@FL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[343]:G|g6|G1+J1@FR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[346]:G|g6|G1+J1@FR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[349]:G|g6|G1+J1@FR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[352]:G|g6|G1+J1@FR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[355]:G|g6|G1+J1@RL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[358]:G|g6|G1+J1@RL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[361]:G|g6|G1+J1@RL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[364]:G|g6|G1+J1@RL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[367]:G|g6|G1+J1@RR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[370]:G|g6|G1+J1@RR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[373]:G|g6|G1+J1@RR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[376]:G|g6|G1+J1@RR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[379]:G|g6|G1+J2@FL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[382]:G|g6|G1+J2@FL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[385]:G|g6|G1+J2@FL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[388]:G|g6|G1+J2@FL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[391]:G|g6|G1+J2@FR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[394]:G|g6|G1+J2@FR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[397]:G|g6|G1+J2@FR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[400]:G|g6|G1+J2@FR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[403]:G|g6|G1+J2@RL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[406]:G|g6|G1+J2@RL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[409]:G|g6|G1+J2@RL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[412]:G|g6|G1+J2@RL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[415]:G|g6|G1+J2@RR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[418]:G|g6|G1+J2@RR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[421]:G|g6|G1+J2@RR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[424]:G|g6|G1+J2@RR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[427]:G|g6|G1+S1@FL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[430]:G|g6|G1+S1@FL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[433]:G|g6|G1+S1@FL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[436]:G|g6|G1+S1@FL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[439]:G|g6|G1+S1@FR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[442]:G|g6|G1+S1@FR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[445]:G|g6|G1+S1@FR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[448]:G|g6|G1+S1@FR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[451]:G|g6|G1+S1@RL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[454]:G|g6|G1+S1@RL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[457]:G|g6|G1+S1@RL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[460]:G|g6|G1+S1@RL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[463]:G|g6|G1+S1@RR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[466]:G|g6|G1+S1@RR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[469]:G|g6|G1+S1@RR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[472]:G|g6|G1+S1@RR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[475]:G|ref|G1|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[478]:G|ref|G1|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[481]:G|ref|G1|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[484]:G|ref|G1|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[487]:G|ref|J1|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[490]:G|ref|J1|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[493]:G|ref|J1|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[496]:G|ref|J1|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[499]:G|ref|J2|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[502]:G|ref|J2|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[505]:G|ref|J2|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[508]:G|ref|J2|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[511]:G|ref|S1|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[514]:G|ref|S1|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[517]:G|ref|S1|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[520]:G|ref|S1|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[523]:G|g6r|rigid+J1@FL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[526]:G|g6r|rigid+J1@FL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[529]:G|g6r|rigid+J1@FL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[532]:G|g6r|rigid+J1@FL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[535]:G|g6r|rigid+J1@FR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[538]:G|g6r|rigid+J1@FR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[541]:G|g6r|rigid+J1@FR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[544]:G|g6r|rigid+J1@FR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[547]:G|g6r|rigid+J1@RL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[550]:G|g6r|rigid+J1@RL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[553]:G|g6r|rigid+J1@RL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[556]:G|g6r|rigid+J1@RL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[559]:G|g6r|rigid+J1@RR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[562]:G|g6r|rigid+J1@RR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[565]:G|g6r|rigid+J1@RR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[568]:G|g6r|rigid+J1@RR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[571]:G|g6r|rigid+J2@FL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[574]:G|g6r|rigid+J2@FL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[577]:G|g6r|rigid+J2@FL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[580]:G|g6r|rigid+J2@FL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[583]:G|g6r|rigid+J2@FR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[586]:G|g6r|rigid+J2@FR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[589]:G|g6r|rigid+J2@FR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[592]:G|g6r|rigid+J2@FR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[595]:G|g6r|rigid+J2@RL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[598]:G|g6r|rigid+J2@RL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[601]:G|g6r|rigid+J2@RL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[604]:G|g6r|rigid+J2@RL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[607]:G|g6r|rigid+J2@RR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[610]:G|g6r|rigid+J2@RR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[613]:G|g6r|rigid+J2@RR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[616]:G|g6r|rigid+J2@RR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[619]:G|g6r|rigid+S1@FL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[622]:G|g6r|rigid+S1@FL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[625]:G|g6r|rigid+S1@FL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[628]:G|g6r|rigid+S1@FL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[631]:G|g6r|rigid+S1@FR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[634]:G|g6r|rigid+S1@FR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[637]:G|g6r|rigid+S1@FR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[640]:G|g6r|rigid+S1@FR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[643]:G|g6r|rigid+S1@RL|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[646]:G|g6r|rigid+S1@RL|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[649]:G|g6r|rigid+S1@RL|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[652]:G|g6r|rigid+S1@RL|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[655]:G|g6r|rigid+S1@RR|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[658]:G|g6r|rigid+S1@RR|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[661]:G|g6r|rigid+S1@RR|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[664]:G|g6r|rigid+S1@RR|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[667]:G|ref|rigid|top|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[670]:G|ref|rigid|top|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[673]:G|ref|rigid|bottom|Fs0|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    },
+    {
+     "where": "H-4:u6_b5_wide_VB.json:records[676]:G|ref|rigid|bottom|Fs4|ABL",
+     "what": "flat_soil_margin_m = 0.0"
+    }
+   ],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-5": {
+   "lines": 14,
+   "classes": {
+    "unchanged": 14
+   },
+   "families": {
+    "unresolved": 14
+   },
+   "tags": {
+    "final_C4G2_LAS_K1": 14
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h5_u9_v0.jsonl",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h5_u9_v0.jsonl",
+     "sha256": "661198e6b806ce4d063ab6031a411ae76e5d2a444cc69befde43a39932c0f44c",
+     "kind": "V0",
+     "format": "run_v5_jsonl",
+     "part": "main",
+     "lines": 14,
+     "classes": {
+      "unchanged": 14
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 14
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 0,
+    "family_run_lines": 0,
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "V0": 14
+   },
+   "parts": {
+    "main": 14
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-6": {
+   "lines": 135,
+   "classes": {
+    "unchanged": 86,
+    "k1_block": 13,
+    "las": 23,
+    "both": 13
+   },
+   "families": {
+    "uniform": 25,
+    "patch": 58,
+    "rigid": 12,
+    "unresolved": 40
+   },
+   "tags": {
+    "final_C4G2_P3_LAS_K1": 135
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json",
+     "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89",
+     "kind": "H6",
+     "format": "r79_json",
+     "part": "main",
+     "lines": 135,
+     "classes": {
+      "unchanged": 86,
+      "k1_block": 13,
+      "las": 23,
+      "both": 13
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [
+      {
+       "role": "key_source",
+       "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\dg3\\dg3_v4_on.json",
+       "sha256": "5f912ca0d25d6dfe0114e05bf8c7a083fa542ad3de71e76c472e44a1a351167d"
+      }
+     ],
+     "kind_lines": {
+      "H6": 135
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 135,
+    "family_run_lines": 0,
+    "key_source": {
+     "compared": 46,
+     "same": 46,
+     "differ": 0,
+     "no_stored_hash": 40,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "H6": 135
+   },
+   "parts": {
+    "main": 135
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-7": {
+   "lines": 135,
+   "classes": {
+    "unchanged": 86,
+    "k1_block": 13,
+    "las": 23,
+    "both": 13
+   },
+   "families": {
+    "uniform": 25,
+    "patch": 58,
+    "rigid": 12,
+    "unresolved": 40
+   },
+   "tags": {
+    "final_C4G2_LAS_K1": 135
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h7_dg3_off.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h7_dg3_off.json",
+     "sha256": "43997bf164655b45aa21a0b8483801053e842b4bfb1a3e9e71cfcf55cb341b0f",
+     "kind": "H7",
+     "format": "r79_json",
+     "part": "main",
+     "lines": 135,
+     "classes": {
+      "unchanged": 86,
+      "k1_block": 13,
+      "las": 23,
+      "both": 13
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "H7": 135
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 0,
+    "family_run_lines": 0,
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "H7": 135
+   },
+   "parts": {
+    "main": 135
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-8": {
+   "lines": 3106,
+   "classes": {
+    "both": 321,
+    "k1_block": 435,
+    "unchanged": 1844,
+    "las": 506
+   },
+   "families": {
+    "patch": 1440,
+    "uniform": 410,
+    "rigid": 306,
+    "unresolved": 950
+   },
+   "tags": {
+    "final_C4G2_P3_LAS_K1": 1553,
+    "final_C4G2_LAS_K1": 1553
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+     "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43",
+     "kind": "VB",
+     "format": "r79_json",
+     "part": "main",
+     "lines": 1503,
+     "classes": {
+      "both": 152,
+      "k1_block": 209,
+      "unchanged": 887,
+      "las": 255
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [
+      {
+       "role": "key_source",
+       "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\noise_vb\\r79_VB_L1L2L3.json",
+       "sha256": "d3c9bba1abd3c1fbc700a26527856e14f7754740192c55a404bc203ef8a763b9"
+      },
+      {
+       "role": "key_source_override",
+       "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\dg3\\dg3_v4_on.json",
+       "sha256": "5f912ca0d25d6dfe0114e05bf8c7a083fa542ad3de71e76c472e44a1a351167d"
+      }
+     ],
+     "kind_lines": {
+      "VB": 1503
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_V0.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+     "sha256": "54d1731611a27982a9e618ac734b6ccb5ab06d6dfed182b30eadb25682a3709e",
+     "kind": "V0",
+     "format": "r79_json",
+     "part": "main",
+     "lines": 1503,
+     "classes": {
+      "both": 169,
+      "k1_block": 226,
+      "unchanged": 857,
+      "las": 251
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [
+      {
+       "role": "key_source",
+       "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\noise_v0\\r79_V0_L1L2L3.json",
+       "sha256": "af6a7ae51abe4b9094db9b21cf49f8770861fb0ed91cb269effb6b2cab9b459a"
+      }
+     ],
+     "kind_lines": {
+      "V0": 1503
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_seedext_VB.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_seedext_VB.json",
+     "sha256": "41afdc7780e0eb9bf162a5baaa47ad27ca2082cb8abc0a828be930a478b6c4bb",
+     "kind": "VB",
+     "format": "r79_json",
+     "part": "main",
+     "lines": 50,
+     "classes": {
+      "unchanged": 50
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [
+      {
+       "role": "key_source",
+       "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\seedext\\r79_VB_seedext.json",
+       "sha256": "6ddca3d5ce5dc6286c319de13d779bbb419df8fbee2bd13577d04b0f4c2d6f57"
+      }
+     ],
+     "kind_lines": {
+      "VB": 50
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_seedext_V0.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_seedext_V0.json",
+     "sha256": "5f771ad24923867db5e37408a49026b32590a15d105ffa06e97058edfb158f4e",
+     "kind": "V0",
+     "format": "r79_json",
+     "part": "main",
+     "lines": 50,
+     "classes": {
+      "unchanged": 50
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [
+      {
+       "role": "key_source",
+       "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\seedext\\r79_V0_seedext.json",
+       "sha256": "f2c01d65238cac50da57c26ca33541b9506ff50b14aee80d65f31e1378dabaa8"
+      }
+     ],
+     "kind_lines": {
+      "V0": 50
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 1553,
+    "family_run_lines": 0,
+    "key_source": {
+     "compared": 894,
+     "same": 894,
+     "differ": 0,
+     "no_stored_hash": 950,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "VB": 1553,
+    "V0": 1553
+   },
+   "parts": {
+    "main": 3106
+   },
+   "gates": [],
+   "status": "stop",
+   "stops": [
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[40]:cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[43]:cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[330]:cand=current#L2|s0|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[375]:cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[497]:cand=current#L2|s1|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[543]:cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[998]:cand=current#L2|s4|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[1043]:cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[1165]:cand=current#L3|s0|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_VB.json:results[1210]:cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[40]:cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[41]:cand=current#L1|s0|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[42]:cand=current#L1|s0|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[43]:cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[163]:cand=current#L1|s0|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[208]:cand=current#L2|s0|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[209]:cand=current#L2|s0|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[210]:cand=current#L2|s0|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[330]:cand=current#L2|s0|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[375]:cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[376]:cand=current#L2|s1|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[497]:cand=current#L2|s1|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[541]:cand=current#L2|s2|g6|48|ref|G1|top|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[542]:cand=current#L2|s2|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[543]:cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[544]:cand=current#L2|s2|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[664]:cand=current#L2|s2|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[709]:cand=current#L2|s3|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[710]:cand=current#L2|s3|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[711]:cand=current#L2|s3|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[831]:cand=current#L2|s3|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[875]:cand=current#L2|s4|g6|48|ref|G1|top|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[876]:cand=current#L2|s4|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[877]:cand=current#L2|s4|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[878]:cand=current#L2|s4|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[998]:cand=current#L2|s4|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1043]:cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1044]:cand=current#L3|s0|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1045]:cand=current#L3|s0|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1165]:cand=current#L3|s0|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1210]:cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1211]:cand=current#L3|s1|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1332]:cand=current#L3|s1|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1377]:cand=current#L3|s2|g6|49|ref|G1|top|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1378]:cand=current#L3|s2|g6|50|ref|G1|bottom|Fs0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1379]:cand=current#L3|s2|g6|51|ref|G1|bottom|Fs4",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    },
+    {
+     "code": "S-6",
+     "where": "H-8:h8_noise_V0.json:results[1499]:cand=current#L3|s2|ref|14|G1|B|0,0",
+     "why": "K1 block on a uniform soft-ground line (7.2 / RV1-6)"
+    }
+   ],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [
+    "S-6"
+   ],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-9": {
+   "lines": 1676,
+   "classes": {
+    "unchanged": 1952
+   },
+   "families": {
+    "unresolved": 908,
+    "patch": 1044
+   },
+   "tags": {
+    "final_C4G2_LAS_K1": 1088,
+    "final_C4G2_P3_LAS_K1": 864
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_stage1.jsonl",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_stage1.jsonl",
+     "sha256": "f759ad0ff2c32039928c17ad8a2e340e3f90379d8bf155570765f42b95a6024f",
+     "kind": "V0",
+     "format": "run_v5_jsonl",
+     "part": "main",
+     "lines": 908,
+     "classes": {
+      "unchanged": 908
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 908
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r67_main.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_main.json",
+     "sha256": "79ca27fe7d57733ce23db96b4b1acabdc39bb7d0c1b8751b6787628fe8af8a33",
+     "kind": "VB",
+     "format": "grid_json",
+     "part": "main",
+     "lines": 192,
+     "classes": {
+      "unchanged": 192
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 192
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid_v0_sample\\grid_r67_main.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r67_main.json",
+     "sha256": "1be9df4bc61fdd0fc43792b64f911ec6fe18e5bd3f166de8c2760ef3a76f24b5",
+     "kind": "V0",
+     "format": "grid_json",
+     "part": "V0-sample",
+     "lines": 12,
+     "classes": {
+      "unchanged": 12
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 12
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r67_top.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json",
+     "sha256": "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827",
+     "kind": "VB",
+     "format": "grid_json",
+     "part": "main",
+     "lines": 192,
+     "classes": {
+      "unchanged": 192
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 192
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid_v0_sample\\grid_r67_top.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r67_top.json",
+     "sha256": "32b63af51801eb2d596c5e0b8bc98849dccb02de7a4a4ea0ad84fe3b8f6d2c85",
+     "kind": "V0",
+     "format": "grid_json",
+     "part": "V0-sample",
+     "lines": 24,
+     "classes": {
+      "unchanged": 24
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 24
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r69_bottom.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_bottom.json",
+     "sha256": "6c06741fdc44d565265773a7d15157065631d631022da9c4034653273de11799",
+     "kind": "VB",
+     "format": "grid_json",
+     "part": "main",
+     "lines": 192,
+     "classes": {
+      "unchanged": 192
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 192
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid_v0_sample\\grid_r69_bottom.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r69_bottom.json",
+     "sha256": "50ad9bcc10d7b44fb79360edd3548816aaf607b0b36afa0979f5c717bcc3d2b0",
+     "kind": "V0",
+     "format": "grid_json",
+     "part": "V0-sample",
+     "lines": 24,
+     "classes": {
+      "unchanged": 24
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 24
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r69_top.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_top.json",
+     "sha256": "fa1f9867c6f9393e82be5906103e23b1d313565564b90a3390b52f092a275595",
+     "kind": "VB",
+     "format": "grid_json",
+     "part": "main",
+     "lines": 192,
+     "classes": {
+      "unchanged": 192
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 192
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid_v0_sample\\grid_r69_top.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r69_top.json",
+     "sha256": "69bffc1271fe364a14813ada72f7a2b18eb9fbf9b1166ad50b8a96c5f85669c4",
+     "kind": "V0",
+     "format": "grid_json",
+     "part": "V0-sample",
+     "lines": 24,
+     "classes": {
+      "unchanged": 24
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 24
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_family_F_VB.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_family_F_VB.json",
+     "sha256": "2620580c69d07b776f236e1c16231f33b6d3c12cf1a77f6a7f8e175340ed6275",
+     "kind": "VB",
+     "format": "grid_json",
+     "part": "family-F",
+     "lines": 96,
+     "classes": {
+      "unchanged": 96
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": true,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 96
+     }
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_family_F_V0.json",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_family_F_V0.json",
+     "sha256": "635c6937d316eecdf350f74f4e5fc1a668f94733567ed4f5a58c2ab472b16dd2",
+     "kind": "V0",
+     "format": "grid_json",
+     "part": "family-F",
+     "lines": 96,
+     "classes": {
+      "unchanged": 96
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": true,
+     "key_sources": [],
+     "kind_lines": {
+      "V0": 96
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 768,
+    "family_run_lines": 192,
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "V0": 1088,
+    "VB": 864
+   },
+   "parts": {
+    "main": 1676,
+    "V0-sample": 84,
+    "family-F": 192
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  },
+  "H-10": {
+   "lines": 440,
+   "classes": {
+    "unchanged": 440
+   },
+   "families": {
+    "unresolved": 440
+   },
+   "tags": {
+    "final_C4G2_P3_LAS_K1": 426,
+    "final_C4G2_LAS_K1": 14
+   },
+   "errors": 0,
+   "missing": 0,
+   "files": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun.jsonl",
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+     "sha256": "ce526b1f71e635e6b80d538f36841ece01710af46f02acb4b3fa1355a5a4dcb3",
+     "kind": "by_setting",
+     "format": "run_v5_jsonl",
+     "part": "main",
+     "lines": 440,
+     "classes": {
+      "unchanged": 440
+     },
+     "stored_hash": null,
+     "stored": null,
+     "family_run": false,
+     "key_sources": [],
+     "kind_lines": {
+      "VB": 138,
+      "LS": 288,
+      "V0": 14
+     }
+    }
+   ],
+   "r4": {
+    "rd9_p3_on": 426,
+    "family_run_lines": 0,
+    "key_source": {
+     "compared": 0,
+     "same": 0,
+     "differ": 0,
+     "no_stored_hash": 0,
+     "no_key_source_line": 0,
+     "several_key_source_lines": 0,
+     "differ_keys": []
+    }
+   },
+   "kind_lines": {
+    "VB": 138,
+    "LS": 288,
+    "V0": 14
+   },
+   "parts": {
+    "main": 440
+   },
+   "gates": [],
+   "status": "pass",
+   "stops": [],
+   "undecidable": [],
+   "fails": [],
+   "records": [],
+   "stop_codes": [],
+   "grade_scope": "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+  }
+ },
+ "v5_options": {
+  "path": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\hydraulics\\v5_options.py",
+  "sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "loaded": true
+ },
+ "stop_codes": [
+  "S-6"
+ ],
+ "r4_input_check": {
+  "expected_files": 42,
+  "expected_key_sources": 5
+ },
+ "stop_S6_list": {
+  "name": "멈춤 S-6 (원판 8.2, 원판 7.2 균일 연약 지면 계열의 K1 막힘; r79 관문 S-6 아님)",
+  "columns": [
+   "bundle",
+   "result_file",
+   "position",
+   "k",
+   "key",
+   "setting",
+   "family",
+   "t_loc_s",
+   "n_P",
+   "n_S",
+   "dP"
+  ],
+  "n_rows": 67,
+  "rows": [
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+    "position": "results[24]",
+    "k": 0,
+    "key": "ref|G1|top|Fs8",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+    "position": "results[29]",
+    "k": 0,
+    "key": "ref|G1|middle|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_VB.json",
+    "position": "results[24]",
+    "k": 0,
+    "key": "ref|G1|top|Fs8",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 23.59999999999035,
+    "n_P": 230,
+    "n_S": 235,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+    "position": "results[0]",
+    "k": 0,
+    "key": "H8|G1|B|top|flat",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "position": "records[48]",
+    "k": 0,
+    "key": "ref|G1|top|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 22.89999999999198,
+    "n_P": 223,
+    "n_S": 228,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "position": "records[49]",
+    "k": 0,
+    "key": "ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "position": "records[50]",
+    "k": 0,
+    "key": "ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "position": "records[51]",
+    "k": 0,
+    "key": "ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[0]",
+    "k": 0,
+    "key": "base|G1|B|top|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 22.89999999999198,
+    "n_P": 223,
+    "n_S": 228,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[1]",
+    "k": 0,
+    "key": "base|G1|B|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[2]",
+    "k": 0,
+    "key": "base|G1|B|top|Fs8",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[3]",
+    "k": 0,
+    "key": "base|G1|B|middle|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[4]",
+    "k": 0,
+    "key": "base|G1|B|middle|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[5]",
+    "k": 0,
+    "key": "base|G1|B|middle|Fs8",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[6]",
+    "k": 0,
+    "key": "base|G1|B|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[7]",
+    "k": 0,
+    "key": "base|G1|B|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "position": "records[8]",
+    "k": 0,
+    "key": "base|G1|B|bottom|Fs8",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+    "position": "records[2]",
+    "k": 0,
+    "key": "base|G1|B|top|Fs8",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 23.59999999999035,
+    "n_P": 230,
+    "n_S": 235,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+    "position": "records[5]",
+    "k": 0,
+    "key": "base|G1|B|middle|Fs8",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 23.699999999990116,
+    "n_P": 231,
+    "n_S": 236,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+    "position": "records[8]",
+    "k": 0,
+    "key": "base|G1|B|bottom|Fs8",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 23.699999999990116,
+    "n_P": 231,
+    "n_S": 236,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[40]",
+    "k": 0,
+    "key": "cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 26.49999999998359,
+    "n_P": 259,
+    "n_S": 264,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[41]",
+    "k": 0,
+    "key": "cand=current#L1|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 25.49999999998592,
+    "n_P": 249,
+    "n_S": 254,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[42]",
+    "k": 0,
+    "key": "cand=current#L1|s0|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 25.399999999986154,
+    "n_P": 248,
+    "n_S": 253,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[43]",
+    "k": 0,
+    "key": "cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 25.399999999986154,
+    "n_P": 248,
+    "n_S": 253,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[163]",
+    "k": 0,
+    "key": "cand=current#L1|s0|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 25.49999999998592,
+    "n_P": 249,
+    "n_S": 254,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[208]",
+    "k": 0,
+    "key": "cand=current#L2|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[209]",
+    "k": 0,
+    "key": "cand=current#L2|s0|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[210]",
+    "k": 0,
+    "key": "cand=current#L2|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[330]",
+    "k": 0,
+    "key": "cand=current#L2|s0|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[375]",
+    "k": 0,
+    "key": "cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[376]",
+    "k": 0,
+    "key": "cand=current#L2|s1|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[497]",
+    "k": 0,
+    "key": "cand=current#L2|s1|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[541]",
+    "k": 0,
+    "key": "cand=current#L2|s2|g6|48|ref|G1|top|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 32.099999999971246,
+    "n_P": 315,
+    "n_S": 320,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[542]",
+    "k": 0,
+    "key": "cand=current#L2|s2|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[543]",
+    "k": 0,
+    "key": "cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[544]",
+    "k": 0,
+    "key": "cand=current#L2|s2|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[664]",
+    "k": 0,
+    "key": "cand=current#L2|s2|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[709]",
+    "k": 0,
+    "key": "cand=current#L2|s3|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[710]",
+    "k": 0,
+    "key": "cand=current#L2|s3|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[711]",
+    "k": 0,
+    "key": "cand=current#L2|s3|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[831]",
+    "k": 0,
+    "key": "cand=current#L2|s3|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[875]",
+    "k": 0,
+    "key": "cand=current#L2|s4|g6|48|ref|G1|top|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 32.19999999997172,
+    "n_P": 316,
+    "n_S": 321,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[876]",
+    "k": 0,
+    "key": "cand=current#L2|s4|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[877]",
+    "k": 0,
+    "key": "cand=current#L2|s4|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[878]",
+    "k": 0,
+    "key": "cand=current#L2|s4|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[998]",
+    "k": 0,
+    "key": "cand=current#L2|s4|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1043]",
+    "k": 0,
+    "key": "cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1044]",
+    "k": 0,
+    "key": "cand=current#L3|s0|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1045]",
+    "k": 0,
+    "key": "cand=current#L3|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1165]",
+    "k": 0,
+    "key": "cand=current#L3|s0|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1210]",
+    "k": 0,
+    "key": "cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1211]",
+    "k": 0,
+    "key": "cand=current#L3|s1|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1332]",
+    "k": 0,
+    "key": "cand=current#L3|s1|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1377]",
+    "k": 0,
+    "key": "cand=current#L3|s2|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1378]",
+    "k": 0,
+    "key": "cand=current#L3|s2|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1379]",
+    "k": 0,
+    "key": "cand=current#L3|s2|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "position": "results[1499]",
+    "k": 0,
+    "key": "cand=current#L3|s2|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[40]",
+    "k": 0,
+    "key": "cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 28.199999999979628,
+    "n_P": 276,
+    "n_S": 281,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[43]",
+    "k": 0,
+    "key": "cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 27.19999999998196,
+    "n_P": 266,
+    "n_S": 271,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[330]",
+    "k": 0,
+    "key": "cand=current#L2|s0|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[375]",
+    "k": 0,
+    "key": "cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[497]",
+    "k": 0,
+    "key": "cand=current#L2|s1|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[543]",
+    "k": 0,
+    "key": "cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.69999999997411,
+    "n_P": 321,
+    "n_S": 326,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[998]",
+    "k": 0,
+    "key": "cand=current#L2|s4|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[1043]",
+    "k": 0,
+    "key": "cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[1165]",
+    "k": 0,
+    "key": "cand=current#L3|s0|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "position": "results[1210]",
+    "k": 0,
+    "key": "cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "VB",
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   }
+  ]
+ },
+ "head_check": {
+  "expect": "932f1fb1724f074e4ee93a9c02193c7c840d13c4",
+  "head": "932f1fb1724f074e4ee93a9c02193c7c840d13c4",
+  "ok": true,
+  "why": null
+ },
+ "tool": "p2_4368.py",
+ "version": "1",
+ "tool_sha256": "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6",
+ "cmd": "harness",
+ "argv": [
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\harness.json",
+  "harness",
+  "--manifest",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path2\\manifest.json",
+  "--expect-head",
+  "932f1fb1724f074e4ee93a9c02193c7c840d13c4"
+ ],
+ "created": "2026-11-16T16:31:24+09:00",
+ "status": "stop"
+}

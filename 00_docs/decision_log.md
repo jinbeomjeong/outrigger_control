@@ -753,6 +753,21 @@
           - 사용자 결정(11-13): Q6 J2 fup은 B1에서 빼고 운용 권고로 분리, B1 새 예측 형식 재등록 착수(결과 본 뒤 개정, 새 Chrono 행으로 검증; 초안 `b1_creep_rules_rev2_draft.md`), C3 probe 단계 가드 초과(683.475 > 682.8 mm) 확인 → 설계 의도(LEVEL 가드는 LEVEL·LOC 뒤만, PROBE는 P6 가드), 하네스 npz는 커밋 안 함
           - B1 rev2 봉인(2026-11-13, `b1/b1_creep_rules_rev2.md` 67b866f4): 결과 본 뒤 재등록, 예측 대상 LEVEL 구간 최대, SGS 한쪽 판정, 후보 {P-A, P-T, P-DL(가산 ΔF_0), P-R}, 문턱 10 mm, 검증은 새 Chrono V1~V7만, P-DL 근거 범위 J2 (U-R2-1~12 모두 권고안). 위임 답 `b1_rev2_dynamics_answers.md`·`b1_rev2_terra_answers.md`는 두 경로 작성자에게 주지 않음
         - **행정 판독 좌표(2026-11-13)**: 제어기 `stroke_m` = 기름 좌표(L1 모터 = L2b `s_ref`), `stroke_corrected_m` = 피스톤, 용도별 사용(`c2.py` R1) → 지금까지 판정 유효. 사용자 결정: v5·436.8은 지금 좌표로 진행, 실기용 피스톤 원좌표 재설계는 v5 뒤 별건, 판정서·논문·CLAUDE.md에 좌표 명시, 행정 끝(694.8 vs 700 mm)·신장 끝 쿠션 50 mm는 지금 모델 보강 검토(`06_analysis/02_control/stroke_input_review.md`, `06_analysis/03_hydraulic/stroke_coordinate_review.md`)
+        - **436.8 v5 재개 검증 판정 끝 — v5 종합 `판정 불가`(2026-11-16, 사용자 결정 113~141)**
+          - Chrono 판정서 `06_analysis/02_control/verif_matrix/v5_resume_4368_judgement.md`(커밋 9656b10, R3f `8a0c843`, 규칙 원판~rev25): 최악 미달(C-2 PS-c c-slow E-5, C-5 J2 t180 P3-7 28/7), C-8a S-9는 L-5 한계(설계 보완 LAS-c)
+          - 하네스 판정서 `06_analysis/02_control/verif_matrix/v5_resume_4368_harness_judgement.md`(R2 `b9f5707` 결과, 판정 도구 M4 `932f1fb`, 출력 `v5_resume_4368/judge_932f1fb/`): H-0·H-5·H-6·H-8 통과, H-2 선별 확정, H-7·H-12 기록 완료, H-11 G-3 참, J_P 재사용, H-1 한정 대조 같음, **H-3 판정 불가(S-13, 경로 2 screen suite 결함)·H-4 판정 불가(경로 1 등급 키 부재)**, **H-9 격자·H-10 미달(J-P3 5줄, 결정 51)**, C-9~C-11 기록 불완전
+          - 113: R4 전 작은 항목 먼저(N3 행정 원인, integrity Low 3), 규칙 rev25 그대로, rev26 후보는 판정서 공개, 판정서는 새 문서 + Chrono 판정서 0절 갱신
+          - 114: R4는 R3f에서 가르고 master에 `--no-ff`(M4), 경로 1 이름 지운 사본, 경로 2 작성자 새 인스턴스 둘(dynamics `path2/`, terramechanics `path2_v5c/`), CD-10 하네스 적용, J-P3 도구 표지 + 판정서 결정 51 대조, P-7·P-11·P-11b 판정서 작성자 계산
+          - 115~122: R4 공통 블록 RD-0~RD-13 확정(`e451f067`), 기준 집합 출처 규칙, family run은 R-1~R-4에만, S-6 목록 대상 묶음 닫음
+          - 123: S6-base 67줄(H-4 41줄 뺌, H-3 4줄 경로 1 B판), JP-base·S6-base 함께 고정(`a5627304`), 시나리오 ① twin FL·위반 다리 RR 구분 공개
+          - 124~126: 보충 1~3(424.11.2 강등 FLAG, C 행 rc `.done`, C-11 LOC 주기, `@` 토큰, 최소 간격 `min_gap_bar` 그대로)
+          - 127~129: 실행 전 감사 B-1·B-2 처리(원 파일 그대로 줄 단위 판별, 계열 𝓕 R-1~R-4 두 경로), 보충 4·5(격자 통과→실패, 𝓕 B안), R4 재생성(`2ceafef` 폐기 → `1ab93f0`)
+          - 130~131: (메인) 기준 집합·manifest `fa0b72bf`·비교기 `8ff3d32b`·대응표 `5f7ec6fa` 결과 전 고정, u6 ABL 잠복 차이·integrity Low 2는 공개만
+          - 132~134: 등급 대조 표(control-expert 초안 → `602618ea` 고정), 비교기 차이 귀결(등급·등급 바꾸는 목록 = S-13, 셈 범위·C 기록 값 = 공개 기록), H-1 한정 대조, H-3·H-4 G-5 묻기, 출력 키 결측 = 판정 불가
+          - 135~137: 두 경로 실행(16:29~16:32), 판정 후 감사 답 — 경로 1 `stage1_judge`·`stroke_H-9` 메인 스크립트 변수 덮어쓰기 버그로 `harness_path1_retry1` 재실행·공개, H-3 S-13, H-4 키 부재 판정 불가, C-9~C-11 기록 불완전, seedext 악화 의심 한계
+          - 138: K-R 멈춤 질문 답 — S-6 67줄 R16-15 3대로 통과 + 한계, G-5 g6 두 키 한계(방향 반대 공개), H-12 실제 대체 다리 기준 H-7 거짓(강제 대체 초과 2건 한계, G-6 g8 닫음), J-P3 5줄 미달, H-10 경로 2 J6 20줄 한 경로 항목, H-9 표지는 격자 부분
+          - 139~141: 종합 문장 승인(v5 `판정 불가`, H-3·H-4는 436.9(rev26)에서 두 경로 도구 보완 뒤 재판정, 한계는 "9절 다섯 건"), R16-15a 원문을 0.1절에 복사, 결과 전 고정 파일은 `judge_932f1fb/_fixed/`에 사본 커밋, P-17은 두 기준(결정 58 기준 판정 맞음, 강제 네 다리 기준 기록 틀림)
+          - 다음: C-8a 기전 개입 실행 2행 → LAS-c 재설계 → 436.9(H-3·H-4 재판정, J-P3 원인 분석·하네스 로드 판독 M2 교체, rev26 후보) → B1 rev2
     - 볼록 껍질 패치 1·2단계(cpp-expert, worktree `cpp-hull-hook` b49d506, 미병합): **G-A 통과**(무작위·격자 400만 + 실제 SCM 패치 12,000에서 원본 conda 생성자와 비트 불일치 0; 호출당 시간 비 0.12~0.31), 가로채기 DLL `03_src/outrigger_sim/native/chrono_hull/`(vehicle IAT 4슬롯, 고정 DLL 해시 확인 뒤 설치, 환경 변수 `OUTRIGGER_HULL_HOOK=off|fast|shadow|dump`, 기본 꺼짐, C API v1), C++ SCM 3,000스텝 off/fast/shadow 상태 해시 동일·프로세스 약 1.22배. **사용자 결정(11-08): 진행 중 실행이 끝난 뒤(~17:00) 병합·옵트인 연동(설치 실패 시 중단, 카운터 기록) → G-B 그림자 3~4사례 → G-C 대표 판정 해시 → G-D 단독 속도까지 자동, 관문 실패 시 멈춤, 통과 시 채택(fast 기본 켬) 질문.**
     - 개정 10 봉인(`v5_criteria_rev10.md`, `bd65db24…`, 09:47:05). **개정 8 7.2·7.3 해시 대조 확정: 하네스 22행 통과(개정 9: pass 4·no_rod_reading 18·H-7 0), Chrono 2행 통과(개정 10 A·B·C 충족)** → 저장된 VB·LS 결과를 `final_C4G2_P3` 결과로 읽음.
   - 사용자 결정(11-08 00시): 3단계 판정에서 Dg-3 ③ revision 4 재실행이 필요하다고 판단되면 밤사이 자동 실행·판정(하네스 270). 검증 행렬 X-00(JOURNAL-AUGER J2 B 하단 재판정, 기록만) 밤사이 control-expert가 판정서 초안까지, 논문·명세 수정은 아침 질문.
