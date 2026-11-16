@@ -98,7 +98,12 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 | RD-5 | `resume4368_judge key-map` | 제외 키 대응표 초안 |
 | RD-1 5, RD-1 4 | `resume4368_judge head-check` | HEAD = M4(아니면 S-12), `--r4`로 허용 목록 파일의 M4·R4 blob sha와 `b9f5707..M4 -- 03_src 02_params` 빈 diff(아니면 S-11) |
 | RD-7 1 (G-5·G-6), R16-8 | `u3_judge_4368.py` | G-5·G-6 목록(RD-7 3 표기, `R4` 블록). `--g3`(`h11` 보고서)의 `pass`가 참이 아니면 등급을 내지 않고 멈춘다 |
-| 보충 2-1 | `r4-lists` | dg3 대체 키(`v5/dg3/dg3_v4_on.json` `results[].key`, `cand=current#` 뗌)의 H-8 VB 줄은 J-P3·J11 목록과 그 판정 불가 수에서 뺀다(파일별 뺀 수 `dg3_replaced_excluded`). H-8 V0 줄의 J11은 기록(목록 밖), J-P3는 해당 없음 |
+| 보충 2-1, 3-1, 3-2 | `r4-lists` | dg3 대체 키(`v5/dg3/dg3_v4_on.json` `results[].key`, `cand=current#` 뗌)의 `h8_noise_VB.json` 줄만 J-P3·J11 목록과 그 판정 불가 수에서 뺀다(`h8_seedext_VB.json` 줄은 키가 같아도 그대로 판정·기록). 뺀 줄 수는 `dg3_replaced_excluded`로 따로 내고, RD-9 ③ 켬 줄 수(`p3_units_RD9`)에는 넣는다. H-8 V0 줄의 J11은 기록(목록 밖), J-P3는 해당 없음 |
+| 보충 3-3 | `judge4368_common._per_leg`·`min_gap_bar` | J-P3 위반 목록의 최소 간격 [bar]·첫 위반 시각 [s]은 기록 `min_gap_bar`·`first_breach_t_s`의 그 다리 원소를 계산·반올림 없이 옮긴다(Pa 키 환산은 없앴다). 없거나 수가 아니거나 유한이 아니면 `null` |
+| 보충 3-4 | (이미 그렇게 구현) | H-10은 `h10_reuse_rerun.jsonl`의 모든 줄(U-9 VB 포함). J-P3는 ③ 켬 태그 줄 전부, J11은 `job.setting` VB·LS1~LS4 줄 전부 |
+| 보충 3-5 | (이미 그렇게 구현) | `묶음` 열은 `H-<숫자>`(격자 run `H-9`, G-5·G-6 `H-3`), 정렬은 숫자 순(`H-9` < `H-10`). G-3 거짓 짝 목록에는 `묶음` 열이 없다 |
+| 보충 3-6 | `judge4368_common.assess_j11` | 격자 run 설정은 `results[i].v5_setting`만(파일 `meta.v5_setting` 안 씀). 설정이 없으면 J11은 판정 불가(줄에도 같게 적용) |
+| 보충 3-7 | (확인, 변경 없음) | `r4-lists`의 u6 `src` 토큰은 `^(rigid|[A-Z][0-9])(\+[A-Z][0-9]@(FL|FR|RL|RR))?$`만 지면 토큰으로 본다(`roll_pos@k0.75` 같은 경사·축척 토큰은 무시). RV1-6 계열 표(`resume_k1_family.py`)는 키 글자가 아니라 러너의 지면 정의(사례 dict `soil`, `r72_g6_screen.parse_soil`, D-1 행, 사건)를 읽으므로 `@k0.75` 토큰을 패치로 읽지 않는다. 경사 키 `H3|J1|B|top|roll_pos@k0.75` 꼴은 사례 `soil`(`J1`)로 균일 연약이다 |
 | 보충 2-2 | `r4-lists`, `judge_stage1_4368.grid_grade` | 격자 768 run에도 run 단위 J11과 RD-10(블록 결측 = 판정 불가) |
 | 보충 2-4 | `x16-records` | rc = `<OUT>/_runners/logs_*/<짧은 행 이름>_run.done` 첫 줄의 `exit=N`(파일 하나만, `.log`는 읽지 않음). 짧은 행 이름은 `_identity/<짧은 행 이름>_pre.json`의 `case`로 짝짓는다. 파일 0개·2개 이상·`exit=` 없음은 `기록 불완전` |
 | 보충 2-5 | `x16-records` | C-10 G6-1~G6-5·G6-7 = 그 행의 P3-1~P3-5·P3-8 값(경로 1 CD-4 정의 `chrono_bundle_grade_4368.p3_items`), G6-6 = FAULT 없음 ∧ READY 도달, `READY_le_120s` 따로. READY 없으면 G6-6·`READY_le_120s` = fail |
@@ -117,7 +122,7 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 7. H-12 실제 대체 다리 범위는 `t4h_replay`(강제 대체 재생)의 다리별 `over_0p6kN_by_leg` 가운데 `meta_json.fallback_start_s`가 있는 다리만 더한다(시각 제한 없음, R17-2a가 말한 두 범위의 글자 그대로). 빈 창 수는 실제 대체 다리마다 `t_s` ≥ `fallback_start_s`(7.6 허용)이고 `locked` = 1이며 작용 명령(앞 주기 `command_m_s`, `t4h_replay`와 같음)이 0인 표본 수다. 실제 대체 다리 하나라도 0이면 그 키는 판정하지 않고 묶음은 `기록 불완전`이다. `recorded_lower_max_abs_N`은 기록만 한다(관문 허용 1e-6 N, R17-1).
 8. C-9~C-11 기록 항목의 원본 키: decisions = `controller_meta.slope_clearance_margin.order_gate.decisions`, 토양 모드 시작 = `c2_soil.soil_mode_t_s`, LOC = `c2_soil.t_loc_s`, 최대 행정 = `p3b.P3-5_clearance_stroke.s_motor_max_m`×10³, 끝 rut 틈 = `rut_clearance_end_m`×10³, P3-1~P3-9 = `p3b.checks`, 첫 READY = `phases`의 첫 `ready`, rc = 보충 2-4(위 표), 마지막 표본 = `step_series.npz` `t_s` 끝. C-10 F < F_min 시간 = `fmin-time` 정의(RV1-7·R2-5), G6 = 보충 2-5(경로 1 CD-4 P3 값: `chrono_rows_judge_4368.judge_scm`(행 id 없음)의 D 항목 위에 `chrono_bundle_grade_4368.p3_items`, `--rigid-base` 행의 P3-5는 CD-9대로 `해당 없음(rigid_base)`이고 G6-5도 그 글자 그대로, 두 모듈은 읽기만), 패치 다리 = `args.rigid_base`, 침하 = `p3b_ext.pad_sinkage`. C-11 LOC 주기 = (t_LOC − 0.1 s, t_LOC]의 1 ms 표본(명세 419.8.1), t_LOC = 첫 LOC(`p3b.P3-2_loc.t_loc_first_s`)와 취소가 있을 때 최종 LOC(`t_loc_final_s`, 보충 2-6), W = `p3b.weight_N`, 크롤러 법선 = `step_series.npz` `scm_crawler_normal_N`, LOC 취소 = `p3b.checks.loc_revokes`.
 9. `u3_judge_4368`에 `--g3`를 주지 않으면 이전처럼 판정하고 "G-3 not passed" 발견을 남긴다(개발용). R4 판정에서는 `h11` 보고서를 준다.
-10. 보충 2-1의 "묶음 H-8 VB 가운데 dg3가 대체한 135키"는 글자 그대로 H-8의 VB 파일 둘(`h8_noise_VB.json`, `h8_seedext_VB.json`) 모두에 적용한다. 키 비교는 `cand=current#` 접두를 뗀 키(rev3 R3-D1)다. 파일별로 뺀 줄 수를 `dg3_replaced_excluded`에 적는다(seedext에서 뺀 줄이 있으면 그 수가 그대로 보인다).
+10. (보충 3-2로 바뀜) dg3 대체 키 제외는 `h8_noise_VB.json` 줄에만 쓴다. `815a78a`에서는 VB 파일 둘 모두에 썼고, `60fc72e`에서 고쳤다. 키 비교는 `cand=current#` 접두를 뗀 키(rev3 R3-D1)다.
 
 ### RD-5 키 대응표 초안 (`resume4368_judge key-map`)
 
@@ -143,11 +148,11 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 | H-3 | 14 | `1472e5137cb96425c41ca5b46ffe5462f6f2cdae65d42030371e30b8cc1d7144` |
 | H-4 | 7 | `b0f2b3fd624ddbe93a6da33a3022508992951df7321e62e8456761076c08238a` |
 | H-5 | 2 | `4b00ce13fc5042c8a876844c4c404c52301984348b9956724c2109dbfc6d3c88` |
-| H-6 | 7 | `9de457176079ec1d1dfff5be21b69341f87b1ec7d79224a270a7d16214c488dc` |
+| H-6 | 7 | `a4b5c678b24d9b09297555f2c5ffb5546eb2d9c4ffd6a41b7ba5eafe63747969` |
 | H-7 | 3 | `eb2e4cd00c6bd0d4362e4b16ed1cd49567620a000598e5cba08ed3defb9ea968` |
-| H-8 | 10 | `f50505f74f6fafae39a9614e333a5ec8d4f57eb0c2bee0837d1db55d2be6bd78` |
-| H-9 | 10 | `746d569504b3d631d9c73dc15951e77eb4c9030bfd6710a38d1476d46527dc69` |
-| H-10 | 11 | `ef156da77fadcf8f701709263bce4df24d62814858ea3771c4a7462f2c65cf2b` |
+| H-8 | 11 | `0231837bc8b047bd6066a6755d9532d2d25e1244beb5d89fd915407a151f5450` |
+| H-9 | 10 | `652dd76a88e3c801eb174280c04e0550b02f943893b47eaf28d335da10df7c66` |
+| H-10 | 11 | `63e299638acca60ba2f6b0ed9a6422522432b811b30a188d67e13abc8e2fa1cd` |
 | H-11 | 3 | `13f6732a777e00f0f38fc3724951424e1ea4ab566b9359c25ff0df09162d11a8` |
 | H-12 | 7 | `f8a9a72bf1c045e62486e33d090d20a845521faa5541febdcc268747aa1bcc30` |
 | C-9 | 6 | `e06fe2dc2551ab6576c9f74d28b25fcd2038b208a87f4c5881bcc76509c6418b` |
@@ -166,21 +171,21 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 5. 묶음 판정기: `d1_judge_4368 --regraded <Out>/h1_d1_regraded.jsonl`(이번에 새로 만든다), `u3_judge_k1 judge`, `u3_judge_4368 --g3 <Out>/h11.json --k1-report …`, `ind-las`, `u9_judge_4368`, `h8_noise_judge_4368 --run-judge`, `h6_judge_4368 --run-judge`, `dg3-hash`, `keyset` 10개, `judge_stage1_4368 … --grid <격자 4개>`, `grid-v0-sample`, `family-f-trigger`, `reagg-items`, `stroke-exposure` 9개.
 6. 모든 출력의 sha256을 `sha256_manifest.txt`에(대조 전, RD-6).
 
-### sha256 (커밋 `815a78a`의 blob, LF 바이트)
+### sha256 (커밋 `60fc72e`의 blob, LF 바이트)
 
 | 파일 | sha256 |
 |---|---|
-| `04_scripts/04_hydraulic/coupled/judge4368_common.py` | `a2a8af54fdb71eba83b2eea66927e50568e8edf3fbe97fa93d1886265301733b` |
+| `04_scripts/04_hydraulic/coupled/judge4368_common.py` | `274b0ddbe157fd6e34b619c61d55193d89728909a745f814577ef49af39bb4b4` |
 | `04_scripts/04_hydraulic/coupled/judge_stage1_4368.py` | `5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee` |
 | `04_scripts/04_hydraulic/coupled/h6_judge_4368.py` | `e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e` |
 | `04_scripts/04_hydraulic/coupled/u3_judge_4368.py` | `b46cfa7cc80211905c1c83c9bce5e8b16c2d567e2cc267b08c68d3854766096e` |
 | `04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py`(변경 없음) | `c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69` |
-| `06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py` | `9813a764d24d4f3d109f5f6587998b438c6e5efbe0c008c83509ae4a1b3f3182` |
+| `06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py` | `d9216a9ac2def9722d718a159e263dc98151455dc1ce8da5479f80824aeda8b2` |
 | `05_tests/unit/test_judges_4368.py` | `d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703` |
 | `05_tests/unit/test_judges_4368_h6_h8.py` | `ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259` |
 | `05_tests/unit/test_resume4368.py` | `b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498` |
 | `05_tests/unit/test_resume4368_rev1.py` | `aaabe890a0317460cda85ead807e8e0d89936987776ba03dc9177c696b09c19e` |
-| `05_tests/unit/test_resume4368_rev16.py`(새 파일) | `9003f8fe5e39027ee8f91ad58463fd07df99cad243257522f35ad58fd12f1fc2` |
+| `05_tests/unit/test_resume4368_rev16.py`(새 파일) | `761f3d110da9958453faf35f71e147511e363465ce7509047d4798d3c4f1acc2` |
 
 이 README 자신의 sha256은 이 표에 넣을 수 없다. R4 blob 표(RD-1 2)는 R4를 만든 뒤 메인 세션이 낸다.
 
@@ -192,4 +197,5 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 4. `<OUT>` 준비물: `_tools/x16_identity.py`, `_tools/harness/h12_t4h_capture.py`, `_tools/rows.json`(키 구조), `_runners/steps_X1.json`, `_runners/logs_X1` 파일 이름과 `.done` 한 줄 형식.
 5. R2 결과(`resume_k1/`, `v5_rerun/las_k1/`), `<OUT>/H-11`, `<OUT>/C-9`·`C-10` 한 행의 `result.json`: 키 경로·자료형·건수만 보는 스크립트로 구조를 확인했다(값은 출력하지 않음). 구조 확인 출력에는 일부 키의 자료형(null 여부)과 H-11 8키의 양쪽 건수(각 1)가 있었다. 판정 값은 보지 않았다.
 6. 보충 1판(`r4_supplement_1_path1.md`, sha256 `c09aa88991363bff93bd62c3f26995c0ab665e5ac9e2248a82470d2c71a2e510`) 전부. 보충 2 구간 sha256 `a9a15a139843e796c73fd9046cd8cd92ed0dcaeaa14bd41c7cd591aaef9c6452`을 다시 계산해 같았다. 메인 세션이 준 첫 경로 1 판정 스크립트 사본 `first_judge_harness_b9f5707.ps1`·`first_judge_helps_b9f5707.ps1`(명령만). 보충을 반영하며 더 읽은 코드: `chrono_bundle_grade_4368.py`의 `p3_items`·`p36_item`·`_p31_item`·`_p32_item`, `chrono_rows_judge_4368.ready_items`, `r72_g6_screen.py`의 G6 관문·강등 부분, `b5_official.demote_preloc_gate`, `late_loc_rule.py` 머리, `resume_k1_family.py` 머리·u6 줄.
-7. 열지 않은 것: 첫 판정 세션 scratchpad의 `judge_b9f5707\sidecars.py`(있는지만 확인), 경로 2 폴더 전부, `judge_b9f5707/`, `h0_judge*`, `gs_harness_*`, scratchpad의 `r4-p2`·`r4-handoff`·`r4-source`·`main`, `<OUT>/H-11/g3_pairs_check.json`.
+7. 보충 2판(`r4_supplement_2_common.md`, sha256 `62721996ee5b16edb83cb944ce6a12440315ddabb4b83a50f217038fa5fe55e6`) 전부. 보충 3 구간 sha256 `5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8`을 다시 계산해 같았다. 3-7 확인을 위해 `resume_k1_family.py`의 지면 판별 함수 전부를 더 읽었다.
+8. 열지 않은 것: 첫 판정 세션 scratchpad의 `judge_b9f5707\sidecars.py`(있는지만 확인), 경로 2 폴더 전부, `judge_b9f5707/`, `h0_judge*`, `gs_harness_*`, scratchpad의 `r4-p2`·`r4-handoff`·`r4-source`·`main`, `<OUT>/H-11/g3_pairs_check.json`.
