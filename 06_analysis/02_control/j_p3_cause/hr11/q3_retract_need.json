@@ -1,0 +1,258 @@
+{
+ "front:s0": {
+  "chain": [
+   {
+    "step": "plant nominal, F_band 8 kN (spec 'before')",
+    "need_mm": 1.6031
+   },
+   {
+    "step": "F_band 0 (spec 'after' 1.24)",
+    "need_mm": 1.7674
+   },
+   {
+    "step": "+ p_r floor",
+    "need_mm": 2.0136
+   },
+   {
+    "step": "+ beta 0.69 GPa",
+    "need_mm": 2.7684
+   },
+   {
+    "step": "+ L0r 0.10 m",
+    "need_mm": 2.9277
+   },
+   {
+    "step": "+ L0h 0.08 m (= need_ub at p_h_ub 77)",
+    "need_mm": 2.9548
+   },
+   {
+    "step": "+ e_h 9 bar (= need_ub at reading 77)",
+    "need_mm": 3.3308
+   }
+  ],
+  "impl_need_ub_mm_p_h_ub77": 2.9548,
+  "impl_need_ub_mm_p_h_ub86": 3.3308
+ },
+ "front:s0.35": {
+  "chain": [
+   {
+    "step": "plant nominal, F_band 8 kN (spec 'before')",
+    "need_mm": 0.9981
+   },
+   {
+    "step": "F_band 0 (spec 'after' 1.24)",
+    "need_mm": 1.296
+   },
+   {
+    "step": "+ p_r floor",
+    "need_mm": 1.4627
+   },
+   {
+    "step": "+ beta 0.69 GPa",
+    "need_mm": 1.97
+   },
+   {
+    "step": "+ L0r 0.10 m",
+    "need_mm": 2.1293
+   },
+   {
+    "step": "+ L0h 0.08 m (= need_ub at p_h_ub 77)",
+    "need_mm": 2.1564
+   },
+   {
+    "step": "+ e_h 9 bar (= need_ub at reading 77)",
+    "need_mm": 2.4308
+   }
+  ],
+  "impl_need_ub_mm_p_h_ub77": 2.1564,
+  "impl_need_ub_mm_p_h_ub86": 2.4308
+ },
+ "front:s0.395": {
+  "chain": [
+   {
+    "step": "plant nominal, F_band 8 kN (spec 'before')",
+    "need_mm": 0.9204
+   },
+   {
+    "step": "F_band 0 (spec 'after' 1.24)",
+    "need_mm": 1.2354
+   },
+   {
+    "step": "+ p_r floor",
+    "need_mm": 1.3919
+   },
+   {
+    "step": "+ beta 0.69 GPa",
+    "need_mm": 1.8674
+   },
+   {
+    "step": "+ L0r 0.10 m",
+    "need_mm": 2.0267
+   },
+   {
+    "step": "+ L0h 0.08 m (= need_ub at p_h_ub 77)",
+    "need_mm": 2.0538
+   },
+   {
+    "step": "+ e_h 9 bar (= need_ub at reading 77)",
+    "need_mm": 2.3151
+   }
+  ],
+  "impl_need_ub_mm_p_h_ub77": 2.0538,
+  "impl_need_ub_mm_p_h_ub86": 2.3151
+ },
+ "front:timing_4.71mm_s": {
+  "plant_band0kN": {
+   "need_mm": 1.2354,
+   "t_ms": 359.5
+  },
+  "plant_band4kN": {
+   "need_mm": 1.042,
+   "t_ms": 317.0
+  },
+  "plant_band8kN": {
+   "need_mm": 0.9204,
+   "t_ms": 289.9
+  },
+  "spec_v1_gate(band8,p_T,beta.69,L0 .10/.08,e_h5)": {
+   "need_mm": 1.4268,
+   "t_ms_kappa0.8": 477.8
+  },
+  "spec_text_1.24_as_gate": {
+   "need_mm": 1.2354,
+   "t_ms_kappa0.8": 426.5
+  },
+  "impl_gate(e_h9)": {
+   "need_mm": 2.3151,
+   "t_ms_kappa0.8": 714.3
+  }
+ },
+ "rear:s0": {
+  "chain": [
+   {
+    "step": "plant nominal, F_band 8 kN (spec 'before')",
+    "need_mm": 1.6645
+   },
+   {
+    "step": "F_band 0 (spec 'after' 1.24)",
+    "need_mm": 1.864
+   },
+   {
+    "step": "+ p_r floor",
+    "need_mm": 2.1161
+   },
+   {
+    "step": "+ beta 0.69 GPa",
+    "need_mm": 2.8843
+   },
+   {
+    "step": "+ L0r 0.10 m",
+    "need_mm": 3.0459
+   },
+   {
+    "step": "+ L0h 0.08 m (= need_ub at p_h_ub 77)",
+    "need_mm": 3.078
+   },
+   {
+    "step": "+ e_h 9 bar (= need_ub at reading 77)",
+    "need_mm": 3.4696
+   }
+  ],
+  "impl_need_ub_mm_p_h_ub77": 3.078,
+  "impl_need_ub_mm_p_h_ub86": 3.4696
+ },
+ "rear:s0.35": {
+  "chain": [
+   {
+    "step": "plant nominal, F_band 8 kN (spec 'before')",
+    "need_mm": 1.0595
+   },
+   {
+    "step": "F_band 0 (spec 'after' 1.24)",
+    "need_mm": 1.4167
+   },
+   {
+    "step": "+ p_r floor",
+    "need_mm": 1.5935
+   },
+   {
+    "step": "+ beta 0.69 GPa",
+    "need_mm": 2.1268
+   },
+   {
+    "step": "+ L0r 0.10 m",
+    "need_mm": 2.2885
+   },
+   {
+    "step": "+ L0h 0.08 m (= need_ub at p_h_ub 77)",
+    "need_mm": 2.3205
+   },
+   {
+    "step": "+ e_h 9 bar (= need_ub at reading 77)",
+    "need_mm": 2.6157
+   }
+  ],
+  "impl_need_ub_mm_p_h_ub77": 2.3205,
+  "impl_need_ub_mm_p_h_ub86": 2.6157
+ },
+ "rear:s0.395": {
+  "chain": [
+   {
+    "step": "plant nominal, F_band 8 kN (spec 'before')",
+    "need_mm": 0.9817
+   },
+   {
+    "step": "F_band 0 (spec 'after' 1.24)",
+    "need_mm": 1.3592
+   },
+   {
+    "step": "+ p_r floor",
+    "need_mm": 1.5263
+   },
+   {
+    "step": "+ beta 0.69 GPa",
+    "need_mm": 2.0295
+   },
+   {
+    "step": "+ L0r 0.10 m",
+    "need_mm": 2.1911
+   },
+   {
+    "step": "+ L0h 0.08 m (= need_ub at p_h_ub 77)",
+    "need_mm": 2.2232
+   },
+   {
+    "step": "+ e_h 9 bar (= need_ub at reading 77)",
+    "need_mm": 2.506
+   }
+  ],
+  "impl_need_ub_mm_p_h_ub77": 2.2232,
+  "impl_need_ub_mm_p_h_ub86": 2.506
+ },
+ "rear:timing_4.71mm_s": {
+  "plant_band0kN": {
+   "need_mm": 1.3592,
+   "t_ms": 386.5
+  },
+  "plant_band4kN": {
+   "need_mm": 1.0811,
+   "t_ms": 325.7
+  },
+  "plant_band8kN": {
+   "need_mm": 0.9817,
+   "t_ms": 303.6
+  },
+  "spec_v1_gate(band8,p_T,beta.69,L0 .10/.08,e_h5)": {
+   "need_mm": 1.4924,
+   "t_ms_kappa0.8": 495.4
+  },
+  "spec_text_1.24_as_gate": {
+   "need_mm": 1.3592,
+   "t_ms_kappa0.8": 459.7
+  },
+  "impl_gate(e_h9)": {
+   "need_mm": 2.506,
+   "t_ms_kappa0.8": 765.0
+  }
+ }
+}

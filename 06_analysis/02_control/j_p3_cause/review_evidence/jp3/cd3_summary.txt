@@ -1,0 +1,22 @@
+VBG4 tag=final_C4G2_P3_LAS_K1 sha=e3869a3be2f8 {"breach_reads": [1, 0, 0, 1], "min_gap_bar": [-3.5614495502447476, 0.49999999999998485, 0.49999999999998485, -4.190378694055854], "min_gap_t_s": [49.2, 56.4, 57.9, 49.2], "first_breach_t_s": [49.2, null, null, 49.2], "locked_unpaired_reads": [19, 26, 28, 19], "jp3a_breach_reads": null, "jp3b_breach_over_tol_reads": null, "jp3c_breach_reads": null, "jp3a_min_gap_bar": null, "jp3b_min_gap_bar": null}
+  RR lock events 43..49.5 s: [[43.488, 3, True], [49.093, 3, False]]
+  t=48.6 rod_read=  32.47 head=  53.34
+  t=48.7 rod_read=  38.72 head=  48.25
+  t=48.8 rod_read=  44.79 head=  43.30
+  t=48.9 rod_read=  50.94 head=  38.30
+  t=49.0 rod_read=  56.56 head=  33.73
+  t=49.1 rod_read=  53.77 head=  29.38
+  t=49.2 rod_read=   9.01 head=  13.18
+  t=49.3 rod_read=   2.95 head=  18.14
+  meta controller_tag final_C4G2_P3_LAS_K1
+VBG5 tag=final_C4G2_P3H_LAS_K1 sha=e3869a3be2f8 {"breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [54.0, 58.4, 19.2, 19.2], "first_breach_t_s": [null, null, null, null], "locked_unpaired_reads": [17, 24, 26, 17], "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999999999999971, 7.99999479090204, 7.791435958629106, 7.090263036038694]}
+  RR lock events 43..49.5 s: [[43.488, 3, True], [49.093, 3, False]]
+  t=48.6 rod_read=  32.47 head=  53.34 cls=lock      used= 125.14 p_tr=  32.47
+  t=48.7 rod_read=  38.72 head=  48.25 cls=lock      used= 133.60 p_tr=  38.72
+  t=48.8 rod_read=  44.79 head=  43.30 cls=carry_ret used= 142.32 p_tr=  44.79
+  t=48.9 rod_read=  50.94 head=  38.30 cls=carry_ret used= 150.64 p_tr=  50.94
+  t=49.0 rod_read=  56.56 head=  33.73 cls=carry_ret used= 158.24 p_tr=  56.56
+  t=49.1 rod_read=  53.77 head=  29.38 cls=carry_ret used= 165.46 p_tr=  54.37
+  t=49.2 rod_read=   9.01 head=  13.18 cls=carry_ext used= 192.38 p_tr=  31.20
+  t=49.3 rod_read=   2.95 head=  18.14 cls=carry_ext used= 192.38 p_tr=  10.24
+  meta controller_tag final_C4G2_P3H_LAS_K1

@@ -1,0 +1,110 @@
+VB: {"tag": "final_C4G2_P3_LAS_K1", "sha": "295d0e7c9310", "phase": "ready", "breach_reads": [0, 0, 0, 2], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, -9.805922386165648], "min_gap_t_s": [51.1, 55.0, 55.8, 48.9], "stored_sha": "295d0e7c9310", "sha_equal_stored": true, "check_equal_stored": true}
+LS1: {"tag": "final_C4G2_P3_LAS_K1", "sha": "bd50065cc09d", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.48563889947402755], "min_gap_t_s": [51.1, 55.0, 55.8, 49.0], "stored_sha": "bd50065cc09d", "sha_equal_stored": true, "check_equal_stored": true}
+LS2: {"tag": "final_C4G2_P3_LAS_K1", "sha": "875ad53bccc3", "phase": "ready", "breach_reads": [0, 0, 0, 3], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, -9.643296298788957], "min_gap_t_s": [51.1, 55.0, 55.8, 48.8], "stored_sha": "875ad53bccc3", "sha_equal_stored": true, "check_equal_stored": true}
+LS3: {"tag": "final_C4G2_P3_LAS_K1", "sha": "53ae7c735918", "phase": "ready", "breach_reads": [0, 0, 0, 4], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, -26.33430043317365], "min_gap_t_s": [51.1, 55.1, 55.8, 48.8], "stored_sha": "53ae7c735918", "sha_equal_stored": true, "check_equal_stored": true}
+LS4: {"tag": "final_C4G2_P3_LAS_K1", "sha": "651a51ce7e3e", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.5000000000000431], "min_gap_t_s": [51.1, 55.0, 55.7, 19.2], "stored_sha": "651a51ce7e3e", "sha_equal_stored": true, "check_equal_stored": true}
+VBH: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "295d0e7c9310", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [52.4, 57.1, 19.2, 19.2], "sha_equal_rev4_same_plant": true, "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999999999999971, 7.879423118217331, 7.207444508910589, 8.000000000000028], "jp3c_min_gap_bar": [43.53180331520371, 42.90539808541203, 35.804892207641714, 33.240615298915124], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [299, 299, 296, 296], "hold": [6, 13, 28, 68], "carry_ext": [13, 34, 37, 28], "carry_ret": [18, 33, 46, 36], "ext": [396, 353, 317, 266], "ret": [0, 0, 8, 38]}, "relock_step_over_1bar_count": 36, "max_abs_dp_tr_step_bar": 16.774079107110346}
+  t=48.6 lock      u=  0.0000 used= 153.18 ext=  51.66 p_tr=  39.31 gate=False
+  t=48.7 hold      u= -0.0019 used= 165.33 ext=  51.66 p_tr=  32.52 gate=False
+  t=48.8 hold      u=  0.0021 used= 169.60 ext=  51.66 p_tr=  41.01 gate=False
+  t=48.9 hold      u=  0.0359 used= 182.81 ext=  51.66 p_tr=  40.85 gate=False
+  t=49.0 hold      u=  0.0749 used= 185.45 ext=  51.66 p_tr=  40.35 gate=False
+  t=49.1 carry_ext u=  4.7064 used= 185.95 ext= 185.95 p_tr=  22.41 gate=False
+  t=49.2 carry_ext u=  4.6725 used= 173.63 ext= 173.63 p_tr=   7.50 gate=True
+  t=49.3 ext       u=  4.6257 used= 138.17 ext= 138.17 p_tr=   5.34 gate=True
+  t=49.4 ext       u=  4.5818 used= 105.34 ext= 105.34 p_tr=   5.05 gate=True
+LSH1: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "bd50065cc09d", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [52.4, 57.1, 19.2, 19.2], "sha_equal_rev4_same_plant": true, "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999999999999971, 7.87181818618231, 7.191926515823556, 8.000000000000028], "jp3c_min_gap_bar": [43.66285570233904, 42.74228454347322, 35.79240531054077, 33.23117304796798], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [299, 299, 296, 296], "hold": [6, 13, 28, 66], "carry_ext": [13, 34, 37, 30], "carry_ret": [18, 33, 46, 36], "ext": [396, 353, 317, 266], "ret": [0, 0, 8, 38]}, "relock_step_over_1bar_count": 35, "max_abs_dp_tr_step_bar": 15.628070111658126}
+  t=48.6 lock      u=  0.0000 used= 154.05 ext=  51.70 p_tr=  38.90 gate=False
+  t=48.7 hold      u= -0.0069 used= 177.43 ext=  51.70 p_tr=  21.62 gate=False
+  t=48.8 hold      u= -0.0045 used= 188.93 ext=  51.70 p_tr=  16.56 gate=False
+  t=48.9 hold      u= -0.0003 used= 180.54 ext=  51.70 p_tr=  32.50 gate=False
+  t=49.0 hold      u=  0.0527 used= 185.37 ext=  51.70 p_tr=  30.54 gate=False
+  t=49.1 carry_ext u=  4.6896 used= 185.87 ext= 185.87 p_tr=  15.59 gate=False
+  t=49.2 carry_ext u=  4.6545 used= 173.94 ext= 173.94 p_tr=   6.43 gate=True
+  t=49.3 ext       u=  4.6107 used= 138.58 ext= 138.58 p_tr=   5.19 gate=True
+  t=49.4 ext       u=  4.5704 used= 105.80 ext= 105.80 p_tr=   5.03 gate=True
+LSH2: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "875ad53bccc3", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [52.4, 57.1, 19.2, 19.2], "sha_equal_rev4_same_plant": true, "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999999999999971, 7.880755047494197, 7.208740278467177, 8.000000000000028], "jp3c_min_gap_bar": [43.50382880934057, 42.86376039982039, 35.84362967819326, 33.2692985880559], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [299, 299, 296, 296], "hold": [6, 13, 28, 68], "carry_ext": [13, 34, 37, 28], "carry_ret": [18, 33, 46, 36], "ext": [396, 353, 317, 266], "ret": [0, 0, 8, 38]}, "relock_step_over_1bar_count": 36, "max_abs_dp_tr_step_bar": 16.766363388371087}
+  t=48.6 lock      u=  0.0000 used= 151.21 ext=  51.44 p_tr=  38.92 gate=False
+  t=48.7 hold      u= -0.0019 used= 163.58 ext=  51.44 p_tr=  31.95 gate=False
+  t=48.8 hold      u=  0.0027 used= 168.81 ext=  51.44 p_tr=  40.73 gate=False
+  t=48.9 hold      u=  0.0367 used= 180.78 ext=  51.44 p_tr=  40.56 gate=False
+  t=49.0 hold      u=  0.0764 used= 183.26 ext=  51.44 p_tr=  40.06 gate=False
+  t=49.1 carry_ext u=  4.7073 used= 183.76 ext= 183.76 p_tr=  22.19 gate=False
+  t=49.2 carry_ext u=  4.6738 used= 171.18 ext= 171.18 p_tr=   7.46 gate=True
+  t=49.3 ext       u=  4.6267 used= 135.98 ext= 135.98 p_tr=   5.33 gate=True
+  t=49.4 ext       u=  4.5818 used= 103.43 ext= 103.43 p_tr=   5.04 gate=True
+LSH3: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "53ae7c735918", "phase": "ready", "breach_reads": [0, 0, 0, 3], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, -5.75187098193801], "min_gap_t_s": [52.5, 57.1, 19.2, 48.8], "sha_equal_rev4_same_plant": true, "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999999999999971, 7.866408694400573, 7.273448634632947, 8.000000000000028], "jp3c_min_gap_bar": [43.52075613372037, 42.93443022593869, 35.78856956952297, 33.2274463461644], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [299, 299, 296, 296], "hold": [6, 12, 28, 67], "carry_ext": [13, 35, 38, 29], "carry_ret": [18, 34, 46, 36], "ext": [396, 352, 316, 266], "ret": [0, 0, 8, 38]}, "relock_step_over_1bar_count": 35, "max_abs_dp_tr_step_bar": 20.838132946809875}
+  t=48.6 lock      u=  0.0000 used= 153.18 ext=  51.67 p_tr=  39.33 gate=False
+  t=48.7 hold      u= -0.0017 used= 162.89 ext=  51.67 p_tr=  37.51 gate=False
+  t=48.8 hold      u=  0.0024 used= 164.43 ext=  51.67 p_tr=  57.42 gate=False
+  t=48.9 hold      u=  0.0423 used= 182.62 ext=  51.67 p_tr=  57.19 gate=False
+  t=49.0 hold      u=  0.0964 used= 187.33 ext=  51.67 p_tr=  56.46 gate=False
+  t=49.1 carry_ext u=  4.7195 used= 187.83 ext= 187.83 p_tr=  34.38 gate=False
+  t=49.2 carry_ext u=  4.6897 used= 175.73 ext= 175.73 p_tr=  10.06 gate=True
+  t=49.3 ext       u=  4.6410 used= 139.91 ext= 139.91 p_tr=   5.69 gate=True
+  t=49.4 ext       u=  4.5865 used= 106.78 ext= 106.78 p_tr=   5.09 gate=True
+LSH4: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "651a51ce7e3e", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [52.3, 57.1, 19.2, 19.2], "sha_equal_rev4_same_plant": true, "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999999999999971, 7.905625647541643, 7.275024029152789, 7.2057014940842565], "jp3c_min_gap_bar": [43.53599483020304, 42.9006247174604, 35.81470228984631, 33.24846255181381], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [299, 299, 296, 296], "hold": [6, 14, 28, 69], "carry_ext": [13, 34, 38, 28], "carry_ret": [18, 32, 46, 36], "ext": [396, 353, 317, 266], "ret": [0, 0, 7, 37]}, "relock_step_over_1bar_count": 34, "max_abs_dp_tr_step_bar": 12.215968342262606}
+  t=48.6 lock      u=  0.0000 used= 153.47 ext=  51.66 p_tr=  39.10 gate=False
+  t=48.7 hold      u= -0.0024 used= 169.72 ext=  51.66 p_tr=  27.34 gate=False
+  t=48.8 hold      u=  0.0015 used= 187.04 ext=  51.66 p_tr=  17.31 gate=False
+  t=48.9 hold      u=  0.0234 used= 197.67 ext=  51.66 p_tr=  17.13 gate=False
+  t=49.0 hold      u=  0.0680 used= 200.65 ext=  51.66 p_tr=  16.88 gate=False
+  t=49.1 carry_ext u=  4.7052 used= 201.15 ext= 201.15 p_tr=   8.19 gate=False
+  t=49.2 carry_ext u=  4.6658 used= 191.51 ext= 191.51 p_tr=   5.43 gate=True
+  t=49.3 ext       u=  4.6231 used= 154.18 ext= 154.18 p_tr=   5.06 gate=True
+  t=49.4 ext       u=  4.5886 used= 119.36 ext= 119.36 p_tr=   5.01 gate=True
+VBJ: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "b3b4fb65002a", "phase": "probe", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [54.2, 58.6, 19.2, 19.2], "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [7.999995894838446, 7.999994201276945, 7.999999999999971, 8.000000000000028], "jp3c_min_gap_bar": [22.142705266263803, 18.44378107462198, 17.22957040213733, 17.830249384089903], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [180, 195, 191, 191], "hold": [455, 464, 229, 506], "carry_ext": [22, 27, 33, 47], "carry_ret": [21, 23, 284, 33], "ext": [399, 352, 320, 263], "ret": [0, 16, 20, 37]}, "relock_step_over_1bar_count": 0, "max_abs_dp_tr_step_bar": 0.0}
+  P4 max |rod reading - p_tr| RR = 0.000e+00 Pa over 1077 reads
+  t=48.6 lock      u=  0.0000 used= 101.94 ext=  29.35 p_tr=  36.03 gate=False
+  t=48.7 lock      u=  0.0000 used= 110.29 ext=  29.35 p_tr=  42.21 gate=False
+  t=48.8 carry_ret u= -0.2615 used= 119.28 ext= 119.28 p_tr=  48.48 gate=False
+  t=48.9 carry_ret u= -0.4085 used= 127.42 ext= 127.42 p_tr=  54.51 gate=False
+  t=49.0 carry_ret u= -0.4215 used= 134.73 ext= 134.73 p_tr=  59.92 gate=False
+  t=49.1 carry_ret u= -0.3745 used= 141.40 ext= 141.40 p_tr=  64.86 gate=False
+  t=49.2 carry_ext u=  4.2265 used= 146.44 ext= 146.44 p_tr=  66.41 gate=False
+  t=49.3 carry_ext u=  4.2029 used= 138.25 ext= 138.25 p_tr=  27.41 gate=True
+  t=49.4 ext       u=  4.1705 used= 110.08 ext= 110.08 p_tr=   8.22 gate=True
+LSJ1: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "15afaa17ebcf", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.49999999999998485], "min_gap_t_s": [53.9, 58.3, 24.9, 24.9], "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.49999999999998485], "jp3b_min_gap_bar": [7.999999999999971, 7.999994118385379, 7.999992524320181, 7.999999999999971], "jp3c_min_gap_bar": [20.80650193122536, 18.5558877095231, 20.488336647330016, 17.505045596354222], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [300, 300, 296, 296], "hold": [8, 11, 27, 60], "carry_ext": [20, 33, 41, 39], "carry_ret": [21, 31, 48, 42], "ext": [388, 352, 312, 268], "ret": [6, 16, 19, 38]}, "relock_step_over_1bar_count": 0, "max_abs_dp_tr_step_bar": 0.0}
+  P4 max |rod reading - p_tr| RR = 0.000e+00 Pa over 743 reads
+  t=48.6 lock      u=  0.0000 used= 110.66 ext=  29.37 p_tr=  42.51 gate=False
+  t=48.7 carry_ret u= -0.2714 used= 119.67 ext= 119.67 p_tr=  48.80 gate=False
+  t=48.8 carry_ret u= -0.4183 used= 127.82 ext= 127.82 p_tr=  54.83 gate=False
+  t=48.9 carry_ret u= -0.4309 used= 135.10 ext= 135.10 p_tr=  60.22 gate=False
+  t=49.0 carry_ret u= -0.3832 used= 141.78 ext= 141.78 p_tr=  65.16 gate=False
+  t=49.1 carry_ext u=  4.2148 used= 146.91 ext= 146.91 p_tr=  67.15 gate=False
+  t=49.2 carry_ext u=  4.1913 used= 138.79 ext= 138.79 p_tr=  27.98 gate=True
+  t=49.3 ext       u=  4.1593 used= 110.63 ext= 110.63 p_tr=   8.33 gate=True
+  t=49.4 ext       u=  4.0210 used=  84.60 ext=  84.60 p_tr=   5.45 gate=True
+LSJ2: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "75c37ff55c01", "phase": "probe", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.49999999999998485], "min_gap_t_s": [54.2, 58.6, 24.9, 24.9], "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.49999999999998485], "jp3b_min_gap_bar": [7.99999589892854, 7.9999942136224105, 7.999999999999971, 7.999999999999971], "jp3c_min_gap_bar": [21.969907002604646, 18.427475034913154, 17.180171389888088, 17.71230463031491], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [180, 200, 196, 196], "hold": [450, 459, 228, 501], "carry_ext": [22, 26, 33, 47], "carry_ret": [26, 23, 281, 33], "ext": [399, 352, 320, 263], "ret": [0, 17, 19, 37]}, "relock_step_over_1bar_count": 0, "max_abs_dp_tr_step_bar": 0.0}
+  P4 max |rod reading - p_tr| RR = 0.000e+00 Pa over 1077 reads
+  t=48.6 lock      u=  0.0000 used= 100.80 ext=  29.24 p_tr=  35.19 gate=False
+  t=48.7 lock      u=  0.0000 used= 109.33 ext=  29.24 p_tr=  41.51 gate=False
+  t=48.8 carry_ret u= -0.2662 used= 118.45 ext= 118.45 p_tr=  47.88 gate=False
+  t=48.9 carry_ret u= -0.4110 used= 126.58 ext= 126.58 p_tr=  53.90 gate=False
+  t=49.0 carry_ret u= -0.4248 used= 134.02 ext= 134.02 p_tr=  59.41 gate=False
+  t=49.1 carry_ret u= -0.3802 used= 140.63 ext= 140.63 p_tr=  64.30 gate=False
+  t=49.2 carry_ext u=  4.2209 used= 145.56 ext= 145.56 p_tr=  65.77 gate=False
+  t=49.3 carry_ext u=  4.1983 used= 137.39 ext= 137.39 p_tr=  27.05 gate=True
+  t=49.4 ext       u=  4.1654 used= 109.34 ext= 109.34 p_tr=   8.16 gate=True
+LSJ3: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "983ad2785c86", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.49999999999998485], "min_gap_t_s": [54.2, 58.6, 24.9, 24.9], "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [0, 0, 0, 0], "jp3b_breach_over_tol_reads": [0, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.49999999999998485, 0.49999999999998485], "jp3b_min_gap_bar": [7.999999999983036, 7.999994230336177, 7.999999999999971, 7.999999999999971], "jp3c_min_gap_bar": [21.057750588318115, 18.36875443899146, 20.260624159120898, 17.61804477314341], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [300, 300, 296, 296], "hold": [84, 128, 138, 170], "carry_ext": [25, 34, 41, 55], "carry_ret": [59, 32, 49, 42], "ext": [399, 357, 324, 267], "ret": [0, 16, 19, 37]}, "relock_step_over_1bar_count": 0, "max_abs_dp_tr_step_bar": 0.0}
+  P4 max |rod reading - p_tr| RR = 0.000e+00 Pa over 867 reads
+  t=48.6 lock      u=  0.0000 used= 102.01 ext=  29.35 p_tr=  36.08 gate=False
+  t=48.7 lock      u=  0.0000 used= 110.32 ext=  29.35 p_tr=  42.23 gate=False
+  t=48.8 carry_ret u= -0.2612 used= 119.30 ext= 119.30 p_tr=  48.50 gate=False
+  t=48.9 carry_ret u= -0.4078 used= 127.49 ext= 127.49 p_tr=  54.57 gate=False
+  t=49.0 carry_ret u= -0.4203 used= 134.80 ext= 134.80 p_tr=  59.97 gate=False
+  t=49.1 carry_ret u= -0.3730 used= 141.46 ext= 141.46 p_tr=  64.91 gate=False
+  t=49.2 carry_ext u=  4.2269 used= 146.52 ext= 146.52 p_tr=  66.47 gate=False
+  t=49.3 carry_ext u=  4.2033 used= 138.30 ext= 138.30 p_tr=  27.44 gate=True
+  t=49.4 ext       u=  4.1713 used= 110.11 ext= 110.11 p_tr=   8.22 gate=True
+LSJ4: {"tag": "final_C4G2_P3H_LAS_K1", "sha": "3672c7222519", "phase": "ready", "breach_reads": [0, 0, 0, 0], "min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "min_gap_t_s": [54.0, 58.4, 19.2, 19.2], "jp3a_breach_reads": [0, 0, 0, 0], "jp3b_breach_reads": [1, 0, 0, 0], "jp3b_breach_over_tol_reads": [1, 0, 0, 0], "jp3c_breach_reads": [0, 0, 0, 0], "jp3a_min_gap_bar": [0.49999999999998485, 0.49999999999998485, 0.5000000000000431, 0.5000000000000431], "jp3b_min_gap_bar": [-10.674295788008534, 7.9999941950374165, 7.999999999999971, 8.000000000000028], "jp3c_min_gap_bar": [21.323721812840443, 18.542407913656017, 20.367524201155412, 17.289894199461703], "lock_ext_breach_over_tol_reads": [0, 0, 0, 0], "ret_breach_reads": [0, 0, 0, 0], "class_reads": {"lock": [300, 300, 296, 296], "hold": [88, 105, 113, 146], "carry_ext": [25, 34, 41, 55], "carry_ret": [32, 32, 49, 42], "ext": [398, 356, 324, 267], "ret": [0, 16, 20, 37]}, "relock_step_over_1bar_count": 0, "max_abs_dp_tr_step_bar": 0.0}
+  P4 max |rod reading - p_tr| RR = 0.000e+00 Pa over 843 reads
+  t=48.6 lock      u=  0.0000 used= 110.42 ext=  29.41 p_tr=  42.20 gate=False
+  t=48.7 carry_ret u= -0.2669 used= 119.40 ext= 119.40 p_tr=  48.47 gate=False
+  t=48.8 carry_ret u= -0.4122 used= 127.54 ext= 127.54 p_tr=  54.49 gate=False
+  t=48.9 carry_ret u= -0.4246 used= 134.85 ext= 134.85 p_tr=  59.90 gate=False
+  t=49.0 carry_ret u= -0.3772 used= 141.50 ext= 141.50 p_tr=  64.83 gate=False
+  t=49.1 carry_ext u=  4.2243 used= 146.55 ext= 146.55 p_tr=  66.39 gate=False
+  t=49.2 carry_ext u=  4.2008 used= 138.62 ext= 138.62 p_tr=  27.42 gate=True
+  t=49.3 ext       u=  4.1684 used= 110.42 ext= 110.42 p_tr=   8.22 gate=True
+  t=49.4 ext       u=  4.0299 used=  84.36 ext=  84.36 p_tr=   5.44 gate=True

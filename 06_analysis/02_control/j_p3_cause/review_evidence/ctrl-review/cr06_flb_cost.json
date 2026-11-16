@@ -1,0 +1,502 @@
+[
+ {
+  "file": "R12_bottom-FL-Fs4-o0.0_VBH.npz",
+  "legs": {
+   "FL": {
+    "lock": {
+     "reads": 298,
+     "over_p50_kN": 10.859884798262646,
+     "over_p90_kN": 36.34271173675855,
+     "over_max_kN": 39.67988193685575,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 6,
+     "over_p50_kN": 17.020764116528362,
+     "over_p90_kN": 56.52207570034051,
+     "over_max_kN": 57.870787881462164,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 13,
+     "over_p50_kN": 17.007259046288468,
+     "over_p90_kN": 61.556605340411814,
+     "over_max_kN": 62.01049778533046,
+     "false_low_reads": 1
+    },
+    "carry_ret": {
+     "reads": 18,
+     "over_p50_kN": 25.985510964656125,
+     "over_p90_kN": 29.221589926427516,
+     "over_max_kN": 29.884654917158144,
+     "false_low_reads": 0
+    }
+   },
+   "FR": {
+    "lock": {
+     "reads": 298,
+     "over_p50_kN": 10.382196433242513,
+     "over_p90_kN": 35.13240643708456,
+     "over_max_kN": 35.13240643708456,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 13,
+     "over_p50_kN": 45.515184988893466,
+     "over_p90_kN": 46.2936183355485,
+     "over_max_kN": 46.61786104166408,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 34,
+     "over_p50_kN": 16.89733458722589,
+     "over_p90_kN": 47.12354331256307,
+     "over_max_kN": 47.123653608712196,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 33,
+     "over_p50_kN": 28.988123183199423,
+     "over_p90_kN": 47.000635281550714,
+     "over_max_kN": 47.12100283529566,
+     "false_low_reads": 0
+    }
+   },
+   "RL": {
+    "lock": {
+     "reads": 295,
+     "over_p50_kN": 12.204909659142054,
+     "over_p90_kN": 32.98920110717415,
+     "over_max_kN": 32.98920110717415,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 28,
+     "over_p50_kN": 11.982357290820168,
+     "over_p90_kN": 15.541739824465067,
+     "over_max_kN": 15.559361129163678,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 37,
+     "over_p50_kN": 18.287133596371497,
+     "over_p90_kN": 49.342349626955574,
+     "over_max_kN": 49.34235678660228,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 46,
+     "over_p50_kN": 19.348351735000094,
+     "over_p90_kN": 29.121401389830872,
+     "over_max_kN": 49.34207857826751,
+     "false_low_reads": 0
+    }
+   },
+   "RR": {
+    "lock": {
+     "reads": 295,
+     "over_p50_kN": 28.317460345841972,
+     "over_p90_kN": 32.083579059111955,
+     "over_max_kN": 35.78215918473853,
+     "false_low_reads": 2
+    },
+    "hold": {
+     "reads": 68,
+     "over_p50_kN": 13.95681045401469,
+     "over_p90_kN": 15.162205498371323,
+     "over_max_kN": 48.59907632443846,
+     "false_low_reads": 4
+    },
+    "carry_ext": {
+     "reads": 28,
+     "over_p50_kN": 14.512622250436639,
+     "over_p90_kN": 29.486696571298747,
+     "over_max_kN": 48.808671041485695,
+     "false_low_reads": 2
+    },
+    "carry_ret": {
+     "reads": 36,
+     "over_p50_kN": 15.361746843270565,
+     "over_p90_kN": 27.35961499671247,
+     "over_max_kN": 30.835743144281107,
+     "false_low_reads": 0
+    }
+   }
+  }
+ },
+ {
+  "file": "R12_bottom-FL-Fs4-o0.0_VBJ.npz",
+  "legs": {
+   "FL": {
+    "lock": {
+     "reads": 180,
+     "over_p50_kN": 11.684007545997744,
+     "over_p90_kN": 28.278722543594412,
+     "over_max_kN": 31.905003788770316,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 455,
+     "over_p50_kN": 6.605109196928504,
+     "over_p90_kN": 14.629059135188452,
+     "over_max_kN": 32.49877949103381,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 22,
+     "over_p50_kN": 26.09719611987607,
+     "over_p90_kN": 26.871756271103603,
+     "over_max_kN": 49.133150118898065,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 20,
+     "over_p50_kN": 16.26473663368875,
+     "over_p90_kN": 33.30431337769233,
+     "over_max_kN": 34.224933474105335,
+     "false_low_reads": 0
+    }
+   },
+   "FR": {
+    "lock": {
+     "reads": 194,
+     "over_p50_kN": 8.84923411820423,
+     "over_p90_kN": 20.733900375848666,
+     "over_max_kN": 22.635310318627713,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 464,
+     "over_p50_kN": 4.27228671656386,
+     "over_p90_kN": 14.505759768194684,
+     "over_max_kN": 16.136150146489992,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 27,
+     "over_p50_kN": 24.888450659227484,
+     "over_p90_kN": 31.776726415987387,
+     "over_max_kN": 31.776872696657623,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 23,
+     "over_p50_kN": 17.788011370189327,
+     "over_p90_kN": 23.50942862682861,
+     "over_max_kN": 28.69434048613363,
+     "false_low_reads": 0
+    }
+   },
+   "RL": {
+    "lock": {
+     "reads": 190,
+     "over_p50_kN": 10.006230906339523,
+     "over_p90_kN": 24.998927013237807,
+     "over_max_kN": 25.92453932286754,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 229,
+     "over_p50_kN": 11.028032670661442,
+     "over_p90_kN": 11.028032670661442,
+     "over_max_kN": 12.425079490789024,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 33,
+     "over_p50_kN": 30.820460738760566,
+     "over_p90_kN": 34.598900045364324,
+     "over_max_kN": 34.59892180640058,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 284,
+     "over_p50_kN": 11.580069695092504,
+     "over_p90_kN": 12.178379916421255,
+     "over_max_kN": 31.436731501075716,
+     "false_low_reads": 0
+    }
+   },
+   "RR": {
+    "lock": {
+     "reads": 190,
+     "over_p50_kN": 9.449016157833757,
+     "over_p90_kN": 17.793884584489454,
+     "over_max_kN": 21.891818214537228,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 506,
+     "over_p50_kN": 13.333895937592171,
+     "over_p90_kN": 13.734511692234657,
+     "over_max_kN": 13.781494059642085,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 47,
+     "over_p50_kN": 12.422291826593428,
+     "over_p90_kN": 12.693200001505067,
+     "over_max_kN": 35.390952678619925,
+     "false_low_reads": 1
+    },
+    "carry_ret": {
+     "reads": 33,
+     "over_p50_kN": 11.322319425235815,
+     "over_p90_kN": 20.607390918517353,
+     "over_max_kN": 24.54895704665495,
+     "false_low_reads": 4
+    }
+   }
+  }
+ },
+ {
+  "file": "R12_bottom-FL-Fs4-o0.0_LSJ2.npz",
+  "legs": {
+   "FL": {
+    "lock": {
+     "reads": 180,
+     "over_p50_kN": 11.542812305665066,
+     "over_p90_kN": 27.842345006923583,
+     "over_max_kN": 31.48337039425265,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 450,
+     "over_p50_kN": 6.596780112282839,
+     "over_p90_kN": 14.666335428895886,
+     "over_max_kN": 32.073898376872435,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 22,
+     "over_p50_kN": 26.056293566513034,
+     "over_p90_kN": 26.818514070772423,
+     "over_max_kN": 48.99588812141773,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 25,
+     "over_p50_kN": 16.235337257859516,
+     "over_p90_kN": 30.43577348370475,
+     "over_max_kN": 33.81333669515316,
+     "false_low_reads": 0
+    }
+   },
+   "FR": {
+    "lock": {
+     "reads": 199,
+     "over_p50_kN": 8.333432536731213,
+     "over_p90_kN": 21.20754105566129,
+     "over_max_kN": 22.420462892669953,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 459,
+     "over_p50_kN": 4.272614350427786,
+     "over_p90_kN": 14.58662464437864,
+     "over_max_kN": 16.139328314496133,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 26,
+     "over_p50_kN": 25.391091065184956,
+     "over_p90_kN": 31.728603779857462,
+     "over_max_kN": 31.72877348202908,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 23,
+     "over_p50_kN": 17.825629557501323,
+     "over_p90_kN": 23.54649836667768,
+     "over_max_kN": 28.703991929117606,
+     "false_low_reads": 0
+    }
+   },
+   "RL": {
+    "lock": {
+     "reads": 195,
+     "over_p50_kN": 9.905299995748443,
+     "over_p90_kN": 24.258604897853353,
+     "over_max_kN": 26.04751247293144,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 228,
+     "over_p50_kN": 11.027954013523239,
+     "over_p90_kN": 11.027954013523239,
+     "over_max_kN": 12.463450112278588,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 33,
+     "over_p50_kN": 30.822672104111888,
+     "over_p90_kN": 34.52597799598618,
+     "over_max_kN": 34.52600042417753,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 281,
+     "over_p50_kN": 11.57643874812132,
+     "over_p90_kN": 12.176441154681553,
+     "over_max_kN": 28.06002818334049,
+     "false_low_reads": 0
+    }
+   },
+   "RR": {
+    "lock": {
+     "reads": 195,
+     "over_p50_kN": 9.28029793255606,
+     "over_p90_kN": 17.528041085693992,
+     "over_max_kN": 21.566893512211273,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 501,
+     "over_p50_kN": 13.079900064922883,
+     "over_p90_kN": 13.484445098660988,
+     "over_max_kN": 13.531364826201884,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 47,
+     "over_p50_kN": 12.169947225070281,
+     "over_p90_kN": 12.486697713715166,
+     "over_max_kN": 34.994702550871544,
+     "false_low_reads": 1
+    },
+    "carry_ret": {
+     "reads": 33,
+     "over_p50_kN": 11.320490439304049,
+     "over_p90_kN": 20.355178691591963,
+     "over_max_kN": 24.241206909171126,
+     "false_low_reads": 3
+    }
+   }
+  }
+ },
+ {
+  "file": "R12_bottom-FL-Fs4-o0.0_VBG5.npz",
+  "legs": {
+   "FL": {
+    "lock": {
+     "reads": 299,
+     "over_p50_kN": 6.228739204664206,
+     "over_p90_kN": 31.963514899099525,
+     "over_max_kN": 35.41469528651048,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 7,
+     "over_p50_kN": 13.890304501218692,
+     "over_p90_kN": 16.955225061099483,
+     "over_max_kN": 17.004212277347804,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 21,
+     "over_p50_kN": 14.11152774934967,
+     "over_p90_kN": 14.113594277432451,
+     "over_max_kN": 52.69450867853247,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 22,
+     "over_p50_kN": 17.192712277347805,
+     "over_p90_kN": 36.73421140976137,
+     "over_max_kN": 37.767487957013834,
+     "false_low_reads": 0
+    }
+   },
+   "FR": {
+    "lock": {
+     "reads": 299,
+     "over_p50_kN": 6.3681297857292956,
+     "over_p90_kN": 30.310611261182334,
+     "over_max_kN": 30.60848310482972,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 11,
+     "over_p50_kN": 15.866984484351095,
+     "over_p90_kN": 15.980309298355147,
+     "over_max_kN": 16.03055336742045,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 34,
+     "over_p50_kN": 11.818447685891048,
+     "over_p90_kN": 39.30937621348395,
+     "over_max_kN": 39.309416091265,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 30,
+     "over_p50_kN": 23.78312759468647,
+     "over_p90_kN": 27.083173815972245,
+     "over_max_kN": 39.318126516020186,
+     "false_low_reads": 0
+    }
+   },
+   "RL": {
+    "lock": {
+     "reads": 295,
+     "over_p50_kN": 6.656513055633725,
+     "over_p90_kN": 26.576059007376724,
+     "over_max_kN": 26.700126144068577,
+     "false_low_reads": 0
+    },
+    "hold": {
+     "reads": 28,
+     "over_p50_kN": 12.7216893457431,
+     "over_p90_kN": 15.533667317643129,
+     "over_max_kN": 15.56171905561602,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 42,
+     "over_p50_kN": 41.49921000939699,
+     "over_p90_kN": 41.49929940075384,
+     "over_max_kN": 41.49930586170094,
+     "false_low_reads": 0
+    },
+    "carry_ret": {
+     "reads": 48,
+     "over_p50_kN": 15.727075702237752,
+     "over_p90_kN": 22.501982844138702,
+     "over_max_kN": 41.521535408853275,
+     "false_low_reads": 0
+    }
+   },
+   "RR": {
+    "lock": {
+     "reads": 295,
+     "over_p50_kN": 18.794862924991772,
+     "over_p90_kN": 25.752087892663,
+     "over_max_kN": 29.81627529804872,
+     "false_low_reads": 1
+    },
+    "hold": {
+     "reads": 59,
+     "over_p50_kN": 10.278317774149212,
+     "over_p90_kN": 18.454899780957685,
+     "over_max_kN": 18.45490262750299,
+     "false_low_reads": 0
+    },
+    "carry_ext": {
+     "reads": 46,
+     "over_p50_kN": 18.45487763162622,
+     "over_p90_kN": 19.401327294820433,
+     "over_max_kN": 59.52012350606047,
+     "false_low_reads": 2
+    },
+    "carry_ret": {
+     "reads": 42,
+     "over_p50_kN": 15.359880852620547,
+     "over_p90_kN": 20.694424002075312,
+     "over_max_kN": 35.09469095109495,
+     "false_low_reads": 4
+    }
+   }
+  }
+ }
+]

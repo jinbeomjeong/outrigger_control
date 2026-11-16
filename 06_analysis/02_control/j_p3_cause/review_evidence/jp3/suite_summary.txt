@@ -1,0 +1,14 @@
+wall 1686 s
+{'tests': 6880, 'failures': 2, 'errors': 0, 'skipped': 11}
+failed:
+05_tests.unit.test_chrono_t45_replay::test_rev7_regression_on_the_stage3_records
+05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash
+shard6: no junit xml
+skip reasons:
+1 stored main.jsonl not present
+1 Dg-3 records not present
+1 Dg-3 v4 records not present
+1 YAML regenerated since S7; L1 fingerprint baseline no longer applies
+1 gas separation after FLOOR (14.3 optional) is not implemented
+5 could not import 'torch': No module named 'torch'
+1 LAS-b merged: no blocked row
