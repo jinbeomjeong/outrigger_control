@@ -32,9 +32,25 @@ file, head-only declaration = the line's ``head_only_declared``, else the steady
 (R1 .. R11, S1 .. S8); ``v5_rerun.j_p3_status`` table; ``setting_defect`` / ``H-7`` stop.
 Harness grades use ``harness_class`` (Q-S1); S8 J6 is not applicable without READY (Q-S2).
 
+R4 (436.8 harness re-judgement, R4 common block e451f067):
+  RD-8 / RD-7 3  J-P3 input ``hydraulics_record.extend_bound_check``; ``breach_reads`` that are
+        not 4 integers >= 0, or a top-level copy with other ``breach_reads``, make the J-P3
+        ``판정 불가`` (never a sum-0 pass).
+  R16-6 / RD-10  J11 reads ``n_late_fallback_by_leg`` of the actual fallback legs; the stop
+        settings are VB, LS1 .. LS4 (item8 / overlap VB lines have setting VB); a stop-setting line
+        without the block is ``판정 불가``, a record-setting line without it "입력 없음".
+  R16-7  ``--grid``: the J-P3 of every ``h9_grid/grid_*.json`` run (tag of ``results[i]``, rod
+        reading by the configuration rule); a breach is the marker ``멈춤 H-7`` with the RD-7
+        violation list, never ``미달``. R4 supplement 2-2 (a9a15a13): J11 with RD-10 per grid
+        run too (its own ``lock_window_alignment``, setting VB).
+  RD-7 / RD-9  the report's ``R4`` block lists, per bundle (H-9 lines + grid, H-10 lines), the
+        J-P3 violations and J11 stops in the RD-7 3 notation, the RD-8 / RD-10 counts and the ③
+        line / run count (0 = S-8 marker).
+
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/judge_stage1_4368.py --out <report.json>
       --h9 <h9_stage1.jsonl> --h10 <h10_reuse_rerun.jsonl>
+      [--grid resume_k1/h9_grid/grid_r67_main.json ... (4 files)]
       [--t4h-dir <dir: one, only without the convention folders>]
       [--overlap-ref <h10_overlap_t_a.json>] [--rules-dir <verif_matrix>]
 Exit codes: 0 judged, 1 a stop / VB J failure / 판정 불가, 2 input error, 3 internal error.
@@ -160,11 +176,7 @@ def metrics(record: dict, t4h_dirs: tuple[Path, ...]) -> dict:
         case_floor=values.get("case_floor_deg"),
         sa4=values.get("sa4"),
         pressure=values.get("pressure") or {},
-        controller_tag=record.get("controller_tag"),
-        head_only_declared=record.get("head_only_declared"),
-        bound_check=(record.get("hydraulics_record") or {}).get("extend_bound_check"),
-        rod_reading=rod_reading(record, t4h_dirs),
-        t4h_lookup=t4h_lookup(record, t4h_dirs),
+        **j_p3_inputs(record, t4h_dirs),
         F_after_W_min_kN=(
             min(event_output["min_F_after_W_kN"].values())
             if event_output.get("min_F_after_W_kN")
@@ -297,44 +309,71 @@ def j7_items(base: dict, on: dict, base_all: list[dict]) -> list[dict]:
 
 
 def j11_items(on: dict) -> list[dict]:
-    """D-10 (rev5 R5-B3: the stop is H-7 for VB, L-e for LS)."""
-    lwa = on["lwa"]
-    has_fallback = bool((lwa or {}).get("fallback_legs"))
-    if lwa is None or lwa.get("n_late") is None:
-        if has_fallback:
-            return [_item("J11", "not_judgeable", "n_late None with fallback legs")]
-        return [_item("J11", "record", "not_computed")]
-    late = lwa.get("n_late_fallback")
-    if late is None and has_fallback:
-        late = sum((lwa.get("n_late_by_leg") or {}).get(leg, 0) for leg in lwa["fallback_legs"])
-    if late:
-        stop = "L-e" if on["setting"] in LS_SETTINGS else "H-7"
+    """D-10 as read by rev16 R16-6 and RD-10 (:func:`judge4368_common.assess_j11`): the
+    ``n_late_fallback_by_leg`` values of the actual fallback legs; on a stop setting (VB, LS,
+    item8 / overlap VB) a value > 0 stops (VB H-7, LS L-e, rev5 R5-B3), a missing block or a
+    missing / None value is 판정 불가; on a record setting the value is a record and a missing
+    block is "입력 없음"."""
+    assessed = common.assess_j11(on["lwa"], on["setting"])
+    state = assessed["state"]
+    if state == common.J11_STOP:
+        stop = "L-e" if assessed["marker"] == common.STOP_LE else "H-7"
+        late = {leg: assessed["late_by_leg"][leg] for leg in assessed["late_legs"]}
         return [_item("J11", "stop", f"fallback-leg n_late {late} ({stop})")]
+    if state == common.NOT_JUDGEABLE:
+        return [_item("J11", "not_judgeable", assessed["reason"])]
+    if state == common.J11_NO_INPUT:
+        return [_item("J11", "record", common.J11_NO_INPUT)]
+    if state == common.J11_RECORD and assessed["late_legs"]:
+        return [_item("J11", "record", f"fallback-leg n_late {assessed['late_by_leg']}")]
     return []
 
 
-def j_p3_item(on: dict) -> list[dict]:
-    """R3-C8 (③ lines only)."""
-    import v5_rerun
+def j_p3_inputs(record: dict, t4h_folders: tuple[Path, ...]) -> dict:
+    """The J-P3 inputs of one run_v5 line (R3-C8, RD-7 3)."""
+    hydraulics = record.get("hydraulics_record") or {}
+    view: dict[str, Any] = {"hydraulics_record": {
+        "extend_bound_check": hydraulics.get("extend_bound_check")}}
+    if "extend_bound_check" in record:
+        view["extend_bound_check"] = record["extend_bound_check"]
+    return {"controller_tag": record.get("controller_tag"),
+            "head_only_declared": record.get("head_only_declared"),
+            "is_event": bool(record.get("event_output")),
+            "row": old.row_name(record["job"]),
+            "bound_check": hydraulics.get("extend_bound_check"), "j_p3_view": view,
+            "rod_reading": rod_reading(record, t4h_folders),
+            "t4h_lookup": t4h_lookup(record, t4h_folders)}
 
-    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
 
-    if not is_extend_start_tag(on["controller_tag"]):
-        return []
+def j_p3_assessment(on: dict) -> dict:
+    """R3-C8 with the R4 readings (:func:`judge4368_common.assess_j_p3`): a T4h lookup S-2 stops
+    (rev12 R12-1), no rod reading and no configuration rule is 판정 불가, the head-only
+    declaration is the line's field or the steady-path rule (R1 .. R11, S1 .. S8)."""
     lookup = on.get("t4h_lookup") or {}
-    if lookup.get("status") == common.T4H_STOP:  # rev12 R12-1 (Q-R12-1 = A): no configuration rule
-        return [_item("J-P3", "stop", f"S-2: {lookup['reason']}")]
-    if on["rod_reading"] is None:
-        return [
-            _item("J-P3", "not_judgeable", "no T4h rod reading record and no configuration rule")
-        ]
+    rod_stop = (f"S-2: {lookup['reason']}" if lookup.get("status") == common.T4H_STOP
+                else None)
     declared = on["head_only_declared"]
     if declared is None:
         declared = (not on["is_event"]) and on["row"] in STEADY_PATH_ROWS
-    status = v5_rerun.j_p3_status(
-        on["controller_tag"], on["bound_check"], on["rod_reading"], bool(declared)
-    )
-    if status in ("H-7", "setting_defect"):
+    view = on.get("j_p3_view") or {"hydraulics_record": {"extend_bound_check":
+                                                         on.get("bound_check")}}
+    basis = "T4h rod_pressure_Pa" if on["rod_reading"] is not None else "없음"
+    return common.assess_j_p3(view, tag=on["controller_tag"], rod_reading=on["rod_reading"],
+                              rod_basis=basis, head_only_declared=bool(declared),
+                              rod_stop=rod_stop)
+
+
+def j_p3_item(on: dict) -> list[dict]:
+    """R3-C8 (③ lines only); RD-8 / RD-7 3 input defects are 판정 불가."""
+    assessed = j_p3_assessment(on)
+    status = assessed["status"]
+    if status == common.J_P3_NOT_APPLICABLE:
+        return []
+    if status == common.J_P3_S2:
+        return [_item("J-P3", "stop", assessed["reason"])]
+    if status == common.NOT_JUDGEABLE:
+        return [_item("J-P3", "not_judgeable", assessed["reason"])]
+    if status in (common.J_P3_H7, common.J_P3_SETTING_DEFECT):
         return [_item("J-P3", "stop", status)]
     return [_item("J-P3", "record", status)]
 
@@ -592,10 +631,126 @@ def p7(rows_by: dict[str, list[dict]]) -> dict:
     }
 
 
+# ------------------------------------------------------------------------------ R4 block
+def r4_lines_block(bundle: str, path: Path, numbered: list[tuple[int, dict]],
+                   t4h_folders: tuple[Path, ...]) -> dict:
+    """R4 common block outputs of one jsonl result file (every line, every batch): RD-7 J-P3
+    violation and J11 stop lists (``line N``), RD-8 and other J-P3 판정 불가 counts, the RD-9 ③
+    line count and the RD-10 J11 counts."""
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+
+    result_file, name = common.repo_relative(path), Path(path).name
+    j_p3_rows, j11_rows, counts = [], [], Counter()
+    for number, record in numbered:
+        if "error" in record:
+            counts["error_lines"] += 1
+            continue
+        key, setting = common.key_and_setting(name, record)
+        place = {"bundle": bundle, "result_file": result_file,
+                 "location": common.jsonl_location(number), "key": key, "setting": setting}
+        counts["p3_lines"] += bool(is_extend_start_tag(record.get("controller_tag")))
+        assessed = j_p3_assessment(j_p3_inputs(record, t4h_folders))
+        counts["rd8_not_judgeable"] += bool(assessed["rd8_problem"])
+        counts["j_p3_not_judgeable"] += assessed["status"] == common.NOT_JUDGEABLE
+        counts["j_p3_s2"] += assessed["status"] == common.J_P3_S2
+        j_p3_rows += common.j_p3_list_rows(assessed, **place)
+        j11 = common.assess_j11(record.get("lock_window_alignment"), setting)
+        counts["j11_not_judgeable"] += j11["state"] == common.NOT_JUDGEABLE
+        counts["j11_no_input"] += j11["state"] == common.J11_NO_INPUT
+        j11_rows += common.j11_list_rows(j11, **place)
+    return {"result_file": result_file, "lines": len(numbered),
+            "error_lines": counts["error_lines"], "p3_lines_RD9": counts["p3_lines"],
+            "J-P3_violations_RD7": sorted(j_p3_rows, key=common.list_sort_key),
+            "J-P3_not_judgeable_RD8": counts["rd8_not_judgeable"],
+            "J-P3_not_judgeable_all": counts["j_p3_not_judgeable"],
+            "J-P3_S2": counts["j_p3_s2"],
+            "J11_stops_RD7": sorted(j11_rows, key=common.list_sort_key),
+            "J11_RD10": {"not_judgeable": counts["j11_not_judgeable"],
+                         "no_input": counts["j11_no_input"]}}
+
+
+GRID_BUNDLE = "H-9"
+
+
+def grid_grade(paths: list[Path]) -> dict:
+    """Rev16 R16-7 grid grade of the H-9 VB grid (768 runs): J-P3 per ``results[i].runs[j]``.
+
+    A breach is the stop marker ``멈춤 H-7`` with the RD-7 violation list (never ``미달``,
+    RD-7 4); a run whose J-P3 is 판정 불가 (RD-8 form, RD-7 3 input mismatch) is counted and
+    makes the grid grade ``판정 불가``; a setting defect is a stop (revision 9 3.2 bundle words).
+    """
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+
+    files, rows, j11_rows, counts = [], [], [], Counter()
+    for path in sorted(paths, key=lambda p: Path(p).as_posix()):
+        document = common.read_json(path)
+        result_file, name = common.repo_relative(path), Path(path).name
+        assessed_runs = common.grid_j_p3(document)
+        statuses = Counter(entry["j_p3"]["status"] for entry in assessed_runs)
+        for entry in assessed_runs:
+            key, setting = common.key_and_setting(name, entry["job"], "h9_grid")
+            location = common.json_location("results", entry["index"], entry["run_index"])
+            place = {"bundle": GRID_BUNDLE, "result_file": result_file, "location": location,
+                     "key": key, "setting": setting}
+            rows += common.j_p3_list_rows(entry["j_p3"], **place)
+            counts["rd8_not_judgeable"] += bool(entry["j_p3"]["rd8_problem"])
+            counts["p3_runs"] += bool(is_extend_start_tag(entry["job"].get("controller_tag")))
+            # supplement 2-2: J11 and RD-10 per grid run (its own lock_window_alignment)
+            run = document["results"][entry["index"]]["runs"][entry["run_index"]]
+            j11 = common.assess_j11(run.get("lock_window_alignment"), setting)
+            j11_rows += common.j11_list_rows(j11, **place)
+            counts["j11_not_judgeable"] += j11["state"] == common.NOT_JUDGEABLE
+            counts["j11_no_input"] += j11["state"] == common.J11_NO_INPUT
+        counts.update(statuses)
+        files.append({"result_file": result_file, "runs": len(assessed_runs),
+                      "j_p3_status": dict(statuses)})
+    markers = []
+    if counts[common.J_P3_H7]:
+        markers.append(common.STOP_H7)
+    if counts[common.J_P3_SETTING_DEFECT]:
+        markers.append("J-P3 setting_defect (revision 9 3.2: stop)")
+    for marker in sorted({row["marker"] for row in j11_rows}):
+        markers.append(f"J11 {common.STOP_H7 if marker == 'H-7' else marker}")
+    is_undecided = (counts[common.NOT_JUDGEABLE] or counts[common.J_P3_S2]
+                    or counts["j11_not_judgeable"])
+    grade = common.NOT_JUDGEABLE if is_undecided else "markers" if markers else "통과"
+    return {"rule": "rev16 R16-7: R3-C8 / R4-A2 / R8-2 J-P3 per grid run (tag = results[i] "
+                    "controller_tag, rod reading = configuration rule, RD-8 form); supplement "
+                    "2-2: R16-6 J11 with RD-10 per grid run",
+            "files": files, "runs": sum(f["runs"] for f in files),
+            "p3_runs_RD9": counts["p3_runs"],
+            "J-P3_not_judgeable_RD8": counts["rd8_not_judgeable"],
+            "J-P3_not_judgeable_all": counts[common.NOT_JUDGEABLE],
+            "J-P3_S2": counts[common.J_P3_S2],
+            "J-P3_violations_RD7": sorted(rows, key=common.list_sort_key),
+            "J11_stops_RD7": sorted(j11_rows, key=common.list_sort_key),
+            "J11_RD10": {"not_judgeable": counts["j11_not_judgeable"],
+                         "no_input": counts["j11_no_input"]},
+            "markers": markers, "grade": grade}
+
+
+def r4_markers(bundle: str, block: dict, grid: dict | None = None) -> list[str]:
+    """RD-7 / RD-9 markers of one bundle (not grades, RD-7 4)."""
+    markers = []
+    if block["J-P3_violations_RD7"] or (grid and grid["J-P3_violations_RD7"]):
+        markers.append(f"{bundle} J-P3: {common.STOP_H7}")
+    j11_rows = block["J11_stops_RD7"] + (grid["J11_stops_RD7"] if grid else [])
+    if any(row["marker"] == "H-7" for row in j11_rows):
+        markers.append(f"{bundle} J11: {common.STOP_H7}")
+    if any(row["marker"] == common.STOP_LE for row in j11_rows):
+        markers.append(f"{bundle} J11: {common.STOP_LE}")
+    p3 = block["p3_lines_RD9"] + (grid["p3_runs_RD9"] if grid else 0)
+    if p3 == 0:
+        markers.append(f"{bundle} S-8 (RD-9: ③ 켬 줄·run 0)")
+    return markers
+
+
 def judge(args: argparse.Namespace) -> dict:
     index = batch_index()
     extra_dirs = tuple(Path(p) for p in args.t4h_dir or [])
-    lines = {"H-9": common.read_jsonl(args.h9), "H-10": common.read_jsonl(args.h10)}
+    numbered = {"H-9": common.read_jsonl_numbered(args.h9),
+                "H-10": common.read_jsonl_numbered(args.h10)}
+    lines = {name: [record for _, record in rows] for name, rows in numbered.items()}
     # rev12 R12-1: each result file reads its own convention folders (one --t4h-dir only
     # without them)
     folders = {name: tuple(common.t4h_folders(path, lines[name], extra_dirs))
@@ -671,7 +826,23 @@ def judge(args: argparse.Namespace) -> dict:
         )
     )
     report["unknown_lines"] = {name: len(batches[name].get("unknown", [])) for name in lines}
+    grid = grid_grade(list(args.grid or [])) if args.grid else None
+    blocks = {name: r4_lines_block(name, path, numbered[name], folders[name])
+              for name, path in (("H-9", args.h9), ("H-10", args.h10))}
+    report["R4"] = {**blocks, "H-9_grid_R16_7": grid,
+                    "markers": r4_markers("H-9", blocks["H-9"], grid)
+                    + r4_markers("H-10", blocks["H-10"])}
     report["findings"] = findings_of(report)
+    report["findings"] += [f"R4 marker: {marker}" for marker in report["R4"]["markers"]]
+    if grid is not None and grid["grade"] == common.NOT_JUDGEABLE:
+        report["findings"].append("H-9 grid J-P3 / J11: 판정 불가 runs (R16-7, supplement 2-2)")
+    for name, block in blocks.items():
+        if block["J11_RD10"]["not_judgeable"]:
+            report["findings"].append(f"{name}: {block['J11_RD10']['not_judgeable']} J11 "
+                                      "판정 불가 lines (RD-10)")
+        if block["J-P3_not_judgeable_RD8"]:
+            report["findings"].append(f"{name}: {block['J-P3_not_judgeable_RD8']} J-P3 "
+                                      "판정 불가 lines (RD-8)")
     return report
 
 
@@ -721,6 +892,8 @@ def parser() -> argparse.ArgumentParser:
                      help="T4h folder only for inputs without <stem>_t4h/ or t4h/ (at most one; "
                      "rev12 R12-1)")
     out.add_argument("--overlap-ref", type=Path, default=None, help="h10_overlap_t_a.json (record)")
+    out.add_argument("--grid", type=Path, nargs="*", default=[],
+                     help="resume_k1/h9_grid/grid_*.json: rev16 R16-7 grid J-P3 grade (768 runs)")
     return out
 
 

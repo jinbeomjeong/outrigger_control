@@ -99,6 +99,62 @@ R11-2 lookup here; only a run without the ``t4h_file`` key is recomputed (R8-1),
 unusable or unfound name is S-2. R12-1 in the J-P3 rod reading and R12-2 .. R12-5 are in the
 ``*_4368.py`` judges, ``chrono_rows_judge_4368`` and ``v5_resume_4368_chrono_rows.py gs-check``.
 
+R4 (436.8 harness re-judgement; R4 common block sha256 e451f067, rules rev13 .. rev25): every
+subcommand checks the 26 seals of RD-2 (original, rev1 .. rev25) raw first (S-1). Changed:
+``record-check`` reads an ABL line (``controller`` ABL and tag ``ABL_LAS_K1`` together; one of
+them alone is a kind-input defect) with ``require_soil_response`` = False (rev16 R16-3); the R8-1
+tag recomputation reads a V0 result without ``hydraulic_options`` as ③ off (rev16 R16-4);
+``jp-reuse`` is RD-11 (the two stored J_P batches, 12 rows fixed, string ``C2Event`` elements only,
+base-name event counts, exactly one shadow line per run; input problems are stop markers and
+withhold the reuse value). New:
+  r4-lists       RD-7 J-P3 / J11 / 멈춤 S-6 lists in the RD-7 3 notation, RD-8 form counts and
+                 marker ``J-P3 입력 형식(RD-8)`` (H-1, H-3, H-4), RD-9 ③ counts (S-8), RD-10
+                 J11 counts, over the R2 result files of every bundle
+  h11            rev16 R16-8 G-3 gate (8 pairs, count check, commit identity)
+  h12            rev16 R16-9 6 with rev17 R17-2a: forced four-leg and actual fallback-leg ranges,
+                 marker ``R17-2a 범위 공백`` when their H-7 conclusions differ, empty-window guard
+  x16-records    rev16 R16-11 / R16-11b: C-9 .. C-11 record items and identity
+  item-list      RD-13 per-bundle item lists (fixed bytes, sha256)
+  key-map        RD-5 draft of the identity keys left out of the K-10 comparison
+  head-check     RD-1 5 (HEAD = M4, else S-12) and with ``--r4`` RD-1 4 (M4 / R4 blobs, S-11)
+R4 supplement 2 (a9a15a13, user decision 124): ``r4-lists`` leaves the dg3-replaced 135 keys out of
+the H-8 VB J-P3 / J11 lists (2-1), applies J11 / RD-10 to every H-9 grid run (2-2) and classifies
+U-6 b5 records by the ground token of ``src`` (2-7); ``x16-records`` takes rc from the first line of
+the only ``_runners/logs_*/<short>_run.done`` (short name by the ``case`` of
+``_identity/<short>_pre.json``; missing, double or no ``exit=`` = 기록 불완전, 2-4), C-10 G6 by
+the rev25 CD-11 P3 table (2-5) and
+C-11 LOC-period values at the first LOC and, after a cancellation, the final LOC (2-6). The r72
+G6-2 demotion (2-3) is in the r72 records' gates already (``r72_g6_screen``, six conditions of
+``late_loc_rule.late_loc_revoked``), read unchanged by ``u3_judge_4368``.
+R4 supplement 3 (5360becf, user decisions 125 / 126): the dg3 exclusion is ``h8_noise_VB.json``
+only and those lines stay in the H-8 RD-9 number (3-1, 3-2); list values ``min_gap_bar`` /
+``first_breach_t_s`` are the recorded elements as they are, a missing / non-number / non-finite
+one is null (3-3); H-10 is every line of ``h10_reuse_rerun.jsonl`` (3-4); a grid run's setting is
+``results[i].v5_setting`` only and a missing one makes its J11 판정 불가 (3-6); a ``@`` token is a
+patch only with a leg name after it (3-7, ``GROUND_TOKEN``).
+R4 supplement 4 (de45d301, user decisions 127 / 128): ``r4-inputs`` checks the 43 original result
+files (named, no glob), 5 key sources and 4 stored V0 grids, the per-line kind (``job.setting``,
+``setting``, u6 ``controller``) against the tag (S-2; missing input S-11; u6 ABL on one side S-3)
+and the S-15 counts of every bundle and H-9 part (4-1 .. 4-4); ``r4-lists`` reads the named files
+and adds the H-9 V0 sample runs to the 멈춤 S-6 scope; ``family-f`` is 4-5 (64 lines, 2 x 16 x
+V0 / VB cells, k by the two gates, R-3 by ``fault_events`` / ``final_phase``, R-4 against the V0
+line of the same (key, offset_s), 판정 불가 never a pass; with ``--vb-dir`` / ``--v0-dir`` the
+application of the 12 family F rows); ``head-check --r4`` without ``--files`` is S-11.
+R4 supplement 5 (89cb422d, user decision 129): ``grid-h10`` pairs each of the 768 VB grid runs with
+the V0 run of the same (file, key, event, offset_s within 1e-9 s) from the source R3-E1 chooses
+(stored V0 grid or ``h9_grid_v0/``; 0 or 2+ pairs and V0-only runs are 판정 불가), takes the run's
+``pass`` (판정 불가 when not a bool or not the AND of ``gates``), and gives the raw pass -> fail
+list N_raw, the family F table, the list N_F with the family F rows judged on both sides without
+``Fmin_after_W`` / ``U57_outside``, the records (fail -> pass, fail -> fail, FAULT, 판정 불가) and
+the v5 criteria H-10 grid term per application case (5-1 .. 5-4).
+R4 supplement 6 (0ad43866): list "file" = the repository path of the VB file, pair key by file
+stem, order result file / key / event (code points) / offset_s, false gate lists in full (6-1);
+the R3-E1 / R4-B4 sample is 같음 / 다름 / 판정 불가 per job and any 판정 불가 leaves the pair source
+undecided (``grid-v0-sample``), the stored V0 grid is never tag-checked (6-2); the application
+condition is true / false / 판정 불가 on that one pairing in ``grid-h10``, ``family-f
+--grid-root`` and ``family-f-trigger --grid-root`` alike, with the 판정 불가 row of the 5-4 table
+(6-3); the only marker is ``멈춤 H-10`` (6-4).
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -178,14 +234,46 @@ RULES_REV12_NAME = "v5_resume_4368_rules_rev12.md"
 RULES_REV12_SHA256 = "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
 """Rev12 (sealed, master 61f066f): R12-1 T4h lookup for every T4h judgement (here already the
 R11-2 lookup); R12-2 .. R12-5 are in the Chrono tools; this seal is checked (R12-6)."""
-SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
+RULES_REV13_TO_REV25 = (
+    ("v5_resume_4368_rules_rev13.md",
+     "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"),
+    ("v5_resume_4368_rules_rev14.md",
+     "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"),
+    ("v5_resume_4368_rules_rev15.md",
+     "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"),
+    ("v5_resume_4368_rules_rev16.md",
+     "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"),
+    ("v5_resume_4368_rules_rev17.md",
+     "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"),
+    ("v5_resume_4368_rules_rev18.md",
+     "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"),
+    ("v5_resume_4368_rules_rev19.md",
+     "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"),
+    ("v5_resume_4368_rules_rev20.md",
+     "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"),
+    ("v5_resume_4368_rules_rev21.md",
+     "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"),
+    ("v5_resume_4368_rules_rev22.md",
+     "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"),
+    ("v5_resume_4368_rules_rev23.md",
+     "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"),
+    ("v5_resume_4368_rules_rev24.md",
+     "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"),
+    ("v5_resume_4368_rules_rev25.md",
+     "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"),
+)
+"""R4 common block RD-2 (rev16 R16-13, the R4 bullets of rev17 .. rev25): the R4 harness tools
+also check rev13 .. rev25."""
+SEALED_REVISIONS = ((RULES_NAME, RULES_SHA256),
+                    (RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
                     (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256),
                     (RULES_REV9_NAME, RULES_REV9_SHA256), (RULES_REV10_NAME, RULES_REV10_SHA256),
-                    (RULES_REV11_NAME, RULES_REV11_SHA256), (RULES_REV12_NAME, RULES_REV12_SHA256))
-"""The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
-normalisation)."""
+                    (RULES_REV11_NAME, RULES_REV11_SHA256), (RULES_REV12_NAME, RULES_REV12_SHA256),
+                    *RULES_REV13_TO_REV25)
+"""The 26 revisions every subcommand checks raw (R4 common block RD-2: the original and rev1 ..
+rev25; R2-9: sealed rule files are ``-text``, no LF normalisation)."""
 RECORD_KEY = "resume_k1"
 """``04_scripts/04_hydraulic/coupled/resume_k1_record.RECORD_KEY``."""
 
@@ -437,6 +525,9 @@ def harness_record_problems(record: dict) -> list[str]:
     kind = harness_line_kind(record)
     if kind.defect is not None:
         return [*problems, kind.defect]
+    is_abl, abl_defect = abl_line(record)
+    if abl_defect is not None:
+        return [*problems, abl_defect]
     if kind.is_request_checked and block.get("k1_order_gate_request") != "preset":
         problems.append(f"k1_order_gate_request {block.get('k1_order_gate_request')!r} != 'preset'")
     if block.get("k1_order_gate_effective") != kind.is_gate_on:
@@ -446,11 +537,36 @@ def harness_record_problems(record: dict) -> list[str]:
     if gate is not kind.is_gate_on:
         problems.append(f"flat_soil_margin_order_gate {gate!r} != {kind.is_gate_on!r}")
     _, settings = get_path(block, "liftoff_approach_slow.settings")
-    problems += _las_setting_problems(settings, expect_on=kind.is_las_on)
+    problems += _las_setting_problems(settings, expect_on=kind.is_las_on,
+                                      expected=ABL_LAS_EXPECTATIONS if is_abl else LAS_PRESET)
     return problems
 
 
-def _las_setting_problems(settings: Any, *, expect_on: bool) -> list[str]:
+ABL_CONTROLLER = "ABL"
+ABL_LAS_EXPECTATIONS = {**LAS_PRESET, "require_soil_response": False}
+"""Rev16 R16-3: an ABL line expects the LAS-b preset values except ``require_soil_response`` =
+False (``b5_baseline_compare.ablation_config``); the K1 gate and its effective value stay the
+preset; ``slope_clearance_margin.settings.flat_soil_margin_m`` = 0 is the ABL definition value
+(not a 4.2 key, so not compared)."""
+
+
+def abl_line(record: dict) -> tuple[bool, str | None]:
+    """Rev16 R16-3 kind of one harness line: (is an ABL line, kind defect).
+
+    The line is ABL when its ``controller`` field is ``ABL`` and its tag is ``ABL_LAS_K1``; only
+    one of the two is a kind-input defect (S-3, in G-S S-11: the rev11 R11-1 form)."""
+    is_name = record.get("controller") == ABL_CONTROLLER
+    is_tag = read_controller_tag(record) == TAG_ABL
+    if is_name and is_tag:
+        return True, None
+    if is_name or is_tag:
+        return False, (f"{KIND_DEFECT_PREFIX}: controller {record.get('controller')!r} and tag "
+                       f"{read_controller_tag(record)!r} disagree on ABL (rev16 R16-3)")
+    return False, None
+
+
+def _las_setting_problems(settings: Any, *, expect_on: bool,
+                          expected: dict[str, Any] | None = None) -> list[str]:
     if not isinstance(settings, dict):
         return ["liftoff_approach_slow.settings missing"]
     if not expect_on:
@@ -460,7 +576,7 @@ def _las_setting_problems(settings: Any, *, expect_on: bool) -> list[str]:
             else [f"LAS-b enable {settings.get('enable')!r} != False"]
         )
     problems = []
-    for name, want in LAS_PRESET.items():
+    for name, want in (LAS_PRESET if expected is None else expected).items():
         got = settings.get(name)
         same = (
             (got is want)
@@ -582,12 +698,13 @@ def _is_c4_off(row: dict) -> bool:
 def _harness_record_row(path: Path, where: str, record: dict) -> dict:
     """One harness run of ``record-check`` with its rev11 R11-1 line kind."""
     kind = harness_line_kind(record)
+    is_abl, abl_defect = abl_line(record)
     row = {
         "file": str(path),
         "where": where,
         "key": record_key(record),
-        "line_kind": kind.name,
-        "kind_input_defect": kind.defect,
+        "line_kind": "ABL" if is_abl and kind.name == LINE_KIND_PRESET else kind.name,
+        "kind_input_defect": kind.defect or abl_defect,
         "problems": harness_record_problems(record),
     }
     if kind.defect is None and not kind.is_request_checked:  # R-0 / R-0K: record only
@@ -1001,79 +1118,180 @@ def k1_class(args: argparse.Namespace) -> dict:
 
 
 # -------------------------------------------------------------------------------------------- 7.3
+JP_BATCHES = ("batch_V5-JP-VB_20261108_115631", "batch_V5-JP-V0_20261108_131212")
+"""RD-11 1: the two stored J_P batches under ``07_results/S9`` (order VB, V0)."""
+JP_SHADOW = Path("06_analysis/03_hydraulic/coupled/v5/las/shadow_jp_b0.jsonl")
+"""RD-11 1: the LAS-b shadow record of the J_P rows."""
+JP_EXPECTED_ROWS = 12
+"""RD-11 2: the row count is fixed (no argument changes it); another count is S-15."""
+JP_RESULT_KEYS = ("s8c_check.result_json", "s6c_check.result_json", "result_json")
+"""RD-11 3: the case record keys tried in order for the row's ``result.json``."""
+RESULTS_ROOT_PART = "07_results/"
+EVENT_FORM = re.compile(r"C2Event\(t_s=(?P<t>[^,]+), name=(?P<name>.+)\)")
+"""RD-11 4: the whole stripped element must be ``C2Event(t_s=<number>, name=<Python string>)``."""
+R4C30_BASE_NAME = "INFO_LOC_FLAT_SOIL_MARGIN"
+SOIL_MODE_START_BASE_NAME = "soil_mode_start"
+JP_STOP_S15 = "S-15"
+JP_STOP_EVENTS = "사건 기록 판독 불가"
+JP_STOP_SHADOW = "그림자 판독 불가"
+
+
+def parse_controller_event(item: Any) -> tuple[float, str] | None:
+    """RD-11 4: (t_s, name) of one ``controller_events.json`` element, None when it is not a
+    string of the exact ``repr(C2Event)`` form (a dict element is not that form)."""
+    if not isinstance(item, str):
+        return None
+    match = EVENT_FORM.fullmatch(item.strip())
+    if match is None:
+        return None
+    try:
+        t_s = float(match.group("t"))
+        name = ast.literal_eval(match.group("name"))
+    except (ValueError, SyntaxError):
+        return None
+    return (t_s, name) if isinstance(name, str) else None
+
+
 def parse_controller_events(items: Any) -> tuple[list[tuple[float, str]] | None, list[str]]:
-    """``controller_events.json`` (a list of ``repr(C2Event)`` strings, or of ``{t_s, name}`` dicts) as
-    (t_s, name) pairs; (None, unreadable items) when any item does not parse."""
+    """RD-11 4: ``controller_events.json`` as (t_s, name) pairs; (None, problems) when it is not a
+    list or any element is not the ``repr(C2Event)`` string form."""
     if not isinstance(items, list):
         return None, ["not a list"]
     events, bad = [], []
     for item in items:
-        if isinstance(item, dict) and "name" in item:
-            events.append((float(item.get("t_s", math.nan)), str(item["name"])))
-            continue
-        match = EVENT_PATTERN.fullmatch(str(item)) if isinstance(item, str) else None
-        if match is None:
+        parsed = parse_controller_event(item)
+        if parsed is None:
             bad.append(str(item)[:120])
-            continue
-        events.append((float(match.group(1)), match.group(2)))
+        else:
+            events.append(parsed)
     return (None, bad) if bad else (events, [])
 
 
+def event_base_name(name: str) -> str:
+    """RD-11 5: the part of an event name before its first ``:`` (the whole name without one)."""
+    return name.split(":", 1)[0]
+
+
 def jp_row_conditions(events: list[tuple[float, str]]) -> dict:
-    """Rules 7.3 condition 2 of one row: R4c30 applied events and soil-mode starts."""
-    applied = [name for _, name in events if name.startswith(APPLIED_EVENT_PREFIX)]
-    soil = [name for _, name in events if name == SOIL_MODE_START_EVENT]
-    return {
-        "events": len(events),
-        "flat_soil_margin_applied": len(applied),
-        "soil_mode_start": len(soil),
-        "k1_no_effect": not applied and not soil,
-    }
+    """RD-11 5 / 7: R4c30 applied events and soil-mode starts by base name; condition 2."""
+    bases = [event_base_name(name) for _, name in events]
+    applied = sum(base == R4C30_BASE_NAME for base in bases)
+    soil = sum(base == SOIL_MODE_START_BASE_NAME for base in bases)
+    return {"events": len(events), "flat_soil_margin_applied": applied,
+            "soil_mode_start": soil, "k1_no_effect": applied == 0 and soil == 0}
+
+
+def _existing_result(value: Any, root: Path) -> Path | None:
+    """RD-11 3: a recorded ``result_json`` path as is (relative = under the checkout), else the
+    part from ``07_results/`` on under the checkout."""
+    if not isinstance(value, str) or not value:
+        return None
+    text = value.replace("\\", "/")
+    path = Path(text)
+    candidate = path if path.is_absolute() else root / path
+    if candidate.is_file():
+        return candidate
+    if RESULTS_ROOT_PART in text:
+        moved = root / (RESULTS_ROOT_PART + text.split(RESULTS_ROOT_PART, 1)[1])
+        if moved.is_file():
+            return moved
+    return None
+
+
+def jp_row_folder(case: dict, batch_dir: Path, root: Path) -> Path | None:
+    """RD-11 3: the row folder (the folder of the row's ``result.json``) of one case record."""
+    for dotted_key in JP_RESULT_KEYS:
+        found = _existing_result(get_path(case, dotted_key)[1], root)
+        if found is not None:
+            return found.parent
+    fallback = batch_dir / str(case.get("case")) / "result.json"
+    return fallback.parent if fallback.is_file() else None
+
+
+def jp_shadow_lines(path: Path) -> dict[str, list[dict]]:
+    """RD-11 6: shadow lines grouped by run id (top-level ``job.chrono_run``, ``\\`` -> ``/``)."""
+    groups: dict[str, list[dict]] = {}
+    for line in read_records(path):
+        if not isinstance(line, dict):
+            continue
+        run = get_path(line, "job.chrono_run")[1]
+        if run is not None:
+            groups.setdefault(str(run).replace("\\", "/"), []).append(line)
+    return groups
+
+
+def jp_events(folder: Path | None) -> tuple[list[tuple[float, str]] | None, str | None]:
+    """RD-11 3 / 4: the parsed events of a row folder, or (None, reason)."""
+    if folder is None:
+        return None, "result.json not found (RD-11 3)"
+    path = folder / "controller_events.json"
+    if not path.is_file():
+        return None, "controller_events.json missing"
+    events, bad = parse_controller_events(read_json(path))
+    if events is None:
+        return None, f"elements not in the C2Event string form: {bad[:3]}"
+    return events, None
+
+
+def jp_row(batch_name: str, case: dict, batch_dir: Path, root: Path,
+           shadow: dict[str, list[dict]]) -> dict:
+    """RD-11 8 items of one J_P row."""
+    folder = jp_row_folder(case, batch_dir, root)
+    run_id = None if folder is None else f"{folder.parent.name}/{folder.name}"
+    events, reason = jp_events(folder)
+    lines = shadow.get(run_id, []) if run_id is not None else []
+    row: dict[str, Any] = {"batch": batch_name, "case": case.get("case"), "run_id": run_id,
+                           "events_unreadable": events is None, "events_unreadable_reason": reason,
+                           "shadow_lines": len(lines), "shadow_unreadable": len(lines) != 1}
+    if events is not None:
+        conditions = jp_row_conditions(events)
+        row.update(events=conditions["events"],
+                   flat_soil_margin_applied=conditions["flat_soil_margin_applied"],
+                   soil_mode_start=conditions["soil_mode_start"],
+                   condition2_k1_no_effect=conditions["k1_no_effect"])
+    if len(lines) == 1:
+        line = lines[0]
+        row["condition1_shadow_silent"] = (line.get("status") == "silent"
+                                           and "first_fire_t_s" in line
+                                           and line["first_fire_t_s"] is None)
+    else:
+        row["shadow_unreadable_reason"] = f"그림자 줄 수 {len(lines)}"
+    return row
 
 
 def jp_reuse(args: argparse.Namespace) -> dict:
-    shadow = {}
-    for record in read_records(Path(args.shadow)):
-        for _, line in run_records(record):
-            run = get_path(line, "job.chrono_run")[1]
-            if run is not None:
-                shadow[str(run).replace("\\", "/")] = line
-    rows = []
-    for folder in args.rows:
-        folder = Path(folder)
-        run_id = f"{folder.parent.name}/{folder.name}"
-        line = shadow.get(run_id)
-        silent = (
-            line is not None
-            and line.get("status") == "silent"
-            and line.get("first_fire_t_s") is None
-        )
-        path = folder / "controller_events.json"
-        events, bad = (
-            parse_controller_events(read_json(path)) if path.is_file() else (None, ["file missing"])
-        )
-        condition2 = None if events is None else jp_row_conditions(events)
-        rows.append(
-            {
-                "row": run_id,
-                "shadow_status": None if line is None else line.get("status"),
-                "condition1_shadow_silent": silent,
-                "condition2": condition2,
-                "condition3_readable": events is not None,
-                "unreadable": bad[:5],
-                "reusable": bool(silent and condition2 and condition2["k1_no_effect"]),
-            }
-        )
-    is_reuse = len(rows) == args.expected and all(row["reusable"] for row in rows)
-    return {
-        "rules": RULES_NAME,
-        "section": "7.3",
-        "rows": rows,
-        "expected_rows": args.expected,
-        "reuse": is_reuse,
-        "decision": "재사용" if is_reuse else "묶음 JP 재실행",
-        "exit_code": 0 if is_reuse else 1,
-    }
+    """RD-11: the 7.3 J_P reuse reading of the 12 stored J_P rows (conditions 1 and 2).
+
+    Input problems (row count other than 12, an unreadable event record, a shadow line count other
+    than 1) are stop markers, never "재사용 거짓"; the reuse value is given only without them.
+    """
+    root = Path(args.root)
+    out: dict[str, Any] = {"rules": RULES_NAME, "section": "7.3 (R4 common block RD-11)",
+                           "batches": list(JP_BATCHES), "shadow": JP_SHADOW.as_posix(),
+                           "expected_rows": JP_EXPECTED_ROWS}
+    cases = []
+    for name in JP_BATCHES:
+        batch_dir = root / "07_results" / "S9" / name
+        document = read_json(batch_dir / "batch.json")
+        cases += [(name, batch_dir, case) for case in document.get("cases") or []]
+    out["rows_count"] = len(cases)
+    if len(cases) != JP_EXPECTED_ROWS:
+        return {**out, "stop_markers": [JP_STOP_S15], "rows": [],
+                "note": "row count is not 12: no reading (RD-11 2)", "exit_code": 1}
+    shadow = jp_shadow_lines(root / JP_SHADOW)
+    rows = [jp_row(name, case, batch_dir, root, shadow) for name, batch_dir, case in cases]
+    markers = []
+    if any(row["events_unreadable"] for row in rows):
+        markers.append(JP_STOP_EVENTS)
+    if any(row["shadow_unreadable"] for row in rows):
+        markers.append(JP_STOP_SHADOW)
+    out.update(rows=rows, stop_markers=markers)
+    if markers:
+        return {**out, "note": "stop markers: the reuse value is not given (RD-11 7)",
+                "exit_code": 1}
+    is_reuse = all(row["condition1_shadow_silent"] and row["condition2_k1_no_effect"]
+                   for row in rows)
+    return {**out, "reuse": is_reuse, "exit_code": 0 if is_reuse else 1}
 
 
 # -------------------------------------------------------------------------------------------- 7.4
@@ -1611,10 +1829,18 @@ def _switch_pair(block: Any, where: str, *, need_applicable: bool) -> tuple[bool
     return values[0], values[1]
 
 
+V0_SETTING = "V0"
+"""Rev16 R16-4: an r79 result with ``v5_setting`` V0 has no ``hydraulic_options`` block (V0 =
+every v5 plant option off), which reads as ③ off."""
+
+
 def _extend_start_switch(record: dict) -> bool:
     """R8-1b ③: ``hydraulic_options.extend_start_tracked`` true = on; the block without the key
-    = off (``HydraulicOptions.to_dict`` keeps the key only when on)."""
+    = off (``HydraulicOptions.to_dict`` keeps the key only when on). Rev16 R16-4: no block on a
+    ``v5_setting`` V0 result = off; no block otherwise is not computable (S-2)."""
     options = record.get(HYDRAULIC_OPTIONS_KEY)
+    if options is None and record.get("v5_setting") == V0_SETTING:  # absent or null
+        return False
     if not isinstance(options, dict):
         raise TagNotComputable(f"{HYDRAULIC_OPTIONS_KEY} block missing")
     return options.get(EXTEND_START_OPTION_KEY) is True
@@ -2078,49 +2304,97 @@ def _results_by_key(path: Path) -> dict[str, dict]:
     return {row.get("key"): row for row in read_json(path).get("results") or []}
 
 
-def _run_hashes(result: dict | None) -> dict[tuple, Any]:
-    """(event, offset) -> ``commands_sha256`` of a grid result's runs."""
-    return {(run.get("event"), float(run.get("offset_s"))): run.get("commands_sha256")
-            for run in (result or {}).get("runs") or []}
+SAMPLE_SAME, SAMPLE_DIFFER = "같음", "다름"
+SAMPLE_UNDECIDED = "판정 불가"
+
+
+def _is_finite_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _same_phase_runs(run: dict, runs: list[dict]) -> list[dict]:
+    """The runs of ``runs`` with the event of ``run`` and its ``offset_s`` within 1e-9 s."""
+    offset = run.get("offset_s")
+    if not _is_finite_number(offset):
+        return []
+    return [other for other in runs if other.get("event") == run.get("event")
+            and _is_finite_number(other.get("offset_s"))
+            and abs(other["offset_s"] - offset) <= COMPARE_EPS]
+
+
+def _phase_name(run: dict) -> str:
+    return f"{run.get('event')}@{run.get('offset_s')}"
 
 
 def sample_job_runs(stored: dict, sample: dict | None) -> dict:
-    """Rev4 R4-B4: one sample job = one stored result; every run is paired by (event, offset)
-    and must have the same hash."""
-    old, new = _run_hashes(stored), _run_hashes(sample)
-    missing = sum(1 for k in old if old[k] is None or new.get(k) is None) + len(set(new) - set(old))
-    differ = sum(1 for k in old if old[k] is not None and new.get(k) is not None
-                 and old[k] != new[k])
-    return {"runs": len(old), "differ": differ, "missing": missing}
+    """Rev4 R4-B4 with supplement 6-2: one sample job = one stored result.
+
+    같음 = every run on both sides has exactly one pair and the same string ``commands_sha256``;
+    다름 = all pairs single, both hashes strings, some differ. A missing or double pair or a
+    missing / non-string hash makes the job 판정 불가 (never read as 같음 or 다름).
+    """
+    stored_runs = [run for run in stored.get("runs") or [] if isinstance(run, dict)]
+    sample_runs = [] if sample is None else [
+        run for run in sample.get("runs") or [] if isinstance(run, dict)]
+    reasons = [] if sample is not None else ["no single sample job with this key"]
+    differ = 0
+    for run in sample_runs:
+        pairs = _same_phase_runs(run, stored_runs)
+        if len(pairs) != 1:
+            reasons.append(f"sample run {_phase_name(run)}: {len(pairs)} stored pairs")
+            continue
+        hashes = (run.get(R79_HASH_KEY), pairs[0].get(R79_HASH_KEY))
+        if not all(isinstance(value, str) for value in hashes):
+            reasons.append(f"sample run {_phase_name(run)}: commands_sha256 missing or not a "
+                           "string")
+        elif hashes[0] != hashes[1]:
+            differ += 1
+    for run in stored_runs:
+        if sample is not None and len(_same_phase_runs(run, sample_runs)) != 1:
+            reasons.append(f"stored run {_phase_name(run)}: no single sample pair")
+    state = SAMPLE_UNDECIDED if reasons else (SAMPLE_DIFFER if differ else SAMPLE_SAME)
+    return {"runs": len(stored_runs), "differ": differ, "state": state,
+            "not_judgeable": reasons}
 
 
 def grid_v0_sample(args: argparse.Namespace) -> dict:
-    """R3-E1 / R4-B4: the 8-job V0 sample (per stored file the first and the last result; every
-    run of the job, paired by (stem, key, event, offset)) against the stored V0 grid by
-    ``commands_sha256``; all same -> the stored V0 is the pair, otherwise V0 768 runs
-    (``resume_k1/h9_grid_v0/``)."""
+    """R3-E1 / R4-B4 with supplement 6-2: the 8-job V0 sample against the stored V0 grid.
+
+    Per stored file the first and the last result are the sample jobs; every run of a job is
+    paired by (stem, key, event, offset_s within 1e-9 s) and compared by ``commands_sha256``.
+    All 8 같음 -> the stored V0 is the pair; else any 다름 -> V0 768 (``resume_k1/h9_grid_v0/``).
+    A 판정 불가 job (it comes before any 다름) or other than 8 jobs leaves the source undecided
+    (``v0_768_required`` None; the H-9 grid judgement is 판정 불가, stop and ask).
+    """
     rows, problems = [], []
     for name in GRID_FILES:
         stored_path = Path(args.stored_dir) / f"{name}.json"
         stored = read_json(stored_path).get("results") or []
-        sample = _results_by_key(Path(args.sample_dir) / f"{name}.json")
+        sample_jobs = read_json(Path(args.sample_dir) / f"{name}.json").get("results") or []
         for row in (stored[0], stored[-1]) if stored else ():
             key = row.get("key")
-            compared = sample_job_runs(row, sample.get(key))
-            if compared["missing"]:
-                problems.append(f"{name} {key}: {compared['missing']} runs without a pair or hash")
+            matches = [job for job in sample_jobs if job.get("key") == key]
+            compared = sample_job_runs(row, matches[0] if len(matches) == 1 else None)
             rows.append({"file": name, "key": key, "stored_sha256_file": file_sha256(stored_path),
-                         **compared,
-                         "same": None if compared["missing"] else compared["differ"] == 0})
+                         "sample_jobs_with_key": len(matches), **compared,
+                         "same": compared["state"] == SAMPLE_SAME})
     if len(rows) != 2 * len(GRID_FILES):
         problems.append(f"{len(rows)} sample jobs, 8 expected")
-    is_all_same = not problems and all(row["same"] for row in rows)
-    return {"rules": RULES_REV3_NAME, "section": "R3-E1", "jobs": len(rows),
-            "same": sum(row["same"] is True for row in rows), "rows": rows,
-            "decision": ("stored V0 is the pair (저장(옛 V0 제어기), 표본 해시 같음)" if is_all_same
-                         else "run V0 768: steps_conditional_h9_grid_v0.json"),
-            "v0_768_required": not is_all_same, "problems": problems,
-            "exit_code": 1 if problems else 0}
+    problems += [f"{row['file']} {row['key']}: {reason}" for row in rows
+                 for reason in row["not_judgeable"]]
+    if problems:
+        source, required = SAMPLE_UNDECIDED, None
+        decision = f"{SAMPLE_UNDECIDED}: V0 pair source undecided, stop and ask"
+    elif all(row["same"] for row in rows):
+        source, required = "stored", False
+        decision = "stored V0 is the pair (저장(옛 V0 제어기), 표본 해시 같음)"
+    else:
+        source, required = "v0_768", True
+        decision = "run V0 768: steps_conditional_h9_grid_v0.json"
+    return {"rules": RULES_REV3_NAME, "section": "R3-E1 / R4-B4, supplement 6-2",
+            "jobs": len(rows), "same": sum(row["same"] for row in rows), "rows": rows,
+            "pair_source": source, "decision": decision, "v0_768_required": required,
+            "problems": problems, "exit_code": 1 if problems else 0}
 
 
 def _family_rows(grid_dir: Path) -> dict[tuple[str, float], list[dict]]:
@@ -2142,7 +2416,16 @@ def _failed_gates(run: dict) -> set[str]:
 
 def family_f_trigger(args: argparse.Namespace) -> dict:
     """R3-E2: a family F row (12 = 4 phases x 2 keys) with V0 pass and VB fail by
-    ``Fmin_after_W`` / ``U57_outside`` only starts the conditional 64 runs."""
+    ``Fmin_after_W`` / ``U57_outside`` only starts the conditional 64 runs.
+
+    With ``--grid-root`` (supplement 6-3) the trigger is the application condition on the one
+    5-1 / 6-2 V0 pairing (true, false, 판정 불가), the same value ``family-f`` and ``grid-h10``
+    give; ``--vb-dir`` / ``--v0-dir`` keep the R3-E2 form for a fixed V0 folder.
+    """
+    if getattr(args, "grid_root", None) is not None:
+        return _family_f_trigger_on_pairing(Path(args.grid_root))
+    if args.vb_dir is None or args.v0_dir is None:
+        raise InputError("family-f-trigger needs --grid-root or both --vb-dir and --v0-dir")
     vb, v0 = _family_rows(Path(args.vb_dir)), _family_rows(Path(args.v0_dir))
     rows = []
     for (key, offset), vb_runs in sorted(vb.items()):
@@ -2163,43 +2446,193 @@ def family_f_trigger(args: argparse.Namespace) -> dict:
             "exit_code": 1 if problems else 0}
 
 
+def _family_f_trigger_on_pairing(root: Path) -> dict:
+    pairing = grid_pairing(root)
+    condition = application_condition(pairing)
+    rows = [{"result_file": row.vb.result_file, "location": row.vb.location, "key": row.vb.key,
+             "offset_s": row.vb.offset_s,
+             "condition": condition_word(family_f_row_condition(row))}
+            for row in pairing.rows if row.is_family_f]
+    problems = [] if len(rows) == FAMILY_F_GRID_ROWS else [
+        f"{len(rows)} family F rows, {FAMILY_F_GRID_ROWS} expected"]
+    decisions = {True: "run steps_conditional_h9_family_f.json (64 runs)",
+                 False: "5.2 runs 해당 없음",
+                 None: f"{NOT_JUDGEABLE_WORD}: stop and ask"}
+    return {"rules": RULES_REV3_NAME, "section": "R3-E2, supplement 6-3 (5-1 V0 pairing)",
+            "v0_pair_source": pairing.source, "rows": sorted(rows, key=grid_sort_key),
+            "trigger": condition_word(condition), "decision": decisions[condition],
+            "problems": problems + pairing.input_stops,
+            "exit_code": 1 if problems or pairing.input_stops or condition is None else 0}
+
+
+FAMILY_F_OFFSETS = 16
+FAMILY_F_SETTINGS = ("V0", "VB")
+FAMILY_F_GRID_ROWS = 12
+"""Supplement 4-5: the family F rows of the VB grid (grid_r67_main 2 phases x 2 keys +
+grid_r67_top 4 phases x 2 keys)."""
+FAMILY_F_RESULT_PASS, FAMILY_F_RESULT_FAIL = "통과", "실패"
+
+
+def family_f_shape_problems(lines: list[dict]) -> list[str]:
+    """Supplement 4-5 form check (S-15): 64 lines, every ``event`` FS24, and the 64 cells
+    (2 keys x 16 offsets x V0 / VB) one line each."""
+    problems = []
+    if len(lines) != FAMILY_F_RUNS:
+        problems.append(f"{len(lines)} lines, {FAMILY_F_RUNS} expected")
+    events = {line.get("event") for line in lines}
+    if events != {FAMILY_F_EVENT}:
+        problems.append(f"event values {sorted(map(str, events))}, only {FAMILY_F_EVENT} allowed")
+    cells = Counter((line.get("key"), line.get("offset_s"), line.get("setting")) for line in lines)
+    offsets = {cell[1] for cell in cells}
+    if {cell[0] for cell in cells} != set(FAMILY_F_KEYS) or len(offsets) != FAMILY_F_OFFSETS \
+            or {cell[2] for cell in cells} != set(FAMILY_F_SETTINGS):
+        problems.append("keys / offsets / settings are not 2 x 16 x (V0, VB)")
+    doubled = [cell for cell, n in cells.items() if n != 1]
+    if doubled or len(cells) != FAMILY_F_RUNS:
+        problems.append(f"{len(cells)} distinct cells, {len(doubled)} with more than one line")
+    return [f"S-15: {problem} (supplement 4-5, rev4 R4-B5)" for problem in problems]
+
+
+def _gate(line: dict, name: str) -> bool | None:
+    gates = line.get("gates")
+    value = gates.get(name) if isinstance(gates, dict) else None
+    return value if isinstance(value, bool) else None
+
+
+def family_f_k(lines: list[dict]) -> tuple[dict[tuple[str, str], int], list[dict]]:
+    """Criteria revision 5 5.2: per (setting, key) the phases where ``Fmin_after_W`` or
+    ``U57_outside`` failed; a missing / non-bool gate is 판정 불가 (listed)."""
+    k: dict[tuple[str, str], int] = {(s, key): 0 for s in FAMILY_F_SETTINGS
+                                     for key in FAMILY_F_KEYS}
+    undecided = []
+    for line in lines:
+        values = [_gate(line, name) for name in FAMILY_F_GATES]
+        cell = (line.get("setting"), line.get("key"))
+        if any(value is None for value in values) or cell not in k:
+            undecided.append({"key": line.get("key"), "offset_s": line.get("offset_s"),
+                              "setting": line.get("setting"), "item": "k (two gates)"})
+            continue
+        k[cell] += not all(values)
+    return k, undecided
+
+
+def family_f_r3(vb_lines: list[dict]) -> tuple[list[dict], list[dict]]:
+    """R-3: every VB line has an empty ``fault_events`` list and ``final_phase`` ``ready``."""
+    bad, undecided = [], []
+    for line in vb_lines:
+        place = {"key": line.get("key"), "offset_s": line.get("offset_s")}
+        faults, phase = line.get("fault_events"), line.get("final_phase")
+        if not isinstance(faults, list) or not isinstance(phase, str):
+            undecided.append({**place, "setting": "VB", "item": "R-3"})
+        elif faults or phase != "ready":
+            bad.append({**place, "fault_events": len(faults), "final_phase": phase})
+    return bad, undecided
+
+
+def family_f_r4(vb_lines: list[dict], v0_by_cell: dict[tuple, dict]) -> tuple[list, list]:
+    """R-4: per VB line the gates outside the two that are false in VB and true in the V0 line
+    of the same (key, offset_s); a gate name on one side only makes that line 판정 불가."""
+    bad, undecided = [], []
+    for line in vb_lines:
+        place = {"key": line.get("key"), "offset_s": line.get("offset_s")}
+        other = v0_by_cell.get((line.get("key"), line.get("offset_s")))
+        vb_gates = line.get("gates")
+        v0_gates = None if other is None else other.get("gates")
+        if not isinstance(vb_gates, dict) or not isinstance(v0_gates, dict):
+            undecided.append({**place, "setting": "VB", "item": "R-4 (gates or V0 pair)"})
+            continue
+        names = (set(vb_gates) | set(v0_gates)) - set(FAMILY_F_GATES)
+        if any(name not in vb_gates or name not in v0_gates for name in names) or any(
+                not isinstance(vb_gates[n], bool) or not isinstance(v0_gates[n], bool)
+                for n in names):
+            undecided.append({**place, "setting": "VB", "item": "R-4 (gate names differ)"})
+            continue
+        new = sorted(n for n in names if vb_gates[n] is False and v0_gates[n] is True)
+        if new:
+            bad.append({**place, "gates": new})
+    return bad, undecided
+
+
+def family_f_tag_problems(numbered: list[tuple[int, dict]]) -> dict[str, list]:
+    """Supplement 4-3 for ``h9_family_F.jsonl``: the line's ``setting`` decides the kind, its
+    ``controller_tag`` must be that kind's tag (missing setting or tag S-11, other tag S-2)."""
+    problems: dict[str, list] = {"S-11": [], "S-2": []}
+    for number, line in numbered:
+        verdict = kind_tag_problem(kind_of_setting(line.get("setting")),
+                                   line.get("controller_tag"))
+        if verdict is not None:
+            problems[verdict[0]].append({"location": f"line {number}", "reason": verdict[1]})
+    return problems
+
+
+def family_f_application(args: argparse.Namespace) -> dict | None:
+    """Supplement 4-5 application with 6-3: the condition (true, false, 판정 불가) on the one
+    V0 pairing of supplement 5-1 / 6-2 (``--grid-root``); the family F VB rows must be 12."""
+    if getattr(args, "grid_root", None) is None:
+        return None
+    pairing = grid_pairing(Path(args.grid_root))
+    rows = sum(row.is_family_f for row in pairing.rows)
+    return {"condition": condition_word(application_condition(pairing)),
+            "v0_pair_source": pairing.source["source"], "family_rows": rows,
+            "rows_ok": rows == FAMILY_F_GRID_ROWS}
+
+
 def family_f(args: argparse.Namespace) -> dict:
-    """v5 criteria rev5 5.2 R-1 .. R-4 on ``h9_family_F.jsonl`` (64 lines)."""
-    lines = read_records(Path(args.lines))
-    by = {(line.get("setting"), line.get("key"), float(line.get("offset_s"))): line
-          for line in lines}
-    problems = [] if len(lines) == FAMILY_F_RUNS == len(by) else [
-        f"{len(lines)} lines ({len(by)} distinct), {FAMILY_F_RUNS} expected (S-15)"]
+    """Criteria revision 5 5.2 R-1 .. R-4 on ``h9_family_F.jsonl`` (64 lines, supplement 4-5).
 
-    def fails(line: dict) -> bool:
-        return bool(_failed_gates(line) & set(FAMILY_F_GATES))
-
-    k = {(s, key): sum(fails(line) for (s2, key2, _), line in by.items() if (s2, key2) == (s, key))
-         for s in ("V0", "VB") for key in FAMILY_F_KEYS}
+    The values (k per key and setting, the four conditions, the violation lists) are always
+    given; a missing or mistyped field is 판정 불가 and R-1 .. R-4 are then not a pass. With
+    ``--grid-root`` the application is decided too (supplement 6-3, the 5-1 V0 pairing):
+    condition true and pass = the 12 rows leave the v5 criteria H-10 count for the two gates;
+    true and fail / 판정 불가 = 멈춤 H-10; false = record only; 판정 불가 = H-9 grid 판정 불가.
+    """
+    numbered = [(n, line) for n, line in _numbered_jsonl(Path(args.lines))]
+    lines = [line for _, line in numbered]
+    shape = family_f_shape_problems(lines)
+    tags = family_f_tag_problems(numbered)
+    k, undecided = family_f_k(lines)
+    vb_lines = [line for line in lines if line.get("setting") == "VB"]
+    v0_by_cell = {(line.get("key"), line.get("offset_s")): line for line in lines
+                  if line.get("setting") == "V0"}
+    r3_bad, r3_undecided = family_f_r3(vb_lines)
+    r4_bad, r4_undecided = family_f_r4(vb_lines, v0_by_cell)
+    undecided += r3_undecided + r4_undecided
     r1 = {key: k[("VB", key)] <= k[("V0", key)] + FAMILY_F_M for key in FAMILY_F_KEYS}
     r2 = (sum(k[("VB", key)] for key in FAMILY_F_KEYS)
           <= sum(k[("V0", key)] for key in FAMILY_F_KEYS) + FAMILY_F_M_SUM)
-    vb_lines = [line for (s, _, _), line in by.items() if s == "VB"]
-    r3_bad = [(line["key"], line["offset_s"]) for line in vb_lines
-              if (line.get("gates") or {}).get("fault0") is False
-              or line.get("final_phase") != "ready"]
-    r4_bad = []
-    for (s, key, offset), line in by.items():
-        if s != "VB":
-            continue
-        other = by.get(("V0", key, offset))
-        new = _failed_gates(line) - set(FAMILY_F_GATES)
-        old = set() if other is None else _failed_gates(other)
-        if new - old:
-            r4_bad.append({"key": key, "offset_s": offset, "gates": sorted(new - old)})
-    is_pass = all(r1.values()) and r2 and not r3_bad and not r4_bad and not problems
-    return {"rules": RULES_REV3_NAME, "section": "R3-E2 / rev5 5.2",
-            "k": {f"{s}|{key}": n for (s, key), n in k.items()},
-            "R-1": r1, "R-2": r2, "R-3_violations": r3_bad, "R-4_violations": r4_bad,
-            "m": FAMILY_F_M, "m_sum": FAMILY_F_M_SUM, "pass": is_pass,
-            "decision": "the 12 family F rows leave H-10 for the two gates" if is_pass
-            else "H-10: stop and ask", "problems": problems,
-            "exit_code": 0 if is_pass else 1}
+    stops = shape + [f"S-11 {p['location']}: {p['reason']}" for p in tags["S-11"]] + [
+        f"S-2 {p['location']}: {p['reason']}" for p in tags["S-2"]]
+    if undecided or stops:
+        result = NOT_JUDGEABLE_WORD
+    elif all(r1.values()) and r2 and not r3_bad and not r4_bad:
+        result = FAMILY_F_RESULT_PASS
+    else:
+        result = FAMILY_F_RESULT_FAIL
+    out = {"rules": RULES_REV3_NAME, "section": "R3-E2 / rev4 R4-B5 / rev5 5.2, supplement 4-5",
+           "lines": len(lines), "k": {f"{s}|{key}": n for (s, key), n in k.items()},
+           "R-1": r1, "R-2": r2, "R-3": not r3_bad, "R-4": not r4_bad,
+           "R-3_violations": r3_bad, "R-4_violations": r4_bad, "not_judgeable": undecided,
+           "m": FAMILY_F_M, "m_sum": FAMILY_F_M_SUM, "result": result,
+           "pass": result == FAMILY_F_RESULT_PASS, "problems": stops, "tag_check_4_3": tags}
+    application = family_f_application(args)
+    if application is None:
+        decision, is_stop = "application not decided (no --grid-root)", result != \
+            FAMILY_F_RESULT_PASS
+    elif application["condition"] == NOT_JUDGEABLE_WORD:
+        decision, is_stop = (f"condition {NOT_JUDGEABLE_WORD}: H-9 grid {NOT_JUDGEABLE_WORD}, "
+                             "stop and ask"), True
+    elif not application["rows_ok"]:
+        decision, is_stop = (f"family F rows {application['family_rows']} != "
+                             f"{FAMILY_F_GRID_ROWS}: stop and ask"), True
+    elif not application["condition"]:
+        decision, is_stop = "condition false: R-1 .. R-4 are a record (no grade)", False
+    elif result == FAMILY_F_RESULT_PASS:
+        decision, is_stop = ("the 12 family F rows leave the v5 criteria H-10 count for "
+                             "Fmin_after_W / U57_outside"), False
+    else:
+        decision, is_stop = f"{H10_MARKER} (v5 criteria H-10: stop and ask)", True
+    return {**out, "application": application, "decision": decision,
+            "exit_code": 1 if stops or is_stop else 0}
 
 
 # --------------------------------------------------------------------- rev3 R3-B5 IND_LAS
@@ -2739,6 +3172,1934 @@ def stroke_exposure(args: argparse.Namespace) -> dict:
             "exit_code": 0}
 
 
+# ===================================================================================== R4 (436.8)
+R4_BLOCK_SHA256 = "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800"
+"""The R4 common block these subcommands implement (both paths receive the same bytes)."""
+SUPPLEMENT_2_SHA256 = "a9a15a139843e796c73fd9046cd8cd92ed0dcaeaa14bd41c7cd591aaef9c6452"
+"""R4 supplement 2 (user decision 124; same bytes for both paths): 2-1 H-8 lists, 2-2 grid J11,
+2-3 G6-2 demotion, 2-4 rc source, 2-5 C-10 G6 by P3, 2-6 C-11 LOC, 2-7 u6 ``src``."""
+SUPPLEMENT_3_SHA256 = "5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8"
+"""R4 supplement 3 (user decisions 125 / 126; same bytes for the three writers): 3-1 H-8 RD-9,
+3-2 dg3 exclusion scope, 3-3 list values as recorded, 3-4 H-10 scope, 3-5 bundle labels, 3-6 grid
+setting, 3-7 patch token."""
+SUPPLEMENT_4_SHA256 = "de45d30170e44a5987e815c41e6cd9580c5f6df89a065803ab0fd2ae7257b497"
+"""R4 supplement 4 (user decisions 127 / 128; same bytes for the three writers): 4-1 original
+files as they are, 4-2 input table, 4-3 per-line kinds, 4-4 no empty pass, 4-5 family F R-1 ..
+R-4."""
+R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+"""RD-1 5 / rev16 R16-14: the run commit of the R2 outputs and of H-11 / H-12 / C-9 .. C-11."""
+HULL_DLL_SHA256 = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+FORBIDDEN_IDENTITY_ENV = ("OUTRIGGER_LOC_SHADOW", "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED",
+                          "OUTRIGGER_HULL_HOOK_DLL", "OUTRIGGER_HULL_HOOK", "MIXED_HULL_MODE")
+"""Rev16 R16-11b 1 / R16-14 3: the five env keys that must be absent at the start and the end."""
+RESUME_K1_DIR = "06_analysis/03_hydraulic/coupled/v5/resume_k1"
+LAS_K1_DIR = "06_analysis/02_control/v5_rerun/las_k1"
+COUPLED_DIR = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+
+
+def _coupled_modules():
+    """``judge4368_common`` and ``judge_stage1_4368`` (the path 1 harness judges' shared code)."""
+    if str(COUPLED_DIR) not in sys.path:
+        sys.path.append(str(COUPLED_DIR))
+    import judge4368_common
+    import judge_stage1_4368
+
+    return judge4368_common, judge_stage1_4368
+
+
+# ------------------------------------------------------------------ RD-7 / RD-8 / RD-9 / RD-10
+U3_NAMES = ("C", "D", "g6", "g8", "h6", "h9", "p3b", "slope", "x426b")
+U3_STRUCTURE = {"C": 34, "D": 33, "g6": 116, "g8": 516, "h6": 26, "h9": 24, "p3b": 171,
+                "slope": 110, "x426b": 84}
+"""Supplement 4-2: the 9 U-3 output names and their items per file (V0 and VB alike)."""
+U3_FILES = tuple(f"u3_{name}_{setting}.json" for name in U3_NAMES for setting in ("V0", "VB"))
+U6_FILES = ("u6_b5_main_VB.json", "u6_b5_wide_VB.json", "u6_b5_main_VB_IND_LAS.json",
+            "u6_b5_wide_VB_IND_LAS.json")
+GRID_NAMES = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
+BUNDLE_FILES = {
+    "H-1": (f"{RESUME_K1_DIR}/h1_d1.jsonl",),
+    "H-3": tuple(f"{LAS_K1_DIR}/{name}" for name in U3_FILES),
+    "H-4": tuple(f"{LAS_K1_DIR}/{name}" for name in U6_FILES),
+    "H-5": (f"{RESUME_K1_DIR}/h5_u9_v0.jsonl",),
+    "H-6": (f"{RESUME_K1_DIR}/h6_dg3_v4on.json",),
+    "H-7": (f"{RESUME_K1_DIR}/h7_dg3_off.json",),
+    "H-8": (f"{RESUME_K1_DIR}/h8_noise_VB.json", f"{RESUME_K1_DIR}/h8_noise_V0.json",
+            f"{RESUME_K1_DIR}/h8_seedext_VB.json", f"{RESUME_K1_DIR}/h8_seedext_V0.json"),
+    "H-9": (f"{RESUME_K1_DIR}/h9_stage1.jsonl",
+            *(f"{RESUME_K1_DIR}/h9_grid/{name}.json" for name in GRID_NAMES),
+            *(f"{RESUME_K1_DIR}/h9_grid_v0_sample/{name}.json" for name in GRID_NAMES)),
+    "H-10": (f"{RESUME_K1_DIR}/h10_reuse_rerun.jsonl",),
+}
+"""Supplement 4-1 / 4-2: the original R2 result files of each bundle, named one by one (no glob,
+no split or merged copy); ``*.partial.jsonl``, ``*.identity.json`` and the family F files are
+never list inputs (RD-7 1). The H-9 V0 sample runs are in the 멈춤 S-6 scope (supplement 4-2)."""
+J_P3_LIST_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
+J11_BUNDLES = ("H-6", "H-8", "H-9", "H-10")
+"""RD-7 1 / RD-10: J-P3 lists and J11 for these bundles only; supplement 2-2: J11 and RD-10 also
+apply to every H-9 grid run (one row = (run, leg))."""
+DG3_KEY_SOURCE = "06_analysis/03_hydraulic/coupled/v5/dg3/dg3_v4_on.json"
+"""Supplement 2-1 / rev1 RV1-3.2: the key source of the 135 keys dg3 replaces in H-8 VB; those
+keys are judged by their H-6 lines, so their H-8 VB lines leave the H-8 J-P3 / J11 lists."""
+H8_BUNDLE = "H-8"
+S6_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")
+RD8_BUNDLES = ("H-1", "H-3", "H-4")
+P3_STOP_BUNDLES = ("H-1", "H-3", "H-4", "H-6", "H-8", "H-9", "H-10")
+"""RD-9: bundles with VB (③) lines by definition; a ③ count of 0 is S-8."""
+FAMILY_LABELS = {"uniform": "균일 연약", "patch_or_sink": "패치·처방 침하", "rigid": "강체"}
+"""RD-7 3 family words (``·`` is U+00B7); an unplaced key reads as 균일 연약 (rev1 RV1-6)."""
+RECORDED_J_P3_PATHS = ("d1.j_p3", "v5.j_p3")
+"""RD-8: the recorded J-P3 state of an H-1 line (``d1.j_p3``) and of a U-3 / U-6 item."""
+VB_SETTING = "VB"
+
+
+@dataclass
+class ListUnit:
+    """One line, item or grid run of a bundle result file, with its RD-7 3 place."""
+
+    bundle: str
+    result_file: str
+    location: str
+    record: dict
+    key: Any
+    setting: Any
+    tag: Any
+    owner: str | None = None
+    grid_family: str | None = None
+    is_grid_run: bool = False
+    is_jsonl: bool = False
+
+
+def bundle_paths(root: Path, bundle: str) -> list[Path]:
+    """The named original result files of one bundle (supplement 4-2; a missing one is reported
+    by the caller)."""
+    return [root / name for name in BUNDLE_FILES[bundle]]
+
+
+def _json_units(common, bundle: str, path: Path, root: Path) -> list[ListUnit]:
+    document = read_json(path)
+    result_file = common.repo_relative(path, root)
+    name, parent = path.name, path.parent.name
+    units = []
+    if is_grid_document(document):
+        is_spec = (document.get("meta") or {}).get("spec") == GRID_SPEC
+        for index, job in enumerate(document["results"]):
+            key, setting = common.key_and_setting(name, job, parent)
+            for run_index, run in enumerate(job["runs"]):
+                family = ("patch_or_sink" if is_spec and run.get("event") in GRID_FLOOR_EVENTS
+                          else None)
+                units.append(ListUnit(bundle, result_file,
+                                      common.json_location("results", index, run_index), run,
+                                      key, setting, job.get("controller_tag"), _own_key(job),
+                                      family, is_grid_run=True))
+        return units
+    container = "records" if isinstance(document.get("records"), list) else "results"
+    for index, item in enumerate(document.get(container) or []):
+        key, setting = common.key_and_setting(name, item, parent)
+        units.append(ListUnit(bundle, result_file, common.json_location(container, index), item,
+                              key, setting, read_controller_tag(item), _own_key(item)))
+    return units
+
+
+def bundle_units(common, bundle: str, path: Path, root: Path) -> list[ListUnit]:
+    """Every line / item / grid run of one result file (RD-7 3 places)."""
+    if path.suffix != ".jsonl":
+        return _json_units(common, bundle, path, root)
+    result_file = common.repo_relative(path, root)
+    units = []
+    for number, record in common.read_jsonl_numbered(path):
+        key, setting = common.key_and_setting(path.name, record)
+        units.append(ListUnit(bundle, result_file, common.jsonl_location(number), record, key,
+                              setting, read_controller_tag(record), None, is_jsonl=True))
+    return units
+
+
+def _place(unit: ListUnit) -> dict:
+    return {"bundle": unit.bundle, "result_file": unit.result_file, "location": unit.location,
+            "key": unit.key, "setting": unit.setting}
+
+
+def unit_j_p3(common, stage1, unit: ListUnit, t4h_folders) -> dict:
+    """J-P3 of one unit by the path 1 judge reading of its file form (lines: the stage 1 judge;
+    r79 results: rod reading by T4h or the configuration rule; grid runs: configuration rule)."""
+    if unit.is_jsonl:
+        return stage1.j_p3_assessment(stage1.j_p3_inputs(unit.record, t4h_folders))
+    if unit.is_grid_run:
+        return common.assess_j_p3(unit.record, tag=unit.tag, rod_reading=True,
+                                  rod_basis=common.ROD_BASIS_GRID,
+                                  head_only_declared=bool(unit.record.get("head_only_declared")))
+    return common.r79_j_p3(unit.record, t4h_folders)
+
+
+GROUND_TOKEN = re.compile(r"^(rigid|[A-Z][0-9])(\+[A-Z][0-9]@(FL|FR|RL|RR))?$")
+"""Supplement 2-7: a ground token of a u6 ``src`` field (``rigid``, a soil set, either with a
+``+<soil>@<leg>`` patch)."""
+H4_BUNDLE = "H-4"
+
+
+def u6_src_family(item: dict) -> str | None:
+    """Supplement 2-7 / rev16 R16-10 2 (c): the family of a U-6 b5 record from the ground token
+    of its ``src`` field (the inner key; the ``case`` name is not read): a ``+<soil>@<leg>`` patch
+    = patch, ``rigid`` = rigid, a soil token only = uniform; no ground token = unplaced (None)."""
+    for field_text in str(item.get("src") or "").split("|"):
+        match = GROUND_TOKEN.fullmatch(field_text)
+        if match is None:
+            continue
+        if match.group(2):
+            return "patch_or_sink"
+        return "rigid" if match.group(1) == "rigid" else "uniform"
+    return None
+
+
+def unit_family(unit: ListUnit, table: dict[str, str | None]) -> str | None:
+    if unit.is_grid_run:
+        return unit.grid_family
+    if unit.bundle == H4_BUNDLE and "src" in unit.record:  # supplement 2-7
+        return u6_src_family(unit.record)
+    return table_family(unit.record, unit.owner, table)[0]
+
+
+def read_dg3_keys(root: Path) -> set[str] | None:
+    """Supplement 2-1: the dg3-replaced keys (``results[].key`` of :data:`DG3_KEY_SOURCE`,
+    ``cand=current#`` dropped); None when the file is missing."""
+    path = root / DG3_KEY_SOURCE
+    if not path.is_file():
+        return None
+    return {r79_key(row.get("key")) for row in read_json(path).get("results") or []}
+
+
+DG3_REPLACED_FILE = "h8_noise_VB.json"
+"""Supplement 3-2: the dg3 replacement is the H-8 VB noise file only (seedext lines keep theirs)."""
+
+
+def is_dg3_replaced(unit: ListUnit, dg3_keys: set[str] | None) -> bool:
+    """An ``h8_noise_VB.json`` line whose key dg3 replaced (judged by its H-6 line, supplement
+    2-1 with 3-2; such lines still count in the RD-9 ③ number, supplement 3-1)."""
+    return (unit.bundle == H8_BUNDLE and unit.result_file.endswith("/" + DG3_REPLACED_FILE)
+            and unit.setting == VB_SETTING and bool(dg3_keys)
+            and r79_key(unit.key) in dg3_keys)
+
+
+def s6_rows(unit: ListUnit, table: dict[str, str | None]) -> list[dict]:
+    """RD-7 1 멈춤 S-6 rows of one unit: blocked decisions (``would_block`` and
+    ``r4_due_without_gate``) on a uniform (or unplaced) family, one row per decision k."""
+    block = record_block(unit.record)
+    if not isinstance(block, dict) or block.get("applicable") is False:
+        return []
+    decisions = get_path(block, "slope_clearance_margin.order_gate.decisions")[1]
+    if not isinstance(decisions, list):
+        return []
+    family = unit_family(unit, table)
+    if family not in ("uniform", None):
+        return []
+    rows = []
+    for k, decision in enumerate(decisions):
+        if not isinstance(decision, dict):
+            continue
+        if decision.get("would_block") is True and decision.get("r4_due_without_gate") is True:
+            rows.append({**_place(unit), "k": k, "family": FAMILY_LABELS["uniform"],
+                         "t_loc_s": decision.get("t_loc_s"), "n_P": decision.get("n_P"),
+                         "n_S": decision.get("n_S"), "dP": decision.get("dP")})
+    return rows
+
+
+def rd8_unit(common, unit: ListUnit) -> dict:
+    """RD-8 facts of one H-1 / H-3 / H-4 unit: ``breach_reads`` present and its form, the
+    RD-7 3 top-level mismatch, and a VB "pass" without ``breach_reads``."""
+    bound, mismatch = common.j_p3_bound(unit.record)
+    has_reads = isinstance(bound, dict) and "breach_reads" in bound
+    recorded = next((value for path in RECORDED_J_P3_PATHS
+                     if (value := get_path(unit.record, path)[1]) is not None), None)
+    return {"has_breach_reads": has_reads,
+            "form_problem": common.breach_reads_problem(bound) if has_reads else None,
+            "top_level_mismatch": mismatch,
+            "vb_pass_without_breach_reads": (unit.setting == VB_SETTING and recorded == "pass"
+                                             and not has_reads)}
+
+
+def _bundle_lists(common, stage1, bundle: str, root: Path, table,
+                  dg3_keys: set[str] | None = None) -> dict:
+    """RD-7 lists and RD-8 / RD-9 / RD-10 counts of one bundle."""
+    out: dict[str, Any] = {"files": [], "missing_files": [], "units": 0, "p3_units_RD9": 0,
+                           "J-P3": [], "J11": [], "S-6": [], "markers": []}
+    if bundle == H8_BUNDLE:
+        out["dg3_replaced_excluded"] = {}
+    counts: Counter = Counter()
+    for path in bundle_paths(root, bundle):
+        if not path.is_file():
+            out["missing_files"].append(common.repo_relative(path, root))
+            continue
+        units = bundle_units(common, bundle, path, root)
+        out["files"].append({"result_file": common.repo_relative(path, root),
+                             "sha256": file_sha256(path), "units": len(units)})
+        records = [unit.record for unit in units if not unit.is_grid_run]
+        folders = tuple(common.t4h_folders(path, records)) if bundle in J_P3_LIST_BUNDLES else ()
+        for unit in units:
+            out["units"] += 1
+            if "error" in unit.record:
+                counts["error_units"] += 1
+                continue
+            out["p3_units_RD9"] += bool(is_extend_start_tag(unit.tag))
+            replaced = is_dg3_replaced(unit, dg3_keys)
+            if replaced:  # supplement 2-1: judged by its H-6 line
+                excluded = out["dg3_replaced_excluded"]
+                excluded[unit.result_file] = excluded.get(unit.result_file, 0) + 1
+            if bundle in J_P3_LIST_BUNDLES and not replaced:
+                assessed = unit_j_p3(common, stage1, unit, folders)
+                out["J-P3"] += common.j_p3_list_rows(assessed, **_place(unit))
+                counts["j_p3_rd8"] += bool(assessed["rd8_problem"])
+                counts["j_p3_not_judgeable"] += assessed["status"] == common.NOT_JUDGEABLE
+                counts["j_p3_s2"] += assessed["status"] == common.J_P3_S2
+            if bundle in J11_BUNDLES and not replaced:
+                j11 = common.assess_j11(unit.record.get("lock_window_alignment"), unit.setting)
+                out["J11"] += common.j11_list_rows(j11, **_place(unit))
+                counts["j11_not_judgeable"] += j11["state"] == common.NOT_JUDGEABLE
+                counts["j11_no_input"] += j11["state"] == common.J11_NO_INPUT
+            if bundle in S6_BUNDLES:
+                out["S-6"] += s6_rows(unit, table)
+            if bundle in RD8_BUNDLES:
+                facts = rd8_unit(common, unit)
+                counts["rd8_with_breach_reads"] += facts["has_breach_reads"]
+                counts["rd8_wrong_form"] += bool(facts["form_problem"])
+                counts["rd8_top_level_mismatch"] += bool(facts["top_level_mismatch"])
+                counts["rd8_vb_pass_without_breach_reads"] += facts[
+                    "vb_pass_without_breach_reads"]
+    out["error_units"] = counts["error_units"]
+    if bundle in J_P3_LIST_BUNDLES:
+        out["J-P3_not_judgeable"] = {"RD-8": counts["j_p3_rd8"],
+                                     "all": counts["j_p3_not_judgeable"],
+                                     "S-2": counts["j_p3_s2"]}
+    if bundle in J11_BUNDLES:
+        out["J11_RD10"] = {"not_judgeable": counts["j11_not_judgeable"],
+                           "no_input": counts["j11_no_input"]}
+    if bundle in RD8_BUNDLES:
+        out["RD-8"] = {"lines_with_breach_reads": counts["rd8_with_breach_reads"],
+                       "wrong_form": counts["rd8_wrong_form"],
+                       "top_level_mismatch_RD7_3": counts["rd8_top_level_mismatch"],
+                       "vb_pass_without_breach_reads": counts["rd8_vb_pass_without_breach_reads"]}
+        if counts["rd8_wrong_form"] or counts["rd8_vb_pass_without_breach_reads"]:
+            out["markers"].append(common.MARKER_JP3_FORM)
+    if out["J-P3"]:
+        out["markers"].append(f"J-P3 {common.STOP_H7}")
+    for marker in sorted({row["marker"] for row in out["J11"]}):
+        out["markers"].append(f"J11 {common.STOP_H7 if marker == 'H-7' else marker}")
+    if out["S-6"]:
+        out["markers"].append("멈춤 S-6")
+    if bundle in P3_STOP_BUNDLES and out["p3_units_RD9"] == 0 and out["files"]:
+        out["markers"].append("S-8 (RD-9: ③ 켬 줄·run 0)")
+    for name in ("J-P3", "J11", "S-6"):
+        out[name] = sorted(out[name], key=common.list_sort_key)
+    return out
+
+
+def r4_lists(args: argparse.Namespace) -> dict:
+    """RD-7 J-P3 / J11 / 멈춤 S-6 lists, RD-8 form counts (H-1, H-3, H-4), RD-9 ③ counts and
+    RD-10 J11 counts of the R2 harness results (stop markers and lists, never grades)."""
+    common, stage1 = _coupled_modules()
+    root = Path(args.root)
+    table = read_family_table(Path(args.family_table))
+    names = [name for name in BUNDLE_FILES if not args.bundles or name in args.bundles]
+    dg3_keys = read_dg3_keys(root) if H8_BUNDLE in names else None
+    bundles = {name: _bundle_lists(common, stage1, name, root, table, dg3_keys)
+               for name in names}
+    lists = {name: sorted((row for part in bundles.values() for row in part[name]),
+                          key=common.list_sort_key) for name in ("J-P3", "J11", "S-6")}
+    markers = [f"{name}: {marker}" for name, part in bundles.items()
+               for marker in part["markers"]]
+    missing = [path for part in bundles.values() for path in part["missing_files"]]
+    if H8_BUNDLE in names and dg3_keys is None:
+        missing.append(DG3_KEY_SOURCE)
+    for part in bundles.values():
+        for name in ("J-P3", "J11", "S-6"):
+            part[f"{name}_rows"] = len(part.pop(name))
+    return {"rules": RULES_NAME, "section": "R4 common block RD-7 / RD-8 / RD-9 / RD-10",
+            "r4_block_sha256": R4_BLOCK_SHA256, "root": str(root),
+            "family_table": {"path": str(args.family_table),
+                             "sha256": file_sha256(Path(args.family_table))},
+            "dg3_key_source": None if dg3_keys is None else {
+                "path": DG3_KEY_SOURCE, "sha256": file_sha256(root / DG3_KEY_SOURCE),
+                "keys": len(dg3_keys)},
+            "supplement_2_sha256": SUPPLEMENT_2_SHA256,
+            "supplement_3_sha256": SUPPLEMENT_3_SHA256,
+            "lists": lists, "bundles": bundles, "markers": markers, "missing_files": missing,
+            "exit_code": 1 if markers or missing else 0}
+
+
+# ------------------------------------------------- supplement 4: inputs, kinds, counts (4-1 .. 4-4)
+NOT_JUDGEABLE_WORD = "판정 불가"
+KIND_P3_VB, KIND_P3_LS, KIND_NONE = "③ 켬(VB)", "③ 켬(LS)", "③ 없음"
+KIND_ABL, KIND_IND, KIND_IND_LAS = "ABL", "IND", "IND_LAS"
+KIND_TAGS = {KIND_P3_VB: TAG_P3, KIND_P3_LS: TAG_P3, KIND_NONE: TAG_V0, KIND_ABL: TAG_ABL,
+             KIND_IND: "IND", KIND_IND_LAS: "IND_LAS"}
+"""Supplement 4-2 / original 4.1: the expected tag of each line kind."""
+LS_NAMES = ("LS1", "LS2", "LS3", "LS4")
+U6_CONTROLLER_KINDS = {"C2": KIND_P3_VB, "ABL": KIND_ABL, "IND": KIND_IND}
+"""Supplement 4-3: u6 ``controller`` -> kind (any other value cannot be decided, S-11)."""
+
+
+def kind_of_setting(value: Any) -> str | None:
+    """Supplement 4-3: ``job.setting`` / ``setting`` -> kind; None when missing or empty."""
+    if not isinstance(value, str) or not value:
+        return None
+    if value == VB_SETTING:
+        return KIND_P3_VB
+    return KIND_P3_LS if value in LS_NAMES else KIND_NONE
+
+
+def kind_tag_problem(kind: str | None, tag: Any) -> tuple[str, str] | None:
+    """Supplement 4-3: (stop, reason) of one line, or None: no kind or no tag = S-11, a tag
+    other than the kind's = S-2."""
+    if kind is None:
+        return "S-11", "kind input missing or not decidable"
+    if not isinstance(tag, str):
+        return "S-11", "controller_tag missing"
+    if tag != KIND_TAGS[kind]:
+        return "S-2", f"tag {tag!r} != {KIND_TAGS[kind]!r} of {kind}"
+    return None
+
+
+@dataclass(frozen=True)
+class InputFile:
+    """One original result file of supplement 4-2.
+
+    Attributes:
+        bundle: ``H-n``.
+        part: The H-9 part (``본``, ``V0 표본``, ``𝓕 원 실행``, ``𝓕 판정 입력``) or ``""``.
+        name: Path relative to the repository root.
+        kind: The kind of every line (one per file), or None for a per-line field.
+        field: The per-line kind field (``job.setting``, ``setting``, ``controller``).
+        expected: Expected units (lines, items or grid runs) of the file, None = only a sum.
+        expected_results: Expected ``results[]`` items of a grid file (V0 sample).
+    """
+
+    bundle: str
+    part: str
+    name: str
+    kind: str | None = None
+    field: str | None = None
+    expected: int | None = None
+    expected_results: int | None = None
+
+
+RK, LK = RESUME_K1_DIR, LAS_K1_DIR
+V0_SAMPLE_RUNS = {"grid_r67_main": 12, "grid_r67_top": 24, "grid_r69_bottom": 24,
+                  "grid_r69_top": 24}
+INPUT_FILES = (
+    InputFile("H-1", "", f"{RK}/h1_d1.jsonl", field="job.setting", expected=868),
+    *(InputFile("H-3", "", f"{LK}/u3_{name}_{setting}.json",
+                kind=KIND_NONE if setting == "V0" else KIND_P3_VB, expected=U3_STRUCTURE[name])
+      for name in U3_NAMES for setting in ("V0", "VB")),
+    InputFile("H-4", "", f"{LK}/u6_b5_main_VB.json", field="controller", expected=48),
+    InputFile("H-4", "", f"{LK}/u6_b5_wide_VB.json", field="controller", expected=678),
+    InputFile("H-4", "", f"{LK}/u6_b5_main_VB_IND_LAS.json", kind=KIND_IND_LAS, expected=16),
+    InputFile("H-4", "", f"{LK}/u6_b5_wide_VB_IND_LAS.json", kind=KIND_IND_LAS, expected=226),
+    InputFile("H-5", "", f"{RK}/h5_u9_v0.jsonl", kind=KIND_NONE, expected=14),
+    InputFile("H-6", "", f"{RK}/h6_dg3_v4on.json", kind=KIND_P3_VB, expected=135),
+    InputFile("H-7", "", f"{RK}/h7_dg3_off.json", kind=KIND_NONE, expected=135),
+    InputFile("H-8", "", f"{RK}/h8_noise_VB.json", kind=KIND_P3_VB, expected=1503),
+    InputFile("H-8", "", f"{RK}/h8_noise_V0.json", kind=KIND_NONE, expected=1503),
+    InputFile("H-8", "", f"{RK}/h8_seedext_VB.json", kind=KIND_P3_VB, expected=50),
+    InputFile("H-8", "", f"{RK}/h8_seedext_V0.json", kind=KIND_NONE, expected=50),
+    InputFile("H-9", "본", f"{RK}/h9_stage1.jsonl", kind=KIND_NONE, expected=908),
+    *(InputFile("H-9", "본", f"{RK}/h9_grid/{name}.json", kind=KIND_P3_VB, expected=192)
+      for name in GRID_NAMES),
+    *(InputFile("H-9", "V0 표본", f"{RK}/h9_grid_v0_sample/{name}.json", kind=KIND_NONE,
+                expected=V0_SAMPLE_RUNS[name], expected_results=2) for name in GRID_NAMES),
+    InputFile("H-9", "𝓕 원 실행", f"{RK}/h9_family_F_VB.json", kind=KIND_P3_VB, expected=96),
+    InputFile("H-9", "𝓕 원 실행", f"{RK}/h9_family_F_V0.json", kind=KIND_NONE, expected=96),
+    InputFile("H-9", "𝓕 판정 입력", f"{RK}/h9_family_F.jsonl", field="setting", expected=64),
+    InputFile("H-10", "", f"{RK}/h10_reuse_rerun.jsonl", field="job.setting", expected=440),
+)
+"""Supplement 4-2: the 43 original result files (RK 21, LK 22) with their kind rule and
+counts. The H-4 u6 C2 / ABL / IND counts are 242 each (main 16 + wide 226), checked below."""
+KEY_SOURCES = ("06_analysis/03_hydraulic/coupled/v5/dg3/dg3_v4_on.json",
+               "06_analysis/03_hydraulic/coupled/v5/noise_vb/r79_VB_L1L2L3.json",
+               "06_analysis/03_hydraulic/coupled/v5/noise_v0/r79_V0_L1L2L3.json",
+               "06_analysis/03_hydraulic/coupled/v5/seedext/r79_VB_seedext.json",
+               "06_analysis/03_hydraulic/coupled/v5/seedext/r79_V0_seedext.json")
+V0_STORED_GRID = tuple(f"06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/{name}.json"
+                       for name in GRID_NAMES)
+V0_768_OUTPUT = tuple(f"{RK}/h9_grid_v0/{name}.json" for name in GRID_NAMES)
+"""Supplement 4-2: needed only when the V0 sample hashes differ (``grid-v0-sample``)."""
+INPUT_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")
+H9_PARTS = {"본": 1676, "V0 표본": 84, "𝓕 원 실행": 192, "𝓕 판정 입력": 64}
+"""Supplement 4-2: the H-9 parts and their unit counts (본 908 lines + 768 grid runs)."""
+KIND_COUNT_CHECKS = (("H-1", "", {KIND_NONE: 434, KIND_P3_VB: 434}),
+                     ("H-4", "", {KIND_P3_VB: 242, KIND_ABL: 242, KIND_IND: 242,
+                                  KIND_IND_LAS: 242}),
+                     ("H-9", "𝓕 판정 입력", {KIND_NONE: 32, KIND_P3_VB: 32}))
+"""Supplement 4-2: the kind counts compared as S-15 (H-10 kind counts are a record)."""
+
+
+def _numbered_jsonl(path: Path) -> list[tuple[int, dict]]:
+    """(physical line number from 1, record) of a jsonl file (blank lines counted)."""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    return [(n, json.loads(line)) for n, line in enumerate(text.split("\n"), start=1)
+            if line.strip()]
+
+
+def input_units(path: Path) -> tuple[list[tuple[str, dict, dict | None]], int | None]:
+    """(location, unit, its grid ``results[i]`` or None) of every unit of one original file and
+    the number of ``results[]`` items of a grid file (None otherwise)."""
+    if path.suffix == ".jsonl":
+        return [(f"line {n}", record, None) for n, record in _numbered_jsonl(path)], None
+    document = read_json(path)
+    if is_grid_document(document):
+        units = [(f"results[{i}].runs[{j}]", run, job)
+                 for i, job in enumerate(document["results"])
+                 for j, run in enumerate(job["runs"])]
+        return units, len(document["results"])
+    container = "records" if isinstance(document.get("records"), list) else "results"
+    return [(f"{container}[{i}]", item, None)
+            for i, item in enumerate(document.get(container) or [])], None
+
+
+def unit_kind_check(spec: InputFile, unit: dict, job: dict | None) -> tuple[str | None, list]:
+    """Supplement 4-3: the unit's kind and its stops ([(stop, reason)])."""
+    tag = job.get("controller_tag") if job is not None else read_controller_tag(unit)
+    if spec.kind is not None:
+        kind = spec.kind
+    elif spec.field == "controller":
+        controller = unit.get("controller")
+        is_abl_name, is_abl_tag = controller == KIND_ABL, tag == TAG_ABL
+        if is_abl_name != is_abl_tag:  # rev16 R16-3: S-3, not counted again as S-2
+            return None, [("S-3", f"controller {controller!r} and tag {tag!r} disagree on ABL")]
+        kind = U6_CONTROLLER_KINDS.get(controller) if isinstance(controller, str) else None
+    else:
+        kind = kind_of_setting(get_path(unit, spec.field)[1])
+    problem = kind_tag_problem(kind, tag)
+    return kind, [] if problem is None else [problem]
+
+
+def check_input_file(spec: InputFile, root: Path) -> dict:
+    """Supplement 4-1 .. 4-3 for one original file: units, kinds and tag stops."""
+    path = root / spec.name
+    out: dict[str, Any] = {"bundle": spec.bundle, "part": spec.part, "result_file": spec.name,
+                           "exists": path.is_file()}
+    if not path.is_file():
+        return out
+    units, n_results = input_units(path)
+    kinds: Counter = Counter()
+    stops: list[dict] = []
+    for location, unit, job in units:
+        kind, problems = unit_kind_check(spec, unit, job)
+        kinds[str(kind)] += 1
+        stops += [{"location": location, "stop": stop, "reason": reason}
+                  for stop, reason in problems]
+    out.update(sha256=file_sha256(path), units=len(units), results=n_results,
+               kinds=dict(kinds), stops=stops)
+    if spec.name.endswith("h9_family_F.jsonl"):
+        out["events"] = dict(Counter(str(unit.get("event")) for _, unit, _ in units))
+    if "h9_family_F_V" in spec.name:
+        out["fs24_runs"] = sum(unit.get("event") == FAMILY_F_EVENT for _, unit, _ in units)
+    return out
+
+
+def input_count_checks(files: list[dict]) -> list[dict]:
+    """Supplement 4-2 / 4-4 S-15 checks: per file, the H-4 / H-1 / 𝓕 kind counts, the H-9
+    parts, the bundle set and no zero bundle or part."""
+    checks = []
+
+    def add(what: str, actual: Any, expected: Any) -> None:
+        checks.append({"check": what, "actual": actual, "expected": expected,
+                       "ok": actual == expected})
+
+    by_name = {f["result_file"]: f for f in files}
+    for spec in INPUT_FILES:
+        found = by_name[spec.name]
+        if spec.expected is not None:
+            add(f"units {spec.name}", found.get("units"), spec.expected)
+        if spec.expected_results is not None:
+            add(f"results {spec.name}", found.get("results"), spec.expected_results)
+        if "h9_family_F_V" in spec.name:
+            add(f"FS24 runs {spec.name}", found.get("fs24_runs"), 32)
+        if spec.name.endswith("h9_family_F.jsonl"):
+            add(f"events {spec.name}", found.get("events"), {FAMILY_F_EVENT: 64})
+    for bundle, part, wanted in KIND_COUNT_CHECKS:
+        counts: Counter = Counter()
+        for f in files:
+            if (f["bundle"], f["part"]) == (bundle, part):
+                counts.update(f.get("kinds") or {})
+        add(f"kinds {bundle} {part}".strip(), {k: counts.get(k, 0) for k in wanted}, wanted)
+    for part, expected in H9_PARTS.items():
+        add(f"units H-9 {part}", sum(f.get("units") or 0 for f in files
+                                     if (f["bundle"], f["part"]) == ("H-9", part)), expected)
+    totals = Counter()
+    for f in files:
+        totals[f["bundle"]] += f.get("units") or 0
+    add("bundle set", sorted(b for b in totals if totals[b] > 0), sorted(INPUT_BUNDLES))
+    add("H-3 total", totals["H-3"], 2228)
+    add("H-4 total (C2 / ABL / IND + IND_LAS)", totals["H-4"], 726 + 242)
+    return checks
+
+
+def r4_inputs(args: argparse.Namespace) -> dict:
+    """Supplement 4-1 .. 4-4: the 43 original files, 5 key sources and 4 stored V0 grids exist;
+    per-line kinds and tags (4-3: S-2 / S-3 / S-11); the S-15 counts and the bundle set."""
+    root = Path(args.root)
+    files = [check_input_file(spec, root) for spec in INPUT_FILES]
+    missing = [f["result_file"] for f in files if not f["exists"]]
+    missing += [name for name in (*KEY_SOURCES, *V0_STORED_GRID) if not (root / name).is_file()]
+    checks = input_count_checks(files)
+    stops = Counter(stop["stop"] for f in files for stop in f.get("stops") or [])
+    markers = []
+    if missing:
+        markers.append(f"S-15 (supplement 4-4: {len(missing)} input files missing)")
+    if any(not check["ok"] for check in checks):
+        markers.append("S-15 (supplement 4-2 / 4-4 counts)")
+    markers += [f"{stop} ({n} lines, supplement 4-3)" for stop, n in sorted(stops.items())]
+    h10 = next(f for f in files if f["result_file"].endswith("h10_reuse_rerun.jsonl"))
+    return {"rules": RULES_NAME, "section": "R4 supplement 4 (4-1 .. 4-4)",
+            "supplement_4_sha256": SUPPLEMENT_4_SHA256, "root": str(root),
+            "files": files, "file_count": {"RK": sum(f["result_file"].startswith(RK)
+                                                     for f in files),
+                                           "LK": sum(f["result_file"].startswith(LK)
+                                                     for f in files)},
+            "key_sources": {name: (root / name).is_file() for name in KEY_SOURCES},
+            "v0_stored_grid": {name: (root / name).is_file() for name in V0_STORED_GRID},
+            "v0_768_output_present": {name: (root / name).is_file() for name in V0_768_OUTPUT},
+            "h10_kinds_record": h10.get("kinds"), "checks": checks,
+            "failed_checks": [c for c in checks if not c["ok"]], "missing": missing,
+            "markers": markers, "exit_code": 1 if markers else 0}
+
+
+# -------------------------- supplements 5 / 6: grid pass -> fail, v5 criteria H-10 grid term
+SUPPLEMENT_5_SHA256 = "89cb422d93374bf9cbc99f9a1db90d1d4ee47b153058ce2313a7dffdec7f40e7"
+GRID_VB_DIR = f"{RK}/h9_grid"
+GRID_V0_SAMPLE_DIR = f"{RK}/h9_grid_v0_sample"
+GRID_V0_STORED_DIR = "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid"
+GRID_V0_768_DIR = f"{RK}/h9_grid_v0"
+GRID_ROWS = 768
+FAMILY_F_GRID_STEMS = ("grid_r67_main", "grid_r67_top")
+FAMILY_F_LINES = f"{RK}/h9_family_F.jsonl"
+GRID_BUNDLE = "H-9"
+V0_SOURCE_STORED, V0_SOURCE_768 = "저장 V0 격자", "V0 768(h9_grid_v0)"
+H10_STOP = "H-10, 멈추고 묻는다"
+H10_MARKER = "멈춤 H-10"
+"""Supplement 6-4: the only marker of the H-9 grid calculation."""
+SUPPLEMENT_6_SHA256 = "0ad43866b82e7f342bfe7e1fb30295b5c47c113c2d02fad5739f8cc40a245fc0"
+
+
+@dataclass(frozen=True)
+class GridRun:
+    """One grid run ``results[i].runs[j]`` with its supplement 5-1 key and RD-7 3 place.
+
+    Attributes:
+        stem: The grid file name without ``.json`` (supplement 6-1: the file part of the pair
+            key; VB and V0 files lie in different folders).
+        result_file: The file relative to the repository root, ``/`` separated (RD-7 3; the
+            "file name" column of the lists, supplement 6-1).
+        location: ``results[i].runs[j]``.
+        key: ``results[i].key``.
+        setting: ``results[i].v5_setting`` (record).
+        tag: ``results[i].controller_tag`` (supplement 5-1: the only tag of a grid run).
+        event: ``runs[j].event``.
+        offset_s: ``runs[j].offset_s``.
+        run: The run itself (``pass``, ``gates``, ``fault_events``).
+    """
+
+    stem: str
+    result_file: str
+    location: str
+    key: Any
+    setting: Any
+    tag: Any
+    event: Any
+    offset_s: Any
+    run: dict
+
+
+def read_grid_runs(folder: Path, root: Path) -> tuple[list[GridRun], list[str]]:
+    """The runs of the four grid files of one folder and the S-15 form problems."""
+    common, _ = _coupled_modules()
+    runs, problems = [], []
+    for name in GRID_NAMES:
+        path = folder / f"{name}.json"
+        if not path.is_file():
+            problems.append(f"S-15: {common.repo_relative(path, root)} missing")
+            continue
+        document = read_json(path)
+        if not is_grid_document(document):
+            problems.append(f"S-15: {common.repo_relative(path, root)} is not a grid file")
+            continue
+        for i, job in enumerate(document["results"]):
+            for j, run in enumerate(job["runs"]):
+                runs.append(GridRun(path.stem, common.repo_relative(path, root),
+                                    f"results[{i}].runs[{j}]", job.get("key"),
+                                    job.get("v5_setting"), job.get("controller_tag"),
+                                    run.get("event"), run.get("offset_s"), run))
+    return runs, problems
+
+
+def _pair_index(runs: list[GridRun]) -> dict[tuple, list[GridRun]]:
+    index: dict[tuple, list[GridRun]] = {}
+    for run in runs:
+        if isinstance(run.key, str) and isinstance(run.event, str):
+            index.setdefault((run.stem, run.key, run.event), []).append(run)
+    return index
+
+
+def pair_grid_runs(vb_runs: list[GridRun], v0_runs: list[GridRun]
+                   ) -> tuple[list[tuple[GridRun, GridRun | None, str | None]], list[GridRun]]:
+    """Supplement 5-1 / 6-1: per VB run the V0 run of the same (file stem, key, event,
+    offset_s within 1e-9 s); 0 or 2+ pairs give a reason (판정 불가). Also the V0 runs no VB
+    run paired."""
+    index = _pair_index(v0_runs)
+    paired: set[int] = set()
+    pairs: list[tuple[GridRun, GridRun | None, str | None]] = []
+    for vb in vb_runs:
+        if not (isinstance(vb.key, str) and isinstance(vb.event, str)
+                and _is_finite_number(vb.offset_s)):
+            pairs.append((vb, None, "VB key / event / offset_s missing or mistyped"))
+            continue
+        found = [v0 for v0 in index.get((vb.stem, vb.key, vb.event), [])
+                 if _is_finite_number(v0.offset_s)
+                 and abs(v0.offset_s - vb.offset_s) <= COMPARE_EPS]
+        paired.update(id(v0) for v0 in found)
+        reason = None if len(found) == 1 else f"{len(found)} V0 pairs (supplement 5-1)"
+        pairs.append((vb, found[0] if len(found) == 1 else None, reason))
+    return pairs, [v0 for v0 in v0_runs if id(v0) not in paired]
+
+
+def run_pass(run: dict) -> tuple[bool | None, str | None]:
+    """Supplement 5-2: the run's ``pass``; 판정 불가 (None, reason) when ``pass`` is not a bool,
+    ``gates`` is not a name -> bool map, or ``pass`` is not the AND of the gate values."""
+    passed, gates = run.get("pass"), run.get("gates")
+    if not isinstance(passed, bool):
+        return None, "pass is not a bool"
+    if not isinstance(gates, dict) or not all(isinstance(v, bool) for v in gates.values()):
+        return None, "gates is not a gate name -> bool map"
+    if passed != all(gates.values()):
+        return None, "pass differs from the AND of the gates"
+    return passed, None
+
+
+def false_gates(run: dict) -> list[str]:
+    """Supplement 6-1: every false gate name of the run, in code point order (the two family F
+    gates included)."""
+    gates = run.get("gates")
+    return sorted(name for name, ok in gates.items() if ok is False) if isinstance(
+        gates, dict) else []
+
+
+def pass_without_two_gates(run: dict) -> bool:
+    """Supplement 5-3 (나): the AND of the gates other than ``Fmin_after_W`` / ``U57_outside``."""
+    return all(ok for name, ok in run["gates"].items() if name not in FAMILY_F_GATES)
+
+
+def is_family_f_run(run: GridRun) -> bool:
+    return (run.stem in FAMILY_F_GRID_STEMS and run.key in FAMILY_F_KEYS
+            and run.event == FAMILY_F_EVENT)
+
+
+def family_f_gate_problem(vb: dict, v0: dict) -> str | None:
+    """Supplement 5-3 (나): a family F row needs the same gate names on both sides and both of
+    the two gates."""
+    vb_names, v0_names = set(vb["gates"]), set(v0["gates"])
+    if vb_names != v0_names:
+        return "family F: VB and V0 gate names differ"
+    if not set(FAMILY_F_GATES) <= vb_names:
+        return "family F: Fmin_after_W or U57_outside missing"
+    return None
+
+
+@dataclass
+class GridRow:
+    """One VB grid run with its V0 pair and the supplement 5-2 / 5-3 values."""
+
+    vb: GridRun
+    v0: GridRun | None
+    reasons: list[str]
+    vb_pass: bool | None = None
+    v0_pass: bool | None = None
+    is_fault: bool | None = None
+    is_family_f: bool = False
+    vb_pass_without_two: bool | None = None
+    v0_pass_without_two: bool | None = None
+
+    @property
+    def is_judged(self) -> bool:
+        return not self.reasons
+
+
+def assess_grid_row(vb: GridRun, v0: GridRun | None, pair_reason: str | None) -> GridRow:
+    """Supplement 5-2 / 5-3 values of one row; any reason makes the row 판정 불가."""
+    row = GridRow(vb, v0, [] if pair_reason is None else [pair_reason],
+                  is_family_f=is_family_f_run(vb))
+    row.vb_pass, reason = run_pass(vb.run)
+    if reason:
+        row.reasons.append(f"VB {reason}")
+    faults = vb.run.get("fault_events")
+    if isinstance(faults, list):
+        row.is_fault = bool(faults)
+    else:
+        row.reasons.append("VB fault_events is not a list")
+    if v0 is None:
+        return row
+    row.v0_pass, reason = run_pass(v0.run)
+    if reason:
+        row.reasons.append(f"V0 {reason}")
+    if row.is_family_f and row.vb_pass is not None and row.v0_pass is not None:
+        problem = family_f_gate_problem(vb.run, v0.run)
+        if problem:
+            row.reasons.append(problem)
+        else:
+            row.vb_pass_without_two = pass_without_two_gates(vb.run)
+            row.v0_pass_without_two = pass_without_two_gates(v0.run)
+    return row
+
+
+def grid_list_row(row: GridRow) -> dict:
+    """Supplement 5-3 / 6-1 list line: the VB result file (repository path, the "file name"
+    column), key, event, phase, the false gates of each side, with the bundle and both
+    locations (RD-7 3)."""
+    return {"bundle": GRID_BUNDLE, "result_file": row.vb.result_file,
+            "location": row.vb.location, "key": row.vb.key, "setting": row.vb.setting,
+            "event": row.vb.event, "offset_s": row.vb.offset_s,
+            "vb_false_gates": false_gates(row.vb.run),
+            "v0_false_gates": [] if row.v0 is None else false_gates(row.v0.run),
+            "v0_result_file": None if row.v0 is None else row.v0.result_file,
+            "v0_location": None if row.v0 is None else row.v0.location}
+
+
+def grid_sort_key(row: dict) -> tuple:
+    """Supplement 6-1: result file path, key, event (code point order), then the phase
+    ``offset_s`` as a number; the location only breaks a tie of identical keys."""
+    offset = row.get("offset_s")
+    return (str(row.get("result_file")), str(row.get("key")), str(row.get("event")),
+            offset if _is_finite_number(offset) else math.inf, str(row.get("location")))
+
+
+def _sorted_rows(rows: list[GridRow]) -> list[dict]:
+    return sorted((grid_list_row(row) for row in rows), key=grid_sort_key)
+
+
+def is_raw_pass_to_fail(row: GridRow) -> bool:
+    return row.is_judged and row.v0_pass is True and row.vb_pass is False
+
+
+def is_excluded_pass_to_fail(row: GridRow) -> bool:
+    """Supplement 5-3 (다), user decision 129: a family F row is judged again on both sides
+    without the two gates; any other row as (가)."""
+    if not row.is_family_f:
+        return is_raw_pass_to_fail(row)
+    return row.is_judged and row.v0_pass_without_two is True and row.vb_pass_without_two is False
+
+
+def family_f_row_condition(row: GridRow) -> bool | None:
+    """Supplement 6-3: is this family F row a pass -> fail by the two gates only (None =
+    판정 불가 by 5-1 / 5-2 / 5-3 (나))."""
+    if not row.is_judged:
+        return None
+    return (row.v0_pass is True and row.vb_pass is False
+            and set(false_gates(row.vb.run)) <= set(FAMILY_F_GATES))
+
+
+def combine_conditions(values: list[bool | None]) -> bool | None:
+    """Supplement 6-3: any true -> true; else any 판정 불가 -> 판정 불가 (None); else false."""
+    if any(value is True for value in values):
+        return True
+    return None if any(value is None for value in values) else False
+
+
+def condition_word(value: bool | None) -> bool | str:
+    """Supplement 6-3: the three values as written (true, false, ``판정 불가``)."""
+    return NOT_JUDGEABLE_WORD if value is None else value
+
+
+def family_f_table(rows: list[GridRow]) -> list[dict]:
+    """Supplement 5-3 (나): the family F rows (key, both passes, both false gate lists, both
+    passes without the two gates) with the row's condition value (6-3)."""
+    table = []
+    for row in rows:
+        if not row.is_family_f:
+            continue
+        table.append({**grid_list_row(row), "vb_pass": row.vb_pass, "v0_pass": row.v0_pass,
+                      "vb_pass_without_two": row.vb_pass_without_two,
+                      "v0_pass_without_two": row.v0_pass_without_two,
+                      "condition": condition_word(family_f_row_condition(row)),
+                      "not_judgeable": row.reasons})
+    return sorted(table, key=grid_sort_key)
+
+
+def h10_grid_table(n_raw: int | None, n_f: int | None) -> list[dict]:
+    """Supplement 5-4 with the 6-3 row: the count each application case uses and whether the
+    case carries the one marker ``멈춤 H-10`` (6-4)."""
+    return [
+        {"condition": False, "R-1..R-4": "(기록)", "count": "N_raw", "value": n_raw,
+         "processing": "N_raw ≥ 1이면 " + H10_STOP, "h10_marker": bool(n_raw)},
+        {"condition": True, "R-1..R-4": FAMILY_F_RESULT_PASS, "count": "N_F", "value": n_f,
+         "processing": "N_F ≥ 1이면 " + H10_STOP, "h10_marker": bool(n_f)},
+        {"condition": True, "R-1..R-4": f"{FAMILY_F_RESULT_FAIL} 또는 {NOT_JUDGEABLE_WORD}",
+         "count": None, "value": None, "processing": H10_STOP, "h10_marker": True},
+        {"condition": NOT_JUDGEABLE_WORD, "R-1..R-4": "(기록)", "count": None, "value": None,
+         "processing": f"H-9 격자 {NOT_JUDGEABLE_WORD}, 멈추고 묻는다", "h10_marker": False},
+    ]
+
+
+def select_h10_row(table: list[dict], condition: bool | None, family_result: str | None
+                   ) -> dict:
+    if condition is None:
+        return table[3]
+    if not condition:
+        return table[0]
+    return table[1] if family_result == FAMILY_F_RESULT_PASS else table[2]
+
+
+def v0_pair_source(root: Path) -> dict:
+    """Supplement 5-1 / 6-2: the R3-E1 / R4-B4 sample decides the V0 pair source (stored V0
+    grid, V0 768, or 판정 불가 = undecided)."""
+    sample = grid_v0_sample(argparse.Namespace(sample_dir=root / GRID_V0_SAMPLE_DIR,
+                                               stored_dir=root / GRID_V0_STORED_DIR))
+    folders = {"stored": GRID_V0_STORED_DIR, "v0_768": GRID_V0_768_DIR}
+    words = {"stored": V0_SOURCE_STORED, "v0_768": V0_SOURCE_768}
+    source = sample["pair_source"]
+    return {"source": words.get(source, NOT_JUDGEABLE_WORD), "folder": folders.get(source),
+            "sample_jobs_same": sample["same"], "sample_jobs": sample["jobs"],
+            "sample_problems": sample["problems"]}
+
+
+def grid_tag_stops(runs: list[GridRun], kind: str) -> list[dict]:
+    """Supplement 5-1 / 4-3 / 6-2: the tag of a grid run is its ``results[i].controller_tag``."""
+    stops = []
+    for run in runs:
+        problem = kind_tag_problem(kind, run.tag)
+        if problem:
+            stops.append({"result_file": run.result_file, "location": run.location,
+                          "stop": problem[0], "reason": problem[1]})
+    return stops
+
+
+@dataclass
+class GridPairing:
+    """Supplement 5-1 / 6-2: the V0 pair source, the VB rows with their pairs, the V0 runs no
+    VB run paired, and the input stops (S-15 form, S-2 / S-11 tags)."""
+
+    source: dict
+    rows: list[GridRow]
+    v0_only: list[GridRun]
+    input_stops: list[str]
+
+    @property
+    def is_source_decided(self) -> bool:
+        return self.source["folder"] is not None
+
+
+def grid_pairing(root: Path) -> GridPairing:
+    """The one V0 pairing every application condition and the grid lists use (supplement 6-3);
+    no rows when the pair source is undecided."""
+    source = v0_pair_source(root)
+    if source["folder"] is None:
+        return GridPairing(source, [], [], [])
+    vb_runs, vb_problems = read_grid_runs(root / GRID_VB_DIR, root)
+    v0_runs, v0_problems = read_grid_runs(root / source["folder"], root)
+    tags = grid_tag_stops(vb_runs, KIND_P3_VB)
+    if source["source"] == V0_SOURCE_768:  # 6-2: the stored (old) V0 grid is not tag-checked
+        tags += grid_tag_stops(v0_runs, KIND_NONE)
+    stops = vb_problems + v0_problems
+    if len(vb_runs) != GRID_ROWS:
+        stops.append(f"S-15: {len(vb_runs)} VB grid runs, {GRID_ROWS} expected")
+    stops += [f"{tag['stop']} {tag['result_file']} {tag['location']}: {tag['reason']}"
+              for tag in tags]
+    pairs, v0_only = pair_grid_runs(vb_runs, v0_runs)
+    return GridPairing(source, [assess_grid_row(*pair) for pair in pairs], v0_only, stops)
+
+
+def application_condition(pairing: GridPairing) -> bool | None:
+    """Supplement 4-5 / 6-3 on the 5-1 pairing: true, false or 판정 불가 (None; also when the
+    pair source is undecided)."""
+    if not pairing.is_source_decided:
+        return None
+    return combine_conditions([family_f_row_condition(row) for row in pairing.rows
+                               if row.is_family_f])
+
+
+def _family_f_result(root: Path) -> tuple[str | None, str | None]:
+    path = root / FAMILY_F_LINES
+    if not path.is_file():
+        return None, f"S-15: {FAMILY_F_LINES} missing"
+    report = family_f(argparse.Namespace(lines=path, grid_root=None))
+    return report["result"], None
+
+
+def _not_judgeable_rows(pairing: GridPairing) -> list[dict]:
+    rows = [{**grid_list_row(row), "reasons": row.reasons}
+            for row in pairing.rows if not row.is_judged]
+    rows += [{"bundle": GRID_BUNDLE, "result_file": run.result_file, "location": run.location,
+              "key": run.key, "setting": run.setting, "event": run.event,
+              "offset_s": run.offset_s, "reasons": ["V0 run without a VB row (supplement 5-1)"]}
+             for run in pairing.v0_only]
+    return sorted(rows, key=grid_sort_key)
+
+
+def grid_lists(pairing: GridPairing) -> dict:
+    """Supplement 5-3 (가) .. (다) and the records of one pairing."""
+    rows = pairing.rows
+    judged = [row for row in rows if row.is_judged]
+    raw = [row for row in rows if is_raw_pass_to_fail(row)]
+    excluded = [row for row in rows if is_excluded_pass_to_fail(row)]
+    faults = [row for row in rows if row.is_fault]
+    return {"rows": len(rows), "judged_rows": len(judged),
+            "raw_pass_to_fail": _sorted_rows(raw), "N_raw": len(raw),
+            "family_f_rows": family_f_table(rows),
+            "excluded_pass_to_fail": _sorted_rows(excluded), "N_F": len(excluded),
+            "record": {
+                "fail_to_pass": sum(r.v0_pass is False and r.vb_pass is True for r in judged),
+                "fail_to_fail": sum(r.v0_pass is False and r.vb_pass is False for r in judged),
+                "pass_to_pass": sum(r.v0_pass is True and r.vb_pass is True for r in judged),
+                "fault": len(faults), "fault_rows": _sorted_rows(faults),
+                "not_judgeable": _not_judgeable_rows(pairing)}}
+
+
+def grid_h10(args: argparse.Namespace) -> dict:
+    """Supplements 5 and 6 (user decision 129): the VB grid pass -> fail rows against the V0
+    pair (5-1, 6-2), the raw list N_raw, the family F table and the list N_F (5-3, 6-1), the
+    application condition (6-3) and the v5 criteria H-10 grid term (5-4).
+
+    The only marker is ``멈춤 H-10`` (6-4); FAULT and 판정 불가 rows are counts and lists. Exit
+    1 when the marker, an input stop, FAULT >= 1 or any 판정 불가 (rows, pair source,
+    condition) is there, else 0 (README).
+    """
+    root = Path(args.root)
+    pairing = grid_pairing(root)
+    condition = application_condition(pairing)
+    family_result, family_problem = _family_f_result(root)
+    stops = pairing.input_stops + ([family_problem] if family_problem else [])
+    lists = grid_lists(pairing) if pairing.is_source_decided else {}
+    if lists and len(lists["family_f_rows"]) != FAMILY_F_GRID_ROWS:
+        stops.append(f"S-15: {len(lists['family_f_rows'])} family F rows, "
+                     f"{FAMILY_F_GRID_ROWS} expected")
+    table = h10_grid_table(lists.get("N_raw"), lists.get("N_F"))
+    selected = select_h10_row(table, condition, family_result)
+    marker = H10_MARKER if selected["h10_marker"] else None
+    record = lists.get("record") or {}
+    is_finding = bool(marker or stops or condition is None or record.get("fault")
+                      or record.get("not_judgeable"))
+    return {"rules": RULES_NAME, "section": "R4 supplements 5 / 6",
+            "supplement_5_sha256": SUPPLEMENT_5_SHA256,
+            "supplement_6_sha256": SUPPLEMENT_6_SHA256, "root": str(root),
+            "v0_pair_source": pairing.source, "input_stops": stops, **lists,
+            "application_condition": condition_word(condition),
+            "family_f_result": family_result, "h10_grid_table": table,
+            "h10_grid_selected": selected, "h10_marker": marker,
+            "exit_code": 1 if is_finding else 0}
+
+
+# --------------------------------------------------------------------------- H-11 (rev16 R16-8)
+@dataclass(frozen=True)
+class G3Pair:
+    """One rev16 R16-8 comparison pair: the no-option output vs its comparison target."""
+
+    script: str
+    new_file: str
+    target_file: str
+    target_in_h11: bool
+    key_field: str
+    compare_field: str
+    key: str
+    controller: str | None = None
+
+
+H11_PAIRS = (
+    G3Pair("s9_slope_fix_candidates.py", "u3_p3b_none.json", "u3_p3b_V0.json", False, "id",
+           "hash", "base|G1|B|top|Fs0"),
+    G3Pair("s9_slope_fix_candidates.py", "u3_g8_none.json", "u3_g8_V0.json", False, "id",
+           "hash", "slope|edge|top|4.0|ref|none|0|proj"),
+    G3Pair("r72_g6_screen.py", "u3_C_none.json", "u3_C_V0.json", False, "key",
+           "commands_sha256", "g6|G1+J1@FL|top|Fs8"),
+    G3Pair("r72_g6_screen.py", "u3_C_none.json", "u3_C_V0.json", False, "key",
+           "commands_sha256", "g6r|rigid+J1@FL|top|Fs8"),
+    G3Pair("s9_soil_slope.py", "u3_D_none.json", "u3_D_V0.json", False, "id",
+           "run.commands_sha256", "H8|rigid|B|top|flat"),
+    G3Pair("s9_soil_slope.py", "u3_D_none.json", "u3_D_V0.json", False, "id",
+           "run.commands_sha256", "H8|G1|B|top|flat|FL:g20"),
+    G3Pair("b5_baseline_compare.py", "u6_b5_A1_none.json", "u6_b5_A1_V0.json", True, "case",
+           "commands_sha256", "A1-rigid", "C2"),
+    G3Pair("b5_baseline_compare.py", "u6_b5_A1_none.json", "u6_b5_A1_V0.json", True, "case",
+           "commands_sha256", "A1-J1", "C2"),
+)
+"""Rev16 R16-8 run / pair table (8 keys) with its key narrowing and compare fields."""
+H11_RUN_FILES = ("u3_p3b_none.json", "u3_g8_none.json", "u3_C_none.json", "u3_D_none.json",
+                 "u6_b5_A1_none.json", "u6_b5_A1_V0.json")
+"""Rev16 R16-8: the H-11 outputs (6 runs, 10 keys); each has a ``.identity.json`` sidecar."""
+
+
+def _matching_items(document: dict, pair: G3Pair) -> list[dict]:
+    rows = []
+    for name in ("records", "results"):
+        for item in document.get(name) or []:
+            if not isinstance(item, dict) or item.get(pair.key_field) != pair.key:
+                continue
+            if pair.controller is not None and item.get("controller") != pair.controller:
+                continue
+            rows.append(item)
+    return rows
+
+
+def g3_pair(pair: G3Pair, h11_dir: Path, las_k1_dir: Path) -> dict:
+    """R16-8 count check and hash comparison of one pair (exactly one line on each side)."""
+    target_dir = h11_dir if pair.target_in_h11 else las_k1_dir
+    new_rows = _matching_items(read_json(h11_dir / pair.new_file), pair)
+    target_rows = _matching_items(read_json(target_dir / pair.target_file), pair)
+    new_hash = get_path(new_rows[0], pair.compare_field)[1] if len(new_rows) == 1 else None
+    target_hash = (get_path(target_rows[0], pair.compare_field)[1] if len(target_rows) == 1
+                   else None)
+    is_count_ok = len(new_rows) == 1 and len(target_rows) == 1
+    same = is_count_ok and new_hash is not None and new_hash == target_hash
+    return {"script": pair.script, "key": pair.key, "compare_field": pair.compare_field,
+            "new_file": pair.new_file, "target_file": pair.target_file,
+            "no_option_hash": new_hash, "target_hash": target_hash,
+            "no_option_lines": len(new_rows), "target_lines": len(target_rows),
+            "count_ok": is_count_ok, "same": same}
+
+
+def identity_problems(sidecar: Path, expected_head: str) -> list[str]:
+    """Rev16 R16-8 commit identity: every ``start`` / ``end`` entry of a ``resume_k1_identity``
+    sidecar has ``git.head`` = R2 and ``git.is_clean`` true (else S-12)."""
+    if not sidecar.is_file():
+        return [f"{sidecar.name} missing"]
+    document = read_json(sidecar)
+    problems = []
+    for moment in ("start", "end"):
+        entries = document.get(moment)
+        if not isinstance(entries, list) or not entries:
+            problems.append(f"{sidecar.name}: no {moment} entry")
+            continue
+        for entry in entries:
+            head = get_path(entry, "git.head")[1]
+            if head != expected_head:
+                problems.append(f"{sidecar.name} {moment}: git.head {head!r} is not R2")
+            if get_path(entry, "git.is_clean")[1] is not True:
+                problems.append(f"{sidecar.name} {moment}: git.is_clean is not true")
+    return problems
+
+
+def h11(args: argparse.Namespace) -> dict:
+    """Rev16 R16-8: G-3 gate of U-3 / U-6 (8 pairs); false = H-3 / H-4 are not judged."""
+    h11_dir, las_k1_dir = Path(args.h11_dir), Path(args.las_k1_dir)
+    pairs = [g3_pair(pair, h11_dir, las_k1_dir) for pair in H11_PAIRS]
+    identity = {name: identity_problems(h11_dir / name.replace(".json", ".identity.json"),
+                                        args.expected_head) for name in H11_RUN_FILES}
+    identity_bad = {name: problems for name, problems in identity.items() if problems}
+    is_g3 = all(pair["same"] for pair in pairs)
+    false_pairs = [{key: pair[key] for key in ("script", "key", "compare_field",
+                                                  "no_option_hash", "target_hash",
+                                                  "no_option_lines", "target_lines")}
+                   for pair in pairs if not pair["same"]]
+    markers = [] if is_g3 else ["G-3 거짓 (H-3·H-4 판정 안 함)"]
+    if identity_bad:
+        markers.append("S-12 (H-11 commit identity)")
+    return {"rules": "v5_resume_4368_rules_rev16.md", "section": "R16-8 (H-11, u3 original 7 G-3)",
+            "pairs": pairs, "G-3": is_g3, "pass": is_g3 and not identity_bad,
+            "false_pairs_RD7": false_pairs, "identity": identity, "markers": markers,
+            "exit_code": 0 if is_g3 and not identity_bad else 1}
+
+
+# --------------------------------------------------------------------- H-12 (R16-9 6, R17-2a)
+H12_EXPECTED_FILES = 3
+H12_LOCKED_LIMIT_N = 600.0
+RECORDED_LOWER_TOL_N = 1e-6
+"""Rev17 R17-1: the own-event replay difference allowance (recorded here, it gates the staging)."""
+H12_GAP_MARKER = "R17-2a 범위 공백"
+STOP_H7_TEXT = "멈춤 H-7"
+"""RD-4: the v5 criteria stop H-7 (not the bundle H-7)."""
+H12_RECORD_COMPLETE = "기록 완료"
+H12_RECORD_INCOMPLETE = "기록 불완전"
+
+
+def _t4h_arrays(path: Path) -> tuple[dict, dict]:
+    import numpy as np
+
+    with np.load(path, allow_pickle=False) as data:
+        arrays = {name: np.asarray(data[name]) for name in ("t_s", "locked", "command_m_s")
+                  if name in data.files}
+        meta = json.loads(str(data["meta_json"].item())) if "meta_json" in data.files else {}
+    return arrays, meta
+
+
+def locked_samples_after(arrays: dict, start_s: float, leg_index: int) -> int:
+    """R16-9 6 empty-window guard: judged samples (T4h ``locked`` = 1 and acting command 0, the
+    acting command being the previous period's ``command_m_s`` as in ``t4h_replay``) of one leg
+    at or after ``start_s`` (7.6 allowance)."""
+    import numpy as np
+
+    t = np.asarray(arrays["t_s"], float)
+    command = np.asarray(arrays["command_m_s"], float)
+    acting = np.zeros_like(command)
+    acting[1:] = command[:-1]
+    locked = np.asarray(arrays["locked"]).astype(bool)
+    after = t >= float(start_s) - COMPARE_EPS
+    return int((after & locked[:, leg_index] & (acting[:, leg_index] == 0.0)).sum())
+
+
+def h12_key(path: Path, replay_row: dict | None) -> dict:
+    """R16-9 6 per T4h file: the forced four-leg range, the actual fallback-leg range and the
+    empty-window count of the actual fallback legs."""
+    legs = list(LEG_NAMES)
+    arrays, meta = _t4h_arrays(path)
+    starts = meta.get("fallback_start_s")
+    actual = ([leg for leg, start in zip(legs, starts, strict=True) if start is not None]
+              if isinstance(starts, list) and len(starts) == len(legs) else [])
+    row: dict[str, Any] = {"file": path.name, "key": get_path(meta, "job.key")[1],
+                           "fallback_start_s": starts, "actual_fallback_legs": actual}
+    missing_arrays = [name for name in ("t_s", "locked", "command_m_s") if name not in arrays]
+    if missing_arrays or not actual:
+        return {**row, "judged": False,
+                "reason": f"no T4h arrays {missing_arrays}" if missing_arrays
+                else "no actual fallback leg (fallback_start_s)"}
+    counts = {leg: locked_samples_after(arrays, starts[legs.index(leg)], legs.index(leg))
+              for leg in actual}
+    row["locked_samples_after_fallback"] = counts
+    if any(count == 0 for count in counts.values()):
+        return {**row, "judged": False, "reason": "empty window (R16-9 6, 사용자 결정 55의 2)"}
+    if replay_row is None:
+        return {**row, "judged": False, "reason": "no t4h_replay row for this file"}
+    over = replay_row.get("over_0p6kN_by_leg") or {}
+    row.update(over_0p6kN_by_leg=over, max_excess_N=replay_row.get("max_excess_N"),
+               unlocked_tail_over_0p6kN_by_leg=replay_row.get("unlocked_tail_over_0p6kN_by_leg"),
+               recorded_lower_max_abs_N=replay_row.get("recorded_lower_max_abs_N"),
+               settings_equal=replay_row.get("settings_equal"),
+               forced_four_legs_over=sum(int(over.get(leg) or 0) for leg in legs),
+               actual_legs_over=sum(int(over.get(leg) or 0) for leg in actual))
+    row["judged"] = True
+    return row
+
+
+def h12(args: argparse.Namespace) -> dict:
+    """Rev16 R16-9 6 (record bundle) with rev17 R17-2a: the H-7 reading of the official T4h
+    files in two ranges (forced four legs, actual fallback legs); different conclusions are the
+    marker ``R17-2a 범위 공백`` (the range is not chosen here)."""
+    t4h_dir = Path(args.h12_dir) / "t4h"
+    files = sorted(t4h_dir.glob("*.npz"))
+    replay = read_json(Path(args.replay))
+    by_file = {row.get("file"): row for row in replay.get("rows") or []}
+    keys = [h12_key(path, by_file.get(path.name)) for path in files]
+    judged = [row for row in keys if row["judged"]]
+    is_four_h7 = any(row["forced_four_legs_over"] > 0 for row in judged)
+    is_actual_h7 = any(row["actual_legs_over"] > 0 for row in judged)
+    markers = []
+    if len(files) != H12_EXPECTED_FILES:
+        markers.append(f"S-15 (H-12 T4h files {len(files)} != {H12_EXPECTED_FILES})")
+    if is_four_h7 != is_actual_h7:
+        markers.append(H12_GAP_MARKER)
+    elif is_four_h7:
+        markers.append(STOP_H7_TEXT)
+    state = (H12_RECORD_COMPLETE if len(judged) == len(keys) == H12_EXPECTED_FILES
+             else H12_RECORD_INCOMPLETE)
+    differences = [row.get("recorded_lower_max_abs_N") for row in judged]
+    return {"rules": "v5_resume_4368_rules_rev16.md", "section": "R16-9 6, rev17 R17-2a",
+            "t4h_dir": str(t4h_dir), "replay": {"path": str(args.replay),
+                                                "sha256": file_sha256(Path(args.replay))},
+            "files": [{"file": path.name, "sha256": file_sha256(path)} for path in files],
+            "keys": keys, "range_forced_four_legs_H7": is_four_h7,
+            "range_actual_fallback_legs_H7": is_actual_h7, "markers": markers,
+            "recorded_lower_max_abs_N_max": max((d for d in differences if d is not None),
+                                                default=None),
+            "recorded_lower_tol_N": RECORDED_LOWER_TOL_N, "state": state,
+            "exit_code": 1 if markers or state != H12_RECORD_COMPLETE else 0}
+
+
+# ------------------------------------------------------------- C-9 .. C-11 (R16-11, R16-11b)
+X16_ROWS = {
+    "R4368X_G1_B_top_Fs4_V0_gateon": ("C-9", "Y1", 0x000F),
+    "R4368X_G1_B_top_Fs4_V0_gateoff": ("C-9", "Y2", 0x00F0),
+    "R4368X_rigidS1FL_B_top_Fs4_V0": ("C-10", "Y2", 0x00F0),
+    "R4368X_rigidS1FL_B_top_Fs4_VB": ("C-10", "X1", 0x0F00),
+    "R4368X_rigidS1FR_B_top_Fs4_V0": ("C-10", "X2", 0xF000),
+    "R4368X_rigidS1FR_B_top_Fs4_VB": ("C-10", "Y1", 0x000F),
+    "R4368X_J2_B_top_Fs0_L2_V0": ("C-11", "X1", 0x0F00),
+    "R4368X_J2_B_top_Fs0_L2_VB": ("C-11", "X2", 0xF000),
+}
+"""Rev16 R16-11 row names with their bundle and rev16 R16-14 5 cell and mask."""
+X16_GATE_ON_ROW = "R4368X_G1_B_top_Fs4_V0_gateon"
+X16_GATE_OFF_ROW = "R4368X_G1_B_top_Fs4_V0_gateoff"
+X16_REQUIRED_FILES = ("result.json", "controller_commands.npz", "step_series.npz",
+                      "r8_series.npz", "completion_series.npz", "record/record.npz",
+                      "record/meta.json")
+"""Rev16 R16-11b 2 row-folder files (``flow_series.npz`` too on VB rows)."""
+DONE_EXIT = re.compile(r"\bexit=(-?\d+)")
+X16_LAST_SAMPLE_TOL_S = 0.1
+"""Rev16 R16-11 1 P-18 premise: the last sample at or after ``--duration`` - 0.1 s."""
+X16_LOC_WINDOW_S = 0.1
+"""C-11 "LOC 주기": the controller period ending at the first LOC (T_s = 0.1 s)."""
+X16_LOC_FRACTION_W = 0.01
+
+
+def _int_mask(value: Any) -> int | None:
+    try:
+        return int(str(value), 0)
+    except (TypeError, ValueError):
+        return None
+
+
+def x16_identity(row_id: str, case: str, cell_mask: int, identity_dir: Path,
+                 result: dict) -> dict:
+    """Rev16 R16-11b 1 identity of one row: the start / end identity files and the
+    ``result.json`` values; problems split into S-12 (commit) and S-4 (SCM identity)."""
+    s12, s4 = [], []
+    pre_path, post_path = identity_dir / f"{row_id}_pre.json", identity_dir / f"{row_id}_post.json"
+    pre = read_json(pre_path) if pre_path.is_file() else None
+    post = read_json(post_path) if post_path.is_file() else None
+    if pre is None or post is None:
+        s12.append(f"identity file missing: pre {pre is not None}, post {post is not None}")
+    else:
+        if pre.get("ok") is not True or pre.get("dry") is not False:
+            s12.append("start identity not ok or a dry record")
+        if pre.get("head") != R2_COMMIT or post.get("head") != R2_COMMIT:
+            s12.append(f"HEAD start {pre.get('head')} / end {post.get('head')} is not R2")
+        if pre.get("tracked_status") or post.get("tracked_status"):
+            s12.append("git status --porcelain --untracked-files=no not empty")
+        if post.get("reflog_new_since_pre"):
+            s12.append("new reflog entries since the start identity")
+        if post.get("ok") is not True:
+            s12.append("end identity not ok")
+        for name in FORBIDDEN_IDENTITY_ENV:
+            for moment, document in (("start", pre), ("end", post)):
+                if (document.get("forbidden_env") or {}).get(name) is not None:
+                    s4.append(f"{moment} env {name} set")
+        if pre.get("dll_sha256") != HULL_DLL_SHA256:
+            s4.append("start identity DLL sha256 is not the validated one")
+    if get_path(result, "code_state.git_at_start.head")[1] != R2_COMMIT:
+        s12.append("result.json code_state.git_at_start.head is not R2")
+    checks = {"num_threads_chrono": 4, "placement.omp_wait_policy": "PASSIVE",
+              "hull_hook.mode": "fast", "hull_hook.dll_sha_validated": True,
+              "hull_hook.dll_sha256": HULL_DLL_SHA256}
+    for dotted_key, want in checks.items():
+        if get_path(result, dotted_key)[1] != want:
+            s4.append(f"result.json {dotted_key} != {want!r}")
+    if _int_mask(get_path(result, "placement.affinity_mask_process")[1]) != cell_mask:
+        s4.append(f"result.json placement mask is not the cell mask 0x{cell_mask:04X}")
+    return {"row": row_id, "case": case, "S-12": s12, "S-4": s4, "ok": not s12 and not s4}
+
+
+X16_SHORT_NAMES = ("C9on", "C9off", "C10FLV0", "C10FLVB", "C10FRV0", "C10FRVB", "C11V0", "C11VB")
+"""Supplement 2-4: the short row names of the runner marks and identity files."""
+
+
+def short_names_by_case(identity_dir: Path) -> dict[str, str]:
+    """Supplement 2-4: row name -> short row name, from ``<short>_pre.json`` ``case``."""
+    names = {}
+    for short in X16_SHORT_NAMES:
+        path = identity_dir / f"{short}_pre.json"
+        if path.is_file():
+            case = read_json(path).get("case")
+            if isinstance(case, str):
+                names[case] = short
+    return names
+
+
+def run_exit_code(runner_dir: Path, short: str | None) -> tuple[int | None, str | None]:
+    """Supplement 2-4: rc of one row = N of ``exit=N`` on the first line of its only
+    ``<runner>/logs_*/<short>_run.done`` (the ``.log`` is not read).
+
+    Returns:
+        (rc, None), or (None, reason) when the mark is missing, found twice or more, or its
+        first line has no ``exit=`` (the row is then ``기록 불완전``).
+    """
+    if short is None:
+        return None, "no short row name (no <short>_pre.json with this case)"
+    hits = sorted(runner_dir.glob(f"logs_*/{short}_run.done"))
+    if len(hits) != 1:
+        return None, f"{len(hits)} {short}_run.done marks (exactly one needed)"
+    with hits[0].open(encoding="utf-8") as handle:
+        first_line = handle.readline()
+    match = DONE_EXIT.search(first_line)
+    if match is None:
+        return None, f"no exit= on the first line of {hits[0].name}"
+    return int(match.group(1)), None
+
+
+def _series(path: Path, names: tuple[str, ...]) -> dict:
+    import numpy as np
+
+    with np.load(path, allow_pickle=False) as data:
+        return {name: np.asarray(data[name]) for name in names if name in data.files}
+
+
+def _first_phase_s(result: dict, phase: str) -> float | None:
+    for entry in result.get("phases") or []:
+        if isinstance(entry, dict) and entry.get("phase") == phase:
+            return float(entry["t_s"])
+    return None
+
+
+def _last_phase(result: dict) -> str | None:
+    phases = [entry for entry in result.get("phases") or [] if isinstance(entry, dict)]
+    return phases[-1].get("phase") if phases else None
+
+
+def _mm(values: Any) -> Any:
+    if isinstance(values, list):
+        return [None if v is None else float(v) * 1e3 for v in values]
+    return None if values is None else float(values) * 1e3
+
+
+def x16_common_items(folder: Path, result: dict, rc: int | None) -> dict:
+    """Items every C-9 .. C-11 row records: first READY [s], rc, last sample time [s]."""
+    series = _series(folder / "step_series.npz", ("t_s",))
+    t_s = series.get("t_s")
+    return {"first_ready_s": _first_phase_s(result, "ready"), "rc": rc,
+            "last_sample_s": None if t_s is None or not len(t_s) else float(t_s[-1])}
+
+
+def c9_items(folder: Path, result: dict) -> dict:
+    """Rev16 R16-11 1 record items of one C-9 row (``controller_commands.npz`` sha in the pair)."""
+    p35 = get_path(result, "p3b.P3-5_clearance_stroke")[1] or {}
+    checks = get_path(result, "p3b.checks")[1] or {}
+    return {"decisions": get_path(result,
+                                  "controller_meta.slope_clearance_margin.order_gate.decisions")[1],
+            "soil_mode_start_s": get_path(result, "c2_soil.soil_mode_t_s")[1],
+            "loc_s": get_path(result, "c2_soil.t_loc_s")[1],
+            "controller_commands_sha256": file_sha256(folder / "controller_commands.npz"),
+            "max_stroke_mm": _mm(p35.get("s_motor_max_m")),
+            "end_rut_gap_mm": _mm(p35.get("rut_clearance_end_m")),
+            "P3": {name: checks.get(key) for name, key in P3_CHECK_KEYS.items()}}
+
+
+P3_CHECK_KEYS = {"P3-1": "P3-1_crawler_zero_after_ready", "P3-2": "P3-2_within",
+                 "P3-3": "P3-3_within", "P3-4": "P3-4_within_0p2", "P3-5": "P3-5_within",
+                 "P3-6": "P3-6_within", "P3-7": "P3-7_within", "P3-8": "P3-8_within",
+                 "P3-9": "P3-9_flags"}
+"""``result.json`` ``p3b.checks`` key of each P3 item (P3-9: the deferred FLAG count)."""
+
+
+def c10_items(folder: Path, result: dict) -> dict:
+    """Rev16 R16-11 2 record items of one C-10 row: leg forces and times, the original 7.4
+    F < F_min / F < F_min + 2 kN times (1 ms ``F_cyl_N`` in [t_D, t_D + 8 s], RV1-7 / R2-5),
+    G6-1 .. G6-7 by the CD-11 table (supplement 2-5), P3-3, end phase, stroke, patch-leg
+    sinkage."""
+    force = get_path(result, "p3b.P3-3_leg_force")[1] or {}
+    p35 = get_path(result, "p3b.P3-5_clearance_stroke")[1] or {}
+    patch_leg = get_path(result, "args.rigid_base")[1]
+    sinkage = get_path(result, "p3b_ext.pad_sinkage")[1] or {}
+    return {"F_min_after_N": force.get("F_min_after_N"),
+            "t_min_after_s": force.get("t_min_after_s"),
+            "F_min_transient_N": force.get("F_min_transient_N"),
+            **fmin_times(folder, result), "G6": g6_gates(folder, result),
+            "P3-3_within": get_path(result, "p3b.checks.P3-3_within")[1],
+            "end_phase": _last_phase(result), "max_stroke_mm": _mm(p35.get("s_motor_max_m")),
+            "patch_leg": patch_leg,
+            "patch_leg_sinkage_end_mm": (sinkage.get("end_mm") or {}).get(str(patch_leg)),
+            "patch_leg_sinkage_max_mm": (sinkage.get("max_mm") or {}).get(str(patch_leg))}
+
+
+def fmin_times(folder: Path, result: dict) -> dict:
+    """Original 7.4 times of one row (the ``fmin-time`` definition, RV1-7 / R2-5)."""
+    import numpy as np
+
+    weight = get_path(result, "p3b.weight_N")[1]
+    series = _series(folder / SERIES_FILE, ("t_s", "F_cyl_N", CRAWLER_NORMAL_KEY))
+    if not isinstance(weight, (int, float)) or len(series) != 3:
+        return {"t_D_s": None, "times_note": "p3b.weight_N or a series column missing"}
+    t_s = np.asarray(series["t_s"], float)
+    t_dep = departure_time(t_s, series[CRAWLER_NORMAL_KEY], float(weight))
+    if t_dep is None:
+        return {"t_D_s": None, "times_note": "t_D not defined (R2-5)"}
+    below = below_durations(t_s, series["F_cyl_N"], t_dep, F_MIN_N)
+    guard = below_durations(t_s, series["F_cyl_N"], t_dep, F_MIN_N + OC5_GUARD_N)
+    return {"t_D_s": t_dep, "F_below_F_min_ms": below["ms"],
+            "F_below_F_min_plus_2kN_ms": guard["ms"],
+            "window_complete": float(t_s[-1]) >= t_dep + FMIN_WINDOW_S - COMPARE_EPS}
+
+
+G6_P3_MAP = (("G6-1", "P3-1"), ("G6-2", "P3-2"), ("G6-3", "P3-3"), ("G6-4", "P3-4"),
+             ("G6-5", "P3-5"), ("G6-7", "P3-8"))
+"""Supplement 2-5 / rules rev25 CD-11 G6 table: the G6 gates replaced by the row's P3 value."""
+G6_FAIL_WORD = "fail"
+G6_PASS_WORD = "pass"
+G6_NOT_JUDGEABLE_WORD = "not_judgeable"
+
+
+def _chrono_modules():
+    """The path 1 Chrono judge modules (read only: ``chrono_rows_judge_4368`` for the row
+    reading and D items, ``chrono_bundle_grade_4368`` for the CD-4 / CD-5 P3 items)."""
+    chrono_dir = ROOT / "04_scripts" / "02_chrono"
+    if str(chrono_dir) not in sys.path:
+        sys.path.append(str(chrono_dir))
+    import chrono_bundle_grade_4368
+    import chrono_rows_judge_4368
+
+    return chrono_rows_judge_4368, chrono_bundle_grade_4368
+
+
+def scm_p3_items(folder: Path, result: dict) -> tuple[list[dict], dict] | None:
+    """Rules rev25 CD-4: the P3 items of one SCM row by the path 1 definition used for the
+    C-2 .. C-4 SCM rows (``chrono_bundle_grade_4368.p3_items`` on the
+    ``chrono_rows_judge_4368.judge_scm`` D items; ``--rigid-base`` rows get P3-5 해당 없음, CD-9).
+
+    Returns:
+        (P3 items, D items), or None when the row cannot be read (the row is 기록 불완전).
+    """
+    rows_judge, bundle = _chrono_modules()
+    try:
+        row = rows_judge.load_row(folder)
+        params = rows_judge.load_params(ROOT / "02_params" / "rexome33.yaml")
+        judged = rows_judge.judge_scm(row, None, params, dict(rows_judge.ASSUMPTIONS))
+        items = bundle.p3_items(result.get("p3b") or {}, judged["items"],
+                                rigid_base=bool(get_path(result, "args.rigid_base")[1]),
+                                args=result.get("args"))
+    except (rows_judge.InputError, KeyError, IndexError, TypeError, ValueError) as exc:
+        print(f"P3 items of {folder} not computable: {exc!r}", file=sys.stderr)
+        return None
+    return items, judged["items"]
+
+
+def g6_from_p3(p3_items: list[dict], judged_items: dict) -> dict:
+    """Supplement 2-5 (rules rev25 CD-11 G6 table): G6-1 .. G6-5 and G6-7 = the row's P3-1 .. P3-5
+    and P3-8 values (a 해당 없음 P3 value is kept as its text); G6-6 = no FAULT and READY reached
+    (no READY = fail); ``READY_le_120s`` = first READY <= 120 s after the closed-loop start (no
+    READY = fail). Record values, no grade (R16-11a)."""
+    by_name = {entry["item"]: entry for entry in p3_items}
+    gates: dict[str, Any] = {}
+    for gate, p3 in G6_P3_MAP:
+        entry = by_name.get(p3) or {}
+        verdict = entry.get("verdict")
+        gates[gate] = {"P3": p3, "value": verdict if verdict is not None else entry.get("value")}
+    ready = judged_items.get("ready_D-27_D-28") or {}
+    fault = (judged_items.get("P3-8_D-34_D-35") or {}).get("fault")
+    has_ready = ready.get("t_ready_rel_s") is not None
+    if not has_ready:
+        g66 = G6_FAIL_WORD
+    elif fault is None:
+        g66 = G6_NOT_JUDGEABLE_WORD
+    else:
+        g66 = G6_FAIL_WORD if fault else G6_PASS_WORD
+    gates["G6-6"] = {"P3": None, "value": g66}
+    gates["READY_le_120s"] = {"P3": None, "value": G6_PASS_WORD
+                              if has_ready and ready.get("READY_le_120s") else G6_FAIL_WORD}
+    return gates
+
+
+def g6_gates(folder: Path, result: dict) -> dict | None:
+    """C-10 G6 record values (supplement 2-5); None when the P3 items cannot be computed."""
+    computed = scm_p3_items(folder, result)
+    return None if computed is None else g6_from_p3(*computed)
+
+
+def loc_period_values(t_s, crawler_N, t_loc: float, weight_N: float) -> dict:
+    """Spec 419.8.1 (supplement 2-6): the largest crawler true normal of the 1 ms samples in
+    (t_LOC - 0.1 s, t_LOC], its fraction of W (``p3b.weight_N``) and the 0.01 W comparison
+    (7.6 allowance); ``t_s`` and the ``p3b`` LOC times are the same absolute time base."""
+    import numpy as np
+
+    t = np.asarray(t_s, float)
+    window = (t > float(t_loc) - X16_LOC_WINDOW_S + COMPARE_EPS) & (t <= float(t_loc) +
+                                                                      COMPARE_EPS)
+    if not window.any():
+        return {"crawler_max_N": None}
+    peak = float(np.asarray(crawler_N, float)[window].max())
+    return {"crawler_max_N": peak, "crawler_max_over_W": peak / float(weight_N),
+            "ge_0p01W": peak >= X16_LOC_FRACTION_W * float(weight_N) - COMPARE_EPS}
+
+
+def c11_items(folder: Path, result: dict) -> dict:
+    """Rev16 R16-11 3 record items of one C-11 row (supplement 2-6): the LOC period values at the
+    first LOC (``P3-2_loc.t_loc_first_s``) and, when a LOC was cancelled (``t_loc_final_s`` not
+    the first LOC), the same three values at the final LOC; the LOC cancel count."""
+    t_first = get_path(result, "p3b.P3-2_loc.t_loc_first_s")[1]
+    t_final = get_path(result, "p3b.P3-2_loc.t_loc_final_s")[1]
+    weight = get_path(result, "p3b.weight_N")[1]
+    out: dict[str, Any] = {"first_loc_s": t_first, "final_loc_s": t_final,
+                           "loc_cancels": get_path(result, "p3b.checks.loc_revokes")[1],
+                           "loc_period_crawler_max_N": None}
+    series = _series(folder / SERIES_FILE, ("t_s", CRAWLER_NORMAL_KEY))
+    if t_first is None or not isinstance(weight, (int, float)) or len(series) != 2:
+        return out
+    first = loc_period_values(series["t_s"], series[CRAWLER_NORMAL_KEY], t_first, weight)
+    out.update(loc_period_crawler_max_N=first["crawler_max_N"],
+               loc_period_crawler_max_over_W=first.get("crawler_max_over_W"),
+               loc_period_ge_0p01W=first.get("ge_0p01W"))
+    is_cancelled = t_final is not None and abs(float(t_final) - float(t_first)) > COMPARE_EPS
+    out["final_loc_differs"] = is_cancelled
+    if is_cancelled:
+        final = loc_period_values(series["t_s"], series[CRAWLER_NORMAL_KEY], t_final, weight)
+        out.update(final_loc_period_crawler_max_N=final["crawler_max_N"],
+                   final_loc_period_crawler_max_over_W=final.get("crawler_max_over_W"),
+                   final_loc_period_ge_0p01W=final.get("ge_0p01W"))
+    return out
+
+
+X16_ITEMS = {"C-9": c9_items, "C-10": c10_items, "C-11": c11_items}
+
+
+def x16_row(row: dict, out_root: Path, identity_dir: Path, runner_dir: Path,
+            short_names: dict[str, str]) -> dict:
+    """One C-9 .. C-11 row: identity, required files and the record items of its bundle."""
+    case = row.get("case")
+    row_id = short_names.get(case)  # supplement 2-4: the pre identity's case names the row
+    bundle, cell, mask = X16_ROWS[case]
+    folder = out_root / bundle / case
+    out: dict[str, Any] = {"bundle": bundle, "case": case, "id": row_id, "cell": cell,
+                           "problems": []}
+    if row.get("cell") != cell or _int_mask(row.get("mask")) != mask:
+        out["problems"].append(f"rows.json cell / mask {row.get('cell')} / {row.get('mask')} "
+                               f"is not rev16 R16-14 5 ({cell}, 0x{mask:04X})")
+    if row.get("id") != row_id:
+        out["problems"].append(f"rows.json id {row.get('id')!r} != short name {row_id!r} of "
+                               "the pre identity (supplement 2-4)")
+    need = list(X16_REQUIRED_FILES) + (["flow_series.npz"] if "--flow-eta-v" in
+                                       (row.get("argv") or []) else [])
+    missing = [name for name in need if not (folder / name).is_file()]
+    if missing:
+        return {**out, "problems": out["problems"] + [f"files missing: {missing}"],
+                "record_state": "기록 불완전"}
+    result = read_json(folder / "result.json")
+    out["identity"] = x16_identity(str(row_id), case, mask, identity_dir, result)
+    out["duration_s"] = get_path(result, "args.duration")[1]
+    out["threads"] = get_path(result, "num_threads_chrono")[1]
+    out["placement_mode"] = get_path(result, "placement.mode")[1]
+    rc, rc_problem = run_exit_code(runner_dir, row_id)
+    if rc_problem is not None:
+        out["problems"].append(f"rc: {rc_problem} (supplement 2-4)")
+    out["items"] = {**x16_common_items(folder, result, rc), **X16_ITEMS[bundle](folder, result)}
+    out["files_sha256"] = {name: file_sha256(folder / name) for name in need}
+    out["problems"] += [f"record item {name} not computable" for name in
+                        X16_REQUIRED_ITEMS[bundle] if out["items"].get(name) is None]
+    out["record_state"] = "기록" if out["identity"]["ok"] and not out["problems"] else "기록 불완전"
+    return out
+
+
+X16_REQUIRED_ITEMS = {"C-9": ("rc", "last_sample_s", "decisions"),
+                      "C-10": ("rc", "last_sample_s", "G6", "t_D_s", "F_min_after_N"),
+                      "C-11": ("rc", "last_sample_s", "first_loc_s", "loc_period_crawler_max_N")}
+"""Items without which a row is ``기록 불완전`` (a missing first READY is a recorded value)."""
+
+
+def p18_premise(on: dict, off: dict) -> dict:
+    """Rev16 R16-11 1 P-18 reading premise: both arms rc 0, last sample >= duration - 0.1 s,
+    a first READY, 4 threads and pcore."""
+    problems = []
+    for arm, row in (("on", on), ("off", off)):
+        items = row.get("items") or {}
+        if items.get("rc") != 0:
+            problems.append(f"{arm}: rc {items.get('rc')!r}")
+        last, duration = items.get("last_sample_s"), row.get("duration_s")
+        if last is None or duration is None or last < float(duration) - X16_LAST_SAMPLE_TOL_S - \
+                COMPARE_EPS:
+            problems.append(f"{arm}: last sample {last} s < duration {duration} - 0.1 s")
+        if items.get("first_ready_s") is None:
+            problems.append(f"{arm}: no first READY")
+        if row.get("threads") != 4 or row.get("placement_mode") != "pcore":
+            problems.append(f"{arm}: threads {row.get('threads')} / placement "
+                            f"{row.get('placement_mode')}")
+    return {"holds": not problems, "problems": problems}
+
+
+def x16_records(args: argparse.Namespace) -> dict:
+    """Rev16 R16-11 / R16-11b: C-9 .. C-11 record items and identity of the 8 rows (record
+    bundles: ``기록`` / ``기록 불완전``, never a grade, R16-11a)."""
+    out_root = Path(args.out_root)
+    rows_doc = read_json(Path(args.rows_json) if args.rows_json else
+                         out_root / "_tools" / "rows.json")
+    rows = [row for row in rows_doc.get("rows") or [] if row.get("case") in X16_ROWS]
+    missing_rows = sorted(set(X16_ROWS) - {row.get("case") for row in rows})
+    identity_dir = Path(args.identity_dir) if args.identity_dir else out_root / "_identity"
+    runner_dir = Path(args.runner_dir) if args.runner_dir else out_root / "_runners"
+    short_names = short_names_by_case(identity_dir)
+    done = {row["case"]: x16_row(row, out_root, identity_dir, runner_dir, short_names)
+            for row in rows}
+    bundles: dict[str, dict] = {}
+    for name in ("C-9", "C-10", "C-11"):
+        members = [done[case] for case, (bundle, _, _) in X16_ROWS.items()
+                   if bundle == name and case in done]
+        complete = len(members) == sum(b == name for b, _, _ in X16_ROWS.values()) and all(
+            row["record_state"] == "기록" for row in members)
+        bundles[name] = {"rows": [row["case"] for row in members],
+                         "state": "기록 완료" if complete else "기록 불완전"}
+    if X16_GATE_ON_ROW in done and X16_GATE_OFF_ROW in done:
+        on, off = done[X16_GATE_ON_ROW], done[X16_GATE_OFF_ROW]
+        premise = p18_premise(on, off)
+        sha_on = (on.get("items") or {}).get("controller_commands_sha256")
+        sha_off = (off.get("items") or {}).get("controller_commands_sha256")
+        bundles["C-9"].update(p18_premise=premise, controller_commands_same=(
+            None if sha_on is None or sha_off is None else sha_on == sha_off))
+        if not premise["holds"]:
+            bundles["C-9"]["state"] = "기록 불완전"
+    identity_stops = {case: {"S-12": row["identity"]["S-12"], "S-4": row["identity"]["S-4"]}
+                      for case, row in done.items()
+                      if "identity" in row and not row["identity"]["ok"]}
+    return {"rules": "v5_resume_4368_rules_rev16.md", "section": "R16-11 / R16-11b (C-9 .. C-11)",
+            "out_root": str(out_root), "rows": done, "missing_rows": missing_rows,
+            "bundles": bundles, "identity_stops": identity_stops,
+            "exit_code": 1 if missing_rows or identity_stops or any(
+                b["state"] != "기록 완료" for b in bundles.values()) else 0}
+
+
+# -------------------------------------------------------------------- RD-13 item lists
+ITEM_GRADE, ITEM_RECORD, ITEM_GATE = "등급 항목", "기록", "관문"
+ITEM_LISTS: dict[str, tuple[tuple[str, str, str], ...]] = {
+    "H-1": (
+        ("d1 판정 블록(H-S P3·G6·E, H-R 잠김 350 bar·G6, G6-7 377·U-S9-G6c)",
+         "d1_selection_rules 11절, rev6 R6-C3", ITEM_GRADE),
+        ("J-P3 기록 상태(d1.j_p3)", "rev3 R3-C8, rev8 R8-2", ITEM_GRADE),
+        ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9, 원판 8.2 S-8", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+        ("P-1·P-2 비트 앵커(S-7)", "rev1 RV1-5, rev13 R13-3", ITEM_GATE),
+        ("4.2 기록 확인(S-3)", "원판 4.2, rev11 R11-1", ITEM_GATE),
+        ("7.2 K1 분류(S-5)", "원판 7.2, rev2 R2-1·R2-2", ITEM_GATE),
+    ),
+    "H-2": (
+        ("D-1 선별 G-1~G-5", "d1_selection_rules, rev1", ITEM_GRADE),
+        ("G-3 면제 줄 기록(가정 경계 미성립)", "rev3 R3-A1", ITEM_RECORD),
+    ),
+    "H-3": (
+        ("U-3 묶음 등급(통과·FLAG·안전 종료·실패)", "u3 원판 4·5절", ITEM_GRADE),
+        ("r72 G6 강등(G6-7 377·U-S9-G6c, G6-2_late_loc_revoked 424.11.2)",
+         "u3 원판 53·58행, rev6 R6-C3, 보충 2-3", ITEM_GRADE),
+        ("정착 v2 재계산", "rev3 R3-B6, rev4 R4-C2", ITEM_GRADE),
+        ("G-1 키 집합", "u3 원판 7절", ITEM_GATE),
+        ("G-2 v5 기록 필드·태그", "u3 원판 7절, rev2 #4", ITEM_GATE),
+        ("G-3(H-11)", "u3 원판 7절, rev16 R16-8", ITEM_GATE),
+        ("G-4 J-P3 기록 상태", "u3 원판 7절, rev1 4, rev2 #5", ITEM_GATE),
+        ("G-5 VB 고유 실패 목록", "u3 원판 5.1, R4 RD-7", ITEM_GATE),
+        ("G-6 g8 VB WARN_ROD_PRESSURE_FALLBACK 목록", "u3 rev1 #5, R4 RD-7", ITEM_GATE),
+        ("재사용 대조", "rev3 R3-B3", ITEM_GATE),
+        ("정착 허용값(S-11)", "rev4 R4-C2", ITEM_GATE),
+        ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-4": (
+        ("U-6 묶음 등급(C2·ABL·IND)", "u3 원판 4절, rev3 R3-B4", ITEM_GRADE),
+        ("IND_LAS 관문·IND 해시", "rev3 R3-B5", ITEM_RECORD),
+        ("G-3(H-11)", "u3 원판 7절, rev16 R16-8", ITEM_GATE),
+        ("4.2 ABL 기대값", "rev16 R16-3", ITEM_GATE),
+        ("J-P3 입력 형식(RD-8) 표지", "R4 RD-8", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록(계열 = src 지면 토큰)", "R4 RD-7, 원판 7.2, rev16 R16-10 2 (c), 보충 2-7",
+         ITEM_GATE),
+    ),
+    "H-5": (
+        ("U-9 V0 판정(H0 ① 기준 포함)", "u9_targeted_rules_rev1, rev3 R3-C1", ITEM_GRADE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-6": (
+        ("J-P3(ext_moving breach_reads)",
+         "rev3 R3-C8, rev4 R4-A2, rev8 R8-2, R4 RD-7·RD-8, 보충 3-3", ITEM_GATE),
+        ("J9 잘림(m2_clipped_steps_post_lift)", "v5 기준 개정 2", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late", "rev16 R16-6, R4 RD-10", ITEM_GATE),
+        ("새 FAULT(S-6 근거)", "rev4 R4-B6", ITEM_GRADE),
+        ("L3 실패 수", "rev4 R4-B6", ITEM_RECORD),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-7": (
+        ("dg3 끔 집계(기록 1회)", "원판 9.1", ITEM_RECORD),
+        ("H-6·H-7 명령 해시·③ 갈림", "rev11 R11-3", ITEM_RECORD),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-8": (
+        ("r79 관문 S-1~S-6 줄 등급", "rev3 R3-E3, rev4 R4-B3, rev5 R5-C2", ITEM_GRADE),
+        ("L2 CP 3 %(H-10)", "r79·v5 기준", ITEM_GRADE),
+        ("L1 게이트 네 개수 대조", "rev4 R4-B3, rev5 R5-C1", ITEM_GATE),
+        ("seedext k/25·Fisher·문구", "개정 6 9절", ITEM_RECORD),
+        ("seedext 시드 0~4 해시(H-15)", "rev3 F-6", ITEM_GATE),
+        ("J-P3 위반 목록(VB 줄, h8_noise_VB의 dg3 대체 135키 제외)",
+         "R4 RD-7·RD-8, rev8 R8-2, 보충 2-1·3-2·3-3", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late(VB 줄, h8_noise_VB의 dg3 대체 135키 제외)",
+         "rev16 R16-6, R4 RD-7·RD-10, 보충 2-1·3-2", ITEM_GATE),
+        ("J11 값(V0 줄)", "rev16 R16-6 2, 보충 2-1", ITEM_RECORD),
+        ("dg3 대체로 목록에서 뺀 줄 수", "보충 3-1", ITEM_RECORD),
+        ("③ 켬 줄 수(S-8, dg3 대체 줄 포함)", "R4 RD-9, 보충 3-1", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-9": (
+        ("J1~J10 VB 외 설정 기록(V0 대비)", "v5 기준, rev3 R3-C3~C6", ITEM_RECORD),
+        ("J11 실제 대체 다리 n_late(main·pressure_only 줄)", "rev16 R16-6, R4 RD-10", ITEM_GATE),
+        ("J-P3(main·pressure_only ③ 줄)", "rev3 R3-C8, R4 RD-7·RD-8, 보충 3-3", ITEM_GATE),
+        ("격자 J-P3 등급(768 run)", "rev16 R16-7, R4 RD-7, 보충 3-3", ITEM_GATE),
+        ("격자 J11 실제 대체 다리 n_late(768 run, 설정 = results[i].v5_setting)",
+         "rev16 R16-6, R4 RD-7·RD-10, 보충 2-2·3-6", ITEM_GATE),
+        ("P-7 L1 해시", "Q-S4", ITEM_GATE),
+        ("pressure_only 끝 단계", "v5 기준", ITEM_RECORD),
+        ("family F R-1~R-4(h9_family_F.jsonl 64줄, 적용 조건 𝓕 12행)",
+         "rev3 R3-E2, rev4 R4-B5, v5 기준 개정 5 5.2, 보충 4-5·6-3", ITEM_GRADE),
+        ("격자 V0 짝 출처(표본 같음·다름·판정 불가)와 V0 768 태그",
+         "rev3 R3-E1, rev4 R4-B4, 보충 5-1·6-2", ITEM_GATE),
+        ("격자 통과→실패(768 run, V0 짝, 원 목록 N_raw·𝓕 12행 표·𝓕 제외 목록 N_F)",
+         "v5 기준 3절 J1·10절, rev3 R3-C3, 개정 5 5절, 보충 5-1~5-3·6-1", ITEM_GATE),
+        ("격자 실패→통과·실패→실패·FAULT·판정 불가 행(수·목록, 표지 없음)",
+         "v5 기준 10절, 원판 9.3, 보충 5-2·5-3·6-4", ITEM_RECORD),
+        ("𝓕 적용 조건(참·거짓·판정 불가, 5-1 짝)", "보충 4-5·6-3", ITEM_GATE),
+        ("v5 기준 H-10 격자 항(적용 조건별 수, 표지 멈춤 H-10)·격자 FAULT 0",
+         "v5 기준 10·11절, 보충 5-4·6-3·6-4", ITEM_GRADE),
+        ("③ 켬 줄·run 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-10": (
+        ("J1~J10 VB(V0 대비, H-2)", "v5 기준, rev3 R3-C3~C6", ITEM_GRADE),
+        ("LS 대비 VB·L-d", "Q-S9", ITEM_RECORD),
+        ("H-8 S7 FL 가드 주기", "Q-S7", ITEM_GATE),
+        ("S8 SA-4 일곱 항목", "Q-S6, rev6 R6-C1", ITEM_GRADE),
+        ("13.1 순서", "Q-S5", ITEM_GRADE),
+        ("item8·overlap J", "Q-S8", ITEM_GRADE),
+        ("U-9 VB 줄 수(S-15)", "Q-S10", ITEM_GATE),
+        ("J11 실제 대체 다리 n_late(모든 줄, U-9 VB 포함)", "rev16 R16-6, R4 RD-10, 보충 3-4",
+         ITEM_GATE),
+        ("J-P3(모든 ③ 줄, U-9 VB 포함)", "rev3 R3-C8, R4 RD-7·RD-8, 보충 3-3·3-4", ITEM_GATE),
+        ("③ 켬 줄 수(S-8)", "R4 RD-9", ITEM_GATE),
+        ("멈춤 S-6 목록", "R4 RD-7, 원판 7.2", ITEM_GATE),
+    ),
+    "H-11": (
+        ("G-3 8쌍 해시 같음", "rev16 R16-8", ITEM_GATE),
+        ("수 검사(키마다 양쪽 1줄)", "rev16 R16-8", ITEM_GATE),
+        ("커밋 정체성(R2·clean, S-12)", "rev16 R16-8", ITEM_GATE),
+    ),
+    "H-12": (
+        ("잠긴 표본 하한 − 진값 > 0.6 kN(강제 대체 네 다리)", "rev16 R16-9 6, rev17 R17-2a",
+         ITEM_GATE),
+        ("같은 판독(실제 대체 다리)", "rev16 R16-9 6, rev17 R17-2a", ITEM_GATE),
+        ("R17-2a 범위 공백 표지", "rev17 R17-2a, R4 RD-7", ITEM_GATE),
+        ("빈 창 막기(실제 대체 다리 잠긴 표본 수)", "rev16 R16-9 6", ITEM_RECORD),
+        ("잠기지 않은 꼬리 초과", "rev16 R16-9 6", ITEM_RECORD),
+        ("자기 사건 재생 차(recorded_lower_max_abs_N)", "rev17 R17-1", ITEM_RECORD),
+        ("T4h 파일 수(S-15)", "rev16 R16-2", ITEM_GATE),
+    ),
+    "C-9": (
+        ("decisions(dP), 토양 모드 시작, LOC 시각", "rev16 R16-11 1", ITEM_RECORD),
+        ("두 팔 controller_commands.npz sha256 같음", "rev16 R16-11 1", ITEM_RECORD),
+        ("최대 행정, 끝 rut 틈, P3-1~P3-9, 첫 READY, 마지막 표본 시각", "rev16 R16-11 1",
+         ITEM_RECORD),
+        ("rc(_run.done 첫 줄 exit=)", "rev16 R16-11 1, 보충 2-4", ITEM_RECORD),
+        ("P-18 읽기 전제", "rev16 R16-11 1", ITEM_RECORD),
+        ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
+    ),
+    "C-10": (
+        ("다리별 F^a_min·F^t_min·시각", "rev16 R16-11 2", ITEM_RECORD),
+        ("F < F_min, F < F_min + 2 kN 시간", "rev16 R16-11 2, 원판 7.4, rev1 RV1-7", ITEM_RECORD),
+        ("G6-1~G6-7·READY_le_120s(P3 값 갈음)", "rev16 R16-11 2, rev25 CD-11, 보충 2-5",
+         ITEM_RECORD),
+        ("P3-3, 끝 단계, 최대 행정, 패치 다리 침하", "rev16 R16-11 2", ITEM_RECORD),
+        ("rc(_run.done 첫 줄 exit=), 마지막 표본 시각", "rev16 R16-11 2, 보충 2-4", ITEM_RECORD),
+        ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
+    ),
+    "C-11": (
+        ("첫 LOC, LOC 주기 크롤러 법선 최대·/W·0.01 W", "rev16 R16-11 3, 명세 419.8.1, 보충 2-6",
+         ITEM_RECORD),
+        ("최종 LOC 기준 같은 세 값(LOC 취소가 있을 때)", "보충 2-6", ITEM_RECORD),
+        ("LOC 취소 수, 첫 READY, 마지막 표본 시각", "rev16 R16-11 3", ITEM_RECORD),
+        ("rc(_run.done 첫 줄 exit=)", "rev16 R16-11 3, 보충 2-4", ITEM_RECORD),
+        ("정체성(S-12·S-4)", "rev16 R16-11b 1", ITEM_GATE),
+    ),
+    "J_P": (
+        ("행 수 12(S-15)", "R4 RD-11 2", ITEM_GATE),
+        ("사건 기록 판독 불가", "R4 RD-11 4·7", ITEM_GATE),
+        ("그림자 판독 불가", "R4 RD-11 6·7", ITEM_GATE),
+        ("조건 1 LAS-b 그림자 미작동", "원판 7.3 1, R4 RD-11 6", ITEM_RECORD),
+        ("조건 2 K1 무영향(R4c30 0, 토양 모드 0)", "원판 7.3 2, R4 RD-11 5", ITEM_RECORD),
+        ("재사용 참거짓", "원판 7.3, R4 RD-11 7", ITEM_RECORD),
+    ),
+}
+"""RD-13: per bundle (item, basis clause, kind); the bases of definitions not handed to path 1
+come from the tools' docstrings / README (RD-13: no earlier section opened for them)."""
+INPUT_ITEM = ("원 결과 파일·줄 수(S-15)·줄 단위 판과 태그(S-2·S-3·S-11)",
+              "원판 4.1·8.2, 보충 4-1~4-4", ITEM_GATE)
+"""Supplement 4: the ``r4-inputs`` gate of every harness bundle."""
+for _bundle in INPUT_BUNDLES:
+    ITEM_LISTS[_bundle] = (*ITEM_LISTS[_bundle], INPUT_ITEM)
+
+
+def item_list_document(bundle: str) -> dict:
+    return {"bundle": bundle, "path": "경로 1", "r4_block_sha256": R4_BLOCK_SHA256,
+            "columns": ["항목", "근거 조항", "구분"],
+            "items": [{"항목": item, "근거 조항": basis, "구분": kind}
+                      for item, basis, kind in ITEM_LISTS[bundle]]}
+
+
+def item_list_bytes(bundle: str) -> bytes:
+    """The fixed bytes of one item list (sorted keys, LF, UTF-8): its sha256 does not depend on
+    the run."""
+    text = json.dumps(item_list_document(bundle), ensure_ascii=False, indent=1, sort_keys=True)
+    return (text + "\n").encode("utf-8")
+
+
+def item_list(args: argparse.Namespace) -> dict:
+    """RD-13: write ``items_<bundle>.json`` per bundle and report their sha256."""
+    folder = Path(args.out_dir)
+    folder.mkdir(parents=True, exist_ok=True)
+    files = {}
+    for bundle in ITEM_LISTS:
+        data = item_list_bytes(bundle)
+        path = folder / f"items_{bundle}.json"
+        path.write_bytes(data)
+        files[bundle] = {"file": path.name, "sha256": hashlib.sha256(data).hexdigest(),
+                         "items": len(ITEM_LISTS[bundle])}
+    return {"rules": RULES_NAME, "section": "R4 common block RD-13", "out_dir": str(folder),
+            "lists": files, "exit_code": 0}
+
+
+# ------------------------------------------------------------------------- RD-5 key map draft
+IDENTITY_KEYS = (
+    ("script / script_sha256", "judge4368_common.run_judge (도구 sha)", "도구 sha·공개 블록"),
+    ("rules_seal, rules_sha256, rules_rev*_sha256", "run_judge, resume4368_judge.main",
+     "봉인 블록"),
+    ("definition_changes, diff_vs_existing", "run_judge", "도구 판·규칙 설명 문자열"),
+    ("inputs.* (path, sha256, t4h_folders_*)", "각 판정기 judge()", "입력 파일 경로·sha256 블록"),
+    ("files[].sha256, family_table, replay, root, out_root, t4h_dir",
+     "resume4368_judge r4-lists·h12·x16-records", "입력 파일 경로·sha256 블록"),
+    ("out (요약 줄), --out 경로", "run_judge._finish, resume4368_judge.main", "출력 위치"),
+    ("rules, section, rule, note, method, *_note, reason, problems, findings 문장",
+     "모든 하위 명령", "자유 문장 사유 키·규칙 설명 문자열"),
+    ("head_check.head, expected_head", "resume4368_judge head-check", "판정 도구 checkout 커밋"),
+    ("r4_block_sha256", "resume4368_judge R4 하위 명령", "도구 판·규칙 설명 문자열"),
+    ("judge_run (명령·종료 코드)", "h6_judge_4368, h8_noise_judge_4368", "도구 판·실행 기록"),
+)
+"""RD-5 draft: the path 1 output keys left out of the K-10 comparison and where they are made
+(written before any run; no key is added after seeing results)."""
+
+
+def key_map(args: argparse.Namespace) -> dict:
+    rows = [{"keys": keys, "made_by": made_by, "category": category}
+            for keys, made_by, category in IDENTITY_KEYS]
+    return {"rules": RULES_NAME, "section": "R4 common block RD-5 (key map draft, path 1)",
+            "rows": rows, "exit_code": 0}
+
+
+# --------------------------------------------------------------------- RD-1 5 / RD-1 4 checks
+def _git(root: Path, *arguments: str) -> tuple[int, bytes]:
+    import subprocess
+
+    completed = subprocess.run(["git", "-C", str(root), *arguments],  # noqa: S603, S607
+                               capture_output=True, check=False)
+    return completed.returncode, completed.stdout
+
+
+def head_check(args: argparse.Namespace) -> dict:
+    """RD-1 5: the judgement checkout's ``HEAD`` is the full M4 hash (else S-12); with ``--r4``
+    also RD-1 4: every listed file has the same LF-byte sha256 at M4 and R4, and
+    ``git diff --name-only b9f5707..M4 -- 03_src 02_params`` is empty (else S-11)."""
+    root = Path(args.root)
+    code, out = _git(root, "rev-parse", "HEAD")
+    head = out.decode("utf-8").strip() if code == 0 else None
+    result: dict[str, Any] = {"rules": RULES_NAME, "section": "R4 common block RD-1 5 / RD-1 4",
+                              "head": head, "expected_head": args.expect, "markers": []}
+    if head != args.expect:
+        result["markers"].append("S-12 (HEAD is not M4)")
+    if args.r4 is not None and not args.files:  # pre-run audit A-4: no empty pass (all([]))
+        result["markers"].append("S-11 (RD-1 4: --r4 without --files)")
+    if args.r4:
+        blobs = []
+        for name in args.files or []:
+            shas = {}
+            for commit in (args.expect, args.r4):
+                status, data = _git(root, "show", f"{commit}:{name}")
+                shas[commit] = (lf_normalised_sha256(data) if status == 0 else None)
+            blobs.append({"file": name, "M4": shas[args.expect], "R4": shas[args.r4],
+                          "same": shas[args.expect] is not None
+                          and shas[args.expect] == shas[args.r4]})
+        diff_status, diff = _git(root, "diff", "--name-only", f"{R2_COMMIT}..{args.expect}",
+                                 "--", "03_src", "02_params")
+        changed = [line for line in diff.decode("utf-8").splitlines() if line.strip()]
+        result.update(blobs=blobs, src_params_changed=changed, diff_exit=diff_status)
+        if not blobs or not all(blob["same"] for blob in blobs) or changed or diff_status != 0:
+            result["markers"].append("S-11 (RD-1 4)")
+    result["exit_code"] = 1 if result["markers"] else 0
+    return result
+
+
 # --------------------------------------------------------------------------------------------- main
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -2762,12 +5123,9 @@ def _parser() -> argparse.ArgumentParser:
                            help="anchor-map report (RV1-5 selection, the only anchor input)")
             p.add_argument("--family-table", type=Path, default=None,
                            help="resume_k1_family.py table (RV1-6; a key not in it = uniform)")
-    p = sub.add_parser("jp-reuse", help="7.3")
-    p.add_argument("--shadow", type=Path, required=True, help="v5/las/shadow_jp_b0.jsonl")
-    p.add_argument(
-        "--rows", nargs="+", type=Path, required=True, help="07_results/S8/v5jp_*/<case> folders"
-    )
-    p.add_argument("--expected", type=int, default=12)
+    p = sub.add_parser("jp-reuse", help="7.3 by RD-11 (the two stored J_P batches, 12 rows fixed)")
+    p.add_argument("--root", type=Path, default=ROOT,
+                   help="checkout with 07_results/S9/<J_P batches> and the shadow record")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("oc5", help="7.4 path 1")
     p.add_argument("--result", type=Path, required=True)
@@ -2804,11 +5162,15 @@ def _parser() -> argparse.ArgumentParser:
                    help="06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("family-f-trigger", help="rev3 R3-E2: does family F start the 64 runs")
-    p.add_argument("--vb-dir", type=Path, required=True, help="resume_k1/h9_grid")
-    p.add_argument("--v0-dir", type=Path, required=True, help="the V0 pair grid folder")
+    p.add_argument("--grid-root", type=Path, default=None,
+                   help="checkout: the supplement 5-1 / 6-2 V0 pairing decides (6-3)")
+    p.add_argument("--vb-dir", type=Path, default=None, help="resume_k1/h9_grid (no --grid-root)")
+    p.add_argument("--v0-dir", type=Path, default=None, help="a fixed V0 grid folder")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("family-f", help="rev3 R3-E2: rev5 5.2 R-1 .. R-4 on h9_family_F.jsonl")
-    p.add_argument("--lines", type=Path, required=True)
+    p.add_argument("--lines", type=Path, required=True, help="resume_k1/h9_family_F.jsonl")
+    p.add_argument("--grid-root", type=Path, default=None,
+                   help="checkout: the application condition on the 5-1 / 6-2 V0 pairing")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("ind-las", help="rev3 R3-B5: IND_LAS gate and the IND hash")
     p.add_argument("--harness", nargs="+", type=Path, required=True,
@@ -2838,7 +5200,56 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--harness", nargs="*", type=Path)
     p.add_argument("--chrono", nargs="*", type=Path)
     p.add_argument("--out", type=Path, required=True)
+    _add_r4_parsers(sub)
     return parser
+
+
+def _add_r4_parsers(sub) -> None:
+    """The R4 subcommands (R4 common block e451f067, rev16 .. rev25)."""
+    p = sub.add_parser("r4-inputs", help="supplement 4-1 .. 4-4: inputs, kinds, S-15 counts")
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("grid-h10", help="supplement 5: grid pass -> fail, v5 criteria H-10 term")
+    p.add_argument("--root", type=Path, default=ROOT,
+                   help="checkout with resume_k1/h9_grid*, h9_family_F.jsonl, stored V0 grid")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("r4-lists", help="RD-7 lists, RD-8 / RD-9 / RD-10 counts (R2 results)")
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
+    p.add_argument("--family-table", type=Path, required=True,
+                   help="resume_k1_family.py table (rev1 RV1-6; a key not in it = 균일 연약)")
+    p.add_argument("--bundles", nargs="*", default=[], help="limit to these bundles (H-1 ...)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("h11", help="rev16 R16-8: H-11 G-3 gate (8 pairs)")
+    p.add_argument("--h11-dir", type=Path, required=True, help="<OUT>/H-11")
+    p.add_argument("--las-k1-dir", type=Path, default=ROOT / LAS_K1_DIR,
+                   help="R2 U-3 outputs (06_analysis/02_control/v5_rerun/las_k1)")
+    p.add_argument("--expected-head", default=R2_COMMIT, help="R2 (the run commit)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("h12", help="rev16 R16-9 6 / rev17 R17-2a: H-12 record (two ranges)")
+    p.add_argument("--h12-dir", type=Path, required=True, help="<OUT>/H-12 (reads t4h/ only)")
+    p.add_argument("--replay", type=Path, required=True,
+                   help="t4h_replay.py <json> <OUT>/H-12/t4h --check-recorded output")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("x16-records", help="rev16 R16-11 / R16-11b: C-9 .. C-11 records")
+    p.add_argument("--out-root", type=Path, required=True, help="<OUT> (C-9/, C-10/, C-11/)")
+    p.add_argument("--rows-json", type=Path, default=None, help="default <OUT>/_tools/rows.json")
+    p.add_argument("--identity-dir", type=Path, default=None,
+                   help="default <OUT>/_identity (x16_identity pre / post files)")
+    p.add_argument("--runner-dir", type=Path, default=None,
+                   help="default <OUT>/_runners (logs_<cell>/<id>_run.done: rc)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("item-list", help="RD-13: per-bundle item lists (fixed bytes, sha256)")
+    p.add_argument("--out-dir", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("key-map", help="RD-5: identity keys left out of K-10 (draft)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("head-check", help="RD-1 5 HEAD = M4 (S-12); with --r4 RD-1 4 (S-11)")
+    p.add_argument("--root", type=Path, default=ROOT)
+    p.add_argument("--expect", required=True, help="M4 full hash")
+    p.add_argument("--r4", default=None, help="R4 full hash (RD-1 4 blob comparison)")
+    p.add_argument("--files", nargs="*", default=[],
+                   help="R4 allow-list files of both paths (RD-1 4)")
+    p.add_argument("--out", type=Path, required=True)
 
 
 COMMANDS = {
@@ -2860,6 +5271,15 @@ COMMANDS = {
     "ind-las": ind_las,
     "reagg-items": reagg_items,
     "stroke-exposure": stroke_exposure,
+    "r4-inputs": r4_inputs,
+    "grid-h10": grid_h10,
+    "r4-lists": r4_lists,
+    "h11": h11,
+    "h12": h12,
+    "x16-records": x16_records,
+    "item-list": item_list,
+    "key-map": key_map,
+    "head-check": head_check,
 }
 
 
@@ -2889,7 +5309,8 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev12 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """The 26 seals of RD-2 (original, rev1 .. rev25, :data:`SEALED_REVISIONS`); any problem is
+    ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2902,7 +5323,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     seal = sealed_rules_check()
     if seal["stop_S1"]:  # no judgement under an unsealed or changed revision
-        report = {"rules": RULES_NAME, "section": "8.2 S-1 (rev1 / rev2 seal)",
+        report = {"rules": RULES_NAME, "section": "8.2 S-1 (RD-2: original .. rev25 seals)",
                   "rules_seal": seal, "exit_code": 1}
     else:
         try:
@@ -2930,6 +5351,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev10_sha256"] = RULES_REV10_SHA256
     report["rules_rev11_sha256"] = RULES_REV11_SHA256
     report["rules_rev12_sha256"] = RULES_REV12_SHA256
+    report["rules_rev13_to_rev25_sha256"] = dict(RULES_REV13_TO_REV25)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

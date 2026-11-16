@@ -331,47 +331,91 @@ def test_parse_controller_events() -> None:
     assert bad == [] and events[1] == (30.1, "INFO_LOC_FLAT_SOIL_MARGIN:80")
     assert judge.jp_row_conditions(events)["k1_no_effect"] is False
     assert judge.parse_controller_events(["garbage"])[0] is None
+    # RD-11 4: a dict element is not the string form (unreadable, not a reading)
+    assert judge.parse_controller_events([{"t_s": 1.0, "name": "x"}])[0] is None
     skipped = [(1.0, "INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order")]
     assert judge.jp_row_conditions(skipped)["k1_no_effect"] is True
+    # RD-11 5: base-name comparison counts the applied event with or without its suffix
+    plain = [(1.0, "INFO_LOC_FLAT_SOIL_MARGIN"), (2.0, "soil_mode_start:x")]
+    assert judge.jp_row_conditions(plain)["flat_soil_margin_applied"] == 1
+    assert judge.jp_row_conditions(plain)["soil_mode_start"] == 1
+
+
+def _jp_batches(root, *, soil_row=None, shadow_extra=0, rows_per_batch=6):
+    """Two stored J_P batches under ``root/07_results/S9`` (RD-11 1) and the shadow record."""
+    shadow = []
+    for batch in judge.JP_BATCHES:
+        batch_dir = root / "07_results" / "S9" / batch
+        cases = []
+        for index in range(rows_per_batch):
+            case = f"row{index}"
+            folder = batch_dir / case
+            folder.mkdir(parents=True)
+            (folder / "result.json").write_text("{}", encoding="utf-8")
+            events = ["C2Event(t_s=1.0, name='crawler_liftoff_confirmed')"]
+            if (batch, index) == soil_row:
+                events.append("C2Event(t_s=2.0, name='soil_mode_start')")
+            (folder / "controller_events.json").write_text(json.dumps(events), encoding="utf-8")
+            cases.append({"case": case})
+            shadow.append({"job": {"chrono_run": f"{batch}\\{case}"}, "status": "silent",
+                           "first_fire_t_s": None})
+        (batch_dir / "batch.json").write_text(json.dumps({"cases": cases}), encoding="utf-8")
+    shadow += shadow[:shadow_extra]
+    path = root / judge.JP_SHADOW
+    path.parent.mkdir(parents=True)
+    path.write_text("".join(json.dumps(s) + "\n" for s in shadow), encoding="utf-8")
+
+
+def _jp_report(tmp_path):
+    out = tmp_path / "jp.json"
+    code = judge.main(["jp-reuse", "--root", str(tmp_path), "--out", str(out)])
+    return code, json.loads(out.read_text(encoding="utf-8"))
 
 
 def test_jp_reuse_cli(tmp_path) -> None:
-    rows = []
-    shadow = []
-    for index in range(2):
-        folder = tmp_path / f"v5jp_VB_{index}" / "N_G4_Fs0_pressure"
-        folder.mkdir(parents=True)
-        events = ["C2Event(t_s=1.0, name='crawler_liftoff_confirmed')"]
-        if index == 1:
-            events.append("C2Event(t_s=2.0, name='soil_mode_start')")
-        (folder / "controller_events.json").write_text(json.dumps(events), encoding="utf-8")
-        shadow.append(
-            {
-                "job": {"chrono_run": f"v5jp_VB_{index}/N_G4_Fs0_pressure"},
-                "status": "silent",
-                "first_fire_t_s": None,
-            }
-        )
-        rows.append(str(folder))
-    shadow_path = tmp_path / "shadow.jsonl"
-    shadow_path.write_text("".join(json.dumps(s) + "\n" for s in shadow), encoding="utf-8")
-    out = tmp_path / "jp.json"
-    code = judge.main(
-        [
-            "jp-reuse",
-            "--shadow",
-            str(shadow_path),
-            "--rows",
-            *rows,
-            "--expected",
-            "2",
-            "--out",
-            str(out),
-        ]
-    )
-    report = json.loads(out.read_text(encoding="utf-8"))
-    assert code == 1 and report["decision"] == "묶음 JP 재실행"
-    assert [r["reusable"] for r in report["rows"]] == [True, False]
+    _jp_batches(tmp_path, soil_row=(judge.JP_BATCHES[1], 2))
+    code, report = _jp_report(tmp_path)
+    assert code == 1 and report["reuse"] is False and report["stop_markers"] == []
+    assert report["rows_count"] == 12
+    assert [r["condition2_k1_no_effect"] for r in report["rows"]].count(False) == 1
+
+
+def test_jp_reuse_all_silent_is_reuse(tmp_path) -> None:
+    _jp_batches(tmp_path)
+    code, report = _jp_report(tmp_path)
+    assert code == 0 and report["reuse"] is True
+    assert report["rows"][0]["run_id"] == f"{judge.JP_BATCHES[0]}/row0"
+
+
+def test_jp_reuse_input_problems_are_stop_markers_without_a_reuse_value(tmp_path) -> None:
+    """RD-11 2 / 6 / 7: 12 rows fixed; a duplicated shadow line is 그림자 판독 불가."""
+    _jp_batches(tmp_path, shadow_extra=1)
+    code, report = _jp_report(tmp_path)
+    assert code == 1 and report["stop_markers"] == [judge.JP_STOP_SHADOW]
+    assert "reuse" not in report
+    other = tmp_path / "other"
+    _jp_batches(other, rows_per_batch=5)
+    code, report = _jp_report(other)
+    assert report["stop_markers"] == [judge.JP_STOP_S15] and "reuse" not in report
+
+
+def test_jp_reuse_dict_events_are_unreadable(tmp_path) -> None:
+    _jp_batches(tmp_path)
+    folder = tmp_path / "07_results" / "S9" / judge.JP_BATCHES[0] / "row3"
+    (folder / "controller_events.json").write_text(json.dumps([{"t_s": 1, "name": "x"}]),
+                                                   encoding="utf-8")
+    code, report = _jp_report(tmp_path)
+    assert report["stop_markers"] == [judge.JP_STOP_EVENTS] and "reuse" not in report
+
+
+def test_jp_row_folder_from_the_recorded_result_json(tmp_path) -> None:
+    """RD-11 3: s8c_check.result_json first; a ``07_results/`` path is found under the root."""
+    target = tmp_path / "07_results" / "S8" / "v5jp_VB" / "caseA"
+    target.mkdir(parents=True)
+    (target / "result.json").write_text("{}", encoding="utf-8")
+    case = {"case": "caseA",
+            "s8c_check": {"result_json": "D:/elsewhere/07_results/S8/v5jp_VB/caseA/result.json"}}
+    assert judge.jp_row_folder(case, tmp_path / "batch", tmp_path) == target
 
 
 # ------------------------------------------------------------------------------------------- 7.4
