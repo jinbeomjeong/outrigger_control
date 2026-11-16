@@ -1,7 +1,8 @@
 """Shared parts of the 436.8 path 1 new judge versions (``*_4368.py``, rules rev5 R5-A1).
 
-Rules: ``v5_resume_4368_rules.md`` (sealed 9019b405) and its revisions rev1 .. rev12. Rev5 R5-A1
-makes the ``*_4368.py`` judges the path 1 of the harness bundles. Each new judge:
+Rules: ``v5_resume_4368_rules.md`` (sealed 9019b405) and its revisions rev1 .. rev25 (R4 common
+block RD-2). Rev5 R5-A1 makes the ``*_4368.py`` judges the path 1 of the harness bundles. Each new
+judge:
 
 1. implements the rev3 / rev4 definitions of its bundle,
 2. takes every input and output path as an argument,
@@ -12,6 +13,13 @@ makes the ``*_4368.py`` judges the path 1 of the harness bundles. Each new judge
    ``판정 불가``), 2 input error, 3 internal error; the last stdout line is a JSON summary.
 
 The judges only read; they never run a simulation.
+
+R4 (436.8 harness re-judgement, R4 common block sha256 e451f067): this module also holds the
+shared readings of the R4 block that more than one path 1 tool applies, so they cannot drift
+apart: RD-8 ``breach_reads`` form and the RD-7 3 J-P3 input field (:func:`assess_j_p3`), rev16
+R16-6 J11 with RD-10 (:func:`assess_j11`), and the RD-7 3 list notation (result file, location,
+key and setting fields, sort order: :func:`list_location`, :func:`key_and_setting`,
+:func:`list_sort_key`).
 """
 
 from __future__ import annotations
@@ -19,6 +27,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 import subprocess
 import sys
 import traceback
@@ -80,10 +89,62 @@ SEALED_RULES = (
         "v5_resume_4368_rules_rev12.md",
         "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
     ),
+    (
+        "v5_resume_4368_rules_rev13.md",
+        "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    ),
+    (
+        "v5_resume_4368_rules_rev14.md",
+        "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    ),
+    (
+        "v5_resume_4368_rules_rev15.md",
+        "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    ),
+    (
+        "v5_resume_4368_rules_rev16.md",
+        "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    ),
+    (
+        "v5_resume_4368_rules_rev17.md",
+        "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    ),
+    (
+        "v5_resume_4368_rules_rev18.md",
+        "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    ),
+    (
+        "v5_resume_4368_rules_rev19.md",
+        "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    ),
+    (
+        "v5_resume_4368_rules_rev20.md",
+        "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    ),
+    (
+        "v5_resume_4368_rules_rev21.md",
+        "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    ),
+    (
+        "v5_resume_4368_rules_rev22.md",
+        "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    ),
+    (
+        "v5_resume_4368_rules_rev23.md",
+        "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    ),
+    (
+        "v5_resume_4368_rules_rev24.md",
+        "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    ),
+    (
+        "v5_resume_4368_rules_rev25.md",
+        "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    ),
 )
-"""The original and rev1 .. rev12, compared raw (rev2 R2-9: sealed rule files are ``-text``;
-rev7 R7-7 / rev8 R8-4 / rev9 R9-8 / rev10 R10-3 / rev11 R11-7 / rev12 R12-6: the path 1 tools
-check the rev7 .. rev12 seals)."""
+"""The original and rev1 .. rev25 (26 revisions), compared raw (rev2 R2-9: sealed rule files are
+``-text``; rev7 R7-7 .. rev12 R12-6 for rev7 .. rev12; R4 common block RD-2, rev16 R16-13 and the
+R4 bullets of rev17 .. rev25: the R4 harness tools check the 26 revisions)."""
 
 F_MIN_N = 9414.589
 """Rules 2 / rev3 R3-C4: YAML ``control.F_min_cylinder_N`` (9.415 kN is its rounded display)."""
@@ -265,6 +326,383 @@ def is_above(value: float | None, limit: float, eps: float = COMPARE_EPS) -> boo
 def control_period_index(t_s: float) -> int:
     """Rules 2: integer controller period of a time."""
     return round(float(t_s) / CONTROL_PERIOD_S)
+
+
+# --------------------------------------------------------------------- R4 shared J-P3 (RD-7, RD-8)
+LEGS = ("FL", "FR", "RL", "RR")
+MARKER_JP3_FORM = "J-P3 입력 형식(RD-8)"
+"""RD-8: the bundle gate marker of a J-P3 input form defect (both paths use this name)."""
+STOP_H7 = "멈춤 H-7"
+"""RD-4 / RD-7: the v5 criteria stop (J-P3 breach, J11 VB fallback leg late, H-12 locked sample)."""
+STOP_LE = "L-e"
+"""Rev5 R5-B3: the J11 stop of an LS setting."""
+
+J_P3_NOT_APPLICABLE = "not_applicable"
+J_P3_PASS = "pass"
+J_P3_H7 = "H-7"
+J_P3_NO_ROD_READING = "no_rod_reading"
+J_P3_SETTING_DEFECT = "setting_defect"
+J_P3_S2 = "S-2"
+J_P3_INPUT_FIELD = "hydraulics_record.extend_bound_check"
+"""RD-7 3: the J-P3 input of a line or run (u3 / u6 items: under ``v5``)."""
+
+
+def j_p3_bound(item: dict) -> tuple[dict | None, str | None]:
+    """RD-7 3 J-P3 input of one line, run or u3 / u6 item.
+
+    The input is ``hydraulics_record.extend_bound_check`` (``v5.hydraulics_record...`` for a U-3 /
+    U-6 item, whose ``v5`` block holds the plant record). When the same item also has a top-level
+    ``extend_bound_check`` (r79 results copy it there), its ``breach_reads`` must equal the input's.
+
+    Returns:
+        (bound, problem): the recorded bound (None or {} = no record) and a 판정 불가 reason
+        when the two ``breach_reads`` differ (else None).
+    """
+    v5 = item.get("v5")
+    owner = v5 if isinstance(v5, dict) and "hydraulics_record" not in item else item
+    record = owner.get("hydraulics_record")
+    bound = record.get("extend_bound_check") if isinstance(record, dict) else None
+    if "extend_bound_check" not in item:
+        return bound, None
+    top = item["extend_bound_check"]
+    top_reads = top.get("breach_reads") if isinstance(top, dict) else None
+    reads = bound.get("breach_reads") if isinstance(bound, dict) else None
+    if top_reads != reads:
+        return bound, (f"top-level extend_bound_check.breach_reads {top_reads!r} != "
+                       f"{J_P3_INPUT_FIELD}.breach_reads {reads!r} (RD-7 3: 판정 불가)")
+    return bound, None
+
+
+def breach_reads_problem(bound: Any) -> str | None:
+    """RD-8: ``breach_reads`` must be a list of 4 integers >= 0 (FL, FR, RL, RR); else the
+    reason (the J-P3 of that line is 판정 불가, never a sum-0 pass)."""
+    reads = bound.get("breach_reads") if isinstance(bound, dict) else None
+    if not isinstance(reads, list) or len(reads) != len(LEGS):
+        return f"breach_reads {reads!r} is not a list of {len(LEGS)} (RD-8)"
+    bad = [v for v in reads if isinstance(v, bool) or not isinstance(v, int) or v < 0]
+    if bad:
+        return f"breach_reads {reads!r} has elements that are not integers >= 0 (RD-8)"
+    return None
+
+
+def _per_leg(bound: dict, name: str, index: int) -> Any:
+    """R4 supplement 3-3: one leg's element of a recorded per-leg list, copied as recorded (no
+    rounding, no conversion); None when it is missing, not a number or not finite."""
+    values = bound.get(name)
+    if not isinstance(values, list) or len(values) != len(LEGS):
+        return None
+    value = values[index]
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return value if math.isfinite(value) else None
+
+
+def min_gap_bar(bound: dict, index: int) -> float | None:
+    """R4 supplement 3-3 (RD-7 3 read anew, user decision 126): the minimum gap [bar] of one leg
+    is the element of the record's ``min_gap_bar`` moved without a calculation (the harness
+    record has no Pa key)."""
+    return _per_leg(bound, "min_gap_bar", index)
+
+
+def breach_leg_rows(bound: dict) -> list[dict]:
+    """RD-7 1 J-P3 violation rows of one judged line: the legs with ``breach_reads`` >= 1."""
+    rows = []
+    for index, leg in enumerate(LEGS):
+        reads = bound["breach_reads"][index]
+        if reads >= 1:
+            rows.append({"leg": leg, "breach_reads": reads,
+                         "min_gap_bar": min_gap_bar(bound, index),
+                         "first_breach_t_s": _per_leg(bound, "first_breach_t_s", index)})
+    return rows
+
+
+def assess_j_p3(item: dict, *, tag: str | None, rod_reading: bool | None, rod_basis: str,
+                head_only_declared: bool, rod_stop: str | None = None) -> dict:
+    """J-P3 of one ③ line or run: rev3 R3-C8 / rev4 R4-A2 / rev8 R8-2 with the R4 readings.
+
+    Args:
+        item: The line, run or u3 / u6 item (its J-P3 input: :func:`j_p3_bound`).
+        tag: The controller tag that decides ③ (``v5_options.is_extend_start_tag`` only).
+        rod_reading: Rod reading present (R3-C8 1); None = neither a T4h reading nor a
+            configuration rule (판정 불가).
+        rod_basis: Where ``rod_reading`` came from (recorded).
+        head_only_declared: The head-only declaration (R3-C8 2).
+        rod_stop: A T4h lookup S-2 reason (rev12 R12-1), never replaced by a configuration rule.
+
+    Returns:
+        ``status`` (``not_applicable`` / ``판정 불가`` / ``S-2`` / ``pass`` / ``H-7`` /
+        ``no_rod_reading`` / ``setting_defect``), ``reason``, ``rd8_problem`` (the RD-8 form
+        defect, else None), ``rows`` (RD-7 legs of an ``H-7`` line) and ``breach_reads_sum``.
+    """
+    from outrigger_sim.control import extend_start_bound as bound_rules
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+
+    out: dict[str, Any] = {"rod_reading_basis": rod_basis, "rd8_problem": None, "rows": [],
+                           "breach_reads_sum": None, "reason": None}
+    if not is_extend_start_tag(tag):
+        return {**out, "status": J_P3_NOT_APPLICABLE, "reason": f"tag {tag!r} is not ③ (R8-2)"}
+    if rod_stop is not None:
+        return {**out, "status": J_P3_S2, "reason": rod_stop}
+    bound, problem = j_p3_bound(item)
+    if problem is not None:
+        return {**out, "status": NOT_JUDGEABLE, "reason": problem}
+    if rod_reading is None:
+        return {**out, "status": NOT_JUDGEABLE,
+                "reason": "no T4h rod reading record and no configuration rule (R3-C8 1)"}
+    case = bound_rules.j_p3_run_case(bound, rod_reading, head_only_declared)
+    out["case"] = case
+    if case == bound_rules.J_P3_JUDGED:
+        form = breach_reads_problem(bound)
+        if form is not None:
+            return {**out, "status": NOT_JUDGEABLE, "rd8_problem": form, "reason": form}
+        total = sum(bound["breach_reads"])
+        status = J_P3_H7 if total else J_P3_PASS
+        return {**out, "status": status, "breach_reads_sum": total,
+                "rows": breach_leg_rows(bound) if total else []}
+    if case == bound_rules.J_P3_NO_ROD_READING:
+        return {**out, "status": J_P3_NO_ROD_READING}
+    return {**out, "status": J_P3_SETTING_DEFECT, "reason": case}
+
+
+ROD_BASIS_T4H = "T4h rod_pressure_Pa"
+ROD_BASIS_CONFIGURATION = "구성 규칙(r79 두 압력 판독)"
+ROD_BASIS_GRID = "구성 규칙(r67 축소 스크린 두 압력 판독, R3-C8 1)"
+
+
+def r79_rod_reading(run: dict, t4h_folders: list[Path] | tuple[Path, ...]
+                    ) -> tuple[bool | None, str]:
+    """Rev3 R3-C8 1 with rev12 R12-1 for an r79 result (H-6 .. H-8): the line's own T4h
+    ``rod_pressure_Pa`` finite somewhere.
+
+    A line without ``t4h_file`` uses the configuration rule (the r79 adapter reads head and rod
+    pressure: "있음"). A recorded ``t4h_file`` found 0 or 2+ times is S-2: ``(None, "S-2: ...")``,
+    never the configuration rule (Q-R12-1 = A). A found file without ``rod_pressure_Pa`` keeps the
+    configuration rule.
+    """
+    located = locate_t4h(run, t4h_folders)
+    if located["status"] == T4H_NO_RECORD:
+        return True, ROD_BASIS_CONFIGURATION
+    if located["status"] == T4H_STOP:
+        return None, f"S-2: {located['reason']}"
+    import numpy as np
+
+    with np.load(located["path"], allow_pickle=False) as data:
+        if "rod_pressure_Pa" in data.files:
+            return bool(np.isfinite(data["rod_pressure_Pa"]).any()), ROD_BASIS_T4H
+    return True, ROD_BASIS_CONFIGURATION
+
+
+def r79_j_p3(run: dict, t4h_folders: list[Path] | tuple[Path, ...]) -> dict:
+    """:func:`assess_j_p3` of one r79 result (H-6, H-8): tag ``controller_tag``, rod reading
+    :func:`r79_rod_reading`, declaration ``head_only_declared`` (r79 writes False)."""
+    has_reading, basis = r79_rod_reading(run, t4h_folders)
+    rod_stop = basis if has_reading is None else None
+    declared = run.get("head_only_declared")
+    return assess_j_p3(run, tag=run.get("controller_tag"), rod_reading=has_reading,
+                       rod_basis=basis, head_only_declared=bool(declared),
+                       rod_stop=rod_stop)
+
+
+def grid_j_p3(document: dict) -> list[dict]:
+    """R16-7: J-P3 of every ``results[i].runs[j]`` of a grid file (r67 / r69 reduced screens).
+
+    The tag is the job record's ``controller_tag`` (a run has none of its own), the rod reading the
+    configuration rule (two pressure readings, rev3 R3-C8 1) and the declaration the run's
+    ``head_only_declared`` (absent = not declared: no steady-path case).
+
+    Returns:
+        One entry per run: ``index``, ``run_index``, ``job`` (the ``results[i]`` record) and
+        ``j_p3`` (:func:`assess_j_p3`).
+    """
+    out = []
+    for index, job in enumerate(document.get("results") or []):
+        for run_index, run in enumerate(job.get("runs") or []):
+            assessed = assess_j_p3(run, tag=job.get("controller_tag"), rod_reading=True,
+                                   rod_basis=ROD_BASIS_GRID,
+                                   head_only_declared=bool(run.get("head_only_declared")))
+            out.append({"index": index, "run_index": run_index, "job": job, "j_p3": assessed})
+    return out
+
+
+def j_p3_list_rows(assessed: dict, *, bundle: str, result_file: str, location: str, key: Any,
+                   setting: Any) -> list[dict]:
+    """RD-7 1 / 3 J-P3 violation rows of one assessed line or run (``H-7`` only)."""
+    if assessed["status"] != J_P3_H7:
+        return []
+    return [{"bundle": bundle, "result_file": result_file, "location": location,
+             "leg": row["leg"], "key": key, "setting": setting,
+             "breach_reads": row["breach_reads"], "min_gap_bar": row["min_gap_bar"],
+             "first_breach_t_s": row["first_breach_t_s"]}
+            for row in assessed["rows"]]
+
+
+def j11_list_rows(assessed: dict, *, bundle: str, result_file: str, location: str, key: Any,
+                  setting: Any) -> list[dict]:
+    """RD-7 1 / 3 J11 stop rows of one assessed line (one per late fallback leg)."""
+    if assessed["state"] != J11_STOP:
+        return []
+    marker = "H-7" if assessed["marker"] == STOP_H7 else assessed["marker"]
+    return [{"bundle": bundle, "result_file": result_file, "location": location, "leg": leg,
+             "key": key, "setting": setting,
+             "n_late_fallback_by_leg": assessed["late_by_leg"][leg], "marker": marker}
+            for leg in assessed["late_legs"]]
+
+
+# ------------------------------------------------------------------- R4 shared J11 (R16-6, RD-10)
+J11_STOP_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4")
+"""Rev16 R16-6 2: the settings whose fallback leg n_late > 0 stops (item8 and overlap VB lines have
+setting VB); every other setting's J11 is a record."""
+LS_SETTINGS = ("LS1", "LS2", "LS3", "LS4")
+J11_STOP = "stop"
+J11_PASS = "pass"
+J11_RECORD = "record"
+J11_NO_INPUT = "입력 없음"
+"""RD-10: a record-setting line without the ``lock_window_alignment`` block."""
+
+
+def fallback_legs_of(block: dict) -> list[str]:
+    """The actual fallback legs of a ``lock_window_alignment`` block (``fallback_legs``: a dict
+    leg -> details, or a list of legs), in the FL, FR, RL, RR order."""
+    legs = block.get("fallback_legs") or {}
+    names = set(legs) if isinstance(legs, (dict, list, tuple)) else set()
+    return [leg for leg in LEGS if leg in names]
+
+
+def assess_j11(block: Any, setting: str | None) -> dict:
+    """J11 of one harness line: rev16 R16-6 (``n_late_fallback_by_leg`` of the actual fallback
+    legs) with RD-10 (a stop setting without the block is 판정 불가).
+
+    Returns:
+        ``state`` (``stop`` / ``pass`` / ``판정 불가`` for a stop setting; ``record`` /
+        ``입력 없음`` for a record setting), ``marker`` (``멈춤 H-7`` / ``L-e`` on a stop),
+        ``late_by_leg`` (the fallback legs' values), ``late_legs`` (> 0) and ``reason``.
+    """
+    is_stop_setting = setting in J11_STOP_SETTINGS
+    out: dict[str, Any] = {"setting": setting, "stop_setting": is_stop_setting, "marker": None,
+                           "fallback_legs": [], "late_by_leg": {}, "late_legs": [],
+                           "reason": None}
+    if setting is None:  # R4 supplement 3-6: whether J11 stops cannot be decided
+        return {**out, "state": NOT_JUDGEABLE,
+                "reason": "setting missing: J11 scope undecidable (supplement 3-6)"}
+    if not isinstance(block, dict):
+        if is_stop_setting:
+            return {**out, "state": NOT_JUDGEABLE,
+                    "reason": "lock_window_alignment block missing or not an object (RD-10)"}
+        return {**out, "state": J11_NO_INPUT}
+    legs = fallback_legs_of(block)
+    by_leg = block.get("n_late_fallback_by_leg")
+    values = {leg: by_leg.get(leg) if isinstance(by_leg, dict) else None for leg in legs}
+    missing = [leg for leg, value in values.items()
+               if isinstance(value, bool) or not isinstance(value, int)]
+    late = [leg for leg, value in values.items() if leg not in missing and value > 0]
+    out.update(fallback_legs=legs, late_by_leg=values, late_legs=late)
+    if not is_stop_setting:
+        return {**out, "state": J11_RECORD, "missing_legs": missing}
+    if missing:
+        return {**out, "state": NOT_JUDGEABLE,
+                "reason": f"n_late_fallback_by_leg missing or None on fallback legs {missing} "
+                          "(R16-6 1)"}
+    if late:
+        marker = STOP_LE if setting in LS_SETTINGS else STOP_H7
+        return {**out, "state": J11_STOP, "marker": marker}
+    return {**out, "state": J11_PASS}
+
+
+# --------------------------------------------------------------------- R4 list notation (RD-7 3)
+JSONL_KEY_FIELDS = {
+    "h1_d1.jsonl": ("job.d1.key", "job.setting"),
+    "h5_u9_v0.jsonl": ("job.case", "job.setting"),
+    "h9_stage1.jsonl": ("job.case", "job.setting"),
+    "h10_reuse_rerun.jsonl": ("job.case", "job.setting"),
+}
+"""RD-7 3: (key, setting) field paths of each jsonl result file."""
+RESULTS_KEY_FILES = ("h6_dg3_v4on.json", "h7_dg3_off.json", "h8_noise_VB.json",
+                     "h8_noise_V0.json", "h8_seedext_VB.json", "h8_seedext_V0.json",
+                     "h9_family_F_VB.json", "h9_family_F_V0.json")
+"""RD-7 3: files whose ``results[i]`` carry ``key`` / ``v5_setting`` (plus ``h9_grid/grid_*``)."""
+
+
+def dotted(node: Any, path: str) -> Any:
+    """The value at a dotted path, None when any part is missing."""
+    for part in path.split("."):
+        if not isinstance(node, dict) or part not in node:
+            return None
+        node = node[part]
+    return node
+
+
+GRID_FOLDERS = ("", "h9_grid", "h9_grid_v0_sample")
+"""Folders of the grid result files (RD-7 3 key / setting of ``results[i]``; supplement 4-2:
+the H-9 V0 sample files have the same form)."""
+
+
+def is_grid_file(name: str, parent: str = "") -> bool:
+    return name.startswith("grid_") and name.endswith(".json") and parent in GRID_FOLDERS
+
+
+def key_and_setting(file_name: str, item: dict, parent_dir: str = "") -> tuple[Any, Any]:
+    """RD-7 3 key and setting of one line / item (``results[i]`` of a grid or r79 file; a grid
+    run uses its ``results[i]``, so pass that). Unknown forms or missing fields give None."""
+    if file_name in JSONL_KEY_FIELDS:
+        key_path, setting_path = JSONL_KEY_FIELDS[file_name]
+        return dotted(item, key_path), dotted(item, setting_path)
+    if file_name in RESULTS_KEY_FILES or is_grid_file(file_name, parent_dir):
+        return item.get("key"), item.get("v5_setting")
+    if file_name.startswith("u3_") and file_name.endswith(".json"):
+        key = item.get("key")
+        if key is None and isinstance(item.get("id"), str):
+            key = item["id"]
+        return key, dotted(item, "v5.v5_setting")
+    if file_name.startswith("u6_") and file_name.endswith(".json"):
+        return item.get("case"), dotted(item, "v5.v5_setting")
+    return None, None
+
+
+def read_jsonl_numbered(path: Path) -> list[tuple[int, dict]]:
+    """RD-7 3: (physical line number from 1, record) of a jsonl file; blank lines are counted
+    but yield no record."""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    numbered = []
+    for number, line in enumerate(text.split("\n"), start=1):
+        if line.strip():
+            numbered.append((number, json.loads(line)))
+    return numbered
+
+
+def jsonl_location(number: int) -> str:
+    return f"line {number}"
+
+
+def json_location(container: str, index: int, run_index: int | None = None) -> str:
+    location = f"{container}[{index}]"
+    return location if run_index is None else f"{location}.runs[{run_index}]"
+
+
+def repo_relative(path: Path, root: Path | None = None) -> str:
+    """RD-7 3: a result file as a path relative to the repository root (``/`` separators); a
+    path outside the root keeps its own form."""
+    base = ROOT if root is None else Path(root)
+    try:
+        return Path(path).resolve().relative_to(base.resolve()).as_posix()
+    except ValueError:
+        return Path(path).as_posix()
+
+
+def bundle_number(bundle: str) -> tuple[int, str]:
+    """``H-10`` -> (10, ``H``): bundles sort by their number, not as strings."""
+    prefix, _, number = str(bundle).partition("-")
+    return (int(number), prefix) if number.isdigit() else (10**6, str(bundle))
+
+
+def list_sort_key(row: dict) -> tuple:
+    """RD-7 3 order: bundle -> result file (string) -> location (numbers in order) -> leg -> k."""
+    numbers = tuple(int(n) for n in re.findall(r"\d+", str(row.get("location", ""))))
+    leg = row.get("leg")
+    return (bundle_number(row.get("bundle", "")), str(row.get("result_file", "")), numbers,
+            LEGS.index(leg) if leg in LEGS else -1, row.get("k", -1))
 
 
 # --------------------------------------------------------------------------------------- seals

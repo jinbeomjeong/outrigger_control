@@ -174,16 +174,26 @@ def test_bundle_status_h10_on_cp_over_3pct():
 
 
 # ------------------------------------------------------------------------------------- H-6
-def _h6_run(**changes):
+def _late(fl):
+    """``lock_window_alignment`` with FL the actual fallback leg (rev16 R16-6)."""
+    return {"fallback_legs": {"FL": {}},
+            "n_late_fallback_by_leg": {"FL": fl, "FR": 0, "RL": 0, "RR": 0}}
+
+
+def _h6_run(breach_reads=(0, 0, 0, 0), clipped=(0, 0, 0, 0), **changes):
+    """An H-6 r79 result: the plant record and its top-level copy carry the same bound."""
+    bound = None if breach_reads is None else {"breach_reads": list(breach_reads)}
+    hydraulics = {"m2_clipped_steps_post_lift": list(clipped), "extend_bound_check": bound}
     run = _run(
         key="L3|s0|g6|1|ref|J1|top|Fs0",
         level="L3",
         controller_tag="final_C4G2_P3_LAS_K1",
         controller_settings={"two_pressure.extend_start_rule": "tracked_bound"},
-        extend_bound_check={"breach_reads": [0, 0, 0, 0]},
+        extend_bound_check=bound,
         head_only_declared=False,
-        hydraulics_record={"m2_clipped_steps_post_lift": [0, 0, 0, 0]},
-        lock_window_alignment={"fallback_legs": {"FL": {}}, "n_late_fallback": 0},
+        hydraulics_record=hydraulics,
+        lock_window_alignment=_late(0),
+        v5_setting="VB",
     )
     run.update(changes)
     return run
@@ -204,12 +214,10 @@ def test_h6_clean_line_passes():
 
 
 def test_h6_stops_j_p3_j9_and_fallback_n_late():
-    assert _h6_line(_h6_run(extend_bound_check={"breach_reads": [0, 1, 0, 0]}))["stops"] == ["H-7"]
-    assert _h6_line(_h6_run(extend_bound_check=None))["stops"] == ["setting_defect"]
-    clipped = _h6_run(hydraulics_record={"m2_clipped_steps_post_lift": [0, 0, 2, 0]})
-    assert _h6_line(clipped)["stops"] == ["H-9"]
-    late = _h6_run(lock_window_alignment={"fallback_legs": {"FL": {}}, "n_late_fallback": 1})
-    line = _h6_line(late)
+    assert _h6_line(_h6_run(breach_reads=(0, 1, 0, 0)))["stops"] == ["H-7"]
+    assert _h6_line(_h6_run(breach_reads=None))["stops"] == ["setting_defect"]
+    assert _h6_line(_h6_run(clipped=(0, 0, 2, 0)))["stops"] == ["H-9"]
+    line = _h6_line(_h6_run(lock_window_alignment=_late(1)))
     assert line["stops"] == ["H-7"] and h6j.bundle_grade([line])[0] == "멈춤"
 
 
@@ -219,11 +227,11 @@ def test_h6_new_fault_is_below_and_missing_keys_not_judgeable():
     line = _h6_line(run)
     assert line["new_fault"] == ["FAULT_STROKE_END"] and h6j.bundle_grade([line])[0] == "미달"
     assert _h6_line(run, l1_faults=["FAULT_STROKE_END"])["new_fault"] == []
-    missing = _h6_line(_h6_run(hydraulics_record={}))
-    late_none = _h6_line(
-        _h6_run(lock_window_alignment={"fallback_legs": {"FL": {}}, "n_late_fallback": None})
-    )
-    assert missing["problems"] and late_none["problems"]
+    missing = _h6_line(_h6_run(hydraulics_record={"extend_bound_check":
+                                                  {"breach_reads": [0, 0, 0, 0]}}))
+    late_none = _h6_line(_h6_run(lock_window_alignment=_late(None)))
+    no_block = _h6_line(_h6_run(lock_window_alignment=None))  # RD-10
+    assert missing["problems"] and late_none["problems"] and no_block["problems"]
     # 판정 불가 beats 미달 (original rules 8.1)
     assert h6j.bundle_grade([line, missing])[0] == "판정 불가"
 
@@ -231,8 +239,7 @@ def test_h6_new_fault_is_below_and_missing_keys_not_judgeable():
 def test_h6_j_p3_reads_the_extend_start_from_the_tag_rev8():
     """Rev8 R8-2: a line whose tag is not ③ has no J-P3; a ③ line without the recorded
     extend_start_rule is 판정 불가 for J-P3."""
-    not_p3 = _h6_line(_h6_run(controller_tag="final_C4G2_LAS_K1",
-                              extend_bound_check={"breach_reads": [0, 1, 0, 0]}))
+    not_p3 = _h6_line(_h6_run(controller_tag="final_C4G2_LAS_K1", breach_reads=(0, 1, 0, 0)))
     assert not_p3["j_p3"]["case"] == "not_applicable" and not_p3["stops"] == []
     no_rule = _h6_line(_h6_run(controller_settings={}))
     assert no_rule["j_p3"]["case"] == "not_judgeable" and no_rule["stops"] == []

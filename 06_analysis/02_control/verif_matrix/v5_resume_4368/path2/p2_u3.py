@@ -22,6 +22,13 @@ command hash = IND hash count (rev2 3, record).
 
 Exit codes: 0 no stop / nothing undecidable, 1 undecidable grade or a G-5 VB-unique fail, 2 a gate stop
 (G-1 / G-2 / G-4 / G-6) or a rules sha mismatch, 3 tool error.
+
+R4 (436.8 R4 common block sha256 e451f067..., rules rev25 c0b778fd...; third path-2 author, new agent run):
+rev16 R16-10 2 (a) settle v2 per axis ([roll, pitch] ``residual_deg`` / ``attitude_error_deg``; ``attitude_tol_deg``
+per axis, ``gap_ok`` / ``attitude_ok`` compared as the recorded bool of all pads / axes or as the per-element list);
+(b) g6 and study C graded by ``grade_r72`` (gates + rev6 R6-C3 + 419.8 + U-S9-G6d / 423.3, not the recorded
+verdict / pass); RD-7 G-5 and G-6 lists (bundle, result file, position, key); ``--expect-head`` (RD-1 5, S-12).
+G-3 (H-11) is read by ``p2_x16.py g3``.
 """
 from __future__ import annotations
 
@@ -62,6 +69,10 @@ STUDY_FILES = {"B": (_S9 + "finB2_x426b.json", 84), "C": (_S9 + "fin_x426_C.json
 SETTLE_V2_SUITES = {"slope", "h6", "h9"}
 SETTLE_V2_STUDIES = {"B", "D"}
 SETTLE_GAP_MM, SETTLE_ATT_FLOOR_DEG, SETTLE_ATT_ADD_DEG = 1.0, 0.005, 0.002   # spec 398.3
+# rev16 R16-10 2 (b): r72 family = one-pad soft patch (g6) and study C (u3 original 4)
+R72_SUITES = {"g6"}
+R72_STUDIES = {"C"}
+G6_FILE = "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json"   # RD-7 1 G-6 list target (u3 rev1 #5)
 EV_LAS_START = "INFO_LIFTOFF_SLOW:"   # rev3 R3-B5 (the _END event does not count)
 
 
@@ -84,6 +95,14 @@ def _get(block, name):
     return core.MISSING
 
 
+def _axes(v):
+    """Per-axis values: a [roll, pitch] list of numbers, or one number (earlier scalar form); None if unreadable."""
+    if isinstance(v, list) and v and all(core.num(x) is not None for x in v):
+        return [core.num(x) for x in v]
+    x = core.num(v) if not isinstance(v, list) else None
+    return None if x is None else [x]
+
+
 def settle_v2_recount(block, repo=None, table_target=False):
     """rev3 R3-B6 / B7: recompute settle v2 (spec 398.3) from ``inputs`` and compare with ``result``.
     Returns dict(status=checked|no_table_check|error|missing|undecidable, ok, issues, gate)."""
@@ -98,34 +117,48 @@ def settle_v2_recount(block, repo=None, table_target=False):
     issues = []
     tol = block.get("tolerances")
     if isinstance(tol, dict):   # rev4 R4-C2: the three values equal 398.3 within 1e-9 (else S-11)
-        vals = sorted(core.num(v) for v in tol.values() if core.num(v) is not None)
-        want = sorted([SETTLE_GAP_MM, SETTLE_ATT_FLOOR_DEG, SETTLE_ATT_ADD_DEG])
-        if len(vals) != 3 or any(abs(a - b) > core.EPS_THR for a, b in zip(vals, want)):
+        named = {"gap_mm": SETTLE_GAP_MM, "attitude_min_deg": SETTLE_ATT_FLOOR_DEG,
+                 "attitude_residual_margin_deg": SETTLE_ATT_ADD_DEG}
+        if set(named) <= set(tol):
+            bad = [k for k, w in named.items() if core.num(tol[k]) is None or abs(core.num(tol[k]) - w) > core.EPS_THR]
+        else:
+            vals = sorted(core.num(v) for v in tol.values() if core.num(v) is not None)
+            want = sorted(named.values())
+            bad = len(vals) != 3 or any(abs(a - b) > core.EPS_THR for a, b in zip(vals, want))
+        if bad:
             return {"status": "tolerance_differs", "tolerances": tol, "gate": gate}
     pen, xy, dat = _get(block, "pen_inst_mm"), _get(block, "pad_xy_m"), _get(block, "d_attitude_deg")
     gap = _get(block, "table_gap_target_mm" if table_target else "gap_target_mm")
-    res_deg, att_err = core.num(_get(block, "residual_deg")), core.num(_get(block, "attitude_error_deg"))
+    # rev16 R16-10 2 (a): residual_deg and attitude_error_deg are per-axis [roll, pitch] lists; 398.3 per axis
+    res_deg, att_err = _axes(_get(block, "residual_deg")), _axes(_get(block, "attitude_error_deg"))
     try:
         dphi, dth = (math.radians(float(dat[0])), math.radians(float(dat[1])))
         pen_mean = [float(p) + (float(c[1]) * dphi - float(c[0]) * dth) * 1000.0 for p, c in zip(pen, xy)]
         plus = [m + float(g) for m, g in zip(pen_mean, gap)]
     except (TypeError, ValueError, IndexError, KeyError):
         return {"status": "undecidable", "why": "settle_v2 inputs unreadable", "gate": gate}
-    if res_deg is None or att_err is None or not (len(pen) == len(xy) == len(gap)):
+    if res_deg is None or att_err is None or len(res_deg) != len(att_err) or not (len(pen) == len(xy) == len(gap)):
         return {"status": "undecidable", "why": "settle_v2 inputs incomplete", "gate": gate}
     gap_ok = [abs(x) <= SETTLE_GAP_MM + core.EPS_THR for x in plus]
-    att_tol = max(SETTLE_ATT_FLOOR_DEG, res_deg + SETTLE_ATT_ADD_DEG)
-    att_ok = att_err <= att_tol + core.EPS_THR
-    ok = all(gap_ok) and att_ok
+    att_tol = [max(SETTLE_ATT_FLOOR_DEG, r + SETTLE_ATT_ADD_DEG) for r in res_deg]
+    att_ok_axes = [abs(e) <= t + core.EPS_THR for e, t in zip(att_err, att_tol)]
+    ok = all(gap_ok) and all(att_ok_axes)
+    scalar_form = len(res_deg) == 1 and not isinstance(_get(block, "residual_deg"), list)
     if not table_target:
         res = block.get("result") if isinstance(block.get("result"), dict) else {}
-        for name, mine in (("pen_mean_mm", pen_mean), ("pen_plus_gap_mm", plus), ("gap_ok", gap_ok),
-                           ("attitude_tol_deg", att_tol), ("attitude_ok", att_ok), ("ok", ok)):
+        for name, mine, mine_all in (("pen_mean_mm", pen_mean, None), ("pen_plus_gap_mm", plus, None),
+                                     ("gap_ok", gap_ok, all(gap_ok)),
+                                     ("attitude_tol_deg", att_tol[0] if scalar_form else att_tol, None),
+                                     ("attitude_ok", att_ok_axes, all(att_ok_axes)), ("ok", ok, None)):
             rv = res.get(name, core.MISSING)
             if rv is core.MISSING:
                 issues.append(f"result.{name} missing")
             elif isinstance(mine, list):
-                if not (isinstance(rv, list) and len(rv) == len(mine) and all(core.same_value(a, b) for a, b in zip(mine, rv))):
+                if isinstance(rv, bool) and mine_all is not None:
+                    # the record keeps the all-pads / all-axes truth as one bool
+                    if rv is not mine_all:
+                        issues.append(f"{name} differs")
+                elif not (isinstance(rv, list) and len(rv) == len(mine) and all(core.same_value(a, b) for a, b in zip(mine, rv))):
                     issues.append(f"{name} differs")
             elif not core.same_value(mine, rv):
                 issues.append(f"{name} differs")
@@ -168,16 +201,23 @@ def settle_grade(rec, block, repo):
     return None, "settle v2 ok", r
 
 
-def records_of(path):
-    """(suite, key, rec) of a U-3 / U-6 output file: wrapper ``records[]`` (id) or screen ``results[]`` (key)."""
+def records_loc(path):
+    """(suite, key, rec, data, position) of a U-3 / U-6 output file: wrapper ``records[]`` (id) or screen
+    ``results[]`` (key); position = RD-7 3 list path (``records[i]`` / ``results[i]``)."""
     data = json.loads(Path(path).read_text("utf-8"))
     stem_suite = Path(path).stem
     if isinstance(data.get("records"), list):
-        for r in data["records"]:
-            yield r.get("suite") or stem_suite, r.get("id") or r.get("case") or r.get("key"), r, data
+        for i, r in enumerate(data["records"]):
+            yield r.get("suite") or stem_suite, r.get("id") or r.get("case") or r.get("key"), r, data, f"records[{i}]"
     elif isinstance(data.get("results"), list):
-        for r in data["results"]:
-            yield r.get("suite") or stem_suite, r.get("key") or r.get("id"), r, data
+        for i, r in enumerate(data["results"]):
+            yield r.get("suite") or stem_suite, r.get("key") or r.get("id"), r, data, f"results[{i}]"
+
+
+def records_of(path):
+    """(suite, key, rec, data) of a U-3 / U-6 output file."""
+    for suite, key, r, data, _pos in records_loc(path):
+        yield suite, key, r, data
 
 
 def v5_of(rec):
@@ -202,6 +242,164 @@ def grade_u3(rec):
     return None, f"verdict {v!r} has no path-2 grade (e.g. settle v2 re-judgement not recorded)"
 
 
+# ----------------------------------------------------------------- r72 family grade (rev16 R16-10 2 (b))
+G6_GATES = ("G6-1_crawler", "G6-2_loc", "G6-3_Fmin", "G6-4_att", "G6-5_rut_stroke", "G6-6_fault_ready",
+            "G6-7_preloc")
+FAULT_PHASES = ("fault", "fault_reground")          # r72_judge.py 79 (named original judge, opened)
+LATE_LOC_CONDITIONS = ("1_restart", "2_delay_by_reapproach", "3_not_false_loc", "4_load_strict",
+                       "5_loc_before_first_done")    # spec 419.8 conditions 1~5
+TRANSIENT_MAX_S, TRANSIENT_MAX_W = 0.5, 0.15         # U-S9-G6d (spec 393): ended before LOC, <= 0.5 s, <= 0.15 W
+CHATTER_AFTER_LOC_S, CHATTER_MAX_S, CHATTER_MAX_OVER = 1.0, 0.1, 1.2   # spec 423.3
+
+
+def classify_recontact(e, t_ready):
+    """U-S9-G6d (spec 393) + 423.3 class of one crawler re-contact event (path-2 recount from the event fields).
+    Returns 'transient_flag' / 'threshold_chatter' / 'strict_fail', or None if a needed field is missing."""
+    need = ("t_start_s", "duration_s", "max_over_W", "max_over_limit", "start_after_loc_s", "ended_before_loc")
+    if not isinstance(e, dict) or any(k not in e for k in need):
+        return None
+    t0, dur, ow, ol, sal = (core.num(e.get(k)) for k in ("t_start_s", "duration_s", "max_over_W", "max_over_limit",
+                                                         "start_after_loc_s"))
+    ebl = e.get("ended_before_loc")
+    if None in (t0, dur, ow, ol, sal) or not isinstance(ebl, bool):
+        return None
+    if t_ready is not None and core.t_ge(t0, t_ready):
+        return "strict_fail"                         # READY window / after READY: strict (423.3)
+    if ebl:
+        ok = not core.t_gt(dur, TRANSIENT_MAX_S) and not core.t_gt(ow, TRANSIENT_MAX_W)
+        return "transient_flag" if ok else "strict_fail"
+    ok = (core.t_gt(sal, 0.0) and not core.t_gt(sal, CHATTER_AFTER_LOC_S) and not core.t_gt(dur, CHATTER_MAX_S)
+          and not core.t_gt(ol, CHATTER_MAX_OVER))
+    return "threshold_chatter" if ok else "strict_fail"
+
+
+LOC_REVOKE_EVENT = "FIX_LOC_REVOKE"     # spec 424.8.1 condition 1: the wrapper's LOC revoke event
+
+
+def late_loc_revoked(rec, llr):
+    """Spec 424.8.1 FLAG ``G6-2_late_loc_revoked`` (conditions 1~5) + 424.9 decision 1 (condition 6, rev3 R3-G12),
+    the "424.11.2 강등" of u3 original line 53 (R4 supplement 2-3). Returns (True / False / None, detail);
+    None = an input is missing (the record has no revoke record and its revoke count is not 0).
+    Inputs: t_LOC^fin = ``late_loc_reapproach.t_loc_s`` (the LOC the record judges), t_off = ``t_off_s``,
+    T_lim = ``limit_s``; revoke times = ``metrics.fix_events`` / ``fix_events`` entries ``[t, FIX_LOC_REVOKE...]`` in
+    [t_off, t_LOC^fin]; a record without them but with ``metrics.l1_revokes`` = 0 has condition 1 false.
+    1 revoke >= 1; 2 t_LOC^fin - max(t_off, t_revoke_last, t_re_end if recorded) <= T_lim; 3 LOC-period crawler
+    max < 0.01 W (``crawler_normal_loc_period_max_N`` < ``crawler_threshold_N``); 4 / 5 the recorded 419.8 conditions
+    4 / 5 (same definitions); 6 t_LOC^fin - t_off <= (1 + n_revoke) T_lim."""
+    det = {"why": None}
+    t_loc, t_off, tlim = (core.num(llr.get(k)) for k in ("t_loc_s", "t_off_s", "limit_s"))
+    fx, _ = core.first_path(rec, ("metrics.fix_events", "fix_events"))
+    n_l1 = core.dig(rec, "metrics.l1_revokes", None)
+    if isinstance(fx, list):
+        times = []
+        for e in fx:
+            if isinstance(e, (list, tuple)) and len(e) == 2 and isinstance(e[1], str) \
+                    and e[1].split(":", 1)[0] == LOC_REVOKE_EVENT and core.num(e[0]) is not None:
+                times.append(core.num(e[0]))
+    elif isinstance(n_l1, int) and not isinstance(n_l1, bool) and n_l1 == 0:
+        times = []
+    else:
+        det["why"] = "no revoke record (fix_events) and no zero revoke count"
+        return None, det
+    if None in (t_loc, t_off, tlim):
+        if not times:
+            det.update(c1=False)
+            return False, det
+        det["why"] = "t_loc_s / t_off_s / limit_s missing"
+        return None, det
+    inside = [t for t in times if core.t_ge(t, t_off) and not core.t_gt(t, t_loc)]
+    n = len(inside)
+    det["n_revoke"] = n
+    c1 = n >= 1
+    if not c1:
+        det.update(c1=False)
+        return False, det
+    base = max([t_off, max(inside)] + ([core.num(llr.get("t_reapproach_end_s"))]
+                                       if core.num(llr.get("t_reapproach_end_s")) is not None else []))
+    c2 = not core.t_gt(t_loc - base, tlim)
+    mx, thr = core.num(llr.get("crawler_normal_loc_period_max_N")), core.num(llr.get("crawler_threshold_N"))
+    conds = llr.get("conditions") if isinstance(llr.get("conditions"), dict) else {}
+    c4, c5 = conds.get("4_load_strict"), conds.get("5_loc_before_first_done")
+    if mx is None or thr is None or not isinstance(c4, bool) or not isinstance(c5, bool):
+        det["why"] = "condition 3 / 4 / 5 inputs missing"
+        return None, det
+    c3 = core.t_lt(mx, thr)
+    c6 = not core.t_gt(t_loc - t_off, (1 + n) * tlim)
+    det.update(c1=c1, c2=c2, c3=c3, c4=c4, c5=c5, c6=c6)
+    return all((c1, c2, c3, c4, c5, c6)), det
+
+
+def grade_r72(rec):
+    """Grade of a g6 (u3 wrapper, ``v5.r72``) or study C (r72 screen) record without its ``verdict`` / ``pass``
+    (rev16 R16-10 2 (b)): gates G6-1~G6-7, then rev6 R6-C3 on G6-7 (preloc_flag_ok true -> FLAG P3-8_demoted;
+    false and G6-3 true and no FAULT phase -> FLAG P3-8_preloc_loss; missing -> undecidable), then on G6-2 the 419.8
+    FLAG G6-2_late_loc_reapproach (five recorded conditions) and the "424.11.2 강등" = 424.8.1 FLAG
+    G6-2_late_loc_revoked (conditions 1~6, R4 supplement 2-3), U-S9-G6d + 423.3 on G6-1 (events recounted:
+    transient / chatter -> FLAG, any strict -> fail). Returns (grade or None, why, detail)."""
+    gates, _ = core.first_path(rec, ("v5.r72.gates", "gates"))
+    if not isinstance(gates, dict) or any(not isinstance(gates.get(g), bool) for g in G6_GATES):
+        return None, "r72 gates G6-1~G6-7 missing", {}
+    preloc, _ = core.first_path(rec, ("v5.r72.preloc_flag_ok", "preloc_flag_ok"))
+    fp = rec.get("final_phase")
+    llr = rec.get("late_loc_reapproach") if isinstance(rec.get("late_loc_reapproach"), dict) else None
+    rce, _ = core.first_path(rec, ("metrics.crawler_recontact.recontact_events", "crawler_recontact.recontact_events"))
+    flags, failed = [], []
+    detail = {"gates": dict(gates)}
+    for g in ("G6-3_Fmin", "G6-4_att", "G6-5_rut_stroke", "G6-6_fault_ready"):
+        if not gates[g]:
+            failed.append(g)
+    if not gates["G6-7_preloc"]:
+        if preloc is core.MISSING or preloc is None:
+            return None, "G6-7: preloc_flag_ok missing (rev6 R6-C3 3)", detail
+        if not isinstance(fp, str):
+            return None, "G6-7: final_phase missing (FAULT state unknown)", detail
+        if preloc is True:
+            flags.append("P3-8_demoted")
+        elif preloc is False and gates["G6-3_Fmin"] and fp not in FAULT_PHASES:
+            flags.append("P3-8_preloc_loss")
+        else:
+            failed.append("G6-7_preloc")
+    if not gates["G6-2_loc"]:
+        conds = llr.get("conditions") if llr else None
+        if not isinstance(conds, dict) or any(not isinstance(conds.get(c), bool) for c in LATE_LOC_CONDITIONS):
+            return None, "G6-2: late_loc_reapproach conditions 1~5 missing (419.8)", detail
+        detail["419.8_conditions"] = {c: conds[c] for c in LATE_LOC_CONDITIONS}
+        reapproach = all(conds[c] for c in LATE_LOC_CONDITIONS)
+        # R4 supplement 2-3 ("424.11.2 강등" = spec 424.8.1 FLAG G6-2_late_loc_revoked, conditions 1~6), after R6-C3
+        revoked, rdet = late_loc_revoked(rec, llr)
+        detail["424.8.1_conditions"] = rdet
+        if reapproach:
+            flags.append("G6-2_late_loc_reapproach")
+        if revoked:
+            flags.append("G6-2_late_loc_revoked")
+        if not reapproach and revoked is None:
+            return None, f"G6-2: 424.8.1 input missing ({rdet.get('why')})", detail
+        if not reapproach and not revoked:
+            failed.append("G6-2_loc")
+    evs = rce.get("events") if isinstance(rce, dict) else None
+    if not isinstance(evs, list):
+        if not gates["G6-1_crawler"]:
+            return None, "G6-1: recontact events missing (U-S9-G6d)", detail
+    else:
+        t_ready = core.num(rce.get("t_ready_s"))
+        classes = [classify_recontact(e, t_ready) for e in evs]
+        detail["recontact_classes"] = classes
+        if any(c is None for c in classes):
+            return None, "G6-1: recontact event fields missing (U-S9-G6d)", detail
+        strict = "strict_fail" in classes
+        if strict and gates["G6-1_crawler"]:
+            return None, "G6-1: gate true but a strict re-contact recounted (record conflict)", detail
+        if strict or (not gates["G6-1_crawler"] and not evs):
+            failed.append("G6-1_crawler")
+        for c, name in (("transient_flag", "P3-1_transient_recontact"), ("threshold_chatter", "P3-1_threshold_chatter")):
+            if c in classes and not strict:
+                flags.append(name)
+    detail.update(flags=flags, failed=failed)
+    if failed:
+        return "fail", None, detail
+    return ("flag" if flags else "pass"), None, detail
+
+
 def ndiff(a, b):
     return None if a is None or b is None else b - a
 
@@ -215,15 +413,18 @@ def att_max(x):
 def recount_u3(files, h1_path, is_p3, repo=None):
     fnd = core.Findings()
     sets = {"V0": {}, "VB": {}}
+    locs = {"V0": {}, "VB": {}}          # R4 RD-7: (result file, position) of each record
     per_file = []
     file_ids, study_of, settle = [], {}, {"checked": 0, "no_table_check": 0, "undecidable": [], "fail_confirmed": 0,
                                             "D_start_gap_lines": 0, "D_table_target_ok_differs": 0}
+    r72 = {"graded": 0, "undecidable": 0, "flags": {}}
     for f in files:
         setting = f["setting"]
         n = 0
         tags = set()
-        for suite, key, rec, data in records_of(f["path"]):
+        for suite, key, rec, data, pos in records_loc(f["path"]):
             n += 1
+            locs[setting][f"{suite}|{key}"] = (f["path"], pos)
             where = f"U-3:{Path(f['path']).name}:{suite}|{key}"
             if "error" in rec:
                 fnd.stop("G-1", where, "run error")
@@ -271,6 +472,15 @@ def recount_u3(files, h1_path, is_p3, repo=None):
                     fnd.stop("G-1", f"{s}:study {study}", f"{len(hit)} output file(s) with the {len(ks)}-key set of {rel} (want 1 file, {want} keys)")
     if set(sets["V0"]) != set(sets["VB"]):
         fnd.stop("G-1", "pairs", f"V0 / VB key sets differ ({len(set(sets['V0']) ^ set(sets['VB']))})")
+    def rd7_row(setting, k):
+        """RD-7 3 row identity (bundle H-3, result file, position, key) of one U-3 record."""
+        path, pos = locs[setting][k]
+        rec = sets[setting][k][1]
+        key, _st = core.rd7_key_setting(rec, None, "u3_json", Path(path).name)
+        rel = core.rel_posix(path, repo) if repo is not None else Path(path).as_posix()
+        return {"bundle": "H-3", "result_file": rel, "position": pos, "key": key}
+
+    g6_rows = []
     # G-4 / G-6 on every VB run selected by file setting
     sel = 0
     for k, (suite, rec) in sets["VB"].items():
@@ -281,11 +491,14 @@ def recount_u3(files, h1_path, is_p3, repo=None):
             if not (v5.get("has_rod_reading") is True and v5.get("j_p3") == "pass"):
                 fnd.stop("G-4", where, f"g8: has_rod_reading {v5.get('has_rod_reading')!r}, J-P3 {v5.get('j_p3')!r}")
             fb = v5.get("rod_pressure_fallback_events")
-            nfb = len(fb) if isinstance(fb, list) else (fb if isinstance(fb, int) else None)
+            nfb = len(fb) if isinstance(fb, list) else (fb if isinstance(fb, int) and not isinstance(fb, bool) else None)
             if nfb is None:
                 fnd.stop("G-6", where, "rod_pressure_fallback_events missing")
             elif nfb != 0:
                 fnd.stop("G-6", where, f"{nfb} WARN_ROD_PRESSURE_FALLBACK")
+                row = rd7_row("VB", k)
+                if row["result_file"].endswith(G6_FILE.split("/")[-1]):
+                    g6_rows.append(row)     # RD-7 1: G-6 list = g8 VB records with the event
         else:
             if not (v5.get("j_p3") == "no_rod_reading" and v5.get("head_only_declared") is True
                     and v5.get("has_rod_reading") is False):
@@ -300,6 +513,15 @@ def recount_u3(files, h1_path, is_p3, repo=None):
                      and study_of.get(pf[1])), None)
         study = study_of.get(path)
         reuse = rec.get("reuse") == "d1"
+        if suite in R72_SUITES or study in R72_STUDIES:
+            # rev16 R16-10 2 (b): r72 family graded from gates / preloc / G6-3 / FAULT, not from verdict / pass
+            g, why, det = grade_r72(rec)
+            r72["graded"] += 1
+            if g is None:
+                r72["undecidable"] += 1
+            for fl in det.get("flags", []):
+                r72["flags"][fl] = r72["flags"].get(fl, 0) + 1
+            return g, why
         if not (suite in SETTLE_V2_SUITES or study in SETTLE_V2_STUDIES or reuse):
             return grade_u3(rec)
         block = core.dig(rec, "u3.settle_v2", None) if reuse and not isinstance(rec.get("settle_v2"), dict) else rec.get("settle_v2")
@@ -332,6 +554,7 @@ def recount_u3(files, h1_path, is_p3, repo=None):
     # 5.1 transitions
     table = {a: {b: 0 for b in GRADES + ("undecidable",)} for a in GRADES + ("undecidable",)}
     vb_unique, base_fail, improve, safe_moves, undec, diffs = [], [], [], [], [], {}
+    g5_rows = []
     sentence = {g: 0 for g in GRADES}
     for k in sorted(set(sets["V0"]) & set(sets["VB"])):
         r0, r1 = sets["V0"][k][1], sets["VB"][k][1]
@@ -345,6 +568,7 @@ def recount_u3(files, h1_path, is_p3, repo=None):
             sentence[g1] += 1
         if g1 == "fail" and g0 in ("pass", "flag", "safe_stop"):
             vb_unique.append(k)
+            g5_rows.append(rd7_row("VB", k))       # RD-7 1: G-5 list row = the VB-unique-fail u3 record
             fnd.stop("G-5", k, f"VB-unique fail (V0 {g0})")
         elif g1 == "fail" and g0 == "fail":
             base_fail.append(k)
@@ -403,8 +627,19 @@ def recount_u3(files, h1_path, is_p3, repo=None):
            "undecidable": undec, "sentence_VB": sentence, "differences": diffs, "d1_reuse": reuse,
            "settle_v2": {**settle, "no_table_check_note": "표 행이 없는 사례가 v1에서도 정착 점검 대상이 아니었다는 것은 가정(R3-B6)"},
            "study_files": {k: v for k, v in study_of.items()},
-           "G-3": "not recounted (needs option-free runs; path 1 record only)"}
+           "r72_family_grade": {**r72, "rule": "rev16 R16-10 2 (b): gates + R6-C3 + 419.8 + 424.8.1 revoked "
+                                               "(= 424.11.2 강등, supplement 2-3) + U-S9-G6d/423.3"},
+           "G-5_list": {"name": "G-5 (u3 원판 5.1 VB 고유 실패)", "columns": ["bundle", "result_file", "position", "key"],
+                        "rows": sorted(g5_rows, key=_row_sort)},
+           "G-6_list": {"name": "G-6 (u3 rev1 #5, g8 VB WARN_ROD_PRESSURE_FALLBACK)",
+                        "columns": ["bundle", "result_file", "position", "key"], "rows": sorted(g6_rows, key=_row_sort)},
+           "G-3": "H-11 (p2_x16.py g3), not here"}
     return out, fnd
+
+
+def _row_sort(r):
+    """RD-7 3 sort: bundle, result file, position numbers."""
+    return (core.bundle_key(r["bundle"]), r["result_file"], core._pos_key(r["position"]))   # supplement 3-5
 
 
 def event_names_of(rec):
@@ -498,6 +733,8 @@ def main(argv=None):
     ap.add_argument("--u3", action="append", default=[], help="SETTING=path (SETTING V0 or VB), repeatable")
     ap.add_argument("--u6", action="append", default=[], help="CONTROLLER=path (C2|ABL|IND|IND_LAS|ALL), repeatable")
     ap.add_argument("--h1", default=None, help="resume_k1/h1_d1.jsonl for the D-1 reuse check")
+    ap.add_argument("--expect-head", required=True,
+                    help="full 40-hex M4 commit; the judging checkout HEAD must equal it, else S-12 (R4 RD-1 5)")
     args = ap.parse_args(argv)
     repo = Path(args.repo) if args.repo else _HERE.parents[4]
     tool_sha = core.sha256_file(Path(__file__))
@@ -506,11 +743,15 @@ def main(argv=None):
     try:
         seals = core.check_seals(repo)
         rs = {rel: core.sha256_file(repo / rel) if (repo / rel).is_file() else None for rel in U3_RULES}
+        hc = core.head_check(repo, args.expect_head)
         if not seals["ok"] or any(rs[r] != w for r, w in U3_RULES.items()):
             report, code = {"seals": seals, "u3_rules": rs, "stop_codes": ["S-1"]}, 2
+        elif not hc["ok"]:
+            report, code = {"head_check": hc, "stop_codes": ["S-12"]}, 2
         else:
             is_p3, mod = core.load_is_extend_start(repo)
-            report = {"u3_rules": rs, "v5_options": mod}
+            report = {"u3_rules": rs, "v5_options": mod, "head_check": hc,
+                      "r4_rev13_25_sha256": {Path(r).stem: w for r, w, _ in core.R4_SEALS_EXTRA}}
             fnds = []
             if args.u3:
                 files = [{"setting": a.split("=", 1)[0], "path": a.split("=", 1)[1]} for a in args.u3]

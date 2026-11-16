@@ -322,19 +322,10 @@ def test_h10_overlap_step_uses_the_new_reference(tmp_path) -> None:
 # ------------------------------------------------------------------------------ rev1 seal / S-1
 def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
     assert judge.sealed_rules_check()["problems"] == []
+    # R4 common block RD-2: the original and rev1 .. rev25 (26 revisions)
     assert set(judge.sealed_rules_check()["revisions"]) == {
-        judge.RULES_REV1_NAME,
-        judge.RULES_REV2_NAME,
-        judge.RULES_REV3_NAME,
-        judge.RULES_REV4_NAME,
-        judge.RULES_REV5_NAME,
-        judge.RULES_REV6_NAME,
-        judge.RULES_REV7_NAME,
-        judge.RULES_REV8_NAME,
-        judge.RULES_REV9_NAME,
-        judge.RULES_REV10_NAME,
-        judge.RULES_REV11_NAME,
-        judge.RULES_REV12_NAME,
+        judge.RULES_NAME,
+        *(f"v5_resume_4368_rules_rev{n}.md" for n in range(1, 26)),
     }
     assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
     for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong
@@ -1201,13 +1192,16 @@ def test_rev3_family_f_trigger_and_rules(tmp_path) -> None:
                 gates = dict(good)
                 if setting == "VB" and i < 5:  # 5 VB failures per key vs V0 0: R-1 fails (> 4)
                     gates["U57_outside"] = False
-                lines.append(
+                lines.append(  # supplement 4-5 fields: event, fault_events, controller_tag
                     {
                         "setting": setting,
                         "key": key,
                         "offset_s": i * 0.00625,
+                        "event": "FS24",
                         "gates": gates,
+                        "fault_events": [],
                         "final_phase": "ready",
+                        "controller_tag": judge.TAG_P3 if setting == "VB" else judge.TAG_V0,
                     }
                 )
     path = _jsonl(tmp_path / "f.jsonl", lines)

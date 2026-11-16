@@ -223,13 +223,20 @@ def test_j3_rigid_flag_limit_follows_the_floor():
 
 
 def test_j11_none_with_fallback_legs_is_not_judgeable():
+    """Rev16 R16-6: the fallback legs' ``n_late_fallback_by_leg``; RD-10: no block on a stop
+    setting is 판정 불가, on a record setting "입력 없음"; no fallback leg = no item."""
     assert (
         s1.j11_items(_row(lwa={"n_late": None, "fallback_legs": ["FL"]}))[0]["kind"]
         == "not_judgeable"
     )
-    assert s1.j11_items(_row(lwa={"n_late": None}))[0]["kind"] == "record"
-    late = _row(setting="LS1", lwa={"n_late": 2, "n_late_fallback": 1, "fallback_legs": ["FL"]})
+    assert s1.j11_items(_row(lwa={"n_late": None})) == []
+    assert s1.j11_items(_row(lwa=None))[0]["kind"] == "not_judgeable"
+    assert s1.j11_items(_row(setting="V4", lwa=None))[0]["detail"] == "입력 없음"
+    late = _row(setting="LS1", lwa={"n_late_fallback_by_leg": {"FL": 1, "FR": 0},
+                                    "fallback_legs": ["FL"]})
     assert "L-e" in s1.j11_items(late)[0]["detail"]
+    other_leg = _row(lwa={"n_late_fallback_by_leg": {"FL": 0, "FR": 3}, "fallback_legs": ["FL"]})
+    assert s1.j11_items(other_leg) == []  # FR is no actual fallback leg
 
 
 def test_order_131_reverse_fails_only_when_v0_keeps_order():

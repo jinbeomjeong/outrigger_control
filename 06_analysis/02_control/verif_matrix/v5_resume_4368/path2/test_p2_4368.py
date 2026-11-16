@@ -16,10 +16,14 @@ p2 = importlib.util.module_from_spec(spec)
 sys.modules["p2_4368"] = p2
 spec.loader.exec_module(p2)
 REPO = HERE.parents[4]
+FAKE_M4 = "4" * 40
+p2.git_head = lambda repo: FAKE_M4      # R4 RD-1 5: tests stand in for the M4 checkout HEAD
 
 
 def run_main(argv, capsys):
     argv = list(argv)
+    if any(c in argv for c in p2.R4_CMDS) and "--expect-head" not in argv:
+        argv += ["--expect-head", FAKE_M4]
     if "chrono" in argv and "--rows-manifest" not in argv and "--batch" in argv:
         # synthetic batches carry their own rows manifest (rev10 R10-1: manifest = judging input)
         man = Path(argv[argv.index("--batch") + 1]).parent / "rows_manifest.json"
@@ -596,7 +600,7 @@ def test_jp(tmp_path, capsys):
     ev_file = s8 / "v5jp_VB_case3_20990101" / "case3" / "controller_events.json"
     ev_file.write_text(json.dumps(["C2Event(t_s=1.0, name='INFO_LOC_FLAT_SOIL_MARGIN')"]), "utf-8")
     code, s = run_main(["jp", "--shadow", str(sh), "--batch", str(bd)], capsys)
-    assert s["decision"].startswith("rerun")
+    assert code == 0 and s["decision"].startswith("reuse false")      # RD-11 9: no rerun inside R4, ask
 
 
 # ------------------------------------------------------------------ K-10 compare
@@ -1420,9 +1424,30 @@ def test_harness_grid_run_reads_parent_tag(tmp_path, capsys):
     grid_file(f, parent_tag=None)                                       # neither run nor job tag -> S-11
     code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
     assert code == 2 and s["stop_codes"] == ["S-11"]
-    grid_file(f, parent_tag=p2.TAG_V0, run_tag=p2.TAG_VB)               # a run's own tag wins over the job's
+    # user decision 129 (supplement 4-3 / 5-1): only results[i].controller_tag; a run's own tag is not read
+    grid_file(f, parent_tag=p2.TAG_V0, run_tag=p2.TAG_VB)
+    code, s, rep = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 2 and s["stop_codes"] == ["S-2"] and rep["bundles"]["G"]["tags"] == {p2.TAG_V0: 3}
+    grid_file(f, parent_tag=None, run_tag=p2.TAG_VB)                    # run tag alone does not count -> S-11
     code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
-    assert code == 0, s
+    assert code == 2 and s["stop_codes"] == ["S-11"]
+
+
+def test_r4_decision_129_grid_tag_only_top_level_of_results_i(tmp_path, capsys):
+    f = tmp_path / "grid.json"
+    grid_file(f, parent_tag=None)
+    data = json.loads(f.read_text("utf-8"))
+    data["results"][0]["v5"] = {"controller_tag": p2.TAG_VB}            # results[i].v5.controller_tag only
+    for r in data["results"][0]["runs"]:
+        r["resume_k1"]["controller_tag"] = p2.TAG_VB                    # and the run's resume_k1 block
+    f.write_text(json.dumps(data), "utf-8")
+    code, s, rep = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 2 and s["stop_codes"] == ["S-11"] and rep["bundles"]["G"]["tags"] == {"None": 3}
+    assert rep["bundles"]["G"]["r4"]["rd9_p3_on"] == 0                  # no tag read -> not counted ③ on
+    data["results"][0]["controller_tag"] = None                          # null = S-11 as well
+    f.write_text(json.dumps(data), "utf-8")
+    code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert s["stop_codes"] == ["S-11"]
 
 
 def test_harness_gs_skips_line_counts(tmp_path, capsys):
@@ -1584,3 +1609,455 @@ def test_rev19_rev20_chrono_seal_mismatch_stops(tmp_path, capsys, monkeypatch, w
     bd = make_batch(tmp_path, scm_result(p2.TAG_VB, [2.0, 1.5]))
     code, s = run_main(["--out", str(tmp_path / "o.json"), "chrono", "--batch", str(bd)], capsys)
     assert code == 2 and s["stop_codes"] == ["S-1"]
+
+
+# ------------------------------------------------------------------ R4 (common block e451f067..., rules rev25)
+def test_r4_rd2_seal_list_26_sheets():
+    seals = p2.check_seals(REPO, appendix=False)
+    assert len(seals["rules"]) == 26 and all(v["ok"] for v in seals["rules"].values()), seals["rules"]
+    assert p2.R4_SEALS_EXTRA[-1][1] == "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+    assert len(p2.check_seals(REPO, appendix=False, r4=False)["rules"]) == 13     # chrono keeps its own list
+
+
+@pytest.mark.parametrize("n", [13, 19, 25])
+def test_r4_rd2_seal_mismatch_stops_r4_commands_not_chrono(tmp_path, capsys, monkeypatch, n):
+    bad = tuple((rel, "e" * 64, seal) if rel.endswith(f"rev{n}.md") else (rel, want, seal)
+                for rel, want, seal in p2.R4_SEALS_EXTRA)
+    monkeypatch.setattr(p2, "R4_SEALS_EXTRA", bad)
+    code, s = run_main(["seal"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-1"]
+    assert p2.check_seals(REPO, appendix=False, r4=False)["ok"]
+
+
+def test_r4_rd1_head_check(tmp_path, capsys):
+    assert p2.head_check(REPO, "abc")["ok"] is False                       # not a full hash
+    assert p2.head_check(REPO, FAKE_M4)["ok"] is True
+    f = tmp_path / "h.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    man = tmp_path / "m.json"
+    man.write_text(json.dumps({"files": [{"bundle": "T", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}]}),
+                   "utf-8")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "harness", "--manifest", str(man), "--expect-head", "5" * 40], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-12"] and "bundles" not in rep
+    code, s = run_main(["--out", str(out), "harness", "--manifest", str(man)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0 and rep["head_check"]["ok"] and rep["seals"]["r4_common_block_sha256"] == p2.R4_BLOCK_SHA
+    assert rep["seals"]["r4_rev13_25_sha256"]["v5_resume_4368_rules_rev25"].startswith("c0b778fd")
+
+
+def test_r4_rd8_breach_reads_format():
+    assert p2.breach_reads_format([0, 0, 0, 0]) == (True, None)
+    for bad in ([], [0], [0, 0, 0, 0, 0], [0, 0.0, 0, 0], [0, True, 0, 0], [0, 0, -2, 0], {"FL": 0}):
+        assert p2.breach_reads_format(bad)[0] is False, bad
+
+
+def vb_h1(i, j_p3="pass", ebc="absent", top=None, base="rigid"):
+    ln = d1_line(i, "H-R-0", base, p2.TAG_VB)
+    ln["job"]["setting"] = "VB"
+    ln["d1"] = {"j_p3": j_p3}
+    if ebc != "absent":
+        ln["hydraulics_record"] = {"extend_bound_check": ebc}
+    if top is not None:
+        ln["extend_bound_check"] = {"breach_reads": top}
+    return ln
+
+
+def _h(tmp_path, capsys, files):
+    man = tmp_path / "m.json"
+    man.write_text(json.dumps({"files": files}), "utf-8")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "harness", "--manifest", str(man)], capsys)
+    return code, s, json.loads(out.read_text("utf-8"))
+
+
+def test_r4_rd8_rd9_h1_counts_and_marker(tmp_path, capsys):
+    f = tmp_path / "h1_d1.jsonl"
+    write_jsonl(f, [vb_h1(1, ebc=None), vb_h1(2, ebc={"breach_reads": [0, 0, 0]}), vb_h1(3, j_p3="pass"),
+                    vb_h1(4, ebc={"breach_reads": [0, 0, 0, 0]}, top=[0, 1, 0, 0]),
+                    vb_h1(5, ebc={"breach_reads": [0, 0, 0, 0]}), d1_line(6, "H-R-0", "rigid", p2.TAG_V0)])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(f), "format": "run_v5_jsonl", "kind": "VB"}])
+    b = rep["bundles"]["H-1"]
+    rd8 = b["r4"]["rd8"]
+    # ebc None / absent do not count as present; line 2 wrong length; line 3 = recorded pass without breach_reads
+    # (line 1 also has a recorded pass without breach_reads); line 4 top-level copy differs
+    assert rd8["breach_reads_bad_format"] == 1 and rd8["jp3_pass_without_breach_reads"] == 2
+    assert rd8["breach_reads_mismatch"] == 1 and rd8["lines_present"] == 3
+    assert b["gates"] == [p2.RD8_MARKER]
+    assert b["r4"]["rd9_p3_on"] == 5                       # the V0-tag line is not ③ on (and is an S-2 in a VB file)
+    assert "S-15" in b["stop_codes"] and "S-8" not in b["stop_codes"]
+    good = tmp_path / "g" / "h1_d1.jsonl"
+    good.parent.mkdir()
+    write_jsonl(good, [vb_h1(1, j_p3="no_rod_reading", ebc=None)])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(good), "format": "run_v5_jsonl", "kind": "VB"}])
+    assert rep["bundles"]["H-1"]["gates"] == []
+
+
+def test_r4_rd9_zero_p3_on_lines_is_s8(tmp_path, capsys):
+    f = tmp_path / "h.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    for bundle, want in (("H-6", True), ("H-5", False), ("H-7", False)):
+        code, s, rep = _h(tmp_path, capsys, [{"bundle": bundle, "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}])
+        assert ("S-8" in rep["bundles"][bundle]["stop_codes"]) is want, bundle
+        assert "rd8" not in rep["bundles"][bundle]["r4"]
+
+
+def test_r4_rd7_stop_s6_list_columns_and_positions(tmp_path, capsys):
+    f = tmp_path / "h1_d1.jsonl"
+    lines = [d1_line(1, "H-R-0", "rigid", p2.TAG_V0),
+             d1_line(2, "H-S-0", "J1", p2.TAG_V0, decisions=[dec(), dec(True, True)], skipped=1),
+             d1_line(3, "H-S-A", "G1", p2.TAG_V0, decisions=[dec(True, True)], skipped=1)]
+    lines[2]["job"]["d1"]["patch_leg"] = "FL"                                  # patch: not listed
+    f.write_text(json.dumps(lines[0]) + "\n\n" + json.dumps(lines[1]) + "\n" + json.dumps(lines[2]) + "\n", "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}])
+    lst = rep["stop_S6_list"]
+    assert lst["n_rows"] == 1 and "S-6" in s["stop_codes"]
+    row = lst["rows"][0]
+    assert row == {"bundle": "H-1", "result_file": f.as_posix(), "position": "line 3", "k": 1,
+                   "key": "D1|H-S-0|J1|T|flat|K1|2", "setting": "V0", "family": "균일 연약", "t_loc_s": 30.0,
+                   "n_P": 290, "n_S": 280, "dP": 10}
+    assert lst["columns"] == ["bundle", "result_file", "position", "k", "key", "setting", "family", "t_loc_s", "n_P",
+                              "n_S", "dP"]
+
+
+def r79_item(key, setting="VB", tag=None, decisions=(), skipped=0, h="a" * 64):
+    return {"key": key, "v5_setting": setting, "controller_tag": tag or (p2.TAG_VB if setting == "VB" else p2.TAG_V0),
+            "commands_sha256": h, "resume_k1": rk_block(decisions=decisions, skipped=skipped)}
+
+
+def test_r4_rd7_family_runs_not_listed_and_r79_key_setting(tmp_path, capsys):
+    fam = tmp_path / "h9_family_F_VB.json"
+    fam.write_text(json.dumps({"results": [r79_item("ref|J2|top|Fs4", decisions=[dec(True, True)], skipped=1)]}),
+                   "utf-8")
+    h8 = tmp_path / "h8_noise_VB.json"
+    h8.write_text(json.dumps({"results": [r79_item("ref|J2|top|Fs4|s3", decisions=[dec(True, True)], skipped=1)]}),
+                  "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [
+        {"bundle": "H-9", "path": str(fam), "format": "r79_json", "kind": "VB"},
+        {"bundle": "H-8", "path": str(h8), "format": "r79_json", "kind": "VB"}])
+    rows = rep["stop_S6_list"]["rows"]
+    assert [(r["bundle"], r["position"], r["key"], r["setting"]) for r in rows] == \
+        [("H-8", "results[0]", "ref|J2|top|Fs4|s3", "VB")]
+    assert "S-6" not in rep["bundles"]["H-9"]["stop_codes"] and rep["bundles"]["H-9"]["r4"]["rd9_p3_on"] == 0
+    assert rep["bundles"]["H-9"]["r4"]["family_run_lines"] == 1
+
+
+def test_r4_family_u6_inner_key_is_src():
+    # R4 supplement 2-7: the inner key is the record's src; the main-file case name is never read
+    f = p2.family_u6
+    assert f("g6|G1+J1@RR|top|Fs4") == "patch" and f("g6r|rigid+J1@FL|top|Fs8") == "patch"
+    assert f("H1|J1|B|top|flat") == "uniform" and f("H5|rigid|B|top|roll_pos") == "rigid"
+    assert f("H3|J1|B|top|roll_pos@k0.75") == "uniform"          # '@k' scale is not a ground token
+    assert f("A1-rigid") == "unresolved" and f(None) == "unresolved"
+    rec = {"case": "A4-G4RR-Fs0", "src": "H5|rigid|B|top|flat"}
+    assert p2.family_harness(rec, "u3_json", name="u6_b5_main_VB.json") == "rigid"
+    rec = {"case": "A1-J1", "src": "H1|J1|B|top|flat"}
+    assert p2.family_harness(rec, "u3_json", name="u6_b5_main_VB.json") == "uniform"
+
+
+def test_r4_b1_by_setting_mixed_run_v5_file(tmp_path, capsys):
+    # B-1 (user decision 127 (a)): one original h1_d1.jsonl with VB and V0 lines, kind by job.setting
+    f = tmp_path / "h1_d1.jsonl"
+    v0 = d1_line(1, "H-S-0", "J1", p2.TAG_V0, decisions=[dec(True, True)], skipped=1)
+    vb = vb_h1(2, j_p3="no_rod_reading", ebc=None)
+    write_jsonl(f, [v0, vb])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "by_setting"}])
+    b = rep["bundles"]["H-1"]
+    assert b["kind_lines"] == {"V0": 1, "VB": 1} and b["files"][0]["kind_lines"] == {"V0": 1, "VB": 1}
+    assert "S-2" not in b["stop_codes"] and b["r4"]["rd9_p3_on"] == 1
+    assert any("V0 lines, rules 5.1 say 434" in x["why"] for x in b["stops"])
+    row = rep["stop_S6_list"]["rows"][0]
+    assert row["result_file"] == f.as_posix() and row["position"] == "line 1" and row["setting"] == "V0"
+    vb["controller_tag"] = p2.TAG_V0                                   # tag checked against the line's kind
+    nos = d1_line(3, "H-R-0", "rigid", p2.TAG_V0)
+    nos["job"].pop("setting")
+    write_jsonl(f, [v0, vb, nos])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-1", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "by_setting"}])
+    codes = rep["bundles"]["H-1"]["stop_codes"]
+    assert "S-2" in codes and "S-11" in codes
+
+
+def test_r4_b1_by_setting_u6_controller_and_h4_kind_counts(tmp_path, capsys):
+    def u6(case, ctrl, tag):
+        return {"case": case, "controller": ctrl, "src": "H1|J1|B|top|flat",
+                "v5": {"controller_tag": tag, "v5_setting": "VB",
+                       "resume_k1": rk_block(applicable=ctrl != "IND")}}
+    main = tmp_path / "u6_b5_main_VB.json"
+    main.write_text(json.dumps({"records": [u6("A1-J1", "C2", p2.TAG_VB), u6("A1-J1", "ABL", p2.TAG_ABL),
+                                            u6("A1-J1", "IND", p2.TAG_IND)]}), "utf-8")
+    wide = tmp_path / "u6_b5_wide_VB.json"
+    wide.write_text(json.dumps({"records": [u6("S|H1|J1|B|top|flat", "IND", p2.TAG_IND)]}), "utf-8")
+    il = tmp_path / "u6_b5_main_VB_IND_LAS.json"
+    il.write_text(json.dumps({"records": [u6("A1-J1", "IND", p2.TAG_IND_LAS)]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [
+        {"bundle": "H-4", "path": str(main), "format": "u3_json", "kind": "by_setting"},
+        {"bundle": "H-4", "path": str(wide), "format": "u3_json", "kind": "by_setting"},
+        {"bundle": "H-4", "path": str(il), "format": "u3_json", "kind": "IND_LAS"}])
+    b = rep["bundles"]["H-4"]
+    assert b["kind_lines"] == {"VB": 1, "ABL": 1, "IND": 2, "IND_LAS": 1}
+    assert "S-2" not in b["stop_codes"] and b["classes"].get("n/a") == 3
+    whys = " ".join(x["why"] for x in b["stops"])
+    assert "2 IND lines, rules 5.1 say 242" in whys and "1 IND_LAS lines, rules 5.1 say 242" in whys
+    assert "1 VB lines, rules 5.1 say 242" in whys and "1 ABL lines, rules 5.1 say 242" in whys   # 4-2, decision 128 (b)
+    assert rep["stop_S6_list"]["n_rows"] == 0
+    # supplement 4-3 / R16-3 (decision 128 (a)): controller ABL xor tag ABL_LAS_K1 = S-3, not S-2
+    main.write_text(json.dumps({"records": [u6("A1-J1", "ABL", p2.TAG_VB), u6("A1-G1", "C2", p2.TAG_ABL),
+                                            u6("A1-J2", "C2", p2.TAG_V0)]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-4", "path": str(main), "format": "u3_json",
+                                          "kind": "by_setting"}])
+    st = rep["bundles"]["H-4"]["stops"]
+    s3 = [x for x in st if x["code"] == "S-3" and "only one is ABL" in x["why"]]
+    s2 = [x for x in st if x["code"] == "S-2"]
+    assert len(s3) == 2 and len(s2) == 1 and "A1-J2" in s2[0]["where"]
+
+
+def test_r4_supplement_4_input_table():
+    rows = p2.R4_INPUTS
+    assert len(rows) == 42
+    assert sum(1 for r in rows if r.startswith(p2._RK)) == 20 and sum(1 for r in rows if r.startswith(p2._LK)) == 22
+    ks = {v[k] for v in rows.values() for k in ("key_source", "key_source_override") if v[k]}
+    assert len(ks) == 5
+    assert sum(v["count"] for v in rows.values() if v["bundle"] == "H-9" and v["part"] == "main") == 1676
+    assert sum(v["count"] for v in rows.values() if v["part"] == "V0-sample") == 84
+    assert sum(v["count"] for v in rows.values() if v["part"] == "family-F") == 192
+    for b, n in p2.HARNESS_COUNTS.items():
+        assert sum(v["count"] for v in rows.values() if v["bundle"] == b and v["part"] == "main") == n, b
+
+
+def _fake_inputs(repo):
+    files = []
+    for rel, v in p2.R4_INPUTS.items():
+        for p in (rel, v["key_source"], v["key_source_override"]):
+            if p:
+                (repo / p).parent.mkdir(parents=True, exist_ok=True)
+                (repo / p).write_text("{}", "utf-8")
+        e = {"bundle": v["bundle"], "path": rel, "format": v["format"], "kind": v["kind"]}
+        if v["part"] != "main":
+            e["part"] = v["part"]
+        for k in ("key_source", "key_source_override"):
+            if v[k]:
+                e[k] = v[k]
+        files.append(e)
+    return files
+
+
+def test_r4_supplement_4_input_check(tmp_path):
+    files = _fake_inputs(tmp_path)
+    stops, rec = p2.r4_input_check(files, tmp_path)
+    assert stops == [] and rec["expected_files"] == 42 and rec["expected_key_sources"] == 5
+    bad = [dict(e) for e in files]
+    bad[0]["kind"] = "VB"                                                 # h1_d1 must be by_setting
+    bad = [e for e in bad if not e["path"].endswith("h9_grid_v0_sample/grid_r69_top.json")]   # a V0-sample file gone
+    bad.append({"bundle": "H-8", "path": p2._RK + "h8_noise_VB_split.json", "format": "r79_json", "kind": "VB"})
+    h8 = next(e for e in bad if e["path"].endswith("h8_noise_VB.json"))
+    h8.pop("key_source_override")                                          # dg3 override missing
+    (tmp_path / p2._RK / "h5_u9_v0.jsonl").unlink()                       # file missing on disk
+    stops, _ = p2.r4_input_check(bad, tmp_path)
+    whys = " | ".join(f"{b}: {w}" for b, w in stops)
+    assert "H-1: " in whys and "['kind'] differ" in whys
+    assert "0 manifest entries for " + p2._RK + "h9_grid_v0_sample/grid_r69_top.json" in whys
+    assert "not in the supplement-4 input table" in whys and "['key_source_override'] differ" in whys
+    assert "input file missing: " + p2._RK + "h5_u9_v0.jsonl" in whys
+
+
+def test_r4_supplement_4_h9_parts_counted_apart(tmp_path, capsys):
+    f = tmp_path / "h9_stage1.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    g = tmp_path / "grid_r67_main.json"
+    g.write_text(json.dumps({"meta": {}, "results": [{"key": "screen|top|0.0|ready|FR", "v5_setting": "V0",
+                                                      "controller_tag": p2.TAG_V0,
+                                                      "runs": [{"event": "FS24", "resume_k1": rk_block()}]}]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [
+        {"bundle": "H-9", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"},
+        {"bundle": "H-9", "part": "V0-sample", "path": str(g), "format": "grid_json", "kind": "V0"}])
+    b = rep["bundles"]["H-9"]
+    assert b["parts"] == {"main": 1, "V0-sample": 1} and b["lines"] == 1
+    whys = " ".join(x["why"] for x in b["stops"])
+    assert "1 lines, rules (rev1) say 1676" in whys and "supplement 4-2 says 84" in whys
+    assert "0 lines / runs, supplement 4-2 says 192" in whys                # family-F part missing
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-5", "part": "x", "path": str(f), "format": "run_v5_jsonl",
+                                          "kind": "V0"}])
+    assert any("unknown part" in x["why"] for x in rep["bundles"]["H-5"]["stops"])
+
+
+def test_r4_b1_missing_bundle_stops(tmp_path, capsys):
+    f = tmp_path / "h.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-5", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}])
+    for miss in ("H-1", "H-3", "H-4", "H-6", "H-7", "H-8", "H-9", "H-10"):
+        bb = rep["bundles"][miss]
+        assert bb["missing_from_manifest"] and bb["stop_codes"] == ["S-15"], miss      # no S-8 on a missing bundle
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "TEST", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}])
+    assert set(rep["bundles"]) == {"TEST"}                          # no rules-5.1 bundle: no completeness check
+
+
+def test_r4_supplement_3_5_bundle_sort_numeric(tmp_path, capsys):
+    assert sorted(["H-10", "H-9", "H-1", "H-3"], key=p2.bundle_key) == ["H-1", "H-3", "H-9", "H-10"]
+    items = {}
+    for bundle, name in (("H-10", "h10_reuse_rerun.jsonl"), ("H-9", "h9_stage1.jsonl")):
+        d = tmp_path / bundle
+        d.mkdir()
+        ln = d1_line(1, "H-S-0", "J1", p2.TAG_V0, decisions=[dec(True, True)], skipped=1)
+        ln["job"]["case"] = "S2"
+        write_jsonl(d / name, [ln])
+        items[bundle] = {"bundle": bundle, "path": str(d / name), "format": "run_v5_jsonl", "kind": "V0"}
+    code, s, rep = _h(tmp_path, capsys, [items["H-10"], items["H-9"]])
+    rows = rep["stop_S6_list"]["rows"]
+    assert [r["bundle"] for r in rows] == ["H-9", "H-10"] and rows[0]["key"] == "S2" and rows[0]["setting"] == "V0"
+
+
+def test_r4_slope_scale_token_is_not_a_patch():
+    # R4 finding: an '@' that does not name a leg (slope scale) is not a patch; uniform soil stays uniform
+    assert p2.family_from_tokens(["H3|J1|B|top|nose_down@k0.875"]) == "uniform"
+    assert p2.family_from_tokens(["H9|J2|B|top|roll_neg@k0.6"]) == "uniform"
+    assert p2.family_from_tokens(["H4|rigid|B|top|nose_down_2p8"]) == "rigid"
+    assert p2.family_from_tokens(["D1|H-S-C|J1|T|flat|K1|c-mid@RR"]) == "patch"
+
+
+def test_r4_key_source_record_not_s5(tmp_path, capsys):
+    new = tmp_path / "h6_dg3_v4on.json"
+    new.write_text(json.dumps({"results": [r79_item("k1", h="1" * 64), r79_item("k2", h="2" * 64),
+                                           r79_item("k3", h="3" * 64), r79_item("k4", h="4" * 64)]}), "utf-8")
+    ks = tmp_path / "dg3_v4_on.json"
+    ks.write_text(json.dumps({"results": [{"key": "cand=current#k1", "base": {"commands_sha256": "1" * 64}},
+                                          {"key": "k2", "base": {"commands_sha256": "f" * 64}},
+                                          {"key": "k3", "base": {}}]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-6", "path": str(new), "format": "r79_json", "kind": "H6",
+                                          "key_source": str(ks)}])
+    k = rep["bundles"]["H-6"]["r4"]["key_source"]
+    assert (k["compared"], k["same"], k["differ"], k["no_stored_hash"], k["no_key_source_line"]) == (2, 1, 1, 1, 1)
+    assert "S-5" not in rep["bundles"]["H-6"]["stop_codes"]
+    ov = tmp_path / "noise_vb.json"
+    ov.write_text(json.dumps({"results": [{"key": "k2", "base": {"commands_sha256": "2" * 64}}]}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-6", "path": str(new), "format": "r79_json", "kind": "H6",
+                                          "key_source": str(ks), "key_source_override": str(ov)}])
+    k = rep["bundles"]["H-6"]["r4"]["key_source"]
+    assert (k["same"], k["differ"]) == (2, 0)                                    # k2 taken from the override
+
+
+def test_r4_u3_screen_results_are_read(tmp_path, capsys):
+    item = {"id": "H8|G1|B|top|flat", "v5": {"controller_tag": p2.TAG_V0, "v5_setting": "V0",
+                                              "resume_k1": rk_block(decisions=[dec(True, True)], skipped=1)}}
+    f = tmp_path / "u3_D_V0.json"
+    f.write_text(json.dumps({"results": [item], "meta": {}}), "utf-8")
+    code, s, rep = _h(tmp_path, capsys, [{"bundle": "H-3", "path": str(f), "format": "u3_json", "kind": "V0"}])
+    rows = rep["stop_S6_list"]["rows"]
+    assert rep["bundles"]["H-3"]["lines"] == 1 and rows[0]["position"] == "results[0]"
+    assert rows[0]["key"] == "H8|G1|B|top|flat" and rows[0]["setting"] == "V0"
+
+
+# ------------------------------------------------------------------ R4 RD-11 (J_P reading)
+def jp_setup(tmp_path, n=12, shadow_dup=None, bad_event=None, relocated=False, fallback=False, suffix=False):
+    rows, shadow = [], []
+    for i in range(n):
+        run = tmp_path / "07_results" / "S8" / f"jp_case{i}_20990101" / f"case{i}"
+        run.mkdir(parents=True)
+        (run / "result.json").write_text("{}", "utf-8")
+        ev = ["C2Event(t_s=1.0, name='crawler_liftoff_confirmed')"]
+        if suffix and i == 2:
+            ev.append("C2Event(t_s=3.0, name='INFO_LOC_FLAT_SOIL_MARGIN:12')")
+        if bad_event is not None and i == 4:
+            ev.append(bad_event)
+        (run / "controller_events.json").write_text(json.dumps(ev), "utf-8")
+        rj = str(run / "result.json")
+        if relocated and i == 0:
+            rj = "D:/elsewhere/07_results/S8/" + f"jp_case{i}_20990101/case{i}/result.json"
+        case = {"case": f"case{i}", "s8c_check": {"result_json": rj}}
+        if fallback and i == 1:
+            case = {"case": f"case{i}"}
+        rows.append(case)
+        shadow.append({"job": {"chrono_run": f"jp_case{i}_20990101\\case{i}"}, "status": "silent",
+                       "first_fire_t_s": None})
+    if shadow_dup is not None:
+        shadow.append(dict(shadow[shadow_dup]))
+    bd = tmp_path / "batch_V5-JP-VB_x"
+    bd.mkdir()
+    if fallback:
+        fb = bd / "case1"
+        fb.mkdir()
+        (fb / "result.json").write_text("{}", "utf-8")
+        (fb / "controller_events.json").write_text(json.dumps([]), "utf-8")
+        shadow[1]["job"]["chrono_run"] = f"{bd.name}/case1"
+    (bd / "batch.json").write_text(json.dumps({"batch": "V5-JP-VB", "cases": rows}), "utf-8")
+    sh = tmp_path / "shadow.jsonl"
+    write_jsonl(sh, shadow)
+    return bd, sh
+
+
+def _jp(tmp_path, capsys, bd, sh, repo=None):
+    out = tmp_path / "jp.json"
+    argv = ["--out", str(out), "jp", "--shadow", str(sh), "--batch", str(bd), "--expect-head", FAKE_M4]
+    if repo is not None:
+        code = p2.main(["--repo", str(repo)] + argv)
+        last = capsys.readouterr().out.strip().splitlines()[-1]
+        return code, json.loads(last), json.loads(out.read_text("utf-8"))
+    code, s = run_main(argv, capsys)
+    return code, s, json.loads(out.read_text("utf-8"))
+
+
+def test_r4_rd11_reuse_and_row_items(tmp_path, capsys):
+    bd, sh = jp_setup(tmp_path)
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert code == 0 and rep["reuse"] is True and rep["n_rows"] == 12 and rep["stop_markers"] == []
+    r = rep["rows"][0]
+    assert r["run_id"] == "jp_case0_20990101/case0" and r["n_shadow_lines"] == 1 and r["cond1"] and r["cond2"]
+    assert set(r) >= {"batch", "case", "run_id", "events_unreadable", "events_unreadable_reason", "n_events",
+                      "n_r4c30", "n_soil_mode_start", "n_shadow_lines", "shadow_unreadable", "cond1", "cond2"}
+
+
+def test_r4_rd11_suffix_counts_and_skipped_does_not(tmp_path, capsys):
+    bd, sh = jp_setup(tmp_path, suffix=True,
+                      bad_event="C2Event(t_s=2.0, name='INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order')")
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert rep["rows"][2]["n_r4c30"] == 1 and rep["rows"][4]["n_r4c30"] == 0
+    assert rep["reuse"] is False and rep["stop_markers"] == []
+
+
+def test_r4_rd11_row_count_is_s15_without_reading(tmp_path, capsys):
+    bd, sh = jp_setup(tmp_path, n=11)
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert code == 2 and rep["stop_markers"] == ["S-15"] and "reuse" not in rep and rep["rows"] == []
+
+
+@pytest.mark.parametrize("bad", ["{'t_s': 1}", "C2Event(t_s=1.0, name=crawler)", "C2Event(t_s=x, name='a')"])
+def test_r4_rd11_event_record_unreadable(tmp_path, capsys, bad):
+    bd, sh = jp_setup(tmp_path, bad_event=bad)
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert code == 2 and rep["stop_markers"] == ["사건 기록 판독 불가"] and "reuse" not in rep
+    assert rep["rows"][4]["events_unreadable"] is True
+
+
+def test_r4_rd11_dict_element_and_missing_file(tmp_path, capsys):
+    bd, sh = jp_setup(tmp_path)
+    ev = tmp_path / "07_results" / "S8" / "jp_case7_20990101" / "case7" / "controller_events.json"
+    ev.write_text(json.dumps([{"t_s": 1.0, "name": "x"}]), "utf-8")
+    (tmp_path / "07_results" / "S8" / "jp_case8_20990101" / "case8" / "controller_events.json").unlink()
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert rep["stop_markers"] == ["사건 기록 판독 불가"]
+    assert rep["rows"][7]["events_unreadable"] and rep["rows"][8]["events_unreadable"]
+
+
+def test_r4_rd11_shadow_count_not_one(tmp_path, capsys):
+    bd, sh = jp_setup(tmp_path, shadow_dup=3)
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert code == 2 and rep["stop_markers"] == ["그림자 판독 불가"] and "reuse" not in rep
+    assert rep["rows"][3]["shadow_unreadable"] and rep["rows"][3]["shadow_unreadable_reason"] == "그림자 줄 수 2"
+
+
+def test_r4_rd11_relocation_and_batch_folder_fallback(tmp_path, capsys):
+    bd, sh = jp_setup(tmp_path, relocated=True, fallback=True)
+    cases = json.loads((bd / "batch.json").read_text("utf-8"))["cases"]
+    p, src = p2.jp_result_json(bd, cases[0], tmp_path)              # 07_results tail under <repo>/07_results
+    assert src == "s8c_check.result_json (relocated)" and p.parent.name == "case0"
+    p, src = p2.jp_result_json(bd, cases[1], tmp_path)
+    assert src == "<batch>/<case>/result.json" and p.parent == bd / "case1"
+    p, src = p2.jp_result_json(bd, {"case": "nope", "s6c_check": {"result_json": "x/result.json"}}, tmp_path)
+    assert p is None
+    cases[0] = {"case": "case0", "s8c_check": {"result_json": str(tmp_path / "07_results" / "S8" /
+                                                                  "jp_case0_20990101" / "case0" / "result.json")}}
+    (bd / "batch.json").write_text(json.dumps({"cases": cases}), "utf-8")
+    code, s, rep = _jp(tmp_path, capsys, bd, sh)
+    assert rep["rows"][1]["run_id"] == f"{bd.name}/case1" and code == 0, rep["stops"]

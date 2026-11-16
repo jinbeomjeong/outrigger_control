@@ -49,6 +49,30 @@ rows (rev4, counted as C-7); a V0 open-loop row without a ``v5_hydraulics`` bloc
 OC5PROBE rows (``r4368.role`` probe) get no O-C5 main-row block (5.4, k procedure in ``oc5k``).
 rev18 (3693a69c...) R18-1 / rev19 (7f87b8bb...) R19-8 / rev20 (615a8fbd...) R20-4 / rev21 (ecd70949...) R21-3: ``chrono`` also checks the rev16..rev21 seals (``CHRONO_SEALS``, S-1);
 the other sub-commands are unchanged (their list is the R4 harness tool's).
+R4 (436.8 R4 common block sha256 e451f067..., rules rev25 c0b778fd...; written by a third path-2 author, a new agent
+run without the earlier authors' context, only from the R4 handoff for path 2-dyn): RD-2 every sub-command but
+``chrono`` checks the original + rev1~rev25 (26 sheets, ``R4_SEALS_EXTRA``); RD-1 5 ``harness`` / ``anchors`` / ``jp``
+need ``--expect-head <M4 full hash>`` = ``git rev-parse HEAD`` (else S-12, nothing judged); ``harness``: RD-9 ③-on
+line / run count per bundle (0 in H-1 / H-3 / H-4 / H-6 / H-8 / H-9 / H-10 = S-8), RD-8 recorded-state J-P3 input
+check of H-1 / H-3 / H-4 (``breach_reads`` not four integers >= 0, or a recorded VB pass without ``breach_reads``
+= that line's J-P3 undecidable and the gate marker ``J-P3 입력 형식(RD-8)``), RD-7 stop S-6 list (columns and
+notation of RD-7 3, family runs excluded), rev16 R16-5 key-source hash record of unchanged lines (P2-12, never
+S-5), rev16 R16-10 2 (c) u6 family by the inner-key ground token, u3 screen files with ``results[]`` read;
+``jp``: RD-11 (row set from the two ``batch.json`` cases, fixed 12 = else S-15; strict ``C2Event`` list; base-name
+count; shadow lines per run id = 1 else "그림자 판독 불가"; no reuse value while a stop marker is present).
+The ``chrono`` / ``oc5k`` / ``openloop`` / ``compare`` code paths are not changed in R4.
+R4 B-1 (pre-run audit, user decision 127 (a)): ``harness`` reads the original result files that mix settings /
+controllers with manifest kind ``by_setting`` (per line: run_v5 ``job.setting``, u6 b5 ``controller``); rules-5.1
+per-kind counts H-1 V0 434 / VB 434 and H-4 IND 242 / IND_LAS 242 are counted over the bundle's files (S-15); outside
+G-S a rules-5.1 bundle missing from the manifest is S-15.
+R4 supplement 4 (sha de45d301..., user decision 128): u6 controller ABL vs tag ABL_LAS_K1 single match = S-3 (R16-3,
+not S-2); H-4 per-kind 242 for C2 (VB) / ABL / IND / IND_LAS; manifest field ``part`` for the H-9 parts (main,
+V0-sample, family-F; family-F raw runs read with format grid_json); outside G-S the table-4-2 input files
+(``R4_INPUTS``: path, bundle, part, kind, format, per-file count, key sources) must all be in the manifest, exist, and
+match (S-15), with no other file in a rules bundle.
+R4 supplement 5-1 / 4-3 (user decision 129): ``harness`` reads the tag of a grid run (``grid_json``: H-9 grid,
+V0 sample, family-F raw runs) only from ``results[i].controller_tag``; the run's own fields and its ``resume_k1`` block
+are not read for the tag (the other ``resume_k1`` checks, 4.2 and the K1 classification, stay on the run).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -129,6 +153,30 @@ REV11_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11
 REV12_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md"
 REV12_SHA = "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
 REV12_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.sha256"
+# R4 RD-2 (R4 common block sha256 e451f067...): the R4 harness tools check the original + rev1~rev25 (26 sheets);
+# rev13~rev25 are added here (raw sha = constant = first token of the same-folder .sha256, LF, no BOM). The
+# ``chrono`` sub-command keeps its own list (original~rev12 + CHRONO_SEALS): it is not an R4 sub-command (RD-3 2).
+R4_SEALS_EXTRA = tuple(
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev%d.md" % n, sha,
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev%d.sha256" % n)
+    for n, sha in (
+        (13, "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"),
+        (14, "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"),
+        (15, "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"),
+        (16, "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"),
+        (17, "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"),
+        (18, "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"),
+        (19, "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"),
+        (20, "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"),
+        (21, "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"),
+        (22, "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"),
+        (23, "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"),
+        (24, "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"),
+        (25, "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"),
+    ))
+R4_BLOCK_SHA = "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800"   # R4 common block (record)
+R2_COMMIT = "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"     # RD-1 5: git_at_start of the harness runs (rev16:40)
+R4_CMDS = ("harness", "anchors", "jp")                      # R4 sub-commands: HEAD check (RD-1 5)
 EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
@@ -236,7 +284,6 @@ LAS_EXTRA_ZERO = ("min_active_periods", "end_ramp_periods")   # P5r4 extras: mus
 # --- line counts (5.1 + RV1-2 / RV1-3 / RV1-12) ---
 HARNESS_COUNTS = {"H-1": 868, "H-3": 2228, "H-4": 968, "H-5": 14, "H-6": 135, "H-7": 135,
                   "H-8": 3106, "H-9": 1676, "H-10": 440}
-HARNESS_FILE_COUNTS = {("H-4", "IND_LAS"): 242, ("H-4", "IND"): 242}
 C2_FIXED = {"C2-03", "C2-07", "S-01", "S-02"}   # rules 5.2 C-2 fixed rows (rev2 R2-8)
 CHRONO_COUNTS = {"C-1": (10, 10), "C-3": (2, 2), "C-4": (4, 4), "C-5": (35, 35), "C-6": (1, 1),
                  "C-7": (2, 2), "C-8a": (1, 1), "C-8b": (1, 1)}
@@ -255,6 +302,7 @@ SCM_FORBIDDEN_ENV = ("OUTRIGGER_HULL_HOOK", "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDAT
 SHADOW_ENV = "OUTRIGGER_LOC_SHADOW"
 
 SOIL_NAMES = {"G1", "G5", "J1", "J2", "S1", "S2"}
+PATCH_TOKEN_RE = re.compile(r"@(FL|FR|RL|RR)(?![A-Za-z0-9])")   # ground patch / prescribed sinkage at a leg
 RIGID_GROUPS_H1 = {"H-R-0", "H-R-A", "H-R-A-stop"}     # P-1 rigid 412 (264 + 144 + 4)
 
 PRIORITY = {"stop": 4, "undecidable": 3, "fail": 2, "pass": 1}
@@ -462,9 +510,13 @@ class Findings:
 
 
 # ----------------------------------------------------------------- seal (S-1, A-2)
-def check_seals(repo, appendix=True):
-    """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha."""
+def check_seals(repo, appendix=True, r4=True):
+    """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha.
+    ``r4`` (default): also rev13~rev25 (R4 RD-2, 26 sheets). The ``chrono`` sub-command passes ``r4=False``."""
     out = {"rules": {}, "appendix_a": {}, "ok": True}
+    extra = R4_SEALS_EXTRA if r4 else ()
+    if r4:
+        out["r4_seal_list"] = "original + rev1~rev25 (RD-2)"
     for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL),
                             (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL),
                             (REV4_REL, REV4_SHA, REV4_SEAL_REL),
@@ -474,7 +526,7 @@ def check_seals(repo, appendix=True):
                             (REV9_REL, REV9_SHA, REV9_SEAL_REL),
                             (REV10_REL, REV10_SHA, REV10_SEAL_REL),
                             (REV11_REL, REV11_SHA, REV11_SEAL_REL),
-                            (REV12_REL, REV12_SHA, REV12_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7, R12-6)
+                            (REV12_REL, REV12_SHA, REV12_SEAL_REL)) + extra:   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7, R12-6, RD-2)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -506,6 +558,39 @@ def check_seals(repo, appendix=True):
     return out
 
 
+# ----------------------------------------------------------------- R4 RD-1 5: HEAD of the judging checkout
+_HEX40 = re.compile(r"^[0-9a-f]{40}$")
+
+
+def git_head(repo):
+    """``git rev-parse HEAD`` of ``repo`` (None if git fails)."""
+    import subprocess   # noqa: PLC0415
+    try:
+        r = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True,
+                           timeout=60, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    h = r.stdout.strip().lower()
+    return h if r.returncode == 0 and _HEX40.match(h) else None
+
+
+def head_check(repo, expect):
+    """RD-1 5: the judging tool runs on the M4 checkout; ``expect`` must be the full 40-hex M4 hash and equal
+    ``git rev-parse HEAD``. Returns dict(ok, expect, head, why); not ok = S-12 (the run is not judged)."""
+    out = {"expect": expect, "head": None, "ok": False, "why": None}
+    if not isinstance(expect, str) or not _HEX40.match(expect.lower()):
+        out["why"] = "--expect-head must be the full 40-hex M4 commit (RD-1 5)"
+        return out
+    out["head"] = git_head(repo)
+    if out["head"] is None:
+        out["why"] = "git rev-parse HEAD failed"
+    elif out["head"] != expect.lower():
+        out["why"] = "HEAD differs from the expected M4 commit"
+    else:
+        out["ok"] = True
+    return out
+
+
 # ----------------------------------------------------------------- tag ③ judgement (4.1)
 def load_is_extend_start(repo):
     """``v5_options.is_extend_start_tag`` (rules 4.1: the only allowed ③ judgement)."""
@@ -525,7 +610,7 @@ def load_is_extend_start(repo):
 
 
 # ----------------------------------------------------------------- K1 classification (7.2)
-def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_ok=False):
+def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_ok=False, s6_stop=True):
     """Classification of one line / row from its LAS-b and order-gate blocks.
 
     ``las``: liftoff_approach_slow dict (MISSING if absent); ``order_gate``: slope_clearance_margin
@@ -598,7 +683,10 @@ def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_o
     else:
         res["class"] = "both"
     if blocked > 0 and family in ("uniform", "unresolved"):
-        fnd.stop("S-6", where, f"K1 block on a {family} soft-ground line (7.2 / RV1-6)")
+        if s6_stop:
+            fnd.stop("S-6", where, f"K1 block on a {family} soft-ground line (7.2 / RV1-6)")
+        else:   # R4 RD-7 1: family runs are not in the stop S-6 list (decision 122 1); recorded only
+            fnd.note(where, f"K1 block on a {family} soft-ground family run (not in the stop S-6 list, RD-7 1)")
     return res
 
 
@@ -611,8 +699,11 @@ def family_from_tokens(strings):
         if isinstance(s, str):
             parts = [p for p in s.split("|") if p]
             toks.extend(parts)
-    if any("@" in t for t in toks):
-        return "patch"              # patch (soil@leg, rigid+soil@leg) or prescribed sinkage (c-mid@leg)
+    if any(PATCH_TOKEN_RE.search(t) for t in toks):
+        # patch (soil@leg, rigid+soil@leg) or prescribed sinkage (c-mid@leg). R4: the '@' must name a leg; slope
+        # scale tokens such as 'roll_pos@k0.5' / 'nose_down@k0.875' are not ground tokens (the earlier sheet read
+        # any '@' as a patch, which took uniform-soil slope lines out of the S-6 check)
+        return "patch"
     if any(t == "rigid" for t in toks):
         return "rigid"
     if any(t in SOIL_NAMES for t in toks):
@@ -642,9 +733,11 @@ def family_grid(run, file_meta):
     return "unresolved"          # treated as uniform soft (S-6 on a K1 block)
 
 
-def family_harness(rec, fmt, parent=None, file_meta=None):
+def family_harness(rec, fmt, parent=None, file_meta=None, name=None):
     if fmt == "grid_json":
         return family_grid(rec, file_meta or {})
+    if fmt == "u3_json" and isinstance(name, str) and name.startswith("u6_"):
+        return family_u6(rec.get("src"))       # rev16 R16-10 2 (c), R4 supplement 2-7: inner key = src
     if fmt == "run_v5_jsonl":
         f = family_d1(rec.get("job"))
         if f is not None:
@@ -704,15 +797,17 @@ def harness_records(path, fmt):
     p = Path(path)
     if fmt == "run_v5_jsonl":
         with open(p, encoding="utf-8") as f:
-            for i, line in enumerate(f):
+            for i, line in enumerate(f):     # RD-7 3: physical line number, from 1, blank lines counted
                 line = line.strip()
                 if line:
-                    yield json.loads(line), None, f"line{i + 1}"
+                    yield json.loads(line), None, f"line {i + 1}"
         return
     data = json.loads(p.read_text("utf-8"))
     if fmt == "u3_json":
-        for i, r in enumerate(data.get("records", [])):
-            yield r, data, f"records[{i}]"
+        # wrapper files carry records[]; screen files (study C, D) carry results[] (R4: both read)
+        cont = "records" if isinstance(data.get("records"), list) else "results"
+        for i, r in enumerate(data.get(cont) or []):
+            yield r, data, f"{cont}[{i}]"
     elif fmt == "r79_json":
         for i, r in enumerate(data.get("results", [])):
             yield r, data, f"results[{i}]"
@@ -768,6 +863,126 @@ def skipped_count_harness(rec, rk):
     return None, None
 
 
+# ----------------------------------------------------------------- R4 harness layer (RD-4, RD-7, RD-8, RD-9)
+EBC_PATHS = ("hydraulics_record.extend_bound_check", "v5.hydraulics_record.extend_bound_check")   # RD-7 3
+JP3_RECORDED_PATHS = ("d1.j_p3", "v5.j_p3")        # RD-8: recorded J-P3 state (h1_d1 lines, u3 / u6 items)
+RD8_BUNDLES = ("H-1", "H-3", "H-4")                # J-P3 judged from the recorded state (RD-8)
+RD8_MARKER = "J-P3 입력 형식(RD-8)"
+RD9_BUNDLES = ("H-1", "H-3", "H-4", "H-6", "H-8", "H-9", "H-10")   # VB (③ on) lines in the bundle definition
+S6_LIST_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")   # RD-7 1 (decision 122 1)
+FAMILY_KO = {"rigid": "강체", "patch": "패치·처방 침하", "uniform": "균일 연약", "unresolved": "균일 연약"}
+RUN_V5_KEY_CASE = ("h5_u9_v0.jsonl", "h9_stage1.jsonl", "h10_reuse_rerun.jsonl")
+R79_NAMES = ("h6_dg3_v4on.json", "h7_dg3_off.json", "h8_noise_VB.json", "h8_noise_V0.json", "h8_seedext_VB.json",
+             "h8_seedext_V0.json", "h9_family_F_VB.json", "h9_family_F_V0.json")
+FAMILY_RUN_PREFIX = "h9_family_F"                  # RD-7 1: family runs are in no RD-7 list and no RD-9 count
+
+
+def breach_reads_format(br):
+    """RD-8: ``breach_reads`` is a list of exactly four JSON integers >= 0 (FL, FR, RL, RR); bool is not an
+    integer here. Returns (ok, why)."""
+    if not isinstance(br, list):
+        return False, f"breach_reads is {type(br).__name__}, not a list"
+    if len(br) != 4:
+        return False, f"breach_reads has {len(br)} elements (4 required)"
+    for i, x in enumerate(br):
+        if isinstance(x, bool) or not isinstance(x, int):
+            return False, f"breach_reads[{i}] = {x!r} is not an integer"
+        if x < 0:
+            return False, f"breach_reads[{i}] = {x} < 0"
+    return True, None
+
+
+def breach_reads_input(rec):
+    """RD-8 / RD-7 3 reading of one line, item or run: dict(present, ok, why, value, mismatch). ``present`` = the
+    input field ``extend_bound_check`` (``hydraulics_record``, u3 / u6 items under ``v5.``) has a non-null
+    ``breach_reads``; ``mismatch`` = a top-level ``extend_bound_check.breach_reads`` differs (J-P3 undecidable)."""
+    ebc, _p = first_path(rec, EBC_PATHS)
+    out = {"present": False, "ok": None, "why": None, "value": None, "mismatch": False}
+    if not isinstance(ebc, dict) or ebc.get("breach_reads") is None:
+        return out
+    br = ebc["breach_reads"]
+    out.update(present=True, value=br)
+    out["ok"], out["why"] = breach_reads_format(br)
+    top = rec.get("extend_bound_check")
+    if isinstance(top, dict) and "breach_reads" in top and top.get("breach_reads") != br:
+        out["mismatch"] = True
+    return out
+
+
+def rel_posix(path, repo):
+    """RD-7 3: result file relative to the repository root with '/' separators."""
+    try:
+        return Path(path).resolve().relative_to(Path(repo).resolve()).as_posix()
+    except ValueError:
+        return Path(path).as_posix()
+
+
+def rd7_key_setting(rec, parent, fmt, name):
+    """RD-7 3 key and setting fields by file form (``None`` when the form is not in the table or the field is
+    absent)."""
+    def s(v):
+        return v if v is not MISSING else None
+    if fmt == "run_v5_jsonl":
+        if name == "h1_d1.jsonl":
+            return s(dig(rec, "job.d1.key")), s(dig(rec, "job.setting"))
+        if name in RUN_V5_KEY_CASE:
+            return s(dig(rec, "job.case")), s(dig(rec, "job.setting"))
+        return None, None
+    if fmt in ("r79_json", "grid_json"):
+        if name in R79_NAMES or (fmt == "grid_json" and name.startswith("grid_")):
+            src = parent if (fmt == "grid_json" and isinstance(parent, dict)) else rec
+            return s(dig(src, "key")), s(dig(src, "v5_setting"))
+        return None, None
+    if fmt == "u3_json":
+        if name.startswith("u6_"):
+            return s(dig(rec, "case")), s(dig(rec, "v5.v5_setting"))
+        if name.startswith("u3_"):
+            k = rec.get("key")
+            if k is None:
+                k = rec.get("id") if isinstance(rec.get("id"), str) else None
+            return k, s(dig(rec, "v5.v5_setting"))
+    return None, None
+
+
+def family_u6(src):
+    """rev16 R16-10 2 (c) with R4 supplement 2-7: a u6 b5 record is classified by the ground token of its inner
+    key, which is the record's ``src`` field (``H1|J1|B|top|flat``, ``g6|G1+J1@RR|top|Fs4``, ``g6r|rigid+J1@FL|...``).
+    ``+<soil>@<leg>`` = patch, ``rigid`` = rigid, a soil token alone = uniform; no ground token = unresolved
+    (treated as uniform, RV1-6). The main-file ``case`` (``A1-J1``) is a case name, never read."""
+    if not isinstance(src, str) or not src:
+        return "unresolved"
+    toks = [t for t in src.split("|") if t]
+    if any(PATCH_TOKEN_RE.search(t) for t in toks):
+        return "patch"
+    if any(t == "rigid" for t in toks):
+        return "rigid"
+    if any(t in SOIL_NAMES for t in toks):
+        return "uniform"
+    return "unresolved"
+
+
+def norm_key(k):
+    """Key of a key-source line: a leading ``cand=<x>#`` is not part of the key (rev3 R3-D1 reading)."""
+    if isinstance(k, str) and k.startswith("cand=") and "#" in k:
+        return k.split("#", 1)[1]
+    return k
+
+
+def key_source_index(path, fmt, repo):
+    """rev16 R16-5 2 (P2-12): key -> list of ``base.commands_sha256`` (None = no stored hash) of a key source."""
+    p = Path(path)
+    if not p.is_absolute():
+        p = repo / p
+    idx = {}
+    for rec, par, lab in harness_records(p, fmt):
+        if "error" in rec:
+            continue
+        k = norm_key(harness_key(rec, par, fmt, lab))
+        h = dig(rec, "base.commands_sha256", None)
+        idx.setdefault(k, []).append(h if isinstance(h, str) and h else None)
+    return idx, str(p), sha256_file(p)
+
+
 GS_BUNDLE_PREFIX = "GS-"      # harness --gs: bundle names GS-H-n, rules-5.1 line counts (S-15) skipped
 KIND_AUTO = "auto"            # harness --gs: per-line kind from job.setting (run_v5_jsonl)
 _EXT_SETTINGS = ("VB",) + ("LS1", "LS2", "LS3", "LS4")
@@ -784,12 +999,112 @@ def auto_kind(rec):
     return "LS" if st in _EXT_SETTINGS else "V0"
 
 
+# R4 B-1 (user decision 127 (a)): the original result files mixing settings / controllers are read as they are;
+# manifest kind "by_setting" resolves the kind of each line from its definition field (never from its tag, which is
+# then checked against the kind, 4.1 / S-2): run_v5 lines by ``job.setting`` (as ``auto_kind``), u6 b5 records by
+# ``controller`` (C2 = VB kind ③ on, ABL, IND). Missing / unknown field = S-11 for that line.
+KIND_BY_SETTING = "by_setting"
+U6_CONTROLLER_KIND = {"C2": "VB", "ABL": "ABL", "IND": "IND"}
+# rules 5.1 per-kind line counts that the bundle total does not show (S-15): H-1 V0 434 + VB 434; H-4 C2 (VB kind),
+# ABL, IND and the record column IND_LAS 242 each (main 16 + wide 226, counted over the files of the bundle;
+# supplement 4-2, user decision 128 (b))
+BUNDLE_KIND_COUNTS = {"H-1": {"V0": 434, "VB": 434}, "H-4": {"VB": 242, "ABL": 242, "IND": 242, "IND_LAS": 242}}
+
+# R4 supplement 4 (sha de45d301..., user decision 128): the harness input files of table 4-2 (the family-F judgement
+# input h9_family_F.jsonl is read by path2_v5c, not here). Per file: bundle, part, kind, format, count as yielded by
+# the reader (lines / items / grid runs), key sources (R16-5 1). Outside G-S, when the manifest holds a rules-5.1
+# bundle, every file below must be in it with these fields and exist, no other file may be in a rules bundle, and
+# each file's count must match (4-4, S-15). H-9 parts (manifest field ``part``, default "main"): "main" (h9_stage1 +
+# grid, 1,676), "V0-sample" (84 runs), "family-F" (192 runs); a missing part = S-15.
+_RK = "06_analysis/03_hydraulic/coupled/v5/resume_k1/"
+_LK = "06_analysis/02_control/v5_rerun/las_k1/"
+_DG3 = _V5 + "dg3/dg3_v4_on.json"
+H9_PARTS = {"main": 1676, "V0-sample": 84, "family-F": 192}
+_U3_COUNTS = {"C": 34, "D": 33, "g6": 116, "g8": 516, "h6": 26, "h9": 24, "p3b": 171, "slope": 110, "x426b": 84}
+
+
+def _r4_inputs():
+    t = [(_RK + "h1_d1.jsonl", "H-1", "main", "by_setting", "run_v5_jsonl", 868, None, None)]
+    for nm, n in _U3_COUNTS.items():
+        for st in ("V0", "VB"):
+            t.append((_LK + f"u3_{nm}_{st}.json", "H-3", "main", st, "u3_json", n, None, None))
+    t += [(_LK + "u6_b5_main_VB.json", "H-4", "main", "by_setting", "u3_json", 48, None, None),
+          (_LK + "u6_b5_wide_VB.json", "H-4", "main", "by_setting", "u3_json", 678, None, None),
+          (_LK + "u6_b5_main_VB_IND_LAS.json", "H-4", "main", "IND_LAS", "u3_json", 16, None, None),
+          (_LK + "u6_b5_wide_VB_IND_LAS.json", "H-4", "main", "IND_LAS", "u3_json", 226, None, None),
+          (_RK + "h5_u9_v0.jsonl", "H-5", "main", "V0", "run_v5_jsonl", 14, None, None),
+          (_RK + "h6_dg3_v4on.json", "H-6", "main", "H6", "r79_json", 135, _DG3, None),
+          (_RK + "h7_dg3_off.json", "H-7", "main", "H7", "r79_json", 135, None, None),
+          (_RK + "h8_noise_VB.json", "H-8", "main", "VB", "r79_json", 1503, _V5 + "noise_vb/r79_VB_L1L2L3.json", _DG3),
+          (_RK + "h8_noise_V0.json", "H-8", "main", "V0", "r79_json", 1503, _V5 + "noise_v0/r79_V0_L1L2L3.json", None),
+          (_RK + "h8_seedext_VB.json", "H-8", "main", "VB", "r79_json", 50, _V5 + "seedext/r79_VB_seedext.json", None),
+          (_RK + "h8_seedext_V0.json", "H-8", "main", "V0", "r79_json", 50, _V5 + "seedext/r79_V0_seedext.json", None),
+          (_RK + "h9_stage1.jsonl", "H-9", "main", "V0", "run_v5_jsonl", 908, None, None)]
+    for g, nv0 in (("r67_main", 12), ("r67_top", 24), ("r69_bottom", 24), ("r69_top", 24)):
+        t.append((_RK + f"h9_grid/grid_{g}.json", "H-9", "main", "VB", "grid_json", 192, None, None))
+        t.append((_RK + f"h9_grid_v0_sample/grid_{g}.json", "H-9", "V0-sample", "V0", "grid_json", nv0, None, None))
+    t += [(_RK + "h9_family_F_VB.json", "H-9", "family-F", "VB", "grid_json", 96, None, None),
+          (_RK + "h9_family_F_V0.json", "H-9", "family-F", "V0", "grid_json", 96, None, None),
+          (_RK + "h10_reuse_rerun.jsonl", "H-10", "main", "by_setting", "run_v5_jsonl", 440, None, None)]
+    keys = ("path", "bundle", "part", "kind", "format", "count", "key_source", "key_source_override")
+    return {row[0]: dict(zip(keys, row)) for row in t}
+
+
+R4_INPUTS = _r4_inputs()       # resume_k1 20 files + las_k1 22 files; key sources 5 distinct (4-4)
+
+
+def _rel_entry_path(p, repo):
+    if not p:
+        return None
+    q = Path(p)
+    return rel_posix(q if q.is_absolute() else Path(repo) / q, repo)
+
+
+def r4_input_check(manifest_files, repo):
+    """Supplement 4-4 on the manifest: (stops [(bundle, why)], record). Every R4_INPUTS file listed once with its
+    bundle / part / kind / format / key sources, existing on disk; no other file in a rules-5.1 bundle."""
+    stops, seen = [], {}
+    for e in manifest_files:
+        rel = _rel_entry_path(e.get("path"), repo)
+        seen.setdefault(rel, []).append(e)
+        if e.get("bundle") in HARNESS_COUNTS and rel not in R4_INPUTS:
+            stops.append((e.get("bundle"), f"file not in the supplement-4 input table: {rel}"))
+    for rel, want in R4_INPUTS.items():
+        es = seen.get(rel, [])
+        if len(es) != 1:
+            stops.append((want["bundle"], f"{len(es)} manifest entries for {rel} (exactly one, supplement 4-4)"))
+            continue
+        e = es[0]
+        got = {"bundle": e.get("bundle"), "part": e.get("part", "main"), "kind": e.get("kind"),
+               "format": e.get("format"), "key_source": _rel_entry_path(e.get("key_source"), repo),
+               "key_source_override": _rel_entry_path(e.get("key_source_override"), repo)}
+        diff = [k for k, v in got.items() if v != want[k]]
+        if diff:
+            stops.append((want["bundle"], f"{rel}: manifest {diff} differ from supplement 4-2"))
+        for p in (rel, want["key_source"], want["key_source_override"]):
+            if p and not (Path(repo) / p).is_file():
+                stops.append((want["bundle"], f"input file missing: {p}"))
+    return stops, {"expected_files": len(R4_INPUTS),
+                   "expected_key_sources": len({v[k] for v in R4_INPUTS.values()
+                                                for k in ("key_source", "key_source_override") if v[k]})}
+
+
+def line_kind(rec, fmt):
+    """Kind of one line of a ``by_setting`` file (None = the defining field is missing or unknown)."""
+    if fmt == "run_v5_jsonl":
+        return auto_kind(rec)
+    if fmt == "u3_json":
+        return U6_CONTROLLER_KIND.get(rec.get("controller"))
+    return None
+
+
 def cmd_harness(args, repo):
     manifest = json.loads(Path(args.manifest).read_text("utf-8"))
     is_p3, mod_info = load_is_extend_start(repo)
     fnd_all = {}
     files_out = []
     bundles = {}
+    s6_rows = []          # R4 RD-7: stop S-6 list (원판 8.2 멈춤 S-6, not the r79 gate S-6)
     for entry in manifest["files"]:
         bundle, kind, fmt = entry["bundle"], entry["kind"], entry["format"]
         file_kind = kind
@@ -802,9 +1117,14 @@ def cmd_harness(args, repo):
         fnd = fnd_all.setdefault(bundle, Findings())
         b = bundles.setdefault(bundle, {"lines": 0, "classes": {}, "families": {}, "tags": {},
                                          "errors": 0, "missing": 0, "files": []})
+        part = entry.get("part", "main")          # supplement 4-2: H-9 parts; every other file is "main"
         if kind == KIND_AUTO:
             if not gs or fmt != "run_v5_jsonl":
                 raise ValueError(f"kind {KIND_AUTO!r} needs --gs and format run_v5_jsonl ({path})")
+            want_tag = None
+        elif kind == KIND_BY_SETTING:
+            if fmt not in ("run_v5_jsonl", "u3_json"):
+                raise ValueError(f"kind {KIND_BY_SETTING!r} needs format run_v5_jsonl or u3_json ({path})")
             want_tag = None
         else:
             want_tag = KIND_TAG.get(kind)
@@ -826,10 +1146,34 @@ def cmd_harness(args, repo):
         classes = {}
         hash_cmp = {"compared": 0, "equal": 0, "differ": [], "no_anchor": 0}
         keys_seen = set()
+        # --- R4 per-file set-up
+        base_bundle = bundle[len(GS_BUNDLE_PREFIX):] if bundle.startswith(GS_BUNDLE_PREFIX) else bundle
+        rel = rel_posix(path, repo)
+        family_run = entry.get("family_run") is True or path.name.startswith(FAMILY_RUN_PREFIX)
+        r4b = b.setdefault("r4", {"rd9_p3_on": 0, "family_run_lines": 0,
+                                  "rd8": {"breach_reads_bad_format": 0, "jp3_pass_without_breach_reads": 0,
+                                          "breach_reads_mismatch": 0, "lines_present": 0, "lines": []},
+                                  "key_source": {"compared": 0, "same": 0, "differ": 0, "no_stored_hash": 0,
+                                                 "no_key_source_line": 0, "several_key_source_lines": 0,
+                                                 "differ_keys": []}})
+        ks_idx, ks_files = {}, []
+        for ks_name in ("key_source", "key_source_override"):
+            if entry.get(ks_name):
+                idx, ks_path, ks_sha = key_source_index(entry[ks_name], entry.get(ks_name + "_format", fmt), repo)
+                ks_idx[ks_name] = idx
+                ks_files.append({"role": ks_name, "path": ks_path, "sha256": ks_sha})
+        file_kinds = {}
         for rec, parent, label in harness_records(path, fmt):
             n_file += 1
             key = harness_key(rec, parent, fmt, label)
             where = f"{bundle}:{path.name}:{label}:{key}"
+            rd7_key, rd7_setting = rd7_key_setting(rec, parent, fmt, path.name)
+            if family_run:
+                r4b["family_run_lines"] += 1
+            lk = line_kind(rec, fmt) if file_kind == KIND_BY_SETTING else file_kind
+            kl = b.setdefault("kind_lines", {})
+            kl[str(lk)] = kl.get(str(lk), 0) + 1
+            file_kinds[str(lk)] = file_kinds.get(str(lk), 0) + 1
             if key in keys_seen:
                 fnd.stop("S-15", where, "duplicate line key")
             keys_seen.add(key)
@@ -852,20 +1196,62 @@ def cmd_harness(args, repo):
                     continue
                 want_tag = KIND_TAG[kind]
                 b.setdefault("auto_kinds", {})[kind] = b.setdefault("auto_kinds", {}).get(kind, 0) + 1
+            elif file_kind == KIND_BY_SETTING:
+                kind = lk
+                if kind is None:
+                    fnd.stop("S-11", where, "by_setting kind: job.setting / controller missing or unknown")
+                    continue
+                want_tag = KIND_TAG[kind]
             # tag (4.1)
-            tag, tag_path = first_path(rec, TAG_PATHS)
-            if tag is MISSING and fmt == "grid_json" and isinstance(parent, dict):
-                # rev8 R8-1: a grid run carries no tag; its job record (results[i]) has the top-level
-                # controller_tag of the run
-                tag, tag_path = first_path(parent, TAG_PATHS)
+            if fmt == "grid_json":
+                # supplement 4-3 / 5-1 (user decision 129, before rev1 RV1-3.2 "run resume_k1 block"): the tag of a
+                # grid run is only the top-level controller_tag of its job record results[i] (rev8 R8-1); the run's
+                # own fields, its resume_k1 block and results[i].v5.* are not read; absent / null = S-11 below
+                tag = parent.get("controller_tag", MISSING) if isinstance(parent, dict) else MISSING
+                tag_path = "results[i].controller_tag"
+            else:
+                tag, tag_path = first_path(rec, TAG_PATHS)
             b["tags"][str(tag if tag is not MISSING else None)] = b["tags"].get(
                 str(tag if tag is not MISSING else None), 0) + 1
+            # R16-3 / supplement 4-3 (user decision 128 (a)): on u6 records the controller ABL and the tag ABL_LAS_K1
+            # must match together; one alone is a line-kind input defect, S-3 (not counted again as S-2)
+            abl_conflict = (file_kind == KIND_BY_SETTING and fmt == "u3_json" and isinstance(tag, str)
+                            and (rec.get("controller") == "ABL") != (tag == TAG_ABL))
             if tag is MISSING or tag is None:
                 fnd.stop("S-11", where, "controller_tag missing (RV1-3.2: stop and ask)")
+            elif abl_conflict:
+                fnd.stop("S-3", where, f"controller {rec.get('controller')!r} and tag {tag!r}: only one is ABL (R16-3)")
             elif tag != want_tag:
                 fnd.stop("S-2", where, f"tag {tag!r} != expected {want_tag!r} ({kind})")
             elif is_p3 is not None and KIND_P3.get(kind) is not None and is_p3(tag) != KIND_P3[kind]:
                 fnd.stop("S-2", where, f"is_extend_start_tag({tag}) = {is_p3(tag)} for kind {kind}")
+            # R4 RD-9: ③-on lines / runs by the 4.1 tag reading (family runs not counted)
+            p3_on = bool(is_p3 is not None and isinstance(tag, str) and is_p3(tag))
+            if p3_on and not family_run:
+                r4b["rd9_p3_on"] += 1
+            # R4 RD-8: H-1 / H-3 / H-4 J-P3 is the recorded state; the input field is read here
+            if base_bundle in RD8_BUNDLES and not family_run:
+                rd8 = r4b["rd8"]
+                bi = breach_reads_input(rec)
+                if bi["present"]:
+                    rd8["lines_present"] += 1
+                    if not bi["ok"]:
+                        rd8["breach_reads_bad_format"] += 1
+                        rd8["lines"].append({"result_file": rel, "position": label, "key": rd7_key,
+                                             "what": "breach_reads format", "detail": bi["why"]})
+                        fnd.undec(where, f"J-P3 undecidable: input format defect (RD-8): {bi['why']}")
+                    if bi["mismatch"]:
+                        rd8["breach_reads_mismatch"] += 1
+                        rd8["lines"].append({"result_file": rel, "position": label, "key": rd7_key,
+                                             "what": "top-level breach_reads differs", "detail": None})
+                        fnd.undec(where, "J-P3 undecidable: top-level extend_bound_check.breach_reads differs (RD-7 3)")
+                elif p3_on:
+                    st, _sp = first_path(rec, JP3_RECORDED_PATHS)
+                    if st == "pass":
+                        rd8["jp3_pass_without_breach_reads"] += 1
+                        rd8["lines"].append({"result_file": rel, "position": label, "key": rd7_key,
+                                             "what": "recorded J-P3 pass without breach_reads", "detail": None})
+                        fnd.undec(where, "J-P3 undecidable: recorded pass without breach_reads (RD-8)")
             if kind in ("H6", "H7"):
                 # rev8 R8-1b: the record key is one dotted key, controller_settings["two_pressure.extend_start_rule"]
                 cs = rec.get("controller_settings")
@@ -904,15 +1290,47 @@ def cmd_harness(args, repo):
             las = rk.get("liftoff_approach_slow", MISSING)
             check_las_settings(las.get("settings") if isinstance(las, dict) else None, where, fnd,
                                abl=(kind == "ABL"))
-            fam = family_harness(rec, fmt, parent, file_meta)
+            fam = family_harness(rec, fmt, parent, file_meta, name=path.name)
             b["families"][fam] = b["families"].get(fam, 0) + 1
             sk, sk_src = skipped_count_harness(rec, rk)
             ec = dig(rk, "event_counts.flat_soil_margin_skipped_order", None)
             if sk_src != "resume_k1.event_counts" and isinstance(ec, int) and sk is not None and ec != sk:
                 fnd.note(where, f"skipped:order {sk} ({sk_src}) vs resume_k1.event_counts {ec}")
-            c = classify_k1(las, scm.get("order_gate", MISSING), sk, fam, where, fnd)
+            c = classify_k1(las, scm.get("order_gate", MISSING), sk, fam, where, fnd, s6_stop=not family_run)
             cl = c.get("class") or "undecidable"
             classes[cl] = classes.get(cl, 0) + 1
+            # R4 RD-7: stop S-6 list, one row per blocked decision (would_block and r4_due_without_gate) of a
+            # uniform soft-ground (or unresolved) line / run; family runs are not listed
+            decs = dig(scm, "order_gate.decisions", None)
+            if (fam in ("uniform", "unresolved") and not family_run and base_bundle in S6_LIST_BUNDLES
+                    and isinstance(decs, list) and c.get("class") in ("k1_block", "both")):
+                for kk, d in enumerate(decs):
+                    if isinstance(d, dict) and d.get("would_block") is True and d.get("r4_due_without_gate") is True:
+                        s6_rows.append({"bundle": base_bundle, "result_file": rel, "position": label, "k": kk,
+                                        "key": rd7_key, "setting": rd7_setting, "family": FAMILY_KO[fam],
+                                        "t_loc_s": d.get("t_loc_s"), "n_P": d.get("n_P"), "n_S": d.get("n_S"),
+                                        "dP": d.get("dP")})
+            # R4 rev16 R16-5 2 (P2-12): unchanged lines vs the key source (record, never S-5)
+            if cl == "unchanged" and ks_idx:
+                kn = norm_key(key)
+                src = ks_idx.get("key_source_override", {}) if kn in ks_idx.get("key_source_override", {}) else \
+                    ks_idx.get("key_source", {})
+                ks = r4b["key_source"]
+                cands = src.get(kn, [])
+                h_new, _ = first_path(rec, HASH_PATHS[:1])     # top-level commands_sha256 of the new line
+                if not cands:
+                    ks["no_key_source_line"] += 1
+                elif len(cands) > 1:
+                    ks["several_key_source_lines"] += 1
+                elif cands[0] is None:
+                    ks["no_stored_hash"] += 1
+                else:
+                    ks["compared"] += 1
+                    if isinstance(h_new, str) and h_new == cands[0]:
+                        ks["same"] += 1
+                    else:
+                        ks["differ"] += 1
+                        ks["differ_keys"].append({"result_file": rel, "position": label, "key": rd7_key})
             if fsm is not None and not same_value(fsm, 0.03):
                 fnd.note(where, f"flat_soil_margin_m = {fsm}")
             # unchanged lines: stored hash (7.2)
@@ -933,27 +1351,95 @@ def cmd_harness(args, repo):
                         hash_cmp["differ"].append(key)
                         fnd.stop("S-5", where, "unchanged line: commands_sha256 differs from the stored line")
         kind = file_kind
-        want_n = None if gs else HARNESS_FILE_COUNTS.get((bundle, kind))
-        if want_n is not None and n_file != want_n:
-            fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines, rules say {want_n} for {kind}")
+        # (the per-file IND / IND_LAS 242 check of the earlier sheets is now the per-kind bundle count, B-1)
         if entry.get("expect_lines") is not None and n_file != int(entry["expect_lines"]):
             fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines, manifest expects {entry['expect_lines']}")
-        b["lines"] += n_file
+        want_file = None if gs else R4_INPUTS.get(rel)
+        if want_file is not None and n_file != want_file["count"]:
+            fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines / runs, supplement 4-2 says {want_file['count']}")
+        if part == "main":
+            b["lines"] += n_file              # the rules-5.1 bundle count (H-9: main part only, RV1-12 1,676)
+        b.setdefault("parts", {})[part] = b.setdefault("parts", {}).get(part, 0) + n_file
         for k, v in classes.items():
             b["classes"][k] = b["classes"].get(k, 0) + v
-        b["files"].append({"path": str(path), "sha256": sha256_file(path), "kind": kind, "format": fmt,
-                           "lines": n_file, "classes": classes, "stored_hash": hash_cmp if stored else None,
-                           "stored": entry.get("stored")})
+        b["files"].append({"path": str(path), "result_file": rel, "sha256": sha256_file(path), "kind": kind,
+                           "format": fmt, "part": part, "lines": n_file, "classes": classes,
+                           "stored_hash": hash_cmp if stored else None, "stored": entry.get("stored"),
+                           "family_run": family_run, "key_sources": ks_files, "kind_lines": file_kinds})
         files_out.append(str(path))
+    # R4 B-1 (user decision 127 (a)) 2: a judged harness bundle missing from the manifest would skip its S-15 / S-8
+    # checks silently; outside G-S every bundle of the rules-5.1 table must be present when any of them is
+    gs_run = bool(getattr(args, "gs", False))
+    present = set(bundles)
+    input_check = None
+    if not gs_run and present & set(HARNESS_COUNTS):
+        # supplement 4-4 (user decision 128 (c) (d)): the input files of table 4-2 and the H-9 parts
+        stops, input_check = r4_input_check(manifest["files"], repo)
+        for bb, why in stops:
+            fnd_all.setdefault(bb, Findings()).stop("S-15", bb, why)
+            input_check.setdefault("stops", []).append({"bundle": bb, "why": why})
+        if "H-9" in bundles:
+            for pn, pwant in H9_PARTS.items():
+                pgot = bundles["H-9"].get("parts", {}).get(pn, 0)
+                if pgot != pwant:
+                    fnd_all["H-9"].stop("S-15", f"H-9 part {pn}", f"{pgot} lines / runs, supplement 4-2 says {pwant}")
+        for bb, b in bundles.items():
+            bad = sorted(set(b.get("parts", {})) - (set(H9_PARTS) if bb == "H-9" else {"main"}))
+            if bad:
+                fnd_all[bb].stop("S-15", bb, f"unknown part(s) {bad} (supplement 4-2)")
+        for miss in sorted(set(HARNESS_COUNTS) - present, key=bundle_key):
+            fnd_all.setdefault(miss, Findings()).stop("S-15", miss, "bundle missing from the manifest (B-1)")
+            bundles[miss] = {"lines": 0, "classes": {}, "families": {}, "tags": {}, "errors": 0, "missing": 0,
+                             "files": [], "missing_from_manifest": True}
     for bundle, b in bundles.items():
-        want = None if bundle.startswith(GS_BUNDLE_PREFIX) else HARNESS_COUNTS.get(bundle)
-        if want is not None and b["lines"] != want:
+        base_bundle = bundle[len(GS_BUNDLE_PREFIX):] if bundle.startswith(GS_BUNDLE_PREFIX) else bundle
+        gs_b = bundle.startswith(GS_BUNDLE_PREFIX)
+        want = None if gs_b else HARNESS_COUNTS.get(bundle)
+        if want is not None and b["lines"] != want and not b.get("missing_from_manifest"):
             fnd_all[bundle].stop("S-15", bundle, f"{b['lines']} lines, rules (rev1) say {want}")
+        for kname, kwant in ({} if gs_b else BUNDLE_KIND_COUNTS.get(bundle, {})).items():
+            got = b.get("kind_lines", {}).get(kname, 0)
+            if got != kwant and not b.get("missing_from_manifest"):
+                fnd_all[bundle].stop("S-15", bundle, f"{got} {kname} lines, rules 5.1 say {kwant}")
+        r4b = b.get("r4", {})
+        gates = []
+        # RD-9: a judged bundle whose definition has VB (③ on) lines stops with S-8 when the count is 0
+        if base_bundle in RD9_BUNDLES and not gs_b and r4b.get("rd9_p3_on", 0) == 0 \
+                and not b.get("missing_from_manifest"):
+            fnd_all[bundle].stop("S-8", bundle, "③-on line / run count 0 (RD-9)")
+        # RD-8: gate marker of the recorded-state J-P3 bundles
+        rd8 = r4b.get("rd8")
+        if base_bundle in RD8_BUNDLES and rd8 is not None:
+            if rd8["breach_reads_bad_format"] or rd8["jp3_pass_without_breach_reads"]:
+                gates.append(RD8_MARKER)
+        else:
+            r4b.pop("rd8", None)
+        b["gates"] = gates
         b.update(fnd_all[bundle].as_dict())
         b["grade_scope"] = "436.8 layer only (4.1 / 4.2 / 7.2 / 9.3 / S-15); original-rule grades not recounted"
+    s6_rows.sort(key=lambda r: (bundle_key(r["bundle"]), r["result_file"], _pos_key(r["position"]), r["k"]))
     codes = sorted({c for b in bundles.values() for c in b["stop_codes"]})
-    return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes},
+    return ({"bundles": bundles, "v5_options": mod_info, "stop_codes": codes, "r4_input_check": input_check,
+             "stop_S6_list": {"name": "멈춤 S-6 (원판 8.2, 원판 7.2 균일 연약 지면 계열의 K1 막힘; r79 관문 S-6 아님)",
+                              "columns": ["bundle", "result_file", "position", "k", "key", "setting", "family",
+                                          "t_loc_s", "n_P", "n_S", "dP"],
+                              "n_rows": len(s6_rows), "rows": s6_rows}},
             combine(b["status"] for b in bundles.values()))
+
+
+def _pos_key(pos):
+    """RD-7 3 sort of positions: the numbers of ``line N`` / ``results[i].runs[j]`` in order."""
+    return tuple(int(x) for x in re.findall(r"\d+", pos or ""))
+
+
+_BUNDLE_RE = re.compile(r"^H-(\d+)$")
+
+
+def bundle_key(b):
+    """R4 supplement 3-5: the bundle column ``H-n`` sorts by its number (``H-9`` < ``H-10``); any other value sorts
+    after, by its text."""
+    m = _BUNDLE_RE.match(b or "")
+    return (0, int(m.group(1)), "") if m else (1, 0, str(b))
 
 
 # ----------------------------------------------------------------- anchors (P-1 / P-2, RV1-5)
@@ -2293,58 +2779,131 @@ def cmd_oc5k(args, repo):
 
 
 # ----------------------------------------------------------------- J_P reuse (7.3)
+JP_ROWS = 12                     # RD-11 2: fixed, not an argument
+JP_STOP_S15 = "S-15"
+JP_STOP_EVENTS = "사건 기록 판독 불가"
+JP_STOP_SHADOW = "그림자 판독 불가"
+
+
+def jp_result_json(bd, case, repo):
+    """RD-11 3: the row's result.json: ``s8c_check.result_json``, ``s6c_check.result_json``, ``result_json`` in this
+    order, the first that is a file (a path containing ``07_results/`` that is not a file is looked up under
+    ``<repo>/07_results/`` with its tail); else ``<batch>/<case>/result.json``. Returns (path or None, source)."""
+    for src in ("s8c_check.result_json", "s6c_check.result_json", "result_json"):
+        v = dig(case, src, None)
+        if not isinstance(v, str) or not v:
+            continue
+        p = Path(v)
+        if p.is_file():
+            return p, src
+        s = v.replace("\\", "/")
+        if "07_results/" in s:
+            q = Path(repo) / "07_results" / s.split("07_results/", 1)[1]
+            if q.is_file():
+                return q, src + " (relocated)"
+    name = case.get("case")
+    if isinstance(name, str) and name:
+        p = Path(bd) / name / "result.json"
+        if p.is_file():
+            return p, "<batch>/<case>/result.json"
+    return None, None
+
+
+def jp_events(ev_path):
+    """RD-11 4: (names, reason). The file is a JSON list whose every element is a string that, stripped, is
+    exactly ``C2Event(t_s=<number>, name=<Python string literal>)``; else (None, reason)."""
+    if not ev_path.is_file():
+        return None, "controller_events.json missing"
+    try:
+        raw = json.loads(ev_path.read_text("utf-8"))
+    except (OSError, ValueError) as exc:
+        return None, f"controller_events.json unreadable ({type(exc).__name__})"
+    if not isinstance(raw, list):
+        return None, f"controller_events.json is {type(raw).__name__}, not a list"
+    names = []
+    for i, e in enumerate(raw):
+        if not isinstance(e, str):
+            return None, f"element {i} is {type(e).__name__}, not a string"
+        p = parse_c2event(e)
+        if p is None:
+            return None, f"element {i} is not C2Event(t_s=<number>, name=<string>)"
+        names.append(p[1])
+    return names, None
+
+
 def cmd_jp(args, repo):
+    """J_P reuse reading (original 7.3) by the R4 common definition RD-11 1~8."""
     fnd = Findings()
-    shadow = read_jsonl(args.shadow)
     sh = {}
-    for s in shadow:
-        run = dig(s, "job.chrono_run", None)
-        if run:
-            sh.setdefault(run.replace("\\", "/"), []).append(s)
-    runs = []
-    for bd in args.batch:
-        batch, cases = batch_rows(bd)
-        for row in cases:
-            rpath = resolve_result(bd, row, repo)
-            where = f"{Path(bd).name}:{row.get('case')}"
-            item = {"case": row.get("case"), "batch": Path(bd).name}
-            if rpath is None:
-                item["readable"] = False
-                fnd.note(where, "result.json not found")
-                runs.append(item)
+    with open(args.shadow, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
                 continue
-            run_id = f"{rpath.parent.parent.name}/{rpath.parent.name}"
-            ev_path = rpath.parent / "controller_events.json"
-            item["chrono_run"] = run_id
-            if not ev_path.is_file():
-                item["readable"] = False
-                runs.append(item)
+            s = json.loads(line)
+            if not isinstance(s, dict):
                 continue
-            raw = json.loads(ev_path.read_text("utf-8"))
-            parsed = [parse_c2event(s) if isinstance(s, str) else None for s in raw]
-            item["events_sha256"] = sha256_file(ev_path)
-            item["n_events"] = len(raw)
-            if any(p is None for p in parsed):
-                item["readable"] = False
-                item["unparsed"] = sum(p is None for p in parsed)
-                runs.append(item)
-                continue
-            item["readable"] = True
-            names = [event_name_split(p[1])[0] for p in parsed]
-            item["n_flat_soil_margin"] = sum(1 for nm in names if nm == EV_FLAT)
-            item["n_soil_mode_start"] = sum(1 for nm in names if nm == EV_SOIL_START)
-            s = sh.get(run_id, [])
-            item["shadow_entries"] = len(s)
-            item["shadow_silent"] = (len(s) == 1 and s[0].get("status") == "silent" and s[0].get("first_fire_t_s") is None)
-            item["cond1"] = item["shadow_silent"]
-            item["cond2"] = item["n_flat_soil_margin"] == 0 and item["n_soil_mode_start"] == 0
-            runs.append(item)
-    n = len(runs)
-    reuse = (n == 12 and all(r.get("readable") and r.get("cond1") and r.get("cond2") for r in runs))
-    if n != 12:
-        fnd.note("jp", f"{n} J_P runs read (rules: 12)")
-    out = {"runs": runs, "n_runs": n, "reuse": reuse, "shadow_sha256": sha256_file(args.shadow),
-           "decision": "reuse stored judgement" if reuse else "rerun J_P 12 rows in bundle JP (5.2)", **fnd.as_dict()}
+            run = dig(s, "job.chrono_run", None)       # RD-11 6: top-level job.chrono_run, '\\' -> '/'
+            if isinstance(run, str):
+                sh.setdefault(run.replace("\\", "/"), []).append(s)
+    rows = []
+    batches = []
+    for bd in args.batch:                               # RD-11 2: batch order as given (VB, then V0)
+        bdata = json.loads((Path(bd) / "batch.json").read_text("utf-8"))
+        cases = bdata.get("cases") if isinstance(bdata.get("cases"), list) else []
+        batches.append({"batch": Path(bd).name, "batch_json_name": bdata.get("batch"), "n_cases": len(cases),
+                        "batch_json_sha256": sha256_file(Path(bd) / "batch.json")})
+        for case in cases:
+            rows.append((bd, case))
+    out = {"n_rows": len(rows), "n_rows_expected": JP_ROWS, "batches": batches,
+           "shadow_sha256": sha256_file(args.shadow), "rows": []}
+    markers = []
+    if len(rows) != JP_ROWS:
+        # RD-11 2: input problem, not a reading result: no reading, stop S-15 (not "reuse false")
+        fnd.stop(JP_STOP_S15, "jp", f"{len(rows)} rows in the two batch.json cases (fixed {JP_ROWS})")
+        out.update(stop_markers=[JP_STOP_S15], **fnd.as_dict())
+        return out, "stop"
+    for bd, case in rows:
+        name = case.get("case")
+        where = f"{Path(bd).name}:{name}"
+        item = {"batch": Path(bd).name, "case": name, "run_id": None, "events_unreadable": False,
+                "events_unreadable_reason": None, "n_events": None, "n_r4c30": None, "n_soil_mode_start": None,
+                "n_shadow_lines": None, "shadow_unreadable": False, "cond1": None, "cond2": None}
+        rpath, src = jp_result_json(bd, case, repo)
+        item["result_json_source"] = src
+        if rpath is None:
+            item.update(events_unreadable=True, events_unreadable_reason="result.json not found (RD-11 3)")
+        else:
+            item["run_id"] = f"{rpath.parent.parent.name}/{rpath.parent.name}"
+            names, why = jp_events(rpath.parent / "controller_events.json")
+            if names is None:
+                item.update(events_unreadable=True, events_unreadable_reason=why)
+            else:
+                bases = [event_name_split(nm)[0] for nm in names]
+                item["n_events"] = len(names)
+                item["n_r4c30"] = sum(1 for b_ in bases if b_ == EV_FLAT)        # RD-11 5: base name exact
+                item["n_soil_mode_start"] = sum(1 for b_ in bases if b_ == EV_SOIL_START)
+                item["cond2"] = item["n_r4c30"] == 0 and item["n_soil_mode_start"] == 0
+        if item["events_unreadable"]:
+            fnd.stop(JP_STOP_EVENTS, where, item["events_unreadable_reason"])
+        if item["run_id"] is not None:
+            s = sh.get(item["run_id"], [])
+            item["n_shadow_lines"] = len(s)
+            if len(s) != 1:
+                item["shadow_unreadable"] = True
+                item["shadow_unreadable_reason"] = f"그림자 줄 수 {len(s)}"
+                fnd.stop(JP_STOP_SHADOW, where, item["shadow_unreadable_reason"])
+            else:
+                item["cond1"] = (s[0].get("status") == "silent" and "first_fire_t_s" in s[0]
+                                 and s[0]["first_fire_t_s"] is None)
+        out["rows"].append(item)
+    markers = sorted({s["code"] for s in fnd.stops})
+    out["stop_markers"] = markers
+    if not markers:      # RD-11 7: read only when no input problem
+        out["reuse"] = all(r["cond1"] for r in out["rows"]) and all(r["cond2"] for r in out["rows"])
+        out["decision"] = ("reuse stored judgement (7.3)" if out["reuse"]
+                           else "reuse false: stop and ask (RD-11 9, rev16:315)")
+    out.update(fnd.as_dict())
     return out, "pass" if not fnd.stops else "stop"
 
 
@@ -2495,14 +3054,17 @@ def build_parser():
     ap.add_argument("--out", default=None, help="output JSON path")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("seal")
+    head_help = "full 40-hex M4 commit; the judging checkout HEAD must equal it, else S-12 (R4 RD-1 5)"
     h = sub.add_parser("harness")
     h.add_argument("--manifest", required=True)
     h.add_argument("--gs", action="store_true",
                    help="G-S (11.2): bundles reported as GS-<bundle>, rules-5.1 line counts (S-15) skipped; "
                         "manifest kind 'auto' reads a run_v5 file mixing settings per line by job.setting")
+    h.add_argument("--expect-head", required=True, help=head_help)
     a = sub.add_parser("anchors")
     a.add_argument("--h1", default=None, help="h1_d1.jsonl (omit: anchor selection counts only)")
     a.add_argument("--v5-root", default=None)
+    a.add_argument("--expect-head", required=True, help=head_help)
     c = sub.add_parser("chrono")
     c.add_argument("--batch", action="append", required=True)
     c.add_argument("--gs", action="store_true", help="G-S key presence only")
@@ -2521,7 +3083,8 @@ def build_parser():
     o.add_argument("--probe", action="append", required=True, help="probe result.json, in run order")
     j = sub.add_parser("jp")
     j.add_argument("--shadow", required=True)
-    j.add_argument("--batch", action="append", required=True)
+    j.add_argument("--batch", action="append", required=True, help="V5-JP-VB batch first, then V5-JP-V0 (RD-11 2)")
+    j.add_argument("--expect-head", required=True, help=head_help)
     ol = sub.add_parser("openloop")
     ol.add_argument("--run", action="append", required=True, help="label=run_dir")
     ol.add_argument("--script", default=None)
@@ -2543,12 +3106,19 @@ def main(argv=None):
     tool_sha = sha256_file(Path(__file__))
     summary = {"tool": TOOL_NAME, "version": TOOL_VERSION, "tool_sha256": tool_sha, "cmd": args.cmd}
     try:
-        seals = check_seals(repo)
+        r4_cmd = args.cmd != "chrono"     # R4 RD-2: 26 sheets for every sub-command but chrono (RD-3 2)
+        seals = check_seals(repo, r4=r4_cmd)
         if args.cmd == "chrono":    # rev18 R18-1: rev16..rev18 for the Chrono sub-command only
             seals["chrono_rev16_21"] = check_chrono_seals(repo)
             seals["ok"] &= seals["chrono_rev16_21"]["ok"]
+        hc = head_check(repo, getattr(args, "expect_head", None)) if args.cmd in R4_CMDS else None
         if not seals["ok"]:
             report = {"seals": seals, "status": "stop", "stop_codes": ["S-1"]}
+            status = "stop"
+        elif hc is not None and not hc["ok"]:
+            # R4 RD-1 5: not the M4 checkout -> S-12, nothing judged
+            report = {"head_check": hc, "status": "stop", "stop_codes": ["S-12"],
+                      "stops": [{"code": "S-12", "where": "HEAD", "why": hc["why"]}]}
             status = "stop"
         elif args.cmd == "seal":
             report, status = {"seals": seals}, "pass"
@@ -2558,6 +3128,11 @@ def main(argv=None):
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
+            if r4_cmd:
+                report["seals"]["r4_rev13_25_sha256"] = {Path(rel).stem: want for rel, want, _ in R4_SEALS_EXTRA}
+                report["seals"]["r4_common_block_sha256"] = R4_BLOCK_SHA
+            if hc is not None:
+                report["head_check"] = hc
             if args.cmd == "chrono":
                 report["seals"]["chrono_rev16_21_sha256"] = {Path(rel).stem: want for rel, want, _ in CHRONO_SEALS}
         report.update(tool=TOOL_NAME, version=TOOL_VERSION, tool_sha256=tool_sha, cmd=args.cmd,
