@@ -386,6 +386,27 @@ def test_r4_rd10_j11_stop_and_record_settings():
     assert "H-7" in f.as_dict()["stop_codes"]
 
 
+def test_r4_supplement_2_1_2_2_h8_items_and_grid_runs():
+    # H-8 r79 items carry v5_setting; VB = J11 stop setting, V0 = record (supplement 2-1)
+    lwa = {"fallback_legs": {"RL": {}}, "n_late_fallback_by_leg": {"FL": 0, "FR": 0, "RL": 2, "RR": 0}}
+    vb = {"key": "L2|s3|x", "v5_setting": "VB", "controller_tag": core.TAG_VB, "lock_window_alignment": lwa,
+          "hydraulics_record": {"extend_bound_check": {"breach_reads": [0, 0, 1, 0]}}, "head_only_declared": False}
+    v0 = dict(vb, v5_setting="V0", controller_tag=core.TAG_V0)
+    it = vj.j11_item(vb)
+    assert it["result"] == "stop" and it["list"] == [{"leg": "RL", "n_late_fallback_by_leg": 2, "marker": "H-7"}]
+    assert vj.j11_item(v0)["result"] == "record" and vj.j11_item(v0)["list"] == []
+    assert vj.jp3(vb, IS_P3, True)[0] == "H-7" and vj.jp3(v0, IS_P3, True)[0] == "not_applicable_tag"
+    # grid run: no own setting / tag; the job record's are passed (supplement 2-2, rev8 R8-1)
+    run = {"lock_window_alignment": lwa, "hydraulics_record": {"extend_bound_check": {"breach_reads": [0, 0, 0, 0]}},
+           "head_only_declared": False}
+    assert vj.j11_item(run)["result"] == "record"                    # without the job setting: not a stop setting
+    assert vj.j11_item(run, setting="VB")["result"] == "stop"
+    assert vj.jp3(run, IS_P3, True)[0] == "not_applicable_tag"
+    assert vj.jp3(run, IS_P3, True, tag=core.TAG_VB)[0] == "pass"
+    bare = {"hydraulics_record": {}}
+    assert vj.j11_item(bare, setting="VB")["result"] == "undecidable"      # RD-10 per grid run
+
+
 def test_rev11_r112_cli_input_error(tmp_path, capsys):
     import json  # noqa: PLC0415
     vb = tmp_path / "vb.jsonl"

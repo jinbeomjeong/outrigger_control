@@ -250,12 +250,15 @@ def ebc_of(line):
     return core.first_path(line, EBC_PATHS)
 
 
-def jp3(line, is_p3, rod_reading):
+def jp3(line, is_p3, rod_reading, tag=None):
     """rev9 3.2 table with the two inputs of rev3 R3-C8 (rod reading: T4h, else configuration; declaration:
     field, else configuration; the declaration is never inverted into a rod-reading assumption).
     R4 RD-8: a ``breach_reads`` that is not a list of four integers >= 0 makes the J-P3 undecidable (input format
-    defect), never a pass; a top-level copy that differs is undecidable too (RD-7 3)."""
-    tag = tag_of(line)
+    defect), never a pass; a top-level copy that differs is undecidable too (RD-7 3).
+    ``tag``: the tag of a grid run, which carries no tag of its own (its job record ``results[i]`` does, rev8 R8-1;
+    R4 supplement 2-2); default = the line's own tag."""
+    if tag is None:
+        tag = tag_of(line)
     if is_p3 is None or not isinstance(tag, str) or not is_p3(tag):
         return "not_applicable_tag", None
     ebc, _p = ebc_of(line)

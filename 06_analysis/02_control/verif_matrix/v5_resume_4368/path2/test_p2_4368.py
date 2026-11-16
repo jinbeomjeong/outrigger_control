@@ -1722,12 +1722,25 @@ def test_r4_rd7_family_runs_not_listed_and_r79_key_setting(tmp_path, capsys):
     assert rep["bundles"]["H-9"]["r4"]["family_run_lines"] == 1
 
 
-def test_r4_family_u6_inner_key():
+def test_r4_family_u6_inner_key_is_src():
+    # R4 supplement 2-7: the inner key is the record's src; the main-file case name is never read
     f = p2.family_u6
-    assert f("G|g6|G1+J1@FL|top|Fs0|C2") == "patch" and f("G|g6r|rigid+J1@FL|top|Fs8") == "patch"
-    assert f("S|H1|G1|B|top|flat") == "uniform" and f("S|H5|rigid|B|top|nose_down") == "rigid"
-    assert f("A1-rigid") == "rigid" and f("A1-J1") == "uniform" and f("A1-x") == "unresolved"
-    assert f(None) == "unresolved"
+    assert f("g6|G1+J1@RR|top|Fs4") == "patch" and f("g6r|rigid+J1@FL|top|Fs8") == "patch"
+    assert f("H1|J1|B|top|flat") == "uniform" and f("H5|rigid|B|top|roll_pos") == "rigid"
+    assert f("H3|J1|B|top|roll_pos@k0.75") == "uniform"          # '@k' scale is not a ground token
+    assert f("A1-rigid") == "unresolved" and f(None) == "unresolved"
+    rec = {"case": "A4-G4RR-Fs0", "src": "H5|rigid|B|top|flat"}
+    assert p2.family_harness(rec, "u3_json", name="u6_b5_main_VB.json") == "rigid"
+    rec = {"case": "A1-J1", "src": "H1|J1|B|top|flat"}
+    assert p2.family_harness(rec, "u3_json", name="u6_b5_main_VB.json") == "uniform"
+
+
+def test_r4_slope_scale_token_is_not_a_patch():
+    # R4 finding: an '@' that does not name a leg (slope scale) is not a patch; uniform soil stays uniform
+    assert p2.family_from_tokens(["H3|J1|B|top|nose_down@k0.875"]) == "uniform"
+    assert p2.family_from_tokens(["H9|J2|B|top|roll_neg@k0.6"]) == "uniform"
+    assert p2.family_from_tokens(["H4|rigid|B|top|nose_down_2p8"]) == "rigid"
+    assert p2.family_from_tokens(["D1|H-S-C|J1|T|flat|K1|c-mid@RR"]) == "patch"
 
 
 def test_r4_key_source_record_not_s5(tmp_path, capsys):

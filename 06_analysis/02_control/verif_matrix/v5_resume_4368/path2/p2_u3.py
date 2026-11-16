@@ -273,13 +273,69 @@ def classify_recontact(e, t_ready):
     return "threshold_chatter" if ok else "strict_fail"
 
 
+LOC_REVOKE_EVENT = "FIX_LOC_REVOKE"     # spec 424.8.1 condition 1: the wrapper's LOC revoke event
+
+
+def late_loc_revoked(rec, llr):
+    """Spec 424.8.1 FLAG ``G6-2_late_loc_revoked`` (conditions 1~5) + 424.9 decision 1 (condition 6, rev3 R3-G12),
+    the "424.11.2 강등" of u3 original line 53 (R4 supplement 2-3). Returns (True / False / None, detail);
+    None = an input is missing (the record has no revoke record and its revoke count is not 0).
+    Inputs: t_LOC^fin = ``late_loc_reapproach.t_loc_s`` (the LOC the record judges), t_off = ``t_off_s``,
+    T_lim = ``limit_s``; revoke times = ``metrics.fix_events`` / ``fix_events`` entries ``[t, FIX_LOC_REVOKE...]`` in
+    [t_off, t_LOC^fin]; a record without them but with ``metrics.l1_revokes`` = 0 has condition 1 false.
+    1 revoke >= 1; 2 t_LOC^fin - max(t_off, t_revoke_last, t_re_end if recorded) <= T_lim; 3 LOC-period crawler
+    max < 0.01 W (``crawler_normal_loc_period_max_N`` < ``crawler_threshold_N``); 4 / 5 the recorded 419.8 conditions
+    4 / 5 (same definitions); 6 t_LOC^fin - t_off <= (1 + n_revoke) T_lim."""
+    det = {"why": None}
+    t_loc, t_off, tlim = (core.num(llr.get(k)) for k in ("t_loc_s", "t_off_s", "limit_s"))
+    fx, _ = core.first_path(rec, ("metrics.fix_events", "fix_events"))
+    n_l1 = core.dig(rec, "metrics.l1_revokes", None)
+    if isinstance(fx, list):
+        times = []
+        for e in fx:
+            if isinstance(e, (list, tuple)) and len(e) == 2 and isinstance(e[1], str) \
+                    and e[1].split(":", 1)[0] == LOC_REVOKE_EVENT and core.num(e[0]) is not None:
+                times.append(core.num(e[0]))
+    elif isinstance(n_l1, int) and not isinstance(n_l1, bool) and n_l1 == 0:
+        times = []
+    else:
+        det["why"] = "no revoke record (fix_events) and no zero revoke count"
+        return None, det
+    if None in (t_loc, t_off, tlim):
+        if not times:
+            det.update(c1=False)
+            return False, det
+        det["why"] = "t_loc_s / t_off_s / limit_s missing"
+        return None, det
+    inside = [t for t in times if core.t_ge(t, t_off) and not core.t_gt(t, t_loc)]
+    n = len(inside)
+    det["n_revoke"] = n
+    c1 = n >= 1
+    if not c1:
+        det.update(c1=False)
+        return False, det
+    base = max([t_off, max(inside)] + ([core.num(llr.get("t_reapproach_end_s"))]
+                                       if core.num(llr.get("t_reapproach_end_s")) is not None else []))
+    c2 = not core.t_gt(t_loc - base, tlim)
+    mx, thr = core.num(llr.get("crawler_normal_loc_period_max_N")), core.num(llr.get("crawler_threshold_N"))
+    conds = llr.get("conditions") if isinstance(llr.get("conditions"), dict) else {}
+    c4, c5 = conds.get("4_load_strict"), conds.get("5_loc_before_first_done")
+    if mx is None or thr is None or not isinstance(c4, bool) or not isinstance(c5, bool):
+        det["why"] = "condition 3 / 4 / 5 inputs missing"
+        return None, det
+    c3 = core.t_lt(mx, thr)
+    c6 = not core.t_gt(t_loc - t_off, (1 + n) * tlim)
+    det.update(c1=c1, c2=c2, c3=c3, c4=c4, c5=c5, c6=c6)
+    return all((c1, c2, c3, c4, c5, c6)), det
+
+
 def grade_r72(rec):
     """Grade of a g6 (u3 wrapper, ``v5.r72``) or study C (r72 screen) record without its ``verdict`` / ``pass``
     (rev16 R16-10 2 (b)): gates G6-1~G6-7, then rev6 R6-C3 on G6-7 (preloc_flag_ok true -> FLAG P3-8_demoted;
-    false and G6-3 true and no FAULT phase -> FLAG P3-8_preloc_loss; missing -> undecidable), 419.8 on G6-2 (all five
-    recorded conditions true -> FLAG G6-2_late_loc_reapproach), U-S9-G6d + 423.3 on G6-1 (events recounted:
-    transient / chatter -> FLAG, any strict -> fail). 424.11.2: no G6 demotion rule found in the handed text
-    (recorded as not applied, 확인 필요). Returns (grade or None, why, detail)."""
+    false and G6-3 true and no FAULT phase -> FLAG P3-8_preloc_loss; missing -> undecidable), then on G6-2 the 419.8
+    FLAG G6-2_late_loc_reapproach (five recorded conditions) and the "424.11.2 강등" = 424.8.1 FLAG
+    G6-2_late_loc_revoked (conditions 1~6, R4 supplement 2-3), U-S9-G6d + 423.3 on G6-1 (events recounted:
+    transient / chatter -> FLAG, any strict -> fail). Returns (grade or None, why, detail)."""
     gates, _ = core.first_path(rec, ("v5.r72.gates", "gates"))
     if not isinstance(gates, dict) or any(not isinstance(gates.get(g), bool) for g in G6_GATES):
         return None, "r72 gates G6-1~G6-7 missing", {}
@@ -288,7 +344,7 @@ def grade_r72(rec):
     llr = rec.get("late_loc_reapproach") if isinstance(rec.get("late_loc_reapproach"), dict) else None
     rce, _ = core.first_path(rec, ("metrics.crawler_recontact.recontact_events", "crawler_recontact.recontact_events"))
     flags, failed = [], []
-    detail = {"gates": dict(gates), "424.11.2": "not applied (no G6 demotion rule in the handed text)"}
+    detail = {"gates": dict(gates)}
     for g in ("G6-3_Fmin", "G6-4_att", "G6-5_rut_stroke", "G6-6_fault_ready"):
         if not gates[g]:
             failed.append(g)
@@ -308,9 +364,17 @@ def grade_r72(rec):
         if not isinstance(conds, dict) or any(not isinstance(conds.get(c), bool) for c in LATE_LOC_CONDITIONS):
             return None, "G6-2: late_loc_reapproach conditions 1~5 missing (419.8)", detail
         detail["419.8_conditions"] = {c: conds[c] for c in LATE_LOC_CONDITIONS}
-        if all(conds[c] for c in LATE_LOC_CONDITIONS):
+        reapproach = all(conds[c] for c in LATE_LOC_CONDITIONS)
+        # R4 supplement 2-3 ("424.11.2 강등" = spec 424.8.1 FLAG G6-2_late_loc_revoked, conditions 1~6), after R6-C3
+        revoked, rdet = late_loc_revoked(rec, llr)
+        detail["424.8.1_conditions"] = rdet
+        if reapproach:
             flags.append("G6-2_late_loc_reapproach")
-        else:
+        if revoked:
+            flags.append("G6-2_late_loc_revoked")
+        if not reapproach and revoked is None:
+            return None, f"G6-2: 424.8.1 input missing ({rdet.get('why')})", detail
+        if not reapproach and not revoked:
             failed.append("G6-2_loc")
     evs = rce.get("events") if isinstance(rce, dict) else None
     if not isinstance(evs, list):
@@ -563,8 +627,8 @@ def recount_u3(files, h1_path, is_p3, repo=None):
            "undecidable": undec, "sentence_VB": sentence, "differences": diffs, "d1_reuse": reuse,
            "settle_v2": {**settle, "no_table_check_note": "표 행이 없는 사례가 v1에서도 정착 점검 대상이 아니었다는 것은 가정(R3-B6)"},
            "study_files": {k: v for k, v in study_of.items()},
-           "r72_family_grade": {**r72, "rule": "rev16 R16-10 2 (b): gates + R6-C3 + 419.8 + U-S9-G6d/423.3; "
-                                               "424.11.2 not applied (no G6 rule in the handed text)"},
+           "r72_family_grade": {**r72, "rule": "rev16 R16-10 2 (b): gates + R6-C3 + 419.8 + 424.8.1 revoked "
+                                               "(= 424.11.2 강등, supplement 2-3) + U-S9-G6d/423.3"},
            "G-5_list": {"name": "G-5 (u3 원판 5.1 VB 고유 실패)", "columns": ["bundle", "result_file", "position", "key"],
                         "rows": sorted(g5_rows, key=_row_sort)},
            "G-6_list": {"name": "G-6 (u3 rev1 #5, g8 VB WARN_ROD_PRESSURE_FALLBACK)",

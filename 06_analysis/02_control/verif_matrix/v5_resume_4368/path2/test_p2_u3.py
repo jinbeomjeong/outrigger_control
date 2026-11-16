@@ -223,16 +223,19 @@ def test_r4_settle_v2_per_axis():
     assert u3.settle_v2_recount(b)["status"] == "undecidable"
 
 
-def g6rec(gates=None, preloc=True, fp="ready", conds=None, events=None, t_ready=None, wrapper=True):
+def g6rec(gates=None, preloc=True, fp="ready", conds=None, events=None, t_ready=None, wrapper=True, revokes=None):
     g = {k: True for k in u3.G6_GATES}
     g.update(gates or {})
-    llr = {"conditions": {c: True for c in u3.LATE_LOC_CONDITIONS}}
+    llr = {"conditions": {c: True for c in u3.LATE_LOC_CONDITIONS}, "t_loc_s": 34.0, "t_off_s": 30.0,
+           "limit_s": 2.9, "t_reapproach_end_s": None, "crawler_normal_loc_period_max_N": 1000.0,
+           "crawler_threshold_N": 3800.0}
     if conds:
         llr["conditions"].update(conds)
     rce = {"events": list(events or []), "t_ready_s": t_ready}
-    if wrapper:     # u3 g6 wrapper form
+    if wrapper:     # u3 g6 wrapper form (metrics.fix_events carries the wrapper LOC revoke events)
         return {"final_phase": fp, "late_loc_reapproach": llr, "verdict": "pass", "passed": True,
-                "metrics": {"crawler_recontact": {"recontact_events": rce}},
+                "metrics": {"crawler_recontact": {"recontact_events": rce}, "l1_revokes": len(revokes or []),
+                            "fix_events": [[t, "FIX_LOC_REVOKE:x"] for t in (revokes or [])]},
                 "v5": {"r72": {"gates": g, "preloc_flag_ok": preloc, "verdict": None, "pass": True}}}
     return {"final_phase": fp, "late_loc_reapproach": llr, "gates": g, "preloc_flag_ok": preloc, "pass": True,
             "crawler_recontact": {"recontact_events": rce}}
@@ -256,10 +259,40 @@ def test_r4_grade_r72_branches():
     g, _, d = u3.grade_r72(g6rec({"G6-2_loc": False}))
     assert g == "flag" and "G6-2_late_loc_reapproach" in d["flags"]
     assert u3.grade_r72(g6rec({"G6-2_loc": False}, conds={"4_load_strict": False}))[0] == "fail"
+    # study C form has no revoke record: G6-2 false without the 419.8 FLAG cannot be read (424.8.1 input missing)
+    assert u3.grade_r72(g6rec({"G6-2_loc": False}, conds={"1_restart": False}, wrapper=False))[0] is None
     # the recorded verdict / pass are not used
     r = g6rec({"G6-4_att": False})
     r["verdict"], r["v5"]["r72"]["pass"] = "pass", True
     assert u3.grade_r72(r)[0] == "fail"
+
+
+def test_r4_supplement_2_3_late_loc_revoked():
+    # 424.11.2 강등 = 424.8.1 FLAG G6-2_late_loc_revoked, conditions 1~6 (R4 supplement 2-3)
+    no419 = {"1_restart": False}
+    g, _, d = u3.grade_r72(g6rec({"G6-2_loc": False}, conds=no419, revokes=[32.0]))
+    assert g == "flag" and d["flags"] == ["G6-2_late_loc_revoked"]
+    assert d["424.8.1_conditions"] == {"why": None, "n_revoke": 1, "c1": True, "c2": True, "c3": True, "c4": True,
+                                       "c5": True, "c6": True}
+    assert u3.grade_r72(g6rec({"G6-2_loc": False}, conds=no419, revokes=[]))[0] == "fail"         # c1 false
+    assert u3.grade_r72(g6rec({"G6-2_loc": False}, conds=no419, revokes=[30.5]))[0] == "fail"     # c2: 3.5 > 2.9
+    r = g6rec({"G6-2_loc": False}, conds=no419, revokes=[32.0])
+    r["late_loc_reapproach"]["t_loc_s"], r["late_loc_reapproach"]["t_off_s"] = 34.0, 28.0         # c6: 6 > 5.8
+    r["metrics"]["fix_events"] = [[33.0, "FIX_LOC_REVOKE:x"]]
+    assert u3.grade_r72(r)[0] == "fail"
+    r["metrics"]["fix_events"] = [[31.0, "FIX_LOC_REVOKE:x"], [33.0, "FIX_LOC_REVOKE:y"]]          # n 2: 6 <= 8.7
+    assert u3.grade_r72(r)[0] == "flag"
+    r = g6rec({"G6-2_loc": False}, conds=no419, revokes=[32.0])
+    r["late_loc_reapproach"]["crawler_normal_loc_period_max_N"] = 3800.0                           # c3 strict <
+    assert u3.grade_r72(r)[0] == "fail"
+    r = g6rec({"G6-2_loc": False}, conds={**no419, "5_loc_before_first_done": False}, revokes=[32.0])
+    assert u3.grade_r72(r)[0] == "fail"                                                             # c5
+    g, _, d = u3.grade_r72(g6rec({"G6-2_loc": False}, revokes=[32.0]))                             # both FLAGs
+    assert g == "flag" and d["flags"] == ["G6-2_late_loc_reapproach", "G6-2_late_loc_revoked"]
+    r = g6rec({"G6-2_loc": False}, conds=no419)
+    r["metrics"].pop("fix_events")
+    r["metrics"]["l1_revokes"] = 2                                                                  # count, no times
+    assert u3.grade_r72(r)[0] is None
 
 
 def test_r4_grade_r72_recontact_classes():

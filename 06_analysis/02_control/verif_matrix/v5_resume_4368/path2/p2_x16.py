@@ -12,7 +12,10 @@ Sub-commands:
          false -> marker ``G-3(H-11) 거짓`` and the RD-7 list (script, key, field, hashes, line counts); H-3 / H-4
          are then not judged (rev16:142).
   c16    C-9 / C-10 / C-11 records (R16-11 record items, R16-11b 1 identity, R16-11b 2 row-folder files): record
-         bundles, ``기록 완료`` / ``기록 불완전`` (never a grade). C-9 P-18 premise (rev16:254).
+         bundles, ``기록 완료`` / ``기록 불완전`` (never a grade). C-9 P-18 premise (rev16:254). R4 supplement 1
+         (sha 8736f68d...) / 2 (a9a15a13...): identity files ``<OUT>\\_identity\\<short>_pre|post.json`` (``dry_`` not
+         read), rc = ``exit=`` of the first line of ``<OUT>\\_runners\\logs_*\\<short>_run.done`` (2-4), C-10 G6 from
+         the ``p3b`` P3 values (2-5), C-11 at the first LOC and, with a revoke, also at the final LOC (2-6).
   items  RD-13 item lists of the bundles the path-2 tools judge or record (item, rule clause, kind); one JSON file,
          per-bundle sha256 of the canonical list.
 
@@ -27,6 +30,7 @@ import datetime as _dt
 import hashlib
 import importlib.util
 import json
+import re
 import sys
 import traceback
 from pathlib import Path
@@ -189,23 +193,28 @@ ROW_FILES = ("result.json", "controller_commands.npz", "step_series.npz", "r8_se
              "completion_series.npz", "record/record.npz", "record/meta.json")   # rev16:288 (P2-43)
 P3_CHECKS = ("P3-1_crawler_zero_after_ready", "P3-1_recontact_pass", "P3-2_within", "P3-3_within",
              "P3-4_within_0p2", "P3-5_within", "P3-6_within", "P3-7_within", "P3-8_within", "P3-9_flags")
-# identity file reading (gs_identity form): the handed text names the contents, not the key names (확인 필요);
-# these candidate paths are tried in order and an absent value makes the row 기록 불완전 (never a guessed value)
-ID_HEAD = ("git.head", "head")
-ID_PORCELAIN = ("git.status_porcelain", "status_porcelain")
-ID_ENV = ("env", "start_env")
-ID_FORBIDDEN = ("forbidden", "forbidden_env")
-ID_DLL = ("dll_sha256", "hull_hook_dll_sha256", "hull_hook.dll_sha256")
-ID_REFLOG = ("git.reflog", "reflog")
-ID_RC = ("rc", "exit", "returncode")
+# identity files <OUT>\_identity\<short>_pre.json / _post.json (R4 supplement 1-2; the `dry_` files are not read).
+# Key names from the files (opened under the supplement): top-level head, tracked_status (git status --porcelain
+# --untracked-files=no lines), forbidden_env (name -> value, null = absent), case; pre: env, dll_sha256;
+# post: reflog_n5, reflog_new_since_pre. Their meaning is R16-11b 1 (rev16:280~287).
+DONE_RE = re.compile(r"(?:^|\s)exit=(-?\d+)(?:\s|$)")
 
 
-def _first(d, paths):
-    v, p = core.first_path(d, paths)
-    return (None, None) if v is core.MISSING else (v, p)
+def done_rc(runners_dir, short):
+    """R4 supplement 2-4: rc = N of ``exit=N`` on the first line of ``<runners>/logs_*/<short>_run.done``.
+    Returns (rc or None, why, file)."""
+    hits = sorted(Path(runners_dir).glob(f"logs_*/{short}_run.done")) if runners_dir else []
+    if len(hits) != 1:
+        return None, f"{len(hits)} {short}_run.done files (exactly one required)", None
+    with open(hits[0], encoding="utf-8", errors="replace") as f:
+        first = f.readline()
+    m = DONE_RE.search(first.strip())
+    if not m:
+        return None, "no exit= on the first line of the .done file", str(hits[0])
+    return int(m.group(1)), None, str(hits[0])
 
 
-def row_identity(res, pre, post):
+def row_identity(res, pre, post, row=None):
     """rev16:280~287 (P2-42) identity of one row: result.json fields + start / end identity files.
     Returns (dict, stops[(code, why)], incomplete[why])."""
     stops, inc = [], []
@@ -233,31 +242,32 @@ def row_identity(res, pre, post):
         if d is None:
             inc.append(f"identity file {name} missing")
             continue
-        rec = {"head": _first(d, ID_HEAD)[0], "status_porcelain": _first(d, ID_PORCELAIN)[0],
-               "forbidden": _first(d, ID_FORBIDDEN)[0]}
-        if name == "pre":
-            rec["env"] = _first(d, ID_ENV)[0]
-            rec["dll_sha256"] = _first(d, ID_DLL)[0]
-        else:
-            rec["reflog"] = _first(d, ID_REFLOG)[0]
-            rec["rc"] = _first(d, ID_RC)[0]
+        keys = ("case", "head", "tracked_status", "forbidden_env") + \
+            (("env", "dll_sha256") if name == "pre" else ("reflog_n5", "reflog_new_since_pre"))
+        rec = {k: d.get(k) for k in keys}
         out[name] = rec
-        missing = [k for k, v in rec.items() if v is None]
+        missing = [k for k in keys if k not in d]
         if missing:
-            inc.append(f"identity {name}: {missing} not found (key names not handed, 확인 필요)")
-        if rec["head"] is not None and str(rec["head"]).lower() != core.R2_COMMIT:
-            stops.append(("S-12", f"identity {name} HEAD != R2"))
-        if isinstance(rec["status_porcelain"], str) and rec["status_porcelain"].strip():
+            inc.append(f"identity {name}: keys {missing} missing")
+        if rec["case"] != row:
+            inc.append(f"identity {name}: case {rec['case']!r} != row {row!r}")
+        if not (isinstance(rec["head"], str) and rec["head"].lower() == core.R2_COMMIT):
+            stops.append(("S-12", f"identity {name}: HEAD {rec['head']!r} != R2"))
+        if not (isinstance(rec["tracked_status"], list) and not rec["tracked_status"]):
             stops.append(("S-12", f"identity {name}: git status --porcelain --untracked-files=no not empty"))
-        fb = rec["forbidden"]
-        if isinstance(fb, dict):
-            for e in FORBIDDEN_ENV:
-                v = fb.get(e)
-                setv = v.get("set") if isinstance(v, dict) else v
-                if setv not in (None, False):
-                    stops.append(("S-4", f"identity {name}: forbidden env {e} present"))
-        if name == "pre" and rec.get("dll_sha256") is not None and rec["dll_sha256"] != DLL_SHA:
-            stops.append(("S-4", "identity pre: DLL sha256 differs"))
+        fb = rec["forbidden_env"]
+        if not isinstance(fb, dict) or any(fb.get(e, "absent-key") is not None for e in FORBIDDEN_ENV):
+            stops.append(("S-4", f"identity {name}: forbidden env present or not recorded {fb!r}"))
+        if name == "pre":
+            if rec["dll_sha256"] != DLL_SHA:
+                stops.append(("S-4", "identity pre: DLL sha256 differs"))
+            if not isinstance(rec["env"], dict) or rec["env"].get("OMP_WAIT_POLICY") != "PASSIVE":
+                stops.append(("S-4", "identity pre: start env OMP_WAIT_POLICY != PASSIVE"))
+        else:
+            if not (isinstance(rec["reflog_new_since_pre"], list) and not rec["reflog_new_since_pre"]):
+                stops.append(("S-12", "identity post: new reflog entries since the start (rev16:280)"))
+    if pre is not None and post is not None and pre.get("head") != post.get("head"):
+        stops.append(("S-12", "identity: end HEAD != start HEAD"))
     return out, stops, inc
 
 
@@ -306,9 +316,38 @@ def c9_items(res, st):
                                                               None)) * 1000.0)}
 
 
+NO_READY = "해당 없음(READY 없음)"
+READY_LIMIT_S = 120.0
+FAULT_PHASES = ("fault", "fault_reground")
+
+
+def g6_from_p3b(res):
+    """R4 supplement 2-5 (rev25 CD-8 9 / CD-11 G6 table): C-10 G6 values from the row's ``p3b`` P3 values.
+    G6-1 = P3-1 (crawler zero READY ~ READY + 10 s and the re-contact check), G6-2 = P3-2, G6-3 = P3-3, G6-4 = P3-4,
+    G6-5 = P3-5, G6-7 = P3-8; G6-6 = no FAULT and READY reached; READY_le_120s = first READY after the loop start
+    <= 120 s (1e-9). Without READY: G6-4 / G6-5 = "해당 없음(READY 없음)", G6-6 / READY_le_120s = "미달"; G6-1 keeps
+    the recorded P3-1 value (CD-5 P3-1 row: not handed, the recorded value is written)."""
+    ck = core.dig(res, "p3b.checks", {}) or {}
+    t_ready = core.num(core.dig(res, "p3b.P3-6_ready.t_ready_after_loop_start_s", None))
+    ready = t_ready is not None
+    ev = res.get("events") if isinstance(res.get("events"), list) else []
+    fault_ev = [e.get("name") for e in ev if isinstance(e, dict) and str(e.get("name", "")).startswith("FAULT")]
+    ph = [p.get("phase") for p in res.get("phases") or [] if isinstance(p, dict)]
+    no_fault = not fault_ev and not any(p in FAULT_PHASES for p in ph)
+    p31 = (None if ck.get("P3-1_crawler_zero_after_ready") is None or ck.get("P3-1_recontact_pass") is None
+           else bool(ck["P3-1_crawler_zero_after_ready"] and ck["P3-1_recontact_pass"]))
+    g6 = {"G6-1": p31, "G6-2": ck.get("P3-2_within"), "G6-3": ck.get("P3-3_within"),
+          "G6-4": ck.get("P3-4_within_0p2") if ready else NO_READY,
+          "G6-5": ck.get("P3-5_within") if ready else NO_READY,
+          "G6-6": (no_fault and ready) if ready else "미달",
+          "G6-7": ck.get("P3-8_within"),
+          "READY_le_120s": (not core.t_gt(t_ready, READY_LIMIT_S)) if ready else "미달"}
+    return g6, {"P3-2_verdict": ck.get("P3-2_verdict"), "fault_events": fault_ev, "t_ready_after_loop_start_s": t_ready}
+
+
 def c10_items(res, st, folder, patch_leg):
-    rec = {"G6-1~G6-7": None,
-           "G6_why": "no G6 record in result.json and no Chrono G6 definition in the handed text (확인 필요)",
+    g6, g6src = g6_from_p3b(res)
+    rec = {"G6": g6, "G6_source": g6src, "G6_rule": "R4 supplement 2-5 (rev25 CD-11 G6 table, p3b P3 values)",
            "P3-3": core.dig(res, "p3b.checks.P3-3_within", None),
            "end_phase": None, "patch_leg": patch_leg, "patch_leg_sinkage_mm": None}
     ph = res.get("phases")
@@ -326,31 +365,47 @@ def c10_items(res, st, folder, patch_leg):
     return rec
 
 
+def loc_period(st, t_loc, w):
+    """Spec 419.8.1 condition 3: max crawler SCM normal over the 1 ms samples in (t_LOC - 0.1 s, t_LOC] and the t_LOC
+    sample; / W and above / below 0.01 W (W = ``p3b.weight_N``, the departure threshold weight). ``p3b`` times and
+    ``step_series.npz`` ``t_s`` are the same absolute time base (R4 supplement 2-6)."""
+    out = {"t_loc_s": t_loc, "crawler_max_N": None, "crawler_max_over_W": None, "above_0p01W": None}
+    if st is None or t_loc is None or "scm_crawler_normal_N" not in st:
+        return out
+    t, cr = st["t_s"], st["scm_crawler_normal_N"]
+    m = (t > t_loc - 0.1 - 1e-9) & (t <= t_loc + 1e-9)
+    if m.any():
+        mx = float(cr[m].max())
+        out["crawler_max_N"] = mx
+        if w:
+            out["crawler_max_over_W"] = mx / w
+            out["above_0p01W"] = bool(mx >= 0.01 * w - core.EPS_THR)
+    return out
+
+
 def c11_items(res, st):
-    rec = {"loc_first_t_s": core.dig(res, "p3b.P3-2_loc.t_loc_first_s", None),
-           "loc_revokes": None, "loc_period_crawler_max_N": None, "loc_period_crawler_max_over_W": None,
-           "above_0p01W": None, "weight_N": core.num(core.dig(res, "p3b.weight_N", None))}
+    """R16-11 3 record items; t_LOC = the first LOC, and with a revoke (final LOC differs) the same three values at
+    the final LOC too (R4 supplement 2-6)."""
+    w = core.num(core.dig(res, "p3b.weight_N", None))
+    t_first = core.num(core.dig(res, "p3b.P3-2_loc.t_loc_first_s", None))
+    t_final = core.num(core.dig(res, "p3b.P3-2_loc.t_loc_final_s", None))
     rv = core.dig(res, "p3b.P3-2_loc.loc_revokes", None)
-    rec["loc_revokes"] = len(rv) if isinstance(rv, list) else None
-    t_loc = core.num(rec["loc_first_t_s"])
-    if st is not None and t_loc is not None and "scm_crawler_normal_N" in st:
-        t, cr = st["t_s"], st["scm_crawler_normal_N"]
-        # spec 419.8.1 condition 3: (t_LOC - 0.1 s, t_LOC] 1 ms samples and the t_LOC sample (path-2 assumption:
-        # p3b times share the step_series time base)
-        m = (t > t_loc - 0.1 - 1e-9) & (t <= t_loc + 1e-9)
-        if m.any():
-            mx = float(cr[m].max())
-            rec["loc_period_crawler_max_N"] = mx
-            if rec["weight_N"]:
-                rec["loc_period_crawler_max_over_W"] = mx / rec["weight_N"]
-                rec["above_0p01W"] = bool(mx >= 0.01 * rec["weight_N"] - core.EPS_THR)
+    first = loc_period(st, t_first, w)
+    rec = {"loc_first_t_s": t_first, "loc_final_t_s": t_final, "weight_N": w,
+           "loc_revokes": len(rv) if isinstance(rv, list) else None,
+           "loc_period_crawler_max_N": first["crawler_max_N"],
+           "loc_period_crawler_max_over_W": first["crawler_max_over_W"], "above_0p01W": first["above_0p01W"],
+           "final_loc_period": None}
+    if t_first is not None and t_final is not None and not core.same_value(t_first, t_final):
+        rec["final_loc_period"] = loc_period(st, t_final, w)
     return rec
 
 
 def cmd_c16(args, repo):
     fnd = core.Findings()
     out_root = Path(args.out_root)
-    idd = Path(args.identity_dir) if args.identity_dir else None
+    idd = Path(args.identity_dir) if args.identity_dir else out_root / "_identity"
+    runners = Path(args.runners_dir) if args.runners_dir else out_root / "_runners"
     bundles = {}
     rows = {}
     for bundle, name, dur, idstem, patch in C16_ROWS:
@@ -365,7 +420,7 @@ def cmd_c16(args, repo):
         res, st, files, items = row_common(folder, dur)
         pre = _load_json(idd / f"{idstem}_pre.json") if idd else None
         post = _load_json(idd / f"{idstem}_post.json") if idd else None
-        ident, stops, inc = row_identity(res, pre, post)
+        ident, stops, inc = row_identity(res, pre, post, row=name)
         for code, why in stops:
             fnd.stop(code, where, why)
         miss_files = [f for f, h in files.items() if h is None]
@@ -373,7 +428,11 @@ def cmd_c16(args, repo):
             inc.append(f"row files missing {miss_files} (rev16:288)")
         if core.dig(res, "args.flow_eta_v", None) is not None and not (folder / "flow_series.npz").is_file():
             inc.append("flow_series.npz missing on a VB row (--flow-eta-v given, rev16:288)")
-        items["rc"] = (ident.get("post") or {}).get("rc")
+        rc, rc_why, rc_file = done_rc(runners, idstem)      # R4 supplement 2-4
+        items["rc"] = rc
+        items["rc_source"] = rc_file
+        if rc is None:
+            inc.append(f"rc: {rc_why}")
         if bundle == "C-9":
             items.update(c9_items(res, st))
         elif bundle == "C-10":
@@ -457,6 +516,7 @@ RD13_ITEMS = {
         ("U-3 등급 이동 4×4·묶음 문구", "u3 원판 5.1", G),
         ("정착 v2 재계산(축별)", "rev16:194", G),
         ("r72 계열 등급(g6·연구 C)", "rev16:194", G),
+        ("r72 G6-2 LOC 취소 강등(G6-2_late_loc_revoked, 조건 1~6, 424.11.2 강등)", "rev3 R3-G12", G),
         ("D-1 재사용", "rev3 R3-B3", R),
     ],
     "H-4": _LAYER + _RD8 + [
@@ -464,7 +524,7 @@ RD13_ITEMS = {
         ("U-6 G-2 태그(③는 C2만)", "u3 rev2 #4", K),
         ("U-6 제어기별 표", "u3 원판 5.2", R),
         ("IND_LAS 관문·해시 동일", "rev3 R3-B5", R),
-        ("u6 키 계열(안쪽 키 지면 토큰)", "rev16:194", R),
+        ("u6 키 계열(안쪽 키 = src의 지면 토큰)", "rev16:197", R),
     ],
     "H-5": _LAYER + [
         ("U-9 키·태그", "u9_targeted_rules_rev1 2", K),
@@ -482,9 +542,11 @@ RD13_ITEMS = {
             ("최대 행정·끝 rut 틈·P3-1~P3-9·첫 READY·rc·마지막 표본 시각", "rev16:250", R),
             ("P-18 읽기 전제", "rev16:254", R), ("정체성(시작·끝 파일, result.json)", "rev16:280", K)],
     "C-10": [("다리별 F^a_min·F^t_min·시각, F<F_min·F<F_min+2kN 시간(1 ms)", "rev16:257", R),
-             ("G6-1~G6-7·P3-3·끝 단계·최대 행정·패치 다리 침하·rc·마지막 표본 시각", "rev16:257", R),
+             ("G6-1~G6-7·READY_le_120s(p3b P3 값으로 갈음, G6-6 따로)", "rev25:99", R),
+             ("P3-3·끝 단계·최대 행정·패치 다리 침하·rc(.done exit=)·마지막 표본 시각", "rev16:257", R),
              ("정체성(시작·끝 파일, result.json)", "rev16:280", K)],
     "C-11": [("첫 LOC·LOC 주기 1 ms 크롤러 법선 최대와 /W·0.01 W 위아래·LOC 취소 수", "rev16:264", R),
+             ("LOC 취소가 있으면 최종 LOC 기준 같은 세 값", "rev16:264", R),
              ("첫 READY·rc·마지막 표본 시각", "rev16:264", R), ("정체성(시작·끝 파일, result.json)", "rev16:280", K)],
     "J_P": [("행 집합(두 batch.json cases, 12 고정)", "원판 7.3", K), ("사건 기록 꼴(C2Event 문자열)", "원판 7.3", K),
             ("R4c30 적용 수(기본 이름)·토양 모드 시작 수", "원판 7.3", R),
@@ -526,7 +588,10 @@ def build_parser():
     g.add_argument("--expect-head", required=True, help=head_help)
     c = sub.add_parser("c16")
     c.add_argument("--out-root", required=True, help="<OUT> (rev16:350)")
-    c.add_argument("--identity-dir", default=None, help="folder of the x16_identity start / end files")
+    c.add_argument("--identity-dir", default=None,
+                   help="folder of the <short>_pre.json / _post.json identity files (default <OUT>\\_identity)")
+    c.add_argument("--runners-dir", default=None,
+                   help="folder holding logs_*\\<short>_run.done (rc, supplement 2-4; default <OUT>\\_runners)")
     c.add_argument("--expect-head", required=True, help=head_help)
     sub.add_parser("items")
     return ap

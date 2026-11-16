@@ -291,6 +291,7 @@ SCM_FORBIDDEN_ENV = ("OUTRIGGER_HULL_HOOK", "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDAT
 SHADOW_ENV = "OUTRIGGER_LOC_SHADOW"
 
 SOIL_NAMES = {"G1", "G5", "J1", "J2", "S1", "S2"}
+PATCH_TOKEN_RE = re.compile(r"@(FL|FR|RL|RR)(?![A-Za-z0-9])")   # ground patch / prescribed sinkage at a leg
 RIGID_GROUPS_H1 = {"H-R-0", "H-R-A", "H-R-A-stop"}     # P-1 rigid 412 (264 + 144 + 4)
 
 PRIORITY = {"stop": 4, "undecidable": 3, "fail": 2, "pass": 1}
@@ -687,8 +688,11 @@ def family_from_tokens(strings):
         if isinstance(s, str):
             parts = [p for p in s.split("|") if p]
             toks.extend(parts)
-    if any("@" in t for t in toks):
-        return "patch"              # patch (soil@leg, rigid+soil@leg) or prescribed sinkage (c-mid@leg)
+    if any(PATCH_TOKEN_RE.search(t) for t in toks):
+        # patch (soil@leg, rigid+soil@leg) or prescribed sinkage (c-mid@leg). R4: the '@' must name a leg; slope
+        # scale tokens such as 'roll_pos@k0.5' / 'nose_down@k0.875' are not ground tokens (the earlier sheet read
+        # any '@' as a patch, which took uniform-soil slope lines out of the S-6 check)
+        return "patch"
     if any(t == "rigid" for t in toks):
         return "rigid"
     if any(t in SOIL_NAMES for t in toks):
@@ -722,7 +726,7 @@ def family_harness(rec, fmt, parent=None, file_meta=None, name=None):
     if fmt == "grid_json":
         return family_grid(rec, file_meta or {})
     if fmt == "u3_json" and isinstance(name, str) and name.startswith("u6_"):
-        return family_u6(rec.get("case"))      # rev16 R16-10 2 (c)
+        return family_u6(rec.get("src"))       # rev16 R16-10 2 (c), R4 supplement 2-7: inner key = src
     if fmt == "run_v5_jsonl":
         f = family_d1(rec.get("job"))
         if f is not None:
@@ -929,28 +933,19 @@ def rd7_key_setting(rec, parent, fmt, name):
     return None, None
 
 
-def family_u6(case):
-    """rev16 R16-10 2 (c): a u6 key is classified by the ground token of its inner key. ``+<soil>@<leg>`` = patch,
-    a soil token alone = uniform, ``rigid`` = rigid; no ground token = unresolved (treated as uniform, RV1-6).
-    Inner key = the key without its one-letter bundle prefix (``S|``, ``G|``) and the controller suffix; the b5 main
-    form ``<case>-<ground>`` (``A1-J1``) reads the part after the last '-' as the ground token (path-2 reading)."""
-    if not isinstance(case, str) or not case:
+def family_u6(src):
+    """rev16 R16-10 2 (c) with R4 supplement 2-7: a u6 b5 record is classified by the ground token of its inner
+    key, which is the record's ``src`` field (``H1|J1|B|top|flat``, ``g6|G1+J1@RR|top|Fs4``, ``g6r|rigid+J1@FL|...``).
+    ``+<soil>@<leg>`` = patch, ``rigid`` = rigid, a soil token alone = uniform; no ground token = unresolved
+    (treated as uniform, RV1-6). The main-file ``case`` (``A1-J1``) is a case name, never read."""
+    if not isinstance(src, str) or not src:
         return "unresolved"
-    toks = [t for t in case.split("|") if t]
-    if toks and len(toks[0]) == 1 and toks[0].isalpha() and toks[0].isupper():
-        toks = toks[1:]
-    if toks and toks[-1] in ("C2", "ABL", "IND", "IND_LAS"):
-        toks = toks[:-1]
-    ground = []
-    for t in toks:
-        ground.append(t)
-        if "-" in t:
-            ground.append(t.rsplit("-", 1)[1])
-    if any("@" in t for t in ground):
+    toks = [t for t in src.split("|") if t]
+    if any(PATCH_TOKEN_RE.search(t) for t in toks):
         return "patch"
-    if any(t == "rigid" for t in ground):
+    if any(t == "rigid" for t in toks):
         return "rigid"
-    if any(t in SOIL_NAMES for t in ground):
+    if any(t in SOIL_NAMES for t in toks):
         return "uniform"
     return "unresolved"
 
