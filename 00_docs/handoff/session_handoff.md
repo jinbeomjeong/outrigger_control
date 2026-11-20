@@ -2,7 +2,7 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.** (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
 
-- 갱신: 2026-11-16(세션 7ea6ef9d). C-8a 개입 진단·LAS-c v2 초안 커밋(이 파일 커밋, 부모 `abbda97`).
+- 갱신: 2026-11-20(worktree 정리·문서 갱신). 이전 갱신 2026-11-16(세션 7ea6ef9d, C-8a 개입 진단·LAS-c v2 초안, 판 4a 봉인 `f67745f`·덧붙임 4a-1 `143a0ef`).
 - 결정 경과 원본: 메모리 `gs-4368-decisions-20261113.md`(결정 74~151), `r3e-authorization-20261116.md`(결정 96 자동 범위). decision_log 4절에는 113~141 요지만 들어갔다(아래 3절 남은 과제).
 
 ## 1. 최근 끝난 것 (11-16)
@@ -15,26 +15,27 @@
 | **J-P3 원인 분석**(결정 143·144) | 미세 반전 사이 플랜트 수축 재잠김(28~69 ms)을 ③ 모니터가 못 봄. 유압 판정: 실기는 43.4~49.07 s 계속 잠김이라 물리적으로도 위반(간격 −22~−24 bar, 대체 다리였다면 6.9~7.5 kN 낙관 > F_min 여유), LS3·LS1·LS4 설정 차이는 플랜트 산물. 이번 5줄 실제 F_min 영향 0(대체 다리 없음). 하네스 판정서 0.1절 한 줄 + 9.9절 추가(판정 낱말 불변) | `06_analysis/02_control/j_p3_cause/jp3_cause_report.md`, `hydraulics_review.md` |
 | **C-8a 개입 2행**(결정 145·149) | (ii) LAS 끔 RL 5,715.7 N(기준 5,869.6과 같은 깊이), (i) P5r4 15,625 N(β 4.5 시작 앞당김 + 끝 램프 섞임). 진동 가진원 = 크롤러 하중 해제, 끝 계단·감속 비대칭이 $s_{ref}$ 비틀림으로 둘째 골 준정적 3.9~5.0 kN. Chrono 판정서 4.7절·L-5에 가리킴 2줄(판정 불변) | `06_analysis/02_control/c8a_intervention/c8a_intervention_report.md`, `c8a_intervention_dynamics.md` |
 | **LAS-c v2 초안**(결정 150·151) | 시작 관문 Σ ≥ 0.65 W(주안 A)·S7′ 제외(B) 둘 다 구현, 공통 축척 끝 램프 N_r 6, 계수 하나 증분 제한 감속 기본, C-T probe 후보, 보조 규칙 끈 채, 태그 `_LAC`/`--lac-off`, 예측 PR-1~13 고정. v1 초안은 'v2로 대체' | `c8a_intervention/las_c_v2_design.md`, `las_redesign/las_redesign_v1_draft.md` |
-| **J-P3 보완 명세 판 3**(결정 144~148) | rev 5(R5-1~R5-5, u_hold 0.01 v_max), 플랜트 P1~P4(관문 e_h 9 bar·F_band 0·p_floor, 수축 시드 예외), J-P3a/b/c(갇힌 몫 판정·채움 기록), 판정은 이상 센서+normal, 태그 `final_C4G2_P3H(_LAS_K1)`, 설정 VBJ·LSJ1~4·VBJ0·VBH·LSH1~4. 구현 중(worktree `z4369-jp3`, python-expert) | `j_p3_cause/jp3_remedy_spec.md`(sha `dfb289ad…`), `hydraulics_remedy_review.md` |
+| **J-P3 보완 명세 판 3**(결정 144~148) | rev 5(R5-1~R5-5, u_hold 0.01 v_max), 플랜트 P1~P4(관문 e_h 9 bar·F_band 0·p_floor, 수축 시드 예외), J-P3a/b/c(갇힌 몫 판정·채움 기록), 판정은 이상 센서+normal, 태그 `final_C4G2_P3H(_LAS_K1)`, 설정 VBJ·LSJ1~4·VBJ0·VBH·LSH1~4. 판 3 구현 `221456d`(기준선). 그 뒤는 아래 판 4a 행(worktree `.claude\worktrees\z4369-jp3`, 2026-11-20 `C:\workspace\z4369-jp3`에서 이동) | `j_p3_cause/jp3_remedy_spec.md`(sha `dfb289ad…`), `hydraulics_remedy_review.md` |
+| **J-P3 보완 판 4a 봉인·J4a 재구현**(결정 152·153) | 판 4a sha `8be9de22…`(`f67745f`), 깨끗한 `221456d` 기준선 `baseline_221456d/SHA256SUMS`(sha `197ac14e…`, 27개 파일만, 덧붙임 4a-1 `143a0ef`). J4a 재구현은 `ad5024b`(11-17, 브랜치 `z4369-jp3`, 미병합). 자동 진행 범위는 명세 13.5절(사례 재생~j9_main)이지만 2026-11-20 사용자 결정으로 **검토·시험까지만** 진행하고 사례 재생은 다시 승인 | `j_p3_cause/jp3_remedy_spec.md` 13절, `jp3_remedy_spec_addendum_4a1.md` |
 | tools/verif 검사기 3종 | `judgement_checklist` 사전 예측·앞 목록 빌리기, `ps1_lint.py`, `handoff_leak.py`(시험 157 passed). 감사 정의·전역 CLAUDE.md §5·메모리 반영 | `~/.claude/tools/verif/README.md` |
 | 경로 1 Chrono 도구 표기 | TOOL_VERSION v8, README(`25effee`·`ae322a7`), N3 행정 좌표 원인 확인(경로 2 `s_motor_m` 링크 변위) | 하네스 판정서 10절 rev26 후보 |
 
 ## 2. 다음 (사용자 결정 110·139 순서, 각 시작은 알리고 승인)
 
-1. J-P3 보완 구현 끝 → 사례 재생 A~F·VBH 진단 → 436.9 봉인 전 감사(결정 96 자동 범위).
-2. LAS-c v2 구현(J-P3 뒤 별도 worktree) → 하네스 probe 280+20줄 → H-0 확인 → Chrono 5행+바닥 probe 2(단계마다 승인).
+1. (진행 중, 2026-11-20) J4a 단위 시험(T-JR-01, skip 3건은 `OUTRIGGER_RECORDS_ROOT`로 메인 checkout 레코드) + J4a-1~18 대조(python-expert), 판 4a 적합성 검토(control-expert, 저장 예정 `j_p3_cause/jp3_impl_review_4a.md`). → (사용자 승인 뒤) 사례 재생 A~F·VBH 진단 → T-JR-10~15 → j9_main → 436.9 봉인 전 감사.
+2. LAS-c v2 구현(J-P3 뒤 별도 worktree, 사용자 결정 2026-11-20) → 하네스 probe 280+20줄 → H-0 확인 → Chrono 5행+바닥 probe 2(단계마다 승인).
 3. **436.9**: J-P3 보완(결정 144: 제어기 안 1 + u_hold 0.21 mm/s(1 % v_max) + 수축 hold 보조 규칙, 플랜트 P1 M1c 라인 충전 관문·P2 모든 잠금 앵커 직전 p_tr 연속(r5 −3 bar 계단 포함)·P3 유량 상한·P4 판독 M2 참값 옵션, J-P3 정의 보완, 모두 VB/LS 명령 해시 변경 → 봉인 전 감사; 구현 python-expert, 합격 기준 `hydraulics_review.md` 7절), H-3·H-4 재판정(두 경로 도구 보완), C-2 E-5 READY 여유, rigid_base P3-5, 열린 루프 해당 없음, rev26 후보(하네스 판정서 10절 + Chrono 판정서 11절).
 4. B1 rev2.
 - J-P3 관련 제조사·실측 확인: V-1·V-5(스풀 불감대·데드밴드 보상), V-6(중립 형식·누설), L-1·L-2·L-6·L-7·H-2(파일럿 체크), H-3·Q-M9(호스), Q-M12(사체적), U-R8-9. 실측 제안은 `hydraulics_review.md`.
 
 ## 3. 열린 작은 항목
 - decision_log 4절에 436.8 결정 1~112 경과 요지(21줄, 결정 143)와 113~141 판정 블록이 모두 들어갔다. 원문은 메모리 결정 기록.
-- 병합된 worktree 4개 제거(브랜치 보존, 결정 143).
+- 병합된 worktree 제거(브랜치 보존, 결정 143) — 2026-11-20 완료(아래 worktree 줄).
 - 하네스 판정서 12절 확인 필요 7건(D297, SKIP 14건 이름, K1 80건 차, P-5·P-6, C-11 법선력 차 원인, J6 결측, G6 강등 조건 재계산). 커밋을 막지 않음(감사 N-7).
 - 경로 2 README 낡은 가리킴 2건(integrity Low, R4 재생성을 피하려 그대로, 공개).
 - tools/verif 후보: `kr_cd11`(나머지 3종은 11-16 완료).
 - 추적 밖 보존(지우지 않음): `gs_harness_b9f5707`, `h0_judge_b9f5707`, `h0_judge`, `judge_b9f5707`, `run_b9f5707`, `07_results/S9/R4368X_b9f5707_20261115_013947`, `las/t3_k1_a861981_superseded`, `judge_576eb87/chrono_path1/chrono_view`, G-S `gs_*`, `judge_062e051`·`judge_576eb87`.
-- worktree: `C:\workspace\z4373-p1harness`, `z4373-p2harness`, `z4373-r4`, `z4373-p1doc`(병합 끝, 정리 가능), `z4373-s4`(규칙 봉인 브랜치).
+- worktree(2026-11-20 기준): 위치 규칙은 `.claude\worktrees\<이름>`(CLAUDE.md 작업 규칙). `C:\workspace\z43xx-*`는 모두 없어졌다(z4369-jp3는 이동). 남은 것: `z4369-jp3`(J4a), `k2-run`(locked), `agent-a46dac271d9a328bb`(브랜치 `worktree-agent-a46dac271d9a328bb` `1cd2622` 436.8 G-S engine rows, master 미병합 — 처리 미정). 병합된 agent worktree 3개는 제거(브랜치 보존). 옛 세션 scratchpad worktree `cad_finalC4\wt`는 제거(파일은 메인과 같음).
 - 결과 전 고정 파일 원본은 세션 scratchpad에 있었고 사본이 `judge_932f1fb/_fixed/`(49개)에 커밋됐다.
 
 ## 4. 규칙 요약 (자세한 것은 CLAUDE.md·메모리)
