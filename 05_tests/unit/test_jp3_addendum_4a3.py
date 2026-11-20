@@ -345,14 +345,21 @@ def _summary_record(truth, monitor, *, key=None, seed=None) -> dict:
     return record
 
 
-SELECTION = {"r79_key": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0", "r79_seed": 25}
+DRY_KEYS_FILE_SHA256 = "1a79e02fc33ae8844d0cd5672e9e5e745215c354e58e9a8095376939c4335e74"
+"""4a-4 erratum 1, typed from the document."""
+SELECTION = {"r79_key": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0", "r79_seed": 25,
+             "r79_keys_file": {"sha256": DRY_KEYS_FILE_SHA256}}
+R79_META = {"keys_file": {"path": "k.txt", "n_keys": 1, "sha256": DRY_KEYS_FILE_SHA256}}
 
 
 def _summary_files(tmp_path, *, vbh_truth: int = 0, r79_key: str | None = None,
-                   r79_seed: int = 25) -> tuple[dict, dict]:
+                   r79_seed: int = 25, r79_meta: dict | None = None) -> tuple[dict, dict]:
+    meta = R79_META if r79_meta is None else r79_meta
+
     def write(name, record, *, r79=False):
         path = tmp_path / name
-        text = json.dumps({"results": [record]}) if r79 else json.dumps(record) + "\n"
+        text = (json.dumps({"meta": meta, "results": [record]}) if r79
+                else json.dumps(record) + "\n")
         path.write_text(text, encoding="utf-8")
         return path
 

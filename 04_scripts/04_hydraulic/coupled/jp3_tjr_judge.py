@@ -33,6 +33,12 @@ Sub-commands:
 ``base-judge``     4a-3 4.4: writes the H-6 base judge file (``r79_sensor_judge.py judge`` on
              the stored H-6 with the L1 lines of ``h8_noise_VB.json``, ``--s4-late-loc``) and
              reports its sha256 (both inputs must be the fixed files).
+``base-judge-compare``  4a-4 erratum 1 R-2 (a record): the per-key grades (grade, failed
+             gates, flags) of the stored H-6 under the new base judge file against the 436.8
+             path 1 r79 judge of the same H-6 (``judge_932f1fb/harness_path1/h6_r79_judge.json``,
+             sha256 fixed) and, optionally, that folder's ``h6_judge.json`` line grades; also
+             whether the two L1 reference extracts are equal. Exit 1 = keys of other grades
+             (look for the cause before T-JR-12), 2 = an input missing or of another sha.
 ``t12-selfcheck``  4a-4 6, before the run: ``t12 --bundle VBH`` of the stored H-6 against
              itself with that judge file on both sides; exit 0 only when the 6 table holds
              (pass, 135 pairs, 1 L2 line, empty failure and improvement lists, 7 pairs without
@@ -73,6 +79,11 @@ Before T-JR-12 (4a-4 6, the main session; stored data only):
       <resume_k1/h8_noise_VB.json> --judge-out <pre>/h6_base_judge.json --out <pre>/bj.json
   jp3_tjr_judge.py t12-selfcheck --h6 <same H-6> --judge <pre>/h6_base_judge.json
       --judge-sha256 <judge_sha256 of bj.json> --out <pre>/h6_selfcheck.json   (exit 0)
+  jp3_tjr_judge.py base-judge-compare --h6 <same H-6> --new-judge <pre>/h6_base_judge.json
+      --new-judge-sha256 <judge_sha256> --stored-judge <v4368>/judge_932f1fb/harness_path1/
+      h6_r79_judge.json --stored-h6-judge <same folder>/h6_judge.json --new-l1-reference
+      <pre>/h6_base_judge_L1_reference.json --stored-l1-reference <same folder>/
+      h6_L1_reference.json --out <pre>/h6_judge_compare.json        (record; exit 1 = differ)
 """
 from __future__ import annotations
 
@@ -604,6 +615,90 @@ def make_base_judge(h6: Path, noise: Path, judge_out: Path
             "l1_reference_sha256": fixed.file_sha256(extract)}, problems, [h6, noise, extract]
 
 
+@dataclass(frozen=True)
+class JudgeCompareInputs:
+    """``base-judge-compare`` inputs (all stored files)."""
+
+    h6: Path
+    new_judge: Path
+    new_judge_sha256: str
+    stored_judge: Path
+    stored_h6_judge: Path | None = None
+    new_l1_reference: Path | None = None
+    stored_l1_reference: Path | None = None
+
+
+GRADE_FIELDS = ("grade", "failed_gates", "flags")
+"""The per-key grade fields compared (``h8_noise_judge_4368.grade_line``)."""
+
+
+def compare_base_judges(inputs: JudgeCompareInputs
+                        ) -> tuple[dict, compare.Problems, list[Path]]:
+    """4a-4 erratum 1 (R-2, a record, not a judgement condition): the per-key grades of the
+    stored H-6 under the new ``base-judge`` file against the 436.8 path 1 r79 judge of the same
+    H-6 (``STORED_H6_R79_JUDGE_SHA256``); with ``stored_h6_judge`` also against that
+    ``h6_judge_4368`` report's ``line_details`` grades. A difference is a failure here (exit 1:
+    find its cause before T-JR-12); a missing or other input is not judgeable (exit 2)."""
+    import h8_noise_judge_4368 as h8
+
+    problems = compare.Problems()
+    checks = [(inputs.h6, fixed.H6_SHA256, "--h6"),
+              (inputs.new_judge, inputs.new_judge_sha256.lower(), "--new-judge"),
+              (inputs.stored_judge, fixed.STORED_H6_R79_JUDGE_SHA256, "--stored-judge")]
+    problems.not_judgeable += [problem for path, expected, label in checks
+                               if (problem := fixed.sha_problem(path, expected, label))]
+    files = [path for path, _, _ in checks]
+    if problems.not_judgeable:
+        return {}, problems, files
+    results = _read_json(inputs.h6)["results"]
+    new_grades = h8.grade_lines(results, _read_json(inputs.new_judge))
+    stored_grades = h8.grade_lines(results, _read_json(inputs.stored_judge))
+    report = {"record_only": "4a-4 erratum 1 R-2: not a judgement condition",
+              "stored_judge": _grade_differences(new_grades, stored_grades, problems,
+                                                 "stored r79 judge")}
+    if inputs.stored_h6_judge is not None:
+        files.append(inputs.stored_h6_judge)
+        report["stored_h6_judge"] = _line_grade_differences(
+            new_grades, _read_json(inputs.stored_h6_judge), problems)
+    report["l1_reference"] = _l1_reference_record(inputs)
+    return report, problems, files
+
+
+def _grade_differences(new: dict, stored: dict, problems: compare.Problems,
+                       label: str) -> dict:
+    if set(new) != set(stored) or len(new) != DG3_PAIRS:
+        problems.not_judgeable.append(f"{label}: {len(new)} / {len(stored)} graded keys, "
+                                      f"{DG3_PAIRS} equal keys expected")
+        return {"keys": len(new)}
+    rows = [{"key": key, **{f"new_{name}": new[key].get(name) for name in GRADE_FIELDS},
+             **{f"stored_{name}": stored[key].get(name) for name in GRADE_FIELDS}}
+            for key in sorted(new)
+            if any(new[key].get(name) != stored[key].get(name) for name in GRADE_FIELDS)]
+    if rows:
+        problems.failures.append(f"{label}: {len(rows)} keys of other grades (record)")
+    return {"keys": len(new), "differing": len(rows), "rows": rows,
+            "grade_counts_new": dict(Counter(grade["grade"] for grade in new.values()))}
+
+
+def _line_grade_differences(new: dict, h6_judge: dict, problems: compare.Problems) -> dict:
+    """Against ``h6_judge.json`` ``line_details[].line_grade``."""
+    import h8_noise_judge_4368 as h8
+
+    stored = {h8.plain_key(line["key"]): line.get("line_grade") or {}
+              for line in h6_judge.get("line_details") or []}
+    return _grade_differences(new, stored, problems, "stored h6_judge line grades")
+
+
+def _l1_reference_record(inputs: JudgeCompareInputs) -> dict:
+    """Whether the new L1 extract is the stored one byte for byte (a record)."""
+    if inputs.new_l1_reference is None or inputs.stored_l1_reference is None:
+        return {"record": "not given"}
+    new_sha = fixed.file_sha256(inputs.new_l1_reference)
+    stored_sha = fixed.file_sha256(inputs.stored_l1_reference)
+    return {"new_sha256": new_sha, "stored_sha256": stored_sha, "equal": new_sha == stored_sha,
+            "stored_is_fixed": stored_sha == fixed.STORED_H6_L1_REFERENCE_SHA256}
+
+
 # --- records (T-JR-13 .. 15) ----------------------------------------------------------------
 
 def judge_records(replays: list[dict], dg3_files: list[dict], lock_rows: list[dict]
@@ -675,6 +770,20 @@ def _parser() -> argparse.ArgumentParser:
     base_judge.add_argument("--noise", type=Path, required=True,
                             help="resume_k1/h8_noise_VB.json (its L1 lines are the reference)")
     base_judge.add_argument("--judge-out", type=Path, required=True)
+    judges = commands.add_parser(
+        "base-judge-compare",
+        help="4a-4 erratum 1 R-2: new H-6 judge grades against the 436.8 path 1 judge (record)")
+    judges.add_argument("--out", type=Path, required=True)
+    judges.add_argument("--h6", type=Path, required=True)
+    judges.add_argument("--new-judge", type=Path, required=True)
+    judges.add_argument("--new-judge-sha256", required=True)
+    judges.add_argument("--stored-judge", type=Path, required=True,
+                        help="verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/"
+                             "h6_r79_judge.json")
+    judges.add_argument("--stored-h6-judge", type=Path, default=None,
+                        help="the same folder's h6_judge.json (line grades, optional)")
+    judges.add_argument("--new-l1-reference", type=Path, default=None)
+    judges.add_argument("--stored-l1-reference", type=Path, default=None)
     selfcheck = commands.add_parser("t12-selfcheck",
                                     help="4a-4 6: stored H-6 against itself with the real judge")
     selfcheck.add_argument("--out", type=Path, required=True)
@@ -711,6 +820,10 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         return make_base_judge(args.h6, args.noise, args.judge_out)
     if args.command == "t12-selfcheck":
         return t12_selfcheck(args.h6, args.judge, args.judge_sha256)
+    if args.command == "base-judge-compare":
+        return compare_base_judges(JudgeCompareInputs(
+            args.h6, args.new_judge, args.new_judge_sha256, args.stored_judge,
+            args.stored_h6_judge, args.new_l1_reference, args.stored_l1_reference))
     lock_rows = [row for path in args.lock_rows for row in _read_json_lines(path)]
     report, problems = judge_records([_read_json(path) for path in args.replay],
                                      [_read_json(path) for path in args.dg3], lock_rows)

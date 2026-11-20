@@ -27,8 +27,14 @@ Sub-commands:
 ``summarize``  The five outputs against the table (4a-3 5.1 rows 1 .. 3, 4a-4 3 rows 4 .. 5):
                per run only the evidence keys and whether it ran without an error; for the r79
                runs also that the runner took the generated key (4a-4 2: its ``key`` without the
-               prefix = the generated key, ``seed_index`` = ``n``). A miss of that is not
+               prefix = the generated key, ``seed_index`` = ``n``; 4a-4 erratum 1: the output
+               meta's ``keys_file.sha256`` = the selection's key file sha = the fixed
+               ``DRY_KEYS_FILE_SHA256`` and ``keys_file.n_keys`` = 1). A miss of that is not
                judgeable with the reason "다시 묻기" (ask the user again, no judged key instead).
+
+``select --keys-file <path>`` names the key file the commands use: absent = written, present
+(the repository copy ``j4a_remedy_b06e409e/dryrun_selection_r79_key.txt``) = it must hold the
+generated key; either way its sha256 must be the fixed one.
 
 The r79 runs use the T-JR-12 runner and environment (4a-4 3): ``las_t3_dg3.py`` with
 ``R79_V5_SETTING``, ``R79_T4H_DIR``, ``LAS_T3_DG3_LAS/K1/P3=on`` (VBJ also
@@ -47,6 +53,7 @@ Usage (dynamics-dev, project root; <m> = <main checkout>/06_analysis):
       --baseline <m>/02_control/j_p3_cause/baseline_221456d
       --dg3 <m>/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json
       --noise <m>/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json
+      [--keys-file <m>/02_control/j_p3_cause/j4a_remedy_b06e409e/dryrun_selection_r79_key.txt]
   python -I -B ... run-event --selection <sel.json> --setting VBJ
       --out <dryrun_evidence/event_VBJ.jsonl>
   python -I -B ... summarize --selection <sel.json> --out <summary.json>
@@ -96,6 +103,10 @@ EXPECTED = {("event", "VBJ"): "equal", ("event", "VBH"): "truth_zero_monitor_pos
 """4a-3 5.1 rows 1 .. 3, 4a-4 3 rows 4 .. 5: equal = 1 = 2 > 0; truth_zero_monitor_positive =
 1 = 0 and 2 > 0."""
 ASK_AGAIN = "다시 묻기(4a-4 2: the runner did not take the generated key)"
+KEYS_FILE_LINE_END = "\r\n"
+"""The fixed key file (4a-4 erratum 1, ``DRY_KEYS_FILE_SHA256``) was written by
+``Path.write_text`` on Windows, so its one line ends in CRLF; the runner strips line ends
+(``r79_L3L4_final.read_keys_file``). Written as bytes so the sha is the same on any OS."""
 DG3_RUNNER = "04_scripts/04_hydraulic/coupled/las_t3_dg3.py"
 EXIT_DONE, EXIT_MISSED, EXIT_NOT_JUDGEABLE, EXIT_ERROR = 0, 1, 2, 3
 
@@ -294,6 +305,22 @@ def key_taken(selection: dict, record: dict) -> bool:
             and record.get("seed_index") == selection["r79_seed"])
 
 
+def keys_file_problems(selection: dict, meta: dict) -> list[str]:
+    """4a-4 erratum 1: the r79 output meta's ``keys_file`` is the selection's key file (sha256
+    = the selection record = the fixed value) with one key."""
+    record = (meta or {}).get("keys_file") or {}
+    expected = (selection.get("r79_keys_file") or {}).get("sha256")
+    problems = []
+    if expected != fixed.DRY_KEYS_FILE_SHA256:
+        problems.append(f"selection key file sha256 {str(expected)[:12]} is not the fixed one")
+    if record.get("sha256") != expected:
+        problems.append(f"r79 meta keys_file.sha256 {str(record.get('sha256'))[:12]} is not "
+                        "the selection's")
+    if record.get("n_keys") != 1:
+        problems.append(f"r79 meta keys_file.n_keys {record.get('n_keys')!r}, 1 expected")
+    return problems
+
+
 def summarize(selection: dict, event_files: dict[str, Path],
               r79_files: dict[str, Path]) -> tuple[dict, int]:
     """The ``summarize`` output and its exit code."""
@@ -305,13 +332,15 @@ def summarize(selection: dict, event_files: dict[str, Path],
             rows.append({"run": f"{path_kind}_{setting}", "output": "missing"})
             code = EXIT_NOT_JUDGEABLE
             continue
-        records = (_read_lines(path) if path_kind == "event" else _read_json(path)["results"])
+        document = None if path_kind == "event" else _read_json(path)
+        records = _read_lines(path) if document is None else document["results"]
         row = {"run": f"{path_kind}_{setting}", "expected": expectation,
                "evidence": [evidence_of(record) for record in records]}
         row["meets"] = [meets(expectation, item) for item in row["evidence"]]
-        if path_kind == "r79":
+        if document is not None:
             row["key_taken"] = [key_taken(selection, record) for record in records]
-            if not all(row["key_taken"]) or len(records) != 1:
+            row["keys_file_problems"] = keys_file_problems(selection, document.get("meta"))
+            if not all(row["key_taken"]) or len(records) != 1 or row["keys_file_problems"]:
                 row["stop"] = ASK_AGAIN
         rows.append(row)
         if len(records) != 1 or None in row["meets"] or "stop" in row:
@@ -345,6 +374,10 @@ def _parser() -> argparse.ArgumentParser:
     chosen.add_argument("--out", type=Path, required=True)
     for name in ("scan-root", "main-jsonl", "baseline", "dg3", "noise"):
         chosen.add_argument(f"--{name}", type=Path, required=True)
+    chosen.add_argument("--keys-file", type=Path, default=None,
+                        help="the r79 key file the commands name (default <out stem>_r79_key.txt "
+                             "next to --out); an existing file must hold the same key (4a-4 "
+                             "erratum 1: the repository copy in j4a_remedy_b06e409e/)")
     event = commands.add_parser("run-event")
     event.add_argument("--selection", type=Path, required=True)
     event.add_argument("--setting", choices=EVENT_SETTINGS, required=True)
@@ -362,15 +395,35 @@ def keys_file_of(out: Path) -> Path:
     return out.with_name(f"{out.stem}_r79_key.txt")
 
 
+def place_keys_file(keys_file: Path, key: str) -> dict:
+    """The one-line key file of ``key`` at ``keys_file``: written when absent; an existing file
+    (the repository copy of 4a-4 erratum 1) must hold exactly that line. Its sha256 must be the
+    fixed :data:`jp3_fixed_inputs.DRY_KEYS_FILE_SHA256`.
+
+    Raises:
+        Stop: An existing file of other content, or another sha256 (the selection changed).
+    """
+    content = (key + KEYS_FILE_LINE_END).encode("utf-8")
+    if keys_file.exists():
+        if keys_file.read_bytes() != content:
+            raise Stop(f"{keys_file} exists with another key (never overwritten)")
+        reused = True
+    else:
+        keys_file.parent.mkdir(parents=True, exist_ok=True)
+        keys_file.write_bytes(content)
+        reused = False
+    digest = fixed.file_sha256(keys_file)
+    if digest != fixed.DRY_KEYS_FILE_SHA256:
+        raise Stop(f"key file sha256 {digest[:12]} is not the fixed "
+                   f"{fixed.DRY_KEYS_FILE_SHA256[:12]} (4a-4 erratum 1)")
+    return {"path": str(keys_file), "sha256": digest, "reused_existing_file": reused}
+
+
 def _select_command(args: argparse.Namespace) -> dict:
     inputs = SelectInputs(args.scan_root, args.main_jsonl, args.baseline, args.dg3, args.noise)
     report = select(inputs)
-    keys_file = keys_file_of(args.out)
-    if keys_file.exists():
-        raise Stop(f"{keys_file} exists (never overwritten)")
-    keys_file.parent.mkdir(parents=True, exist_ok=True)
-    keys_file.write_text(report["r79_key"] + "\n", encoding="utf-8")
-    report["r79_keys_file"] = {"path": str(keys_file), "sha256": fixed.file_sha256(keys_file)}
+    keys_file = args.keys_file or keys_file_of(args.out)
+    report["r79_keys_file"] = place_keys_file(keys_file, report["r79_key"])
     report["commands"] = _commands(report["event_job"], keys_file)
     return report
 
