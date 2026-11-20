@@ -22,7 +22,11 @@
 
 ## 2. 다음 (사용자 결정 110·139 순서, 각 시작은 알리고 승인)
 
-1. (진행 중, 2026-11-20) J4a 단위 시험(T-JR-01, skip 3건은 `OUTRIGGER_RECORDS_ROOT`로 메인 checkout 레코드) + J4a-1~18 대조(python-expert), 판 4a 적합성 검토(control-expert, 저장 예정 `j_p3_cause/jp3_impl_review_4a.md`). → (사용자 승인 뒤) 사례 재생 A~F·VBH 진단 → T-JR-10~15 → j9_main → 436.9 봉인 전 감사.
+1. J4a 검토·시험 끝(2026-11-20, `j_p3_cause/jp3_impl_review_4a.md` 원문 + 끝 절 결정). 결정 Q1·Q2·Q4·보완 범위는 decision_log 4절 끝. **다음 세션은 여기서 시작**(새 단계라 시작 전 알리고 승인):
+   1. control-expert: 덧붙임 4a-2 문안(B1 공개 문장 P4-6·P4-7·T-JR-05 (k)·2.10절 비용 정정, Q2 P4-2 설명 범위, Q4 시드 순 힘 측정 열 정의). 봉인 본문 불변, 메인이 `jp3_remedy_spec_addendum_4a2.md`로 저장·sha.
+   2. python-expert(worktree `.claude\worktrees\z4369-jp3`): B2(사례 F를 run_v5 `j9_case_f` 배치로, P4 적용 기록 키), B3, B4(J4a-15 T-JR-10~15 배치·T-JR-12 판정 도구), J4a-9 결함(identity 단언·키 없으면 판정 불가·덮어쓰기 금지·출력 sha·시험), X11 러너(append·해시 출력), P4-5a·F 판정 스크립트, 시험 공백(J4a-18 재생 거부, `j_p3_inputs` 시험 설정 거부), 권고 R1~R9.
+   3. 단위 시험 재실행(지난 실행: worktree 루트에서 Chrono-dev `python.exe -B -m pytest 05_tests/unit -n 12 --dist loadfile`, 환경 변수 `OUTRIGGER_RECORDS_ROOT=C:\workspace\outrigger_control`, P코어 affinity 0xFFFF. worktree에 없는 `07_results` 의존 skip은 메인 checkout에서 `-o pythonpath=<worktree>/03_src`로 보충, junction 금지. 세션 scratchpad 러너는 재부팅 뒤 없을 수 있음) → control 재검토 → verif-protocol-auditor 실행 전 감사 → (승인) 사례 재생 A~F·VBH → T-JR-10~15 → j9_main → 436.9 봉인 전 감사.
+   - 열린 결정: B5 경로 2 J-P3 rev 5 판정 도구 작성자(경로 1을 본 적 없는 에이전트), `agent-a46dac271d9a328bb`(`1cd2622`) 처리.
 2. LAS-c v2 구현(J-P3 뒤 별도 worktree, 사용자 결정 2026-11-20) → 하네스 probe 280+20줄 → H-0 확인 → Chrono 5행+바닥 probe 2(단계마다 승인).
 3. **436.9**: J-P3 보완(결정 144: 제어기 안 1 + u_hold 0.21 mm/s(1 % v_max) + 수축 hold 보조 규칙, 플랜트 P1 M1c 라인 충전 관문·P2 모든 잠금 앵커 직전 p_tr 연속(r5 −3 bar 계단 포함)·P3 유량 상한·P4 판독 M2 참값 옵션, J-P3 정의 보완, 모두 VB/LS 명령 해시 변경 → 봉인 전 감사; 구현 python-expert, 합격 기준 `hydraulics_review.md` 7절), H-3·H-4 재판정(두 경로 도구 보완), C-2 E-5 READY 여유, rigid_base P3-5, 열린 루프 해당 없음, rev26 후보(하네스 판정서 10절 + Chrono 판정서 11절).
 4. B1 rev2.
