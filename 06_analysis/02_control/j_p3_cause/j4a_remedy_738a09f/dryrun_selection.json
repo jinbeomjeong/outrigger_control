@@ -1,0 +1,56 @@
+{
+ "event_job": {
+  "case": "R14",
+  "eps": 0.0,
+  "offset_s": 0.025
+ },
+ "event_candidates": [
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.025
+   },
+   "in_union": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0125
+   },
+   "in_union": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.025
+   },
+   "in_union": false
+  }
+ ],
+ "r79_key": "L2|s0|g6|0|g6|G1+J1@FL|top|Fs0",
+ "r79_key_in_dg3": false,
+ "union_sizes": {
+  "j9_main": 100,
+  "j9_cases": 1,
+  "j9_case_f": 1,
+  "j9_t8": 22,
+  "baseline_221456d": 1
+ },
+ "event_union_size": 101,
+ "dg3_key_count": 135,
+ "commands": {
+  "event_VBJ": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py run-event --selection <sel.json> --setting VBJ --out dryrun_evidence/event_VBJ.jsonl",
+  "event_VBH": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py run-event --selection <sel.json> --setting VBH --out dryrun_evidence/event_VBH.jsonl",
+  "event_VBJ0": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py run-event --selection <sel.json> --setting VBJ0 --out dryrun_evidence/event_VBJ0.jsonl",
+  "r79_VBJ": "env R79_V5_SETTING=VBJ R79_ROD_MODEL=plant_truth R72_PATH=per_leg python -I -B 04_scripts/03_control/s8/r79_L3L4_final.py <root> run dryrun_evidence/r79_VBJ.json --levels L2 --keys \"L2|s0|g6|0|g6|G1+J1@FL|top|Fs0\" --workers 1",
+  "r79_VBH": "env R79_V5_SETTING=VBH R72_PATH=per_leg python -I -B 04_scripts/03_control/s8/r79_L3L4_final.py <root> run dryrun_evidence/r79_VBH.json --levels L2 --keys \"L2|s0|g6|0|g6|G1+J1@FL|top|Fs0\" --workers 1",
+  "event_job": {
+   "case": "R14",
+   "eps": 0.0,
+   "offset_s": 0.025
+  }
+ }
+}

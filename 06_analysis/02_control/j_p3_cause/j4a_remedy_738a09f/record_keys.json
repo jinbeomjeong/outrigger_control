@@ -1,0 +1,54 @@
+{
+ "VBG4": {
+  "options": {
+   "flow": null,
+   "valve_tau_s": null,
+   "rod_release_force": true,
+   "check_delay": null,
+   "lock_closure": {
+    "overlap_ratio": 0.02,
+    "closing_delay_s": 0.05
+   },
+   "lock_window_follows_plant": true,
+   "extend_start_tracked": true,
+   "line_fill_gate": {
+    "kind": "VN",
+    "volume_scale": 1.0,
+    "c_v": 0.02
+   },
+   "m2_law": "flow_limited_r5"
+  },
+  "evidence": {
+   "rod_reading_truth_calls": 0,
+   "two_pressure_reads": 0
+  },
+  "has_keys": true
+ },
+ "VBG5": {
+  "options": {
+   "flow": null,
+   "valve_tau_s": null,
+   "rod_release_force": true,
+   "check_delay": null,
+   "lock_closure": {
+    "overlap_ratio": 0.02,
+    "closing_delay_s": 0.05
+   },
+   "lock_window_follows_plant": true,
+   "extend_start_tracked": true,
+   "extend_start_hold": true,
+   "line_fill_gate": {
+    "kind": "VN",
+    "volume_scale": 1.0,
+    "c_v": 0.02
+   },
+   "m2_law": "flow_limited_r5"
+  },
+  "evidence": {
+   "rod_reading_truth_calls": 0,
+   "two_pressure_reads": 0
+  },
+  "has_keys": true
+ },
+ "foreign_modules": []
+}

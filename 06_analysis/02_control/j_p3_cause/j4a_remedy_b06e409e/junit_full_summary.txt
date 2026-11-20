@@ -1,0 +1,239 @@
+passed 7505 failed 2 skipped 132 xfail 0
+FAILED 05_tests.unit.test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume
+FAILED 05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash
+SKIP-FILE    5 05_tests.unit.test_chrono_t45_replay
+SKIP-FILE    2 05_tests.unit.test_contact_episode
+SKIP-FILE    7 05_tests.unit.test_contact_replay
+SKIP-FILE    3 05_tests.unit.test_contact_replay_fallback_slope
+SKIP-FILE    1 05_tests.unit.test_d8x_chrono_rows
+SKIP-FILE    1 05_tests.unit.test_las_chrono_rows
+SKIP-FILE    1 05_tests.unit.test_las_off_chrono
+SKIP-FILE    5 05_tests.unit.test_ml_pipeline
+SKIP-FILE    1 05_tests.unit.test_params_l2b
+SKIP-FILE   20 05_tests.unit.test_r5_fallback_replay
+SKIP-FILE    1 05_tests.unit.test_rod_chamber
+SKIP-FILE    1 05_tests.unit.test_s6_bundle_c
+SKIP-FILE    1 05_tests.unit.test_s7_control_rev37
+SKIP-FILE    1 05_tests.unit.test_s8_c_s8_33
+SKIP-FILE    1 05_tests.unit.test_s8_c_s8_34
+SKIP-FILE    3 05_tests.unit.test_s8_control
+SKIP-FILE    6 05_tests.unit.test_s8_control_rev45
+SKIP-FILE    4 05_tests.unit.test_s8_control_rev46
+SKIP-FILE    1 05_tests.unit.test_s8_ml_main
+SKIP-FILE    1 05_tests.unit.test_s8_rev54_cad
+SKIP-FILE    2 05_tests.unit.test_s8_rev55_cad
+SKIP-FILE    2 05_tests.unit.test_s8_rev56_cad
+SKIP-FILE    1 05_tests.unit.test_s8_soil_restore
+SKIP-FILE    3 05_tests.unit.test_s9_final
+SKIP-FILE    4 05_tests.unit.test_s9_mass_scale
+SKIP-FILE    1 05_tests.unit.test_s9_p3b_rev60
+SKIP-FILE    4 05_tests.unit.test_s9_rev420_records
+SKIP-FILE    1 05_tests.unit.test_two_pressure_cb_moving
+SKIP-FILE    9 05_tests.unit.test_two_pressure_d1_drain
+SKIP-FILE   21 05_tests.unit.test_two_pressure_d1_imu
+SKIP-FILE    5 05_tests.unit.test_two_pressure_d1_steps
+SKIP-FILE    8 05_tests.unit.test_two_pressure_lock_bound
+SKIP-FILE    5 05_tests.unit.test_two_pressure_lock_valve
+SKIP-REASON   10 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP-REASON    9 07_results/S8 ML pilot not present
+SKIP-REASON    7 07_results/S8 D1' ML records not present
+SKIP-REASON    5 could not import 'torch': No module named 'torch'
+SKIP-REASON    5 p1r not present
+SKIP-REASON    4 07_results/S8 old ML episodes not present
+SKIP-REASON    4 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIP-REASON    4 07_results/S8 records absent
+SKIP-REASON    4 07_results/S8 old ML episodes absent
+SKIP-REASON    3 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIP-REASON    3 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIP-REASON    3 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIP-REASON    3 07_results/S8 ML pilot bases not present
+SKIP-REASON    3 c36 records absent
+SKIP-REASON    2 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\cb_20261025_000840\CB_H4V_fdown3.5_Fs0 not present
+SKIP-REASON    2 batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk
+SKIP-REASON    2 batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk
+SKIP-REASON    2 batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk
+SKIP-REASON    2 c36 A records absent
+SKIP-REASON    2 stored stage 3 VB record not present
+SKIP-REASON    2 stored VB Chrono record not present
+SKIP-REASON    2 07_results/S8 CB batch not present
+SKIP-REASON    2 07_results/S8 p1r batch not present
+SKIP-REASON    2 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_G4_combined_ph0.075
+SKIP-REASON    2 p1r verdict not present
+SKIP-REASON    1 got empty parameter set for (base)
+SKIP-REASON    1 gas separation after FLOOR (14.3 optional) is not implemented
+SKIP-REASON    1 S7 ctrl3 record not present
+SKIP-REASON    1 S8 p1 batch not present
+SKIP-REASON    1 S8 p1 verdict not present
+SKIP-REASON    1 S8 ML plan not present (07_results is not tracked): C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\ml_main_20261025_090131\ml_plan.jso
+SKIP-REASON    1 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\ml_pilot_20261025_002044\episodes\missing\ML00_ep5 not present
+SKIP-REASON    1 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\ml_pilot_20261025_002044\episodes\ML17_ep4 not present
+SKIP-REASON    1 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\K0V_top_fdown3.5_Fs0 not present
+SKIP-REASON    1 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\E_G4_Fs8 not present
+SKIP-REASON    1 C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\K0_top_rpBop_Fs0 not present
+SKIP-REASON    1 VERIFICATION_EXT installed
+SKIP-REASON    1 G6P batch 20261028 not on disk
+SKIP-REASON    1 stored V0 Chrono record not present
+SKIP-REASON    1 stored stage 3 records not present
+SKIP-REASON    1 C-S8-36 bundle A / 768 records not present
+SKIP-REASON    1 C-S8-36 bundle D / original MLJ records not present
+SKIP-REASON    1 batch_P3b_20261027_174330/P3b_J1_B_top_Fs4 not on disk
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\E_G4_Fs0
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1bF_top_flat_dropRR30
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1bP_top_flat_dropRR30_prob
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1b_top_flat_settleRR30
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_D8_top_rpB_b0.69
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun33_L1R_20261024_125604\C1_RE1bF_top_flat_dropRR30
+SKIP-REASON    1 record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun33_L1R_20261024_125604\C1_RE1bP_top_flat_dropRR30_prob
+SKIP-REASON    1 768 batch records not present
+SKIP-REASON    1 07_results/S8 CB batches not present
+SKIP-REASON    1 07_results/states_L1R snapshots not present
+SKIP-REASON    1 no former run folders under 07_results/S9
+SKIP-REASON    1 former S6 batch not here
+SKIP-REASON    1 source run folder absent (07_results is not in git)
+SKIP-REASON    1 ML pilot batch not present
+SKIP-REASON    1 ctrl3 batch not present
+SKIP-REASON    1 rest not present
+SKIP-REASON    1 CB not present
+SKIP-REASON    1 ML pilot not judged
+SKIP-REASON    1 main ML batch not present
+SKIP-REASON    1 YAML regenerated since S7; L1 fingerprint baseline no longer applies
+SKIP-REASON    1 MLJ batch not present
+SKIP-REASON    1 C-S8-36 bundle A records not present
+SKIP-REASON    1 C-S8-36 bundle D records not present
+SKIP-REASON    1 P3b batch 20261026_122444 or control p3b_loc_detail.json not on disk
+SKIP-REASON    1 LAS-b merged: no blocked row
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML00_ep5] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML08_ep4] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML10_ep4] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML11_ep4] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML17_ep4] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML18_ep6] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML21_ep1] | 07_results/S8 D1' ML records not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML00_ep5] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML08_ep4] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML10_ep4] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML11_ep4] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML17_ep4] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML18_ep6] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML21_ep1] | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML00_ep5] | 07_results/S8 old ML episodes not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML02_ep1] | 07_results/S8 old ML episodes not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML02_ep5] | 07_results/S8 old ML episodes not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML22_ep4] | 07_results/S8 old ML episodes not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_injected_head_jumps_are_detected_at_least_as_often_as_with_d1_prime | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_restored_branch_gets_the_lever_arm_of_its_auger_level[NOTSET] | got empty parameter set for (base)
+SKIP 05_tests.unit.test_two_pressure_d1_imu::test_all_ml_pilot_runs_have_no_sensor_fault_and_match_d1_prime_elsewhere | 07_results/S8 ML pilot not present
+SKIP 05_tests.unit.test_rod_chamber::test_h6_gas_separation | gas separation after FLOOR (14.3 optional) is not implemented
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_passes_the_level_gate | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_command_source_matches_and_aborted_rounds_probed_rl | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_302_5_reconstruction_with_l_hat_true[plant_meta-45.06] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_302_5_reconstruction_with_l_hat_true[column_nominal-20.7] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_official_judgement_passes[plant_meta] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_official_judgement_passes[column_nominal] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_record_169_0_row_is_not_watched | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[G4RF_Fs0] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[G4RF_Fs0] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[G4RF_Fs0] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[G4RF_Fs8] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[G4RF_Fs8] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[G4RF_Fs8] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[L1_PS2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[L1_PS2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[L1_PS2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[L2b_PS2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[L2b_PS2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[L2b_PS2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_r5_fallback_replay::test_v4_own_source_is_replayed_even_when_not_asked | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIP 05_tests.unit.test_s8_control::test_c1_on_the_s7_rpb_record | S7 ctrl3 record not present
+SKIP 05_tests.unit.test_s8_control::test_rev43_on_the_p1_re1bf_fs8_case | S8 p1 batch not present
+SKIP 05_tests.unit.test_s8_control::test_rev43_verdict_matches_the_control_f2_recheck | S8 p1 verdict not present
+SKIP 05_tests.unit.test_s8_soil_restore::test_soil_restore_check_reads_the_plan_of_this_tree | S8 ML plan not present (07_results is not tracked): C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\ml_main_20261025_090131\ml_plan.jso
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_controller_from_an_old_branch_runs_with_a_fallback_leg[NOTSET] | 07_results/S8 ML pilot bases not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T1] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\ml_pilot_20261025_002044\episodes\missing\ML00_ep5 not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T1b] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\ml_pilot_20261025_002044\episodes\ML17_ep4 not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T2] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\K0V_top_fdown3.5_Fs0 not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T3] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\cb_20261025_000840\CB_H4V_fdown3.5_Fs0 not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T6a] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\E_G4_Fs8 not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T6b] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\cb_20261025_000840\CB_H4V_fdown3.5_Fs0 not present
+SKIP 05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T6c] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\K0_top_rpBop_Fs0 not present
+SKIP 05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext | VERIFICATION_EXT installed
+SKIP 05_tests.unit.test_s9_rev420_records::test_stored_case_rejudge_unchanged[batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4] | batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk
+SKIP 05_tests.unit.test_s9_rev420_records::test_stored_case_rejudge_unchanged[batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL] | batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk
+SKIP 05_tests.unit.test_s9_rev420_records::test_stored_case_rejudge_unchanged[batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0] | batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk
+SKIP 05_tests.unit.test_s9_rev420_records::test_e420_on_the_stored_pre_implementation_g6p_batch | G6P batch 20261028 not on disk
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_c36_a_false_fallbacks_are_drains | c36 A records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_c36_a_other_38_runs_keep_their_controller_outputs | c36 A records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_c36_b_c_d_have_no_drain_hold[B_f1only] | c36 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_c36_b_c_d_have_no_drain_hold[C_gate] | c36 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_c36_b_c_d_have_no_drain_hold[D_fs24] | c36 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[ml_main_20261025_090131/episodes] | 07_results/S8 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[p1r_20261024_222013] | 07_results/S8 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[rest_20261024_233615] | 07_results/S8 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[cb_20261025_013946] | 07_results/S8 records absent
+SKIP 05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML00_ep5] | 07_results/S8 old ML episodes absent
+SKIP 05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML02_ep1] | 07_results/S8 old ML episodes absent
+SKIP 05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML02_ep5] | 07_results/S8 old ML episodes absent
+SKIP 05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML22_ep4] | 07_results/S8 old ML episodes absent
+SKIP 05_tests.unit.test_two_pressure_d1_steps::test_controller_from_an_old_branch_runs_on_the_current_settings[NOTSET] | 07_results/S8 ML pilot bases not present
+SKIP 05_tests.unit.test_chrono_t45_replay::test_replay_case_of_a_stage3_vb_record_with_m2_records | stored stage 3 VB record not present
+SKIP 05_tests.unit.test_chrono_t45_replay::test_b_t4_0_on_a_stored_v0_record | stored V0 Chrono record not present
+SKIP 05_tests.unit.test_chrono_t45_replay::test_t5_copied_state_equals_a_full_replay | stored VB Chrono record not present
+SKIP 05_tests.unit.test_chrono_t45_replay::test_r4_lock_window_of_a_stored_vb_record | stored VB Chrono record not present
+SKIP 05_tests.unit.test_chrono_t45_replay::test_rev7_regression_on_the_stage3_records | stored stage 3 records not present
+SKIP 05_tests.unit.test_s8_rev56_cad::test_iv_bundle_a_deferred_minima_unchanged_with_768_reference | C-S8-36 bundle A / 768 records not present
+SKIP 05_tests.unit.test_s8_rev56_cad::test_iv_bundle_d_fs0_rr_unchanged_with_mlj_reference | C-S8-36 bundle D / original MLJ records not present
+SKIP 05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4] | batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk
+SKIP 05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL] | batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk
+SKIP 05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0] | batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk
+SKIP 05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_P3b_20261027_174330/P3b_J1_B_top_Fs4] | batch_P3b_20261027_174330/P3b_J1_B_top_Fs4 not on disk
+SKIP 05_tests.unit.test_two_pressure_lock_valve::test_cb_record_replay_has_no_false_rod_fallback[CB_G4_Fs0] | 07_results/S8 CB batch not present
+SKIP 05_tests.unit.test_two_pressure_lock_valve::test_cb_record_replay_has_no_false_rod_fallback[CB_RE1bF_Fs0] | 07_results/S8 CB batch not present
+SKIP 05_tests.unit.test_two_pressure_lock_valve::test_cb_equivalent_roll_record_has_no_false_rl_fallback | 07_results/S8 p1r batch not present
+SKIP 05_tests.unit.test_two_pressure_lock_valve::test_pilot_check_record_replay_is_bit_identical_through_with_lock_valve | 07_results/S8 p1r batch not present
+SKIP 05_tests.unit.test_two_pressure_lock_valve::test_controller_from_a_branch_pickled_before_p_s8_11_keeps_running | 07_results/S8 ML pilot bases not present
+SKIP 05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_contact_episode::test_build_from_a_bundle_c_case_reproduces_the_controller_band | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_G4_combined_ph0.075
+SKIP 05_tests.unit.test_contact_episode::test_build_from_an_s8_case_keeps_the_crawler_meta | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S8\p1r_20261024_222013\E_G4_Fs0
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_G4_combined_ph0.075] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_G4_combined_ph0.075
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_RE1bF_top_flat_dropRR30] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1bF_top_flat_dropRR30
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_RE1bP_top_flat_dropRR30_probe] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1bP_top_flat_dropRR30_prob
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_RE1b_top_flat_settleRR30] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1b_top_flat_settleRR30
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_D8_top_rpB_b0.69] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_D8_top_rpB_b0.69
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun33_/C1_RE1bF_top_flat_dropRR30] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun33_L1R_20261024_125604\C1_RE1bF_top_flat_dropRR30
+SKIP 05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun33_/C1_RE1bP_top_flat_dropRR30_probe] | record not present: C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\S6\bundleC_rerun33_L1R_20261024_125604\C1_RE1bP_top_flat_dropRR30_prob
+SKIP 05_tests.unit.test_s8_rev54_cad::test_768_recurrence_list_equals_spec_248_2 | 768 batch records not present
+SKIP 05_tests.unit.test_two_pressure_cb_moving::test_cb_record_moving_samples_are_never_optimistic | 07_results/S8 CB batches not present
+SKIP 05_tests.unit.test_s6_bundle_c::test_stored_snapshots_rrpre_refused_top_flat_accepted | 07_results/states_L1R snapshots not present
+SKIP 05_tests.unit.test_s8_control_rev45::test_p1r_wika_reading_law_reproduces_5_27_2[S_top_rpB_wika_Fs8] | p1r not present
+SKIP 05_tests.unit.test_s8_control_rev45::test_p1r_wika_reading_law_reproduces_5_27_2[S_top_fdown3.5_wika_Fs8] | p1r not present
+SKIP 05_tests.unit.test_s8_control_rev45::test_p1r_wika_std_pooled_per_side_within_3_percent | p1r not present
+SKIP 05_tests.unit.test_s8_control_rev45::test_p1r_calibration_split_reproduces_the_controller_offsets | p1r not present
+SKIP 05_tests.unit.test_s8_control_rev45::test_p1r_ideal_sensor_cases_reading_law_within_0_1_kN | p1r verdict not present
+SKIP 05_tests.unit.test_s8_control_rev45::test_p1r_rev45_rejudgement_keeps_zero_gate_failures | p1r verdict not present
+SKIP 05_tests.unit.test_s9_final::test_source_args_check_on_the_former_runs | no former run folders under 07_results/S9
+SKIP 05_tests.unit.test_s9_final::test_final_r_s6_rows_match_their_former_batch | former S6 batch not here
+SKIP 05_tests.unit.test_s9_final::test_final_rep_x_check_sources | source run folder absent (07_results is not in git)
+SKIP 05_tests.unit.test_s8_ml_main::test_pilot_rejudge_matches_rev50 | ML pilot batch not present
+SKIP 05_tests.unit.test_s7_control_rev37::test_ctrl3_rejudged_file | ctrl3 batch not present
+SKIP 05_tests.unit.test_s8_control_rev46::test_rest_rev46_zero_failures | rest not present
+SKIP 05_tests.unit.test_s8_control_rev46::test_p1r_rev46_c11_twins_from_rest | p1r not present
+SKIP 05_tests.unit.test_s8_control_rev46::test_cb_rev46_fallback_caught | CB not present
+SKIP 05_tests.unit.test_s8_control_rev46::test_ml_judge_rows | ML pilot not judged
+SKIP 05_tests.unit.test_las_off_chrono::test_t45_replay_of_a_las_row_rebuilds_las_on_and_gives_t4_t5 | stored stage 3 VB record not present
+SKIP 05_tests.unit.test_s8_c_s8_34::test_main_ml_rejudge_expected | main ML batch not present
+SKIP 05_tests.unit.test_contact_replay_fallback_slope::test_record_level_replay_reproduces_the_controller | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_contact_replay_fallback_slope::test_record_fallback_slope_replay_has_no_false_relevel[plant_meta-values_127_8_kN0] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_contact_replay_fallback_slope::test_record_fallback_slope_replay_has_no_false_relevel[column_nominal-values_127_8_kN1] | C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIP 05_tests.unit.test_params_l2b::test_l1_default_is_unchanged | YAML regenerated since S7; L1 fingerprint baseline no longer applies
+SKIP 05_tests.unit.test_s8_c_s8_33::test_mlj_rejudge_rev50 | MLJ batch not present
+SKIP 05_tests.unit.test_s8_rev55_cad::test_bundle_a_gate_lists_the_17_runs_of_spec_260_1 | C-S8-36 bundle A records not present
+SKIP 05_tests.unit.test_s8_rev55_cad::test_bundle_d_fs0_rr_deferred_minimum | C-S8-36 bundle D records not present
+SKIP 05_tests.unit.test_s9_p3b_rev60::test_rejudge_24_stored_cases_against_control | P3b batch 20261026_122444 or control p3b_loc_detail.json not on disk
+SKIP 05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows | LAS-b merged: no blocked row
+13.10 PASSED 05_tests.unit.test_v5_setting_records::test_p3_hash_batch_is_the_22_cases_of_revision_8
+13.10 PASSED 05_tests.unit.test_v5_setting_records::test_rebuilt_allowance_replays_the_dg3_lower_readings
+13.10 PASSED 05_tests.unit.test_v5_setting_records::test_p3_records_replay_with_their_own_setting

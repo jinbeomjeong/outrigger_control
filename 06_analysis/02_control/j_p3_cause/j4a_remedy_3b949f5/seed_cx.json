@@ -1,0 +1,78 @@
+{
+ "normal": {
+  "head_bar": 120.60000000000059,
+  "rod_bar": -0.91325,
+  "p_floor_bar": -0.91325,
+  "band_N": 7000.0,
+  "seed_count": 1,
+  "seed_log": [
+   [
+    0.529,
+    2.0,
+    12060000.00000006,
+    -91325.0,
+    3282493.4334141845,
+    3373818.4334141845,
+    1115311.8788146065,
+    0.0,
+    -14.57303431064065,
+    3.688462868467468e-10,
+    false,
+    false
+   ]
+  ],
+  "seed_log_columns": [
+   "t_s",
+   "leg",
+   "p_h_Pa",
+   "p_r_locked_Pa",
+   "seed_Pa",
+   "step_Pa",
+   "dp_h_read_Pa",
+   "net_force_step_N",
+   "net_force_release_step_N",
+   "net_force_seed_step_N",
+   "m2_previous_unset",
+   "m2_shift_clipped"
+  ]
+ },
+ "mutated": {
+  "head_bar": 120.60000000000059,
+  "rod_bar": -0.91325,
+  "p_floor_bar": -0.91325,
+  "band_N": 7000.0,
+  "seed_count": 1,
+  "seed_log": [
+   [
+    0.529,
+    2.0,
+    12060000.00000006,
+    -91325.0,
+    3282493.4334141845,
+    3373818.4334141845,
+    1115311.8788146065,
+    0.0,
+    -10613.736239270758,
+    -10599.163204959748,
+    false,
+    false
+   ]
+  ],
+  "seed_log_columns": [
+   "t_s",
+   "leg",
+   "p_h_Pa",
+   "p_r_locked_Pa",
+   "seed_Pa",
+   "step_Pa",
+   "dp_h_read_Pa",
+   "net_force_step_N",
+   "net_force_release_step_N",
+   "net_force_seed_step_N",
+   "m2_previous_unset",
+   "m2_shift_clipped"
+  ]
+ },
+ "records_off_bit_equal": true,
+ "foreign_modules": []
+}

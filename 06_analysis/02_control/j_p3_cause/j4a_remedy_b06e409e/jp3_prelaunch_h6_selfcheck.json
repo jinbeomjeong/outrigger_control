@@ -1,0 +1,26 @@
+{
+ "purpose": "436.9 addendum 4a-4 6 (P-1): H-6 base judge file (4a-3 4.4) and the stored H-6 self check with the real judge file, before T-JR-12. Stored data only; the main session runs it and keeps the outputs and these commands in the prelaunch record.",
+ "code_commit": "z4369-jp3 (this remedy commit)",
+ "environment": "dynamics-dev python.exe -I -B, worktree root",
+ "inputs": {
+  "h6": {"path": "C:/workspace/outrigger_control/06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json", "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"},
+  "noise_vb": {"path": "C:/workspace/outrigger_control/06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json", "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43"}
+ },
+ "steps": [
+  {"id": "P-1a base judge file (4a-3 4.4)",
+   "command": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py base-judge --h6 <h6> --noise <noise_vb> --judge-out <prelaunch>/h6_base_judge.json --out <prelaunch>/h6_base_judge_report.json",
+   "expect": "exit 0; the report's judge_sha256 is recorded before the run (it is --base-judge-sha256 / --judge-sha256 below and goes into the fixed list SUMS)"},
+  {"id": "P-1b self check (4a-4 6)",
+   "command": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py t12-selfcheck --h6 <h6> --judge <prelaunch>/h6_base_judge.json --judge-sha256 <judge_sha256 of P-1a> --out <prelaunch>/h6_selfcheck.json",
+   "equivalent_t12_form": "jp3_tjr_judge.py t12 --bundle VBH --base <h6> --base-judge <judge> --new <h6> --new-judge <judge> --base-judge-sha256 <judge_sha256>",
+   "expect_table_4a4_6": {
+    "status": "pass (exit 0)",
+    "not_judgeable / setting_defects / failures": "0 / 0 / 0",
+    "pairs / L2 lines": "135 / 1",
+    "l2_pass_to_fail, new_fault, ready_failures, ready_improved_record": "all empty",
+    "ready_both_missing_record": 7,
+    "grade_transitions_record": "per level only X->X transitions"
+   },
+   "on_miss": "exit 1 (expectation_misses listed): stop before T-JR-12"}
+ ]
+}

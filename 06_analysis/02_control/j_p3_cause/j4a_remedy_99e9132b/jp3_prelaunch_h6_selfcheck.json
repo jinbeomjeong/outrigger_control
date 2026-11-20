@@ -1,0 +1,32 @@
+{
+ "purpose": "436.9 addendum 4a-4 6 (P-1) and erratum 1 R-2: the H-6 base judge file (4a-3 4.4), its comparison with the 436.8 path 1 judge (record), and the stored H-6 self check with the real judge file, before T-JR-12. Stored data only; the main session runs them and keeps outputs and commands in the prelaunch record.",
+ "code": "worktree z4369-jp3 at the R-1 / R-2 commit (see the report)",
+ "environment": "dynamics-dev python.exe -I -B, worktree root",
+ "inputs": {
+  "h6": {"path": "C:/workspace/outrigger_control/06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json", "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"},
+  "noise_vb": {"path": "C:/workspace/outrigger_control/06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json", "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43"},
+  "stored_path1_h6_r79_judge": {"path": "C:/workspace/outrigger_control/06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_r79_judge.json", "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b"},
+  "stored_path1_h6_judge_report": {"path": "C:/workspace/outrigger_control/06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_judge.json"},
+  "stored_path1_l1_reference": {"path": "C:/workspace/outrigger_control/06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_L1_reference.json", "sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7"}
+ },
+ "steps": [
+  {"id": "P-1a base judge file (4a-3 4.4)",
+   "command": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py base-judge --h6 <h6> --noise <noise_vb> --judge-out <prelaunch>/h6_base_judge.json --out <prelaunch>/h6_base_judge_report.json",
+   "expect": "exit 0; record judge_sha256 (and l1_reference_sha256) of the report before the run; both go into the fixed list SUMS"},
+  {"id": "R-2 comparison with the 436.8 path 1 judge (record, not a judgement condition)",
+   "command": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py base-judge-compare --h6 <h6> --new-judge <prelaunch>/h6_base_judge.json --new-judge-sha256 <judge_sha256 of P-1a> --stored-judge <stored_path1_h6_r79_judge> --stored-h6-judge <stored_path1_h6_judge_report> --new-l1-reference <prelaunch>/h6_base_judge_L1_reference.json --stored-l1-reference <stored_path1_l1_reference> --out <prelaunch>/h6_judge_compare.json",
+   "expect": "exit 0 = same grades on all 135 keys; exit 1 = the differing keys are listed (find the cause before T-JR-12); exit 2 = an input missing or of another sha"},
+  {"id": "P-1b self check (4a-4 6)",
+   "command": "python -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py t12-selfcheck --h6 <h6> --judge <prelaunch>/h6_base_judge.json --judge-sha256 <judge_sha256 of P-1a> --out <prelaunch>/h6_selfcheck.json",
+   "equivalent_t12_form": "jp3_tjr_judge.py t12 --bundle VBH --base <h6> --base-judge <judge> --new <h6> --new-judge <judge> --base-judge-sha256 <judge_sha256>",
+   "expect_table_4a4_6": {
+    "status": "pass (exit 0)",
+    "not_judgeable / setting_defects / failures": "0 / 0 / 0",
+    "pairs / L2 lines": "135 / 1",
+    "l2_pass_to_fail, new_fault, ready_failures, ready_improved_record": "all empty",
+    "ready_both_missing_record": 7,
+    "grade_transitions_record": "per level only X->X transitions"
+   },
+   "on_miss": "exit 1 (expectation_misses listed): stop before T-JR-12"}
+ ]
+}

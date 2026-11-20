@@ -1,0 +1,20 @@
+passed 667 failed 0 skipped 9 xfail 0
+SKIP-FILE    1 05_tests.unit.test_d8x_chrono_rows
+SKIP-FILE    1 05_tests.unit.test_las_chrono_rows
+SKIP-FILE    5 05_tests.unit.test_ml_pipeline
+SKIP-FILE    1 05_tests.unit.test_params_l2b
+SKIP-FILE    1 05_tests.unit.test_rod_chamber
+SKIP-REASON    5 could not import 'torch': No module named 'torch'
+SKIP-REASON    1 gas separation after FLOOR (14.3 optional) is not implemented
+SKIP-REASON    1 VERIFICATION_EXT installed
+SKIP-REASON    1 YAML regenerated since S7; L1 fingerprint baseline no longer applies
+SKIP-REASON    1 LAS-b merged: no blocked row
+SKIP 05_tests.unit.test_rod_chamber::test_h6_gas_separation | gas separation after FLOOR (14.3 optional) is not implemented
+SKIP 05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end | could not import 'torch': No module named 'torch'
+SKIP 05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext | VERIFICATION_EXT installed
+SKIP 05_tests.unit.test_params_l2b::test_l1_default_is_unchanged | YAML regenerated since S7; L1 fingerprint baseline no longer applies
+SKIP 05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows | LAS-b merged: no blocked row
