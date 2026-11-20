@@ -1,35 +1,52 @@
-"""436.9 B2 dry check (addendum 4a-3 5.1, K-6): five runs outside every judged set, of which only
-the two P4 evidence keys (``rod_reading_truth_calls``, ``two_pressure_reads``) and the error
-flag are read. The outputs belong to an own folder (``dryrun_evidence/``) and no judgement uses
-them.
+"""436.9 B2 dry check (addendum 4a-3 5.1, K-6; addendum 4a-4 1 .. 3, 5): five runs outside every
+judged set, of which only the two P4 evidence keys (``rod_reading_truth_calls``,
+``two_pressure_reads``) and the error flag are read. The outputs belong to an own folder
+(``dryrun_evidence/``) and no judgement uses them.
 
 Sub-commands:
 
-``select``     The union of the judged job sets (run_v5 ``j9_main``, ``j9_cases``, ``j9_case_f``,
-               ``j9_t8`` of ``--main-jsonl``; the jobs of the sealed baseline's rows; the Dg-3
-               135 keys of ``--dg3``) and the jobs chosen outside it: the first event-path job
-               of :data:`EVENT_CANDIDATES` whose normalised job (``job`` without ``setting``,
-               ``mask``, ``t4h_dir``) is not in the union, and the first L2 key of ``--noise``
-               that is not a Dg-3 key. The output shows the proof (``in_union`` false, the
-               union sizes) and the five commands. No event candidate outside the union = stop
-               (exit 2: 4a-3 5.1 "확인 필요", never a judged job instead).
+``select``     Reads stored files only. Checks the fixed inputs (4a-4 5: ``--noise``, ``--dg3``,
+               ``--main-jsonl`` and the baseline ``SHA256SUMS``), then:
+               * event path: the union of the judged job sets (run_v5 ``j9_main``,
+                 ``j9_cases``, ``j9_case_f``, ``j9_t8`` of ``--main-jsonl``; the jobs of the
+                 baseline's rows) and the first job of :data:`EVENT_CANDIDATES` outside it
+                 (normalised job = ``job`` without ``setting``, ``mask``, ``t4h_dir``);
+               * r79 (4a-4 1, 2): every r79 key of every ``.json`` / ``.jsonl`` under
+                 ``--scan-root`` (the working tree's ``06_analysis/``; ``"key"`` values
+                 ``L<n>|s<n>|...``, a ``cand=...#`` prefix cut), the base key (the first L2 key
+                 of ``--noise`` that is not a Dg-3 key) and the generated key: its seed token
+                 only set to ``s25``, raised by 1 while the key is in the scan.
+               The output shows the scan evidence (files scanned, per-file sha256 and key
+               count, the largest seed), the base and generated key, ``n``, that the generated
+               key is neither in the scan nor a Dg-3 key, the one-line key file for the runner
+               and the five commands. No event candidate outside the union, or no r79 key in
+               the scan, stops (exit 2, 4a-3 5.1 / 4a-4 1: never a judged job instead).
 ``run-event``  One event-path run of the selected job under ``--setting`` (VBJ, VBH or VBJ0) in
                a spawned worker (``run_v5.run_one``), one JSON line to ``--out``. The main
                session launches it (a simulation).
-``summarize``  The five outputs against the 4a-3 5.1 table: per run only the evidence keys and
-               whether it ran without an error.
+``summarize``  The five outputs against the table (4a-3 5.1 rows 1 .. 3, 4a-4 3 rows 4 .. 5):
+               per run only the evidence keys and whether it ran without an error; for the r79
+               runs also that the runner took the generated key (4a-4 2: its ``key`` without the
+               prefix = the generated key, ``seed_index`` = ``n``). A miss of that is not
+               judgeable with the reason "다시 묻기" (ask the user again, no judged key instead).
+
+The r79 runs use the T-JR-12 runner and environment (4a-4 3): ``las_t3_dg3.py`` with
+``R79_V5_SETTING``, ``R79_T4H_DIR``, ``LAS_T3_DG3_LAS/K1/P3=on`` (VBJ also
+``R79_ROD_MODEL=plant_truth``). The runner (``r79_L3L4_final.cmd_run``) takes ``--keys`` only
+for jobs of its default seed list, so the generated key goes in through ``--keys-file`` (any
+seed >= 0 of a table-rule case, ``keys_file_problems``; the 436.8 seedext path).
 
 Exit codes: 0 done / all five as expected (``summarize``), 1 an expectation missed
-(``summarize``), 2 not judgeable (no candidate outside the union, an output missing or without
-the keys, an existing ``--out``), 3 error. The stdout's last line is JSON with ``status`` and the
-output path only.
+(``summarize``), 2 not judgeable (a fixed input differs, no candidate outside the union, an
+output missing or without the keys, the runner did not take the key, an existing ``--out``),
+3 error. The stdout's last line is JSON with ``status`` and the output path only.
 
-Usage (dynamics-dev, project root):
+Usage (dynamics-dev, project root; <m> = <main checkout>/06_analysis):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py select --out <sel.json>
-      --main-jsonl <main checkout>/06_analysis/03_hydraulic/coupled/v5/main.jsonl
-      --baseline <main checkout>/06_analysis/02_control/j_p3_cause/baseline_221456d
-      --dg3 <main checkout>/06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json
-      --noise <main checkout>/06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json
+      --scan-root <m> --main-jsonl <m>/03_hydraulic/coupled/v5/main.jsonl
+      --baseline <m>/02_control/j_p3_cause/baseline_221456d
+      --dg3 <m>/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json
+      --noise <m>/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json
   python -I -B ... run-event --selection <sel.json> --setting VBJ
       --out <dryrun_evidence/event_VBJ.jsonl>
   python -I -B ... summarize --selection <sel.json> --out <summary.json>
@@ -38,8 +55,11 @@ Usage (dynamics-dev, project root):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import sys
+from dataclasses import dataclass
 from multiprocessing import get_context
 from pathlib import Path
 
@@ -49,6 +69,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import jp3_baseline_compare as compare  # noqa: E402
+import jp3_fixed_inputs as fixed  # noqa: E402
 from j_p3_inputs import ROD_READING_EVIDENCE_KEYS  # noqa: E402
 
 JUDGED_BATCHES = ("j9_main", "j9_cases", "j9_case_f", "j9_t8")
@@ -61,16 +82,41 @@ EVENT_CANDIDATES = (
 """Event-path rows with rod readings (R12 / R14 .. R16 family) at offsets no batch runs."""
 EVENT_SETTINGS = ("VBJ", "VBH", "VBJ0")
 R79_SETTINGS = ("VBJ", "VBH")
-CANDIDATE_PREFIX = "cand=current#"
 R79_LEVEL = "L2"
+R79_KEY_PATTERN = re.compile(rb'"key"\s*:\s*"((?:cand=[^"#]*#)?L\d+\|s(\d+)\|[^"]*)"')
+"""4a-4 1: an r79 key is a ``"key"`` value ``L<level>|s<seed>|...`` (prefix ``cand=...#``)."""
+CANDIDATE_PREFIX = re.compile(r"^cand=[^#]*#")
+SCAN_SUFFIXES = (".json", ".jsonl")
+DRY_SEED_START = 25
+"""4a-4 2: the generated key's seed token starts at ``s25`` (above every stored seed)."""
+SEED_TOKEN = re.compile(r"^s\d+$")
 EXPECTED = {("event", "VBJ"): "equal", ("event", "VBH"): "truth_zero_monitor_positive",
-            ("event", "VBJ0"): "equal", ("r79", "VBJ"): "equal", ("r79", "VBH"): "truth_zero"}
-"""4a-3 5.1 table: equal = 1 = 2 > 0; truth_zero = 1 = 0 (with 2 > 0 for the event VBH run)."""
+            ("event", "VBJ0"): "equal", ("r79", "VBJ"): "equal",
+            ("r79", "VBH"): "truth_zero_monitor_positive"}
+"""4a-3 5.1 rows 1 .. 3, 4a-4 3 rows 4 .. 5: equal = 1 = 2 > 0; truth_zero_monitor_positive =
+1 = 0 and 2 > 0."""
+ASK_AGAIN = "다시 묻기(4a-4 2: the runner did not take the generated key)"
+DG3_RUNNER = "04_scripts/04_hydraulic/coupled/las_t3_dg3.py"
 EXIT_DONE, EXIT_MISSED, EXIT_NOT_JUDGEABLE, EXIT_ERROR = 0, 1, 2, 3
 
 
 class Stop(Exception):
     """A not-judgeable condition (exit 2)."""
+
+
+@dataclass(frozen=True)
+class KeyScan:
+    """4a-4 1 scan of the stored r79 keys.
+
+    Attributes:
+        keys: Every r79 key found, without its candidate prefix.
+        files: (relative path, sha256, r79 keys in it) of every scanned file.
+        seed_max: The largest seed token found (None without keys).
+    """
+
+    keys: frozenset[str]
+    files: tuple[tuple[str, str, int], ...]
+    seed_max: int | None
 
 
 def normalised_job(job: dict) -> str:
@@ -79,11 +125,46 @@ def normalised_job(job: dict) -> str:
 
 
 def plain_key(key: str) -> str:
-    return key[len(CANDIDATE_PREFIX):] if key.startswith(CANDIDATE_PREFIX) else key
+    """The r79 key without a ``cand=...#`` prefix."""
+    return CANDIDATE_PREFIX.sub("", key)
 
 
-def judged_union(main_jsonl: Path, baseline_folder: Path, dg3: dict) -> dict:
-    """The event-path job union (normalised) and the Dg-3 key union (plain keys)."""
+def scan_r79_keys(scan_root: Path) -> KeyScan:
+    """Every r79 key of every ``.json`` / ``.jsonl`` under ``scan_root`` (raw bytes, so a file
+    of any encoding is read; the key strings hold no escapes)."""
+    keys: set[str] = set()
+    files = []
+    seed_max = None
+    for path in sorted(p for p in scan_root.rglob("*") if p.suffix in SCAN_SUFFIXES
+                       and p.is_file()):
+        data = path.read_bytes()
+        found = R79_KEY_PATTERN.findall(data)
+        for key, seed in found:
+            keys.add(plain_key(key.decode("utf-8")))
+            seed_max = int(seed) if seed_max is None else max(seed_max, int(seed))
+        files.append((path.relative_to(scan_root).as_posix(), hashlib.sha256(data).hexdigest(),
+                      len(found)))
+    return KeyScan(frozenset(keys), tuple(files), seed_max)
+
+
+def generated_key(base_key: str, scanned: frozenset[str]) -> tuple[str, int]:
+    """4a-4 2: the base key with its seed token only set to ``s<n>``, ``n`` from 25 up while the
+    key is in the scan.
+
+    Raises:
+        Stop: The base key's second token is not a seed token.
+    """
+    tokens = base_key.split("|")
+    if len(tokens) < 3 or not SEED_TOKEN.match(tokens[1]):
+        raise Stop(f"base key {base_key!r} has no seed token")
+    seed = DRY_SEED_START
+    while "|".join([tokens[0], f"s{seed}", *tokens[2:]]) in scanned:
+        seed += 1
+    return "|".join([tokens[0], f"s{seed}", *tokens[2:]]), seed
+
+
+def judged_union(main_jsonl: Path, baseline_folder: Path) -> dict:
+    """The event-path job union (normalised) of the judged batches and the baseline."""
     import run_v5
 
     run_v5.P3_HASH_SOURCE_OVERRIDE[0] = main_jsonl
@@ -93,50 +174,89 @@ def judged_union(main_jsonl: Path, baseline_folder: Path, dg3: dict) -> dict:
     rows = [row for name in baseline.hashes if name.endswith(".jsonl")
             for row in baseline.rows(name)]
     jobs["baseline_221456d"] = {normalised_job(row["job"]) for row in rows}
-    union = set().union(*jobs.values())
-    dg3_keys = {plain_key(run["key"]) for run in dg3["results"]}
-    return {"event_union": union, "dg3_keys": dg3_keys,
-            "sizes": {name: len(found) for name, found in jobs.items()},
-            "union_size": len(union), "dg3_key_count": len(dg3_keys)}
+    return {"event_union": set().union(*jobs.values()),
+            "sizes": {name: len(found) for name, found in jobs.items()}}
 
 
-def select(main_jsonl: Path, baseline_folder: Path, dg3: dict, noise: dict) -> dict:
+@dataclass(frozen=True)
+class SelectInputs:
+    """The ``select`` inputs (stored files, 4a-4 5 fixed)."""
+
+    scan_root: Path
+    main_jsonl: Path
+    baseline: Path
+    dg3: Path
+    noise: Path
+
+
+def fixed_input_problems(inputs: SelectInputs) -> list[str]:
+    """4a-4 5 for ``select`` (the baseline SUMS is checked by ``compare.Baseline``)."""
+    checks = ((inputs.noise, fixed.NOISE_VB_SHA256, "--noise"),
+              (inputs.dg3, fixed.H6_SHA256, "--dg3"),
+              (inputs.main_jsonl, fixed.MAIN_JSONL_SHA256, "--main-jsonl"))
+    return [problem for path, expected, label in checks
+            if (problem := fixed.sha_problem(path, expected, label)) is not None]
+
+
+def select(inputs: SelectInputs) -> dict:
     """The ``select`` output (module docstring).
 
     Raises:
-        Stop: No event candidate or no r79 key outside the union.
+        Stop: A fixed input differs, no event candidate outside the union, no r79 key in the
+            scan or no base key.
     """
-    union = judged_union(main_jsonl, baseline_folder, dg3)
+    problems = fixed_input_problems(inputs)
+    if problems:
+        raise Stop("; ".join(problems))
+    union = judged_union(inputs.main_jsonl, inputs.baseline)
     proof = [{"job": job, "in_union": normalised_job(job) in union["event_union"]}
              for job in EVENT_CANDIDATES]
     event_job = next((row["job"] for row in proof if not row["in_union"]), None)
     if event_job is None:
         raise Stop("no event-path candidate outside the judged union (4a-3 5.1: 확인 필요)")
-    r79_key = next((plain_key(run["key"]) for run in noise["results"]
-                    if run.get("level") == R79_LEVEL
-                    and plain_key(run["key"]) not in union["dg3_keys"]), None)
-    if r79_key is None:
+    scan = scan_r79_keys(inputs.scan_root)
+    if not scan.keys:
+        raise Stop(f"no r79 key under {inputs.scan_root} (4a-4 1: the scan found nothing)")
+    dg3_keys = {plain_key(run["key"]) for run in _read_json(inputs.dg3)["results"]}
+    base_key = next((plain_key(run["key"]) for run in _read_json(inputs.noise)["results"]
+                     if run.get("level") == R79_LEVEL and plain_key(run["key"]) not in dg3_keys),
+                    None)
+    if base_key is None:
         raise Stop("no L2 noise key outside the Dg-3 135 keys")
-    return {"event_job": event_job, "event_candidates": proof, "r79_key": r79_key,
-            "r79_key_in_dg3": r79_key in union["dg3_keys"], "union_sizes": union["sizes"],
-            "event_union_size": union["union_size"], "dg3_key_count": union["dg3_key_count"],
-            "commands": _commands(event_job, r79_key)}
+    key, seed = generated_key(base_key, scan.keys)
+    return {"event_job": event_job, "event_candidates": proof,
+            "event_union_sizes": union["sizes"],
+            "r79_base_key": base_key, "r79_key": key, "r79_seed": seed,
+            "r79_key_in_scan": key in scan.keys, "r79_key_in_dg3": key in dg3_keys,
+            "scan": {"root": str(inputs.scan_root), "files_scanned": len(scan.files),
+                     "files_with_r79_keys": sum(count > 0 for _, _, count in scan.files),
+                     "r79_keys": len(scan.keys), "seed_max": scan.seed_max,
+                     "files": [{"path": path, "sha256": digest, "r79_keys": count}
+                               for path, digest, count in scan.files]}}
 
 
-def _commands(event_job: dict, r79_key: str) -> dict:
+def _commands(event_job: dict, keys_file: Path) -> dict:
+    """The five commands (4a-3 5.1, 4a-4 3)."""
     script = "04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py"
-    r79 = "04_scripts/03_control/s8/r79_L3L4_final.py"
     commands = {f"event_{setting}": f"python -I -B {script} run-event --selection <sel.json> "
                 f"--setting {setting} --out dryrun_evidence/event_{setting}.jsonl"
                 for setting in EVENT_SETTINGS}
     for setting in R79_SETTINGS:
-        rod_model = " R79_ROD_MODEL=plant_truth" if setting == "VBJ" else ""
         commands[f"r79_{setting}"] = (
-            f"env R79_V5_SETTING={setting}{rod_model} R72_PATH=per_leg python -I -B {r79} "
-            f"<root> run dryrun_evidence/r79_{setting}.json --levels {R79_LEVEL} "
-            f'--keys "{r79_key}" --workers 1')
+            f"env {' '.join(r79_environment(setting))} python -I -B {DG3_RUNNER} <root> run "
+            f"dryrun_evidence/r79_{setting}.json --levels {R79_LEVEL} --keys-file {keys_file} "
+            "--workers 1")
     commands["event_job"] = event_job
     return commands
+
+
+def r79_environment(setting: str) -> list[str]:
+    """4a-4 3: the T-JR-12 environment of one r79 dry run (``NAME=value`` words)."""
+    words = [f"R79_V5_SETTING={setting}", f"R79_T4H_DIR=dryrun_evidence/{setting}_t4h",
+             "LAS_T3_DG3_LAS=on", "LAS_T3_DG3_K1=on", "LAS_T3_DG3_P3=on"]
+    if setting == "VBJ":
+        words.append("R79_ROD_MODEL=plant_truth")
+    return words
 
 
 def run_event(selection: dict, setting: str, out: Path) -> None:
@@ -159,18 +279,23 @@ def evidence_of(record: dict) -> dict:
 
 
 def meets(expectation: str, evidence: dict) -> bool | None:
-    """4a-3 5.1 expectation of one run (None: the keys are missing)."""
+    """The table's expectation of one run (None: the keys are missing)."""
     truth, monitor = (evidence.get(key) for key in ROD_READING_EVIDENCE_KEYS)
     if evidence["error"] or truth is None or monitor is None:
         return None
     if expectation == "equal":
         return truth == monitor > 0
-    if expectation == "truth_zero_monitor_positive":
-        return truth == 0 and monitor > 0
-    return truth == 0
+    return truth == 0 and monitor > 0
 
 
-def summarize(event_files: dict[str, Path], r79_files: dict[str, Path]) -> tuple[dict, int]:
+def key_taken(selection: dict, record: dict) -> bool:
+    """4a-4 2: the r79 runner ran the generated key (prefix-free key and seed record)."""
+    return (plain_key(str(record.get("key", ""))) == selection["r79_key"]
+            and record.get("seed_index") == selection["r79_seed"])
+
+
+def summarize(selection: dict, event_files: dict[str, Path],
+              r79_files: dict[str, Path]) -> tuple[dict, int]:
     """The ``summarize`` output and its exit code."""
     rows, code = [], EXIT_DONE
     for (path_kind, setting), expectation in EXPECTED.items():
@@ -180,17 +305,24 @@ def summarize(event_files: dict[str, Path], r79_files: dict[str, Path]) -> tuple
             rows.append({"run": f"{path_kind}_{setting}", "output": "missing"})
             code = EXIT_NOT_JUDGEABLE
             continue
-        records = (_read_lines(path) if path_kind == "event"
-                   else json.loads(path.read_text(encoding="utf-8"))["results"])
-        evidence = [evidence_of(record) for record in records]
-        results = [meets(expectation, item) for item in evidence]
-        rows.append({"run": f"{path_kind}_{setting}", "expected": expectation,
-                     "evidence": evidence, "meets": results})
-        if len(records) != 1 or None in results:
+        records = (_read_lines(path) if path_kind == "event" else _read_json(path)["results"])
+        row = {"run": f"{path_kind}_{setting}", "expected": expectation,
+               "evidence": [evidence_of(record) for record in records]}
+        row["meets"] = [meets(expectation, item) for item in row["evidence"]]
+        if path_kind == "r79":
+            row["key_taken"] = [key_taken(selection, record) for record in records]
+            if not all(row["key_taken"]) or len(records) != 1:
+                row["stop"] = ASK_AGAIN
+        rows.append(row)
+        if len(records) != 1 or None in row["meets"] or "stop" in row:
             code = EXIT_NOT_JUDGEABLE
-        elif not all(results) and code == EXIT_DONE:
+        elif not all(row["meets"]) and code == EXIT_DONE:
             code = EXIT_MISSED
     return {"rows": rows}, code
+
+
+def _read_json(path: Path) -> dict:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _read_lines(path: Path) -> list[dict]:
@@ -211,7 +343,7 @@ def _parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     chosen = commands.add_parser("select")
     chosen.add_argument("--out", type=Path, required=True)
-    for name in ("main-jsonl", "baseline", "dg3", "noise"):
+    for name in ("scan-root", "main-jsonl", "baseline", "dg3", "noise"):
         chosen.add_argument(f"--{name}", type=Path, required=True)
     event = commands.add_parser("run-event")
     event.add_argument("--selection", type=Path, required=True)
@@ -225,6 +357,24 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def keys_file_of(out: Path) -> Path:
+    """The one-line r79 key file ``select`` writes next to its output."""
+    return out.with_name(f"{out.stem}_r79_key.txt")
+
+
+def _select_command(args: argparse.Namespace) -> dict:
+    inputs = SelectInputs(args.scan_root, args.main_jsonl, args.baseline, args.dg3, args.noise)
+    report = select(inputs)
+    keys_file = keys_file_of(args.out)
+    if keys_file.exists():
+        raise Stop(f"{keys_file} exists (never overwritten)")
+    keys_file.parent.mkdir(parents=True, exist_ok=True)
+    keys_file.write_text(report["r79_key"] + "\n", encoding="utf-8")
+    report["r79_keys_file"] = {"path": str(keys_file), "sha256": fixed.file_sha256(keys_file)}
+    report["commands"] = _commands(report["event_job"], keys_file)
+    return report
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
@@ -232,17 +382,14 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(f"{args.out} exists (a new output never overwrites one)")
     try:
         if args.command == "select":
-            report = select(args.main_jsonl, args.baseline,
-                            json.loads(args.dg3.read_text(encoding="utf-8")),
-                            json.loads(args.noise.read_text(encoding="utf-8")))
-            code = EXIT_DONE
+            report, code = _select_command(args), EXIT_DONE
         elif args.command == "run-event":
-            run_event(json.loads(args.selection.read_text(encoding="utf-8")), args.setting,
-                      args.out)
+            run_event(_read_json(args.selection), args.setting, args.out)
             print(json.dumps({"status": "done", "out": str(args.out)}))
             return EXIT_DONE
         else:
-            report, code = summarize(_pairs(args.event), _pairs(args.r79))
+            report, code = summarize(_read_json(args.selection), _pairs(args.event),
+                                     _pairs(args.r79))
     except (Stop, compare.NotJudgeable) as exc:
         report, code = {"stop": str(exc)}, EXIT_NOT_JUDGEABLE
     except (OSError, KeyError, ValueError) as exc:

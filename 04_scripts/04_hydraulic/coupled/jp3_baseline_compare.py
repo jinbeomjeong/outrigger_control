@@ -63,9 +63,10 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
+import jp3_fixed_inputs as fixed  # noqa: E402
 from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
 
-BASELINE_SUMS_SHA256 = "197ac14e96822130ba4eee98486be6ba9646c207ed1a27936c275077b3a60361"
+BASELINE_SUMS_SHA256 = fixed.BASELINE_SUMS_SHA256
 """Edition 4a 13.1 / addendum 4a-1: the sealed baseline list."""
 SPEC_EDITION = "8be9de22"
 DEFAULT_IDENTITY = {"spec_edition": SPEC_EDITION, "carry_end_rule": "inherit_when_gate_shut",

@@ -13,7 +13,10 @@ Sub-commands:
              3.2 paths (``jp3_t8_rules``), C recorded; every stored line must carry the tag
              ``final_C4G2_P3_LAS_K1`` and its T4h the ③ revision 4 (else not judgeable).
              T-JR-11 = VBJ against VBJ0, ``commands_sha256`` equal. The VB lines are a record
-             (4a-3 5.3: a difference to the stored hash flags ``stop_before_reading_T-JR-10``).
+             (4a-3 5.3); a VB line missing, an error VB row or a VB hash other than the stored
+             h10 one makes T-JR-10 not judgeable ("저장값 노후 확인 전", 4a-4 4) while T-JR-11
+             is still judged (each test reports its own ``status``). 4a-4 5: ``--stored`` and
+             ``--main-jsonl`` must be the fixed files (``jp3_fixed_inputs``).
 ``t12``      T-JR-12 (13.9, 4a-3 4) of one bundle: ``--bundle VBH`` = VBH against the stored H-6
              (rev 4), ``--bundle VBJ`` = VBJ against VBJ0. Exactly 135 pairs by plain key,
              exactly 1 L2 line. Failure: the L2 line's base grade pass / flag and new grade fail
@@ -24,7 +27,16 @@ Sub-commands:
              (``j_p3_judgement_rev5``, 1 judged row expected) and the P4 evidence of the VBJ
              lines and of their VBJ0 base lines (4a-2 B2, 4a-3 4.4; VBJ and VBJ0 run with
              ``R79_ROD_MODEL=plant_truth``). Records: the R5-7 columns of 5.5 with the
-             ``ret_after_gate_s`` resolution (R9).
+             ``ret_after_gate_s`` resolution (R9). 4a-4 5: VBH needs the fixed H-6 as
+             ``--base`` and ``--base-judge-sha256`` (the judge file's sha256 recorded before the
+             run); without it, or with another file, not judgeable.
+``base-judge``     4a-3 4.4: writes the H-6 base judge file (``r79_sensor_judge.py judge`` on
+             the stored H-6 with the L1 lines of ``h8_noise_VB.json``, ``--s4-late-loc``) and
+             reports its sha256 (both inputs must be the fixed files).
+``t12-selfcheck``  4a-4 6, before the run: ``t12 --bundle VBH`` of the stored H-6 against
+             itself with that judge file on both sides; exit 0 only when the 6 table holds
+             (pass, 135 pairs, 1 L2 line, empty failure and improvement lists, 7 pairs without
+             READY on both sides, only X -> X grade transitions), else 1.
 ``records``  T-JR-13 .. T-JR-15 (records, 4a-2 B4): Dg-2 replay reports (runs, errors), the
              ``lock_window_alignment`` J11 ``n_late`` of the Dg-3 lines, and per-lock records
              (``relock_step_over_1bar_count``, seed rows) with the seed net force of 4a-2 3.4
@@ -56,6 +68,11 @@ Batch commands (dynamics-dev, project root; the main session launches them):
         LAS_T3_DG3_K1=on LAS_T3_DG3_P3=on [R79_ROD_MODEL=plant_truth for VBJ / VBJ0]
     las_t3_dg3.py <root> run <folder>/dg3_<setting>.json --levels L2,L3 --keys "<keys>"
   then r79_sensor_judge.py judge <judge.json> <dg3 file> <H-8 VB L1 extract> --s4-late-loc
+Before T-JR-12 (4a-4 6, the main session; stored data only):
+  jp3_tjr_judge.py base-judge --h6 <resume_k1/h6_dg3_v4on.json> --noise
+      <resume_k1/h8_noise_VB.json> --judge-out <pre>/h6_base_judge.json --out <pre>/bj.json
+  jp3_tjr_judge.py t12-selfcheck --h6 <same H-6> --judge <pre>/h6_base_judge.json
+      --judge-sha256 <judge_sha256 of bj.json> --out <pre>/h6_selfcheck.json   (exit 0)
 """
 from __future__ import annotations
 
@@ -63,7 +80,7 @@ import argparse
 import json
 import sys
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -73,6 +90,7 @@ for _path in (HERE, ROOT / "03_src"):
         sys.path.insert(0, str(_path))
 
 import jp3_baseline_compare as compare  # noqa: E402
+import jp3_fixed_inputs as fixed  # noqa: E402
 import jp3_t8_rules as t8_rules  # noqa: E402
 from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
 
@@ -81,6 +99,8 @@ T8_JOBS = 22
 T8_JUDGED_SETTINGS = ("VBH", "VBJ", "VBJ0")
 """``j9_t8`` settings the judgement reads; its VB lines are the 4a-3 5.3 record only."""
 STORED_SETTING = "VB"
+VB_STALE_REASON = "저장값 노후 확인 전(4a-3 5.3)"
+"""4a-4 4: the reason T-JR-10 is not judgeable when the VB record is not 22 equal lines."""
 DG3_PAIRS = 135
 DG3_L2_LINES = 1
 JUDGED_LEVEL = "L2"
@@ -122,25 +142,55 @@ class T8Inputs:
     rerun: dict[str, dict[str, dict]]
     stored_meta: dict[str, dict | None]
     rerun_meta: dict[str, dict | None]
+    bad_rows: dict[str, int] = field(default_factory=dict)
+    """``<stored|rerun>:<setting>`` -> error or repeated rows of that setting."""
+    stored_sha_problem: str | None = None
+    """4a-4 5: ``--stored`` is not the fixed h10 file (T-JR-10 not judgeable)."""
 
 
 def judge_t8(inputs: T8Inputs, problems: compare.Problems) -> dict:
-    """T-JR-10 / T-JR-11 on the 22 jobs (4a-3 2, 3) and the VB record (4a-3 5.3)."""
+    """T-JR-10 / T-JR-11 on the 22 jobs (4a-3 2, 3) and the VB record (4a-3 5.3, 4a-4 4).
+
+    Each test has its own status: a VB record with a missing, error or other-hash line makes
+    T-JR-10 not judgeable (4a-4 4) and leaves T-JR-11 judged; the bundle status is the worst."""
     if len(inputs.rule_jobs) != T8_JOBS or len(set(inputs.rule_jobs)) != T8_JOBS:
         problems.not_judgeable.append(f"{len(inputs.rule_jobs)} rule jobs, {T8_JOBS} expected")
         return {}
-    for setting in T8_JUDGED_SETTINGS:
-        found = set(inputs.rerun.get(setting, {}))
-        if found != set(inputs.rule_jobs):
-            problems.not_judgeable.append(f"rerun {setting}: {len(found)} jobs, not the 22 jobs")
-    stored_vb = inputs.stored.get(STORED_SETTING, {})
-    missing = [key for key in inputs.rule_jobs if key not in stored_vb]
+    tests = {"T-JR-10": compare.Problems(), "T-JR-11": compare.Problems()}
+    vb_record = _vb_rerun_record(inputs)
+    report = {"T-JR-11": _t_jr_11(inputs, tests["T-JR-11"]), "VB_rerun_record": vb_record}
+    t10 = tests["T-JR-10"]
+    t10.not_judgeable += _t_jr_10_preconditions(inputs, vb_record)
+    report["T-JR-10"] = {} if t10.not_judgeable else _t_jr_10(inputs, t10)
+    for name, found in tests.items():
+        report[name]["status"] = found.status()
+        problems.setting_defects += [f"{name}: {text}" for text in found.setting_defects]
+        problems.not_judgeable += [f"{name}: {text}" for text in found.not_judgeable]
+        problems.failures += [f"{name}: {text}" for text in found.failures]
+    return report
+
+
+def _rows_ok(inputs: T8Inputs, label: str, setting: str, lines: dict) -> list[str]:
+    """Why the lines of one setting are not exactly the 22 jobs without a bad row."""
+    problems = []
+    if inputs.bad_rows.get(f"{label}:{setting}"):
+        problems.append(f"{label} {setting}: {inputs.bad_rows[f'{label}:{setting}']} error or "
+                        "repeated rows")
+    missing = [key for key in inputs.rule_jobs if key not in lines]
     if missing:
-        problems.not_judgeable.append(f"stored VB: {len(missing)} of the 22 jobs missing")
-    if problems.not_judgeable:
-        return {}
-    return {"T-JR-10": _t_jr_10(inputs, problems), "T-JR-11": _t_jr_11(inputs, problems),
-            "VB_rerun_record": _vb_rerun_record(inputs)}
+        problems.append(f"{label} {setting}: {len(missing)} of the 22 jobs missing")
+    return problems
+
+
+def _t_jr_10_preconditions(inputs: T8Inputs, vb_record: dict) -> list[str]:
+    problems = [] if inputs.stored_sha_problem is None else [inputs.stored_sha_problem]
+    problems += _rows_ok(inputs, "rerun", "VBH", inputs.rerun.get("VBH", {}))
+    problems += _rows_ok(inputs, "stored", STORED_SETTING,
+                         inputs.stored.get(STORED_SETTING, {}))
+    if vb_record["missing"] or vb_record["error_rows"] or vb_record["differing_count"]:
+        problems.append(f"{VB_STALE_REASON}: VB lines missing {vb_record['missing']}, error "
+                        f"{vb_record['error_rows']}, other hash {vb_record['differing_count']}")
+    return problems
 
 
 def _t_jr_10(inputs: T8Inputs, problems: compare.Problems) -> dict:
@@ -152,7 +202,7 @@ def _t_jr_10(inputs: T8Inputs, problems: compare.Problems) -> dict:
         pairs.append(_t_jr_10_pair(key, stored, new, inputs, problems))
     failing = [pair["job"] for pair in pairs if pair["problems"]]
     if failing:
-        problems.failures.append(f"T-JR-10: {len(failing)}/{T8_JOBS} pairs differ")
+        problems.failures.append(f"{len(failing)}/{T8_JOBS} pairs differ")
     return {"pairs": T8_JOBS, "passing": T8_JOBS - len(failing), "pair_rows": pairs}
 
 
@@ -182,38 +232,52 @@ def _t_jr_10_pair(key: str, stored: dict, new: dict, inputs: T8Inputs,
 
 def _t_jr_11(inputs: T8Inputs, problems: compare.Problems) -> dict:
     """VBJ against VBJ0: ``commands_sha256`` equal on the 22 jobs (4a-3 2)."""
+    for setting in ("VBJ", "VBJ0"):
+        problems.not_judgeable += _rows_ok(inputs, "rerun", setting,
+                                           inputs.rerun.get(setting, {}))
+    if problems.not_judgeable:
+        return {}
     differing = [key for key in inputs.rule_jobs
                  if inputs.rerun["VBJ"][key]["commands_sha256"]
                  != inputs.rerun["VBJ0"][key]["commands_sha256"]]
     if differing:
-        problems.failures.append(f"T-JR-11: {len(differing)}/{T8_JOBS} command hashes differ")
+        problems.failures.append(f"{len(differing)}/{T8_JOBS} command hashes differ")
     return {"pairs": T8_JOBS, "equal": T8_JOBS - len(differing), "differing": differing[:10]}
 
 
 def _vb_rerun_record(inputs: T8Inputs) -> dict:
-    """4a-3 5.3 (a record): the current-code VB rerun against the stored h10 hash. A difference
-    means the stored values may be stale: read a T-JR-10 failure only after that is settled."""
+    """4a-3 5.3 record of the current-code VB rerun against the stored h10 hash (equal, other,
+    missing, error rows, the other jobs); 4a-4 4 reads it for the T-JR-10 precondition."""
     vb_lines = inputs.rerun.get(STORED_SETTING, {})
+    stored_vb = inputs.stored.get(STORED_SETTING, {})
     missing = [key for key in inputs.rule_jobs if key not in vb_lines]
     differing = [key for key in inputs.rule_jobs if key in vb_lines
-                 and vb_lines[key]["commands_sha256"]
-                 != inputs.stored[STORED_SETTING][key]["commands_sha256"]]
-    return {"lines": T8_JOBS - len(missing), "equal": T8_JOBS - len(missing) - len(differing),
+                 and not _same_hash(vb_lines[key], stored_vb.get(key))]
+    return {"lines": T8_JOBS - len(missing),
+            "equal": T8_JOBS - len(missing) - len(differing), "differing_count": len(differing),
             "differing": differing[:10], "missing": len(missing),
-            "stop_before_reading_T-JR-10": bool(differing or missing)}
+            "error_rows": inputs.bad_rows.get(f"rerun:{STORED_SETTING}", 0)}
 
 
-def _by_setting_job(rows: list[dict], problems: compare.Problems,
-                    label: str) -> dict[str, dict[str, dict]]:
+def _same_hash(line: dict, stored: dict | None) -> bool:
+    """4a-4 4: the 64-character ``commands_sha256`` of the line equals the stored one."""
+    value = line.get("commands_sha256")
+    return (stored is not None and isinstance(value, str) and len(value) == t8_rules.HASH_LENGTH
+            and value == stored.get("commands_sha256"))
+
+
+def _by_setting_job(rows: list[dict], label: str,
+                    bad_rows: dict[str, int]) -> dict[str, dict[str, dict]]:
+    """Lines by setting and job key; error and repeated rows are counted in ``bad_rows``
+    (``<label>:<setting>``) and left out."""
     out: dict[str, dict[str, dict]] = {}
     for row in rows:
-        if "error" in row:
-            problems.not_judgeable.append(f"{label}: error row {row['job']}")
-            continue
+        name = f"{label}:{row['job']['setting']}"
         setting_lines = out.setdefault(row["job"]["setting"], {})
         key = _job_identity(row["job"])
-        if key in setting_lines:
-            problems.not_judgeable.append(f"{label}: two lines of {row['job']}")
+        if "error" in row or key in setting_lines:
+            bad_rows[name] = bad_rows.get(name, 0) + 1
+            continue
         setting_lines[key] = row
     return out
 
@@ -231,12 +295,19 @@ def _t4h_meta(folder: Path, line: dict) -> dict | None:
 
 
 def t8_inputs(args: argparse.Namespace, problems: compare.Problems) -> tuple[T8Inputs, list]:
-    """The ``t8`` inputs from the command line; also the input files for the sha record."""
+    """The ``t8`` inputs from the command line; also the input files for the sha record.
+    ``--main-jsonl`` not the fixed file (4a-4 5) makes the bundle not judgeable (no jobs)."""
     import run_v5
 
-    rule_jobs = tuple(_job_identity(job) for _, job in run_v5.p3_hash_jobs(args.main_jsonl))
-    stored = _by_setting_job(_read_json_lines(args.stored), problems, "stored")
-    rerun = _by_setting_job(_read_json_lines(args.rerun), problems, "rerun")
+    main_problem = fixed.sha_problem(args.main_jsonl, fixed.MAIN_JSONL_SHA256, "--main-jsonl")
+    if main_problem is not None:
+        problems.not_judgeable.append(main_problem)
+        rule_jobs: tuple[str, ...] = ()
+    else:
+        rule_jobs = tuple(_job_identity(job) for _, job in run_v5.p3_hash_jobs(args.main_jsonl))
+    bad_rows: dict[str, int] = {}
+    stored = _by_setting_job(_read_json_lines(args.stored), "stored", bad_rows)
+    rerun = _by_setting_job(_read_json_lines(args.rerun), "rerun", bad_rows)
     stored_dir = args.stored_t4h_dir or args.stored.with_name(f"{args.stored.stem}_t4h")
     rerun_dir = args.rerun_t4h_dir or args.rerun.with_name(f"{args.rerun.stem}_t4h")
     stored_vb, rerun_vbh = stored.get(STORED_SETTING, {}), rerun.get("VBH", {})
@@ -248,7 +319,10 @@ def t8_inputs(args: argparse.Namespace, problems: compare.Problems) -> tuple[T8I
     for folder, lines in ((stored_dir, stored_vb), (rerun_dir, rerun_vbh)):
         files += [folder / Path(lines[key]["t4h_file"]).name for key in rule_jobs
                   if key in lines and lines[key].get("t4h_file")]
-    return T8Inputs(rule_jobs, stored, rerun, stored_meta, rerun_meta), files
+    stored_problem = fixed.sha_problem(args.stored, fixed.H10_SHA256, "--stored")
+    inputs = T8Inputs(rule_jobs, stored, rerun, stored_meta, rerun_meta, bad_rows,
+                      stored_problem)
+    return inputs, files
 
 
 # --- t12 (T-JR-12) --------------------------------------------------------------------------
@@ -438,6 +512,98 @@ def _r5_7_records(lines: list[dict]) -> dict:
             "ret_after_gate_s_resolution": RET_AFTER_GATE_RESOLUTION}
 
 
+def t12_input_problems(bundle: str, base: Path, base_judge: Path,
+                       base_judge_sha256: str | None) -> list[str]:
+    """4a-4 5: VBH's ``--base`` is the fixed H-6 and ``--base-judge`` has the sha256 recorded
+    before the run (``--base-judge-sha256``, required for VBH); VBJ checks the judge sha when
+    one is given (its VBJ0 base is a new run, no fixed value)."""
+    problems = []
+    if bundle == "VBH":
+        problem = fixed.sha_problem(base, fixed.H6_SHA256, "--base (stored H-6)")
+        problems += [] if problem is None else [problem]
+        if base_judge_sha256 is None:
+            problems.append("--base-judge-sha256 missing (4a-4 5: required for VBH)")
+    if base_judge_sha256 is not None:
+        problem = fixed.sha_problem(base_judge, base_judge_sha256.lower(), "--base-judge")
+        problems += [] if problem is None else [problem]
+    return problems
+
+
+SELFCHECK_EMPTY_LISTS = ("l2_pass_to_fail", "new_fault", "ready_failures",
+                         "ready_improved_record")
+SELFCHECK_BOTH_MISSING = 7
+"""4a-4 6 table: the expectations of the stored H-6 against itself with the real judge."""
+
+
+def selfcheck_problems(report: dict, problems: compare.Problems) -> list[str]:
+    """Why a ``t12 --bundle VBH`` report of H-6 against itself is not the 4a-4 6 table."""
+    missed = []
+    if problems.status() != compare.STATUS_PASS:
+        missed.append(f"status {problems.status()} (not / defect / failed "
+                      f"{len(problems.not_judgeable)} / {len(problems.setting_defects)} / "
+                      f"{len(problems.failures)})")
+    if report.get("pairs") != DG3_PAIRS:
+        missed.append(f"pairs {report.get('pairs')}")
+    missed += [f"{key} not empty" for key in SELFCHECK_EMPTY_LISTS if report.get(key)]
+    both_missing = len(report.get("ready_both_missing_record") or [])
+    if both_missing != SELFCHECK_BOTH_MISSING:
+        missed.append(f"ready_both_missing_record {both_missing}")
+    for level, transitions in (report.get("grade_transitions_record") or {}).items():
+        other = [name for name in transitions if name.split("->")[0] != name.split("->")[1]]
+        if other:
+            missed.append(f"{level} transitions other than X->X: {other}")
+    return missed
+
+
+def t12_selfcheck(h6: Path, judge: Path, judge_sha256: str
+                  ) -> tuple[dict, compare.Problems, list[Path]]:
+    """4a-4 6 (a step before the run, stored data only): ``t12 --bundle VBH`` with the stored
+    H-6 as base and new and the real base judge file on both sides; a miss of the 6 table is a
+    failure (exit 1), so T-JR-12 does not start."""
+    input_problems = t12_input_problems("VBH", h6, judge, judge_sha256)
+    outcome = compare.Problems()
+    if input_problems:
+        outcome.not_judgeable += input_problems
+        return {}, outcome, [h6, judge]
+    h6_document, judge_document = _read_json(h6), _read_json(judge)
+    report, problems = judge_t12("VBH", h6_document, judge_document, h6_document,
+                                 judge_document)
+    l2_lines = sum(run.get("level") == "L2" for run in h6_document["results"])
+    missed = selfcheck_problems(report, problems)
+    if l2_lines != DG3_L2_LINES:
+        missed.append(f"L2 lines {l2_lines}")
+    outcome.failures += missed
+    return {"t12_report": report, "t12_problems": problems.as_dict(), "l2_lines": l2_lines,
+            "expectation_misses": missed}, outcome, [h6, judge]
+
+
+def make_base_judge(h6: Path, noise: Path, judge_out: Path
+                    ) -> tuple[dict, compare.Problems, list[Path]]:
+    """4a-3 4.4: ``r79_sensor_judge.py judge <judge_out> <H-6> <L1 lines of noise VB>
+    --s4-late-loc`` (``h8_noise_judge_4368.run_r79_judge``); the report gives the judge
+    file's sha256 for the record before the run and for ``--base-judge-sha256``."""
+    import h8_noise_judge_4368 as h8
+
+    problems = compare.Problems()
+    for path, expected, label in ((h6, fixed.H6_SHA256, "--h6"),
+                                  (noise, fixed.NOISE_VB_SHA256, "--noise")):
+        problem = fixed.sha_problem(path, expected, label)
+        problems.not_judgeable += [] if problem is None else [problem]
+    if judge_out.exists():
+        problems.not_judgeable.append(f"{judge_out} exists (never overwritten)")
+    if problems.not_judgeable:
+        return {}, problems, [h6, noise]
+    extract = h8.reference_extract(h8.read_run_file(noise),
+                                   judge_out.with_name(f"{judge_out.stem}_L1_reference.json"))
+    run = h8.run_r79_judge(judge_out, [h6, extract])
+    if run["exit_code"] != 0 or not judge_out.is_file():
+        problems.not_judgeable.append(f"r79_sensor_judge exit {run['exit_code']}")
+        return {"judge_run": run}, problems, [h6, noise]
+    return {"judge_run": run, "judge_file": str(judge_out),
+            "judge_sha256": fixed.file_sha256(judge_out),
+            "l1_reference_sha256": fixed.file_sha256(extract)}, problems, [h6, noise, extract]
+
+
 # --- records (T-JR-13 .. 15) ----------------------------------------------------------------
 
 def judge_records(replays: list[dict], dg3_files: list[dict], lock_rows: list[dict]
@@ -499,6 +665,22 @@ def _parser() -> argparse.ArgumentParser:
     t12.add_argument("--bundle", choices=sorted(BUNDLE_BASE), required=True)
     for name in ("base", "base-judge", "new", "new-judge"):
         t12.add_argument(f"--{name}", type=Path, required=True)
+    t12.add_argument("--base-judge-sha256", default=None,
+                     help="VBH: the sha256 of --base-judge recorded before the run (4a-4 5; "
+                          "required, without it not judgeable)")
+    base_judge = commands.add_parser("base-judge",
+                                     help="4a-3 4.4: the H-6 base judge file (r79_sensor_judge)")
+    base_judge.add_argument("--out", type=Path, required=True)
+    base_judge.add_argument("--h6", type=Path, required=True)
+    base_judge.add_argument("--noise", type=Path, required=True,
+                            help="resume_k1/h8_noise_VB.json (its L1 lines are the reference)")
+    base_judge.add_argument("--judge-out", type=Path, required=True)
+    selfcheck = commands.add_parser("t12-selfcheck",
+                                    help="4a-4 6: stored H-6 against itself with the real judge")
+    selfcheck.add_argument("--out", type=Path, required=True)
+    selfcheck.add_argument("--h6", type=Path, required=True)
+    selfcheck.add_argument("--judge", type=Path, required=True)
+    selfcheck.add_argument("--judge-sha256", required=True)
     records = commands.add_parser("records")
     records.add_argument("--out", type=Path, required=True)
     records.add_argument("--replay", type=Path, nargs="*", default=[])
@@ -518,10 +700,17 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         inputs, files = t8_inputs(args, problems)
         return judge_t8(inputs, problems), problems, files
     if args.command == "t12":
+        input_problems = t12_input_problems(args.bundle, args.base, args.base_judge,
+                                            args.base_judge_sha256)
         report, problems = judge_t12(args.bundle, _read_json(args.base),
                                      _read_json(args.base_judge), _read_json(args.new),
                                      _read_json(args.new_judge))
+        problems.not_judgeable[:0] = input_problems
         return report, problems, [args.base, args.base_judge, args.new, args.new_judge]
+    if args.command == "base-judge":
+        return make_base_judge(args.h6, args.noise, args.judge_out)
+    if args.command == "t12-selfcheck":
+        return t12_selfcheck(args.h6, args.judge, args.judge_sha256)
     lock_rows = [row for path in args.lock_rows for row in _read_json_lines(path)]
     report, problems = judge_records([_read_json(path) for path in args.replay],
                                      [_read_json(path) for path in args.dg3], lock_rows)

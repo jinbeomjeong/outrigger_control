@@ -63,6 +63,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import jp3_baseline_compare as compare  # noqa: E402
+import jp3_fixed_inputs as fixed  # noqa: E402
 from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
 
 BAR = 1.0e5
@@ -96,7 +97,7 @@ STORED_TIME_TOLERANCE_S = 1.0e-9
 CHECK_LIST_KEYS = ("breach_reads", "min_gap_bar", "min_gap_t_s")
 REV5_JUDGED_KEYS = ("jp3a_breach_reads", "jp3b_breach_over_tol_reads", "jp3c_breach_reads")
 HARNESS_HASH_KEY = "harness_commands_sha256"
-GRID_SHA256 = "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827"
+GRID_SHA256 = fixed.GRID_SHA256
 """Addendum 4a-3 5.4: ``resume_k1/h9_grid/grid_r67_top.json`` (F-A and 5.2)."""
 PATH_OFFSETS_S = (0.0, 0.025, 0.05)
 """4a-3 5.2: ``runs[0..2]`` (``run_v5.J9_CASE_F_PATH_OFFSETS_S``)."""

@@ -121,7 +121,8 @@ def test_k1_allowed_differences_pass_and_the_c_record_is_written() -> None:
     assert status == compare.STATUS_PASS
     assert report["T-JR-10"]["passing"] == 22 and report["T-JR-11"]["equal"] == 22
     assert report["T-JR-10"]["pair_rows"][0]["C_record"] == {"record": "no record"}
-    assert report["VB_rerun_record"]["stop_before_reading_T-JR-10"] is False
+    assert report["VB_rerun_record"]["differing_count"] == 0
+    assert report["T-JR-10"]["status"] == report["T-JR-11"]["status"] == compare.STATUS_PASS
 
 
 def _set_new_record(inputs, key, path, value):
@@ -156,15 +157,9 @@ def test_k1_t8_conditions(change, status) -> None:
     assert _t8_status(change)[1] == status
 
 
-def test_k1_t8_needs_exactly_the_22_jobs_and_records_vb() -> None:
+def test_k1_t8_needs_exactly_the_22_jobs() -> None:
+    """(4a-4 4 rules the VB record: ``test_jp3_addendum_4a4.py``.)"""
     assert _t8_status(jobs=21)[1] == compare.STATUS_NOT_JUDGEABLE
-
-    def stale_vb(inputs, key):
-        inputs.rerun["VB"][key]["commands_sha256"] = "e" * 64
-
-    report, status = _t8_status(stale_vb)
-    assert status == compare.STATUS_PASS  # VB is a record only (4a-3 5.3)
-    assert report["VB_rerun_record"]["stop_before_reading_T-JR-10"] is True
 
 
 def test_k1_c_record_compares_the_fallback_estimates() -> None:
@@ -296,9 +291,12 @@ def _main_jsonl(path: Path) -> Path:
 
 
 def test_k5_j9_t8_is_88_rows_with_the_vb_record(tmp_path, monkeypatch) -> None:
+    import jp3_fixed_inputs
     import run_v5
 
     source = _main_jsonl(tmp_path / "main.jsonl")
+    monkeypatch.setattr(jp3_fixed_inputs, "MAIN_JSONL_SHA256",
+                        jp3_fixed_inputs.file_sha256(source))  # 4a-4 5 is tested apart
     jobs = run_v5.j9_t8_jobs(source)
     assert len(jobs) == 88
     assert {job["setting"] for job in jobs} == {"VBH", "VBJ", "VBJ0", "VB"}
@@ -314,49 +312,71 @@ def test_k5_j9_t8_is_88_rows_with_the_vb_record(tmp_path, monkeypatch) -> None:
 
 # --- K-6: dry check ---------------------------------------------------------------------------
 
+SELECT_INPUTS = dryrun.SelectInputs(Path("scan"), Path("main"), Path("baseline"), Path("dg3"),
+                                    Path("noise"))
+
+
 def test_k6_no_candidate_outside_the_union_stops(monkeypatch) -> None:
     union = {dryrun.normalised_job(job) for job in dryrun.EVENT_CANDIDATES}
-    monkeypatch.setattr(dryrun, "judged_union", lambda *args: {
-        "event_union": union, "dg3_keys": set(), "sizes": {}, "union_size": len(union),
-        "dg3_key_count": 0})
+    monkeypatch.setattr(dryrun, "fixed_input_problems", lambda inputs: [])
+    monkeypatch.setattr(dryrun, "judged_union", lambda *args: {"event_union": union,
+                                                               "sizes": {}})
     with pytest.raises(dryrun.Stop, match="확인 필요"):
-        dryrun.select(Path("main"), Path("baseline"), {"results": []}, {"results": []})
+        dryrun.select(SELECT_INPUTS)
 
 
 @pytest.mark.skipif(not (V5_DIR / "main.jsonl").is_file() or not BASELINE_FOLDER.is_dir(),
                     reason="stored main.jsonl / baseline not present")
 def test_k6_selection_shows_the_jobs_outside_the_union() -> None:
-    noise = {"results": [{"key": "cand=current#L2|s0|g6|52|ref|J1|top|Fs0", "level": "L2"},
-                         {"key": "cand=current#L2|s9|x|1|y", "level": "L2"}]}
-    dg3 = {"results": [{"key": "cand=current#L2|s0|g6|52|ref|J1|top|Fs0"}]}
-    selection = dryrun.select(V5_DIR / "main.jsonl", BASELINE_FOLDER, dg3, noise)
-    first = next(row for row in selection["event_candidates"] if not row["in_union"])
-    assert first["job"] == selection["event_job"]
-    assert selection["r79_key"] == "L2|s9|x|1|y" and selection["r79_key_in_dg3"] is False
-    assert selection["union_sizes"]["j9_t8"] == 22
+    union = dryrun.judged_union(V5_DIR / "main.jsonl", BASELINE_FOLDER)
+    assert union["sizes"]["j9_t8"] == 22
+    candidates = [job for job in dryrun.EVENT_CANDIDATES
+                  if dryrun.normalised_job(job) not in union["event_union"]]
+    assert candidates and candidates[0] == {"case": "R14", "eps": 0.0, "offset_s": 0.025}
 
 
-def test_k6_summary_holds_only_the_evidence_keys(tmp_path) -> None:
-    def write(name, truth, monitor, *, r79=False):
-        record = {"job": {}, "commands_sha256": "secret", "values": {"x": 1},
-                  "hydraulics_record": {"rod_reading_truth_calls": truth,
-                                        "two_pressure_reads": monitor,
-                                        "extend_bound_check": {"breach_reads": [9] * 4}}}
+def _summary_record(truth, monitor, *, key=None, seed=None) -> dict:
+    record = {"job": {}, "commands_sha256": "secret", "values": {"x": 1},
+              "hydraulics_record": {"rod_reading_truth_calls": truth,
+                                    "two_pressure_reads": monitor,
+                                    "extend_bound_check": {"breach_reads": [9] * 4}}}
+    if key is not None:
+        record.update(key=key, seed_index=seed)
+    return record
+
+
+SELECTION = {"r79_key": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0", "r79_seed": 25}
+
+
+def _summary_files(tmp_path, *, vbh_truth: int = 0, r79_key: str | None = None,
+                   r79_seed: int = 25) -> tuple[dict, dict]:
+    def write(name, record, *, r79=False):
         path = tmp_path / name
         text = json.dumps({"results": [record]}) if r79 else json.dumps(record) + "\n"
         path.write_text(text, encoding="utf-8")
         return path
 
-    events = {"VBJ": write("e1", 5, 5), "VBH": write("e2", 0, 5), "VBJ0": write("e3", 4, 4)}
-    r79 = {"VBJ": write("r1", 3, 3, r79=True), "VBH": write("r2", 0, 3, r79=True)}
-    summary, code = dryrun.summarize(events, r79)
-    assert code == dryrun.EXIT_DONE
+    key = f"cand=current#{SELECTION['r79_key']}" if r79_key is None else r79_key
+    events = {"VBJ": write("e1", _summary_record(5, 5)),
+              "VBH": write("e2", _summary_record(vbh_truth, 5)),
+              "VBJ0": write("e3", _summary_record(4, 4))}
+    r79 = {"VBJ": write("r1", _summary_record(3, 3, key=key, seed=r79_seed), r79=True),
+           "VBH": write("r2", _summary_record(0, 3, key=key, seed=r79_seed), r79=True)}
+    return events, r79
+
+
+def test_k6_summary_holds_only_the_evidence_keys(tmp_path) -> None:
+    events, r79 = _summary_files(tmp_path)
+    summary, code = dryrun.summarize(SELECTION, events, r79)
+    assert code == dryrun.EXIT_DONE, summary
     for row in summary["rows"]:
         for evidence in row["evidence"]:
             assert set(evidence) == {"error", "rod_reading_truth_calls", "two_pressure_reads"}
-    events["VBH"] = write("e4", 2, 5)
-    assert dryrun.summarize(events, r79)[1] == dryrun.EXIT_MISSED
-    assert dryrun.summarize({}, r79)[1] == dryrun.EXIT_NOT_JUDGEABLE
+    missed = tmp_path / "missed"
+    missed.mkdir()
+    events, r79 = _summary_files(missed, vbh_truth=2)
+    assert dryrun.summarize(SELECTION, events, r79)[1] == dryrun.EXIT_MISSED
+    assert dryrun.summarize(SELECTION, {}, r79)[1] == dryrun.EXIT_NOT_JUDGEABLE
 
 
 # --- K-8: F-A path equivalence ---------------------------------------------------------------

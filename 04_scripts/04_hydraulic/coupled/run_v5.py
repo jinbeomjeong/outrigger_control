@@ -651,6 +651,13 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     if args.p3_hash_source is not None:
         if args.batch != J9_T8_BATCH:
             parser.error("--p3-hash-source belongs to the j9_t8 batch")
+        import jp3_fixed_inputs
+
+        problem = jp3_fixed_inputs.sha_problem(args.p3_hash_source,
+                                               jp3_fixed_inputs.MAIN_JSONL_SHA256,
+                                               "--p3-hash-source (addendum 4a-4 5)")
+        if problem is not None:
+            parser.error(problem)
         P3_HASH_SOURCE_OVERRIDE[0] = args.p3_hash_source
     _check_overlap_reference(parser, args)
     if args.group is None and args.k1 is not None:
