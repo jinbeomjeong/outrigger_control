@@ -158,6 +158,93 @@ def check_p1_seed() -> dict:
             "seed_log_columns": record["p1_retract_seed_log_columns"]}
 
 
+SEED_CASE_LEG = 2
+"""Addendum 4a-2 3.3: RL (rear), the leg of the largest seed event (hydraulics review 11.2)."""
+SEED_CASE_HEAD_PA = 120.6e5
+SEED_CASE_BAND_N = 7.0e3
+FLOOR_SETTLE_STEPS = 20
+RETRACT_RUN_S = 0.6
+
+
+def _seed_case_plant(options):
+    """RL locked at the floor rod pressure with ``p_h`` 120.6 bar and a 7 kN band, on a floor
+    that does not move (4a-2 3.3)."""
+    plant = base._lifted_leg_plant(options, floor_move_m=0.0)
+    leg = SEED_CASE_LEG
+    head_area = float(plant.flow_limiter.params.A_h[leg])
+    target_N = SEED_CASE_HEAD_PA * head_area - plant.p_floor * float(plant.A_ann[leg])
+    stiffness = base.FLOOR_STIFFNESS_N_M
+    force_N = float(plant.ko[leg] * (plant.sref[leg] - plant.x[leg]))
+    plant.sref[leg] += (target_N - force_N) * (plant.ko[leg] + stiffness) / (
+        plant.ko[leg] * stiffness)
+    plant.step(np.zeros(4), 1)
+    plant.c_lock[leg] = plant.sref[leg] - plant.x[leg]  # a fresh lock at the new load
+    plant.Gr_lock[leg] = 0.0
+    plant.p_r0[leg] = plant.p_floor
+    plant.Fs[leg] = SEED_CASE_BAND_N
+    _drive(plant, leg, [0.0] * FLOOR_SETTLE_STEPS)
+    return plant
+
+
+def _retract_ramp() -> list[float]:
+    return [-RELEASE_SPEED_M_S * (1.0 - np.exp(-(k + 1) * base.KERNEL_STEP_S / base.VALVE_TAU_S))
+            for k in range(round(RETRACT_RUN_S / base.KERNEL_STEP_S))]
+
+
+def _hold_back_the_seed(plant) -> None:
+    """The 3.3 mutation (test hook): ``release()`` gets the locked pressure as the M2 previous
+    pressure instead of the seed (``p_r,locked = p_r0 - Delta``), the lag still starts at it."""
+    from outrigger_sim.hydraulics.rod_release import ReleaseStart
+
+    release = plant.rod_release.release
+
+    def release_without_seed(leg, start):
+        locked_Pa = float(plant.p_r0[leg]) - start.drop_Pa
+        release(leg, ReleaseStart(locked_Pa, start.drop_Pa))
+
+    plant.rod_release.release = release_without_seed
+
+
+def _seed_case(is_mutated: bool, has_records: bool = True) -> dict:
+    options = _options(gate=True, lock_anchor_continuous=True, rod_flow_cap_all=True)
+    plant = _seed_case_plant(options)
+    leg = SEED_CASE_LEG
+    head_area = float(plant.flow_limiter.params.A_h[leg])
+    rod_Pa = float(plant.p_r0[leg] - plant.Gr[leg] / plant.A_ann[leg])
+    head_Pa = float((plant.pressure()[leg] + rod_Pa * plant.A_ann[leg]) / head_area)
+    if is_mutated:
+        _hold_back_the_seed(plant)
+    log = plant.lock_log
+    if not has_records:
+        plant.lock_log = None
+    trajectory = []
+    for speed_m_s in _retract_ramp():
+        command = np.zeros(4)
+        command[leg] = speed_m_s
+        plant.step(command, 1)
+        trajectory.append(np.concatenate([plant.sref, plant.x]).tobytes())
+    out = {"head_bar": head_Pa / BAR, "rod_bar": rod_Pa / BAR, "p_floor_bar": plant.p_floor / BAR,
+           "band_N": float(plant.Fs[leg] - plant.f[leg]), "trajectory": trajectory}
+    if has_records:
+        record = log.record()
+        out.update(seed_count=record["p1_retract_seed_count"],
+                   seed_log=record["p1_retract_seed_log"],
+                   seed_log_columns=record["p1_retract_seed_log_columns"])
+    return out
+
+
+def check_seed_force_counterexample() -> dict:
+    """Addendum 4a-2 3.3: the seed net force column on the largest seed event, with the plant
+    as it is and with the seed held back from the M2 re-anchor (the column must see it); and
+    the records-off run (no ``lock_log``) moves the plant bit for bit the same (the column is
+    read only)."""
+    normal, mutated = _seed_case(False), _seed_case(True)
+    without_records = _seed_case(False, has_records=False)
+    is_bit_equal = normal.pop("trajectory") == without_records.pop("trajectory")
+    mutated.pop("trajectory")
+    return {"normal": normal, "mutated": mutated, "records_off_bit_equal": is_bit_equal}
+
+
 def _relock_after_short_move(options) -> dict:
     """The lifted FR: locked through the floor drop (its rod spring takes the load change),
     a 20 ms extension, then zero: the relock keeps ``G_r,lock`` of the release decay."""
@@ -191,7 +278,8 @@ def check_p2_anchor() -> dict:
             "r5": _relock_after_short_move(_options())}
 
 
-CHECKS = {"p1_gate": check_p1_gate, "p2_anchor": check_p2_anchor, "p1_seed": check_p1_seed}
+CHECKS = {"p1_gate": check_p1_gate, "p2_anchor": check_p2_anchor, "p1_seed": check_p1_seed,
+          "seed_counterexample": check_seed_force_counterexample}
 
 
 def main() -> None:

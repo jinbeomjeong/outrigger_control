@@ -11,7 +11,9 @@ arm's rules (the arm travels in the environment variable :data:`ARM_ENV`). The t
 hold the function (``v5_options`` and ``harness_hydraulics``) are both replaced. The rows carry
 the rules in ``extend_bound_check`` (``carry_end_rule``, ``retract_start_rule``), so the J-P3
 judgement refuses them (13.6); the setting names end in ``_X11`` and stay out of every
-judgement list (R6). Write to an own folder.
+judgement list (R6). Write to an own folder. ``jp3_case_judge.py x11`` judges P4-5a on the
+``both`` output (addendum 4a-2 R7, X11); a ``*_X11`` row given to ``jp3_baseline_compare.py``
+is a setting defect.
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_x11_replay.py --out <own folder>/<jsonl>

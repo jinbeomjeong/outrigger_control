@@ -46,6 +46,42 @@ TEST_ONLY_SETTINGS = ("VBG4", "VBG5")
 """Case replay settings under a test constant (``jp3_case_replay.py``: C and D)."""
 TEST_ONLY_SETTING_SUFFIX = "_X11"
 """Edition 4a 13.3 counterexample arm (both test-only rules, its own folder)."""
+REV5_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
+"""436.9 spec 6.1 / 13.2, addendum 4a-2 R6: the revision 5 rows J-P3 judges; the other
+revision 5 rows (VBH, LSH1 .. 4, a row without a setting) are recorded apart."""
+REVISION_5_RECORD_KEY = "rule_revision"
+"""``extend_bound_check`` key of a revision 5 record (value 5)."""
+
+
+ROD_READING_EVIDENCE_KEYS = ("rod_reading_truth_calls", "two_pressure_reads")
+"""Addendum 4a-2 B2, counted at two places of a harness run (``hydraulics_record``, record
+only): ``rod_reading_truth_calls`` inside the P4 reading
+(``harness_hydraulics.with_plant_truth_pressures``), ``two_pressure_reads`` at the monitor input
+(controller reads with a rod-side pressure). A run with ``rod_reading_truth`` has 1 = 2 > 0; a
+run without P4 has 1 = 0."""
+
+
+def rod_reading_evidence_problems(record: dict | None, options: dict | None) -> list[str]:
+    """Addendum 4a-2 B2: why a result row's P4 evidence does not fit its options (empty = it
+    fits; anything else makes its bundle a ``setting_defect``).
+
+    Args:
+        record: The row's ``hydraulics_record``.
+        options: The row's ``hydraulic_options`` (``HydraulicOptions.to_dict``; None = none).
+    """
+    record = record or {}
+    missing = [key for key in ROD_READING_EVIDENCE_KEYS if key not in record]
+    if missing:
+        return [f"P4 evidence keys missing: {missing}"]
+    truth_calls, monitor_reads = (int(record[key]) for key in ROD_READING_EVIDENCE_KEYS)
+    if (options or {}).get("rod_reading_truth"):
+        if truth_calls < 1 or truth_calls != monitor_reads:
+            return [f"rod_reading_truth: {truth_calls} truth readings, {monitor_reads} monitor "
+                    "rod reads (equal and > 0 needed)"]
+        return []
+    if truth_calls != 0:
+        return [f"P4 off but {truth_calls} truth readings"]
+    return []
 
 
 def is_test_only_setting(setting: str | None) -> bool:
@@ -80,13 +116,27 @@ def harness_head_only_declared(meta: dict) -> bool:
     return case is not None and case.path == verdict_cases.PATH_STEADY
 
 
+def is_revision_5_record(row: dict) -> bool:
+    """The row's ``extend_bound_check`` is a revision 5 record (``rule_revision`` 5)."""
+    record = row.get("extend_bound_check") or {}
+    return record.get(REVISION_5_RECORD_KEY) == HOLD_REVISION
+
+
 def j_p3_over_rows(rows: list[dict]) -> dict:
     """J-P3 of the expected rows (``p3_expected`` True, or a ``tracked_bound`` own rule).
 
-    Row keys read: ``p3_expected``, :data:`RULE_KEY`, ``extend_bound_check``,
-    ``has_rod_reading`` (default True), ``head_only_declared`` (default False), ``setting``
-    (a test-only setting, :func:`is_test_only_setting`, makes the whole set a setting defect:
-    edition 4a 13.6; the revision 5 rule identity is checked by ``j_p3_judgement_rev5``).
+    Row keys read: ``p3_expected``, :data:`RULE_KEY`, :data:`REVISION_KEY`,
+    ``extend_bound_check``, ``has_rod_reading`` (default True), ``head_only_declared`` (default
+    False), ``setting`` (a test-only setting, :func:`is_test_only_setting`, makes the whole set
+    a setting defect: edition 4a 13.6; the revision 5 rule identity is checked by
+    ``j_p3_judgement_rev5``).
+
+    Addendum 4a-2 R6: the revision 5 judgement takes the :data:`REV5_JUDGED_SETTINGS` rows only
+    (the other revision 5 rows are ``rev5_record_only``, never judged); a row with a revision 5
+    record but without :data:`REVISION_KEY` is refused (``revision_key_missing_runs``, a setting
+    defect), it never goes to the revision 4 judgement, which itself refuses a revision 5
+    record. ``status_by_revision`` keeps both statuses apart (``no_judged_runs`` of revision 5
+    does not hide a revision 4 H-7).
     """
     from outrigger_sim.control.extend_start_bound import j_p3_judgement, j_p3_judgement_rev5
 
@@ -95,19 +145,38 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
                 if row.get("p3_expected") or row.get(RULE_KEY) == P3_RULE]
     with_rule = [row for row in expected if row.get(RULE_KEY) == P3_RULE]
     rule_missing = len(expected) - len(with_rule)
-    revision_4 = [row for row in with_rule if row.get(REVISION_KEY) != HOLD_REVISION]
-    revision_5 = [row for row in with_rule if row.get(REVISION_KEY) == HOLD_REVISION]
+    is_rev5_key = [row.get(REVISION_KEY) == HOLD_REVISION for row in with_rule]
+    revision_5 = [row for row, is_rev5 in zip(with_rule, is_rev5_key, strict=True) if is_rev5]
+    unkeyed_rev5 = [row for row, is_rev5 in zip(with_rule, is_rev5_key, strict=True)
+                    if not is_rev5 and is_revision_5_record(row)]
+    revision_4 = [row for row, is_rev5 in zip(with_rule, is_rev5_key, strict=True)
+                  if not is_rev5 and not is_revision_5_record(row)]
     judgement = j_p3_judgement(*_judgement_inputs(revision_4))
+    status_by_revision = {"4": judgement["status"]}
     if revision_5:  # 436.9 6.1: the revision 5 rows apart, never mixed into one sum
-        # decisions 147 / 148: the record's sensor_grade decides; conservative / old_worst rows
-        # are recorded only, a row without a grade is a setting defect
-        judgement["rev5"] = j_p3_judgement_rev5(*_judgement_inputs(revision_5))
+        judgement.update(_revision_5_judgement(revision_5, j_p3_judgement_rev5))
+        status_by_revision["5"] = judgement["rev5"]["status"]
         judgement["status"] = _worse_status(judgement["status"], judgement["rev5"]["status"])
-    if rule_missing or test_only_runs:
+    if rule_missing or test_only_runs or unkeyed_rev5:
         judgement["status"] = "setting_defect"
     judgement.update(runs_expected=len(expected), rule_missing_runs=rule_missing,
-                     test_only_setting_runs=test_only_runs)
+                     test_only_setting_runs=test_only_runs,
+                     revision_key_missing_runs=len(unkeyed_rev5),
+                     status_by_revision=status_by_revision)
     return judgement
+
+
+def _revision_5_judgement(revision_5: list[dict], judge_rev5) -> dict:
+    """``rev5`` (the judged settings) and ``rev5_record_only`` (the other revision 5 rows)."""
+    judged = [row for row in revision_5 if row.get("setting") in REV5_JUDGED_SETTINGS]
+    others = [row for row in revision_5 if row.get("setting") not in REV5_JUDGED_SETTINGS]
+    out = {"rev5": judge_rev5(*_judgement_inputs(judged)),
+           "rev5_unjudged_setting_runs": len(others)}
+    if not judged:  # 13.2: revision 5 rows but no judged one = not judgeable, never a pass
+        out["rev5"]["status"] = "no_judged_runs"
+    if others:
+        out["rev5_record_only"] = judge_rev5(*_judgement_inputs(others))
+    return out
 
 
 def _judgement_inputs(rows: list[dict]) -> tuple[list, list[bool], list[bool]]:

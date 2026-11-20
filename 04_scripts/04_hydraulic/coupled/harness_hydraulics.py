@@ -50,6 +50,11 @@ import numpy as np
 SOURCE_DIR = Path(__file__).resolve().parents[3] / "03_src"
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
+_COUPLED_DIR = Path(__file__).resolve().parent
+if str(_COUPLED_DIR) not in sys.path:  # j_p3_inputs (a sibling) for the B2 evidence keys
+    sys.path.append(str(_COUPLED_DIR))
+
+from j_p3_inputs import ROD_READING_EVIDENCE_KEYS  # noqa: E402
 
 from outrigger_sim.control.extend_start_bound import (  # noqa: E402
     ExtendBoundCheck,
@@ -231,13 +236,45 @@ RELOCK_STEP_COUNTED_PA = 1.0e5
 RELEASE_BY_GATE = "gate"
 RELEASE_BY_COMMAND = "command"
 SEED_LOG_COLUMNS = ("t_s", "leg", "p_h_Pa", "p_r_locked_Pa", "seed_Pa", "step_Pa",
-                    "dp_h_read_Pa", "net_force_step_N", "net_force_release_step_N")
+                    "dp_h_read_Pa", "net_force_step_N", "net_force_release_step_N",
+                    "net_force_seed_step_N", "m2_previous_unset", "m2_shift_clipped")
 """Edition 4 ``p1_retract_seed_log`` row (spec 6.3; ``leg`` = index as in ``lock_log``).
-``net_force_step_N`` = the read net force step at the seed instant, ``dp_h_read A_h - step
-A_ann`` (5.4 #12: the head reading moves with the rod step, the net force stays; the seed
-re-anchors the M2 shift, so the plant force does not step either). The added column
-``net_force_release_step_N`` is the plant force change over the whole release step, which
-also holds the lag's first relax step (a record)."""
+
+* ``net_force_step_N`` = the read net force step at the seed instant, ``dp_h_read A_h - step
+  A_ann``: 0 by definition (the head reading is solved from the net force), an implementation
+  check column, never judged (addendum 4a-2 3.2).
+* ``net_force_release_step_N`` = the plant force change over the whole release step, which
+  also holds the lag's first relax step (a record).
+* ``net_force_seed_step_N`` (addendum 4a-2 3.2, the judged column of P4-4 / T-JR-15 / T-JR-18):
+  ``[F_after - F_before] - k_o s_relax`` with ``s_relax = A_ann [(p_start + Delta) - (p_relax
+  + Delta w)] / k_h``, the force step the seed itself makes in the release step (0 when the M2
+  re-anchor holds the seed, about ``-k_o A_ann dp_seed / k_h`` when it does not).
+* ``m2_previous_unset``: the release step had no M2 previous pressure (its shift is 0,
+  ``s_relax`` = 0); ``m2_shift_clipped``: the leg's shift of that step was clipped by the stroke
+  room (the row cannot split the seed share: not judgeable).
+
+Every value is read from the plant after it computed it; no plant arithmetic changes."""
+
+
+@dataclass(frozen=True)
+class ReleaseStepRecord:
+    """Plant values of one M2 release step, read after ``s_ref += shift`` (per leg).
+
+    Attributes:
+        net_force_after_N: ``pressure()`` after the shift.
+        relaxed_Pa: ``p_relax``, the lag pressure after this step's ``relax``.
+        weight: ``w`` of the base release decay this step.
+        head_stiffness_N_m: ``k_h`` the shift used.
+        oil_stiffness_N_m: ``k_o`` of ``pressure()``.
+        is_clipped: The leg's shift was clipped by the stroke room this step.
+    """
+
+    net_force_after_N: np.ndarray
+    relaxed_Pa: np.ndarray
+    weight: np.ndarray
+    head_stiffness_N_m: np.ndarray
+    oil_stiffness_N_m: np.ndarray
+    is_clipped: np.ndarray
 
 
 class _LockLog:
@@ -271,12 +308,24 @@ class _LockLog:
             self.seed_rows.append(row)
             self._pending_seed_rows.append(row)
 
-    def finish_seed_rows(self, net_force_N) -> None:
-        """The net force after the M2 shift of the release step (``net_force_release_step_N``:
-        the seed instant plus the lag's first relax step towards ``p*``, a record)."""
+    def finish_seed_rows(self, step: ReleaseStepRecord) -> None:
+        """The seed rows of this release step after its M2 shift: ``net_force_release_step_N``
+        (the seed instant plus the lag's first relax step, a record) and the judged
+        ``net_force_seed_step_N`` (:data:`SEED_LOG_COLUMNS`)."""
         for row in self._pending_seed_rows:
-            row["net_force_release_step_N"] = (float(net_force_N[row["leg"]])
-                                               - row.pop("net_force_before_N"))
+            leg = row["leg"]
+            release_step_N = float(step.net_force_after_N[leg]) - row.pop("net_force_before_N")
+            drop_Pa, annulus = row.pop("drop_Pa"), row.pop("annulus_m2")
+            relax_shift_m = 0.0
+            if not row["m2_previous_unset"]:
+                relax_shift_m = annulus * ((row["seed_Pa"] + drop_Pa)
+                                           - (float(step.relaxed_Pa[leg])
+                                              + drop_Pa * float(step.weight[leg]))
+                                           ) / float(step.head_stiffness_N_m[leg])
+            row["net_force_release_step_N"] = release_step_N
+            row["net_force_seed_step_N"] = (release_step_N
+                                            - float(step.oil_stiffness_N_m[leg]) * relax_shift_m)
+            row["m2_shift_clipped"] = bool(step.is_clipped[leg])
         self._pending_seed_rows = []
 
     def on_lock(self, plant, leg: int, p_tr_before_Pa: float, monitor_trace: dict | None) -> None:
@@ -351,6 +400,8 @@ def with_plant_truth_pressures(plant, m, ha):
     truth = plant.plant_rod_pressure_Pa() if hasattr(plant, "plant_rod_pressure_Pa") else None
     if truth is None:
         raise RuntimeError("rod_reading_truth needs the v5 harness plant with M2")
+    # addendum 4a-2 B2 evidence 1 (record only): counted inside the P4 reading itself
+    plant.rod_reading_truth_calls = getattr(plant, "rod_reading_truth_calls", 0) + 1
     rod_Pa = np.asarray(truth, float)
     head_Pa = (np.asarray(plant.pressure(), float) + rod_Pa * np.asarray(plant.A_ann, float)) / ha
     return dataclasses.replace(m, head_pressure_Pa=head_Pa, rod_pressure_Pa=rod_Pa)
@@ -679,12 +730,21 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]),
                                            float(speed_m_s[i]))
                 weight[i] = release_weight(float(self.t - self.t_rel[i]), float(self.tau))
+            clipped_before = (None if self.lock_log is None
+                              else self.rod_release.clipped_steps)  # a copy (record only)
             shift_m = self.rod_release.shift_m(
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
                 self.geo.stroke - self.sref, release_weight=weight, t_s=float(self.t))
             self.sref += shift_m
-            if self.lock_log is not None:
-                self.lock_log.finish_seed_rows(self.pressure())
+            if self.lock_log is not None:  # record only: reads the values computed above
+                self.lock_log.finish_seed_rows(ReleaseStepRecord(
+                    net_force_after_N=np.asarray(self.pressure(), float),
+                    relaxed_Pa=pressure_Pa.copy(), weight=weight.copy(),
+                    head_stiffness_N_m=np.broadcast_to(np.asarray(self.kh, float),
+                                                       (LEG_COUNT,)).copy(),
+                    oil_stiffness_N_m=np.broadcast_to(np.asarray(self.ko, float),
+                                                      (LEG_COUNT,)).copy(),
+                    is_clipped=self.rod_release.clipped_steps != clipped_before))
 
         def _start_release(self, leg: int, locked_pressure_Pa: float,
                            release_force_N: float, net_force_N: float = math.nan) -> None:
@@ -692,22 +752,31 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             A_ann`` (= ``p_r0 - p_r,rel``; ``Gr`` is ``r0`` in the release step)."""
             seed_Pa = self.rod_pressure_seed_Pa[leg]
             start_Pa = locked_pressure_Pa if np.isnan(seed_Pa) else float(seed_Pa)
+            drop_Pa = release_force_N / float(self.A_ann[leg])
             if self.lock_log is not None and not np.isnan(seed_Pa):
-                step_Pa = start_Pa - locked_pressure_Pa
-                annulus = float(self.A_ann[leg])
-                head_area = float(self.flow_limiter.params.A_h[leg])
-                self.lock_log.on_retract_seed(step_Pa, {
-                    "t_s": round(float(self.t), 6), "leg": leg,
-                    "p_h_Pa": (net_force_N + locked_pressure_Pa * annulus) / head_area,
-                    "p_r_locked_Pa": locked_pressure_Pa, "seed_Pa": start_Pa,
-                    "step_Pa": step_Pa, "dp_h_read_Pa": step_Pa * annulus / head_area,
-                    "net_force_step_N": (step_Pa * annulus / head_area) * head_area
-                    - step_Pa * annulus,
-                    "net_force_before_N": net_force_N})
+                self.lock_log.on_retract_seed(
+                    start_Pa - locked_pressure_Pa,
+                    self._seed_row(leg, locked_pressure_Pa, start_Pa, drop_Pa, net_force_N))
             self.rod_pressure_seed_Pa[leg] = np.nan
             self.rod_pressure_lag.start(leg, start_Pa)
-            self.rod_release.release(
-                leg, ReleaseStart(start_Pa, release_force_N / float(self.A_ann[leg])))
+            self.rod_release.release(leg, ReleaseStart(start_Pa, drop_Pa))
+
+        def _seed_row(self, leg: int, locked_pressure_Pa: float, seed_Pa: float,
+                      drop_Pa: float, net_force_N: float) -> dict:
+            """The ``p1_retract_seed_log`` values known at the release (record only); the
+            release step's values follow in :meth:`_LockLog.finish_seed_rows`."""
+            step_Pa = seed_Pa - locked_pressure_Pa
+            annulus = float(self.A_ann[leg])
+            head_area = float(self.flow_limiter.params.A_h[leg])
+            return {
+                "t_s": round(float(self.t), 6), "leg": leg,
+                "p_h_Pa": (net_force_N + locked_pressure_Pa * annulus) / head_area,
+                "p_r_locked_Pa": locked_pressure_Pa, "seed_Pa": seed_Pa,
+                "step_Pa": step_Pa, "dp_h_read_Pa": step_Pa * annulus / head_area,
+                "net_force_step_N": (step_Pa * annulus / head_area) * head_area
+                - step_Pa * annulus,
+                "net_force_before_N": net_force_N, "drop_Pa": drop_Pa, "annulus_m2": annulus,
+                "m2_previous_unset": not self.rod_release.has_previous_pressure}
 
     if options.lock_anchor_continuous:
         HydraulicsPlant._locked_knee_m = _continuous_knee_m
@@ -790,6 +859,8 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
         record["p1_output_exceptions"] = list(plant.line_fill_gate.summary()["output_exceptions"])
     if getattr(plant, "lock_log", None) is not None:
         record.update(plant.lock_log.record())
+    if getattr(plant, "extend_targets", None) is not None:  # an armed v5 plant (B2 evidence)
+        record.update({key: int(getattr(plant, key, 0)) for key in ROD_READING_EVIDENCE_KEYS})
     if getattr(plant, "tension_truth", None) is not None:
         record["tension_truth"] = plant.tension_truth.record()
         check = getattr(plant, "extend_bound_check", None)
@@ -816,6 +887,8 @@ def install_extend_bound_check() -> None:
             check = getattr(plant, "check_extend_bound", None)
             if check is None or abs(float(plant.t) - float(measurements.t_s)) > TIME_TOL_S:
                 return output
+            if _has_rod_reading(measurements):  # addendum 4a-2 B2 evidence 2 (record only)
+                plant.two_pressure_reads = getattr(plant, "two_pressure_reads", 0) + 1
             bound_Pa = self.extend_bound_Pa()
             if bound_Pa is not None:
                 trace = self.extend_bound_trace_row()  # None below ③ revision 5
@@ -825,6 +898,12 @@ def install_extend_bound_check() -> None:
             return output
 
     c2.C2Controller = BoundCheckedController
+
+
+def _has_rod_reading(measurements) -> bool:
+    """The controller read a rod-side pressure this period (a finite value on some leg)."""
+    rod_Pa = getattr(measurements, "rod_pressure_Pa", None)
+    return rod_Pa is not None and bool(np.isfinite(np.asarray(rod_Pa, float)).any())
 
 
 def _extend_target_model(plant):
@@ -897,13 +976,24 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
     verdict_runs_module.make_flow_plant_class = make_class
 
 
+R64_MODULE = "r64_g4_closed_loop"
+
+
 def install_rod_reading_truth() -> None:
     """P4 on the event path: the S8 harness reads ``r64.with_two_pressures`` at call time, so
     the module attribute becomes :func:`with_plant_truth_pressures` once the S8 modules are
     imported (``s9_soil_event_screen._s8_modules``, which imports them under its own argv).
-    The steady path gives no rod reading (criteria revision 9 3.1) and is not touched."""
+    The steady path gives no rod reading (criteria revision 9 3.1) and is not touched.
+
+    Addendum 4a-2 B2: an ``r64_g4_closed_loop`` module imported already (the standalone
+    ``r67_g1_screen`` worker imports it before it installs the setting) is patched at once; the
+    evidence keys :data:`ROD_READING_EVIDENCE_KEYS` show whether the reading reached the
+    controller on any path (r79 takes P4 through its own ``R79_ROD_MODEL=plant_truth``)."""
     import s9_soil_event_screen as study_a
 
+    imported_r64 = sys.modules.get(R64_MODULE)
+    if imported_r64 is not None:
+        imported_r64.with_two_pressures = with_plant_truth_pressures
     if getattr(study_a._s8_modules, "_rod_reading_truth", False):
         return
     load_s8_modules = study_a._s8_modules

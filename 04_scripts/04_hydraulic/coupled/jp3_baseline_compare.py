@@ -1,62 +1,133 @@
 """436.9 edition 4a J4a-9: the re-implementation's case replays against the clean ``221456d``
-baseline (``jp3_remedy_spec.md`` 5.7 P4-1 .. P4-4, P4-9, 13.1; addendum 4a-1 section 1).
+baseline (``jp3_remedy_spec.md`` 5.7 P4-1 .. P4-4, P4-9, 13.1; addendum 4a-1 section 1;
+addendum 4a-2 sections 2, 3 and table 4: J4a-9 R1 .. R4, B2, B3, X11).
 
-Checks, in order (any failure stops with "not judgeable" or the failed prediction):
+Checks (every problem is collected; the status is the worst kind found):
 
 1. Baseline: the sha256 of ``SHA256SUMS`` is :data:`BASELINE_SUMS_SHA256`; every listed file
-   has its hash; the script opens no baseline file outside the list (CRLF lines: ``\\r`` cut).
+   has its hash; no baseline file outside the list is opened (CRLF lines: ``\\r`` cut). A
+   broken baseline stops at once (not judgeable).
 2. Pairs: every baseline row (``j9_cases.jsonl``, ``cd.jsonl``) has exactly one new row of the
-   same job; the new revision 5 rows carry the sealed identity (13.6), test-only settings are
-   refused.
+   same job. Setting defects (13.6, 4a-2 R3 / X11 / B2): a ``*_X11`` row in the compared set; a
+   new revision 5 row (VBG5 included) without the sealed identity (``spec_edition``,
+   ``carry_end_rule``, ``retract_start_rule``); a new row whose P4 evidence does not fit its
+   options (``j_p3_inputs.rod_reading_evidence_problems``).
 3. P4-1: ``commands_sha256`` equal per pair (T8).
-4. Per read (T4h npz): ``jp3_t_s`` of equal length and value; P4-2 used bound new >= baseline
-   (1 Pa); a raised read must be an R5-7 read (source ``retract_tracker``) or follow one on its
-   leg (seed / carry); a class change only CARRY instead of EXT / RET of the same direction.
-5. Judged rows (``jp3_judged_row``) > 0; per class reads > 0 (lock, hold, carry_ext,
-   carry_ret, ext) over the revision 5 rows (the A rows and VBG4 have no ``class_reads``).
-6. P4-3a: J-P3a / b / c judged keys 0 and ``relock_step_over_1bar_count`` 0 on VBJ, LSJ1 .. 4.
-7. P4-4: ``p1_retract_seed_count`` and the largest seed step equal to the baseline; one
-   ``p1_retract_seed_log`` row per seed, each read net force step <= 1 N.
-8. P4-9: ``retract_tracker_dominated_reads`` 0 and an empty stretch log (no fallback leg);
-   ``jp3_model_bound_source`` present on every revision 5 T4h.
+4. P4-2 per read (T4h npz, 4a-2 section 2): ``jp3_t_s`` of equal length and value; used bound
+   new >= baseline - 1 Pa and the same NaN pattern; class changes only EXT -> CARRY_ext and
+   RET -> CARRY_ret; every raised read explained by the chain of 4a-2 2.2
+   (:func:`chain_explanation`). A revision 5 pair (B, D, E) without one of the input columns is
+   not judgeable (R4); a revision 4 pair (A, C) without a trace is "not applicable".
+5. Judged rows (``jp3_judged_row`` of VBJ, LSJ1 .. 4 only, R2) > 0; per class reads > 0 (lock,
+   hold, carry_ext, carry_ret, ext) over the revision 5 rows.
+6. P4-3a on VBJ, LSJ1 .. 4: the J-P3a / b / c judged keys 0 and ``relock_step_over_1bar_count``
+   0; a missing key is not judgeable (R2), never 0.
+7. P4-4: ``p1_retract_seed_count`` and the largest seed step equal to the baseline (else
+   failed); the seed net force (4a-2 3.4): every ``p1_retract_seed_log`` row has
+   ``|net_force_seed_step_N|`` <= 1 N (else failed). Not judgeable: the column missing, rows !=
+   count, zero rows, an ``m2_shift_clipped`` row.
+8. P4-9: ``retract_tracker_dominated_reads`` 0 and an empty stretch log (no fallback leg).
+
+Exit codes and ``status`` (the J4a-9 rows of 13.1 and 4a-2 R3):
+
+======  =================  ===================================================================
+exit    status             meaning
+======  =================  ===================================================================
+0       ``pass``           every check passes
+1       ``failed``         a prediction (P4-1 .. P4-4, P4-9) failed, the inputs being sound
+2       ``not_judgeable``  baseline, pairing, a missing column / key, zero judged rows or seed
+                           rows, an ``m2_shift_clipped`` seed row (13.1, 4a-2 2.2 / 3.4)
+2       ``setting_defect`` a test-only setting, a non-default identity or P4 evidence (13.6,
+                           4a-2 R3, B2, X11); it outranks the other kinds
+3       ``error``          an unexpected input error (file missing, malformed JSON)
+======  =================  ===================================================================
+
+The stdout's last line is JSON with ``status``, the problem counts and the report path only.
 
 Usage (python-dev or dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_baseline_compare.py <baseline folder>
       --new <jsonl> [<jsonl> ...] --out <report.json>
-
-Exit 0 all checks pass, 1 a prediction failed, 2 not judgeable (baseline or pairing), 3 error.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 
 import numpy as np
 
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
+from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
+
 BASELINE_SUMS_SHA256 = "197ac14e96822130ba4eee98486be6ba9646c207ed1a27936c275077b3a60361"
 """Edition 4a 13.1 / addendum 4a-1: the sealed baseline list."""
 SPEC_EDITION = "8be9de22"
+DEFAULT_IDENTITY = {"spec_edition": SPEC_EDITION, "carry_end_rule": "inherit_when_gate_shut",
+                    "retract_start_rule": "with_tracker"}
 BASELINE_ROW_FILES = ("j9_cases.jsonl", "cd.jsonl")
 JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JUDGED_KEYS = ("jp3a_breach_reads", "jp3b_breach_over_tol_reads", "jp3c_breach_reads")
+RELOCK_KEY = "relock_step_over_1bar_count"
 CLASS_NAMES = ("lock", "hold", "carry_ext", "carry_ret", "ext", "ret")
 REQUIRED_CLASSES = ("lock", "hold", "carry_ext", "carry_ret", "ext")
-RETRACT_TRACKER_CODE = 4
-"""``jp3_source_names`` index of ``retract_tracker`` (appended last, J4a-4)."""
+LOCK_CLASSES = ("lock", "hold")
+ALLOWED_CLASS_CHANGES = (("ext", "carry_ext"), ("ret", "carry_ret"))
+RETRACT_TRACKER_SOURCE = "retract_tracker"
 BOUND_TOLERANCE_PA = 1.0
+"""4a-2 2.2 ``epsilon_p`` (the J-P3a allowance)."""
+LOOKBACK_S = 0.3
+"""4a-2 2.2 ``T_lb`` = ``two_pressure.LOCKED_START_LOOKBACK_S`` (fixed by the rule here)."""
+LOOKBACK_SLACK_S = 1.0e-6
 NET_FORCE_TOLERANCE_N = 1.0
-TEST_ONLY_SETTINGS = ("VBG4", "VBG5")
+SEED_FORCE_COLUMN = "net_force_seed_step_N"
+SEED_CLIPPED_COLUMN = "m2_shift_clipped"
+NEW_TRACE_COLUMNS = ("jp3_t_s", "jp3_class", "jp3_class_names", "jp3_used_bound_Pa",
+                     "jp3_ext_bound_Pa", "jp3_model_bound_source", "jp3_source_names",
+                     "jp3_model_bound_inherited")
+BASELINE_TRACE_COLUMNS = ("jp3_t_s", "jp3_class", "jp3_used_bound_Pa", "jp3_ext_bound_Pa")
+MAX_UNEXPLAINED_ROWS = 50
+TEST_ONLY_SUFFIX = "_X11"
+STATUS_PASS, STATUS_FAILED = "pass", "failed"
+STATUS_NOT_JUDGEABLE, STATUS_SETTING_DEFECT, STATUS_ERROR = (
+    "not_judgeable", "setting_defect", "error")
 EXIT_PASS, EXIT_FAILED, EXIT_NOT_JUDGEABLE, EXIT_ERROR = 0, 1, 2, 3
+STATUS_EXIT = {STATUS_PASS: EXIT_PASS, STATUS_FAILED: EXIT_FAILED,
+               STATUS_NOT_JUDGEABLE: EXIT_NOT_JUDGEABLE,
+               STATUS_SETTING_DEFECT: EXIT_NOT_JUDGEABLE, STATUS_ERROR: EXIT_ERROR}
 
 
 class NotJudgeable(Exception):
     """Baseline or pairing broken (13.1: stop)."""
 
 
-def _sha256(path: Path) -> str:
+class Problems:
+    """The three kinds of findings of one comparison (status order: defect > not judgeable >
+    failed)."""
+
+    def __init__(self) -> None:
+        self.setting_defects: list[str] = []
+        self.not_judgeable: list[str] = []
+        self.failures: list[str] = []
+
+    def status(self) -> str:
+        if self.setting_defects:
+            return STATUS_SETTING_DEFECT
+        if self.not_judgeable:
+            return STATUS_NOT_JUDGEABLE
+        return STATUS_FAILED if self.failures else STATUS_PASS
+
+    def as_dict(self) -> dict:
+        return {"setting_defects": self.setting_defects, "not_judgeable": self.not_judgeable,
+                "failures": self.failures}
+
+
+def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -66,7 +137,7 @@ class Baseline:
     def __init__(self, folder: Path) -> None:
         self.folder = folder
         sums = folder / "SHA256SUMS"
-        if _sha256(sums) != BASELINE_SUMS_SHA256:
+        if file_sha256(sums) != BASELINE_SUMS_SHA256:
             raise NotJudgeable(f"{sums}: sha256 is not {BASELINE_SUMS_SHA256[:12]}")
         self.hashes: dict[str, str] = {}
         for line in sums.read_bytes().decode("utf-8").split("\n"):
@@ -76,7 +147,7 @@ class Baseline:
             digest, name = line.split(maxsplit=1)
             self.hashes[name.lstrip("*")] = digest
         for name, digest in self.hashes.items():
-            if _sha256(folder / name) != digest:
+            if file_sha256(folder / name) != digest:
                 raise NotJudgeable(f"baseline {name}: hash differs from SHA256SUMS")
 
     def path(self, name: str) -> Path:
@@ -110,13 +181,20 @@ def _is_revision_5(record: dict) -> bool:
     return _check(record).get("rule_revision") == 5
 
 
-def pair_rows(baseline: Baseline, new_rows: list[dict]) -> list[tuple[str, dict, dict]]:
-    """(baseline row file, baseline record, new record) per baseline row."""
+def pair_rows(baseline: Baseline, new_rows: list[dict],
+              problems: Problems) -> list[tuple[str, dict, dict]]:
+    """(baseline row file, baseline record, new record) per baseline row; a test-only
+    ``*_X11`` row in the compared set is a setting defect (13.6, 4a-2 X11).
+
+    Raises:
+        NotJudgeable: A baseline row without exactly one new row.
+    """
     new_by_key: dict[str, list[dict]] = {}
     for record in new_rows:
         setting = record["job"]["setting"]
-        if setting.endswith("_X11"):
-            raise NotJudgeable(f"test-only setting {setting} in the compared set (13.6)")
+        if setting.endswith(TEST_ONLY_SUFFIX):
+            problems.setting_defects.append(f"test-only setting {setting} in the compared set")
+            continue
         new_by_key.setdefault(_job_key(record), []).append(record)
     pairs = []
     for row_file in BASELINE_ROW_FILES:
@@ -128,129 +206,301 @@ def pair_rows(baseline: Baseline, new_rows: list[dict]) -> list[tuple[str, dict,
     return pairs
 
 
-def check_identity(record: dict) -> list[str]:
-    """13.6: a new revision 5 row of the sealed edition with the default rules."""
-    if record["job"]["setting"] in TEST_ONLY_SETTINGS or not _is_revision_5(record):
+def identity_problems(record: dict) -> list[str]:
+    """13.6 / 4a-2 R3: a new revision 5 row (VBG5 included) of the sealed edition with the
+    default rules; revision 4 rows have no identity."""
+    if not _is_revision_5(record):
         return []
     check = _check(record)
-    wanted = {"spec_edition": SPEC_EDITION, "carry_end_rule": "inherit_when_gate_shut",
-              "retract_start_rule": "with_tracker"}
     return [f"{record['job']['setting']}: {key} {check.get(key)!r}"
-            for key, value in wanted.items() if check.get(key) != value]
+            for key, value in DEFAULT_IDENTITY.items() if check.get(key) != value]
 
 
-def compare_reads(old_npz: Path, new_npz: Path) -> dict:
-    """Step 4 for one pair; raises :class:`NotJudgeable` on a different read time base."""
+# --- P4-2 (addendum 4a-2 section 2) ---------------------------------------------------------
+
+def _lock_segments(is_lock: np.ndarray) -> list[tuple[int, int]]:
+    """Maximal runs ``[a, b]`` of lock / hold reads of one leg."""
+    segments, start = [], None
+    for read, locked in enumerate(is_lock):
+        if locked and start is None:
+            start = read
+        elif not locked and start is not None:
+            segments.append((start, read - 1))
+            start = None
+    if start is not None:
+        segments.append((start, len(is_lock) - 1))
+    return segments
+
+
+def chain_explanation(t_s: np.ndarray, is_lock: np.ndarray, is_tracker: np.ndarray,
+                      is_inherited: np.ndarray, is_tracker_raised: np.ndarray) -> list[str | None]:
+    """4a-2 2.2 chain mark ``C_k`` of one leg's reads, as the reason it holds.
+
+    Args:
+        t_s: Read times (ascending).
+        is_lock: New class lock or hold.
+        is_tracker: ``S_k``: a lock read whose source is ``retract_tracker``.
+        is_inherited: ``jp3_model_bound_inherited`` of the read.
+        is_tracker_raised: ``E_k``: ``jp3_ext_bound_Pa`` new > baseline + 1 Pa (NaN = False).
+
+    Returns:
+        Per read None (``C_k`` false) or the reason: ``"stretch_source"`` (i),
+        ``"lookback"`` (ii), ``"inherit"`` (iii) for the reads of a stretch, ``"tracker_chain"``
+        for a read outside a stretch (step 2).
+    """
+    count = len(t_s)
+    reasons: list[str | None] = [None] * count
+    segment_end = dict(_lock_segments(is_lock))
+    previous_segment_reason: str | None = None
+    read = 0
+    while read < count:
+        if not is_lock[read]:
+            previous = reasons[read - 1] if read > 0 else None
+            reasons[read] = "tracker_chain" if is_tracker_raised[read] and previous else None
+            read += 1
+            continue
+        start, end = read, segment_end[read]
+        reason = _segment_reason(t_s, is_lock, is_tracker, is_inherited, reasons, start, end,
+                                 previous_segment_reason)
+        for inside in range(start, end + 1):
+            reasons[inside] = reason
+        previous_segment_reason = reason
+        read = end + 1
+    return reasons
+
+
+def _segment_reason(t_s, is_lock, is_tracker, is_inherited, reasons, start: int, end: int,
+                    previous_segment_reason: str | None) -> str | None:
+    """Step 1 of 4a-2 2.2 for the stretch ``[start, end]``: (i), (ii), (iii) in this order."""
+    if is_tracker[start:end + 1].any():
+        return "stretch_source"
+    earliest_s = t_s[start] - LOOKBACK_S - LOOKBACK_SLACK_S
+    for before in range(start - 1, -1, -1):
+        if t_s[before] < earliest_s:
+            break
+        if not is_lock[before] and reasons[before] is not None:
+            return "lookback"
+    if is_inherited[start:end + 1].any() and previous_segment_reason is not None:
+        return "inherit"
+    return None
+
+
+def _codes(names: np.ndarray, wanted: tuple[str, ...]) -> list[int]:
+    listed = [str(name) for name in names.tolist()]
+    return [listed.index(name) for name in wanted if name in listed]
+
+
+def _check_columns(path: Path, data, columns: tuple[str, ...]) -> None:
+    missing = [column for column in columns if column not in data.files]
+    if missing:
+        raise NotJudgeable(f"{path.name}: no {missing} (4a-2 2.2 / R4)")
+
+
+def compare_reads(old_npz: Path, new_npz: Path, is_revision_5_pair: bool) -> dict:
+    """Step 4 for one pair (module docstring).
+
+    Raises:
+        NotJudgeable: A revision 5 pair without the input columns, or another read time base.
+    """
     with np.load(old_npz, allow_pickle=False) as old, np.load(new_npz, allow_pickle=False) as new:
-        if "jp3_t_s" not in old:
-            return {"has_trace": False}
-        if "jp3_model_bound_source" not in new:
-            raise NotJudgeable(f"{new_npz.name}: no jp3_model_bound_source (P4-9)")
+        if not is_revision_5_pair and "jp3_t_s" not in old.files:
+            return {"has_trace": False, "p4_2": "not_applicable (revision 4 pair, no trace)"}
+        _check_columns(old_npz, old, BASELINE_TRACE_COLUMNS)
+        _check_columns(new_npz, new, NEW_TRACE_COLUMNS)
         t_old, t_new = old["jp3_t_s"], new["jp3_t_s"]
         if t_old.shape != t_new.shape or not np.array_equal(t_old, t_new):
             raise NotJudgeable(f"{new_npz.name}: jp3_t_s differs from the baseline")
-        used_old, used_new = old["jp3_used_bound_Pa"], new["jp3_used_bound_Pa"]
-        class_old, class_new = old["jp3_class"], new["jp3_class"]
-        source = new["jp3_model_bound_source"]
-        u_new = new["jp3_u_m_s"]
+        if ("jp3_class_names" in old.files
+                and old["jp3_class_names"].tolist() != new["jp3_class_names"].tolist()):
+            raise NotJudgeable(f"{new_npz.name}: class names differ from the baseline")
+        arrays = {name: new[name] for name in NEW_TRACE_COLUMNS}
+        baseline = {name: old[name] for name in BASELINE_TRACE_COLUMNS}
+    return _read_counts(arrays, baseline)
+
+
+def _read_counts(new: dict, old: dict) -> dict:
+    """P4-2 counts of one pair (4a-2 2.3 columns)."""
+    used_new, used_old = new["jp3_used_bound_Pa"], old["jp3_used_bound_Pa"]
     with np.errstate(invalid="ignore"):
         lowered = used_new < used_old - BOUND_TOLERANCE_PA
         raised = used_new > used_old + BOUND_TOLERANCE_PA
+        tracker_raised = new["jp3_ext_bound_Pa"] > old["jp3_ext_bound_Pa"] + BOUND_TOLERANCE_PA
     nan_changed = np.isnan(used_old) != np.isnan(used_new)
-    unexplained = _unexplained_raises(raised, class_new, source)
-    bad_class = _bad_class_changes(class_old, class_new, u_new)
-    return {"has_trace": True, "reads": int(t_new.size),
-            "lowered_reads": int(lowered.sum()), "nan_changed_reads": int(nan_changed.sum()),
+    class_codes = new["jp3_class"].astype(int)
+    is_lock = np.isin(class_codes, _codes(new["jp3_class_names"], LOCK_CLASSES))
+    tracker_codes = _codes(new["jp3_source_names"], (RETRACT_TRACKER_SOURCE,))
+    is_tracker = is_lock & np.isin(new["jp3_model_bound_source"].astype(int), tracker_codes)
+    inherited = new["jp3_model_bound_inherited"].astype(bool)
+    reasons_by_leg = [chain_explanation(new["jp3_t_s"], is_lock[:, leg], is_tracker[:, leg],
+                                        inherited[:, leg], tracker_raised[:, leg])
+                      for leg in range(used_new.shape[1])]
+    explained = dict.fromkeys(("stretch_source", "lookback", "inherit", "tracker_chain"), 0)
+    unexplained_rows = []
+    for read, leg in np.argwhere(raised):
+        reason = reasons_by_leg[leg][read]
+        if reason is not None:
+            explained[reason] += 1
+            continue
+        unexplained_rows.append(_unexplained_row(new, old, int(read), int(leg)))
+    return {"has_trace": True, "reads": int(new["jp3_t_s"].size),
             "raised_reads": int(raised.sum()),
-            "raised_retract_tracker_reads": int((raised & (source == RETRACT_TRACKER_CODE)).sum()),
-            "unexplained_raised_reads": unexplained, "bad_class_changes": bad_class,
-            "class_changes": int((class_old != class_new).sum())}
+            "unexplained_raised_reads": len(unexplained_rows),
+            **{f"explained_by_{name}": value for name, value in explained.items()},
+            "lowered_reads": int(lowered.sum()), "nan_changed_reads": int(nan_changed.sum()),
+            "bad_class_changes": _bad_class_changes(old["jp3_class"], new["jp3_class"],
+                                                     new["jp3_class_names"]),
+            "class_changes": int((old["jp3_class"] != new["jp3_class"]).sum()),
+            "unexplained_rows": unexplained_rows[:MAX_UNEXPLAINED_ROWS]}
 
 
-def _unexplained_raises(raised: np.ndarray, classes: np.ndarray, source: np.ndarray) -> int:
-    """P4-2: a raised read is an R5-7 read, or a later read of the same leg reached from one
-    (seed / carry / moving) without an unrelated lock or hold read in between."""
-    lock_codes = {CLASS_NAMES.index("lock"), CLASS_NAMES.index("hold")}
-    count = 0
-    for leg in range(raised.shape[1]):
-        follows_tracker = False
-        for read in range(raised.shape[0]):
-            is_tracker = source[read, leg] == RETRACT_TRACKER_CODE
-            is_lock = int(classes[read, leg]) in lock_codes
-            if is_lock:
-                follows_tracker = is_tracker
-            if raised[read, leg] and not (is_tracker or follows_tracker):
-                count += 1
-    return count
+def _unexplained_row(new: dict, old: dict, read: int, leg: int) -> dict:
+    names = [str(name) for name in new["jp3_class_names"].tolist()]
+    sources = [str(name) for name in new["jp3_source_names"].tolist()]
+    class_code = int(new["jp3_class"][read, leg])
+    source_code = int(new["jp3_model_bound_source"][read, leg])
+
+    def difference_Pa(name: str) -> float:
+        return float(new[name][read, leg] - old[name][read, leg])
+
+    return {"t_s": float(new["jp3_t_s"][read]), "leg": leg,
+            "class": names[class_code] if 0 <= class_code < len(names) else None,
+            "du_Pa": difference_Pa("jp3_used_bound_Pa"),
+            "de_Pa": difference_Pa("jp3_ext_bound_Pa"),
+            "source": sources[source_code] if 0 <= source_code < len(sources) else None}
 
 
-def _bad_class_changes(old: np.ndarray, new: np.ndarray, u_new: np.ndarray) -> int:
+def _bad_class_changes(old: np.ndarray, new: np.ndarray, class_names: np.ndarray) -> int:
     """P4-2: allowed changes are EXT -> CARRY_ext and RET -> CARRY_ret (a later gate)."""
-    allowed = {(CLASS_NAMES.index("ext"), CLASS_NAMES.index("carry_ext")),
-               (CLASS_NAMES.index("ret"), CLASS_NAMES.index("carry_ret"))}
+    names = [str(name) for name in class_names.tolist()]
+    allowed = {(names.index(before), names.index(after))
+               for before, after in ALLOWED_CLASS_CHANGES}
     changed = np.argwhere(old != new)
     return sum((int(old[r, c]), int(new[r, c])) not in allowed for r, c in changed)
 
 
-def seed_checks(old: dict, new: dict) -> list[str]:
-    """P4-4 on one judged pair."""
+# --- P4-3a, P4-4 ----------------------------------------------------------------------------
+
+def judged_key_problems(setting: str, check: dict, hydraulics: dict,
+                        problems: Problems) -> None:
+    """P4-3a on a judged row; a missing key is not judgeable (4a-2 R2)."""
+    for key in JUDGED_KEYS:
+        values = check.get(key)
+        if not isinstance(values, list) or len(values) != 4:
+            problems.not_judgeable.append(f"{setting}: P4-3a key {key} missing")
+        elif sum(values):
+            problems.failures.append(f"{setting}: P4-3a {key} {values}")
+    if hydraulics.get(RELOCK_KEY) is None:
+        problems.not_judgeable.append(f"{setting}: P4-3a {RELOCK_KEY} missing")
+    elif hydraulics[RELOCK_KEY]:
+        problems.failures.append(f"{setting}: P4-3a relock step over 1 bar")
+
+
+def seed_force_check(hydraulics: dict) -> dict:
+    """4a-2 3.4 on one row's ``p1_retract_seed_log``: rows, over 1 N, clipped and the reason it
+    cannot be judged (``not_judgeable`` None = it can). Zero rows are reported (``rows`` 0); the
+    caller decides whether its set has a judged row."""
+    rows = hydraulics.get("p1_retract_seed_log") or []
+    columns = hydraulics.get("p1_retract_seed_log_columns") or []
+    count = hydraulics.get("p1_retract_seed_count")
+    out = {"rows": len(rows), "count": count, "over_1N_rows": 0, "m2_shift_clipped_rows": 0,
+           "not_judgeable": None}
+    if SEED_FORCE_COLUMN not in columns or SEED_CLIPPED_COLUMN not in columns:
+        out["not_judgeable"] = f"no {SEED_FORCE_COLUMN} / {SEED_CLIPPED_COLUMN} column"
+        return out
+    if len(rows) != count:
+        out["not_judgeable"] = f"seed rows {len(rows)} != p1_retract_seed_count {count}"
+        return out
+    forces = [row[columns.index(SEED_FORCE_COLUMN)] for row in rows]
+    out["m2_shift_clipped_rows"] = sum(bool(row[columns.index(SEED_CLIPPED_COLUMN)])
+                                       for row in rows)
+    if out["m2_shift_clipped_rows"]:
+        out["not_judgeable"] = f"{out['m2_shift_clipped_rows']} m2_shift_clipped seed rows"
+    elif any(value is None or not math.isfinite(value) for value in forces):
+        out["not_judgeable"] = "a seed row without a force value"
+    else:
+        out["over_1N_rows"] = sum(abs(value) > NET_FORCE_TOLERANCE_N for value in forces)
+    return out
+
+
+def seed_problems(setting: str, old: dict, new: dict, problems: Problems) -> dict:
+    """P4-4 of one judged pair (4a-2 3.4); returns its record. Zero seed rows on a judged pair
+    is not judgeable (the baseline counts are 7 .. 11)."""
     old_h, new_h = old["hydraulics_record"], new["hydraulics_record"]
-    problems = []
     for key in ("p1_retract_seed_count", "p1_retract_seed_step_max_bar"):
         if old_h.get(key) != new_h.get(key):
-            problems.append(f"{key} {new_h.get(key)} != baseline {old_h.get(key)}")
-    rows = new_h.get("p1_retract_seed_log") or []
-    columns = new_h.get("p1_retract_seed_log_columns") or []
-    if len(rows) != new_h.get("p1_retract_seed_count"):
-        problems.append(f"p1_retract_seed_log rows {len(rows)} != count")
-    if rows:
-        index = columns.index("net_force_step_N")
-        worst = max(abs(row[index]) for row in rows)
-        if worst > NET_FORCE_TOLERANCE_N:
-            problems.append(f"seed net force step {worst:.3f} N > 1 N")
-    return problems
+            problems.failures.append(f"{setting}: P4-4 {key} differs from the baseline")
+    check = seed_force_check(new_h)
+    if check["not_judgeable"] is None and check["rows"] == 0:
+        check["not_judgeable"] = "zero seed rows (4a-2 3.4: not a pass)"
+    if check["not_judgeable"] is not None:
+        problems.not_judgeable.append(f"{setting}: P4-4 {check['not_judgeable']}")
+    elif check["over_1N_rows"]:
+        problems.failures.append(f"{setting}: P4-4 seed net force over 1 N")
+    return check
 
 
-def compare(baseline: Baseline, new_rows: list[dict]) -> dict:
-    pairs = pair_rows(baseline, new_rows)
-    report: dict = {"pairs": [], "failures": []}
+# --- comparison ------------------------------------------------------------------------------
+
+def compare(baseline: Baseline, new_rows: list[dict]) -> tuple[dict, Problems]:
+    """All checks (module docstring); a broken baseline or pairing raises
+    :class:`NotJudgeable`."""
+    problems = Problems()
+    pairs = pair_rows(baseline, new_rows, problems)
+    report: dict = {"pairs": []}
     class_totals = dict.fromkeys(CLASS_NAMES, 0)
     judged_rows = 0
     for row_file, old, new in pairs:
-        setting = new["job"]["setting"]
-        failures = check_identity(new)
-        if old["commands_sha256"] != new["commands_sha256"]:
-            failures.append("P4-1 commands_sha256 differs")
-        reads = compare_reads(baseline.t4h(row_file, old), Path(new["t4h_file"]))
-        if reads.get("lowered_reads") or reads.get("nan_changed_reads"):
-            failures.append("P4-2 a read's used bound below the baseline")
-        if reads.get("unexplained_raised_reads") or reads.get("bad_class_changes"):
-            failures.append("P4-2 an unexplained raise or class change")
+        pair = _compare_pair(baseline, row_file, old, new, problems)
+        report["pairs"].append(pair)
         check = _check(new)
         if _is_revision_5(new):
-            judged_rows += int(bool(check.get("jp3_judged_row")))
             for name in CLASS_NAMES:
                 class_totals[name] += int(sum((check.get("class_reads") or {}).get(name, [])))
-            if sum(check.get("retract_tracker_dominated_reads") or [0]) or check.get(
-                    "retract_tracker_stretch_log"):
-                failures.append("P4-9 retract_tracker records on a run without fallback legs")
-        if setting in JUDGED_SETTINGS:
-            failures += [f"P4-3a {key} {check.get(key)}" for key in JUDGED_KEYS
-                         if sum(check.get(key) or [0])]
-            if new["hydraulics_record"].get("relock_step_over_1bar_count"):
-                failures.append("P4-3a relock step over 1 bar")
-            failures += [f"P4-4 {problem}" for problem in seed_checks(old, new)]
-        report["pairs"].append({"setting": setting, "row_file": row_file,
-                                "commands_sha256": new["commands_sha256"][:12],
-                                "reads": reads, "failures": failures})
-        report["failures"] += [f"{setting}: {failure}" for failure in failures]
+        if new["job"]["setting"] in JUDGED_SETTINGS:
+            judged_rows += int(bool(check.get("jp3_judged_row")))
     if judged_rows == 0:
-        raise NotJudgeable("no judged row (13.1)")
+        problems.not_judgeable.append("no judged row of VBJ, LSJ1 .. 4 (13.1, 4a-2 R2)")
     missing = [name for name in REQUIRED_CLASSES if class_totals[name] == 0]
     if missing:
-        raise NotJudgeable(f"no reads of class {missing} over the revision 5 rows (13.1)")
+        problems.not_judgeable.append(f"no reads of class {missing} over the revision 5 rows")
     report.update(judged_rows=judged_rows, class_reads=class_totals)
-    return report
+    return report, problems
+
+
+def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
+                  problems: Problems) -> dict:
+    setting = new["job"]["setting"]
+    problems.setting_defects += identity_problems(new)
+    problems.setting_defects += [f"{setting}: {text}" for text in rod_reading_evidence_problems(
+        new.get("hydraulics_record"), new.get("hydraulic_options"))]
+    if old["commands_sha256"] != new["commands_sha256"]:
+        problems.failures.append(f"{setting}: P4-1 commands_sha256 differs")
+    new_npz = Path(new["t4h_file"])
+    try:
+        reads = compare_reads(baseline.t4h(row_file, old), new_npz, _is_revision_5(new))
+    except NotJudgeable as exc:
+        problems.not_judgeable.append(f"{setting}: {exc}")
+        reads = {"has_trace": None}
+    if reads.get("lowered_reads") or reads.get("nan_changed_reads"):
+        problems.failures.append(f"{setting}: P4-2 a read's used bound below the baseline")
+    if reads.get("unexplained_raised_reads") or reads.get("bad_class_changes"):
+        problems.failures.append(f"{setting}: P4-2 an unexplained raise or class change")
+    check, hydraulics = _check(new), new.get("hydraulics_record") or {}
+    if _is_revision_5(new) and (sum(check.get("retract_tracker_dominated_reads") or [0])
+                                or check.get("retract_tracker_stretch_log")):
+        problems.failures.append(f"{setting}: P4-9 retract_tracker records without fallback")
+    seed = {}
+    if setting in JUDGED_SETTINGS:
+        judged_key_problems(setting, check, hydraulics, problems)
+        seed = seed_problems(setting, old, new, problems)
+    return {"setting": setting, "row_file": row_file,
+            "commands_sha256": new["commands_sha256"][:12],
+            "new_t4h_sha256": file_sha256(new_npz) if new_npz.is_file() else None,
+            "reads": reads, "seed": seed}
+
+
+def _input_record(paths: list[Path]) -> list[dict]:
+    return [{"path": str(path), "sha256": file_sha256(path)} for path in paths]
 
 
 def main() -> int:
@@ -259,22 +509,27 @@ def main() -> int:
     parser.add_argument("--new", type=Path, nargs="+", required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
+    if args.out.exists():
+        parser.error(f"{args.out} exists (a new report never overwrites one)")
     try:
         baseline = Baseline(args.baseline)
         new_rows = [row for path in args.new for row in _read_rows(path)]
-        report = compare(baseline, new_rows)
-        status = "pass" if not report["failures"] else "failed"
-        code = EXIT_PASS if status == "pass" else EXIT_FAILED
+        report, problems = compare(baseline, new_rows)
+        report.update(problems.as_dict())
+        status = problems.status()
     except NotJudgeable as exc:
-        report, status, code = {"reason": str(exc)}, "not_judgeable", EXIT_NOT_JUDGEABLE
+        report, status = {"not_judgeable": [str(exc)]}, STATUS_NOT_JUDGEABLE
     except (OSError, KeyError, ValueError) as exc:
-        report, status, code = {"reason": f"{type(exc).__name__}: {exc}"}, "error", EXIT_ERROR
+        report, status = {"error": f"{type(exc).__name__}: {exc}"}, STATUS_ERROR
     report["status"] = status
     report["baseline_sums_sha256"] = BASELINE_SUMS_SHA256
+    report["inputs"] = _input_record([path for path in args.new if path.is_file()])
+    args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=1, default=float), encoding="utf-8")
-    print(json.dumps({"status": status, "failures": len(report.get("failures", [])),
-                      "reason": report.get("reason")}))
-    return code
+    print(json.dumps({"status": status, "out": str(args.out),
+                      **{f"{kind}_count": len(report.get(kind) or [])
+                         for kind in ("setting_defects", "not_judgeable", "failures")}}))
+    return STATUS_EXIT[status]
 
 
 if __name__ == "__main__":

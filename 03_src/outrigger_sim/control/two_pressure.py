@@ -2914,12 +2914,11 @@ class TwoPressureMonitor:
         stretch.last_command_m_s = command_m_s
         lookback_start_s = t_s - self.settings.locked_start_lookback_s - self.period_s
         if start_Pa is None:
-            start_Pa = self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa)
+            model_Pa = self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa)
             # R5-7 application point 1: the start value of a ret / carry_ret period
-            tracker_Pa = self._retract_tracker_term_Pa(leg, stretch.last_sign)
-            if tracker_Pa > start_Pa:
-                start_Pa = tracker_Pa
-                self._tracker_moving_starts(stretch).append((t_s, tracker_Pa))
+            start_Pa = self._retract_lock_start_model_Pa(leg, stretch.last_sign, model_Pa)
+            if start_Pa > model_Pa:  # the p_hat + delta_m term won (source record)
+                self._tracker_moving_starts(stretch).append((t_s, start_Pa))
         history = stretch.moving_starts
         history.append((t_s, start_Pa))
         while history and history[0][0] < lookback_start_s:
@@ -2946,12 +2945,17 @@ class TwoPressureMonitor:
             return -math.inf
         return self._extend_bound_Pa(leg)
 
-    def _retract_lock_start_model_Pa(self, leg: int, head_Pa: float) -> float:
-        """R5-7 (spec 2.10): ``M_ret = max(retract model, p_ret, p_hat + delta_m)``. Only the
-        start values of ret / carry_ret periods and the window candidates after a retraction
-        use it; the R5-2 hold and carry candidates keep :meth:`_lock_start_model_Pa` (R9)."""
-        return max(self._lock_start_model_Pa(leg, -1.0, head_Pa),
-                   self._retract_tracker_term_Pa(leg, -1.0))
+    def _retract_lock_start_model_Pa(self, leg: int, sign: float, model_Pa: float) -> float:
+        """R5-7 (spec 2.10), the one definition of its value: after a retraction (``sign < 0``)
+        ``M_ret = max(model_Pa, p_hat + delta_m)`` with ``model_Pa`` = :meth:`_lock_start_model_Pa`
+        (``max(retract model, p_ret)``); ``model_Pa`` itself elsewhere (revision 4,
+        ``model_only``, after an extension: the term is ``-inf``).
+
+        Both application points call it: the start value of a ret / carry_ret period
+        (:meth:`_track_moving_leg`) and the window candidate after a retraction
+        (:meth:`_add_lock_candidate`). The R5-2 hold and the carry candidates keep
+        :meth:`_lock_start_model_Pa` (R9, addendum 4a-2 R5)."""
+        return max(model_Pa, self._retract_tracker_term_Pa(leg, sign))
 
     # --- CB moving estimate (P-S8-15, hydraulics 11.2) ---
 
@@ -3130,9 +3134,9 @@ class TwoPressureMonitor:
         """A window candidate ``(M_j, p_h,j)``. After a retraction R5-7 adds the term
         ``p_hat + delta_m`` (application point 2; paired with this window head, A4)."""
         model_Pa = self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa)
-        tracker_Pa = self._retract_tracker_term_Pa(leg, stretch.last_sign)
-        start_Pa = max(model_Pa, tracker_Pa, stretch.previous_moving_max_Pa)
-        source = self._lock_start_source(leg, stretch, head_Pa, model_Pa, tracker_Pa)
+        retract_start_Pa = self._retract_lock_start_model_Pa(leg, stretch.last_sign, model_Pa)
+        start_Pa = max(retract_start_Pa, stretch.previous_moving_max_Pa)
+        source = self._lock_start_source(leg, stretch, head_Pa, model_Pa, retract_start_Pa)
         self._append_candidate(stretch, start_Pa, head_Pa, source, t_s)
         if math.isfinite(stroke_m):
             stretch.stroke_window_max_m = max(stretch.stroke_window_max_m, stroke_m)
@@ -3151,13 +3155,17 @@ class TwoPressureMonitor:
             holder.candidate_inherited = (*holder.candidate_inherited, is_inherited)
 
     def _lock_start_source(self, leg, stretch, head_Pa, model_Pa,
-                           tracker_Pa: float = -math.inf) -> str:
-        """Record only (``tension_premise.md`` 6.4): the term behind ``M_j``."""
-        if stretch.previous_moving_max_Pa > max(model_Pa, tracker_Pa):
+                           retract_start_Pa: float | None = None) -> str:
+        """Record only (``tension_premise.md`` 6.4): the term behind ``M_j``.
+        ``retract_start_Pa`` = :meth:`_retract_lock_start_model_Pa` of ``model_Pa`` (None =
+        ``model_Pa``: no R5-7 term)."""
+        if retract_start_Pa is None:
+            retract_start_Pa = model_Pa
+        if stretch.previous_moving_max_Pa > retract_start_Pa:
             if stretch.previous_tracker_max_Pa >= stretch.previous_moving_max_Pa:
                 return LockStartSource.RETRACT_TRACKER.value
             return LockStartSource.PREVIOUS_MOVING.value
-        if tracker_Pa > model_Pa:
+        if retract_start_Pa > model_Pa:
             return LockStartSource.RETRACT_TRACKER.value
         if (self._uses_extend_bound and stretch.last_sign > 0.0
                 and self._extend_bound_Pa(leg) > self._extend_rod_estimate_Pa(

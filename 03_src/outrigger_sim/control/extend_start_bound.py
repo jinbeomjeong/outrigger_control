@@ -1687,6 +1687,9 @@ J_P3_DEFECT_UNDECLARED = "defect_no_rod_reading_not_declared"
 J_P3_DEFECT_RECORD_WITHOUT_READING = "defect_record_without_rod_reading"
 J_P3_DEFECT_CASES = (J_P3_DEFECT_NO_RECORD, J_P3_DEFECT_UNDECLARED,
                      J_P3_DEFECT_RECORD_WITHOUT_READING)
+J_P3_DEFECT_REVISION_5_RECORD = "defect_revision_5_record_in_revision_4_judgement"
+"""Addendum 4a-2 R6: a revision 5 record (``rule_revision`` 5) handed to the revision 4
+:func:`j_p3_judgement` is refused (a setting defect), never summed with the 436.8 key."""
 
 
 def j_p3_run_case(record: dict[str, object] | None, has_rod_reading: bool,
@@ -1737,9 +1740,13 @@ def j_p3_judgement(records: list[dict[str, object] | None],
     declared = [False] * len(records) if head_only_declared is None else list(head_only_declared)
     cases = [j_p3_run_case(record, has_rod, is_declared)
              for record, has_rod, is_declared in zip(records, rod, declared, strict=True)]
+    # addendum 4a-2 R6: a revision 5 record never goes into the revision 4 sum
+    cases = [J_P3_DEFECT_REVISION_5_RECORD
+             if case == J_P3_JUDGED and record.get("rule_revision") == EXTEND_HOLD_REVISION
+             else case for record, case in zip(records, cases, strict=True)]
     judged = [record for record, case in zip(records, cases, strict=True)
               if case == J_P3_JUDGED]
-    defects = sum(case in J_P3_DEFECT_CASES for case in cases)
+    defects = sum(case in (*J_P3_DEFECT_CASES, J_P3_DEFECT_REVISION_5_RECORD) for case in cases)
 
     def total(key: str) -> int:
         return int(sum(sum(record.get(key) or []) for record in judged))
@@ -1756,7 +1763,8 @@ def j_p3_judgement(records: list[dict[str, object] | None],
     return {"name": J_P3_NAME, "status": status, "runs": len(records),
             "runs_judged": len(judged),
             "runs_by_case": {name: cases.count(name) for name in
-                             (J_P3_JUDGED, J_P3_NO_ROD_READING, *J_P3_DEFECT_CASES)},
+                             (J_P3_JUDGED, J_P3_NO_ROD_READING, *J_P3_DEFECT_CASES,
+                              J_P3_DEFECT_REVISION_5_RECORD)},
             "missing_records": cases.count(J_P3_DEFECT_NO_RECORD),
             "no_rod_reading_runs": cases.count(J_P3_NO_ROD_READING),
             "breach_reads": breach_reads,

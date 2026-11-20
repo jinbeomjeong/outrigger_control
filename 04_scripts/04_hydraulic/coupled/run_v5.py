@@ -15,7 +15,8 @@ lines), ``d1`` (D-1 verification matrix, ``d1_rows.py`` / ``d1_runs.py``: 217 ro
 x eps {0, 2e-3} = 868; ``--list`` also prints rows per group, missing settle-table keys and a
 cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3), ``u9_targeted``
 (U-9 targeted runs, ``u9_targeted_rules_rev1.md`` 2 / 3.2: 14 keys x V0, VB eta_v 0.85, VB eta_v
-0.80 = 42; lines carry ``values["U9"]``).
+0.80 = 42; lines carry ``values["U9"]``), and the 436.9 batches ``j9_main``, ``j9_cases``,
+``j9_case_f`` (case F, 15) and ``j9_t8`` (T-JR-10 / 11, 66).
 A job may carry ``eta_v`` (pump volumetric efficiency of a flow-limited setting, default
 :data:`ETA_V`) and ``u9_metrics`` (add ``values["U9"]``), and a ``d1`` job ``mass_scale`` (plant
 mass factor of a steady row, B1 H-W runs); jobs without them are as before.
@@ -230,6 +231,10 @@ def batch_jobs(name: str) -> list[dict]:
         return j9_main_jobs()
     if name == J9_CASES_BATCH:
         return j9_case_jobs()
+    if name == J9_CASE_F_BATCH:
+        return j9_case_f_jobs()
+    if name == J9_T8_BATCH:
+        return j9_t8_jobs()
     raise ValueError(f"unknown batch {name!r}")
 
 
@@ -253,6 +258,42 @@ def j9_main_jobs() -> list[dict]:
 def j9_case_jobs() -> list[dict]:
     row = {"case": "R12", "eps": 0.0, "offset_s": 0.0, "twin": dict(J9_CASE_TWIN)}
     return [{**row, "setting": setting} for setting in J9_CASE_SETTINGS]
+
+
+J9_CASE_F_BATCH = "j9_case_f"
+"""436.9 case F (``jp3_remedy_spec.md`` 13.8, J4a-14; addendum 4a-2 R8): the ``grid_r67_top``
+FR row (``r67_g1_screen`` key ``screen|top|8.0|ready|FR``, its G4 branch at offset 0.075 s,
+stored as ``results[13].runs[3]``) on the event path of ``verdict_runs`` (the P4 install path)
+x A (VB, LS1 .. LS4), B (VBH, LSH1 .. LSH4), E (VBJ, LSJ1 .. LSJ4) = 15 runs. The R12 case is
+the G4 event of the screen (ready + 5 s, branch 0.5 s before), with the twin replaced by this
+row. ``jp3_case_judge.py case-f`` judges F-A / F-B / F-E."""
+J9_CASE_F_TWIN = {"level": "top", "leg": "FR", "fs_kN": 8.0}
+J9_CASE_F_OFFSET_S = 0.075
+J9_CASE_F_GROUPS = {"A": ("VB", "LS1", "LS2", "LS3", "LS4"),
+                    "B": ("VBH", "LSH1", "LSH2", "LSH3", "LSH4"),
+                    "E": JP3_JUDGED_SETTINGS}
+
+
+def j9_case_f_jobs() -> list[dict]:
+    row = {"case": "R12", "eps": 0.0, "offset_s": J9_CASE_F_OFFSET_S,
+           "twin": dict(J9_CASE_F_TWIN)}
+    return [{**row, "setting": setting} for settings in J9_CASE_F_GROUPS.values()
+            for setting in settings]
+
+
+J9_T8_BATCH = "j9_t8"
+"""436.9 T-JR-10 / T-JR-11 (spec 5.5): the 22 jobs of the revision 8 7.2 hash rule
+(:func:`p3_hash_jobs`, the first VB line per case of the stored ``main.jsonl``) x VBH, VBJ,
+VBJ0 = 66 runs. T-JR-10 compares VBH with the stored VB lines of the same jobs, T-JR-11 VBJ
+with VBJ0 (``jp3_tjr_judge.py t8``). The T-P3-5 sample of 20 rows has no list in the
+repository (``v5_criteria_rev8.md`` 7.2): not in this batch."""
+J9_T8_SETTINGS = ("VBH", "VBJ", "VBJ0")
+
+
+def j9_t8_jobs(source: Path | None = None) -> list[dict]:
+    """The :data:`J9_T8_BATCH` jobs (``source`` = the stored ``main.jsonl``, None = default)."""
+    jobs = p3_hash_jobs() if source is None else p3_hash_jobs(source)
+    return [{**job, "setting": setting} for setting in J9_T8_SETTINGS for _, job in jobs]
 
 
 U9_BATCH = "u9_targeted"
@@ -501,7 +542,8 @@ def run_one(job: dict) -> dict:
                 "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
                                                 "lock_window_alignment", "controller_tag",
-                                                "head_only_declared", "d1", RESUME_K1_KEY)
+                                                "head_only_declared", "d1", RESUME_K1_KEY,
+                                                HARNESS_HASH_KEY)
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
@@ -554,6 +596,9 @@ D8X_OUT_DIR = ROOT / "06_analysis" / "02_control" / "d8x" / "rc"
 """D8x R-c output folder (``d8x_rules.md`` 9.2 item 2): ``hrx_<k1>.jsonl``."""
 RESUME_K1_KEY = "resume_k1"
 """``resume_k1_record.RECORD_KEY``: the 436.8 record block a line copies from the result."""
+HARNESS_HASH_KEY = "harness_commands_sha256"
+"""The harness' own command hash (the r67 screen hash of a stored grid row, prefix + branch;
+addendum 4a-2 R7 F-A compares it with ``grid_r67_top``). Record only."""
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:

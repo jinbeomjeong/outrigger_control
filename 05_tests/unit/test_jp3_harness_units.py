@@ -53,18 +53,53 @@ def test_t_jr_06_micro_command_keeps_the_lock_and_a_real_command_releases(tmp_pa
     assert reference["rear_area_35p2bar_drain"] >= 0.070
 
 
+SEED_FORCE_TOLERANCE_N = 1.0
+"""Addendum 4a-2 3.4: ``|net_force_seed_step_N|`` <= 1 N per seed row."""
+MUTATED_SEED_FORCE_MIN_N = 1.0e3
+"""Addendum 4a-2 3.3: the column must see a seed held back from the M2 re-anchor."""
+
+
+def _seed_rows(report: dict) -> list[dict]:
+    columns = report["seed_log_columns"]
+    return [dict(zip(columns, row, strict=True)) for row in report["seed_log"]]
+
+
 def test_t_jr_15_retract_seed_rows_and_net_force(tmp_path) -> None:
-    """T-JR-15 / T-JR-18 (edition 4): one ``p1_retract_seed_log`` row per counted seed, the
-    read net force continuous at each seed instant (<= 1 N; the whole release step, which
-    also holds the lag's first relax, is the record column ``net_force_release_step_N``)."""
+    """T-JR-15 / T-JR-18 (edition 4, addendum 4a-2 3.4): one ``p1_retract_seed_log`` row per
+    counted seed; the judged seed net force ``net_force_seed_step_N`` <= 1 N on every row, no
+    row clipped (a clipped row is not judgeable). ``net_force_step_N`` is the read net force
+    identity (0 by definition, an implementation check column)."""
     report = _run_check("p1_seed", tmp_path)
     assert report["seed_count"] >= 1
-    assert len(report["seed_log"]) == report["seed_count"]
-    columns = report["seed_log_columns"]
-    for row in report["seed_log"]:
-        values = dict(zip(columns, row, strict=True))
+    rows = _seed_rows(report)
+    assert len(rows) == report["seed_count"]
+    for values in rows:
         assert values["step_Pa"] == pytest.approx(values["seed_Pa"] - values["p_r_locked_Pa"])
-        assert abs(values["net_force_step_N"]) <= 1.0
+        assert values["m2_shift_clipped"] is False and values["m2_previous_unset"] is False
+        assert abs(values["net_force_seed_step_N"]) <= SEED_FORCE_TOLERANCE_N
+        assert abs(values["net_force_step_N"]) <= SEED_FORCE_TOLERANCE_N
+
+
+def test_4a2_3_3_seed_force_column_sees_a_held_back_seed(tmp_path) -> None:
+    """Addendum 4a-2 3.3 (counterexample, both hard): RL at ``p_h`` 120.6 bar, the locked rod
+    side at the floor, band 7 kN. As built ``|net_force_seed_step_N|`` <= 1 N; with the seed
+    held back from ``release()`` (test hook) >= 1 kN (about ``A_ann`` x 33.8 bar = 10.6 kN,
+    ``k_h`` = ``k_o`` on the harness). The records-off run moves the plant bit for bit alike
+    (the column only reads)."""
+    report = _run_check("seed_counterexample", tmp_path)
+    normal, mutated = report["normal"], report["mutated"]
+    assert normal["head_bar"] == pytest.approx(120.6, abs=0.05)
+    assert normal["rod_bar"] == pytest.approx(normal["p_floor_bar"], abs=1e-9)
+    assert normal["band_N"] == pytest.approx(7.0e3)
+    normal_rows, mutated_rows = _seed_rows(normal), _seed_rows(mutated)
+    assert len(normal_rows) == normal["seed_count"] >= 1
+    assert len(mutated_rows) == mutated["seed_count"] == len(normal_rows)
+    for values in normal_rows:
+        assert values["m2_shift_clipped"] is False
+        assert abs(values["net_force_seed_step_N"]) <= SEED_FORCE_TOLERANCE_N
+    assert max(abs(values["net_force_seed_step_N"]) for values in mutated_rows) >= (
+        MUTATED_SEED_FORCE_MIN_N)
+    assert report["records_off_bit_equal"] is True
 
 
 def test_t_jr_07_relock_is_continuous_with_p2(tmp_path) -> None:

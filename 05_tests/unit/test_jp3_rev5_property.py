@@ -16,8 +16,11 @@ On the old plant revision 4 shows the 436.8 breach of case ⑤ (counterexample r
 
 from __future__ import annotations
 
+import json
 import math
+import os
 from dataclasses import replace
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -502,10 +505,10 @@ def _gate_open_s(reads: list, monitor: TwoPressureMonitor) -> float:
     return carry_start_s + monitor._extend_tracker.gate_open_substeps[RR][0] * CHUNK_S
 
 
-def _run_11b(speed_m_s, after_gate_s, force_N, truth_Pa, rules) -> list:
+def _run_11b(speed_m_s, after_gate_s, force_N, truth_Pa, rules) -> tuple[list, float]:
     """Pass 1 finds the tracker gate opening with the plant held locked; pass 2 releases the
     plant at that sub-step, retracts ``after_gate_s`` more, then 0 for 1 s. Returns the reads
-    after the retraction."""
+    after the retraction and the gate opening time [s]."""
     start_N, commands, forces = _locked_by_load_drop(RR, truth_Pa, force_N)
     probe_commands = commands + [-speed_m_s] * CARRY_PERIODS_MAX
     probe_forces = forces + [force_N] * CARRY_PERIODS_MAX
@@ -517,7 +520,7 @@ def _run_11b(speed_m_s, after_gate_s, force_N, truth_Pa, rules) -> list:
     run_forces = probe_forces[:end_read] + [force_N] * 10
     reads, monitor = _hooked_run(start_N, run_commands, run_forces, open_s, rules)
     assert _gate_open_s(reads, monitor) == pytest.approx(open_s)  # the release keeps it
-    return reads[end_read:]
+    return reads[end_read:], open_s
 
 
 P4_6_TABLE = [
@@ -529,61 +532,92 @@ P4_6_TABLE = [
     (14.8e3, 1.0e-3, 0.2, 50.95, -27.14, 9.45),
     (5.0e3, 0.3e-3, 0.2, 57.92, -36.78, 2.58),
 ]
+"""The sealed P4-6 table (edition 4 5.7). Addendum 4a-2 1.2 / 1.4: its numbers are a
+prediction premise error (not "적중"); the tests below record them and hard-assert only the
+soundness part."""
 P4_6_TRUTH_PA = {14.8e3: 59.9e5, 5.0e3: 60.0e5}
 P4_6_OPENING_ROWS = [row for row in P4_6_TABLE if row[1] >= 1.0e-3]
-"""Rows whose retract speed opens the tracker gate (below, see the 0.3 mm/s test)."""
+"""Rows whose retract speed opens the tracker gate."""
+P4_6_SLOW_ROWS = [row for row in P4_6_TABLE if row[1] < 1.0e-3]
+"""Rows whose gate does not open within 20 s (4a-2 1.2: no exposure, recorded)."""
+P4_6_COLUMNS = ("force_N", "speed_m_s", "after_s", "start_bar", "old_gap_bar", "lower_gap_bar")
+MODEL_ONLY_GAP_LIMIT_BAR = -20.0
+RECORD_DIR_ENV = "JP3_RECORD_DIR"
+"""Addendum 4a-2 1.4 record tests: a folder for their JSON records (unset = pytest's tmp_path
+only); every record also goes to the JUnit XML through ``record_property``."""
 
 
-def _p4_6_run(force_N, speed_m_s, after_s):
+def _write_record(name: str, payload: dict, record_property, tmp_path) -> None:
+    """A record test's values (4a-2 1.4: written, not asserted)."""
+    text = json.dumps(payload, indent=1, default=float)
+    record_property(name, text)
+    (tmp_path / f"{name}.json").write_text(text, encoding="utf-8")
+    folder = os.environ.get(RECORD_DIR_ENV)
+    if folder:
+        Path(folder).mkdir(parents=True, exist_ok=True)
+        (Path(folder) / f"{name}.json").write_text(text, encoding="utf-8")
+
+
+def _p4_6_opening_values(force_N, speed_m_s, after_s) -> dict:
+    """One 1 mm/s row: the record values of 4a-2 1.4 and the inputs of its soundness asserts."""
     truth_Pa = P4_6_TRUTH_PA[force_N]
-    after = _run_11b(speed_m_s, after_s, force_N, truth_Pa, None)
-    old_after = _run_11b(speed_m_s, after_s, force_N, truth_Pa,
-                         {"retract_start_rule": "model_only"})
-    return after, old_after
-
-
-@pytest.mark.parametrize(("force_N", "speed_m_s", "after_s", "start_bar", "old_gap_bar",
-                          "lower_gap_bar"), P4_6_OPENING_ROWS)
-def test_t_jr_04_case_11b_r5_7_covers_the_trapped_pressure_after_a_retraction(
-        monkeypatch, force_N, speed_m_s, after_s, start_bar, old_gap_bar, lower_gap_bar) -> None:
-    """⑪b (P4-6): the plant leaves its lock at the gate opening sub-step, retracts, then
-    stops: R5-7 keeps every lock / hold read at or above ``p_tr`` (gap >= the table's lower
-    gap, an R5-7 candidate behind ④); ``model_only`` breaks by <= -20 bar."""
-    _allow_test_rules(monkeypatch)
-    after, old_after = _p4_6_run(force_N, speed_m_s, after_s)
+    after, open_s = _run_11b(speed_m_s, after_s, force_N, truth_Pa, None)
+    old_after, _ = _run_11b(speed_m_s, after_s, force_N, truth_Pa,
+                            {"retract_start_rule": "model_only"})
     gaps = [(used - truth) / BAR for _, cls, used, truth, _, _ in after
             if cls in ("lock", "hold")]
-    assert gaps and min(gaps) >= lower_gap_bar - 1e-6
-    assert after[0][5]["model_bound_source"][RR] == "retract_tracker"
-    assert (old_after[0][2] - old_after[0][3]) / BAR <= -20.0
+    return {"hold_start_p_tr_bar": after[0][3] / BAR,
+            "model_only_gap_bar": (old_after[0][2] - old_after[0][3]) / BAR,
+            "r5_7_gap_bar": min(gaps) if gaps else None,
+            "first_read_source": after[0][5]["model_bound_source"][RR],
+            "gate_opened": True, "gate_open_s": open_s}
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "P4-6 table (cr09) integrates P3 (c) for exactly the RET time; the plant here keeps "
-    "retracting on the 0.1 s valve tail after the command ends, so the first lock read's "
-    "p_tr is about 7 bar lower (1 mm/s rows): reported to control-expert"))
-@pytest.mark.parametrize(("force_N", "speed_m_s", "after_s", "start_bar", "old_gap_bar",
-                          "lower_gap_bar"), P4_6_OPENING_ROWS)
-def test_t_jr_04_case_11b_start_pressure_of_the_p4_6_table(
-        monkeypatch, force_N, speed_m_s, after_s, start_bar, old_gap_bar, lower_gap_bar) -> None:
-    """P4-6 stop condition: start ``p_tr`` and the ``model_only`` gap within +-2 bar."""
+@pytest.mark.parametrize(P4_6_COLUMNS, P4_6_OPENING_ROWS)
+def test_t_jr_04_case_11b_p4_6_soundness_of_the_opening_rows(
+        monkeypatch, record_property, tmp_path, force_N, speed_m_s, after_s, start_bar,
+        old_gap_bar, lower_gap_bar) -> None:
+    """⑪b (P4-6, 1 mm/s rows; addendum 4a-2 1.4): the plant leaves its lock at the gate
+    opening sub-step, retracts, then stops. Recorded: HOLD start ``p_tr``, the ``model_only``
+    gap, the R5-7 gap, the gate opening. Hard (the soundness part): R5-7 gap >= 0 and >= the
+    table's lower gap, the first read's source ``retract_tracker``, ``model_only`` <= -20 bar."""
     _allow_test_rules(monkeypatch)
-    after, old_after = _p4_6_run(force_N, speed_m_s, after_s)
-    assert after[0][3] / BAR == pytest.approx(start_bar, abs=2.0)
-    assert (old_after[0][2] - old_after[0][3]) / BAR == pytest.approx(old_gap_bar, abs=2.0)
+    values = _p4_6_opening_values(force_N, speed_m_s, after_s)
+    row = dict(zip(P4_6_COLUMNS, (force_N, speed_m_s, after_s, start_bar, old_gap_bar,
+                                  lower_gap_bar), strict=True))
+    _write_record(f"P4-6_F{force_N / 1e3:g}kN_{speed_m_s * 1e3:g}mms_{after_s:g}s",
+                  {"table_row": row, **values}, record_property, tmp_path)
+    assert values["r5_7_gap_bar"] is not None
+    assert values["r5_7_gap_bar"] >= 0.0
+    assert values["r5_7_gap_bar"] >= lower_gap_bar - 1e-6
+    assert values["first_read_source"] == "retract_tracker"
+    assert values["model_only_gap_bar"] <= MODEL_ONLY_GAP_LIMIT_BAR
 
 
-def test_t_jr_04_case_11b_slow_rows_never_open_the_tracker_gate() -> None:
-    """The 0.3 mm/s rows of P4-6: ``kappa_x`` 0.8 x 0.3 mm/s = 1.15 % ``v_max`` lies below the
-    VN drain cut-off (``c_v`` 2 %), so the tracker gate never opens within 20 s and the hooked
-    plant never leaves its lock (the rows cannot be built as written; reported)."""
-    for force_N in (14.8e3, 5.0e3):
-        start_N, commands, forces = _locked_by_load_drop(RR, P4_6_TRUTH_PA[force_N], force_N)
-        commands += [-0.3e-3] * CARRY_PERIODS_MAX
-        forces += [force_N] * CARRY_PERIODS_MAX
-        reads, monitor = _hooked_run(start_N, commands, forces, math.inf, None)
-        assert monitor._extend_tracker.gate_open_substeps[RR] == []
-        assert not any(read[5]["gate_open"][RR] for read in reads)
+@pytest.mark.parametrize(P4_6_COLUMNS, P4_6_SLOW_ROWS)
+def test_t_jr_04_case_11b_p4_6_slow_rows_have_no_exposure(
+        record_property, tmp_path, force_N, speed_m_s, after_s, start_bar, old_gap_bar,
+        lower_gap_bar) -> None:
+    """The 0.3 mm/s rows of P4-6 (addendum 4a-2 1.2 / 1.4): ``kappa_x`` 0.8 x 0.3 mm/s =
+    1.15 % ``v_max`` lies below the VN drain cut-off (``c_v`` 2 %), so the tracker gate never
+    opens within 20 s and the hooked plant never leaves its lock. Hard: no gate opening and the
+    used bound (④ or ④c) >= ``p_tr`` at every read (no ⑪b exposure). The row's RET time after
+    the gate does not exist, so the run is the same for its ``after_s``."""
+    start_N, commands, forces = _locked_by_load_drop(RR, P4_6_TRUTH_PA[force_N], force_N)
+    commands += [-speed_m_s] * CARRY_PERIODS_MAX
+    forces += [force_N] * CARRY_PERIODS_MAX
+    reads, monitor = _hooked_run(start_N, commands, forces, math.inf, None)
+    gaps = [(used - truth) / BAR for _, _, used, truth, _, _ in reads if math.isfinite(used)]
+    row = dict(zip(P4_6_COLUMNS, (force_N, speed_m_s, after_s, start_bar, old_gap_bar,
+                                  lower_gap_bar), strict=True))
+    _write_record(f"P4-6_F{force_N / 1e3:g}kN_{speed_m_s * 1e3:g}mms_{after_s:g}s",
+                  {"table_row": row, "gate_opened": False, "reads": len(reads),
+                   "unbounded_reads": len(reads) - len(gaps),
+                   "min_used_minus_p_tr_bar": min(gaps) if gaps else None},
+                  record_property, tmp_path)
+    assert monitor._extend_tracker.gate_open_substeps[RR] == []
+    assert not any(read[5]["gate_open"][RR] for read in reads)
+    assert len(gaps) == len(reads) and min(gaps) >= 0.0
 
 
 HR11_EXCESS_BAR = 27.4
@@ -638,47 +672,53 @@ def _shortest_ret(band_N: float) -> tuple[int, list, int]:
     return open_read + 1, reads, lead
 
 
-@pytest.mark.parametrize("band_N", [0.0, 4.0e3], ids=["band0", "band4kN"])
-def test_t_jr_04_case_11b_p1_physical_size_and_r5_7_margin(monkeypatch, band_N) -> None:
-    """⑪b-P1 (P4-7): R5-7 keeps every lock / hold read above ``p_tr`` with a margin >= 4.30
-    bar. The plant's first post-retraction excess over the retract model ``13 + p_h / 3``
-    (hydraulics q1 definition, true head) is recorded per band; its larger value is checked
-    against +27.4 +-0.5 bar in :func:`test_t_jr_04_case_11b_p1_excess_of_the_review`."""
-    _allow_test_rules(monkeypatch)
-    n_ret, _, _ = _shortest_ret(band_N)
-    reads, lead, _ = _run_11b_p1(n_ret, None, band_N)
-    after = reads[lead + n_ret:]
-    margins = [(used - truth) / BAR for _, cls, used, truth, _, _ in after
-               if cls in ("lock", "hold")]
-    assert margins and min(margins) >= HR11_MARGIN_BAR
-
-
 def _first_excess_bar(after: list) -> float:
+    """The plant's first post-retraction excess over the retract model ``13 + p_h / 3``
+    (hydraulics q1 definition, true head)."""
     _, _, _, truth, head, _ = after[0]
     return (truth - (13.0e5 + head / 3.0)) / BAR
 
 
 HR11_N_RET = 14
-"""N of the review model q1 at this point (its gate keeps ``p_h0 - 4.62 bar + e_h``)."""
+"""N of the review model q1 at this point (its gate keeps ``p_h0 - 4.62 bar + e_h``; addendum
+4a-2 6: the P4-7 basis)."""
 MONITOR_N_RET = 12
-"""N with the monitor's gate: its ``p_h_ub`` follows the head reading, which falls once the P1
-plant has left its lock (242 ms), so the gate opens about 0.13 s earlier than q1's."""
-MONITOR_EXCESS_BAR = 29.19
+"""N with the monitor's gate as written in addendum 4a-2 1.1 (its ``p_h_ub`` follows the
+head reading, which falls once the P1 plant has left its lock); recorded, never asserted: the
+monitor's own shortest N is recorded beside it."""
+P4_7_BANDS_N = (0.0, 4.0e3)
+P4_7_N_VALUES = (MONITOR_N_RET, HR11_N_RET)
 
 
-def test_t_jr_04_case_11b_p1_excess_of_the_review(monkeypatch) -> None:
-    """P4-7 with the review's inputs: at q1's N = 14 the plant's first-read excess over the
-    retract model is +27.4 +-0.5 bar (both bands: the light leg's need does not depend on the
-    band). With the monitor's own N = 12 the excess is +29.19 bar (recorded; the P4-7 stop
-    condition was checked against q1: the N differs, see :data:`MONITOR_N_RET`)."""
+def _p4_7_values(n_ret: int, band_N: float) -> dict:
+    """``model_only`` first-read excess and the R5-7 margin of one N and band."""
+    reads, lead, _ = _run_11b_p1(n_ret, {"retract_start_rule": "model_only"}, band_N)
+    model_only_after = reads[lead + n_ret:]
+    reads, lead, _ = _run_11b_p1(n_ret, None, band_N)
+    after = reads[lead + n_ret:]
+    margins = [(used - truth) / BAR for _, cls, used, truth, _, _ in after
+               if cls in ("lock", "hold")]
+    first_used, first_truth = model_only_after[0][2], model_only_after[0][3]
+    return {"model_only_first_excess_bar": _first_excess_bar(model_only_after),
+            "model_only_first_p_tr_minus_bound_bar": (first_truth - first_used) / BAR,
+            "r5_7_min_margin_bar": min(margins) if margins else None}
+
+
+def test_t_jr_04_case_11b_p1_p4_7(monkeypatch, record_property, tmp_path) -> None:
+    """⑪b-P1 (P4-7; addendum 4a-2 1.2, 1.4, 6). Recorded: per N (12, 14) and band (0, 4 kN)
+    the ``model_only`` first HOLD excess and the R5-7 margin, and the monitor's own shortest N
+    per band. Hard: at q1's N = 14 the larger excess of the two bands is +27.4 +-0.5 bar
+    (regression against the review model), and the R5-7 margin >= +4.30 bar at N = 12 and 14
+    on both bands."""
     _allow_test_rules(monkeypatch)
-    excess = []
-    for band_N in (0.0, 4.0e3):
-        reads, lead, _ = _run_11b_p1(HR11_N_RET, {"retract_start_rule": "model_only"}, band_N)
-        excess.append(_first_excess_bar(reads[lead + HR11_N_RET:]))
-    assert max(excess) == pytest.approx(HR11_EXCESS_BAR, abs=0.5), excess
-    n_ret, _, _ = _shortest_ret(0.0)
-    assert n_ret == MONITOR_N_RET
-    reads, lead, _ = _run_11b_p1(n_ret, {"retract_start_rule": "model_only"}, 0.0)
-    assert _first_excess_bar(reads[lead + n_ret:]) == pytest.approx(MONITOR_EXCESS_BAR,
-                                                                     abs=0.05)
+    values = {f"N{n_ret}_band{band_N / 1e3:g}kN": _p4_7_values(n_ret, band_N)
+              for n_ret in P4_7_N_VALUES for band_N in P4_7_BANDS_N}
+    shortest = {f"band{band_N / 1e3:g}kN": _shortest_ret(band_N)[0] for band_N in P4_7_BANDS_N}
+    _write_record("P4-7", {"values": values, "monitor_shortest_N": shortest},
+                  record_property, tmp_path)
+    excess_at_14 = [values[f"N{HR11_N_RET}_band{band_N / 1e3:g}kN"]
+                    ["model_only_first_excess_bar"] for band_N in P4_7_BANDS_N]
+    assert max(excess_at_14) == pytest.approx(HR11_EXCESS_BAR, abs=0.5), excess_at_14
+    for name, row in values.items():
+        assert row["r5_7_min_margin_bar"] is not None, name
+        assert row["r5_7_min_margin_bar"] >= HR11_MARGIN_BAR, name

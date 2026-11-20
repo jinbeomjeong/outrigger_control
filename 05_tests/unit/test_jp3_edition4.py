@@ -173,6 +173,23 @@ def test_t_jr_05_j_lock_after_a_retraction_takes_the_tracker_term(monkeypatch) -
     assert old_run.stretch.candidate_sources[0] != "retract_tracker"
 
 
+def test_r5_both_application_points_call_the_one_r5_7_function(monkeypatch) -> None:
+    """Addendum 4a-2 R5: the ret / carry_ret start value and the window candidate after a
+    retraction both take their value from ``_retract_lock_start_model_Pa``."""
+    import sys
+
+    callers: list[str] = []
+    original = TwoPressureMonitor._retract_lock_start_model_Pa
+
+    def counted(self, *args):
+        callers.append(sys._getframe(1).f_code.co_name)
+        return original(self, *args)
+
+    monkeypatch.setattr(TwoPressureMonitor, "_retract_lock_start_model_Pa", counted)
+    _carry_ret_ret_lock()
+    assert {"_track_moving_leg", "_add_lock_candidate"} <= set(callers)
+
+
 def test_t_jr_05_k_hold_and_carry_candidates_have_no_tracker_term() -> None:
     """(k) R9: the R5-2 hold candidates of an open stretch and the carry candidates stay at
     ``max(retract model, p_ret)``."""
@@ -201,19 +218,88 @@ def test_t_jr_05_k_carry_candidate_has_no_tracker_term() -> None:
     assert value == run.monitor._lock_start_model_Pa(RR, -1.0, head)
 
 
-def test_t_jr_05_k_tracker_term_after_a_low_retraction() -> None:
-    """(k) second half, as built: after any ret period ``p_hat >= max(p_ret, retract model)``
-    (A2), so the term exceeds the floor by at least ``delta_m`` (0.5 bar) at a constant head.
-    The spec's "``p_hat + delta_m <= floor``: unchanged" does not occur (reported)."""
+RETRACT_FLOOR_PA = RETRACT_ANCHOR_PA[RR]
+ALLOWANCE_PA = 1.0
+"""(k′) 1 Pa allowance."""
+
+
+def _retract_floor_Pa(head_Pa: float) -> float:
+    """The floor input of a retract period, ``max(p_ret, 13 + p_h / 3)`` (4a-2 1.2 (k′);
+    ``test_t_jr_05_k_prime_floor_is_the_monitor_floor`` ties it to the monitor's own)."""
+    return max(RETRACT_FLOOR_PA, 13.0 * BAR + head_Pa / 3.0)
+
+
+@pytest.mark.parametrize("head_bar", [45.0, 50.0, 60.0, 70.0])
+def test_t_jr_05_k_prime_floor_is_the_monitor_floor(head_bar) -> None:
+    """The (k′) floor is the monitor's tracker floor input (``_advance_hold_bound``)."""
+    monitor = _monitor()
+    head_Pa = head_bar * BAR
+    floor_Pa = max(monitor._retract_lock_floor_Pa[RR], monitor._retract_rod_estimate_Pa(head_Pa))
+    assert floor_Pa == pytest.approx(_retract_floor_Pa(head_Pa), abs=ALLOWANCE_PA)
+
+
+def _ret_then_lock(retract_head_bar: float, window_head_bar: float, *, loaded: bool):
+    """A retraction at one head, then a lock read at the window head: (last ret row, lock
+    row, stretch)."""
     run = Run(_monitor())
-    run.periods(0.5 * V_MAX, 5)
-    moves = run.periods(-0.5 * V_MAX, 3)
-    assert _classes(moves) == ["ret"] * 3
-    locks = run.periods(0.0, 1)
-    start_Pa, head_Pa = run.stretch.candidates[0]
-    model_Pa = run.monitor._lock_start_model_Pa(RR, -1.0, head_Pa)
-    assert start_Pa - model_Pa >= esb.BOUND_MARGIN_PA - 1e-6
-    assert locks[0]["model_bound_source"][RR] == "retract_tracker"
+    if loaded:
+        _loaded_lock_then(run)
+        moves = run.periods(-0.5 * V_MAX, 8, head_bar=retract_head_bar)
+    else:
+        run.periods(0.5 * V_MAX, 5, head_bar=retract_head_bar)
+        moves = run.periods(-0.5 * V_MAX, 3, head_bar=retract_head_bar)
+    assert _classes(moves)[-1] == "ret"
+    lock = run.periods(0.0, 1, head_bar=window_head_bar)[0]
+    assert lock["class"][RR] == "lock"
+    return moves[-1], lock, run.stretch
+
+
+@pytest.mark.parametrize(("loaded", "retract_head_bar", "window_head_bar"),
+                         [(True, 60.0, 60.0), (True, 60.0, 50.0), (False, 60.0, 60.0),
+                          (False, 60.0, 70.0)])
+def test_t_jr_05_k_prime_1_tracker_term_is_above_the_last_retract_floor(
+        loaded, retract_head_bar, window_head_bar) -> None:
+    """(k′) 1 (addendum 4a-2 1.2): after a retraction the R5-7 term of the window
+    ``p_hat + delta_m >= max(p_ret, 13 + h_R / 3) + delta_m`` (1 Pa), ``h_R`` = the head
+    reading of the last retract period."""
+    last_ret, lock, _ = _ret_then_lock(retract_head_bar, window_head_bar, loaded=loaded)
+    head_R_Pa = last_ret["head_read_Pa"][RR]
+    term_Pa = lock["ext_bound_Pa"][RR]
+    assert term_Pa >= _retract_floor_Pa(head_R_Pa) + esb.BOUND_MARGIN_PA - ALLOWANCE_PA
+
+
+@pytest.mark.parametrize(("loaded", "retract_head_bar", "window_head_bar"),
+                         [(True, 60.0, 60.0), (True, 60.0, 50.0), (False, 60.0, 60.0),
+                          (False, 60.0, 45.0)])
+def test_t_jr_05_k_prime_2_window_at_or_below_the_retract_head_takes_the_term(
+        loaded, retract_head_bar, window_head_bar) -> None:
+    """(k′) 2: ``h_w <= h_R``: the window candidate is the R5-7 term (source
+    ``retract_tracker``) and lies ``delta_m`` or more above the retract model candidate
+    ``max(p_ret, 13 + h_w / 3)``."""
+    last_ret, lock, stretch = _ret_then_lock(retract_head_bar, window_head_bar, loaded=loaded)
+    start_Pa, head_w_Pa = stretch.candidates[0]
+    assert head_w_Pa <= last_ret["head_read_Pa"][RR]
+    assert stretch.candidate_sources[0] == "retract_tracker"
+    assert lock["model_bound_source"][RR] == "retract_tracker"
+    assert start_Pa >= _retract_floor_Pa(head_w_Pa) + esb.BOUND_MARGIN_PA - ALLOWANCE_PA
+    assert start_Pa == max(lock["ext_bound_Pa"][RR], stretch.previous_moving_max_Pa)
+
+
+def test_t_jr_05_k_prime_3_higher_window_head_keeps_the_retract_model() -> None:
+    """(k′) 3: ``h_w > h_R + 3 delta_m`` with ``p_hat`` at the last retract period's floor:
+    the window candidate is the retract model candidate (the R5-7 term does not win, the
+    source is the model side)."""
+    retract_head_bar, window_head_bar = 60.0, 70.0
+    last_ret, lock, stretch = _ret_then_lock(retract_head_bar, window_head_bar, loaded=False)
+    head_R_Pa = last_ret["head_read_Pa"][RR]
+    # premise: p_hat is the floor of the last retract period (p_hat + delta_m = floor + delta_m)
+    assert last_ret["ext_bound_Pa"][RR] == pytest.approx(
+        _retract_floor_Pa(head_R_Pa) + esb.BOUND_MARGIN_PA, abs=ALLOWANCE_PA)
+    start_Pa, head_w_Pa = stretch.candidates[0]
+    assert head_w_Pa > head_R_Pa + 3.0 * esb.BOUND_MARGIN_PA
+    assert start_Pa == pytest.approx(_retract_floor_Pa(head_w_Pa), abs=ALLOWANCE_PA)
+    assert stretch.candidate_sources[0] != "retract_tracker"
+    assert lock["model_bound_source"][RR] != "retract_tracker"
 
 
 def test_t_jr_05_l_tracker_candidate_pairs_with_the_window_head() -> None:

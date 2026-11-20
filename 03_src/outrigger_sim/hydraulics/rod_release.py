@@ -400,6 +400,12 @@ class RodReleaseShift:
         return [list(times) for times in self._clip_times_s]
 
     @property
+    def has_previous_pressure(self) -> bool:
+        """``p_hat^(k-1)`` exists (False: the next :meth:`shift_m` moves no leg; a record of
+        the 436.9 seed log, addendum 4a-2 3.2 ``m2_previous_unset``)."""
+        return self._previous_pressure_Pa is not None
+
+    @property
     def release_drop_Pa(self) -> NDArray[np.float64]:
         """``Delta`` per leg (0 while locked)."""
         return self._release_drop_Pa.copy()
