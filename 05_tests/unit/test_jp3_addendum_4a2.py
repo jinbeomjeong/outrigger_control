@@ -359,28 +359,6 @@ def test_r7_x11_read_is_the_fl_hold_read_at_49_s(tmp_path) -> None:
 
 # --- B4: T-JR judges --------------------------------------------------------------------------
 
-def _t8_rows(settings: tuple[str, ...], jobs: int = 22, hash_of=lambda setting, k: f"{k:064d}"):
-    return [{"job": {"case": f"C{k}", "eps": 0.0, "setting": setting},
-             "commands_sha256": hash_of(setting, k)} for setting in settings for k in range(jobs)]
-
-
-def test_b4_t8_without_the_t_p3_5_list_is_not_judgeable_and_counts_22() -> None:
-    stored, rerun = _t8_rows(("VB",)), _t8_rows(("VBH", "VBJ", "VBJ0"))
-    report, problems = tjr.judge_t8(stored, rerun, None)
-    assert report["T-JR-10"]["22_jobs"]["equal"] == 22
-    assert report["T-JR-11"]["22_jobs"]["equal"] == 22
-    assert problems.status() == compare.STATUS_NOT_JUDGEABLE
-    sample = [{"case": f"C{k}", "eps": 0.0} for k in range(20)]
-    _, problems = tjr.judge_t8(stored, rerun, sample)
-    assert problems.status() == compare.STATUS_PASS
-    differing = _t8_rows(("VBH", "VBJ", "VBJ0"),
-                         hash_of=lambda s, k: "f" * 64 if s == "VBJ" and k == 3 else f"{k:064d}")
-    _, problems = tjr.judge_t8(stored, differing, sample)
-    assert problems.status() == compare.STATUS_FAILED
-    _, problems = tjr.judge_t8(stored, _t8_rows(("VBH", "VBJ", "VBJ0"), jobs=21), sample)
-    assert problems.status() == compare.STATUS_NOT_JUDGEABLE
-
-
 def _dg3_document(fault: str | None = None, ready_s: float | None = 100.0, count: int = 135,
                   truth_calls: int = 0) -> dict:
     results = []

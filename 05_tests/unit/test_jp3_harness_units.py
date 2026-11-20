@@ -102,6 +102,17 @@ def test_4a2_3_3_seed_force_column_sees_a_held_back_seed(tmp_path) -> None:
     assert report["records_off_bit_equal"] is True
 
 
+def test_4a3_k7_case_c_and_d_plants_carry_the_evidence_keys(tmp_path) -> None:
+    """Addendum 4a-3 5.1 / K-7 (no run of the case replay): the armed VB + P1 plants of C and D
+    (``jp3_case_replay.CASE_SETTINGS``) write both P4 evidence keys in ``plant_record``."""
+    report = _run_check("case_replay_record_keys", tmp_path)
+    for setting in ("VBG4", "VBG5"):
+        assert report[setting]["has_keys"] is True
+        assert report[setting]["options"]["line_fill_gate"]["kind"] == "VN"
+        assert report[setting]["evidence"] == {"rod_reading_truth_calls": 0,
+                                               "two_pressure_reads": 0}
+
+
 def test_t_jr_07_relock_is_continuous_with_p2(tmp_path) -> None:
     """A relock with ``G_r,lock != 0``: P2 keeps the locked truth on the lag (<= 0.01 bar, the
     head likewise), the truth reaches the floor at the knee (+-1 Pa), the locked ratio of RR is

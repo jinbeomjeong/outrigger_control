@@ -705,11 +705,12 @@ def _p4_7_values(n_ret: int, band_N: float) -> dict:
 
 
 def test_t_jr_04_case_11b_p1_p4_7(monkeypatch, record_property, tmp_path) -> None:
-    """⑪b-P1 (P4-7; addendum 4a-2 1.2, 1.4, 6). Recorded: per N (12, 14) and band (0, 4 kN)
-    the ``model_only`` first HOLD excess and the R5-7 margin, and the monitor's own shortest N
-    per band. Hard: at q1's N = 14 the larger excess of the two bands is +27.4 +-0.5 bar
-    (regression against the review model), and the R5-7 margin >= +4.30 bar at N = 12 and 14
-    on both bands."""
+    """⑪b-P1 (P4-7; addendum 4a-2 1.2, 1.4, 6; addendum 4a-3 1.1). Recorded: per N (12, 14)
+    and band (0, 4 kN) the ``model_only`` first HOLD excess, its ``p_tr - ④`` and the R5-7
+    margin, and the monitor's own shortest N per band. Hard: at q1's N = 14 the larger q1
+    excess (``p_tr - (13 bar + p_h,true / 3)``, the measured quantity of 4a-3 1.1) of the two
+    bands is +27.4 +-0.5 bar (regression against the review model), and the R5-7 margin
+    >= +4.30 bar at N = 12 and 14 on both bands. ``p_tr - ④`` is a record."""
     _allow_test_rules(monkeypatch)
     values = {f"N{n_ret}_band{band_N / 1e3:g}kN": _p4_7_values(n_ret, band_N)
               for n_ret in P4_7_N_VALUES for band_N in P4_7_BANDS_N}

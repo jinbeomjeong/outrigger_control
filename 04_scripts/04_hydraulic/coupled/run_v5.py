@@ -16,7 +16,8 @@ x eps {0, 2e-3} = 868; ``--list`` also prints rows per group, missing settle-tab
 cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3), ``u9_targeted``
 (U-9 targeted runs, ``u9_targeted_rules_rev1.md`` 2 / 3.2: 14 keys x V0, VB eta_v 0.85, VB eta_v
 0.80 = 42; lines carry ``values["U9"]``), and the 436.9 batches ``j9_main``, ``j9_cases``,
-``j9_case_f`` (case F, 15) and ``j9_t8`` (T-JR-10 / 11, 66).
+``j9_case_f`` (case F, 15), ``j9_case_f_path`` (4a-3 5.2, 3) and ``j9_t8`` (T-JR-10 / 11,
+88).
 A job may carry ``eta_v`` (pump volumetric efficiency of a flow-limited setting, default
 :data:`ETA_V`) and ``u9_metrics`` (add ``values["U9"]``), and a ``d1`` job ``mass_scale`` (plant
 mass factor of a steady row, B1 H-W runs); jobs without them are as before.
@@ -233,8 +234,10 @@ def batch_jobs(name: str) -> list[dict]:
         return j9_case_jobs()
     if name == J9_CASE_F_BATCH:
         return j9_case_f_jobs()
+    if name == J9_CASE_F_PATH_BATCH:
+        return j9_case_f_path_jobs()
     if name == J9_T8_BATCH:
-        return j9_t8_jobs()
+        return j9_t8_jobs(P3_HASH_SOURCE_OVERRIDE[0])
     raise ValueError(f"unknown batch {name!r}")
 
 
@@ -281,13 +284,27 @@ def j9_case_f_jobs() -> list[dict]:
             for setting in settings]
 
 
+J9_CASE_F_PATH_BATCH = "j9_case_f_path"
+"""Addendum 4a-3 5.2 (F-A path equivalence, before case F): the same FR row at the other three
+G4 offsets of the stored grid (``results[13].runs[0..2]``: 0.0, 0.025, 0.05 s) x VB on the
+case F event path; ``jp3_case_judge.py case-f-path`` compares them with the stored runs. The
+judged offset 0.075 s (``runs[3]``) is not in this batch."""
+J9_CASE_F_PATH_OFFSETS_S = (0.0, 0.025, 0.05)
+
+
+def j9_case_f_path_jobs() -> list[dict]:
+    return [{"case": "R12", "eps": 0.0, "offset_s": offset, "twin": dict(J9_CASE_F_TWIN),
+             "setting": "VB"} for offset in J9_CASE_F_PATH_OFFSETS_S]
+
+
 J9_T8_BATCH = "j9_t8"
-"""436.9 T-JR-10 / T-JR-11 (spec 5.5): the 22 jobs of the revision 8 7.2 hash rule
-(:func:`p3_hash_jobs`, the first VB line per case of the stored ``main.jsonl``) x VBH, VBJ,
-VBJ0 = 66 runs. T-JR-10 compares VBH with the stored VB lines of the same jobs, T-JR-11 VBJ
-with VBJ0 (``jp3_tjr_judge.py t8``). The T-P3-5 sample of 20 rows has no list in the
-repository (``v5_criteria_rev8.md`` 7.2): not in this batch."""
-J9_T8_SETTINGS = ("VBH", "VBJ", "VBJ0")
+"""436.9 T-JR-10 / T-JR-11 (spec 5.5, addendum 4a-3 2 and 5.3): the 22 jobs of the revision 8
+7.2 hash rule (:func:`p3_hash_jobs`, the first VB line per case of the stored ``main.jsonl``;
+they replace the T-P3-5 20 rows, which have no list) x VBH, VBJ, VBJ0, VB = 88 runs. T-JR-10
+compares VBH with the stored h10 VB lines of the same jobs, T-JR-11 VBJ with VBJ0
+(``jp3_tjr_judge.py t8``); the VB lines are a record (the current code against the stored
+hash). ``--p3-hash-source`` names the stored ``main.jsonl`` (a worktree has none)."""
+J9_T8_SETTINGS = ("VBH", "VBJ", "VBJ0", "VB")
 
 
 def j9_t8_jobs(source: Path | None = None) -> list[dict]:
@@ -318,6 +335,9 @@ eps {0, 2e-3} = 868 runs; output ``d1.jsonl``, a new file: the VB lines are ③ 
 
 P3_HASH_BATCH = "p3_hash"
 P3_HASH_SOURCE = OUT_DIR / "main.jsonl"
+P3_HASH_SOURCE_OVERRIDE: list[Path | None] = [None]
+"""``--p3-hash-source`` of this run: the stored ``main.jsonl`` the ``j9_t8`` batch reads its 22
+jobs from (None = :data:`P3_HASH_SOURCE`)."""
 P3_HASH_CASES = 22
 """Criteria revision 8 7.2: per case the first VB line of ``main.jsonl`` (r5, ③ off), rerun
 with the VB definition of revision 8 (③ on); ``p3_hash_check.py`` compares the two."""
@@ -624,7 +644,14 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help="overlap only: t_a record of this run (436.8 rules rev1 RV1-4); "
                              "written by the VB reference run when missing, read by every "
                              "worker; never the stored v5/overlap_t_a.json")
+    parser.add_argument("--p3-hash-source", type=Path, default=None,
+                        help="j9_t8 only: the stored v5/main.jsonl of the 22-job rule "
+                             "(addendum 4a-3 2; a worktree has none)")
     args = parser.parse_args(argv)
+    if args.p3_hash_source is not None:
+        if args.batch != J9_T8_BATCH:
+            parser.error("--p3-hash-source belongs to the j9_t8 batch")
+        P3_HASH_SOURCE_OVERRIDE[0] = args.p3_hash_source
     _check_overlap_reference(parser, args)
     if args.group is None and args.k1 is not None:
         parser.error("--k1 belongs to --group H-R-X")

@@ -245,6 +245,45 @@ def check_seed_force_counterexample() -> dict:
     return {"normal": normal, "mutated": mutated, "records_off_bit_equal": is_bit_equal}
 
 
+CASE_REPLAY_SETTINGS = ("VBG4", "VBG5")
+"""Addendum 4a-3 5.1 / K-7: the C and D plants of ``jp3_case_replay.py`` (VB + P1)."""
+RECORD_KEY_STEPS = 40
+
+
+def check_case_replay_record_keys() -> dict:
+    """4a-3 K-7: an armed VB + P1 plant of case C and D (``jp3_case_replay.CASE_SETTINGS``) has
+    both P4 evidence keys in its ``plant_record`` (without them the comparison is a setting
+    defect). The body-fixed stand-in runs a few steps; no controller reads it (counts 0)."""
+    import importlib
+
+    importlib.import_module("verdict_runs")  # first: it puts the harness folders on sys.path
+    import harness_hydraulics
+    import jp3_case_replay
+
+    from outrigger_sim.hydraulics.v5_options import HydraulicOptions
+
+    rodside = importlib.import_module("s8_g4_rodside_check")
+    rodside._setup_path()
+    base_class = rodside.make_plant_class(base._Namespace(rmf=base._Namespace(
+        FlexPlant=base._BodyFixedLegs)))
+    out = {}
+    for setting in CASE_REPLAY_SETTINGS:
+        options = HydraulicOptions.from_dict(jp3_case_replay.CASE_SETTINGS[setting][1])
+        plant_class = harness_hydraulics.make_hydraulics_plant_class(
+            base_class, options, (np.zeros(4), np.zeros(4)))
+        plant = plant_class(0.0, base.GROUND_DROP_S)
+        plant.arm()
+        for _ in range(RECORD_KEY_STEPS):
+            plant.step(np.zeros(4), 1)
+        record = harness_hydraulics.plant_record(plant)
+        out[setting] = {"options": options.to_dict(),
+                        "evidence": {key: record.get(key)
+                                     for key in harness_hydraulics.ROD_READING_EVIDENCE_KEYS},
+                        "has_keys": all(key in record
+                                        for key in harness_hydraulics.ROD_READING_EVIDENCE_KEYS)}
+    return out
+
+
 def _relock_after_short_move(options) -> dict:
     """The lifted FR: locked through the floor drop (its rod spring takes the load change),
     a 20 ms extension, then zero: the relock keeps ``G_r,lock`` of the release decay."""
@@ -279,7 +318,8 @@ def check_p2_anchor() -> dict:
 
 
 CHECKS = {"p1_gate": check_p1_gate, "p2_anchor": check_p2_anchor, "p1_seed": check_p1_seed,
-          "seed_counterexample": check_seed_force_counterexample}
+          "seed_counterexample": check_seed_force_counterexample,
+          "case_replay_record_keys": check_case_replay_record_keys}
 
 
 def main() -> None:

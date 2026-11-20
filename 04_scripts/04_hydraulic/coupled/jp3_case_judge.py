@@ -16,6 +16,13 @@ Sub-commands:
             J-P3a 0 (LSH rows recorded); F-E = VBJ, LSJ1 .. 4 J-P3a / b / c judged keys 0 and
             ``relock_step_over_1bar_count`` 0 (hashes and bounds recorded, 4a-1 1). Every row's
             P4 evidence (4a-2 B2) and every revision 5 row's identity are checked.
+``case-f-path``  Addendum 4a-3 5.2, before case F: the three VB rows of the run_v5 batch
+            ``j9_case_f_path`` (offsets 0.0, 0.025, 0.05 s) reproduce ``results[13].runs[0..2]``
+            of the stored grid (harness hash with the 4a-3 prefixes, ``breach_reads``,
+            ``min_gap_bar`` and ``min_gap_t_s`` within 1e-9); a row at 0.075 s is refused (not
+            judgeable). Exit 0 reproduced, 1 a difference (fix the path, do not run case F).
+
+``case-f`` and ``case-f-path`` refuse a grid whose sha256 is not :data:`GRID_SHA256` (4a-3 5.4).
 
 Exit codes and ``status`` (the same for both sub-commands):
 
@@ -38,6 +45,8 @@ Usage (python-dev or dynamics-dev, project root):
       --both <LSJ4_X11 jsonl> --baseline <baseline_221456d folder> [--fresh-only <jsonl>]
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_case_judge.py case-f --out <report.json>
       --rows <j9_case_f jsonl> --grid <resume_k1/h9_grid/grid_r67_top.json>
+  python -I -B 04_scripts/04_hydraulic/coupled/jp3_case_judge.py case-f-path --out <json>
+      --rows <j9_case_f_path jsonl> --grid <resume_k1/h9_grid/grid_r67_top.json>
 """
 from __future__ import annotations
 
@@ -87,6 +96,12 @@ STORED_TIME_TOLERANCE_S = 1.0e-9
 CHECK_LIST_KEYS = ("breach_reads", "min_gap_bar", "min_gap_t_s")
 REV5_JUDGED_KEYS = ("jp3a_breach_reads", "jp3b_breach_over_tol_reads", "jp3c_breach_reads")
 HARNESS_HASH_KEY = "harness_commands_sha256"
+GRID_SHA256 = "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827"
+"""Addendum 4a-3 5.4: ``resume_k1/h9_grid/grid_r67_top.json`` (F-A and 5.2)."""
+PATH_OFFSETS_S = (0.0, 0.025, 0.05)
+"""4a-3 5.2: ``runs[0..2]`` (``run_v5.J9_CASE_F_PATH_OFFSETS_S``)."""
+PATH_HASH_PREFIXES = {0.0: "4712c8fcfeb3", 0.025: "6d1d93ac77dd", 0.05: "7034ad6a41f1"}
+"""4a-3 5.2: the stored ``commands_sha256`` of ``runs[0..2]`` (first 12 characters)."""
 
 
 def _read_rows(path: Path) -> list[dict]:
@@ -315,6 +330,73 @@ def _f_e(by_setting: dict[str, dict], problems: compare.Problems) -> dict:
     return out
 
 
+def judge_case_f_path(rows: list[dict], grid: dict) -> tuple[dict, compare.Problems]:
+    """Addendum 4a-3 5.2: the three VB rows of ``j9_case_f_path`` reproduce the stored grid's
+    ``runs[0..2]`` (harness command hash, ``breach_reads``, ``min_gap_bar`` <= 1e-9 bar,
+    ``min_gap_t_s`` <= 1e-9 s). A row at the judged offset 0.075 s (``runs[3]``) is refused."""
+    problems = compare.Problems()
+    result = _grid_result(grid, problems)
+    if result is None:
+        return {}, problems
+    by_offset: dict[float, list[dict]] = {}
+    for row in rows:
+        job = row.get("job") or {}
+        offset = job.get("offset_s")
+        if offset == GRID_OFFSET_S:
+            problems.not_judgeable.append("a row at the judged offset 0.075 s (runs[3]) refused")
+            continue
+        if "error" in row:
+            problems.not_judgeable.append(f"error row at offset {offset}")
+            continue
+        if {k: v for k, v in job.items() if k not in ("setting", "offset_s")} != {
+                k: v for k, v in CASE_F_JOB.items() if k != "offset_s"} or job.get(
+                "setting") != "VB":
+            problems.not_judgeable.append(f"row {job} is not the case F row with VB")
+            continue
+        by_offset.setdefault(offset, []).append(row)
+    record = {}
+    for run_index, offset in enumerate(PATH_OFFSETS_S):
+        stored = result["runs"][run_index]
+        found = by_offset.get(offset, [])
+        if len(found) != 1 or stored.get("event") != GRID_EVENT or stored.get(
+                "offset_s") != offset:
+            problems.not_judgeable.append(f"offset {offset}: {len(found)} rows / stored run "
+                                          f"{run_index} not the G4 run of this offset")
+            continue
+        record[f"runs[{run_index}]"] = _path_pair(found[0], stored, offset, problems)
+    return record, problems
+
+
+def _grid_result(grid: dict, problems: compare.Problems) -> dict | None:
+    try:
+        result = grid["results"][GRID_RESULT_INDEX]
+    except (KeyError, IndexError, TypeError):
+        problems.not_judgeable.append("grid has no results[13]")
+        return None
+    if result.get("key") != GRID_KEY or len(result.get("runs") or []) <= GRID_RUN_INDEX:
+        problems.not_judgeable.append("grid results[13] is not the FR row")
+        return None
+    return result
+
+
+def _path_pair(row: dict, stored: dict, offset: float, problems: compare.Problems) -> dict:
+    stored_hash = stored.get("commands_sha256") or ""
+    expected_prefix = PATH_HASH_PREFIXES[offset]
+    if not stored_hash.startswith(expected_prefix):
+        problems.not_judgeable.append(f"offset {offset}: stored hash not {expected_prefix}")
+    new_check = _check(row)
+    stored_check = (stored.get("hydraulics_record") or {}).get("extend_bound_check") or {}
+    is_hash_equal = row.get(HARNESS_HASH_KEY) == stored_hash
+    missing = [key for key in CHECK_LIST_KEYS if key not in new_check or key not in stored_check]
+    if HARNESS_HASH_KEY not in row or missing:
+        problems.not_judgeable.append(f"offset {offset}: hash or {missing} missing")
+        return {"hash_equal": is_hash_equal}
+    is_check_equal = _same_bound_check(new_check, stored_check)
+    if not (is_hash_equal and is_check_equal):
+        problems.failures.append(f"offset {offset}: not the stored run (fix the path first)")
+    return {"hash_equal": is_hash_equal, "extend_bound_check_equal": is_check_equal}
+
+
 def _bound_record(row: dict) -> dict:
     check = _check(row)
     return {key: check.get(key) for key in (*REV5_JUDGED_KEYS, "breach_reads", "min_gap_bar")
@@ -331,10 +413,13 @@ def _parser() -> argparse.ArgumentParser:
     x11.add_argument("--both", type=Path, required=True)
     x11.add_argument("--baseline", type=Path, required=True)
     x11.add_argument("--fresh-only", type=Path, default=None)
-    case_f = commands.add_parser("case-f")
-    case_f.add_argument("--out", type=Path, required=True)
-    case_f.add_argument("--rows", type=Path, required=True)
-    case_f.add_argument("--grid", type=Path, required=True)
+    for name in ("case-f", "case-f-path"):
+        command = commands.add_parser(name)
+        command.add_argument("--out", type=Path, required=True)
+        command.add_argument("--rows", type=Path, required=True,
+                             help="run_v5 j9_case_f (case-f) or j9_case_f_path output")
+        command.add_argument("--grid", type=Path, required=True,
+                             help="resume_k1/h9_grid/grid_r67_top.json (sha256 7160f9f1...)")
     return parser
 
 
@@ -347,8 +432,11 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         inputs = [args.both, *([] if args.fresh_only is None else [args.fresh_only]),
                   *sorted(t4h_dir.glob("*.npz"))]
         return record, problems, inputs
+    if compare.file_sha256(args.grid) != GRID_SHA256:
+        raise compare.NotJudgeable(f"{args.grid}: sha256 is not {GRID_SHA256[:12]} (4a-3 5.4)")
     grid = json.loads(args.grid.read_text(encoding="utf-8"))
-    record, problems = judge_case_f(_read_rows(args.rows), grid)
+    judge = judge_case_f if args.command == "case-f" else judge_case_f_path
+    record, problems = judge(_read_rows(args.rows), grid)
     return record, problems, [args.rows, args.grid]
 
 
