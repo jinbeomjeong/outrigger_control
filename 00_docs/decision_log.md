@@ -23,6 +23,7 @@
   - 시각화는 `pychrono.irrlicht`를 쓴다. VSG 시각화 모듈은 `pychrono.vsg3d`라는 이름으로 있지만(2026-10-19 import 확인) 쓰지 않는다.
   - 계산 비용 측정·장시간 실행은 **P코어 고정 + EcoQoS 해제**로 한다(i7-14700, P 8 + E 12). Windows가 창 없는 하위 프로세스를 E코어로 보내 2.4~2.5배 느려진다. 구현 참고 `04_scripts/02_chrono/solver_benchmark/step_cost_S0.py`의 `place_process`, S6 runner에 넣는다(계획 6절 #24). 비용 측정은 다른 계산과 겹치지 않게 혼자 돌린다.
   - Chrono 9 이후로는 충돌 시스템을 지정해야 접촉이 생긴다: `sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)`.
+  - git worktree 위치(사용자 결정, 2026-11-20): `.claude/worktrees/<이름>`로 통일한다(CLAUDE.md 작업 규칙). 근거: 2026-11-14~16에 만든 `C:\workspace\z4369~z4377-*` 22개가 관례(`k2-run`·`z4368` 등) 밖에 만들어졌고, `z4372-manifest`에 원본 `07_results`로 가는 정션이 생겼다. scratchpad worktree(`cad_c4g1/wt` 등)는 경로가 길어 지우지 못했다.
 
 ## 2. 지면·구동기 한계·질량·시나리오·다리 기하·센서·F_min
 

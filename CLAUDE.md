@@ -141,6 +141,7 @@
 - CAD 자동 추출(부품 표, 부피·무게중심·관성)은 `Chrono-dev`의 pythonocc-core로 한다(cad-expert 도구 `mass_props.py` 우선).
 - FreeCAD 1.1.4(`C:\Program Files\FreeCAD 1.1\bin`)는 참고용 교차 검증(눈으로 확인, 치수 측정, 메시 내보내기 점검)에만 쓴다. 헤드리스는 `freecadcmd.exe script.py`(번들 Python 3.11은 Chrono-dev와 별개). FreeCAD를 Chrono-dev에 conda로 설치하지 않는다(OpenCASCADE 충돌). 630 MB STEP 전체 열기는 피하고 필요한 부품만 내보낸다.
 - 결정이 생기면 [decision_log.md](00_docs/decision_log.md) 해당 절 끝에 한 줄로 더하고, 기준값이 바뀌었으면 위 "현재 기준값" 표를 고친다. 이 파일에 결정 경과나 재실행 판정 수치를 쓰지 않는다.
+- git worktree는 `.claude/worktrees/<이름>`에 만든다(git 제외 경로): `git -C C:\workspace\outrigger_control worktree add .claude\worktrees\<이름> -b <브랜치> <기준 커밋>`. `C:\workspace\` 바로 아래와 세션 scratchpad에는 만들지 않는다(2026-11-14~16에 `C:\workspace\z43xx-*` 22개가 흩어졌고, scratchpad worktree는 경로가 길어 지우지 못했다). 에이전트 지시문에 worktree 경로를 적을 때도 이 위치를 쓴다. worktree 안에 `07_results` 등 원본 결과로 가는 정션·링크를 만들지 않는다. 결과는 메인 checkout 절대경로로 읽는다. 병합이 끝난 worktree는 `git worktree remove`로 지우고(브랜치는 남김), 판정 실행에 쓰는 고정 checkout은 `git worktree lock`을 건다.
 
 ### 위임
 
