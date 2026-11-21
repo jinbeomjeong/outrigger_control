@@ -1,0 +1,84 @@
+{
+  "step": "dg3_vbj",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1",
+  "exit_code": 0,
+  "commit": "d3c6c57e27f5b5448ecc33708b955773705ab22e",
+  "started": "2026-11-21 20:23:45 +09:00",
+  "done": "2026-11-21 20:43:01 +09:00",
+  "codes": {
+    "tool:import_closure": 0,
+    "tool:l1_keys": 0,
+    "l1_keys_sha256": "eea8ed0d5f3aa79ecb5cf1cb892fa82f7d4bac780f8b3b17dbd069200765c6af",
+    "run:l1_VBJ": 0,
+    "run:l1_VBJ0": 0,
+    "identity_check": 0,
+    "l1_VBJ_sha256": "4698ee3354870e62f5da4d0d20c3f00e77e8a4914f69f4698b9b91c518dfcbde",
+    "l1_VBJ0_sha256": "9cf0ceaefc11b4e358ae92d3ef65e0bda1cf58814787b61f623643922b95d9e1",
+    "tool:l1_hash_record": 0,
+    "tool:dg3_judge_VBJ0": 0,
+    "tool:dg3_judge_VBJ": 0,
+    "tool:t12_VBJ": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "import_closure",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_import_closure.py --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 --entry 04_scripts/04_hydraulic/coupled/las_t3_dg3.py --base 78fd5d2d03e40ac7d9143429f602b58255c762fc --head d3c6c57e27f5b5448ecc33708b955773705ab22e --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\import_closure.json"
+    },
+    {
+      "label": "l1_keys",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py l1-keys --h6 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --keys-out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_keys.json --l1-extract C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_L1_reference.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\l1_keys.json"
+    },
+    {
+      "label": "l1_VBJ",
+      "mask": "0xFFFF",
+      "environment": {
+        "R72_PATH": "per_leg",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\VBJ_L1_t4h",
+        "LAS_T3_DG3_P3": "on",
+        "R79_V5_SETTING": "VBJ",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_LAS": "on",
+        "R79_ROD_MODEL": "plant_truth"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --workers 12 --affinity 0xFFFF",
+      "pid": 2904
+    },
+    {
+      "label": "l1_VBJ0",
+      "mask": "0x0FFF0000",
+      "environment": {
+        "R72_PATH": "per_leg",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\VBJ0_L1_t4h",
+        "LAS_T3_DG3_P3": "on",
+        "R79_V5_SETTING": "VBJ0",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_LAS": "on",
+        "R79_ROD_MODEL": "plant_truth"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --workers 12 --affinity 0x0FFF0000",
+      "pid": 21368
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1 --expect-commit d3c6c57e27f5b5448ecc33708b955773705ab22e --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\_identity_checks\\dg3_vbj_a1.md"
+    },
+    {
+      "label": "l1_hash_record",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py l1-hash-record --vbj-l1 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ.json --vbj0-l1 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\l1_hash_record.json"
+    },
+    {
+      "label": "dg3_judge_VBJ0",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py dg3-judge --setting VBJ0 --dg3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ0.json --dg3-sha256 c1201b2d160dc2fee08671cdb285df65fa367e22b2e6af643e87c5216252b9c7 --l1-reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json --l1-reference-sha256 9cf0ceaefc11b4e358ae92d3ef65e0bda1cf58814787b61f623643922b95d9e1 --l1-keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --judge-out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge_report.json"
+    },
+    {
+      "label": "dg3_judge_VBJ",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py dg3-judge --setting VBJ --dg3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ.json --dg3-sha256 603e4b815d8abc11f09bb85731f9591df5e4c6cc812f2dd9f0e6c7ebae070cd0 --l1-reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ.json --l1-reference-sha256 4698ee3354870e62f5da4d0d20c3f00e77e8a4914f69f4698b9b91c518dfcbde --l1-keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --judge-out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ_judge.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ_judge_report.json"
+    },
+    {
+      "label": "t12_VBJ",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py t12 --bundle VBJ --base C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ0.json --base-judge C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge.json --base-judge-sha256 e3593c869d366ecb526cd998c3228eda25560c63a49589feef49dd8261d9794a --new C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ.json --new-judge C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ_judge.json --new-judge-sha256 e3593c869d366ecb526cd998c3228eda25560c63a49589feef49dd8261d9794a --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\t12_VBJ.json"
+    }
+  ]
+}

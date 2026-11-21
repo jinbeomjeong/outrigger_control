@@ -1,0 +1,22 @@
+{
+ "pairs": 102,
+ "same_command_hash": 102,
+ "other_command_hash": 0,
+ "hash_missing": 0,
+ "record_only": "4a-8 4.5: not a judgement",
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "l1-hash-record",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ.json",
+   "sha256": "4698ee3354870e62f5da4d0d20c3f00e77e8a4914f69f4698b9b91c518dfcbde"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json",
+   "sha256": "9cf0ceaefc11b4e358ae92d3ef65e0bda1cf58814787b61f623643922b95d9e1"
+  }
+ ]
+}

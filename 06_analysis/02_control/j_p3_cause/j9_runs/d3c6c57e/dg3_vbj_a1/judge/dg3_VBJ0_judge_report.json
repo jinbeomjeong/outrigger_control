@@ -1,0 +1,47 @@
+{
+ "setting": "VBJ0",
+ "judge_run": {
+  "command": [
+   "-I",
+   "-B",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+   "judge",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ0.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json",
+   "--s4-late-loc"
+  ],
+  "exit_code": 0,
+  "last_line": "unmatched 0 errors 0 -> C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge.json",
+  "stderr_tail": []
+ },
+ "judge_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge.json",
+ "judge_sha256": "e3593c869d366ecb526cd998c3228eda25560c63a49589feef49dd8261d9794a",
+ "dg3_sha256": "c1201b2d160dc2fee08671cdb285df65fa367e22b2e6af643e87c5216252b9c7",
+ "l1_reference_sha256": "9cf0ceaefc11b4e358ae92d3ef65e0bda1cf58814787b61f623643922b95d9e1",
+ "judge_rows": {
+  "runs": 135,
+  "unmatched": 0,
+  "errors": 0,
+  "lines": 135
+ },
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "dg3-judge",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ0.json",
+   "sha256": "c1201b2d160dc2fee08671cdb285df65fa367e22b2e6af643e87c5216252b9c7"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\l1_VBJ0.json",
+   "sha256": "9cf0ceaefc11b4e358ae92d3ef65e0bda1cf58814787b61f623643922b95d9e1"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json",
+   "sha256": "eea8ed0d5f3aa79ecb5cf1cb892fa82f7d4bac780f8b3b17dbd069200765c6af"
+  }
+ ]
+}

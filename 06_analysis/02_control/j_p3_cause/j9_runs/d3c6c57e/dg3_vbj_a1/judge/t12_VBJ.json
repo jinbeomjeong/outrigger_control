@@ -1,0 +1,67 @@
+{
+ "bundle": "VBJ",
+ "base": "VBJ0",
+ "pairs": 135,
+ "l2_pass_to_fail": [],
+ "grade_transitions_record": {
+  "L2": {
+   "pass->pass": 1
+  },
+  "L3": {
+   "pass->pass": 107,
+   "flag->flag": 25,
+   "fail->fail": 2
+  }
+ },
+ "new_fault": [],
+ "ready_failures": [],
+ "ready_both_missing_record": [],
+ "ready_improved_record": [],
+ "J-P3": {
+  "status": "pass",
+  "runs": 135,
+  "runs_judged": 1,
+  "runs_by_case": {
+   "judged": 1,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_record_not_revision_5": 0,
+   "defect_sensor_grade_missing": 0,
+   "defect_rule_identity_not_default": 0,
+   "record_only_sensor_grade": 134
+  }
+ },
+ "records": {
+  "retract_tracker_dominated_reads": 14,
+  "retract_tracker_over_tol_reads": 14,
+  "retract_tracker_false_drop_reads": 0,
+  "ret_after_gate_s_values": 1,
+  "ret_after_gate_s_max": 0.0,
+  "ret_after_gate_s_resolution": "read grid 0.1 s: ret_after_gate_s = first RET read - T (the read before it), so it differs from the gate-opening sub-step by up to 0.1 s; a record, not a judged column (4a-2 R9)"
+ },
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "t12",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ0.json",
+   "sha256": "c1201b2d160dc2fee08671cdb285df65fa367e22b2e6af643e87c5216252b9c7"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ0_judge.json",
+   "sha256": "e3593c869d366ecb526cd998c3228eda25560c63a49589feef49dd8261d9794a"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ.json",
+   "sha256": "603e4b815d8abc11f09bb85731f9591df5e4c6cc812f2dd9f0e6c7ebae070cd0"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\d3c6c57e\\dg3_vbj_a1\\judge\\dg3_VBJ_judge.json",
+   "sha256": "e3593c869d366ecb526cd998c3228eda25560c63a49589feef49dd8261d9794a"
+  }
+ ]
+}
