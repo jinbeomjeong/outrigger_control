@@ -1,0 +1,32 @@
+{
+  "step": "fpath",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1\\fpath_a1",
+  "exit_code": 0,
+  "commit": "b51ed6e1090cb0a54f2c24799f372fb02c50653c",
+  "started": "2026-11-21 14:05:43 +09:00",
+  "done": "2026-11-21 14:06:37 +09:00",
+  "codes": {
+    "run:j9_case_f_path": 0,
+    "identity_check": 0,
+    "tool:case_f_path": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "j9_case_f_path",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_case_f_path --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1\\fpath_a1\\j9_case_f_path.jsonl --workers 3 --mask 0xFFFF",
+      "pid": 25208
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1\\fpath_a1 --expect-commit b51ed6e1090cb0a54f2c24799f372fb02c50653c --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1\\_identity_checks\\fpath_a1.md"
+    },
+    {
+      "label": "case_f_path",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_case_judge.py case-f-path --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1\\fpath_a1\\j9_case_f_path.jsonl --grid C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r67_top.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1\\fpath_a1\\judge\\case_f_path.json"
+    }
+  ]
+}
