@@ -2,13 +2,14 @@
 the implementation and before the run (records for the seal; this script prepares them, the
 main session runs it).
 
-``p52``  Case replay rows (``run_v5`` JSON lines of ``j9_cases`` / ``j9_case_f`` /
-         ``jp3_case_replay.py`` / ``jp3_x11_replay.py``, or an r79 run file) to the P5-2 record:
-         per row its setting, job, ``rule_revision``, the J-P3 judged key sums
-         (``jp3a_breach_reads``, ``jp3b_breach_over_tol_reads``, ``jp3c_breach_reads``) and the
-         rev 6 counts ``jp3_r58_witness_carries``, ``jp3_r59_substeps``, ``jp3_r510_candidates``
-         (per leg and summed). A row without its ``extend_bound_check`` or without a judged key
-         is listed in ``problems`` (never read as 0).
+``p52``  Case replay rows A .. F (``run_v5`` JSON lines of ``j9_cases`` / ``j9_case_f`` /
+         ``jp3_case_replay.py``, or an r79 run file) to the P5-2 record: per row its setting,
+         job, ``rule_revision``, the J-P3 judged key sums (``jp3a_breach_reads``,
+         ``jp3b_breach_over_tol_reads``, ``jp3c_breach_reads``) and the rev 6 counts
+         ``jp3_r58_witness_carries``, ``jp3_r59_substeps``, ``jp3_r510_candidates`` (per leg and
+         summed). A row without its ``extend_bound_check`` or without a judged key is listed in
+         ``problems`` (never read as 0). X11 rows (``*_X11``, ③ rev 5 under test constants) are
+         not P5-2 rows (edition 5 erratum 1 1): listed in ``excluded_rows``, not counted.
 ``p54``  Open-loop replay (commands fixed) of stored T4h records (P5-4: the stored VBH T4h) with
          the run's own monitor setting at ③ revision 5 and at revision 6
          (``t4h_replay.checked_run_config``), the rod fallbacks forced at the run's own
@@ -18,7 +19,9 @@ main session runs it).
          distribution of their stretches; the reduction of rev 6 against rev 5 (P5-4 record,
          expected about 23 %, F8). The plant rod pressure is not in a T4h record, so
          ``max_over_kN`` uses ``p_tr ~ (p_h,read A_h - F_true) / A_ann`` (T4h ``true_force_N``):
-         the head reading error enters both revisions alike (a record, not a judged value).
+         the head reading error enters both revisions alike, A_h / A_ann times (front 3.52,
+         rear 3.02; 1.33 / 0.95 kN per head-reading bar; erratum 1 8, the output's
+         ``plant_rod_pressure``); a record, not a judged value.
 
 Usage (dynamics-dev or Chrono-dev, project root; read only, one output file each):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_p5_fixed_values.py p52 --rows <file> [...]
@@ -86,11 +89,28 @@ def p52_row(row: dict, problems: list[str]) -> dict:
     return out
 
 
+X11_SETTING_SUFFIX = "_X11"
+"""Erratum 1 1: P5-2 is read on the case replays A .. F; the X11 arm is a sensitivity check."""
+
+
+def _setting_of(row: dict) -> str | None:
+    return row.get("v5_setting") or (row.get("job") or {}).get("setting")
+
+
 def p52(paths: list[Path]) -> dict:
     problems: list[str] = []
-    rows = [p52_row(row, problems) for path in paths for row in read_rows(path)]
-    return {"rule": "jp3_remedy_spec_v5.md P5-2 (fixed after implementation, before the run)",
+    rows, excluded = [], []
+    for path in paths:
+        for row in read_rows(path):
+            setting = _setting_of(row)
+            if setting is not None and setting.endswith(X11_SETTING_SUFFIX):
+                excluded.append({"setting": setting, "job": row.get("job")})
+                continue
+            rows.append(p52_row(row, problems))
+    return {"rule": "jp3_remedy_spec_v5.md P5-2 (fixed after implementation, before the run; "
+                    "erratum 1 1: cases A .. F)",
             "inputs": [str(path) for path in paths], "rows": rows, "problems": problems,
+            "excluded_rows": excluded,
             "judged_key_total": sum(row.get(f"{key}_sum", 0) for row in rows
                                     for key in JUDGED_KEYS)}
 
@@ -174,7 +194,29 @@ def p54(folder: Path) -> dict:
     return {"rule": "jp3_remedy_spec_v5.md P5-4 (record; expected reduction about 23 %, F8)",
             "t4h_folder": str(folder), "files": len(files), "by_revision": per_revision,
             "dominated_reduction": None if before == 0 else 1.0 - after / before,
-            "plant_rod_pressure": "(head reading x A_h - true_force_N) / A_ann (T4h proxy)"}
+            "plant_rod_pressure": proxy_disclosure()}
+
+
+def proxy_disclosure() -> dict:
+    """Erratum 1 8 (control review of 8a3c48c7 W-7): the ``max_over_kN`` plant rod pressure is
+    the proxy ``(p_h,read A_h - F_true) / A_ann``; a head reading error enters it A_h / A_ann
+    times (front 3.52, rear 3.02), as a force 1 bar of head reading is A_h x 1 bar (front
+    1.33 kN, rear 0.95 kN). ``retract_tracker_dominated_reads`` does not use it. A record."""
+    from outrigger_sim.control.c2 import C2Geometry
+    from outrigger_sim.params import load_params
+
+    geometry = C2Geometry.from_params(load_params())
+    gains, force_per_bar = {}, {}
+    for side, leg in (("front", 0), ("rear", 2)):
+        head = float(geometry.head_area_m2[leg])
+        annulus = float(geometry.annulus_area_m2[leg])
+        # 3 decimals: the rear ratio is 3.025 (erratum 1 8 writes 3.02)
+        gains[side] = round(head / annulus, 3)
+        force_per_bar[side] = round(head * 1e5 / 1e3, 3)
+    return {"definition": "(head reading x A_h - true_force_N) / A_ann (T4h proxy; the plant "
+                          "rod pressure is not in a T4h record)",
+            "head_error_gain": gains, "max_over_kN_per_head_bar": force_per_bar,
+            "dominated_reads_use_it": False, "judged": False}
 
 
 def main(argv: list[str] | None = None) -> int:

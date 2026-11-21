@@ -26,6 +26,16 @@ casef    (4a-7 2.1, step 4b) ``commands_sha256`` of the 15 rows of ``j9_case_f.j
          the VB ``harness_commands_sha256``; the F-A, F-B, F-E statuses (judged again by
          the ``jp3_case_judge`` part functions on the rows and the fixed grid named in
          ``judge/case_f.json``); its ``status``; the code ``tool:case_f``
+dry5     (edition 5 erratum 1 9.3, against 78fd5d2d ``dry_a1``) the g6 r79 VBJ / VBH lines:
+         ``key`` without its prefix, ``seed_index``, the two evidence keys, and
+         ``commands_sha256`` under the P5-1 rule (equal when neither side has
+         ``WARN_ROD_PRESSURE_FALLBACK``, else recorded only: ``recorded_only``); the event
+         lines VBJ / VBH: the hash under the P5-1 rule, VBJ0: the hash whatever the
+         fallbacks. Not compared: ``extend_bound_check``, ``jp3_*`` arrays, run meta; g8 /
+         ref (not run in edition 4a). No exit code compared
+dry5_retry (9.3, a retry ``dry_a<k>`` of the same commit, ``--old-folder dry_a<k-1>``) every
+         result line of the folder without the run meta keys (``wall_s``, ``mask``,
+         ``t4h_dir``), one sha256 per line
 ======== ==============================================================================
 
 A step's folder is the ``folder`` of ``<root>/<step>.done`` (else of the newest
@@ -59,7 +69,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 ITEM_STEPS = {"p1": "p1", "dry": "dry", "fpath": "fpath", "x11": "cases", "cases_ae": "cases",
-              "casef": "casef"}
+              "casef": "casef", "dry5": "dry", "dry5_retry": "dry"}
 """Item -> the run step whose folder holds it."""
 CASE_ROW_FILES = ("j9_cases.jsonl", "cd.jsonl")
 """4a-7 2.1 (4a) A .. E: the ``jp3_baseline_compare`` ``--new`` rows of step 4a."""
@@ -79,7 +89,7 @@ X11_ROWS = "lsj4_x11.jsonl"
 X11_SETTING = "LSJ4_X11"
 ITEM_CODES = {"p1": P1_CODES, "dry": ("tool:summarize",), "fpath": ("tool:case_f_path",),
               "x11": ("tool:x11",), "cases_ae": ("tool:baseline_compare",),
-              "casef": ("tool:case_f",)}
+              "casef": ("tool:case_f",), "dry5": (), "dry5_retry": ()}
 EXIT_SAME, EXIT_DIFFERS, EXIT_MISSING, EXIT_ERROR = 0, 1, 2, 3
 
 
@@ -141,6 +151,8 @@ def _evidence(records: list[dict]) -> list:
 
 
 def _codes(side: Side, item: str) -> dict:
+    if not ITEM_CODES[item]:
+        return {}
     codes = side.step_codes(ITEM_STEPS[item])
     missing = [name for name in ITEM_CODES[item] if name not in codes]
     if missing:
@@ -174,6 +186,10 @@ def item_values(side: Side, item: str) -> dict:
         values.update(_cases_ae_values(folder))
     elif item == "casef":
         values.update(_case_f_values(folder))
+    elif item == "dry5":
+        values.update(_dry5_values(folder))
+    elif item == "dry5_retry":
+        values.update(_dry5_retry_values(folder))
     values.update(_codes(side, item))
     return values
 
@@ -281,6 +297,113 @@ def _case_f_part_statuses(rows: list[dict], grid: dict) -> dict:
     return statuses
 
 
+DRY5_R79_FILES = {"r79_VBJ.json": "VBJ", "r79_VBH.json": "VBH"}
+"""Edition 5 erratum 1 9.3: the g6 r79 lines compared with 78fd5d2d (g8 / ref were not run in
+edition 4a: no comparison, 9.2 only)."""
+DRY5_EVENT_FILES = {"event_VBJ.jsonl": False, "event_VBH.jsonl": False,
+                    "event_VBJ0.jsonl": True}
+"""Event line -> its hash is equal whatever the fallbacks (VBJ0: ③ off); else the P5-1 rule."""
+RUN_META_KEYS = frozenset({"wall_s", "wall_s_this_start", "mask", "t4h_dir"})
+"""Run meta left out of the same-commit retry comparison (9.3: time, mask, paths)."""
+DRY5_ITEMS = ("dry5", "dry5_retry")
+HASH_EXEMPT_SUFFIX = " commands_sha256"
+FALLBACK_SUFFIX = " rod_fallback"
+ALWAYS_EQUAL_SUFFIX = " hash_always_equal"
+
+
+def _dry5_line(label: str, record: dict, folder: Path | None, always: bool) -> dict:
+    """The 9.3 values of one dry line: its hash and the fallback flag of the P5-1 rule
+    (``jp3_p51_compare.has_fallback`` on the line's T4h record when its folder is given)."""
+    import jp3_p51_compare as p51
+
+    fallback = p51.has_fallback(record, folder)
+    if fallback is None and not always:
+        raise Missing(f"{label}: the event list is at the cap without a T4h record")
+    return {f"{label}{HASH_EXEMPT_SUFFIX}": record.get("commands_sha256"),
+            f"{label}{FALLBACK_SUFFIX}": fallback, f"{label}{ALWAYS_EQUAL_SUFFIX}": always}
+
+
+def _dry5_values(folder: Path) -> dict:
+    """Erratum 1 9.3 compared values: per g6 r79 line the key without its prefix, the seed,
+    the two evidence keys (per leg) and its hash; per event line its hash (each hash with its
+    fallback flag). Not read: the ``extend_bound_check`` contents, the ``jp3_*`` arrays, run
+    meta."""
+    values = {}
+    for name, setting in DRY5_R79_FILES.items():
+        records = _read_json(folder / name).get("results") or []
+        if len(records) != 1:
+            raise Missing(f"{folder / name}: {len(records)} r79 lines, 1 expected")
+        record = records[0]
+        key = str(record.get("key", ""))
+        values[f"{name} key"] = key.split("#", 1)[1] if "#" in key else key
+        values[f"{name} seed_index"] = record.get("seed_index")
+        values[f"{name} evidence"] = _evidence([record])
+        values.update(_dry5_line(name, record, folder / f"{setting}_t4h", always=False))
+    for name, always in DRY5_EVENT_FILES.items():
+        records = _read_lines(folder / name)
+        if len(records) != 1:
+            raise Missing(f"{folder / name}: {len(records)} lines, 1 expected")
+        values.update(_dry5_line(name, records[0], None, always))
+    return values
+
+
+def _without_run_meta(value):
+    if isinstance(value, dict):
+        return {key: _without_run_meta(item) for key, item in value.items()
+                if key not in RUN_META_KEYS}
+    if isinstance(value, list):
+        return [_without_run_meta(item) for item in value]
+    return value
+
+
+def _dry5_retry_values(folder: Path) -> dict:
+    """9.3 same-commit retry: every result line of the dry folder (the three event lines, the
+    r79 lines of every family) without :data:`RUN_META_KEYS`, as a sha256 per line."""
+    values = {}
+    for name in DRY5_EVENT_FILES:
+        for index, record in enumerate(_read_lines(folder / name)):
+            values[f"{name} #{index}"] = _canonical_sha(_without_run_meta(record))
+    for path in sorted(folder.glob("r79_*.json")):
+        for index, record in enumerate(_read_json(path).get("results") or []):
+            values[f"{path.name} #{index}"] = _canonical_sha(_without_run_meta(record))
+    if not values:
+        raise Missing(f"{folder}: no dry result line")
+    return values
+
+
+def _canonical_sha(value) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def p51_exempt_names(before: dict, after: dict) -> list[str]:
+    """The hash names of the P5-1 rule recorded only (a fallback on either side; never on a
+    line whose hash is equal whatever the fallbacks)."""
+    exempt = []
+    for name in before:
+        if not name.endswith(HASH_EXEMPT_SUFFIX):
+            continue
+        label = name.removesuffix(HASH_EXEMPT_SUFFIX)
+        if after.get(f"{label}{ALWAYS_EQUAL_SUFFIX}"):
+            continue
+        flags = (before.get(f"{label}{FALLBACK_SUFFIX}"), after.get(f"{label}{FALLBACK_SUFFIX}"))
+        if any(flags):
+            exempt.append(name)
+    return exempt
+
+
+def _dry5_judged(before: dict, after: dict) -> tuple[dict, dict, list[str]]:
+    """The compared values of 9.3: the fallback flags only decide (P5-1), they are not
+    compared; a hash with a fallback on either side is recorded only."""
+    exempt = p51_exempt_names(before, after)
+
+    def judged(values: dict) -> dict:
+        return {name: value for name, value in values.items()
+                if name not in exempt and not name.endswith((FALLBACK_SUFFIX,
+                                                             ALWAYS_EQUAL_SUFFIX))}
+
+    return judged(before), judged(after), exempt
+
+
 def _x11_values(folder: Path) -> dict:
     import jp3_baseline_compare as compare
     import jp3_case_judge as case_judge
@@ -330,7 +453,14 @@ def compare_items(olds: list[Side], new: Side, items: list[str]) -> tuple[dict, 
             continue
         for old in olds:
             try:
-                entry["by_old"][old.root.name] = _compare_one(item_values(old, item), after)
+                before = item_values(old, item)
+                found_after = after
+                if item == "dry5":
+                    before, found_after, recorded = _dry5_judged(before, after)
+                found = _compare_one(before, found_after)
+                if item == "dry5":
+                    found["recorded_only"] = recorded
+                entry["by_old"][old.root.name] = found
             except Missing as exc:
                 entry["by_old"][old.root.name] = {"status": "missing", "reason": str(exc)}
         statuses = [found["status"] for found in entry["by_old"].values()]
@@ -353,12 +483,16 @@ def _parser() -> argparse.ArgumentParser:
                         help="runs root of an earlier attempt (repeatable; the run steps "
                              "pass fa997f4c alone, addendum 4a-7 2.1)")
     parser.add_argument("--new", type=Path, required=True, help="runs root of the new commit")
-    parser.add_argument("--items", default=",".join(ITEM_STEPS),
+    parser.add_argument("--items", default=",".join(name for name in ITEM_STEPS
+                                                    if name not in DRY5_ITEMS),
                         help=f"comma list of {sorted(ITEM_STEPS)}")
     parser.add_argument("--new-folder", type=Path, default=None,
                         help="the running step's folder (one item only)")
     parser.add_argument("--new-codes", type=Path, default=None,
                         help="JSON file of the running step's codes (with --new-folder)")
+    parser.add_argument("--old-folder", type=Path, default=None,
+                        help="the earlier attempt's step folder (one --old, one item of "
+                             f"{list(DRY5_ITEMS)}: the same-commit retry dry_a<k-1>)")
     parser.add_argument("--out", type=Path, required=True)
     return parser
 
@@ -373,13 +507,17 @@ def main(argv: list[str] | None = None) -> int:
     if (args.new_folder is None) != (args.new_codes is None) or (
             args.new_folder is not None and len(items) != 1):
         parser.error("--new-folder and --new-codes go together, with one item")
+    if args.old_folder is not None and (len(args.old) != 1 or len(items) != 1
+                                        or items[0] not in DRY5_ITEMS):
+        parser.error(f"--old-folder takes one --old and one item of {list(DRY5_ITEMS)}")
     if args.out.exists():
         parser.error(f"{args.out} exists (a new report never overwrites one)")
     try:
         codes = None if args.new_codes is None else json.loads(
             args.new_codes.read_text(encoding="utf-8"))
-        report, code = compare_items([Side(root) for root in args.old],
-                                     Side(args.new, args.new_folder, codes), items)
+        olds = [Side(root, args.old_folder, None if args.old_folder is None else {})
+                for root in args.old]
+        report, code = compare_items(olds, Side(args.new, args.new_folder, codes), items)
     except Exception as exc:  # noqa: BLE001 (any error is a tool error, exit 3)
         report, code = {"error": f"{type(exc).__name__}: {exc}"}, EXIT_ERROR
     status = {EXIT_SAME: "same", EXIT_DIFFERS: "differs", EXIT_MISSING: "missing",

@@ -47,8 +47,9 @@ HOLD_REVISION = 5
 HOLD_REVISIONS = (5, 6)
 """The hold revisions (``extend_start_bound.HOLD_REVISIONS``): edition 4a revision 5 and
 edition 5 revision 6, each judged apart (edition 5 4.6, 6.1)."""
-TEST_ONLY_SETTINGS = ("VBG4", "VBG5")
-"""Case replay settings under a test constant (``jp3_case_replay.py``: C and D)."""
+TEST_ONLY_SETTINGS = ("VBG4", "VBG5", "VBG6")
+"""Case replay settings under a test constant (``jp3_case_replay.py``: C and D; D is VBG6 from
+edition 5, VBG5 the edition 4a records)."""
 TEST_ONLY_SETTING_SUFFIX = "_X11"
 """Edition 4a 13.3 counterexample arm (both test-only rules, its own folder)."""
 REV5_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4", "VBK")

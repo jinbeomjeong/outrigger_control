@@ -1,0 +1,39 @@
+# 436.9 J-P3 edition 5: the fixed list entries (jp3_fixed_inputs_list.py --entries), repository-
+# relative; a line with * ? [ is a glob (at least one match). The X-11 plans and the dry
+# selection with its three key files come from --x11-selection / --dry-selection.
+# rules
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5.md.sha256
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum1.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum1.md.sha256
+# stored inputs (common.ps1 $FixedInputs; jp3_fixed_inputs.py)
+06_analysis/02_control/j_p3_cause/baseline_221456d/SHA256SUMS
+06_analysis/03_hydraulic/coupled/v5/main.jsonl
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json
+06_analysis/02_control/j_p3_cause/j4a_remedy_b06e409e/dryrun_selection_r79_key.txt
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_r79_judge.json
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_judge.json
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_L1_reference.json
+06_analysis/02_control/j_p3_cause/prelaunch_j9/h10_reuse_rerun_t4h.SHA256SUMS
+06_analysis/02_control/j_p3_cause/prelaunch_j9/h6_dg3_v4on_t4h.SHA256SUMS
+# the edition 4a run commit's outputs compared by P5-1 and erratum 1 9.3 (read by the tools only)
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/*.done
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dg3.stop
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dry_a1/event_*.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dry_a1/r79_VB?.json
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dry_a1/VB?_t4h/*.npz
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/fpath_a*/j9_case_f_path.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/cases_a*/j9_cases.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/cases_a*/cd.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/cases_a*/lsj4_x11.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/casef_a*/j9_case_f.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/t8_a*/j9_t8.jsonl
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dg3_a1/dg3_VB*.json
+# the run steps (the main checkout's files, the run commit filled in)
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/common.ps1
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/record_helper.ps1
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/*.ps1
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/fixed_inputs_entries.txt

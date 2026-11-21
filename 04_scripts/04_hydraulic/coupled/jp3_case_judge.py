@@ -73,6 +73,8 @@ X11_SETTING = "LSJ4_X11"
 X11_FRESH_SETTING = "LSJ4F_X11"
 X11_IDENTITY = {"spec_edition": compare.SPEC_EDITION, "carry_end_rule": "fresh_stretch",
                 "retract_start_rule": "model_only"}
+X11_REVISION = 5
+"""The ③ revision of the X11 arm in every edition (P4-5a of edition 4a; edition 5 B-1)."""
 X11_BASELINE_SETTING = "LSJ4"
 X11_BASELINE_HASH_PREFIX = "3672c7222519"
 X11_READ_T_S = 49.0
@@ -155,12 +157,12 @@ def judge_x11(both_rows: list[dict], both_t4h_dir: Path, baseline: compare.Basel
         problems.not_judgeable.append(f"settings {sorted(rows)}, {X11_SETTING} alone expected")
         return {}, problems
     check = _check(row)
-    # edition 5 4.6: a revision 6 X11 row carries the edition 5 spec_edition
-    edition = compare.IDENTITY_OF_REVISION.get(check.get("rule_revision"),
-                                               compare.DEFAULT_IDENTITY)["spec_edition"]
-    expected = {**X11_IDENTITY, "spec_edition": edition}
+    # edition 5 (control review of 8a3c48c7 B-1): X11 stays the edition 4a arm on ③ rev 5
+    if check.get("rule_revision") != X11_REVISION:
+        problems.setting_defects.append(f"{X11_SETTING}: rule_revision "
+                                        f"{check.get('rule_revision')!r}, not {X11_REVISION}")
     problems.setting_defects += [f"{X11_SETTING}: {key} {check.get(key)!r}"
-                                 for key, value in expected.items() if check.get(key) != value]
+                                 for key, value in X11_IDENTITY.items() if check.get(key) != value]
     _evidence(row, problems)
     baseline_hash = _baseline_hash(baseline, problems)
     if baseline_hash is not None and row["commands_sha256"] != baseline_hash:

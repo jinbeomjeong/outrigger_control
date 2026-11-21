@@ -4,7 +4,10 @@ R12 bottom-FL-Fs4 offset 0.0 case on the VB plant with the P1 line-fill gate onl
 * ``VBG4`` (C, test only): P1 with the ③ bound of revision 4. The combination is refused by
   ``v5_options`` (counterexample ⑥); this script turns ``ALLOW_GATE_WITH_REV4_FOR_TEST`` on at its
   top level, so the spawned workers (which import this file as ``__mp_main__``) run it too.
-* ``VBG5`` (D): P1 with ③ revision 5 (tag ``final_C4G2_P3H``).
+* ``VBG6`` (D, edition 5; control review of 8a3c48c7 W-1): P1 with ③ revision 6 (tag
+  ``final_C4G2_P3W``), the edition 4a pass condition unchanged (gap >= +15 bar, HOLD ④ - p_tr
+  >= +10 bar). Edition 4a ran D as ``VBG5`` (③ revision 5); that name stays a test-only
+  setting of the stored records (``j_p3_inputs.TEST_ONLY_SETTINGS``) and is not run here.
 
 Both settings live in this script only (spec 4.2: not in ``run_v5.SETTINGS``). Cases A, B and E
 are the ``run_v5`` batch ``j9_cases``. One JSON line per run (``run_v5.run_one``); T4h records in
@@ -12,7 +15,7 @@ are the ``run_v5`` batch ``j9_cases``. One JSON line per run (``run_v5.run_one``
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_case_replay.py --out <jsonl> [--workers N]
-      [--mask HEX] [--settings VBG4,VBG5]
+      [--mask HEX] [--settings VBG4,VBG6]
 This runner writes no run identity: run it under ``jp3_run_identity.py wrap <jsonl> -- ...``
 (start / end records with git head and ``is_clean``, prelaunch audit M-1).
 """
@@ -35,8 +38,10 @@ from outrigger_sim.hydraulics import v5_options  # noqa: E402
 v5_options.ALLOW_GATE_WITH_REV4_FOR_TEST = True  # case C only (spec 4.2)
 _VB_PLANT_GATE = {**run_v5._VB_PLANT, "line_fill_gate": run_v5._vn(1.0)}
 CASE_SETTINGS = {"VBG4": (True, {**_VB_PLANT_GATE, **run_v5._P3}),
-                 "VBG5": (True, {**_VB_PLANT_GATE, **run_v5._P3H})}
-"""Spec 5.3 C (P1 + revision 4, test only) and D (P1 + revision 5)."""
+                 "VBG6": (True, {**_VB_PLANT_GATE, **run_v5._P3W})}
+"""Spec 5.3 C (P1 + revision 4, test only) and D (P1 + revision 6 from edition 5)."""
+CASE_D_PREVIOUS_SETTING = {"VBG6": "VBG5"}
+"""The edition 4a name of the same case D job (P5-1 pairs the two runs by it)."""
 run_v5.ALL_SETTINGS.update(CASE_SETTINGS)
 run_v5.T4H_SETTINGS = (*run_v5.T4H_SETTINGS, *CASE_SETTINGS)
 

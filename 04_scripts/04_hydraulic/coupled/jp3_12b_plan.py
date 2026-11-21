@@ -5,12 +5,15 @@ From the fixed case source (``v5/resume_k1/h8_noise_VB.json``, sha256 of
 166; case = the key without its seed token), the block seeds, the cell table and one rod fault
 plan per block, all before any run:
 
-* blocks b1 .. b4 = seed_index 30, 31, 32, 33 (b1 / b2 the base blocks, b3 the N top-up, b4 the
-  witness top-up); a block is the 167 cases with its seed.
+* blocks b1 .. b4 = seed_index 40, 41, 42, 43 (user decision 2026-11-22 after the erratum 1
+  audit E-1; b1 / b2 the base blocks, b3 the N top-up, b4 the witness top-up); a block is the
+  167 cases with its seed.
 * seed rule: the generated keys ``L2|s<seed>|<case rest>`` of every block must be absent from
   the scan (every r79 ``"key"`` value under ``--scan-root``, the whole ``06_analysis/`` with
-  ``j9_runs`` and the dry outputs: nothing is left out, 4a-4 1). Any collision raises all four
-  seeds by 10, repeated until none; the record names the repeat count.
+  ``j9_runs`` and the dry outputs: nothing is left out, 4a-4 1; and every r79 key string
+  literal of each ``--scan-extra`` root: the run worktree's ``05_tests/`` and probe records,
+  E-1). Any collision raises all four seeds by 10, repeated until none; the record names the
+  repeat count. Test and probe keys use seeds outside the judged set (``s9x``, not 90 / 91).
 * cell = rank mod 8 of :data:`CELLS` (leg-major: FL tau_C, FL tau_R, FR tau_C, ... RR tau_R),
   the same for every block; b4 keeps the cell's leg with the phase TRw for all its pairs.
 * anchors: tau_C ``phase_exit:CHECK``, tau_R ``retract_start_after:LEVEL``, TRw
@@ -31,7 +34,7 @@ table, every output file with its sha256 and the run commands).
 
 Usage (python-dev or Chrono-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_plan.py --noise <h8_noise_VB.json>
-      --scan-root <repo>/06_analysis --out-dir <folder>
+      --scan-root <repo>/06_analysis --scan-extra <run worktree>/05_tests --out-dir <folder>
 
 Exit codes (the stdout's last line is JSON with ``status`` and the output folder):
 
@@ -67,8 +70,10 @@ CELLS = tuple((leg, phase) for leg in LEGS for phase in (PHASE_TAU_C, PHASE_TAU_
 """Cell index 0 .. 7 (rank mod 8): leg-major, tau_C before tau_R."""
 ANCHOR_OF_PHASE = {PHASE_TAU_C: "phase_exit:CHECK", PHASE_TAU_R: "retract_start_after:LEVEL",
                    PHASE_TRW: "retract_witness_after:LEVEL"}
-BLOCK_SEEDS = (30, 31, 32, 33)
-"""b1 .. b4 before any collision step (6.3.1)."""
+BLOCK_SEEDS = (40, 41, 42, 43)
+"""b1 .. b4 before any collision step (6.3.1; user decision 2026-11-22 after the erratum 1
+audit E-1: 40 .. 43, because the X-10 unit tests and a probe had run b1's former ``s30``
+keys)."""
 BLOCK_PHASES = ("cell", "cell", "cell", PHASE_TRW)
 """b1 .. b3 take the cell's phase, b4 the TRw phase on the cell's leg."""
 SEED_STEP = 10
@@ -84,6 +89,12 @@ PLAN_SCHEMA = "r79_rod_fault_plan/1"
 R79_KEY_PATTERN = re.compile(rb'"key"\s*:\s*"((?:cand=[^"#]*#)?L\d+[A-Za-z]*\|s(\d+)\|[^"]*)"')
 """4a-4 1 with X-3: an r79 ``"key"`` value (level token ``L``, digits, letters)."""
 SCAN_SUFFIXES = (".json", ".jsonl")
+SOURCE_KEY_PATTERN = re.compile(
+    rb"""["']((?:cand=[^"'#\s]*#)?L\d+[A-Za-z]*\|s(\d+)\|[^"'\s]*)["']""")
+"""An r79 key written as a string literal in a test or probe source (a ``"key"`` field is not
+needed there; an f-string seed ``s{seed}`` does not match)."""
+SOURCE_SUFFIXES = (".py", ".ps1", ".json", ".jsonl", ".txt")
+"""The files of an ``--scan-extra`` root (tests, probe records)."""
 EXIT_WRITTEN, EXIT_NOT_USABLE, EXIT_ERROR = 0, 2, 3
 
 
@@ -147,8 +158,36 @@ def scan_r79_keys(scan_root: Path) -> KeyScan:
     return KeyScan(frozenset(keys), tuple(files), seed_max)
 
 
+def scan_source_keys(root: Path) -> KeyScan:
+    """Every r79 key string literal of the test and probe sources under ``root``
+    (:data:`SOURCE_SUFFIXES`; the erratum 1 audit E-1: test keys run a seed too). File paths
+    are relative to ``root``'s parent (``05_tests/...``)."""
+    keys: set[str] = set()
+    files = []
+    seed_max = None
+    for path in sorted(p for p in root.rglob("*") if p.suffix in SOURCE_SUFFIXES
+                       and p.is_file()):
+        data = path.read_bytes()
+        found = SOURCE_KEY_PATTERN.findall(data)
+        for key, seed in found:
+            keys.add(plain_key(key.decode("utf-8")))
+            seed_max = int(seed) if seed_max is None else max(seed_max, int(seed))
+        files.append((path.relative_to(root.parent).as_posix(),
+                      hashlib.sha256(data).hexdigest(), len(found)))
+    return KeyScan(frozenset(keys), tuple(files), seed_max)
+
+
+def merged_scan(scan_root: Path, extra_roots: tuple[Path, ...]) -> KeyScan:
+    """The ``--scan-root`` scan and every ``--scan-extra`` source scan together."""
+    scans = [scan_r79_keys(scan_root), *(scan_source_keys(root) for root in extra_roots)]
+    seeds = [scan.seed_max for scan in scans if scan.seed_max is not None]
+    return KeyScan(frozenset().union(*(scan.keys for scan in scans)),
+                   tuple(item for scan in scans for item in scan.files),
+                   max(seeds) if seeds else None)
+
+
 def block_seeds(cases: list[str], scanned: frozenset[str]) -> tuple[tuple[int, ...], int]:
-    """``(seeds of b1 .. b4, repeat count)``: 30 + j, all four +10 while any generated key is
+    """``(seeds of b1 .. b4, repeat count)``: 40 + j, all four +10 while any generated key is
     in the scan (6.3.1).
 
     Raises:
@@ -225,7 +264,8 @@ def _keys_text(keys: list[str]) -> str:
 
 
 def select(noise_path: Path, scan_root: Path, out_dir: Path,
-           noise_sha256: str = fixed.NOISE_VB_SHA256) -> dict:
+           noise_sha256: str = fixed.NOISE_VB_SHA256, *,
+           extra_roots: tuple[Path, ...] = ()) -> dict:
     """Selection and plans (module docstring); returns the ``selection.json`` document.
 
     Args:
@@ -233,6 +273,7 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         scan_root: Root of the r79 key scan.
         out_dir: New or empty output folder.
         noise_sha256: The case source's fixed sha256 (tests give their own file's).
+        extra_roots: Test and probe source roots (``--scan-extra``, :func:`scan_source_keys`).
 
     Raises:
         NotUsable: Module docstring exit 2.
@@ -245,7 +286,10 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     cases = l2_cases(json.loads(noise_path.read_text(encoding="utf-8")))
     if len(cases) != CASE_COUNT:
         raise NotUsable(f"{len(cases)} L2 cases in the case source, {CASE_COUNT} expected")
-    scan = scan_r79_keys(scan_root)
+    for root in extra_roots:
+        if not root.is_dir():
+            raise NotUsable(f"--scan-extra {root} is not a folder")
+    scan = merged_scan(scan_root, tuple(extra_roots))
     seeds, repeats = block_seeds(cases, scan.keys)
     table = cell_table(cases)
     dry, dry_keys = dry_plan(table, scan.keys)
@@ -265,7 +309,8 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     document = {
         "rule": "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)",
         "inputs": {"noise": {"path": str(noise_path), "sha256": noise_sha256},
-                   "scan_root": str(scan_root)},
+                   "scan_root": str(scan_root),
+                   "scan_extra": [str(root) for root in extra_roots]},
         "scan": {"files_scanned": len(scan.files), "r79_keys": len(scan.keys),
                  "seed_max": scan.seed_max,
                  "files": [{"path": path, "sha256": sha, "r79_keys": count}
@@ -303,9 +348,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--noise", type=Path, required=True)
     parser.add_argument("--scan-root", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--scan-extra", type=Path, action="append", required=True,
+                        help="a test or probe source root (repeatable; at least the run "
+                             "worktree's 05_tests, erratum 1 audit E-1)")
     args = parser.parse_args(argv)
     try:
-        document = select(args.noise, args.scan_root, args.out_dir)
+        document = select(args.noise, args.scan_root, args.out_dir,
+                          extra_roots=tuple(args.scan_extra))
     except NotUsable as exc:
         print(f"not usable: {exc}", file=sys.stderr)
         print(json.dumps({"status": "not_usable", "out_dir": str(args.out_dir)}))

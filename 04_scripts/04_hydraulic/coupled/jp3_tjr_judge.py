@@ -88,11 +88,12 @@ Sub-commands:
              READY on both sides, only X -> X grade transitions), else 1.
 ``records``  T-JR-13 .. T-JR-15, all judged (addendum 4a-5 1; user decisions 1 and 4). Any of
              ``--replay``, ``--dg3``, ``--lock-rows`` empty: not judgeable.
-             T-JR-13: exactly two ``t4h_replay --extend-start-revision 5`` reports, one of the
+             T-JR-13: exactly two ``t4h_replay --extend-start-revision 6`` reports (edition 5;
+             edition 4a used 5), one of the
              426 h10 T4h runs and one of the 135 H-6 T4h runs; their row ``file`` names must
              be the fixed ``--t4h-sums`` lists (the report records no folder; 4a-5 1 end).
              Failed: an error row. Not judgeable: other report count / run counts, rows !=
-             runs, ``extend_start_revision`` missing or not 5, a test-only (``judged:
+             runs, ``extend_start_revision`` missing or not 6, a test-only (``judged:
              False``) or stopped report, other file names, ``--t4h-sums`` not the fixed lists.
              T-JR-14: VBH and VBJ Dg-3 lines, 135 each. Failed: a ``LockWindowMismatchError``
              error line (the fallback log mismatch, 가) or ``lock_window_alignment.
@@ -224,11 +225,12 @@ REPLAY_RUN_COUNTS = (426, 135)
 """T-JR-13 (addendum 4a-5 1): the replays of the stored h10 T4h (426 npz) and H-6 T4h (135
 npz) folders, one report each."""
 REPLAY_REVISION_KEY = "extend_start_revision"
-REPLAY_REVISION = 5
-"""``t4h_replay --extend-start-revision 5``: the report's ③ revision record (4a-5 1)."""
-REPLAY_REVISIONS = (REPLAY_REVISION, 6)
-"""Accepted report revisions: 5 (edition 4a) and 6 (edition 5, ``--extend-start-revision 6``);
-both reports of one judgement must name the same one."""
+REPLAY_REVISION = 6
+"""``t4h_replay --extend-start-revision 6``: the report's ③ revision record. Edition 5 fixes it
+at 6 (control review of 8a3c48c7 W-2; 4a-5 1 named 5 for edition 4a); a report of another
+revision is not judgeable."""
+REPLAY_REVISIONS = (REPLAY_REVISION,)
+"""The accepted report revisions (one judgement, one revision)."""
 T4H_SUMS_SHA256 = {"h10_reuse_rerun_t4h.SHA256SUMS": fixed.H10_T4H_SUMS_SHA256,
                    "h6_dg3_v4on_t4h.SHA256SUMS": fixed.H6_T4H_SUMS_SHA256}
 """``--t4h-sums``: the fixed name lists of the two T4h input folders (``prelaunch_j9``)."""
@@ -1343,8 +1345,9 @@ def key_set_problems(label: str, keys: list[str], expected: frozenset[str]) -> l
 
 def judge_t_jr_13(replays: list[dict], t4h_names: dict[int, set[str]],
                   problems: compare.Problems) -> list[dict]:
-    """Exactly two judged rev 5 replay reports, 426 runs of the h10 T4h folder and 135 of the
-    H-6 one, one row per run; an error row fails (4a-5 1)."""
+    """Exactly two judged replay reports of :data:`REPLAY_REVISION` (edition 5 erratum 1 4:
+    revision 6; a revision 5 report is not judgeable), 426 runs of the h10 T4h folder and 135
+    of the H-6 one, one row per run; an error row fails (4a-5 1)."""
     if replays and Counter(replay.get("runs") for replay in replays) != Counter(
             REPLAY_RUN_COUNTS):
         problems.not_judgeable.append(
@@ -1371,8 +1374,8 @@ def judge_t_jr_13(replays: list[dict], t4h_names: dict[int, set[str]],
 
 
 def replay_report_problems(replay: dict, t4h_names: dict[int, set[str]]) -> list[str]:
-    """Why one report is not a judged ``t4h_replay --extend-start-revision 5`` output of its
-    fixed input folder (not judgeable)."""
+    """Why one report is not a judged ``t4h_replay --extend-start-revision 6`` output of its
+    fixed input folder (not judgeable; edition 5 erratum 1 4)."""
     rows = replay.get("rows")
     if "stop" in replay or replay.get("judged") is False:
         return ["a stop or test-only report (judged False)"]

@@ -69,8 +69,15 @@ Usage (dynamics-dev, project root; <m> = <main checkout>/06_analysis):
       [--keys-file <m>/02_control/j_p3_cause/j4a_remedy_b06e409e/dryrun_selection_r79_key.txt]
   python -I -B ... run-event --selection <sel.json> --setting VBJ
       --out <dryrun_evidence/event_VBJ.jsonl>
-  python -I -B ... summarize --selection <sel.json> --out <summary.json>
-      --event VBJ=<jsonl> VBH=<jsonl> VBJ0=<jsonl> --r79 VBJ=<json> VBH=<json>
+  python -I -B ... summarize --selection <sel.json> --out <summary.json> --edition 5
+      --event VBJ=<jsonl> VBH=<jsonl> VBJ0=<jsonl> --r79 VBJ=<json> VBH=<json> VBJ:g8=...
+      --r79-t4h VBJ=<VBJ_t4h> VBH=<VBH_t4h> VBJ:g8=<VBJ_g8_t4h> ...
+
+Edition 5 (``jp3_remedy_spec_v5_erratum1.md`` 9): the g8 / ref key files have fixed sha256
+too (:data:`jp3_fixed_inputs.DRY_KEYS_FILE_SHA256_BY_FAMILY`; ``select`` stops on another
+one); ``summarize --edition 5`` checks that every r79 line's T4h holds the revision 6
+``jp3_*`` arrays and the ``meta_json`` events (presence only, 9.2 (다)). The comparison
+with the 78fd5d2d ``dry_a1`` outputs (9.3) is ``jp3_rerun_match.py --items dry5``.
 """
 from __future__ import annotations
 
@@ -413,8 +420,10 @@ def keys_file_problems(selection: dict, meta: dict, family: str = FIXED_KEY_FAMI
     record = (meta or {}).get("keys_file") or {}
     expected = (family_selection(selection, family).get("keys_file") or {}).get("sha256")
     problems = []
-    if family == FIXED_KEY_FAMILY and expected != fixed.DRY_KEYS_FILE_SHA256:
-        problems.append(f"selection key file sha256 {str(expected)[:12]} is not the fixed one")
+    # edition 5 erratum 1 9.1: the g8 / ref key files are fixed too
+    if expected != fixed.DRY_KEYS_FILE_SHA256_BY_FAMILY.get(family):
+        problems.append(f"selection {family} key file sha256 {str(expected)[:12]} is not the "
+                        "fixed one")
     if expected is None:
         problems.append(f"selection without a {family} key file")
     if record.get("sha256") != expected:
@@ -456,9 +465,42 @@ def r79_argument(setting: str, family: str) -> str:
     return setting if family == FIXED_KEY_FAMILY else f"{setting}:{family}"
 
 
+T4H_REQUIRED_ARRAYS = ("jp3_r58_witness", "jp3_r59_substeps", "jp3_r510_candidates",
+                       "jp3_r59_end_guard_substeps")
+"""Edition 5 erratum 1 9.2 (다): the revision 6 ``jp3_*`` arrays (X-1) every dry r79 VBJ /
+VBH T4h must hold, with ``meta_json`` ``events`` (X-2); presence only, no value read."""
+
+
+def t4h_presence_problems(record: dict, folder: Path | None) -> list[str]:
+    """9.2 (다) of one dry r79 line: its T4h record holds :data:`T4H_REQUIRED_ARRAYS` and the
+    ``events`` of ``meta_json`` (names only; a miss is not judgeable)."""
+    import numpy as np
+
+    name = record.get("t4h_file")
+    if folder is None:
+        return ["no --r79-t4h folder of this setting"]
+    if not name or not (folder / Path(str(name)).name).is_file():
+        return [f"T4h record {name!r} not in {folder}"]
+    with np.load(folder / Path(str(name)).name, allow_pickle=False) as data:
+        names = set(data.files)
+        meta = json.loads(str(data["meta_json"])) if "meta_json" in names else None
+    problems = [f"T4h array {array} missing" for array in T4H_REQUIRED_ARRAYS
+                if array not in names]
+    if not isinstance(meta, dict) or "events" not in meta:
+        problems.append("T4h meta_json events missing")
+    return problems
+
+
 def summarize(selection: dict, event_files: dict[str, Path],
-              r79_files: dict[str, Path]) -> tuple[dict, int]:
-    """The ``summarize`` output and its exit code (every family's r79 runs required, 4a-8 3)."""
+              r79_files: dict[str, Path],
+              r79_t4h: dict[str, Path] | None = None) -> tuple[dict, int]:
+    """The ``summarize`` output and its exit code (every family's r79 runs required, 4a-8 3).
+
+    ``r79_t4h`` (edition 5, erratum 1 9.2 (다)): the T4h folder of each r79 run by its
+    ``--r79`` name (``VBJ``, ``VBJ:g8``, ...; the run steps give each run its own
+    ``R79_T4H_DIR``); given, every r79 line's T4h must hold the revision 6 arrays and the events
+    (:func:`t4h_presence_problems`), else not judgeable. None: the edition 4a summary.
+    """
     rows, code = [], EXIT_DONE
     for path_kind, setting, family, expectation in expected_runs():
         name = f"{path_kind}_{setting}" + ("" if family in (None, FIXED_KEY_FAMILY)
@@ -482,8 +524,13 @@ def summarize(selection: dict, event_files: dict[str, Path],
                                                            family)
             if not all(row["key_taken"]) or len(records) != 1 or row["keys_file_problems"]:
                 row["stop"] = ASK_AGAIN
+            if r79_t4h is not None:
+                folder = r79_t4h.get(r79_argument(setting, family))
+                row["t4h_problems"] = [problem for record in records for problem in
+                                       t4h_presence_problems(record, folder)]
         rows.append(row)
-        if len(records) != 1 or None in row["meets"] or "stop" in row:
+        if (len(records) != 1 or None in row["meets"] or "stop" in row
+                or row.get("t4h_problems")):
             code = EXIT_NOT_JUDGEABLE
         elif not all(row["meets"]) and code == EXIT_DONE:
             code = EXIT_MISSED
@@ -537,7 +584,15 @@ def _parser() -> argparse.ArgumentParser:
     summary.add_argument("--out", type=Path, required=True)
     summary.add_argument("--event", nargs="*", default=[])
     summary.add_argument("--r79", nargs="*", default=[])
+    summary.add_argument("--edition", choices=EDITIONS, required=True,
+                         help="5: the r79 T4h presence check of erratum 1 9.2 (다) with "
+                              "--r79-t4h; 4a: the edition 4a summary")
+    summary.add_argument("--r79-t4h", nargs="*", default=[],
+                         help="<--r79 name>=<T4h folder> of all six r79 runs (edition 5)")
     return parser
+
+
+EDITIONS = ("4a", "5")
 
 
 def keys_file_of(out: Path, family: str = "g6") -> Path:
@@ -581,24 +636,31 @@ def _select_command(args: argparse.Namespace) -> dict:
             chosen["keys_file"] = report["r79_keys_file"]
             continue
         keys_files[family] = keys_file_of(args.out, family)
-        chosen["keys_file"] = write_family_keys_file(keys_files[family], chosen["key"])
+        chosen["keys_file"] = write_family_keys_file(keys_files[family], chosen["key"], family)
     report["commands"] = _commands(report["event_job"], keys_files)
     return report
 
 
-def write_family_keys_file(keys_file: Path, key: str) -> dict:
-    """The one-line key file of a family other than g6 (4a-8 3; no fixed sha yet: recorded
-    in the selection, and the r79 output's meta must name it). Never overwritten.
+def write_family_keys_file(keys_file: Path, key: str, family: str) -> dict:
+    """The one-line key file of a family other than g6 (4a-8 3), recorded in the selection;
+    the r79 output's meta must name it. Its sha256 must be the fixed one of edition 5
+    erratum 1 9.1 (:data:`jp3_fixed_inputs.DRY_KEYS_FILE_SHA256_BY_FAMILY`: the rescan of
+    the run commit chose another key, or the file differs: stop and ask again, never another
+    key instead). Never overwritten.
 
     Raises:
-        Stop: The file exists.
+        Stop: The file exists, or its sha256 is not the fixed one.
     """
     if keys_file.exists():
         raise Stop(f"{keys_file} exists (never overwritten)")
     keys_file.parent.mkdir(parents=True, exist_ok=True)
     keys_file.write_bytes((key + KEYS_FILE_LINE_END).encode("utf-8"))
-    return {"path": str(keys_file), "sha256": fixed.file_sha256(keys_file),
-            "reused_existing_file": False}
+    digest = fixed.file_sha256(keys_file)
+    expected = fixed.DRY_KEYS_FILE_SHA256_BY_FAMILY[family]
+    if digest != expected:
+        raise Stop(f"{family} key file sha256 {digest[:12]} is not the fixed {expected[:12]} "
+                   f"(edition 5 erratum 1 9.1: {ASK_AGAIN})")
+    return {"path": str(keys_file), "sha256": digest, "reused_existing_file": False}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -614,8 +676,16 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"status": "done", "out": str(args.out)}))
             return EXIT_DONE
         else:
+            r79_t4h = None
+            if args.edition == "5":
+                r79_t4h = _pairs(args.r79_t4h)
+                names = {r79_argument(setting, family) for setting in R79_SETTINGS
+                         for family in R79_FAMILIES}
+                if set(r79_t4h) != names:
+                    raise Stop(f"--r79-t4h needs {sorted(names)} (edition 5, erratum 1 9.2), "
+                               f"got {sorted(r79_t4h)}")
             report, code = summarize(_read_json(args.selection), _pairs(args.event),
-                                     _pairs(args.r79))
+                                     _pairs(args.r79), r79_t4h)
     except (Stop, compare.NotJudgeable) as exc:
         report, code = {"stop": str(exc)}, EXIT_NOT_JUDGEABLE
     except compare.TOOL_ERRORS as exc:

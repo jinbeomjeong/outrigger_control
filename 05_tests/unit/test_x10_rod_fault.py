@@ -61,9 +61,9 @@ STROKE_MAX_M = 0.70
 FR = 1
 U_HOLD = 0.01 * V_MAX
 GATE_VALUE_BAR = -100.0
-RUN_KEY = "cand=current#L2|s30|ref|0|rigid|B|0,0"
+RUN_KEY = "cand=current#L2|s95|ref|0|rigid|B|0,0"
 """A short ref key (rigid, pad B, flat; about 40 s): READY within the run, a retract carry
-after LEVEL on FR, CHECK on (L2)."""
+after LEVEL on FR, CHECK on (L2); seed s95 (a harness-run test key: s95 .. s99 only)."""
 RUN_TIMEOUT_S = 1200
 BASE_ROOT_ENV = "X10_BASE_ROOT"
 """A checkout of the commit before X-10 (df95158d) for (i); the test is skipped without it."""
@@ -613,9 +613,11 @@ def test_latch_is_the_same_read_d1_only(events, expected) -> None:
 # ------------------------------------------------------------------------------- harness runs
 REV5_ALIAS = "VBJ5"
 """The edition 4a revision 5 VBJ on the edition 5 code (``rod_fault_runner`` alias, test only)."""
-TRW_KEY = "cand=current#L2|s30|ref|3|rigid|B|0,3.2"
+TRW_KEY = "cand=current#L2|s96|ref|3|rigid|B|0,3.2"
 """A short ref key (pitch 3.2 deg) whose VBJ run has a witnessed retract carry on RL after LEVEL
-(probe run of this commit: carry start 373, witness 388); :data:`RUN_KEY` has none."""
+(the tests below check it); :data:`RUN_KEY` has none. Erratum 1 seed rule: every key a test
+runs through the harness has a seed of s95 .. s99 only, outside every judged set (12b b1 .. b4
+start at 40 .. 43, the c dry seeds are 90 / 91)."""
 TRW_LEG = "RL"
 
 
@@ -948,7 +950,7 @@ GUARD_CASES = [
     ("VBK0", None, "needs R79_ROD_FAULT_PLAN"),
     ("VBJ0", {RUN_KEY: _fault()}, "is no VBK setting"),
     ("VBK0", {}, "empty plan"),
-    ("VBK0", {"cand=current#L2|s31|ref|0|rigid|B|0,0": _fault()}, "without a fault"),
+    ("VBK0", {"cand=current#L2|s97|ref|0|rigid|B|0,0": _fault()}, "without a fault"),
 ]
 
 

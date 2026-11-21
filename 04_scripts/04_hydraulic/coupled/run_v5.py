@@ -173,9 +173,12 @@ resolves both. The revision 5 options of edition 4a stay in :data:`JP3_REV5_SETT
 JP3_REV5_SETTINGS: dict[str, tuple[bool, dict]] = {
     "VBH": (True, {**_VB_PLANT, **_P3H}),
     "VBJ": (True, {**_VB_PLANT_J, **_P3H}),
+    "LSJ4": (True, {**_VB_PLANT_J, "lock_closure": _lc(*LS_CLOSURES["4"]), **_P3H}),
 }
-"""The edition 4a revision 5 options of VBH and VBJ (record only: never a runnable setting;
-the X-10 bit-for-bit test compares a run of these with the commit before X-10)."""
+"""The edition 4a revision 5 options of VBH, VBJ and LSJ4 (no runnable setting of this list:
+the X-10 bit-for-bit test runs VBJ under a test alias, and the X11 counterexample arm
+``jp3_x11_replay.py`` builds ``LSJ4_X11`` on LSJ4 of revision 5, P4-5a as in edition 4a,
+control review of 8a3c48c7 B-1)."""
 ROD_FAULT_SETTINGS = ("VBK", "VBK0")
 """Edition 5 6.3.1: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
 one without the other by this list, audit W15)."""

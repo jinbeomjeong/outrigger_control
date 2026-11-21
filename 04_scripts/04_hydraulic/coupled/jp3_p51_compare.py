@@ -43,9 +43,15 @@ from pathlib import Path
 import numpy as np
 
 FALLBACK_EVENT = "WARN_ROD_PRESSURE_FALLBACK"
-ALWAYS_EQUAL_SETTINGS = ("VBJ0", "VB", "VBK0")
-"""③ off (VBJ0, VBK0) or ③ revision 4 (VB): rev 6 changes nothing there (P5-1)."""
+ALWAYS_EQUAL_SETTINGS = ("VBJ0", "VB", "VBK0", "LSJ4_X11")
+"""③ off (VBJ0, VBK0), ③ revision 4 (VB) or the X11 arm on ③ revision 5 (erratum 1 1: its
+rev 5 path is unchanged, so its hash equals the 78fd5d2d X11 line): equal whatever the
+fallbacks (P5-1)."""
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
+SETTING_OF_PREVIOUS_EDITION = {"VBG6": "VBG5"}
+"""Case D: edition 5 runs it as VBG6 (③ rev 6), edition 4a ran the same job as VBG5
+(``jp3_case_replay.CASE_D_PREVIOUS_SETTING``); erratum 1 2: the pair's hashes are equal when
+neither side has a fallback (T8 under the name map), else a record."""
 ROW_EVENT_CAP = 400
 """``verdict_runs._finish`` keeps the first 400 events of a run_v5 row."""
 HASH = re.compile(r"^[0-9a-f]{64}$")
@@ -65,12 +71,15 @@ def read_rows(path: Path) -> list[dict]:
 
 
 def identity(row: dict) -> str:
-    """The pairing key of a row (r79 key without the candidate prefix, or the run_v5 job)."""
+    """The pairing key of a row (r79 key without the candidate prefix, or the run_v5 job; a
+    setting of :data:`SETTING_OF_PREVIOUS_EDITION` takes its edition 4a name)."""
     if isinstance(row.get("key"), str):
         key = row["key"]
         return "r79:" + (key.split("#", 1)[1] if "#" in key else key)
     job = {name: value for name, value in (row.get("job") or {}).items()
            if name not in RUNTIME_JOB_KEYS}
+    if job.get("setting") in SETTING_OF_PREVIOUS_EDITION:
+        job["setting"] = SETTING_OF_PREVIOUS_EDITION[job["setting"]]
     return "job:" + json.dumps(job, sort_keys=True)
 
 

@@ -419,6 +419,7 @@ def test_dryrun_summarize_main(tmp_path, elsewhere) -> None:
     selection = _write_json(folder / "selection.json", SELECTION)
     out = tmp_path / "summary.json"
     code = dryrun.main(["summarize", "--selection", str(selection), "--out", str(out),
+                        "--edition", "4a",
                         "--event", *[f"{k}={v}" for k, v in events.items()],
                         "--r79", *[f"{k}={v}" for k, v in r79.items()]])
     assert code == dryrun.EXIT_DONE, json.loads(out.read_text(encoding="utf-8"))

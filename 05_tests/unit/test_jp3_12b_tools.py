@@ -73,7 +73,7 @@ def selected(tmp_path):
 # ------------------------------------------------------------------------------- X-11
 def test_x11_blocks_seeds_cells_and_plans(selected) -> None:
     document, out = selected["doc"], selected["out"]
-    assert [document["blocks"][f"b{j}"]["seed_index"] for j in range(1, 5)] == [30, 31, 32, 33]
+    assert [document["blocks"][f"b{j}"]["seed_index"] for j in range(1, 5)] == [40, 41, 42, 43]
     assert document["seed_repeats"] == 0 and document["cases"] == 167
     table = document["cell_table"]
     assert [row["cell"] for row in table[:9]] == [0, 1, 2, 3, 4, 5, 6, 7, 0]
@@ -91,7 +91,7 @@ def test_x11_blocks_seeds_cells_and_plans(selected) -> None:
     b4 = rfp.load_plan(out / "b4_plan.json").faults
     assert {fault.anchor.text for fault in b4.values()} == {"retract_witness_after:LEVEL"}
     b1 = rfp.load_plan(out / "b1_plan.json").faults
-    first = b1["cand=current#L2|s30|g6|0|x0|top|Fs0"]
+    first = b1["cand=current#L2|s40|g6|0|x0|top|Fs0"]
     assert (first.leg, first.anchor.text) == ("FL", "phase_exit:CHECK")
     for name, sha in document["outputs"].items():
         assert hashlib.sha256((out / name).read_bytes()).hexdigest() == sha
@@ -119,23 +119,51 @@ def test_x11_scan_collision_raises_all_seeds_by_10(tmp_path) -> None:
     scan = tmp_path / "scan"
     (scan / "02_control" / "j_p3_cause" / "j9_runs" / "x").mkdir(parents=True)
     (scan / "02_control" / "j_p3_cause" / "j9_runs" / "x" / "dg3.json").write_text(
-        json.dumps({"results": [{"key": "cand=current#L2|s33|g8|5|x5|top|Fs0"}]}),
+        json.dumps({"results": [{"key": "cand=current#L2|s43|g8|5|x5|top|Fs0"}]}),
         encoding="utf-8")
-    (scan / "other.jsonl").write_text(json.dumps({"key": "L2|s41|ref|2|x2|top|Fs0"}) + "\n"
+    (scan / "other.jsonl").write_text(json.dumps({"key": "L2|s51|ref|2|x2|top|Fs0"}) + "\n"
                                       + json.dumps({"key": "L2nocal|s77|g6|0|x0"}) + "\n",
                                       encoding="utf-8")
     document = plan.select(noise, scan, tmp_path / "plans", noise_sha256=sha)
-    assert [document["blocks"][f"b{j}"]["seed_index"] for j in range(1, 5)] == [50, 51, 52, 53]
+    assert [document["blocks"][f"b{j}"]["seed_index"] for j in range(1, 5)] == [60, 61, 62, 63]
     assert document["seed_repeats"] == 2
     assert document["scan"]["files_scanned"] == 2 and document["scan"]["seed_max"] == 77
     assert {row["path"] for row in document["scan"]["files"]} == {
         "02_control/j_p3_cause/j9_runs/x/dg3.json", "other.jsonl"}
 
 
+def test_x11_test_and_probe_key_strings_are_scanned(tmp_path) -> None:
+    """Erratum 1 audit E-1: a key string literal of a test or probe source (``--scan-extra``)
+    collides like a stored key; an f-string seed does not; the source files are recorded."""
+    noise = tmp_path / "noise.json"
+    sha = write_noise(noise)
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    tests = tmp_path / "05_tests"
+    (tests / "unit").mkdir(parents=True)
+    (tests / "unit" / "test_x.py").write_text(
+        'RUN_KEY = "cand=current#L2|s40|g6|3|x3|top|Fs0"\n'
+        'OTHER = f"L2|s{seed}|g6|0|x0|top|Fs0"\n', encoding="utf-8")
+    probes = tmp_path / "probe"
+    probes.mkdir()
+    (probes / "probe.ps1").write_text("$Key = 'L2|s51|g6|0|x0|top|Fs0'\n", encoding="utf-8")
+    found = plan.scan_source_keys(tests)
+    assert found.keys == {"L2|s40|g6|3|x3|top|Fs0"} and found.seed_max == 40
+    document = plan.select(noise, scan, tmp_path / "plans", noise_sha256=sha,
+                           extra_roots=(tests, probes))
+    assert [document["blocks"][f"b{j}"]["seed_index"] for j in range(1, 5)] == [60, 61, 62, 63]
+    assert {row["path"] for row in document["scan"]["files"]} == {
+        "05_tests/unit/test_x.py", "probe/probe.ps1"}
+    assert document["inputs"]["scan_extra"] == [str(tests), str(probes)]
+    with pytest.raises(plan.NotUsable, match="not a folder"):
+        plan.select(noise, scan, tmp_path / "plans2", noise_sha256=sha,
+                    extra_roots=(tmp_path / "missing",))
+
+
 def test_x11_refusals(tmp_path, selected, monkeypatch, capsys) -> None:
     monkeypatch.chdir(tmp_path)
     assert plan.main(["--noise", str(selected["noise"]), "--scan-root", str(selected["scan"]),
-                      "--out-dir", str(tmp_path / "new")]) == 2  # not the fixed source
+                      "--out-dir", str(tmp_path / "new"), "--scan-extra", str(tmp_path)]) == 2
     assert json.loads(capsys.readouterr().out.splitlines()[-1])["status"] == "not_usable"
     with pytest.raises(plan.NotUsable, match="has files"):
         plan.select(selected["noise"], selected["scan"], selected["out"],
@@ -157,9 +185,10 @@ def test_x11_main_end_to_end_in_another_folder(tmp_path, monkeypatch, capsys) ->
     monkeypatch.setattr(plan.fixed, "NOISE_VB_SHA256", sha)
     monkeypatch.setattr(plan.select, "__defaults__", (sha,))
     assert plan.main(["--noise", str(noise), "--scan-root", str(tmp_path / "scan"),
-                      "--out-dir", str(tmp_path / "out")]) == 0
+                      "--out-dir", str(tmp_path / "out"),
+                      "--scan-extra", str(tmp_path / "scan")]) == 0
     last = json.loads(capsys.readouterr().out.splitlines()[-1])
-    assert last["status"] == "written" and last["seeds"] == [30, 31, 32, 33]
+    assert last["status"] == "written" and last["seeds"] == [40, 41, 42, 43]
     assert (tmp_path / "out" / "selection.json").is_file()
 
 
@@ -215,7 +244,7 @@ class Arm:
                   "fault_id": fault["fault_id"], "leg": fault["leg"], "kind": "STUCK",
                   "value": -100.0, "anchor": anchor, "delay_reads": 0, "is_armed": True,
                   "trigger_read": trigger, "first_applied_read": first,
-                  "first_applied_t_s": first * PERIOD_S,
+                  "first_applied_t_s": first * PERIOD_S, "applied_periods": ROWS - first,
                   "latched": {"is_latched": True, "reason": "D1", "t_s": first * PERIOD_S,
                               "reads_after_first": 0, "is_same_read_d1": True},
                   "pre_trigger_commands_sha256": "c" * 64, "pre_trigger_fallback": False}
@@ -246,7 +275,8 @@ class Arm:
                 substeps[CARRY_START + 3:CARRY_START + 6, leg] = 100 if self.witness else 0
                 arrays.update(jp3_t_s=arrays["t_s"], jp3_r58_witness=witness,
                               jp3_r59_substeps=substeps,
-                              jp3_r510_candidates=np.zeros((ROWS, 4), np.int32))
+                              jp3_r510_candidates=np.zeros((ROWS, 4), np.int32),
+                              jp3_r59_end_guard_substeps=np.zeros((ROWS, 4), np.int32))
             meta = {"events": self.events[key], "controller_tag": row.get("controller_tag")}
             np.savez(t4h / row["t4h_file"], meta_json=np.array(json.dumps(meta)),
                                 **arrays)
@@ -280,7 +310,22 @@ def decide_args(world, written: dict[str, tuple[Path, Path]], out: Path) -> list
     return args
 
 
-def judge_args(world, written0, written1, decision: Path, out: Path) -> list[str]:
+def grade_report(written: dict[str, tuple[Path, Path]], failing: frozenset = frozenset()) -> dict:
+    """An r79 judge output of the arm's lines (every gate ok; ``failing`` keys fail S-1)."""
+    runs = []
+    for result, _ in written.values():
+        for row in json.loads(result.read_text(encoding="utf-8"))["results"]:
+            gates = {name: {"ok": True, "flags": []} for name in judge._grade_module().GATES}
+            gates["S-4"].update({name: [] for name in judge._grade_module().S4_KEYS})
+            gates["S-4"]["ok"] = True
+            if judge.plain_key(row["key"]) in failing:
+                gates["S-1"]["ok"] = False
+            runs.append({"key": row["key"], "rows": gates, "pass": True})
+    return {"runs": runs}
+
+
+def judge_args(world, written0, written1, decision: Path, out: Path,
+               grades: dict[str, dict] | None = None) -> list[str]:
     args = ["judge", "--selection", str(world["selection"]), "--selection-sha256",
             world["selection_sha"], "--decision", str(decision), "--decision-sha256",
             hashlib.sha256(decision.read_bytes()).hexdigest(), "--out", str(out)]
@@ -288,6 +333,12 @@ def judge_args(world, written0, written1, decision: Path, out: Path) -> list[str
         args += ["--vbk0", f"{block}={result}", "--vbk0-t4h", f"{block}={t4h}"]
     for block, (result, t4h) in written1.items():
         args += ["--vbk", f"{block}={result}", "--vbk-t4h", f"{block}={t4h}"]
+    grades = grades or {}
+    for arm, written in (("vbk0", written0), ("vbk", written1)):  # W-6 grade-judge files
+        path = out.with_name(f"{out.stem}_grades_{arm}.json")  # no "vbk_": the file watch
+        path.write_text(json.dumps(grades.get(arm) or grade_report(written)), encoding="utf-8")
+        args += [f"--{arm}-grade-judge", str(path), f"--{arm}-grade-judge-sha256",
+                 hashlib.sha256(path.read_bytes()).hexdigest()]
     return args
 
 
@@ -395,8 +446,9 @@ def test_12b_aa_floor_stop_and_no_vbk_file_read(world, capsys, cwd_elsewhere,
     assert code == 2 and last["status"] == "aa_floor_stop"
     assert record["aa"]["counted_pairs"] == 3 and record["exit"] == 2
     assert watch.touched("vbk_") == []
+    empty = {"vbk0": {"runs": []}, "vbk": {"runs": []}}  # the test itself reads no VBK file
     code, last, _ = run_main(judge_args(world, written0, written1, decision,
-                                        world["runs"] / "judge.json"), capsys)
+                                        world["runs"] / "judge.json", empty), capsys)
     assert code == 2 and last["status"] == "not_judgeable"
     assert watch.touched("vbk_") == []
 
@@ -555,7 +607,7 @@ def test_12b_new_fault_judged_on_ready_missing_pairs_recorded_on_fallback(world,
                                              world["runs"] / "judge.json"), capsys)
     assert code == 1
     assert [text for text in report["problems"]["failures"] if "new FAULT" in text] == [
-        f"{plan.key_of(world['doc']['cell_table'][11]['case'], 30)}: new FAULT "
+        f"{plan.key_of(world['doc']['cell_table'][11]['case'], 40)}: new FAULT "
         "[('FAULT_STOP', '–')] (1)"]
     assert len(report["new_faults_recorded"]) == 1
 
@@ -598,6 +650,188 @@ def test_12b_zero_judged_rows_are_not_judgeable() -> None:
     problems = judge.Problems()
     judge._judge_jp3({"status": "no_judged_runs"}, 0, problems)
     assert problems.status() == "not_judgeable"
+
+
+# ------------------------------------------------- control review of 8a3c48c7 / erratum 1
+def _no_injection(record: dict) -> None:
+    """Armed on the run's last update: no fault read in the run (erratum 1 6)."""
+    record.update(first_applied_t_s=None, applied_periods=0)
+    record["latched"].update(is_latched=False, is_same_read_d1=False)
+
+
+def test_w4_armed_without_an_injected_read_is_no_trigger(world, capsys, cwd_elsewhere) -> None:
+    """Erratum 1 6: armed, the planned first read kept, but no injection record: no trigger
+    (not "not latched", which would stop the decision as a setting defect)."""
+    def edit(block, vbk0, vbk):
+        if block == "b1":
+            for rank in range(5):
+                for arm in (vbk0, vbk):
+                    _no_injection(arm.rows[arm.key_at(rank)]["rod_fault"])
+    written0, written1 = build(world, edit=edit)
+    decision = world["runs"] / "decision.json"
+    code, last, record = run_main(decide_args(world, written0, decision), capsys)
+    assert code == 0 and last["status"] == "decided", record
+    assert record["categories"]["b1"][judge.NO_TRIGGER] == 5
+    assert record["n_opp"] == 334 - 5
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 0 and last["status"] == "pass", report.get("problems")
+    assert report["problems"]["setting_defects"] == []
+
+
+def test_w4_injection_on_one_arm_only_is_a_setting_defect() -> None:
+    record = {"is_armed": True, "trigger_read": 20, "first_applied_read": 21,
+              "first_applied_t_s": 2.1, "applied_periods": 19,
+              "latched": {"is_same_read_d1": True}, "pre_trigger_fallback": False,
+              "pre_trigger_commands_sha256": "c" * 64,
+              **{name: "x" for name in judge.PLAN_FIELDS}}
+    without = {**record, "first_applied_t_s": None, "applied_periods": 0}
+    assert judge.is_injected(record) and not judge.is_injected(without)
+    assert not judge.is_injected({**record, "applied_periods": None})  # (다) no key is no read
+    vbk = judge.Line("k", {"rod_fault": record}, Path("unused.npz"))
+    vbk0 = judge.Line("k", {"rod_fault": without}, Path("unused.npz"))
+    problems = judge.Problems()
+    assert judge.classify_pair(vbk, vbk0, problems) == judge.NO_TRIGGER
+    assert any("one arm only" in text for text in problems.setting_defects)
+    problems = judge.Problems()  # (가) holds for no-trigger pairs too
+    other = judge.Line("k", {"rod_fault": {**without, "trigger_read": 21}}, Path("unused.npz"))
+    assert judge.classify_pair(other, vbk0, problems) == judge.NO_TRIGGER
+    assert problems.setting_defects == ["k: trigger reads differ (가)"]
+
+
+def test_w5_phase_fault_entries() -> None:
+    """Erratum 1 7: a ``fault`` / ``fault_reground`` row whose row before is neither (or the
+    first row) is one entry; the pair set holds it once."""
+    pair = {("PHASE_FAULT", "–")}
+    assert judge.phase_fault_pairs(np.array(["level", "fault", "fault"])) == pair
+    assert judge.phase_fault_pairs(np.array(["fault_reground", "level"])) == pair
+    assert judge.phase_fault_pairs(np.array(["level", "fault", "level", "fault"])) == pair
+    assert judge.phase_fault_pairs(np.array(["check", "level", "done"])) == set()
+
+
+def test_w5_phase_fault_only_on_vbk_fails_a_ready_missing_pair(world, capsys,
+                                                                cwd_elsewhere) -> None:
+    """The S-4 150 mm stop leaves no FAULT-named event: the phase entry is the new FAULT."""
+    def edit(block, vbk0, vbk):
+        if block != "b1":
+            return
+        key = vbk.key_at(11)
+        for arm in (vbk0, vbk):
+            arm.rows[key]["base"]["t_ready_s"] = None
+        phase = vbk.columns[key]["phase"].copy()
+        phase[30:] = "fault"
+        vbk.columns[key]["phase"] = phase
+        vbk.events[key] = [[3.0, "WARN_CRAWLER_LIFTOFF_UNCONFIRMED:FL"]]
+    written0, written1, decision = _decided(world, capsys, edit)
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 1 and last["status"] == "failed"
+    assert [text for text in report["problems"]["failures"] if "new FAULT" in text] == [
+        f"{plan.key_of(world['doc']['cell_table'][11]['case'], 40)}: new FAULT "
+        "[('PHASE_FAULT', '–')] (1)"]
+
+
+def test_w6_grade_transitions_are_computed(world, capsys, cwd_elsewhere) -> None:
+    written0, written1, decision = _decided(world, capsys)
+    out = world["runs"] / "judge.json"
+    code, last, report = run_main(judge_args(world, written0, written1, decision, out), capsys)
+    transitions = report["grade_transitions"]
+    assert code == 0 and transitions["computed"] is True
+    assert transitions["changed_pairs"] == 0 and transitions["ungraded_pairs"] == 0
+    assert set(transitions["inputs"]) == {"vbk0", "vbk"}
+    victim = judge.plain_key(next(iter(json.loads(written1["b2"][0].read_text(
+        encoding="utf-8"))["results"]))["key"])
+    grades = {"vbk": grade_report(written1, failing=frozenset({victim}))}
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge2.json", grades), capsys)
+    transitions = report["grade_transitions"]
+    assert code == 0 and last["status"] == "pass"  # a record, not a 6.3.7 failure
+    assert transitions["changed_pairs"] == 1 and transitions["by_transition"] == {
+        "pass->fail": 1}
+    assert transitions["changed"] == [{"block": "b2", "key": victim, "vbk0": "pass",
+                                       "vbk": "fail"}]
+    args = judge_args(world, written0, written1, decision, world["runs"] / "judge3.json")
+    args[args.index("--vbk-grade-judge-sha256") + 1] = "0" * 64
+    code, last, report = run_main(args, capsys)
+    assert code == 2 and last["status"] == "not_judgeable"
+    assert report["grade_transitions"]["computed"] is False
+
+
+def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cwd_elsewhere,
+                                                               monkeypatch) -> None:
+    written0, _ = build(world)
+    l1 = world["runs"] / "l1.json"
+    l1.write_text(json.dumps({"results": []}), encoding="utf-8")
+    calls = []
+
+    def fake_run(out, files, rerun=None):
+        calls.append([Path(path) for path in files])
+        Path(out).write_text(json.dumps({"runs": []}), encoding="utf-8")
+        return {"command": ["judge"], "exit_code": 0, "last_line": "", "stderr_tail": []}
+
+    monkeypatch.setattr(judge._grade_module(), "run_r79_judge", fake_run)
+    judge_out = world["runs"] / "vbk0_grades.json"
+    args = ["grade-judge", "--arm", "vbk0", "--l1-reference", str(l1), "--l1-reference-sha256",
+            hashlib.sha256(l1.read_bytes()).hexdigest(), "--judge-out", str(judge_out),
+            "--out", str(world["runs"] / "grade_record.json")]
+    for block, (result, _) in written0.items():
+        args += ["--runs", f"{block}={result}"]
+    code, last, record = run_main(args, capsys)
+    assert code == 0 and last["status"] == "written"
+    assert calls == [[written0["b1"][0], written0["b2"][0], l1]]
+    assert record["judge_sha256"] == hashlib.sha256(judge_out.read_bytes()).hexdigest()
+    again = [*args]
+    again[again.index("--out") + 1] = str(world["runs"] / "grade_record2.json")
+    code, last, _ = run_main(again, capsys)  # the judge file exists: never overwritten
+    assert code == 2 and last["status"] == "not_judgeable"
+    wrong = [*args]
+    wrong[wrong.index("--l1-reference-sha256") + 1] = "0" * 64
+    wrong[wrong.index("--out") + 1] = str(world["runs"] / "grade_record3.json")
+    code, last, _ = run_main(wrong, capsys)
+    assert code == 2 and len(calls) == 1
+
+
+def _dry_arms(world, change_vbk_hash: int) -> dict[str, list[str]]:
+    """Both arms of the dry plan, split per dry seed into c90 / c91 run files."""
+    args: dict[str, list[str]] = {"vbk0": [], "vbk0_t4h": [], "vbk": [], "vbk_t4h": []}
+    for arm_name in ("vbk0", "vbk"):
+        arm = Arm(world["runs"], world["doc"], world["plans"], "c90_91", arm_name)
+        for index, row in enumerate(arm.rows.values()):
+            changed = arm_name == "vbk" and index < change_vbk_hash
+            row["commands_sha256"] = ("a" if changed else "b") * 64
+        result, t4h = arm.write()
+        rows = json.loads(result.read_text(encoding="utf-8"))["results"]
+        for run in judge.DRY_RUNS:
+            token = "s" + run.removeprefix("c")
+            path = world["runs"] / f"{arm_name}_{run}.json"
+            path.write_text(json.dumps({"meta": {}, "results": [
+                row for row in rows if judge.plain_key(row["key"]).split("|")[1] == token]}),
+                encoding="utf-8")
+            args[arm_name].append(f"{run}={path}")
+            args[f"{arm_name}_t4h"].append(f"{run}={t4h}")
+    return args
+
+
+def _dry_args(world, found: dict[str, list[str]], out: str, drop_vbk_c91=False) -> list[str]:
+    args = ["dry-c", "--selection", str(world["selection"]), "--selection-sha256",
+            world["selection_sha"], "--out", str(world["runs"] / out)]
+    for arm in ("vbk0", "vbk"):
+        for value in found[arm]:
+            if not (drop_vbk_c91 and arm == "vbk" and value.startswith("c91=")):
+                args += [f"--{arm}", value]
+        for value in found[f"{arm}_t4h"]:
+            args += [f"--{arm}-t4h", value]
+    return args
+
+
+def test_dry_c_share_of_changed_opportunity_pairs(world, capsys, cwd_elsewhere) -> None:
+    found = _dry_arms(world, change_vbk_hash=40)
+    code, last, report = run_main(_dry_args(world, found, "dry_c.json"), capsys)
+    assert code == 0 and last["status"] == "written", report.get("problems")
+    assert report["pairs"] == 160 and report["categories"][judge.OPPORTUNITY] == 160
+    assert report["c"] == pytest.approx(40 / 160)
+    code, last, _ = run_main(_dry_args(world, found, "dry_c2.json", drop_vbk_c91=True), capsys)
+    assert code == 2 and last["status"] == "not_judgeable"
 
 
 def test_12b_existing_out_and_tool_errors(world, capsys, cwd_elsewhere) -> None:

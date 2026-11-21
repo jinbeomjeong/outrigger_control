@@ -202,7 +202,11 @@ def test_settings_vbk_and_the_rev6_jp3_settings() -> None:
     assert run_v5.options_of("VB")[1].extend_start_revision == 4
     rev5 = run_v5.JP3_REV5_SETTINGS["VBJ"][1]
     assert v5_options.HydraulicOptions.from_dict(rev5).extend_start_revision == 5
-    assert set(run_v5.JP3_REV5_SETTINGS) & set(run_v5.ALL_SETTINGS) == {"VBH", "VBJ"}
+    # LSJ4: the rev 5 options of the X11 arm (control review of 8a3c48c7 B-1)
+    assert set(run_v5.JP3_REV5_SETTINGS) & set(run_v5.ALL_SETTINGS) == {"VBH", "VBJ", "LSJ4"}
+    assert v5_options.HydraulicOptions.from_dict(
+        run_v5.JP3_REV5_SETTINGS["LSJ4"][1]).extend_start_revision == 5
+    assert run_v5.options_of("LSJ4")[1].extend_start_revision == 6
     assert run_v5.ALL_SETTINGS["VBJ"] != run_v5.JP3_REV5_SETTINGS["VBJ"]
 
 
@@ -438,8 +442,12 @@ def test_r59_guards_take_the_floor_only(guard, kwargs) -> None:
     assert tr.release_relief_substeps[FR] == 0
     assert tr.release_uncounted_substeps[FR] == 100
     assert tr.pressure_Pa[FR] == 60e5  # max(p, floor) with p above the floor
-    is_end = guard.startswith("end")
-    assert bool(tr.release_end_guard_substeps[FR] == 100) is is_end
+    # control review item 6: a NaN stroke is counted apart from the end guard
+    assert bool(tr.release_end_guard_substeps[FR] == 100) is (guard == "end")
+    assert bool(tr.release_nan_stroke_substeps[FR] == 100) is (guard == "end_nan")
+    record = tr.record()
+    assert record["r59_end_guard_substeps"][FR] == (100 if guard == "end" else 0)
+    assert record["r59_nan_stroke_substeps"][FR] == (100 if guard == "end_nan" else 0)
 
 
 def test_r59_end_guard_raises_to_the_floor() -> None:

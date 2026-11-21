@@ -782,8 +782,12 @@ class ExtendStartTracker:
         self.release_relief_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
         """Sub-steps that counted the R5-9 relief (``jp3_r59_substeps`` per run)."""
         self.release_end_guard_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
-        """Sub-steps under release evidence that the retract end guard did not count
-        (``r59_end_guard_substeps``; a NaN stroke reading counts here too)."""
+        """Sub-steps under release evidence that the retract end guard did not count (stroke
+        reading at or below ``s_lo``; ``r59_end_guard_substeps``)."""
+        self.release_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Sub-steps under release evidence with a NaN stroke reading (not counted, the guard's
+        conservative side; ``r59_nan_stroke_substeps``, kept apart from the end guard)."""
+        self.period_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
         self.release_uncounted_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
         """Sub-steps under release evidence without counted relief (any guard)."""
         self.period_relief_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
@@ -984,6 +988,16 @@ class ExtendStartTracker:
         self.release_evidence[leg] = True
         self.release_evidence_runs[leg] += 1
 
+    def _nan_stroke_total_array(self) -> NDArray[np.int64]:
+        if "release_nan_stroke_substeps" not in self.__dict__:  # a tracker of 8a3c48c7
+            self.release_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        return self.release_nan_stroke_substeps
+
+    def _nan_stroke_period_array(self) -> NDArray[np.int64]:
+        if "period_nan_stroke_substeps" not in self.__dict__:
+            self.period_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        return self.period_nan_stroke_substeps
+
     def release_head_bounds_Pa(self, head_Pa: ArrayLike
                                ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
         """``(p_h^lb, p_h^ub)`` per leg: the smaller / larger of this head reading and the
@@ -1003,6 +1017,7 @@ class ExtendStartTracker:
         new carry) clears the evidence and the R5-10 mark of the run before."""
         self.period_relief_substeps[:] = 0
         self.period_end_guard_substeps[:] = 0
+        self._nan_stroke_period_array()[:] = 0
         for leg, period_class in enumerate(classes):
             if period_class.is_locked:
                 self.release_evidence[leg] = False
@@ -1036,11 +1051,14 @@ class ExtendStartTracker:
                               - params.rod_floor_Pa * geometry.annulus_area_m2[leg])
                 target_ub[leg] = retract_target_rod_pressure_Pa(
                     force_ub_N, geometry.head_area_m2[leg], geometry.annulus_area_m2[leg], params)
-        # a NaN stroke reading may be at the end: guarded too (the conservative side)
-        is_end_guard = ~(stroke > params.retract_end_stroke_m)
+        is_end_guard = np.isfinite(stroke) & (stroke <= params.retract_end_stroke_m)
+        # a NaN stroke reading may be at the end: not counted either (the conservative side),
+        # recorded apart from the end guard
+        is_nan_stroke = ~np.isfinite(stroke)
         is_tail_cut = np.abs(command) <= ZERO_COMMAND_M_S
         return {"flow_factor": flow_factor, "target_ub_Pa": target_ub, "floor_Pa": floor,
-                "is_end_guard": is_end_guard, "is_tail_cut": is_tail_cut}
+                "is_end_guard": is_end_guard, "is_nan_stroke": is_nan_stroke,
+                "is_tail_cut": is_tail_cut}
 
     def _release_substep(self, mean_valve_m_s: NDArray[np.float64],
                          is_retracting: NDArray[np.bool_], is_stopped: NDArray[np.bool_],
@@ -1060,8 +1078,10 @@ class ExtendStartTracker:
             floor_Pa = float(relief["floor_Pa"][leg])
             floor_Pa = floor_Pa if math.isfinite(floor_Pa) else -math.inf
             is_end_guard = bool(relief["is_end_guard"][leg])
+            is_nan_stroke = bool(relief["is_nan_stroke"][leg])
             is_counted = not (self._last_substep_saturated or bool(is_stopped[leg])
-                              or bool(relief["is_tail_cut"][leg]) or is_end_guard)
+                              or bool(relief["is_tail_cut"][leg]) or is_end_guard
+                              or is_nan_stroke)
             self.release_relief_ran[leg] = True
             if not is_counted:
                 self.pressure_Pa[leg] = max(pressure_Pa, floor_Pa)
@@ -1069,6 +1089,9 @@ class ExtendStartTracker:
                 if is_end_guard:
                     self.release_end_guard_substeps[leg] += 1
                     self.period_end_guard_substeps[leg] += 1
+                if is_nan_stroke:
+                    self._nan_stroke_total_array()[leg] += 1
+                    self._nan_stroke_period_array()[leg] += 1
                 continue
             drop_Pa = (geometry.annulus_area_m2[leg] * bound.speed_factor
                        * abs(float(mean_valve_m_s[leg])) * float(relief["flow_factor"][leg])
@@ -1187,6 +1210,7 @@ class ExtendStartTracker:
                 "release_evidence_runs": self.release_evidence_runs.tolist(),
                 "r59_substeps": self.release_relief_substeps.tolist(),
                 "r59_end_guard_substeps": self.release_end_guard_substeps.tolist(),
+                "r59_nan_stroke_substeps": self._nan_stroke_total_array().tolist(),
                 "r59_uncounted_substeps": self.release_uncounted_substeps.tolist()})
         return record
 
@@ -1613,7 +1637,8 @@ class ExtendBoundTrace:
                       "gate_fill_m", "model_bound_age_s", "model_bound_head_Pa",
                       "ret_after_gate_s")
     REVISION_6_FIELDS = {"r58_witness": bool, "r59_substeps": np.int32,
-                         "r510_candidates": np.int32, "r59_end_guard_substeps": np.int32}
+                         "r510_candidates": np.int32, "r59_end_guard_substeps": np.int32,
+                         "r59_nan_stroke_substeps": np.int32}
     """Revision 6 per-read coverage columns (``jp3_<name>`` arrays; spec v5 6.3.9), kept only
     when the monitor's rows carry them (a revision 5 trace has none)."""
 
@@ -2017,7 +2042,8 @@ class ExtendBoundCheckRev5:
         return {"jp3_r58_witness_carries": totals["r58_witness"],
                 "jp3_r59_substeps": totals["r59_substeps"],
                 "jp3_r510_candidates": totals["r510_candidates"],
-                "r59_end_guard_substeps": totals["r59_end_guard_substeps"]}
+                "r59_end_guard_substeps": totals["r59_end_guard_substeps"],
+                "r59_nan_stroke_substeps": totals["r59_nan_stroke_substeps"]}
 
 
 J_P3_NAME = "extend_bound_check.ext_moving.breach_reads == 0"

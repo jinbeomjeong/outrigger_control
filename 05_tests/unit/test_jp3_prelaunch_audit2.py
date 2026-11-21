@@ -239,7 +239,7 @@ def test_n3_any_exception_is_exit_3(tmp_path, monkeypatch, error) -> None:
     monkeypatch.setattr(dryrun, "summarize", _raise(error))
     cases = [(tjr.main, ["records"]), (compare.main, ["baseline", "--new", "x.jsonl"]),
              (case_judge.main, ["case-f", "--rows", "r", "--grid", "g"]),
-             (dryrun.main, ["summarize", "--selection", str(selection)])]
+             (dryrun.main, ["summarize", "--selection", str(selection), "--edition", "4a"])]
     for index, (main, argv) in enumerate(cases):
         out = tmp_path / f"out_{index}.json"
         assert main([*argv, "--out", str(out)]) == 3, index

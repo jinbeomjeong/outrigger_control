@@ -2800,7 +2800,8 @@ class TwoPressureMonitor:
         return {"r58_witness": list(self._read_witnesses),
                 "r59_substeps": tracker.period_relief_substeps.tolist(),
                 "r510_candidates": list(self._read_r510_candidates),
-                "r59_end_guard_substeps": tracker.period_end_guard_substeps.tolist()}
+                "r59_end_guard_substeps": tracker.period_end_guard_substeps.tolist(),
+                "r59_nan_stroke_substeps": tracker._nan_stroke_period_array().tolist()}
 
     def _dominant_candidate_columns(self, t_s: float,
                                     classes: list[PeriodClass]) -> dict[str, list[Any]]:

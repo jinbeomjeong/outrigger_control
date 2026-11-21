@@ -418,10 +418,12 @@ def test_b4_records_seed_force_rules() -> None:
 LEGS = ("FL", "FR", "RL", "RR")
 T4H_NAMES = {runs: {f"r{runs}_{k}.npz" for k in range(runs)} for runs in tjr.REPLAY_RUN_COUNTS}
 """Stand-ins of the two fixed T4h name lists (``--t4h-sums``)."""
-REPLAY_REPORTS = [{"runs": runs, "runs_over": 0, "extend_start_revision": 5,
+REPLAY_REPORTS = [{"runs": runs, "runs_over": 0,
+                   "extend_start_revision": tjr.REPLAY_REVISION,
                    "rows": [{"file": name} for name in sorted(T4H_NAMES[runs])],
                    "J-P3": {"status": "pass"}} for runs in tjr.REPLAY_RUN_COUNTS]
-"""Two judged ``t4h_replay --extend-start-revision 5`` reports of the T-JR-13 run counts."""
+"""Two judged ``t4h_replay --extend-start-revision <REPLAY_REVISION>`` reports of the T-JR-13
+run counts (6 from edition 5)."""
 GOOD_SEED_ROWS = [[1.0, 2, 0.0, False]]
 CASE_E_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 

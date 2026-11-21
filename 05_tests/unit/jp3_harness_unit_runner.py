@@ -245,7 +245,7 @@ def check_seed_force_counterexample() -> dict:
     return {"normal": normal, "mutated": mutated, "records_off_bit_equal": is_bit_equal}
 
 
-CASE_REPLAY_SETTINGS = ("VBG4", "VBG5")
+CASE_REPLAY_SETTINGS = ("VBG4", "VBG6")
 """Addendum 4a-3 5.1 / K-7: the C and D plants of ``jp3_case_replay.py`` (VB + P1)."""
 RECORD_KEY_STEPS = 40
 
