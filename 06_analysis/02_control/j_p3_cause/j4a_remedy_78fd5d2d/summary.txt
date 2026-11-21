@@ -1,0 +1,40 @@
+436.9 J4a remedy 11 - test evidence of run commit 78fd5d2d03e40ac7d9143429f602b58255c762fc
+(worktree z4369-jp3, parent fa997f4c; measured 2026-11-21 17:20 .. 17:40 on the tree that was
+committed unchanged, then re-checked out for CRLF; jp3 tests re-run after the re-checkout)
+
+full suite (Chrono-dev, 05_tests/unit, -n 12 --dist loadfile, affinity 0xFFFF,
+OUTRIGGER_RECORDS_ROOT=C:\workspace\outrigger_control, JP3_RECORD_DIR=records_full)
+  passed 7747  failed 2  skipped 132  xfail 0   (junit_full.xml, junit_full_summary.txt)
+  failed (known before this round):
+    05_tests/unit/test_hydraulics_flow_limit_run.py::test_coupled_batch_rows_and_resume
+    05_tests/unit/test_d8x_diag.py::test_rerun_gives_the_stored_command_hash
+
+main-data supplement (31 files of gap_plan.txt "main", probe plugin, -o pythonpath=<wt>/03_src,
+working folder = main checkout)
+  passed 667  failed 0  skipped 9   (junit_main2.xml, pytest_main2.log)
+  modules loaded from outside the worktree: 0 (probe_main.txt)
+  tracked files of the main checkout changed by the run: none
+
+gap tests (gap_tests: test_chrono_t45_replay, test_s9_mass_scale, test_las_off_chrono,
+test_hydraulics_flow_limit_run, rootdir = worktree)
+  passed 57  failed 1   (junit_gap.xml, probe_gap.txt)
+  failed (known before this round):
+    test_chrono_t45_replay.py::test_rev7_regression_on_the_stage3_records  (assert 55 == 23)
+
+jp3 tests after the re-checkout (05_tests/unit/test_jp3*.py, -n 8, -W error::SyntaxWarning)
+  passed 460  failed 0  skipped 0
+
+digests (controller behaviour unchanged)
+  monitor  552c768a6cad1b19fc617b3cf5c41ffb79b041e64c0ecc68f7ce1b857b632488  (monitor_digest.txt)
+  plant    7404b793c6244879d1b7fa582f11cbc1072624e49a162e43c4a3e81945d8dde1  (plant_digest.txt)
+  both equal to the earlier rounds; the txt files hold the line each digest script printed
+  (python-dev / dynamics-dev, -I -B; stderr was not kept this round, so no *_digest.err)
+
+run_steps checks (prelaunch_j9/run_steps, 9 files, $RunCommit = 78fd5d2d...)
+  ps1_lint            exit 0  error 0 warning 0  (ps1_lint.md)
+  placeholder_scan    exit 0  unfilled 0, pattern '<[A-Za-z_][^>]*>'  (placeholder_angle.md)
+  probe_check.ps1     exit 0  Assert-RunCommit, Assert-FixedInputs,
+                      Assert-SimulationPathsUnchanged (outside the allowed paths: 0)
+
+git diff --stat fa997f4c 78fd5d2d: git_diff_stat_fa997f4c_78fd5d2d.txt (9 files, +858 / -80;
+no 03_src, harness or runner path)

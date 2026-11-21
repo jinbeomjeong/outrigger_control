@@ -1,0 +1,11 @@
+git diff --stat fa997f4cb2dba9820118c6d38e469ebb137110e2 78fd5d2d03e40ac7d9143429f602b58255c762fc
+ .../04_hydraulic/coupled/jp3_baseline_compare.py   |  73 ++++++-
+ 04_scripts/04_hydraulic/coupled/jp3_case_judge.py  |   8 +-
+ 04_scripts/04_hydraulic/coupled/jp3_rerun_match.py | 216 +++++++++++++++++---
+ 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py   | 127 ++++++++++--
+ 05_tests/unit/test_jp3_addendum_4a3.py             |  25 ++-
+ 05_tests/unit/test_jp3_addendum_4a7_erratum1.py    | 123 +++++++++++
+ 05_tests/unit/test_jp3_judge_main_e2e.py           | 135 +++++++++++-
+ 05_tests/unit/test_jp3_prelaunch_audit.py          |   4 +-
+ 05_tests/unit/test_jp3_rerun_match.py              | 227 +++++++++++++++++++--
+ 9 files changed, 858 insertions(+), 80 deletions(-)

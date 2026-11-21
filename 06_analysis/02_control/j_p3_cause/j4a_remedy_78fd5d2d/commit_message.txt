@@ -1,0 +1,17 @@
+436.9 J4a remedy 11 (addendum 4a-7 H-1 .. H-3, erratum 1 7 / 9)
+
+- jp3_tjr_judge t8: the 4a-7 1.2 line rules (declared head-only: no ③ record, ① = ② = 0;
+  event path: ③ record, rev 5 identity on rev 5 records only, ② > 0, VBJ / VBJ0 ① = ②,
+  VBH ① = 0); 4a-7 1.1 declaration order (T4h meta, line, case path) and the 18 / 4 split
+  per setting (else the test is not judgeable); the VB record under the same rules.
+- jp3_rerun_match: items cases_ae (4a-7 2.1 (4a) A .. E) and casef ((4b)); other value
+  names on the two sides (pair or row count) = missing (exit 2).
+- erratum 1 9: the J-P3 judged-line P4 evidence (VBJ, LSJ1 .. 4: event ① = ② > 0, declared
+  ① = ② = 0, keys missing = setting defect) in t12 VBJ, jp3_baseline_compare (P4-3a rows)
+  and case-f (F-E rows); shared helpers in jp3_baseline_compare.
+- erratum 1 7: t12 VBJ J-P3 with judged rows but not 1 = judged_row_count_mismatch.
+- Tests: synthetic only (H-2 (a) .. (f), rerun match items one at a time, erratum 1).
+  No 03_src, harness or runner change; monitor / plant digests unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o
