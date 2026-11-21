@@ -34,5 +34,6 @@ Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--
 # re-audit N-5: the P-1 output list prelaunch_j9\P1_OUTPUTS_(run commit 8).SHA256SUMS; the main
 # session commits it before step 6 (step 6 checks it is tracked and equal to bj.json)
 Write-P1Outputs $Folder
+Invoke-RerunMatch 'p1'  # 4a-6 G-4: the same P-1 files and codes as the b51ed6e1 attempt
 
 Complete-Step

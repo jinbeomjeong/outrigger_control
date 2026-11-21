@@ -16,8 +16,8 @@ Set-StrictMode -Version 3
 $ErrorActionPreference = 'Stop'
 
 # --- run commit and paths -------------------------------------------------------------------
-$RunCommit = 'b51ed6e1090cb0a54f2c24799f372fb02c50653c'
-# decision 2: one commit for steps (1) .. (7), the locked worktree z4369-jp3 (remedy 8)
+$RunCommit = 'fa997f4cb2dba9820118c6d38e469ebb137110e2'
+# decision 2: one commit for steps (1) .. (7), the locked worktree z4369-jp3 (remedy 10)
 $RunShort = $RunCommit.Substring(0, 8)
 $Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3'
 $MainRoot = 'C:\workspace\outrigger_control'
@@ -370,6 +370,21 @@ function Assert-P1Outputs([string]$P1Folder) {
             Stop-Step 2 "P-1 output $($Name) - list $Sha, bj.json $($Expected[$Name]), file $Actual differ"
         }
     }
+}
+
+# --- rerun match (addendum 4a-6 G-4) --------------------------------------------------------
+$PreviousRunsRoot = "$CauseDir\j9_runs\b51ed6e1"
+# the earlier attempt of steps (1) .. (4a) (preserved, never judged)
+
+function Invoke-RerunMatch([string]$Item) {
+    # after the step's judge tools: the reproducible values of this attempt against b51ed6e1
+    # (jp3_rerun_match.py: names only in its report); 1 differs / 2 missing / 3 error stop
+    $Folder = $StepState.Folder
+    $CodesFile = "$Folder\logs\codes_for_rerun_match.json"
+    $StepState.Codes | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $CodesFile -Encoding utf8NoBOM
+    Invoke-Judge "rerun_match_$Item" @("$Coupled/jp3_rerun_match.py", '--old', $PreviousRunsRoot,
+        '--new', $RunsRoot, '--items', $Item, '--new-folder', $Folder, '--new-codes', $CodesFile,
+        '--out', "$Folder\judge\rerun_match_$Item.json") | Out-Null
 }
 
 function Complete-Step {

@@ -30,5 +30,6 @@ $X11Code = Invoke-Tool 'x11' @("$Coupled/jp3_case_judge.py", 'x11', '--both', $X
     '--out', "$Folder\judge\x11.json")
 $StepCode = Get-StepCode @($CompareCode, $X11Code)  # re-audit N-2: a 1 makes the step 1
 if ($StepCode -ne 0) { Stop-Step $StepCode "baseline_compare exit $CompareCode, x11 exit $X11Code" }
+Invoke-RerunMatch 'x11'  # 4a-6 G-4: the same LSJ4_X11 hash, FL read and x11 code as b51ed6e1
 
 Complete-Step

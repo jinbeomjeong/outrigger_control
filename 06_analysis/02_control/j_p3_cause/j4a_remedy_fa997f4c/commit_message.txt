@@ -1,0 +1,18 @@
+436.9 J4a remedy 10 (addendum 4a-6 G-1 .. G-4)
+
+- G-1: the dry key scan leaves out the J-P3 run outputs (scan-root relative
+  path starting with 02_control/j_p3_cause/j9_runs/, case as it is, '/');
+  the selection records the folder, the count and per excluded file the
+  path, sha256, r79 key count and whether it holds the generated key; the
+  scan evidence outside it as before.
+- G-3 (b): the s25 key in the scan outside that folder stops the
+  selection (not judgeable).
+- test_d1a: seed max 24 outside j9_runs, excluded files > 0;
+  test_jp3_dry_scan_exclusion: s25 only inside keeps 25, outside stops.
+- G-4: jp3_rerun_match.py compares the reproducible values of steps 1 ..
+  4a (P-1 file sha and codes, dry evidence and code, F-A path hashes and
+  code, LSJ4_X11 hash, FL 49.0 s read and code) of two attempts; names
+  only in its report; exit 0 same / 1 differs / 2 missing / 3 error.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o

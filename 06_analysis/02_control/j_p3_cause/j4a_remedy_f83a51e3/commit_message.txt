@@ -1,0 +1,14 @@
+436.9 J4a remedy 9 (j9 step 4a: baseline compare reads the new T4h by rows file)
+
+- jp3_baseline_compare: the T4h of a --new row is
+  <rows file folder>/<rows file stem>_t4h/<t4h_file name> (read_new_rows,
+  t4h_path_of; the Baseline.t4h rule). run_v5 writes the name only; the
+  tool read it from the working folder (b51ed6e1 step 4a: exit 3). The
+  rows' t4h_file stays as written.
+- test_jp3_judge_main_e2e: every judge tool's main (baseline compare, x11,
+  case-f, case-f-path, t8, t12, records, dry summarize) end to end on
+  synthetic inputs of the real output form, run from another working
+  folder; the compare test fails on the b51ed6e1 module (status error).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o
