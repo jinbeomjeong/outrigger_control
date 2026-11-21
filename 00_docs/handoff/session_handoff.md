@@ -2,6 +2,7 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.** (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
 
+- **최신(2026-11-21 밤)**: 436.9 J-P3 판 4a 실행 끝, **T-JR-12 = 실패**(VBH 새 FAULT 2·READY 실패 11, R5-7 수축 추적기 비용; 두 경로 일치. VBJ 통과는 d3c6c57e 재판정, J-P3 경로 1 단일). 판정서 `06_analysis/02_control/j_p3_cause/jp3_tjr12_judgement_78fd5d2d_d3c6c57e.md`(master `4f4b455d`), 멈춤 보고 `jp3_tjr12_stop_report_78fd5d2d.md`, 판정 후 감사 `audit_postjudge_tjr12.md`(B 0). `z4369-jp3`는 master에 `--no-ff` 병합(`fa548230`, worktree·브랜치 유지·locked). 단계 (7) T-JR-13~15는 판 5로 넘김. 로컬 전용(> 100 MB) `dg3_VBH/VBJ.json`·`l1_VBJ.json`은 `j9_runs/*_LOCAL_ONLY.SHA256SUMS`로 sha 고정(지우지 말 것). **다음 세션 시작점: 판 5 착수 승인 받기**(봉인 9절 C1~C3, 2.10절 안 B 조건 검토 — 재료는 판정서 7절; 판 5 구현 과제: r79 `write_t4h`에 `jp3_trace_arrays`, 판정 근거 입력 존재 관문, r79 key 판별식 L2nocal, 건식 g8·ref 키 고정, dg3 판정 함수 빈 집합 정리·폐포 진입점에 정체성 래퍼). 경과 원본: 메모리 `j4a-review-decisions-20261120.md`, decision_log 4절 끝. 아래 1~2절은 11-20 시점 내용이다.
 - 갱신: 2026-11-20(worktree 정리·문서 갱신). 이전 갱신 2026-11-16(세션 7ea6ef9d, C-8a 개입 진단·LAS-c v2 초안, 판 4a 봉인 `f67745f`·덧붙임 4a-1 `143a0ef`).
 - 결정 경과 원본: 메모리 `gs-4368-decisions-20261113.md`(결정 74~151), `r3e-authorization-20261116.md`(결정 96 자동 범위). decision_log 4절에는 113~141 요지만 들어갔다(아래 3절 남은 과제).
 
