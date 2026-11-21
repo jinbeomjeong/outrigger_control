@@ -1,0 +1,27 @@
+436.9 J4a remedy 5 (prelaunch audit B-1, M-1, M-3 .. M-6, M-8, R-7, R-8)
+
+- B-1: t12 applies the P4 evidence to 436.9 lines only (v5_setting in the
+  run_v5.JP3_SETTINGS names); the stored H-6 VB lines are left out. The
+  self check (t12-selfcheck) runs with check_settings=False and passes on
+  the real H-6 with real r79 grades (test).
+- M-3: t12 setting defects for a new line not of the bundle or not rev 5,
+  a VBJ base line not VBJ0, the new file equal to the base file.
+- M-4: t8 applies the 13.6 identity (VBH, VBJ, rev 5) and the B2 evidence
+  (VBH, VBJ, VBJ0) per test; T-JR-11 needs 64-character equal hashes.
+- M-5: j_p3_judgement_rev5 reads a judged row without per-leg judged keys
+  as not judgeable (judgement path only); P4-9 of jp3_baseline_compare
+  likewise.
+- M-6: records refuses empty inputs, stopped / test-only / short replay
+  reports (426 / 135 runs); a T-JR-15 seed row over 1 N fails (user
+  decision 2026-11-21).
+- M-8: new dg3-judge sub-command (P-1a L1 extract sha asserted, stored H-6
+  keys file, judge sha reported); t12 needs --base-judge-sha256 for both
+  bundles and --new-judge-sha256, and the new side's meta keys_file.
+- R-7: reference_extract never overwrites (same bytes kept, other bytes
+  raise); base-judge refuses an existing extract.
+- R-8: --stored-h6-judge sha fixed (f8352c5d...).
+- M-1: jp3_run_identity.py mark / wrap (run_v5 identity sidecar, refuses a
+  sidecar of another git head) for the case / X11 replays and r79 runs.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o

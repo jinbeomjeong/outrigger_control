@@ -1,0 +1,45 @@
+{
+  "tool": "baseline_check",
+  "command": "identity",
+  "expect_commit": "325b77a8c20c0b4ced0d1ade84d5d195384e6802",
+  "files": [
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-j4a-remedy6\\e6_identity\\forged\\dg3.identity.json"
+  ],
+  "heads": [],
+  "blocks": [
+    {
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-j4a-remedy6\\e6_identity\\forged\\dg3.identity.json",
+      "json_path": "$.start[0].git",
+      "head": "",
+      "is_clean": true,
+      "status_porcelain": "",
+      "run_time": "2026-11-21 10:00:00 +0900",
+      "git_error": null
+    }
+  ],
+  "mtime": null,
+  "summary": {
+    "tool": "baseline_check",
+    "command": "identity",
+    "files": 1,
+    "git_blocks": 1,
+    "heads": 0,
+    "dirty": 0,
+    "error": 1,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "baseline_head_invalid": 1
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "baseline_head_invalid",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-j4a-remedy6\\e6_identity\\forged\\dg3.identity.json",
+      "line": 0,
+      "message": "git.head ''는 전체 커밋 해시가 아님 (빈 값 = git 조회 실패; is_clean 값과 무관하게 정체성 없음)",
+      "target": "$.start[0].git"
+    }
+  ]
+}

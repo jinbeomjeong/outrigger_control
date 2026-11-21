@@ -1,0 +1,30 @@
+bringing up nodes...
+bringing up nodes...
+
+........................................................................ [ 10%]
+.......................................................s................ [ 21%]
+........................................................................ [ 31%]
+..................................s.ss.s..........................s..... [ 42%]
+........................................................................ [ 53%]
+.............s.......................................................... [ 63%]
+........................................................................ [ 74%]
+....s.......................................................s........... [ 85%]
+........................................................................ [ 95%]
+............................                                             [100%]
+============================== warnings summary ===============================
+05_tests/unit/test_s8_control.py::test_rev43_on_the_p1_re1bf_fs8_case
+  C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3\03_src\outrigger_sim\verify\s6_control.py:1011: RuntimeWarning: Mean of empty slice
+    reference = np.nanmean(anchors[before], axis=0)  # (4, 3)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] 05_tests\unit\test_rod_chamber.py:441: gas separation after FLOOR (14.3 optional) is not implemented
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:276: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:286: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:299: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:308: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:329: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_d8x_chrono_rows.py:276: VERIFICATION_EXT installed
+SKIPPED [1] 05_tests\unit\test_params_l2b.py:37: YAML regenerated since S7; L1 fingerprint baseline no longer applies
+SKIPPED [1] 05_tests\unit\test_las_chrono_rows.py:92: LAS-b merged: no blocked row
+667 passed, 9 skipped, 1 warning in 233.73s (0:03:53)

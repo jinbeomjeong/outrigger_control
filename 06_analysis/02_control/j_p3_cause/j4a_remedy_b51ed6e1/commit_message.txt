@@ -1,0 +1,19 @@
+436.9 J4a remedy 8 (narrow re-audit N-1, N-3, N-4, R-b)
+
+- N-1 (decision: option 1, code): r79_sensor_screen.v5_record_or_mismatch
+  keeps a LockWindowMismatchError of the lock-window alignment as the run's
+  error line ("LockWindowMismatchError: ...") and the batch goes on; any
+  other exception ends the run as before, a run without it records as
+  before. t12 reads a new-side mismatch line as the T-JR-14 failure (exit
+  1, pairs not compared); records T-JR-14 fails on it and T-JR-15 counts
+  it as that failure instead of not judgeable. Other error lines stay not
+  judgeable.
+- N-3: TOOL_ERRORS = (Exception,): any unexpected error of the four judge
+  tools is exit 3 (KeyboardInterrupt passes).
+- N-4: t8 VB lines get the B2 evidence check (1 = 0); a miss adds to the
+  T-JR-10 "저장값 노후 확인 전" reason.
+- R-b: dry summarize records whether the r79 lines carry the T-JR-14 / 15
+  keys (no value read).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o

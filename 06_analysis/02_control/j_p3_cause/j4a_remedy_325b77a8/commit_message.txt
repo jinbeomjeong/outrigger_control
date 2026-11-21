@@ -1,0 +1,26 @@
+436.9 J4a remedy 6 (addendum 4a-5 section 8: E-1 .. E-7)
+
+- E-1 records T-JR-13: exactly two t4h_replay reports (426 h10 / 135 H-6
+  runs); an error row fails; extend_start_revision != 5, rows != runs,
+  test-only / stopped reports and row files other than the fixed T4h lists
+  (new --t4h-sums, sha-fixed prelaunch_j9 lists) are not judgeable.
+- E-1b T-JR-14 judged: VBH and VBJ 135 lines each; a
+  LockWindowMismatchError line or n_late_fallback >= 1 fails; no record,
+  a reason / non-integer value, other error lines are not judgeable.
+- E-1c T-JR-15: VBJ / LSJ relock_step_over_1bar_count >= 1 fails, key
+  missing not judgeable; seed rules on the judged rows only; VBH rows are
+  records; --lock-rows also reads Dg-3 json files.
+- E-2 t8: a commands_sha256 not of 64 characters on either side makes
+  T-JR-10 / T-JR-11 not judgeable (was a failure).
+- E-3 / E-5 confirmed (base sha != new sha, VBJ --base-judge-sha256).
+- E-4 j_p3_judgement_rev5 status judged_key_missing (judgement path only;
+  setting_defect > judged_key_missing > no_judged_runs > H-7 > pass), in
+  j_p3_inputs.STATUS_ORDER; P4-3a message names it.
+- E-6 jp3_run_identity: r79 wrap usage and the baseline_check identity
+  step (the verif tool now refuses empty / non-commit heads and git error
+  marks, outside this repository).
+- E-7 exit 0 / 1 / 2 / 3 table in --help of every judge tool;
+  TOOL_ERRORS (type / attribute / index errors too) give exit 3.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o
