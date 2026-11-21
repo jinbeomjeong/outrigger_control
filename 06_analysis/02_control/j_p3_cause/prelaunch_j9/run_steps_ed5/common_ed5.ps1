@@ -4,11 +4,20 @@
 # list keeps it as it is) and ..\run_steps\record_helper.ps1 (batch id and estimates of the run
 # records); this file then sets the edition 5 run commit, folders and fixed inputs.
 #
-# Before any step: the main session writes the run commit and the run worktree below (in the
-# main checkout, as for edition 4a), makes the inputs (prelaunch_dry_select.ps1, then
-# prelaunch_x11_plan.ps1 once, just before step0_cdry.ps1), commits them and writes the fixed
-# list (prelaunch_fixed_inputs.ps1). A step refuses to start while a placeholder is left or the
-# fixed list is not tracked and equal to its files.
+# Before any step the main session writes the run commit and the run worktree below (in the
+# main checkout, as for edition 4a). Run order (erratum 2 audit warning 1):
+#   1. prelaunch_ed5.ps1 -Part dry       X-4 dry selection
+#   2. prelaunch_ed5.ps1 -Part l1keys    the 12b L1 key file (erratum 2 2-1)
+#   3. step_l1ref.ps1                    the two L1 reference runs
+#   4. prelaunch_ed5.ps1 -Part x11       the X-11 plans, once
+#   5. (main session commit: this file filled in, the parts 1 .. 4)
+#   6. prelaunch_ed5.ps1 -Part list      FIXED_INPUTS_<run commit 8>.SHA256SUMS
+#   7. (main session commit: the fixed list)
+#   8. step0_cdry.ps1, then the steps 1 .. 7 (6b / 6c for 12b)
+# A step refuses to start while a placeholder is left or the fixed list is not tracked and
+# equal to its files (Initialize-Ed5Step). One exception: step_l1ref.ps1 runs before the list
+# exists (its outputs go into it), so it takes the edition 4a start checks only (run commit,
+# clean tree, the 4a fixed inputs; Initialize-Step).
 
 . "$PSScriptRoot\..\run_steps\common.ps1"
 . "$PSScriptRoot\..\run_steps\record_helper.ps1"
@@ -45,6 +54,11 @@ $EntriesFile = "$PSScriptRoot\fixed_inputs_entries.txt"
 # with (the comparison tools read them; no value is shown)
 $PreviousRunCommit = '78fd5d2d03e40ac7d9143429f602b58255c762fc'
 $PreviousRunsRoot = "$CauseDir\j9_runs\$($PreviousRunCommit.Substring(0, 8))"
+
+# exit 1 of these tools is a record, not a judged failure (Read-PreviousStops: a retry stays
+# possible): the P-1 import closure (meets = the content comparison path, erratum 2 2-4) and
+# the T-JR-12a bundles (6.2)
+$RecordCodeTools += @('tool:p1_import_closure', 'tool:t12_VBH', 'tool:t12_VBJ')
 
 # the fixed key files of the three dry families (erratum 1 9.1; jp3_fixed_inputs checks the values)
 $FixedInputs['DRY_KEYS_FILE_SHA256_G8'] = @("$Ed5Inputs\dry_selection_r79_key_g8.txt",

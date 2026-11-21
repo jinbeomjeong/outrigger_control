@@ -34,7 +34,9 @@ Sub-commands, run in the order of 8 4.(6) (VBK0 first):
             review of 8a3c48c7 W-6): per pair the r79 path 1 grade of the VBK0 and the VBK line
             (``h8_noise_judge_4368.grade_lines`` on the ``grade-judge`` file of each arm, its
             sha256 given), the changed pairs and their keys (``grade_transitions``; a record,
-            j9_main judges the grades, 6.5).
+            j9_main judges the grades, 6.5). A grade input defect (a grade-judge file not
+            given, missing or of another sha256) is recorded as ``computed`` False with its
+            reasons and never changes the status or exit code (erratum 2 audit F-1).
 ``grade-judge`` ``r79_sensor_judge.py judge --s4-late-loc`` of one arm's block run files and the
             arm's L1 reference run (erratum 2 2-1: VBK0 against the VBJ0 L1 run, VBK against
             the VBJ L1 run, both ``plant_truth``, from the fixed L1 key file; its sha256 and
@@ -42,6 +44,8 @@ Sub-commands, run in the order of 8 4.(6) (VBK0 first):
             (``--out``) names every input and the judge file with their sha256. The judge
             record also publishes ``ungraded_pairs`` and the causes of the ungraded
             opportunity pairs, and the cached ``u_hold`` of the witness count (2-5).
+``l1-overlap`` (erratum 2 2-1, a record) the keys the 12b L1 reference and the T-JR-12a L1
+            reference of one setting share, with the same / differing command hash counts.
 ``dry-c``   The c dry check (6.3.10): the VBK0 and VBK lines of the dry plan (``c90=`` /
             ``c91=`` run files and T4h folders per arm; the lines must carry the dry plan's
             sha256), the 6.3.2 categories and c = the share of opportunity pairs whose
@@ -59,7 +63,8 @@ Inputs: ``--selection`` and ``--selection-sha256`` (the X-11 record), ``--vbk0 b
 and ``--vbk0-t4h b<j>=<T4h folder>`` (the r79 runner output and its ``R79_T4H_DIR``; a line's
 ``t4h_file`` is a name in that folder, never a path of the working folder), and for ``judge``
 ``--vbk`` / ``--vbk-t4h`` alike plus ``--decision`` / ``--decision-sha256`` and
-``--vbk0-grade-judge`` / ``--vbk-grade-judge`` with their sha256. ``--out`` must not exist. The
+``--vbk0-grade-judge`` / ``--vbk-grade-judge`` with their sha256 (optional: a missing one is a
+grade record defect, F-1). ``--out`` must not exist. The
 stdout's last line is JSON with ``status``, the problem counts and the output path.
 
 ======  ==================  ===================================================================
@@ -716,23 +721,26 @@ def _grade_module():
 
 
 def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
-                      judges: dict[str, tuple[Path, str]], problems: Problems,
+                      judges: dict[str, tuple[Path | None, str | None]],
                       categories: dict[tuple[str, str], str] | None = None) -> dict:
     """6.3.7 / 6.3.9 record (control review of 8a3c48c7 W-6): per pair the VBK0 grade and the
     VBK grade of its line (``h8_noise_judge_4368.grade_lines`` on the r79 judge file of each arm,
-    the ``grade-judge`` output); the pairs whose grade changed, with their keys. A judge file of
-    another sha is not judgeable; a line without a judge row is counted (``ungraded``)."""
+    the ``grade-judge`` output); the pairs whose grade changed, with their keys; a line without a
+    judge row is counted (``ungraded``). A grade input defect (no file, another sha256, not a
+    judge output: :func:`grade_input_problems`) gives ``computed`` False with the reasons and
+    leaves the 12b status alone (erratum 2 audit F-1: the transitions are a record)."""
     h8 = _grade_module()
     categories = categories or {}
     reports, inputs = {}, {}
-    for arm, (path, expected) in judges.items():
-        actual = file_sha256(path)
-        if actual != expected:
-            problems.not_judgeable.append(f"--{arm}-grade-judge sha256 {actual[:12]} is not the "
-                                          f"given {expected[:12]}")
-            return {"computed": False, "reason": f"{arm} grade judge of another sha"}
+    # erratum 2 audit F-1: a grade input defect is a record only ("not computed" with its
+    # reason); it never reaches ``problems`` (the 12b status and exit code stay the judgement's)
+    input_problems = grade_input_problems(judges)
+    if input_problems:
+        return {"computed": False, "reason": "grade input defect (a record, 6.3.7)",
+                "input_problems": input_problems}
+    for arm, (path, _) in judges.items():
         reports[arm] = json.loads(path.read_text(encoding="utf-8"))
-        inputs[arm] = {"path": str(path), "sha256": actual}
+        inputs[arm] = {"path": str(path), "sha256": file_sha256(path)}
     changed, ungraded, by_transition = [], [], {}
     for block in decision["blocks"]:
         grades0 = h8.grade_lines([line.row for line in blocks0[block].values()], reports["vbk0"])
@@ -757,6 +765,33 @@ def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
                 len(ungraded_opportunity), "ungraded_opportunity": ungraded_opportunity,
             "ungraded_other": [item for item in ungraded if item["category"] != OPPORTUNITY],
             "rule": "a record (6.3.7): j9_main judges the grades (6.5)"}
+
+
+def grade_input_problems(judges: dict[str, tuple[Path | None, str | None]]) -> list[str]:
+    """Why the grade transitions cannot be computed: a grade-judge file not given (its
+    ``grade-judge`` stopped, e.g. on an L1 reference defect), missing, of another sha256 or not
+    an r79 judge output (``runs``). A record (erratum 2 audit F-1)."""
+    problems = []
+    for arm, (path, expected) in judges.items():
+        if path is None or expected is None:
+            problems.append(f"{arm}: no grade-judge file given (its grade-judge did not write one)")
+            continue
+        if not Path(path).is_file():
+            problems.append(f"{arm}: grade-judge file {path} missing")
+            continue
+        actual = file_sha256(path)
+        if actual != expected:
+            problems.append(f"{arm}: grade-judge sha256 {actual[:12]} is not the given "
+                            f"{expected[:12]}")
+            continue
+        try:
+            document = json.loads(Path(path).read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            problems.append(f"{arm}: grade-judge file is no JSON")
+            continue
+        if not isinstance(document, dict) or not isinstance(document.get("runs"), list):
+            problems.append(f"{arm}: grade-judge file is no r79 judge output (runs)")
+    return problems
 
 
 def _ungraded_reason(grade: dict) -> str | None:
@@ -841,6 +876,52 @@ def cmd_grade_judge(args) -> tuple[str, dict]:
     record.update(status="written", judge_file=str(args.judge_out),
                   judge_sha256=file_sha256(args.judge_out))
     return "written", record
+
+
+# ------------------------------------------------------------------------------- L1 overlap
+def _command_hash(line: dict) -> str | None:
+    """The line's command hash (top level, else ``base.commands_sha256`` / ``cmd_sha256``)."""
+    base = line.get("base") or {}
+    return line.get("commands_sha256") or base.get("commands_sha256") or base.get("cmd_sha256")
+
+
+def l1_overlap(pairs: dict[str, tuple[Path, Path]]) -> dict:
+    """Erratum 2 2-1 (audit warning 5, a record): per setting the keys the 12b L1 reference and
+    the T-JR-12a L1 reference share, and how many of them have the same command hash (the same
+    commit and a deterministic run: all should; a differing key is published)."""
+    out = {}
+    for setting, (l1_12b, l1_12a) in pairs.items():
+        lines = []
+        for path in (l1_12b, l1_12a):
+            document = json.loads(Path(path).read_text(encoding="utf-8"))
+            rows = document["results"] if isinstance(document, dict) else document
+            lines.append({plain_key(row["key"]): row for row in rows})
+        common = sorted(set(lines[0]) & set(lines[1]))
+        differing = [key for key in common
+                     if _command_hash(lines[0][key]) != _command_hash(lines[1][key])
+                     or _command_hash(lines[0][key]) is None]
+        out[setting] = {"inputs": {"12b": {"path": str(l1_12b), "sha256": file_sha256(l1_12b)},
+                                   "12a": {"path": str(l1_12a), "sha256": file_sha256(l1_12a)}},
+                        "common_keys": len(common), "same_hash": len(common) - len(differing),
+                        "differing_hash": len(differing), "differing_keys": differing,
+                        "only_12b": len(set(lines[0]) - set(lines[1])),
+                        "only_12a": len(set(lines[1]) - set(lines[0]))}
+    return out
+
+
+def cmd_l1_overlap(args) -> tuple[str, dict]:
+    pairs = {}
+    for value in args.pair:
+        setting, separator, files = value.partition("=")
+        first, comma, second = files.partition(",")
+        if not separator or not comma or setting not in L1_SETTING_OF_ARM.values():
+            raise Stop("not_judgeable", f"--pair {value!r}: <VBJ|VBJ0>=<12b L1>,<12a L1>")
+        pairs[setting] = (Path(first), Path(second))
+    missing = [str(path) for pair in pairs.values() for path in pair if not path.is_file()]
+    if missing:
+        raise Stop("not_judgeable", f"L1 file missing: {missing[0]}")
+    return "written", {"rule": "erratum 2 2-1 (a record, not a judgement)",
+                       "status": "written", "by_setting": l1_overlap(pairs)}
 
 
 # ------------------------------------------------------------------------------- dry c (6.3.10)
@@ -1000,7 +1081,7 @@ def cmd_judge(args) -> tuple[str, dict]:
     report["grade_transitions"] = grade_transitions(
         blocks0, blocks1, decision, {"vbk0": (args.vbk0_grade_judge, args.vbk0_grade_judge_sha256),
                                      "vbk": (args.vbk_grade_judge, args.vbk_grade_judge_sha256)},
-        problems, {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]})
+        {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]})
     report["hold_speed_m_s"] = _hold_speed_record()  # erratum 2 2-5
     report["pass_sentence"] = {"n_opp": decision.get("n_opp"),
                                "upper_bound_n_opp": upper_bound(decision.get("n_opp") or 0),
@@ -1016,7 +1097,7 @@ EXIT_OF_STATUS = {"decided": EXIT_OK, "needs_b3": EXIT_OK, "needs_b4": EXIT_OK,
                   "aa_floor_stop": EXIT_NOT_JUDGEABLE, "setting_defect": EXIT_NOT_JUDGEABLE,
                   "not_judgeable": EXIT_NOT_JUDGEABLE}
 COMMANDS = {"decide": cmd_decide, "judge": cmd_judge, "grade-judge": cmd_grade_judge,
-            "dry-c": cmd_dry_c}
+            "dry-c": cmd_dry_c, "l1-overlap": cmd_l1_overlap}
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -1035,8 +1116,9 @@ def _parser() -> argparse.ArgumentParser:
             command.add_argument("--vbk", action="append", required=True)
             command.add_argument("--vbk-t4h", action="append", required=True)
             for arm in ("vbk0", "vbk"):  # W-6: the grade-judge files of both arms
-                command.add_argument(f"--{arm}-grade-judge", type=Path, required=True)
-                command.add_argument(f"--{arm}-grade-judge-sha256", required=True)
+                # optional (erratum 2 audit F-1): a missing one is a record, never a stop
+                command.add_argument(f"--{arm}-grade-judge", type=Path, default=None)
+                command.add_argument(f"--{arm}-grade-judge-sha256", default=None)
     grades = sub.add_parser("grade-judge")
     grades.add_argument("--arm", choices=sorted(SETTING_OF_ARM), required=True)
     grades.add_argument("--runs", action="append", required=True, help="b<j>=<run json>")
@@ -1048,6 +1130,10 @@ def _parser() -> argparse.ArgumentParser:
                              "name it)")
     grades.add_argument("--judge-out", type=Path, required=True)
     grades.add_argument("--out", type=Path, required=True)
+    overlap = sub.add_parser("l1-overlap")
+    overlap.add_argument("--pair", action="append", required=True,
+                         help="VBJ|VBJ0=<12b L1 run>,<T-JR-12a L1 run>")
+    overlap.add_argument("--out", type=Path, required=True)
     dry = sub.add_parser("dry-c")
     dry.add_argument("--selection", type=Path, required=True)
     dry.add_argument("--selection-sha256", required=True)

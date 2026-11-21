@@ -33,6 +33,9 @@ dry5     (edition 5 erratum 1 9.3, against 78fd5d2d ``dry_a1``) the g6 r79 VBJ /
          lines VBJ / VBH: the hash under the P5-1 rule, VBJ0: the hash whatever the
          fallbacks. Not compared: ``extend_bound_check``, ``jp3_*`` arrays, run meta; g8 /
          ref (not run in edition 4a). No exit code compared
+p1_content (edition 5 erratum 2 2-4, when the import closure of the judge code met a changed
+         file) the P-1 judge file's ``runs`` / ``table`` / ``unmatched`` / ``errors`` and the
+         L1 extract's lines, each sorted, instead of the file sha256; the two P-1 codes
 dry5_retry (9.3, a retry ``dry_a<k>`` of the same commit, ``--old-folder dry_a<k-1>``) every
          result line of the folder without the run meta keys (``wall_s``, ``mask``,
          ``t4h_dir``), one sha256 per line
@@ -69,7 +72,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 ITEM_STEPS = {"p1": "p1", "dry": "dry", "fpath": "fpath", "x11": "cases", "cases_ae": "cases",
-              "casef": "casef", "dry5": "dry", "dry5_retry": "dry"}
+              "casef": "casef", "dry5": "dry", "dry5_retry": "dry", "p1_content": "p1"}
 """Item -> the run step whose folder holds it."""
 CASE_ROW_FILES = ("j9_cases.jsonl", "cd.jsonl")
 """4a-7 2.1 (4a) A .. E: the ``jp3_baseline_compare`` ``--new`` rows of step 4a."""
@@ -89,7 +92,7 @@ X11_ROWS = "lsj4_x11.jsonl"
 X11_SETTING = "LSJ4_X11"
 ITEM_CODES = {"p1": P1_CODES, "dry": ("tool:summarize",), "fpath": ("tool:case_f_path",),
               "x11": ("tool:x11",), "cases_ae": ("tool:baseline_compare",),
-              "casef": ("tool:case_f",), "dry5": (), "dry5_retry": ()}
+              "casef": ("tool:case_f",), "dry5": (), "dry5_retry": (), "p1_content": P1_CODES}
 EXIT_SAME, EXIT_DIFFERS, EXIT_MISSING, EXIT_ERROR = 0, 1, 2, 3
 
 
@@ -190,6 +193,8 @@ def item_values(side: Side, item: str) -> dict:
         values.update(_dry5_values(folder))
     elif item == "dry5_retry":
         values.update(_dry5_retry_values(folder))
+    elif item == "p1_content":
+        values.update(_p1_content_values(folder))
     values.update(_codes(side, item))
     return values
 
@@ -309,6 +314,32 @@ DRY5_ITEMS = ("dry5", "dry5_retry")
 HASH_EXEMPT_SUFFIX = " commands_sha256"
 FALLBACK_SUFFIX = " rod_fallback"
 ALWAYS_EQUAL_SUFFIX = " hash_always_equal"
+
+
+P1_CONTENT_KEYS = ("runs", "table", "unmatched", "errors")
+"""Erratum 2 2-4: the judge-file parts compared when the import closure met a changed file."""
+
+
+def _sorted_content(value):
+    """A canonical form of a judge part: lists sorted by their JSON text (``runs`` by key)."""
+    if isinstance(value, list):
+        return sorted((_sorted_content(item) for item in value),
+                      key=lambda item: json.dumps(item, sort_keys=True))
+    if isinstance(value, dict):
+        return {key: _sorted_content(item) for key, item in value.items()}
+    return value
+
+
+def _p1_content_values(folder: Path) -> dict:
+    """Erratum 2 2-4 (the closure met a changed file): the P-1 judge file's ``runs``,
+    ``table``, ``unmatched`` and ``errors`` in sorted form, and the L1 extract's lines in sorted
+    form, one sha256 each (no value written)."""
+    judge = _read_json(folder / P1_FILES[0])
+    values = {f"{P1_FILES[0]} {part}": _canonical_sha(_sorted_content(judge.get(part)))
+              for part in P1_CONTENT_KEYS}
+    extract = _read_json(folder / P1_FILES[1])
+    values[f"{P1_FILES[1]} results"] = _canonical_sha(_sorted_content(extract.get("results")))
+    return values
 
 
 def _dry5_line(label: str, record: dict, folder: Path | None, always: bool) -> dict:
@@ -484,7 +515,7 @@ def _parser() -> argparse.ArgumentParser:
                              "pass fa997f4c alone, addendum 4a-7 2.1)")
     parser.add_argument("--new", type=Path, required=True, help="runs root of the new commit")
     parser.add_argument("--items", default=",".join(name for name in ITEM_STEPS
-                                                    if name not in DRY5_ITEMS),
+                                                    if name not in (*DRY5_ITEMS, "p1_content")),
                         help=f"comma list of {sorted(ITEM_STEPS)}")
     parser.add_argument("--new-folder", type=Path, default=None,
                         help="the running step's folder (one item only)")

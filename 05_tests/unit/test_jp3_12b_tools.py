@@ -764,11 +764,60 @@ def test_w6_grade_transitions_are_computed(world, capsys, cwd_elsewhere) -> None
     assert transitions["ungraded_opportunity"][0]["vbk_reason"] == "no judge row"
     assert transitions["ungraded_opportunity"][0]["vbk0_reason"] is None
     assert report["hold_speed_m_s"]["value"] > 0  # erratum 2 2-5
+    # erratum 2 audit F-1: a grade input defect is a record; a pass stays a pass (exit 0)
     args = judge_args(world, written0, written1, decision, world["runs"] / "judge3.json")
     args[args.index("--vbk-grade-judge-sha256") + 1] = "0" * 64
     code, last, report = run_main(args, capsys)
-    assert code == 2 and last["status"] == "not_judgeable"
+    assert code == 0 and last["status"] == "pass", report["problems"]
     assert report["grade_transitions"]["computed"] is False
+    assert "vbk: grade-judge sha256" in report["grade_transitions"]["input_problems"][0]
+    assert report["problems"]["not_judgeable"] == []
+
+
+def _without_grade_arm(args: list[str], arm: str) -> list[str]:
+    """The judge arguments without one arm's grade-judge file (its grade-judge stopped)."""
+    out, skip = [], 0
+    for value in args:
+        if skip:
+            skip -= 1
+            continue
+        if value in (f"--{arm}-grade-judge", f"--{arm}-grade-judge-sha256"):
+            skip = 1
+            continue
+        out.append(value)
+    return out
+
+
+@pytest.mark.parametrize("defect", ["sha", "missing_arm"])
+def test_f1_failure_with_a_grade_input_defect_is_exit_1(world, capsys, cwd_elsewhere,
+                                                         defect) -> None:
+    """Erratum 2 audit F-1: a 6.3.7 failure with a grade input defect stays a failure (exit 1),
+    never a not-judgeable 2 that a rerun could take; the transitions record "not computed"."""
+    def edit(block, vbk0, vbk):
+        if block == "b2":
+            vbk.rows[vbk.key_at(3)]["base"]["t_ready_s"] = None  # READY lost (3)
+    written0, written1, decision = _decided(world, capsys, edit)
+    args = judge_args(world, written0, written1, decision, world["runs"] / f"f1_{defect}.json")
+    if defect == "sha":
+        args[args.index("--vbk0-grade-judge-sha256") + 1] = "0" * 64
+    else:
+        args = _without_grade_arm(args, "vbk0")
+    code, last, report = run_main(args, capsys)
+    assert code == 1 and last["status"] == "failed", report["problems"]
+    assert report["problems"]["not_judgeable"] == []
+    transitions = report["grade_transitions"]
+    assert transitions["computed"] is False and transitions["input_problems"]
+    assert transitions["input_problems"][0].startswith("vbk0:")
+
+
+def test_f1_pass_without_both_grade_files_is_exit_0(world, capsys, cwd_elsewhere) -> None:
+    written0, written1, decision = _decided(world, capsys)
+    args = judge_args(world, written0, written1, decision, world["runs"] / "f1_none.json")
+    args = _without_grade_arm(_without_grade_arm(args, "vbk0"), "vbk")
+    code, last, report = run_main(args, capsys)
+    assert code == 0 and last["status"] == "pass"
+    assert report["grade_transitions"]["computed"] is False
+    assert len(report["grade_transitions"]["input_problems"]) == 2
 
 
 def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cwd_elsewhere,

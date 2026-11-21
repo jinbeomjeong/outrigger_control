@@ -874,10 +874,15 @@ def judge_sha_problems(label: str, judge: Path, expected: str | None) -> list[st
 
 
 def t12_file_defects(base: Path, new: Path) -> list[str]:
-    """Prelaunch audit M-3: the new file is never the base file itself."""
+    """Prelaunch audit M-3: the new file is never the base file itself; erratum 2 2-1: neither
+    is an L1 reference run (a grade reference, never a judged input)."""
+    import j_p3_inputs
+
+    defects = [problem for path, label in ((base, "--base"), (new, "--new")) if path.is_file()
+               and (problem := j_p3_inputs.l1_reference_file_problem(path, label)) is not None]
     if base.is_file() and new.is_file() and fixed.file_sha256(base) == fixed.file_sha256(new):
-        return [f"--new {new} has the sha256 of --base {base} (the same run on both sides)"]
-    return []
+        defects.append(f"--new {new} has the sha256 of --base {base} (the same run on both sides)")
+    return defects
 
 
 SELFCHECK_EMPTY_LISTS = ("l2_pass_to_fail", "new_fault", "ready_failures",

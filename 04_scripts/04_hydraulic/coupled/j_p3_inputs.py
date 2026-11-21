@@ -98,6 +98,35 @@ def is_test_only_setting(setting: str | None) -> bool:
                                     or setting.endswith(TEST_ONLY_SETTING_SUFFIX))
 
 
+L1_REFERENCE_LEVEL = "L1"
+"""Erratum 2 2-1 (audit warning 5): an L1 line is a grade reference, never a judged row."""
+
+
+def is_l1_reference_line(row: dict) -> bool:
+    """An r79 L1 line (``level`` L1, or a key whose level token is L1)."""
+    key = str(row.get("key") or "")
+    plain = key.split("#", 1)[1] if "#" in key else key
+    return row.get("level") == L1_REFERENCE_LEVEL or plain.startswith(f"{L1_REFERENCE_LEVEL}|")
+
+
+def l1_reference_file_problem(path, label: str) -> str | None:
+    """Why the run file ``path`` may not be a J-P3 / j9_main / T-JR-12 judged input: it holds
+    L1 reference lines only (the 12b ``l1ref`` runs, the T-JR-12a L1 runs; erratum 2 2-1).
+    None: not such a file (or not a run file: other checks name it)."""
+    import json
+    from pathlib import Path
+
+    try:
+        document = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    rows = document.get("results") if isinstance(document, dict) else document
+    if isinstance(rows, list) and rows and all(isinstance(row, dict) and is_l1_reference_line(row)
+                                               for row in rows):
+        return f"{label} {path} is an L1 reference run (no judged input, erratum 2 2-1)"
+    return None
+
+
 def is_p3_expected(controller_tag: str | None, setting: str | None) -> bool:
     """A VB / LS run: a tag whose base is ``final_C4G2_P3`` or ``final_C4G2_P3H`` with any
     LAS-b / K1 suffixes (``v5_options.is_extend_start_tag``), or setting ``VB`` / ``LS<n>`` /
@@ -154,6 +183,7 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
     from outrigger_sim.control.extend_start_bound import j_p3_judgement, j_p3_judgement_rev5
 
     test_only_runs = sum(is_test_only_setting(row.get("setting")) for row in rows)
+    l1_reference_runs = sum(is_l1_reference_line(row) for row in rows)  # erratum 2 2-1
     expected = [row for row in rows
                 if row.get("p3_expected") or row.get(RULE_KEY) == P3_RULE]
     with_rule = [row for row in expected if row.get(RULE_KEY) == P3_RULE]
@@ -180,10 +210,10 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
         status_by_revision[str(revision)] = judgement[f"rev{revision}"]["status"]
         judgement["status"] = _worse_status(judgement["status"],
                                             judgement[f"rev{revision}"]["status"])
-    if rule_missing or test_only_runs or unkeyed_hold or key_record_mismatch:
+    if rule_missing or test_only_runs or unkeyed_hold or key_record_mismatch or l1_reference_runs:
         judgement["status"] = "setting_defect"
     judgement.update(runs_expected=len(expected), rule_missing_runs=rule_missing,
-                     test_only_setting_runs=test_only_runs,
+                     test_only_setting_runs=test_only_runs, l1_reference_runs=l1_reference_runs,
                      revision_key_missing_runs=len(unkeyed_hold),
                      revision_key_mismatch_runs=len(key_record_mismatch),
                      status_by_revision=status_by_revision)

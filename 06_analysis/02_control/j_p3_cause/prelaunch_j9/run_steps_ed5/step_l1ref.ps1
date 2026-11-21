@@ -4,10 +4,18 @@
 # The L1 key file of prelaunch_ed5.ps1 -Part l1keys under VBJ0 (the VBK0 arm's plant) and VBJ
 # (the VBK arm's plant: the VBK options, no fault plan), R79_ROD_MODEL=plant_truth, 4 workers
 # each on half of the P threads. No judge tool; grade-judge checks these files later.
-# Run order: -Part dry, -Part l1keys, this step, -Part x11, -Part list, then step0_cdry.ps1.
+# Run order: -Part dry, -Part l1keys, this step, -Part x11, (commit), -Part list, (commit),
+# then step0_cdry.ps1 (common_ed5.ps1 head).
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed5.ps1"
 
+# erratum 2 2-1 / 2-6: never made again once a 12b or c dry output exists
+$Later = @(Get-ChildItem -LiteralPath $RunsRoot -Directory -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -like 'cdry_a*' -or $_.Name -like '12b_*' })
+if ($Later.Count) {
+    Write-Host "STOP: $($Later[0].FullName) exists (erratum 2 2-1: the L1 reference is not made again)"
+    exit 2
+}
 # the fixed list does not exist yet: the edition 4a step start (commit, tree, 4a fixed inputs)
 $Folder = Initialize-Step 'l1ref' $Attempt @()
 if (-not (Test-Path -LiteralPath $L1KeysFile)) { Stop-Step 3 "$L1KeysFile missing (prelaunch_ed5.ps1 -Part l1keys)" }

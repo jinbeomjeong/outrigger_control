@@ -8,7 +8,8 @@
 #                 90 / 91 must not collide with keys written later; user decision 2026-11-22)
 #   -Part list    FIXED_INPUTS_<run commit 8>.SHA256SUMS (jp3_fixed_inputs_list.py) after the
 #                 main session committed the parts above, the L1 runs and the filled-in
-#                 common_ed5.ps1; it lists the L1 key file and the two L1 runs too
+#                 common_ed5.ps1; it lists the L1 key file and the two L1 runs too; the main
+#                 session then commits the list before step0_cdry.ps1 (order: common_ed5.ps1)
 #   -ScanExtra    (x11) more probe record folders whose r79 key strings the seed scan reads
 #                 (erratum 2 2-3: the run worktree's 05_tests is always scanned; the probe file
 #                 ed5_design/probes/probes_ed5.json lies under 06_analysis, the base scan)

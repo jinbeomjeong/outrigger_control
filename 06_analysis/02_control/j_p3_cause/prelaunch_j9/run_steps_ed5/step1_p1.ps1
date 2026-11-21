@@ -5,7 +5,8 @@
 # check and no fa997f4c match (erratum 2 2-4); instead git diff --stat 78fd5d2d..run commit
 # into the record, and the P-1 outputs against 78fd5d2d's (4a-6 4 row (1): the sha256 of the
 # judge file and its L1 extract, the base-judge-compare and t12-selfcheck codes; P-1 reads
-# stored data only, so they are the same - a difference stops).
+# stored data only, so they are the same - a difference stops; the import closure of the
+# judge code picks the sha or the sorted-content comparison, erratum 2 2-4).
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed5.ps1"
 
@@ -34,6 +35,15 @@ Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--
     '--judge', $JudgeFile, '--judge-sha256', $JudgeSha, '--out', "$Folder\judge\h6_selfcheck.json") | Out-Null
 
 Write-P1Outputs $Folder
-Invoke-RerunMatch 'p1'  # erratum 2 2-4: against 78fd5d2d ($PreviousRunsRoot, its p1.done)
+# erratum 2 2-4 / 2-7 (audit warning 4): the static import closure of the judge code against
+# git diff 78fd5d2d..run commit picks the comparison: disjoint (0) the file sha256 (item p1),
+# meets (1) the sorted judge contents (item p1_content); 2 / 3 stop. The path is recorded.
+$ClosureCode = Invoke-Judge 'p1_import_closure' @("$Coupled/jp3_import_closure.py", '--repo', $Worktree,
+    '--entry', '04_scripts/03_control/s8/r79_sensor_judge.py',
+    '--entry', "$Coupled/h8_noise_judge_4368.py", '--base', $PreviousRunCommit, '--head', $RunCommit,
+    '--out', "$Folder\judge\p1_import_closure.json") -ContinueCodes @(0, 1)
+$MatchItem = if ($ClosureCode -eq 0) { 'p1' } else { 'p1_content' }
+$StepState.Codes['p1_match_path'] = $MatchItem
+Invoke-RerunMatch $MatchItem  # against 78fd5d2d ($PreviousRunsRoot, its p1.done)
 
 Complete-Step

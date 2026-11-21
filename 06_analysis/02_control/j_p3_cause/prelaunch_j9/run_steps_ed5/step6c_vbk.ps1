@@ -55,9 +55,14 @@ foreach ($Arm in @('vbk0', 'vbk')) {
         $Path = if ($Arm -eq 'vbk') { "$Folder\VBK_$Block.json" } else { $Vbk0[$Block][0] }
         $Arguments += @('--runs', "$Block=$Path")
     }
-    Invoke-Judge "grade_judge_$Arm" $Arguments | Out-Null
-    $GradeFiles[$Arm] = @("$Folder\judge\grades_$Arm.json",
-        (Read-ReportField "$Folder\judge\grades_${Arm}_record.json" 'judge_sha256'))
+    # erratum 2 audit F-1: the grade transitions are a record - grade-judge exit 2 (an L1
+    # reference defect, not judgeable) goes on; the judge then records "not computed" with the
+    # reason and its status and exit code stay the 12b judgement's (a tool error, 3, stops)
+    $GradeCode = Invoke-Judge "grade_judge_$Arm" $Arguments -ContinueCodes @(0, 2)
+    if ($GradeCode -eq 0) {
+        $GradeFiles[$Arm] = @("$Folder\judge\grades_$Arm.json",
+            (Read-ReportField "$Folder\judge\grades_${Arm}_record.json" 'judge_sha256'))
+    }
 }
 
 $Arguments = @($Judge, 'judge', '--selection', $X11Selection, '--selection-sha256', (Get-X11Sha),
@@ -67,7 +72,9 @@ foreach ($Block in $Blocks) {
         '--vbk', "$Block=$Folder\VBK_$Block.json", '--vbk-t4h', "$Block=$Folder\VBK_${Block}_t4h")
 }
 foreach ($Arm in @('vbk0', 'vbk')) {
-    $Arguments += @("--$Arm-grade-judge", $GradeFiles[$Arm][0], "--$Arm-grade-judge-sha256", $GradeFiles[$Arm][1])
+    if ($GradeFiles.ContainsKey($Arm)) {  # a missing arm: the judge records "not computed"
+        $Arguments += @("--$Arm-grade-judge", $GradeFiles[$Arm][0], "--$Arm-grade-judge-sha256", $GradeFiles[$Arm][1])
+    }
 }
 Invoke-Judge 'judge' $Arguments | Out-Null
 
