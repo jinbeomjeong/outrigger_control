@@ -199,8 +199,10 @@ def test_d1a_empty_scan_is_not_judgeable(tmp_path, monkeypatch) -> None:
 
 @pytest.mark.skipif(not NOISE_PATH.is_file(), reason="stored h8_noise_VB.json not present")
 def test_d1a_selection_of_the_stored_data(tmp_path) -> None:
-    """4a-4 1 / 2 on the main checkout's ``06_analysis``: seed max 24 in the scan, the generated
-    key ``s25`` of the base key, in neither the scan nor the Dg-3 keys."""
+    """4a-4 1 / 2 on the main checkout's ``06_analysis``: seed max 24 in the scan outside the
+    J-P3 run outputs (``j9_runs/`` left out, user decision 2026-11-21: their dry r79 runs hold
+    the dry key itself; only paths are listed, no value is read), the generated key ``s25`` of
+    the base key, in neither the scan nor the Dg-3 keys."""
     analysis = DATA_ROOT / "06_analysis"
     v5 = analysis / "03_hydraulic" / "coupled" / "v5"
     inputs = dryrun.SelectInputs(analysis, v5 / "main.jsonl",
@@ -209,6 +211,10 @@ def test_d1a_selection_of_the_stored_data(tmp_path) -> None:
     selection = dryrun.select(inputs)
     assert selection["r79_base_key"] == BASE_KEY
     assert selection["scan"]["seed_max"] == 24
+    assert selection["scan"]["excluded_folder"] == "02_control/j_p3_cause/j9_runs/"
+    assert selection["scan"]["files_excluded"] == len(selection["scan"]["excluded"]) > 0
+    assert all(item["path"].startswith("02_control/j_p3_cause/j9_runs/")
+               for item in selection["scan"]["excluded"])
     assert selection["r79_seed"] == 25 and selection["r79_key"] == dryrun.generated_key(
         BASE_KEY, frozenset())[0]
     assert selection["r79_key_in_scan"] is False and selection["r79_key_in_dg3"] is False

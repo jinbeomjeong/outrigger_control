@@ -12,7 +12,11 @@ Sub-commands:
                  baseline's rows) and the first job of :data:`EVENT_CANDIDATES` outside it
                  (normalised job = ``job`` without ``setting``, ``mask``, ``t4h_dir``);
                * r79 (4a-4 1, 2): every r79 key of every ``.json`` / ``.jsonl`` under
-                 ``--scan-root`` (the working tree's ``06_analysis/``; ``"key"`` values
+                 ``--scan-root`` (the working tree's ``06_analysis/``; addendum 4a-6 G-1: the
+                 J-P3 run outputs, relative paths starting with ``02_control/j_p3_cause/
+                 j9_runs/``, are left out and listed under ``scan.excluded`` with sha256, key
+                 count and whether they hold the generated key; G-3 (b): the ``s25`` key
+                 outside them stops, not judgeable; ``"key"`` values
                  ``L<n>|s<n>|...``, a ``cand=...#`` prefix cut), the base key (the first L2 key
                  of ``--noise`` that is not a Dg-3 key) and the generated key: its seed token
                  only set to ``s25``, raised by 1 while the key is in the scan.
@@ -130,6 +134,21 @@ class KeyScan:
     keys: frozenset[str]
     files: tuple[tuple[str, str, int], ...]
     seed_max: int | None
+    excluded: tuple[tuple[str, str, int, frozenset[str]], ...] = ()
+    """(relative path, sha256, r79 key count, r79 keys) of each file under
+    :data:`SCAN_EXCLUDED_FOLDER`; its keys never enter :attr:`keys`."""
+
+
+SCAN_EXCLUDED_FOLDER = "02_control/j_p3_cause/j9_runs/"
+"""Addendum 4a-6 5 G-1 (user decision 2026-11-21): the J-P3 run outputs below
+``<scan-root>`` are left out of the key scan (their dry r79 runs carry the dry key itself).
+A file is left out when its scan-root relative path, ``/`` separated, starts with this string,
+case as it is; nothing else of the scan root is left out."""
+
+
+def is_scan_excluded(relative: str) -> bool:
+    """4a-6 G-1: a scan-root relative ``/`` path under :data:`SCAN_EXCLUDED_FOLDER`."""
+    return relative.startswith(SCAN_EXCLUDED_FOLDER)
 
 
 def normalised_job(job: dict) -> str:
@@ -144,20 +163,27 @@ def plain_key(key: str) -> str:
 
 def scan_r79_keys(scan_root: Path) -> KeyScan:
     """Every r79 key of every ``.json`` / ``.jsonl`` under ``scan_root`` (raw bytes, so a file
-    of any encoding is read; the key strings hold no escapes)."""
+    of any encoding is read; the key strings hold no escapes). The files under
+    :data:`SCAN_EXCLUDED_FOLDER` are recorded apart (sha256, keys) and their keys are not part
+    of the scan (4a-6 G-1)."""
     keys: set[str] = set()
     files = []
+    excluded = []
     seed_max = None
     for path in sorted(p for p in scan_root.rglob("*") if p.suffix in SCAN_SUFFIXES
                        and p.is_file()):
+        relative = path.relative_to(scan_root).as_posix()
         data = path.read_bytes()
         found = R79_KEY_PATTERN.findall(data)
+        if is_scan_excluded(relative):
+            excluded.append((relative, hashlib.sha256(data).hexdigest(), len(found),
+                             frozenset(plain_key(key.decode("utf-8")) for key, _ in found)))
+            continue
         for key, seed in found:
             keys.add(plain_key(key.decode("utf-8")))
             seed_max = int(seed) if seed_max is None else max(seed_max, int(seed))
-        files.append((path.relative_to(scan_root).as_posix(), hashlib.sha256(data).hexdigest(),
-                      len(found)))
-    return KeyScan(frozenset(keys), tuple(files), seed_max)
+        files.append((relative, hashlib.sha256(data).hexdigest(), len(found)))
+    return KeyScan(frozenset(keys), tuple(files), seed_max, tuple(excluded))
 
 
 def generated_key(base_key: str, scanned: frozenset[str]) -> tuple[str, int]:
@@ -237,6 +263,9 @@ def select(inputs: SelectInputs) -> dict:
     if base_key is None:
         raise Stop("no L2 noise key outside the Dg-3 135 keys")
     key, seed = generated_key(base_key, scan.keys)
+    if seed != DRY_SEED_START:  # 4a-6 G-3 (b): the key outside the run outputs stops
+        raise Stop(f"the s{DRY_SEED_START} key of the base key is in the scan outside "
+                   f"{SCAN_EXCLUDED_FOLDER} (generated s{seed}; 4a-6 G-3: not judgeable)")
     return {"event_job": event_job, "event_candidates": proof,
             "event_union_sizes": union["sizes"],
             "r79_base_key": base_key, "r79_key": key, "r79_seed": seed,
@@ -245,7 +274,12 @@ def select(inputs: SelectInputs) -> dict:
                      "files_with_r79_keys": sum(count > 0 for _, _, count in scan.files),
                      "r79_keys": len(scan.keys), "seed_max": scan.seed_max,
                      "files": [{"path": path, "sha256": digest, "r79_keys": count}
-                               for path, digest, count in scan.files]}}
+                               for path, digest, count in scan.files],
+                     "excluded_folder": SCAN_EXCLUDED_FOLDER,
+                     "files_excluded": len(scan.excluded),
+                     "excluded": [{"path": path, "sha256": digest, "r79_keys": count,
+                                   "has_generated_key": key in found}
+                                  for path, digest, count, found in scan.excluded]}}
 
 
 def _commands(event_job: dict, keys_file: Path) -> dict:
