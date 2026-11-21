@@ -11,9 +11,10 @@ Checks (every problem is collected; the status is the worst kind found):
    same job. Setting defects (13.6, 4a-2 R3 / X11 / B2): a ``*_X11`` row in the compared set; a
    new revision 5 row (VBG5 included) without the sealed identity (``spec_edition``,
    ``carry_end_rule``, ``retract_start_rule``); a new row whose P4 evidence does not fit its
-   options (``j_p3_inputs.rod_reading_evidence_problems``); a VBJ / LSJ1 .. 4 row (a J-P3
-   line) whose evidence is not ① = ② > 0 (event path) or ① = ② = 0 (declared head-only;
-   ``j_p3_inputs.judged_line_evidence_problems``, addendum 4a-7 erratum 1 9).
+   options (:func:`rod_evidence_problems`, ① = k x ② with the k of addendum 4a-8 2); a
+   VBJ / LSJ1 .. 4 row (a J-P3 line) whose evidence is not ① = k x ② > 0 (event path) or
+   ① = ② = 0 (declared head-only; :func:`judged_line_evidence_problems`, addendum 4a-7
+   erratum 1 9).
 3. P4-1: ``commands_sha256`` equal per pair (T8).
 4. P4-2 per read (T4h npz, 4a-2 section 2): ``jp3_t_s`` of equal length and value; used bound
    new >= baseline - 1 Pa and the same NaN pattern; class changes only EXT -> CARRY_ext and
@@ -59,6 +60,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -69,11 +71,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import jp3_fixed_inputs as fixed  # noqa: E402
-from j_p3_inputs import (  # noqa: E402
-    ROD_READING_EVIDENCE_KEYS,
-    harness_head_only_declared,
-    rod_reading_evidence_problems,
-)
+from j_p3_inputs import ROD_READING_EVIDENCE_KEYS, harness_head_only_declared  # noqa: E402
 
 BASELINE_SUMS_SHA256 = fixed.BASELINE_SUMS_SHA256
 """Edition 4a 13.1 / addendum 4a-1: the sealed baseline list."""
@@ -284,15 +282,17 @@ def is_head_only_line(line: dict, meta: dict | None = None) -> bool:
     return harness_head_only_declared({"job": line.get("job") or {}})
 
 
-def judged_line_evidence_problems(record: dict | None, is_declared: bool) -> list[str]:
-    """Addendum 4a-7 erratum 1 9: the P4 evidence of a J-P3 judged-setting line (VBJ,
-    LSJ1 .. 4). An event-path line has ① truth reads = ② monitor rod reads > 0, a declared
-    head-only line ① = ② = 0; a missing or non-integer evidence key is a setting defect too
-    (never read as 0).
+def judged_line_evidence_problems(record: dict | None, is_declared: bool,
+                                  multiplier: int = 1) -> list[str]:
+    """Addendum 4a-7 erratum 1 9 with 4a-8 2: the P4 evidence of a J-P3 judged-setting line
+    (VBJ, LSJ1 .. 4). An event-path line has ① truth reads = k x ② monitor rod reads > 0
+    (``multiplier`` = k, :func:`evidence_multiplier`), a declared head-only line ① = ② = 0; a
+    missing or non-integer evidence key is a setting defect too (never read as 0).
 
     Args:
         record: The line's ``hydraulics_record``.
         is_declared: :func:`is_head_only_line` of the line.
+        multiplier: k of the line's run path (1 but on the r79 G8 path).
     """
     record = record or {}
     values = [record.get(key) for key in ROD_READING_EVIDENCE_KEYS]
@@ -305,10 +305,100 @@ def judged_line_evidence_problems(record: dict | None, is_declared: bool) -> lis
             return [f"J-P3 judged line declared head-only with rod reads ({truth_calls} truth, "
                     f"{monitor_reads} monitor; 0 and 0 needed, erratum 1 9)"]
         return []
-    if monitor_reads <= 0 or truth_calls != monitor_reads:
+    if monitor_reads <= 0 or truth_calls != multiplier * monitor_reads:
         return [f"J-P3 judged event line: {truth_calls} truth readings, {monitor_reads} monitor "
-                "rod reads (equal and > 0 needed, erratum 1 9)"]
+                f"rod reads (k = {multiplier}: truth = k x monitor > 0 needed, erratum 1 9, "
+                "4a-8 2)"]
     return []
+
+
+R79_KEY = re.compile(r"^L\d+\|s\d+\|")
+"""Addendum 4a-8 2: an r79 line's key (``L<level>|s<seed>|...``, ``cand=...#`` cut first)."""
+CANDIDATE_PREFIX = re.compile(r"^cand=[^#]*#")
+DOUBLE_READ_FAMILY = "g8"
+"""4a-8 2: the r79 G8 path reads the P4 truth twice per control period (the case step,
+``r79_sensor_screen.py:844``, and the sensor delivery, ``:277``): k = 2."""
+
+
+def evidence_multiplier(line: dict) -> int:
+    """4a-8 2: k of a result line - 2 for an r79 line whose key's third token is ``g8``, 1 for
+    every other line (other r79 families, run_v5 batch lines without an r79 key)."""
+    key = line.get("key")
+    if not isinstance(key, str):
+        return 1
+    plain = CANDIDATE_PREFIX.sub("", key)
+    if not R79_KEY.match(plain):
+        return 1
+    return 2 if plain.split("|")[2] == DOUBLE_READ_FAMILY else 1
+
+
+def rod_evidence_problems(record: dict | None, options: dict | None,
+                          multiplier: int = 1) -> list[str]:
+    """Addendum 4a-2 B2 with 4a-8 2 (k): why a result line's P4 evidence does not fit its
+    options. With ``rod_reading_truth`` ① = k x ② > 0, without it ① = 0; a missing key is a
+    setting defect (never read as 0). ``j_p3_inputs.rod_reading_evidence_problems`` is the
+    same rule with k = 1; the judge tools use this one (4a-8 6.1: ``j_p3_inputs`` is in the
+    runner's import closure and stays unchanged).
+
+    Args:
+        record: The line's ``hydraulics_record``.
+        options: The line's ``hydraulic_options`` (None = none).
+        multiplier: :func:`evidence_multiplier` of the line.
+    """
+    record = record or {}
+    missing = [key for key in ROD_READING_EVIDENCE_KEYS if key not in record]
+    if missing:
+        return [f"P4 evidence keys missing: {missing}"]
+    truth_calls, monitor_reads = (int(record[key]) for key in ROD_READING_EVIDENCE_KEYS)
+    if (options or {}).get("rod_reading_truth"):
+        if monitor_reads < 1 or truth_calls != multiplier * monitor_reads:
+            return [f"rod_reading_truth: {truth_calls} truth readings, {monitor_reads} monitor "
+                    f"rod reads (k = {multiplier}: truth = k x monitor > 0 needed)"]
+        return []
+    if truth_calls != 0:
+        return [f"P4 off but {truth_calls} truth readings"]
+    return []
+
+
+def line_evidence_problems(line: dict) -> list[str]:
+    """:func:`rod_evidence_problems` of a whole result line (its own k)."""
+    return rod_evidence_problems(line.get("hydraulics_record"), line.get("hydraulic_options"),
+                                 evidence_multiplier(line))
+
+
+def judge_rows_problems(label: str, lines: list[dict], judge: dict,
+                        excused_keys: frozenset[str] = frozenset()) -> list[str]:
+    """Addendum 4a-8 5: an r79 judge file grades every input line - ``runs`` = the lines
+    (count and plain-key set), ``unmatched`` 0, ``errors`` 0; else not judgeable (13.2: zero
+    judged rows is never a pass).
+
+    Args:
+        label: Name of the judge file in the messages.
+        lines: The judged Dg-3 lines (L2 / L3 results).
+        judge: The r79 judge file document.
+        excused_keys: Plain keys of lines judged elsewhere as they are (the T-JR-14
+            ``LockWindowMismatchError`` failure lines, prelaunch audit N-1): left out of the
+            expected rows, and their ``errors`` entries do not count.
+    """
+    runs = judge.get("runs")
+    unmatched, errors = judge.get("unmatched"), judge.get("errors")
+    if not isinstance(runs, list) or not isinstance(unmatched, list) or not isinstance(errors,
+                                                                                    list):
+        return [f"{label}: no runs / unmatched / errors lists (4a-8 5)"]
+    errors = [item for item in errors
+              if CANDIDATE_PREFIX.sub("", str((item or {}).get("key"))) not in excused_keys]
+    lines = [line for line in lines
+             if CANDIDATE_PREFIX.sub("", str(line.get("key"))) not in excused_keys]
+    problems = []
+    expected = {CANDIDATE_PREFIX.sub("", str(line.get("key"))) for line in lines}
+    graded = [CANDIDATE_PREFIX.sub("", str(run.get("key"))) for run in runs]
+    if len(graded) != len(lines) or set(graded) != expected:
+        problems.append(f"{label}: {len(graded)} judged rows of {len(set(graded) & expected)} "
+                        f"input keys, {len(lines)} input lines expected (4a-8 5)")
+    if unmatched or errors:
+        problems.append(f"{label}: {len(unmatched)} unmatched, {len(errors)} error lines, "
+                        "0 and 0 needed (4a-8 5)")
+    return problems
 
 
 def identity_problems(record: dict) -> list[str]:
@@ -590,8 +680,7 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
                   problems: Problems) -> dict:
     setting = new["job"]["setting"]
     problems.setting_defects += identity_problems(new)
-    problems.setting_defects += [f"{setting}: {text}" for text in rod_reading_evidence_problems(
-        new.get("hydraulics_record"), new.get("hydraulic_options"))]
+    problems.setting_defects += [f"{setting}: {text}" for text in line_evidence_problems(new)]
     if old["commands_sha256"] != new["commands_sha256"]:
         problems.failures.append(f"{setting}: P4-1 commands_sha256 differs")
     new_npz = _new_t4h_path(new)
@@ -599,7 +688,8 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
         is_declared = is_head_only_line(new, _t4h_meta(new_npz))
         problems.setting_defects += [f"{setting}: {text}" for text in
                                      judged_line_evidence_problems(new.get("hydraulics_record"),
-                                                                   is_declared)]
+                                                                   is_declared,
+                                                                   evidence_multiplier(new))]
     try:
         reads = compare_reads(baseline.t4h(row_file, old), new_npz, _is_revision_5(new))
     except NotJudgeable as exc:

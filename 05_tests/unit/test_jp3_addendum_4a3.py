@@ -384,28 +384,45 @@ def _summary_record(truth, monitor, *, key=None, seed=None) -> dict:
 
 DRY_KEYS_FILE_SHA256 = "1a79e02fc33ae8844d0cd5672e9e5e745215c354e58e9a8095376939c4335e74"
 """4a-4 erratum 1, typed from the document."""
-SELECTION = {"r79_key": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0", "r79_seed": 25,
-             "r79_keys_file": {"sha256": DRY_KEYS_FILE_SHA256}}
+FAMILY_KEYS = {"g6": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0",
+               "g8": "L2|s25|g8|0|slope|edge|top|4.0|ref|none|0",
+               "ref": "L2|s25|ref|0|rigid|B|0,0"}
+"""Addendum 4a-8 3: the generated dry key of each family (the base keys of its table)."""
+FAMILY_KEYS_FILE_SHA256 = {"g6": DRY_KEYS_FILE_SHA256, "g8": "8" * 64, "ref": "f" * 64}
+SELECTION = {"r79_key": FAMILY_KEYS["g6"], "r79_seed": 25,
+             "r79_keys_file": {"sha256": DRY_KEYS_FILE_SHA256},
+             "r79_families": {family: {"key": key, "seed": 25,
+                                       "keys_file": {"sha256": FAMILY_KEYS_FILE_SHA256[family]}}
+                              for family, key in FAMILY_KEYS.items()}}
 R79_META = {"keys_file": {"path": "k.txt", "n_keys": 1, "sha256": DRY_KEYS_FILE_SHA256}}
 
 
 def _summary_files(tmp_path, *, vbh_truth: int = 0, r79_key: str | None = None,
-                   r79_seed: int = 25, r79_meta: dict | None = None) -> tuple[dict, dict]:
-    meta = R79_META if r79_meta is None else r79_meta
+                   r79_seed: int = 25, r79_meta: dict | None = None,
+                   g8_vbj_truth: int = 6) -> tuple[dict, dict]:
+    """Event outputs and the r79 outputs of every family (4a-8 3; g8 VBJ: 1 = 2 x 2)."""
 
-    def write(name, record, *, r79=False):
+    def write(name, record, *, meta=None):
         path = tmp_path / name
-        text = (json.dumps({"meta": meta, "results": [record]}) if r79
+        text = (json.dumps({"meta": meta, "results": [record]}) if meta is not None
                 else json.dumps(record) + "\n")
         path.write_text(text, encoding="utf-8")
         return path
 
-    key = f"cand=current#{SELECTION['r79_key']}" if r79_key is None else r79_key
     events = {"VBJ": write("e1", _summary_record(5, 5)),
               "VBH": write("e2", _summary_record(vbh_truth, 5)),
               "VBJ0": write("e3", _summary_record(4, 4))}
-    r79 = {"VBJ": write("r1", _summary_record(3, 3, key=key, seed=r79_seed), r79=True),
-           "VBH": write("r2", _summary_record(0, 3, key=key, seed=r79_seed), r79=True)}
+    r79 = {}
+    for family, plain in FAMILY_KEYS.items():
+        meta = r79_meta if r79_meta is not None else {"keys_file": {
+            "path": f"k_{family}.txt", "n_keys": 1, "sha256": FAMILY_KEYS_FILE_SHA256[family]}}
+        key = r79_key if (r79_key is not None and family == "g6") else f"cand=current#{plain}"
+        seed = r79_seed if family == "g6" else 25
+        truth = g8_vbj_truth if family == "g8" else 3
+        for setting, record in (("VBJ", _summary_record(truth, 3, key=key, seed=seed)),
+                                ("VBH", _summary_record(0, 3, key=key, seed=seed))):
+            name = setting if family == "g6" else f"{setting}:{family}"
+            r79[name] = write(f"r_{setting}_{family}", record, meta=meta)
     return events, r79
 
 
@@ -413,14 +430,33 @@ def test_k6_summary_holds_only_the_evidence_keys(tmp_path) -> None:
     events, r79 = _summary_files(tmp_path)
     summary, code = dryrun.summarize(SELECTION, events, r79)
     assert code == dryrun.EXIT_DONE, summary
+    assert len(summary["rows"]) == 9  # 3 event + 2 settings x 3 families (4a-8 3)
     for row in summary["rows"]:
         for evidence in row["evidence"]:
-            assert set(evidence) == {"error", "rod_reading_truth_calls", "two_pressure_reads"}
+            assert set(evidence) == {"error", "k", "rod_reading_truth_calls",
+                                     "two_pressure_reads"}
     missed = tmp_path / "missed"
     missed.mkdir()
     events, r79 = _summary_files(missed, vbh_truth=2)
     assert dryrun.summarize(SELECTION, events, r79)[1] == dryrun.EXIT_MISSED
     assert dryrun.summarize(SELECTION, {}, r79)[1] == dryrun.EXIT_NOT_JUDGEABLE
+
+
+@pytest.mark.parametrize(("g8_vbj_truth", "code"), [
+    (6, dryrun.EXIT_DONE),     # g8: 1 = 2 x 2 (4a-8 2)
+    (3, dryrun.EXIT_MISSED),   # g8: 1 = 2 is not k = 2
+])
+def test_4a8_dry_g8_family_uses_k_2(tmp_path, g8_vbj_truth, code) -> None:
+    events, r79 = _summary_files(tmp_path, g8_vbj_truth=g8_vbj_truth)
+    assert dryrun.summarize(SELECTION, events, r79)[1] == code
+
+
+def test_4a8_dry_needs_every_family(tmp_path) -> None:
+    events, r79 = _summary_files(tmp_path)
+    del r79["VBJ:ref"]
+    summary, code = dryrun.summarize(SELECTION, events, r79)
+    assert code == dryrun.EXIT_NOT_JUDGEABLE
+    assert {"run": "r79_VBJ_ref", "output": "missing"} in summary["rows"]
 
 
 # --- K-8: F-A path equivalence ---------------------------------------------------------------

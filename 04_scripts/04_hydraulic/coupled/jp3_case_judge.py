@@ -66,7 +66,6 @@ if str(HERE) not in sys.path:
 
 import jp3_baseline_compare as compare  # noqa: E402
 import jp3_fixed_inputs as fixed  # noqa: E402
-from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
 
 BAR = 1.0e5
 FL, FR = 0, 1
@@ -132,8 +131,8 @@ def _check(row: dict) -> dict:
 
 def _evidence(row: dict, problems: compare.Problems) -> None:
     setting = row["job"]["setting"]
-    problems.setting_defects += [f"{setting}: {text}" for text in rod_reading_evidence_problems(
-        row.get("hydraulics_record"), row.get("hydraulic_options"))]
+    problems.setting_defects += [f"{setting}: {text}"
+                                 for text in compare.line_evidence_problems(row)]  # 4a-8 2 k
 
 
 def _key_sum(check: dict, key: str, setting: str, problems: compare.Problems) -> int | None:
@@ -241,7 +240,8 @@ def judge_case_f(rows: list[dict], grid: dict) -> tuple[dict, compare.Problems]:
             problems.setting_defects += [f"{setting}: {text}" for text in
                                          compare.judged_line_evidence_problems(
                                              row.get("hydraulics_record"),
-                                             compare.is_head_only_line(row, None))]
+                                             compare.is_head_only_line(row, None),
+                                             compare.evidence_multiplier(row))]
     record = {"F-A": _f_a(by_setting["VB"], grid, problems),
               "F-B": _f_b(by_setting, problems), "F-E": _f_e(by_setting, problems),
               "A_LS_record": {s: _bound_record(by_setting[s]) for s in CASE_F_GROUPS["A"][1:]}}

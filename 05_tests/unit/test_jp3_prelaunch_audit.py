@@ -187,12 +187,23 @@ def test_m8_t12_needs_the_new_judge_sha(tmp_path) -> None:
     assert tjr.judge_sha_problems("--new-judge", judge, "0" * 64)
 
 
-def _dg3_inputs(tmp_path, *, setting="VBJ0", document=None) -> tjr.Dg3JudgeInputs:
+def _dg3_inputs(tmp_path, monkeypatch, *, setting="VBH", document=None) -> tjr.Dg3JudgeInputs:
+    """A VBH ``dg3-judge`` input: its L1 reference is the P-1a extract (addendum 4a-8 4.1: the
+    fixed sha, patched to the synthetic file)."""
     extract, dg3 = tmp_path / "L1.json", tmp_path / "dg3.json"
     extract.write_text("{}", encoding="utf-8")
-    dg3.write_text(json.dumps(document or _dg3_document(setting="VBJ0")), encoding="utf-8")
+    monkeypatch.setattr(fixed, "STORED_H6_L1_REFERENCE_SHA256", fixed.file_sha256(extract))
+    dg3.write_text(json.dumps(document or _dg3_document(setting="VBH")), encoding="utf-8")
     return tjr.Dg3JudgeInputs(setting, dg3, extract, fixed.file_sha256(extract),
                               tmp_path / "judge.json")
+
+
+def _judge_every_line(out, files) -> dict:
+    """A stub r79 judge grading every Dg-3 line (4a-8 5: rows = lines, unmatched 0)."""
+    lines = json.loads(files[0].read_text(encoding="utf-8"))["results"]
+    out.write_text(json.dumps({"runs": [{"key": line["key"]} for line in lines],
+                               "unmatched": [], "errors": []}), encoding="utf-8")
+    return {"exit_code": 0}
 
 
 def test_m8_dg3_judge_runs_r79_with_the_p1a_extract(tmp_path, monkeypatch) -> None:
@@ -200,11 +211,10 @@ def test_m8_dg3_judge_runs_r79_with_the_p1a_extract(tmp_path, monkeypatch) -> No
 
     def run_r79_judge(out, files):
         calls.append([out, *files])
-        out.write_text('{"runs": []}', encoding="utf-8")
-        return {"exit_code": 0}
+        return _judge_every_line(out, files)
 
     monkeypatch.setattr(h8, "run_r79_judge", run_r79_judge)
-    inputs = _dg3_inputs(tmp_path)
+    inputs = _dg3_inputs(tmp_path, monkeypatch)
     report, problems, _ = tjr.make_dg3_judge(inputs)
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
     assert calls == [[inputs.judge_out, inputs.dg3, inputs.l1_reference]]
@@ -212,19 +222,22 @@ def test_m8_dg3_judge_runs_r79_with_the_p1a_extract(tmp_path, monkeypatch) -> No
     assert report["l1_reference_sha256"] == inputs.l1_reference_sha256
 
 
-@pytest.mark.parametrize("change", ["extract_sha", "judge_exists", "setting", "keys_file"])
-def test_m8_dg3_judge_input_problems(tmp_path, change) -> None:
-    document = _dg3_document(setting="VBJ0")
+@pytest.mark.parametrize(("change", "count"), [
+    ("extract_sha", 2),  # another sha than given and than the fixed P-1a extract (4a-8 4.1)
+    ("judge_exists", 1), ("setting", 1), ("keys_file", 1)])
+def test_m8_dg3_judge_input_problems(tmp_path, monkeypatch, change, count) -> None:
+    document = _dg3_document(setting="VBH")
     if change == "keys_file":
         document["meta"] = {}
-    inputs = _dg3_inputs(tmp_path, document=document,
-                         setting="VBJ" if change == "setting" else "VBJ0")
+    if change == "setting":
+        document = _dg3_document(setting="VBJ0")
+    inputs = _dg3_inputs(tmp_path, monkeypatch, document=document)
     if change == "extract_sha":
         inputs = tjr.Dg3JudgeInputs(inputs.setting, inputs.dg3, inputs.l1_reference, "0" * 64,
                                     inputs.judge_out)
     if change == "judge_exists":
         inputs.judge_out.write_text("{}", encoding="utf-8")
-    assert len(tjr.dg3_input_problems(inputs)) == 1
+    assert len(tjr.dg3_input_problems(inputs)) == count, tjr.dg3_input_problems(inputs)
 
 
 # --- M-4 --------------------------------------------------------------------------------------

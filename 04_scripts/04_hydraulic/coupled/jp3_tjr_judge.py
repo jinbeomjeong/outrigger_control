@@ -21,7 +21,8 @@ Sub-commands:
              1.1: T4h meta ``head_only_declared``, else the line's, else the harness steady
              path) has no ③ record and ① = ② = 0; an event-path job has its ③ record
              (VBH / VBJ: rev 5 of the 13.6 identity, checked on rev 5 records only) and
-             ② > 0 (VBH: ① = 0; VBJ / VBJ0, P4 on: ① = ②); otherwise a setting defect of
+             ② > 0 (VBH: ① = 0; VBJ / VBJ0, P4 on: ① = k ②, k of 4a-8 2 = 1 on these
+             run_v5 lines); otherwise a setting defect of
              its test. A setting other than 18 declared / 4 event jobs makes its test not
              judgeable. A VB line breaking the same rules adds to the T-JR-10
              "저장값 노후 확인 전" reason (4a-5 2 VB row, prelaunch audit N-4).
@@ -38,7 +39,8 @@ Sub-commands:
              (``j_p3_judgement_rev5``, 1 judged row expected; ``judged_key_missing``,
              ``no_judged_runs`` and, judged rows but not 1, ``judged_row_count_mismatch`` are
              not judgeable, 4a-5 3.3, 4a-7 erratum 1 7) and the P4 evidence of the VBJ lines
-             (also ① = ② > 0, erratum 1 9: event-path lines) and of their VBJ0 base lines
+             (also ① = k ② > 0, erratum 1 9: event-path lines; addendum 4a-8 2: k = 2 on an
+             r79 key whose third token is ``g8``, else 1) and of their VBJ0 base lines
              (4a-2 B2, 4a-3 4.4; VBJ and VBJ0 run with
              ``R79_ROD_MODEL=plant_truth``). Records: the R5-7 columns of 5.5 with the
              ``ret_after_gate_s`` resolution (R9). 4a-4 5: VBH needs the fixed H-6 as
@@ -52,10 +54,25 @@ Sub-commands:
              ``keys_file`` is not the stored H-6 (135 keys). A new-side
              ``LockWindowMismatchError`` error line is the T-JR-14 (가) failure (exit 1, the
              pairs are not compared; prelaunch audit N-1); other error lines are not judgeable.
+             Addendum 4a-8 5: each received judge file must grade every line of its side
+             (row count and key set = the lines, unmatched 0, errors 0; a mismatch line is
+             left out), else not judgeable.
 ``dg3-judge``      Prelaunch audit M-8: the judge file of one new-side Dg-3 run (VBH, VBJ,
-             VBJ0) with the P-1a L1 extract (``--l1-reference-sha256`` from the P-1a report;
-             the run's meta ``keys_file`` must be the stored H-6, its lines of the setting);
-             reports the judge file's sha256. An existing ``--judge-out`` is refused.
+             VBJ0) with its L1 reference (addendum 4a-8 4: VBH the P-1a extract, its sha the
+             fixed ``a591c3a8...``; VBJ / VBJ0 the L1 run of the setting on the
+             ``--l1-keys-file``, checked by 4a-8 4.3: 102 lines, no error, L1, plant_truth,
+             the setting, candidate current, the key file's (harness, inner) set, meta
+             ``keys_file``); the run's meta ``keys_file`` must be the stored H-6, its lines of
+             the setting, ``--dg3-sha256`` (when given) its sha. The judge file must grade
+             every Dg-3 line (4a-8 5: rows = lines, unmatched 0, errors 0; else not
+             judgeable). Reports the judge file's sha256. An existing ``--judge-out`` is
+             refused.
+``l1-keys``        Addendum 4a-8 4.2: writes the VBJ / VBJ0 L1 key file (one
+             ``L1|s0|<harness>|<case_index>|<inner>`` per distinct (harness, inner) of the
+             fixed stored H-6, first-appearance order, 102 keys; with ``--l1-extract`` every
+             key must be in the fixed L1 extract) and reports its sha256.
+``l1-hash-record`` Addendum 4a-8 4.5 (a record): per (harness, inner) of the VBJ and VBJ0 L1
+             runs, the counts of the same and of other command hashes.
 ``base-judge``     4a-3 4.4: writes the H-6 base judge file (``r79_sensor_judge.py judge`` on
              the stored H-6 with the L1 lines of ``h8_noise_VB.json``, ``--s4-late-loc``) and
              reports its sha256 (both inputs must be the fixed files).
@@ -163,8 +180,9 @@ for _path in (HERE, ROOT / "03_src"):
 
 import jp3_baseline_compare as compare  # noqa: E402
 import jp3_fixed_inputs as fixed  # noqa: E402
+import jp3_rejudge_inputs as rejudge  # noqa: E402
 import jp3_t8_rules as t8_rules  # noqa: E402
-from j_p3_inputs import REV5_JUDGED_SETTINGS, rod_reading_evidence_problems  # noqa: E402
+from j_p3_inputs import REV5_JUDGED_SETTINGS  # noqa: E402
 
 T8_JOBS = 22
 """4a-3 2: the revision 8 7.2 rule (``run_v5.p3_hash_jobs``) replaces the T-P3-5 20 rows."""
@@ -349,10 +367,11 @@ def t8_line_problems(setting: str, line: dict, is_declared: bool) -> list[str]:
         problems.append("event job without an extend_bound_check record")
     if reads <= 0:
         problems.append("event job without monitor rod reads (② = 0)")
-    if setting in T8_P4_SETTINGS:  # the 4a-7 1.2 table: VBJ / VBJ0 ① = ②, VBH / VB ① = 0
-        if truth != reads:
+    if setting in T8_P4_SETTINGS:  # the 4a-7 1.2 table: VBJ / VBJ0 ① = k ②, VBH / VB ① = 0
+        multiplier = compare.evidence_multiplier(line)  # 4a-8 2 (run_v5 lines: k = 1)
+        if truth != multiplier * reads:
             problems.append(f"rod_reading_truth: {truth} truth readings, {reads} monitor rod "
-                            "reads (equal and > 0 needed)")
+                            f"reads (k = {multiplier}: truth = k x monitor > 0 needed)")
     elif truth != 0:
         problems.append(f"P4 off but {truth} truth readings")
     return problems
@@ -612,13 +631,13 @@ def _check_lines(bundle: str, base_lines: dict, new_lines: dict,
                 problems.setting_defects += [f"{key}: {text}" for text in _dg3_identity(line)]
             if line.get("v5_setting") not in JP3_LINE_SETTINGS:
                 continue
-            problems.setting_defects += [
-                f"{label} {key}: {text}" for text in rod_reading_evidence_problems(
-                    line.get("hydraulics_record"), line.get("hydraulic_options"))]
+            problems.setting_defects += [  # 4a-8 2: k = 2 on the r79 G8 lines
+                f"{label} {key}: {text}" for text in compare.line_evidence_problems(line)]
             if line.get("v5_setting") in REV5_JUDGED_SETTINGS:  # erratum 1 9: J-P3 lines
                 problems.setting_defects += [
                     f"{label} {key}: {text}" for text in compare.judged_line_evidence_problems(
-                        line.get("hydraulics_record"), is_head_only_line(line, None))]
+                        line.get("hydraulics_record"), is_head_only_line(line, None),
+                        compare.evidence_multiplier(line))]
 
 
 def bundle_setting_problems(bundle: str, base_lines: dict, new_lines: dict) -> list[str]:
@@ -797,6 +816,29 @@ def _r5_7_records(lines: list[dict]) -> dict:
             "ret_after_gate_s_resolution": RET_AFTER_GATE_RESOLUTION}
 
 
+def t12_judge_row_problems(documents: dict[str, dict]) -> list[str]:
+    """Addendum 4a-8 5 (second item): each received r79 judge file grades every line of its
+    Dg-3 side (``compare.judge_rows_problems``: row count and key set = the lines, unmatched
+    0, errors 0); a miss is not judgeable (13.2: zero judged rows is never a pass)."""
+    problems = []
+    for side in ("base", "new"):
+        lines = [line for line in documents[side].get("results") or []
+                 if line.get("level") != L1_LEVEL]
+        problems += compare.judge_rows_problems(f"--{side}-judge", lines,
+                                                documents[f"{side}_judge"],
+                                                mismatch_keys(lines))
+    return problems
+
+
+def mismatch_keys(lines: list[dict]) -> frozenset[str]:
+    """Plain keys of the ``LockWindowMismatchError`` lines: a T-JR-14 failure as it is
+    (prelaunch audit N-1), not an ungraded line of 4a-8 5."""
+    import h8_noise_judge_4368 as h8
+
+    return frozenset(h8.plain_key(line["key"]) for line in lines
+                     if is_lock_window_mismatch(line))
+
+
 def t12_input_problems(bundle: str, base: Path, base_judge: Path,
                        base_judge_sha256: str | None) -> list[str]:
     """4a-4 5: VBH's ``--base`` is the fixed H-6; ``--base-judge`` has the sha256 recorded
@@ -907,27 +949,47 @@ def l1_reference_path(judge_out: Path) -> Path:
 
 @dataclass(frozen=True)
 class Dg3JudgeInputs:
-    """``dg3-judge`` inputs (prelaunch audit M-8)."""
+    """``dg3-judge`` inputs (prelaunch audit M-8; addendum 4a-8 4, 5)."""
 
     setting: str
     dg3: Path
     l1_reference: Path
     l1_reference_sha256: str
     judge_out: Path
+    l1_keys_file: Path | None = None
+    """4a-8 4.2 key file of the VBJ / VBJ0 L1 run (required there, unused for VBH)."""
+    dg3_sha256: str | None = None
+    """4a-8 6.2 3: the fixed sha256 of a stored Dg-3 file (None: not asserted)."""
+
+
+PLANT_TRUTH_SETTINGS = ("VBJ", "VBJ0")
+"""4a-8 4.1: their L1 reference is a new L1 run of the same setting (``plant_truth``)."""
+L1_ROD_MODEL = "plant_truth"
+L1_LEVEL = "L1"
+L1_CANDIDATE = "current"
 
 
 def dg3_input_problems(inputs: Dg3JudgeInputs) -> list[str]:
-    """Why a new-side Dg-3 file cannot be judged with the P-1a L1 extract: the extract of
-    another sha, a run file without the stored H-6 keys file, lines of another setting or an
-    existing judge file."""
+    """Why a new-side Dg-3 file cannot be judged: an L1 reference of another sha than given
+    (VBH: also than the fixed P-1a extract, 4a-8 4.1; VBJ / VBJ0: not the 4.3 L1 run of the
+    setting), a Dg-3 file of another sha than ``dg3_sha256``, a run file without the stored
+    H-6 keys file, lines of another setting or an existing judge file."""
     problems = []
     problem = fixed.sha_problem(inputs.l1_reference, inputs.l1_reference_sha256.lower(),
-                                "--l1-reference (P-1a extract)")
+                                "--l1-reference")
     problems += [] if problem is None else [problem]
+    if inputs.setting in PLANT_TRUTH_SETTINGS:
+        problems += l1_run_problems(inputs.setting, inputs.l1_reference, inputs.l1_keys_file)
+    elif inputs.l1_reference_sha256.lower() != fixed.STORED_H6_L1_REFERENCE_SHA256:
+        problems.append(f"--l1-reference-sha256 is not the P-1a extract "
+                        f"{fixed.STORED_H6_L1_REFERENCE_SHA256[:12]} (4a-8 4.1: VBH keeps it)")
     if inputs.judge_out.exists():
         problems.append(f"{inputs.judge_out} exists (never overwritten)")
     if not inputs.dg3.is_file():
         return [*problems, f"--dg3 {inputs.dg3} missing"]
+    if inputs.dg3_sha256 is not None:
+        problem = fixed.sha_problem(inputs.dg3, inputs.dg3_sha256.lower(), "--dg3")
+        problems += [] if problem is None else [problem]
     document = _read_json(inputs.dg3)
     problems += keys_file_problems("--dg3", document)
     other = sorted({str(line.get("v5_setting")) for line in document.get("results") or []
@@ -937,15 +999,69 @@ def dg3_input_problems(inputs: Dg3JudgeInputs) -> list[str]:
     return problems
 
 
+def l1_key_pairs(keys: list[str]) -> list[tuple[str, str]]:
+    """(harness, inner) of ``L1|s0|<harness>|<case_index>|<inner>`` keys (4a-8 4.2)."""
+    import h8_noise_judge_4368 as h8
+
+    pairs = []
+    for key in keys:
+        tokens = h8.plain_key(key).split("|", 4)
+        pairs.append((tokens[2], tokens[4]) if len(tokens) == 5 else ("", key))
+    return pairs
+
+
+def l1_run_problems(setting: str, l1_run: Path, keys_file: Path | None) -> list[str]:
+    """Addendum 4a-8 4.3: the VBJ / VBJ0 L1 reference is the L1 run of ``setting`` on the 4.2
+    key file - :data:`L1_KEY_COUNT` lines without an error line, each ``level`` L1,
+    ``rod_model`` plant_truth, ``v5_setting`` = the setting, ``candidate`` current; its
+    (harness, inner) set is the key file's; meta ``keys_file`` names the key file (sha256,
+    ``n_keys``). Any miss makes the bundle not judgeable."""
+    if keys_file is None or not keys_file.is_file():
+        return [f"{setting}: --l1-keys-file missing (4a-8 4.3)"]
+    if not l1_run.is_file():
+        return [f"{setting}: --l1-reference {l1_run} missing"]
+    keys = [str(row["key"]) for row in _read_json(keys_file).get("results") or []]
+    document = _read_json(l1_run)
+    lines = document.get("results") or []
+    problems = []
+    if len(keys) != rejudge.L1_KEY_COUNT:
+        problems.append(f"{setting}: key file of {len(keys)} keys, {rejudge.L1_KEY_COUNT} "
+                        "expected (4a-8 4.2)")
+    errors = sum("error" in line for line in lines)
+    if len(lines) != rejudge.L1_KEY_COUNT or errors:
+        problems.append(f"{setting}: L1 run of {len(lines)} lines, {errors} error lines; "
+                        f"{rejudge.L1_KEY_COUNT} and 0 expected (4a-8 4.3)")
+    expected_fields = {"level": L1_LEVEL, "rod_model": L1_ROD_MODEL, "v5_setting": setting,
+                       "candidate": L1_CANDIDATE}
+    for field_name, value in expected_fields.items():
+        other = sum(line.get(field_name) != value for line in lines)
+        if other:
+            problems.append(f"{setting}: {other} L1 lines with {field_name} other than "
+                            f"{value!r} (4a-8 4.3)")
+    found = {(str(line.get("harness")), str(line.get("inner"))) for line in lines}
+    if found != set(l1_key_pairs(keys)):
+        problems.append(f"{setting}: L1 (harness, inner) set differs from the key file's "
+                        "(4a-8 4.3)")
+    record = (document.get("meta") or {}).get("keys_file") or {}
+    if record.get("sha256") != fixed.file_sha256(keys_file) or record.get("n_keys") != len(keys):
+        problems.append(f"{setting}: L1 meta keys_file is not the key file (sha256 / n_keys, "
+                        "4a-8 4.3)")
+    return problems
+
+
 def make_dg3_judge(inputs: Dg3JudgeInputs) -> tuple[dict, compare.Problems, list[Path]]:
     """Prelaunch audit M-8 (4a-3 4.4 "the same command"): the r79 judge file of one new-side
-    Dg-3 run (VBH, VBJ or VBJ0) with the P-1a L1 extract, ``r79_sensor_judge.py judge
-    <judge_out> <dg3> <extract> --s4-late-loc``; the report gives the judge file's sha256 for
-    ``t12 --new-judge-sha256`` (and, for VBJ0, ``--base-judge-sha256`` of the VBJ bundle)."""
+    Dg-3 run (VBH, VBJ or VBJ0) with its L1 reference (VBH: the P-1a extract; VBJ / VBJ0: the
+    4a-8 4.3 L1 run of the setting), ``r79_sensor_judge.py judge <judge_out> <dg3> <L1>
+    --s4-late-loc``. The judge file must grade every Dg-3 line (4a-8 5:
+    ``compare.judge_rows_problems``), else not judgeable. The report gives the judge file's
+    sha256 for ``t12 --new-judge-sha256`` (and, for VBJ0, ``--base-judge-sha256`` of the VBJ
+    bundle)."""
     import h8_noise_judge_4368 as h8
 
     problems = compare.Problems()
-    files = [inputs.dg3, inputs.l1_reference]
+    files = [inputs.dg3, inputs.l1_reference,
+             *([] if inputs.l1_keys_file is None else [inputs.l1_keys_file])]
     problems.not_judgeable += dg3_input_problems(inputs)
     if problems.not_judgeable:
         return {"setting": inputs.setting}, problems, files
@@ -954,10 +1070,111 @@ def make_dg3_judge(inputs: Dg3JudgeInputs) -> tuple[dict, compare.Problems, list
     if run["exit_code"] != 0 or not inputs.judge_out.is_file():
         problems.not_judgeable.append(f"r79_sensor_judge exit {run['exit_code']}")
         return report, problems, files
+    lines = [line for line in _read_json(inputs.dg3).get("results") or []
+             if line.get("level") != L1_LEVEL]
+    judge = _read_json(inputs.judge_out)
+    problems.not_judgeable += compare.judge_rows_problems("--judge-out", lines, judge,
+                                                          mismatch_keys(lines))
     report.update(judge_file=str(inputs.judge_out),
                   judge_sha256=fixed.file_sha256(inputs.judge_out),
                   dg3_sha256=fixed.file_sha256(inputs.dg3),
-                  l1_reference_sha256=fixed.file_sha256(inputs.l1_reference))
+                  l1_reference_sha256=fixed.file_sha256(inputs.l1_reference),
+                  judge_rows={"runs": len(judge.get("runs") or []),
+                              "unmatched": len(judge.get("unmatched") or []),
+                              "errors": len(judge.get("errors") or []), "lines": len(lines)})
+    return report, problems, files
+
+
+def l1_hash_record(vbj_l1: Path, vbj0_l1: Path) -> tuple[dict, compare.Problems, list[Path]]:
+    """Addendum 4a-8 4.5 (a record, not a judgement): per (harness, inner) whether the VBJ L1
+    and the VBJ0 L1 lines have the same command hash (``base.commands_sha256``, else
+    ``base.cmd_sha256``); counts only. Not judgeable: a file missing or a pair on one side
+    only."""
+    problems = compare.Problems()
+    by_pair = {}
+    for label, path in (("VBJ", vbj_l1), ("VBJ0", vbj0_l1)):
+        if not path.is_file():
+            problems.not_judgeable.append(f"{label} L1 run {path} missing")
+            return {}, problems, [vbj_l1, vbj0_l1]
+        by_pair[label] = {(str(line.get("harness")), str(line.get("inner"))): line
+                          for line in _read_json(path).get("results") or []}
+    pairs = set(by_pair["VBJ"]) | set(by_pair["VBJ0"])
+    one_side = pairs ^ (set(by_pair["VBJ"]) & set(by_pair["VBJ0"]))
+    if one_side:
+        problems.not_judgeable.append(f"{len(one_side)} (harness, inner) pairs on one side only")
+
+    def command_hash(line: dict) -> str | None:
+        base = line.get("base") or {}
+        return base.get("commands_sha256") or base.get("cmd_sha256")
+
+    shared = sorted(pairs - one_side)
+    hashes = [(command_hash(by_pair["VBJ"][pair]), command_hash(by_pair["VBJ0"][pair]))
+              for pair in shared]
+    report = {"pairs": len(shared),
+              "same_command_hash": sum(mine is not None and mine == theirs
+                                       for mine, theirs in hashes),
+              "other_command_hash": sum(mine != theirs for mine, theirs in hashes),
+              "hash_missing": sum(mine is None or theirs is None for mine, theirs in hashes),
+              "record_only": "4a-8 4.5: not a judgement"}
+    return report, problems, [vbj_l1, vbj0_l1]
+
+
+# --- l1-keys (addendum 4a-8 4.2) ------------------------------------------------------------
+
+def l1_keys_of(h6: dict) -> list[str]:
+    """One key ``L1|s0|<harness>|<case_index>|<inner>`` per distinct (harness, inner) of the
+    stored H-6 lines, in the order they first appear (4a-8 4.2)."""
+    seen: set[tuple[str, str]] = set()
+    keys = []
+    for line in h6.get("results") or []:
+        pair = (str(line["harness"]), str(line["inner"]))
+        if pair in seen:
+            continue
+        seen.add(pair)
+        keys.append(f"{L1_LEVEL}|s0|{pair[0]}|{line['case_index']}|{pair[1]}")
+    return keys
+
+
+def make_l1_keys(h6_path: Path, keys_out: Path,
+                 l1_extract: Path | None) -> tuple[dict, compare.Problems, list[Path]]:
+    """Addendum 4a-8 4.2: the L1 key file of the VBJ / VBJ0 L1 runs from the fixed stored H-6
+    (``{"results": [{"key": ...}]}``, LF bytes). Not judgeable: another H-6 sha, a key count
+    other than :data:`jp3_rejudge_inputs.L1_KEY_COUNT`, an existing key file, or (with
+    ``l1_extract``, the P-1a / stored L1 extract of the fixed sha) a key not in the extract."""
+    import h8_noise_judge_4368 as h8
+
+    problems = compare.Problems()
+    files = [h6_path, *([] if l1_extract is None else [l1_extract])]
+    problem = fixed.sha_problem(h6_path, fixed.H6_SHA256, "--h6 (stored H-6)")
+    if problem is not None:
+        problems.not_judgeable.append(problem)
+        return {}, problems, files
+    if keys_out.exists():
+        problems.not_judgeable.append(f"{keys_out} exists (never overwritten)")
+        return {}, problems, files
+    keys = l1_keys_of(_read_json(h6_path))
+    report = {"keys": len(keys), "by_harness": dict(Counter(key.split("|")[2] for key in keys))}
+    if len(keys) != rejudge.L1_KEY_COUNT:
+        problems.not_judgeable.append(f"{len(keys)} L1 keys, {rejudge.L1_KEY_COUNT} expected "
+                                      "(4a-8 4.2)")
+    if l1_extract is not None:
+        problem = fixed.sha_problem(l1_extract, fixed.STORED_H6_L1_REFERENCE_SHA256,
+                                    "--l1-extract")
+        if problem is not None:
+            problems.not_judgeable.append(problem)
+        else:
+            extract = _read_json(l1_extract)
+            plain = {h8.plain_key(line["key"]) for line in extract.get("results") or []}
+            missing = [key for key in keys if key not in plain]
+            report["keys_not_in_extract"] = len(missing)
+            if missing:
+                problems.not_judgeable.append(f"{len(missing)} keys not in the L1 extract")
+    if problems.not_judgeable:
+        return report, problems, files
+    keys_out.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps({"results": [{"key": key} for key in keys]}, indent=1) + "\n"
+    keys_out.write_bytes(text.encode("utf-8"))
+    report.update(keys_file=str(keys_out), keys_file_sha256=fixed.file_sha256(keys_out))
     return report, problems, files
 
 
@@ -1373,10 +1590,27 @@ def _parser() -> argparse.ArgumentParser:
     dg3_judge.add_argument("--dg3", type=Path, required=True,
                            help="las_t3_dg3 output of the setting (--keys-file = stored H-6)")
     dg3_judge.add_argument("--l1-reference", type=Path, required=True,
-                           help="P-1a h6_base_judge_L1_reference.json")
+                           help="VBH: P-1a h6_base_judge_L1_reference.json; VBJ / VBJ0: the "
+                                "L1 run of the setting (addendum 4a-8 4.3)")
     dg3_judge.add_argument("--l1-reference-sha256", required=True,
-                           help="l1_reference_sha256 of the P-1a base-judge report")
+                           help="VBH: l1_reference_sha256 of the P-1a base-judge report (= the "
+                                "fixed extract); VBJ / VBJ0: the L1 run's recorded sha256")
+    dg3_judge.add_argument("--l1-keys-file", type=Path, default=None,
+                           help="VBJ / VBJ0: the 4a-8 4.2 key file of the L1 run (required)")
+    dg3_judge.add_argument("--dg3-sha256", default=None,
+                           help="the fixed sha256 of --dg3 (4a-8 6.2 3: stored Dg-3 files)")
     dg3_judge.add_argument("--judge-out", type=Path, required=True)
+    l1_keys = commands.add_parser("l1-keys", help="4a-8 4.2: the VBJ / VBJ0 L1 key file")
+    l1_keys.add_argument("--out", type=Path, required=True)
+    l1_keys.add_argument("--h6", type=Path, required=True, help="the fixed stored H-6")
+    l1_keys.add_argument("--keys-out", type=Path, required=True)
+    l1_keys.add_argument("--l1-extract", type=Path, default=None,
+                         help="the fixed L1 extract (a591c3a8...): every key must be in it")
+    l1_hashes = commands.add_parser("l1-hash-record",
+                                    help="4a-8 4.5: VBJ / VBJ0 L1 command hash counts (record)")
+    l1_hashes.add_argument("--out", type=Path, required=True)
+    l1_hashes.add_argument("--vbj-l1", type=Path, required=True)
+    l1_hashes.add_argument("--vbj0-l1", type=Path, required=True)
     base_judge = commands.add_parser("base-judge",
                                      help="4a-3 4.4: the H-6 base judge file (r79_sensor_judge)")
     base_judge.add_argument("--out", type=Path, required=True)
@@ -1419,7 +1653,7 @@ def _parser() -> argparse.ArgumentParser:
                               "bundles and the T-JR-15 Dg-3 VBJ lines (4a-5 erratum 1)")
     records.add_argument("--lock-rows", type=Path, nargs="*", default=[],
                          help="run_v5 jsonl (case E) and Dg-3 json (VBJ 135 lines) files")
-    for sub in (t8, t12, dg3_judge, base_judge, judges, selfcheck):
+    for sub in (t8, t12, dg3_judge, l1_keys, l1_hashes, base_judge, judges, selfcheck):
         sub.epilog, sub.formatter_class = EXIT_TABLE, _RAW_HELP
     return parser
 
@@ -1438,15 +1672,22 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
                                               args.base_judge_sha256),
                           *judge_sha_problems("--new-judge", args.new_judge,
                                               args.new_judge_sha256)]
-        report, problems = judge_t12(args.bundle, _read_json(args.base),
-                                     _read_json(args.base_judge), _read_json(args.new),
-                                     _read_json(args.new_judge))
-        problems.not_judgeable[:0] = input_problems
+        documents = {name: _read_json(path) for name, path in (
+            ("base", args.base), ("base_judge", args.base_judge), ("new", args.new),
+            ("new_judge", args.new_judge))}
+        report, problems = judge_t12(args.bundle, documents["base"], documents["base_judge"],
+                                     documents["new"], documents["new_judge"])
+        problems.not_judgeable[:0] = [*input_problems, *t12_judge_row_problems(documents)]
         problems.setting_defects[:0] = t12_file_defects(args.base, args.new)
         return report, problems, [args.base, args.base_judge, args.new, args.new_judge]
     if args.command == "dg3-judge":
         return make_dg3_judge(Dg3JudgeInputs(args.setting, args.dg3, args.l1_reference,
-                                             args.l1_reference_sha256, args.judge_out))
+                                             args.l1_reference_sha256, args.judge_out,
+                                             args.l1_keys_file, args.dg3_sha256))
+    if args.command == "l1-keys":
+        return make_l1_keys(args.h6, args.keys_out, args.l1_extract)
+    if args.command == "l1-hash-record":
+        return l1_hash_record(args.vbj_l1, args.vbj0_l1)
     if args.command == "base-judge":
         return make_base_judge(args.h6, args.noise, args.judge_out)
     if args.command == "t12-selfcheck":

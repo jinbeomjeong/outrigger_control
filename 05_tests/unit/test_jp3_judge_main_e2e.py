@@ -355,18 +355,33 @@ def pass_grades(monkeypatch):
         for run in results})
 
 
-def test_t12_main(tmp_path, monkeypatch, elsewhere, pass_grades) -> None:
+def _judge_of(document: dict, drop: int = 0) -> dict:
+    """An r79 judge file grading every line of ``document`` (``drop``: the last rows left out)."""
+    runs = [{"key": line["key"]} for line in document["results"]]
+    return {"runs": runs[:len(runs) - drop], "unmatched": [], "errors": []}
+
+
+@pytest.mark.parametrize(("judge_of", "expected"), [
+    (_judge_of, compare.EXIT_PASS),
+    (lambda document: {}, compare.EXIT_NOT_JUDGEABLE),  # 4a-8 5: an empty judge file
+    (lambda document: _judge_of(document, drop=1), compare.EXIT_NOT_JUDGEABLE),  # 134 rows
+    (lambda document: {**_judge_of(document), "unmatched": ["k"]}, compare.EXIT_NOT_JUDGEABLE),
+])
+def test_t12_main(tmp_path, monkeypatch, elsewhere, pass_grades, judge_of, expected) -> None:
     base = _write_json(tmp_path / "stored" / "h6_dg3_v4on.json", _dg3_document(setting="VB"))
     monkeypatch.setattr(fixed, "H6_SHA256", _sha(base))
     new_document = _dg3_document(setting="VBH")
     new_document["meta"]["keys_file"]["sha256"] = _sha(base)
     new = _write_json(tmp_path / "run" / "dg3_VBH.json", new_document)
-    judge = _write_json(tmp_path / "run" / "judge.json", {})
+    judge = _write_json(tmp_path / "run" / "judge.json", judge_of(new_document))
     out = tmp_path / "t12.json"
     code = tjr.main(["t12", "--bundle", "VBH", "--base", str(base), "--base-judge", str(judge),
                      "--base-judge-sha256", _sha(judge), "--new", str(new), "--new-judge",
                      str(judge), "--new-judge-sha256", _sha(judge), "--out", str(out)])
-    assert code == compare.EXIT_PASS, json.loads(out.read_text(encoding="utf-8"))
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert code == expected, report
+    if expected != compare.EXIT_PASS:
+        assert any("4a-8 5" in text for text in report["not_judgeable"])
 
 
 def test_records_main(tmp_path, monkeypatch, elsewhere) -> None:

@@ -219,6 +219,14 @@ def test_d1a_selection_of_the_stored_data(tmp_path) -> None:
         BASE_KEY, frozenset())[0]
     assert selection["r79_key_in_scan"] is False and selection["r79_key_in_dg3"] is False
     assert selection["scan"]["files_with_r79_keys"] > 0
+    # addendum 4a-8 3: one key per family, the base keys of its table, outside the scan
+    base_keys = {family: chosen["base_key"]
+                 for family, chosen in selection["r79_families"].items()}
+    assert base_keys == {"g6": BASE_KEY, "g8": "L2|s0|g8|0|slope|edge|top|4.0|ref|none|0",
+                         "ref": "L2|s0|ref|0|rigid|B|0,0"}
+    for chosen in selection["r79_families"].values():
+        assert chosen["seed"] == 25 and chosen["in_scan"] is False
+        assert chosen["in_dg3"] is False
 
 
 @pytest.mark.parametrize(("key", "seed"), [
@@ -230,11 +238,13 @@ def test_d1b_runner_must_take_the_generated_key(tmp_path, key, seed) -> None:
     summary, code = dryrun.summarize(SELECTION, events, r79)
     assert code == dryrun.EXIT_NOT_JUDGEABLE
     assert all(row.get("stop") == dryrun.ASK_AGAIN for row in summary["rows"]
-               if row["run"].startswith("r79"))
+               if row["run"] in ("r79_VBJ", "r79_VBH"))  # the g6 runs took another key
 
 
 def test_w1_r79_commands_are_the_t_jr_12_runner_and_environment(tmp_path) -> None:
-    commands = dryrun._commands({"case": "R14"}, tmp_path / "key.txt")
+    commands = dryrun._commands({"case": "R14"}, {"g6": tmp_path / "key.txt",
+                                                  "g8": tmp_path / "key_g8.txt"})
+    assert "--keys-file " + str(tmp_path / "key_g8.txt") in commands["r79_VBJ_g8"]
     for setting in ("VBJ", "VBH"):
         command = commands[f"r79_{setting}"]
         for word in (f"R79_V5_SETTING={setting}", f"R79_T4H_DIR=dryrun_evidence/{setting}_t4h",

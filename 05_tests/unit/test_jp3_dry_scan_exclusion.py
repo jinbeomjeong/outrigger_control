@@ -23,6 +23,25 @@ import jp3_dryrun_evidence as dryrun  # noqa: E402
 BASE_KEY = "L2|s0|g6|0|g6|G1+J1@FL|top|Fs0"
 DRY_KEY = "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0"
 RUN_OUTPUTS = "02_control/j_p3_cause/j9_runs/b51ed6e1/dry_a1"
+OTHER_FAMILY_BASE_KEYS = ("L2|s0|g8|0|slope|edge|top|4.0|ref|none|0", "L2|s0|ref|0|rigid|B|0,0")
+
+
+def test_4a8_one_generated_key_per_family(tmp_path, monkeypatch) -> None:
+    """Addendum 4a-8 3: g6, g8 and ref keys, each at s25 and outside the scan."""
+    selection = _selection(tmp_path, _scan_root(tmp_path), monkeypatch)
+    families = selection["r79_families"]
+    assert set(families) == {"g6", "g8", "ref"}
+    for family, chosen in families.items():
+        assert chosen["key"].split("|")[1:3] == ["s25", family]
+        assert chosen["seed"] == 25 and chosen["in_scan"] is False
+    assert families["g6"]["key"] == selection["r79_key"] == DRY_KEY
+
+
+def test_4a8_family_without_a_noise_key_stops(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(sys.modules[__name__], "OTHER_FAMILY_BASE_KEYS",
+                        OTHER_FAMILY_BASE_KEYS[:1])
+    with pytest.raises(dryrun.Stop, match="no ref L2 noise key"):
+        _selection(tmp_path, _scan_root(tmp_path), monkeypatch)
 
 
 def _r79_file(path: Path, key: str) -> Path:
@@ -47,8 +66,9 @@ def _selection(tmp_path: Path, root: Path, monkeypatch) -> dict:
     dg3.write_text(json.dumps({"results": [{"key": "cand=current#L3|s0|h|1|x"}]}),
                    encoding="utf-8")
     noise = tmp_path / "noise.json"
-    noise.write_text(json.dumps({"results": [{"key": f"cand=current#{BASE_KEY}",
-                                              "level": "L2"}]}), encoding="utf-8")
+    base_keys = (BASE_KEY, *OTHER_FAMILY_BASE_KEYS)  # addendum 4a-8 3: a key per family
+    noise.write_text(json.dumps({"results": [{"key": f"cand=current#{key}", "level": "L2"}
+                                             for key in base_keys]}), encoding="utf-8")
     inputs = dryrun.SelectInputs(root, tmp_path / "main.jsonl", tmp_path, dg3, noise)
     return dryrun.select(inputs)
 

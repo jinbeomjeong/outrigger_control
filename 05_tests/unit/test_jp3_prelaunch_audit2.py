@@ -198,17 +198,26 @@ def test_n1_t12_command_exit_1(tmp_path, pass_grades) -> None:
     new = _dg3_document()
     new["results"][9]["error"] = MISMATCH
     files = {"base": tmp_path / "base.json", "new": tmp_path / "new.json",
-             "judge": tmp_path / "judge.json"}
-    files["base"].write_text(json.dumps(_dg3_document(setting="VBJ0")), encoding="utf-8")
+             "base_judge": tmp_path / "base_judge.json", "new_judge": tmp_path / "new_judge.json"}
+    base = _dg3_document(setting="VBJ0")
+    files["base"].write_text(json.dumps(base), encoding="utf-8")
     for line in new["results"]:
         line["v5_setting"] = "VBJ"
     files["new"].write_text(json.dumps(new), encoding="utf-8")
-    files["judge"].write_text("{}", encoding="utf-8")
-    sha = compare.file_sha256(files["judge"])
+    # addendum 4a-8 5: each judge file grades its side's lines; the mismatch line is the
+    # T-JR-14 failure as it is (an r79 judge error entry, excused)
+    for side, document in (("base", base), ("new", new)):
+        graded = [line for line in document["results"] if "error" not in line]
+        errors = [{"key": line["key"], "error": line["error"]}
+                  for line in document["results"] if "error" in line]
+        files[f"{side}_judge"].write_text(json.dumps({
+            "runs": [{"key": line["key"]} for line in graded], "unmatched": [],
+            "errors": errors}), encoding="utf-8")
     code = tjr.main(["t12", "--out", str(tmp_path / "out.json"), "--bundle", "VBJ", "--base",
-                     str(files["base"]), "--base-judge", str(files["judge"]), "--new",
-                     str(files["new"]), "--new-judge", str(files["judge"]),
-                     "--base-judge-sha256", sha, "--new-judge-sha256", sha])
+                     str(files["base"]), "--base-judge", str(files["base_judge"]), "--new",
+                     str(files["new"]), "--new-judge", str(files["new_judge"]),
+                     "--base-judge-sha256", compare.file_sha256(files["base_judge"]),
+                     "--new-judge-sha256", compare.file_sha256(files["new_judge"])])
     assert code == 1
 
 
