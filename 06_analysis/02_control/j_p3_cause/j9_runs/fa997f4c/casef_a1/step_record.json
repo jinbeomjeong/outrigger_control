@@ -1,0 +1,32 @@
+{
+  "step": "casef",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\casef_a1",
+  "exit_code": 0,
+  "commit": "fa997f4cb2dba9820118c6d38e469ebb137110e2",
+  "started": "2026-11-21 16:30:33 +09:00",
+  "done": "2026-11-21 16:33:20 +09:00",
+  "codes": {
+    "run:j9_case_f": 0,
+    "identity_check": 0,
+    "tool:case_f": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "j9_case_f",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_case_f --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\casef_a1\\j9_case_f.jsonl --workers 8 --mask 0xFFFF",
+      "pid": 624
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\casef_a1 --expect-commit fa997f4cb2dba9820118c6d38e469ebb137110e2 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\_identity_checks\\casef_a1.md"
+    },
+    {
+      "label": "case_f",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_case_judge.py case-f --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\casef_a1\\j9_case_f.jsonl --grid C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r67_top.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\casef_a1\\judge\\case_f.json"
+    }
+  ]
+}

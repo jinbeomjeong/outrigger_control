@@ -1,0 +1,33 @@
+{
+  "step": "t8",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1",
+  "exit_code": 2,
+  "reason": "t8 exit 2",
+  "commit": "fa997f4cb2dba9820118c6d38e469ebb137110e2",
+  "started": "2026-11-21 16:33:20 +09:00",
+  "stopped": "2026-11-21 16:43:48 +09:00",
+  "codes": {
+    "run:j9_t8": 0,
+    "identity_check": 0,
+    "tool:t8": 2
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "j9_t8",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_t8 --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8.jsonl --workers 8 --mask 0xFFFF --p3-hash-source C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+      "pid": 7132
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1 --expect-commit fa997f4cb2dba9820118c6d38e469ebb137110e2 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\_identity_checks\\t8_a1.md"
+    },
+    {
+      "label": "t8",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py t8 --stored C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun.jsonl --rerun C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8.jsonl --main-jsonl C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\judge\\t8.json"
+    }
+  ]
+}

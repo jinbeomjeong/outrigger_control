@@ -1,0 +1,446 @@
+{
+ "T-JR-11": {
+  "pairs": 22,
+  "equal": 22,
+  "differing": [],
+  "status": "setting_defect"
+ },
+ "VB_rerun_record": {
+  "lines": 22,
+  "evidence_problems": [],
+  "equal": 22,
+  "differing_count": 0,
+  "differing": [],
+  "missing": 0,
+  "error_rows": 0
+ },
+ "T-JR-10": {
+  "pairs": 22,
+  "passing": 22,
+  "pair_rows": [
+   {
+    "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FL\", \"level\": \"top\"}}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R16\", \"eps\": 0.0, \"offset_s\": 0.05}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R15\", \"eps\": 0.0, \"offset_s\": 0.05}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R14\", \"eps\": 0.0, \"offset_s\": 0.05}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S1\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S4\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S8\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S7\", \"eps\": 0.001}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S5\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R2\", \"eps\": 0.002}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R7\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R1\", \"eps\": 0.002}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R5\", \"eps\": 0.002}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R6\", \"eps\": 0.002}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R8\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R9\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R10\", \"eps\": 0.002}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R11\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R3\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S3\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"R4\", \"eps\": 0.0}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   },
+   {
+    "job": "{\"case\": \"S2\", \"eps\": 0.002}",
+    "problems": [],
+    "C_record": {
+     "record": "no record"
+    }
+   }
+  ],
+  "status": "setting_defect"
+ },
+ "setting_defects": [
+  "T-JR-10: VBH {\"case\": \"S1\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"S4\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"S8\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"S7\", \"eps\": 0.001}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"S5\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R2\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R7\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R1\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R5\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R6\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R8\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R9\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R10\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R11\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R3\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"S3\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"R4\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-10: VBH {\"case\": \"S2\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S1\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S1\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"S4\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S4\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"S8\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S8\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"S7\", \"eps\": 0.001}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S7\", \"eps\": 0.001}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"S5\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S5\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R2\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R2\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R7\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R7\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R1\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R1\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R5\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R5\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R6\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R6\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R8\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R8\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R9\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R9\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R10\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R10\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R11\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R11\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R3\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R3\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"S3\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S3\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"R4\", \"eps\": 0.0}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"R4\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ {\"case\": \"S2\", \"eps\": 0.002}: rule_revision None, not 5",
+  "T-JR-11: VBJ {\"case\": \"S2\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S1\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S4\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S8\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S7\", \"eps\": 0.001}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S5\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R2\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R7\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R1\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R5\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R6\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R8\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R9\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R10\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R11\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R3\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S3\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"R4\", \"eps\": 0.0}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)",
+  "T-JR-11: VBJ0 {\"case\": \"S2\", \"eps\": 0.002}: rod_reading_truth: 0 truth readings, 0 monitor rod reads (equal and > 0 needed)"
+ ],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "setting_defect",
+ "command": "t8",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun.jsonl",
+   "sha256": "ce526b1f71e635e6b80d538f36841ece01710af46f02acb4b3fa1355a5a4dcb3"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8.jsonl",
+   "sha256": "ee0b9a2f64a13a237e63ea5d95ff1976871226117e31a10510bfb4d727cae831"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R12_top-FL-Fs8-o0.0_VB.npz",
+   "sha256": "d2aae658199bb79b2b37ce7fbd8a3a3589e7cd2db523ecd9b33827c72ac70dcd"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R16_o0.05_VB.npz",
+   "sha256": "431c9f9d0a8e85b52c2f395d6c227950bf3aeb13eaa38599b0e591e3f372618f"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R15_o0.05_VB.npz",
+   "sha256": "7a6cdbaa0eab24cef883a23627093373face888b8ef252cefc7689f46470e7b3"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R14_o0.05_VB.npz",
+   "sha256": "fbe5cabfe5afb68c9d84ccbbfd9d2693c85a08db7484ec3c540b013668913e22"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S1_e0.0_VB.npz",
+   "sha256": "a8b77f373283680f73802edd69c6dd589774ba28f7851f4ce8567f2693fb1e5f"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S4_e0.0_VB.npz",
+   "sha256": "e3bfebe5692f80a4a6b250ea28d3e2cd8dec8aec5c700156db5f4265625d497e"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S8_e0.0_VB.npz",
+   "sha256": "a3fdfbb45aa0cd5675281a626b1c5b902a0dc772e7b9bce5b966ce96478ffea2"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S7_e0.001_VB.npz",
+   "sha256": "589638a257e725d93dbc6a6b7b84f8af59f7228c03f2bf2dd28f60556248651b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S5_e0.0_VB.npz",
+   "sha256": "8afc23255c58972792ae3d43ec2792f43bb26c93ad3f546ed36e021fe33d5b6b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R2_e0.002_VB.npz",
+   "sha256": "8e5ca540e8b30995453873b9c46867f2cab98ba691de2a633cc4269afe1d1caf"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R7_e0.0_VB.npz",
+   "sha256": "caf9aa939b09814b8f6a6495824928544da16647f3bd8ad883e5865c59969c8b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R1_e0.002_VB.npz",
+   "sha256": "903a8d5645bb4da1e45558f5ac30566b2a62edd48bc2e1065378c4281b9651cc"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R5_e0.002_VB.npz",
+   "sha256": "0efedc38da9fbee53436388ac3d141ff60de3dcd5dd1afa8d132d9cb2f6b3df7"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R6_e0.002_VB.npz",
+   "sha256": "598917e63dbc4a9403c8ad1e8d41a645691142400066b1ceca60b3895a1544fa"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R8_e0.0_VB.npz",
+   "sha256": "253306e4b906f7fa5899b901afe2c452718f42d6037194ccd8e18206c78051f6"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R9_e0.0_VB.npz",
+   "sha256": "c3e7997ca19c4d6926fd9456a4f1869f3c13ffdba10f9b4ab446ee651af92585"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R10_e0.002_VB.npz",
+   "sha256": "77df752ea15ebf86e49704099163300f09dbfeeeaac3e2b95070ccb998cc47d0"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R11_e0.0_VB.npz",
+   "sha256": "e52b242d1ad6d6e35928927aa89f2e4b7060b40593104392a07e05d2aed23144"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R3_e0.0_VB.npz",
+   "sha256": "4d3880b247ffacc7f0b962f7c7d3432fb648ebe24a3510f58d51128d62c8b6a5"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S3_e0.0_VB.npz",
+   "sha256": "ceeae21317a0e101326c97c4ad61bb1b9c01a4e938e3a46857f7ac5073f973e7"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\R4_e0.0_VB.npz",
+   "sha256": "dd207e46ef96120d633bbd5e6db1928bd4d946c08aa1ca1d08091292e86abc63"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h10_reuse_rerun_t4h\\S2_e0.002_VB.npz",
+   "sha256": "548f9513387a338cd5a1806ea455d0795c92a3c9361e146681066f1262ffddd2"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R12_top-FL-Fs8-o0.0_VBH.npz",
+   "sha256": "b2ee43c0b02e4029e043fbd536d36deb01e4b39c6633a1cc65c87ac1f45a640e"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R16_o0.05_VBH.npz",
+   "sha256": "969bb8d98be88d6a2ddcef5d2a6eeb97c4f1b98e49a1e7abbb3b160dd4820050"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R15_o0.05_VBH.npz",
+   "sha256": "d3f2b4eda0a2d219a54e6af2a80f44390997b03a66d402179fcc1682ebc42e21"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R14_o0.05_VBH.npz",
+   "sha256": "9a0e8336cb125ea8aebf19054b935969bc7513c5d98f7a0343c3d5fa947c1aa9"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S1_e0.0_VBH.npz",
+   "sha256": "cb103b2f2b64db9f99105212ec57b8c4fafff9d46376b28855075de3cfe16568"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S4_e0.0_VBH.npz",
+   "sha256": "2b955439cea060bbd698ee0ee3bd02eee3b166c7fd52b39ceb026089da359437"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S8_e0.0_VBH.npz",
+   "sha256": "3304c888102bdf26022c109c44eaea4daf6a641a5d2628bffb258df70bf135c0"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S7_e0.001_VBH.npz",
+   "sha256": "0681cbb994015c63b76747e6272b330075968b47c189e8806e311a083d3a9ecb"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S5_e0.0_VBH.npz",
+   "sha256": "af24d24b8847d9df31c65fecb9f1cc4a26aee9f51538f22db27f2207f36518da"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R2_e0.002_VBH.npz",
+   "sha256": "fed22b73a25ee04081075f59d372f6c6f90a08a8aeed1d79f7ddac35ba938317"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R7_e0.0_VBH.npz",
+   "sha256": "8f7b30d7a7d4fa03232af37b0f1aacb3727f6a1ee5bbb88461116d4a0dbd2577"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R1_e0.002_VBH.npz",
+   "sha256": "552e4bcf7427e3a0a69ebcabe3ca470c57d02c84811f1d34c7549b7246525eed"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R5_e0.002_VBH.npz",
+   "sha256": "936915278370c94d4f32324a0d3167b6906afdb096752a12926bf55cc728a509"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R6_e0.002_VBH.npz",
+   "sha256": "c3f2d97217505e89ee5bb44b5fb93e561a732104b7b026a58f91264d0a9086ca"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R8_e0.0_VBH.npz",
+   "sha256": "483cba123d21c2f8c840d766e3f92ec979379755862f71f635e024880df3c80c"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R9_e0.0_VBH.npz",
+   "sha256": "2edc26a72b5af874e8ecc69733b66a7c61293a33ece264e975985c03b2add3b9"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R10_e0.002_VBH.npz",
+   "sha256": "42cac51298d4cc86d12cd143d50042844c5fd695d4db17024d6f8af16aca60b2"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R11_e0.0_VBH.npz",
+   "sha256": "ee6db22a1c3b1df167b2b38c3b3976705e4807e10de24a80c47f9d373a56b2b2"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R3_e0.0_VBH.npz",
+   "sha256": "102a7084b8722d4805505e7f07a88865e3d59443c591d774b2b7edae1d838a33"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S3_e0.0_VBH.npz",
+   "sha256": "55834f8e8f88648f4b59ca80d9d6b294e76da58588ae2c5fb1b2fada98d1b22f"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\R4_e0.0_VBH.npz",
+   "sha256": "6a910eb59472d4003de92cbc2ba3578ac1ebb66789baa93eb0f6138171241f68"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\t8_a1\\j9_t8_t4h\\S2_e0.002_VBH.npz",
+   "sha256": "277180e8e7009d06384cf6ef90b0246fa9acb2c3b0f77f54a40e81c195b67e36"
+  }
+ ]
+}
