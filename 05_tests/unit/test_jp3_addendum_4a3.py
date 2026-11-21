@@ -80,7 +80,7 @@ STORED_RECORD = {"ext_lock_count": [1, 0, 0, 2], "lock_events": [[1.0, 3, True]]
 def _new_record() -> dict:
     return {**json.loads(json.dumps(STORED_RECORD)),
             "m2_law": {"law": "flow_limited_r5", "rule": "new text"},
-            "extend_bound_check": {"rule_revision": 5},
+            "extend_bound_check": {"rule_revision": 5, **compare.DEFAULT_IDENTITY},
             **{key: 1 for key in t8_rules.LOCK_LOG_KEYS},
             "rod_reading_truth_calls": 0, "two_pressure_reads": 4}
 
@@ -171,19 +171,28 @@ def test_k1_c_record_compares_the_fallback_estimates() -> None:
 
 # --- K-2 .. K-4: t12 ------------------------------------------------------------------------
 
-def _line(key: int, level: str, base: dict, *, truth: int, is_p4: bool) -> dict:
+def _line(key: int, level: str, base: dict, *, truth: int, is_p4: bool, setting: str) -> dict:
     return {"key": f"cand=current#{level}|s0|h|{key}|inner", "level": level,
-            "base": base, "r79": {"warn_fault": ["WARN_X"]},
+            "base": base, "r79": {"warn_fault": ["WARN_X"]}, "v5_setting": setting,
             "hydraulic_options": {"rod_reading_truth": is_p4},
             "hydraulics_record": {"rod_reading_truth_calls": truth,
-                                  "two_pressure_reads": max(truth, 9)}}
+                                  "two_pressure_reads": max(truth, 9),
+                                  "extend_bound_check": {"rule_revision": 5,
+                                                         **compare.DEFAULT_IDENTITY}}}
 
 
-def _document(bases: list[dict], *, truth: int = 0, is_p4: bool | None = None) -> dict:
-    """135-ish r79 lines (the first is L2); ``is_p4`` None = P4 exactly when ``truth`` > 0."""
+KEYS_FILE_META = {"keys_file": {"sha256": H6_SHA256, "n_keys": 135}}
+"""Prelaunch audit M-8: a 436.9 Dg-3 run took the stored H-6 keys (``--keys-file``)."""
+
+
+def _document(bases: list[dict], *, truth: int = 0, is_p4: bool | None = None,
+              setting: str = "VBH") -> dict:
+    """135-ish r79 lines of ``setting`` (the first is L2); ``is_p4`` None = P4 exactly when
+    ``truth`` > 0."""
     p4 = truth > 0 if is_p4 is None else is_p4
-    return {"meta": {}, "results": [_line(k, "L2" if k == 0 else "L3", base, truth=truth,
-                                          is_p4=p4) for k, base in enumerate(bases)]}
+    return {"meta": dict(KEYS_FILE_META),
+            "results": [_line(k, "L2" if k == 0 else "L3", base, truth=truth, is_p4=p4,
+                              setting=setting) for k, base in enumerate(bases)]}
 
 
 READY_BASES = [{"t_ready_s": 100.0}] * 130 + [{"t_ready": 90.0, "final_phase": "ready"}] * 3 + [
@@ -230,7 +239,7 @@ def test_k2_ready_table_of_4_2(base, new, kind) -> None:
 
 
 def test_k2_t_ready_lines_and_records(stub_grades) -> None:
-    report, problems = tjr.judge_t12("VBH", _document(READY_BASES), {},
+    report, problems = tjr.judge_t12("VBH", _document(READY_BASES, setting="VB"), {},
                                      _document(READY_BASES), {})
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
     assert len(report["ready_both_missing_record"]) == 2 and not report["ready_failures"]
@@ -239,13 +248,17 @@ def test_k2_t_ready_lines_and_records(stub_grades) -> None:
 @pytest.mark.skipif(not H6_PATH.is_file(), reason="stored H-6 not present (07_results-like "
                     "stored data; run with OUTRIGGER_RECORDS_ROOT)")
 def test_k2_stored_h6_self_comparison(stub_grades) -> None:
-    """4a-3 4.1 check before any run: H-6 as base and as new gives not judgeable 0, failures 0,
-    7 pairs without READY on both sides, 135 pairs, 1 L2 line (grades stubbed: the READY
-    reading is under test)."""
+    """4a-3 4.1 check before any run: H-6 as base and as new (the ``t12-selfcheck`` call)
+    gives no setting defect, not judgeable 0, failures 0 -- status pass (prelaunch audit B-1)
+    --, 7 pairs without READY on both sides, 135 pairs, 1 L2 line (grades stubbed: the READY
+    reading is under test; the real judge: ``test_jp3_prelaunch_audit.py``)."""
     assert hashlib.sha256(H6_PATH.read_bytes()).hexdigest() == H6_SHA256
     h6 = json.loads(H6_PATH.read_text(encoding="utf-8"))
-    report, problems = tjr.judge_t12("VBH", h6, {}, h6, {})
+    report, problems = tjr.judge_t12("VBH", h6, {}, h6, {}, check_settings=False)
+    assert problems.setting_defects == []
     assert problems.not_judgeable == [] and problems.failures == []
+    assert problems.status() == compare.STATUS_PASS
+    assert tjr.selfcheck_problems(report, problems) == []
     assert len(report["ready_both_missing_record"]) == 7
     assert report["pairs"] == 135
     assert sum(run.get("level") == "L2" for run in h6["results"]) == 1
@@ -263,7 +276,8 @@ def test_k3_pass_to_fail_is_judged_on_l2_only(stub_grades, level, base_grade, ne
     bases = [{"t_ready_s": 100.0} for _ in range(135)]
     news = [dict(base) for base in bases]
     bases[index]["grade"], news[index]["grade"] = base_grade, new_grade
-    report, problems = tjr.judge_t12("VBH", _document(bases), {}, _document(news), {})
+    report, problems = tjr.judge_t12("VBH", _document(bases, setting="VB"), {},
+                                     _document(news), {})
     assert problems.status() == status
     transition = f"{base_grade}->{new_grade}"
     assert report["grade_transitions_record"][level][transition] == 1
@@ -272,11 +286,11 @@ def test_k3_pass_to_fail_is_judged_on_l2_only(stub_grades, level, base_grade, ne
 def test_k4_vbj0_base_lines_need_the_p4_evidence(stub_grades, monkeypatch) -> None:
     monkeypatch.setattr(tjr, "_dg3_j_p3", lambda lines, problems: {"status": "pass"})
     bases = [{"t_ready_s": 100.0}] * 135
-    _, problems = tjr.judge_t12("VBJ", _document(bases, truth=9), {},
-                                _document(bases, truth=9), {})
+    _, problems = tjr.judge_t12("VBJ", _document(bases, truth=9, setting="VBJ0"), {},
+                                _document(bases, truth=9, setting="VBJ"), {})
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
-    _, problems = tjr.judge_t12("VBJ", _document(bases, truth=0, is_p4=True), {},
-                                _document(bases, truth=9), {})
+    _, problems = tjr.judge_t12("VBJ", _document(bases, truth=0, is_p4=True, setting="VBJ0"),
+                                {}, _document(bases, truth=9, setting="VBJ"), {})
     assert problems.status() == compare.STATUS_SETTING_DEFECT
     assert all(text.startswith("base ") for text in problems.setting_defects)
 

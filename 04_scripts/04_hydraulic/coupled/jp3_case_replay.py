@@ -13,6 +13,8 @@ are the ``run_v5`` batch ``j9_cases``. One JSON line per run (``run_v5.run_one``
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_case_replay.py --out <jsonl> [--workers N]
       [--mask HEX] [--settings VBG4,VBG5]
+This runner writes no run identity: run it under ``jp3_run_identity.py wrap <jsonl> -- ...``
+(start / end records with git head and ``is_clean``, prelaunch audit M-1).
 """
 from __future__ import annotations
 

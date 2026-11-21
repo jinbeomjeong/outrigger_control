@@ -26,7 +26,8 @@ Checks (every problem is collected; the status is the worst kind found):
    failed); the seed net force (4a-2 3.4): every ``p1_retract_seed_log`` row has
    ``|net_force_seed_step_N|`` <= 1 N (else failed). Not judgeable: the column missing, rows !=
    count, zero rows, an ``m2_shift_clipped`` row.
-8. P4-9: ``retract_tracker_dominated_reads`` 0 and an empty stretch log (no fallback leg).
+8. P4-9: ``retract_tracker_dominated_reads`` 0 and an empty stretch log (no fallback leg); a
+   revision 5 row without either key is not judgeable, never 0 (prelaunch audit M-5).
 
 Exit codes and ``status`` (the J4a-9 rows of 13.1 and 4a-2 R3):
 
@@ -75,6 +76,9 @@ BASELINE_ROW_FILES = ("j9_cases.jsonl", "cd.jsonl")
 JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JUDGED_KEYS = ("jp3a_breach_reads", "jp3b_breach_over_tol_reads", "jp3c_breach_reads")
 RELOCK_KEY = "relock_step_over_1bar_count"
+RETRACT_TRACKER_READS_KEY = "retract_tracker_dominated_reads"
+RETRACT_TRACKER_LOG_KEY = "retract_tracker_stretch_log"
+"""P4-9 keys of a revision 5 record (``extend_start_bound`` writes both on every rev 5 row)."""
 CLASS_NAMES = ("lock", "hold", "carry_ext", "carry_ret", "ext", "ret")
 REQUIRED_CLASSES = ("lock", "hold", "carry_ext", "carry_ret", "ext")
 LOCK_CLASSES = ("lock", "hold")
@@ -396,6 +400,19 @@ def judged_key_problems(setting: str, check: dict, hydraulics: dict,
         problems.failures.append(f"{setting}: P4-3a relock step over 1 bar")
 
 
+def retract_tracker_problems(setting: str, check: dict, problems: Problems) -> None:
+    """P4-9 on a revision 5 row: no ``retract_tracker`` read and no stretch row; a missing
+    ``retract_tracker_dominated_reads`` (not a per-leg list) or ``retract_tracker_stretch_log``
+    is not judgeable (prelaunch audit M-5: an empty count is never a pass, 5.7)."""
+    reads = check.get(RETRACT_TRACKER_READS_KEY)
+    stretches = check.get(RETRACT_TRACKER_LOG_KEY)
+    if not isinstance(reads, list) or len(reads) != 4 or not isinstance(stretches, list):
+        problems.not_judgeable.append(f"{setting}: P4-9 key {RETRACT_TRACKER_READS_KEY} / "
+                                      f"{RETRACT_TRACKER_LOG_KEY} missing")
+    elif sum(reads) or stretches:
+        problems.failures.append(f"{setting}: P4-9 retract_tracker records without fallback")
+
+
 def seed_force_check(hydraulics: dict) -> dict:
     """4a-2 3.4 on one row's ``p1_retract_seed_log``: rows, over 1 N, clipped and the reason it
     cannot be judged (``not_judgeable`` None = it can). Zero rows are reported (``rows`` 0); the
@@ -487,9 +504,8 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
     if reads.get("unexplained_raised_reads") or reads.get("bad_class_changes"):
         problems.failures.append(f"{setting}: P4-2 an unexplained raise or class change")
     check, hydraulics = _check(new), new.get("hydraulics_record") or {}
-    if _is_revision_5(new) and (sum(check.get("retract_tracker_dominated_reads") or [0])
-                                or check.get("retract_tracker_stretch_log")):
-        problems.failures.append(f"{setting}: P4-9 retract_tracker records without fallback")
+    if _is_revision_5(new):
+        retract_tracker_problems(setting, check, problems)
     seed = {}
     if setting in JUDGED_SETTINGS:
         judged_key_problems(setting, check, hydraulics, problems)

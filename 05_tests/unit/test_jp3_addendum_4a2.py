@@ -30,6 +30,7 @@ if str(COUPLED_DIR) not in sys.path:
 import j_p3_inputs  # noqa: E402
 import jp3_baseline_compare as compare  # noqa: E402
 import jp3_case_judge as case_judge  # noqa: E402
+import jp3_fixed_inputs  # noqa: E402
 import jp3_tjr_judge as tjr  # noqa: E402
 
 from outrigger_sim.control import extend_start_bound as esb  # noqa: E402
@@ -360,17 +361,23 @@ def test_r7_x11_read_is_the_fl_hold_read_at_49_s(tmp_path) -> None:
 # --- B4: T-JR judges --------------------------------------------------------------------------
 
 def _dg3_document(fault: str | None = None, ready_s: float | None = 100.0, count: int = 135,
-                  truth_calls: int = 0) -> dict:
+                  truth_calls: int = 0, setting: str = "VBH") -> dict:
+    """Dg-3 lines of ``setting`` (prelaunch audit M-3 / M-8: rev 5 records of the sealed
+    identity, meta ``keys_file`` = the stored H-6)."""
     results = []
     for k in range(count):
         names = ["WARN_X"] + ([fault] if fault and k == 7 else [])
         results.append({"key": f"cand=current#L{2 if k == 0 else 3}|s0|h|{k}|inner",
                         "level": "L2" if k == 0 else "L3", "r79": {"warn_fault": names},
-                        "base": {"t_ready_s": ready_s},
+                        "base": {"t_ready_s": ready_s}, "v5_setting": setting,
                         "hydraulic_options": {"rod_reading_truth": truth_calls > 0},
                         "hydraulics_record": {"rod_reading_truth_calls": truth_calls,
-                                              "two_pressure_reads": max(truth_calls, 9)}})
-    return {"meta": {}, "results": results}
+                                              "two_pressure_reads": max(truth_calls, 9),
+                                              "extend_bound_check": {
+                                                  "rule_revision": 5,
+                                                  **compare.DEFAULT_IDENTITY}}})
+    keys_file = {"sha256": jp3_fixed_inputs.H6_SHA256, "n_keys": 135}
+    return {"meta": {"keys_file": keys_file}, "results": results}
 
 
 def test_b4_t12_counts_faults_and_ready(monkeypatch) -> None:
@@ -380,7 +387,7 @@ def test_b4_t12_counts_faults_and_ready(monkeypatch) -> None:
     monkeypatch.setattr(h8, "grade_lines", lambda results, judge: {
         h8.plain_key(run["key"]): {"grade": h8.GRADE_PASS, "level": run["level"]}
         for run in results})
-    base = _dg3_document()
+    base = _dg3_document(setting="VB")
     _, problems = tjr.judge_t12("VBH", base, {}, _dg3_document(), {})
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
     _, problems = tjr.judge_t12("VBH", base, {}, _dg3_document(fault="FAULT_NEW"), {})
@@ -398,13 +405,19 @@ def test_b4_records_seed_force_rules() -> None:
     good = {"job": {"setting": "VBJ"}, "hydraulics_record": _seed_record([[1.0, 2, 0.0, False]])}
     clipped = {"job": {"setting": "VBJ"},
                "hydraulics_record": _seed_record([[1.0, 2, 0.0, True]])}
-    _, problems = tjr.judge_records([], [], [good])
-    assert problems.status() == compare.STATUS_PASS
-    _, problems = tjr.judge_records([], [], [good, clipped])
+    replays, dg3 = REPLAY_REPORTS, [_dg3_document(count=1)]  # M-6: non-empty inputs
+    _, problems = tjr.judge_records(replays, dg3, [good])
+    assert problems.status() == compare.STATUS_PASS, problems.as_dict()
+    _, problems = tjr.judge_records(replays, dg3, [good, clipped])
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
     no_seed = {"job": {"setting": "VBJ"}, "hydraulics_record": _seed_record([])}
-    _, problems = tjr.judge_records([], [], [no_seed])
+    _, problems = tjr.judge_records(replays, dg3, [no_seed])
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
+
+
+REPLAY_REPORTS = [{"runs": runs, "runs_over": 0, "rows": [{}] * runs, "J-P3": {"status": "pass"}}
+                  for runs in tjr.REPLAY_RUN_COUNTS]
+"""Two judged ``t4h_replay`` reports of the T-JR-13 run counts (rows stubbed)."""
 
 
 def test_judges_refuse_to_overwrite_a_report(tmp_path) -> None:

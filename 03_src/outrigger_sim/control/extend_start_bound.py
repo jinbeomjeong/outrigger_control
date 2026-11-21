@@ -1825,7 +1825,8 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     Edition 4a: a judged row whose rule identity is not the sealed default (``spec_edition``
     :data:`JP3_SPEC_EDITION`, ``carry_end_rule`` and ``retract_start_rule`` defaults) is
     :data:`J_P3_DEFECT_IDENTITY` (13.6); no judged row, or not ``expected_judged_runs`` of them
-    (a batch with a fixed count, T-JR-12), is ``no_judged_runs`` (13.2).
+    (a batch with a fixed count, T-JR-12), is ``no_judged_runs`` (13.2), and so is a judged row
+    whose judged keys are not per-leg lists (``judged_key_missing_runs``, prelaunch audit M-5).
 
     The run cases are those of :func:`j_p3_run_case` (criteria revision 9 3.2 table). A judged
     row whose record is not a revision 5 record is a setting defect (a revision 4 row is judged
@@ -1862,6 +1863,8 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     def total(record: Mapping[str, Any], key: str) -> int:
         return int(sum(record.get(key) or []))
 
+    # prelaunch audit M-5 (4a-2 R2): a judged row without a judged key is never read as 0
+    key_missing_runs = sum(not has_rev5_judged_keys(record) for record in judged)
     sums = {key: sum(total(record, key) for record in judged) for key in J_P3_REV5_JUDGED_KEYS}
     record_only_sums = {key: sum(total(record, key) for record in record_only)
                         for key in J_P3_REV5_JUDGED_KEYS}
@@ -1872,8 +1875,9 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
         status = "no_p3_runs"
     elif defects:
         status = "setting_defect"
-    elif not judged or is_count_wrong:
-        # edition 4a 13.2: no judged row (or not the fixed number) = not judgeable
+    elif not judged or is_count_wrong or key_missing_runs:
+        # edition 4a 13.2: no judged row (or not the fixed number) = not judgeable; a judged
+        # row without its judged keys is not judgeable either (M-5)
         status = "no_judged_runs"
     elif any(sums.values()):
         status = "H-7"
@@ -1881,6 +1885,7 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
         status = "pass"
     return {"name": J_P3_REV5_NAME, "status": status, "runs": len(records),
             "runs_judged": len(judged), "expected_judged_runs": expected_judged_runs,
+            "judged_key_missing_runs": key_missing_runs,
             "runs_by_case": {name: cases.count(name) for name in
                              (J_P3_JUDGED, J_P3_NO_ROD_READING, *J_P3_DEFECT_CASES,
                               J_P3_DEFECT_NOT_REVISION_5, J_P3_DEFECT_GRADE_MISSING,
@@ -1890,6 +1895,13 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
                                     for record in judged),
             **{f"{key}_flag": sum(total(record, key) for record in judged)
                for key in J_P3_REV5_FLAG_KEYS}}
+
+
+def has_rev5_judged_keys(record: Mapping[str, Any] | None) -> bool:
+    """Every :data:`J_P3_REV5_JUDGED_KEYS` value is a per-leg list (prelaunch audit M-5)."""
+    record = record or {}
+    return all(isinstance(record.get(key), list) and len(record[key]) == LEG_COUNT
+               for key in J_P3_REV5_JUDGED_KEYS)
 
 
 def _graded_case(case: str, grade: str | None) -> str:

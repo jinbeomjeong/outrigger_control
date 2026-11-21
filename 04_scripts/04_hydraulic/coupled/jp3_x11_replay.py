@@ -18,6 +18,8 @@ is a setting defect.
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_x11_replay.py --out <own folder>/<jsonl>
       [--arm both|fresh_only] [--mask HEX]
+This runner writes no run identity: run it under ``jp3_run_identity.py wrap <jsonl> -- ...``
+(start / end records with git head and ``is_clean``, prelaunch audit M-1).
 """
 from __future__ import annotations
 

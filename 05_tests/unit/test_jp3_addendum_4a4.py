@@ -96,7 +96,9 @@ def test_d2_t12_vbh_needs_the_fixed_base_and_the_judge_sha(tmp_path) -> None:
     wrong = tjr.t12_input_problems("VBJ", base, judge, "0" * 64)
     assert any("--base-judge" in text for text in wrong)
     assert tjr.t12_input_problems("VBJ", base, judge, fixed.file_sha256(judge)) == []
-    assert tjr.t12_input_problems("VBJ", base, judge, None) == []
+    # prelaunch audit M-8: the VBJ bundle needs the VBJ0 judge sha too
+    assert any("--base-judge-sha256 missing" in text
+               for text in tjr.t12_input_problems("VBJ", base, judge, None))
 
 
 def test_d2_run_v5_p3_hash_source_of_another_sha_is_refused(tmp_path, monkeypatch) -> None:
