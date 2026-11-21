@@ -11,7 +11,7 @@ param([int]$Attempt = 1, [Parameter(Mandatory)][ValidateSet('base', 'b3', 'b4')]
 
 $PhaseBlocks = [ordered]@{ base = @('b1', 'b2'); b3 = @('b3'); b4 = @('b4') }
 $Earlier = @(if ($Phase -ne 'base') { '12b_vbk0_base' })
-$Folder = Initialize-Ed5Step "12b_vbk0_$Phase" $Attempt (@('dry') + $Earlier)
+$Folder = Initialize-Ed5Step "12b_vbk0_$Phase" $Attempt (@('dry', 'l1ref') + $Earlier)  # erratum 2 2-1: L1 first
 $EarlierFolders = @($Earlier | ForEach-Object { Get-StepFolder $_ })
 if ($Phase -eq 'b4' -and (Test-Path -LiteralPath "$RunsRoot\12b_vbk0_b3.done")) {
     $EarlierFolders += Get-StepFolder '12b_vbk0_b3'  # b4 after a b3 top-up: all decided blocks

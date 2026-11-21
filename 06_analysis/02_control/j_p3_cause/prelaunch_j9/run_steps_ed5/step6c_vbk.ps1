@@ -2,7 +2,7 @@
 # Step (6c) T-JR-12b VBK and judgement (spec v5 6.3.7, 8 4.(6) 5 .. 6): -DecisionPhase names the
 # 12b_vbk0_* phase whose decision record is "decided" (base, b3 or b4). The VBK runs of every
 # decided block (4 workers each on a P quarter), then per arm grade-judge (r79_sensor_judge with
-# the L1 lines of the fixed case source h8_noise_VB.json; control review W-6) and the judge
+# the arm's own L1 run of step_l1ref.ps1, erratum 2 2-1; control review W-6) and the judge
 # (decision sha first: a changed or stopped decision opens no VBK file). Exit: the judge's code
 # (0 pass; 1 failed = the cost gate failed, stop and re-design, 8 5; 2 / 3 stop and ask).
 param([int]$Attempt = 1, [Parameter(Mandatory)][ValidateSet('base', 'b3', 'b4')][string]$DecisionPhase)
@@ -10,7 +10,7 @@ param([int]$Attempt = 1, [Parameter(Mandatory)][ValidateSet('base', 'b3', 'b4')]
 
 $Vbk0Phases = @(@('12b_vbk0_base', '12b_vbk0_b3', '12b_vbk0_b4') |
         Where-Object { Test-Path -LiteralPath "$RunsRoot\$_.done" })
-$Folder = Initialize-Ed5Step '12b_vbk' $Attempt (@('dry') + $Vbk0Phases)
+$Folder = Initialize-Ed5Step '12b_vbk' $Attempt (@('dry', 'l1ref') + $Vbk0Phases)
 $DecisionFolder = Get-StepFolder "12b_vbk0_$DecisionPhase"
 $Decision = "$DecisionFolder\judge\decision.json"
 $DecisionSha = (Get-FileHash -Algorithm SHA256 -LiteralPath $Decision).Hash.ToLower()
@@ -42,11 +42,14 @@ foreach ($Phase in $Vbk0Phases) {
     }
 }
 $Judge = "$Coupled/jp3_12b_judge.py"
-$Noise = Get-FixedPath 'NOISE_VB_SHA256'
-$NoiseSha = $FixedInputs['NOISE_VB_SHA256'][1]
+# erratum 2 2-1: each arm's own L1 run of the l1ref step (VBK0: VBJ0, VBK: VBJ), its sha256 and
+# the L1 key file's from the fixed list
+$L1OfArm = @{ vbk0 = (Get-L1Run 'VBJ0'); vbk = (Get-L1Run 'VBJ') }
+$L1KeysSha = Get-ListedSha $L1KeysFile
 $GradeFiles = @{}
 foreach ($Arm in @('vbk0', 'vbk')) {
-    $Arguments = @($Judge, 'grade-judge', '--arm', $Arm, '--l1-reference', $Noise, '--l1-reference-sha256', $NoiseSha,
+    $Arguments = @($Judge, 'grade-judge', '--arm', $Arm, '--l1-reference', $L1OfArm[$Arm],
+        '--l1-reference-sha256', (Get-ListedSha $L1OfArm[$Arm]), '--l1-keys-sha256', $L1KeysSha,
         '--judge-out', "$Folder\judge\grades_$Arm.json", '--out', "$Folder\judge\grades_${Arm}_record.json")
     foreach ($Block in $Blocks) {
         $Path = if ($Arm -eq 'vbk') { "$Folder\VBK_$Block.json" } else { $Vbk0[$Block][0] }

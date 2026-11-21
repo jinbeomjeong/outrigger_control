@@ -19,8 +19,8 @@ main session runs it).
          distribution of their stretches; the reduction of rev 6 against rev 5 (P5-4 record,
          expected about 23 %, F8). The plant rod pressure is not in a T4h record, so
          ``max_over_kN`` uses ``p_tr ~ (p_h,read A_h - F_true) / A_ann`` (T4h ``true_force_N``):
-         the head reading error enters both revisions alike, A_h / A_ann times (front 3.52,
-         rear 3.02; 1.33 / 0.95 kN per head-reading bar; erratum 1 8, the output's
+         the head reading error enters both revisions alike, A_h / A_ann times (front 3.521,
+         rear 3.025; 1.327 / 0.950 kN per head-reading bar; erratum 2 2-2, the output's
          ``plant_rod_pressure``); a record, not a judged value.
 
 Usage (dynamics-dev or Chrono-dev, project root; read only, one output file each):
@@ -200,8 +200,9 @@ def p54(folder: Path) -> dict:
 def proxy_disclosure() -> dict:
     """Erratum 1 8 (control review of 8a3c48c7 W-7): the ``max_over_kN`` plant rod pressure is
     the proxy ``(p_h,read A_h - F_true) / A_ann``; a head reading error enters it A_h / A_ann
-    times (front 3.52, rear 3.02), as a force 1 bar of head reading is A_h x 1 bar (front
-    1.33 kN, rear 0.95 kN). ``retract_tracker_dominated_reads`` does not use it. A record."""
+    times (front 3.521, rear 3.025), as a force 1 bar of head reading is A_h x 1 bar (front
+    1.327 kN, rear 0.950 kN; erratum 2 2-2). ``retract_tracker_dominated_reads`` does not use
+    it. A record."""
     from outrigger_sim.control.c2 import C2Geometry
     from outrigger_sim.params import load_params
 
@@ -210,12 +211,16 @@ def proxy_disclosure() -> dict:
     for side, leg in (("front", 0), ("rear", 2)):
         head = float(geometry.head_area_m2[leg])
         annulus = float(geometry.annulus_area_m2[leg])
-        # 3 decimals: the rear ratio is 3.025 (erratum 1 8 writes 3.02)
+        # 3 decimals (erratum 2 2-2: front 3.521 / rear 3.025, 1.327 / 0.950 kN)
         gains[side] = round(head / annulus, 3)
         force_per_bar[side] = round(head * 1e5 / 1e3, 3)
     return {"definition": "(head reading x A_h - true_force_N) / A_ann (T4h proxy; the plant "
                           "rod pressure is not in a T4h record)",
             "head_error_gain": gains, "max_over_kN_per_head_bar": force_per_bar,
+            "text": (f"a head reading error enters A_h / A_ann times (front "
+                     f"{gains['front']:.3f}, rear {gains['rear']:.3f}); as a force, per bar of "
+                     f"head reading front {force_per_bar['front']:.3f} kN, rear "
+                     f"{force_per_bar['rear']:.3f} kN (erratum 2 2-2)"),
             "dominated_reads_use_it": False, "judged": False}
 
 

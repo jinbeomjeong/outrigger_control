@@ -132,14 +132,13 @@ def test_t_jr_13_takes_revision_6_reports_only() -> None:
 
 
 def test_p54_discloses_the_proxy_and_its_gains() -> None:
-    """Erratum 1 8: front 3.52 / rear 3.02, 1.33 / 0.95 kN per head-reading bar."""
+    """Erratum 2 2-2 (erratum 1 8 made exact): front 3.521 / rear 3.025, 1.327 / 0.950 kN per
+    head-reading bar."""
     disclosure = p5.proxy_disclosure()
-    gains, forces = disclosure["head_error_gain"], disclosure["max_over_kN_per_head_bar"]
-    # the erratum's two-decimal values (rear: 3.025 written as 3.02)
-    assert gains["front"] == pytest.approx(3.52, abs=0.006)
-    assert gains["rear"] == pytest.approx(3.02, abs=0.006)
-    assert forces["front"] == pytest.approx(1.33, abs=0.006)
-    assert forces["rear"] == pytest.approx(0.95, abs=0.006)
+    assert disclosure["head_error_gain"] == {"front": 3.521, "rear": 3.025}
+    assert disclosure["max_over_kN_per_head_bar"] == {"front": 1.327, "rear": 0.95}
+    assert "front 3.521, rear 3.025" in disclosure["text"]
+    assert "front 1.327 kN, rear 0.950 kN" in disclosure["text"]
     assert disclosure["judged"] is False and disclosure["dominated_reads_use_it"] is False
     assert "A_ann" in disclosure["definition"]
 
@@ -321,13 +320,18 @@ def test_fixed_list_lines_and_refusals(list_repo, tmp_path, monkeypatch) -> None
     (tmp_path / "cwd").mkdir()
     monkeypatch.chdir(tmp_path / "cwd")
     out = tmp_path / f"FIXED_INPUTS_{commit[:8]}.SHA256SUMS"
-    assert fixed_list.main(_list_args(repo, entries, commit, out, worktree)) == 0
+    l1_run = repo / "06_analysis" / "l1ref" / "L1_VBJ0.json"  # erratum 2 2-1: --add
+    l1_run.parent.mkdir()
+    l1_run.write_text("{}", encoding="utf-8")
+    assert fixed_list.main([*_list_args(repo, entries, commit, out, worktree),
+                            "--add", str(l1_run)]) == 0
     lines = out.read_bytes().decode("utf-8").split("\n")
     assert lines[-1] == "" and all(" *" in line for line in lines[:-1])
     paths = [line.split(" *", 1)[1] for line in lines[:-1]]
     assert paths[:4] == ["04_scripts/tool.py", "06_analysis/doc.md", "06_analysis/doc.md.sha256",
                          fixed_list.NOISE_PATH]
-    assert {"06_analysis/x11/b1_plan.json", "06_analysis/dry/key_g8.txt"} <= set(paths)
+    assert {"06_analysis/x11/b1_plan.json", "06_analysis/dry/key_g8.txt",
+            "06_analysis/l1ref/L1_VBJ0.json"} <= set(paths)
     assert fixed_list.main(_list_args(repo, entries, commit, out, worktree)) == 2  # exists
 
     def refused(name: str, change) -> None:

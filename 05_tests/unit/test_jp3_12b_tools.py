@@ -377,6 +377,7 @@ def test_12b_pass_end_to_end(world, capsys, cwd_elsewhere) -> None:
     assert code == 0 and last["status"] == "decided"
     assert record["blocks"] == ["b1", "b2"] and record["n_opp"] == 334 and record["k"] == 334
     assert record["aa"]["counted_pairs"] == 0 and not record["n_topup"]["needs_b3"]
+    assert record["witness_topup"]["hold_speed_m_s"]["value"] > 0  # erratum 2 2-5
     out = world["runs"] / "judge.json"
     code, last, report = run_main(judge_args(world, written0, written1, decision, out), capsys)
     assert code == 0 and last["status"] == "pass", report.get("problems")
@@ -750,6 +751,19 @@ def test_w6_grade_transitions_are_computed(world, capsys, cwd_elsewhere) -> None
         "pass->fail": 1}
     assert transitions["changed"] == [{"block": "b2", "key": victim, "vbk0": "pass",
                                        "vbk": "fail"}]
+    # erratum 2 2-1: an ungraded opportunity pair is published with its cause
+    missing = grade_report(written1)
+    missing["runs"] = [run for run in missing["runs"] if judge.plain_key(run["key"]) != victim]
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge4.json", {"vbk": missing}),
+                                  capsys)
+    transitions = report["grade_transitions"]
+    assert code == 0 and transitions["ungraded_pairs"] == 1
+    assert transitions["ungraded_opportunity_pairs"] == 1
+    assert transitions["ungraded_opportunity"][0]["key"] == victim
+    assert transitions["ungraded_opportunity"][0]["vbk_reason"] == "no judge row"
+    assert transitions["ungraded_opportunity"][0]["vbk0_reason"] is None
+    assert report["hold_speed_m_s"]["value"] > 0  # erratum 2 2-5
     args = judge_args(world, written0, written1, decision, world["runs"] / "judge3.json")
     args[args.index("--vbk-grade-judge-sha256") + 1] = "0" * 64
     code, last, report = run_main(args, capsys)
@@ -760,8 +774,17 @@ def test_w6_grade_transitions_are_computed(world, capsys, cwd_elsewhere) -> None
 def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cwd_elsewhere,
                                                                monkeypatch) -> None:
     written0, _ = build(world)
-    l1 = world["runs"] / "l1.json"
-    l1.write_text(json.dumps({"results": []}), encoding="utf-8")
+    keys_sha = "1" * 64
+
+    def l1_file(name: str, setting: str = "VBJ0", rod_model: str = "plant_truth") -> Path:
+        path = world["runs"] / name
+        path.write_text(json.dumps({"meta": {"keys_file": {"sha256": keys_sha, "n_keys": 1}},
+                                    "results": [{"key": "cand=current#L1|s0|g6|0|x0|top|Fs0",
+                                                 "level": "L1", "v5_setting": setting,
+                                                 "rod_model": rod_model}]}), encoding="utf-8")
+        return path
+
+    l1 = l1_file("l1.json")
     calls = []
 
     def fake_run(out, files, rerun=None):
@@ -772,8 +795,8 @@ def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cw
     monkeypatch.setattr(judge._grade_module(), "run_r79_judge", fake_run)
     judge_out = world["runs"] / "vbk0_grades.json"
     args = ["grade-judge", "--arm", "vbk0", "--l1-reference", str(l1), "--l1-reference-sha256",
-            hashlib.sha256(l1.read_bytes()).hexdigest(), "--judge-out", str(judge_out),
-            "--out", str(world["runs"] / "grade_record.json")]
+            hashlib.sha256(l1.read_bytes()).hexdigest(), "--l1-keys-sha256", keys_sha,
+            "--judge-out", str(judge_out), "--out", str(world["runs"] / "grade_record.json")]
     for block, (result, _) in written0.items():
         args += ["--runs", f"{block}={result}"]
     code, last, record = run_main(args, capsys)
@@ -789,6 +812,20 @@ def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cw
     wrong[wrong.index("--out") + 1] = str(world["runs"] / "grade_record3.json")
     code, last, _ = run_main(wrong, capsys)
     assert code == 2 and len(calls) == 1
+    # erratum 2 2-1: the arm's own L1 plant with plant_truth, from the fixed L1 key file
+    for index, (setting, rod_model, sha) in enumerate((("VBJ", "plant_truth", keys_sha),
+                                                       ("VBJ0", "dyn_map", keys_sha),
+                                                       ("VBJ0", "plant_truth", "2" * 64))):
+        other = l1_file(f"l1_bad_{index}.json", setting, rod_model)
+        bad = [*args]
+        bad[bad.index("--l1-reference") + 1] = str(other)
+        bad[bad.index("--l1-reference-sha256") + 1] = hashlib.sha256(other.read_bytes()).hexdigest()
+        bad[bad.index("--l1-keys-sha256") + 1] = sha
+        bad[bad.index("--judge-out") + 1] = str(world["runs"] / f"bad_judge_{index}.json")
+        bad[bad.index("--out") + 1] = str(world["runs"] / f"bad_record_{index}.json")
+        code, last, _ = run_main(bad, capsys)
+        assert code == 2 and last["status"] == "not_judgeable", index
+    assert len(calls) == 1
 
 
 def _dry_arms(world, change_vbk_hash: int) -> dict[str, list[str]]:

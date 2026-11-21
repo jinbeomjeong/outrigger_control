@@ -114,6 +114,16 @@ function Invoke-DryMatch([string]$Item, [string]$OldFolder) {
         '--new-codes', $CodesFile, '--out', "$Folder\judge\rerun_match_$Item.json") | Out-Null
 }
 
+function Write-DiffStat {
+    # erratum 2 2-4: git diff --stat 78fd5d2d..run commit into the run record (a record, no stop;
+    # a git failure is not read as "no change")
+    $Log = "$($StepState.Folder)\logs\git_diff_stat_$($PreviousRunCommit.Substring(0, 8)).txt"
+    $Stat = @(& git -C $Worktree diff --stat $PreviousRunCommit $RunCommit)
+    if ($LASTEXITCODE -ne 0) { Stop-Step 3 'git diff --stat failed (no record)' }
+    [IO.File]::WriteAllText($Log, ($Stat -join "`n") + "`n")
+    $StepState.Codes['git_diff_stat'] = Get-RepoPath $Log
+}
+
 function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '') {
     # the T-JR-12 runner environment; a rod fault plan for VBK / VBK0 (X-10, 6.3.1)
     $Environment = @{ R79_V5_SETTING = $Setting; R79_T4H_DIR = $T4hDir; R79_ROD_MODEL = $R79RodModel[$Setting] } + $R79Common
@@ -121,12 +131,20 @@ function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '
     return $Environment
 }
 
-function Get-X11Sha {
-    # the X-11 selection sha256 from the fixed list (the 12b judge checks the file against it)
-    $Relative = Get-RepoPath $X11Selection
+function Get-ListedSha([string]$File) {
+    # a file's sha256 from the fixed list (the judge tools check the file against it)
+    $Relative = Get-RepoPath $File
     foreach ($Line in (Get-Content -LiteralPath $FixedList)) {
         $Sha, $Path = $Line -split ' \*', 2
         if ($Path -eq $Relative) { return $Sha }
     }
     Stop-Step 2 "$Relative is not in $FixedList"
 }
+
+function Get-X11Sha { return Get-ListedSha $X11Selection }
+
+# erratum 2 2-1: the L1 grade reference of 12b (key file from the case source, two L1 runs at
+# the run commit, both in the fixed list)
+$L1KeysFile = "$Ed5Inputs\l1_keys_12b.txt"
+$L1Settings = @('VBJ0', 'VBJ')
+function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Setting.json" }

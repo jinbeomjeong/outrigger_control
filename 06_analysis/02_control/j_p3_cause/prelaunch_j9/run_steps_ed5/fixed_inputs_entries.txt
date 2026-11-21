@@ -32,6 +32,12 @@
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/casef_a*/j9_case_f.jsonl
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/t8_a*/j9_t8.jsonl
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dg3_a1/dg3_VB*.json
+# erratum 2 2-4: the 78fd5d2d P-1 outputs and codes compared by jp3_rerun_match.py --items p1
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/p1_a*/h6_base_judge*.json
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/p1_a*/step_record.json
+# erratum 2 2-3: the probe record (12b seed scan)
+06_analysis/02_control/j_p3_cause/ed5_design/probes/probes_ed5.json
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum2.md
 # the run steps (the main checkout's files, the run commit filled in)
 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/common.ps1
 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/record_helper.ps1

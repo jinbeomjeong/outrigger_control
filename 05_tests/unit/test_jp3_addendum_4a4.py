@@ -210,7 +210,11 @@ def test_d1a_selection_of_the_stored_data(tmp_path) -> None:
                                  v5 / "resume_k1" / "h6_dg3_v4on.json", NOISE_PATH)
     selection = dryrun.select(inputs)
     assert selection["r79_base_key"] == BASE_KEY
-    assert selection["scan"]["seed_max"] == 24
+    # 24 in the stored runs; 30 once the edition 5 probe record (erratum 2 2-3,
+    # ed5_design/probes/probes_ed5.json, s30 keys) is under 06_analysis: no s25 key either way
+    probe_files = [item for item in selection["scan"]["files"]
+                   if item["path"].endswith("ed5_design/probes/probes_ed5.json")]
+    assert selection["scan"]["seed_max"] == (30 if probe_files else 24)
     assert selection["scan"]["excluded_folder"] == "02_control/j_p3_cause/j9_runs/"
     assert selection["scan"]["files_excluded"] == len(selection["scan"]["excluded"]) > 0
     assert all(item["path"].startswith("02_control/j_p3_cause/j9_runs/")

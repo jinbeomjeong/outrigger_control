@@ -36,8 +36,12 @@ Sub-commands, run in the order of 8 4.(6) (VBK0 first):
             sha256 given), the changed pairs and their keys (``grade_transitions``; a record,
             j9_main judges the grades, 6.5).
 ``grade-judge`` ``r79_sensor_judge.py judge --s4-late-loc`` of one arm's block run files and the
-            L1 reference (its sha256 given), into ``--judge-out`` (never overwritten); the
-            record (``--out``) names every input and the judge file with their sha256.
+            arm's L1 reference run (erratum 2 2-1: VBK0 against the VBJ0 L1 run, VBK against
+            the VBJ L1 run, both ``plant_truth``, from the fixed L1 key file; its sha256 and
+            the key file's given), into ``--judge-out`` (never overwritten); the record
+            (``--out``) names every input and the judge file with their sha256. The judge
+            record also publishes ``ungraded_pairs`` and the causes of the ungraded
+            opportunity pairs, and the cached ``u_hold`` of the witness count (2-5).
 ``dry-c``   The c dry check (6.3.10): the VBK0 and VBK lines of the dry plan (``c90=`` /
             ``c91=`` run files and T4h folders per arm; the lines must carry the dry plan's
             sha256), the 6.3.2 categories and c = the share of opportunity pairs whose
@@ -463,6 +467,15 @@ def _hold_speed_m_s() -> float:
     return rod_fault_plan.hold_speed_m_s()
 
 
+def _hold_speed_record() -> dict:
+    """The cached ``u_hold`` of the witness count (erratum 2 2-5: recorded with the judgement;
+    the simulation path reads its own)."""
+    import rod_fault_plan
+
+    return {"value": _hold_speed_m_s(), "source": rod_fault_plan.HOLD_SPEED_SOURCE,
+            "cached_in": "jp3_12b_judge._hold_speed_m_s (once per process)"}
+
+
 def count_categories(lines: dict[str, Line]) -> dict[str, list[str]]:
     by_category = {category: [] for category in CATEGORIES}
     for key, line in lines.items():
@@ -503,7 +516,8 @@ def decide(selection: dict, blocks: dict[str, dict[str, Line]]) -> dict:
     k = len(witness_pairs)
     needs_b4 = k < K_MIN
     out["witness_topup"] = {"k_without_b4": k, "k_min": K_MIN, "needs_b4": needs_b4,
-                            "witness_pairs": witness_pairs}
+                            "witness_pairs": witness_pairs,
+                            "hold_speed_m_s": _hold_speed_record()}  # erratum 2 2-5
     if needs_b4 and "b4" not in blocks:
         out["status"], out["blocks"] = "needs_b4", used
         return out
@@ -702,12 +716,14 @@ def _grade_module():
 
 
 def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
-                      judges: dict[str, tuple[Path, str]], problems: Problems) -> dict:
+                      judges: dict[str, tuple[Path, str]], problems: Problems,
+                      categories: dict[tuple[str, str], str] | None = None) -> dict:
     """6.3.7 / 6.3.9 record (control review of 8a3c48c7 W-6): per pair the VBK0 grade and the
     VBK grade of its line (``h8_noise_judge_4368.grade_lines`` on the r79 judge file of each arm,
     the ``grade-judge`` output); the pairs whose grade changed, with their keys. A judge file of
     another sha is not judgeable; a line without a judge row is counted (``ungraded``)."""
     h8 = _grade_module()
+    categories = categories or {}
     reports, inputs = {}, {}
     for arm, (path, expected) in judges.items():
         actual = file_sha256(path)
@@ -717,22 +733,81 @@ def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
             return {"computed": False, "reason": f"{arm} grade judge of another sha"}
         reports[arm] = json.loads(path.read_text(encoding="utf-8"))
         inputs[arm] = {"path": str(path), "sha256": actual}
-    changed, ungraded, by_transition = [], 0, {}
+    changed, ungraded, by_transition = [], [], {}
     for block in decision["blocks"]:
         grades0 = h8.grade_lines([line.row for line in blocks0[block].values()], reports["vbk0"])
         grades1 = h8.grade_lines([line.row for line in blocks1[block].values()], reports["vbk"])
         for key in blocks0[block]:
-            before = (grades0.get(key) or {}).get("grade")
-            after = (grades1.get(key) or {}).get("grade")
+            grade0, grade1 = grades0.get(key) or {}, grades1.get(key) or {}
+            before, after = grade0.get("grade"), grade1.get("grade")
             if h8.GRADE_NOT_JUDGEABLE in (before, after) or None in (before, after):
-                ungraded += 1
+                ungraded.append({"block": block, "key": key,
+                                 "category": categories.get((block, key)),
+                                 "vbk0_reason": _ungraded_reason(grade0),
+                                 "vbk_reason": _ungraded_reason(grade1)})
             if before != after:
                 name = f"{before}->{after}"
                 by_transition[name] = by_transition.get(name, 0) + 1
                 changed.append({"block": block, "key": key, "vbk0": before, "vbk": after})
+    ungraded_opportunity = [item for item in ungraded if item["category"] == OPPORTUNITY]
+    # erratum 2 2-1: the ungraded count is public; the causes of opportunity pairs among them too
     return {"computed": True, "inputs": inputs, "changed_pairs": len(changed),
-            "by_transition": by_transition, "changed": changed, "ungraded_pairs": ungraded,
+            "by_transition": by_transition, "changed": changed,
+            "ungraded_pairs": len(ungraded), "ungraded_opportunity_pairs":
+                len(ungraded_opportunity), "ungraded_opportunity": ungraded_opportunity,
+            "ungraded_other": [item for item in ungraded if item["category"] != OPPORTUNITY],
             "rule": "a record (6.3.7): j9_main judges the grades (6.5)"}
+
+
+def _ungraded_reason(grade: dict) -> str | None:
+    """Why a line has no grade (None: it has one): no judge row (no L1 pair), a judge row
+    without its gates, or no line (an error line is not graded)."""
+    if not grade:
+        return "no graded line (an error line or another level)"
+    if grade.get("grade") == _grade_module().GRADE_NOT_JUDGEABLE:
+        return str(grade.get("reason"))
+    return None
+
+
+L1_SETTING_OF_ARM = {"vbk0": "VBJ0", "vbk": "VBJ"}
+"""Erratum 2 2-1: each arm grades against the L1 run of its own plant (VBK0: VBJ0, VBK: VBJ
+with the VBK options and no fault plan), both ``R79_ROD_MODEL=plant_truth``."""
+L1_ROD_MODEL = "plant_truth"
+
+
+def l1_reference_problems(path: Path, arm: str, keys_sha256: str) -> list[str]:
+    """Why ``path`` is not the arm's L1 reference run (erratum 2 2-1): the run took the fixed
+    L1 key file (meta ``keys_file.sha256``); every line an L1 line of
+    :data:`L1_SETTING_OF_ARM` with :data:`L1_ROD_MODEL`, without an error, at least one."""
+    document = json.loads(Path(path).read_text(encoding="utf-8"))
+    rows = document["results"] if isinstance(document, dict) else document
+    if not rows:
+        return ["--l1-reference has no line"]
+    expected = L1_SETTING_OF_ARM[arm]
+    problems = []
+    keys_file = ((document.get("meta") if isinstance(document, dict) else None)
+                 or {}).get("keys_file") or {}
+    if keys_file.get("sha256") != keys_sha256:
+        problems.append(f"--l1-reference meta keys_file.sha256 "
+                        f"{str(keys_file.get('sha256'))[:12]} is not the L1 key file's")
+    if keys_file.get("n_keys") != len(rows):
+        problems.append(f"--l1-reference has {len(rows)} lines, its key file "
+                        f"{keys_file.get('n_keys')!r} keys")
+    for row in rows:
+        key = str(row.get("key"))
+        if row.get("level") != h8_reference_level():
+            problems.append(f"{key}: level {row.get('level')!r}, not L1")
+        if row.get("v5_setting") != expected:
+            problems.append(f"{key}: setting {row.get('v5_setting')!r}, not {expected}")
+        if row.get("rod_model") != L1_ROD_MODEL:
+            problems.append(f"{key}: rod_model {row.get('rod_model')!r}, not {L1_ROD_MODEL}")
+        if row.get("error"):
+            problems.append(f"{key}: an error line")
+    return problems
+
+
+def h8_reference_level() -> str:
+    return _grade_module().LEVEL_REFERENCE
 
 
 def cmd_grade_judge(args) -> tuple[str, dict]:
@@ -741,6 +816,9 @@ def cmd_grade_judge(args) -> tuple[str, dict]:
     h8 = _grade_module()
     if file_sha256(args.l1_reference) != args.l1_reference_sha256:
         raise Stop("not_judgeable", "--l1-reference is not of the given sha256")
+    l1_problems = l1_reference_problems(args.l1_reference, args.arm, args.l1_keys_sha256)
+    if l1_problems:
+        raise Stop("not_judgeable", "; ".join(l1_problems[:3]))
     runs = parse_block_paths(args.runs, "--runs")
     if not runs:
         raise Stop("not_judgeable", "no --runs")
@@ -752,7 +830,10 @@ def cmd_grade_judge(args) -> tuple[str, dict]:
               "inputs": {**{block: {"path": str(path), "sha256": file_sha256(path)}
                             for block, path in runs.items()},
                          "l1_reference": {"path": str(args.l1_reference),
-                                          "sha256": args.l1_reference_sha256}},
+                                          "sha256": args.l1_reference_sha256,
+                                          "setting": L1_SETTING_OF_ARM[args.arm],
+                                          "rod_model": L1_ROD_MODEL},
+                         "l1_keys": {"sha256": args.l1_keys_sha256}},
               "judge_run": run}
     if run["exit_code"] != 0 or not args.judge_out.is_file():
         record.update(status="not_judgeable", reason=f"r79_sensor_judge exit {run['exit_code']}")
@@ -919,7 +1000,8 @@ def cmd_judge(args) -> tuple[str, dict]:
     report["grade_transitions"] = grade_transitions(
         blocks0, blocks1, decision, {"vbk0": (args.vbk0_grade_judge, args.vbk0_grade_judge_sha256),
                                      "vbk": (args.vbk_grade_judge, args.vbk_grade_judge_sha256)},
-        problems)
+        problems, {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]})
+    report["hold_speed_m_s"] = _hold_speed_record()  # erratum 2 2-5
     report["pass_sentence"] = {"n_opp": decision.get("n_opp"),
                                "upper_bound_n_opp": upper_bound(decision.get("n_opp") or 0),
                                "k": decision.get("k"),
@@ -959,7 +1041,11 @@ def _parser() -> argparse.ArgumentParser:
     grades.add_argument("--arm", choices=sorted(SETTING_OF_ARM), required=True)
     grades.add_argument("--runs", action="append", required=True, help="b<j>=<run json>")
     grades.add_argument("--l1-reference", type=Path, required=True)
-    grades.add_argument("--l1-reference-sha256", required=True)
+    grades.add_argument("--l1-reference-sha256", required=True,
+                        help="the L1 run file's sha256 of FIXED_INPUTS (erratum 2 2-1)")
+    grades.add_argument("--l1-keys-sha256", required=True,
+                        help="the L1 key file's sha256 of FIXED_INPUTS (the run's meta must "
+                             "name it)")
     grades.add_argument("--judge-out", type=Path, required=True)
     grades.add_argument("--out", type=Path, required=True)
     dry = sub.add_parser("dry-c")

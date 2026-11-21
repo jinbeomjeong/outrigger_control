@@ -12,7 +12,9 @@ checkout):
   selection recorded;
 * ``--dry-selection``: the X-4 dry ``select`` output (``jp3_dryrun_evidence.py select``) and
   its three key files (g6 / g8 / ref), each with the fixed sha256 of erratum 1 9.1
-  (``jp3_fixed_inputs.DRY_KEYS_FILE_SHA256_BY_FAMILY``).
+  (``jp3_fixed_inputs.DRY_KEYS_FILE_SHA256_BY_FAMILY``);
+* ``--add`` (repeatable): more files, e.g. the 12b L1 key file and the two L1 reference runs
+  of erratum 2 2-1.
 
 Checks (any miss: not usable, nothing written):
 
@@ -182,6 +184,8 @@ def build_list(args: argparse.Namespace) -> list[tuple[str, str]]:
     expected: dict[str, str | None] = dict.fromkeys(read_entries(args.entries, args.repo))
     expected.update(x11_entries(args.x11_selection, args.repo))
     expected.update(dry_entries(args.dry_selection, args.repo))
+    for path in args.add:  # erratum 2 2-1: the L1 key file and the two L1 runs
+        expected.setdefault(_relative(path, args.repo), None)
     if NOISE_PATH not in expected:
         raise NotUsable(f"{NOISE_PATH} is not an entry")
     expected[NOISE_PATH] = fixed.NOISE_VB_SHA256
@@ -213,6 +217,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--entries", type=Path, required=True)
     parser.add_argument("--x11-selection", type=Path, required=True)
     parser.add_argument("--dry-selection", type=Path, required=True)
+    parser.add_argument("--add", type=Path, action="append", default=[],
+                        help="one more file under --repo (repeatable): the 12b L1 key file and "
+                             "the two L1 reference runs (erratum 2 2-1)")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     status, count = "written", 0

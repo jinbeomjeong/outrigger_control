@@ -2,11 +2,15 @@
 # Step (1) P-1 (spec v5 8 4.(1); 4a-4 6, erratum 1 R-2; stored data only): base-judge -> R-2
 # record -> t12-selfcheck, single, mask 0xFFFF; the P-1 output list at its end (the main session
 # commits it before step 6). Edition 5 changes the simulation code by design: no 4a-7 2.2 path
-# check and no fa997f4c rerun match (P5-1 compares the rows of steps 3 .. 6 with 78fd5d2d).
+# check and no fa997f4c match (erratum 2 2-4); instead git diff --stat 78fd5d2d..run commit
+# into the record, and the P-1 outputs against 78fd5d2d's (4a-6 4 row (1): the sha256 of the
+# judge file and its L1 extract, the base-judge-compare and t12-selfcheck codes; P-1 reads
+# stored data only, so they are the same - a difference stops).
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed5.ps1"
 
 $Folder = Initialize-Ed5Step 'p1' $Attempt @()
+Write-DiffStat
 $JudgeFile = "$Folder\h6_base_judge.json"
 $BaseReport = "$Folder\judge\bj.json"
 $H6 = Get-FixedPath 'H6_SHA256'
@@ -30,4 +34,6 @@ Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--
     '--judge', $JudgeFile, '--judge-sha256', $JudgeSha, '--out', "$Folder\judge\h6_selfcheck.json") | Out-Null
 
 Write-P1Outputs $Folder
+Invoke-RerunMatch 'p1'  # erratum 2 2-4: against 78fd5d2d ($PreviousRunsRoot, its p1.done)
+
 Complete-Step
