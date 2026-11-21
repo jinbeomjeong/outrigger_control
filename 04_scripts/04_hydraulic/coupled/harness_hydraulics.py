@@ -22,10 +22,24 @@ the lag of the last moving step, ``p*`` the extension target of the lock step's 
 the moving ``Gr``, so the knee moves from the next step on (as on L2b). Retract locks keep
 ``p_ret``. All pressures are model values and ASSUMPTIONS.
 
+436.9 plant options (``06_analysis/02_control/j_p3_cause/jp3_remedy_spec.md`` 3, all off by
+default; off = none of their lines runs):
+  P1 ``line_fill_gate``          ``CheckOpenGate`` in front of the flow limit: a locked leg keeps
+                                 its lock (speed 0) until the check of its direction opened
+  P2 ``lock_anchor_continuous``  every lock: ``p_r0 = max(p_lag, p_floor) + G_r,lock / A_ann``, so
+                                 the locked truth starts at the lag; the knee counts from the truth
+                                 (``_locked_knee_m``); the r5 extension anchor is off
+  P3 ``rod_flow_cap_all``        M2 law ``flow_limited_r6`` (flow cap on all four branches)
+  P4 ``rod_reading_truth``       the controller's rod reading is the M2 truth
+                                 (:func:`with_plant_truth_pressures`, event path ``r64``)
+Records of a run with any 436.9 option or ③ revision 5: the per-read J-P3 trace in
+``extend_bound_check`` (revision 5 keys) and the per-lock ``lock_log``.
+
 Pressures gauge [Pa], speeds m/s, extension positive.
 """
 from __future__ import annotations
 
+import dataclasses
 import math
 import sys
 from dataclasses import dataclass
@@ -36,16 +50,23 @@ import numpy as np
 SOURCE_DIR = Path(__file__).resolve().parents[3] / "03_src"
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
+_COUPLED_DIR = Path(__file__).resolve().parent
+if str(_COUPLED_DIR) not in sys.path:  # j_p3_inputs (a sibling) for the B2 evidence keys
+    sys.path.append(str(_COUPLED_DIR))
+
+from j_p3_inputs import ROD_READING_EVIDENCE_KEYS  # noqa: E402
 
 from outrigger_sim.control.extend_start_bound import (  # noqa: E402
     ExtendBoundCheck,
     TensionTruthCounter,
     extend_bound_states,
+    plant_leg_states,
 )
 from outrigger_sim.hydraulics.check_open_delay import (  # noqa: E402
     CheckDelayCircuit,
     CheckDelayInputs,
     CheckOpenDelay,
+    CheckOpenGate,
 )
 from outrigger_sim.hydraulics.rod_chamber import (  # noqa: E402
     RodChamberLegParams,
@@ -54,6 +75,7 @@ from outrigger_sim.hydraulics.rod_chamber import (  # noqa: E402
 from outrigger_sim.hydraulics.rod_release import (  # noqa: E402
     ReleaseStart,
     RodPressureFlowLaw,
+    RodPressureFlowLawR6,
     RodReleaseShift,
     release_weight,
 )
@@ -93,9 +115,15 @@ BAR = 1.0e5
 
 
 class _RodPressureLag:
-    """Moving rod pressure of one plant: lag capped by the valve flow (module docstring)."""
+    """Moving rod pressure of one plant: lag capped by the valve flow (module docstring).
 
-    def __init__(self, plant) -> None:
+    Args:
+        plant: The armed harness plant.
+        flow_law: The law (r5 :class:`RodPressureFlowLaw` by default; P3 the r6 law, which
+            also reads the head pressure of the step).
+    """
+
+    def __init__(self, plant, flow_law: RodPressureFlowLaw | None = None) -> None:
         head_area_m2 = plant.flow_limiter.params.A_h
         self._legs = [
             RodChamberLegParams(
@@ -106,7 +134,7 @@ class _RodPressureLag:
                 outer_stiffness_N_m=UNUSED_OUTER_STIFFNESS_N_M,
                 rod_weight_N=0.0)
             for i in range(LEG_COUNT)]
-        self.flow_law = RodPressureFlowLaw()
+        self.flow_law = RodPressureFlowLaw() if flow_law is None else flow_law
         # the harness oil columns are frozen at e_op, so C_r is one value per leg
         self._compliance_m3_Pa = [
             self.flow_law.rod_compliance_m3_Pa(leg.annulus_area_m2, leg.head_stiffness_N_m,
@@ -115,6 +143,9 @@ class _RodPressureLag:
         self._step_s = float(plant.dt)
         self._lag_s = float(plant.tau)
         self.pressure_Pa = np.zeros(LEG_COUNT)
+        self.last_target_Pa = np.full(LEG_COUNT, np.nan)
+        """``p*`` the law used in the last moving step per leg (the J-P3c / RET share boundary,
+        ``hydraulics_remedy_review.md`` 10; NaN before the first moving step)."""
 
     def start(self, leg: int, pressure_Pa: float) -> None:
         self.pressure_Pa[leg] = pressure_Pa
@@ -124,8 +155,16 @@ class _RodPressureLag:
         mode = RodChamberMode.EXT if direction > 0.0 else RodChamberMode.RET
         params = self._legs[leg]
         target_Pa = params.moving_target_rod_pressure_Pa(mode, force_N)
+        self.last_target_Pa[leg] = target_Pa
+        previous_Pa = float(self.pressure_Pa[leg])
+        if isinstance(self.flow_law, RodPressureFlowLawR6):  # P3: the law reads F and p_bA
+            self.pressure_Pa[leg] = self.flow_law.rod_pressure_with_force_Pa(
+                previous_Pa, target_Pa, speed_m_s, self._step_s, self._lag_s,
+                self._compliance_m3_Pa[leg], params.head_area_m2, params.annulus_area_m2,
+                mode is RodChamberMode.RET, force_N, params.p_head_back_retract_Pa)
+            return self.pressure_Pa[leg]
         self.pressure_Pa[leg] = self.flow_law.rod_pressure_Pa(
-            float(self.pressure_Pa[leg]), target_Pa, speed_m_s, self._step_s, self._lag_s,
+            previous_Pa, target_Pa, speed_m_s, self._step_s, self._lag_s,
             self._compliance_m3_Pa[leg], params.head_area_m2, params.annulus_area_m2,
             is_retract=mode is RodChamberMode.RET)
         return self.pressure_Pa[leg]
@@ -187,6 +226,215 @@ class _AnchorRecord:
                                          "dF_knee_N"]}
 
 
+LOCK_LOG_COLUMNS = ("t_lock_s", "leg", "direction", "p_tr_before_Pa", "p_r0_Pa", "Gr_lock_N",
+                    "p_tr_after_Pa", "dp_tr_step_Pa", "dp_h_step_Pa", "t_release_s",
+                    "release_cause", "gate_wait_s", "dF_lock_N", "dp_tr_lock_Pa",
+                    "monitor_class_at_lock", "monitor_stretch_open")
+"""``jp3_remedy_spec.md`` 6.3 per-lock row."""
+RELOCK_STEP_COUNTED_PA = 1.0e5
+"""Hydraulics 7 recommendation: a lock whose truth steps by more than 1 bar is counted."""
+RELEASE_BY_GATE = "gate"
+RELEASE_BY_COMMAND = "command"
+SEED_LOG_COLUMNS = ("t_s", "leg", "p_h_Pa", "p_r_locked_Pa", "seed_Pa", "step_Pa",
+                    "dp_h_read_Pa", "net_force_step_N", "net_force_release_step_N",
+                    "net_force_seed_step_N", "m2_previous_unset", "m2_shift_clipped")
+"""Edition 4 ``p1_retract_seed_log`` row (spec 6.3; ``leg`` = index as in ``lock_log``).
+
+* ``net_force_step_N`` = the read net force step at the seed instant, ``dp_h_read A_h - step
+  A_ann``: 0 by definition (the head reading is solved from the net force), an implementation
+  check column, never judged (addendum 4a-2 3.2).
+* ``net_force_release_step_N`` = the plant force change over the whole release step, which
+  also holds the lag's first relax step (a record).
+* ``net_force_seed_step_N`` (addendum 4a-2 3.2, the judged column of P4-4 / T-JR-15 / T-JR-18):
+  ``[F_after - F_before] - k_o s_relax`` with ``s_relax = A_ann [(p_start + Delta) - (p_relax
+  + Delta w)] / k_h``, the force step the seed itself makes in the release step (0 when the M2
+  re-anchor holds the seed, about ``-k_o A_ann dp_seed / k_h`` when it does not).
+* ``m2_previous_unset``: the release step had no M2 previous pressure (its shift is 0,
+  ``s_relax`` = 0); ``m2_shift_clipped``: the leg's shift of that step was clipped by the stroke
+  room (the row cannot split the seed share: not judgeable).
+
+Every value is read from the plant after it computed it; no plant arithmetic changes."""
+
+
+@dataclass(frozen=True)
+class ReleaseStepRecord:
+    """Plant values of one M2 release step, read after ``s_ref += shift`` (per leg).
+
+    Attributes:
+        net_force_after_N: ``pressure()`` after the shift.
+        relaxed_Pa: ``p_relax``, the lag pressure after this step's ``relax``.
+        weight: ``w`` of the base release decay this step.
+        head_stiffness_N_m: ``k_h`` the shift used.
+        oil_stiffness_N_m: ``k_o`` of ``pressure()``.
+        is_clipped: The leg's shift was clipped by the stroke room this step.
+    """
+
+    net_force_after_N: np.ndarray
+    relaxed_Pa: np.ndarray
+    weight: np.ndarray
+    head_stiffness_N_m: np.ndarray
+    oil_stiffness_N_m: np.ndarray
+    is_clipped: np.ndarray
+
+
+class _LockLog:
+    """Per-lock record of the plant (spec 6.3, record only): the truth step at the lock, the
+    release that ends it and the monitor's class of the read before the lock."""
+
+    def __init__(self) -> None:
+        self.rows: list[list] = []
+        self._open: dict[int, dict] = {}
+        """Leg -> the open row (its lock values) until the release."""
+        self.gate_held_since_s = np.full(LEG_COUNT, np.nan)
+        """P1: start of a nonzero command the gate holds back on a locked leg."""
+        self.lock_count = 0
+        self.step_over_1bar_count = 0
+        self.max_abs_step_Pa = 0.0
+        self.retract_seed_count = 0
+        self.retract_seed_step_max_Pa = 0.0
+        """T-JR-15: the P1 retract M2 seed steps the rod pressure at a release (not a lock
+        step, counted apart)."""
+        self.seed_rows: list[dict] = []
+        self._pending_seed_rows: list[dict] = []
+
+    def on_retract_seed(self, step_Pa: float, row: dict | None = None) -> None:
+        """One P1 retract seed; ``row`` = its ``p1_retract_seed_log`` values (edition 4,
+        spec 6.3) without ``net_force_step_N``, which :meth:`finish_seed_rows` adds after
+        the M2 reference shift of the same inner step."""
+        self.retract_seed_count += 1
+        if abs(step_Pa) > abs(self.retract_seed_step_max_Pa):
+            self.retract_seed_step_max_Pa = step_Pa
+        if row is not None and len(self.seed_rows) < MAX_LOGGED_LOCK_EVENTS:
+            self.seed_rows.append(row)
+            self._pending_seed_rows.append(row)
+
+    def finish_seed_rows(self, step: ReleaseStepRecord) -> None:
+        """The seed rows of this release step after its M2 shift: ``net_force_release_step_N``
+        (the seed instant plus the lag's first relax step, a record) and the judged
+        ``net_force_seed_step_N`` (:data:`SEED_LOG_COLUMNS`)."""
+        for row in self._pending_seed_rows:
+            leg = row["leg"]
+            release_step_N = float(step.net_force_after_N[leg]) - row.pop("net_force_before_N")
+            drop_Pa, annulus = row.pop("drop_Pa"), row.pop("annulus_m2")
+            relax_shift_m = 0.0
+            if not row["m2_previous_unset"]:
+                relax_shift_m = annulus * ((row["seed_Pa"] + drop_Pa)
+                                           - (float(step.relaxed_Pa[leg])
+                                              + drop_Pa * float(step.weight[leg]))
+                                           ) / float(step.head_stiffness_N_m[leg])
+            row["net_force_release_step_N"] = release_step_N
+            row["net_force_seed_step_N"] = (release_step_N
+                                            - float(step.oil_stiffness_N_m[leg]) * relax_shift_m)
+            row["m2_shift_clipped"] = bool(step.is_clipped[leg])
+        self._pending_seed_rows = []
+
+    def on_lock(self, plant, leg: int, p_tr_before_Pa: float, monitor_trace: dict | None) -> None:
+        annulus = float(plant.A_ann[leg])
+        p_tr_after_Pa = float(plant.p_r0[leg]) - float(plant.Gr_lock[leg]) / annulus
+        step_Pa = p_tr_after_Pa - p_tr_before_Pa
+        head_area = float(plant.flow_limiter.params.A_h[leg])
+        self.lock_count += 1
+        if math.isfinite(step_Pa):
+            self.step_over_1bar_count += int(abs(step_Pa) > RELOCK_STEP_COUNTED_PA)
+            self.max_abs_step_Pa = max(self.max_abs_step_Pa, abs(step_Pa))
+        classes = (monitor_trace or {}).get("class")
+        model = (monitor_trace or {}).get("model_bound_Pa")
+        self._open[leg] = {
+            "t_lock_s": round(float(plant.t), 6), "leg": leg,
+            "direction": float(plant.last_dir[leg]), "p_tr_before_Pa": p_tr_before_Pa,
+            "p_r0_Pa": float(plant.p_r0[leg]), "Gr_lock_N": float(plant.Gr_lock[leg]),
+            "p_tr_after_Pa": p_tr_after_Pa, "dp_tr_step_Pa": step_Pa,
+            "dp_h_step_Pa": step_Pa * annulus / head_area,
+            "force_at_lock_N": float(plant.pressure()[leg]),
+            "monitor_class_at_lock": None if classes is None else classes[leg],
+            "monitor_stretch_open": None if model is None else bool(math.isfinite(model[leg]))}
+
+    def on_release(self, plant, leg: int, locked_truth_Pa: float) -> None:
+        row = self._open.pop(leg, None)
+        held_since_s = self.gate_held_since_s[leg]
+        self.gate_held_since_s[leg] = np.nan
+        if row is None:  # the armed start lock (not a logged lock)
+            return
+        is_gate = math.isfinite(held_since_s)
+        row.update(t_release_s=round(float(plant.t), 6),
+                   release_cause=RELEASE_BY_GATE if is_gate else RELEASE_BY_COMMAND,
+                   gate_wait_s=float(plant.t) - held_since_s if is_gate else 0.0,
+                   dF_lock_N=float(plant.pressure()[leg]) - row.pop("force_at_lock_N"),
+                   dp_tr_lock_Pa=locked_truth_Pa - row["p_tr_after_Pa"])
+        self._append(row)
+
+    def note_gate_holds(self, t_s: float, is_held: np.ndarray) -> None:
+        for leg in np.flatnonzero(is_held):
+            if np.isnan(self.gate_held_since_s[leg]):
+                self.gate_held_since_s[leg] = t_s
+
+    def _append(self, row: dict) -> None:
+        if len(self.rows) < MAX_LOGGED_LOCK_EVENTS:
+            self.rows.append([row.get(column) for column in LOCK_LOG_COLUMNS])
+
+    def record(self) -> dict:
+        open_rows = []
+        for row in self._open.values():
+            pending = {key: value for key, value in row.items() if key != "force_at_lock_N"}
+            open_rows.append([pending.get(column) for column in LOCK_LOG_COLUMNS])
+        rows = (self.rows + open_rows)[:MAX_LOGGED_LOCK_EVENTS]
+        return {"lock_log": rows, "lock_log_columns": list(LOCK_LOG_COLUMNS),
+                "relock_count": self.lock_count,
+                "relock_step_over_1bar_count": self.step_over_1bar_count,
+                "max_abs_dp_tr_step_bar": self.max_abs_step_Pa / BAR,
+                "p1_retract_seed_count": self.retract_seed_count,
+                "p1_retract_seed_step_max_bar": self.retract_seed_step_max_Pa / BAR,
+                "p1_retract_seed_log": [[row.get(column) for column in SEED_LOG_COLUMNS]
+                                        for row in self.seed_rows],
+                "p1_retract_seed_log_columns": list(SEED_LOG_COLUMNS)}
+
+
+def with_plant_truth_pressures(plant, m, ha):
+    """P4 reading (spec 3): rod = the M2 truth ``plant_rod_pressure_Pa()`` (moving: the lag,
+    locked: ``p_r0 - G_r / A_ann``), head = ``(F_net + p_r A_ann) / A_h``; the sensor error
+    model acts on it afterwards as before.
+
+    Raises:
+        RuntimeError: The plant has no M2 truth (P4 needs M2).
+    """
+    truth = plant.plant_rod_pressure_Pa() if hasattr(plant, "plant_rod_pressure_Pa") else None
+    if truth is None:
+        raise RuntimeError("rod_reading_truth needs the v5 harness plant with M2")
+    # addendum 4a-2 B2 evidence 1 (record only): counted inside the P4 reading itself
+    plant.rod_reading_truth_calls = getattr(plant, "rod_reading_truth_calls", 0) + 1
+    rod_Pa = np.asarray(truth, float)
+    head_Pa = (np.asarray(plant.pressure(), float) + rod_Pa * np.asarray(plant.A_ann, float)) / ha
+    return dataclasses.replace(m, head_pressure_Pa=head_Pa, rod_pressure_Pa=rod_Pa)
+
+
+SENSOR_GRADE_IDEAL = "ideal"
+_SENSOR_GRADE: list = [SENSOR_GRADE_IDEAL]
+"""Pressure sensor grade of the rows of this process (``extend_bound_check.sensor_grade``,
+2nd edition 6.1): the harness reading as it is (``verdict_runs``) is ``ideal``; a runner with
+a sensor error model declares its grade (:func:`declare_sensor_grade`)."""
+
+
+def declare_sensor_grade(grade: str) -> None:
+    """The row grade of the following runs of this process (``ideal``, ``normal``,
+    ``conservative``, ``old_worst``; r79 levels L0 / L1 ideal, L2* normal, L3, L4).
+
+    Raises:
+        ValueError: An unknown grade.
+    """
+    from outrigger_sim.control.extend_start_bound import SENSOR_GRADES
+
+    if grade not in SENSOR_GRADES:
+        raise ValueError(f"sensor grade {grade!r} is not one of {SENSOR_GRADES}")
+    _SENSOR_GRADE[0] = grade
+
+
+def _records_jp3(options: HydraulicOptions) -> bool:
+    """The per-lock and per-read 436.9 records run with ③ revision 5 or any P1 .. P4 option."""
+    return bool(options.extend_start_hold or options.line_fill_gate is not None
+                or options.lock_anchor_continuous or options.rod_flow_cap_all
+                or options.rod_reading_truth)
+
+
 def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                                 damping_N_s_m: tuple[np.ndarray, np.ndarray] | None = None) -> type:
     """Subclass of the flow-limited plant ``base`` with the v5 options.
@@ -203,6 +451,7 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
     closure = options.lock_closure
     if (closure is not None or options.check_delay is not None) and damping_N_s_m is None:
         raise ValueError("LC and M1c on the harness need the locked and moving dashpots")
+    records_jp3 = _records_jp3(options)
 
     class HydraulicsPlant(base):
         """Harness plant with the v5 options (module docstring)."""
@@ -212,8 +461,10 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             _LAST_ARMED[0] = self
             self.rod_release = None
             if options.rod_release_force:
-                self.rod_release = RodReleaseShift(self.A_ann)
-                self.rod_pressure_lag = _RodPressureLag(self)
+                flow_law = RodPressureFlowLawR6() if options.rod_flow_cap_all else None
+                self.rod_release = (RodReleaseShift(self.A_ann) if flow_law is None
+                                    else RodReleaseShift(self.A_ann, flow_law.law_revision))
+                self.rod_pressure_lag = _RodPressureLag(self, flow_law)
                 self.anchor_record = _AnchorRecord()
             self.lock_pending_since_s = np.full(LEG_COUNT, np.nan)
             self.lock_events = []
@@ -222,6 +473,13 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             if options.check_delay is not None:
                 self.check_delay = CheckOpenDelay(options.check_delay,
                                                   _check_delay_circuit(self.flow_limiter.params))
+            self.line_fill_gate = None
+            if options.line_fill_gate is not None:  # P1
+                self.line_fill_gate = CheckOpenGate(
+                    options.line_fill_gate, _check_delay_circuit(self.flow_limiter.params))
+            self.lock_log = _LockLog() if records_jp3 else None
+            self.last_monitor_trace = None
+            """The monitor's revision 5 trace of the last read (the lock log's class)."""
             self.tension_truth = TensionTruthCounter()
             self.extend_targets = _extend_target_model(self)
             self.extend_bound_check = None
@@ -235,12 +493,28 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             if closure is not None:
                 # spec 2.5: the dashpot follows the law's lock state, not the valve output
                 self.cn = np.where(self.locked, damping_N_s_m[0], damping_N_s_m[1])
-            if self.check_delay is None:
-                accumulated = super().step(u, nsteps)
-            else:
+            if self.check_delay is not None:
                 accumulated = self._step_with_check_delay(np.asarray(u, float), nsteps)
+            elif self.line_fill_gate is not None:
+                accumulated = self._step_with_line_fill_gate(np.asarray(u, float), nsteps)
+            else:
+                accumulated = super().step(u, nsteps)
             self._count_tension_truth(u, nsteps)
             return accumulated
+
+        def _step_with_line_fill_gate(self, u: np.ndarray, nsteps: int):
+            """P1: the gate's speeds in front of the flow limit (a held leg stays locked); the
+            retract M2 seed is kept (user decision 147, ``CheckOpenGate``)."""
+            speed_m_s = np.array(np.broadcast_to(u, (LEG_COUNT,)), dtype=float)
+            output = self.line_fill_gate.filter(
+                self._check_delay_inputs(speed_m_s, nsteps, self.line_fill_gate))
+            if self.lock_log is not None:
+                is_held = (np.asarray(self.locked, bool) & (np.abs(speed_m_s) > self.eps)
+                           & (output.speed_m_s == 0.0))
+                self.lock_log.note_gate_holds(float(self.t), is_held)
+            for i in np.flatnonzero(np.isfinite(output.opening_rod_pressure_Pa)):
+                self._seed_rod_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
+            return super().step(output.speed_m_s, nsteps)
 
         def _count_tension_truth(self, u, nsteps: int) -> None:
             """Premise ① truth of this chunk (``tension_premise.md`` S-2, record only): an
@@ -268,17 +542,30 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
 
         def check_extend_bound(self, t_s: float, bound_Pa: np.ndarray,
                                locked_model_bound_Pa: np.ndarray | None = None,
-                               locked_sources: list | None = None) -> None:
+                               locked_sources: list | None = None,
+                               trace: dict | None = None) -> None:
             """5.5 / 6.4: the controller's ③ bound (and its locked model bound ④) of the read
-            at ``t_s`` against this plant (record only; the plant has not moved since)."""
+            at ``t_s`` against this plant (record only; the plant has not moved since).
+            ``trace`` = the monitor's revision 5 per-read trace (436.9 J-P3 keys)."""
+            self.last_monitor_trace = trace
             plant_Pa = self.plant_rod_pressure_Pa()
             if plant_Pa is None:
                 return
             if self.extend_bound_check is None:
                 self.extend_bound_check = ExtendBoundCheck(self.A_ann)
+                self.extend_bound_check.sensor_grade = _SENSOR_GRADE[0]
+            revision_5 = {} if trace is None else {
+                "period_classes": trace["class"], "used_bounds": trace["used_bound_Pa"],
+                "plant_states": plant_leg_states(self.locked, self.last_dir),
+                "trace_row": trace,
+                # 3rd edition 6.3: the target of the last moving step; NaN on locked legs
+                "p_star_ret_Pa": np.where(np.asarray(self.locked, bool), np.nan,
+                                          self.rod_pressure_lag.last_target_Pa),
+                # edition 4.1 record: the false-drop count of retract_tracker reads
+                "true_force_N": np.asarray(self.pressure(), float).copy()}
             self.extend_bound_check.add(t_s, bound_Pa, plant_Pa,
                                         extend_bound_states(self.locked, self.last_dir),
-                                        locked_model_bound_Pa, locked_sources)
+                                        locked_model_bound_Pa, locked_sources, **revision_5)
 
         def _step_with_check_delay(self, u: np.ndarray, nsteps: int):
             """Spec 2.0 rows 3 and 6: M1c in front of the flow limit, its shift after the chunk
@@ -298,11 +585,16 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 self.sref -= output.opening_shift_m
             return accumulated
 
-        def _check_delay_inputs(self, u: np.ndarray, nsteps: int) -> CheckDelayInputs:
+        def _check_delay_inputs(self, u: np.ndarray, nsteps: int,
+                                model=None) -> CheckDelayInputs:
+            """M1c inputs (``model`` = the M1c or P1 object; default M1c). The knee is the
+            plant's ``_locked_knee_m`` (the P2 truth-based knee with P2, review 2.4; the same
+            value as before 436.9 without P2)."""
+            model = self.check_delay if model is None else model
             rod_Pa = (np.asarray(self.p_r0, float) - np.asarray(self.Gr, float)
                       / np.asarray(self.A_ann, float))
-            head_Pa = (self.pressure() + rod_Pa * self.A_ann) / self.check_delay.A_h
-            knee_m = (self.p_r0 - self.p_floor) * self.A_ann / self.kr
+            head_Pa = (self.pressure() + rod_Pa * self.A_ann) / model.A_h
+            knee_m = np.array([self._locked_knee_m(i) for i in range(LEG_COUNT)])
             void_m = np.where(self.locked,
                               np.maximum(self.sref - self.x - self.c_lock - knee_m, 0.0), 0.0)
             band_N = np.asarray(self.Fs, float) - np.asarray(self.f, float)
@@ -323,10 +615,59 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 u = self._closing_delay_speed(kernel_speed_m_s)
             rod_force_N = super()._rod_force(u)
             self._record_lock_changes(was_locked)
+            tracked_before_Pa = None
+            if self.lock_log is not None:  # 436.9 records only
+                self._log_releases(was_locked, rod_force_N)
+                tracked_before_Pa = (np.full(LEG_COUNT, np.nan) if self.rod_release is None
+                                     else self.rod_pressure_lag.pressure_Pa.copy())
             if self.rod_release is not None:
-                self._anchor_extension_locks(was_locked)
+                if options.lock_anchor_continuous:
+                    self._anchor_continuous(was_locked)
+                else:
+                    self._anchor_extension_locks(was_locked)
                 self._shift_reference_for_rod_pressure(rod_force_N, was_locked, kernel_speed_m_s)
+            if tracked_before_Pa is not None:
+                self._log_locks(was_locked, tracked_before_Pa)
             return rod_force_N
+
+        def _log_releases(self, was_locked, rod_force_N) -> None:
+            """Released legs of this step: the locked truth ``p_r0 - G_r / A_ann`` at the
+            release (``G_r`` = ``r0`` of the release step)."""
+            for i in np.flatnonzero(was_locked & ~self.locked):
+                leg = int(i)
+                truth_Pa = float(self.p_r0[leg]) - float(rod_force_N[leg]) / float(self.A_ann[leg])
+                self.lock_log.on_release(self, leg, truth_Pa)
+
+        def _log_locks(self, was_locked, tracked_before_Pa) -> None:
+            """Legs locked in this step (after the anchor of this step was set)."""
+            for i in np.flatnonzero(self.locked & ~was_locked):
+                leg = int(i)
+                self.lock_log.on_lock(self, leg, float(tracked_before_Pa[leg]),
+                                      self.last_monitor_trace)
+
+        def _anchor_continuous(self, was_locked) -> None:
+            """P2: every leg locked in this step anchors at ``p_r0 = max(p_lag, p_floor) +
+            G_r,lock / A_ann`` (``p_lag`` = M2 lag of the last moving step), so the locked truth
+            ``p_r0 - G_r / A_ann`` starts at the lag; extension locks keep the 4.5 record."""
+            newly_locked = self.locked & ~was_locked
+            if not newly_locked.any():
+                return
+            lag = self.rod_pressure_lag
+            net_force_N = self.pressure()
+            for i in np.flatnonzero(newly_locked):
+                leg = int(i)
+                tracked_Pa = float(lag.pressure_Pa[leg])
+                truth_Pa = max(tracked_Pa, self.p_floor)
+                annulus = float(self.A_ann[leg])
+                self.p_r0[leg] = truth_Pa + float(self.Gr_lock[leg]) / annulus
+                if self.last_dir[leg] <= 0:
+                    continue
+                target_Pa = lag.extension_target_Pa(leg, float(net_force_N[leg]))
+                knee_N = ((truth_Pa - self.p_floor) * annulus
+                          * (self.kh[leg] + self.kr[leg]) / self.kr[leg])
+                lock = ExtensionLock(float(self.t), leg, tracked_Pa, target_Pa,
+                                     float(self.p_r0[leg]), float(knee_N))
+                self.anchor_record.add(lock, truth_Pa - float(self.p_ext[leg]))
 
         def _anchor_extension_locks(self, was_locked) -> None:
             """Revision 5: the anchor of a leg locked in this step after an extension keeps the
@@ -384,28 +725,70 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             weight = np.zeros(LEG_COUNT)
             for i in np.flatnonzero(~self.locked):
                 if was_locked[i]:
-                    self._start_release(i, float(pressure_Pa[i]), float(rod_force_N[i]))
+                    self._start_release(i, float(pressure_Pa[i]), float(rod_force_N[i]),
+                                        float(net_force_N[i]))
                 pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]),
                                            float(speed_m_s[i]))
                 weight[i] = release_weight(float(self.t - self.t_rel[i]), float(self.tau))
+            clipped_before = (None if self.lock_log is None
+                              else self.rod_release.clipped_steps)  # a copy (record only)
             shift_m = self.rod_release.shift_m(
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
                 self.geo.stroke - self.sref, release_weight=weight, t_s=float(self.t))
             self.sref += shift_m
+            if self.lock_log is not None:  # record only: reads the values computed above
+                self.lock_log.finish_seed_rows(ReleaseStepRecord(
+                    net_force_after_N=np.asarray(self.pressure(), float),
+                    relaxed_Pa=pressure_Pa.copy(), weight=weight.copy(),
+                    head_stiffness_N_m=np.broadcast_to(np.asarray(self.kh, float),
+                                                       (LEG_COUNT,)).copy(),
+                    oil_stiffness_N_m=np.broadcast_to(np.asarray(self.ko, float),
+                                                      (LEG_COUNT,)).copy(),
+                    is_clipped=self.rod_release.clipped_steps != clipped_before))
 
         def _start_release(self, leg: int, locked_pressure_Pa: float,
-                           release_force_N: float) -> None:
+                           release_force_N: float, net_force_N: float = math.nan) -> None:
             """The lag starts at the locked pressure or the M1c seed; ``Delta = Gr(t_rel) /
             A_ann`` (= ``p_r0 - p_r,rel``; ``Gr`` is ``r0`` in the release step)."""
             seed_Pa = self.rod_pressure_seed_Pa[leg]
             start_Pa = locked_pressure_Pa if np.isnan(seed_Pa) else float(seed_Pa)
+            drop_Pa = release_force_N / float(self.A_ann[leg])
+            if self.lock_log is not None and not np.isnan(seed_Pa):
+                self.lock_log.on_retract_seed(
+                    start_Pa - locked_pressure_Pa,
+                    self._seed_row(leg, locked_pressure_Pa, start_Pa, drop_Pa, net_force_N))
             self.rod_pressure_seed_Pa[leg] = np.nan
             self.rod_pressure_lag.start(leg, start_Pa)
-            self.rod_release.release(
-                leg, ReleaseStart(start_Pa, release_force_N / float(self.A_ann[leg])))
+            self.rod_release.release(leg, ReleaseStart(start_Pa, drop_Pa))
 
+        def _seed_row(self, leg: int, locked_pressure_Pa: float, seed_Pa: float,
+                      drop_Pa: float, net_force_N: float) -> dict:
+            """The ``p1_retract_seed_log`` values known at the release (record only); the
+            release step's values follow in :meth:`_LockLog.finish_seed_rows`."""
+            step_Pa = seed_Pa - locked_pressure_Pa
+            annulus = float(self.A_ann[leg])
+            head_area = float(self.flow_limiter.params.A_h[leg])
+            return {
+                "t_s": round(float(self.t), 6), "leg": leg,
+                "p_h_Pa": (net_force_N + locked_pressure_Pa * annulus) / head_area,
+                "p_r_locked_Pa": locked_pressure_Pa, "seed_Pa": seed_Pa,
+                "step_Pa": step_Pa, "dp_h_read_Pa": step_Pa * annulus / head_area,
+                "net_force_step_N": (step_Pa * annulus / head_area) * head_area
+                - step_Pa * annulus,
+                "net_force_before_N": net_force_N, "drop_Pa": drop_Pa, "annulus_m2": annulus,
+                "m2_previous_unset": not self.rod_release.has_previous_pressure}
+
+    if options.lock_anchor_continuous:
+        HydraulicsPlant._locked_knee_m = _continuous_knee_m
     HydraulicsPlant.v5_options = options
     return HydraulicsPlant
+
+
+def _continuous_knee_m(plant, i: int) -> float:
+    """P2 knee: the locked truth ``p_r0 - G_r / A_ann`` reaches ``p_floor`` at the knee (the
+    base knee counts from ``p_r0``, which is off by ``G_r,lock / A_ann`` after a relock)."""
+    truth_anchor_Pa = plant.p_r0[i] - plant.Gr_lock[i] / plant.A_ann[i]
+    return (truth_anchor_Pa - plant.p_floor) * plant.A_ann[i] / plant.kr[i]
 
 
 def install_overlap_cut(closed_loop_module, setting, v_max_m_s: float, zero_command_m_s: float):
@@ -471,6 +854,13 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
         record["lock_events"] = plant.lock_events[:MAX_LOGGED_LOCK_EVENTS]
     if getattr(plant, "check_delay", None) is not None:
         record["check_delay"] = plant.check_delay.summary()
+    if getattr(plant, "line_fill_gate", None) is not None:
+        record["line_fill_gate"] = plant.line_fill_gate.summary()
+        record["p1_output_exceptions"] = list(plant.line_fill_gate.summary()["output_exceptions"])
+    if getattr(plant, "lock_log", None) is not None:
+        record.update(plant.lock_log.record())
+    if getattr(plant, "extend_targets", None) is not None:  # an armed v5 plant (B2 evidence)
+        record.update({key: int(getattr(plant, key, 0)) for key in ROD_READING_EVIDENCE_KEYS})
     if getattr(plant, "tension_truth", None) is not None:
         record["tension_truth"] = plant.tension_truth.record()
         check = getattr(plant, "extend_bound_check", None)
@@ -497,13 +887,23 @@ def install_extend_bound_check() -> None:
             check = getattr(plant, "check_extend_bound", None)
             if check is None or abs(float(plant.t) - float(measurements.t_s)) > TIME_TOL_S:
                 return output
+            if _has_rod_reading(measurements):  # addendum 4a-2 B2 evidence 2 (record only)
+                plant.two_pressure_reads = getattr(plant, "two_pressure_reads", 0) + 1
             bound_Pa = self.extend_bound_Pa()
             if bound_Pa is not None:
+                trace = self.extend_bound_trace_row()  # None below ③ revision 5
+                revision_5 = {} if trace is None else {"trace": trace}
                 check(float(measurements.t_s), bound_Pa, self.locked_model_bound_Pa(),
-                      self.locked_model_bound_sources())
+                      self.locked_model_bound_sources(), **revision_5)
             return output
 
     c2.C2Controller = BoundCheckedController
+
+
+def _has_rod_reading(measurements) -> bool:
+    """The controller read a rod-side pressure this period (a finite value on some leg)."""
+    rod_Pa = getattr(measurements, "rod_pressure_Pa", None)
+    return rod_Pa is not None and bool(np.isfinite(np.asarray(rod_Pa, float)).any())
 
 
 def _extend_target_model(plant):
@@ -570,8 +970,41 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
     if options.lock_window_follows_plant or options.extend_start_tracked:
         install_lock_window(options, load_params().v_max)
     install_extend_bound_check()
+    if options.rod_reading_truth:
+        install_rod_reading_truth()
 
     verdict_runs_module.make_flow_plant_class = make_class
+
+
+R64_MODULE = "r64_g4_closed_loop"
+
+
+def install_rod_reading_truth() -> None:
+    """P4 on the event path: the S8 harness reads ``r64.with_two_pressures`` at call time, so
+    the module attribute becomes :func:`with_plant_truth_pressures` once the S8 modules are
+    imported (``s9_soil_event_screen._s8_modules``, which imports them under its own argv).
+    The steady path gives no rod reading (criteria revision 9 3.1) and is not touched.
+
+    Addendum 4a-2 B2: an ``r64_g4_closed_loop`` module imported already (the standalone
+    ``r67_g1_screen`` worker imports it before it installs the setting) is patched at once; the
+    evidence keys :data:`ROD_READING_EVIDENCE_KEYS` show whether the reading reached the
+    controller on any path (r79 takes P4 through its own ``R79_ROD_MODEL=plant_truth``)."""
+    import s9_soil_event_screen as study_a
+
+    imported_r64 = sys.modules.get(R64_MODULE)
+    if imported_r64 is not None:
+        imported_r64.with_two_pressures = with_plant_truth_pressures
+    if getattr(study_a._s8_modules, "_rod_reading_truth", False):
+        return
+    load_s8_modules = study_a._s8_modules
+
+    def s8_modules_with_truth_reading():
+        modules = load_s8_modules()
+        modules["r64"].with_two_pressures = with_plant_truth_pressures
+        return modules
+
+    s8_modules_with_truth_reading._rod_reading_truth = True
+    study_a._s8_modules = s8_modules_with_truth_reading
 
 
 def install_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:
@@ -607,9 +1040,14 @@ def check_last_extend_start(options: HydraulicOptions) -> None:
     if not options.extend_start_tracked:
         return
     preset = _LAST_PRESET[0]
-    rule = None if preset is None else preset.two_pressure.to_meta().get("extend_start_rule")
+    meta = {} if preset is None else preset.two_pressure.to_meta()
+    rule = meta.get("extend_start_rule")
     if rule != "tracked_bound":
         raise RuntimeError(f"extend_start_tracked run with the preset rule {rule!r}")
+    revision = (meta.get("extend_start_bound") or {}).get("revision")
+    if revision != options.extend_start_revision:  # 436.9: hold runs build revision 5
+        raise RuntimeError(f"③ bound revision {revision!r} of the preset is not "
+                           f"{options.extend_start_revision} of the options")
 
 
 def check_last_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:

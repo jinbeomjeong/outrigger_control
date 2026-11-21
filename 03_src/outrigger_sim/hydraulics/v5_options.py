@@ -7,7 +7,10 @@ are ASSUMPTIONS (spec 2.4, 2.5); U-R8-9 and the manufacturer answers replace the
 Combinations refused here:
   * rod-side lock window of the controller without the plant lock rule (spec 2.6, ``SystemExit``);
   * circuit BL with the lock closure (decision D-6, ``ValueError``);
-  * the controller's ③ start bound with M1c (review 2026-11-07, ``ValueError``).
+  * the controller's ③ start bound with M1c (review 2026-11-07, ``ValueError``);
+  * 436.9 (``jp3_remedy_spec.md`` 3, 4.1): ``extend_start_hold`` without ``extend_start_tracked``;
+    P1 ``line_fill_gate`` with M1c, with BL + LC, or with the ③ bound of revision 4 (no line-fill
+    gate in the tracker: counterexample ⑥); P2 / P3 / P4 without M2 (``ValueError``).
 """
 
 from __future__ import annotations
@@ -19,7 +22,7 @@ from enum import StrEnum
 from typing import Any
 
 from .flow_limit_run import FlowLimitSetting, flow_setting_from_args
-from .rod_release import FLOW_LIMITED_LAW, STORED_LAWS
+from .rod_release import FLOW_LIMITED_LAW, FLOW_LIMITED_R6_LAW, STORED_LAWS
 
 EXTEND_START_TRACKED_RULE = "tracked_bound"
 """``TwoPressureSettings.extend_start_rule`` of the ③ start bound."""
@@ -53,6 +56,22 @@ EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TA
 """Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1). A list only: the ③
 judgement uses :func:`is_extend_start_tag` (a set misses suffix combinations such as
 ``final_C4G2_P3_K1``, post-switch audit W-1)."""
+EXTEND_HOLD_CONTROLLER_TAG = "final_C4G2_P3H"
+"""436.9 (``jp3_remedy_spec.md`` 4.3): controller tag of a run with ``extend_start_hold`` (③
+revision 5, micro-command lock hold). Its switch suffixes follow in the usual order
+(``final_C4G2_P3H_LAS_K1``)."""
+EXTEND_HOLD_TAGS = (EXTEND_HOLD_CONTROLLER_TAG,
+                    EXTEND_HOLD_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX,
+                    EXTEND_HOLD_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
+                    + ORDER_GATE_TAG_SUFFIX)
+"""Tags of a run with ③ revision 5 (a list only: judge with :func:`is_extend_start_tag` and
+:func:`extend_start_revision_of_tag`)."""
+EXTEND_START_REVISION_OF_BASE_TAG = {EXTEND_START_CONTROLLER_TAG: 4,
+                                     EXTEND_HOLD_CONTROLLER_TAG: 5}
+"""③ bound revision per base tag (:func:`switch_base_tag`)."""
+ALLOW_GATE_WITH_REV4_FOR_TEST = False
+"""Test-only switch (``jp3_remedy_spec.md`` 4.2, case replay C): with True the P1 line-fill gate
+may run with the ③ bound of revision 4. Never set by a runner."""
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
 DEFAULT_VOLUME_SCALE = 1.0
@@ -126,6 +145,13 @@ class LockClosureSetting:
         return self.overlap_ratio * max_speed_m_s
 
 
+OPTIONAL_FIELDS = ("extend_start_tracked", "extend_start_hold", "line_fill_gate",
+                   "lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
+"""Fields :meth:`HydraulicOptions.to_dict` leaves out while off (stored digests unchanged)."""
+M2_PLANT_FIELDS = ("lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
+"""P2, P3 and P4: defined on the M2 rod pressure only."""
+
+
 @dataclass(frozen=True)
 class HydraulicOptions:
     """All v5 plant options of one run; the defaults change nothing.
@@ -141,6 +167,14 @@ class HydraulicOptions:
             (``TwoPressureSettings.extend_start_rule = "tracked_bound"``, revision 4); the v5
             VB and LS1 .. LS4 definition since criteria revision 8 (controller tag
             :data:`EXTEND_START_CONTROLLER_TAG`). Refused with M1c (:func:`check_extend_start`).
+        extend_start_hold: ③ revision 5 (``ExtendStartBound(revision=5)``: micro-command lock
+            hold, line-fill gate of the tracker; ``jp3_remedy_spec.md`` 2); needs
+            ``extend_start_tracked``. Tag :data:`EXTEND_HOLD_CONTROLLER_TAG`.
+        line_fill_gate: P1, the M1c line state as the release gate of a locked leg
+            (``check_open_delay.CheckOpenGate``; harness only).
+        lock_anchor_continuous: P2, every lock anchor continues the M2 lag (no r5 step).
+        rod_flow_cap_all: P3, M2 law ``flow_limited_r6`` (flow cap on all four branches).
+        rod_reading_truth: P4, the controller's rod reading is the M2 plant truth.
     """
 
     flow: FlowLimitSetting | None = None
@@ -150,28 +184,53 @@ class HydraulicOptions:
     lock_closure: LockClosureSetting | None = None
     lock_window_follows_plant: bool = False
     extend_start_tracked: bool = False
+    extend_start_hold: bool = False
+    line_fill_gate: CheckDelaySetting | None = None
+    lock_anchor_continuous: bool = False
+    rod_flow_cap_all: bool = False
+    rod_reading_truth: bool = False
 
     def __post_init__(self) -> None:
         if self.lock_window_follows_plant and self.lock_closure is None:
             raise SystemExit("the controller lock window needs the plant lock rule "
                              "(spec 2.6: controller alone is refused)")
+        if self.extend_start_hold and not self.extend_start_tracked:
+            raise ValueError("extend_start_hold (③ revision 5) needs extend_start_tracked")
+        _check_jp3_plant_options(self)
         if self.extend_start_tracked:
-            check_extend_start(self, EXTEND_START_TRACKED_RULE)
+            check_extend_start(self, EXTEND_START_TRACKED_RULE, self.extend_start_revision)
 
     @property
     def is_any_on(self) -> bool:
         return self != HydraulicOptions()
 
+    @property
+    def extend_start_revision(self) -> int | None:
+        """③ bound revision of these options (5 with ``extend_start_hold``, 4 with the bound
+        alone, None without it)."""
+        if not self.extend_start_tracked:
+            return None
+        return 5 if self.extend_start_hold else 4
+
+    @property
+    def m2_law(self) -> str | None:
+        """M2 law name of the run (None with M2 off)."""
+        if not self.rod_release_force:
+            return None
+        return FLOW_LIMITED_R6_LAW if self.rod_flow_cap_all else FLOW_LIMITED_LAW
+
     def to_dict(self) -> dict[str, Any]:
         """The fields, plus ``m2_law`` with M2 on: the definition digests and metas of M2 runs
-        change with the M2 law (revision 5, ``flow_limited_r5``); the M2-off dict stays as it
-        was. ``extend_start_tracked`` appears only when on, so the dicts (and digests) of the
-        runs without the ③ bound stay as they were (criteria revision 8)."""
+        change with the M2 law (revision 5, ``flow_limited_r5``; ``flow_limited_r6`` with
+        ``rod_flow_cap_all``); the M2-off dict stays as it was. ``extend_start_tracked`` and the
+        436.9 fields appear only when on, so the dicts (and digests) of the runs without them
+        stay as they were (criteria revision 8, ``jp3_remedy_spec.md`` 4.4)."""
         values = asdict(self)
-        if not self.extend_start_tracked:
-            del values["extend_start_tracked"]
+        for name in OPTIONAL_FIELDS:
+            if values[name] in (False, None):
+                del values[name]
         if self.rod_release_force:
-            values["m2_law"] = FLOW_LIMITED_LAW
+            values["m2_law"] = self.m2_law
         return values
 
     @classmethod
@@ -179,13 +238,15 @@ class HydraulicOptions:
         """The options of :meth:`to_dict` (a job description passed to a worker process).
 
         Raises:
-            ValueError: An ``m2_law`` other than the one this code runs (stored
+            ValueError: An ``m2_law`` other than the one these options run (stored
                 ``flow_limited_r3`` and ``flow_limited_r4`` runs are refused: this code cannot
-                rerun them).
+                rerun them; ``flow_limited_r6`` goes with ``rod_flow_cap_all`` only).
         """
-        if values.get("m2_law", FLOW_LIMITED_LAW) != FLOW_LIMITED_LAW:
-            raise ValueError(f"M2 law {values['m2_law']!r} is not {FLOW_LIMITED_LAW!r}")
-        return cls._from_fields(values)
+        options = cls._from_fields(values)
+        expected = options.m2_law or FLOW_LIMITED_LAW
+        if values.get("m2_law", expected) != expected:
+            raise ValueError(f"M2 law {values['m2_law']!r} is not {expected!r}")
+        return options
 
     @classmethod
     def from_stored(cls, values: dict[str, Any]) -> HydraulicOptions:
@@ -196,18 +257,24 @@ class HydraulicOptions:
         controller-side settings (``t4h_replay``: the lock window) use it.
 
         Raises:
-            ValueError: An ``m2_law`` no revision of this project wrote.
+            ValueError: An ``m2_law`` no revision of this project wrote, or ``flow_limited_r6``
+                without ``rod_flow_cap_all`` (and the other way round).
         """
         stored_law = values.get("m2_law", FLOW_LIMITED_LAW)
         if stored_law not in STORED_LAWS:
             raise ValueError(f"M2 law {stored_law!r} is not one of {STORED_LAWS}")
-        return cls._from_fields(values)
+        options = cls._from_fields(values)
+        if (stored_law == FLOW_LIMITED_R6_LAW) != options.rod_flow_cap_all:
+            raise ValueError(f"M2 law {stored_law!r} does not match rod_flow_cap_all "
+                             f"{options.rod_flow_cap_all}")
+        return options
 
     @classmethod
     def _from_fields(cls, values: dict[str, Any]) -> HydraulicOptions:
         flow = values.get("flow")
         check_delay = values.get("check_delay")
         lock_closure = values.get("lock_closure")
+        line_fill_gate = values.get("line_fill_gate")
         return cls(
             flow=None if flow is None else FlowLimitSetting.from_dict(flow),
             valve_tau_s=values.get("valve_tau_s"),
@@ -215,7 +282,13 @@ class HydraulicOptions:
             check_delay=None if check_delay is None else CheckDelaySetting.from_dict(check_delay),
             lock_closure=None if lock_closure is None else LockClosureSetting(**lock_closure),
             lock_window_follows_plant=bool(values.get("lock_window_follows_plant", False)),
-            extend_start_tracked=bool(values.get("extend_start_tracked", False)))
+            extend_start_tracked=bool(values.get("extend_start_tracked", False)),
+            extend_start_hold=bool(values.get("extend_start_hold", False)),
+            line_fill_gate=(None if line_fill_gate is None
+                            else CheckDelaySetting.from_dict(line_fill_gate)),
+            lock_anchor_continuous=bool(values.get("lock_anchor_continuous", False)),
+            rod_flow_cap_all=bool(values.get("rod_flow_cap_all", False)),
+            rod_reading_truth=bool(values.get("rod_reading_truth", False)))
 
     def without_flow(self) -> HydraulicOptions:
         """The plant options alone (the runners keep the flow limit on their own path)."""
@@ -260,19 +333,50 @@ def add_hydraulic_arguments(parser: argparse.ArgumentParser, *, with_valve_tau: 
                        action="store_true", default=argparse.SUPPRESS,
                        help="controller ③ start bound, revision 4 (v5 VB / LS definition, "
                             "criteria revision 8; refused with M1c)")
+    _add_jp3_arguments(group)
+
+
+def _add_jp3_arguments(group) -> None:
+    """436.9 options (``jp3_remedy_spec.md`` 3, 4.1), all off and absent by default."""
+    group.add_argument("--extend-start-hold", dest="extend_start_hold", action="store_true",
+                       default=argparse.SUPPRESS,
+                       help="③ revision 5: micro-command lock hold and line-fill gate "
+                            "(needs --extend-start-tracked)")
+    group.add_argument("--line-fill-gate", dest="line_fill_gate",
+                       choices=[kind.value for kind in CheckCircuit], default=argparse.SUPPRESS,
+                       help="P1: M1c line fill gates the release of a locked leg (harness)")
+    group.add_argument("--line-fill-gate-volume-scale", dest="line_fill_gate_volume_scale",
+                       type=float, default=argparse.SUPPRESS, help="P1 volume factor, nominal 1")
+    group.add_argument("--line-fill-gate-cv", dest="line_fill_gate_cv", type=float,
+                       default=argparse.SUPPRESS, help="P1 vent closing opening, nominal 0.02")
+    group.add_argument("--lock-anchor-continuous", dest="lock_anchor_continuous",
+                       action="store_true", default=argparse.SUPPRESS,
+                       help="P2: every lock anchor continues the M2 lag (needs M2)")
+    group.add_argument("--rod-flow-cap-all", dest="rod_flow_cap_all", action="store_true",
+                       default=argparse.SUPPRESS,
+                       help="P3: M2 law flow_limited_r6, flow cap on all branches (needs M2)")
+    group.add_argument("--rod-reading-truth", dest="rod_reading_truth", action="store_true",
+                       default=argparse.SUPPRESS,
+                       help="P4: controller rod reading = M2 plant truth (needs M2)")
+
+
+def _delay_setting_from_args(args: argparse.Namespace, option: str) -> CheckDelaySetting | None:
+    """``CheckDelaySetting`` of ``--<option>`` with its ``-volume-scale`` / ``-cv`` companions
+    (``option`` is the attribute name: ``check_delay`` or ``line_fill_gate``)."""
+    scale_key, cv_key = f"{option}_volume_scale", f"{option}_cv"
+    given = {key: getattr(args, key) for key in (scale_key, cv_key) if hasattr(args, key)}
+    if not hasattr(args, option):
+        if given:
+            raise SystemExit(f"{sorted(given)} need --{option.replace('_', '-')}")
+        return None
+    return CheckDelaySetting(
+        kind=getattr(args, option),
+        volume_scale=given.get(scale_key, DEFAULT_VOLUME_SCALE),
+        c_v=given.get(cv_key, DEFAULT_VENT_CLOSING_OPENING))
 
 
 def _check_delay_from_args(args: argparse.Namespace) -> CheckDelaySetting | None:
-    given = {key: getattr(args, key)
-             for key in ("check_delay_volume_scale", "check_delay_cv") if hasattr(args, key)}
-    if not hasattr(args, "check_delay"):
-        if given:
-            raise SystemExit(f"{sorted(given)} need --check-delay")
-        return None
-    return CheckDelaySetting(
-        kind=args.check_delay,
-        volume_scale=given.get("check_delay_volume_scale", DEFAULT_VOLUME_SCALE),
-        c_v=given.get("check_delay_cv", DEFAULT_VENT_CLOSING_OPENING))
+    return _delay_setting_from_args(args, "check_delay")
 
 
 def _lock_closure_from_args(args: argparse.Namespace) -> LockClosureSetting | None:
@@ -297,7 +401,12 @@ def hydraulic_options_from_args(args: argparse.Namespace) -> HydraulicOptions:
         check_delay=_check_delay_from_args(args),
         lock_closure=_lock_closure_from_args(args),
         lock_window_follows_plant=hasattr(args, "lock_window_follows_plant"),
-        extend_start_tracked=hasattr(args, "extend_start_tracked"))
+        extend_start_tracked=hasattr(args, "extend_start_tracked"),
+        extend_start_hold=hasattr(args, "extend_start_hold"),
+        line_fill_gate=_delay_setting_from_args(args, "line_fill_gate"),
+        lock_anchor_continuous=hasattr(args, "lock_anchor_continuous"),
+        rod_flow_cap_all=hasattr(args, "rod_flow_cap_all"),
+        rod_reading_truth=hasattr(args, "rod_reading_truth"))
 
 
 def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harness",
@@ -317,9 +426,15 @@ def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harne
     """
     if options.lock_window_follows_plant and options.lock_closure is None:
         raise SystemExit("the controller lock window alone is refused (spec 2.6)")
-    plant_options = (options.rod_release_force, options.check_delay, options.lock_closure)
+    jp3_plant_options = (options.line_fill_gate, options.lock_anchor_continuous,
+                         options.rod_flow_cap_all, options.rod_reading_truth)
+    plant_options = (options.rod_release_force, options.check_delay, options.lock_closure,
+                     *jp3_plant_options)
     if engine == "L1" and any(option not in (None, False) for option in plant_options):
         raise SystemExit("M2, M1c and LC are L2b / harness options, not L1 (spec 2.0)")
+    if engine != "harness" and any(option not in (None, False) for option in jp3_plant_options):
+        raise SystemExit("P1 .. P4 (436.9) are harness options; the L2b plant has none "
+                         "(jp3_remedy_spec.md 3, user decision 146)")
     closure = options.lock_closure
     if closure is not None and not options.lock_window_follows_plant \
             and closure.closing_delay_s > period_s:
@@ -328,21 +443,56 @@ def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harne
     if closure is not None and options.check_delay is not None \
             and options.check_delay.kind == CheckCircuit.BLOCKED.value:
         raise ValueError("BL with LC is refused (decision D-6: t_c assumes A, B -> T)")
-    if lock_valve == "counterbalance" and (closure is not None or options.rod_release_force):
-        raise ValueError("LC and M2 are not defined with the counterbalance (spec 2.3, 2.5)")
+    if lock_valve == "counterbalance" and (closure is not None or options.rod_release_force
+                                           or options.line_fill_gate is not None):
+        raise ValueError("LC, M2 and P1 are not defined with the counterbalance "
+                         "(spec 2.3, 2.5; jp3_remedy_spec.md 3)")
 
 
-def check_extend_start(options: HydraulicOptions | None, extend_start_rule: str) -> None:
+def check_extend_start(options: HydraulicOptions | None, extend_start_rule: str,
+                       revision: int | None = None) -> None:
     """Refuse the ③ start bound with M1c (hydraulics-expert review 2026-11-07, 2c): M1c holds
-    the extending leg back, which the bound's speed lower bound does not cover.
+    the extending leg back, which the bound's speed lower bound does not cover. Refuse the
+    bound of revision 4 with the P1 line-fill gate (``jp3_remedy_spec.md`` 3, counterexample ⑥:
+    only revision 5 has the tracker gate), unless :data:`ALLOW_GATE_WITH_REV4_FOR_TEST`.
+
+    Args:
+        options: The run's options (None = none).
+        extend_start_rule: ``"tracked_bound"`` or ``"constant"``.
+        revision: Bound revision of the run; None = 4 (the revision before 436.9).
 
     Raises:
-        ValueError: ``extend_start_rule`` is ``"tracked_bound"`` and M1c is on.
+        ValueError: ``extend_start_rule`` is ``"tracked_bound"`` and M1c is on, or P1 is on
+            with a revision 4 bound.
     """
-    if extend_start_rule == "tracked_bound" and options is not None \
-            and options.check_delay is not None:
+    if extend_start_rule != "tracked_bound" or options is None:
+        return
+    if options.check_delay is not None:
         raise ValueError("extend_start_rule tracked_bound with M1c is refused "
                          "(review 2026-11-07: the speed lower bound does not hold)")
+    is_revision_4 = revision is None or revision == 4
+    if options.line_fill_gate is not None and is_revision_4 and not ALLOW_GATE_WITH_REV4_FOR_TEST:
+        raise ValueError("the P1 line-fill gate with the ③ bound of revision 4 is refused "
+                         "(jp3_remedy_spec.md 3: counterexample ⑥, revision 5 needed)")
+
+
+def _check_jp3_plant_options(options: HydraulicOptions) -> None:
+    """436.9 plant options P1 .. P4 (``jp3_remedy_spec.md`` 3 refusal column).
+
+    Raises:
+        ValueError: P1 with M1c or with BL + LC (D-6); P2 / P3 / P4 without M2.
+    """
+    gate = options.line_fill_gate
+    if gate is not None:
+        if options.check_delay is not None:
+            raise ValueError("line_fill_gate (P1) and check_delay (M1c) are refused together: "
+                             "P1 is the M1c gate alone")
+        if gate.kind == CheckCircuit.BLOCKED.value and options.lock_closure is not None:
+            raise ValueError("line_fill_gate BL with LC is refused (decision D-6)")
+    if not options.rod_release_force:
+        on = [name for name in M2_PLANT_FIELDS if getattr(options, name)]
+        if on:
+            raise ValueError(f"{on} need M2 (rod_release_force)")
 
 
 def apply_lock_window(config: Any, options: HydraulicOptions, v_max_m_s: float,
@@ -376,7 +526,15 @@ def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: 
     config = apply_lock_window(config, options, v_max_m_s, valve_tau_s)
     if not options.extend_start_tracked:
         return config
-    two_pressure = replace(config.two_pressure, extend_start_rule=EXTEND_START_TRACKED_RULE)
+    changes: dict[str, Any] = {"extend_start_rule": EXTEND_START_TRACKED_RULE}
+    if options.extend_start_hold:  # ③ revision 5 (436.9); revision 4 keeps the default bound
+        from outrigger_sim.control.extend_start_bound import (
+            EXTEND_HOLD_REVISION,
+            ExtendStartBound,
+        )
+
+        changes["extend_start_bound"] = ExtendStartBound(revision=EXTEND_HOLD_REVISION)
+    two_pressure = replace(config.two_pressure, **changes)
     return replace(config, two_pressure=two_pressure)
 
 
@@ -492,9 +650,19 @@ def switch_base_tag(tag: str) -> str:
 
 def is_extend_start_tag(tag: str | None) -> bool:
     """A recorded tag of a run with the ③ start bound: its base tag (:func:`switch_base_tag`)
-    is :data:`EXTEND_START_CONTROLLER_TAG`, whatever the LAS-b and K1 switches were
-    (post-switch audit W-1, user decision (a) 2026-11-10). False for ``None``."""
-    return tag is not None and switch_base_tag(tag) == EXTEND_START_CONTROLLER_TAG
+    is :data:`EXTEND_START_CONTROLLER_TAG` (revision 4) or :data:`EXTEND_HOLD_CONTROLLER_TAG`
+    (revision 5, 436.9), whatever the LAS-b and K1 switches were (post-switch audit W-1, user
+    decision (a) 2026-11-10). False for ``None``."""
+    return extend_start_revision_of_tag(tag) is not None
+
+
+def extend_start_revision_of_tag(tag: str | None) -> int | None:
+    """③ bound revision of a recorded tag: ``final_C4G2_P3*`` -> 4, ``final_C4G2_P3H*`` -> 5,
+    any other tag (or None) -> None. Every tool that rebuilds a setting from a tag uses this
+    (``jp3_remedy_spec.md`` 4.3): a revision 5 row must never be re-tagged as revision 4."""
+    if tag is None:
+        return None
+    return EXTEND_START_REVISION_OF_BASE_TAG.get(switch_base_tag(tag))
 
 
 def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
@@ -518,7 +686,9 @@ def controller_tag(options: HydraulicOptions | None, config: Any | None = None) 
     ``config`` the tag is the one before the LAS-b switch (callers that know the controller
     pass it)."""
     tag = None
-    if options is not None and options.extend_start_tracked:
+    if options is not None and options.extend_start_hold:
+        tag = EXTEND_HOLD_CONTROLLER_TAG
+    elif options is not None and options.extend_start_tracked:
         tag = EXTEND_START_CONTROLLER_TAG
     return with_switch_tags(tag, config)
 
@@ -545,9 +715,13 @@ def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: Hydraulic
 
 
 __all__ = [
+    "ALLOW_GATE_WITH_REV4_FOR_TEST",
+    "EXTEND_HOLD_CONTROLLER_TAG",
+    "EXTEND_HOLD_TAGS",
     "EXTEND_START_LAS_CONTROLLER_TAG",
     "EXTEND_START_LAS_K1_CONTROLLER_TAG",
     "EXTEND_START_TAGS",
+    "extend_start_revision_of_tag",
     "LAS_CONTROLLER_TAG",
     "LAS_K1_CONTROLLER_TAG",
     "LIFTOFF_SLOW_TAG_SUFFIX",

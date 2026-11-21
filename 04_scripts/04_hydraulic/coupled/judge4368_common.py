@@ -435,12 +435,19 @@ def assess_j_p3(item: dict, *, tag: str | None, rod_reading: bool | None, rod_ba
         defect, else None), ``rows`` (RD-7 legs of an ``H-7`` line) and ``breach_reads_sum``.
     """
     from outrigger_sim.control import extend_start_bound as bound_rules
-    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
+    from outrigger_sim.hydraulics.v5_options import (
+        extend_start_revision_of_tag,
+        is_extend_start_tag,
+    )
 
     out: dict[str, Any] = {"rod_reading_basis": rod_basis, "rd8_problem": None, "rows": [],
                            "breach_reads_sum": None, "reason": None}
     if not is_extend_start_tag(tag):
         return {**out, "status": J_P3_NOT_APPLICABLE, "reason": f"tag {tag!r} is not ③ (R8-2)"}
+    if extend_start_revision_of_tag(tag) != bound_rules.EXTEND_START_REVISION:
+        # 436.9 6.1: a ③ revision 5 row is judged by j_p3_judgement_rev5, never here
+        return {**out, "status": NOT_JUDGEABLE,
+                "reason": f"tag {tag!r} is ③ revision 5 (436.9 J-P3), not the 436.8 definition"}
     if rod_stop is not None:
         return {**out, "status": J_P3_S2, "reason": rod_stop}
     bound, problem = j_p3_bound(item)

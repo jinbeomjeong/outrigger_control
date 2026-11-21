@@ -99,13 +99,17 @@ def load_record(path: Path) -> tuple[dict, dict]:
     return arrays, meta
 
 
-def run_config(meta: dict, extend_start: str | None = None):
+def run_config(meta: dict, extend_start: str | None = None,
+               extend_start_revision: int | None = None):
     """C2Config of the run: harness preset + the controller options of its options (lock
     window, ③ start bound) or, for a ③-on record without the option key, the stored monitor
-    rule; ``extend_start`` overrides the ③ start rule (``p3_extend_start_spec.md`` 4 #8).
+    rule; ``extend_start`` overrides the ③ start rule (``p3_extend_start_spec.md`` 4 #8) and
+    ``extend_start_revision`` the bound revision of a ``tracked_bound`` replay (436.9 Dg-2:
+    stored T4h replayed with revision 5; None = the record's own revision, 4 for an override).
 
     Raises:
-        ValueError: ``tracked_bound`` on a run with M1c (review 2026-11-07, 2c).
+        ValueError: ``tracked_bound`` on a run with M1c (review 2026-11-07, 2c), or revision 4
+            on a run with the P1 line-fill gate.
     """
     import s9_soil_closed_loop as soil
     from params import load_params
@@ -143,17 +147,30 @@ def run_config(meta: dict, extend_start: str | None = None):
         # a ③-on run whose options predate the option key (Dg-3 v4): the stored monitor rule
         extend_start = stored_rule
     if extend_start is not None:
-        check_extend_start(options, extend_start)
-        config = replace(config, two_pressure=replace(config.two_pressure,
-                                                      extend_start_rule=extend_start))
+        changes = {"extend_start_rule": extend_start}
+        revision = extend_start_revision
+        if extend_start == EXTEND_START_TRACKED_RULE and revision is None:
+            stored_bound = (meta.get("two_pressure_settings") or {}).get("extend_start_bound")
+            revision = (stored_bound or {}).get("revision")
+        check_extend_start(options, extend_start, revision)
+        if extend_start == EXTEND_START_TRACKED_RULE and revision is not None:
+            from outrigger_sim.control.extend_start_bound import ExtendStartBound
+
+            rule = RETRACT_START_OVERRIDE[0] if int(revision) == 5 else None
+            changes["extend_start_bound"] = ExtendStartBound(
+                revision=int(revision), **({} if rule is None else {"retract_start_rule": rule}))
+        config = replace(config, two_pressure=replace(config.two_pressure, **changes))
     return closed_loop, config
 
 
-def _settings_for_comparison(settings: dict, stored: dict, extend_start: str | None) -> dict:
-    """An override of another rule than the stored one changes only the ③ start keys: leave
-    them out. The same rule compares them all (the bound ``revision`` included)."""
+def _settings_for_comparison(settings: dict, stored: dict, extend_start: str | None,
+                             extend_start_revision: int | None = None) -> dict:
+    """An override of another rule (or another bound revision) than the stored one changes
+    only the ③ start keys: leave them out. The same rule and revision compares them all."""
     stored_rule = stored.get("extend_start_rule", "constant")
-    if extend_start is None or extend_start == stored_rule:
+    stored_revision = (stored.get("extend_start_bound") or {}).get("revision")
+    is_same_revision = extend_start_revision is None or extend_start_revision == stored_revision
+    if extend_start is None or (extend_start == stored_rule and is_same_revision):
         return settings
     return {key: value for key, value in settings.items() if key not in EXTEND_START_KEYS}
 
@@ -252,29 +269,42 @@ def recorded_lower_difference_N(arrays: dict, meta: dict, closed_loop, config,
     return float(np.max(difference)) if difference.size else 0.0
 
 
-def checked_run_config(path_name: str, meta: dict, extend_start: str | None = None):
+def checked_run_config(path_name: str, meta: dict, extend_start: str | None = None,
+                       extend_start_revision: int | None = None):
     """:func:`run_config` of a record after the stored-settings checks of :func:`replay_values`.
 
     Raises:
         RuntimeError: The rebuilt monitor settings differ from the stored ones (with
-            ``extend_start``: apart from the ③ start keys).
+            ``extend_start`` or another ``extend_start_revision``: apart from the ③ keys).
     """
     from outrigger_sim.control.extend_start_bound import check_extend_start_meta
 
     stored = meta["two_pressure_settings"]
     check_extend_start_meta(stored)
-    closed_loop, config = run_config(meta, extend_start)
+    stored_bound = stored.get("extend_start_bound") or {}
+    is_edition_3_record = (stored_bound.get("revision") == 5
+                           and "retract_start_rule" not in stored_bound)
+    if is_edition_3_record and RETRACT_START_OVERRIDE[0] is None:
+        # edition 4a R7: never re-read an edition 3 record under the new rule silently
+        raise RuntimeError(f"{path_name}: a revision 5 record without retract_start_rule "
+                           f"(edition 3 code): replay refused; only --retract-start-rule "
+                           f"model_only (test constant, own output folder, not judged)")
+    closed_loop, config = run_config(meta, extend_start, extend_start_revision)
     rebuilt = _plain(config.two_pressure.to_meta())
-    if (_settings_for_comparison(rebuilt, stored, extend_start)
-            != _settings_for_comparison(stored, stored, extend_start)):
+    if is_edition_3_record:
+        rebuilt["extend_start_bound"].pop("retract_start_rule", None)
+    if (_settings_for_comparison(rebuilt, stored, extend_start, extend_start_revision)
+            != _settings_for_comparison(stored, stored, extend_start, extend_start_revision)):
         raise RuntimeError(f"{path_name}: rebuilt two_pressure settings differ from the record")
     return closed_loop, config, rebuilt
 
 
 def replay_values(path: Path, extend_start: str | None = None,
-                  check_recorded: bool = False) -> dict:
+                  check_recorded: bool = False,
+                  extend_start_revision: int | None = None) -> dict:
     """T4h values of one record (module docstring); ``check_recorded`` adds the own-event
-    replay difference ``recorded_lower_max_abs_N``.
+    replay difference ``recorded_lower_max_abs_N``; ``extend_start_revision`` replays a
+    ``tracked_bound`` override with that bound revision (436.9 Dg-2).
 
     Raises:
         RuntimeError: The rebuilt monitor settings differ from the stored ones (with
@@ -286,7 +316,8 @@ def replay_values(path: Path, extend_start: str | None = None,
     arrays, meta = load_record(path)
     reject_ideal_record(meta, path.name)
     stored = meta["two_pressure_settings"]
-    closed_loop, config, rebuilt = checked_run_config(path.name, meta, extend_start)
+    closed_loop, config, rebuilt = checked_run_config(path.name, meta, extend_start,
+                                                      extend_start_revision)
     t_s = arrays["t_s"]
     forced = [(float(t_s[0]), f"{FALLBACK_EVENT}:{leg}") for leg in LEGS]
     geometry = C2Geometry.from_params(closed_loop.PARAMS)
@@ -329,10 +360,14 @@ def replay_values(path: Path, extend_start: str | None = None,
             # criteria revision 9 (j_p3_inputs): which runs J-P3 must cover and their declaration
             "p3_expected": is_p3_expected(meta.get("controller_tag"),
                                           (meta.get("job") or {}).get("setting")),
+            "setting": (meta.get("job") or {}).get("setting"),
             "has_rod_reading": bool(np.isfinite(arrays["rod_pressure_Pa"]).any()),
             "head_only_declared": harness_head_only_declared(meta),
             **({} if "extend_start_rule" not in stored
-               else {"run_extend_start_rule": stored["extend_start_rule"]})}
+               else {"run_extend_start_rule": stored["extend_start_rule"]}),
+            # 436.9: a revision 5 run's own bound (j_p3_inputs judges its rows apart)
+            **({} if (stored.get("extend_start_bound") or {}).get("revision") != 5
+               else {"run_extend_start_revision": 5})}
 
 
 def _by_leg(counts) -> dict[str, int]:
@@ -355,11 +390,29 @@ def record_name(extend_start: str | None) -> str:
     return "T4h-const" if extend_start == "constant" else "T4h"
 
 
-def _override_revision(extend_start: str | None) -> int | None:
-    """Bound revision of a ``tracked_bound`` override (None otherwise)."""
+RETRACT_START_OVERRIDE: list[str | None] = [None]
+"""Edition 4a R7: ``--retract-start-rule model_only`` replays an edition 3 revision 5 record
+(no ``retract_start_rule`` in its meta) with the test-only rule; None = such records are
+refused. Set only by :func:`main` (with the ``extend_start_bound`` test constant)."""
+RETRACT_START_TEST_RULE = "model_only"
+
+
+def enable_model_only_retract_start() -> None:
+    """The test-only R7 path: the module constant of ``extend_start_bound`` and the override."""
+    from outrigger_sim.control import extend_start_bound
+
+    extend_start_bound.ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST = True
+    RETRACT_START_OVERRIDE[0] = RETRACT_START_TEST_RULE
+
+
+def _override_revision(extend_start: str | None, revision: int | None = None) -> int | None:
+    """Bound revision of a ``tracked_bound`` override (None otherwise); ``revision`` = the
+    ``--extend-start-revision`` choice (None = 4)."""
     from outrigger_sim.control.extend_start_bound import EXTEND_START_REVISION
 
-    return EXTEND_START_REVISION if extend_start == "tracked_bound" else None
+    if extend_start != "tracked_bound":
+        return None
+    return EXTEND_START_REVISION if revision is None else revision
 
 
 def _parse_arguments() -> argparse.Namespace:
@@ -370,7 +423,17 @@ def _parse_arguments() -> argparse.Namespace:
                         help="override the ③ start rule (constant: record T4h-const)")
     parser.add_argument("--check-recorded", action="store_true",
                         help="also replay with the run's own events against lower_reading_N")
-    return parser.parse_args()
+    parser.add_argument("--extend-start-revision", type=int, choices=(4, 5), default=None,
+                        help="③ bound revision of a --extend-start tracked_bound replay "
+                             "(436.9 Dg-2: 5; default 4)")
+    parser.add_argument("--retract-start-rule", choices=(RETRACT_START_TEST_RULE,),
+                        default=None,
+                        help="test only (edition 4a R7): replay edition 3 revision 5 records "
+                             "with the model_only rule; write to an own folder, never judged")
+    args = parser.parse_args()
+    if args.extend_start_revision is not None and args.extend_start != "tracked_bound":
+        parser.error("--extend-start-revision belongs to --extend-start tracked_bound")
+    return args
 
 
 def main() -> int:
@@ -378,8 +441,11 @@ def main() -> int:
         print(__doc__)
         return 2
     args = _parse_arguments()
+    if args.retract_start_rule is not None:
+        enable_model_only_retract_start()
     try:
-        rows = [replay_values(path, args.extend_start, args.check_recorded)
+        rows = [replay_values(path, args.extend_start, args.check_recorded,
+                              args.extend_start_revision)
                 for path in record_files(args.records)]
     except IdealRecordError as exc:
         print(f"input error: {exc}")
@@ -390,7 +456,11 @@ def main() -> int:
                       "forced on all legs; unlocked tail samples recorded only",
               "record": record_name(args.extend_start),
               "extend_start_rule": args.extend_start,
-              "extend_start_revision": _override_revision(args.extend_start),
+              "extend_start_revision": _override_revision(args.extend_start,
+                                                          args.extend_start_revision),
+              **({} if args.retract_start_rule is None
+                 else {"test_only_retract_start_rule": args.retract_start_rule,
+                       "judged": False}),
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
               "offset_allowance_runs": sum(any(value != 0.0 for value in
                                                row["offset_allowance_N"]) for row in rows),

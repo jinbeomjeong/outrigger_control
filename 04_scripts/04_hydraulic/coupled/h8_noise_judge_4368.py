@@ -442,11 +442,24 @@ def seed_hash_check(seedext: list[dict], noise: list[dict]) -> dict:
 
 # ------------------------------------------------------------------------------- judge running
 def reference_extract(noise: dict, path: Path) -> Path:
-    """The L1 lines of a noise file as a run file (rev5 R5-C3: the seedext L1 pair)."""
+    """The L1 lines of a noise file as a run file (rev5 R5-C3: the seedext L1 pair).
+
+    An existing ``path`` is never overwritten (436.9 prelaunch audit R-7): one with the same
+    bytes is kept as it is (a rerun in the same folder behaves as before), one with other bytes
+    raises.
+
+    Raises:
+        FileExistsError: ``path`` exists with other contents.
+    """
     lines = [r for r in noise["results"] if r.get("level") == LEVEL_REFERENCE]
     meta = {**(noise.get("meta") or {}), "extract": "L1 lines only (436.8 rev5 R5-C3)"}
+    text = json.dumps({"meta": meta, "results": lines}, default=float)
+    if path.exists():
+        if path.read_bytes() != text.encode("utf-8"):
+            raise FileExistsError(f"{path} exists with other contents (never overwritten)")
+        return path
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps({"meta": meta, "results": lines}, default=float), encoding="utf-8")
+    path.write_text(text, encoding="utf-8")
     return path
 
 

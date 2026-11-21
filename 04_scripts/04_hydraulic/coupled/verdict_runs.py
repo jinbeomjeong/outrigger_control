@@ -222,7 +222,8 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
         if t4h is not None:
             write_t4h_record(t4h["path"], plant, controller, period,
                              {**_meta_with_controller_tag(t4h["meta"], _LAST_FINISHED_CONFIG[0]),
-                              "commands_sha256": _command_digest(period["command"])})
+                              "commands_sha256": _command_digest(period["command"])},
+                             extra_arrays=jp3_trace_arrays(plant))
     thresholds = controller.config.thresholds
     values = run_values(limiter.rows(), period, events, limiter,
                         controller.geometry.twist_vector, controller.geometry.head_area_m2,
@@ -254,6 +255,15 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
 
 _LAST_FINISHED_CONFIG: list = [None]
 """C2 config of the last :func:`_finish` of this process (one run per worker process)."""
+
+
+def jp3_trace_arrays(plant) -> dict | None:
+    """436.9 per-read J-P3 arrays of a ③ revision 5 run (``jp3_*``, ``jp3_remedy_spec.md``
+    6.3); None for any other run, so its T4h npz keeps its arrays."""
+    check = getattr(plant, "extend_bound_check", None)
+    if check is None or not hasattr(check, "trace_arrays"):
+        return None
+    return check.trace_arrays()
 
 
 def _meta_with_controller_tag(meta: dict, config) -> dict:

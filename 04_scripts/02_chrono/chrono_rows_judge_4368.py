@@ -1412,6 +1412,11 @@ def j_p3_block(row: dict[str, Any], meta: dict[str, Any] | None,
         return out
     is_p3 = is_extend_start_tag(tag["tag"])
     out["is_extend_start"] = is_p3
+    from outrigger_sim.hydraulics.v5_options import extend_start_revision_of_tag  # noqa: PLC0415
+
+    if is_p3 and extend_start_revision_of_tag(tag["tag"]) != 4:
+        out["s2"].append(f"tag {tag['tag']!r} is ③ revision 5: the 436.9 J-P3, not this 436.8 "
+                         "definition (jp3_remedy_spec.md 6.1)")
     if out["ls_setting"]["is_ls"] and not is_p3:
         out["s2"].append(f"LS row ({out['ls_setting']['v5_setting']}) with a tag {tag['tag']!r} that is not ③ "
                          "(rev9 R9-4)")

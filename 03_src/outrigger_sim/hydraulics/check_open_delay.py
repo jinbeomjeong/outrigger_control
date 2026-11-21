@@ -429,5 +429,56 @@ class CheckOpenDelay:
                 "status": "ASSUMPTION (Q-M9, V-6); port of m1c_plant VN / BL, VR E2 E4 left out"}
 
 
-__all__ = ["UNIT_STATUS", "CheckDelayCircuit", "CheckDelayInputs", "CheckDelayOutput",
-           "CheckOpenDelay", "CheckValveValues", "RetractConfig", "retract_dead"]
+GATE_ONLY_MODE = "gate_only"
+"""``summary()["mode"]`` of :class:`CheckOpenGate`."""
+GATE_RETRACT_SEED_EXCEPTION = ("retract opening_rod_pressure_Pa (M2 seed) kept: user decision "
+                               "147, exception to decision 145 (check opening only); without it "
+                               "the plant p_tr is up to about 19 bar below the physics "
+                               "(hydraulics_remedy_review.md 2.3)")
+"""``summary()["output_exception"]`` / ``meta()["output_exception"]`` of :class:`CheckOpenGate`."""
+GATE_OUTPUT_EXCEPTIONS = ("retract_m2_seed",)
+"""``summary()`` / ``meta()`` ``"output_exceptions"`` (``jp3_remedy_spec.md`` 2nd edition 4.1)."""
+
+
+class CheckOpenGate(CheckOpenDelay):
+    """P1 ``line_fill_gate`` (``jp3_remedy_spec.md`` 3, ``hydraulics_remedy_review.md`` 2): the
+    M1c line state decides when a locked leg may leave its lock.
+
+    The state advances exactly as :class:`CheckOpenDelay` (the parent's :meth:`filter` runs on
+    the same inputs). The output keeps of M1c only the gate and one exception: a leg that is
+    locked and whose check of the moving direction is still shut (extend: the head check
+    ``is_open``, which M1c opens only after the rod check released; retract: ``x >= need``)
+    gets speed 0 (kernel and lock law), every other leg the input speed; the retract M2 seed
+    ``opening_rod_pressure_Pa`` is passed on (:data:`GATE_RETRACT_SEED_EXCEPTION`). Creep,
+    opening shift and lock damping are off (zero, False).
+    """
+
+    def filter(self, inputs: CheckDelayInputs) -> CheckDelayOutput:
+        """Speeds of one step after the gate; advances the parent state."""
+        delay_output = super().filter(inputs)
+        is_locked = np.asarray(inputs.locked, bool)
+        # review 2.4: a still locked leg with an open check cannot occur (d = 0 shuts it)
+        is_still = np.abs(np.asarray(inputs.u_m_s, float)) <= EPS_M_S
+        assert not np.any(is_locked & self.is_open & is_still)
+        speed_m_s = np.asarray(inputs.u_m_s, float).copy()
+        speed_m_s[is_locked & ~self.is_open] = 0.0
+        n = len(speed_m_s)
+        return CheckDelayOutput(speed_m_s, np.zeros(n), np.zeros(n), np.zeros(n, bool),
+                                delay_output.opening_rod_pressure_Pa.copy())
+
+    def summary(self) -> dict[str, Any]:
+        return {**super().summary(), "mode": GATE_ONLY_MODE,
+                "output_exceptions": list(GATE_OUTPUT_EXCEPTIONS),
+                "output_exception": GATE_RETRACT_SEED_EXCEPTION}
+
+    def meta(self) -> dict[str, Any]:
+        return {**super().meta(), "mode": GATE_ONLY_MODE,
+                "output_exceptions": list(GATE_OUTPUT_EXCEPTIONS),
+                "output_exception": GATE_RETRACT_SEED_EXCEPTION}
+
+
+__all__ = ["GATE_ONLY_MODE", "GATE_OUTPUT_EXCEPTIONS", "GATE_RETRACT_SEED_EXCEPTION",
+           "UNIT_STATUS", "CheckDelayCircuit",
+           "CheckDelayInputs",
+           "CheckDelayOutput", "CheckOpenDelay", "CheckOpenGate", "CheckValveValues",
+           "RetractConfig", "retract_dead"]

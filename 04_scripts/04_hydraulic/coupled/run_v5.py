@@ -15,7 +15,9 @@ lines), ``d1`` (D-1 verification matrix, ``d1_rows.py`` / ``d1_runs.py``: 217 ro
 x eps {0, 2e-3} = 868; ``--list`` also prints rows per group, missing settle-table keys and a
 cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3), ``u9_targeted``
 (U-9 targeted runs, ``u9_targeted_rules_rev1.md`` 2 / 3.2: 14 keys x V0, VB eta_v 0.85, VB eta_v
-0.80 = 42; lines carry ``values["U9"]``).
+0.80 = 42; lines carry ``values["U9"]``), and the 436.9 batches ``j9_main``, ``j9_cases``,
+``j9_case_f`` (case F, 15), ``j9_case_f_path`` (4a-3 5.2, 3) and ``j9_t8`` (T-JR-10 / 11,
+88).
 A job may carry ``eta_v`` (pump volumetric efficiency of a flow-limited setting, default
 :data:`ETA_V`) and ``u9_metrics`` (add ``values["U9"]``), and a ``d1`` job ``mass_scale`` (plant
 mass factor of a steady row, B1 H-W runs); jobs without them are as before.
@@ -139,6 +141,31 @@ Criteria revision 8: VB and LS1 .. LS4 run the controller with the ③ start bou
 (``extend_start_tracked``); V0 .. V3, L1, L2 keep ``final_C4G2``; V4 .. V8 carry M1c, which
 refuses the bound, so they keep it off."""
 
+_P3H = {**_P3, "extend_start_hold": True}
+"""436.9 (``jp3_remedy_spec.md`` 4.2): ③ revision 5, tag ``final_C4G2_P3H``."""
+_PLANT_J = {"line_fill_gate": _vn(1.0), "lock_anchor_continuous": True,
+            "rod_flow_cap_all": True, "rod_reading_truth": True}
+"""P1 (VN, 1.0, 0.02) + P2 + P3 + P4."""
+_VB_PLANT_J = {**_VB_PLANT, **_PLANT_J}
+LS_CLOSURES = {"1": (0.01, 0.05), "2": (0.05, 0.05), "3": (0.02, 0.02), "4": (0.02, 0.10)}
+"""LS1 .. LS4 lock closure (overlap ratio, closing delay)."""
+JP3_SETTINGS: dict[str, tuple[bool, dict]] = {
+    "VBH": (True, {**_VB_PLANT, **_P3H}),
+    **{f"LSH{n}": (True, {**_VB_PLANT, "lock_closure": _lc(*closure), **_P3H})
+       for n, closure in LS_CLOSURES.items()},
+    "VBJ": (True, {**_VB_PLANT_J, **_P3H}),
+    **{f"LSJ{n}": (True, {**_VB_PLANT_J, "lock_closure": _lc(*closure), **_P3H})
+       for n, closure in LS_CLOSURES.items()},
+    "VBJ0": (True, _VB_PLANT_J),
+}
+"""436.9 settings (spec 4.2): VBJ / LSJ1 .. LSJ4 judged (P1 .. P4 + ③ rev 5), VBJ0 the same
+plant with ③ off (T8, H-7 pair), VBH / LSH1 .. LSH4 the old VB / LS plant with ③ rev 5
+(controller effect alone, T8 on the old plant). :data:`SETTINGS` stays as it is (its names and
+digests are pinned); :data:`ALL_SETTINGS` resolves both."""
+ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS}
+JP3_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
+JP3_DIAG_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4", "VBJ0")
+
 
 def _phase_jobs(case: str, *, two: bool = False) -> list[dict]:
     base = {"case": "R2", "decision": "reanchor_on"} if case == "R2ra" else {"case": case}
@@ -201,7 +228,89 @@ def batch_jobs(name: str) -> list[dict]:
         return d1_rows.jobs()
     if name == U9_BATCH:
         return u9_targeted_jobs()
+    if name == J9_MAIN_BATCH:
+        return j9_main_jobs()
+    if name == J9_CASES_BATCH:
+        return j9_case_jobs()
+    if name == J9_CASE_F_BATCH:
+        return j9_case_f_jobs()
+    if name == J9_CASE_F_PATH_BATCH:
+        return j9_case_f_path_jobs()
+    if name == J9_T8_BATCH:
+        return j9_t8_jobs(P3_HASH_SOURCE_OVERRIDE[0])
     raise ValueError(f"unknown batch {name!r}")
+
+
+J9_MAIN_BATCH = "j9_main"
+"""436.9 (``jp3_remedy_spec.md`` 7, H-10 main part): the required rows x VBJ, LSJ1 .. LSJ4 and
+the regression rows x VBJ (the ``main`` layout with VB / LS replaced; V0 rows are reused)."""
+J9_CASES_BATCH = "j9_cases"
+"""436.9 case replay A, B, E (spec 5.3): R12 bottom-FL-Fs4 offset 0.0 x VB, LS1 .. LS4, VBH,
+LSH1 .. LSH4, VBJ, LSJ1 .. LSJ4 (15 runs). C and D are test-only plants
+(``jp3_case_replay.py``)."""
+J9_CASE_TWIN = {"level": "bottom", "leg": "FL", "fs_kN": 4.0}
+J9_CASE_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", "VBH", "LSH1", "LSH2", "LSH3", "LSH4",
+                    *JP3_JUDGED_SETTINGS)
+
+
+def j9_main_jobs() -> list[dict]:
+    jobs = [{**row, "setting": s} for s in JP3_JUDGED_SETTINGS for row in required_rows()]
+    return jobs + [{**row, "setting": "VBJ"} for row in regression_rows()]
+
+
+def j9_case_jobs() -> list[dict]:
+    row = {"case": "R12", "eps": 0.0, "offset_s": 0.0, "twin": dict(J9_CASE_TWIN)}
+    return [{**row, "setting": setting} for setting in J9_CASE_SETTINGS]
+
+
+J9_CASE_F_BATCH = "j9_case_f"
+"""436.9 case F (``jp3_remedy_spec.md`` 13.8, J4a-14; addendum 4a-2 R8): the ``grid_r67_top``
+FR row (``r67_g1_screen`` key ``screen|top|8.0|ready|FR``, its G4 branch at offset 0.075 s,
+stored as ``results[13].runs[3]``) on the event path of ``verdict_runs`` (the P4 install path)
+x A (VB, LS1 .. LS4), B (VBH, LSH1 .. LSH4), E (VBJ, LSJ1 .. LSJ4) = 15 runs. The R12 case is
+the G4 event of the screen (ready + 5 s, branch 0.5 s before), with the twin replaced by this
+row. ``jp3_case_judge.py case-f`` judges F-A / F-B / F-E."""
+J9_CASE_F_TWIN = {"level": "top", "leg": "FR", "fs_kN": 8.0}
+J9_CASE_F_OFFSET_S = 0.075
+J9_CASE_F_GROUPS = {"A": ("VB", "LS1", "LS2", "LS3", "LS4"),
+                    "B": ("VBH", "LSH1", "LSH2", "LSH3", "LSH4"),
+                    "E": JP3_JUDGED_SETTINGS}
+
+
+def j9_case_f_jobs() -> list[dict]:
+    row = {"case": "R12", "eps": 0.0, "offset_s": J9_CASE_F_OFFSET_S,
+           "twin": dict(J9_CASE_F_TWIN)}
+    return [{**row, "setting": setting} for settings in J9_CASE_F_GROUPS.values()
+            for setting in settings]
+
+
+J9_CASE_F_PATH_BATCH = "j9_case_f_path"
+"""Addendum 4a-3 5.2 (F-A path equivalence, before case F): the same FR row at the other three
+G4 offsets of the stored grid (``results[13].runs[0..2]``: 0.0, 0.025, 0.05 s) x VB on the
+case F event path; ``jp3_case_judge.py case-f-path`` compares them with the stored runs. The
+judged offset 0.075 s (``runs[3]``) is not in this batch."""
+J9_CASE_F_PATH_OFFSETS_S = (0.0, 0.025, 0.05)
+
+
+def j9_case_f_path_jobs() -> list[dict]:
+    return [{"case": "R12", "eps": 0.0, "offset_s": offset, "twin": dict(J9_CASE_F_TWIN),
+             "setting": "VB"} for offset in J9_CASE_F_PATH_OFFSETS_S]
+
+
+J9_T8_BATCH = "j9_t8"
+"""436.9 T-JR-10 / T-JR-11 (spec 5.5, addendum 4a-3 2 and 5.3): the 22 jobs of the revision 8
+7.2 hash rule (:func:`p3_hash_jobs`, the first VB line per case of the stored ``main.jsonl``;
+they replace the T-P3-5 20 rows, which have no list) x VBH, VBJ, VBJ0, VB = 88 runs. T-JR-10
+compares VBH with the stored h10 VB lines of the same jobs, T-JR-11 VBJ with VBJ0
+(``jp3_tjr_judge.py t8``); the VB lines are a record (the current code against the stored
+hash). ``--p3-hash-source`` names the stored ``main.jsonl`` (a worktree has none)."""
+J9_T8_SETTINGS = ("VBH", "VBJ", "VBJ0", "VB")
+
+
+def j9_t8_jobs(source: Path | None = None) -> list[dict]:
+    """The :data:`J9_T8_BATCH` jobs (``source`` = the stored ``main.jsonl``, None = default)."""
+    jobs = p3_hash_jobs() if source is None else p3_hash_jobs(source)
+    return [{**job, "setting": setting} for setting in J9_T8_SETTINGS for _, job in jobs]
 
 
 U9_BATCH = "u9_targeted"
@@ -226,6 +335,9 @@ eps {0, 2e-3} = 868 runs; output ``d1.jsonl``, a new file: the VB lines are ③ 
 
 P3_HASH_BATCH = "p3_hash"
 P3_HASH_SOURCE = OUT_DIR / "main.jsonl"
+P3_HASH_SOURCE_OVERRIDE: list[Path | None] = [None]
+"""``--p3-hash-source`` of this run: the stored ``main.jsonl`` the ``j9_t8`` batch reads its 22
+jobs from (None = :data:`P3_HASH_SOURCE`)."""
 P3_HASH_CASES = 22
 """Criteria revision 8 7.2: per case the first VB line of ``main.jsonl`` (r5, ③ off), rerun
 with the VB definition of revision 8 (③ on); ``p3_hash_check.py`` compares the two."""
@@ -252,8 +364,9 @@ def p3_hash_jobs(source: Path = P3_HASH_SOURCE) -> list[tuple[int, dict]]:
 
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
 """Job entries ``main`` adds for the worker only (not part of the job identity)."""
-T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4")
-"""Criteria 9 T4h (control-expert B): the runs that write a T4h record."""
+T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", *JP3_JUDGED_SETTINGS, *JP3_DIAG_SETTINGS)
+"""Criteria 9 T4h (control-expert B): the runs that write a T4h record (436.9: the VBJ, LSJ,
+VBJ0, VBH and LSH settings too, spec 6.3)."""
 
 
 def job_key(job: dict) -> str:
@@ -387,7 +500,7 @@ def options_of(setting: str, eta_v: float | None = None):
 
     from outrigger_sim.hydraulics.v5_options import HydraulicOptions
 
-    is_flow_on, plant = SETTINGS[setting]
+    is_flow_on, plant = ALL_SETTINGS[setting]
     if eta_v is not None and not is_flow_on:
         raise ValueError(f"setting {setting!r} has no flow limit: eta_v {eta_v} is meaningless")
     if is_flow_on:
@@ -449,7 +562,8 @@ def run_one(job: dict) -> dict:
                 "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
                                                 "lock_window_alignment", "controller_tag",
-                                                "head_only_declared", "d1", RESUME_K1_KEY)
+                                                "head_only_declared", "d1", RESUME_K1_KEY,
+                                                HARNESS_HASH_KEY)
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
@@ -481,7 +595,7 @@ def _done_keys(path: Path) -> set[str]:
         RuntimeError: The file holds an M2 run of another M2 law (the job key has no law: it
             would count as done). Archive the file first (``*_m2r3`` precedent).
     """
-    from outrigger_sim.hydraulics.rod_release import FLOW_LIMITED_LAW
+    from outrigger_sim.hydraulics.rod_release import FLOW_LIMITED_LAW, RERUNNABLE_LAWS
 
     if not path.exists():
         return set()
@@ -489,9 +603,9 @@ def _done_keys(path: Path) -> set[str]:
     for line in path.read_text(encoding="utf-8").splitlines():
         record = json.loads(line)
         stored_law = (record.get("hydraulic_options") or {}).get("m2_law", FLOW_LIMITED_LAW)
-        if stored_law != FLOW_LIMITED_LAW:
-            raise RuntimeError(f"{path.name}: M2 law {stored_law!r} is not {FLOW_LIMITED_LAW!r}; "
-                               "archive the file before running this law")
+        if stored_law not in RERUNNABLE_LAWS:  # r6 = 436.9 P3; the options check pairs it
+            raise RuntimeError(f"{path.name}: M2 law {stored_law!r} is not one of "
+                               f"{RERUNNABLE_LAWS}; archive the file before running this law")
         if "error" not in record:
             _check_stored_definition(path, record)
             done.add(job_key(record["job"]))
@@ -502,6 +616,9 @@ D8X_OUT_DIR = ROOT / "06_analysis" / "02_control" / "d8x" / "rc"
 """D8x R-c output folder (``d8x_rules.md`` 9.2 item 2): ``hrx_<k1>.jsonl``."""
 RESUME_K1_KEY = "resume_k1"
 """``resume_k1_record.RECORD_KEY``: the 436.8 record block a line copies from the result."""
+HARNESS_HASH_KEY = "harness_commands_sha256"
+"""The harness' own command hash (the r67 screen hash of a stored grid row, prefix + branch;
+addendum 4a-2 R7 F-A compares it with ``grid_r67_top``). Record only."""
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -527,7 +644,21 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help="overlap only: t_a record of this run (436.8 rules rev1 RV1-4); "
                              "written by the VB reference run when missing, read by every "
                              "worker; never the stored v5/overlap_t_a.json")
+    parser.add_argument("--p3-hash-source", type=Path, default=None,
+                        help="j9_t8 only: the stored v5/main.jsonl of the 22-job rule "
+                             "(addendum 4a-3 2; a worktree has none)")
     args = parser.parse_args(argv)
+    if args.p3_hash_source is not None:
+        if args.batch != J9_T8_BATCH:
+            parser.error("--p3-hash-source belongs to the j9_t8 batch")
+        import jp3_fixed_inputs
+
+        problem = jp3_fixed_inputs.sha_problem(args.p3_hash_source,
+                                               jp3_fixed_inputs.MAIN_JSONL_SHA256,
+                                               "--p3-hash-source (addendum 4a-4 5)")
+        if problem is not None:
+            parser.error(problem)
+        P3_HASH_SOURCE_OVERRIDE[0] = args.p3_hash_source
     _check_overlap_reference(parser, args)
     if args.group is None and args.k1 is not None:
         parser.error("--k1 belongs to --group H-R-X")
@@ -539,9 +670,10 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         args.out = args.out or D8X_OUT_DIR / f"hrx_{args.k1}.jsonl"
     if args.settings is not None:
         names = [name for name in args.settings.split(",") if name]
-        unknown = sorted(set(names) - set(SETTINGS))
+        unknown = sorted(set(names) - set(ALL_SETTINGS))
         if not names or unknown:
-            parser.error(f"--settings needs setting names of {sorted(SETTINGS)}, got {unknown or names}")
+            parser.error(f"--settings needs setting names of {sorted(ALL_SETTINGS)}, "
+                         f"got {unknown or names}")
         args.settings = tuple(names)
     return args
 
