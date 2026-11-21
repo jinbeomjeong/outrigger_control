@@ -405,13 +405,13 @@ def test_b4_t12_counts_faults_and_ready(monkeypatch) -> None:
 
 def test_b4_records_seed_force_rules() -> None:
     """T-JR-15 (4a-2 3.4) in the record bundle: a clipped seed row is not judgeable."""
-    good = _lock_row([[1.0, 2, 0.0, False]])
-    clipped = _lock_row([[1.0, 2, 0.0, True]])
-    _, problems = tjr.judge_records(records_inputs([good]))
+    _, problems = tjr.judge_records(records_inputs())
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
-    _, problems = tjr.judge_records(records_inputs([good, clipped]))
+    rows = valid_lock_rows()
+    rows[0] = _lock_row([[1.0, 2, 0.0, True]])  # the case E VBJ row, clipped
+    _, problems = tjr.judge_records(records_inputs(rows))
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
-    _, problems = tjr.judge_records(records_inputs([_lock_row([])]))
+    _, problems = tjr.judge_records(records_inputs(valid_lock_rows(seed_rows=[])))
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
 
 
@@ -422,22 +422,50 @@ REPLAY_REPORTS = [{"runs": runs, "runs_over": 0, "extend_start_revision": 5,
                    "rows": [{"file": name} for name in sorted(T4H_NAMES[runs])],
                    "J-P3": {"status": "pass"}} for runs in tjr.REPLAY_RUN_COUNTS]
 """Two judged ``t4h_replay --extend-start-revision 5`` reports of the T-JR-13 run counts."""
+GOOD_SEED_ROWS = [[1.0, 2, 0.0, False]]
+CASE_E_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
+
+
+def _case_job(setting: str) -> dict:
+    """The j9_cases job of ``setting`` (case E = its VBJ / LSJ rows)."""
+    import run_v5
+
+    return next(job for job in run_v5.j9_case_jobs() if job["setting"] == setting)
 
 
 def _lock_row(seed_rows: list[list], *, setting: str = "VBJ", relocks: int | None = 0) -> dict:
+    """A j9_cases run_v5 row of ``setting`` with the T-JR-15 record keys."""
     record = _seed_record(seed_rows)
     if relocks is not None:
         record["relock_step_over_1bar_count"] = relocks
-    return {"job": {"setting": setting, "case": "E"}, "hydraulics_record": record}
+    return {"job": _case_job(setting), "hydraulics_record": record}
 
 
-def records_inputs(lock_rows: list[dict], *, replays: list[dict] | None = None,
+def h6_keys() -> frozenset[str]:
+    """Stand-in of the stored H-6 key set: the plain keys of :func:`_dg3_document`."""
+    import h8_noise_judge_4368 as h8
+
+    return frozenset(h8.plain_key(line["key"]) for line in _dg3_document()["results"])
+
+
+def valid_lock_rows(seed_rows: list[list] | None = None) -> list[dict]:
+    """The fixed T-JR-15 set of 4a-5 erratum 1: the five case E rows, then the Dg-3 VBJ 135
+    lines (each with the seed and relock keys)."""
+    seed = GOOD_SEED_ROWS if seed_rows is None else seed_rows
+    lines = _dg3_document(setting="VBJ")["results"]
+    for line in lines:
+        line["hydraulics_record"].update(_seed_record(seed), relock_step_over_1bar_count=0)
+    return [_lock_row(seed, setting=setting) for setting in CASE_E_SETTINGS] + lines
+
+
+def records_inputs(lock_rows: list[dict] | None = None, *, replays: list[dict] | None = None,
                    dg3: list[dict] | None = None) -> tjr.RecordsInputs:
-    """Valid T-JR-13 / 14 inputs around the given T-JR-15 rows (4a-5 1)."""
+    """Valid T-JR-13 / 14 / 15 inputs (4a-5 1 and erratum 1); ``lock_rows`` None = the valid
+    T-JR-15 set."""
     return tjr.RecordsInputs(
         json.loads(json.dumps(REPLAY_REPORTS if replays is None else replays)),
         [_dg3_document(setting="VBH"), _dg3_document(setting="VBJ")] if dg3 is None else dg3,
-        lock_rows, T4H_NAMES)
+        valid_lock_rows() if lock_rows is None else lock_rows, T4H_NAMES, h6_keys())
 
 
 def test_judges_refuse_to_overwrite_a_report(tmp_path) -> None:

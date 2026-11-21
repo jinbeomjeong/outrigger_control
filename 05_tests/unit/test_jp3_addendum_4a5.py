@@ -38,7 +38,9 @@ from test_jp3_addendum_4a2 import (  # noqa: E402
     T4H_NAMES,
     _dg3_document,
     _lock_row,
+    h6_keys,
     records_inputs,
+    valid_lock_rows,
 )
 from test_jp3_addendum_4a3 import _t8_inputs  # noqa: E402
 
@@ -47,6 +49,8 @@ from outrigger_sim.control import extend_start_bound as esb  # noqa: E402
 DATA_ROOT = Path(os.environ.get("OUTRIGGER_RECORDS_ROOT") or ROOT)
 PRELAUNCH = DATA_ROOT / "06_analysis" / "02_control" / "j_p3_cause" / "prelaunch_j9"
 T4H_SUMS = [PRELAUNCH / "h10_reuse_rerun_t4h.SHA256SUMS", PRELAUNCH / "h6_dg3_v4on_t4h.SHA256SUMS"]
+H6_PATH = DATA_ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "resume_k1" / (
+    "h6_dg3_v4on.json")
 GOOD_ROW = [[1.0, 2, 0.0, False]]
 
 
@@ -55,17 +59,18 @@ def _status(inputs: tjr.RecordsInputs) -> str:
 
 
 def test_valid_records_inputs_pass() -> None:
-    report, problems = tjr.judge_records(records_inputs([_lock_row(GOOD_ROW)]))
+    report, problems = tjr.judge_records(records_inputs())
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
     assert report["T-JR-14"]["VBH"]["lines"] == report["T-JR-14"]["VBJ"]["lines"] == 135
-    assert report["T-JR-15"]["judged_rows"] == 1
+    assert report["T-JR-15"]["judged_rows"] == 140  # 135 Dg-3 VBJ + 5 case E
 
 
-@pytest.mark.parametrize("empty", ["replays", "dg3_files", "lock_rows"])
+@pytest.mark.parametrize("empty", ["replays", "dg3_files", "lock_rows", "h6_keys"])
 def test_empty_records_input_is_not_judgeable(empty) -> None:
-    inputs = records_inputs([_lock_row(GOOD_ROW)])
-    values = {name: getattr(inputs, name) for name in ("replays", "dg3_files", "lock_rows")}
-    values[empty] = []
+    inputs = records_inputs()
+    values = {name: getattr(inputs, name)
+              for name in ("replays", "dg3_files", "lock_rows", "h6_keys")}
+    values[empty] = frozenset() if empty == "h6_keys" else []
     assert _status(tjr.RecordsInputs(**values, t4h_names=T4H_NAMES)) == (
         compare.STATUS_NOT_JUDGEABLE)
 
@@ -80,7 +85,7 @@ def _replays(change) -> list[dict]:
 
 def test_e1_replay_error_row_fails() -> None:
     reports = _replays(lambda r: r[1]["rows"][0].update(error="ValueError: x"))
-    assert _status(records_inputs([_lock_row(GOOD_ROW)], replays=reports)) == (
+    assert _status(records_inputs(replays=reports)) == (
         compare.STATUS_FAILED)
 
 
@@ -98,7 +103,7 @@ def test_e1_replay_error_row_fails() -> None:
         "rows_not_runs", "other_file", "two_426"])
 def test_e1_replay_reports_not_judgeable(change) -> None:
     reports = _replays(change)
-    assert _status(records_inputs([_lock_row(GOOD_ROW)], replays=reports)) == (
+    assert _status(records_inputs(replays=reports)) == (
         compare.STATUS_NOT_JUDGEABLE)
 
 
@@ -136,7 +141,7 @@ def _alignment(files, index, **values):
 
 def test_e1b_late_fallback_fails() -> None:
     files = _dg3(lambda f: _alignment(f, 3, n_late_fallback=1))
-    report, problems = tjr.judge_records(records_inputs([_lock_row(GOOD_ROW)], dg3=files))
+    report, problems = tjr.judge_records(records_inputs(dg3=files))
     assert problems.status() == compare.STATUS_FAILED
     assert report["T-JR-14"]["VBJ"]["late_lines"] == 1
 
@@ -144,7 +149,7 @@ def test_e1b_late_fallback_fails() -> None:
 def test_e1b_lock_window_mismatch_error_line_fails() -> None:
     error = "LockWindowMismatchError: stretch_mismatch [('FL', 1.0)], window max |diff| 0.1 s"
     files = _dg3(lambda f: f[0]["results"][5].update(error=error))
-    report, problems = tjr.judge_records(records_inputs([_lock_row(GOOD_ROW)], dg3=files))
+    report, problems = tjr.judge_records(records_inputs(dg3=files))
     assert problems.status() == compare.STATUS_FAILED
     assert report["T-JR-14"]["VBH"]["mismatch_error_lines"] == 1
 
@@ -159,30 +164,63 @@ def test_e1b_lock_window_mismatch_error_line_fails() -> None:
     lambda f: f[1]["results"].pop(),                                  # 134 lines
     lambda f: f.append(_dg3_document(setting="VBJ0", count=1)),       # another setting
     lambda f: f.pop(0),                                               # no VBH
+    lambda f: f[1]["results"][4].update(key="cand=current#L3|s9|h|999|inner"),  # other key
+    lambda f: f[0]["results"].__setitem__(                            # a key twice
+        6, {**f[0]["results"][6], "key": f[0]["results"][5]["key"]}),
 ], ids=["other_error", "reason", "no_record", "none", "bool", "134_lines", "other_setting",
-        "one_bundle"])
+        "one_bundle", "other_key", "key_twice"])
 def test_e1b_not_judgeable(change) -> None:
-    assert _status(records_inputs([_lock_row(GOOD_ROW)], dg3=_dg3(change))) == (
+    assert _status(records_inputs(dg3=_dg3(change))) == (
         compare.STATUS_NOT_JUDGEABLE)
 
 
 # --- E-1c: T-JR-15 ----------------------------------------------------------------------------
 
-@pytest.mark.parametrize(("rows", "status"), [
-    ([_lock_row(GOOD_ROW, relocks=1)], compare.STATUS_FAILED),
-    ([_lock_row(GOOD_ROW), _lock_row(GOOD_ROW, setting="LSJ2", relocks=2)],
-     compare.STATUS_FAILED),
-    ([_lock_row(GOOD_ROW, relocks=None)], compare.STATUS_NOT_JUDGEABLE),
-    ([_lock_row([[1.0, 2, 1.5, False]])], compare.STATUS_FAILED),            # seed > 1 N
-    ([_lock_row(GOOD_ROW), _lock_row(GOOD_ROW, setting="VBH", relocks=5)],
-     compare.STATUS_PASS),                                                   # VBH: record
-    ([_lock_row(GOOD_ROW), _lock_row([[1.0, 2, 9.0, True]], setting="VBH", relocks=None)],
-     compare.STATUS_PASS),                                                   # VBH: record
-    ([_lock_row(GOOD_ROW, setting="VBH")], compare.STATUS_NOT_JUDGEABLE),    # no judged row
-], ids=["relock_vbj", "relock_lsj", "relock_missing", "seed_over", "vbh_relock_record",
-        "vbh_seed_record", "vbh_only"])
-def test_e1c_relock_and_seed(rows, status) -> None:
-    assert _status(records_inputs(rows)) == status
+def _rows(change) -> list[dict]:
+    """The valid T-JR-15 set (rows 0 .. 4 = case E VBJ, LSJ1 .. LSJ4; 5 .. = Dg-3 VBJ lines)
+    after ``change``."""
+    rows = valid_lock_rows()
+    change(rows)
+    return rows
+
+
+def _record(rows, index, **values):
+    rows[index]["hydraulics_record"].update(values)
+
+
+@pytest.mark.parametrize(("change", "status"), [
+    (lambda rows: _record(rows, 0, relock_step_over_1bar_count=1), compare.STATUS_FAILED),
+    (lambda rows: _record(rows, 2, relock_step_over_1bar_count=2), compare.STATUS_FAILED),
+    (lambda rows: _record(rows, 40, relock_step_over_1bar_count=1), compare.STATUS_FAILED),
+    (lambda rows: rows[3]["hydraulics_record"].pop("relock_step_over_1bar_count"),
+     compare.STATUS_NOT_JUDGEABLE),
+    (lambda rows: rows.__setitem__(0, _lock_row([[1.0, 2, 1.5, False]])),
+     compare.STATUS_FAILED),                                                  # seed > 1 N
+    (lambda rows: rows.append(_lock_row(GOOD_ROW, setting="VBH", relocks=5)),
+     compare.STATUS_PASS),                                                    # VBH: record
+    (lambda rows: rows.append(_lock_row([[1.0, 2, 9.0, True]], setting="VBH", relocks=None)),
+     compare.STATUS_PASS),                                                    # VBH: record
+], ids=["relock_vbj", "relock_lsj", "relock_dg3_vbj", "relock_missing", "seed_over",
+        "vbh_relock_record", "vbh_seed_record"])
+def test_e1c_relock_and_seed(change, status) -> None:
+    assert _status(records_inputs(_rows(change))) == status
+
+
+@pytest.mark.parametrize("change", [
+    lambda rows: rows.pop(2),                                        # a case E row missing
+    lambda rows: rows.pop(),                                         # a Dg-3 VBJ line missing
+    lambda rows: rows.append(json.loads(json.dumps(rows[1]))),       # a case E row twice
+    lambda rows: rows.append(json.loads(json.dumps(rows[7]))),       # a Dg-3 line twice
+    lambda rows: rows[9].update(key="cand=current#L3|s9|h|999|inner"),   # another key
+    lambda rows: rows[0]["job"].update(offset_s=0.075),              # a case F row
+    lambda rows: rows.append(_dg3_document(setting="LSJ1", count=1)["results"][0]),
+    lambda rows: rows.clear() or rows.append(_lock_row(GOOD_ROW, setting="VBH")),
+], ids=["case_e_missing", "dg3_missing", "case_e_twice", "dg3_twice", "dg3_other_key",
+        "case_f_row", "dg3_other_setting", "vbh_only"])
+def test_e1c_judged_set_is_fixed(change) -> None:
+    """4a-5 erratum 1: the Dg-3 VBJ 135 lines of the stored H-6 keys + the five case E rows;
+    missing, repeated or other rows are not judgeable."""
+    assert _status(records_inputs(_rows(change))) == compare.STATUS_NOT_JUDGEABLE
 
 
 def test_e1c_lock_rows_read_dg3_json_and_jsonl(tmp_path) -> None:
@@ -191,13 +229,15 @@ def test_e1c_lock_rows_read_dg3_json_and_jsonl(tmp_path) -> None:
     (tmp_path / "rows.jsonl").write_text(json.dumps(_lock_row(GOOD_ROW)) + "\n",
                                          encoding="utf-8")
     lines = tjr.read_lock_rows(tmp_path / "dg3_VBJ.json")
-    assert len(lines) == 2 and tjr._lock_record(lines[0])["setting"] == "VBJ"
+    record = tjr._lock_record(lines[0])
+    assert len(lines) == 2 and record["setting"] == "VBJ" and record["source"] == "dg3"
+    assert record["key"] == "L2|s0|h|0|inner"  # the cand=...# prefix removed
     assert len(tjr.read_lock_rows(tmp_path / "rows.jsonl")) == 1
 
 
 def test_e1_records_command_exit_codes(tmp_path, monkeypatch) -> None:
     """Through ``main``: pass 0, a T-JR-13 error row 1, a revision 4 report 2 (4a-5 8 E-1)."""
-    def run(name, replays, rows) -> int:
+    def run(name, replays) -> int:
         folder = tmp_path / name
         folder.mkdir()
         paths = []
@@ -207,19 +247,29 @@ def test_e1_records_command_exit_codes(tmp_path, monkeypatch) -> None:
         for setting in tjr.T_JR_14_BUNDLES:
             (folder / f"dg3_{setting}.json").write_text(
                 json.dumps(_dg3_document(setting=setting)), encoding="utf-8")
+        rows = valid_lock_rows()
         (folder / "rows.jsonl").write_text("".join(json.dumps(row) + "\n" for row in rows),
                                            encoding="utf-8")
         return tjr.main(["records", "--out", str(folder / "out.json"), "--replay",
                          *map(str, paths), "--dg3", str(folder / "dg3_VBH.json"),
                          str(folder / "dg3_VBJ.json"), "--lock-rows",
-                         str(folder / "rows.jsonl"), "--t4h-sums", "unused"])
+                         str(folder / "rows.jsonl"), "--t4h-sums", "unused", "--h6", "unused"])
 
     monkeypatch.setattr(tjr, "t4h_names_of", lambda paths: (T4H_NAMES, []))
-    assert run("pass", REPLAY_REPORTS, [_lock_row(GOOD_ROW)]) == 0
-    errors = _replays(lambda r: r[0]["rows"][0].update(error="x"))
-    assert run("error_row", errors, [_lock_row(GOOD_ROW)]) == 1
-    old = _replays(lambda r: r[0].update(extend_start_revision=4))
-    assert run("revision_4", old, [_lock_row(GOOD_ROW)]) == 2
+    monkeypatch.setattr(tjr, "h6_keys_of", lambda path: (h6_keys(), []))
+    assert run("pass", REPLAY_REPORTS) == 0
+    assert run("error_row", _replays(lambda r: r[0]["rows"][0].update(error="x"))) == 1
+    assert run("revision_4", _replays(lambda r: r[0].update(extend_start_revision=4))) == 2
+
+
+@pytest.mark.skipif(not H6_PATH.is_file(), reason="stored H-6 not present")
+def test_erratum1_h6_keys_of_the_stored_h6(tmp_path) -> None:
+    keys, problems = tjr.h6_keys_of(H6_PATH)
+    assert problems == [] and len(keys) == 135
+    assert not any("#" in key for key in keys)
+    other = tmp_path / "h6.json"
+    other.write_text('{"results": []}', encoding="utf-8")
+    assert tjr.h6_keys_of(other)[1] and tjr.h6_keys_of(None)[1]
 
 
 # --- E-2: t8 hashes ---------------------------------------------------------------------------

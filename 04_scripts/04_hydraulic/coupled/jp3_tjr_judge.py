@@ -70,12 +70,16 @@ Sub-commands:
              T-JR-14: VBH and VBJ Dg-3 lines, 135 each. Failed: a ``LockWindowMismatchError``
              error line (the fallback log mismatch, 가) or ``lock_window_alignment.
              n_late_fallback`` >= 1 (J11, 나). Not judgeable: other line counts or settings,
+             a bundle whose key set is not the 135 stored H-6 keys (``--h6``, 4a-5 erratum 1),
              no ``lock_window_alignment`` or a non-integer ``n_late_fallback`` (a ``reason``
              record), any other error line. Records: ``n_late_by_leg``, ``margin_min_s_by_leg``.
              T-JR-15: VBJ / LSJ1..4 rows (Dg-3 VBJ lines and case E run_v5 rows). Failed: a
              seed row with ``|net_force_seed_step_N|`` > 1 N (4a-2 3.4) or
              ``relock_step_over_1bar_count`` >= 1. Not judgeable: the 3.4 rules, the relock key
-             missing, no judged row, zero seed rows. VBH (and other) rows are records.
+             missing, zero seed rows, and a judged set other than the fixed one of 4a-5
+             erratum 1 (the Dg-3 VBJ 135 lines of the stored H-6 keys + the five j9_cases
+             case E rows, VBJ / LSJ1 .. LSJ4 once each; missing, repeated or other rows). VBH
+             (and other) rows are records.
 
 Exit codes and ``status`` (all sub-commands):
 
@@ -119,8 +123,8 @@ Batch commands (dynamics-dev, project root; the main session launches them):
   records (T-JR-13 .. 15): jp3_tjr_judge.py records --replay <h10 replay>.json <H-6
       replay>.json --t4h-sums <prelaunch_j9>/h10_reuse_rerun_t4h.SHA256SUMS
       <prelaunch_j9>/h6_dg3_v4on_t4h.SHA256SUMS --dg3 <folder>/dg3_VBH.json
-      <folder>/dg3_VBJ.json --lock-rows <folder>/dg3_VBJ.json <cases>/j9_cases.jsonl
-      --out <judge>/records.json
+      <folder>/dg3_VBJ.json --h6 <resume_k1/h6_dg3_v4on.json> --lock-rows
+      <folder>/dg3_VBJ.json <cases>/j9_cases.jsonl --out <judge>/records.json
 Before T-JR-12 (4a-4 6, the main session; stored data only):
   jp3_tjr_judge.py base-judge --h6 <resume_k1/h6_dg3_v4on.json> --noise
       <resume_k1/h8_noise_VB.json> --judge-out <pre>/h6_base_judge.json --out <pre>/bj.json
@@ -189,6 +193,9 @@ LOCK_WINDOW_MISMATCH_ERROR = "LockWindowMismatchError"
 log mismatch; an r79 error line starts with the exception's class name."""
 T_JR_15_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 """4a-5 1 T-JR-15: VBJ 135 Dg-3 lines and the case E rows; VBH rows are records."""
+T_JR_15_DG3_SETTING = "VBJ"
+DG3_SOURCE, RUN_V5_SOURCE = "dg3", "run_v5"
+"""``--lock-rows`` row kinds: a Dg-3 line (``key``) or a run_v5 row (``job``)."""
 NEW_FAULT_PREFIX = "FAULT"
 RET_AFTER_GATE_RESOLUTION = (
     "read grid 0.1 s: ret_after_gate_s = first RET read - T (the read before it), so it differs "
@@ -943,25 +950,56 @@ class RecordsInputs:
         lock_rows: run_v5 rows and Dg-3 lines with a ``hydraulics_record`` (T-JR-15).
         t4h_names: Run count -> the T4h file names of its fixed input folder (from the fixed
             ``*_t4h.SHA256SUMS``); the report's row ``file`` names must be these (1, end).
+        h6_keys: The 135 plain keys of the stored H-6 (``--h6``): the T-JR-14 line set of
+            each bundle and the Dg-3 VBJ part of the T-JR-15 set (4a-5 erratum 1).
     """
 
     replays: list[dict]
     dg3_files: list[dict]
     lock_rows: list[dict]
     t4h_names: dict[int, set[str]] = field(default_factory=dict)
+    h6_keys: frozenset[str] = frozenset()
 
 
 def judge_records(inputs: RecordsInputs) -> tuple[dict, compare.Problems]:
-    """T-JR-13 .. 15 (addendum 4a-5 1 table, user decisions 1 and 4: all three judged)."""
+    """T-JR-13 .. 15 (addendum 4a-5 1 table and erratum 1, user decisions 1 and 4: all three
+    judged)."""
     problems = compare.Problems()
     for name, given in (("T-JR-13 --replay", inputs.replays), ("T-JR-14 --dg3", inputs.dg3_files),
                         ("T-JR-15 --lock-rows", inputs.lock_rows)):
         if not given:
             problems.not_judgeable.append(f"{name}: no input (an empty bundle is never a pass)")
+    if len(inputs.h6_keys) != DG3_PAIRS:
+        problems.not_judgeable.append(f"--h6: {len(inputs.h6_keys)} stored H-6 keys, "
+                                      f"{DG3_PAIRS} expected (4a-5 erratum 1)")
     report = {"T-JR-13": judge_t_jr_13(inputs.replays, inputs.t4h_names, problems),
-              "T-JR-14": judge_t_jr_14(inputs.dg3_files, problems),
-              "T-JR-15": judge_t_jr_15(inputs.lock_rows, problems)}
+              "T-JR-14": judge_t_jr_14(inputs.dg3_files, inputs.h6_keys, problems),
+              "T-JR-15": judge_t_jr_15(inputs.lock_rows, inputs.h6_keys, problems)}
     return report, problems
+
+
+def h6_keys_of(path: Path | None) -> tuple[frozenset[str], list[str]]:
+    """The plain keys of the stored H-6 (its sha asserted; 4a-5 erratum 1)."""
+    import h8_noise_judge_4368 as h8
+
+    if path is None:
+        return frozenset(), ["--h6 missing (the stored H-6: T-JR-14 / 15 key sets)"]
+    problem = fixed.sha_problem(path, fixed.H6_SHA256, "--h6 (stored H-6)")
+    if problem is not None:
+        return frozenset(), [problem]
+    return frozenset(h8.plain_key(run["key"]) for run in _read_json(path)["results"]), []
+
+
+def key_set_problems(label: str, keys: list[str], expected: frozenset[str]) -> list[str]:
+    """Why ``keys`` are not exactly ``expected`` once each (missing, repeated, other keys)."""
+    counts = Counter(keys)
+    repeated = sorted(key for key, count in counts.items() if count > 1)
+    missing, other = sorted(expected - set(counts)), sorted(set(counts) - expected)
+    if not (repeated or missing or other):
+        return []
+    return [f"{label}: key set is not the stored H-6 {len(expected)} keys ({len(missing)} "
+            f"missing, {len(repeated)} repeated, {len(other)} other; first "
+            f"{(missing + repeated + other)[:2]})"]
 
 
 # T-JR-13 ---------------------------------------------------------------------------------------
@@ -1034,9 +1072,13 @@ def t4h_names_of(sums_files: list[Path]) -> tuple[dict[int, set[str]], list[str]
 
 # T-JR-14 ---------------------------------------------------------------------------------------
 
-def judge_t_jr_14(dg3_files: list[dict], problems: compare.Problems) -> dict:
-    """VBH and VBJ, 135 lines each: no ``LockWindowMismatchError`` line and
-    ``lock_window_alignment.n_late_fallback`` = 0 on every line (4a-5 1)."""
+def judge_t_jr_14(dg3_files: list[dict], h6_keys: frozenset[str],
+                  problems: compare.Problems) -> dict:
+    """VBH and VBJ, 135 lines each with the stored H-6 key set (4a-5 erratum 1): no
+    ``LockWindowMismatchError`` line and ``lock_window_alignment.n_late_fallback`` = 0 on every
+    line (4a-5 1)."""
+    import h8_noise_judge_4368 as h8
+
     lines_by_setting: dict[str, list[dict]] = {}
     for document in dg3_files:
         for line in document.get("results") or []:
@@ -1046,6 +1088,10 @@ def judge_t_jr_14(dg3_files: list[dict], problems: compare.Problems) -> dict:
         if counts != dict.fromkeys(T_JR_14_BUNDLES, DG3_PAIRS):
             problems.not_judgeable.append(f"T-JR-14: lines by setting {counts}, "
                                           f"{DG3_PAIRS} of each of {T_JR_14_BUNDLES} expected")
+        for setting in T_JR_14_BUNDLES:
+            keys = [h8.plain_key(str(line.get("key")))
+                    for line in lines_by_setting.get(setting, [])]
+            problems.not_judgeable += key_set_problems(f"T-JR-14 {setting}", keys, h6_keys)
     report = {}
     for setting in T_JR_14_BUNDLES:
         rows = [_alignment_check(line, problems) for line in lines_by_setting.get(setting, [])]
@@ -1083,13 +1129,16 @@ def _alignment_check(line: dict, problems: compare.Problems) -> dict:
 
 # T-JR-15 ---------------------------------------------------------------------------------------
 
-def judge_t_jr_15(lock_rows: list[dict], problems: compare.Problems) -> dict:
+def judge_t_jr_15(lock_rows: list[dict], h6_keys: frozenset[str],
+                  problems: compare.Problems) -> dict:
     """VBJ / LSJ rows: every seed row |net force| <= 1 N (4a-2 3.4) and
-    ``relock_step_over_1bar_count`` = 0; VBH (and any other setting) rows are records."""
+    ``relock_step_over_1bar_count`` = 0; VBH (and any other setting) rows are records. The
+    judged set is fixed (4a-5 erratum 1): the Dg-3 VBJ 135 lines of the stored H-6 keys and
+    the five j9_cases case E rows (VBJ, LSJ1 .. LSJ4 once each)."""
     rows = [_lock_record(row) for row in lock_rows]
     judged = [row for row in rows if row["setting"] in T_JR_15_JUDGED_SETTINGS]
-    if lock_rows and not judged:
-        problems.not_judgeable.append("T-JR-15: no VBJ / LSJ row (judged rows 0)")
+    if lock_rows:
+        problems.not_judgeable += judged_set_problems(judged, h6_keys)
     for row in judged:
         label = f"T-JR-15 {row['setting']} {row['key']}"
         if row["seed"]["not_judgeable"] is not None:
@@ -1110,11 +1159,49 @@ def judge_t_jr_15(lock_rows: list[dict], problems: compare.Problems) -> dict:
                                       and row[compare.RELOCK_KEY] >= 1 for row in judged)}
 
 
+def judged_set_problems(judged: list[dict], h6_keys: frozenset[str]) -> list[str]:
+    """Why the judged T-JR-15 rows are not the fixed set of 4a-5 erratum 1 (not judgeable)."""
+    dg3 = [row for row in judged if row["source"] == DG3_SOURCE]
+    case_rows = [row for row in judged if row["source"] == RUN_V5_SOURCE]
+    problems = []
+    other_dg3 = sorted({row["setting"] for row in dg3} - {T_JR_15_DG3_SETTING})
+    if other_dg3:
+        problems.append(f"T-JR-15: Dg-3 lines of {other_dg3} (only {T_JR_15_DG3_SETTING})")
+    problems += key_set_problems(f"T-JR-15 Dg-3 {T_JR_15_DG3_SETTING}",
+                                 [row["key"] for row in dg3
+                                  if row["setting"] == T_JR_15_DG3_SETTING], h6_keys)
+    expected_case = case_e_identity()
+    other_case = [row["key"] for row in case_rows if row["key"] != expected_case]
+    if other_case:
+        problems.append(f"T-JR-15: {len(other_case)} VBJ / LSJ run_v5 rows that are not the "
+                        f"j9_cases case E job (first {other_case[0]})")
+    settings = Counter(row["setting"] for row in case_rows if row["key"] == expected_case)
+    if settings != Counter(T_JR_15_JUDGED_SETTINGS):
+        problems.append(f"T-JR-15: case E rows by setting {dict(sorted(settings.items()))}, "
+                        f"one each of {T_JR_15_JUDGED_SETTINGS} expected")
+    return problems
+
+
+def case_e_identity() -> str:
+    """The job key (:func:`_job_identity`) of the j9_cases rows (case E = its VBJ / LSJ rows)."""
+    import run_v5
+
+    keys = {_job_identity(job) for job in run_v5.j9_case_jobs()}
+    if len(keys) != 1:
+        raise ValueError(f"run_v5.j9_case_jobs has {len(keys)} job keys, 1 expected")
+    return keys.pop()
+
+
 def _lock_record(row: dict) -> dict:
     """T-JR-15 per row (run_v5 row or Dg-3 line): relock count and the 3.4 seed check."""
+    import h8_noise_judge_4368 as h8
+
     record = row.get("hydraulics_record") or {}
-    return {"setting": (row.get("job") or {}).get("setting") or row.get("v5_setting"),
-            "key": row.get("key") or _job_identity(row.get("job") or {}),
+    job = row.get("job")
+    is_run_v5 = isinstance(job, dict)
+    return {"source": RUN_V5_SOURCE if is_run_v5 else DG3_SOURCE,
+            "setting": job.get("setting") if is_run_v5 else row.get("v5_setting"),
+            "key": _job_identity(job) if is_run_v5 else h8.plain_key(str(row.get("key"))),
             compare.RELOCK_KEY: record.get(compare.RELOCK_KEY),
             "p1_retract_seed_count": record.get("p1_retract_seed_count"),
             "p1_retract_seed_step_max_bar": record.get("p1_retract_seed_step_max_bar"),
@@ -1206,6 +1293,9 @@ def _parser() -> argparse.ArgumentParser:
                               "h6_dg3_v4on_t4h.SHA256SUMS (fixed; the reports' input folders)")
     records.add_argument("--dg3", type=Path, nargs="*", default=[],
                          help="Dg-3 run files of VBH and VBJ (T-JR-14)")
+    records.add_argument("--h6", type=Path, default=None,
+                         help="resume_k1/h6_dg3_v4on.json (fixed): the 135 keys of the T-JR-14 "
+                              "bundles and the T-JR-15 Dg-3 VBJ lines (4a-5 erratum 1)")
     records.add_argument("--lock-rows", type=Path, nargs="*", default=[],
                          help="run_v5 jsonl (case E) and Dg-3 json (VBJ 135 lines) files")
     for sub in (t8, t12, dg3_judge, base_judge, judges, selfcheck):
@@ -1245,11 +1335,13 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
             args.h6, args.new_judge, args.new_judge_sha256, args.stored_judge,
             args.stored_h6_judge, args.new_l1_reference, args.stored_l1_reference))
     t4h_names, sums_problems = t4h_names_of(args.t4h_sums)
+    h6_keys, h6_problems = h6_keys_of(args.h6)
     report, problems = judge_records(RecordsInputs(
         [_read_json(path) for path in args.replay], [_read_json(path) for path in args.dg3],
-        [row for path in args.lock_rows for row in read_lock_rows(path)], t4h_names))
-    problems.not_judgeable[:0] = sums_problems
-    return report, problems, [*args.replay, *args.dg3, *args.lock_rows, *args.t4h_sums]
+        [row for path in args.lock_rows for row in read_lock_rows(path)], t4h_names, h6_keys))
+    problems.not_judgeable[:0] = [*sums_problems, *h6_problems]
+    return report, problems, [*args.replay, *args.dg3, *args.lock_rows, *args.t4h_sums,
+                              *([] if args.h6 is None else [args.h6])]
 
 
 def main(argv: list[str] | None = None) -> int:
