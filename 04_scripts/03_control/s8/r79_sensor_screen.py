@@ -943,7 +943,10 @@ def run_job(key: str) -> dict:
         return out
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
-    out.update(_v5_record(v5_options, run, plant))
+    v5_record = v5_record_or_mismatch(v5_options, run, plant)
+    out.update(v5_record)
+    if "error" in v5_record:  # 436.9 addendum 4a-5 1 T-JR-14 (가): the line is the record
+        return out
     out[RESUME_K1_KEY] = _resume_k1_record(run.ctrl)  # 436.8 rules 4.2 / 7.2, every setting
     command_hash = _commands_sha256(run.ctrl)
     if command_hash is not None:  # 436.8 rules rev3 R3-E4: the harness-line definition
@@ -1083,6 +1086,24 @@ def _resume_k1_record(controller) -> dict:
     import resume_k1_record
 
     return resume_k1_record.controller_record(controller)
+
+
+LOCK_WINDOW_MISMATCH_ERROR = "LockWindowMismatchError"
+"""``lock_window_alignment.LockWindowMismatchError`` (a ``RuntimeError``): the fallback lock log
+of the monitor and the rebuilt stretches differ."""
+
+
+def v5_record_or_mismatch(options, run: ActiveRun, plant) -> dict:
+    """:func:`_v5_record`, or ``{"error": "LockWindowMismatchError: ..."}`` when the lock-window
+    alignment raises that error (436.9 prelaunch audit N-1, addendum 4a-5 1 T-JR-14 (가): the
+    run's line carries the error, the batch goes on, and the judge reads it as a T-JR-14
+    failure). Any other exception still ends the run as before."""
+    try:
+        return _v5_record(options, run, plant)
+    except RuntimeError as exc:  # LockWindowMismatchError subclasses RuntimeError
+        if type(exc).__name__ != LOCK_WINDOW_MISMATCH_ERROR:
+            raise
+        return {"error": f"{LOCK_WINDOW_MISMATCH_ERROR}: {exc}"}
 
 
 def _v5_record(options, run: ActiveRun, plant) -> dict:

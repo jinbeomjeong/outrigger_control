@@ -19,7 +19,9 @@ Sub-commands:
              ``--main-jsonl`` must be the fixed files (``jp3_fixed_inputs``). Prelaunch audit
              M-4: a VBH / VBJ line that is not a rev 5 row of the 13.6 identity, or a VBH /
              VBJ / VBJ0 line without fitting P4 evidence (4a-2 B2), is a setting defect of its
-             test. Addendum 4a-5 2: a ``commands_sha256`` that is not a 64-character string
+             test; a VB line whose P4 evidence is not 1 = 0 adds to the T-JR-10
+             "저장값 노후 확인 전" reason (4a-5 2 VB row, prelaunch audit N-4).
+             Addendum 4a-5 2: a ``commands_sha256`` that is not a 64-character string
              on either side of a T-JR-10 or T-JR-11 pair makes that test not judgeable (a
              broken record, not a T8 difference).
 ``t12``      T-JR-12 (13.9, 4a-3 4) of one bundle: ``--bundle VBH`` = VBH against the stored H-6
@@ -41,7 +43,9 @@ Sub-commands:
              the evidence keys: prelaunch audit B-1). Setting defects (M-3): a new line not of
              the bundle's setting or not rev 5, a VBJ base line not VBJ0, the new file equal to
              the base file. Not judgeable (M-8): a new (VBJ: also base) file whose meta
-             ``keys_file`` is not the stored H-6 (135 keys).
+             ``keys_file`` is not the stored H-6 (135 keys). A new-side
+             ``LockWindowMismatchError`` error line is the T-JR-14 (가) failure (exit 1, the
+             pairs are not compared; prelaunch audit N-1); other error lines are not judgeable.
 ``dg3-judge``      Prelaunch audit M-8: the judge file of one new-side Dg-3 run (VBH, VBJ,
              VBJ0) with the P-1a L1 extract (``--l1-reference-sha256`` from the P-1a report;
              the run's meta ``keys_file`` must be the stored H-6, its lines of the setting);
@@ -304,9 +308,11 @@ def _t_jr_10_preconditions(inputs: T8Inputs, vb_record: dict) -> list[str]:
     problems += _rows_ok(inputs, "rerun", "VBH", inputs.rerun.get("VBH", {}))
     problems += _rows_ok(inputs, "stored", STORED_SETTING,
                          inputs.stored.get(STORED_SETTING, {}))
-    if vb_record["missing"] or vb_record["error_rows"] or vb_record["differing_count"]:
+    if (vb_record["missing"] or vb_record["error_rows"] or vb_record["differing_count"]
+            or vb_record["evidence_problems"]):
         problems.append(f"{VB_STALE_REASON}: VB lines missing {vb_record['missing']}, error "
-                        f"{vb_record['error_rows']}, other hash {vb_record['differing_count']}")
+                        f"{vb_record['error_rows']}, other hash {vb_record['differing_count']}, "
+                        f"P4 evidence {len(vb_record['evidence_problems'])} (4a-5 2: 1 = 0)")
     return problems
 
 
@@ -381,7 +387,14 @@ def _vb_rerun_record(inputs: T8Inputs) -> dict:
     missing = [key for key in inputs.rule_jobs if key not in vb_lines]
     differing = [key for key in inputs.rule_jobs if key in vb_lines
                  and not _same_hash(vb_lines[key], stored_vb.get(key))]
-    return {"lines": T8_JOBS - len(missing),
+    # addendum 4a-5 2 (prelaunch audit N-4): the VB lines have no P4 reading (1 = 0)
+    evidence = []
+    for key in inputs.rule_jobs:
+        line = vb_lines.get(key)
+        if line is not None:
+            evidence += [f"VB {key}: {text}" for text in rod_reading_evidence_problems(
+                line.get("hydraulics_record"), line.get("hydraulic_options"))]
+    return {"lines": T8_JOBS - len(missing), "evidence_problems": evidence,
             "equal": T8_JOBS - len(missing) - len(differing), "differing_count": len(differing),
             "differing": differing[:10], "missing": len(missing),
             "error_rows": inputs.bad_rows.get(f"rerun:{STORED_SETTING}", 0)}
@@ -474,12 +487,16 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
 
     problems = compare.Problems()
     base_lines = _dg3_lines(base["results"], "base", problems)
-    new_lines = _dg3_lines(new["results"], "new", problems)
+    new_lines = _dg3_lines(new["results"], "new", problems, mismatch_fails=True)
     if check_settings:
         problems.setting_defects += bundle_setting_problems(bundle, base_lines, new_lines)
         problems.not_judgeable += keys_file_problems("new", new)
         if bundle == "VBJ":
             problems.not_judgeable += keys_file_problems("base", base)
+    mismatches = sorted(h8.plain_key(run["key"]) for run in new["results"]
+                        if is_lock_window_mismatch(run))
+    if mismatches:  # prelaunch audit N-1: a failure as it is, the pairs are not compared
+        return {"bundle": bundle, "lock_window_mismatch_keys": mismatches}, problems
     if len(base_lines) != DG3_PAIRS or set(base_lines) != set(new_lines):
         problems.not_judgeable.append(f"{bundle}: {len(base_lines)} base / {len(new_lines)} new "
                                       f"keys, {DG3_PAIRS} equal keys expected")
@@ -552,12 +569,21 @@ def keys_file_problems(label: str, document: dict) -> list[str]:
             f"is not the stored H-6 ({fixed.H6_SHA256[:12]}, {DG3_PAIRS} keys)"]
 
 
-def _dg3_lines(results: list[dict], label: str, problems: compare.Problems) -> dict[str, dict]:
+def _dg3_lines(results: list[dict], label: str, problems: compare.Problems, *,
+               mismatch_fails: bool = False) -> dict[str, dict]:
+    """The result lines by plain key. An error line is not judgeable, except a
+    ``LockWindowMismatchError`` line of the new side (``mismatch_fails``): the T-JR-14 (가)
+    failure of 4a-5 1, reported here as a failure so that step 6 does not stop as not
+    judgeable (prelaunch audit N-1)."""
     import h8_noise_judge_4368 as h8
 
     lines = {}
     for run in results:
         key = h8.plain_key(run["key"])
+        if mismatch_fails and is_lock_window_mismatch(run):
+            problems.failures.append(f"{label} {key}: T-JR-14 failure "
+                                     f"({LOCK_WINDOW_MISMATCH_ERROR})")
+            continue
         if "error" in run:
             problems.not_judgeable.append(f"{label} {key}: error line (no result)")
             continue
@@ -1102,12 +1128,19 @@ def judge_t_jr_14(dg3_files: list[dict], h6_keys: frozenset[str],
     return report
 
 
+def is_lock_window_mismatch(line: dict) -> bool:
+    """An r79 error line of a ``LockWindowMismatchError`` (``r79_sensor_screen.
+    v5_record_or_mismatch``: the T-JR-14 (가) failure of 4a-5 1)."""
+    return ("error" in line
+            and str(line["error"]).split(":", 1)[0].strip() == LOCK_WINDOW_MISMATCH_ERROR)
+
+
 def _alignment_check(line: dict, problems: compare.Problems) -> dict:
     """One Dg-3 line of T-JR-14 (its kind: ok, late, mismatch, not_judgeable)."""
     label = f"T-JR-14 {line.get('v5_setting')} {line.get('key')}"
     record = {"key": line.get("key"), "kind": "ok"}
     if "error" in line:
-        if str(line["error"]).split(":", 1)[0].strip() == LOCK_WINDOW_MISMATCH_ERROR:
+        if is_lock_window_mismatch(line):
             problems.failures.append(f"{label}: {LOCK_WINDOW_MISMATCH_ERROR} (log mismatch)")
             return {**record, "kind": "mismatch"}
         problems.not_judgeable.append(f"{label}: error line {str(line['error'])[:80]}")
@@ -1141,6 +1174,10 @@ def judge_t_jr_15(lock_rows: list[dict], h6_keys: frozenset[str],
         problems.not_judgeable += judged_set_problems(judged, h6_keys)
     for row in judged:
         label = f"T-JR-15 {row['setting']} {row['key']}"
+        if row["lock_window_mismatch"]:  # N-1: no record on the line; a T-JR-14 failure
+            problems.failures.append(f"{label}: {LOCK_WINDOW_MISMATCH_ERROR} line "
+                                     "(T-JR-14 failure, no T-JR-15 record)")
+            continue
         if row["seed"]["not_judgeable"] is not None:
             problems.not_judgeable.append(f"{label}: {row['seed']['not_judgeable']}")
         elif row["seed"]["over_1N_rows"]:
@@ -1200,6 +1237,7 @@ def _lock_record(row: dict) -> dict:
     job = row.get("job")
     is_run_v5 = isinstance(job, dict)
     return {"source": RUN_V5_SOURCE if is_run_v5 else DG3_SOURCE,
+            "lock_window_mismatch": is_lock_window_mismatch(row),
             "setting": job.get("setting") if is_run_v5 else row.get("v5_setting"),
             "key": _job_identity(job) if is_run_v5 else h8.plain_key(str(row.get("key"))),
             compare.RELOCK_KEY: record.get(compare.RELOCK_KEY),

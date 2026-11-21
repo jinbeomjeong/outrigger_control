@@ -31,6 +31,8 @@ Sub-commands:
                meta's ``keys_file.sha256`` = the selection's key file sha = the fixed
                ``DRY_KEYS_FILE_SHA256`` and ``keys_file.n_keys`` = 1). A miss of that is not
                judgeable with the reason "다시 묻기" (ask the user again, no judged key instead).
+               Record only (prelaunch audit R-b): whether each r79 line carries the keys
+               T-JR-14 / 15 read later (``record_keys_present``; no value is read).
 
 ``select --keys-file <path>`` names the key file the commands use: absent = written, present
 (the repository copy ``j4a_remedy_b06e409e/dryrun_selection_r79_key.txt``) = it must hold the
@@ -321,6 +323,21 @@ def keys_file_problems(selection: dict, meta: dict) -> list[str]:
     return problems
 
 
+RECORD_KEY_PATHS = (("hydraulics_record", "relock_step_over_1bar_count"),
+                    ("hydraulics_record", "p1_retract_seed_log_columns"),
+                    ("lock_window_alignment", "n_late_fallback"))
+"""Prelaunch audit R-b (a record, no value read): the keys T-JR-14 / T-JR-15 read later."""
+
+
+def record_keys_present(record: dict) -> dict[str, bool]:
+    """Whether each :data:`RECORD_KEY_PATHS` key is on the r79 line (record only)."""
+    present = {}
+    for outer, inner in RECORD_KEY_PATHS:
+        block = record.get(outer)
+        present[f"{outer}.{inner}"] = isinstance(block, dict) and inner in block
+    return present
+
+
 def summarize(selection: dict, event_files: dict[str, Path],
               r79_files: dict[str, Path]) -> tuple[dict, int]:
     """The ``summarize`` output and its exit code."""
@@ -338,6 +355,7 @@ def summarize(selection: dict, event_files: dict[str, Path],
                "evidence": [evidence_of(record) for record in records]}
         row["meets"] = [meets(expectation, item) for item in row["evidence"]]
         if document is not None:
+            row["record_keys_present"] = [record_keys_present(record) for record in records]
             row["key_taken"] = [key_taken(selection, record) for record in records]
             row["keys_file_problems"] = keys_file_problems(selection, document.get("meta"))
             if not all(row["key_taken"]) or len(records) != 1 or row["keys_file_problems"]:

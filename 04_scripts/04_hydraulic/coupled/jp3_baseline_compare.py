@@ -102,9 +102,11 @@ STATUS_PASS, STATUS_FAILED = "pass", "failed"
 STATUS_NOT_JUDGEABLE, STATUS_SETTING_DEFECT, STATUS_ERROR = (
     "not_judgeable", "setting_defect", "error")
 EXIT_PASS, EXIT_FAILED, EXIT_NOT_JUDGEABLE, EXIT_ERROR = 0, 1, 2, 3
-TOOL_ERRORS = (OSError, KeyError, ValueError, TypeError, AttributeError, IndexError)
-"""Unexpected input errors of the J-P3 judge tools: status ``error``, exit 3 (addendum 4a-5
-5.1: a tool error, not a judgement; an uncaught one would leave Python's exit 1 = failed)."""
+TOOL_ERRORS = (Exception,)
+"""Every unexpected error of the J-P3 judge tools (``KeyboardInterrupt`` and ``SystemExit`` are
+not ``Exception``): status ``error``, exit 3 (addendum 4a-5 5.1: a tool error, not a judgement;
+an uncaught one would leave Python's exit 1 = failed; prelaunch audit N-3: ``RuntimeError``,
+``ZeroDivisionError``, ``StopIteration`` too)."""
 EXIT_TABLE = """exit codes (addendum 4a-5 5.1, the J-P3 judge tools):
   0  pass             passed (a record tool: written as expected)
   1  failed           a prediction or judgement failed (base-judge-compare: grades differ,
