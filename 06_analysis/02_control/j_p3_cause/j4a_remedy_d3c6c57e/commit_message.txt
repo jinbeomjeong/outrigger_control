@@ -1,0 +1,18 @@
+436.9 J4a remedy 12 (addendum 4a-8 H8-1 .. H8-5, 6.1 closure tool)
+
+- H8-1: B2 evidence 1 = k x 2 (k = 2 on an r79 key whose third token is g8, else 1):
+  jp3_baseline_compare.evidence_multiplier / rod_evidence_problems / line_evidence_problems,
+  judged_line_evidence_problems(k); used by t12, t8, baseline_compare, case-f and the dry
+  summarize (j_p3_inputs stays unchanged: it is in the runner's import closure).
+- H8-2: dry select / summarize per run-path family g6 / g8 / ref (base key per family, s25
+  generated key, family key files; all nine runs required).
+- H8-3: jp3_tjr_judge l1-keys (102 L1 keys of the stored H-6, every key in the L1 extract).
+- H8-4: dg3-judge per-setting L1 reference (VBH: the fixed P-1a extract; VBJ / VBJ0: the 4.3
+  checks of the plant_truth L1 run), --dg3-sha256, judge rows = Dg-3 lines (4a-8 5).
+- H8-5: t12 checks the rows of both received judge files (mismatch lines excused, N-1).
+- 4.5: l1-hash-record; jp3_rejudge_inputs.py (dg3 sha values, L1 key count, outside the
+  closure); jp3_import_closure.py (6.1 static import closure against a commit range).
+- No 03_src, harness, runner or closure file change; monitor / plant digests unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S2ErLGAPskSckV6pgGAu8o
