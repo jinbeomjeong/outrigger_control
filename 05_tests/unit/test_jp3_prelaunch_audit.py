@@ -134,8 +134,10 @@ def test_m3_setting_and_revision_of_the_lines(pass_grades, monkeypatch, bundle, 
 
 def test_m3_vbj_bundle_of_the_right_settings_passes(pass_grades, monkeypatch) -> None:
     monkeypatch.setattr(tjr, "_dg3_j_p3", lambda lines, problems: {"status": "pass"})
+    # the VBJ lines read the plant truth (R79_ROD_MODEL=plant_truth): 1 = 2 > 0 (4a-7
+    # erratum 1 9: the J-P3 lines' evidence)
     _, problems = tjr.judge_t12("VBJ", _dg3_document(setting="VBJ0"), {},
-                                _dg3_document(setting="VBJ"), {})
+                                _dg3_document(setting="VBJ", truth_calls=9), {})
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
 
 

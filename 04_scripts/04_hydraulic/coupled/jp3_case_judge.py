@@ -15,7 +15,8 @@ Sub-commands:
             FR 3 / -0.900 bar @ 48.7 s); F-B = VBH / LSH<n> command hash = VB / LS<n> (T8), VBH
             J-P3a 0 (LSH rows recorded); F-E = VBJ, LSJ1 .. 4 J-P3a / b / c judged keys 0 and
             ``relock_step_over_1bar_count`` 0 (hashes and bounds recorded, 4a-1 1). Every row's
-            P4 evidence (4a-2 B2) and every revision 5 row's identity are checked.
+            P4 evidence (4a-2 B2) and every revision 5 row's identity are checked; the F-E
+            (J-P3) rows also need ① = ② > 0 (addendum 4a-7 erratum 1 9).
 ``case-f-path``  Addendum 4a-3 5.2, before case F: the three VB rows of the run_v5 batch
             ``j9_case_f_path`` (offsets 0.0, 0.025, 0.05 s) reproduce ``results[13].runs[0..2]``
             of the stored grid (harness hash with the 4a-3 prefixes, ``breach_reads``,
@@ -236,6 +237,11 @@ def judge_case_f(rows: list[dict], grid: dict) -> tuple[dict, compare.Problems]:
             problems.not_judgeable.append(f"{setting}: job {row['job']} is not the case F row")
         _evidence(row, problems)
         problems.setting_defects += compare.identity_problems(row)
+        if setting in CASE_F_GROUPS["E"]:  # addendum 4a-7 erratum 1 9: the J-P3 lines of F-E
+            problems.setting_defects += [f"{setting}: {text}" for text in
+                                         compare.judged_line_evidence_problems(
+                                             row.get("hydraulics_record"),
+                                             compare.is_head_only_line(row, None))]
     record = {"F-A": _f_a(by_setting["VB"], grid, problems),
               "F-B": _f_b(by_setting, problems), "F-E": _f_e(by_setting, problems),
               "A_LS_record": {s: _bound_record(by_setting[s]) for s in CASE_F_GROUPS["A"][1:]}}

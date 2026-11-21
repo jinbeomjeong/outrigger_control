@@ -39,7 +39,6 @@ from test_jp3_addendum_4a2 import (  # noqa: E402
 from test_jp3_addendum_4a3 import (  # noqa: E402
     SELECTION,
     STORED_RECORD,
-    _main_jsonl,
     _new_record,
     _path_grid,
     _path_rows,
@@ -189,11 +188,41 @@ def _meta_npz(path: Path, meta: dict) -> None:
     np.savez(path, meta_json=np.array(json.dumps(meta)))
 
 
-def test_t8_main(tmp_path, monkeypatch, elsewhere) -> None:
+T8_CASES = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R14",
+            "R15", "R16", "S1", "S2", "S3", "S4", "S5", "S7", "S8")
+"""The 22 cases of the revision 8 7.2 rule (``main.jsonl``): 18 steady (declared head-only,
+``verdict_cases``) and R12, R14 .. R16 on the event path."""
+EVENT_CASES = ("R12", "R14", "R15", "R16")
+
+
+def _t8_main_jsonl(path: Path) -> Path:
+    lines = [{"job": {"case": case, "eps": 0.0, "setting": setting}}
+             for case in T8_CASES for setting in ("V0", "VB")]
+    return _write_rows(path, lines)
+
+
+def _t8_record(job: dict) -> dict:
+    """The record of a run of the real form: the steady (head-only) cases have no rod
+    reading, so no ③ record and both evidence counts 0; the event cases read both pressures
+    (P4 on VBJ / VBJ0: truth reads = monitor rod reads)."""
+    record = _new_record()
+    is_p4 = job["setting"] in ("VBJ", "VBJ0")
+    if job["case"] not in EVENT_CASES:
+        record["extend_bound_check"] = {}
+        record.update(rod_reading_truth_calls=0, two_pressure_reads=0)
+    elif is_p4:
+        record.update(rod_reading_truth_calls=12, two_pressure_reads=12)
+    if job["setting"] == "VBJ0":
+        record["extend_bound_check"] = {}  # ③ off
+    return record
+
+
+def _t8_files(tmp_path: Path, monkeypatch, change=None) -> list[str]:
+    """The ``t8`` arguments of a stored h10 file, a j9_t8 output and their T4h folders."""
     import run_v5
 
     (tmp_path / "stored").mkdir()
-    main_jsonl = _main_jsonl(tmp_path / "stored" / "main.jsonl")
+    main_jsonl = _t8_main_jsonl(tmp_path / "stored" / "main.jsonl")
     monkeypatch.setattr(fixed, "MAIN_JSONL_SHA256", _sha(main_jsonl))
     jobs = run_v5.j9_t8_jobs(main_jsonl)
     hashes = {tjr._job_identity(job): f"{index:064d}" for index, job in enumerate(jobs)}
@@ -203,11 +232,15 @@ def test_t8_main(tmp_path, monkeypatch, elsewhere) -> None:
         name = f"{job['case']}_{job['setting']}.npz"
         line = {"job": job, "commands_sha256": hashes[key],
                 "controller_tag": "final_C4G2_P3H_LAS_K1", "event_names": ["INFO_X"],
-                "events": [[1.0, "INFO_X"]], "t4h_file": name, "hydraulics_record": _new_record()}
+                "events": [[1.0, "INFO_X"]], "t4h_file": name,
+                "hydraulic_options": {"rod_reading_truth": job["setting"] in ("VBJ", "VBJ0")},
+                "hydraulics_record": _t8_record(job)}
         rerun_rows.append(line)
         if job["setting"] == "VB":
             stored_rows.append({**line, "controller_tag": t8_rules.STORED_TAG,
                                 "hydraulics_record": json.loads(json.dumps(STORED_RECORD))})
+    if change is not None:
+        change(rerun_rows)
     stored = _write_rows(tmp_path / "stored" / "h10_reuse_rerun.jsonl", stored_rows)
     rerun = _write_rows(tmp_path / "run" / "j9_t8.jsonl", rerun_rows)
     monkeypatch.setattr(fixed, "H10_SHA256", _sha(stored))
@@ -217,12 +250,102 @@ def test_t8_main(tmp_path, monkeypatch, elsewhere) -> None:
     for row in rerun_rows:
         if row["job"]["setting"] == "VBH":
             _meta_npz(_t4h_folder(rerun) / row["t4h_file"], {})
+    return ["t8", "--stored", str(stored), "--rerun", str(rerun), "--main-jsonl",
+            str(main_jsonl)]
+
+
+def test_t8_main(tmp_path, monkeypatch, elsewhere) -> None:
+    """18 steady (head-only) and 4 event jobs, as the stored main.jsonl rule picks them."""
     out = tmp_path / "t8.json"
-    code = tjr.main(["t8", "--stored", str(stored), "--rerun", str(rerun), "--main-jsonl",
-                     str(main_jsonl), "--out", str(out)])
+    code = tjr.main([*_t8_files(tmp_path, monkeypatch), "--out", str(out)])
     report = json.loads(out.read_text(encoding="utf-8"))
     assert code == compare.EXIT_PASS, report
     assert report["T-JR-10"]["passing"] == 22  # the stored T4h meta was read from its folder
+    assert report["setting_defects"] == []
+
+
+def _line(rows: list[dict], case: str, setting: str) -> dict:
+    return next(row for row in rows if row["job"]["case"] == case
+                and row["job"]["setting"] == setting)
+
+
+def _steady_form(line: dict) -> None:
+    line["hydraulics_record"].update(extend_bound_check={}, rod_reading_truth_calls=0,
+                                     two_pressure_reads=0)
+
+
+def _event_form(line: dict) -> None:
+    reads = 12 if line["job"]["setting"] in ("VBJ", "VBJ0") else 4
+    truth = reads if line["job"]["setting"] in ("VBJ", "VBJ0") else 0
+    line["hydraulics_record"].update(
+        extend_bound_check={"rule_revision": 5, **compare.DEFAULT_IDENTITY},
+        rod_reading_truth_calls=truth, two_pressure_reads=reads)
+
+
+DEFECT = (compare.EXIT_NOT_JUDGEABLE, compare.STATUS_SETTING_DEFECT)
+NOT_JUDGEABLE = (compare.EXIT_NOT_JUDGEABLE, compare.STATUS_NOT_JUDGEABLE)
+FAILED = (compare.EXIT_FAILED, compare.STATUS_FAILED)
+
+
+@pytest.mark.parametrize(("change", "test", "expected"), [
+    # (b) a declared head-only line that reads the rod side / carries a ③ record
+    (lambda rows: _line(rows, "R3", "VBJ")["hydraulics_record"].update(
+        rod_reading_truth_calls=5, two_pressure_reads=5), "T-JR-11", DEFECT),
+    (lambda rows: _line(rows, "S2", "VBH")["hydraulics_record"].update(two_pressure_reads=4),
+     "T-JR-10", DEFECT),
+    (lambda rows: _line(rows, "R1", "VBH")["hydraulics_record"].update(
+        extend_bound_check={"rule_revision": 5, **compare.DEFAULT_IDENTITY}), "T-JR-10", DEFECT),
+    # (c) an event (undeclared) line without rod reads or without its ③ record
+    (lambda rows: _line(rows, "R14", "VBJ")["hydraulics_record"].update(
+        rod_reading_truth_calls=0, two_pressure_reads=0), "T-JR-11", DEFECT),
+    (lambda rows: _line(rows, "R16", "VBH")["hydraulics_record"].update(two_pressure_reads=0),
+     "T-JR-10", DEFECT),  # VBH event: 1 = 0 and 2 > 0 (4a-7 1.2)
+    (lambda rows: _line(rows, "R12", "VBH")["hydraulics_record"].update(
+        extend_bound_check={}), "T-JR-10", DEFECT),
+    # (d) the 13.6 identity of an event VBH / VBJ line
+    (lambda rows: _line(rows, "R15", "VBJ")["hydraulics_record"]["extend_bound_check"].update(
+        spec_edition="f2f7dfad"), "T-JR-11", DEFECT),
+    (lambda rows: _line(rows, "R14", "VBH")["hydraulics_record"]["extend_bound_check"].update(
+        retract_start_rule="model_only"), "T-JR-10", DEFECT),
+    # (e) another split of declared / event jobs (each line itself sound)
+    (lambda rows: (_line(rows, "S8", "VBJ").update(head_only_declared=False),
+                   _event_form(_line(rows, "S8", "VBJ"))), "T-JR-11", NOT_JUDGEABLE),  # 17 / 5
+    (lambda rows: (_line(rows, "R16", "VBH").update(head_only_declared=True),
+                   _steady_form(_line(rows, "R16", "VBH"))), "T-JR-10", NOT_JUDGEABLE),  # 19 / 3
+    # the VB record (4a-5 2, 4a-4 4): the same line rules make T-JR-10 not judgeable
+    (lambda rows: _line(rows, "R14", "VB")["hydraulics_record"].update(two_pressure_reads=0),
+     "T-JR-10", NOT_JUDGEABLE),
+    (lambda rows: _line(rows, "S5", "VB")["hydraulics_record"].update(
+        extend_bound_check={"rule_revision": 4}), "T-JR-10", NOT_JUDGEABLE),
+    # (f) a declared line's hash still goes into the T8 hash judgement
+    (lambda rows: _line(rows, "S3", "VBJ").update(commands_sha256="f" * 64), "T-JR-11", FAILED),
+])
+def test_t8_head_only_rule(tmp_path, monkeypatch, elsewhere, change, test, expected) -> None:
+    """Addendum 4a-7 5 H-2 (b) .. (f); (a) is :func:`test_t8_main`."""
+    out = tmp_path / "t8.json"
+    code = tjr.main([*_t8_files(tmp_path, monkeypatch, change), "--out", str(out)])
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert (code, report[test]["status"]) == expected, report.get(
+        "setting_defects") or report.get("not_judgeable")
+
+
+def test_t8_head_only_declaration_order() -> None:
+    """4a-7 1.1: the T4h meta, then the line's ``head_only_declared``, then the case path."""
+    steady = {"job": {"case": "R1"}}
+    event = {"job": {"case": "R12"}}
+    assert tjr.is_head_only_line(steady, None) is True
+    assert tjr.is_head_only_line(event, None) is False
+    assert tjr.is_head_only_line({**event, "head_only_declared": True}, None) is True
+    assert tjr.is_head_only_line({**steady, "head_only_declared": True},
+                                 {"head_only_declared": False}) is False
+    assert tjr.is_head_only_line(steady, {"other": 1}) is True  # meta without the key
+
+
+def test_head_only_job_is_the_steady_path() -> None:
+    steady = [case for case in T8_CASES
+              if tjr.is_head_only_line({"job": {"case": case}}, None)]
+    assert tuple(case for case in T8_CASES if case not in steady) == EVENT_CASES
+    assert not tjr.is_head_only_line({"job": {"case": "C0"}}, None)  # unknown: not declared
 
 
 @pytest.fixture

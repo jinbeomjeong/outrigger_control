@@ -17,9 +17,13 @@ Sub-commands:
              h10 one makes T-JR-10 not judgeable ("저장값 노후 확인 전", 4a-4 4) while T-JR-11
              is still judged (each test reports its own ``status``). 4a-4 5: ``--stored`` and
              ``--main-jsonl`` must be the fixed files (``jp3_fixed_inputs``). Prelaunch audit
-             M-4: a VBH / VBJ line that is not a rev 5 row of the 13.6 identity, or a VBH /
-             VBJ / VBJ0 line without fitting P4 evidence (4a-2 B2), is a setting defect of its
-             test; a VB line whose P4 evidence is not 1 = 0 adds to the T-JR-10
+             M-4 with the line rules of addendum 4a-7 1.2: a declared head-only job (4a-7
+             1.1: T4h meta ``head_only_declared``, else the line's, else the harness steady
+             path) has no ③ record and ① = ② = 0; an event-path job has its ③ record
+             (VBH / VBJ: rev 5 of the 13.6 identity, checked on rev 5 records only) and
+             ② > 0 (VBH: ① = 0; VBJ / VBJ0, P4 on: ① = ②); otherwise a setting defect of
+             its test. A setting other than 18 declared / 4 event jobs makes its test not
+             judgeable. A VB line breaking the same rules adds to the T-JR-10
              "저장값 노후 확인 전" reason (4a-5 2 VB row, prelaunch audit N-4).
              Addendum 4a-5 2: a ``commands_sha256`` that is not a 64-character string
              on either side of a T-JR-10 or T-JR-11 pair makes that test not judgeable (a
@@ -31,9 +35,11 @@ Sub-commands:
              transitions are a record), a new FAULT name, and the READY table of 4a-3 4.2 (READY
              = ``r79_sensor_judge._ready_time``: base READY and new READY more than 30 s later or
              none = fail; both none and base none / new READY = records). VBJ: J-P3
-             (``j_p3_judgement_rev5``, 1 judged row expected; ``judged_key_missing`` and
-             ``no_judged_runs`` are not judgeable, 4a-5 3.3) and the P4 evidence of the VBJ
-             lines and of their VBJ0 base lines (4a-2 B2, 4a-3 4.4; VBJ and VBJ0 run with
+             (``j_p3_judgement_rev5``, 1 judged row expected; ``judged_key_missing``,
+             ``no_judged_runs`` and, judged rows but not 1, ``judged_row_count_mismatch`` are
+             not judgeable, 4a-5 3.3, 4a-7 erratum 1 7) and the P4 evidence of the VBJ lines
+             (also ① = ② > 0, erratum 1 9: event-path lines) and of their VBJ0 base lines
+             (4a-2 B2, 4a-3 4.4; VBJ and VBJ0 run with
              ``R79_ROD_MODEL=plant_truth``). Records: the R5-7 columns of 5.5 with the
              ``ret_after_gate_s`` resolution (R9). 4a-4 5: VBH needs the fixed H-6 as
              ``--base``; both bundles need ``--base-judge-sha256`` and ``--new-judge-sha256``
@@ -158,7 +164,7 @@ for _path in (HERE, ROOT / "03_src"):
 import jp3_baseline_compare as compare  # noqa: E402
 import jp3_fixed_inputs as fixed  # noqa: E402
 import jp3_t8_rules as t8_rules  # noqa: E402
-from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
+from j_p3_inputs import REV5_JUDGED_SETTINGS, rod_reading_evidence_problems  # noqa: E402
 
 T8_JOBS = 22
 """4a-3 2: the revision 8 7.2 rule (``run_v5.p3_hash_jobs``) replaces the T-P3-5 20 rows."""
@@ -168,11 +174,20 @@ T8_TEST_SETTINGS = {"T-JR-10": ("VBH",), "T-JR-11": ("VBJ", "VBJ0")}
 """The ``j9_t8`` settings whose line checks (M-4) belong to each test."""
 T8_REVISION_5_SETTINGS = ("VBH", "VBJ")
 """③ rev 5 on (VBJ0 = the same plant with ③ off: no rev 5 identity)."""
+T8_P4_SETTINGS = ("VBJ", "VBJ0")
+"""P4 on (``rod_reading_truth``): an event line has ① truth reads = ② monitor rod reads."""
+T8_JOB_SPLIT = (18, 4)
+"""Addendum 4a-7 1.1: declared head-only (steady) and event-path jobs of the 22 rule jobs."""
+EVIDENCE_COUNT_KEYS = ("rod_reading_truth_calls", "two_pressure_reads")
 STORED_SETTING = "VB"
 VB_STALE_REASON = "저장값 노후 확인 전(4a-3 5.3)"
 """4a-4 4: the reason T-JR-10 is not judgeable when the VB record is not 22 equal lines."""
 DG3_PAIRS = 135
 DG3_L2_LINES = 1
+JUDGED_ROW_COUNT_MISMATCH = "judged_row_count_mismatch"
+"""Addendum 4a-7 erratum 1 7: a bundle with judged rows, but not :data:`DG3_L2_LINES` of them
+(``extend_start_bound.j_p3_judgement_rev5`` names it ``no_judged_runs``; zero judged rows keep
+that name). Not judgeable either way."""
 JUDGED_LEVEL = "L2"
 """4a-3 4.3: pass -> fail is judged on the L2 line only (all transitions are recorded)."""
 READY_DELAY_LIMIT_S = 30.0
@@ -239,6 +254,8 @@ class T8Inputs:
     """``<stored|rerun>:<setting>`` -> error or repeated rows of that setting."""
     stored_sha_problem: str | None = None
     """4a-4 5: ``--stored`` is not the fixed h10 file (T-JR-10 not judgeable)."""
+    line_meta: dict[str, dict[str, dict | None]] = field(default_factory=dict)
+    """Setting -> job key -> T4h meta of the rerun line (4a-7 1.1 ``head_only_declared``)."""
 
 
 def judge_t8(inputs: T8Inputs, problems: compare.Problems) -> dict:
@@ -252,6 +269,7 @@ def judge_t8(inputs: T8Inputs, problems: compare.Problems) -> dict:
     tests = {"T-JR-10": compare.Problems(), "T-JR-11": compare.Problems()}
     for name, settings in T8_TEST_SETTINGS.items():
         tests[name].setting_defects += t8_line_defects(inputs, settings)
+        tests[name].not_judgeable += t8_split_problems(inputs, settings)
     vb_record = _vb_rerun_record(inputs)
     report = {"T-JR-11": _t_jr_11(inputs, tests["T-JR-11"]), "VB_rerun_record": vb_record}
     t10 = tests["T-JR-10"]
@@ -266,9 +284,10 @@ def judge_t8(inputs: T8Inputs, problems: compare.Problems) -> dict:
 
 
 def t8_line_defects(inputs: T8Inputs, settings: tuple[str, ...]) -> list[str]:
-    """Prelaunch audit M-4 (user decision 2026-11-21): on the rule jobs, a VBH / VBJ line is a
-    revision 5 row of the sealed identity (13.6) and every VBH / VBJ / VBJ0 line carries the
-    P4 evidence (4a-2 B2); otherwise a setting defect."""
+    """The line rules of addendum 4a-7 1.2 (replacing the 4a-5 2 table) on the rule jobs of
+    ``settings``: a declared head-only job's line (4a-7 1.1, :func:`is_head_only_line`) has
+    no ③ record and both evidence counts 0; an event-path line has a ③ record (VBH / VBJ:
+    revision 5 of the 13.6 identity) and rod reads; otherwise a setting defect."""
     defects = []
     for setting in settings:
         lines = inputs.rerun.get(setting, {})
@@ -276,15 +295,67 @@ def t8_line_defects(inputs: T8Inputs, settings: tuple[str, ...]) -> list[str]:
             line = lines.get(key)
             if line is None:
                 continue  # a missing line is not judgeable (_rows_ok)
-            label = f"{setting} {key}"
-            revision = _t8_check(line).get("rule_revision")
-            if setting in T8_REVISION_5_SETTINGS:
-                if revision != 5:
-                    defects.append(f"{label}: rule_revision {revision!r}, not 5")
-                defects += [f"{label}: {text}" for text in compare.identity_problems(line)]
-            defects += [f"{label}: {text}" for text in rod_reading_evidence_problems(
-                line.get("hydraulics_record"), line.get("hydraulic_options"))]
+            meta = inputs.line_meta.get(setting, {}).get(key)
+            problems = t8_line_problems(setting, line, is_head_only_line(line, meta))
+            defects += [f"{setting} {key}: {text}" for text in problems]
     return defects
+
+
+def t8_split_problems(inputs: T8Inputs, settings: tuple[str, ...]) -> list[str]:
+    """4a-7 1.1: every setting has 18 declared head-only and 4 event-path rule jobs; another
+    split makes its test not judgeable."""
+    problems = []
+    for setting in settings:
+        lines = inputs.rerun.get(setting, {})
+        declared = sum(is_head_only_line(lines[key], inputs.line_meta.get(setting, {}).get(key))
+                       for key in inputs.rule_jobs if key in lines)
+        events = sum(key in lines for key in inputs.rule_jobs) - declared
+        if (declared, events) != T8_JOB_SPLIT:
+            problems.append(f"{setting}: {declared} head-only / {events} event jobs, "
+                            f"{T8_JOB_SPLIT[0]} / {T8_JOB_SPLIT[1]} expected (4a-7 1.1)")
+    return problems
+
+
+def is_head_only_line(line: dict, meta: dict | None) -> bool:
+    """4a-7 1.1: the T4h meta ``head_only_declared``, else the line's ``head_only_declared``,
+    else the harness steady path of the job's case (``jp3_baseline_compare.is_head_only_line``,
+    shared with the J-P3 judged-line evidence check of erratum 1 9)."""
+    return compare.is_head_only_line(line, meta)
+
+
+def t8_line_problems(setting: str, line: dict, is_declared: bool) -> list[str]:
+    """One line against the 4a-7 1.2 table (``setting``: VBH, VBJ, VBJ0 or VB)."""
+    record = line.get("hydraulics_record") or {}
+    check = record.get("extend_bound_check")
+    counts = {name: record.get(name) for name in EVIDENCE_COUNT_KEYS}
+    missing = [name for name, value in counts.items() if not isinstance(value, int)]
+    if missing:
+        return [f"P4 evidence keys missing: {missing}"]
+    truth, reads = counts["rod_reading_truth_calls"], counts["two_pressure_reads"]
+    if is_declared:
+        problems = ["head-only declared job with an extend_bound_check record"] if check else []
+        if truth or reads:
+            problems.append(f"head-only declared job with rod reads ({truth} truth, {reads} "
+                            "monitor; 0 and 0 needed)")
+        return problems
+    problems = []
+    if setting in T8_REVISION_5_SETTINGS:
+        if (check or {}).get("rule_revision") != 5:
+            problems.append(f"event job: rule_revision {(check or {}).get('rule_revision')!r}, "
+                            "not 5")
+        else:  # 13.6 identity only on lines with a revision 5 record (4a-7 1.2)
+            problems += compare.identity_problems(line)
+    elif setting == STORED_SETTING and not check:
+        problems.append("event job without an extend_bound_check record")
+    if reads <= 0:
+        problems.append("event job without monitor rod reads (② = 0)")
+    if setting in T8_P4_SETTINGS:  # the 4a-7 1.2 table: VBJ / VBJ0 ① = ②, VBH / VB ① = 0
+        if truth != reads:
+            problems.append(f"rod_reading_truth: {truth} truth readings, {reads} monitor rod "
+                            "reads (equal and > 0 needed)")
+    elif truth != 0:
+        problems.append(f"P4 off but {truth} truth readings")
+    return problems
 
 
 def _t8_check(line: dict) -> dict:
@@ -387,13 +458,15 @@ def _vb_rerun_record(inputs: T8Inputs) -> dict:
     missing = [key for key in inputs.rule_jobs if key not in vb_lines]
     differing = [key for key in inputs.rule_jobs if key in vb_lines
                  and not _same_hash(vb_lines[key], stored_vb.get(key))]
-    # addendum 4a-5 2 (prelaunch audit N-4): the VB lines have no P4 reading (1 = 0)
+    # addendum 4a-5 2 (prelaunch audit N-4): the VB lines have no P4 reading (1 = 0); 4a-7
+    # 1.2: the head-only and event line rules apply to them too
     evidence = []
     for key in inputs.rule_jobs:
         line = vb_lines.get(key)
         if line is not None:
-            evidence += [f"VB {key}: {text}" for text in rod_reading_evidence_problems(
-                line.get("hydraulics_record"), line.get("hydraulic_options"))]
+            meta = inputs.line_meta.get(STORED_SETTING, {}).get(key)
+            evidence += [f"VB {key}: {text}" for text in t8_line_problems(
+                STORED_SETTING, line, is_head_only_line(line, meta))]
     return {"lines": T8_JOBS - len(missing), "evidence_problems": evidence,
             "equal": T8_JOBS - len(missing) - len(differing), "differing_count": len(differing),
             "differing": differing[:10], "missing": len(missing),
@@ -471,8 +544,11 @@ def t8_inputs(args: argparse.Namespace, problems: compare.Problems) -> tuple[T8I
         files += [folder / Path(lines[key]["t4h_file"]).name for key in rule_jobs
                   if key in lines and lines[key].get("t4h_file")]
     stored_problem = fixed.sha_problem(args.stored, fixed.H10_SHA256, "--stored")
+    line_meta = {setting: {key: _t4h_meta(rerun_dir, rerun[setting][key])
+                           for key in rule_jobs if key in rerun.get(setting, {})}
+                 for setting in (*T8_JUDGED_SETTINGS, STORED_SETTING)}
     inputs = T8Inputs(rule_jobs, stored, rerun, stored_meta, rerun_meta, bad_rows,
-                      stored_problem)
+                      stored_problem, line_meta)
     return inputs, files
 
 
@@ -539,6 +615,10 @@ def _check_lines(bundle: str, base_lines: dict, new_lines: dict,
             problems.setting_defects += [
                 f"{label} {key}: {text}" for text in rod_reading_evidence_problems(
                     line.get("hydraulics_record"), line.get("hydraulic_options"))]
+            if line.get("v5_setting") in REV5_JUDGED_SETTINGS:  # erratum 1 9: J-P3 lines
+                problems.setting_defects += [
+                    f"{label} {key}: {text}" for text in compare.judged_line_evidence_problems(
+                        line.get("hydraulics_record"), is_head_only_line(line, None))]
 
 
 def bundle_setting_problems(bundle: str, base_lines: dict, new_lines: dict) -> list[str]:
@@ -690,6 +770,9 @@ def _dg3_j_p3(lines: list[dict], problems: compare.Problems) -> dict:
     judgement = j_p3_judgement_rev5(records, rods, [False] * len(lines),
                                     expected_judged_runs=DG3_L2_LINES)
     status = judgement["status"]
+    if status == "no_judged_runs" and judgement["runs_judged"]:
+        # erratum 1 7: judged rows, but not the fixed number (both not judgeable)
+        status = judgement["status"] = JUDGED_ROW_COUNT_MISMATCH
     if status == "H-7":
         problems.failures.append("VBJ: J-P3 H-7")
     elif status == "setting_defect":

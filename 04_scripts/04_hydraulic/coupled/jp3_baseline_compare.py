@@ -11,7 +11,9 @@ Checks (every problem is collected; the status is the worst kind found):
    same job. Setting defects (13.6, 4a-2 R3 / X11 / B2): a ``*_X11`` row in the compared set; a
    new revision 5 row (VBG5 included) without the sealed identity (``spec_edition``,
    ``carry_end_rule``, ``retract_start_rule``); a new row whose P4 evidence does not fit its
-   options (``j_p3_inputs.rod_reading_evidence_problems``).
+   options (``j_p3_inputs.rod_reading_evidence_problems``); a VBJ / LSJ1 .. 4 row (a J-P3
+   line) whose evidence is not ① = ② > 0 (event path) or ① = ② = 0 (declared head-only;
+   ``j_p3_inputs.judged_line_evidence_problems``, addendum 4a-7 erratum 1 9).
 3. P4-1: ``commands_sha256`` equal per pair (T8).
 4. P4-2 per read (T4h npz, 4a-2 section 2): ``jp3_t_s`` of equal length and value; used bound
    new >= baseline - 1 Pa and the same NaN pattern; class changes only EXT -> CARRY_ext and
@@ -67,7 +69,11 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import jp3_fixed_inputs as fixed  # noqa: E402
-from j_p3_inputs import rod_reading_evidence_problems  # noqa: E402
+from j_p3_inputs import (  # noqa: E402
+    ROD_READING_EVIDENCE_KEYS,
+    harness_head_only_declared,
+    rod_reading_evidence_problems,
+)
 
 BASELINE_SUMS_SHA256 = fixed.BASELINE_SUMS_SHA256
 """Edition 4a 13.1 / addendum 4a-1: the sealed baseline list."""
@@ -253,6 +259,56 @@ def pair_rows(baseline: Baseline, new_rows: list[dict],
                 raise NotJudgeable(f"{old['job']['setting']}: {len(matches)} new rows")
             pairs.append((row_file, old, matches[0]))
     return pairs
+
+
+HEAD_ONLY_KEY = "head_only_declared"
+
+
+def is_head_only_line(line: dict, meta: dict | None = None) -> bool:
+    """Addendum 4a-7 1.1 with erratum 1 3: is a J-P3 input line a declared head-only run?
+
+    A noise-run result line (it has ``level``) is an event-path line (both pressures read). A
+    harness batch line: the T4h meta ``head_only_declared``, else the line's own, else the
+    steady path of its ``verdict_cases`` case; a line still undecided is an event-path line.
+
+    Args:
+        line: The result line (``job``, maybe ``level`` / ``head_only_declared``).
+        meta: The ``meta_json`` of the line's T4h (None = no T4h read).
+    """
+    if "level" in line:
+        return False
+    if meta is not None and meta.get(HEAD_ONLY_KEY) is not None:
+        return bool(meta[HEAD_ONLY_KEY])
+    if line.get(HEAD_ONLY_KEY) is not None:
+        return bool(line[HEAD_ONLY_KEY])
+    return harness_head_only_declared({"job": line.get("job") or {}})
+
+
+def judged_line_evidence_problems(record: dict | None, is_declared: bool) -> list[str]:
+    """Addendum 4a-7 erratum 1 9: the P4 evidence of a J-P3 judged-setting line (VBJ,
+    LSJ1 .. 4). An event-path line has ① truth reads = ② monitor rod reads > 0, a declared
+    head-only line ① = ② = 0; a missing or non-integer evidence key is a setting defect too
+    (never read as 0).
+
+    Args:
+        record: The line's ``hydraulics_record``.
+        is_declared: :func:`is_head_only_line` of the line.
+    """
+    record = record or {}
+    values = [record.get(key) for key in ROD_READING_EVIDENCE_KEYS]
+    if not all(isinstance(value, int) and not isinstance(value, bool) for value in values):
+        return [f"J-P3 judged line: P4 evidence keys {list(ROD_READING_EVIDENCE_KEYS)} missing "
+                "or not integers (erratum 1 9)"]
+    truth_calls, monitor_reads = values
+    if is_declared:
+        if truth_calls or monitor_reads:
+            return [f"J-P3 judged line declared head-only with rod reads ({truth_calls} truth, "
+                    f"{monitor_reads} monitor; 0 and 0 needed, erratum 1 9)"]
+        return []
+    if monitor_reads <= 0 or truth_calls != monitor_reads:
+        return [f"J-P3 judged event line: {truth_calls} truth readings, {monitor_reads} monitor "
+                "rod reads (equal and > 0 needed, erratum 1 9)"]
+    return []
 
 
 def identity_problems(record: dict) -> list[str]:
@@ -539,6 +595,11 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
     if old["commands_sha256"] != new["commands_sha256"]:
         problems.failures.append(f"{setting}: P4-1 commands_sha256 differs")
     new_npz = _new_t4h_path(new)
+    if setting in JUDGED_SETTINGS:  # addendum 4a-7 erratum 1 9: the J-P3 lines' P4 evidence
+        is_declared = is_head_only_line(new, _t4h_meta(new_npz))
+        problems.setting_defects += [f"{setting}: {text}" for text in
+                                     judged_line_evidence_problems(new.get("hydraulics_record"),
+                                                                   is_declared)]
     try:
         reads = compare_reads(baseline.t4h(row_file, old), new_npz, _is_revision_5(new))
     except NotJudgeable as exc:
@@ -559,6 +620,14 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
             "commands_sha256": new["commands_sha256"][:12],
             "new_t4h_sha256": file_sha256(new_npz) if new_npz.is_file() else None,
             "reads": reads, "seed": seed}
+
+
+def _t4h_meta(npz: Path) -> dict | None:
+    """The ``meta_json`` of a T4h npz (None: no file or no meta)."""
+    if not npz.is_file():
+        return None
+    with np.load(npz, allow_pickle=False) as data:
+        return json.loads(str(data["meta_json"])) if "meta_json" in data.files else None
 
 
 def _input_record(paths: list[Path]) -> list[dict]:

@@ -93,6 +93,25 @@ def _t8_line(setting: str, case: int, record: dict, *, events=None, tag="final_C
             "hydraulics_record": record, "t4h_file": f"C{case}_{setting}.npz"}
 
 
+T8_EVENT_JOBS = 4
+"""Addendum 4a-7 1.1: jobs 0 .. 3 are event-path jobs, 4 .. 21 declared head-only ones."""
+
+
+def _head_only_record() -> dict:
+    """A declared head-only run: no ③ record, no rod reading (4a-7 1.2)."""
+    record = _new_record()
+    record.update(extend_bound_check={}, rod_reading_truth_calls=0, two_pressure_reads=0)
+    return record
+
+
+def _event_record(setting: str) -> dict:
+    """An event-path run of the 4a-7 1.2 table: VBJ / VBJ0 (P4 on) ① = ② > 0, else ① = 0."""
+    record = _new_record()
+    if setting in tjr.T8_P4_SETTINGS:
+        record["rod_reading_truth_calls"] = record["two_pressure_reads"]
+    return record
+
+
 def _t8_inputs(change=None, jobs: int = 22) -> tjr.T8Inputs:
     keys = [tjr._job_identity({"case": f"C{k}", "eps": 0.0}) for k in range(22)]
     stored = {"VB": {}}
@@ -101,7 +120,11 @@ def _t8_inputs(change=None, jobs: int = 22) -> tjr.T8Inputs:
         stored["VB"][key] = _t8_line("VB", k, dict(STORED_RECORD), tag=t8_rules.STORED_TAG)
         for setting in rerun:
             if k < jobs:
-                rerun[setting][key] = _t8_line(setting, k, _new_record())
+                is_event = k < T8_EVENT_JOBS
+                line = _t8_line(setting, k, _event_record(setting) if is_event
+                                else _head_only_record())
+                line["head_only_declared"] = not is_event  # 4a-7 1.1 rule 2 (line key)
+                rerun[setting][key] = line
     meta = {key: {"two_pressure_settings": {"extend_start_bound": {"revision": 4}}}
             for key in keys}
     inputs = tjr.T8Inputs(tuple(keys), stored, rerun, meta, {key: {} for key in keys})
