@@ -1795,6 +1795,9 @@ JUDGED_SENSOR_GRADES = ("ideal", "normal")
 J_P3_RECORD_ONLY_GRADES = ("conservative", "old_worst")
 
 
+J_P3_JUDGED_KEY_MISSING = "judged_key_missing"
+"""Addendum 4a-5 3.3: a judged row without the judged keys as per-leg lists (not judgeable;
+a reason apart from ``no_judged_runs``, the name path 2 uses too)."""
 J_P3_DEFECT_IDENTITY = "defect_rule_identity_not_default"
 """Edition 4a 13.6: a revision 5 row of a test-only rule (``fresh_stretch``, ``model_only``) or
 of another spec edition's code (``spec_edition`` missing or not :data:`JP3_SPEC_EDITION`)."""
@@ -1825,8 +1828,10 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     Edition 4a: a judged row whose rule identity is not the sealed default (``spec_edition``
     :data:`JP3_SPEC_EDITION`, ``carry_end_rule`` and ``retract_start_rule`` defaults) is
     :data:`J_P3_DEFECT_IDENTITY` (13.6); no judged row, or not ``expected_judged_runs`` of them
-    (a batch with a fixed count, T-JR-12), is ``no_judged_runs`` (13.2), and so is a judged row
-    whose judged keys are not per-leg lists (``judged_key_missing_runs``, prelaunch audit M-5).
+    (a batch with a fixed count, T-JR-12), is ``no_judged_runs`` (13.2). A judged row whose
+    judged keys are not per-leg lists is :data:`J_P3_JUDGED_KEY_MISSING` (not judgeable,
+    ``judged_key_missing_runs``; addendum 4a-5 3.3: setting defect > judged_key_missing >
+    no_judged_runs > H-7 > pass).
 
     The run cases are those of :func:`j_p3_run_case` (criteria revision 9 3.2 table). A judged
     row whose record is not a revision 5 record is a setting defect (a revision 4 row is judged
@@ -1836,8 +1841,9 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     known grade is :data:`J_P3_DEFECT_GRADE_MISSING` (2nd edition 6.1, decision 148).
 
     Returns:
-        ``status`` ``"pass"``, ``"H-7"``, ``"setting_defect"``, ``"no_judged_runs"`` or
-        ``"no_p3_runs"``; the judged sums per key, ``runs_with_breach``, the FLAG sums and
+        ``status`` ``"pass"``, ``"H-7"``, ``"setting_defect"``, ``"judged_key_missing"``,
+        ``"no_judged_runs"`` or ``"no_p3_runs"``; the judged sums per key,
+        ``runs_with_breach``, the FLAG sums and
         ``record_only_grade_sums``.
     """
     rod = [True] * len(records) if has_rod_reading is None else list(has_rod_reading)
@@ -1875,9 +1881,11 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
         status = "no_p3_runs"
     elif defects:
         status = "setting_defect"
-    elif not judged or is_count_wrong or key_missing_runs:
-        # edition 4a 13.2: no judged row (or not the fixed number) = not judgeable; a judged
-        # row without its judged keys is not judgeable either (M-5)
+    elif key_missing_runs:
+        # addendum 4a-5 3.3: a judged row without its judged keys, a reason apart from 13.2
+        status = J_P3_JUDGED_KEY_MISSING
+    elif not judged or is_count_wrong:
+        # edition 4a 13.2: no judged row (or not the fixed number) = not judgeable
         status = "no_judged_runs"
     elif any(sums.values()):
         status = "H-7"

@@ -185,10 +185,12 @@ def _judgement_inputs(rows: list[dict]) -> tuple[list, list[bool], list[bool]]:
             [bool(row.get("head_only_declared", False)) for row in rows])
 
 
-STATUS_ORDER = ("no_p3_runs", "pass", "H-7", "no_judged_runs", "setting_defect")
+STATUS_ORDER = ("no_p3_runs", "pass", "H-7", "no_judged_runs", "judged_key_missing",
+                "setting_defect")
 
 
 def _worse_status(first: str, second: str) -> str:
     """The more severe of two J-P3 statuses (``no_p3_runs`` < pass < H-7 < ``no_judged_runs``
-    (edition 4a 13.2: not judgeable) < setting_defect)."""
+    (edition 4a 13.2: not judgeable) < ``judged_key_missing`` (addendum 4a-5 3.3) <
+    setting_defect)."""
     return max(first, second, key=STATUS_ORDER.index)

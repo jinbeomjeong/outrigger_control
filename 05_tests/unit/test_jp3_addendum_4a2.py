@@ -363,7 +363,8 @@ def test_r7_x11_read_is_the_fl_hold_read_at_49_s(tmp_path) -> None:
 def _dg3_document(fault: str | None = None, ready_s: float | None = 100.0, count: int = 135,
                   truth_calls: int = 0, setting: str = "VBH") -> dict:
     """Dg-3 lines of ``setting`` (prelaunch audit M-3 / M-8: rev 5 records of the sealed
-    identity, meta ``keys_file`` = the stored H-6)."""
+    identity, meta ``keys_file`` = the stored H-6; 4a-5 1 T-JR-14: a J11 record with
+    ``n_late_fallback`` 0)."""
     results = []
     for k in range(count):
         names = ["WARN_X"] + ([fault] if fault and k == 7 else [])
@@ -371,6 +372,8 @@ def _dg3_document(fault: str | None = None, ready_s: float | None = 100.0, count
                         "level": "L2" if k == 0 else "L3", "r79": {"warn_fault": names},
                         "base": {"t_ready_s": ready_s}, "v5_setting": setting,
                         "hydraulic_options": {"rod_reading_truth": truth_calls > 0},
+                        "lock_window_alignment": {"n_late_fallback": 0,
+                                                  "n_late_by_leg": dict.fromkeys(LEGS, 0)},
                         "hydraulics_record": {"rod_reading_truth_calls": truth_calls,
                                               "two_pressure_reads": max(truth_calls, 9),
                                               "extend_bound_check": {
@@ -402,22 +405,39 @@ def test_b4_t12_counts_faults_and_ready(monkeypatch) -> None:
 
 def test_b4_records_seed_force_rules() -> None:
     """T-JR-15 (4a-2 3.4) in the record bundle: a clipped seed row is not judgeable."""
-    good = {"job": {"setting": "VBJ"}, "hydraulics_record": _seed_record([[1.0, 2, 0.0, False]])}
-    clipped = {"job": {"setting": "VBJ"},
-               "hydraulics_record": _seed_record([[1.0, 2, 0.0, True]])}
-    replays, dg3 = REPLAY_REPORTS, [_dg3_document(count=1)]  # M-6: non-empty inputs
-    _, problems = tjr.judge_records(replays, dg3, [good])
+    good = _lock_row([[1.0, 2, 0.0, False]])
+    clipped = _lock_row([[1.0, 2, 0.0, True]])
+    _, problems = tjr.judge_records(records_inputs([good]))
     assert problems.status() == compare.STATUS_PASS, problems.as_dict()
-    _, problems = tjr.judge_records(replays, dg3, [good, clipped])
+    _, problems = tjr.judge_records(records_inputs([good, clipped]))
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
-    no_seed = {"job": {"setting": "VBJ"}, "hydraulics_record": _seed_record([])}
-    _, problems = tjr.judge_records(replays, dg3, [no_seed])
+    _, problems = tjr.judge_records(records_inputs([_lock_row([])]))
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
 
 
-REPLAY_REPORTS = [{"runs": runs, "runs_over": 0, "rows": [{}] * runs, "J-P3": {"status": "pass"}}
-                  for runs in tjr.REPLAY_RUN_COUNTS]
-"""Two judged ``t4h_replay`` reports of the T-JR-13 run counts (rows stubbed)."""
+LEGS = ("FL", "FR", "RL", "RR")
+T4H_NAMES = {runs: {f"r{runs}_{k}.npz" for k in range(runs)} for runs in tjr.REPLAY_RUN_COUNTS}
+"""Stand-ins of the two fixed T4h name lists (``--t4h-sums``)."""
+REPLAY_REPORTS = [{"runs": runs, "runs_over": 0, "extend_start_revision": 5,
+                   "rows": [{"file": name} for name in sorted(T4H_NAMES[runs])],
+                   "J-P3": {"status": "pass"}} for runs in tjr.REPLAY_RUN_COUNTS]
+"""Two judged ``t4h_replay --extend-start-revision 5`` reports of the T-JR-13 run counts."""
+
+
+def _lock_row(seed_rows: list[list], *, setting: str = "VBJ", relocks: int | None = 0) -> dict:
+    record = _seed_record(seed_rows)
+    if relocks is not None:
+        record["relock_step_over_1bar_count"] = relocks
+    return {"job": {"setting": setting, "case": "E"}, "hydraulics_record": record}
+
+
+def records_inputs(lock_rows: list[dict], *, replays: list[dict] | None = None,
+                   dg3: list[dict] | None = None) -> tjr.RecordsInputs:
+    """Valid T-JR-13 / 14 inputs around the given T-JR-15 rows (4a-5 1)."""
+    return tjr.RecordsInputs(
+        json.loads(json.dumps(REPLAY_REPORTS if replays is None else replays)),
+        [_dg3_document(setting="VBH"), _dg3_document(setting="VBJ")] if dg3 is None else dg3,
+        lock_rows, T4H_NAMES)
 
 
 def test_judges_refuse_to_overwrite_a_report(tmp_path) -> None:

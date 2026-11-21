@@ -4,11 +4,10 @@ python-expert and the user decisions appended to it:
 * B-1: the stored H-6 self check passes with no setting defect (real H-6, real r79 grades of
   the 436.8 path 1 judge of the same H-6); the P4 evidence applies to 436.9 lines only.
 * M-3: t12 checks the lines' setting and revision, the VBJ base setting and base != new file.
-* M-4: t8 applies the 13.6 identity and the B2 evidence to its VBH / VBJ / VBJ0 lines; T-JR-11
-  needs 64-character hashes.
-* M-5: a missing J-P3 judged key or P4-9 key is not judgeable, never 0.
-* M-6: ``records`` with an empty input, a test-only or short replay report is not judgeable;
-  a T-JR-15 seed row over 1 N fails.
+* M-4: t8 applies the 13.6 identity and the B2 evidence to its VBH / VBJ / VBJ0 lines (the
+  hash length rule of addendum 4a-5 2 and the ``records`` judgement of 4a-5 1 are tested in
+  ``test_jp3_addendum_4a5.py``).
+* M-5: a missing J-P3 judged key (``judged_key_missing``) or P4-9 key is not judgeable.
 * M-8: ``dg3-judge`` (the new-side judge file with the P-1a L1 extract), the keys file of the
   new side, the judge sha of both bundles.
 * R-7: ``h8_noise_judge_4368.reference_extract`` never overwrites; R-8: the stored
@@ -35,7 +34,7 @@ import jp3_baseline_compare as compare  # noqa: E402
 import jp3_fixed_inputs as fixed  # noqa: E402
 import jp3_run_identity as run_identity  # noqa: E402
 import jp3_tjr_judge as tjr  # noqa: E402
-from test_jp3_addendum_4a2 import REPLAY_REPORTS, _dg3_document, _seed_record  # noqa: E402
+from test_jp3_addendum_4a2 import _dg3_document  # noqa: E402
 from test_jp3_addendum_4a3 import _t8_inputs  # noqa: E402
 
 from outrigger_sim.control import extend_start_bound as esb  # noqa: E402
@@ -255,14 +254,7 @@ def test_m4_t8_identity_and_evidence_are_setting_defects(change, test) -> None:
     assert report[other]["status"] == compare.STATUS_PASS
 
 
-@pytest.mark.parametrize("value", [None, "a" * 10])
-def test_m4_t_jr_11_needs_64_character_hashes(value) -> None:
-    def same_short_hash(inputs, key):
-        inputs.rerun["VBJ"][key]["commands_sha256"] = value
-        inputs.rerun["VBJ0"][key]["commands_sha256"] = value
-
-    report = _t8_status(same_short_hash)
-    assert report["T-JR-11"]["status"] == compare.STATUS_FAILED
+# (T-JR-10 / 11 hashes of other than 64 characters: addendum 4a-5 2, test_jp3_addendum_4a5.py)
 
 
 # --- M-5 --------------------------------------------------------------------------------------
@@ -276,9 +268,10 @@ JUDGED_ROW = {"rule_revision": 5, "jp3a_breach_reads": [0] * 4,
 @pytest.mark.parametrize("change", [{"jp3c_breach_reads": None}, {"jp3a_breach_reads": [0] * 3},
                                     {"jp3b_breach_over_tol_reads": 0}])
 def test_m5_j_p3_rev5_missing_judged_key_is_not_judgeable(change) -> None:
+    """Addendum 4a-5 3.3 names the status ``judged_key_missing``."""
     row = {key: value for key, value in {**JUDGED_ROW, **change}.items() if value is not None}
     result = esb.j_p3_judgement_rev5([JUDGED_ROW, row])
-    assert result["status"] == "no_judged_runs"
+    assert result["status"] == esb.J_P3_JUDGED_KEY_MISSING == "judged_key_missing"
     assert result["judged_key_missing_runs"] == 1
     assert esb.j_p3_judgement_rev5([JUDGED_ROW])["status"] == "pass"
 
@@ -301,55 +294,7 @@ def test_m5_p4_9_missing_key_is_not_judgeable(check, kind) -> None:
         assert bool(getattr(problems, name)) == (name == kind)
 
 
-# --- M-6 --------------------------------------------------------------------------------------
-
-GOOD_LOCK_ROW = {"job": {"setting": "VBJ"},
-                 "hydraulics_record": _seed_record([[1.0, 2, 0.0, False]])}
-
-
-@pytest.mark.parametrize("empty", ["replay", "dg3", "lock_rows"])
-def test_m6_empty_records_input_is_not_judgeable(empty) -> None:
-    inputs = {"replay": REPLAY_REPORTS, "dg3": [_dg3_document(count=1)],
-              "lock_rows": [GOOD_LOCK_ROW]}
-    inputs[empty] = []
-    _, problems = tjr.judge_records(inputs["replay"], inputs["dg3"], inputs["lock_rows"])
-    assert problems.status() == compare.STATUS_NOT_JUDGEABLE
-    _, problems = tjr.judge_records([], [], [])
-    assert len(problems.not_judgeable) == 3
-
-
-@pytest.mark.parametrize("change", [
-    lambda reports: reports[0].update(judged=False),
-    lambda reports: reports[0].update(stop="ideal_record"),
-    lambda reports: reports[1].update(runs=134),
-    lambda reports: reports[1]["rows"].__setitem__(0, {"error": "x"}),
-    lambda reports: reports.pop(1),
-    lambda reports: reports[0].update(runs=400, rows=[{}] * 400),
-])
-def test_m6_replay_reports_of_t_jr_13(change) -> None:
-    reports = json.loads(json.dumps(REPLAY_REPORTS))
-    change(reports)
-    _, problems = tjr.judge_records(reports, [_dg3_document(count=1)], [GOOD_LOCK_ROW])
-    assert problems.status() == compare.STATUS_NOT_JUDGEABLE
-
-
-def test_m6_t_jr_15_seed_net_force_over_1n_fails(tmp_path) -> None:
-    over = {"job": {"setting": "VBJ"}, "hydraulics_record": _seed_record([[1.0, 2, 1.5, False]])}
-    _, problems = tjr.judge_records(REPLAY_REPORTS, [_dg3_document(count=1)],
-                                    [GOOD_LOCK_ROW, over])
-    assert problems.status() == compare.STATUS_FAILED
-    paths = []
-    for name, document in (("replay_a", REPLAY_REPORTS[0]), ("replay_b", REPLAY_REPORTS[1]),
-                           ("dg3", _dg3_document(count=1))):
-        paths.append(tmp_path / f"{name}.json")
-        paths[-1].write_text(json.dumps(document), encoding="utf-8")
-    rows = tmp_path / "rows.jsonl"
-    rows.write_text(json.dumps(GOOD_LOCK_ROW) + "\n" + json.dumps(over) + "\n",
-                    encoding="utf-8")
-    exit_code = tjr.main(["records", "--out", str(tmp_path / "out.json"), "--replay",
-                          str(paths[0]), str(paths[1]), "--dg3", str(paths[2]),
-                          "--lock-rows", str(rows)])
-    assert exit_code == compare.STATUS_EXIT[compare.STATUS_FAILED] == 1
+# (M-6 records: superseded by addendum 4a-5 1, test_jp3_addendum_4a5.py)
 
 
 # --- R-7, R-8 ---------------------------------------------------------------------------------

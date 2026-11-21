@@ -19,7 +19,9 @@ Sub-commands:
              ``--main-jsonl`` must be the fixed files (``jp3_fixed_inputs``). Prelaunch audit
              M-4: a VBH / VBJ line that is not a rev 5 row of the 13.6 identity, or a VBH /
              VBJ / VBJ0 line without fitting P4 evidence (4a-2 B2), is a setting defect of its
-             test; T-JR-11 hashes must be 64 characters (as T-JR-10).
+             test. Addendum 4a-5 2: a ``commands_sha256`` that is not a 64-character string
+             on either side of a T-JR-10 or T-JR-11 pair makes that test not judgeable (a
+             broken record, not a T8 difference).
 ``t12``      T-JR-12 (13.9, 4a-3 4) of one bundle: ``--bundle VBH`` = VBH against the stored H-6
              (rev 4), ``--bundle VBJ`` = VBJ against VBJ0. Exactly 135 pairs by plain key,
              exactly 1 L2 line. Failure: the L2 line's base grade pass / flag and new grade fail
@@ -27,7 +29,8 @@ Sub-commands:
              transitions are a record), a new FAULT name, and the READY table of 4a-3 4.2 (READY
              = ``r79_sensor_judge._ready_time``: base READY and new READY more than 30 s later or
              none = fail; both none and base none / new READY = records). VBJ: J-P3
-             (``j_p3_judgement_rev5``, 1 judged row expected) and the P4 evidence of the VBJ
+             (``j_p3_judgement_rev5``, 1 judged row expected; ``judged_key_missing`` and
+             ``no_judged_runs`` are not judgeable, 4a-5 3.3) and the P4 evidence of the VBJ
              lines and of their VBJ0 base lines (4a-2 B2, 4a-3 4.4; VBJ and VBJ0 run with
              ``R79_ROD_MODEL=plant_truth``). Records: the R5-7 columns of 5.5 with the
              ``ret_after_gate_s`` resolution (R9). 4a-4 5: VBH needs the fixed H-6 as
@@ -56,30 +59,43 @@ Sub-commands:
              itself with that judge file on both sides; exit 0 only when the 6 table holds
              (pass, 135 pairs, 1 L2 line, empty failure and improvement lists, 7 pairs without
              READY on both sides, only X -> X grade transitions), else 1.
-``records``  T-JR-13 .. T-JR-15 (4a-2 B4; user decision 2026-11-21: the T-JR-15 seed net force
-             is judged): Dg-2 replay reports (runs, errors; a record), the
-             ``lock_window_alignment`` J11 ``n_late`` of the Dg-3 lines (a record), and
-             per-lock records (``relock_step_over_1bar_count``, seed rows) with the seed net
-             force of 4a-2 3.4 (``net_force_seed_step_N`` <= 1 N on every row, else failed).
-             Not judgeable (prelaunch audit M-6): an empty ``--replay``, ``--dg3`` or
-             ``--lock-rows``, a replay report that stopped, is test-only (``judged: False``),
-             has error rows or other than one row per run, a run count outside 426 / 135 or
-             one of the two missing, and the 3.4 rules.
+``records``  T-JR-13 .. T-JR-15, all judged (addendum 4a-5 1; user decisions 1 and 4). Any of
+             ``--replay``, ``--dg3``, ``--lock-rows`` empty: not judgeable.
+             T-JR-13: exactly two ``t4h_replay --extend-start-revision 5`` reports, one of the
+             426 h10 T4h runs and one of the 135 H-6 T4h runs; their row ``file`` names must
+             be the fixed ``--t4h-sums`` lists (the report records no folder; 4a-5 1 end).
+             Failed: an error row. Not judgeable: other report count / run counts, rows !=
+             runs, ``extend_start_revision`` missing or not 5, a test-only (``judged:
+             False``) or stopped report, other file names, ``--t4h-sums`` not the fixed lists.
+             T-JR-14: VBH and VBJ Dg-3 lines, 135 each. Failed: a ``LockWindowMismatchError``
+             error line (the fallback log mismatch, 가) or ``lock_window_alignment.
+             n_late_fallback`` >= 1 (J11, 나). Not judgeable: other line counts or settings,
+             no ``lock_window_alignment`` or a non-integer ``n_late_fallback`` (a ``reason``
+             record), any other error line. Records: ``n_late_by_leg``, ``margin_min_s_by_leg``.
+             T-JR-15: VBJ / LSJ1..4 rows (Dg-3 VBJ lines and case E run_v5 rows). Failed: a
+             seed row with ``|net_force_seed_step_N|`` > 1 N (4a-2 3.4) or
+             ``relock_step_over_1bar_count`` >= 1. Not judgeable: the 3.4 rules, the relock key
+             missing, no judged row, zero seed rows. VBH (and other) rows are records.
 
 Exit codes and ``status`` (all sub-commands):
 
 ======  =================  ===================================================================
 exit    status             meaning
 ======  =================  ===================================================================
-0       ``pass``           the bundle passes (``records``: written, nothing not judgeable)
+0       ``pass``           the bundle passes (``base-judge`` / ``dg3-judge``: written)
 1       ``failed``         a failure of 5.5 / 13.9 (T8 hash, pass -> fail, new FAULT, READY,
-                           J-P3 H-7, ``records``: a T-JR-15 seed row over 1 N)
+                           J-P3 H-7, ``records``: a T-JR-13 error row, a T-JR-14 mismatch or
+                           late line, a T-JR-15 seed or relock row; ``base-judge-compare``:
+                           grades differ, a record); stop (13.5)
 2       ``not_judgeable``  a pair without a result, another pair or L2 count, a missing key
                            or L2 grade, a stored line of another tag / revision; an existing
-                           ``--out``
+                           ``--out`` or another argument error
 2       ``setting_defect`` a wrong rev 5 identity or P4 evidence (outranks the others)
-3       ``error``          an unexpected input error
+3       ``error``          a tool error (``jp3_baseline_compare.TOOL_ERRORS``: a file missing,
+                           broken JSON, an input of another shape); not a judgement (4a-5 5.1)
 ======  =================  ===================================================================
+
+``--help`` of every sub-command prints this table (:data:`EXIT_TABLE`).
 
 The report records the sha256 of every input. The stdout's last line is JSON with ``status``,
 the problem counts and the report path only.
@@ -90,14 +106,21 @@ Batch commands (dynamics-dev, project root; the main session launches them):
   for VBH / VBJ / VBJ0 (T-JR-12, the 135 stored dg3 keys of resume_k1/h6_dg3_v4on.json):
     env R79_V5_SETTING=<setting> R79_T4H_DIR=<folder>/<setting>_t4h LAS_T3_DG3_LAS=on
         LAS_T3_DG3_K1=on LAS_T3_DG3_P3=on [R79_ROD_MODEL=plant_truth for VBJ / VBJ0]
-    las_t3_dg3.py <root> run <folder>/dg3_<setting>.json --levels L2,L3
-        --keys-file <resume_k1/h6_dg3_v4on.json>          (meta keys_file = the fixed H-6)
+    jp3_run_identity.py wrap <folder>/dg3_<setting>.json -- <python.exe> -I -B
+        las_t3_dg3.py <root> run <folder>/dg3_<setting>.json --levels L2,L3
+        --keys-file <resume_k1/h6_dg3_v4on.json>          (meta keys_file = the fixed H-6;
+        the wrap writes dg3_<setting>.identity.json, 4a-5 4)
   then (M-8) jp3_tjr_judge.py dg3-judge --setting <setting> --dg3 <folder>/dg3_<setting>.json
       --l1-reference <pre>/h6_base_judge_L1_reference.json --l1-reference-sha256
       <l1_reference_sha256 of bj.json> --judge-out <folder>/dg3_<setting>_judge.json
       --out <folder>/dg3_<setting>_judge_report.json
   and t12 --bundle VBH (base H-6, --base-judge-sha256 = P-1a) / --bundle VBJ (base VBJ0,
       --base-judge-sha256 = the VBJ0 dg3-judge report), --new-judge-sha256 = its report
+  records (T-JR-13 .. 15): jp3_tjr_judge.py records --replay <h10 replay>.json <H-6
+      replay>.json --t4h-sums <prelaunch_j9>/h10_reuse_rerun_t4h.SHA256SUMS
+      <prelaunch_j9>/h6_dg3_v4on_t4h.SHA256SUMS --dg3 <folder>/dg3_VBH.json
+      <folder>/dg3_VBJ.json --lock-rows <folder>/dg3_VBJ.json <cases>/j9_cases.jsonl
+      --out <judge>/records.json
 Before T-JR-12 (4a-4 6, the main session; stored data only):
   jp3_tjr_judge.py base-judge --h6 <resume_k1/h6_dg3_v4on.json> --noise
       <resume_k1/h8_noise_VB.json> --judge-out <pre>/h6_base_judge.json --out <pre>/bj.json
@@ -152,7 +175,20 @@ JP3_LINE_SETTINGS = ("VBH", "VBJ", "VBJ0", "LSH1", "LSH2", "LSH3", "LSH4", "LSJ1
                      "LSJ3", "LSJ4")
 """436.9 settings (``run_v5.JP3_SETTINGS``): their lines carry the P4 evidence keys (B-1)."""
 REPLAY_RUN_COUNTS = (426, 135)
-"""T-JR-13: the Dg-2 replays of the stored h10 T4h (426 npz) and H-6 T4h (135 npz) folders."""
+"""T-JR-13 (addendum 4a-5 1): the replays of the stored h10 T4h (426 npz) and H-6 T4h (135
+npz) folders, one report each."""
+REPLAY_REVISION_KEY = "extend_start_revision"
+REPLAY_REVISION = 5
+"""``t4h_replay --extend-start-revision 5``: the report's ③ revision record (4a-5 1)."""
+T4H_SUMS_SHA256 = {"h10_reuse_rerun_t4h.SHA256SUMS": fixed.H10_T4H_SUMS_SHA256,
+                   "h6_dg3_v4on_t4h.SHA256SUMS": fixed.H6_T4H_SUMS_SHA256}
+"""``--t4h-sums``: the fixed name lists of the two T4h input folders (``prelaunch_j9``)."""
+T_JR_14_BUNDLES = ("VBH", "VBJ")
+LOCK_WINDOW_MISMATCH_ERROR = "LockWindowMismatchError"
+"""``lock_window_alignment.LockWindowMismatchError`` (``stretch_mismatch``): a T-JR-14 (가)
+log mismatch; an r79 error line starts with the exception's class name."""
+T_JR_15_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
+"""4a-5 1 T-JR-15: VBJ 135 Dg-3 lines and the case E rows; VBH rows are records."""
 NEW_FAULT_PREFIX = "FAULT"
 RET_AFTER_GATE_RESOLUTION = (
     "read grid 0.1 s: ret_after_gate_s = first RET read - T (the read before it), so it differs "
@@ -296,7 +332,12 @@ def _t_jr_10_pair(key: str, stored: dict, new: dict, inputs: T8Inputs,
             problems.not_judgeable.append(f"{label} {key}: no event_names / events")
         elif has_fallback:
             pair_problems.append(f"A: {label} line has {t8_rules.FALLBACK_EVENT}")
-    pair_problems += [f"B: {text}" for text in t8_rules.condition_b_problems(stored, new)]
+    b_problems = t8_rules.condition_b_problems(stored, new)
+    broken = broken_hash_sides({"stored": stored, "new": new})
+    if broken:  # addendum 4a-5 2: a broken record, not a T8 difference
+        problems.not_judgeable.append(f"{key}: commands_sha256 not 64 characters ({broken})")
+        b_problems = [text for text in b_problems if not text.startswith(HASH_FIELD)]
+    pair_problems += [f"B: {text}" for text in b_problems]
     paths = t8_rules.record_differences(stored.get("hydraulics_record") or {},
                                         new.get("hydraulics_record") or {})
     pair_problems += [f"record: {path}" for path in paths[:20]]
@@ -311,7 +352,13 @@ def _t_jr_11(inputs: T8Inputs, problems: compare.Problems) -> dict:
                                            inputs.rerun.get(setting, {}))
     if problems.not_judgeable:
         return {}
-    # prelaunch audit M-4: 64 characters and equal, like T-JR-10 (None == None never passes)
+    for key in inputs.rule_jobs:  # addendum 4a-5 2: a hash not of 64 characters
+        broken = broken_hash_sides({side: inputs.rerun[side][key] for side in ("VBJ", "VBJ0")})
+        if broken:
+            problems.not_judgeable.append(f"{key}: commands_sha256 not 64 characters "
+                                          f"({broken})")
+    if problems.not_judgeable:
+        return {}
     differing = [key for key in inputs.rule_jobs
                  if not _same_hash(inputs.rerun["VBJ"][key], inputs.rerun["VBJ0"][key])]
     if differing:
@@ -331,6 +378,16 @@ def _vb_rerun_record(inputs: T8Inputs) -> dict:
             "equal": T8_JOBS - len(missing) - len(differing), "differing_count": len(differing),
             "differing": differing[:10], "missing": len(missing),
             "error_rows": inputs.bad_rows.get(f"rerun:{STORED_SETTING}", 0)}
+
+
+HASH_FIELD = "commands_sha256"
+
+
+def broken_hash_sides(lines: dict[str, dict]) -> list[str]:
+    """The sides whose ``commands_sha256`` is not a 64-character string (addendum 4a-5 2)."""
+    return [side for side, line in lines.items()
+            if not (isinstance(line.get(HASH_FIELD), str)
+                    and len(line[HASH_FIELD]) == t8_rules.HASH_LENGTH)]
 
 
 def _same_hash(line: dict, stored: dict | None) -> bool:
@@ -876,86 +933,210 @@ def _l1_reference_record(inputs: JudgeCompareInputs) -> dict:
 
 # --- records (T-JR-13 .. 15) ----------------------------------------------------------------
 
-def judge_records(replays: list[dict], dg3_files: list[dict], lock_rows: list[dict]
-                  ) -> tuple[dict, compare.Problems]:
-    """T-JR-13 .. 15 (module docstring): T-JR-13 and T-JR-14 are records, T-JR-15's seed net
-    force is judged (4a-2 3.4, user decision 2026-11-21); an empty input of any of the three,
-    a replay report that is not a judged rev 5 Dg-2 replay of 426 or 135 runs, or the 3.4
-    not-judgeable rules make the bundle not judgeable (prelaunch audit M-6)."""
+@dataclass(frozen=True)
+class RecordsInputs:
+    """``records`` inputs (addendum 4a-5 1).
+
+    Attributes:
+        replays: ``t4h_replay`` reports (T-JR-13).
+        dg3_files: Dg-3 run files of VBH and VBJ (T-JR-14).
+        lock_rows: run_v5 rows and Dg-3 lines with a ``hydraulics_record`` (T-JR-15).
+        t4h_names: Run count -> the T4h file names of its fixed input folder (from the fixed
+            ``*_t4h.SHA256SUMS``); the report's row ``file`` names must be these (1, end).
+    """
+
+    replays: list[dict]
+    dg3_files: list[dict]
+    lock_rows: list[dict]
+    t4h_names: dict[int, set[str]] = field(default_factory=dict)
+
+
+def judge_records(inputs: RecordsInputs) -> tuple[dict, compare.Problems]:
+    """T-JR-13 .. 15 (addendum 4a-5 1 table, user decisions 1 and 4: all three judged)."""
     problems = compare.Problems()
-    for name, given in (("T-JR-13 --replay", replays), ("T-JR-14 --dg3", dg3_files),
-                        ("T-JR-15 --lock-rows", lock_rows)):
+    for name, given in (("T-JR-13 --replay", inputs.replays), ("T-JR-14 --dg3", inputs.dg3_files),
+                        ("T-JR-15 --lock-rows", inputs.lock_rows)):
         if not given:
             problems.not_judgeable.append(f"{name}: no input (an empty bundle is never a pass)")
-    problems.not_judgeable += replay_report_problems(replays)
-    alignment_rows = [_alignment_record(line) for document in dg3_files
-                      for line in document.get("results") or []]
-    if dg3_files and not alignment_rows:
-        problems.not_judgeable.append("T-JR-14: zero Dg-3 lines over the --dg3 files")
-    seed_rows = [_lock_record(row) for row in lock_rows]
-    for row in seed_rows:
-        if row["seed"]["not_judgeable"] is not None:
-            problems.not_judgeable.append(f"T-JR-15 {row['setting']}: "
-                                          f"{row['seed']['not_judgeable']}")
-    if lock_rows and not sum(row["seed"]["rows"] for row in seed_rows):
-        problems.not_judgeable.append("T-JR-15: zero seed rows over the rows (4a-2 3.4)")
-    over_1n_rows = sum(row["seed"]["over_1N_rows"] for row in seed_rows)
-    if over_1n_rows:
-        problems.failures.append(f"T-JR-15: {over_1n_rows} seed rows over 1 N (4a-2 3.4)")
-    report = {"T-JR-13": [{"runs": replay.get("runs"), "runs_over": replay.get("runs_over"),
-                           "J-P3": (replay.get("J-P3") or {}).get("status")}
-                          for replay in replays],
-              "T-JR-14": alignment_rows,
-              "T-JR-15": seed_rows,
-              "T-JR-15_seed_rows_over_1N": over_1n_rows}
+    report = {"T-JR-13": judge_t_jr_13(inputs.replays, inputs.t4h_names, problems),
+              "T-JR-14": judge_t_jr_14(inputs.dg3_files, problems),
+              "T-JR-15": judge_t_jr_15(inputs.lock_rows, problems)}
     return report, problems
 
 
-def replay_report_problems(replays: list[dict]) -> list[str]:
-    """T-JR-13 "오류 0" (prelaunch audit M-6): every report is a ``t4h_replay`` output of
-    :data:`REPLAY_RUN_COUNTS` runs, not a test-only one (``judged: False``) or a stop, with one
-    row per run and no row error; each expected run count appears."""
-    problems = []
+# T-JR-13 ---------------------------------------------------------------------------------------
+
+def judge_t_jr_13(replays: list[dict], t4h_names: dict[int, set[str]],
+                  problems: compare.Problems) -> list[dict]:
+    """Exactly two judged rev 5 replay reports, 426 runs of the h10 T4h folder and 135 of the
+    H-6 one, one row per run; an error row fails (4a-5 1)."""
+    if replays and Counter(replay.get("runs") for replay in replays) != Counter(
+            REPLAY_RUN_COUNTS):
+        problems.not_judgeable.append(
+            f"T-JR-13: {len(replays)} reports of {[r.get('runs') for r in replays]} runs, "
+            f"exactly one each of {REPLAY_RUN_COUNTS} expected")
+    records = []
     for index, replay in enumerate(replays):
         label = f"T-JR-13 replay {index}"
-        rows = replay.get("rows")
-        if "stop" in replay or replay.get("judged") is False:
-            problems.append(f"{label}: a stop or test-only report (judged False)")
-        elif not isinstance(rows, list) or replay.get("runs") != len(rows):
-            problems.append(f"{label}: runs {replay.get('runs')!r} without one row per run")
-        elif any("error" in row for row in rows):
-            problems.append(f"{label}: {sum('error' in row for row in rows)} error rows")
-        elif replay.get("runs") not in REPLAY_RUN_COUNTS:
-            problems.append(f"{label}: {replay.get('runs')} runs, not one of "
-                            f"{REPLAY_RUN_COUNTS}")
-    counts = {replay.get("runs") for replay in replays}
-    missing = [count for count in REPLAY_RUN_COUNTS if count not in counts]
-    if replays and missing:
-        problems.append(f"T-JR-13: no replay report of {missing} runs")
+        problems.not_judgeable += [f"{label}: {text}"
+                                   for text in replay_report_problems(replay, t4h_names)]
+        rows = replay.get("rows") if isinstance(replay.get("rows"), list) else []
+        error_rows = sum("error" in row for row in rows)
+        if error_rows:
+            problems.failures.append(f"{label}: {error_rows} replay error rows")
+        records.append({"runs": replay.get("runs"), "runs_over": replay.get("runs_over"),
+                        "error_rows": error_rows,
+                        "extend_start_revision": replay.get(REPLAY_REVISION_KEY),
+                        "J-P3": (replay.get("J-P3") or {}).get("status")})
+    return records
+
+
+def replay_report_problems(replay: dict, t4h_names: dict[int, set[str]]) -> list[str]:
+    """Why one report is not a judged ``t4h_replay --extend-start-revision 5`` output of its
+    fixed input folder (not judgeable)."""
+    rows = replay.get("rows")
+    if "stop" in replay or replay.get("judged") is False:
+        return ["a stop or test-only report (judged False)"]
+    if not isinstance(rows, list) or replay.get("runs") != len(rows):
+        return [f"runs {replay.get('runs')!r} without one row per run"]
+    problems = []
+    if replay.get(REPLAY_REVISION_KEY) != REPLAY_REVISION:
+        problems.append(f"{REPLAY_REVISION_KEY} {replay.get(REPLAY_REVISION_KEY)!r}, not "
+                        f"{REPLAY_REVISION}")
+    expected = t4h_names.get(replay.get("runs"))
+    names = {str(row.get("file")) for row in rows}
+    if expected is None:
+        problems.append(f"no fixed T4h folder of {replay.get('runs')} runs (--t4h-sums)")
+    elif names != expected:
+        problems.append(f"row files are not the fixed T4h folder of {replay.get('runs')} runs "
+                        f"({len(names - expected)} other, {len(expected - names)} missing)")
     return problems
 
 
-def _alignment_record(line: dict) -> dict:
-    alignment = line.get("lock_window_alignment") or {}
-    late = alignment.get("n_late_fallback_by_leg") or {}
-    return {"key": line.get("key"), "n_late_fallback_by_leg": late,
-            "n_late_over_0": any((value or 0) > 0 for value in late.values())}
+def t4h_names_of(sums_files: list[Path]) -> tuple[dict[int, set[str]], list[str]]:
+    """Run count -> T4h names of each fixed ``*_t4h.SHA256SUMS`` (its sha asserted)."""
+    names, problems = {}, []
+    for path in sums_files:
+        expected = T4H_SUMS_SHA256.get(path.name)
+        problem = (f"--t4h-sums {path.name}: not a fixed T4h list" if expected is None
+                   else fixed.sha_problem(path, expected, "--t4h-sums"))
+        if problem is not None:
+            problems.append(problem)
+            continue
+        listed = {line.split(maxsplit=1)[1].lstrip("*")
+                  for line in path.read_text(encoding="utf-8").splitlines() if line.strip()}
+        names[len(listed)] = listed
+    missing = [count for count in REPLAY_RUN_COUNTS if count not in names]
+    if missing:
+        problems.append(f"--t4h-sums: no fixed T4h list of {missing} files")
+    return names, problems
+
+
+# T-JR-14 ---------------------------------------------------------------------------------------
+
+def judge_t_jr_14(dg3_files: list[dict], problems: compare.Problems) -> dict:
+    """VBH and VBJ, 135 lines each: no ``LockWindowMismatchError`` line and
+    ``lock_window_alignment.n_late_fallback`` = 0 on every line (4a-5 1)."""
+    lines_by_setting: dict[str, list[dict]] = {}
+    for document in dg3_files:
+        for line in document.get("results") or []:
+            lines_by_setting.setdefault(str(line.get("v5_setting")), []).append(line)
+    if dg3_files:
+        counts = {setting: len(lines) for setting, lines in sorted(lines_by_setting.items())}
+        if counts != dict.fromkeys(T_JR_14_BUNDLES, DG3_PAIRS):
+            problems.not_judgeable.append(f"T-JR-14: lines by setting {counts}, "
+                                          f"{DG3_PAIRS} of each of {T_JR_14_BUNDLES} expected")
+    report = {}
+    for setting in T_JR_14_BUNDLES:
+        rows = [_alignment_check(line, problems) for line in lines_by_setting.get(setting, [])]
+        report[setting] = {"lines": len(rows),
+                           "mismatch_error_lines": sum(row["kind"] == "mismatch" for row in rows),
+                           "late_lines": sum(row["kind"] == "late" for row in rows),
+                           "rows": rows}
+    return report
+
+
+def _alignment_check(line: dict, problems: compare.Problems) -> dict:
+    """One Dg-3 line of T-JR-14 (its kind: ok, late, mismatch, not_judgeable)."""
+    label = f"T-JR-14 {line.get('v5_setting')} {line.get('key')}"
+    record = {"key": line.get("key"), "kind": "ok"}
+    if "error" in line:
+        if str(line["error"]).split(":", 1)[0].strip() == LOCK_WINDOW_MISMATCH_ERROR:
+            problems.failures.append(f"{label}: {LOCK_WINDOW_MISMATCH_ERROR} (log mismatch)")
+            return {**record, "kind": "mismatch"}
+        problems.not_judgeable.append(f"{label}: error line {str(line['error'])[:80]}")
+        return {**record, "kind": "not_judgeable"}
+    alignment = line.get("lock_window_alignment")
+    late = alignment.get("n_late_fallback") if isinstance(alignment, dict) else None
+    if not isinstance(late, int) or isinstance(late, bool):
+        reason = alignment.get("reason") if isinstance(alignment, dict) else "no record"
+        problems.not_judgeable.append(f"{label}: n_late_fallback {late!r} ({reason})")
+        return {**record, "kind": "not_judgeable", "reason": reason}
+    record.update(n_late_fallback=late,
+                  n_late_by_leg=alignment.get("n_late_by_leg"),
+                  margin_min_s_by_leg=alignment.get("margin_min_s_by_leg"))
+    if late >= 1:
+        problems.failures.append(f"{label}: n_late_fallback {late} (J11)")
+        record["kind"] = "late"
+    return record
+
+
+# T-JR-15 ---------------------------------------------------------------------------------------
+
+def judge_t_jr_15(lock_rows: list[dict], problems: compare.Problems) -> dict:
+    """VBJ / LSJ rows: every seed row |net force| <= 1 N (4a-2 3.4) and
+    ``relock_step_over_1bar_count`` = 0; VBH (and any other setting) rows are records."""
+    rows = [_lock_record(row) for row in lock_rows]
+    judged = [row for row in rows if row["setting"] in T_JR_15_JUDGED_SETTINGS]
+    if lock_rows and not judged:
+        problems.not_judgeable.append("T-JR-15: no VBJ / LSJ row (judged rows 0)")
+    for row in judged:
+        label = f"T-JR-15 {row['setting']} {row['key']}"
+        if row["seed"]["not_judgeable"] is not None:
+            problems.not_judgeable.append(f"{label}: {row['seed']['not_judgeable']}")
+        elif row["seed"]["over_1N_rows"]:
+            problems.failures.append(f"{label}: {row['seed']['over_1N_rows']} seed rows over "
+                                     "1 N (4a-2 3.4)")
+        relocks = row[compare.RELOCK_KEY]
+        if not isinstance(relocks, int) or isinstance(relocks, bool):
+            problems.not_judgeable.append(f"{label}: {compare.RELOCK_KEY} {relocks!r}")
+        elif relocks >= 1:
+            problems.failures.append(f"{label}: {compare.RELOCK_KEY} {relocks}")
+    if judged and not sum(row["seed"]["rows"] for row in judged):
+        problems.not_judgeable.append("T-JR-15: zero seed rows over the judged rows (4a-2 3.4)")
+    return {"rows": rows, "judged_rows": len(judged),
+            "seed_rows_over_1N": sum(row["seed"]["over_1N_rows"] for row in judged),
+            "relock_rows_over_0": sum(isinstance(row[compare.RELOCK_KEY], int)
+                                      and row[compare.RELOCK_KEY] >= 1 for row in judged)}
 
 
 def _lock_record(row: dict) -> dict:
-    """T-JR-15 per row: relock counts and the 3.4 seed force check of its seed rows."""
+    """T-JR-15 per row (run_v5 row or Dg-3 line): relock count and the 3.4 seed check."""
     record = row.get("hydraulics_record") or {}
-    return {"setting": (row.get("job") or {}).get("setting") or row.get("key"),
-            "relock_step_over_1bar_count": record.get("relock_step_over_1bar_count"),
+    return {"setting": (row.get("job") or {}).get("setting") or row.get("v5_setting"),
+            "key": row.get("key") or _job_identity(row.get("job") or {}),
+            compare.RELOCK_KEY: record.get(compare.RELOCK_KEY),
             "p1_retract_seed_count": record.get("p1_retract_seed_count"),
             "p1_retract_seed_step_max_bar": record.get("p1_retract_seed_step_max_bar"),
             "seed": compare.seed_force_check(record)}
 
 
+def read_lock_rows(path: Path) -> list[dict]:
+    """``--lock-rows``: a run_v5 jsonl, or a Dg-3 run json (its ``results`` lines)."""
+    if path.suffix == ".json":
+        return list(_read_json(path).get("results") or [])
+    return _read_json_lines(path)
+
+
 # --- command line ---------------------------------------------------------------------------
 
+_RAW_HELP = argparse.RawDescriptionHelpFormatter
+EXIT_TABLE = compare.EXIT_TABLE
+
+
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], epilog=EXIT_TABLE,
+                                     formatter_class=_RAW_HELP)
     commands = parser.add_subparsers(dest="command", required=True)
     t8 = commands.add_parser("t8")
     t8.add_argument("--out", type=Path, required=True)
@@ -1015,12 +1196,20 @@ def _parser() -> argparse.ArgumentParser:
     selfcheck.add_argument("--h6", type=Path, required=True)
     selfcheck.add_argument("--judge", type=Path, required=True)
     selfcheck.add_argument("--judge-sha256", required=True)
-    records = commands.add_parser("records")
+    records = commands.add_parser("records", help="T-JR-13 .. 15 (addendum 4a-5 1, judged)",
+                                  epilog=EXIT_TABLE, formatter_class=_RAW_HELP)
     records.add_argument("--out", type=Path, required=True)
-    records.add_argument("--replay", type=Path, nargs="*", default=[])
-    records.add_argument("--dg3", type=Path, nargs="*", default=[])
+    records.add_argument("--replay", type=Path, nargs="*", default=[],
+                         help="the two t4h_replay --extend-start-revision 5 reports")
+    records.add_argument("--t4h-sums", type=Path, nargs="*", default=[],
+                         help="prelaunch_j9/h10_reuse_rerun_t4h.SHA256SUMS and "
+                              "h6_dg3_v4on_t4h.SHA256SUMS (fixed; the reports' input folders)")
+    records.add_argument("--dg3", type=Path, nargs="*", default=[],
+                         help="Dg-3 run files of VBH and VBJ (T-JR-14)")
     records.add_argument("--lock-rows", type=Path, nargs="*", default=[],
-                         help="run_v5 jsonl files (VBJ 135 rows, case E)")
+                         help="run_v5 jsonl (case E) and Dg-3 json (VBJ 135 lines) files")
+    for sub in (t8, t12, dg3_judge, base_judge, judges, selfcheck):
+        sub.epilog, sub.formatter_class = EXIT_TABLE, _RAW_HELP
     return parser
 
 
@@ -1055,10 +1244,12 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         return compare_base_judges(JudgeCompareInputs(
             args.h6, args.new_judge, args.new_judge_sha256, args.stored_judge,
             args.stored_h6_judge, args.new_l1_reference, args.stored_l1_reference))
-    lock_rows = [row for path in args.lock_rows for row in _read_json_lines(path)]
-    report, problems = judge_records([_read_json(path) for path in args.replay],
-                                     [_read_json(path) for path in args.dg3], lock_rows)
-    return report, problems, [*args.replay, *args.dg3, *args.lock_rows]
+    t4h_names, sums_problems = t4h_names_of(args.t4h_sums)
+    report, problems = judge_records(RecordsInputs(
+        [_read_json(path) for path in args.replay], [_read_json(path) for path in args.dg3],
+        [row for path in args.lock_rows for row in read_lock_rows(path)], t4h_names))
+    problems.not_judgeable[:0] = sums_problems
+    return report, problems, [*args.replay, *args.dg3, *args.lock_rows, *args.t4h_sums]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1071,7 +1262,7 @@ def main(argv: list[str] | None = None) -> int:
         report, problems, inputs = _run(args)
         report.update(problems.as_dict())
         status = problems.status()
-    except (OSError, KeyError, ValueError) as exc:
+    except compare.TOOL_ERRORS as exc:
         report, status = {"error": f"{type(exc).__name__}: {exc}"}, compare.STATUS_ERROR
     report.update(status=status, command=args.command,
                   inputs=[{"path": str(path), "sha256": compare.file_sha256(path)}

@@ -367,10 +367,20 @@ def _pairs(values: list[str]) -> dict[str, Path]:
     return out
 
 
+EXIT_TABLE = """exit codes (addendum 4a-5 5.1):
+  0  done           select / run-event written; summarize: all five as expected
+  1  missed         summarize: an expectation missed; stop
+  2  not_judgeable  a fixed input differs, no candidate outside the union, an output missing
+                    or without the keys, the runner did not take the key, an existing --out
+  3  error          a tool error (unexpected input: file missing, broken JSON)"""
+
+
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    raw_help = argparse.RawDescriptionHelpFormatter
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], epilog=EXIT_TABLE,
+                                     formatter_class=raw_help)
     commands = parser.add_subparsers(dest="command", required=True)
-    chosen = commands.add_parser("select")
+    chosen = commands.add_parser("select", epilog=EXIT_TABLE, formatter_class=raw_help)
     chosen.add_argument("--out", type=Path, required=True)
     for name in ("scan-root", "main-jsonl", "baseline", "dg3", "noise"):
         chosen.add_argument(f"--{name}", type=Path, required=True)
@@ -378,11 +388,11 @@ def _parser() -> argparse.ArgumentParser:
                         help="the r79 key file the commands name (default <out stem>_r79_key.txt "
                              "next to --out); an existing file must hold the same key (4a-4 "
                              "erratum 1: the repository copy in j4a_remedy_b06e409e/)")
-    event = commands.add_parser("run-event")
+    event = commands.add_parser("run-event", epilog=EXIT_TABLE, formatter_class=raw_help)
     event.add_argument("--selection", type=Path, required=True)
     event.add_argument("--setting", choices=EVENT_SETTINGS, required=True)
     event.add_argument("--out", type=Path, required=True)
-    summary = commands.add_parser("summarize")
+    summary = commands.add_parser("summarize", epilog=EXIT_TABLE, formatter_class=raw_help)
     summary.add_argument("--selection", type=Path, required=True)
     summary.add_argument("--out", type=Path, required=True)
     summary.add_argument("--event", nargs="*", default=[])
@@ -445,7 +455,7 @@ def main(argv: list[str] | None = None) -> int:
                                      _pairs(args.r79))
     except (Stop, compare.NotJudgeable) as exc:
         report, code = {"stop": str(exc)}, EXIT_NOT_JUDGEABLE
-    except (OSError, KeyError, ValueError) as exc:
+    except compare.TOOL_ERRORS as exc:
         report, code = {"error": f"{type(exc).__name__}: {exc}"}, EXIT_ERROR
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=1, default=float), encoding="utf-8")

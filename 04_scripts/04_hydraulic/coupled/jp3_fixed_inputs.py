@@ -28,6 +28,11 @@ STORED_H6_R79_JUDGE_SHA256 = (
 """436.8 path 1 r79 judge of the stored H-6 (``verif_matrix/v5_resume_4368/judge_932f1fb/
 harness_path1/h6_r79_judge.json``, named by that folder's ``h6_judge.json`` inputs): the
 record comparison of ``jp3_tjr_judge.py base-judge-compare`` (4a-4 erratum 1, R-2)."""
+H10_T4H_SUMS_SHA256 = "3d0ed49a5044c7dd223940e782b6d280a833ffaeb9916347f8cc0622000cc3ac"
+"""``prelaunch_j9/h10_reuse_rerun_t4h.SHA256SUMS`` (FIXED_INPUTS): the 426 T4h names of the
+stored h10 folder (``records --t4h-sums``, T-JR-13 report and input folder, 4a-5 1)."""
+H6_T4H_SUMS_SHA256 = "c426f5185adc04102dca229b9a4257db71e2cc8c5933f392a083086e186ce655"
+"""``prelaunch_j9/h6_dg3_v4on_t4h.SHA256SUMS`` (FIXED_INPUTS): the 135 stored H-6 T4h names."""
 STORED_H6_JUDGE_SHA256 = (
     "f8352c5d12d31aebcffe2a4bc5bdfa7919e605a3f3261da8455640df3bad0d0b")
 """That folder's ``h6_judge.json`` (FIXED_INPUTS row 24): ``base-judge-compare

@@ -21,8 +21,19 @@ Usage (dynamics-dev, project root of the worktree; the main session writes the c
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap
       <folder>/case_C.jsonl -- <dynamics-dev python.exe> -I -B
       04_scripts/04_hydraulic/coupled/jp3_case_replay.py --out <folder>/case_C.jsonl ...
-  python -I -B .../jp3_run_identity.py wrap <folder>/dg3_VBH.json -- <python.exe> -I -B
-      04_scripts/04_hydraulic/coupled/las_t3_dg3.py <root> run <folder>/dg3_VBH.json ...
+  r79 Dg-3 run of T-JR-12 (the environment of this process goes to the runner unchanged):
+    $env:R79_V5_SETTING='VBH'; $env:R79_T4H_DIR='<folder>/VBH_t4h'; $env:LAS_T3_DG3_LAS='on'
+    $env:LAS_T3_DG3_K1='on'; $env:LAS_T3_DG3_P3='on'   (+ R79_ROD_MODEL=plant_truth: VBJ, VBJ0)
+    <python.exe> -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap
+        <folder>/dg3_VBH.json -- <python.exe> -I -B 04_scripts/04_hydraulic/coupled/
+        las_t3_dg3.py <root> run <folder>/dg3_VBH.json --levels L2,L3 --keys-file
+        <resume_k1>/h6_dg3_v4on.json --workers <n> --affinity <mask>
+    -> <folder>/dg3_VBH.identity.json (start / end). The r79 partial
+    (``dg3_VBH.json.partial.jsonl``) may resume only under the same head: a sidecar of
+    another head is refused (exit 2).
+Check before judging (addendum 4a-5 4; refuses an empty head and a git failure mark):
+  <python-dev> -I -B ~/.claude/tools/verif/baseline_check.py identity <folder>
+      --expect-commit <run commit> --mtime
 """
 from __future__ import annotations
 

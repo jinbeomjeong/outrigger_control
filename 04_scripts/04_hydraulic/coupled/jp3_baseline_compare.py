@@ -102,6 +102,17 @@ STATUS_PASS, STATUS_FAILED = "pass", "failed"
 STATUS_NOT_JUDGEABLE, STATUS_SETTING_DEFECT, STATUS_ERROR = (
     "not_judgeable", "setting_defect", "error")
 EXIT_PASS, EXIT_FAILED, EXIT_NOT_JUDGEABLE, EXIT_ERROR = 0, 1, 2, 3
+TOOL_ERRORS = (OSError, KeyError, ValueError, TypeError, AttributeError, IndexError)
+"""Unexpected input errors of the J-P3 judge tools: status ``error``, exit 3 (addendum 4a-5
+5.1: a tool error, not a judgement; an uncaught one would leave Python's exit 1 = failed)."""
+EXIT_TABLE = """exit codes (addendum 4a-5 5.1, the J-P3 judge tools):
+  0  pass             passed (a record tool: written as expected)
+  1  failed           a prediction or judgement failed (base-judge-compare: grades differ,
+                      a record); stop
+  2  not_judgeable /  not judgeable, a setting defect, or an argument error (an existing
+     setting_defect   --out is refused); stop and find the cause
+  3  error            a tool error (unexpected input: file missing, broken JSON); not a
+                      judgement"""
 STATUS_EXIT = {STATUS_PASS: EXIT_PASS, STATUS_FAILED: EXIT_FAILED,
                STATUS_NOT_JUDGEABLE: EXIT_NOT_JUDGEABLE,
                STATUS_SETTING_DEFECT: EXIT_NOT_JUDGEABLE, STATUS_ERROR: EXIT_ERROR}
@@ -387,11 +398,12 @@ def _bad_class_changes(old: np.ndarray, new: np.ndarray, class_names: np.ndarray
 
 def judged_key_problems(setting: str, check: dict, hydraulics: dict,
                         problems: Problems) -> None:
-    """P4-3a on a judged row; a missing key is not judgeable (4a-2 R2)."""
+    """P4-3a on a judged row; a missing key is not judgeable (4a-2 R2; addendum 4a-5 3.3
+    names it ``judged_key_missing``)."""
     for key in JUDGED_KEYS:
         values = check.get(key)
         if not isinstance(values, list) or len(values) != 4:
-            problems.not_judgeable.append(f"{setting}: P4-3a key {key} missing")
+            problems.not_judgeable.append(f"{setting}: P4-3a judged_key_missing {key}")
         elif sum(values):
             problems.failures.append(f"{setting}: P4-3a {key} {values}")
     if hydraulics.get(RELOCK_KEY) is None:
@@ -520,12 +532,13 @@ def _input_record(paths: list[Path]) -> list[dict]:
     return [{"path": str(path), "sha256": file_sha256(path)} for path in paths]
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], epilog=EXIT_TABLE,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("baseline", type=Path)
     parser.add_argument("--new", type=Path, nargs="+", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.out.exists():
         parser.error(f"{args.out} exists (a new report never overwrites one)")
     try:
@@ -536,7 +549,7 @@ def main() -> int:
         status = problems.status()
     except NotJudgeable as exc:
         report, status = {"not_judgeable": [str(exc)]}, STATUS_NOT_JUDGEABLE
-    except (OSError, KeyError, ValueError) as exc:
+    except TOOL_ERRORS as exc:
         report, status = {"error": f"{type(exc).__name__}: {exc}"}, STATUS_ERROR
     report["status"] = status
     report["baseline_sums_sha256"] = BASELINE_SUMS_SHA256

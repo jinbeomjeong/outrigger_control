@@ -34,7 +34,8 @@ exit    status             meaning
 2       ``not_judgeable``  a row, key or column missing, rows of another count; an existing
                            ``--out`` (never overwritten)
 2       ``setting_defect`` a wrong identity or P4 evidence (outranks ``not_judgeable``)
-3       ``error``          an unexpected input error
+3       ``error``          an unexpected input error (file missing, broken JSON; addendum 4a-5
+                           5.1: a tool error, not a judgement)
 ======  =================  ===================================================================
 
 The report records the sha256 of every input file. The stdout's last line is JSON with
@@ -407,15 +408,17 @@ def _bound_record(row: dict) -> dict:
 # --- command line ---------------------------------------------------------------------------
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    raw_help = argparse.RawDescriptionHelpFormatter
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0],
+                                     epilog=compare.EXIT_TABLE, formatter_class=raw_help)
     commands = parser.add_subparsers(dest="command", required=True)
-    x11 = commands.add_parser("x11")
+    x11 = commands.add_parser("x11", epilog=compare.EXIT_TABLE, formatter_class=raw_help)
     x11.add_argument("--out", type=Path, required=True)
     x11.add_argument("--both", type=Path, required=True)
     x11.add_argument("--baseline", type=Path, required=True)
     x11.add_argument("--fresh-only", type=Path, default=None)
     for name in ("case-f", "case-f-path"):
-        command = commands.add_parser(name)
+        command = commands.add_parser(name, epilog=compare.EXIT_TABLE, formatter_class=raw_help)
         command.add_argument("--out", type=Path, required=True)
         command.add_argument("--rows", type=Path, required=True,
                              help="run_v5 j9_case_f (case-f) or j9_case_f_path output")
@@ -453,7 +456,7 @@ def main(argv: list[str] | None = None) -> int:
         status = problems.status()
     except compare.NotJudgeable as exc:
         report, status = {"not_judgeable": [str(exc)]}, compare.STATUS_NOT_JUDGEABLE
-    except (OSError, KeyError, ValueError) as exc:
+    except compare.TOOL_ERRORS as exc:
         report, status = {"error": f"{type(exc).__name__}: {exc}"}, compare.STATUS_ERROR
     report.update(status=status, command=args.command,
                   inputs=[{"path": str(path), "sha256": compare.file_sha256(path)}
