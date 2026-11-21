@@ -29,6 +29,8 @@ Usage (repo root, dynamics-dev python):
       [--affinity 0x...]
     Results stream to ``<out_json>.partial.jsonl``; a re-start with the same out path skips
     the keys already there (resume). The final JSON is written when every job is done.
+    With ``R79_ROD_FAULT_PLAN`` (X-10) the r79 guard checks setting, plan and keys first
+    (exit 2) and the meta gets ``rod_fault_plan``.
   python -I 04_scripts/03_control/s8/r79_L3L4_final.py <project_root> judge <out_json> <run_json> [<run_json> ...]
       [--reference <fin_r79_merged.json>] [--previous <r79_final_judgement_v3.json>]
 """
@@ -241,6 +243,7 @@ def cmd_run(args) -> None:
         keys = [candidate_key(screen.split_candidate(k)[1]) for k in listed]
         keys_file = {"path": str(args.keys_file), "n_keys": len(keys),
                      "sha256": hashlib.sha256(Path(args.keys_file).read_bytes()).hexdigest()}
+    rod_fault_meta = screen.apply_rod_fault_guard(keys)  # X-10: exit 2 before any job
     if args.affinity:
         os.environ["R79_AFFINITY"] = args.affinity
         screen.set_parent_placement()
@@ -285,6 +288,8 @@ def cmd_run(args) -> None:
     if keys_file is not None:  # a run without the option writes the former meta
         meta["seeds"] = "keys file"
         meta["keys_file"] = keys_file
+    if rod_fault_meta is not None:  # X-10; a run without a plan writes the former meta
+        meta[screen.ROD_FAULT_PLAN_KEY] = rod_fault_meta
     out_path.write_text(json.dumps({"meta": meta, "results": results}, indent=1, default=float),
                         encoding="utf-8")
     print("done", meta["wall_s_this_start"], "s ->", out_path, "errors", meta["n_errors"],

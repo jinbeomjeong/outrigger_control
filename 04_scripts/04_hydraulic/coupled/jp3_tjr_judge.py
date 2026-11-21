@@ -213,8 +213,9 @@ BUNDLE_BASE = {"VBH": "stored H-6 (rev 4)", "VBJ": "VBJ0"}
 BUNDLE_BASE_SETTING = {"VBH": "VB", "VBJ": "VBJ0"}
 """Prelaunch audit M-3: the ``v5_setting`` of the base lines (the stored H-6 is a VB run)."""
 JP3_LINE_SETTINGS = ("VBH", "VBJ", "VBJ0", "LSH1", "LSH2", "LSH3", "LSH4", "LSJ1", "LSJ2",
-                     "LSJ3", "LSJ4")
-"""436.9 settings (``run_v5.JP3_SETTINGS``): their lines carry the P4 evidence keys (B-1)."""
+                     "LSJ3", "LSJ4", "VBK0")
+"""436.9 settings (``run_v5.JP3_SETTINGS``): their lines carry the P4 evidence keys (B-1);
+edition 5 VBK0 (the VBJ0 plant, P4 on) too."""
 REPLAY_RUN_COUNTS = (426, 135)
 """T-JR-13 (addendum 4a-5 1): the replays of the stored h10 T4h (426 npz) and H-6 T4h (135
 npz) folders, one report each."""

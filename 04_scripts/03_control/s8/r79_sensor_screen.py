@@ -48,7 +48,11 @@ Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comm
   clipped steps split at the first crawler lift-off ``t_lift_s`` (also recorded),
   ``rod_fallback_reasons`` and, with LC lock events, ``lock_window_alignment``; unset = the former
   runs), R79_T4H_DIR (a folder: a T4h-form record per run, ``T4H_DIR_ENV``; needs
-  R79_V5_SETTING; record only).
+  R79_V5_SETTING; record only), R79_ROD_FAULT_PLAN (X-10, edition 5 6.2a: a
+  ``rod_fault_plan.py`` plan file, one rod sensor fault per job key, injected after the sensor
+  model; needs a ``VBK`` setting and every VBK setting needs it, the plan keys must be the job
+  keys, else exit 2 before any job; records ``rod_fault`` per row and ``rod_fault_plan`` in the
+  meta; unset = the former runs, the module not imported).
 """
 
 from __future__ import annotations
@@ -458,15 +462,20 @@ class ActiveRun:
     plant: object | None = None
     applied_before_update: list[np.ndarray] = field(default_factory=list)
     """Controller applied output at every truth row, i.e. after the previous update (v5 n_late)."""
+    rod_fault: object | None = None
+    """X-10 ``rod_fault_plan.RodFaultInjector`` of the run (None without a plan)."""
 
     def after_period(self, plant, ideal, head_area):
-        """Truth row, then the delivered measurements (called before the controller update)."""
+        """Truth row, then the delivered measurements (called before the controller update);
+        a planned rod fault replaces one leg's rod reading after the sensor model (X-10)."""
         self.plant = plant
         phase = "none" if self.ctrl is None else str(self.ctrl.phase)
         self.truth.append(plant, phase, self.probe)
         self.applied_before_update.append(self._applied_output_m_s())
         delivered = self.adapter.deliver(ideal, plant, head_area, self.probe.gyro_samples,
                                          self.probe.sample_times)
+        if self.rod_fault is not None:
+            delivered = self.rod_fault.apply(self.ctrl, delivered)
         self.probe.reset_period()
         return delivered
 
@@ -917,7 +926,7 @@ def run_job(key: str) -> dict:
     _install_command_log()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),
                             always_split=rod_model != "harness")
-    run = ActiveRun(level, adapter)
+    run = ActiveRun(level, adapter, rod_fault=rod_fault_injector(key))
     _ACTIVE = run
     patches = _Patches()
     restore_candidate = lambda: None  # noqa: E731
@@ -943,6 +952,8 @@ def run_job(key: str) -> dict:
         return out
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
+    if run.rod_fault is not None:  # X-10: only with a plan (no new key otherwise)
+        out[ROD_FAULT_KEY] = run.rod_fault.record(run.ctrl)
     v5_record = v5_record_or_mismatch(v5_options, run, plant)
     out.update(v5_record)
     if "error" in v5_record:  # 436.9 addendum 4a-5 1 T-JR-14 (가): the line is the record
@@ -952,7 +963,7 @@ def run_job(key: str) -> dict:
     if command_hash is not None:  # 436.8 rules rev3 R3-E4: the harness-line definition
         out[COMMANDS_SHA256_KEY] = command_hash
     if t4h_dir is not None:
-        out["t4h_file"] = write_t4h(t4h_dir, key, v5_options, run.ctrl, plant)
+        out["t4h_file"] = write_t4h(t4h_dir, key, v5_options, run.ctrl, plant, run.rod_fault)
     if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
         controller = run.ctrl
         fix = getattr(controller, "fix", None)
@@ -1029,6 +1040,118 @@ def _commands_sha256(ctrl) -> str | None:
     return verdict_runs._command_digest(verdict_runs.period_arrays(ctrl)["command"])
 
 
+ROD_FAULT_PLAN_ENV = "R79_ROD_FAULT_PLAN"
+"""X-10 (edition 5 6.2a): a ``rod_fault_plan`` JSON file, one rod sensor fault per job key
+(schema and anchors in ``rod_fault_plan.py``). Unset or empty = the former runs: that module is
+not imported and no row, meta or T4h key is added."""
+ROD_FAULT_PLAN_SHA256_ENV = "R79_ROD_FAULT_PLAN_SHA256"
+"""Set by the parent after :func:`apply_rod_fault_guard`; a worker whose plan file has another
+sha256 (the file changed during the run) refuses its job."""
+ROD_FAULT_SETTING_PREFIX = "VBK"
+"""The rod-fault settings (``run_v5.ROD_FAULT_SETTINGS``): a plan needs one of them and each of
+them needs a plan."""
+ROD_FAULT_GUARD_EXIT = 2
+ROD_FAULT_KEY = "rod_fault"
+ROD_FAULT_PLAN_KEY = "rod_fault_plan"
+_ROD_FAULT_PLANS: dict = {}
+"""Plans read in this process, by path."""
+
+
+def is_rod_fault_setting(setting: str | None) -> bool:
+    return setting is not None and setting.startswith(ROD_FAULT_SETTING_PREFIX)
+
+
+def _rod_fault_plan_path() -> str | None:
+    return os.environ.get(ROD_FAULT_PLAN_ENV) or None
+
+
+def _rod_fault_plan(path: str):
+    import rod_fault_plan
+
+    if path not in _ROD_FAULT_PLANS:
+        _ROD_FAULT_PLANS[path] = rod_fault_plan.load_plan(path)
+    return _ROD_FAULT_PLANS[path]
+
+
+def _rod_fault_setting_problem() -> str | None:
+    """Why the v5 setting and the plan variable do not belong together (None: they do)."""
+    setting = os.environ.get(V5_SETTING_ENV) or None
+    has_plan = _rod_fault_plan_path() is not None
+    if is_rod_fault_setting(setting) and not has_plan:
+        return f"setting {setting} needs {ROD_FAULT_PLAN_ENV}"
+    if has_plan and not is_rod_fault_setting(setting):
+        return (f"{ROD_FAULT_PLAN_ENV} is set but {V5_SETTING_ENV}={setting!r} is no "
+                f"{ROD_FAULT_SETTING_PREFIX} setting")
+    return None
+
+
+def rod_fault_plan_problems(job_keys: list[str]) -> list[str]:
+    """X-10 identity guard of a run: setting without plan, plan without a rod-fault setting, an
+    unusable or empty plan, plan keys other than the job keys (empty = no problem)."""
+    problem = _rod_fault_setting_problem()
+    if problem is not None:
+        return [problem]
+    path = _rod_fault_plan_path()
+    if path is None:
+        return []
+    import rod_fault_plan
+
+    try:
+        plan = _rod_fault_plan(path)
+    except rod_fault_plan.RodFaultPlanError as exc:
+        return [str(exc)]
+    return plan.key_problems(job_keys)
+
+
+def apply_rod_fault_guard(job_keys: list[str]) -> dict | None:
+    """The parent's X-10 guard before any job: exit :data:`ROD_FAULT_GUARD_EXIT` on a problem;
+    returns the ``rod_fault_plan`` meta block (None without a plan) and pins the plan sha256
+    for the workers.
+
+    Raises:
+        SystemExit: Code 2 with the problems on stderr.
+    """
+    problems = rod_fault_plan_problems(job_keys)
+    if problems:
+        print(f"rod fault plan refused (exit {ROD_FAULT_GUARD_EXIT}): " + "; ".join(problems),
+              file=sys.stderr, flush=True)
+        raise SystemExit(ROD_FAULT_GUARD_EXIT)
+    meta = rod_fault_plan_meta()
+    if meta is not None:
+        os.environ[ROD_FAULT_PLAN_SHA256_ENV] = meta["sha256"]
+    return meta
+
+
+def rod_fault_plan_meta() -> dict | None:
+    """``rod_fault_plan`` meta (path, sha256, n_faults, schema); None without a plan."""
+    path = _rod_fault_plan_path()
+    return None if path is None else _rod_fault_plan(path).meta()
+
+
+def rod_fault_injector(key: str):
+    """The X-10 injector of job ``key`` (None without a plan; nothing imported then).
+
+    Raises:
+        ValueError: Setting and plan do not belong together, the plan file is not the one the
+            parent checked, or the plan has no fault for ``key`` (``RodFaultPlanError``).
+    """
+    problem = _rod_fault_setting_problem()
+    if problem is not None:
+        raise ValueError(problem)
+    path = _rod_fault_plan_path()
+    if path is None:
+        return None
+    import rod_fault_plan
+
+    plan = _rod_fault_plan(path)
+    expected = os.environ.get(ROD_FAULT_PLAN_SHA256_ENV) or None
+    if expected is not None and expected != plan.sha256:
+        raise ValueError(f"rod fault plan {path} sha256 {plan.sha256} is not the checked "
+                         f"{expected}")
+    return rod_fault_plan.RodFaultInjector(plan.fault_for(key), plan.sha256,
+                                           rod_fault_plan.hold_speed_m_s())
+
+
 def t4h_file_name(key: str) -> str:
     return T4H_FILE_CHARACTERS.sub("_", key) + ".npz"
 
@@ -1046,8 +1169,11 @@ def fallback_start_s(events) -> list[float | None]:
     return starts
 
 
-def write_t4h(folder: Path, key: str, options, ctrl, plant) -> str:
-    """The S-4 record of one run (``T4H_DIR_ENV``); returns the file name."""
+def write_t4h(folder: Path, key: str, options, ctrl, plant, rod_fault=None) -> str:
+    """The S-4 record of one run (``T4H_DIR_ENV``); returns the file name. With a planned rod
+    fault (X-10) the meta also holds ``rod_fault`` / ``rod_fault_plan`` and the arrays
+    ``rod_pressure_pre_fault_Pa`` / ``rod_fault_applied``; without one the record is as
+    before."""
     import verdict_runs
 
     period = verdict_runs.period_arrays(ctrl)
@@ -1068,9 +1194,13 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant) -> str:
             "lower_reading_rule": "the run's own monitor lower reading at each update "
                                   "(lower_estimate_N + seal band unless the PRESSURE judge); "
                                   "lower_estimate_N = the value compared with F_min"}
+    extra_arrays = {"lower_reading_N": lower_reading_N, "lower_estimate_N": lower_estimate_N}
+    if rod_fault is not None:
+        meta[ROD_FAULT_KEY] = rod_fault.record(ctrl)
+        meta[ROD_FAULT_PLAN_KEY] = rod_fault_plan_meta()
+        extra_arrays.update(rod_fault.t4h_arrays(period["t"]))
     verdict_runs.write_t4h_record(folder / name, plant, ctrl, period, meta,
-                                  extra_arrays={"lower_reading_N": lower_reading_N,
-                                                "lower_estimate_N": lower_estimate_N})
+                                  extra_arrays=extra_arrays)
     return name
 
 
@@ -1249,6 +1379,7 @@ def main() -> None:
         print("\n".join(jobs))
         print(len(jobs), "jobs")
         return
+    rod_fault_meta = apply_rod_fault_guard(jobs)  # X-10: exit 2 before any job
     set_parent_placement()
     r72_path = normalise_r72_path()
     out_path = Path(sys.argv[2])
@@ -1269,6 +1400,8 @@ def main() -> None:
             "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)}
     if os.environ.get(V5_SETTING_ENV):  # v5 X-1; the former meta without it
         meta["v5_setting"] = os.environ[V5_SETTING_ENV]
+    if rod_fault_meta is not None:  # X-10; the former meta without a plan
+        meta[ROD_FAULT_PLAN_KEY] = rod_fault_meta
     out_path.write_text(json.dumps({"meta": meta, "results": results}, indent=1, default=float),
                         encoding="utf-8")
     print("done", meta["wall_s"], "s ->", out_path)

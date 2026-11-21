@@ -36,8 +36,9 @@ P3_CONTROLLER_TAGS = EXTEND_START_TAGS
 list for records; :func:`is_p3_expected` judges by the base tag instead."""
 P3_RULE = "tracked_bound"
 P3_SETTING_PREFIXES = ("VB", "LS")
-P3_OFF_SETTINGS = ("VBJ0",)
-"""436.9 VBJ0: the VBJ plant with ③ off by definition (T8 / H-7 pair), never a J-P3 row."""
+P3_OFF_SETTINGS = ("VBJ0", "VBK0")
+"""436.9 VBJ0: the VBJ plant with ③ off by definition (T8 / H-7 pair), never a J-P3 row;
+edition 5 VBK0 (VBJ0 with a rod fault plan) likewise."""
 RULE_KEY = "run_extend_start_rule"
 REVISION_KEY = "run_extend_start_revision"
 """Row key of a ③ revision 5 record (present only then: revision 4 rows keep their keys)."""
@@ -94,7 +95,7 @@ def is_test_only_setting(setting: str | None) -> bool:
 def is_p3_expected(controller_tag: str | None, setting: str | None) -> bool:
     """A VB / LS run: a tag whose base is ``final_C4G2_P3`` or ``final_C4G2_P3H`` with any
     LAS-b / K1 suffixes (``v5_options.is_extend_start_tag``), or setting ``VB`` / ``LS<n>`` /
-    the 436.9 ``VBH``, ``VBJ``, ``LSH<n>``, ``LSJ<n>`` (not ``VBJ0``, ③ off)."""
+    the 436.9 ``VBH``, ``VBJ``, ``LSH<n>``, ``LSJ<n>`` (not :data:`P3_OFF_SETTINGS`, ③ off)."""
     if is_extend_start_tag(controller_tag):
         return True
     if setting in P3_OFF_SETTINGS:

@@ -60,10 +60,13 @@ $R79Common = @{
     LAS_T3_DG3_K1  = 'on'
     LAS_T3_DG3_P3  = 'on'
 }
-$R79RodModel = @{ VB = 'dyn_map'; VBH = 'dyn_map'; VBJ = 'plant_truth'; VBJ0 = 'plant_truth' }
+$R79RodModel = @{ VB = 'dyn_map'; VBH = 'dyn_map'; VBJ = 'plant_truth'; VBJ0 = 'plant_truth'
+    VBK0 = 'plant_truth' }
+# edition 5 6.2a: VBK0 = the VBJ0 plant with a rod fault plan (R79_ROD_FAULT_PLAN, X-10)
 $R79Variables = @('R79_V5_SETTING', 'R79_T4H_DIR', 'R79_ROD_MODEL', 'R72_PATH',
     'LAS_T3_DG3_LAS', 'LAS_T3_DG3_K1', 'LAS_T3_DG3_P3', 'R79_AFFINITY', 'R79_CANDIDATE',
-    'R79_TRACE', 'R79_LEVELS', 'R79_SEEDS', 'R79_SET', 'R79_FILTER')
+    'R79_TRACE', 'R79_LEVELS', 'R79_SEEDS', 'R79_SET', 'R79_FILTER', 'R79_ROD_FAULT_PLAN',
+    'R79_ROD_FAULT_PLAN_SHA256')
 # the r79 / r67 / r72 screen variables read by r79_sensor_screen.py (734, 863, 905, 964, 978,
 # 1186-1208), r67_g1_screen.py and r72_g6_screen.py; Set-RunEnvironment also clears any other
 # variable of these prefixes left in the shell (re-audit R-e)

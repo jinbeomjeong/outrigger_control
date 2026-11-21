@@ -157,11 +157,18 @@ JP3_SETTINGS: dict[str, tuple[bool, dict]] = {
     **{f"LSJ{n}": (True, {**_VB_PLANT_J, "lock_closure": _lc(*closure), **_P3H})
        for n, closure in LS_CLOSURES.items()},
     "VBJ0": (True, _VB_PLANT_J),
+    "VBK0": (True, _VB_PLANT_J),
+    # TODO(edition 5, after the seal): "VBK" = the VBJ plant + ③ rev 6 (R5-8 .. R5-10) and the
+    # rod fault plan; not registered before rev 6 exists.
 }
 """436.9 settings (spec 4.2): VBJ / LSJ1 .. LSJ4 judged (P1 .. P4 + ③ rev 5), VBJ0 the same
 plant with ③ off (T8, H-7 pair), VBH / LSH1 .. LSH4 the old VB / LS plant with ③ rev 5
-(controller effect alone, T8 on the old plant). :data:`SETTINGS` stays as it is (its names and
-digests are pinned); :data:`ALL_SETTINGS` resolves both."""
+(controller effect alone, T8 on the old plant). Edition 5 6.2a: VBK0 = the VBJ0 options with a
+rod sensor fault plan (``R79_ROD_FAULT_PLAN``, X-10; ③ off). :data:`SETTINGS` stays as it is
+(its names and digests are pinned); :data:`ALL_SETTINGS` resolves both."""
+ROD_FAULT_SETTINGS = ("VBK0",)
+"""Edition 5 6.2a: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
+one without the other; their names start with ``ROD_FAULT_SETTING_PREFIX`` "VBK")."""
 ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS}
 JP3_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JP3_DIAG_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4", "VBJ0")
