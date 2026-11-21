@@ -1,0 +1,29 @@
+{
+  "step": "p1",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\p1_a1",
+  "exit_code": 2,
+  "reason": "baseline_check identity exit 1 (C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\_identity_checks\\p1_a1.md)",
+  "commit": "78fd5d2d03e40ac7d9143429f602b58255c762fc",
+  "started": "2026-11-21 17:58:08 +09:00",
+  "stopped": "2026-11-21 17:58:12 +09:00",
+  "codes": {
+    "git_diff_stat": "06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/p1_a1/logs/git_diff_stat_fa997f4c.txt",
+    "run:base_judge": 0,
+    "identity_check": 1
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "base_judge",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\p1_a1\\h6_base_judge.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py base-judge --h6 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --noise C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json --judge-out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\p1_a1\\h6_base_judge.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\p1_a1\\judge\\bj.json",
+      "pid": 1552
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\p1_a1 --expect-commit 78fd5d2d03e40ac7d9143429f602b58255c762fc --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\_identity_checks\\p1_a1.md"
+    }
+  ]
+}
