@@ -48,6 +48,8 @@ The stdout's last line is JSON with ``status``, the problem counts and the repor
 Usage (python-dev or dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_baseline_compare.py <baseline folder>
       --new <jsonl> [<jsonl> ...] --out <report.json>
+The T4h of a ``--new`` row is ``<jsonl folder>/<jsonl stem>_t4h/<t4h_file>`` (run_v5 writes the
+name only), as the baseline's own rows; the working folder plays no part.
 """
 from __future__ import annotations
 
@@ -185,6 +187,35 @@ class Baseline:
 
 def _read_rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+
+
+NEW_T4H_PATH_KEY = "_new_t4h_path"
+"""In-memory key of a ``--new`` row: its T4h file (never written; ``t4h_file`` stays as run)."""
+
+
+def t4h_path_of(rows_file: Path, record: dict) -> Path:
+    """The T4h file of a run_v5 row: ``<rows file folder>/<rows file stem>_t4h/<t4h_file name>``
+    (run_v5 writes the name only, ``run_v5.py`` ``t4h_file``; the same rule as
+    :meth:`Baseline.t4h`, j9 step 4a diagnosis 2026-11-21: the name was read from the CWD)."""
+    return rows_file.with_name(f"{rows_file.stem}_t4h") / Path(record["t4h_file"]).name
+
+
+def read_new_rows(paths: list[Path]) -> list[dict]:
+    """The ``--new`` rows, each with its T4h path under :data:`NEW_T4H_PATH_KEY` (rows without
+    ``t4h_file`` are left as they are: the compare reports them)."""
+    rows = []
+    for path in paths:
+        for record in _read_rows(path):
+            if record.get("t4h_file"):
+                record[NEW_T4H_PATH_KEY] = str(t4h_path_of(Path(path), record))
+            rows.append(record)
+    return rows
+
+
+def _new_t4h_path(record: dict) -> Path:
+    """A ``--new`` row's T4h (:func:`read_new_rows`); a row given directly to :func:`compare`
+    without that key keeps its ``t4h_file`` path as it is."""
+    return Path(record.get(NEW_T4H_PATH_KEY) or record["t4h_file"])
 
 
 def _job_key(record: dict) -> str:
@@ -507,7 +538,7 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
         new.get("hydraulics_record"), new.get("hydraulic_options"))]
     if old["commands_sha256"] != new["commands_sha256"]:
         problems.failures.append(f"{setting}: P4-1 commands_sha256 differs")
-    new_npz = Path(new["t4h_file"])
+    new_npz = _new_t4h_path(new)
     try:
         reads = compare_reads(baseline.t4h(row_file, old), new_npz, _is_revision_5(new))
     except NotJudgeable as exc:
@@ -545,7 +576,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(f"{args.out} exists (a new report never overwrites one)")
     try:
         baseline = Baseline(args.baseline)
-        new_rows = [row for path in args.new for row in _read_rows(path)]
+        new_rows = read_new_rows(args.new)
         report, problems = compare(baseline, new_rows)
         report.update(problems.as_dict())
         status = problems.status()
