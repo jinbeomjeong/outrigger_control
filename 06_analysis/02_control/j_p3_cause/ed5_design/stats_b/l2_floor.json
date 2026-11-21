@@ -1,0 +1,31 @@
+{
+ "n_rows": 835,
+ "n_cases": 167,
+ "seeds_per_case": {
+  "5": 167
+ },
+ "no_ready_rows": 0,
+ "final_phase": {
+  "ready": 828,
+  "probe": 5,
+  "level": 2
+ },
+ "ordered_pairs": 3340,
+ "indep_draw_fail": 0,
+ "indep_draw_fail_cases": 0,
+ "upper95_rate_if_zero": 0.0008965237126650205,
+ "ready_sd_q": {
+  "0.5": 0.9011104260898074,
+  "0.9": 4.592083889826792,
+  "0.99": 9.900674726382876,
+  "1.0": 12.04769687539432
+ },
+ "cases_pass_mixed_across_seeds": 3,
+ "pass_rate_rows": 0.9820359281437125,
+ "V0_to_VB_L2": {
+  "pairs": 835,
+  "pass_to_fail": 3,
+  "fail_to_pass": 22,
+  "ready_loss": 0
+ }
+}

@@ -1,0 +1,94 @@
+{
+ "V0_base": {
+  "L1": {
+   "n": 167,
+   "base_ready": 167,
+   "fail": 0,
+   "fail_cases": 0
+  },
+  "L2": {
+   "n": 835,
+   "base_ready": 833,
+   "fail": 0,
+   "fail_cases": 0
+  },
+  "L3": {
+   "n": 501,
+   "base_ready": 497,
+   "fail": 7,
+   "fail_cases": 5
+  },
+  "dg3_cases_all_seeds": {
+   "n": 311,
+   "fail": 7,
+   "fail_cases": 5
+  },
+  "dg3_keys": {
+   "n": 135,
+   "fail": 7
+  },
+  "dg3_cases_other_seeds": {
+   "n": 176,
+   "fail": 0,
+   "fail_cases": 0
+  }
+ },
+ "VB_base": {
+  "L1": {
+   "n": 167,
+   "base_ready": 167,
+   "fail": 0,
+   "fail_cases": 0
+  },
+  "L2": {
+   "n": 835,
+   "base_ready": 835,
+   "fail": 2,
+   "fail_cases": 1
+  },
+  "L3": {
+   "n": 501,
+   "base_ready": 494,
+   "fail": 2,
+   "fail_cases": 1
+  },
+  "dg3_cases_all_seeds": {
+   "n": 311,
+   "fail": 0,
+   "fail_cases": 0
+  },
+  "dg3_keys": {
+   "n": 135,
+   "fail": 0
+  },
+  "dg3_cases_other_seeds": {
+   "n": 176,
+   "fail": 0,
+   "fail_cases": 0
+  }
+ },
+ "cluster_V0_base": [
+  {
+   "sum": 1,
+   "size": 3,
+   "count": 3
+  },
+  {
+   "sum": 2,
+   "size": 3,
+   "count": 2
+  }
+ ],
+ "cluster_VB_base": [
+  {
+   "sum": 2,
+   "size": 5,
+   "count": 1
+  },
+  {
+   "sum": 2,
+   "size": 3,
+   "count": 1
+  }
+ ]
+}

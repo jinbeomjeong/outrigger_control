@@ -1,0 +1,197 @@
+[
+ {
+  "label": "dg3_off_vs_on",
+  "a": "h7_dg3_off.json",
+  "b": "h6_dg3_v4on.json",
+  "n_pairs": 135,
+  "meta_a": {
+   "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+   "set": "all",
+   "seeds": "default (L3 / L4: 0, 1, 2)",
+   "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+   "levels": "L2,L3"
+  },
+  "meta_b": {
+   "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+   "set": "all",
+   "seeds": "default (L3 / L4: 0, 1, 2)",
+   "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+   "levels": "L2,L3"
+  },
+  "same_cmd": 128,
+  "a_base": {
+   "base_ready": 130,
+   "fail_missing": 2,
+   "fail_late30": 0,
+   "fail_total": 2,
+   "fail_among_changed_cmd": 2,
+   "changed_cmd": 7,
+   "fail_cases": 1,
+   "ready_diff_changed_q": {
+    "0.01": 0.0,
+    "0.05": 0.0,
+    "0.5": 0.0,
+    "0.95": 0.0,
+    "0.99": 0.0
+   },
+   "ready_diff_changed_sd": NaN
+  },
+  "b_base": {
+   "base_ready": 128,
+   "fail_missing": 0,
+   "fail_late30": 0,
+   "fail_total": 0,
+   "fail_among_changed_cmd": 0,
+   "changed_cmd": 7,
+   "fail_cases": 0,
+   "ready_diff_changed_q": {
+    "0.01": 0.0,
+    "0.05": 0.0,
+    "0.5": 0.0,
+    "0.95": 0.0,
+    "0.99": 0.0
+   },
+   "ready_diff_changed_sd": NaN
+  },
+  "by_level_same_cmd": {
+   "L2": {
+    "n": 1,
+    "same": 1
+   },
+   "L3": {
+    "n": 134,
+    "same": 127
+   }
+  }
+ },
+ {
+  "label": "noise_V0_vs_VB",
+  "a": "h8_noise_V0.json",
+  "b": "h8_noise_VB.json",
+  "n_pairs": 1503,
+  "meta_a": {
+   "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+   "set": "all",
+   "seeds": "default (L3 / L4: 0, 1, 2)",
+   "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+   "levels": "L1,L2,L3"
+  },
+  "meta_b": {
+   "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+   "set": "all",
+   "seeds": "default (L3 / L4: 0, 1, 2)",
+   "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+   "levels": "L1,L2,L3"
+  },
+  "same_cmd": 0,
+  "a_base": {
+   "base_ready": 1497,
+   "fail_missing": 5,
+   "fail_late30": 2,
+   "fail_total": 7,
+   "fail_among_changed_cmd": 7,
+   "changed_cmd": 1503,
+   "fail_cases": 5,
+   "ready_diff_changed_q": {
+    "0.01": -10.781000000051478,
+    "0.05": -1.4450000000068999,
+    "0.5": 1.5000000000071623,
+    "0.95": 4.600000000021964,
+    "0.99": 16.21800000007742
+   },
+   "ready_diff_changed_sd": 3.97561687371987
+  },
+  "b_base": {
+   "base_ready": 1496,
+   "fail_missing": 4,
+   "fail_late30": 0,
+   "fail_total": 4,
+   "fail_among_changed_cmd": 4,
+   "changed_cmd": 1503,
+   "fail_cases": 2,
+   "ready_diff_changed_q": {
+    "0.01": -16.21800000007744,
+    "0.05": -4.600000000021964,
+    "0.5": -1.5000000000071623,
+    "0.95": 1.445000000006904,
+    "0.99": 10.781000000051405
+   },
+   "ready_diff_changed_sd": 3.97561687371987
+  },
+  "by_level_same_cmd": {
+   "L1": {
+    "n": 167,
+    "same": 0
+   },
+   "L2": {
+    "n": 835,
+    "same": 0
+   },
+   "L3": {
+    "n": 501,
+    "same": 0
+   }
+  }
+ },
+ {
+  "label": "seedext_V0_vs_VB",
+  "a": "h8_seedext_V0.json",
+  "b": "h8_seedext_VB.json",
+  "n_pairs": 50,
+  "meta_a": {
+   "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+   "set": "all",
+   "seeds": "keys file",
+   "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+   "levels": "L2"
+  },
+  "meta_b": {
+   "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+   "set": "all",
+   "seeds": "keys file",
+   "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+   "levels": "L2"
+  },
+  "same_cmd": 0,
+  "a_base": {
+   "base_ready": 50,
+   "fail_missing": 0,
+   "fail_late30": 0,
+   "fail_total": 0,
+   "fail_among_changed_cmd": 0,
+   "changed_cmd": 50,
+   "fail_cases": 0,
+   "ready_diff_changed_q": {
+    "0.01": -1.759000000008399,
+    "0.05": -1.0000000000047748,
+    "0.5": 0.10000000000047748,
+    "0.95": 21.940000000104757,
+    "0.99": 23.814000000113705
+   },
+   "ready_diff_changed_sd": 9.690785861484182
+  },
+  "b_base": {
+   "base_ready": 50,
+   "fail_missing": 0,
+   "fail_late30": 0,
+   "fail_total": 0,
+   "fail_among_changed_cmd": 0,
+   "changed_cmd": 50,
+   "fail_cases": 0,
+   "ready_diff_changed_q": {
+    "0.01": -23.814000000113708,
+    "0.05": -21.94000000010476,
+    "0.5": -0.10000000000047748,
+    "0.95": 1.0000000000047748,
+    "0.99": 1.7590000000083972
+   },
+   "ready_diff_changed_sd": 9.690785861484182
+  },
+  "by_level_same_cmd": {
+   "L2": {
+    "n": 50,
+    "same": 0
+   }
+  }
+ }
+]
