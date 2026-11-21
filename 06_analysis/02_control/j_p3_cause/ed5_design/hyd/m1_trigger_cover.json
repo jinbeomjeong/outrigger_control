@@ -1,0 +1,53 @@
+{
+ "phases_seen": [
+  "CHECK",
+  "DONE",
+  "LEVEL",
+  "PROBE",
+  "READY",
+  "TOUCH"
+ ],
+ "trigger_carry_directed_disp_mm": {
+  "LEVEL": {
+   "n": 98,
+   "p10_p50_p90": [
+    0.04,
+    0.79,
+    2.85
+   ],
+   "ge_1mm": 42
+  },
+  "PROBE": {
+   "n": 442,
+   "p10_p50_p90": [
+    0.5,
+    0.94,
+    1.36
+   ],
+   "ge_1mm": 179
+  },
+  "other": {
+   "n": 0,
+   "p10_p50_p90": null,
+   "ge_1mm": 0
+  }
+ },
+ "TRw": {
+  "legs": 540,
+  "found": 262,
+  "phase": {
+   "LEVEL": 52,
+   "PROBE": 210
+  },
+  "remaining_s_p10_p50_p90": [
+   8.4,
+   13.4,
+   37.8
+  ],
+  "after_level_s_p10_p50_p90": [
+   15.93,
+   31.35,
+   74.48
+  ]
+ }
+}
