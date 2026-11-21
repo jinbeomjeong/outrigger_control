@@ -1,0 +1,23 @@
+noise sha 2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43 dg3 sha ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89 dg3 keys 135
+scan files 3372 excluded files 259 keys 2628
+{
+ "g6": {
+  "base": "L2|s0|g6|0|g6|G1+J1@FL|top|Fs0",
+  "generated": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0",
+  "seed": 25,
+  "key_file_sha256": "1a79e02fc33ae8844d0cd5672e9e5e745215c354e58e9a8095376939c4335e74"
+ },
+ "g8": {
+  "base": "L2|s0|g8|0|slope|edge|top|4.0|ref|none|0",
+  "generated": "L2|s25|g8|0|slope|edge|top|4.0|ref|none|0",
+  "seed": 25,
+  "key_file_sha256": "b7c7470a800ce1146d30caefa8050fbb1a73c18058af2b23af7dedf399619bd4"
+ },
+ "ref": {
+  "base": "L2|s0|ref|0|rigid|B|0,0",
+  "generated": "L2|s25|ref|0|rigid|B|0,0",
+  "seed": 25,
+  "key_file_sha256": "95ce6f27b44bb13b76fe8fb02d056f6dc5ae1de9be28b29d1529b8fbbd965299"
+ }
+}
+g6 matches fixed: True

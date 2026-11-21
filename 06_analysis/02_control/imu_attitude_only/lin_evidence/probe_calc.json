@@ -1,0 +1,282 @@
+{
+ "ripple": {
+  "S0_tf0.8": {
+   "ctrl_ripple_deg": 0.017902296112712747,
+   "completion_ripple_deg": 0.0009534835364590313,
+   "worst_mode": "top 2.984 Hz"
+  },
+  "S0_tf0.4": {
+   "ctrl_ripple_deg": 0.0706709769931527,
+   "completion_ripple_deg": 0.003763964836923669,
+   "worst_mode": "top 2.984 Hz"
+  },
+  "A_f1.0_tf0.8": {
+   "ctrl_ripple_deg": 0.0024397620651372895,
+   "completion_ripple_deg": 0.0002167960443458182,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "A_f1.0_tf0.4": {
+   "ctrl_ripple_deg": 0.009412218474228526,
+   "completion_ripple_deg": 0.0008363650549737328,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "A_f0.5_tf0.8": {
+   "ctrl_ripple_deg": 0.0007432062403222806,
+   "completion_ripple_deg": 6.604093708044896e-05,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "A_f0.5_tf0.4": {
+   "ctrl_ripple_deg": 0.002867172830203695,
+   "completion_ripple_deg": 0.00025477555247133794,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "A_f0.3_tf0.8": {
+   "ctrl_ripple_deg": 0.00028063496121459114,
+   "completion_ripple_deg": 2.49370831548862e-05,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "A_f0.3_tf0.4": {
+   "ctrl_ripple_deg": 0.0010826455596643374,
+   "completion_ripple_deg": 9.620334626794238e-05,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "B_c0.05_tf0.8": {
+   "ctrl_ripple_deg": 0.0006822116558892072,
+   "completion_ripple_deg": 6.0620988627047935e-05,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "B_c0.05_tf0.4": {
+   "ctrl_ripple_deg": 0.0026318653128714425,
+   "completion_ripple_deg": 0.00023386624344837108,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "B_c0.1_tf0.8": {
+   "ctrl_ripple_deg": 0.0012042316508710993,
+   "completion_ripple_deg": 6.413786510732021e-05,
+   "worst_mode": "top 2.984 Hz"
+  },
+  "B_c0.1_tf0.4": {
+   "ctrl_ripple_deg": 0.004753816312573653,
+   "completion_ripple_deg": 0.00025319018079310036,
+   "worst_mode": "top 2.984 Hz"
+  },
+  "B_c0.02_tf0.8": {
+   "ctrl_ripple_deg": 0.0004430737336150581,
+   "completion_ripple_deg": 3.9371311724970245e-05,
+   "worst_mode": "top 1.784 Hz"
+  },
+  "B_c0.02_tf0.4": {
+   "ctrl_ripple_deg": 0.001709308805382376,
+   "completion_ripple_deg": 0.0001518883307793059,
+   "worst_mode": "top 1.784 Hz"
+  }
+ },
+ "cue_sigma_deg": {
+  "good_B_c0.02": 0.0013835317913276559,
+  "good_B_c0.05": 0.0013273223270433702,
+  "good_B_c0.1": 0.0012823418079085593,
+  "good_current": 0.0014361280927437392,
+  "good_current_formula": 0.00203100960115899,
+  "normal_B_c0.02": 0.002833073748907852,
+  "normal_B_c0.05": 0.0030190208101142438,
+  "normal_B_c0.1": 0.003671316587663021,
+  "normal_current": 0.0028722561854874784,
+  "normal_current_formula": 0.00406201920231798
+ },
+ "cue_z": {
+  "good_B_c0.02": 8.528896895586735,
+  "good_B_c0.05": 8.89007873941567,
+  "good_B_c0.1": 9.20191475254578,
+  "good_current": 8.216537271028495,
+  "good_current_formula": 5.809918374224505,
+  "normal_B_c0.02": 4.165087479473096,
+  "normal_B_c0.05": 3.9085520578288007,
+  "normal_B_c0.1": 3.21410581687571,
+  "normal_current": 4.108268635514247,
+  "normal_current_formula": 2.9049591871122526
+ },
+ "probe_ripple": {
+  "S0": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.3,
+     0.49999999999999994
+    ],
+    "ptp_ratio_to_response": [
+     25.423728813559322,
+     42.3728813559322
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.3,
+     0.5
+    ],
+    "ptp_ratio_to_response": [
+     25.423728813559322,
+     42.37288135593221
+    ]
+   }
+  },
+  "A_f1.0": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.07172476053493282,
+     0.11954126755822136
+    ],
+    "ptp_ratio_to_response": [
+     6.078369536858713,
+     10.130615894764523
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.030290008658903807,
+     0.050483347764839676
+    ],
+    "ptp_ratio_to_response": [
+     2.56694988634778,
+     4.278249810579633
+    ]
+   }
+  },
+  "A_f0.5": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.021848970593033493,
+     0.03641495098838915
+    ],
+    "ptp_ratio_to_response": [
+     1.8516076773757197,
+     3.0860127956261993
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.008192910488848027,
+     0.013654850814746712
+    ],
+    "ptp_ratio_to_response": [
+     0.69431444820746,
+     1.1571907470124332
+    ]
+   }
+  },
+  "A_f0.3": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.008250179670579493,
+     0.013750299450965819
+    ],
+    "ptp_ratio_to_response": [
+     0.6991677686931774,
+     1.1652796144886288
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.003001915889429877,
+     0.005003193149049795
+    ],
+    "ptp_ratio_to_response": [
+     0.2543996516465997,
+     0.42399941941099956
+    ]
+   }
+  },
+  "B_c0.05": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.020055835916130582,
+     0.033426393193550966
+    ],
+    "ptp_ratio_to_response": [
+     1.69964711153649,
+     2.8327451858941495
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.010291759927216263,
+     0.017152933212027103
+    ],
+    "ptp_ratio_to_response": [
+     0.8721830446793444,
+     1.453638407798907
+    ]
+   }
+  },
+  "B_c0.1": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.03504982631509496,
+     0.05841637719182494
+    ],
+    "ptp_ratio_to_response": [
+     2.9703242639910985,
+     4.950540439985165
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.020180064779779044,
+     0.033633441299631736
+    ],
+    "ptp_ratio_to_response": [
+     1.7101749813372071,
+     2.850291635562012
+    ]
+   }
+  },
+  "B_c0.02": {
+   "1.784Hz": {
+    "out_amp_deg": [
+     0.01302559700266115,
+     0.021709328337768584
+    ],
+    "ptp_ratio_to_response": [
+     1.103864152767894,
+     1.8397735879464903
+    ]
+   },
+   "2.984Hz": {
+    "out_amp_deg": [
+     0.004625262524387805,
+     0.007708770873979674
+    ],
+    "ptp_ratio_to_response": [
+     0.39197140037184786,
+     0.6532856672864131
+    ]
+   }
+  },
+  "note": "S0 row = accelerometer tilt (the cue uses the gyro integral instead: true rocking only)"
+ },
+ "quantisation": {
+  "lsb_0.01": {
+   "window_diff_worst_deg": 0.01,
+   "ratio_error_worst": 0.42372881355932207,
+   "q_over_gate": 0.8474576271186441,
+   "single_step_ripple_ratio": 0.42372881355932207
+  },
+  "lsb_0.005": {
+   "window_diff_worst_deg": 0.005,
+   "ratio_error_worst": 0.21186440677966104,
+   "q_over_gate": 0.42372881355932207,
+   "single_step_ripple_ratio": 0.21186440677966104
+  },
+  "lsb_0.001": {
+   "window_diff_worst_deg": 0.001,
+   "ratio_error_worst": 0.04237288135593221,
+   "q_over_gate": 0.08474576271186442,
+   "single_step_ripple_ratio": 0.04237288135593221
+  },
+  "lsb_0.0005": {
+   "window_diff_worst_deg": 0.0005,
+   "ratio_error_worst": 0.021186440677966104,
+   "q_over_gate": 0.04237288135593221,
+   "single_step_ripple_ratio": 0.021186440677966104
+  }
+ },
+ "response_deg": 0.0236
+}

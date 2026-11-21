@@ -1,0 +1,81 @@
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=27.80 s: leg_reapproach_start:RL
+C2 t=28.80 s: leg_reapproach_start:RL
+C2 t=26.00 s: leg_reapproach_start:RR
+C2 t=29.80 s: leg_reapproach_start:RL
+C2 t=27.80 s: leg_reapproach_start:RR
+C2 t=64.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.540
+C2 t=67.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.553
+C2 t=75.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.527
+C2 t=84.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.573
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=104.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.605
+C2 t=101.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.590
+C2 t=29.20 s: leg_reapproach_start:RR
+C2 t=107.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.790
+C2 t=71.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.578
+C2 t=98.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.685
+C2 t=31.30 s: leg_reapproach_start:RL
+C2 t=32.70 s: leg_reapproach_start:RL
+C2 t=33.60 s: leg_reapproach_start:RL
+C2 t=34.50 s: leg_reapproach_start:RL
+C2 t=83.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.562
+C2 t=72.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.555
+C2 t=91.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.606
+C2 t=31.30 s: leg_reapproach_start:RR
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=33.10 s: leg_reapproach_start:RR
+C2 t=34.90 s: leg_reapproach_start:RR
+C2 t=107.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.580
+C2 t=4.30 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=91.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.719
+C2 t=77.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.780
+C2 t=104.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.616
+done 176.3 s -> C:\workspace\outrigger_control\06_analysis\02_control\imu_attitude_only\h0\r79_identity_L1L2_s0.json
+L1|s0|g6|0|g6|G1+J1@FL|top|Fs0 pass True zero_cal True ready 64.20000000012452 wall 49.1
+L1|s0|g6|9|g6|G1+J1@RL|top|Fs4 pass True zero_cal True ready 75.30000000017752 wall 55.2
+L1|s0|g6|18|g6|G1+J2@FL|bottom|Fs0 pass True zero_cal True ready 84.30000000022049 wall 58.7
+L1|s0|g6|27|g6|G1+J2@RL|bottom|Fs4 pass True zero_cal True ready 104.7000000003179 wall 69.8
+L1|s0|g6|36|g6|G1+S1@FR|top|Fs0 pass False zero_cal True ready 67.4000000001398 wall 52.1
+L1|s0|g6|45|g6|G1+S1@RR|top|Fs4 pass True zero_cal True ready 101.50000000030262 wall 69.8
+L1|s0|g6|54|ref|J1|bottom|Fs0 pass True zero_cal True ready 67.00000000013789 wall 51.3
+L1|s0|g6|63|ref|S1|bottom|Fs4 pass True zero_cal True ready 62.20000000011497 wall 46.0
+L1|s0|g6|72|g6r|rigid+J1@RL|top|Fs0 pass True zero_cal True ready 81.10000000020521 wall 60.9
+L1|s0|g6|81|g6r|rigid+J2@FL|top|Fs4 pass True zero_cal True ready 84.90000000022336 wall 61.7
+L1|s0|g6|90|g6r|rigid+J2@RL|bottom|Fs0 pass True zero_cal True ready 107.90000000033318 wall 76.2
+L1|s0|g6|99|g6r|rigid+S1@FL|bottom|Fs4 pass False zero_cal True ready 71.10000000015746 wall 54.7
+L1|s0|g6|108|g6r|rigid+S1@RR|top|Fs0 pass True zero_cal True ready 98.80000000028973 wall 62.5
+L1|s0|g8|0|slope|edge|top|4.0|ref|none|0 pass True zero_cal True ready 61.600000000112104 wall 36.5
+L1|s0|g8|8|slope|edge|top|4.0|FR|raised|230.0 pass True zero_cal True ready 61.500000000111626 wall 35.5
+L1|s0|g8|16|slope|edge|top|4.0|RR|raised|230.0 pass True zero_cal True ready 63.80000000012261 wall 36.5
+L1|s0|g8|24|slope|rpB|top|4.0|FR|raised|200.0 pass True zero_cal True ready 62.5000000001164 wall 35.5
+L1|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0 pass False zero_cal True ready 65.6000000001312 wall 37.7
+L1|s0|g8|40|main|flat|top|4.0|FR|raised|320.0 pass True zero_cal True ready 44.3000000000295 wall 27.4
+L1|s0|g8|48|main|flat|top|4.0|RR|raised|320.0 pass True zero_cal True ready 47.00000000004239 wall 30.4
+L2|s0|g6|0|g6|G1+J1@FL|top|Fs0 pass True zero_cal True ready 71.4000000001589 wall 46.7
+L2|s0|g6|9|g6|G1+J1@RL|top|Fs4 pass True zero_cal True ready 83.20000000021524 wall 53.5
+L2|s0|g6|18|g6|G1+J2@FL|bottom|Fs0 pass True zero_cal True ready 91.20000000025344 wall 61.3
+L2|s0|g6|27|g6|G1+J2@RL|bottom|Fs4 pass True zero_cal True ready 107.40000000033079 wall 67.6
+L2|s0|g6|36|g6|G1+S1@FR|top|Fs0 pass False zero_cal True ready 72.00000000016176 wall 45.3
+L2|s0|g6|45|g6|G1+S1@RR|top|Fs4 pass True zero_cal True ready 107.70000000033222 wall 68.4
+L2|s0|g6|54|ref|J1|bottom|Fs0 pass True zero_cal True ready 72.20000000016272 wall 50.5
+L2|s0|g6|63|ref|S1|bottom|Fs4 pass True zero_cal True ready 67.50000000014028 wall 45.4
+L2|s0|g6|72|g6r|rigid+J1@RL|top|Fs0 pass True zero_cal True ready 88.00000000023816 wall 56.9
+L2|s0|g6|81|g6r|rigid+J2@FL|top|Fs4 pass True zero_cal True ready 91.4000000002544 wall 61.9
+L2|s0|g6|90|g6r|rigid+J2@RL|bottom|Fs0 pass True zero_cal True ready 112.60000000035562 wall 70.7
+L2|s0|g6|99|g6r|rigid+S1@FL|bottom|Fs4 pass False zero_cal True ready 77.50000000018802 wall 53.1
+L2|s0|g6|108|g6r|rigid+S1@RR|top|Fs0 pass True zero_cal True ready 104.50000000031694 wall 65.7
+L2|s0|g8|0|slope|edge|top|4.0|ref|none|0 pass True zero_cal True ready 61.70000000011258 wall 33.4
+L2|s0|g8|8|slope|edge|top|4.0|FR|raised|230.0 pass True zero_cal True ready 61.500000000111626 wall 35.0
+L2|s0|g8|16|slope|edge|top|4.0|RR|raised|230.0 pass True zero_cal True ready 63.60000000012165 wall 36.3
+L2|s0|g8|24|slope|rpB|top|4.0|FR|raised|200.0 pass True zero_cal False ready 62.5000000001164 wall 33.6
+L2|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0 pass False zero_cal True ready 65.70000000013168 wall 35.4
+L2|s0|g8|40|main|flat|top|4.0|FR|raised|320.0 pass True zero_cal True ready 50.20000000005767 wall 27.7
+L2|s0|g8|48|main|flat|top|4.0|RR|raised|320.0 pass True zero_cal True ready 50.70000000006006 wall 28.3

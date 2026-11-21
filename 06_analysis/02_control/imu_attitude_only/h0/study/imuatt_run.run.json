@@ -1,0 +1,58 @@
+{
+ "script": "04_scripts/03_control/s8/imu_attitude_study.py",
+ "design": "06_analysis/02_control/imu_attitude_only/imu_attitude_only_design.md",
+ "started_at": "2026-11-22T03:00:25+09:00",
+ "argv": [
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\imu-att\\04_scripts\\03_control\\s8\\imu_attitude_study.py",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\imu-att",
+  "run",
+  "--arms",
+  "R0",
+  "--levels",
+  "L1,L2",
+  "--seeds",
+  "0",
+  "--set",
+  "identity",
+  "--workers",
+  "12",
+  "--affinity",
+  "0x0FFF0000",
+  "--pool",
+  "E",
+  "--out-dir",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\imu_attitude_only\\h0\\study"
+ ],
+ "interpreter": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+ "git": {
+  "head": "25287d7aaa093d4e6ebe1472755b04e1b3f6776e",
+  "is_clean": true,
+  "dirty_paths": []
+ },
+ "c2_py_sha256": "293ca85452d9b7adea5371e7e5adf24f3e5a68afd863e9edddee8a9c3c0d7603",
+ "r79_sensor_screen_sha256": "b5b157e2489678a52560d566fe818b1b6bed9430d6d4156f3070a18ef161cff5",
+ "study_script_sha256": "5e38cb4b5e9fcb326078f04e0aa86f882519836b397db2bce2ea50a4671216e6",
+ "sources_sha256": {
+  "03_src/outrigger_sim/control/imu_outputs.py": "ab8c4a454233681071768e58f57aae0f59125254b183fc9bd899bea12ef7816d",
+  "03_src/outrigger_sim/sensors/attitude_only.py": "367ddb3ae2d7f5dbb5031b82af72e1ca426de9470d731b7d7397090e60273ecd",
+  "03_src/outrigger_sim/sensors/suite.py": "a82a5bac3ffae0c6b15653650af82b59ee127a488cb78cc1bb84264c24045a4f",
+  "04_scripts/03_control/s8/imu_attitude_metrics.py": "efd42c4789d0084decf5b416ac6e65cb17fa2a3a068585549e631ac3835e6718"
+ },
+ "pool": "E",
+ "affinity": "0x0FFF0000",
+ "workers": 12,
+ "env": {
+  "R79_V5_SETTING": "V0",
+  "R72_PATH": "per_leg",
+  "OMP_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB"
+ },
+ "n_jobs": 40,
+ "n_done_before": 0,
+ "n_to_run": 40,
+ "ended_at": "2026-11-22T03:03:28+09:00",
+ "n_errors_this_start": 0
+}

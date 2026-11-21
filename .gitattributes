@@ -155,3 +155,7 @@
 # C-8a intervention diagnosis and LAS-c v2 draft (decisions 149/150)
 06_analysis/02_control/c8a_intervention/** -text
 06_analysis/02_control/las_redesign/** -text
+
+# numpy·Hopsan 기준 시계열: 그림 스크립트가 sha로 대조하므로 줄바꿈 변환 금지(2026-11-22)
+05_tests/data/*.csv -text
+06_analysis/02_control/imu_attitude_only/** -text

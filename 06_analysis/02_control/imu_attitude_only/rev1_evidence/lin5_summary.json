@@ -1,0 +1,65 @@
+{
+ "A2_butter5_Kp0.1_Kg0.08": {
+  "n": 80,
+  "Ms_worst": 1.3298,
+  "Ms_worst_where": "bottom_crawler_b0.69_rigid phi",
+  "Ms_over_1.5": 0,
+  "att_Ms_worst": 1.3298,
+  "att_Ms_where": "bottom_crawler_b0.69_rigid phi",
+  "att_w_Ms": 0.069,
+  "att_PM_min_deg": 44.7,
+  "att_GM_min": 5.473,
+  "att_GM_min_dB": 14.76,
+  "att_DM_min_s": 8.467,
+  "att_wgc_range": [
+   0.0624,
+   0.1107
+  ],
+  "rho_max": 0.997987,
+  "guard_Ms_worst": 1.357,
+  "guard_where": "top_pads_b1.6_sup_lower leg1 tw",
+  "guard_n": 160
+ },
+ "A_f1.0_Kp0.1_Kg0.08": {
+  "n": 80,
+  "Ms_worst": 1.3587,
+  "Ms_worst_where": "bottom_crawler_b0.69_rigid phi",
+  "Ms_over_1.5": 0,
+  "att_Ms_worst": 1.3587,
+  "att_Ms_where": "bottom_crawler_b0.69_rigid phi",
+  "att_w_Ms": 0.069,
+  "att_PM_min_deg": 43.72,
+  "att_GM_min": 4.952,
+  "att_GM_min_dB": 13.89,
+  "att_DM_min_s": 8.196,
+  "att_wgc_range": [
+   0.0624,
+   0.1107
+  ],
+  "rho_max": 0.998276,
+  "guard_Ms_worst": 1.4103,
+  "guard_where": "top_pads_b1.6_sup_lower leg1 tw",
+  "guard_n": 160
+ },
+ "A2_bessel1_Kp0.1_Kg0.08_tv0.15": {
+  "n": 80,
+  "Ms_worst": 1.3531,
+  "Ms_worst_where": "bottom_crawler_b0.69_rigid phi",
+  "Ms_over_1.5": 0,
+  "att_Ms_worst": 1.3531,
+  "att_Ms_where": "bottom_crawler_b0.69_rigid phi",
+  "att_w_Ms": 0.069,
+  "att_PM_min_deg": 43.9,
+  "att_GM_min": 4.031,
+  "att_GM_min_dB": 12.11,
+  "att_DM_min_s": 8.247,
+  "att_wgc_range": [
+   0.0624,
+   0.1107
+  ],
+  "rho_max": 0.998387,
+  "guard_Ms_worst": 1.3939,
+  "guard_where": "top_pads_b1.6_sup_lower leg1 tw",
+  "guard_n": 160
+ }
+}
