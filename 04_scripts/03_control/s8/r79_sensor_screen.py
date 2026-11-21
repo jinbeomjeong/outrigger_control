@@ -1048,8 +1048,8 @@ ROD_FAULT_PLAN_SHA256_ENV = "R79_ROD_FAULT_PLAN_SHA256"
 """Set by the parent after :func:`apply_rod_fault_guard`; a worker whose plan file has another
 sha256 (the file changed during the run) refuses its job."""
 ROD_FAULT_SETTING_PREFIX = "VBK"
-"""The rod-fault settings (``run_v5.ROD_FAULT_SETTINGS``): a plan needs one of them and each of
-them needs a plan."""
+"""The common name prefix of the rod-fault settings (a record: the guard judges by the list
+:func:`rod_fault_settings`, audit W15; a unit test checks that the two agree)."""
 ROD_FAULT_GUARD_EXIT = 2
 ROD_FAULT_KEY = "rod_fault"
 ROD_FAULT_PLAN_KEY = "rod_fault_plan"
@@ -1057,8 +1057,19 @@ _ROD_FAULT_PLANS: dict = {}
 """Plans read in this process, by path."""
 
 
+def rod_fault_settings() -> tuple[str, ...]:
+    """``run_v5.ROD_FAULT_SETTINGS``: a plan needs one of them and each of them needs a plan."""
+    coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled_dir) not in sys.path:
+        sys.path.insert(0, str(coupled_dir))
+    import run_v5
+
+    return tuple(run_v5.ROD_FAULT_SETTINGS)
+
+
 def is_rod_fault_setting(setting: str | None) -> bool:
-    return setting is not None and setting.startswith(ROD_FAULT_SETTING_PREFIX)
+    """The setting is in :func:`rod_fault_settings` (list membership, not the name prefix)."""
+    return setting is not None and setting in rod_fault_settings()
 
 
 def _rod_fault_plan_path() -> str | None:
@@ -1195,6 +1206,8 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant, rod_fault=None) -> s
                                   "(lower_estimate_N + seal band unless the PRESSURE judge); "
                                   "lower_estimate_N = the value compared with F_min"}
     extra_arrays = {"lower_reading_N": lower_reading_N, "lower_estimate_N": lower_estimate_N}
+    # X-1: the per-read J-P3 arrays of a ③ revision 5 / 6 run, as run_v5 writes them
+    extra_arrays.update(verdict_runs.jp3_trace_arrays(plant) or {})
     if rod_fault is not None:
         meta[ROD_FAULT_KEY] = rod_fault.record(ctrl)
         meta[ROD_FAULT_PLAN_KEY] = rod_fault_plan_meta()
@@ -1260,6 +1273,22 @@ def _v5_record(options, run: ActiveRun, plant) -> dict:
         out["lock_window_alignment"] = verdict_runs.lock_window_record(plant, run.ctrl, period)
     if is_p3_setting(record.get("v5_setting")):
         out.update(j_p3_run_record(record, getattr(run.adapter, "rod_reading_periods", 0)))
+        out.update(run_extend_start_record(getattr(run.ctrl, "config", None)))
+    return out
+
+
+def run_extend_start_record(config) -> dict:
+    """Edition 5 4.6: the run's own ③ rule and, for a hold revision (5 or 6), its revision as
+    the line keys ``run_extend_start_rule`` / ``run_extend_start_revision`` (the replay rows'
+    names, ``j_p3_inputs``); empty for a run without the ③ bound."""
+    two_pressure = getattr(config, "two_pressure", None)
+    if getattr(two_pressure, "extend_start_rule", None) != "tracked_bound":
+        return {}
+    bound = two_pressure.extend_start_bound
+    revision = 4 if bound is None else int(bound.revision)
+    out = {"run_extend_start_rule": "tracked_bound"}
+    if revision >= 5:
+        out["run_extend_start_revision"] = revision
     return out
 
 

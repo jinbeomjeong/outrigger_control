@@ -155,8 +155,12 @@ def judge_x11(both_rows: list[dict], both_t4h_dir: Path, baseline: compare.Basel
         problems.not_judgeable.append(f"settings {sorted(rows)}, {X11_SETTING} alone expected")
         return {}, problems
     check = _check(row)
+    # edition 5 4.6: a revision 6 X11 row carries the edition 5 spec_edition
+    edition = compare.IDENTITY_OF_REVISION.get(check.get("rule_revision"),
+                                               compare.DEFAULT_IDENTITY)["spec_edition"]
+    expected = {**X11_IDENTITY, "spec_edition": edition}
     problems.setting_defects += [f"{X11_SETTING}: {key} {check.get(key)!r}"
-                                 for key, value in X11_IDENTITY.items() if check.get(key) != value]
+                                 for key, value in expected.items() if check.get(key) != value]
     _evidence(row, problems)
     baseline_hash = _baseline_hash(baseline, problems)
     if baseline_hash is not None and row["commands_sha256"] != baseline_hash:

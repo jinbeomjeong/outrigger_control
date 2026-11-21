@@ -33,12 +33,26 @@ Anchors (trigger read, first faulty read):
     tau_R (TR'): from the first update whose phase is LEVEL, the first update k >= 1 with
     ``|u_{k-1}| <= u_hold`` and ``u_k < -u_hold`` on the fault leg; trigger read k, faulty
     from read k + 1 (the trigger never depends on the fault).
+``retract_witness_after:LEVEL``
+    TRw (edition 5 6.3.3, the witness top-up layer): from the first update whose phase is
+    LEVEL, the retract carries that start as tau_R does (update k >= 1 with
+    ``|u_{k-1}| <= u_hold`` and ``u_k < -u_hold``) and last while ``u < -u_hold``; in the first
+    such carry with a witness, the first read n >= k + 1 whose acting command is the carry
+    with ``s_ref - s_n >= 1.0 mm`` (``s`` = the delivered ``stroke_m``, ``s_ref`` = its value at
+    the trigger read k) and an output command ``u_n < -u_hold``; trigger read n, faulty from
+    read n + 1.
 ``t:<s>``
     tests: the first read with ``t >= s``; faulty from it.
 
-``delay_reads`` adds that many reads before the first faulty read. ``u_hold`` =
+``delay_reads`` adds that many reads before the first faulty read; a gate anchor
+(:data:`GATE_ANCHORS`: tau_C, tau_R, TRw) must have 0 (edition 5 6.3.2, audit W2: else the
+"k + 1" rule breaks), a plan with another value is refused. ``u_hold`` =
 ``extend_start_bound.HOLD_SPEED_RATIO`` (0.01, decision 146) x YAML
 ``actuator.max_speed_m_s`` (0.20924 mm/s).
+
+Latch (edition 5 6.3.2, audit B3): the fault leg's ``INFO_ROD_PRESSURE_FAULT_REASON:<leg>:D1``
+on the first faulty read itself. ``latched.is_same_read_d1`` records it; a later latch, another
+reason or none is ``is_same_read_d1`` False (the gate judge counts that pair as not latched).
 
 Pair identity (6.2a.4): ``pre_trigger_commands_sha256`` is the sha256 of the output commands
 of every update before the first faulty read (``verdict_runs._command_digest`` bytes, float64
@@ -90,7 +104,16 @@ class AnchorKind(StrEnum):
     PHASE_ENTER_CHECK = "phase_enter:CHECK"
     PHASE_EXIT_CHECK = "phase_exit:CHECK"
     RETRACT_START_AFTER_LEVEL = "retract_start_after:LEVEL"
+    RETRACT_WITNESS_AFTER_LEVEL = "retract_witness_after:LEVEL"
     TIME = "t"
+
+
+GATE_ANCHORS = (AnchorKind.PHASE_EXIT_CHECK, AnchorKind.RETRACT_START_AFTER_LEVEL,
+                AnchorKind.RETRACT_WITNESS_AFTER_LEVEL)
+"""The T-JR-12b anchors (tau_C, tau_R, TRw): their ``delay_reads`` must be 0."""
+WITNESS_STROKE_M = 1.0e-3
+"""``Delta s_w`` of the TRw trigger (edition 5 4.1, 6.3.3; the R5-8 witness threshold)."""
+D1_REASON = "D1"
 
 
 @dataclass(frozen=True)
@@ -219,9 +242,13 @@ def _parse_fault(job_key: str, entry: object) -> RodFault:
     if not isinstance(delay, int) or isinstance(delay, bool) or delay < 0:
         raise RodFaultPlanError(f"{where}: delay_reads must be an integer >= 0, got {delay!r}")
     kind = FaultKind(entry["kind"])
+    anchor = parse_anchor(entry["anchor"])
+    if anchor.kind in GATE_ANCHORS and delay != 0:
+        raise RodFaultPlanError(f"{where}: a gate anchor ({anchor.text}) needs delay_reads 0, "
+                                f"got {delay} (edition 5 6.3.2)")
     return RodFault(job_key, fault_id, leg, kind, _fault_value_bar(kind, entry["value_bar"],
                                                                      where),
-                    parse_anchor(entry["anchor"]), delay)
+                    anchor, delay)
 
 
 def load_plan(path: str | Path) -> RodFaultPlan:
@@ -270,6 +297,50 @@ def commands_sha256(period_log: list, rows: int) -> str:
     return hashlib.sha256(commands.tobytes()).hexdigest()
 
 
+def retract_witnesses(phase, command_m_s, stroke_m, leg: int, hold_speed: float,
+                      from_read: int = 0) -> list[tuple[int, int]]:
+    """Every witnessed retract carry of ``leg`` after the first LEVEL update, as T4h columns
+    give them (edition 5 6.3.3 TRw / 6.3.6 record function): ``(k, n)`` per carry = its start
+    update ``k`` (``|u_{k-1}| <= u_hold``, ``u_k < -u_hold``) and its first read ``n >= k + 1``
+    with ``u_{n-1}``, ``u_n < -u_hold`` and ``s_k - s_n >= 1.0 mm`` (its witness read); only
+    carries whose witness read is ``n >= from_read`` count (``from_read`` = the latch read for
+    "after the latch", 6.3.6: a carry witnessed before it does not count later).
+
+    Args:
+        phase: Phase after each update (T4h ``phase``, row k = update k).
+        command_m_s: Output commands (T4h ``command_m_s``, rows x 4).
+        stroke_m: ``stroke_m`` readings (T4h ``motor_stroke_m``, row n = read n).
+        leg: Leg index.
+        hold_speed: ``u_hold`` [m/s].
+        from_read: Smallest witness read counted.
+    """
+    phases = [str(value).lower() for value in phase]
+    commands = np.asarray(command_m_s, float)
+    strokes = np.asarray(stroke_m, float)
+    level = next((row for row, value in enumerate(phases) if value == PHASE_LEVEL), None)
+    if level is None:
+        return []
+    found, row, rows = [], max(level, 1), len(commands)
+    while row < rows:
+        is_start = (abs(commands[row - 1, leg]) <= hold_speed
+                    and commands[row, leg] < -hold_speed)
+        if not is_start:
+            row += 1
+            continue
+        start, read = row, row + 1
+        while read < rows and commands[read, leg] < -hold_speed:
+            moved = strokes[start, leg] - strokes[read, leg]
+            if moved >= WITNESS_STROKE_M:  # NaN never witnesses
+                if read >= from_read:
+                    found.append((start, read))
+                break
+            read += 1
+        while read < rows and commands[read, leg] < -hold_speed:
+            read += 1
+        row = read + 1
+    return found
+
+
 # ------------------------------------------------------------------------------- injection
 class RodFaultInjector:
     """Applies one :class:`RodFault` to the delivered measurements of a run and records it.
@@ -291,12 +362,17 @@ class RodFaultInjector:
         self.pre_trigger_commands_sha256: str | None = None
         self.pre_trigger_fallback_events: list[tuple[float, str]] | None = None
         self.read_t_s: list[float] = []
+        self.read_stroke_m: list[np.ndarray] = []
+        """Delivered ``stroke_m`` per read (the TRw witness; T4h ``motor_stroke_m``)."""
         self.pre_fault_rod_Pa: list[np.ndarray] = []
         self.is_applied: list[bool] = []
         self.sum_offsets_N: list[float] = []
+        self.witness: dict | None = None
+        """TRw: carry start read k, witness read n, ``s_ref`` and ``s_ref - s_n`` (None = none)."""
         self._has_seen_check = False
         self._level_row: int | None = None
         self._scanned_rows = 0
+        self._carry_start_row: int | None = None
 
     # --- per read
     def apply(self, ctrl, delivered):
@@ -317,6 +393,9 @@ class RodFaultInjector:
         if is_faulty and read == self.first_applied_read:
             self._note_first_faulty_read(ctrl, read, t_s)
         self.read_t_s.append(t_s)
+        stroke = getattr(delivered, "stroke_m", None)
+        self.read_stroke_m.append(np.full(len(LEGS), np.nan) if stroke is None
+                                  else np.array(stroke, float).reshape(len(LEGS)))
         self.pre_fault_rod_Pa.append(rod_Pa.copy())
         self.is_applied.append(is_faulty)
         if not is_faulty:
@@ -346,6 +425,8 @@ class RodFaultInjector:
                 self._has_seen_check = True
             elif self._has_seen_check:
                 self._arm(read, t_s, read)
+        elif kind is AnchorKind.RETRACT_WITNESS_AFTER_LEVEL:
+            self._scan_retract_witness(self._period_log(ctrl, read))
         else:
             self._scan_retract_start(self._period_log(ctrl, read))
 
@@ -371,6 +452,37 @@ class RodFaultInjector:
                 self._arm(row, float(log[row][0]), row + 1)
                 return
 
+    def _is_carry_start(self, log: list, row: int, leg: int) -> bool:
+        previous_u, current_u = float(log[row - 1][2][leg]), float(log[row][2][leg])
+        return abs(previous_u) <= self.hold_speed_m_s and current_u < -self.hold_speed_m_s
+
+    def _scan_retract_witness(self, log: list) -> None:
+        """TRw (module docstring) on the updates not scanned yet: update ``row`` is scanned
+        once read ``row`` has been delivered (its ``stroke_m`` is known), so a witness at read
+        ``n`` arms at read ``n + 1``, the first faulty read."""
+        leg = self.fault.leg_index
+        for row in range(self._scanned_rows, min(len(log), len(self.read_stroke_m))):
+            self._scanned_rows = row + 1
+            if self._level_row is None and log[row][1] == PHASE_LEVEL:
+                self._level_row = row
+            if self._level_row is None or row < max(self._level_row, 1):
+                continue
+            if self._carry_start_row is None:
+                if self._is_carry_start(log, row, leg):
+                    self._carry_start_row = row
+                continue
+            if not float(log[row][2][leg]) < -self.hold_speed_m_s:
+                self._carry_start_row = None  # the carry ended; read ``row`` is not in it
+                continue
+            reference_m = float(self.read_stroke_m[self._carry_start_row][leg])
+            moved_m = reference_m - float(self.read_stroke_m[row][leg])
+            if moved_m >= WITNESS_STROKE_M:  # NaN never witnesses
+                self.witness = {"carry_start_read": self._carry_start_row,
+                                "witness_read": row, "witness_ref_m": reference_m,
+                                "witness_ds_m": moved_m}
+                self._arm(row, float(log[row][0]), row + 1)
+                return
+
     def _note_first_faulty_read(self, ctrl, read: int, t_s: float) -> None:
         self.first_applied_t_s = t_s
         log = ctrl.__dict__.get("period_log") or []
@@ -381,8 +493,11 @@ class RodFaultInjector:
 
     # --- after the run
     def latch_record(self, ctrl) -> dict:
-        """The fault leg's rod fallback at or after the first faulty read."""
-        empty = {"is_latched": False, "reason": None, "t_s": None, "reads_after_first": None}
+        """The fault leg's rod fallback at or after the first faulty read; ``is_same_read_d1``
+        = its reason is D1 on the first faulty read itself (edition 5 6.3.2: only that is a
+        latch; a later one, another reason or none is not)."""
+        empty = {"is_latched": False, "reason": None, "t_s": None, "reads_after_first": None,
+                 "is_same_read_d1": False}
         if self.first_applied_t_s is None:
             return empty
         prefix = f"{FAULT_REASON_EVENT}:{self.fault.leg}:"
@@ -392,10 +507,11 @@ class RodFaultInjector:
                 t_latch = float(event.t_s)
                 reads = [i for i, t in enumerate(self.read_t_s)
                          if abs(t - t_latch) <= TIME_TOLERANCE_S]
-                return {"is_latched": True, "reason": event.name[len(prefix):],
-                        "t_s": round(t_latch, 6),
-                        "reads_after_first": (reads[0] - self.first_applied_read) if reads
-                        else None}
+                reads_after = (reads[0] - self.first_applied_read) if reads else None
+                reason = event.name[len(prefix):]
+                return {"is_latched": True, "reason": reason, "t_s": round(t_latch, 6),
+                        "reads_after_first": reads_after,
+                        "is_same_read_d1": reason == D1_REASON and reads_after == 0}
         return empty
 
     def sum_offset_record(self) -> dict | None:
@@ -433,6 +549,8 @@ class RodFaultInjector:
             "pre_trigger_fallback_events": fallback,
             "rod_fault_sum_offset_N": self.sum_offset_record(),
             "reads": len(self.read_t_s), "updates": len(log),
+            **({"witness": self.witness}
+               if fault.anchor.kind is AnchorKind.RETRACT_WITNESS_AFTER_LEVEL else {}),
         }
 
     def t4h_arrays(self, period_t: np.ndarray) -> dict[str, np.ndarray]:

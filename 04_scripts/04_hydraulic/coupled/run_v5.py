@@ -143,6 +143,9 @@ refuses the bound, so they keep it off."""
 
 _P3H = {**_P3, "extend_start_hold": True}
 """436.9 (``jp3_remedy_spec.md`` 4.2): ③ revision 5, tag ``final_C4G2_P3H``."""
+_P3W = {**_P3H, "extend_start_witness": True}
+"""Edition 5 (``jp3_remedy_spec_v5.md`` 4.6, 6.2): ③ revision 6, tag ``final_C4G2_P3W``; the
+436.9 settings that ran ③ revision 5 run it from edition 5 on."""
 _PLANT_J = {"line_fill_gate": _vn(1.0), "lock_anchor_continuous": True,
             "rod_flow_cap_all": True, "rod_reading_truth": True}
 """P1 (VN, 1.0, 0.02) + P2 + P3 + P4."""
@@ -150,25 +153,32 @@ _VB_PLANT_J = {**_VB_PLANT, **_PLANT_J}
 LS_CLOSURES = {"1": (0.01, 0.05), "2": (0.05, 0.05), "3": (0.02, 0.02), "4": (0.02, 0.10)}
 """LS1 .. LS4 lock closure (overlap ratio, closing delay)."""
 JP3_SETTINGS: dict[str, tuple[bool, dict]] = {
-    "VBH": (True, {**_VB_PLANT, **_P3H}),
-    **{f"LSH{n}": (True, {**_VB_PLANT, "lock_closure": _lc(*closure), **_P3H})
+    "VBH": (True, {**_VB_PLANT, **_P3W}),
+    **{f"LSH{n}": (True, {**_VB_PLANT, "lock_closure": _lc(*closure), **_P3W})
        for n, closure in LS_CLOSURES.items()},
-    "VBJ": (True, {**_VB_PLANT_J, **_P3H}),
-    **{f"LSJ{n}": (True, {**_VB_PLANT_J, "lock_closure": _lc(*closure), **_P3H})
+    "VBJ": (True, {**_VB_PLANT_J, **_P3W}),
+    **{f"LSJ{n}": (True, {**_VB_PLANT_J, "lock_closure": _lc(*closure), **_P3W})
        for n, closure in LS_CLOSURES.items()},
     "VBJ0": (True, _VB_PLANT_J),
+    "VBK": (True, {**_VB_PLANT_J, **_P3W}),
     "VBK0": (True, _VB_PLANT_J),
-    # TODO(edition 5, after the seal): "VBK" = the VBJ plant + ③ rev 6 (R5-8 .. R5-10) and the
-    # rod fault plan; not registered before rev 6 exists.
 }
-"""436.9 settings (spec 4.2): VBJ / LSJ1 .. LSJ4 judged (P1 .. P4 + ③ rev 5), VBJ0 the same
-plant with ③ off (T8, H-7 pair), VBH / LSH1 .. LSH4 the old VB / LS plant with ③ rev 5
-(controller effect alone, T8 on the old plant). Edition 5 6.2a: VBK0 = the VBJ0 options with a
-rod sensor fault plan (``R79_ROD_FAULT_PLAN``, X-10; ③ off). :data:`SETTINGS` stays as it is
-(its names and digests are pinned); :data:`ALL_SETTINGS` resolves both."""
-ROD_FAULT_SETTINGS = ("VBK0",)
-"""Edition 5 6.2a: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
-one without the other; their names start with ``ROD_FAULT_SETTING_PREFIX`` "VBK")."""
+"""436.9 settings (spec 4.2), from edition 5 on with ③ revision 6 (``jp3_remedy_spec_v5.md``
+6.2: VBH and VBJ of T-JR-12a run revision 6): VBJ / LSJ1 .. LSJ4 judged (P1 .. P4 + ③), VBJ0
+the same plant with ③ off (T8, H-7 pair), VBH / LSH1 .. LSH4 the old VB / LS plant with ③
+(controller effect alone, T8 on the old plant). Edition 5 6.3.1: VBK = the VBJ options and
+VBK0 = the VBJ0 options, each with a rod sensor fault plan (``R79_ROD_FAULT_PLAN``, X-10).
+:data:`SETTINGS` stays as it is (its names and digests are pinned); :data:`ALL_SETTINGS`
+resolves both. The revision 5 options of edition 4a stay in :data:`JP3_REV5_SETTINGS`."""
+JP3_REV5_SETTINGS: dict[str, tuple[bool, dict]] = {
+    "VBH": (True, {**_VB_PLANT, **_P3H}),
+    "VBJ": (True, {**_VB_PLANT_J, **_P3H}),
+}
+"""The edition 4a revision 5 options of VBH and VBJ (record only: never a runnable setting;
+the X-10 bit-for-bit test compares a run of these with the commit before X-10)."""
+ROD_FAULT_SETTINGS = ("VBK", "VBK0")
+"""Edition 5 6.3.1: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
+one without the other by this list, audit W15)."""
 ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS}
 JP3_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JP3_DIAG_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4", "VBJ0")

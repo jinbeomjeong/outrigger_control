@@ -1,0 +1,762 @@
+"""436.9 edition 5 X-13 (``jp3_remedy_spec_v5.md`` 6.3, 6.6, 8 4.(6)): the T-JR-12b judge.
+
+Two sub-commands, run in the order of 8 4.(6) (VBK0 first):
+
+``decide``  VBK0 outputs only (no VBK path argument; no VBK file is opened). On the blocks
+            given (b1, b2, then b3 / b4 when a decision asked for them): the key presence gate
+            (6.6, X-2), the plan and cell check against the X-11 ``selection.json``, the A/A
+            floor (6.3.8: b1 against b2, all 167 cases; one side without READY, or the first
+            READY difference rounded to 1e-6 s above 30 s; 3 pairs or more stop), the VBK0
+            classification (6.3.2 order: no trigger, pre-trigger fallback, not latched, VBK0
+            READY not reached, opportunity), the N top-up (6.3.5: ``N_opp < 0.9 N`` of b1 + b2
+            asks for b3; ``N_opp < 301`` after it is not judgeable) and the witness top-up
+            (6.3.6: ``k`` = opportunity pairs whose VBK0 columns show a witnessed retract carry
+            of the fault leg after the latch, ``rod_fault_plan.retract_witnesses`` with the TRw
+            form; ``k < 45`` asks for b4, whose opportunity pairs all count; ``k < 45`` after it
+            is not judgeable). Writes the decision record (inputs with their sha256, counts,
+            decisions, exit code).
+``judge``   The decision record (its sha256 given; status ``decided``, else exit 2 before any VBK
+            file is opened, also when its VBK0 inputs changed), the VBK0 and VBK outputs of the
+            decided blocks. Per pair the identity (가) trigger read, (나) pre-trigger command
+            sha256, (다) plan sha256 / fault id / leg / anchor / ``delay_reads`` 0 (6.3.4), the
+            pair classification (both arms; a VBK-only pre-trigger fallback or missing latch is
+            a setting defect, 6.3.5), the rev 6 identity of every VBK line (tag base
+            ``final_C4G2_P3W``, ``hydraulics_record.extend_bound_check.rule_revision`` and
+            ``run_extend_start_revision`` all 6, 4.6), then 6.3.7: (1) a new (name, leg) FAULT
+            pair of the T4h ``meta_json`` events on an opportunity or VBK0-READY-missing pair,
+            (2) READY more than 30 s later (rounded to 1e-6 s), (3) READY lost, (4) J-P3 of
+            those VBK lines (``j_p3_judgement_rev5``; 0 judged rows is not judgeable). Records:
+            category counts per block and cell, tau_R pairs by the phase of the trigger update
+            (LEVEL / PROBE), the coverage keys of 6.3.9 after the latch on the fault leg (sums of
+            ``jp3_r58_witness`` / ``jp3_r59_substeps`` / ``jp3_r510_candidates`` of the VBK T4h),
+            the new FAULT pairs of the no-trigger and pre-trigger-fallback pairs, the 95 % upper
+            bounds of the pass sentence. The sensor grade transitions (6.3.7) are left to the
+            r79 grade tools (``grade_transitions.computed`` False).
+
+Inputs: ``--selection`` and ``--selection-sha256`` (the X-11 record), ``--vbk0 b<j>=<run json>``
+and ``--vbk0-t4h b<j>=<T4h folder>`` (the r79 runner output and its ``R79_T4H_DIR``; a line's
+``t4h_file`` is a name in that folder, never a path of the working folder), and for ``judge``
+``--vbk`` / ``--vbk-t4h`` alike plus ``--decision`` / ``--decision-sha256``. ``--out`` must not
+exist. The stdout's last line is JSON with ``status``, the problem counts and the output path.
+
+======  ==================  ===================================================================
+exit    status              meaning
+======  ==================  ===================================================================
+0       ``decided``         decide: the blocks are decided (``blocks``)
+0       ``needs_b3`` / ``needs_b4``  decide: run that VBK0 block, then decide again with it
+0       ``pass``            judge: every 6.3.7 count 0
+1       ``failed``          judge: a 6.3.7 failure (stop, 8 5: re-design)
+2       ``aa_floor_stop``   decide: A/A 3 pairs or more (not judgeable, not a failure; ask
+                            again, no rerun before the answer, 6.3.8)
+2       ``setting_defect``  a not-latched pair, a pair identity / plan / revision mismatch, a
+                            VBK-only pre-trigger fallback (outranks the others)
+2       ``not_judgeable``   a missing line, key or array (X-2), another cell table, a decision
+                            record of another sha or status, ``N_opp < 301`` / ``k < 45`` after
+                            the top-up, 0 judged rows, an existing ``--out``
+3       ``error``           a tool error (unreadable file, broken JSON, another shape)
+======  ==================  ===================================================================
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+for _path in (HERE, ROOT / "03_src", ROOT / "04_scripts" / "03_control" / "s8"):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
+LEGS = ("FL", "FR", "RL", "RR")
+NO_LEG = "–"
+BLOCKS = ("b1", "b2", "b3", "b4")
+CASES_PER_BLOCK = 167
+NO_TRIGGER, PRE_FALLBACK, UNLATCHED = "no_trigger", "pre_trigger_fallback", "unlatched"
+VBK0_NOT_READY, OPPORTUNITY = "vbk0_ready_unreached", "opportunity"
+CATEGORIES = (NO_TRIGGER, PRE_FALLBACK, UNLATCHED, VBK0_NOT_READY, OPPORTUNITY)
+"""6.3.2 order: the first that fits."""
+JUDGED_CATEGORIES = (OPPORTUNITY, VBK0_NOT_READY)
+"""6.3.7 (1) and (4): opportunity pairs and VBK0-READY-missing pairs."""
+READY_LIMIT_S = 30.0
+READY_ROUND_DIGITS = 6
+AA_STOP_PAIRS = 3
+N_TOPUP_RATIO = 0.9
+N_OPP_MIN = 301
+K_MIN = 45
+UPPER_BOUND_ALPHA = 0.05
+SETTING_OF_ARM = {"vbk0": "VBK0", "vbk": "VBK"}
+REVISION = 6
+REVISION_BASE_TAG = "final_C4G2_P3W"
+FAULT_PREFIX = "FAULT"
+PLAN_FIELDS = ("plan_sha256", "fault_id", "leg", "anchor", "delay_reads")
+ROD_FAULT_FIELDS = (*PLAN_FIELDS, "is_armed", "trigger_read", "first_applied_read",
+                    "first_applied_t_s", "latched", "pre_trigger_commands_sha256",
+                    "pre_trigger_fallback")
+T4H_ARRAYS = ("motor_stroke_m", "command_m_s", "phase", "rod_fault_applied")
+T4H_REV6_ARRAYS = ("jp3_t_s", "jp3_r58_witness", "jp3_r59_substeps", "jp3_r510_candidates")
+COVERAGE_KEYS = {"jp3_r58_witness_carries": "jp3_r58_witness",
+                 "jp3_r59_substeps": "jp3_r59_substeps",
+                 "jp3_r510_candidates": "jp3_r510_candidates"}
+TAU_R_ANCHOR = "retract_start_after:LEVEL"
+EXIT_OK, EXIT_FAILED, EXIT_NOT_JUDGEABLE, EXIT_ERROR = 0, 1, 2, 3
+TIME_TOLERANCE_S = 1e-9
+
+
+class Stop(Exception):
+    """A condition that ends the sub-command with exit 2 (``status`` in :attr:`status`)."""
+
+    def __init__(self, status: str, reason: str) -> None:
+        super().__init__(reason)
+        self.status = status
+
+
+@dataclass
+class Problems:
+    setting_defects: list[str] = field(default_factory=list)
+    not_judgeable: list[str] = field(default_factory=list)
+    failures: list[str] = field(default_factory=list)
+
+    def status(self) -> str:
+        if self.setting_defects:
+            return "setting_defect"
+        if self.not_judgeable:
+            return "not_judgeable"
+        return "failed" if self.failures else "pass"
+
+    def counts(self) -> dict[str, int]:
+        return {"setting_defects": len(self.setting_defects),
+                "not_judgeable": len(self.not_judgeable), "failures": len(self.failures)}
+
+
+@dataclass
+class Line:
+    """One result line of one arm with its T4h record (loaded on first use)."""
+
+    key: str
+    row: dict
+    t4h_path: Path
+    _arrays: dict | None = None
+    _meta: dict | None = None
+
+    def arrays(self) -> dict:
+        if self._arrays is None:
+            with np.load(self.t4h_path, allow_pickle=False) as data:
+                self._arrays = {name: np.asarray(data[name]) for name in data.files
+                                if name != "meta_json"}
+                self._meta = json.loads(str(data["meta_json"]))
+        return self._arrays
+
+    def meta(self) -> dict:
+        self.arrays()
+        return self._meta
+
+    @property
+    def fault(self) -> dict:
+        return self.row["rod_fault"]
+
+
+# ------------------------------------------------------------------------------- inputs
+def file_sha256(path: Path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def plain_key(key: str) -> str:
+    return key.split("#", 1)[1] if "#" in key else key
+
+
+def case_of(key: str) -> str:
+    tokens = plain_key(key).split("|")
+    return "|".join([tokens[0], *tokens[2:]])
+
+
+def ready_time(row: dict) -> float | None:
+    """4a-3 4.1 (``r79_sensor_judge._ready_time``): ``base.t_ready_s`` when present, else
+    ``base.t_ready``; None = no READY."""
+    base = row["base"]
+    return base.get("t_ready_s", base.get("t_ready"))
+
+
+def parse_block_paths(values: list[str] | None, option: str) -> dict[str, Path]:
+    """``b<j>=<path>`` arguments by block.
+
+    Raises:
+        Stop: A malformed or repeated block (not judgeable).
+    """
+    paths: dict[str, Path] = {}
+    for value in values or []:
+        block, separator, path = value.partition("=")
+        if not separator or block not in BLOCKS or block in paths:
+            raise Stop("not_judgeable", f"{option} {value!r}: one b1..b4=<path> per block")
+        paths[block] = Path(path)
+    return paths
+
+
+def load_selection(path: Path, expected_sha256: str) -> dict:
+    actual = file_sha256(path)
+    if actual != expected_sha256:
+        raise Stop("not_judgeable", f"--selection sha256 {actual[:12]} is not the given "
+                                    f"{expected_sha256[:12]}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def block_keys(selection: dict, block: str) -> list[str]:
+    """The plain keys of a block (its seed and the 167 cases of the cell table)."""
+    seed = selection["blocks"][block]["seed_index"]
+    keys = []
+    for row in selection["cell_table"]:
+        level, rest = row["case"].split("|", 1)
+        keys.append(f"{level}|s{seed}|{rest}")
+    return keys
+
+
+def load_lines(result_path: Path, t4h_dir: Path, expected: list[str], arm: str,
+               problems: Problems) -> dict[str, Line]:
+    """The lines of one block and arm by plain key; every expected key once, no error line,
+    the arm's setting (missing / repeated / other lines are not judgeable)."""
+    document = json.loads(result_path.read_text(encoding="utf-8"))
+    rows = document["results"] if isinstance(document, dict) else document
+    lines: dict[str, Line] = {}
+    for row in rows:
+        key = plain_key(row["key"])
+        if key in lines:
+            problems.not_judgeable.append(f"{arm} {key}: repeated line")
+            continue
+        if row.get("error"):
+            problems.not_judgeable.append(f"{arm} {key}: error line")
+        if row.get("v5_setting") != SETTING_OF_ARM[arm]:
+            problems.setting_defects.append(f"{arm} {key}: v5_setting {row.get('v5_setting')!r}")
+        t4h_file = row.get("t4h_file")
+        lines[key] = Line(key, row, t4h_dir / t4h_file if t4h_file else t4h_dir / "<none>")
+    missing = sorted(set(expected) - set(lines))
+    other = sorted(set(lines) - set(expected))
+    if missing or other:
+        problems.not_judgeable.append(f"{arm} {result_path.name}: {len(missing)} keys missing, "
+                                      f"{len(other)} other (first {(missing + other)[:2]})")
+    return lines
+
+
+def presence_problems(line: Line, arm: str) -> list[str]:
+    """X-2 / 6.6 key presence of one line (empty = every judged input is there)."""
+    row = line.row
+    problems = []
+    record = row.get("rod_fault")
+    if not isinstance(record, dict):
+        return ["rod_fault missing"]
+    problems += [f"rod_fault.{name} missing" for name in ROD_FAULT_FIELDS if name not in record]
+    if not isinstance(record.get("latched"), dict) or "is_same_read_d1" not in record["latched"]:
+        problems.append("rod_fault.latched.is_same_read_d1 missing")
+    base = row.get("base")
+    if not isinstance(base, dict) or not ("t_ready_s" in base or "t_ready" in base):
+        problems.append("base.t_ready_s / base.t_ready missing")
+    if arm == "vbk":
+        check = (row.get("hydraulics_record") or {}).get("extend_bound_check")
+        if not isinstance(check, dict):
+            problems.append("hydraulics_record.extend_bound_check missing")
+        elif "rule_revision" not in check:
+            problems.append("hydraulics_record.extend_bound_check.rule_revision missing")
+        if "run_extend_start_revision" not in row:
+            problems.append("run_extend_start_revision missing")
+    if not line.t4h_path.is_file():
+        return [*problems, f"T4h {line.t4h_path.name} missing"]
+    arrays = line.arrays()
+    names = T4H_ARRAYS + (T4H_REV6_ARRAYS if arm == "vbk" else ())
+    problems += [f"T4h array {name} missing" for name in names if name not in arrays]
+    if not isinstance(line.meta().get("events"), list):
+        problems.append("T4h meta_json events missing")
+    return problems
+
+
+def check_presence(lines: dict[str, Line], arm: str, problems: Problems) -> None:
+    for key, line in lines.items():
+        problems.not_judgeable += [f"{arm} {key}: {text}" for text in presence_problems(line, arm)]
+
+
+def check_plan(lines: dict[str, Line], selection: dict, block: str, arm: str,
+               problems: Problems) -> None:
+    """The lines' faults are the block's plan and the fixed cell table (6.3.1, 6.3.4 (다))."""
+    plan_name = selection["blocks"][block]["plan"]
+    plan_sha = selection["outputs"][plan_name]
+    phase_rule = selection["blocks"][block]["phase"]
+    anchors = {"tau_C": "phase_exit:CHECK", "tau_R": TAU_R_ANCHOR,
+               "TRw": "retract_witness_after:LEVEL"}
+    by_case = {row["case"]: row for row in selection["cell_table"]}
+    for key, line in lines.items():
+        record = line.row.get("rod_fault") or {}
+        if record.get("plan_sha256") != plan_sha:
+            problems.setting_defects.append(f"{arm} {key}: plan sha256 is not {plan_name}")
+        if record.get("delay_reads") != 0:
+            problems.setting_defects.append(f"{arm} {key}: delay_reads "
+                                            f"{record.get('delay_reads')!r}, 0 needed")
+        cell = by_case.get(case_of(key))
+        if cell is None:
+            continue
+        phase = cell["phase"] if phase_rule == "cell" else phase_rule
+        if record.get("leg") != cell["leg"] or record.get("anchor") != anchors[phase]:
+            problems.not_judgeable.append(f"{arm} {key}: fault {record.get('leg')} "
+                                          f"{record.get('anchor')} is not the cell table's")
+
+
+def load_arm(selection: dict, results: dict[str, Path], t4h_dirs: dict[str, Path], arm: str,
+             problems: Problems) -> dict[str, dict[str, Line]]:
+    """Every given block of one arm, checked (presence, plan, cells)."""
+    if set(results) != set(t4h_dirs):
+        raise Stop("not_judgeable", f"--{arm} and --{arm}-t4h name other blocks")
+    blocks = {}
+    for block in BLOCKS:
+        if block not in results:
+            continue
+        lines = load_lines(results[block], t4h_dirs[block], block_keys(selection, block), arm,
+                           problems)
+        check_presence(lines, arm, problems)
+        check_plan(lines, selection, block, arm, problems)
+        blocks[block] = lines
+    return blocks
+
+
+def input_record(results: dict[str, Path], t4h_dirs: dict[str, Path],
+                 blocks: dict[str, dict[str, Line]]) -> dict:
+    """sha256 of each run file and a digest of the T4h files its lines name."""
+    record = {}
+    for block, lines in blocks.items():
+        names = sorted(line.t4h_path.name for line in lines.values() if line.t4h_path.is_file())
+        digest = hashlib.sha256("".join(
+            f"{file_sha256(t4h_dirs[block] / name)}  {name}\n" for name in names).encode())
+        record[block] = {"run": str(results[block]), "run_sha256": file_sha256(results[block]),
+                         "t4h_dir": str(t4h_dirs[block]), "t4h_files": len(names),
+                         "t4h_sha256_digest": digest.hexdigest()}
+    return record
+
+
+# ------------------------------------------------------------------------------- classification
+def is_latched(record: dict) -> bool:
+    return bool((record.get("latched") or {}).get("is_same_read_d1"))
+
+
+def classify_line(line: Line) -> str:
+    """6.3.2 order on one arm (the VBK0 count of the decisions, 6.3.5)."""
+    record = line.fault
+    if not record.get("is_armed") or record.get("first_applied_read") is None:
+        return NO_TRIGGER
+    if record.get("pre_trigger_fallback"):
+        return PRE_FALLBACK
+    if not is_latched(record):
+        return UNLATCHED
+    if ready_time(line.row) is None:
+        return VBK0_NOT_READY
+    return OPPORTUNITY
+
+
+def classify_pair(vbk: Line, vbk0: Line, problems: Problems) -> str:
+    """6.3.2 / 6.3.4 on both arms; identity breaks and one-sided outcomes are setting defects."""
+    key = vbk0.key
+    fault, fault0 = vbk.fault, vbk0.fault
+    differing = [name for name in PLAN_FIELDS if fault.get(name) != fault0.get(name)]
+    if differing:
+        problems.setting_defects.append(f"{key}: plans differ in {differing} (다)")
+    armed, armed0 = bool(fault.get("is_armed")), bool(fault0.get("is_armed"))
+    if not armed and not armed0:
+        return NO_TRIGGER
+    if armed != armed0:
+        problems.setting_defects.append(f"{key}: armed on one arm only (가)")
+        return NO_TRIGGER
+    fallback, fallback0 = bool(fault.get("pre_trigger_fallback")), bool(
+        fault0.get("pre_trigger_fallback"))
+    if fallback or fallback0:
+        if fallback and not fallback0:
+            problems.setting_defects.append(f"{key}: pre-trigger fallback on VBK only (6.3.5)")
+        return PRE_FALLBACK
+    if fault.get("trigger_read") != fault0.get("trigger_read"):
+        problems.setting_defects.append(f"{key}: trigger reads differ (가)")
+    if fault.get("pre_trigger_commands_sha256") != fault0.get("pre_trigger_commands_sha256"):
+        problems.setting_defects.append(f"{key}: pre-trigger commands differ (나)")
+    if not (is_latched(fault) and is_latched(fault0)):
+        problems.setting_defects.append(f"{key}: not latched on the first faulty read (6.3.2)")
+        return UNLATCHED
+    if ready_time(vbk0.row) is None:
+        return VBK0_NOT_READY
+    return OPPORTUNITY
+
+
+# ------------------------------------------------------------------------------- decide
+def aa_floor(blocks: dict[str, dict[str, Line]], selection: dict) -> dict:
+    """6.3.8: b1 against b2 over all 167 cases (missing lines are not judgeable)."""
+    first = {case_of(key): line for key, line in blocks["b1"].items()}
+    second = {case_of(key): line for key, line in blocks["b2"].items()}
+    cases = [row["case"] for row in selection["cell_table"]]
+    missing = [case for case in cases if case not in first or case not in second]
+    if missing:
+        raise Stop("not_judgeable", f"A/A: {len(missing)} of {len(cases)} pairs incomplete")
+    counted = []
+    for case in cases:
+        ready, ready_other = ready_time(first[case].row), ready_time(second[case].row)
+        if (ready is None) != (ready_other is None):
+            counted.append(case)
+        elif ready is not None and round(abs(ready - ready_other), READY_ROUND_DIGITS) > \
+                READY_LIMIT_S:
+            counted.append(case)
+    return {"pairs": len(cases), "counted_pairs": len(counted), "counted": counted,
+            "stop_at": AA_STOP_PAIRS, "is_stop": len(counted) >= AA_STOP_PAIRS}
+
+
+def witness_after_latch(line: Line) -> bool:
+    """6.3.6 record function on one VBK0 line: a witnessed retract carry of the fault leg with
+    its witness read at or after the latch read (TRw form, ``retract_witnesses``)."""
+    import rod_fault_plan
+
+    arrays = line.arrays()
+    leg = LEGS.index(line.fault["leg"])
+    found = rod_fault_plan.retract_witnesses(
+        arrays["phase"], arrays["command_m_s"], arrays["motor_stroke_m"], leg,
+        rod_fault_plan.hold_speed_m_s(), from_read=int(line.fault["first_applied_read"]))
+    return bool(found)
+
+
+def count_categories(lines: dict[str, Line]) -> dict[str, list[str]]:
+    by_category = {category: [] for category in CATEGORIES}
+    for key, line in lines.items():
+        by_category[classify_line(line)].append(key)
+    return by_category
+
+
+def decide(selection: dict, blocks: dict[str, dict[str, Line]]) -> dict:
+    """The decisions of 6.3.5, 6.3.6 and 6.3.8 on VBK0 lines (module docstring)."""
+    if not {"b1", "b2"} <= set(blocks):
+        raise Stop("not_judgeable", "decide needs the VBK0 blocks b1 and b2")
+    aa = aa_floor(blocks, selection)
+    out: dict = {"aa": aa}
+    if aa["is_stop"]:
+        raise _with_record(Stop("aa_floor_stop", f"A/A: {aa['counted_pairs']} pairs"), out)
+    categories = {block: count_categories(lines) for block, lines in blocks.items()}
+    out["categories"] = {block: {name: len(keys) for name, keys in found.items()}
+                         for block, found in categories.items()}
+    unlatched = sum(len(found[UNLATCHED]) for found in categories.values())
+    if unlatched:
+        raise _with_record(Stop("setting_defect", f"{unlatched} VBK0 pairs not latched"), out)
+    opportunity_12 = sum(len(categories[block][OPPORTUNITY]) for block in ("b1", "b2"))
+    n_12 = CASES_PER_BLOCK * 2
+    needs_b3 = opportunity_12 < N_TOPUP_RATIO * n_12
+    out["n_topup"] = {"n_opp_b1_b2": opportunity_12, "n_b1_b2": n_12,
+                      "threshold": N_TOPUP_RATIO * n_12, "needs_b3": needs_b3}
+    if needs_b3 and "b3" not in blocks:
+        out["status"], out["blocks"] = "needs_b3", ["b1", "b2"]
+        return out
+    if not needs_b3 and "b3" in blocks:
+        raise _with_record(Stop("not_judgeable", "b3 given but not asked for (6.3.5)"), out)
+    used = ["b1", "b2"] + (["b3"] if needs_b3 else [])
+    n_opp = sum(len(categories[block][OPPORTUNITY]) for block in used)
+    if n_opp < N_OPP_MIN:
+        raise _with_record(Stop("not_judgeable", f"N_opp {n_opp} < {N_OPP_MIN} after b3"), out)
+    witness_pairs = [key for block in used for key in categories[block][OPPORTUNITY]
+                     if witness_after_latch(blocks[block][key])]
+    k = len(witness_pairs)
+    needs_b4 = k < K_MIN
+    out["witness_topup"] = {"k_without_b4": k, "k_min": K_MIN, "needs_b4": needs_b4,
+                            "witness_pairs": witness_pairs}
+    if needs_b4 and "b4" not in blocks:
+        out["status"], out["blocks"] = "needs_b4", used
+        return out
+    if not needs_b4 and "b4" in blocks:
+        raise _with_record(Stop("not_judgeable", "b4 given but not asked for (6.3.6)"), out)
+    if needs_b4:
+        used.append("b4")
+        b4_pairs = categories["b4"][OPPORTUNITY]
+        k += len(b4_pairs)
+        n_opp += len(b4_pairs)
+        out["witness_topup"]["b4_opportunity_pairs"] = len(b4_pairs)
+        if k < K_MIN:
+            raise _with_record(Stop("not_judgeable", f"k {k} < {K_MIN} after b4"), out)
+    out.update(status="decided", blocks=used, n=CASES_PER_BLOCK * len(used), n_opp=n_opp, k=k)
+    return out
+
+
+def _with_record(stop: Stop, record: dict) -> Stop:
+    stop.record = record
+    return stop
+
+
+# ------------------------------------------------------------------------------- judge
+def fault_pairs(events: list) -> set[tuple[str, str]]:
+    """6.3.7 (1): (name, leg) of every event whose first ':' token starts with ``FAULT``; the
+    legs are the FL / FR / RL / RR elements of the other tokens split at ',' ({'–'} if none)."""
+    pairs = set()
+    for event in events:
+        name = event[1] if isinstance(event, (list, tuple)) else event
+        tokens = str(name).split(":")
+        if not tokens[0].startswith(FAULT_PREFIX):
+            continue
+        legs = {part for token in tokens[1:] for part in token.split(",") if part in LEGS}
+        for leg in legs or {NO_LEG}:
+            pairs.add((tokens[0], leg))
+    return pairs
+
+
+def new_fault_pairs(vbk: Line, vbk0: Line) -> list[tuple[str, str]]:
+    return sorted(fault_pairs(vbk.meta()["events"]) - fault_pairs(vbk0.meta()["events"]))
+
+
+def revision_problems(line: Line) -> list[str]:
+    """4.6: the VBK line's tag and both revision keys name revision 6."""
+    from outrigger_sim.hydraulics.v5_options import extend_start_revision_of_tag
+
+    row = line.row
+    problems = []
+    tag = row.get("controller_tag")
+    if extend_start_revision_of_tag(tag) != REVISION:
+        problems.append(f"controller_tag {tag!r} is not revision {REVISION}")
+    check = (row.get("hydraulics_record") or {}).get("extend_bound_check") or {}
+    if check.get("rule_revision") != REVISION:
+        problems.append(f"extend_bound_check.rule_revision {check.get('rule_revision')!r}")
+    if row.get("run_extend_start_revision") != REVISION:
+        problems.append(f"run_extend_start_revision {row.get('run_extend_start_revision')!r}")
+    return problems
+
+
+def coverage(line: Line) -> dict[str, int]:
+    """6.3.9: the fault leg's per-read rev 6 counts from the latch read on (VBK T4h)."""
+    arrays = line.arrays()
+    leg = LEGS.index(line.fault["leg"])
+    after = np.asarray(arrays["jp3_t_s"], float) >= float(line.fault["first_applied_t_s"]) - \
+        TIME_TOLERANCE_S
+    return {key: int(np.asarray(arrays[name])[after, leg].astype(np.int64).sum())
+            for key, name in COVERAGE_KEYS.items()}
+
+
+def trigger_phase(line: Line) -> str:
+    """The phase after the trigger update (tau_R LEVEL / PROBE record, 6.3.3)."""
+    return str(line.arrays()["phase"][int(line.fault["trigger_read"])]).upper()
+
+
+def upper_bound(count: int) -> float | None:
+    return None if count <= 0 else 1.0 - UPPER_BOUND_ALPHA ** (1.0 / count)
+
+
+def judge_pairs(blocks0: dict, blocks1: dict, decision: dict, problems: Problems) -> dict:
+    """Classification, identity, revision and 6.3.7 (1) .. (3) over the decided blocks."""
+    from outrigger_sim.control.extend_start_bound import j_p3_judgement_rev5
+
+    pairs, judged_lines, records = [], [], {"new_faults_recorded": []}
+    by_block: dict[str, dict[str, int]] = {}
+    tau_r_phases: dict[str, int] = {}
+    totals = dict.fromkeys(COVERAGE_KEYS, 0)
+    for block in decision["blocks"]:
+        lines0, lines1 = blocks0[block], blocks1[block]
+        by_block[block] = dict.fromkeys(CATEGORIES, 0)
+        for key, vbk0 in lines0.items():
+            vbk = lines1.get(key)
+            if vbk is None:
+                continue  # load_lines reported it
+            problems.setting_defects += [f"VBK {key}: {text}" for text in revision_problems(vbk)]
+            category = classify_pair(vbk, vbk0, problems)
+            if category != classify_line(vbk0):
+                problems.setting_defects.append(f"{key}: pair category {category} is not the "
+                                                f"VBK0 one {classify_line(vbk0)} (6.3.5)")
+            by_block[block][category] += 1
+            new_faults = new_fault_pairs(vbk, vbk0) if category != UNLATCHED else []
+            pair = {"block": block, "key": key, "category": category,
+                    "new_faults": [list(item) for item in new_faults]}
+            if category in JUDGED_CATEGORIES:
+                judged_lines.append(vbk)
+                if new_faults:
+                    problems.failures.append(f"{key}: new FAULT {new_faults} (1)")
+            elif new_faults:
+                records["new_faults_recorded"].append(pair)
+            if category == OPPORTUNITY:
+                _judge_ready(vbk, vbk0, pair, problems)
+                pair["coverage"] = coverage(vbk)
+                for name, value in pair["coverage"].items():
+                    totals[name] += value
+                if vbk0.fault["anchor"] == TAU_R_ANCHOR:
+                    phase = trigger_phase(vbk0)
+                    tau_r_phases[phase] = tau_r_phases.get(phase, 0) + 1
+            pairs.append(pair)
+    jp3 = j_p3_judgement_rev5(
+        [line.row["hydraulics_record"]["extend_bound_check"] for line in judged_lines],
+        [bool(line.row.get("has_rod_reading", True)) for line in judged_lines],
+        [bool(line.row.get("head_only_declared", False)) for line in judged_lines],
+        expected_judged_runs=len(judged_lines))
+    _judge_jp3(jp3, len(judged_lines), problems)
+    opportunity = sum(counts[OPPORTUNITY] for counts in by_block.values())
+    return {"pairs": pairs, "categories_by_block": by_block, "jp3": jp3,
+            "tau_r_trigger_phase": tau_r_phases, "coverage_totals": totals,
+            "n_opp": opportunity, **records}
+
+
+def _judge_ready(vbk: Line, vbk0: Line, pair: dict, problems: Problems) -> None:
+    """6.3.7 (2) and (3) on an opportunity pair (VBK0 reached READY)."""
+    ready, ready0 = ready_time(vbk.row), ready_time(vbk0.row)
+    pair["ready_s"], pair["ready0_s"] = ready, ready0
+    if ready is None:
+        problems.failures.append(f"{vbk.key}: READY lost (3)")
+        return
+    if round(ready - ready0, READY_ROUND_DIGITS) > READY_LIMIT_S:
+        problems.failures.append(f"{vbk.key}: READY more than {READY_LIMIT_S} s later (2)")
+
+
+def _judge_jp3(jp3: dict, judged_rows: int, problems: Problems) -> None:
+    """6.3.7 (4): H-7 fails, a defect is a setting defect, 0 rows or missing keys are not
+    judgeable (13.2, 4a-5 3.3)."""
+    status = jp3["status"]
+    if judged_rows == 0:
+        problems.not_judgeable.append("J-P3: 0 judged VBK lines (6.3.7 (4))")
+    elif status == "H-7":
+        problems.failures.append("J-P3 H-7 on the VBK lines (4)")
+    elif status == "setting_defect":
+        problems.setting_defects.append("J-P3 setting defect on the VBK lines")
+    elif status != "pass":
+        problems.not_judgeable.append(f"J-P3 {status} on the VBK lines")
+
+
+def load_decision(path: Path, expected_sha256: str, vbk0_inputs: dict) -> dict:
+    """The decision record (its sha256, status ``decided``, the same VBK0 inputs).
+
+    Raises:
+        Stop: Another sha, another status, or changed VBK0 inputs (not judgeable).
+    """
+    if not path.is_file():
+        raise Stop("not_judgeable", f"--decision {path} missing")
+    actual = file_sha256(path)
+    if actual != expected_sha256:
+        raise Stop("not_judgeable", f"--decision sha256 {actual[:12]} is not the given "
+                                    f"{expected_sha256[:12]}")
+    decision = json.loads(path.read_text(encoding="utf-8"))
+    if decision.get("status") != "decided":
+        raise Stop("not_judgeable", f"decision status {decision.get('status')!r}, not decided")
+    if decision.get("inputs", {}).get("vbk0") != vbk0_inputs:
+        raise Stop("not_judgeable", "the VBK0 inputs are not the decision's")
+    return decision
+
+
+# ------------------------------------------------------------------------------- commands
+def _write_new(path: Path, document: dict) -> str:
+    data = (json.dumps(document, indent=1, ensure_ascii=False, default=_plain) + "\n").encode()
+    with path.open("xb") as handle:
+        handle.write(data)
+    return hashlib.sha256(data).hexdigest()
+
+
+def _plain(value):
+    if isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    raise TypeError(f"not JSON: {type(value).__name__}")
+
+
+def cmd_decide(args) -> tuple[str, dict]:
+    selection = load_selection(args.selection, args.selection_sha256)
+    results = parse_block_paths(args.vbk0, "--vbk0")
+    t4h_dirs = parse_block_paths(args.vbk0_t4h, "--vbk0-t4h")
+    problems = Problems()
+    blocks = load_arm(selection, results, t4h_dirs, "vbk0", problems)
+    record = {"rule": "jp3_remedy_spec_v5.md 6.3.5 / 6.3.6 / 6.3.8 (X-13 decide)",
+              "inputs": {"selection_sha256": args.selection_sha256,
+                         "vbk0": input_record(results, t4h_dirs, blocks)}}
+    status = problems.status()
+    if status != "pass":
+        record.update(status=status, problems=problems.__dict__)
+        return status, record
+    try:
+        record.update(decide(selection, blocks))
+    except Stop as stop:
+        record.update(getattr(stop, "record", {}), status=stop.status, reason=str(stop))
+    return record["status"], record
+
+
+def cmd_judge(args) -> tuple[str, dict]:
+    selection = load_selection(args.selection, args.selection_sha256)
+    results0 = parse_block_paths(args.vbk0, "--vbk0")
+    t4h0 = parse_block_paths(args.vbk0_t4h, "--vbk0-t4h")
+    problems = Problems()
+    blocks0 = load_arm(selection, results0, t4h0, "vbk0", problems)
+    # the decision first: a missing, changed or stopped one ends here, no VBK file opened
+    decision = load_decision(args.decision, args.decision_sha256,
+                             input_record(results0, t4h0, blocks0))
+    if set(blocks0) != set(decision["blocks"]):
+        raise Stop("not_judgeable", f"VBK0 blocks {sorted(blocks0)} are not the decided "
+                                    f"{decision['blocks']}")
+    results1 = parse_block_paths(args.vbk, "--vbk")
+    t4h1 = parse_block_paths(args.vbk_t4h, "--vbk-t4h")
+    if set(results1) != set(decision["blocks"]):
+        raise Stop("not_judgeable", f"VBK blocks {sorted(results1)} are not the decided "
+                                    f"{decision['blocks']}")
+    blocks1 = load_arm(selection, results1, t4h1, "vbk", problems)
+    report = {"rule": "jp3_remedy_spec_v5.md 6.3.7 (X-13 judge)",
+              "inputs": {"selection_sha256": args.selection_sha256,
+                         "decision_sha256": args.decision_sha256,
+                         "vbk0": input_record(results0, t4h0, blocks0),
+                         "vbk": input_record(results1, t4h1, blocks1)},
+              "decision": {name: decision.get(name) for name in
+                           ("blocks", "n", "n_opp", "k", "aa", "n_topup", "witness_topup")}}
+    if problems.not_judgeable or problems.setting_defects:
+        report.update(status=problems.status(), problems=problems.__dict__)
+        return report["status"], report
+    found = judge_pairs(blocks0, blocks1, decision, problems)
+    if found["n_opp"] == 0:  # X-5: no judged row is never a pass
+        problems.not_judgeable.append("no opportunity pair")
+    report.update(found)
+    report["grade_transitions"] = {"computed": False, "reason": "the r79 grade tools judge them "
+                                   "(6.3.7: a record; j9_main grades the lines, 6.5)"}
+    report["pass_sentence"] = {"n_opp": decision.get("n_opp"),
+                               "upper_bound_n_opp": upper_bound(decision.get("n_opp") or 0),
+                               "k": decision.get("k"),
+                               "upper_bound_k": upper_bound(decision.get("k") or 0)}
+    report.update(status=problems.status(), problems=problems.__dict__,
+                  problem_counts=problems.counts())
+    return report["status"], report
+
+
+EXIT_OF_STATUS = {"decided": EXIT_OK, "needs_b3": EXIT_OK, "needs_b4": EXIT_OK,
+                  "pass": EXIT_OK, "failed": EXIT_FAILED, "aa_floor_stop": EXIT_NOT_JUDGEABLE,
+                  "setting_defect": EXIT_NOT_JUDGEABLE, "not_judgeable": EXIT_NOT_JUDGEABLE}
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sub = parser.add_subparsers(dest="command", required=True)
+    for name in ("decide", "judge"):
+        command = sub.add_parser(name)
+        command.add_argument("--selection", type=Path, required=True)
+        command.add_argument("--selection-sha256", required=True)
+        command.add_argument("--vbk0", action="append", required=True)
+        command.add_argument("--vbk0-t4h", action="append", required=True)
+        command.add_argument("--out", type=Path, required=True)
+        if name == "judge":
+            command.add_argument("--decision", type=Path, required=True)
+            command.add_argument("--decision-sha256", required=True)
+            command.add_argument("--vbk", action="append", required=True)
+            command.add_argument("--vbk-t4h", action="append", required=True)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parser().parse_args(argv)
+    if args.out.exists():
+        print(json.dumps({"status": "not_judgeable", "reason": "--out exists",
+                          "out": str(args.out)}))
+        return EXIT_NOT_JUDGEABLE
+    try:
+        status, document = (cmd_decide if args.command == "decide" else cmd_judge)(args)
+    except Stop as stop:
+        status, document = stop.status, {"status": stop.status, "reason": str(stop)}
+    except Exception as exc:  # (마): any unexpected exception is a tool error, never a verdict
+        print(f"error: {type(exc).__name__}: {exc}", file=sys.stderr)
+        print(json.dumps({"status": "error", "out": str(args.out)}))
+        return EXIT_ERROR
+    exit_code = EXIT_OF_STATUS[status]
+    document["exit"] = exit_code
+    sha = _write_new(args.out, document)
+    counts = document.get("problem_counts") or {
+        name: len(values) for name, values in (document.get("problems") or {}).items()}
+    print(json.dumps({"status": status, "out": str(args.out), "out_sha256": sha, **counts}))
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

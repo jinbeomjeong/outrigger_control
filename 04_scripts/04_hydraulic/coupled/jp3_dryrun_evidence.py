@@ -103,8 +103,10 @@ EVENT_CANDIDATES = (
 EVENT_SETTINGS = ("VBJ", "VBH", "VBJ0")
 R79_SETTINGS = ("VBJ", "VBH")
 R79_LEVEL = "L2"
-R79_KEY_PATTERN = re.compile(rb'"key"\s*:\s*"((?:cand=[^"#]*#)?L\d+\|s(\d+)\|[^"]*)"')
-"""4a-4 1: an r79 key is a ``"key"`` value ``L<level>|s<seed>|...`` (prefix ``cand=...#``)."""
+R79_KEY_PATTERN = re.compile(
+    rb'"key"\s*:\s*"((?:cand=[^"#]*#)?L\d+[A-Za-z]*\|s(\d+)\|[^"]*)"')
+"""4a-4 1: an r79 key is a ``"key"`` value ``L<level>|s<seed>|...`` (prefix ``cand=...#``);
+edition 5 X-3: the level token is ``L``, a digit, then letters (``L2nocal``, ``L2imuideal``)."""
 CANDIDATE_PREFIX = re.compile(r"^cand=[^#]*#")
 SCAN_SUFFIXES = (".json", ".jsonl")
 DRY_SEED_START = 25

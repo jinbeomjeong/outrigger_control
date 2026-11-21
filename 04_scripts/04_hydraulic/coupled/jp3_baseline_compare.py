@@ -78,6 +78,14 @@ BASELINE_SUMS_SHA256 = fixed.BASELINE_SUMS_SHA256
 SPEC_EDITION = "8be9de22"
 DEFAULT_IDENTITY = {"spec_edition": SPEC_EDITION, "carry_end_rule": "inherit_when_gate_shut",
                     "retract_start_rule": "with_tracker"}
+SPEC_EDITION_V5 = "fe6f5844"
+"""Edition 5 (``jp3_remedy_spec_v5.md``): the ``spec_edition`` of a ③ revision 6 record."""
+HOLD_REVISIONS = (5, 6)
+"""③ hold revisions (``extend_start_bound.HOLD_REVISIONS``); a revision 6 row is never read
+as a revision 4 or 5 row (edition 5 4.6)."""
+IDENTITY_OF_REVISION = {5: DEFAULT_IDENTITY,
+                        6: {**DEFAULT_IDENTITY, "spec_edition": SPEC_EDITION_V5}}
+"""The sealed identity of each hold revision's record (13.6, edition 5 4.6)."""
 BASELINE_ROW_FILES = ("j9_cases.jsonl", "cd.jsonl")
 JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JUDGED_KEYS = ("jp3a_breach_reads", "jp3b_breach_over_tol_reads", "jp3c_breach_reads")
@@ -231,7 +239,9 @@ def _check(record: dict) -> dict:
 
 
 def _is_revision_5(record: dict) -> bool:
-    return _check(record).get("rule_revision") == 5
+    """A hold revision row (``rule_revision`` 5 or 6, edition 5 4.6): the revision 5 rules of
+    this tool apply to both, each with its own sealed identity (:func:`identity_problems`)."""
+    return _check(record).get("rule_revision") in HOLD_REVISIONS
 
 
 def pair_rows(baseline: Baseline, new_rows: list[dict],
@@ -312,8 +322,10 @@ def judged_line_evidence_problems(record: dict | None, is_declared: bool,
     return []
 
 
-R79_KEY = re.compile(r"^L\d+\|s\d+\|")
-"""Addendum 4a-8 2: an r79 line's key (``L<level>|s<seed>|...``, ``cand=...#`` cut first)."""
+R79_KEY = re.compile(r"^L\d+[A-Za-z]*\|s\d+\|")
+"""Addendum 4a-8 2: an r79 line's key (``L<level>|s<seed>|...``, ``cand=...#`` cut first);
+edition 5 X-3: the level token is ``L`` and a digit then letters (``L2``, ``L2nocal``,
+``L2imuideal``)."""
 CANDIDATE_PREFIX = re.compile(r"^cand=[^#]*#")
 DOUBLE_READ_FAMILY = "g8"
 """4a-8 2: the r79 G8 path reads the P4 truth twice per control period (the case step,
@@ -403,12 +415,14 @@ def judge_rows_problems(label: str, lines: list[dict], judge: dict,
 
 def identity_problems(record: dict) -> list[str]:
     """13.6 / 4a-2 R3: a new revision 5 row (VBG5 included) of the sealed edition with the
-    default rules; revision 4 rows have no identity."""
+    default rules, a revision 6 row likewise with the edition 5 ``spec_edition`` (4.6);
+    revision 4 rows have no identity."""
     if not _is_revision_5(record):
         return []
     check = _check(record)
+    expected = IDENTITY_OF_REVISION[check.get("rule_revision")]
     return [f"{record['job']['setting']}: {key} {check.get(key)!r}"
-            for key, value in DEFAULT_IDENTITY.items() if check.get(key) != value]
+            for key, value in expected.items() if check.get(key) != value]
 
 
 # --- P4-2 (addendum 4a-2 section 2) ---------------------------------------------------------

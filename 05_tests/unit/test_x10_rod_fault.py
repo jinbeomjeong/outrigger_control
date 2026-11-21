@@ -332,7 +332,7 @@ def test_record_latch_fallback_and_t4h_arrays() -> None:
         "pre_trigger_commands_sha256", "pre_trigger_fallback", "pre_trigger_fallback_events",
         "rod_fault_sum_offset_N", "reads", "updates"}
     assert record["latched"] == {"is_latched": True, "reason": "D1", "t_s": 0.5,
-                                 "reads_after_first": 0}
+                                 "reads_after_first": 0, "is_same_read_d1": True}
     assert record["pre_trigger_fallback"] is True
     assert record["pre_trigger_fallback_events"] == [(0.1, "WARN_ROD_PRESSURE_FALLBACK:RL")]
     assert (record["applied_periods"], record["reads"], record["updates"]) == (7, 12, 12)
@@ -471,42 +471,174 @@ def test_guard_passes_pins_the_sha_and_workers_check_it(guard_env, tmp_path) -> 
         screen.rod_fault_injector(RUN_KEY)
 
 
-def test_vbk0_is_the_vbj0_options_and_a_rod_fault_setting() -> None:
+def test_vbk_vbk0_are_the_vbj_vbj0_options_and_rod_fault_settings() -> None:
     import j_p3_inputs
     import run_v5
 
     assert run_v5.JP3_SETTINGS["VBK0"] == run_v5.JP3_SETTINGS["VBJ0"]
-    assert "VBK" not in run_v5.ALL_SETTINGS  # rev 6 setting not registered yet
+    assert run_v5.JP3_SETTINGS["VBK"] == run_v5.JP3_SETTINGS["VBJ"]  # ③ rev 6 (edition 5)
     assert all(screen.is_rod_fault_setting(name) for name in run_v5.ROD_FAULT_SETTINGS)
     assert not any(screen.is_rod_fault_setting(name) for name in run_v5.ALL_SETTINGS
                    if name not in run_v5.ROD_FAULT_SETTINGS)
     assert not j_p3_inputs.is_p3_expected(None, "VBK0")  # ③ off, never a J-P3 row
+    assert j_p3_inputs.is_p3_expected(None, "VBK")
 
 
-def test_common_ps1_runs_vbk0_with_plant_truth() -> None:
+def test_common_ps1_runs_vbk_and_vbk0_with_plant_truth() -> None:
     text = (ROOT / "06_analysis" / "02_control" / "j_p3_cause" / "prelaunch_j9" / "run_steps"
             / "common.ps1").read_text(encoding="utf-8")
     assert "VBK0 = 'plant_truth'" in text and "'R79_ROD_FAULT_PLAN'" in text
+    assert "VBK = 'plant_truth'" in text
+
+
+# ------------------------------------------------------------------------------- X-10 extension
+def _drive_with_strokes(injector, phases, commands_fr, strokes_fr):
+    """:func:`_drive` with a delivered ``stroke_m`` per read (FR column ``strokes_fr[k]``)."""
+    ctrl = FakeController()
+    read = []
+    for k, (phase, command) in enumerate(zip(phases, commands_fr, strict=True)):
+        measured = _measurements(k * PERIOD_S)
+        stroke = np.full(4, 0.3)
+        stroke[FR] = strokes_fr[k]
+        measured = Measurements(t_s=measured.t_s, specific_force_m_s2=measured.specific_force_m_s2,
+                                angular_rate_rad_s=measured.angular_rate_rad_s,
+                                head_pressure_Pa=measured.head_pressure_Pa, stroke_m=stroke,
+                                rod_pressure_Pa=measured.rod_pressure_Pa)
+        read.append(injector.apply(ctrl, measured))
+        commands = np.zeros(4)
+        commands[FR] = command
+        ctrl.update(k * PERIOD_S, phase, commands)
+    return ctrl, read
+
+
+TRW_PHASES = ["check"] * 3 + ["level"] * 17
+TRW_COMMANDS = ([0.0] * 4 + [-5e-3] * 3 + [0.0] * 2 + [-5e-3] * 6 + [0.0] * 5)
+"""Carry A (updates 4 .. 6) moves 0.8 mm only; carry B (updates 9 .. 14) is witnessed."""
+TRW_STROKES = ([0.40] * 5 + [0.3996, 0.3992] + [0.3992] * 3
+               + [0.3986, 0.3984, 0.3978, 0.3970, 0.3960] + [0.3960] * 5)
+
+
+def test_trw_anchor_is_the_first_witnessed_retract_carry() -> None:
+    """Edition 5 6.3.3 TRw: carry B starts at update 9 (s_ref = read 9, 0.3992); read 12
+    reaches 1.4 mm with u_12 < -u_hold: trigger read 12, faulty from read 13."""
+    injector = _injector("retract_witness_after:LEVEL")
+    ctrl, read = _drive_with_strokes(injector, TRW_PHASES, TRW_COMMANDS, TRW_STROKES)
+    assert (injector.trigger_read, injector.first_applied_read, _first_faulty(read)) == (
+        12, 13, 13)
+    record = injector.record(ctrl)
+    assert record["witness"] == {"carry_start_read": 9, "witness_read": 12,
+                                 "witness_ref_m": 0.3992,
+                                 "witness_ds_m": pytest.approx(1.4e-3)}
+    assert record["anchor"] == "retract_witness_after:LEVEL"
+
+
+def test_trw_offline_function_agrees_with_the_injector() -> None:
+    """The record function of the gate judge (``retract_witnesses``) gives the injector's
+    trigger on the same columns, also on random command / stroke sequences."""
+    arrays_phase = np.array(TRW_PHASES)
+    commands = np.zeros((len(TRW_COMMANDS), 4))
+    commands[:, FR] = TRW_COMMANDS
+    strokes = np.full((len(TRW_STROKES), 4), 0.3)
+    strokes[:, FR] = TRW_STROKES
+    assert rfp.retract_witnesses(arrays_phase, commands, strokes, FR, U_HOLD)[0] == (9, 12)
+    rng = np.random.default_rng(11)
+    armed = 0
+    for _ in range(40):
+        size = 60
+        phases = ["check"] * 5 + ["level"] * (size - 5)
+        command_fr = rng.choice([0.0, -1e-4, -5e-3, 5e-3], size=size, p=[0.35, 0.1, 0.45, 0.1])
+        stroke_fr = 0.40 + np.cumsum(np.where(command_fr < -U_HOLD, -4e-4, 0.0)) \
+            + rng.normal(0.0, 1e-4, size)
+        injector = _injector("retract_witness_after:LEVEL")
+        _drive_with_strokes(injector, phases, list(command_fr), list(stroke_fr))
+        commands = np.zeros((size, 4))
+        commands[:, FR] = command_fr
+        strokes = np.full((size, 4), 0.3)
+        strokes[:, FR] = stroke_fr
+        found = rfp.retract_witnesses(np.array(phases), commands, strokes, FR, U_HOLD)
+        # a witness on the last read arms only at a read the run never delivers
+        expected = found[0][1] if found and found[0][1] < size - 1 else None
+        assert injector.trigger_read == expected
+        if expected is not None:
+            assert injector.first_applied_read == expected + 1
+            armed += 1
+    assert 10 <= armed < 40  # both outcomes occur
+
+
+def test_trw_counts_witnesses_after_a_read() -> None:
+    commands = np.zeros((len(TRW_COMMANDS), 4))
+    commands[:, FR] = TRW_COMMANDS
+    strokes = np.full((len(TRW_STROKES), 4), 0.3)
+    strokes[:, FR] = TRW_STROKES
+    assert rfp.retract_witnesses(np.array(TRW_PHASES), commands, strokes, FR, U_HOLD,
+                                 from_read=12) == [(9, 12)]
+    # the carry's witness read is 12: it does not count again from read 13 on
+    assert rfp.retract_witnesses(np.array(TRW_PHASES), commands, strokes, FR, U_HOLD,
+                                 from_read=13) == []
+    assert rfp.retract_witnesses(np.array(["check"] * 20), commands, strokes, FR, U_HOLD) == []
+
+
+@pytest.mark.parametrize("anchor", ["phase_exit:CHECK", "retract_start_after:LEVEL",
+                                    "retract_witness_after:LEVEL"])
+def test_gate_anchor_with_a_delay_is_refused(tmp_path, anchor) -> None:
+    """Audit W2 / 6.3.2: a gate plan needs ``delay_reads`` 0."""
+    with pytest.raises(rfp.RodFaultPlanError, match="needs delay_reads 0"):
+        rfp.load_plan(_write_plan(tmp_path / "plan.json",
+                                  {RUN_KEY: _fault(anchor=anchor, delay_reads=1)}))
+    rfp.load_plan(_write_plan(tmp_path / "ok.json", {RUN_KEY: _fault(anchor=anchor)}))
+    rfp.load_plan(_write_plan(tmp_path / "ck.json",
+                              {RUN_KEY: _fault(anchor="phase_enter:CHECK", delay_reads=2)}))
+
+
+@pytest.mark.parametrize(("events", "expected"), [
+    ([(0.5, "D1")], True),
+    ([(0.6, "D1")], False),  # a later latch
+    ([(0.5, "D1_stuck")], False),  # another reason
+    ([], False),
+])
+def test_latch_is_the_same_read_d1_only(events, expected) -> None:
+    """Audit B3: only a D1 reason on the first faulty read itself is a latch."""
+    injector = _injector("phase_exit:CHECK")
+    ctrl = FakeController()
+    for k, phase in enumerate(PHASES):
+        injector.apply(ctrl, _measurements(k * PERIOD_S))
+        for t_s, reason in events:
+            if abs(k * PERIOD_S - t_s) < 1e-9:
+                ctrl.events.append(SimpleNamespace(
+                    t_s=t_s, name=f"INFO_ROD_PRESSURE_FAULT_REASON:FR:{reason}"))
+        ctrl.update(k * PERIOD_S, phase, np.zeros(4))
+    assert injector.record(ctrl)["latched"]["is_same_read_d1"] is expected
 
 
 # ------------------------------------------------------------------------------- harness runs
+REV5_ALIAS = "VBJ5"
+"""The edition 4a revision 5 VBJ on the edition 5 code (``rod_fault_runner`` alias, test only)."""
+TRW_KEY = "cand=current#L2|s30|ref|3|rigid|B|0,3.2"
+"""A short ref key (pitch 3.2 deg) whose VBJ run has a witnessed retract carry on RL after LEVEL
+(probe run of this commit: carry start 373, witness 388); :data:`RUN_KEY` has none."""
+TRW_LEG = "RL"
+
+
 def _run_environment(setting: str, t4h_dir: Path, plan: Path | None) -> dict:
     environment = {name: value for name, value in os.environ.items()
-                   if not name.startswith(("R79_", "R72_", "R67_", "LAS_T3_"))}
+                   if not name.startswith(("R79_", "R72_", "R67_", "LAS_T3_", "X10_"))}
     environment.update(PYTHONDONTWRITEBYTECODE="1", MKL_THREADING_LAYER="TBB",
                        OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", R72_PATH="per_leg",
                        R79_ROD_MODEL="plant_truth", R79_V5_SETTING=setting,
                        R79_T4H_DIR=str(t4h_dir))
     if plan is not None:
         environment["R79_ROD_FAULT_PLAN"] = str(plan)
+    if setting == REV5_ALIAS:
+        environment["X10_REV5_ALIAS"] = f"{REV5_ALIAS}=VBJ"
     return environment
 
 
-def _start_run(root: Path, folder: Path, label: str, setting: str, plan: Path | None):
+def _start_run(root: Path, folder: Path, label: str, setting: str, plan: Path | None,
+               key: str = RUN_KEY):
     out = folder / f"{label}.json"
     process = subprocess.Popen(
         [sys.executable, "-I", "-B", str(ROOT / "05_tests" / "unit" / "rod_fault_runner.py"),
-         str(root), RUN_KEY, str(out)], cwd=root, env=_run_environment(
+         str(root), key, str(out)], cwd=root, env=_run_environment(
             setting, folder / f"{label}_t4h", plan),
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     return process, out
@@ -523,17 +655,24 @@ def runs(tmp_path_factory) -> dict:
         "tau_r": _write_plan(folder / "tau_r.json", {RUN_KEY: _fault()}),
         "tau_c": _write_plan(folder / "tau_c.json",
                              {RUN_KEY: _fault(leg="RL", anchor="phase_exit:CHECK")}),
+        "trw": _write_plan(folder / "trw.json",
+                           {TRW_KEY: _fault(leg=TRW_LEG, anchor="retract_witness_after:LEVEL")}),
     }
-    specs = {"VBJ": (ROOT, "VBJ", None), "VBJ0": (ROOT, "VBJ0", None),
-             "VBK0_unarmed": (ROOT, "VBK0", plans["unarmed"]),
-             "VBK0_tau_r": (ROOT, "VBK0", plans["tau_r"]),
-             "VBK0_tau_c": (ROOT, "VBK0", plans["tau_c"])}
+    specs = {"VBJ": (ROOT, "VBJ", None, RUN_KEY), "VBJ0": (ROOT, "VBJ0", None, RUN_KEY),
+             REV5_ALIAS: (ROOT, REV5_ALIAS, None, RUN_KEY),
+             "VBK0_unarmed": (ROOT, "VBK0", plans["unarmed"], RUN_KEY),
+             "VBK0_tau_r": (ROOT, "VBK0", plans["tau_r"], RUN_KEY),
+             "VBK0_tau_c": (ROOT, "VBK0", plans["tau_c"], RUN_KEY),
+             "VBK_unarmed": (ROOT, "VBK", plans["unarmed"], RUN_KEY),
+             "VBJ_trw_key": (ROOT, "VBJ", None, TRW_KEY),
+             "VBK_trw": (ROOT, "VBK", plans["trw"], TRW_KEY),
+             "VBK0_trw": (ROOT, "VBK0", plans["trw"], TRW_KEY)}
     base_root = os.environ.get(BASE_ROOT_ENV)
     if base_root:
-        specs.update({"base_VBJ": (Path(base_root), "VBJ", None),
-                      "base_VBJ0": (Path(base_root), "VBJ0", None)})
-    started = {label: _start_run(root, folder, label, setting, plan)
-               for label, (root, setting, plan) in specs.items()}
+        specs.update({"base_VBJ": (Path(base_root), "VBJ", None, RUN_KEY),
+                      "base_VBJ0": (Path(base_root), "VBJ0", None, RUN_KEY)})
+    started = {label: _start_run(root, folder, label, setting, plan, key)
+               for label, (root, setting, plan, key) in specs.items()}
     results = {}
     for label, (process, out) in started.items():
         stdout, stderr = process.communicate(timeout=RUN_TIMEOUT_S)
@@ -582,26 +721,65 @@ def _arrays_equal(left: dict, right: dict) -> list[str]:
     return different
 
 
-@pytest.mark.parametrize("setting", ["VBJ", "VBJ0"])
-def test_i_without_a_plan_the_rows_are_the_commit_before_x10(runs, setting) -> None:
-    """6.2a.8 (i): the same row (``wall_s`` aside) and the same T4h record, and the plan
-    module is not imported."""
+NEW_ROW_KEYS = ("run_extend_start_rule", "run_extend_start_revision")
+"""Edition 5 line keys of a ③-on r79 row (4.6); the new T4h arrays are the ``jp3_*`` of X-1."""
+
+
+def _without_new_t4h_arrays(arrays: dict) -> dict:
+    return {name: value for name, value in arrays.items() if not name.startswith("jp3_")}
+
+
+@pytest.mark.parametrize(("setting", "base_setting"), [(REV5_ALIAS, "VBJ"), ("VBJ0", "VBJ0")])
+def test_i_without_a_plan_the_rows_are_the_commit_before_x10(runs, setting,
+                                                             base_setting) -> None:
+    """7.2 X-10 (i): without a plan VBJ (③ rev 5, the edition 4a options) and VBJ0 give the
+    row (``wall_s``, the setting name and the new edition 5 keys aside) and the T4h record
+    (the new ``jp3_*`` arrays aside) of the commit before X-10, and the plan module is not
+    imported."""
     row, t4h_path, line = runs[setting]
     assert line["rod_fault_imported"] is False
     assert screen.ROD_FAULT_KEY not in row
     _, meta = _t4h(t4h_path)
     assert not {screen.ROD_FAULT_KEY, screen.ROD_FAULT_PLAN_KEY} & set(meta)
-    if f"base_{setting}" not in runs:
+    if f"base_{base_setting}" not in runs:
         pytest.skip(f"{BASE_ROOT_ENV} not set (a checkout of the commit before X-10)")
-    base_row, base_t4h, base_line = runs[f"base_{setting}"]
+    base_row, base_t4h, base_line = runs[f"base_{base_setting}"]
     assert Path(base_line["module_file"]).resolve().is_relative_to(
         Path(os.environ[BASE_ROOT_ENV]).resolve())
-    assert _canonical(row) == _canonical(base_row)
+    assert row["v5_setting"] == setting and base_row["v5_setting"] == base_setting
+    assert _canonical(_without_setting_name(row), NEW_ROW_KEYS) == _canonical(
+        _without_setting_name(base_row))
     assert row["commands_sha256"] == base_row["commands_sha256"]
     arrays, meta = _t4h(t4h_path)
     base_arrays, base_meta = _t4h(base_t4h)
-    assert _arrays_equal(arrays, base_arrays) == []
+    assert _arrays_equal(_without_new_t4h_arrays(arrays), base_arrays) == []
+    assert not any(name.startswith("jp3_") for name in base_arrays)
+    assert meta["job"].pop("setting") == setting
+    assert base_meta["job"].pop("setting") == base_setting
     assert meta == base_meta
+
+
+def test_i_vbj_rev6_has_the_rev5_commands_without_a_fallback(runs) -> None:
+    """P5-1 on the test key (7.2 (iii) is P5-1's): VBJ now runs ③ rev 6; with no
+    ``WARN_ROD_PRESSURE_FALLBACK`` on either side its commands are those of revision 5 (the
+    commit before X-10 and the alias run of this code); its records name revision 6."""
+    row, t4h_path, _ = runs["VBJ"]
+    alias_row, alias_t4h, _ = runs[REV5_ALIAS]
+    for path in (t4h_path, alias_t4h):
+        events = _t4h(path)[1]["events"]
+        assert not [name for _, name in events if name.startswith("WARN_ROD_PRESSURE_FALLBACK")]
+    assert row["r79"]["rod_fallback"] == alias_row["r79"]["rod_fallback"] == []
+    assert row["commands_sha256"] == alias_row["commands_sha256"]
+    check = row["hydraulics_record"]["extend_bound_check"]
+    assert check["rule_revision"] == 6 and check["spec_edition"] == "fe6f5844"
+    assert row["run_extend_start_revision"] == 6
+    assert alias_row["hydraulics_record"]["extend_bound_check"]["rule_revision"] == 5
+    arrays, meta = _t4h(t4h_path)
+    assert meta["controller_tag"] == "final_C4G2_P3W_LAS_K1"
+    assert {"jp3_r58_witness", "jp3_r59_substeps", "jp3_r510_candidates",
+            "jp3_class"} <= set(arrays)
+    if "base_VBJ" in runs:
+        assert row["commands_sha256"] == runs["base_VBJ"][0]["commands_sha256"]
 
 
 def _without_setting_name(row: dict) -> dict:
@@ -635,6 +813,58 @@ def test_ii_an_unarmed_plan_is_vbj0_bit_for_bit(runs) -> None:
     assert meta == base_meta
 
 
+def test_ii_an_unarmed_plan_on_vbk_is_vbj_bit_for_bit(runs) -> None:
+    """7.2 X-10 (ii) for VBK (③ rev 6): an unarmed plan gives the VBJ row and T4h record
+    (``rod_fault``, its two arrays and the setting name aside)."""
+    row, t4h_path, _ = runs["VBK_unarmed"]
+    base_row, base_t4h, _ = runs["VBJ"]
+    assert row[screen.ROD_FAULT_KEY]["is_armed"] is False
+    drop = (screen.ROD_FAULT_KEY,)
+    assert _canonical(_without_setting_name(row), drop) == _canonical(
+        _without_setting_name(base_row), drop)
+    arrays, meta = _t4h(t4h_path)
+    base_arrays, base_meta = _t4h(base_t4h)
+    assert _arrays_equal({k: v for k, v in arrays.items() if k not in NEW_T4H_ARRAYS},
+                         base_arrays) == []
+    meta.pop(screen.ROD_FAULT_PLAN_KEY)
+    meta.pop(screen.ROD_FAULT_KEY)
+    assert meta["job"].pop("setting") == "VBK" and base_meta["job"].pop("setting") == "VBJ"
+    assert meta == base_meta
+
+
+def test_trw_harness_run_latches_after_the_witness_and_runs_r59(runs) -> None:
+    """7.2 (라) on the harness: VBK and VBK0 arm on the same TRw read (the witness read of
+    the VBJ columns, ``retract_witnesses``), D1 latches on read n + 1, the commands before it
+    are the same on both arms, and the rev 6 arm counts R5-9 sub-steps on the fault leg in the
+    n -> n + 1 period."""
+    row, t4h_path, _ = runs["VBK_trw"]
+    row0, t4h0_path, _ = runs["VBK0_trw"]
+    vbj_arrays, _ = _t4h(runs["VBJ_trw_key"][1])
+    leg = rfp.LEGS.index(TRW_LEG)
+    found = rfp.retract_witnesses(vbj_arrays["phase"], vbj_arrays["command_m_s"],
+                                  vbj_arrays["motor_stroke_m"], leg, rfp.hold_speed_m_s())
+    assert found, "no witnessed retract carry on the TRw leg of the test key"
+    witness_read = found[0][1]
+    for record in (row[screen.ROD_FAULT_KEY], row0[screen.ROD_FAULT_KEY]):
+        assert record["trigger_read"] == witness_read
+        assert record["first_applied_read"] == witness_read + 1
+        assert record["witness"]["witness_read"] == witness_read
+        assert record["latched"]["is_same_read_d1"] is True
+        assert record["pre_trigger_fallback"] is False
+    assert (row[screen.ROD_FAULT_KEY]["pre_trigger_commands_sha256"]
+            == row0[screen.ROD_FAULT_KEY]["pre_trigger_commands_sha256"])
+    arrays, _ = _t4h(t4h_path)
+    first_t_s = row[screen.ROD_FAULT_KEY]["first_applied_t_s"]
+    jp3_row = int(np.flatnonzero(np.isclose(arrays["jp3_t_s"], first_t_s))[0])
+    assert arrays["jp3_r59_substeps"][jp3_row, leg] > 0
+    # the release evidence of read n: the monitor's witness, or a gate seen open by then
+    assert arrays["jp3_r58_witness"][jp3_row - 1, leg] or arrays["jp3_gate_open"][jp3_row - 1,
+                                                                                  leg]
+    assert row["hydraulics_record"]["extend_bound_check"]["jp3_r59_substeps"][leg] > 0
+    arrays0, _ = _t4h(t4h0_path)
+    assert not any(name.startswith("jp3_") for name in arrays0)  # VBK0: ③ off
+
+
 def _expected_tau_r_read(arrays: dict, leg: int) -> int:
     """tau_R from the VBJ0 T4h columns (the rule of ``ed5_design/control_c/c2_triggers_b.py``
     (a), an independent path)."""
@@ -663,7 +893,7 @@ def test_c_a_real_fault_latches_d1_and_starts_the_fallback(runs, label, leg) -> 
     first = record["first_applied_read"]
     assert record["latched"] == {"is_latched": True, "reason": "D1",
                                  "t_s": round(record["first_applied_t_s"], 6),
-                                 "reads_after_first": 0}
+                                 "reads_after_first": 0, "is_same_read_d1": True}
     assert record["pre_trigger_fallback"] is False
     assert record["applied_periods"] == record["reads"] - first
     assert meta["fallback_start_s"][index] == round(record["first_applied_t_s"], 6)

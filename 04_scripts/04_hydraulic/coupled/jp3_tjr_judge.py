@@ -191,7 +191,11 @@ T8_JUDGED_SETTINGS = ("VBH", "VBJ", "VBJ0")
 T8_TEST_SETTINGS = {"T-JR-10": ("VBH",), "T-JR-11": ("VBJ", "VBJ0")}
 """The ``j9_t8`` settings whose line checks (M-4) belong to each test."""
 T8_REVISION_5_SETTINGS = ("VBH", "VBJ")
-"""③ rev 5 on (VBJ0 = the same plant with ③ off: no rev 5 identity)."""
+"""③ hold revision on (revision 5 in edition 4a, 6 from edition 5; VBJ0 = the same plant with
+③ off: no identity)."""
+HOLD_REVISIONS = compare.HOLD_REVISIONS
+"""``rule_revision`` values of a ③ hold record (edition 5 4.6: a revision 6 line is accepted
+and checked against its own sealed identity, never read as revision 4 or 5)."""
 T8_P4_SETTINGS = ("VBJ", "VBJ0")
 """P4 on (``rod_reading_truth``): an event line has ① truth reads = ② monitor rod reads."""
 T8_JOB_SPLIT = (18, 4)
@@ -213,15 +217,18 @@ BUNDLE_BASE = {"VBH": "stored H-6 (rev 4)", "VBJ": "VBJ0"}
 BUNDLE_BASE_SETTING = {"VBH": "VB", "VBJ": "VBJ0"}
 """Prelaunch audit M-3: the ``v5_setting`` of the base lines (the stored H-6 is a VB run)."""
 JP3_LINE_SETTINGS = ("VBH", "VBJ", "VBJ0", "LSH1", "LSH2", "LSH3", "LSH4", "LSJ1", "LSJ2",
-                     "LSJ3", "LSJ4", "VBK0")
+                     "LSJ3", "LSJ4", "VBK", "VBK0")
 """436.9 settings (``run_v5.JP3_SETTINGS``): their lines carry the P4 evidence keys (B-1);
-edition 5 VBK0 (the VBJ0 plant, P4 on) too."""
+edition 5 VBK / VBK0 (the VBJ / VBJ0 plant, P4 on) too."""
 REPLAY_RUN_COUNTS = (426, 135)
 """T-JR-13 (addendum 4a-5 1): the replays of the stored h10 T4h (426 npz) and H-6 T4h (135
 npz) folders, one report each."""
 REPLAY_REVISION_KEY = "extend_start_revision"
 REPLAY_REVISION = 5
 """``t4h_replay --extend-start-revision 5``: the report's ③ revision record (4a-5 1)."""
+REPLAY_REVISIONS = (REPLAY_REVISION, 6)
+"""Accepted report revisions: 5 (edition 4a) and 6 (edition 5, ``--extend-start-revision 6``);
+both reports of one judgement must name the same one."""
 T4H_SUMS_SHA256 = {"h10_reuse_rerun_t4h.SHA256SUMS": fixed.H10_T4H_SUMS_SHA256,
                    "h6_dg3_v4on_t4h.SHA256SUMS": fixed.H6_T4H_SUMS_SHA256}
 """``--t4h-sums``: the fixed name lists of the two T4h input folders (``prelaunch_j9``)."""
@@ -359,10 +366,10 @@ def t8_line_problems(setting: str, line: dict, is_declared: bool) -> list[str]:
         return problems
     problems = []
     if setting in T8_REVISION_5_SETTINGS:
-        if (check or {}).get("rule_revision") != 5:
+        if (check or {}).get("rule_revision") not in HOLD_REVISIONS:
             problems.append(f"event job: rule_revision {(check or {}).get('rule_revision')!r}, "
-                            "not 5")
-        else:  # 13.6 identity only on lines with a revision 5 record (4a-7 1.2)
+                            f"not one of {HOLD_REVISIONS}")
+        else:  # 13.6 identity only on lines with a hold revision record (4a-7 1.2, ed. 5 4.6)
             problems += compare.identity_problems(line)
     elif setting == STORED_SETTING and not check:
         problems.append("event job without an extend_bound_check record")
@@ -649,8 +656,9 @@ def bundle_setting_problems(bundle: str, base_lines: dict, new_lines: dict) -> l
         record = (line.get("hydraulics_record") or {}).get("extend_bound_check") or {}
         if line.get("v5_setting") != bundle:
             problems.append(f"new {key}: v5_setting {line.get('v5_setting')!r} is not {bundle}")
-        if record.get("rule_revision") != 5:
-            problems.append(f"new {key}: rule_revision {record.get('rule_revision')!r}, not 5")
+        if record.get("rule_revision") not in HOLD_REVISIONS:
+            problems.append(f"new {key}: rule_revision {record.get('rule_revision')!r}, not one "
+                            f"of {HOLD_REVISIONS}")
     expected_base = BUNDLE_BASE_SETTING[bundle]
     for key, line in base_lines.items():
         if line.get("v5_setting") != expected_base:
@@ -774,10 +782,12 @@ def _ready_cases(base_lines: dict, new_lines: dict) -> dict[str, list]:
 
 
 def _dg3_identity(line: dict) -> list[str]:
+    """13.6 identity of a hold revision line (revision 5 or 6, each its own sealed edition)."""
     check = (line.get("hydraulics_record") or {}).get("extend_bound_check") or {}
-    if check.get("rule_revision") != 5:
+    expected = compare.IDENTITY_OF_REVISION.get(check.get("rule_revision"))
+    if expected is None:
         return []
-    return [f"{key} {check.get(key)!r}" for key, value in compare.DEFAULT_IDENTITY.items()
+    return [f"{key} {check.get(key)!r}" for key, value in expected.items()
             if check.get(key) != value]
 
 
@@ -1340,6 +1350,10 @@ def judge_t_jr_13(replays: list[dict], t4h_names: dict[int, set[str]],
         problems.not_judgeable.append(
             f"T-JR-13: {len(replays)} reports of {[r.get('runs') for r in replays]} runs, "
             f"exactly one each of {REPLAY_RUN_COUNTS} expected")
+    revisions = {replay.get(REPLAY_REVISION_KEY) for replay in replays}
+    if len(revisions) > 1:  # edition 5 4.6: one hold revision per T-JR-13 judgement
+        problems.not_judgeable.append(f"T-JR-13: reports of revisions {sorted(map(str, revisions))}"
+                                      ", one revision expected")
     records = []
     for index, replay in enumerate(replays):
         label = f"T-JR-13 replay {index}"
@@ -1365,9 +1379,9 @@ def replay_report_problems(replay: dict, t4h_names: dict[int, set[str]]) -> list
     if not isinstance(rows, list) or replay.get("runs") != len(rows):
         return [f"runs {replay.get('runs')!r} without one row per run"]
     problems = []
-    if replay.get(REPLAY_REVISION_KEY) != REPLAY_REVISION:
+    if replay.get(REPLAY_REVISION_KEY) not in REPLAY_REVISIONS:
         problems.append(f"{REPLAY_REVISION_KEY} {replay.get(REPLAY_REVISION_KEY)!r}, not "
-                        f"{REPLAY_REVISION}")
+                        f"one of {REPLAY_REVISIONS}")
     expected = t4h_names.get(replay.get("runs"))
     names = {str(row.get("file")) for row in rows}
     if expected is None:

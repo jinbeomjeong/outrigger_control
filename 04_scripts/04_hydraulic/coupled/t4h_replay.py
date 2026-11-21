@@ -156,7 +156,7 @@ def run_config(meta: dict, extend_start: str | None = None,
         if extend_start == EXTEND_START_TRACKED_RULE and revision is not None:
             from outrigger_sim.control.extend_start_bound import ExtendStartBound
 
-            rule = RETRACT_START_OVERRIDE[0] if int(revision) == 5 else None
+            rule = RETRACT_START_OVERRIDE[0] if int(revision) in (5, 6) else None
             changes["extend_start_bound"] = ExtendStartBound(
                 revision=int(revision), **({} if rule is None else {"retract_start_rule": rule}))
         config = replace(config, two_pressure=replace(config.two_pressure, **changes))
@@ -365,9 +365,15 @@ def replay_values(path: Path, extend_start: str | None = None,
             "head_only_declared": harness_head_only_declared(meta),
             **({} if "extend_start_rule" not in stored
                else {"run_extend_start_rule": stored["extend_start_rule"]}),
-            # 436.9: a revision 5 run's own bound (j_p3_inputs judges its rows apart)
-            **({} if (stored.get("extend_start_bound") or {}).get("revision") != 5
-               else {"run_extend_start_revision": 5})}
+            # 436.9: a revision 5 / 6 run's own bound (j_p3_inputs judges its rows apart)
+            **_run_hold_revision(stored)}
+
+
+def _run_hold_revision(stored: dict) -> dict:
+    """``run_extend_start_revision`` of a stored hold revision bound (5 or 6, edition 5 4.6);
+    empty for the other runs (revision 4 rows keep their keys)."""
+    revision = (stored.get("extend_start_bound") or {}).get("revision")
+    return {"run_extend_start_revision": revision} if revision in (5, 6) else {}
 
 
 def _by_leg(counts) -> dict[str, int]:
@@ -423,9 +429,9 @@ def _parse_arguments() -> argparse.Namespace:
                         help="override the ③ start rule (constant: record T4h-const)")
     parser.add_argument("--check-recorded", action="store_true",
                         help="also replay with the run's own events against lower_reading_N")
-    parser.add_argument("--extend-start-revision", type=int, choices=(4, 5), default=None,
+    parser.add_argument("--extend-start-revision", type=int, choices=(4, 5, 6), default=None,
                         help="③ bound revision of a --extend-start tracked_bound replay "
-                             "(436.9 Dg-2: 5; default 4)")
+                             "(436.9 Dg-2: 5; edition 5 P5-4: 6; default 4)")
     parser.add_argument("--retract-start-rule", choices=(RETRACT_START_TEST_RULE,),
                         default=None,
                         help="test only (edition 4a R7): replay edition 3 revision 5 records "
