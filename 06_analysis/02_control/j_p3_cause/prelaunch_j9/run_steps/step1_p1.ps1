@@ -7,6 +7,7 @@ param([int]$Attempt = 1)
 . "$PSScriptRoot\common.ps1"
 
 $Folder = Initialize-Step 'p1' $Attempt @()
+Assert-SimulationPathsUnchanged  # 4a-7 2.2: git diff --stat fa997f4c..run commit in the record
 $JudgeFile = "$Folder\h6_base_judge.json"           # its L1 extract: h6_base_judge_L1_reference.json
 $BaseReport = "$Folder\judge\bj.json"
 $H6 = Get-FixedPath 'H6_SHA256'
@@ -34,6 +35,6 @@ Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--
 # re-audit N-5: the P-1 output list prelaunch_j9\P1_OUTPUTS_(run commit 8).SHA256SUMS; the main
 # session commits it before step 6 (step 6 checks it is tracked and equal to bj.json)
 Write-P1Outputs $Folder
-Invoke-RerunMatch 'p1'  # 4a-6 G-4: the same P-1 files and codes as the b51ed6e1 attempt
+Invoke-RerunMatch 'p1'  # 4a-6 G-4, 4a-7 2: the same P-1 files and codes as the fa997f4c attempt
 
 Complete-Step

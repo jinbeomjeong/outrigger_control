@@ -36,6 +36,6 @@ Invoke-IdentityCheck
 Invoke-Judge 'summarize' @($Dry, 'summarize', '--selection', $Selection, '--out', "$Folder\judge\summary.json",
     '--event', "VBJ=$Folder\event_VBJ.jsonl", "VBH=$Folder\event_VBH.jsonl", "VBJ0=$Folder\event_VBJ0.jsonl",
     '--r79', "VBJ=$Folder\r79_VBJ.json", "VBH=$Folder\r79_VBH.json") | Out-Null
-Invoke-RerunMatch 'dry'  # 4a-6 G-4: the same evidence values and code as b51ed6e1
+Invoke-RerunMatch 'dry'  # 4a-6 G-4, 4a-7 2: the same evidence values and code as fa997f4c
 
 Complete-Step

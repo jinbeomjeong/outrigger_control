@@ -16,7 +16,7 @@ Set-StrictMode -Version 3
 $ErrorActionPreference = 'Stop'
 
 # --- run commit and paths -------------------------------------------------------------------
-$RunCommit = 'fa997f4cb2dba9820118c6d38e469ebb137110e2'
+$RunCommit = '78fd5d2d03e40ac7d9143429f602b58255c762fc'
 # decision 2: one commit for steps (1) .. (7), the locked worktree z4369-jp3 (remedy 10)
 $RunShort = $RunCommit.Substring(0, 8)
 $Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\z4369-jp3'
@@ -372,12 +372,38 @@ function Assert-P1Outputs([string]$P1Folder) {
     }
 }
 
-# --- rerun match (addendum 4a-6 G-4) --------------------------------------------------------
-$PreviousRunsRoot = "$CauseDir\j9_runs\b51ed6e1"
-# the earlier attempt of steps (1) .. (4a) (preserved, never judged)
+# --- rerun match (addenda 4a-6 G-4, 4a-7 2) -------------------------------------------------
+$PreviousRunCommit = 'fa997f4cb2dba9820118c6d38e469ebb137110e2'
+$PreviousRunsRoot = "$CauseDir\j9_runs\$($PreviousRunCommit.Substring(0, 8))"
+# 4a-7 2.1: the attempt whose steps (1) .. (4b) were seen (preserved in master); b51ed6e1 is not
+# read again (same by transitivity)
+$MatchAllowedPaths = @('04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py',
+    '04_scripts/04_hydraulic/coupled/jp3_rerun_match.py',
+    '04_scripts/04_hydraulic/coupled/jp3_baseline_compare.py',
+    '04_scripts/04_hydraulic/coupled/jp3_case_judge.py')
+$MatchAllowedPrefix = '05_tests/'
+# 4a-7 2.2: the run commit changes judge tools only - the t8 judge (5 H-1), the match tool
+# (5 H-3) and the J-P3 judged-line evidence of erratum 1 9 (baseline_compare, case-f, t12) -
+# and the tests; any other path (03_src, the harness, the runners) stops before step (1)
+
+function Assert-SimulationPathsUnchanged {
+    # 4a-7 2.2: git diff --stat of the previous attempt's commit and the run commit into the run
+    # record; a changed path outside the t8 judge tool, the match tool and the tests stops (3)
+    $Log = "$($StepState.Folder)\logs\git_diff_stat_$($PreviousRunCommit.Substring(0, 8)).txt"
+    $Stat = @(& git -C $Worktree diff --stat $PreviousRunCommit $RunCommit)
+    if ($LASTEXITCODE -ne 0) { Stop-Step 3 'git diff --stat failed (no identity)' }
+    [IO.File]::WriteAllText($Log, ($Stat -join "`n") + "`n")
+    $Names = @(& git -C $Worktree diff --name-only $PreviousRunCommit $RunCommit)
+    if ($LASTEXITCODE -ne 0) { Stop-Step 3 'git diff --name-only failed (no identity)' }
+    $StepState.Codes['git_diff_stat'] = Get-RepoPath $Log
+    $Outside = @($Names | Where-Object { $MatchAllowedPaths -notcontains $_ -and -not $_.StartsWith($MatchAllowedPrefix) })
+    if ($Outside.Count) {
+        Stop-Step 3 "4a-7 2.2: $($Outside.Count) changed paths outside the t8 judge tool, the match tool and the tests ($($Outside[0]) ...); ask the user"
+    }
+}
 
 function Invoke-RerunMatch([string]$Item) {
-    # after the step's judge tools: the reproducible values of this attempt against b51ed6e1
+    # after the step's judge tool: the reproducible values of this attempt against fa997f4c
     # (jp3_rerun_match.py: names only in its report); 1 differs / 2 missing / 3 error stop
     $Folder = $StepState.Folder
     $CodesFile = "$Folder\logs\codes_for_rerun_match.json"

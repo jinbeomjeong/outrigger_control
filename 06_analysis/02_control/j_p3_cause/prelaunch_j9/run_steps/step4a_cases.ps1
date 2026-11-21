@@ -2,9 +2,9 @@
 # Step (4a) case replay A .. E and X11 (spec 5.3, 13.1, 13.3; addenda 4a-1, 4a-2): at once
 #   run_v5 j9_cases (15 runs, --workers 5), jp3_case_replay.py (C, D; --workers 2),
 #   jp3_x11_replay.py --arm both (LSJ4_X11), all mask 0xFFFF (8 workers on 16 P threads)
-# -> jp3_baseline_compare.py (P4-1 .. P4-4, P4-9) and jp3_case_judge.py x11 (P4-5a).
-# Needs step 2 (4a-5 5.1). Both judges run; any != 0 stops (code 1 when either failed, else the
-# larger code; re-audit N-2).
+# -> jp3_baseline_compare.py (P4-1 .. P4-4, P4-9), at once the rerun match of cases A .. E
+# (4a-7 2.1: != 0 stops before x11), then jp3_case_judge.py x11 (P4-5a). Needs step 2 (4a-5
+# 5.1). Any judge != 0 stops (code 1 when either failed, else the larger code; re-audit N-2).
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common.ps1"
 
@@ -26,10 +26,11 @@ Invoke-IdentityCheck
 
 $CompareCode = Invoke-Tool 'baseline_compare' @("$Coupled/jp3_baseline_compare.py", $BaselineDir,
     '--new', $Cases, $CaseCD, '--out', "$Folder\judge\baseline_compare.json")
+Invoke-RerunMatch 'cases_ae'  # 4a-7 2.1: hashes, P4-2 / 3a / 4 / 9 values, status and code as fa997f4c
 $X11Code = Invoke-Tool 'x11' @("$Coupled/jp3_case_judge.py", 'x11', '--both', $X11, '--baseline', $BaselineDir,
     '--out', "$Folder\judge\x11.json")
 $StepCode = Get-StepCode @($CompareCode, $X11Code)  # re-audit N-2: a 1 makes the step 1
 if ($StepCode -ne 0) { Stop-Step $StepCode "baseline_compare exit $CompareCode, x11 exit $X11Code" }
-Invoke-RerunMatch 'x11'  # 4a-6 G-4: the same LSJ4_X11 hash, FL read and x11 code as b51ed6e1
+Invoke-RerunMatch 'x11'  # 4a-6 G-4, 4a-7 2: the same LSJ4_X11 hash, FL read and x11 code as fa997f4c
 
 Complete-Step

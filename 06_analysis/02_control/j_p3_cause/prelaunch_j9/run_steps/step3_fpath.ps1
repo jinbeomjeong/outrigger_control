@@ -15,6 +15,6 @@ Invoke-IdentityCheck
 
 Invoke-Judge 'case_f_path' @("$Coupled/jp3_case_judge.py", 'case-f-path', '--rows', $Rows,
     '--grid', (Get-FixedPath 'GRID_SHA256'), '--out', "$Folder\judge\case_f_path.json") | Out-Null
-Invoke-RerunMatch 'fpath'  # 4a-6 G-4: the same F-A path hashes and code as b51ed6e1
+Invoke-RerunMatch 'fpath'  # 4a-6 G-4, 4a-7 2: the same F-A path hashes and code as fa997f4c
 
 Complete-Step
