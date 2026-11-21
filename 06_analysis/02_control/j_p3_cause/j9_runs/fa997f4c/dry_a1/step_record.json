@@ -1,0 +1,90 @@
+{
+  "step": "dry",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1",
+  "exit_code": 0,
+  "commit": "fa997f4cb2dba9820118c6d38e469ebb137110e2",
+  "started": "2026-11-21 16:24:06 +09:00",
+  "done": "2026-11-21 16:25:24 +09:00",
+  "codes": {
+    "tool:select": 0,
+    "run:event_VBJ": 0,
+    "run:event_VBH": 0,
+    "run:event_VBJ0": 0,
+    "run:r79_VBJ": 0,
+    "run:r79_VBH": 0,
+    "identity_check": 0,
+    "tool:summarize": 0,
+    "tool:rerun_match_dry": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "select",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py select --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\selection.json --scan-root C:\\workspace\\outrigger_control\\06_analysis --main-jsonl C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --baseline C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\baseline_221456d --dg3 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --noise C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j4a_remedy_b06e409e\\dryrun_selection_r79_key.txt"
+    },
+    {
+      "label": "event_VBJ",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBJ.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py run-event --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\selection.json --setting VBJ --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBJ.jsonl",
+      "pid": 27200
+    },
+    {
+      "label": "event_VBH",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBH.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py run-event --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\selection.json --setting VBH --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBH.jsonl",
+      "pid": 648
+    },
+    {
+      "label": "event_VBJ0",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBJ0.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py run-event --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\selection.json --setting VBJ0 --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBJ0.jsonl",
+      "pid": 21412
+    },
+    {
+      "label": "r79_VBJ",
+      "mask": "0xFFFF",
+      "environment": {
+        "LAS_T3_DG3_P3": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\VBJ_t4h",
+        "LAS_T3_DG3_K1": "on",
+        "R79_ROD_MODEL": "plant_truth",
+        "R79_V5_SETTING": "VBJ",
+        "R72_PATH": "per_leg",
+        "LAS_T3_DG3_LAS": "on"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\r79_VBJ.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\r79_VBJ.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j4a_remedy_b06e409e\\dryrun_selection_r79_key.txt --workers 1 --affinity 0xFFFF",
+      "pid": 23152
+    },
+    {
+      "label": "r79_VBH",
+      "mask": "0xFFFF",
+      "environment": {
+        "LAS_T3_DG3_P3": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\VBH_t4h",
+        "LAS_T3_DG3_K1": "on",
+        "R79_ROD_MODEL": "dyn_map",
+        "R79_V5_SETTING": "VBH",
+        "R72_PATH": "per_leg",
+        "LAS_T3_DG3_LAS": "on"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\r79_VBH.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\r79_VBH.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j4a_remedy_b06e409e\\dryrun_selection_r79_key.txt --workers 1 --affinity 0xFFFF",
+      "pid": 5584
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1 --expect-commit fa997f4cb2dba9820118c6d38e469ebb137110e2 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\_identity_checks\\dry_a1.md"
+    },
+    {
+      "label": "summarize",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py summarize --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\selection.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\judge\\summary.json --event VBJ=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBJ.jsonl VBH=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBH.jsonl VBJ0=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\event_VBJ0.jsonl --r79 VBJ=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\r79_VBJ.json VBH=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\r79_VBH.json"
+    },
+    {
+      "label": "rerun_match_dry",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_rerun_match.py --old C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1 --new C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c --items dry --new-folder C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1 --new-codes C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\logs\\codes_for_rerun_match.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\dry_a1\\judge\\rerun_match_dry.json"
+    }
+  ]
+}

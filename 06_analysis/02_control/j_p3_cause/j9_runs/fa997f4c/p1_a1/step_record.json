@@ -1,0 +1,43 @@
+{
+  "step": "p1",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1",
+  "exit_code": 0,
+  "commit": "fa997f4cb2dba9820118c6d38e469ebb137110e2",
+  "started": "2026-11-21 16:23:54 +09:00",
+  "done": "2026-11-21 16:23:58 +09:00",
+  "codes": {
+    "run:base_judge": 0,
+    "identity_check": 0,
+    "tool:base_judge_compare": 0,
+    "tool:t12_selfcheck": 0,
+    "p1_outputs_list": "06_analysis/02_control/j_p3_cause/prelaunch_j9/P1_OUTPUTS_fa997f4c.SHA256SUMS",
+    "tool:rerun_match_p1": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "base_judge",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\h6_base_judge.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py base-judge --h6 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --noise C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json --judge-out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\h6_base_judge.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\judge\\bj.json",
+      "pid": 10100
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\z4369-jp3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1 --expect-commit fa997f4cb2dba9820118c6d38e469ebb137110e2 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\_identity_checks\\p1_a1.md"
+    },
+    {
+      "label": "base_judge_compare",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py base-judge-compare --h6 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --new-judge C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\h6_base_judge.json --new-judge-sha256 d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b --stored-judge C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_r79_judge.json --stored-h6-judge C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_judge.json --new-l1-reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\h6_base_judge_L1_reference.json --stored-l1-reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_L1_reference.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\judge\\h6_judge_compare.json"
+    },
+    {
+      "label": "t12_selfcheck",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py t12-selfcheck --h6 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --judge C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\h6_base_judge.json --judge-sha256 d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\judge\\h6_selfcheck.json"
+    },
+    {
+      "label": "rerun_match_p1",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_rerun_match.py --old C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b51ed6e1 --new C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c --items p1 --new-folder C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1 --new-codes C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\logs\\codes_for_rerun_match.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\fa997f4c\\p1_a1\\judge\\rerun_match_p1.json"
+    }
+  ]
+}
