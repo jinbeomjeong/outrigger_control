@@ -1,0 +1,15 @@
+# 436.9 edition 5 regression record at run commit 606f8713 (erratum 5 5-1: not a P5-3 judgement).
+# The edition 4a test files edition 5 changed:
+# git diff --name-status --diff-filter=M 5632b618 606f8713 -- 05_tests/unit/test_*.py
+# without test_x10_rod_fault.py (in the P5-3 set). The same 9 files as at ae9d0b2d.
+# test_chrono_t45_replay.py needs the stored 07_results data: it is run again with
+# ~/.claude/tools/verif/worktree_tests.py (junit_606f8713_regress4a_t45data.*).
+test_chrono_t45_replay.py
+test_jp3_addendum_4a2.py
+test_jp3_addendum_4a3.py
+test_jp3_addendum_4a4.py
+test_jp3_addendum_4a5.py
+test_jp3_harness_units.py
+test_jp3_judge_main_e2e.py
+test_jp3_prelaunch_audit2.py
+test_s9_batch_code_at_launch.py

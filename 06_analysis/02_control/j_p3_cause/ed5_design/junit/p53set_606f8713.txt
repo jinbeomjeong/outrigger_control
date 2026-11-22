@@ -1,0 +1,20 @@
+# 436.9 edition 5 P5-3 test set at run commit 606f8713 (erratum 5 5-1, sealed 8487bd55).
+# 1. git diff --name-status --diff-filter=A 5632b618 606f8713 -- 05_tests/unit/test_*.py
+#    (13 files: the 10 of the erratum 5 list at ae9d0b2d, and test_jp3_ed5_erratum6.py,
+#    test_jp3_ed5_erratum7.py, test_jp3_ed5_s1_stored.py from the ed5-fix3 merge ad1c4df5)
+# 2. test_x10_rod_fault.py (7.2 X-10 bit identity and fault injection; X10_BASE_ROOT)
+# Item 3 (functions added to existing files) is p53set3_606f8713.txt.
+test_jp3_12b_tools.py
+test_jp3_ckdrop.py
+test_jp3_ed5_erratum1.py
+test_jp3_ed5_erratum2.py
+test_jp3_ed5_erratum6.py
+test_jp3_ed5_erratum7.py
+test_jp3_ed5_prelaunch_fix.py
+test_jp3_ed5_s1_stored.py
+test_jp3_j9main.py
+test_jp3_p51_compare.py
+test_jp3_p5_fixed_values.py
+test_jp3_rev6.py
+test_s9_batch_inputs_exit.py
+test_x10_rod_fault.py

@@ -1,0 +1,32 @@
+{
+  "purpose": "P5-3",
+  "head": "606f87131a7f13468f1db37cf6c811c442a6caf0",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5",
+  "list_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\p53set3_606f8713.txt",
+  "list_file_sha256": "54da4e404473ce5aa9768685411ce28bbf911b58f8c1565617476757070d95b8",
+  "test_files": [
+    "test_jp3_prelaunch_audit2.py::test_n1_t12_mismatch_line_is_a_setting_defect",
+    "test_jp3_prelaunch_audit2.py::test_t12_record_failures_are_the_13_9_list",
+    "test_jp3_prelaunch_audit2.py::test_n1_t12_command_lock_window_mismatch_exit_2"
+  ],
+  "environment": {
+    "python": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "workers": 6,
+    "dist": "loadfile",
+    "affinity_mask": "0x0FFF0000",
+    "OUTRIGGER_RECORDS_ROOT": "C:\\workspace\\outrigger_control",
+    "X10_BASE_ROOT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\x10base",
+    "MKL_THREADING_LAYER": "TBB"
+  },
+  "junit_skips": {
+    "critical": ".",
+    "fail_on_skip": true
+  },
+  "hashed_files": {},
+  "started": "2026-11-23T02:14:01.8294324+09:00",
+  "ended": "2026-11-23T02:14:05.9588527+09:00",
+  "pytest_exit": 0,
+  "junit_skips_exit": 0,
+  "junit": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\junit_606f8713_p53set3.xml",
+  "junit_sha256": "55bfe4e839a8a3e64df53bd4afc1bb0b410fd95164a894b922c479f3da09bd89"
+}

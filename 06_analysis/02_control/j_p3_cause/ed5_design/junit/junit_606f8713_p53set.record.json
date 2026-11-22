@@ -1,0 +1,48 @@
+{
+  "purpose": "P5-3",
+  "head": "606f87131a7f13468f1db37cf6c811c442a6caf0",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5",
+  "list_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\p53set_606f8713.txt",
+  "list_file_sha256": "e0cd99a909e26fb4a6f5b2bce8b37ae90024532840cb93a38c6d4865805bd3c6",
+  "test_files": [
+    "test_jp3_12b_tools.py",
+    "test_jp3_ckdrop.py",
+    "test_jp3_ed5_erratum1.py",
+    "test_jp3_ed5_erratum2.py",
+    "test_jp3_ed5_erratum6.py",
+    "test_jp3_ed5_erratum7.py",
+    "test_jp3_ed5_prelaunch_fix.py",
+    "test_jp3_ed5_s1_stored.py",
+    "test_jp3_j9main.py",
+    "test_jp3_p51_compare.py",
+    "test_jp3_p5_fixed_values.py",
+    "test_jp3_rev6.py",
+    "test_s9_batch_inputs_exit.py",
+    "test_x10_rod_fault.py"
+  ],
+  "environment": {
+    "python": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "workers": 6,
+    "dist": "loadfile",
+    "affinity_mask": "0x0FFF0000",
+    "OUTRIGGER_RECORDS_ROOT": "C:\\workspace\\outrigger_control",
+    "X10_BASE_ROOT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\x10base",
+    "MKL_THREADING_LAYER": "TBB"
+  },
+  "junit_skips": {
+    "critical": ".",
+    "fail_on_skip": true
+  },
+  "hashed_files": {
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\dry_selection.json": "5085530b14141e968ee156579e38c7153c4cb9e4bec6886ade09511ac80f33c3",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j4a_remedy_b06e409e\\dryrun_selection_r79_key.txt": "1a79e02fc33ae8844d0cd5672e9e5e745215c354e58e9a8095376939c4335e74",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\dry_selection_r79_key_g8.txt": "b7c7470a800ce1146d30caefa8050fbb1a73c18058af2b23af7dedf399619bd4",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\dry_selection_r79_key_ref.txt": "95ce6f27b44bb13b76fe8fb02d056f6dc5ae1de9be28b29d1529b8fbbd965299"
+  },
+  "started": "2026-11-23T02:09:31.1600262+09:00",
+  "ended": "2026-11-23T02:13:48.6336914+09:00",
+  "pytest_exit": 0,
+  "junit_skips_exit": 0,
+  "junit": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\junit_606f8713_p53set.xml",
+  "junit_sha256": "b57b117e301e8b813856ef48ac926888d3fedcedcc784b741d2efa2b3d6a80b6"
+}

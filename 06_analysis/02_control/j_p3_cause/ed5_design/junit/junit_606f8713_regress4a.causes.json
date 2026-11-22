@@ -1,0 +1,21 @@
+{
+  "purpose": "regression record of the edition 4a test files edition 5 changed (erratum 5 5-1; not a P5-3 judgement)",
+  "head": "606f87131a7f13468f1db37cf6c811c442a6caf0",
+  "run": "junit_606f8713_regress4a.xml (run_p53_set.ps1, list regress4a_606f8713.txt): 249 tests, 244 passed, 0 failed, 5 skipped; pytest exit 0, junit_skips exit 1 (the 5 skips)",
+  "failures": [],
+  "skips": [
+    {
+      "tests": [
+        "05_tests/unit/test_chrono_t45_replay.py::test_replay_case_of_a_stage3_vb_record_with_m2_records",
+        "05_tests/unit/test_chrono_t45_replay.py::test_b_t4_0_on_a_stored_v0_record",
+        "05_tests/unit/test_chrono_t45_replay.py::test_t5_copied_state_equals_a_full_replay",
+        "05_tests/unit/test_chrono_t45_replay.py::test_r4_lock_window_of_a_stored_vb_record",
+        "05_tests/unit/test_chrono_t45_replay.py::test_rev7_regression_on_the_stage3_records"
+      ],
+      "cause": "test_environment",
+      "detail": "the stored records are read at PROJECT_ROOT/07_results (PROJECT_ROOT = the test file's worktree, no 07_results there). Rerun with the main checkout's 07_results through ~/.claude/tools/verif/worktree_tests.py (worktree ed5-run5 code, probe outrigger_sim / chrono_t45_replay / j_p3_inputs all from the worktree, originals unchanged): 19 tests, 19 passed, 0 skipped, exit 0 -> junit_606f8713_regress4a_t45data.xml, junit_606f8713_regress4a_t45data.worktree_tests.json"
+    }
+  ],
+  "code_defects": [],
+  "note": "test_d1a_selection_of_the_stored_data (the ae9d0b2d regression failure, test environment) passed here: the D-5 test reads the stored scan list in its recorded order (ed5-fix3)."
+}
