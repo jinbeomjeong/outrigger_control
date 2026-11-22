@@ -54,6 +54,7 @@ Invoke-IdentityCheck
 # worktree HEAD = $RunCommit and a clean tree); the step record names it and the disclosure
 $StepState.Codes['p5fixed_commit'] = $RunCommit
 $StepState.Codes['p5fixed_disclosure'] = $P5FixedDisclosure
+$StepState.Codes['p5fixed_judged_key_reading'] = $P5JudgedKeyReading
 $P52 = "$Folder\judge\p52.json"
 Invoke-Judge 'p52' @("$Coupled/jp3_p5_fixed_values.py", 'p52', '--rows', $Cases, $CaseCD, $CaseF, '--out', $P52) | Out-Null
 $P52Stop = Get-P5FixedStop $P52

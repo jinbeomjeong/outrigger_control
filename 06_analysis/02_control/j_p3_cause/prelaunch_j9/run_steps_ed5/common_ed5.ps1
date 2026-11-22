@@ -29,11 +29,11 @@
 . "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
-$RunCommit = '8003083db362cb01116882e84819d128629b2c54'
-# the master merge of ed5-fix1 (prelaunch audit fixes B-1, B-2, W-1 .. W-3, erratum 4) in the
-# locked worktree ed5-run2 (2026-11-22); the first run commit dba05b3f (worktree ed5-run) is
-# superseded, its prelaunch outputs are in j9_runs/dba05b3f
-$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run2'
+$RunCommit = '<ED5_RUN_COMMIT>'
+# the run commit is filled in after each fix merge; superseded run commits: dba05b3f (worktree
+# ed5-run, prelaunch audit), 8003083d (worktree ed5-run2, p5fixed stopped 2: the rev 4 judged
+# key); their prelaunch outputs are in j9_runs/<commit 8>
+$Worktree = '<ED5_RUN_WORKTREE>'
 $Ed5Placeholder = '^<ED5_'
 
 function Assert-Ed5Configured {
@@ -238,7 +238,9 @@ function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Set
 # prelaunch audit B-2: the P5-2 / P5-4 fixed records of step_p5fixed.ps1 (fixed list entries)
 $P5FixedNames = @('p52.json', 'p54.json')
 # erratum 4 4-1: the disclosure sentence of the fixed computation (step record, judgement head)
-$P5FixedDisclosure = 'P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). 단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.'
+$P5FixedDisclosure = 'P5-2 고정 계산에서 사례 재생 줄의 판정 키와 사례별 합격 값을 실행 전에 보았다(원판 5절 설계). 단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.'
+# control's reading of erratum 4 4-1 (2026-11-22; step record of step_p5fixed.ps1)
+$P5JudgedKeyReading = '정오 4 4-1의 ''판정 키''는 줄의 ③ 판에 따른 J-P3 판정 키다(판 4a 6.1·4a-2 R6). rev 4 = `ext_moving.breach_reads`, rev 5·6 = jp3a/b/c.'
 # erratum 4 4-1: the simulation path of the fixed values (case replay and replay runners; the
 # static import closure of these entries decides whether another commit's records may serve)
 $P5FixedEntries = @("$Coupled/run_v5.py", "$Coupled/jp3_case_replay.py", "$Coupled/jp3_p5_fixed_values.py")
