@@ -1,0 +1,16 @@
+436.9 J-P3 edition 5 run commit note (2026-11-23)
+
+This file is the only change of the edition 5 run commit made in the worktree ed5-run5.
+It changes no code and no judge input. It exists so that the run commit changes a file that
+was written inside the run worktree before the commit (user decision (ga), 2026-11-23):
+baseline_check identity --mtime then sees a changed file older than the commit.
+
+Why: run commit 876d8a49 stopped at l1ref (identity check exit 1, 6 mtime warnings) because
+the worktree ed5-run4 was made with git worktree add after the commit, so every file the
+commit changed was written about 10 s after it. Run commits dba05b3f, 8003083d and ae9d0b2d
+were merges, and the verif tool then listed no changed files for a merge, so their mtime
+check saw nothing. The tool now compares a merge with its first parent (verif README,
+2026-11-23).
+
+Parent: 81871a68 (the 876d8a49 archive, erratum 6 6-4).
+After this commit the worktree ed5-run5 is not checked out, reset or written again.
