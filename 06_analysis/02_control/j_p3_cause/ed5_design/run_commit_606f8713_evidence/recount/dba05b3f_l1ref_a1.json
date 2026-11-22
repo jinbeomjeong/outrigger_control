@@ -1,0 +1,1027 @@
+{
+  "tool": "baseline_check",
+  "command": "identity",
+  "expect_commit": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ.identity.json",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ0.identity.json"
+  ],
+  "heads": [
+    "dba05b3f9ee80621b3d57d09711acc40c9d0df9e"
+  ],
+  "blocks": [
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ.identity.json",
+      "json_path": "$.start[0].git",
+      "head": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+      "is_clean": true,
+      "status_porcelain": "",
+      "run_time": "2026-11-22 13:09:25 +0900",
+      "git_error": null
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ.identity.json",
+      "json_path": "$.end[0].git",
+      "head": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+      "is_clean": true,
+      "status_porcelain": "",
+      "run_time": "2026-11-22 13:47:07 +0900",
+      "git_error": null
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ0.identity.json",
+      "json_path": "$.start[0].git",
+      "head": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+      "is_clean": true,
+      "status_porcelain": "",
+      "run_time": "2026-11-22 13:09:25 +0900",
+      "git_error": null
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ0.identity.json",
+      "json_path": "$.end[0].git",
+      "head": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+      "is_clean": true,
+      "status_porcelain": "",
+      "run_time": "2026-11-22 13:46:31 +0900",
+      "git_error": null
+    }
+  ],
+  "mtime": {
+    "commit": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+    "commit_time": "2026-11-22T12:57:18+09:00",
+    "earliest_run": "2026-11-22T13:09:25+09:00",
+    "changed_files": 68,
+    "late_files": [
+      {
+        "path": "03_src/outrigger_sim/control/extend_start_bound.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "03_src/outrigger_sim/control/two_pressure.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "03_src/outrigger_sim/hydraulics/v5_options.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/02_chrono/v5_resume_4368_chrono_rows.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/03_control/s8/r79_L3L4_final.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/03_control/s8/r79_sensor_screen.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/03_control/s8/rod_fault_plan.py",
+        "mtime": "2026-11-22T13:05:08+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/j_p3_inputs.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_12b_judge.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_12b_l1_keys.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_12b_plan.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_baseline_compare.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_case_judge.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_case_replay.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_ckdrop_plan.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_ckdrop_record.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_fixed_inputs.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_fixed_inputs_list.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_import_closure.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_j9main_judge.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_l1_input_guard.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_p51_compare.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_p5_fixed_values.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_rerun_match.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/jp3_x11_replay.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/lock_window_alignment.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/run_v5.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "04_scripts/04_hydraulic/coupled/t4h_replay.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/jp3_harness_unit_runner.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/rod_fault_runner.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_chrono_t45_replay.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_12b_tools.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_addendum_4a2.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_addendum_4a3.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_addendum_4a4.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_addendum_4a5.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_ckdrop.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_ed5_erratum1.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_ed5_erratum2.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_harness_units.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_j9main.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_judge_main_e2e.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_p51_compare.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_p5_fixed_values.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_prelaunch_audit2.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_jp3_rev6.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "05_tests/unit/test_x10_rod_fault.py",
+        "mtime": "2026-11-22T13:05:09+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/common.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/common_ed5.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/fixed_inputs_entries.txt",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/prelaunch_ed5.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/record_gates_ed5.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step0_cdry.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step1_p1.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step2_dry.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step3_fpath.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step4a_cases.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step4b_casef.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step5_t8.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step6_dg3.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step6b_vbk0.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step6c_vbk.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step7_records.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step7b_ckdrop.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step8_j9main.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      },
+      {
+        "path": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step_l1ref.ps1",
+        "mtime": "2026-11-22T13:05:14+09:00",
+        "before_run": true,
+        "same_as_commit_now": true
+      }
+    ],
+    "note": ""
+  },
+  "summary": {
+    "tool": "baseline_check",
+    "command": "identity",
+    "files": 2,
+    "git_blocks": 4,
+    "heads": 1,
+    "dirty": 0,
+    "error": 0,
+    "warning": 68,
+    "info": 0,
+    "categories": {
+      "mtime_after_commit_before_run": 68
+    }
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\03_src\\outrigger_sim\\control\\extend_start_bound.py",
+      "line": 0,
+      "message": "03_src/outrigger_sim/control/extend_start_bound.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\03_src\\outrigger_sim\\control\\two_pressure.py",
+      "line": 0,
+      "message": "03_src/outrigger_sim/control/two_pressure.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\03_src\\outrigger_sim\\hydraulics\\v5_options.py",
+      "line": 0,
+      "message": "03_src/outrigger_sim/hydraulics/v5_options.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\02_chrono\\v5_resume_4368_chrono_rows.py",
+      "line": 0,
+      "message": "04_scripts/02_chrono/v5_resume_4368_chrono_rows.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\03_control\\s8\\r79_L3L4_final.py",
+      "line": 0,
+      "message": "04_scripts/03_control/s8/r79_L3L4_final.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\03_control\\s8\\r79_sensor_screen.py",
+      "line": 0,
+      "message": "04_scripts/03_control/s8/r79_sensor_screen.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\03_control\\s8\\rod_fault_plan.py",
+      "line": 0,
+      "message": "04_scripts/03_control/s8/rod_fault_plan.py: mtime 2026-11-22 13:05:08이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\j_p3_inputs.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/j_p3_inputs.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_12b_judge.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_12b_judge.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_12b_l1_keys.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_12b_l1_keys.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_12b_plan.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_12b_plan.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_baseline_compare.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_baseline_compare.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_case_judge.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_case_judge.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_case_replay.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_case_replay.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_ckdrop_plan.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_ckdrop_plan.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_ckdrop_record.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_ckdrop_record.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_dryrun_evidence.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_dryrun_evidence.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_fixed_inputs.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_fixed_inputs.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_fixed_inputs_list.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_fixed_inputs_list.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_import_closure.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_import_closure.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_j9main_judge.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_j9main_judge.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_l1_input_guard.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_l1_input_guard.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_p51_compare.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_p51_compare.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_p5_fixed_values.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_p5_fixed_values.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_rerun_match.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_rerun_match.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_tjr_judge.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\jp3_x11_replay.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/jp3_x11_replay.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\lock_window_alignment.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/lock_window_alignment.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\run_v5.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/run_v5.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\04_scripts\\04_hydraulic\\coupled\\t4h_replay.py",
+      "line": 0,
+      "message": "04_scripts/04_hydraulic/coupled/t4h_replay.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\jp3_harness_unit_runner.py",
+      "line": 0,
+      "message": "05_tests/unit/jp3_harness_unit_runner.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\rod_fault_runner.py",
+      "line": 0,
+      "message": "05_tests/unit/rod_fault_runner.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_chrono_t45_replay.py",
+      "line": 0,
+      "message": "05_tests/unit/test_chrono_t45_replay.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_12b_tools.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_12b_tools.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_addendum_4a2.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_addendum_4a2.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_addendum_4a3.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_addendum_4a3.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_addendum_4a4.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_addendum_4a4.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_addendum_4a5.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_addendum_4a5.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_ckdrop.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_ckdrop.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_ed5_erratum1.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_ed5_erratum1.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_ed5_erratum2.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_ed5_erratum2.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_harness_units.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_harness_units.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_j9main.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_j9main.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_judge_main_e2e.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_judge_main_e2e.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_p51_compare.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_p51_compare.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_p5_fixed_values.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_p5_fixed_values.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_prelaunch_audit2.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_prelaunch_audit2.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_jp3_rev6.py",
+      "line": 0,
+      "message": "05_tests/unit/test_jp3_rev6.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\05_tests\\unit\\test_x10_rod_fault.py",
+      "line": 0,
+      "message": "05_tests/unit/test_x10_rod_fault.py: mtime 2026-11-22 13:05:09이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps\\common.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/common.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\common_ed5.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/common_ed5.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\fixed_inputs_entries.txt",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/fixed_inputs_entries.txt: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\prelaunch_ed5.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/prelaunch_ed5.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\record_gates_ed5.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/record_gates_ed5.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step0_cdry.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step0_cdry.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step1_p1.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step1_p1.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step2_dry.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step2_dry.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step3_fpath.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step3_fpath.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step4a_cases.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step4a_cases.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step4b_casef.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step4b_casef.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step5_t8.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step5_t8.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step6_dg3.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step6_dg3.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step6b_vbk0.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step6b_vbk0.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step6c_vbk.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step6c_vbk.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step7_records.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step7_records.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step7b_ckdrop.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step7b_ckdrop.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step8_j9main.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step8_j9main.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "mtime_after_commit_before_run",
+      "file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed5\\step_l1ref.ps1",
+      "line": 0,
+      "message": "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/step_l1ref.ps1: mtime 2026-11-22 13:05:14이 커밋 뒤, 실행 시작 2026-11-22 13:09:25 전: 실행이 커밋과 다른 내용을 읽었을 수 있다(지금 내용은 커밋과 같다(저장만 했거나 되돌렸을 수 있음))",
+      "target": ""
+    }
+  ]
+}
