@@ -48,6 +48,10 @@ def test_stored_open_loop_rows_record(monkeypatch) -> None:
 def test_run_batch_records_open_loop_code_at_launch(monkeypatch, tmp_path) -> None:
     monkeypatch.delenv("OUTRIGGER_HULL_HOOK", raising=False)
     monkeypatch.setattr(sb, "ROOT", tmp_path)
+    # the fake run_S9.py loads no hull hook DLL; the pre-launch input check has its own tests
+    # (test_s9_batch_inputs_exit.py) and would otherwise depend on the DLL of this checkout
+    monkeypatch.setattr(sb, "untracked_input_check",
+                        lambda rows, **_: {"ok": True, "checked": 0, "missing": [], "unresolved": []})
     script = tmp_path / "run_S9.py"
     script.write_text(CHILD, encoding="utf-8")
     rows = [{"case": "ol", "argv": [sys.executable, str(script), "machine"], "est_s": 1.0},

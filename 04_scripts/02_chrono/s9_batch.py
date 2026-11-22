@@ -5,7 +5,11 @@ Runs the cases of one batch as separate Chrono-dev processes (each pins itself t
 P-cores). Writes ``07_results/S9/<batch>_<stamp>/``: one folder per case (``result.json`` +
 ``series.npz`` of run_S9), ``<case>.log`` (stdout / stderr), ``progress.log`` (one START and one
 END line per case, read by the periodic monitor) and ``batch.json`` (argv, return code, wall time).
-A failed case (return code != 0) stops new launches; running ones finish.
+A failed case (return code != 0) stops new launches; running ones finish. ``run`` then exits 1
+(:data:`BATCH_FAILED_EXIT`, failing rows on stderr; 2026-11-22, before it exited 0 with ``failed=True`` only in
+``progress.log`` / ``batch.json``). Before any launch ``run`` checks the git-ignored inputs of the rows it will start
+(:func:`untracked_input_check`: L1-R start snapshots in ``07_results/states_L1R``, the hull hook DLL of SCM rows) and
+stops with the list when one is missing (``check-inputs <batch>`` runs the same check alone).
 
 Usage (project root)::
 
@@ -33,6 +37,7 @@ Usage (project root)::
     # final controller (spec 430.5 / 431.3; after the 03_src acceptance, rows refuse another preset):
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list FINAL1            # rows, P / E estimates, sources
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py check-sources FINAL2   # rows reproduce the former run args
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py check-inputs FINAL-R   # git-ignored inputs present (exit 1)
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV6 --rv6-k 0.65 --rv6-dir roll_neg --parallel 2 \
         --parallel-e 2 --only S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0 ...  # X6-rb = roll_neg k 0.65 (spec 430.3.1)
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run FINAL-R --parallel 5 --only-file final_r_acting.json
@@ -1702,6 +1707,140 @@ def row_finished(row: dict, folder: Path) -> bool:
     return (folder / row["case"] / "result.json").is_file()
 
 
+BATCH_FAILED_EXIT = 1
+"""Exit code of ``run`` when a row failed (``batch.json`` ``failed`` true: a row rc != 0, an ``s8c`` row with
+:data:`S8C_FAILED_RC`, or rows skipped after it). Same code as the ``check-sources`` mismatch and the refusals before
+any launch (``SystemExit(<message>)``); a runner tells them apart by the stderr text (2026-11-22: before, a failed
+batch exited 0)."""
+SCM_SCRIPTS = ("run_S9.py", "s9_dual_terrain_equivalence.py", "pre_las_preset_runner.py")
+"""Row scripts that import ``outrigger_sim.chrono.scm_model`` (installs the hull hook at import)."""
+STATES_DIR = ("07_results", "states_L1R")
+"""L1-R start snapshots (run_S6C ``STATES``), git-ignored: a new worktree has none."""
+
+
+def _row_script(row: dict) -> str | None:
+    """File name of the first ``*.py`` token of the row argv (the runner script), None when there is none."""
+    return next((Path(str(t)).name for t in row.get("argv") or [] if str(t).endswith(".py")), None)
+
+
+def _argv_value(argv: list, flag: str) -> str | None:
+    argv = [str(t) for t in argv]
+    return argv[argv.index(flag) + 1] if flag in argv and argv.index(flag) + 1 < len(argv) else None
+
+
+def _runner_module(name: str):
+    sys.path.insert(0, str(HERE))
+    try:
+        return __import__(name)
+    finally:
+        sys.path.remove(str(HERE))
+
+
+def l1r_snapshot_of(row: dict, tables: dict) -> tuple[str | None, str | None]:
+    """``(snapshot, unresolved)`` of an ``s6c`` row or an ``s8c`` row whose case runs on L1-R: the start snapshot name
+    of its ``--only`` case (``run_S6C.case_table()`` / ``run_S8C.case_table()`` or ``case_set(--set)``, ``.snapshot``
+    = what the runner loads from ``07_results/states_L1R``). ``(None, None)`` = the row needs none (L2b, SCM, m3);
+    ``(None, reason)`` = the case could not be resolved (reported, not a stop: the runner checks again). ``tables``
+    caches the case tables over the rows."""
+    if not (row.get("s6c") or row.get("s8c")):
+        return None, None
+    case_id = _argv_value(row["argv"], "--only")
+    if case_id is None:
+        return None, "no --only in argv"
+    try:
+        if row.get("s6c"):
+            if "s6c" not in tables:
+                tables["s6c"] = _runner_module("run_S6C").case_table()
+            case = tables["s6c"].get(case_id)
+            return (case.snapshot, None) if case is not None else (None, f"{case_id} not in run_S6C.case_table()")
+        if "s8c" not in tables:
+            tables["s8c"] = _runner_module("run_S8C").case_table()
+        case = tables["s8c"].get(case_id)
+        if case is None:
+            set_name = _argv_value(row["argv"], "--set")
+            case = next((c for c in _runner_module("run_S8C").case_set(set_name) if c.case_id == case_id), None)
+        if case is None:
+            return None, f"{case_id} not in run_S8C cases"
+        return (case.base.snapshot, None) if case.engine == "L1R" else (None, None)
+    except Exception as e:  # noqa: BLE001  (a row table that does not build here is reported, the runner decides)
+        return None, f"{type(e).__name__}: {e}"
+
+
+def untracked_input_check(rows: list[dict], *, root: Path | None = None, masks: dict[str, str] | None = None,
+                          tables: dict | None = None) -> dict:
+    """Git-ignored inputs the rows read at start, checked before any launch (2026-11-22: a new worktree lacked
+    ``07_results/states_L1R`` and the G8C1 row of JOURNAL-V0-RIGID failed 2 s after its start).
+
+    * ``l1r_snapshot``: ``<root>/07_results/states_L1R/<snapshot>.npz`` of every ``s6c`` row and every ``s8c`` row on
+      L1-R (:func:`l1r_snapshot_of`).
+    * ``hull_hook_dll``: SCM rows (:data:`SCM_SCRIPTS`) whose child env (:func:`_case_env`) asks for a hull mode other
+      than ``off``: the DLL (``OUTRIGGER_HULL_HOOK_DLL`` or ``hull_hook.DLL_PATH`` of this checkout) must exist and
+      have ``hull_hook.VALIDATED_DLL_SHA256`` unless ``OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED=1``. Without it a default
+      request falls back to off (same bits, about 1.3x slower, mixed hull record) and an explicit one exits 2.
+
+    Returns ``{"ok", "checked", "missing": [{case, input, path, reason}], "unresolved": [{case, reason}]}``;
+    ``ok`` = no ``missing``. Nothing is written."""
+    base = Path(root) if root is not None else ROOT
+    tables = {} if tables is None else tables
+    states = base.joinpath(*STATES_DIR)
+    missing: list[dict] = []
+    unresolved: list[dict] = []
+    hh = None
+    sha_cache: dict[Path, str] = {}
+    checked = 0
+    for row in rows:
+        snap, why = l1r_snapshot_of(row, tables)
+        if why is not None:
+            unresolved.append({"case": row["case"], "reason": why})
+        if snap is not None:
+            checked += 1
+            path = states / f"{snap}.npz"
+            if not path.is_file():
+                missing.append({"case": row["case"], "input": "l1r_snapshot", "path": path.as_posix(),
+                                "reason": "missing"})
+        if row.get("s8c") or row.get("s6c") or row.get("m3") or _row_script(row) not in SCM_SCRIPTS:
+            continue
+        hh = hh or _hull_hook_module()
+        env = _case_env("pcore", row.get("start_env"), row.get("run_env"), masks)
+        mode, _source = hh.requested_mode(env)
+        if mode == "off":
+            continue
+        checked += 1
+        dll = Path(env.get(hh.ENV_DLL) or hh.DLL_PATH)
+        if not dll.is_file():
+            missing.append({"case": row["case"], "input": "hull_hook_dll", "path": dll.as_posix(),
+                            "reason": f"missing (hull request {mode})"})
+            continue
+        if (env.get(hh.ENV_ALLOW_UNVALIDATED) or "").strip() == "1":
+            continue
+        if dll not in sha_cache:
+            sha_cache[dll] = hh._sha256(dll)
+        if sha_cache[dll] != hh.VALIDATED_DLL_SHA256:
+            missing.append({"case": row["case"], "input": "hull_hook_dll", "path": dll.as_posix(),
+                            "reason": f"SHA-256 {sha_cache[dll][:12]} != validated {hh.VALIDATED_DLL_SHA256[:12]}"})
+    return {"ok": not missing, "checked": checked, "missing": missing, "unresolved": unresolved}
+
+
+INPUT_HINTS = {
+    "l1r_snapshot": "copy the .npz from the main checkout's 07_results/states_L1R (git-ignored) or build it "
+                    "(run_S6C.py snaps / snaps-crx / snaps-pre, run_S8C.py snaps)",
+    "hull_hook_dll": "copy 03_src/outrigger_sim/native/chrono_hull/bin/chrono_hull_hook.dll from the main checkout "
+                     "(git-ignored) or run that folder's build.ps1; OUTRIGGER_HULL_HOOK=off runs without it",
+}
+
+
+def input_check_lines(name: str, chk: dict) -> list[str]:
+    """Text of :func:`untracked_input_check`: one line per missing input (grouped hint per input kind) and per
+    unresolved row."""
+    out = []
+    if chk["missing"]:
+        out.append(f"batch {name}: {len(chk['missing'])} git-ignored input(s) missing; nothing was launched:")
+        out += [f"  {m['case']}: {m['input']} {m['path']} ({m['reason']})" for m in chk["missing"]]
+        out += [f"  -> {kind}: {INPUT_HINTS[kind]}" for kind in sorted({m["input"] for m in chk["missing"]})]
+    out += [f"WARN_INPUT_UNRESOLVED {u['case']}: {u['reason']}" for u in chk["unresolved"]]
+    return out
+
+
 def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, parallel_e: int = 0,
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
@@ -1754,11 +1893,20 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     order_cases = None if order_cases is None else [n for n in order_cases if n not in done_names]
     queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
     slots = {"pcore": int(parallel), "ecore": int(parallel_e)}
+    inputs = untracked_input_check(cases, masks=masks)  # before any folder / launch (2026-11-22)
+    if not inputs["ok"]:
+        raise SystemExit("\n".join(input_check_lines(name, inputs)))
+    for line in input_check_lines(name, inputs):
+        print(line, flush=True)
     folder.mkdir(parents=True, exist_ok=True)
     progress = folder / "progress.log"
     _log(progress, f"# batch {name} {len(cases)} cases, parallel P {slots['pcore']} / E {slots['ecore']}, order {order}"
                    f"{' (explicit list first)' if order_cases else ''}, started "
                    f"{_dt.datetime.now().isoformat(timespec='seconds')}")
+    _log(progress, f"# input check ok: {inputs['checked']} git-ignored input(s) present"
+                   + (f", {len(inputs['unresolved'])} row(s) unresolved" if inputs["unresolved"] else ""))
+    for u in inputs["unresolved"]:
+        _log(progress, f"WARN_INPUT_UNRESOLVED {u['case']}: {u['reason']}")
     if masks is not None:
         _log(progress, "# affinity masks " + " ".join(f"{p}={m}" for p, m in masks.items()))
     for c in finished:
@@ -2066,13 +2214,42 @@ def main(argv) -> None:
         print("ok" if doc["ok"] else "DIFFERS")
         if not doc["ok"]:
             raise SystemExit(1)
+    elif a.action == "check-inputs":
+        rows = select_rows(batches(rv6_k=a.rv6_k, rv6_dir=a.rv6_dir)[a.batch], a.only or None,
+                           parse_row_filter(a.row_filter))
+        chk = untracked_input_check(rows)
+        for line in input_check_lines(a.batch, chk):
+            print(line)
+        print(f"ok ({chk['checked']} git-ignored input(s) present over {len(rows)} rows)" if chk["ok"] else "MISSING")
+        if not chk["ok"]:
+            raise SystemExit(1)
     else:
         env_override_guard(a.allow_env_override, a.batch)
         only = (a.only or []) + (read_only_file(a.only_file) or [])
-        run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
-                  row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, rerun_of=a.rerun_of,
-                  p_mask=a.p_mask, e_mask=a.e_mask, **schedule_args(a, argv))
+        folder = run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
+                           row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
+                           resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull,
+                           rerun_of=a.rerun_of, p_mask=a.p_mask, e_mask=a.e_mask, **schedule_args(a, argv))
+        raise_if_failed(a.batch, folder)
+
+
+def raise_if_failed(name: str, folder: Path) -> None:
+    """``run``: SystemExit(:data:`BATCH_FAILED_EXIT`) when ``<folder>/batch.json`` says ``failed`` (the failing and
+    the skipped rows on stderr). A batch.json that cannot be read also fails (the batch did not finish its record)."""
+    try:
+        doc = json.loads((folder / "batch.json").read_text("utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"batch {name}: batch.json unreadable ({type(e).__name__}: {e}) in {folder}", file=sys.stderr)
+        raise SystemExit(BATCH_FAILED_EXIT) from e
+    if not doc.get("failed"):
+        return
+    cases = doc.get("cases", [])
+    bad = [f"{c['case']} rc={c.get('rc')}" for c in cases if c.get("rc") not in (0, None)]
+    skipped = [c["case"] for c in cases if c.get("rc") is None]
+    print(f"batch {name} FAILED: {', '.join(bad) or '?'}"
+          + (f"; not started: {' '.join(skipped)}" if skipped else "") + f" ({folder.as_posix()}/batch.json)",
+          file=sys.stderr, flush=True)
+    raise SystemExit(BATCH_FAILED_EXIT)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -2083,10 +2260,15 @@ def build_parser() -> argparse.ArgumentParser:
     ls.add_argument("batch", nargs="?", choices=names)
     cs = sub.add_parser("check-sources", help="RV6 / FINAL: do the level rows reproduce their former run args?")
     cs.add_argument("batch", choices=names)
+    ci = sub.add_parser("check-inputs", help="git-ignored inputs of the rows (L1-R start snapshots, hull hook DLL) "
+                                             "present? (run does the same check before any launch)")
+    ci.add_argument("batch", choices=names)
+    ci.add_argument("--only", nargs="*")
+    ci.add_argument("--row-filter", action="append", default=None, metavar="KEY=V1[,V2]")
     ls.add_argument("--row-filter", action="append", default=None, metavar="KEY=V1[,V2]")
     r = sub.add_parser("run")
     r.add_argument("batch", choices=names)
-    for p in (ls, cs, r):
+    for p in (ls, cs, ci, r):
         p.add_argument("--rv6-k", type=float, default=None,
                        help="RV6: X6-rb floor roll = k_b x 4.4 deg, sign by --rv6-dir (default 0.65; spec 430.3.1)")
         p.add_argument("--rv6-dir", choices=("roll_neg", "roll_pos"), default=None,
