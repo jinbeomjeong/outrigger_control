@@ -3,7 +3,8 @@
 #   -Part dry     X-4 dry selection at the run commit (erratum 1 9.1: select scans again; its g8 /
 #                 ref key files must have the fixed sha256, else not usable - ask the user again)
 #   -Part l1keys  the 12b L1 key file (erratum 2 2-1, jp3_12b_l1_keys.py); then step_l1ref.ps1
-#                 runs the two L1 reference runs (a simulation, before the fixed list)
+#                 runs the two L1 reference runs and step_p5fixed.ps1 the P5-2 / P5-4 fixed
+#                 values (simulations, before the fixed list; prelaunch audit B-2)
 #   -Part x11     X-11 plans (jp3_12b_plan.py), ONCE, just before step0_cdry.ps1 (the c dry seeds
 #                 90 / 91 must not collide with keys written later; user decision 2026-11-22)
 #   -Part ckdrop  the T-CK / DROPOUT seeds, keys and plans (erratum 2 2-9.5, jp3_ckdrop_plan.py;
@@ -12,7 +13,8 @@
 #                 and its generation command file
 #   -Part list    FIXED_INPUTS_<run commit 8>.SHA256SUMS (jp3_fixed_inputs_list.py) after the
 #                 main session committed the parts above, the L1 runs and the filled-in
-#                 common_ed5.ps1; it lists the L1 key file and the two L1 runs too; the main
+#                 common_ed5.ps1; it lists the L1 key file, the two L1 runs and the P5-2 /
+#                 P5-4 records (p52.json, p54.json of p5fixed.done's folder) too; the main
 #                 session then commits the list before step0_cdry.ps1 (order: common_ed5.ps1)
 #   -ScanExtra    (x11) more probe record folders whose r79 key strings the seed scan reads
 #                 (erratum 2 2-3: the run worktree's 05_tests is always scanned; the probe file
@@ -83,6 +85,11 @@ switch ($Part) {
         $L1Folder = Get-L1RefFolder
         $Add = @('--add', $L1KeysFile)
         foreach ($Setting in $L1Settings) { $Add += @('--add', "$L1Folder\L1_$Setting.json") }
+        # prelaunch audit B-2: the P5-2 / P5-4 fixed records of step_p5fixed.ps1
+        $P5Done = "$RunsRoot\p5fixed.done"
+        if (-not (Test-Path -LiteralPath $P5Done)) { Write-Host "STOP: $P5Done missing (run step_p5fixed.ps1)"; exit 2 }
+        $P5Folder = "$RunsRoot\$(Split-Path -Leaf (Get-Content -Raw -LiteralPath $P5Done | ConvertFrom-Json).folder)"
+        foreach ($Name in $P5FixedNames) { $Add += @('--add', "$P5Folder\judge\$Name") }
         & $DevPython -I -B "$Coupled/jp3_fixed_inputs_list.py" --repo $MainRoot --worktree $Worktree `
             --commit $RunCommit --entries $EntriesFile --x11-selection $X11Selection `
             --dry-selection $DrySelection --out $FixedList @Add
