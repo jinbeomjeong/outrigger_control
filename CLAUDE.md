@@ -43,7 +43,7 @@
 - MuJoCo는 **인터페이스만** 둔다(`SimEngine` 프로토콜 유지, 백엔드 없음). 교차 검증은 Chrono와 독립인 numpy 모델로 한다.
 - ML env의 numpy는 **MKL + TBB 스레딩 계층**이다. torch를 먼저 import하고 MKL 기본 계층이면 행렬곱에서 프로세스가 죽는다(0xC06D007F). `MKL_THREADING_LAYER=TBB`가 conda 환경 변수와 `sitecustomize.py`에 걸려 있다(env를 다시 만들면 `sitecustomize.py`도 다시 만든다). 학습 데이터는 Chrono-dev가 만든 npz를 읽고, 두 env를 한 프로세스로 섞지 않는다.
 - 계산 비용 측정·장시간 실행은 **P코어 고정 + EcoQoS 해제**로 한다(i7-14700, P 8 + E 12; Windows가 창 없는 하위 프로세스를 E코어로 보내 느려진다). 구현 `04_scripts/02_chrono/solver_benchmark/step_cost_S0.py`의 `place_process`. 비용 측정은 다른 계산과 겹치지 않게 혼자 돌린다. 그 밖의 계산은 컴퓨터 자원을 최대한 쓴다(배치표·실행 명령은 compute-scheduler-expert, 스스로 코어를 고정하는 Chrono 사례는 `self_pin: pcore`로 동시 개수만 받는다).
-- SCM(S9) Chrono 실행 규칙: `--threads`는 실행 조건으로 고정·기록(다르면 비트가 다름), P코어 우선, `OMP_WAIT_POLICY=PASSIVE`를 시작 전 env에, GPU·CRM 쓰지 않음. 볼록 껍질 훅 기본 fast(DLL `chrono_hull_hook.dll` SHA-256 `cec997d7…`, git 제외라 새 checkout에는 복사 또는 `build.ps1`, 없거나 다르면 off 폴백, 명시 모드는 exit 2). 근거·기록 키·`--resume` 규칙은 [00_docs/claude_md_detail.md](00_docs/claude_md_detail.md) 2절.
+- SCM(S9) Chrono 실행 규칙: `--threads`는 실행 조건으로 고정·기록(다르면 비트가 다름), P코어 우선, `OMP_WAIT_POLICY=PASSIVE`를 시작 전 env에, GPU·CRM 쓰지 않음. 볼록 껍질 훅 기본 fast(DLL `chrono_hull_hook.dll` SHA-256 `cec997d7…`, git 제외라 새 checkout에는 복사하거나 `build.ps1`로 만든다. `07_results/states_L1R` 시작 스냅숏도 git 제외라 새 checkout에 복사해야 한다. `s9_batch run`은 SCM 행의 DLL이 없거나 SHA가 다를 때, 그리고 L1-R 스냅숏이 없을 때 실행 전에 멈춘다. 미리 보려면 `check-inputs <batch>`를 쓰고, DLL 없이 돌리려면 `OUTRIGGER_HULL_HOOK=off`를 준다. 실패 행이 있는 배치는 종료 1이다. run_S9를 직접 돌리면 기본 모드에서 DLL이 없거나 다를 때 off로 폴백하고, 명시 모드에서는 exit 2). 근거·기록 키·`--resume` 규칙은 [00_docs/claude_md_detail.md](00_docs/claude_md_detail.md) 2절.
 - PARDISO_MKL은 env 미활성 실행에서 `Library\bin\libomp.dll`을 미리 로드해야 한다(`chrono/system.py`가 처리).
 
 ## 현재 기준값 (2026-11-01)
