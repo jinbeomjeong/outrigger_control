@@ -722,7 +722,8 @@ def _grade_module():
 
 def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
                       judges: dict[str, tuple[Path | None, str | None]],
-                      categories: dict[tuple[str, str], str] | None = None) -> dict:
+                      categories: dict[tuple[str, str], str] | None = None,
+                      exits: dict[str, int | None] | None = None) -> dict:
     """6.3.7 / 6.3.9 record (control review of 8a3c48c7 W-6): per pair the VBK0 grade and the
     VBK grade of its line (``h8_noise_judge_4368.grade_lines`` on the r79 judge file of each arm,
     the ``grade-judge`` output); the pairs whose grade changed, with their keys; a line without a
@@ -734,7 +735,7 @@ def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
     reports, inputs = {}, {}
     # erratum 2 audit F-1: a grade input defect is a record only ("not computed" with its
     # reason); it never reaches ``problems`` (the 12b status and exit code stay the judgement's)
-    input_problems = grade_input_problems(judges)
+    input_problems = grade_input_problems(judges, exits)
     if input_problems:
         return {"computed": False, "reason": "grade input defect (a record, 6.3.7)",
                 "input_problems": input_problems}
@@ -767,14 +768,20 @@ def grade_transitions(blocks0: dict, blocks1: dict, decision: dict,
             "rule": "a record (6.3.7): j9_main judges the grades (6.5)"}
 
 
-def grade_input_problems(judges: dict[str, tuple[Path | None, str | None]]) -> list[str]:
+def grade_input_problems(judges: dict[str, tuple[Path | None, str | None]],
+                         exits: dict[str, int | None] | None = None) -> list[str]:
     """Why the grade transitions cannot be computed: a grade-judge file not given (its
-    ``grade-judge`` stopped, e.g. on an L1 reference defect), missing, of another sha256 or not
-    an r79 judge output (``runs``). A record (erratum 2 audit F-1)."""
+    ``grade-judge`` stopped: ``exits`` names its exit code, e.g. 2 on an L1 reference defect or
+    3 on a tool error, erratum 2 2-1), missing, of another sha256 or not an r79 judge output
+    (``runs``). A record (erratum 2 audit F-1)."""
+    exits = exits or {}
     problems = []
     for arm, (path, expected) in judges.items():
         if path is None or expected is None:
-            problems.append(f"{arm}: no grade-judge file given (its grade-judge did not write one)")
+            code = exits.get(arm)
+            problems.append(f"{arm}: grade-judge 종료 {code} (grade-judge exit {code}: no file)"
+                            if code is not None else
+                            f"{arm}: no grade-judge file given (its grade-judge did not write one)")
             continue
         if not Path(path).is_file():
             problems.append(f"{arm}: grade-judge file {path} missing")
@@ -1081,7 +1088,8 @@ def cmd_judge(args) -> tuple[str, dict]:
     report["grade_transitions"] = grade_transitions(
         blocks0, blocks1, decision, {"vbk0": (args.vbk0_grade_judge, args.vbk0_grade_judge_sha256),
                                      "vbk": (args.vbk_grade_judge, args.vbk_grade_judge_sha256)},
-        {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]})
+        {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]},
+        {"vbk0": args.vbk0_grade_judge_exit, "vbk": args.vbk_grade_judge_exit})
     report["hold_speed_m_s"] = _hold_speed_record()  # erratum 2 2-5
     report["pass_sentence"] = {"n_opp": decision.get("n_opp"),
                                "upper_bound_n_opp": upper_bound(decision.get("n_opp") or 0),
@@ -1119,6 +1127,9 @@ def _parser() -> argparse.ArgumentParser:
                 # optional (erratum 2 audit F-1): a missing one is a record, never a stop
                 command.add_argument(f"--{arm}-grade-judge", type=Path, default=None)
                 command.add_argument(f"--{arm}-grade-judge-sha256", default=None)
+                command.add_argument(f"--{arm}-grade-judge-exit", type=int, default=None,
+                                     help="the arm's grade-judge exit code when it wrote no "
+                                          "file (2 or 3; a record, erratum 2 2-1)")
     grades = sub.add_parser("grade-judge")
     grades.add_argument("--arm", choices=sorted(SETTING_OF_ARM), required=True)
     grades.add_argument("--runs", action="append", required=True, help="b<j>=<run json>")

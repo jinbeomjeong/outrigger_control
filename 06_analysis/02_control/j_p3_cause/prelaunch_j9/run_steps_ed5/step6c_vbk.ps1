@@ -47,6 +47,7 @@ $Judge = "$Coupled/jp3_12b_judge.py"
 $L1OfArm = @{ vbk0 = (Get-L1Run 'VBJ0'); vbk = (Get-L1Run 'VBJ') }
 $L1KeysSha = Get-ListedSha $L1KeysFile
 $GradeFiles = @{}
+$GradeExits = @{}
 foreach ($Arm in @('vbk0', 'vbk')) {
     $Arguments = @($Judge, 'grade-judge', '--arm', $Arm, '--l1-reference', $L1OfArm[$Arm],
         '--l1-reference-sha256', (Get-ListedSha $L1OfArm[$Arm]), '--l1-keys-sha256', $L1KeysSha,
@@ -55,13 +56,15 @@ foreach ($Arm in @('vbk0', 'vbk')) {
         $Path = if ($Arm -eq 'vbk') { "$Folder\VBK_$Block.json" } else { $Vbk0[$Block][0] }
         $Arguments += @('--runs', "$Block=$Path")
     }
-    # erratum 2 audit F-1: the grade transitions are a record - grade-judge exit 2 (an L1
-    # reference defect, not judgeable) goes on; the judge then records "not computed" with the
-    # reason and its status and exit code stay the 12b judgement's (a tool error, 3, stops)
-    $GradeCode = Invoke-Judge "grade_judge_$Arm" $Arguments -ContinueCodes @(0, 2)
-    if ($GradeCode -eq 0) {
-        $GradeFiles[$Arm] = @("$Folder\judge\grades_$Arm.json",
-            (Read-ReportField "$Folder\judge\grades_${Arm}_record.json" 'judge_sha256'))
+    # erratum 2 2-1 (audit F-1): the grade transitions are a record - grade-judge exit 2 (an L1
+    # reference defect) and exit 3 (a tool error) both go on; the judge then records "not
+    # computed" with the reason ("grade-judge 종료 <code>") and its status and exit code stay
+    # the 12b judgement's
+    $GradeCode = Invoke-Judge "grade_judge_$Arm" $Arguments -ContinueCodes @(0, 2, 3)
+    $GradeExits[$Arm] = $GradeCode
+    $GradeRecord = "$Folder\judge\grades_${Arm}_record.json"
+    if ($GradeCode -eq 0 -and (Test-Path -LiteralPath $GradeRecord)) {
+        $GradeFiles[$Arm] = @("$Folder\judge\grades_$Arm.json", (Read-ReportField $GradeRecord 'judge_sha256'))
     }
 }
 
@@ -72,8 +75,10 @@ foreach ($Block in $Blocks) {
         '--vbk', "$Block=$Folder\VBK_$Block.json", '--vbk-t4h', "$Block=$Folder\VBK_${Block}_t4h")
 }
 foreach ($Arm in @('vbk0', 'vbk')) {
-    if ($GradeFiles.ContainsKey($Arm)) {  # a missing arm: the judge records "not computed"
+    if ($GradeFiles.ContainsKey($Arm)) {
         $Arguments += @("--$Arm-grade-judge", $GradeFiles[$Arm][0], "--$Arm-grade-judge-sha256", $GradeFiles[$Arm][1])
+    } else {  # a missing arm: the judge records "not computed" with the grade-judge exit code
+        $Arguments += @("--$Arm-grade-judge-exit", "$($GradeExits[$Arm])")
     }
 }
 Invoke-Judge 'judge' $Arguments | Out-Null

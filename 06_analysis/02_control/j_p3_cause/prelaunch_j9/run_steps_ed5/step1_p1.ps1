@@ -35,15 +35,23 @@ Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--
     '--judge', $JudgeFile, '--judge-sha256', $JudgeSha, '--out', "$Folder\judge\h6_selfcheck.json") | Out-Null
 
 Write-P1Outputs $Folder
-# erratum 2 2-4 / 2-7 (audit warning 4): the static import closure of the judge code against
-# git diff 78fd5d2d..run commit picks the comparison: disjoint (0) the file sha256 (item p1),
-# meets (1) the sorted judge contents (item p1_content); 2 / 3 stop. The path is recorded.
+# erratum 2 2-4 / 2-7 (audit warning 4): the static import closure of the judge code (entries
+# r79_sensor_judge.py, h8_noise_judge_4368.py, jp3_tjr_judge.py) against git diff
+# 78fd5d2d..run commit picks the comparison; 2 / 3 stop; the path is recorded.
+#   disjoint (0): item p1 - the two file sha256 and the two codes as 78fd5d2d's
+#   meets (1):    item p1_content - the judge file's sorted runs / table / unmatched / errors
+#                 and the L1 extract JSON as 78fd5d2d's; t12-selfcheck judged by its 4a-4 6
+#                 expectation table (its exit 0 above) and base-judge-compare exit 0
 $ClosureCode = Invoke-Judge 'p1_import_closure' @("$Coupled/jp3_import_closure.py", '--repo', $Worktree,
     '--entry', '04_scripts/03_control/s8/r79_sensor_judge.py',
-    '--entry', "$Coupled/h8_noise_judge_4368.py", '--base', $PreviousRunCommit, '--head', $RunCommit,
+    '--entry', "$Coupled/h8_noise_judge_4368.py", '--entry', "$Coupled/jp3_tjr_judge.py",
+    '--base', $PreviousRunCommit, '--head', $RunCommit,
     '--out', "$Folder\judge\p1_import_closure.json") -ContinueCodes @(0, 1)
 $MatchItem = if ($ClosureCode -eq 0) { 'p1' } else { 'p1_content' }
 $StepState.Codes['p1_match_path'] = $MatchItem
+if ($MatchItem -eq 'p1_content' -and $StepState.Codes['tool:base_judge_compare'] -ne 0) {
+    Stop-Step 1 "erratum 2 2-4 content path: base-judge-compare exit $($StepState.Codes['tool:base_judge_compare']), 0 required"
+}
 Invoke-RerunMatch $MatchItem  # against 78fd5d2d ($PreviousRunsRoot, its p1.done)
 
 Complete-Step

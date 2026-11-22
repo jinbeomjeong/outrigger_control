@@ -162,3 +162,16 @@ function Get-X11Sha { return Get-ListedSha $X11Selection }
 $L1KeysFile = "$Ed5Inputs\l1_keys_12b.txt"
 $L1Settings = @('VBJ0', 'VBJ')
 function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Setting.json" }
+
+function Assert-NoL1Inputs([string[]]$Inputs) {
+    # erratum 2 2-1 (file level, recommended): call before a j9_main judge command - an input
+    # file of the sha256 of an L1 reference run (12b l1ref VBJ / VBJ0, T-JR-12a step 6 VBJ /
+    # VBJ0) stops as a setting defect (exit 2) before the judge starts
+    $Dg3Folder = Get-StepFolder 'dg3'
+    $Arguments = @("$Coupled/jp3_l1_input_guard.py", '--out', "$($StepState.Folder)\judge\l1_input_guard.json")
+    foreach ($Setting in $L1Settings) {
+        $Arguments += @('--l1-reference', (Get-L1Run $Setting), '--l1-reference', "$Dg3Folder\l1_$Setting.json")
+    }
+    foreach ($InputFile in $Inputs) { $Arguments += @('--input', $InputFile) }
+    Invoke-Judge 'l1_input_guard' $Arguments | Out-Null
+}

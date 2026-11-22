@@ -34,8 +34,9 @@ dry5     (edition 5 erratum 1 9.3, against 78fd5d2d ``dry_a1``) the g6 r79 VBJ /
          fallbacks. Not compared: ``extend_bound_check``, ``jp3_*`` arrays, run meta; g8 /
          ref (not run in edition 4a). No exit code compared
 p1_content (edition 5 erratum 2 2-4, when the import closure of the judge code met a changed
-         file) the P-1 judge file's ``runs`` / ``table`` / ``unmatched`` / ``errors`` and the
-         L1 extract's lines, each sorted, instead of the file sha256; the two P-1 codes
+         file) the P-1 judge file's ``runs`` / ``table`` / ``unmatched`` / ``errors`` (sorted)
+         and the L1 extract (JSON) instead of the file sha256; no exit code (the run step
+         needs ``t12-selfcheck`` 0 by its expectation table and ``base-judge-compare`` 0)
 dry5_retry (9.3, a retry ``dry_a<k>`` of the same commit, ``--old-folder dry_a<k-1>``) every
          result line of the folder without the run meta keys (``wall_s``, ``mask``,
          ``t4h_dir``), one sha256 per line
@@ -92,7 +93,7 @@ X11_ROWS = "lsj4_x11.jsonl"
 X11_SETTING = "LSJ4_X11"
 ITEM_CODES = {"p1": P1_CODES, "dry": ("tool:summarize",), "fpath": ("tool:case_f_path",),
               "x11": ("tool:x11",), "cases_ae": ("tool:baseline_compare",),
-              "casef": ("tool:case_f",), "dry5": (), "dry5_retry": (), "p1_content": P1_CODES}
+              "casef": ("tool:case_f",), "dry5": (), "dry5_retry": (), "p1_content": ()}
 EXIT_SAME, EXIT_DIFFERS, EXIT_MISSING, EXIT_ERROR = 0, 1, 2, 3
 
 
@@ -332,13 +333,14 @@ def _sorted_content(value):
 
 def _p1_content_values(folder: Path) -> dict:
     """Erratum 2 2-4 (the closure met a changed file): the P-1 judge file's ``runs``,
-    ``table``, ``unmatched`` and ``errors`` in sorted form, and the L1 extract's lines in sorted
-    form, one sha256 each (no value written)."""
+    ``table``, ``unmatched`` and ``errors`` in sorted form, and the L1 extract as JSON (the
+    same contents), one sha256 each (no value written). The two P-1 codes are not compared
+    with the earlier attempt here: the run step judges ``t12-selfcheck`` by its 4a-4 6
+    expectation table (its own exit 0) and needs ``base-judge-compare`` exit 0."""
     judge = _read_json(folder / P1_FILES[0])
     values = {f"{P1_FILES[0]} {part}": _canonical_sha(_sorted_content(judge.get(part)))
               for part in P1_CONTENT_KEYS}
-    extract = _read_json(folder / P1_FILES[1])
-    values[f"{P1_FILES[1]} results"] = _canonical_sha(_sorted_content(extract.get("results")))
+    values[f"{P1_FILES[1]} json"] = _canonical_sha(_read_json(folder / P1_FILES[1]))
     return values
 
 

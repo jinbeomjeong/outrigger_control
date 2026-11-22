@@ -23,10 +23,18 @@ $Placement = [ordered]@{ VBH = @('0x00FF', 4); VBJ = @('0xFF00', 4); VBJ0 = @('0
 $L1Placement = [ordered]@{ VBJ = '0x00FF'; VBJ0 = '0xFF00' }
 $Dg3L1KeysFile = "$PrelaunchDir\l1_keys_d3c6c57e.json"
 $Dg3L1KeysSha256 = 'eea8ed0d5f3aa79ecb5cf1cb892fa82f7d4bac780f8b3b17dbd069200765c6af'
-# 4a-8 erratum 1 3: the fixed L1 key file of the T-JR-12a VBJ bundle (fixed list entry too)
+# erratum 2 2-8 / 4a-8 erratum 1 3: the fixed L1 key file of the T-JR-12a VBJ bundle, its
+# sha256 the constant and the fixed list's entry (missing or other: not judgeable)
+if (-not (Test-Path -LiteralPath $Dg3L1KeysFile)) { Stop-Step 2 "$Dg3L1KeysFile missing" }
 if ((Get-FileHash -Algorithm SHA256 -LiteralPath $Dg3L1KeysFile).Hash.ToLower() -ne $Dg3L1KeysSha256) {
     Stop-Step 2 "$Dg3L1KeysFile is not the fixed 4a-8 L1 key file"
 }
+if ((Get-ListedSha $Dg3L1KeysFile) -ne $Dg3L1KeysSha256) { Stop-Step 2 "fixed list sha of $Dg3L1KeysFile differs" }
+# 4a-8 4.3 pre-use checks of the two L1 runs before they grade anything: the identity of every
+# run of this folder (Invoke-IdentityCheck below: run commit, clean tree), then dg3-judge
+# --l1-keys-file (jp3_tjr_judge.l1_run_problems: 102 lines, 0 error lines, level L1,
+# rod_model plant_truth, the setting, candidate current, the key file's (harness, inner) set,
+# meta keys_file = the key file); any miss stops the step (exit 2)
 
 $Runs = @()
 foreach ($Setting in $Placement.Keys) {

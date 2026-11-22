@@ -788,7 +788,7 @@ def _without_grade_arm(args: list[str], arm: str) -> list[str]:
     return out
 
 
-@pytest.mark.parametrize("defect", ["sha", "missing_arm"])
+@pytest.mark.parametrize("defect", ["sha", "missing_arm", "grade_judge_exit_3"])
 def test_f1_failure_with_a_grade_input_defect_is_exit_1(world, capsys, cwd_elsewhere,
                                                          defect) -> None:
     """Erratum 2 audit F-1: a 6.3.7 failure with a grade input defect stays a failure (exit 1),
@@ -800,14 +800,18 @@ def test_f1_failure_with_a_grade_input_defect_is_exit_1(world, capsys, cwd_elsew
     args = judge_args(world, written0, written1, decision, world["runs"] / f"f1_{defect}.json")
     if defect == "sha":
         args[args.index("--vbk0-grade-judge-sha256") + 1] = "0" * 64
-    else:
+    elif defect == "missing_arm":
         args = _without_grade_arm(args, "vbk0")
+    else:  # erratum 2 2-1: the arm's grade-judge ended with a tool error (exit 3)
+        args = [*_without_grade_arm(args, "vbk0"), "--vbk0-grade-judge-exit", "3"]
     code, last, report = run_main(args, capsys)
     assert code == 1 and last["status"] == "failed", report["problems"]
     assert report["problems"]["not_judgeable"] == []
     transitions = report["grade_transitions"]
     assert transitions["computed"] is False and transitions["input_problems"]
     assert transitions["input_problems"][0].startswith("vbk0:")
+    if defect == "grade_judge_exit_3":
+        assert "grade-judge 종료 3" in transitions["input_problems"][0]
 
 
 def test_f1_pass_without_both_grade_files_is_exit_0(world, capsys, cwd_elsewhere) -> None:

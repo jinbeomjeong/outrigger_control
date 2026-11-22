@@ -142,7 +142,7 @@ def test_p1_content_match_sorts_and_compares_the_judge_parts(tmp_path) -> None:
     extract = [{"key": "L1|s0|g6|0|x"}, {"key": "L1|s0|g6|1|y"}]
     codes = {"tool:base_judge_compare": 0, "tool:t12_selfcheck": 0}
     old = _p1_folder(tmp_path / "old" / "p1_a1", runs, extract)
-    same = _p1_folder(tmp_path / "new" / "p1_a1", list(reversed(runs)), list(reversed(extract)))
+    same = _p1_folder(tmp_path / "new" / "p1_a1", list(reversed(runs)), extract)
     other = _p1_folder(tmp_path / "other" / "p1_a1", [runs[0], {"key": "b", "pass": True}],
                        extract)
     report, code = rerun.compare_items([rerun.Side(old.parent, old, codes)],
@@ -152,6 +152,17 @@ def test_p1_content_match_sorts_and_compares_the_judge_parts(tmp_path) -> None:
                                        rerun.Side(other.parent, other, codes), ["p1_content"])
     assert code == rerun.EXIT_DIFFERS
     assert report["items"]["p1_content"]["differing"] == ["h6_base_judge.json runs"]
+    # erratum 2 2-4: the L1 extract is the same JSON (not a sorted comparison)
+    moved = _p1_folder(tmp_path / "moved" / "p1_a1", runs, list(reversed(extract)))
+    report, code = rerun.compare_items([rerun.Side(old.parent, old, codes)],
+                                       rerun.Side(moved.parent, moved, codes), ["p1_content"])
+    assert report["items"]["p1_content"]["differing"] == [
+        "h6_base_judge_L1_reference.json json"]
+    # the P-1 codes are judged by the run step, not compared with the earlier attempt
+    report, code = rerun.compare_items(
+        [rerun.Side(old.parent, old, codes)],
+        rerun.Side(same.parent, same, {**codes, "tool:t12_selfcheck": 1}), ["p1_content"])
+    assert code == rerun.EXIT_SAME
 
 
 def test_grade_input_problems_names_each_defect(tmp_path) -> None:
@@ -167,6 +178,28 @@ def test_grade_input_problems_names_each_defect(tmp_path) -> None:
     assert judge.grade_input_problems({"vbk0": (good, sha)}) == []
     assert "no r79 judge output" in judge.grade_input_problems(
         {"vbk": (broken, hashlib.sha256(broken.read_bytes()).hexdigest())})[0]
+
+
+def test_l1_input_guard_stops_on_an_l1_reference_input(tmp_path, monkeypatch, capsys) -> None:
+    """2-1 (file level): a j9_main input of an L1 reference sha256 is a setting defect."""
+    import jp3_l1_input_guard as guard
+
+    references = [_l1_run(tmp_path / f"l1_{index}.json", {f"L1|s0|g6|{index}|x": "a" * 64})
+                  for index in range(4)]
+    rows = tmp_path / "j9_main.jsonl"
+    rows.write_text(json.dumps({"job": {"case": "R12"}}) + "\n", encoding="utf-8")
+    (tmp_path / "cwd").mkdir()
+    monkeypatch.chdir(tmp_path / "cwd")
+    base = [arg for path in references for arg in ("--l1-reference", str(path))]
+    assert guard.main([*base, "--input", str(rows), "--out", str(tmp_path / "a.json")]) == 0
+    assert guard.main([*base, "--input", str(rows), "--input", str(references[2]),
+                       "--out", str(tmp_path / "b.json")]) == 2
+    report = json.loads((tmp_path / "b.json").read_text(encoding="utf-8"))
+    assert report["status"] == "setting_defect"
+    assert report["shared"] == [{"input": str(references[2]), "l1_reference": str(references[2])}]
+    assert guard.main([*base[:6], "--input", str(rows), "--out", str(tmp_path / "c.json")]) == 2
+    assert guard.main([*base, "--input", str(tmp_path / "none.jsonl"),
+                       "--out", str(tmp_path / "d.json")]) == 2
 
 
 def test_probe_record_form_is_read_by_the_12b_scan(tmp_path) -> None:
