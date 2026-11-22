@@ -3,7 +3,7 @@
 * B-1 (a): every (plan, key file) pair the run steps hand to the r79 runner passes the runner's
   X-10 guard as the runner applies it (``r79_L3L4_final`` keys file -> job keys ->
   ``rod_fault_plan.load_plan`` + ``key_problems``), no simulation: b1 .. b4 (steps 6b / 6c),
-  c90 / c91 (step 0) and the 8 T-CK / DROPOUT pairs (step 7b), made by X-11 and the ckdrop
+  c92 / c93 (step 0) and the 8 T-CK / DROPOUT pairs (step 7b), made by X-11 and the ckdrop
   selection from the stored case source;
 * B-2: the P5-2 record (judged key total of the P4-on rev 6 rows only), ``p52-compare`` and the
   fixed-record gate of ``step_p5fixed.ps1``;
@@ -91,7 +91,7 @@ def _step_pairs(outputs: dict) -> dict[str, list[tuple[Path, Path]]]:
     x11, ck = outputs["x11"], outputs["ckdrop"]
     return {
         "step0_cdry.ps1": [(x11 / f"{run}_plan.json", x11 / f"{run}_keys.txt")
-                           for run in ("c90", "c91")],
+                           for run in ("c92", "c93")],
         "step6b_vbk0.ps1": [(x11 / f"b{j}_plan.json", x11 / f"b{j}_keys.txt") for j in range(1, 5)],
         "step6c_vbk.ps1": [(x11 / f"b{j}_plan.json", x11 / f"b{j}_keys.txt") for j in range(1, 5)],
         "step7b_ckdrop.ps1": [(ck / f"{bundle}_{leg}_plan.json", ck / f"{bundle}_keys.txt")
@@ -106,12 +106,14 @@ def test_step_scripts_hand_these_plan_key_pairs() -> None:
         text = (STEPS / script).read_text(encoding="utf-8")
         assert plan_text in text and keys_text in text, script
     step0 = (STEPS / "step0_cdry.ps1").read_text(encoding="utf-8")
-    assert "c90_91" not in step0  # B-1: no shared dry plan any more
+    assert "c90_91" not in step0 and "c92_93" not in step0  # B-1: no shared dry plan any more
+    # erratum 6 6-3: step 0 runs the 92 / 93 dry plans, the 90 / 91 ones never again
+    assert "$DryRuns = @('c92', 'c93')" in step0 and "c90" not in step0 and "c91" not in step0
 
 
 def test_every_run_step_pair_passes_the_runner_guard(prelaunch_outputs) -> None:
     """B-1 (a): load_plan + key_problems on the runner's job keys of every pair - b1 .. b4,
-    c90 / c91 and the 8 T-CK / DROPOUT pairs; the guard (plan = jobs exactly) as it is."""
+    c92 / c93 and the 8 T-CK / DROPOUT pairs; the guard (plan = jobs exactly) as it is."""
     pairs = _step_pairs(prelaunch_outputs)
     assert [len(pairs[name]) for name in STEP_PAIRS] == [2, 4, 4, 8]
     for script, items in pairs.items():
@@ -126,11 +128,11 @@ def test_the_guard_still_refuses_a_plan_beyond_the_jobs(prelaunch_outputs, tmp_p
     is not weakened."""
     x11 = prelaunch_outputs["x11"]
     faults = {}
-    for run in ("c90", "c91"):
+    for run in ("c92", "c93"):
         faults.update(json.loads((x11 / f"{run}_plan.json").read_text(encoding="utf-8"))["faults"])
-    shared = tmp_path / "c90_91_plan.json"
+    shared = tmp_path / "c92_93_plan.json"
     shared.write_text(json.dumps({"schema": plan.PLAN_SCHEMA, "faults": faults}), encoding="utf-8")
-    problems = rfp.load_plan(shared).key_problems(_runner_job_keys(x11 / "c90_keys.txt"))
+    problems = rfp.load_plan(shared).key_problems(_runner_job_keys(x11 / "c92_keys.txt"))
     assert any("no job of the run" in text for text in problems)
 
 
@@ -307,7 +309,7 @@ def test_p54_record_lists_the_input_files_sha(tmp_path, monkeypatch) -> None:
 
 
 def test_dry_union_check(prelaunch_outputs) -> None:
-    """Erratum 4 4-2: X-11 records that c90 + c91 are the 160 pairs, 20 per cell; a broken
+    """Erratum 4 4-2: X-11 records that c92 + c93 are the 160 pairs, 20 per cell; a broken
     union is not usable; step 0 reads the record."""
     selection = json.loads((prelaunch_outputs["x11"] / "selection.json").read_text(
         encoding="utf-8"))
@@ -316,7 +318,7 @@ def test_dry_union_check(prelaunch_outputs) -> None:
     assert set(check["per_cell"].values()) == {20}
     plans = {seed: json.loads((prelaunch_outputs["x11"] / f"c{seed}_plan.json").read_text(
         encoding="utf-8")) for seed in plan.DRY_SEEDS}
-    plans[91]["faults"].pop(next(iter(plans[91]["faults"])))
+    plans[93]["faults"].pop(next(iter(plans[93]["faults"])))
     with pytest.raises(plan.NotUsable, match="160 pairs"):
         plan.dry_union_check(plans)
     assert "union_check" in (STEPS / "step0_cdry.ps1").read_text(encoding="utf-8")

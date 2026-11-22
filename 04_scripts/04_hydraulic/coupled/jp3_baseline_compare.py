@@ -32,6 +32,18 @@ Checks (every problem is collected; the status: failed > setting defect > not ju
 8. P4-9: ``retract_tracker_dominated_reads`` 0 and an empty stretch log (no fallback leg); a
    revision 5 row without either key is not judgeable, never 0 (prelaunch audit M-5).
 
+Edition 5 erratum 6 (sealed ``9a92bd34``):
+
+* 6-1: the edition 5 case D row (VBG6) pairs with the baseline VBG5 row
+  (:data:`SETTING_OF_PREVIOUS_EDITION`, the map of P5-1).
+* 6-2: on a ③ revision 6 row (B, D, E) P4-2, P4-4 and P4-9 are records - their findings go to
+  the report's ``p4_records`` with the row's revision 6 reason counts and never change the
+  status. P4-1, the identity, the P4 evidence and P4-3a stay judged; the revision 4 rows (A, C)
+  keep every P4 item judged.
+* 6-2A: :func:`case_bd_conditions` judges the 5.3 conditions of case B (J-P3a on VBH, LSH1 ..
+  LSH4; J-P3b on VBH, LSH1, LSH2, LSH4) and case D ((D-가) J-P3a / b / c 0, (D-나) the VBG6
+  gap > 0 at every C breach read, (D-다) the numeric conditions under C's command order).
+
 Exit codes and ``status`` (the J4a-9 rows of 13.1 and 4a-2 R3):
 
 ======  =================  ===================================================================
@@ -59,6 +71,7 @@ name only), as the baseline's own rows; the working folder plays no part.
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import math
@@ -74,6 +87,7 @@ if str(HERE) not in sys.path:
 
 import jp3_fixed_inputs as fixed  # noqa: E402
 from j_p3_inputs import ROD_READING_EVIDENCE_KEYS, harness_head_only_declared  # noqa: E402
+from jp3_p51_compare import SETTING_OF_PREVIOUS_EDITION  # noqa: E402
 
 BASELINE_SUMS_SHA256 = fixed.BASELINE_SUMS_SHA256
 """Edition 4a 13.1 / addendum 4a-1: the sealed baseline list."""
@@ -238,6 +252,15 @@ def _job_key(record: dict) -> str:
     return json.dumps(record["job"], sort_keys=True)
 
 
+def _baseline_job_key(record: dict) -> str:
+    """Edition 5 erratum 6 6-1: the pairing key of a ``--new`` row - its job with a setting of
+    :data:`SETTING_OF_PREVIOUS_EDITION` (case D: VBG6) named as the baseline ran it (VBG5),
+    the map P5-1 uses; every other job as it is."""
+    job = dict(record["job"])
+    job["setting"] = SETTING_OF_PREVIOUS_EDITION.get(job.get("setting"), job.get("setting"))
+    return json.dumps(job, sort_keys=True)
+
+
 def _check(record: dict) -> dict:
     return (record.get("hydraulics_record") or {}).get("extend_bound_check") or {}
 
@@ -251,7 +274,9 @@ def _is_revision_5(record: dict) -> bool:
 def pair_rows(baseline: Baseline, new_rows: list[dict],
               problems: Problems) -> list[tuple[str, dict, dict]]:
     """(baseline row file, baseline record, new record) per baseline row; a test-only
-    ``*_X11`` row in the compared set is a setting defect (13.6, 4a-2 X11).
+    ``*_X11`` row in the compared set is a setting defect (13.6, 4a-2 X11). A new row is keyed
+    by :func:`_baseline_job_key` (erratum 6 6-1: the edition 5 VBG6 row pairs with the
+    baseline VBG5 row).
 
     Raises:
         NotJudgeable: A baseline row without exactly one new row.
@@ -262,7 +287,7 @@ def pair_rows(baseline: Baseline, new_rows: list[dict],
         if setting.endswith(TEST_ONLY_SUFFIX):
             problems.setting_defects.append(f"test-only setting {setting} in the compared set")
             continue
-        new_by_key.setdefault(_job_key(record), []).append(record)
+        new_by_key.setdefault(_baseline_job_key(record), []).append(record)
     pairs = []
     for row_file in BASELINE_ROW_FILES:
         for old in baseline.rows(row_file):
@@ -666,6 +691,287 @@ def seed_problems(setting: str, old: dict, new: dict, problems: Problems) -> dic
     return check
 
 
+# --- erratum 6 6-2A: the 5.3 conditions of cases B and D --------------------------------------
+
+CASE_B_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4")
+CASE_B_JP3B_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH4")
+"""5.3 B row: J-P3b judged on these four; LSH3's ``jp3b_breach_over_tol_reads`` is a record."""
+CASE_C_SETTING, CASE_D_SETTING = "VBG4", "VBG6"
+JP3A_KEY, JP3B_KEY, JP3C_KEY = JUDGED_KEYS
+RR_LEG = 3
+TIME_MATCH_TOLERANCE_S = 1.0e-6
+"""6-2A (D-나) / (D-다): a time matches a read within 1e-6 s (``first_breach_t_s`` is the read
+time rounded to 6 decimals, ``extend_start_bound.py`` 1509; ``jp3_t_s`` the same time unrounded)."""
+SAME_ORDER_WINDOW_S = (48.7, 49.0)
+CARRY_READ_S = 49.1
+CARRY_GAP_MIN_PA = 15.0e5
+HOLD_GAP_MIN_PA = 10.0e5
+"""(D-다): 49.1 s CARRY, its gap >= +15 bar, the HOLD reads' gap >= +10 bar (5.3 D row)."""
+CARRY_CLASSES = ("carry_ext", "carry_ret")
+HOLD_CLASS = "hold"
+HOLD_SPEED_RATIO = 0.01
+"""(D-다): u_hold = 0.01 x YAML ``actuator.max_speed_m_s`` (decision 146,
+``extend_start_bound.HOLD_SPEED_RATIO``)."""
+PARAMS_YAML = HERE.parents[2] / "02_params" / "rexome33.yaml"
+HOLD_SPEED_RECORD_PATH = ("lock_window_alignment", "monitor_stretch_rule", "hold_speed_m_s")
+"""The ``hold_speed_m_s`` a VBG6 row records (it must equal u_hold, else a setting defect)."""
+HOLD_SPEED_REL_TOLERANCE = 1.0e-9
+D_TRACE_COLUMNS = ("jp3_t_s", "jp3_used_bound_Pa", "jp3_p_tr_Pa", "jp3_class", "jp3_class_names")
+C_COMMAND_COLUMNS = ("t_s", "command_m_s")
+
+
+@functools.lru_cache(maxsize=1)
+def params_v_max_m_s() -> float:
+    """``actuator.max_speed_m_s`` of the parameter YAML (the single source of the run)."""
+    import yaml
+
+    params = yaml.safe_load(PARAMS_YAML.read_text(encoding="utf-8"))
+    return float(params["actuator"]["max_speed_m_s"])
+
+
+def u_hold_m_s() -> float:
+    return HOLD_SPEED_RATIO * params_v_max_m_s()
+
+
+def _leg_sum(check: dict, key: str) -> int | None:
+    """The per-leg sum of a judged key; None when it is missing or not four integers (never 0)."""
+    values = check.get(key)
+    if (not isinstance(values, list) or len(values) != 4
+            or not all(isinstance(value, int) and not isinstance(value, bool) for value in values)):
+        return None
+    return sum(values)
+
+
+def _judge_zero_sum(setting: str, check: dict, key: str, label: str,
+                    problems: Problems) -> int | None:
+    total = _leg_sum(check, key)
+    if total is None:
+        problems.not_judgeable.append(f"{setting}: {label} {key} missing or not 4 integers")
+    elif total:
+        problems.failures.append(f"{setting}: {label} {key} sum {total} (0 needed)")
+    return total
+
+
+def case_bd_conditions(new_rows: list[dict], problems: Problems) -> dict:
+    """Erratum 6 6-2A: the judged 5.3 conditions of case B (VBH, LSH1 .. LSH4) and case D
+    (VBG6 against case C, VBG4) on the paired new rows; failures, defects and not-judgeable
+    reasons go to ``problems`` (erratum 2 2-10 order), the record items to the returned report.
+
+    Not judgeable: a B row, the C or the D row missing (then nothing else is judged here).
+    """
+    by_setting = {row["job"]["setting"]: row for row in new_rows}
+    missing = [setting for setting in (*CASE_B_SETTINGS, CASE_C_SETTING, CASE_D_SETTING)
+               if setting not in by_setting]
+    if missing:
+        problems.not_judgeable.append(f"6-2A: rows {missing} missing (B five, C and D needed)")
+        return {"missing": missing}
+    return {"B": _case_b(by_setting, problems), "D": _case_d(by_setting, problems)}
+
+
+def _case_b(by_setting: dict[str, dict], problems: Problems) -> dict:
+    """6-2A B: J-P3a sum 0 on the five rows, J-P3b sum 0 on four (LSH3 a record), J-P3c a
+    record; the 5.3 B class / seed predictions are records too (no judged item)."""
+    report: dict = {"jp3a": {}, "jp3b": {}, "records": {}}
+    for setting in CASE_B_SETTINGS:
+        check = _check(by_setting[setting])
+        report["jp3a"][setting] = _judge_zero_sum(setting, check, JP3A_KEY, "6-2A B J-P3a",
+                                                  problems)
+        if setting in CASE_B_JP3B_SETTINGS:
+            report["jp3b"][setting] = _judge_zero_sum(setting, check, JP3B_KEY, "6-2A B J-P3b",
+                                                      problems)
+        else:
+            report["records"][f"{setting} {JP3B_KEY}"] = _leg_sum(check, JP3B_KEY)
+        report["records"][f"{setting} {JP3C_KEY}"] = _leg_sum(check, JP3C_KEY)
+    return report
+
+
+def _case_d(by_setting: dict[str, dict], problems: Problems) -> dict:
+    """6-2A D: (D-가) J-P3a / b / c sums 0, (D-나) D covers every C breach read, (D-다) the
+    numeric conditions, judged only under C's command order (else records)."""
+    c_row, d_row = by_setting[CASE_C_SETTING], by_setting[CASE_D_SETTING]
+    d_check = _check(d_row)
+    report: dict = {"jp3": {key: _judge_zero_sum(CASE_D_SETTING, d_check, key, "6-2A (D-가)",
+                                                 problems)
+                            for key in JUDGED_KEYS}}
+    trace = _d_trace(_new_t4h_path(d_row), problems)
+    report["covering"] = _covering(c_row, trace, problems)
+    report["numeric"] = _numeric_conditions(c_row, d_row, trace, problems)
+    return report
+
+
+def _d_trace(npz: Path, problems: Problems) -> dict | None:
+    """The VBG6 T4h columns of (D-나) / (D-다); None (not judgeable) without them."""
+    if not npz.is_file():
+        problems.not_judgeable.append(f"6-2A D: VBG6 T4h {npz.name} missing")
+        return None
+    with np.load(npz, allow_pickle=False) as data:
+        absent = [name for name in D_TRACE_COLUMNS if name not in data.files]
+        if absent:
+            problems.not_judgeable.append(f"6-2A D: VBG6 T4h without {absent}")
+            return None
+        trace = {name: data[name] for name in D_TRACE_COLUMNS}
+    trace["class_names"] = [str(name) for name in trace.pop("jp3_class_names").tolist()]
+    return trace
+
+
+def _matching_read(times: np.ndarray, t_s: float) -> int | None:
+    """The one read within :data:`TIME_MATCH_TOLERANCE_S` of ``t_s`` (None: none or several)."""
+    found = np.flatnonzero(np.abs(np.asarray(times, float) - t_s) <= TIME_MATCH_TOLERANCE_S)
+    return int(found[0]) if found.size == 1 else None
+
+
+def _gap_Pa(trace: dict, read: int, leg: int) -> float:
+    return float(trace["jp3_used_bound_Pa"][read, leg] - trace["jp3_p_tr_Pa"][read, leg])
+
+
+def _c_breach_reads(c_row: dict, problems: Problems) -> list[tuple[float, int]] | None:
+    """(D-나): the C moving-extension breach reads (t, leg) from the rev 4 record; None (not
+    judgeable) when they cannot be placed: keys missing, no breach, a leg with 2 or more, a
+    leg with 1 and no ``first_breach_t_s``."""
+    check = _check(c_row)
+    counts, firsts = check.get("breach_reads"), check.get("first_breach_t_s")
+    if (not isinstance(counts, list) or len(counts) != 4
+            or not all(isinstance(count, int) and not isinstance(count, bool) for count in counts)
+            or not isinstance(firsts, list) or len(firsts) != 4):
+        problems.not_judgeable.append("6-2A (D-나): C breach_reads / first_breach_t_s missing "
+                                      "or not 4 per leg")
+        return None
+    if sum(counts) == 0:
+        problems.not_judgeable.append("6-2A (D-나): C has no moving-extension breach read (no "
+                                      "covering row)")
+        return None
+    if any(count >= 2 for count in counts):
+        problems.not_judgeable.append("6-2A (D-나): a C leg with 2 or more breach reads (their "
+                                      "places are unknown; erratum 7)")
+        return None
+    reads = []
+    for leg, (count, first) in enumerate(zip(counts, firsts, strict=True)):
+        if count != 1:
+            continue
+        is_time = isinstance(first, (int, float)) and not isinstance(first, bool)
+        if not is_time or not math.isfinite(first):
+            problems.not_judgeable.append(f"6-2A (D-나): C leg {leg} has 1 breach read and no "
+                                          "first_breach_t_s")
+            return None
+        reads.append((float(first), leg))
+    return reads
+
+
+def _covering(c_row: dict, trace: dict | None, problems: Problems) -> dict:
+    """(D-나): at every C breach read (t, leg) the VBG6 gap ``jp3_used_bound_Pa`` -
+    ``jp3_p_tr_Pa`` > 0 at the one read of the same time."""
+    c_check = _check(c_row)
+    report = {"records": {key: c_check.get(key) for key in
+                          ("locked_breach_reads", "locked_breach_over_tol_reads",
+                           "retract_breach_reads")}}
+    breaches = _c_breach_reads(c_row, problems)
+    if breaches is None or trace is None:
+        return {**report, "judged_reads": 0}
+    rows = []
+    for t_s, leg in breaches:
+        read = _matching_read(trace["jp3_t_s"], t_s)
+        if read is None:
+            problems.not_judgeable.append(f"6-2A (D-나): not exactly one VBG6 read at {t_s} s")
+            return {**report, "judged_reads": 0}
+        gap = _gap_Pa(trace, read, leg)
+        if not math.isfinite(gap):
+            problems.not_judgeable.append(f"6-2A (D-나): VBG6 gap at {t_s} s leg {leg} not finite")
+            return {**report, "judged_reads": 0}
+        rows.append({"t_s": t_s, "leg": leg, "read": read, "gap_Pa": gap})
+        if gap <= 0.0:
+            problems.failures.append(f"6-2A (D-나): VBG6 does not cover the C breach read at "
+                                     f"{t_s} s leg {leg}")
+    return {**report, "judged_reads": len(rows), "rows": rows}
+
+
+def _hold_speed_problem(d_row: dict, u_hold: float) -> str | None:
+    """(D-다): a ``hold_speed_m_s`` the VBG6 row records must be u_hold (else a defect)."""
+    value: object = d_row
+    for key in HOLD_SPEED_RECORD_PATH:
+        if not isinstance(value, dict) or key not in value:
+            return None
+        value = value[key]
+    if not isinstance(value, (int, float)) or not math.isclose(
+            float(value), u_hold, rel_tol=HOLD_SPEED_REL_TOLERANCE, abs_tol=0.0):
+        return f"6-2A (D-다): VBG6 hold_speed_m_s {value!r} is not u_hold {u_hold!r}"
+    return None
+
+
+def _same_command_order(c_npz: Path, u_hold: float) -> tuple[bool | None, str]:
+    """(D-다): whether every RR read of C in the window has an acting command (the update
+    ``k - 1``'s output, zero before the first) of at most u_hold; None (a record, no status
+    change) when C's T4h or its target reads are missing."""
+    if not c_npz.is_file():
+        return None, f"C T4h {c_npz.name} missing"
+    with np.load(c_npz, allow_pickle=False) as data:
+        if any(name not in data.files for name in C_COMMAND_COLUMNS):
+            return None, f"C T4h without {list(C_COMMAND_COLUMNS)}"
+        times = np.asarray(data["t_s"], float)
+        commands = np.asarray(data["command_m_s"], float)
+    low, high = SAME_ORDER_WINDOW_S
+    reads = np.flatnonzero((times >= low - TIME_MATCH_TOLERANCE_S)
+                           & (times <= high + TIME_MATCH_TOLERANCE_S))
+    if reads.size == 0:
+        return None, "no C RR read in 48.7 .. 49.0 s"
+    acting = [commands[read - 1, RR_LEG] if read > 0 else 0.0 for read in reads]
+    return all(abs(value) <= u_hold for value in acting), f"{reads.size} C reads"
+
+
+def _numeric_conditions(c_row: dict, d_row: dict, trace: dict | None,
+                        problems: Problems) -> dict:
+    """(D-다): 49.1 s CARRY, its gap >= +15 bar and every HOLD read's gap >= +10 bar on RR,
+    judged only when C ran the same command order; otherwise (or when it cannot be told) a
+    record that leaves the status as it is."""
+    u_hold = u_hold_m_s()
+    defect = _hold_speed_problem(d_row, u_hold)
+    if defect is not None:
+        problems.setting_defects.append(defect)
+    same_order, basis = _same_command_order(_new_t4h_path(c_row), u_hold)
+    judged = same_order is True
+    report: dict = {"u_hold_m_s": u_hold, "same_order": same_order, "basis": basis,
+                    "status": "judged" if judged else "record"}
+    if trace is None:
+        return report
+    target = problems if judged else Problems()
+    findings = _numeric_findings(trace, target)
+    report.update(findings)
+    if not judged:
+        report["record_findings"] = target.as_dict()
+    return report
+
+
+def _numeric_findings(trace: dict, target: Problems) -> dict:
+    names = trace["class_names"]
+    read = _matching_read(trace["jp3_t_s"], CARRY_READ_S)
+    out: dict = {}
+    if read is None:
+        target.not_judgeable.append("6-2A (D-다): not exactly one VBG6 read at 49.1 s")
+    else:
+        code = int(trace["jp3_class"][read, RR_LEG])
+        name = names[code] if 0 <= code < len(names) else None
+        gap = _gap_Pa(trace, read, RR_LEG)
+        out["carry_read"] = {"class": name, "gap_Pa": gap}
+        if name not in CARRY_CLASSES:
+            target.failures.append(f"6-2A (D-다): RR 49.1 s class {name!r}, CARRY needed")
+        if not math.isfinite(gap) or gap < CARRY_GAP_MIN_PA:
+            target.failures.append("6-2A (D-다): RR 49.1 s gap below +15 bar")
+    low, high = SAME_ORDER_WINDOW_S
+    times = np.asarray(trace["jp3_t_s"], float)
+    window = np.flatnonzero((times >= low - TIME_MATCH_TOLERANCE_S)
+                            & (times <= high + TIME_MATCH_TOLERANCE_S))
+    hold_code = names.index(HOLD_CLASS) if HOLD_CLASS in names else None
+    holds = [int(k) for k in window
+             if hold_code is not None and int(trace["jp3_class"][k, RR_LEG]) == hold_code]
+    out["hold_reads"] = len(holds)
+    if not holds:
+        target.not_judgeable.append("6-2A (D-다): no VBG6 RR HOLD read in 48.7 .. 49.0 s")
+    for k in holds:
+        gap = _gap_Pa(trace, k, RR_LEG)
+        if not math.isfinite(gap) or gap < HOLD_GAP_MIN_PA:
+            target.failures.append(f"6-2A (D-다): RR HOLD read {k} gap below +10 bar")
+    return out
+
+
 # --- comparison ------------------------------------------------------------------------------
 
 def compare(baseline: Baseline, new_rows: list[dict]) -> tuple[dict, Problems]:
@@ -673,11 +979,11 @@ def compare(baseline: Baseline, new_rows: list[dict]) -> tuple[dict, Problems]:
     :class:`NotJudgeable`."""
     problems = Problems()
     pairs = pair_rows(baseline, new_rows, problems)
-    report: dict = {"pairs": []}
+    report: dict = {"pairs": [], "p4_records": []}
     class_totals = dict.fromkeys(CLASS_NAMES, 0)
     judged_rows = 0
     for row_file, old, new in pairs:
-        pair = _compare_pair(baseline, row_file, old, new, problems)
+        pair = _compare_pair(baseline, row_file, old, new, problems, report["p4_records"])
         report["pairs"].append(pair)
         check = _check(new)
         if _is_revision_5(new):
@@ -691,12 +997,20 @@ def compare(baseline: Baseline, new_rows: list[dict]) -> tuple[dict, Problems]:
     if missing:
         problems.not_judgeable.append(f"no reads of class {missing} over the revision 5 rows")
     report.update(judged_rows=judged_rows, class_reads=class_totals)
+    report["case_bd"] = case_bd_conditions([new for _, _, new in pairs], problems)
     return report, problems
 
 
 def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
-                  problems: Problems) -> dict:
+                  problems: Problems, p4_records: list[dict]) -> dict:
+    """The P4 items of one pair. A revision 6 row (edition 5 erratum 6 6-2) has P4-2, P4-4 and
+    P4-9 as records: their findings go to ``p4_records`` (with the row's revision 6 reason
+    counts) and never to ``problems``; P4-1, the identity, the P4 evidence and P4-3a stay
+    judged on every row they apply to."""
     setting = new["job"]["setting"]
+    is_record_row = _is_revision_6(new)
+    recorded = Problems()  # the record-only findings of a revision 6 row
+    record_or_judged = recorded if is_record_row else problems
     problems.setting_defects += identity_problems(new)
     problems.setting_defects += [f"{setting}: {text}" for text in line_evidence_problems(new)]
     if old["commands_sha256"] != new["commands_sha256"]:
@@ -711,23 +1025,43 @@ def _compare_pair(baseline: Baseline, row_file: str, old: dict, new: dict,
     try:
         reads = compare_reads(baseline.t4h(row_file, old), new_npz, _is_revision_5(new))
     except NotJudgeable as exc:
-        problems.not_judgeable.append(f"{setting}: {exc}")
+        record_or_judged.not_judgeable.append(f"{setting}: {exc}")
         reads = {"has_trace": None}
     if reads.get("lowered_reads") or reads.get("nan_changed_reads"):
-        problems.failures.append(f"{setting}: P4-2 a read's used bound below the baseline")
+        record_or_judged.failures.append(f"{setting}: P4-2 a read's used bound below the baseline")
     if reads.get("unexplained_raised_reads") or reads.get("bad_class_changes"):
-        problems.failures.append(f"{setting}: P4-2 an unexplained raise or class change")
+        record_or_judged.failures.append(f"{setting}: P4-2 an unexplained raise or class change")
     check, hydraulics = _check(new), new.get("hydraulics_record") or {}
     if _is_revision_5(new):
-        retract_tracker_problems(setting, check, problems)
+        retract_tracker_problems(setting, check, record_or_judged)  # P4-9
     seed = {}
     if setting in JUDGED_SETTINGS:
-        judged_key_problems(setting, check, hydraulics, problems)
-        seed = seed_problems(setting, old, new, problems)
+        judged_key_problems(setting, check, hydraulics, problems)  # P4-3a: judged (1A)
+        seed = seed_problems(setting, old, new, record_or_judged)  # P4-4
+    if is_record_row:
+        p4_records.append(_p4_record(setting, check, recorded))
     return {"setting": setting, "row_file": row_file,
             "commands_sha256": new["commands_sha256"][:12],
             "new_t4h_sha256": file_sha256(new_npz) if new_npz.is_file() else None,
-            "reads": reads, "seed": seed}
+            "reads": reads, "seed": seed, "p4_2_4_9": "record" if is_record_row else "judged"}
+
+
+REVISION_6 = 6
+REVISION_6_REASON_KEYS = ("jp3_r58_witness_carries", "jp3_r59_substeps", "jp3_r510_candidates")
+"""Erratum 6 6-2: the revision 6 reason counts kept with a record row's P4-2 / 4 / 9 record."""
+
+
+def _is_revision_6(record: dict) -> bool:
+    return _check(record).get("rule_revision") == REVISION_6
+
+
+def _p4_record(setting: str, check: dict, recorded: Problems) -> dict:
+    """Erratum 6 6-2: the P4-2 / P4-4 / P4-9 findings of a revision 6 row as a record (a
+    finding of these items never changes the status), with the row's revision 6 reason
+    counts (None = the key missing; a record, not a judgement)."""
+    return {"setting": setting, "items": ["P4-2", "P4-4", "P4-9"],
+            "findings": recorded.as_dict(),
+            "revision_6_reasons": {key: check.get(key) for key in REVISION_6_REASON_KEYS}}
 
 
 def _t4h_meta(npz: Path) -> dict | None:

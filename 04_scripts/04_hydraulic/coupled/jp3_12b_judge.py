@@ -46,8 +46,8 @@ Sub-commands, run in the order of 8 4.(6) (VBK0 first):
             opportunity pairs, and the cached ``u_hold`` of the witness count (2-5).
 ``l1-overlap`` (erratum 2 2-1, a record) the keys the 12b L1 reference and the T-JR-12a L1
             reference of one setting share, with the same / differing command hash counts.
-``dry-c``   The c dry check (6.3.10): the VBK0 and VBK lines of the two dry plans (``c90=`` /
-            ``c91=`` run files and T4h folders per arm; one plan per dry seed, ``selection.json``
+``dry-c``   The c dry check (6.3.10): the VBK0 and VBK lines of the two dry plans (``c92=`` /
+            ``c93=`` run files and T4h folders per arm; one plan per dry seed, ``selection.json``
             ``dry.runs``; a run's lines must carry its own plan's sha256 and a plan's keys must
             be its key file's, prelaunch audit B-1 (a)), the 6.3.2 categories and c = the share
             of opportunity pairs whose ``commands_sha256`` changed. ``written`` (exit 0) records
@@ -947,9 +947,10 @@ def cmd_l1_overlap(args) -> tuple[str, dict]:
 
 
 # ------------------------------------------------------------------------------- dry c (6.3.10)
-DRY_RUNS = ("c90", "c91")
+DRY_RUNS = ("c92", "c93")
 """The dry runs of one arm, one per dry seed, each with its own plan and key file
-(``c90_plan.json`` / ``c90_keys.txt``, ``c91_...``; prelaunch audit B-1 (a))."""
+(``c92_plan.json`` / ``c92_keys.txt``, ``c93_...``; prelaunch audit B-1 (a)); the seeds are
+``jp3_12b_plan.DRY_SEEDS`` (edition 5 erratum 6 6-3: 92 / 93)."""
 
 
 def dry_run_keys(selection: dict, plans_dir: Path, problems: Problems) -> dict[str, list[str]]:
@@ -980,7 +981,7 @@ def dry_plan_sha256(selection: dict, run: str) -> str:
 
 
 def parse_dry_paths(values: list[str] | None, option: str) -> dict[str, Path]:
-    """``c90=<path>`` / ``c91=<path>`` arguments, both required.
+    """``c92=<path>`` / ``c93=<path>`` arguments, both required.
 
     Raises:
         Stop: A malformed, repeated or missing run (not judgeable).
@@ -989,7 +990,8 @@ def parse_dry_paths(values: list[str] | None, option: str) -> dict[str, Path]:
     for value in values or []:
         run, separator, path = value.partition("=")
         if not separator or run not in DRY_RUNS or run in paths:
-            raise Stop("not_judgeable", f"{option} {value!r}: one c90/c91=<path> per run")
+            raise Stop("not_judgeable", f"{option} {value!r}: one {'/'.join(DRY_RUNS)}=<path> "
+                                        "per run")
         paths[run] = Path(path)
     if set(paths) != set(DRY_RUNS):
         raise Stop("not_judgeable", f"{option} needs {list(DRY_RUNS)}, got {sorted(paths)}")
@@ -1192,9 +1194,10 @@ def _parser() -> argparse.ArgumentParser:
     dry.add_argument("--selection", type=Path, required=True)
     dry.add_argument("--selection-sha256", required=True)
     for arm in ("vbk0", "vbk"):
-        dry.add_argument(f"--{arm}", action="append", required=True, help="c90|c91=<run json>")
+        dry.add_argument(f"--{arm}", action="append", required=True,
+                         help=f"{'|'.join(DRY_RUNS)}=<run json>")
         dry.add_argument(f"--{arm}-t4h", action="append", required=True,
-                         help="c90|c91=<T4h folder>")
+                         help=f"{'|'.join(DRY_RUNS)}=<T4h folder>")
     dry.add_argument("--out", type=Path, required=True)
     return parser
 

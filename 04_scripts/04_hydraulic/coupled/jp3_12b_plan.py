@@ -13,13 +13,15 @@ plan per block, all before any run:
   ``j9_runs`` and the dry outputs: nothing is left out, 4a-4 1; and every r79 key string
   literal of each ``--scan-extra`` root: the run worktree's ``05_tests/`` and probe records,
   E-1). Any collision raises all four seeds by 10, repeated until none; the record names the
-  repeat count. Test and probe keys use seeds outside the judged set (``s9x``, not 90 / 91).
+  repeat count. Test and probe keys use seeds outside the judged set (``s95`` .. ``s99``, not
+  the dry seeds).
 * cell = rank mod 8 of :data:`CELLS` (leg-major: FL tau_C, FL tau_R, FR tau_C, ... RR tau_R),
   the same for every block; b4 keeps the cell's leg with the phase TRw for all its pairs.
 * anchors: tau_C ``phase_exit:CHECK``, tau_R ``retract_start_after:LEVEL``, TRw
   ``retract_witness_after:LEVEL``; STUCK -100 bar, ``delay_reads`` 0 (6.3.2).
-* the c dry check (6.3.10): seeds 90 and 91, outside the judged set, 160 pairs = 20 per cell
-  (seed 90: ranks 0 .. 79, seed 91: ranks 80 .. 159; the same cell table). A dry seed found in
+* the c dry check (6.3.10): seeds 92 and 93 (edition 5 erratum 6 6-3; ``ae9d0b2d`` ran 90 / 91,
+  whose results were seen), outside the judged set, 160 pairs = 20 per cell (seed 92: ranks
+  0 .. 79, seed 93: ranks 80 .. 159; the same cell table). A dry seed found in
   the scan stops (exit 2): the spec fixes those two seeds. One plan per dry seed (prelaunch
   audit B-1 (a)): a dry run takes one seed's key file, and the runner's X-10 guard needs the
   plan keys to be exactly the run's job keys.
@@ -29,8 +31,8 @@ One plan serves both arms of a block (VBK0 and VBK, ``R79_ROD_FAULT_PLAN``): the
 line, LF) for ``r79_L3L4_final.py run --keys-file``.
 
 Outputs in ``--out-dir`` (a new or empty folder; an existing file is never overwritten):
-``b<j>_plan.json``, ``b<j>_keys.txt`` (j = 1 .. 4), ``c90_plan.json``, ``c90_keys.txt``,
-``c91_plan.json``, ``c91_keys.txt``, ``selection.json`` (``dry.runs`` names each dry run's plan
+``b<j>_plan.json``, ``b<j>_keys.txt`` (j = 1 .. 4), ``c92_plan.json``, ``c92_keys.txt``,
+``c93_plan.json``, ``c93_keys.txt``, ``selection.json`` (``dry.runs`` names each dry run's plan
 and key file; inputs and their sha256, the scan evidence: files
 scanned, per-file sha256 and key count, the largest seed; the seeds and repeat count, the cell
 table, every output file with its sha256 and the run commands).
@@ -82,7 +84,9 @@ BLOCK_PHASES = ("cell", "cell", "cell", PHASE_TRW)
 SEED_STEP = 10
 SEED_LIMIT = 900
 """No seed above this (a scan full of keys would never end)."""
-DRY_SEEDS = (90, 91)
+DRY_SEEDS = (92, 93)
+"""Edition 5 erratum 6 6-3: the c dry seeds of a new run commit (90 / 91 ran at ``ae9d0b2d`` and
+their gate result was seen, so they are no seeds fixed before the result)."""
 DRY_PAIRS_PER_SEED = 80
 CASE_COUNT = 167
 LEVEL = "L2"
@@ -232,7 +236,7 @@ def block_plan(table: list[dict], block: int, seed: int, phase_rule: str) -> dic
 
 
 def dry_run_name(seed: int) -> str:
-    """The dry run of one seed (``c90``, ``c91``): its plan and key file names start with it."""
+    """The dry run of one seed (``c92``, ``c93``): its plan and key file names start with it."""
     return f"c{seed}"
 
 

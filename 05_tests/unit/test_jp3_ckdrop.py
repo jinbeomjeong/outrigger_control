@@ -65,6 +65,10 @@ def test_plans_seeds_and_faults(tmp_path) -> None:
 def test_taken_seeds_are_skipped() -> None:
     seed, repeats = ckdrop.bundle_seed(89, CASES, frozenset(), {90, 91, 89})
     assert (seed, repeats) == (92, 3)
+    # erratum 6 6-3: the new c dry seeds 92 / 93 are taken too
+    assert {92, 93} <= ckdrop.TAKEN_SEEDS
+    seed, repeats = ckdrop.bundle_seed(89, CASES, frozenset(), set(ckdrop.TAKEN_SEEDS) | {89})
+    assert (seed, repeats) == (94, 5)
 
 
 def test_record_lines_and_not_computed(tmp_path, monkeypatch, capsys) -> None:

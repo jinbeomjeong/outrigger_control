@@ -4,7 +4,7 @@ keys and rod fault plans, all before any run (a record; no judgement).
 * cases: ranks 0 and 1 of the 12b cell table (the X-11 ``selection.json``, its sha256 given);
 * seeds: T-CK 80, DROPOUT 81, each raised by 1 while a key of it is in the scan (the 12b scan:
   ``--scan-root`` 06_analysis and ``--scan-extra`` 05_tests) or the seed is taken (the 12b
-  block seeds of the selection, the c dry seeds 90 / 91, the dry seed 25, the test seeds
+  block seeds of the selection, the c dry seeds 90 / 91 and 92 / 93, the dry seed 25, the test seeds
   95 .. 99, the other bundle's seed); the repeat counts are recorded;
 * one plan per bundle and leg (a plan holds one fault per key): both case keys with the fault
   on that leg, anchor ``phase_enter:CHECK``, ``delay_reads`` 0; T-CK STUCK -100 bar, DROPOUT
@@ -43,8 +43,10 @@ BUNDLES = {"tck": {"seed": 80, "kind": "STUCK", "value_bar": -100.0},
            "dropout": {"seed": 81, "kind": "DROPOUT", "value_bar": None}}
 """2-9.5: the start seed and the fault of each bundle."""
 ANCHOR = "phase_enter:CHECK"
-TAKEN_SEEDS = frozenset({25, 90, 91, *range(95, 100)})
-"""Dry 25, c dry 90 / 91, harness test keys 95 .. 99 (the 12b seeds come from the selection)."""
+TAKEN_SEEDS = frozenset({25, 90, 91, *plan.DRY_SEEDS, *range(95, 100)})
+"""Dry 25, the ``ae9d0b2d`` c dry seeds 90 / 91 and the c dry seeds 92 / 93 (edition 5 erratum
+6 6-3: added, :data:`jp3_12b_plan.DRY_SEEDS`), harness test keys 95 .. 99 (the 12b seeds come
+from the selection)."""
 SEED_LIMIT = 900
 EXIT_WRITTEN, EXIT_NOT_USABLE, EXIT_ERROR = 0, 2, 3
 
