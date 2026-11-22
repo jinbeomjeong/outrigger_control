@@ -109,25 +109,79 @@ def is_p4_on(row: dict) -> bool:
     return (row.get("hydraulic_options") or {}).get(P4_OPTION) is True
 
 
+REV4_JUDGED_KEY = "breach_reads"
+"""The revision 4 J-P3 judged key (``extend_start_bound.J_P3_NAME``: ``ext_moving.breach_reads``,
+kept flat in the record)."""
+JUDGED_KEYS_OF_REVISION = {4: (REV4_JUDGED_KEY,), 5: JUDGED_KEYS, 6: JUDGED_KEYS}
+JUDGED_KEY_READING = ("정오 4 4-1의 '판정 키'는 줄의 ③ 판에 따른 J-P3 판정 키다"
+                      "(판 4a 6.1·4a-2 R6). rev 4 = `ext_moving.breach_reads`, "
+                      "rev 5·6 = jp3a/b/c.")
+"""control's reading of erratum 4 4-1 (2026-11-22), written into the record and the step
+record as it is."""
+LEG_COUNT = 4
+
+
+def row_revision(row: dict, check: dict) -> tuple[int | None, str, str | None]:
+    """(revision, source, problem) of a row's ③ record: ``rule_revision`` when the record has
+    it, else the controller tag's (``v5_options.extend_start_revision_of_tag``); neither, or
+    both but differing, is a problem."""
+    from outrigger_sim.hydraulics.v5_options import extend_start_revision_of_tag
+
+    recorded = check.get("rule_revision")
+    tagged = extend_start_revision_of_tag(row.get("controller_tag"))
+    if recorded is None and tagged is None:
+        return None, "none", "no rule_revision and no ③ revision of the tag"
+    if recorded is not None and tagged is not None and recorded != tagged:
+        return None, "both", f"rule_revision {recorded!r} but the tag's revision {tagged!r}"
+    if recorded is not None:
+        return recorded, "record", None
+    return tagged, "tag", None
+
+
+def _is_count_list(values) -> bool:
+    """Four integer counts >= 0 (436.8 RD-8: a judged key of another shape is never read)."""
+    return (isinstance(values, list) and len(values) == LEG_COUNT
+            and all(isinstance(value, int) and not isinstance(value, bool) and value >= 0
+                    for value in values))
+
+
 def p52_row(row: dict, problems: list[str], source: str = "") -> dict:
-    """The P5-2 values of one case replay row."""
+    """The P5-2 values of one case replay row: its ③ revision (:func:`row_revision`), the
+    J-P3 judged keys of that revision (rev 4 ``breach_reads``, rev 5 / 6 jp3a / b / c;
+    :data:`JUDGED_KEY_READING`), the rev 6 counts of a rev 6 row."""
     label = row.get("key") or json.dumps(row.get("job"), sort_keys=True)
     check = _check_of(row)
-    revision = None if check is None else check.get("rule_revision")
     out = {"row": label, "identity": row_identity(row), "source": source,
-           "setting": _setting_of(row), "rule_revision": revision,
-           "is_rev6": revision == REV6, "p4_on": is_p4_on(row)}
+           "setting": _setting_of(row), "rule_revision": None, "revision_source": None,
+           "is_rev6": False, "p4_on": is_p4_on(row)}
     if check is None:
         problems.append(f"{label}: no extend_bound_check")
         return out
-    for key in (*JUDGED_KEYS, *COVERAGE_KEYS):
+    revision, revision_source, problem = row_revision(row, check)
+    out.update(rule_revision=revision, revision_source=revision_source,
+               is_rev6=revision == REV6)
+    if problem is not None:
+        problems.append(f"{label}: {problem}")
+        return out
+    judged_keys = JUDGED_KEYS_OF_REVISION.get(revision)
+    if judged_keys is None:
+        problems.append(f"{label}: no J-P3 judged keys of revision {revision!r}")
+        return out
+    for key in judged_keys:
         values = check.get(key)
-        if not (isinstance(values, list) and len(values) == 4):
-            if key in JUDGED_KEYS or revision == REV6:
-                problems.append(f"{label}: {key} missing")
+        if not _is_count_list(values):
+            problems.append(f"{label}: {key} missing or not 4 integer counts >= 0")
             continue
         out[key] = values
         out[f"{key}_sum"] = int(sum(values))
+    if revision == REV6:
+        for key in COVERAGE_KEYS:
+            values = check.get(key)
+            if not (isinstance(values, list) and len(values) == LEG_COUNT):
+                problems.append(f"{label}: {key} missing")
+                continue
+            out[key] = values
+            out[f"{key}_sum"] = int(sum(values))
     return out
 
 
@@ -160,22 +214,26 @@ def p52(paths: list[Path]) -> dict:
             "rows": rows, "problems": problems, "excluded_rows": excluded,
             "rev6_rows": sum(row["is_rev6"] for row in rows), "p4_on_rev6_rows": len(judged),
             "judged_key_total": _judged_sum(judged),
-            # erratum 4 4-1: records only (A / C rev 4; the P4-off rev 6 rows B, D, F-B are
-            # judged at step (4) by the edition 4a 5.3 case conditions)
+            # erratum 4 4-1: records only (A / C rev 4: breach_reads; the P4-off rev 6 rows
+            # B, D, F-B are judged at step (4) by the edition 4a 5.3 case conditions)
             "judged_key_record": {
                 "rev4_rows": _judged_sum([row for row in rows if row["rule_revision"] == 4]),
                 "p4_off_rev6_rows": _judged_sum([row for row in rows
                                                  if row["is_rev6"] and not row["p4_on"]])},
+            "judged_key_reading": JUDGED_KEY_READING,
             "disclosure": P52_DISCLOSURE}
 
 
-P52_DISCLOSURE = ("P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). "
-                  "단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.")
-"""Erratum 4 4-1: the disclosure sentence of the P5-2 fixed computation (as written)."""
+P52_DISCLOSURE = ("P5-2 고정 계산에서 사례 재생 줄의 판정 키와 사례별 합격 값을 실행 전에 보았다"
+                  "(원판 5절 설계). 단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.")
+"""Erratum 4 4-1 (sealed 4bc4ecdd): the disclosure sentence of the P5-2 fixed computation, as
+written."""
 
 
 def _judged_sum(rows: list[dict]) -> int:
-    return sum(row.get(f"{key}_sum", 0) for row in rows for key in JUDGED_KEYS)
+    """The judged key sum of ``rows``, each by its own revision's keys."""
+    return sum(row.get(f"{key}_sum", 0) for row in rows
+               for key in JUDGED_KEYS_OF_REVISION.get(row["rule_revision"], ()))
 
 
 def file_sha256(path: Path) -> str:

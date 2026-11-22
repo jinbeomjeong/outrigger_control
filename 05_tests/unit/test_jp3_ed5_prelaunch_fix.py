@@ -135,13 +135,32 @@ def test_the_guard_still_refuses_a_plan_beyond_the_jobs(prelaunch_outputs, tmp_p
 
 
 # ------------------------------------------------------------------------------- B-2
+TAG_OF_REVISION = {4: "final_C4G2_P3_LAS_K1", 5: "final_C4G2_P3H_LAS_K1",
+                   6: "final_C4G2_P3W_LAS_K1"}
+
+
+def _rev4_check(judged: int = 0) -> dict:
+    """A revision 4 ③ record of the real form: the ext_moving keys flat, no rule_revision."""
+    return {"rule": "tracked_bound", "reads": [40, 40, 40, 40],
+            "breach_reads": [judged, 0, 0, 0], "margin_used_reads": [0] * 4,
+            "locked_reads": [10] * 4, "locked_breach_reads": [0] * 4,
+            "locked_breach_over_tol_reads": [0] * 4, "retract_reads": [5] * 4,
+            "retract_breach_reads": [0] * 4, "min_gap_bar": [1.0] * 4}
+
+
 def _case_row(setting: str, revision: int, *, p4: bool, witness=(0, 1, 0, 0), judged=0,
               case: str = "R12") -> dict:
-    check = {"rule_revision": revision, "jp3a_breach_reads": [judged, 0, 0, 0],
-             "jp3b_breach_over_tol_reads": [0] * 4, "jp3c_breach_reads": [0] * 4,
-             "jp3_r58_witness_carries": list(witness), "jp3_r59_substeps": [0, 300, 0, 0],
-             "jp3_r510_candidates": [0, 2, 0, 0]}
+    """A case replay row: revision 4 with the real rev 4 record (judged key breach_reads, the
+    revision from the P3 tag), revision 5 / 6 with jp3a / b / c and the rev 6 counts."""
+    if revision == 4:
+        check = _rev4_check(judged)
+    else:
+        check = {"rule_revision": revision, "jp3a_breach_reads": [judged, 0, 0, 0],
+                 "jp3b_breach_over_tol_reads": [0] * 4, "jp3c_breach_reads": [0] * 4,
+                 "jp3_r58_witness_carries": list(witness), "jp3_r59_substeps": [0, 300, 0, 0],
+                 "jp3_r510_candidates": [0, 2, 0, 0]}
     return {"job": {"case": case, "setting": setting, "mask": "0xFFFF", "t4h_dir": "x"},
+            "controller_tag": TAG_OF_REVISION[revision],
             "hydraulic_options": {"rod_reading_truth": p4},
             "hydraulics_record": {"extend_bound_check": check}}
 
@@ -182,10 +201,62 @@ def test_stored_violation_of_case_a_does_not_stop_the_fixed_step(tmp_path) -> No
     assert report["inputs"] == [{"path": str(rows),
                                  "sha256": hashlib.sha256(rows.read_bytes()).hexdigest()}]
     assert report["disclosure"] == p5.P52_DISCLOSURE
+    assert report["judged_key_reading"] == p5.JUDGED_KEY_READING and report["problems"] == []
     out = _gate(tmp_path, "$Stop = Get-P5FixedStop {r}\n" + SHOW, {"r": report})
     assert out == "go"
     common = (STEPS / "common_ed5.ps1").read_text(encoding="utf-8")
     assert f"$P5FixedDisclosure = '{p5.P52_DISCLOSURE}'" in common
+
+
+def test_rev4_rows_are_judged_by_breach_reads(tmp_path) -> None:
+    """control's reading of erratum 4 4-1: "판정 키" = the row's ③ revision's J-P3 key. A real
+    rev 4 record (no rule_revision, P3 tag, breach_reads) without jp3a / b / c is no problem;
+    without breach_reads, or with breach_reads of another shape (436.8 RD-8: 4 integers >= 0),
+    it is."""
+    real = _case_row("VB", 4, p4=False, judged=2)
+    assert "rule_revision" not in real["hydraulics_record"]["extend_bound_check"]
+    problems: list[str] = []
+    row = p5.p52_row(real, problems)
+    assert problems == [] and (row["rule_revision"], row["revision_source"]) == (4, "tag")
+    assert row["breach_reads_sum"] == 2 and "jp3a_breach_reads" not in row
+    for name, values in (("missing", None), ("bool", [True, 0, 0, 0]), ("negative", [-1, 0, 0, 0]),
+                         ("three", [0, 0, 0]), ("float", [0.0, 0, 0, 0])):
+        bad = _case_row("LS1", 4, p4=False)
+        check = bad["hydraulics_record"]["extend_bound_check"]
+        if values is None:
+            del check["breach_reads"]
+        else:
+            check["breach_reads"] = values
+        problems = []
+        p5.p52_row(bad, problems)
+        assert any("breach_reads missing or not 4 integer counts" in text
+                   for text in problems), name
+
+
+def test_row_revision_from_record_or_tag() -> None:
+    """The revision is rule_revision, else the tag's; neither, or both differing, is a
+    problem (the row's keys are then not read)."""
+    rev6 = _case_row("VBJ", 6, p4=True)
+    assert p5.row_revision(rev6, rev6["hydraulics_record"]["extend_bound_check"])[:2] == (
+        6, "record")
+    conflict = {**rev6, "controller_tag": TAG_OF_REVISION[4]}
+    problems: list[str] = []
+    assert p5.p52_row(conflict, problems)["rule_revision"] is None
+    assert any("but the tag's revision 4" in text for text in problems)
+    untagged = {**_case_row("VB", 4, p4=False), "controller_tag": None}
+    problems = []
+    p5.p52_row(untagged, problems)
+    assert any("no rule_revision and no ③ revision of the tag" in text for text in problems)
+
+
+def test_judged_key_reading_in_the_record_and_the_step_record() -> None:
+    """control's reading goes into p52.json and the step record of step_p5fixed as it is."""
+    assert p5.JUDGED_KEY_READING.startswith("정오 4 4-1의 '판정 키'는 줄의 ③ 판에 따른")
+    common = (STEPS / "common_ed5.ps1").read_text(encoding="utf-8")
+    quoted = p5.JUDGED_KEY_READING.replace("'", "''")
+    assert f"$P5JudgedKeyReading = '{quoted}'" in common
+    step = (STEPS / "step_p5fixed.ps1").read_text(encoding="utf-8")
+    assert "Codes['p5fixed_judged_key_reading'] = $P5JudgedKeyReading" in step
 
 
 def test_p52_problems_stop_the_fixed_step_with_exit_2(tmp_path) -> None:
