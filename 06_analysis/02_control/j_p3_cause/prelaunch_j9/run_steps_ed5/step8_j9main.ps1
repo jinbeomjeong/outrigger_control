@@ -5,7 +5,8 @@
 #   preconditions (2-6 10): steps (1) .. (7) done (p1, dry, fpath, cases, casef, t8, dg3,
 #     12b_vbk, records) and dg3.done; the 12b judge file of 12b_vbk.done with its sha256,
 #     status pass and exit 0 (2-9.6); T-CK / DROPOUT are not a precondition (2-9.5)
-#   1. the V0 sample (2-7.1): run_v5 j9_v0_sample on the fixed V0 sample key file, then
+#   1. the V0 sample (2-7.1): run_v5 j9_v0_sample on the fixed V0 sample key file, the identity
+#      check of the folder so far (re-audit warning 4: Invoke-IdentityCheckPart v0_sample), then
 #      jp3_j9main_judge.py v0-sample against the stored V0 lines (v5/main.jsonl, fixed sha):
 #      a differing hash stops
 #   2. run_v5 j9_main (the placement comes from compute-scheduler-expert: -MaskHex, -Workers)
@@ -14,8 +15,10 @@
 #   5. jp3_j9main_judge.py judge (v5 criteria 12 stage 1 on path 1, VB -> VBJ, LS -> LSJ; J-P3
 #      rev 6): 0 pass goes on to j9main.done; 1 failed / 2 / 3 stop (2-7.1 stop conditions)
 # Not here (2-7.1): the other H bundles and the rest of H-10 (436.9 main run), P5-1 (no 78fd5d2d
-# pair). Run cost: about 6,779 s at 8 E threads (+25 %, assumption): batch table, reservation
-# and monitoring by the main session.
+# pair). Run cost (erratum 2 2-7.1, assumption): the 436.8 R2 H-10 main share 6,036 s at 8 E
+# threads x 1.25 (③ rev 6, edition 4a 7) = about 7,545 s (2.1 h); about 2,360 s (0.7 h) on
+# P 8 + E 12; the V0 sample about 2 min (2-9.1). Batch table, reservation and monitoring by the
+# main session.
 param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mandatory)][int]$Workers,
     [string]$SampleMaskHex = '', [int]$SampleWorkers = 0)
 . "$PSScriptRoot\common_ed5.ps1"
@@ -58,12 +61,13 @@ $Run = Start-Run -Label 'j9_v0_sample' -MaskHex $SampleMaskHex -TaskType 'run_v5
     -Arguments @("$Coupled/run_v5.py", 'j9_v0_sample', '--jobs-file', $V0SampleKeysFile, '--out', $Sample,
         '--workers', "$SampleWorkers", '--mask', $SampleMaskHex)
 Wait-Runs @($Run)
+Invoke-IdentityCheckPart 'v0_sample'
 Invoke-Judge 'v0_sample' @($Judge, 'v0-sample', '--sample-keys', $V0SampleKeysFile, '--sample', $Sample,
     '--v0', $V0Rows, '--v0-sha256', $V0Sha, '--out', "$Folder\judge\v0_sample.json") | Out-Null
 
 # 2. the j9_main run
 $Rows = "$Folder\j9_main.jsonl"
-$RunEstimatesS['j9_main'] = 8474
+$RunEstimatesS['j9_main'] = 7545  # 6,036 s x 1.25 at 8 E threads (2-7.1, assumption)
 $Run = Start-Run -Label 'j9_main' -MaskHex $MaskHex -TaskType 'run_v5_j9_main' -Workers $Workers `
     -Arguments @("$Coupled/run_v5.py", 'j9_main', '--out', $Rows, '--workers', "$Workers", '--mask', $MaskHex)
 Wait-Runs @($Run)

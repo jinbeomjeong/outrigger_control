@@ -51,6 +51,11 @@ def test_v0_sample_same_differs_and_refusals(tmp_path) -> None:
     missing = _write_rows(tmp_path / "missing.jsonl",
                           [{"job": jobs[0], "commands_sha256": "0" * 64}])
     assert j9.v0_sample(keys, missing, stored, sha)["status"] == "not_judgeable"
+    # 2-10: a differing hash with a missing line is a failure, the problem kept
+    differing_and_missing = _write_rows(tmp_path / "dm.jsonl",
+                                        [{"job": jobs[0], "commands_sha256": "9" * 64}])
+    report = j9.v0_sample(keys, differing_and_missing, stored, sha)
+    assert report["status"] == "differs" and report["problems"]
     with pytest.raises(j9.NotJudgeable, match="sha256"):
         j9.v0_sample(keys, same, stored, "0" * 64)
     vb = tmp_path / "vb_keys.json"
@@ -81,17 +86,35 @@ def test_check_rows_refuses_other_jobs_errors_and_settings() -> None:
         j9.check_rows([{**rows[0], "error": "x"}, *rows[1:]])
 
 
+def _status_of(**changes) -> str:
+    report = {"no_reference": {}, "not_judgeable_items": [], "vb_fail_items": 0, "L-a": [],
+              "L-b": [], "L-c": [], "stops": [], "identity_defects": [],
+              "r15_worsening": {"failures": []}, "S8": {"failures": []},
+              "J_vs_V0": {"VB": {"runs": 100}},
+              "J-P3": {"status": "pass", "status_by_revision": {"4": "no_p3_runs",
+                                                                "6": "pass"}}}
+    report.update(changes)
+    report["status_basis"] = j9.status_basis(report)
+    return j9._status(report)
+
+
 def test_status_order() -> None:
-    base = {"no_reference": {}, "not_judgeable_items": [], "vb_fail_items": 0, "L-a": [],
-            "L-b": [], "stops": [], "J-P3": {"status": "pass"}}
-    assert j9._status(base) == "pass"
-    assert j9._status({**base, "vb_fail_items": 1}) == "failed"
-    assert j9._status({**base, "L-a": [{}]}) == "failed"
-    assert j9._status({**base, "J-P3": {"status": "H-7"}}) == "failed"
-    assert j9._status({**base, "J-P3": {"status": "setting_defect"}, "stops": [{}]}) == (
-        "setting_defect")
-    assert j9._status({**base, "J-P3": {"status": "no_judged_runs"}}) == "not_judgeable"
-    assert j9._status({**base, "no_reference": {"x": [["R1", 0]]}}) == "not_judgeable"
+    """Erratum 2 2-10: failed > setting_defect > not_judgeable > pass."""
+    assert _status_of() == "pass"  # an empty revision 4 side is no reason
+    assert _status_of(vb_fail_items=1) == "failed"
+    assert _status_of(**{"L-a": [{}]}) == "failed"
+    assert _status_of(**{"L-c": [{}]}) == "failed"
+    assert _status_of(**{"J-P3": {"status": "H-7"}}) == "failed"
+    assert _status_of(**{"J-P3": {"status": "setting_defect",
+                                  "status_by_revision": {"6": "H-7"}}}) == "failed"
+    assert _status_of(**{"J-P3": {"status": "setting_defect"}}, stops=[{}]) == "failed"
+    assert _status_of(**{"J-P3": {"status": "setting_defect"}}) == "setting_defect"
+    assert _status_of(identity_defects=[{}], not_judgeable_items=[{}]) == "setting_defect"
+    assert _status_of(**{"J-P3": {"status": "no_judged_runs"}}) == "not_judgeable"
+    assert _status_of(no_reference={"x": [["R1", 0]]}) == "not_judgeable"
+    assert _status_of(**{"J_vs_V0": {"VB": {"runs": 0}}}) == "not_judgeable"
+    assert _status_of(vb_fail_items=1, no_reference={"x": [["R1", 0]]}) == "failed"
+    assert _status_of(vb_fail_items=1, **{"J-P3": {"status": "no_p3_runs"}}) == "failed"
 
 
 def test_v0_sample_keys_first_and_last_line_of_every_row(tmp_path, monkeypatch) -> None:
@@ -139,11 +162,24 @@ def test_s8_f5_record_sa4_failure_and_stop() -> None:
     assert record["failures"][0]["detail"] == ["no_ready"]
 
 
+def test_s8_stop_value_none_is_not_judgeable() -> None:
+    """Re-audit warning 3: a criteria 6 stop value None is never a silent pass."""
+    row = _s8_row("VB", "eps 0.0")
+    row["s8"] = {"margin_at_stop_kN": None, "max_after_stop_kN": 10.0}
+    record = j9.s8_items({"VB": [row]})
+    assert [item["item"] for item in record["not_judgeable"]] == ["F-5"]
+    assert "margin_at_stop_kN" in record["not_judgeable"][0]["detail"]
+
+
 def test_limit_cycle_and_r15_rules() -> None:
     rows_by = {"V0": [{"group": "R1", "n_rev": 10}],
                "LS1": [{"group": "R1", "row": "R1", "phase": "eps 0.0", "n_rev": 20}],
-               "LS2": [{"group": "R1", "row": "R1", "phase": "eps 0.0", "n_rev": 15}]}
-    assert [s["setting"] for s in j9.limit_cycle_suspects(rows_by)] == ["LS1"]
+               "LS2": [{"group": "R1", "row": "R1", "phase": "eps 0.0", "n_rev": 15}],
+               "LS3": [{"group": "R9", "row": "R9", "phase": "eps 0.0", "n_rev": 15}]}
+    found = j9.limit_cycle_suspects(rows_by)
+    assert [s["setting"] for s in found["suspects"]] == ["LS1"]
+    # re-audit warning 3: no V0 maximum of the group is not judgeable, not skipped
+    assert [(i["setting"], i["item"]) for i in found["not_judgeable"]] == [("LS3", "L-c")]
 
     def r15(setting, phase, force_kN):
         return {"row": "R15", "group": "R15", "phase": phase, "setting": setting,
@@ -154,10 +190,24 @@ def test_limit_cycle_and_r15_rules() -> None:
     assert j9.r15_worsening(worse)["failures"]
     within = {"V0": worse["V0"], "VB": [r15("VB", "a", -0.3), r15("VB", "b", -0.6)]}
     assert not j9.r15_worsening(within)["failures"]
-    assert j9.r15_worsening({"V0": [], "VB": []})["state"] == "no R15 pair"
+    assert j9.r15_not_judgeable(j9.r15_worsening(within)) == []
 
 
-def _r15_event(setting: str, phase: str, *, gates: list[str], force_kN: float,
+def test_r15_without_pairs_or_values_is_not_judgeable() -> None:
+    """Re-audit H-1: "no R15 pair" and "판정 불가" are not-judgeable items, never a pass."""
+    none_pair = j9.r15_worsening({"V0": [], "VB": []})
+    assert none_pair["state"] == "no R15 pair"
+    assert [i["item"] for i in j9.r15_not_judgeable(none_pair)] == ["J2"]
+    v0 = _r15_event("V0", "a", gates=[], force_kN=-0.2)
+    missing = j9.r15_worsening({"V0": [v0, _r15_event("V0", "b", gates=[], force_kN=-0.7)],
+                                "VB": [_r15_event("VB", "a", gates=[], force_kN=None),
+                                       _r15_event("VB", "b", gates=[], force_kN=-0.6)]})
+    assert missing["state"] == "판정 불가" and missing["failures"] == []
+    (item,) = j9.r15_not_judgeable(missing)
+    assert item["kind"] == "not_judgeable" and "판정 불가" in item["detail"]
+
+
+def _r15_event(setting: str, phase: str, *, gates: list[str], force_kN: float | None,
                t_back: float | None = 30.0) -> dict:
     return {"row": "R15", "group": "R15", "phase": phase, "setting": setting, "is_event": True,
             "gates": gates, "F_after_W_min_kN": force_kN, "F_after_event": force_kN,
@@ -165,22 +215,35 @@ def _r15_event(setting: str, phase: str, *, gates: list[str], force_kN: float,
             "t_ready": 20.0}
 
 
-def test_r15_baseline_failures_leave_j2_to_the_worsening_rule() -> None:
-    """Erratum 2 final 2-9.3: V0's R15 failures other than J2 are baseline failures (records);
-    J2 is the worsening rule's; a VBJ pass on the item is kept as ``vbj_also_fails`` False."""
+def _steady(setting: str, phase: str, row: str = "R1", **values) -> dict:
+    return {"row": row, "group": row, "phase": phase, "setting": setting, "is_event": False,
+            "class": "pass", "t_ready": 30.0, "att_last5": 0.05, "p_move": 100.0,
+            "F_after": 20.0, "final": "ready", "case_floor": [0.0, 0.0], **values}
+
+
+def test_baseline_failures_of_every_pair() -> None:
+    """Re-audit H-3 (2-9.3 210): every pair's reference failures with the judged row's state
+    and the None reasons; R15 J2 of VBJ against V0 stays with the worsening rule."""
     rows_by = {"V0": [_r15_event("V0", "a", gates=["min_force"], force_kN=-0.2, t_back=None),
-                      _r15_event("V0", "b", gates=["min_force"], force_kN=-0.7)],
+                      _r15_event("V0", "b", gates=["min_force"], force_kN=-0.7),
+                      _steady("V0", "a", att_last5=None), _steady("V0", "b", p_move=None)],
                "VB": [_r15_event("VB", "a", gates=["min_force"], force_kN=-0.3),
-                      _r15_event("VB", "b", gates=[], force_kN=-0.6)]}
-    listed = j9.r15_baseline_failures(rows_by)
-    assert [(i["phase"], i["item"], i["vbj_also_fails"]) for i in listed] == [
-        ("a", "J1", True), ("a", "J5", False), ("b", "J1", False)]
-    assert all(i["kind"] == "baseline_failure" and i["item"] != "J2" for i in listed)
-    assert j9.r15_baseline_failures({"V0": rows_by["V0"], "VB": []}) == []
-    other = {"V0": [{**rows_by["V0"][0], "row": "R14"}], "VB": [{**rows_by["VB"][0],
-                                                                  "row": "R14"}]}
-    assert j9.r15_baseline_failures(other) == []
-    assert j9.r15_worsening(rows_by)["failures"] == []
+                      _r15_event("VB", "b", gates=[], force_kN=-0.6),
+                      _steady("VB", "a", att_last5=0.5), _steady("VB", "b", final="fault")],
+               "LS1": [_steady("LS1", "a"), _steady("LS1", "b", row="R2")]}
+    record = j9.baseline_failures(rows_by)
+    assert record["counted"] == 0
+    listed = [(i["row"], i["phase"], i["item"], i["reference_state"], i["setting_state"])
+              for i in record["J_vs_V0"]]
+    assert listed == [("R15", "a", "J1", "fail", "fail"), ("R15", "a", "J5", "fail", "pass"),
+                      ("R15", "b", "J1", "fail", "pass"), ("R1", "a", "J6", "fail", "fail"),
+                      ("R1", "b", "J10", "undetermined", "pass")]
+    missing = [i for i in record["J_vs_V0"] if i["value_missing"]]
+    assert [i["reason"] for i in missing] == ["t_back None", "att_last5 None", "p_move None"]
+    vb_a = next(i for i in record["LS_vs_VB"] if i["phase"] == "a")
+    assert (vb_a["reference"], vb_a["item"], vb_a["setting_state"]) == ("VB", "J6", "pass")
+    assert record["count"] == len(record["J_vs_V0"]) + len(record["LS_vs_VB"])
+    assert record["value_missing_count"] == 3
 
 
 def test_own_item_failures_non_event_row() -> None:
@@ -191,6 +254,156 @@ def test_own_item_failures_non_event_row() -> None:
     passing = {**row, "class": "pass", "t_ready": 30.0, "att_last5": 0.1, "p_move": 100.0,
                "F_after": 20.0, "final": "ready"}
     assert j9.own_item_failures(passing) == []
+
+
+def test_own_item_j3_rigid_record_rows() -> None:
+    """Re-audit warning 1: the D-11 rigid record branch (FLAG on the row, ``case_floor``)."""
+    flat = _steady("V0", "a", t_ready=95.0)
+    assert [(i["item"], i["state"]) for i in j9.own_item_failures(flat)] == [("J3", "flag")]
+    slope = _steady("V0", "a", t_ready=95.0, case_floor=[2.0, 0.0])
+    assert j9.own_item_failures(slope) == []
+    no_floor = _steady("V0", "a", case_floor=None)
+    (entry,) = j9.own_item_failures(no_floor)
+    assert (entry["item"], entry["state"], entry["reason"]) == ("J3", "record",
+                                                                "case_floor_deg None")
+
+
+# ------------------------------------------------------------------------------ H-2 identity
+REV6_TAG = "final_C4G2_P3W_LAS_K1"
+WITNESS_OPTIONS = {"extend_start_tracked": True, "extend_start_hold": True,
+                   "extend_start_witness": True}
+
+
+def _rev6_record(breaches: int = 0) -> dict:
+    return {"rule_revision": 6, "spec_edition": "fe6f5844",
+            "carry_end_rule": "inherit_when_gate_shut", "retract_start_rule": "with_tracker",
+            "identity_consistent": True, "sensor_grade": "normal",
+            "jp3a_breach_reads": [breaches, 0, 0, 0], "jp3b_breach_over_tol_reads": [0] * 4,
+            "jp3c_breach_reads": [0] * 4}
+
+
+def _line(setting: str, metric: dict, **changes) -> dict:
+    line = {"job": {"setting": setting, "case": metric["row"], "phase": metric["phase"]},
+            "controller_tag": REV6_TAG, "hydraulic_options": dict(WITNESS_OPTIONS),
+            "hydraulics_record": {"extend_bound_check": _rev6_record()},
+            "head_only_declared": False, "_metric": metric}
+    line.update(changes)
+    return line
+
+
+def test_line_identity_problems() -> None:
+    from outrigger_sim.hydraulics.v5_options import extend_start_revision_of_tag
+
+    assert extend_start_revision_of_tag(REV6_TAG) == 6
+    metric = _steady("VB", "a")
+    assert j9.line_identity_problems(_line("VBJ", metric)) == []
+    assert j9.line_identity_problems(_line("VBJ", metric, run_extend_start_revision=6)) == []
+    cases = {"tag": {"controller_tag": "final_C4G2_P3H_LAS_K1"},
+             "no_tag": {"controller_tag": None},
+             "revision_key": {"run_extend_start_revision": 5},
+             "options": {"hydraulic_options": {**WITNESS_OPTIONS, "extend_start_witness": False}},
+             "rule_revision": {"hydraulics_record": {"extend_bound_check": {
+                 **_rev6_record(), "rule_revision": 5}}},
+             "spec_edition": {"hydraulics_record": {"extend_bound_check": {
+                 **_rev6_record(), "spec_edition": "8be9de22"}}}}
+    for name, change in cases.items():
+        assert len(j9.line_identity_problems(_line("VBJ", metric, **change))) == 1, name
+    no_record = _line("VBJ", metric, hydraulics_record={"extend_bound_check": None})
+    assert j9.line_identity_problems(no_record) == []  # J-P3's run-case table
+
+
+# ------------------------------------------------------- synthetic judge (2-10, warning 5)
+def _synthetic_world(*, vb_r1_class: str = "pass", vb_r15_force: float | None = -0.3,
+                     extra_vb: bool = False, identity_change: dict | None = None):
+    """V0 / VBJ / LSJ1 .. 4 rows R1 (steady) and R15 (event), phases a / b; VBJ / LSJ lines
+    are clean rev 6 (J-P3 pass on its revision 6 side, revision 4 side empty)."""
+    v0 = [_steady("V0", p) for p in "ab"] + [
+        _r15_event("V0", "a", gates=[], force_kN=-0.2),
+        _r15_event("V0", "b", gates=[], force_kN=-0.7)]
+    vb = [_steady("VB", "a", **{"class": vb_r1_class}), _steady("VB", "b"),
+          _r15_event("VB", "a", gates=[], force_kN=vb_r15_force),
+          _r15_event("VB", "b", gates=[], force_kN=-0.6)]
+    if extra_vb:
+        vb.append(_steady("VB", "a", row="R2"))
+    lines = [_line("VBJ", metric) for metric in vb]
+    for index in range(1, 5):
+        lines += [_line(f"LSJ{index}", _steady(f"LS{index}", p)) for p in "ab"]
+    if identity_change:
+        lines[0].update(identity_change)
+    common = {"n_rev": 3, "post_clip": [0, 0, 0, 0], "lwa": {}, "bad": [], "bad_436": [],
+              "fallback_436": [], "events_capped": False, "events_full": [], "sa4": None,
+              "pressure": {}, "controller_tag": None, "head_only_declared": True,
+              "j_p3_view": None, "rod_reading": None, "t4h_lookup": {}, "bound_check": None}
+    for metric in [*v0, *(line["_metric"] for line in lines)]:
+        for key, value in common.items():
+            metric.setdefault(key, value)
+    return lines, [{"job": {"setting": "V0"}, "_metric": metric} for metric in v0]
+
+
+def _run_synthetic(tmp_path, monkeypatch, capsys, lines, v0_lines, *, j_p3_rows=None):
+    import judge_stage1_4368 as path1
+
+    monkeypatch.setattr(j9, "check_rows", lambda rows: None)
+    monkeypatch.setattr(j9, "stored_v0_rows", lambda path, sha: v0_lines)
+    monkeypatch.setattr(j9, "_metric_rows", lambda rows, folders, relabel: [
+        dict(row["_metric"]) for row in rows])
+    monkeypatch.setattr(path1, "rod_reading", lambda row, folders: True)
+    if j_p3_rows is not None:
+        monkeypatch.setattr(j9, "j_p3_rows", j_p3_rows)
+    rows_path = _write_rows(tmp_path / "j9_main.jsonl", lines)
+    (tmp_path / "cwd").mkdir()
+    monkeypatch.chdir(tmp_path / "cwd")
+    out = tmp_path / "report.json"
+    code = j9.main(["judge", "--rows", str(rows_path), "--v0", str(rows_path),
+                    "--v0-sha256", SHA, "--out", str(out)])
+    last = json.loads(capsys.readouterr().out.splitlines()[-1])
+    return code, last, json.loads(out.read_text(encoding="utf-8"))
+
+
+def test_synthetic_rev6_only_passes(tmp_path, monkeypatch, capsys) -> None:
+    """Re-audit warning 5: rev 6 lines only - J-P3 pass (revision 4 side empty is no reason)
+    and the j9_main judge pass, exit 0."""
+    code, last, report = _run_synthetic(tmp_path, monkeypatch, capsys, *_synthetic_world())
+    assert code == 0 and last["status"] == "pass", report["status_basis"]
+    assert report["J-P3"]["status"] == "pass"
+    assert report["J-P3"]["status_by_revision"] == {"4": "no_p3_runs", "6": "pass"}
+    assert report["J-P3"]["rev6"]["runs_judged"] == 12  # VBJ 4 + LSJ1 .. 4 x 2
+    assert report["identity_defects"] == [] and report["not_judgeable_items"] == []
+    assert report["r15_worsening"]["pairs"] == 2
+
+
+def test_synthetic_failure_with_no_reference_is_exit_1(tmp_path, monkeypatch, capsys) -> None:
+    lines, v0 = _synthetic_world(vb_r1_class="fault", extra_vb=True)
+    code, last, report = _run_synthetic(tmp_path, monkeypatch, capsys, lines, v0)
+    assert code == 1 and last["status"] == "failed"
+    assert report["no_reference"] and report["vb_fail_items"] == 1
+    assert report["status_basis"]["failures"] and report["status_basis"]["not_judgeable"]
+
+
+def test_synthetic_r15_not_judgeable_alone_is_exit_2(tmp_path, monkeypatch, capsys) -> None:
+    lines, v0 = _synthetic_world(vb_r15_force=None)
+    code, last, report = _run_synthetic(tmp_path, monkeypatch, capsys, lines, v0)
+    assert code == 2 and last["status"] == "not_judgeable", report["status_basis"]
+    assert [i["item"] for i in report["not_judgeable_items"]] == ["J2"]
+    assert report["status_basis"]["failures"] == []
+
+
+def test_synthetic_jp3_without_rows_and_a_failure_is_exit_1(tmp_path, monkeypatch,
+                                                            capsys) -> None:
+    lines, v0 = _synthetic_world(vb_r1_class="fault")
+    code, last, report = _run_synthetic(tmp_path, monkeypatch, capsys, lines, v0,
+                                        j_p3_rows=lambda rows, folders: [])
+    assert code == 1 and last["status"] == "failed"
+    assert report["J-P3"]["status"] == "no_p3_runs"
+    assert "J-P3 no_p3_runs" in report["status_basis"]["not_judgeable"]
+
+
+def test_synthetic_identity_defect_is_a_setting_defect(tmp_path, monkeypatch, capsys) -> None:
+    """H-2: a VBJ line of another tag base: setting_defect (exit 2) when nothing fails."""
+    lines, v0 = _synthetic_world(identity_change={"controller_tag": "final_C4G2_P3H_LAS_K1"})
+    code, last, report = _run_synthetic(tmp_path, monkeypatch, capsys, lines, v0)
+    assert code == 2 and last["status"] == "setting_defect"
+    assert len(report["identity_defects"]) == 1
 
 
 @pytest.mark.skipif(not MAIN_JSONL.is_file(), reason="stored v5/main.jsonl not present")

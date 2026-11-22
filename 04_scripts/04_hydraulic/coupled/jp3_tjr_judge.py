@@ -118,11 +118,13 @@ exit    status             meaning
 1       ``failed``         a failure of 5.5 / 13.9 (T8 hash, pass -> fail, new FAULT, READY,
                            J-P3 H-7, ``records``: a T-JR-13 error row, a T-JR-14 mismatch or
                            late line, a T-JR-15 seed or relock row; ``base-judge-compare``:
-                           grades differ, a record); stop (13.5)
-2       ``not_judgeable``  a pair without a result, another pair or L2 count, a missing key
-                           or L2 grade, a stored line of another tag / revision; an existing
-                           ``--out`` or another argument error
-2       ``setting_defect`` a wrong rev 5 identity or P4 evidence (outranks the others)
+                           grades differ, a record); stop (13.5); it outranks the other
+                           kinds, which stay in the report (edition 5 erratum 2 2-10)
+2       ``not_judgeable``  no failure, no defect: a pair without a result, another pair or L2
+                           count, a missing key or L2 grade, a stored line of another tag /
+                           revision; an existing ``--out`` or another argument error
+2       ``setting_defect`` no failure: a wrong rev 5 identity or P4 evidence (outranks
+                           ``not_judgeable``)
 3       ``error``          a tool error (``jp3_baseline_compare.TOOL_ERRORS``: a file missing,
                            broken JSON, an input of another shape); not a judgement (4a-5 5.1)
 ======  =================  ===================================================================

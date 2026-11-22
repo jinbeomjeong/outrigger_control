@@ -23,8 +23,10 @@ JSON lines.)
 exit    status             meaning
 ======  =================  ==================================================================
 0       ``pass``           every judged pair has the same hash (at least one judged pair)
-1       ``differ``         a judged pair differs: stop (P5-1)
-2       ``not_judgeable``  a row of one side only, a repeated job, a row without a 64-hex
+1       ``differ``         a judged pair differs: stop (P5-1), also with the problems below
+                           (kept in ``problems``, erratum 2 2-10)
+2       ``not_judgeable``  no differing pair and: a row of one side only, a repeated job, a
+                           row without a 64-hex
                            hash, an event list at the cap, no judged pair, an existing --out
 3       ``error``          a tool error (unreadable file, broken JSON)
 ======  =================  ==================================================================
@@ -150,7 +152,8 @@ def compare(old_rows: list[dict], new_rows: list[dict], old_t4h: Path | None,
             recorded.append(pair)
     if not judged:
         problems.append("no judged pair")
-    status = ("not_judgeable" if problems else "differ" if differing else "pass")
+    # erratum 2 2-10: a differing judged pair is a failure whatever the problems (all kept)
+    status = "differ" if differing else ("not_judgeable" if problems else "pass")
     return {"rule": "jp3_remedy_spec_v5.md P5-1", "status": status,
             "pairs": len(set(old) & set(new)), "judged_pairs": len(judged),
             "differing_pairs": len(differing), "fallback_pairs_recorded": len(recorded),

@@ -403,9 +403,57 @@ def test_dry5_against_78fd5d2d(tmp_path, change, status, recorded) -> None:
     entry, code = _compare(old, new)
     assert entry["status"] == status, entry
     assert entry["by_old"]["old"]["recorded_only"] == recorded
-    assert code == rerun.STATUS_RANK[status]
+    assert code == rerun.EXIT_OF_STATUS[status]
     assert not any(name.endswith((rerun.FALLBACK_SUFFIX, rerun.ALWAYS_EQUAL_SUFFIX))
                    for name in entry["compared"])
+
+
+def test_compare_problems_status_order() -> None:
+    """Erratum 2 2-10 for the T8 / case / T-JR judges (``jp3_baseline_compare.Problems``)."""
+    problems = tjr.compare.Problems()
+    problems.setting_defects.append("d")
+    problems.not_judgeable.append("n")
+    assert problems.status() == tjr.compare.STATUS_SETTING_DEFECT
+    problems.failures.append("f")
+    assert problems.status() == tjr.compare.STATUS_FAILED
+    assert problems.as_dict()["setting_defects"] == ["d"]
+
+
+def test_p51_differ_outranks_the_problems() -> None:
+    """Erratum 2 2-10: a differing judged pair with a one-sided row is ``differ`` (exit 1),
+    the problem kept; the one-sided row alone stays not judgeable."""
+    job = {"setting": "VBJ0", "case": "x"}
+    old = [{"job": job, "commands_sha256": "a" * 64}]
+    new = [{"job": job, "commands_sha256": "b" * 64},
+           {"job": {"setting": "VBJ0", "case": "y"}, "commands_sha256": "a" * 64}]
+    report = p51.compare(old, new, None, None)
+    assert report["status"] == "differ" and report["problems"]
+    same = p51.compare(old, [{"job": job, "commands_sha256": "a" * 64}, new[1]], None, None)
+    assert same["status"] == "not_judgeable"
+
+
+def test_rerun_match_differs_outranks_missing(monkeypatch) -> None:
+    """Erratum 2 2-10: one item differs, another misses an input: exit 1, the missing item
+    kept as missing; a missing input alone stays exit 2."""
+    values = {("old", "a"): {"x": 1}, ("new", "a"): {"x": 2}, ("old", "b"): None,
+              ("new", "b"): {"y": 1}}
+
+    def item_values(side, item):
+        found = values[(side.root.name, item)]
+        if found is None:
+            raise rerun.Missing("no file")
+        return found
+    monkeypatch.setattr(rerun, "item_values", item_values)
+
+    class Side:
+        def __init__(self, name: str) -> None:
+            self.root = Path(name)
+    report, code = rerun.compare_items([Side("old")], Side("new"), ["a", "b"])
+    assert code == rerun.EXIT_DIFFERS
+    assert report["items"]["a"]["status"] == "differs"
+    assert report["items"]["b"]["status"] == "missing"
+    _, code = rerun.compare_items([Side("old")], Side("new"), ["b"])
+    assert code == rerun.EXIT_MISSING
 
 
 def test_dry5_retry_compares_whole_lines_without_run_meta(tmp_path) -> None:

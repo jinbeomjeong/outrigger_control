@@ -2,7 +2,7 @@
 baseline (``jp3_remedy_spec.md`` 5.7 P4-1 .. P4-4, P4-9, 13.1; addendum 4a-1 section 1;
 addendum 4a-2 sections 2, 3 and table 4: J4a-9 R1 .. R4, B2, B3, X11).
 
-Checks (every problem is collected; the status is the worst kind found):
+Checks (every problem is collected; the status: failed > setting defect > not judgeable):
 
 1. Baseline: the sha256 of ``SHA256SUMS`` is :data:`BASELINE_SUMS_SHA256`; every listed file
    has its hash; no baseline file outside the list is opened (CRLF lines: ``\\r`` cut). A
@@ -38,11 +38,13 @@ Exit codes and ``status`` (the J4a-9 rows of 13.1 and 4a-2 R3):
 exit    status             meaning
 ======  =================  ===================================================================
 0       ``pass``           every check passes
-1       ``failed``         a prediction (P4-1 .. P4-4, P4-9) failed, the inputs being sound
-2       ``not_judgeable``  baseline, pairing, a missing column / key, zero judged rows or seed
-                           rows, an ``m2_shift_clipped`` seed row (13.1, 4a-2 2.2 / 3.4)
-2       ``setting_defect`` a test-only setting, a non-default identity or P4 evidence (13.6,
-                           4a-2 R3, B2, X11); it outranks the other kinds
+1       ``failed``         a prediction (P4-1 .. P4-4, P4-9) failed; it outranks the other
+                           kinds, which stay in the report (edition 5 erratum 2 2-10)
+2       ``not_judgeable``  no failure, no defect: baseline, pairing, a missing column / key,
+                           zero judged rows or seed rows, an ``m2_shift_clipped`` seed row
+                           (13.1, 4a-2 2.2 / 3.4)
+2       ``setting_defect`` no failure: a test-only setting, a non-default identity or P4
+                           evidence (13.6, 4a-2 R3, B2, X11); it outranks not_judgeable
 3       ``error``          an unexpected input error (file missing, malformed JSON)
 ======  =================  ===================================================================
 
@@ -124,9 +126,9 @@ an uncaught one would leave Python's exit 1 = failed; prelaunch audit N-3: ``Run
 EXIT_TABLE = """exit codes (addendum 4a-5 5.1, the J-P3 judge tools):
   0  pass             passed (a record tool: written as expected)
   1  failed           a prediction or judgement failed (base-judge-compare: grades differ,
-                      a record); stop
-  2  not_judgeable /  not judgeable, a setting defect, or an argument error (an existing
-     setting_defect   --out is refused); stop and find the cause
+                      a record), whatever else was found (erratum 2 2-10); stop
+  2  not_judgeable /  no failure: not judgeable, a setting defect, or an argument error (an
+     setting_defect   existing --out is refused); stop and find the cause
   3  error            a tool error (unexpected input: file missing, broken JSON); not a
                       judgement"""
 STATUS_EXIT = {STATUS_PASS: EXIT_PASS, STATUS_FAILED: EXIT_FAILED,
@@ -139,8 +141,8 @@ class NotJudgeable(Exception):
 
 
 class Problems:
-    """The three kinds of findings of one comparison (status order: defect > not judgeable >
-    failed)."""
+    """The three kinds of findings of one comparison (status order, edition 5 erratum 2 2-10:
+    failed > defect > not judgeable; a failure never hides the other kinds, all are kept)."""
 
     def __init__(self) -> None:
         self.setting_defects: list[str] = []
@@ -148,11 +150,13 @@ class Problems:
         self.failures: list[str] = []
 
     def status(self) -> str:
+        if self.failures:
+            return STATUS_FAILED
         if self.setting_defects:
             return STATUS_SETTING_DEFECT
         if self.not_judgeable:
             return STATUS_NOT_JUDGEABLE
-        return STATUS_FAILED if self.failures else STATUS_PASS
+        return STATUS_PASS
 
     def as_dict(self) -> dict:
         return {"setting_defects": self.setting_defects, "not_judgeable": self.not_judgeable,

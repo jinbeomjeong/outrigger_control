@@ -653,6 +653,88 @@ def test_12b_zero_judged_rows_are_not_judgeable() -> None:
     assert problems.status() == "not_judgeable"
 
 
+# ------------------------------------------------- erratum 2 2-10: status order
+def _new_fault_edit(also=None):
+    """b1 key 9: a FAULT on VBK only (a 6.3.7 (1) failure); ``also(vbk0, vbk)`` adds more."""
+    def edit(block, vbk0, vbk):
+        if block != "b1":
+            return
+        key = vbk.key_at(9)
+        vbk.events[key] = [[40.0, "FAULT_STROKE_END:FR"]]
+        vbk0.events[key] = []
+        if also is not None:
+            also(vbk0, vbk)
+    return edit
+
+
+def test_status_order_failure_outranks_and_keeps_the_reasons() -> None:
+    problems = judge.Problems(setting_defects=["d"], not_judgeable=["n"], failures=["f"])
+    assert problems.status() == "failed"
+    assert judge.Problems(setting_defects=["d"], not_judgeable=["n"]).status() == (
+        "setting_defect")
+    assert judge.Problems(not_judgeable=["n"]).status() == "not_judgeable"
+    assert judge.Problems().status() == "pass"
+
+
+def test_12b_failure_and_setting_defect_is_exit_1_with_both(world, capsys,
+                                                             cwd_elsewhere) -> None:
+    """2-10: a failure and a setting defect of the same run: exit 1, both reasons kept."""
+    def trigger(vbk0, vbk):
+        vbk.rows[vbk.key_at(7)]["rod_fault"]["trigger_read"] += 1
+    written0, written1, decision = _decided(world, capsys, _new_fault_edit(trigger))
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 1 and last["status"] == "failed"
+    assert any("new FAULT" in text for text in report["problems"]["failures"])
+    assert any("trigger reads differ" in text for text in report["problems"]["setting_defects"])
+    assert last["setting_defects"] >= 1 and last["failures"] >= 1
+
+
+def test_12b_failure_and_not_judgeable_is_exit_1(world, capsys, cwd_elsewhere,
+                                                 monkeypatch) -> None:
+    written0, written1, decision = _decided(world, capsys, _new_fault_edit())
+    original = judge._judge_jp3
+
+    def judge_jp3_with_a_missing_key(jp3, judged_rows, problems):
+        original(jp3, judged_rows, problems)
+        problems.not_judgeable.append("J-P3 judged_key_missing on the VBK lines")
+    monkeypatch.setattr(judge, "_judge_jp3", judge_jp3_with_a_missing_key)
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 1 and last["status"] == "failed"
+    assert report["problems"]["not_judgeable"] and report["problems"]["failures"]
+
+
+def test_12b_no_failure_and_not_judgeable_is_exit_2(world, capsys, cwd_elsewhere,
+                                                    monkeypatch) -> None:
+    written0, written1, decision = _decided(world, capsys)
+    original = judge._judge_jp3
+
+    def judge_jp3_with_a_missing_key(jp3, judged_rows, problems):
+        original(jp3, judged_rows, problems)
+        problems.not_judgeable.append("J-P3 judged_key_missing on the VBK lines")
+    monkeypatch.setattr(judge, "_judge_jp3", judge_jp3_with_a_missing_key)
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 2 and last["status"] == "not_judgeable"
+    assert report["problems"]["failures"] == []
+
+
+def test_12b_stop_before_judging_is_exit_2_even_with_a_failing_pair(world, capsys,
+                                                                    cwd_elsewhere) -> None:
+    """2-10: a load-time stop (a T4h array missing) ends before any item is judged: exit 2,
+    no failure counted, although a pair would fail."""
+    written0, written1, decision = _decided(world, capsys, _new_fault_edit())
+    victim = sorted(written1["b2"][1].glob("*.npz"))[0]
+    with np.load(victim, allow_pickle=False) as data:
+        arrays = {name: data[name] for name in data.files if name != "jp3_r59_substeps"}
+    np.savez_compressed(victim, **arrays)
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 2 and last["status"] == "not_judgeable"
+    assert report["problems"]["failures"] == []
+
+
 # ------------------------------------------------- control review of 8a3c48c7 / erratum 1
 def _no_injection(record: dict) -> None:
     """Armed on the run's last update: no fault read in the run (erratum 1 6)."""

@@ -160,6 +160,22 @@ function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '
     return $Environment
 }
 
+function Invoke-IdentityCheckPart([string]$Part) {
+    # Invoke-IdentityCheck for a part of a step run before its judge (re-audit warning 4: the
+    # j9_main V0 sample): its own report and log (never the step's final identity check
+    # files), code identity_check_<part>; exit != 0 is not judgeable (exit 2)
+    $Folder = $StepState.Folder
+    $Out = "$IdentityChecks\$(Split-Path -Leaf $Folder)_$Part.md"
+    if (Test-Path -LiteralPath $Out) { Stop-Step 2 "$Out exists (an identity report is never overwritten)" }
+    $All = @('-I', '-B', "$VerifTools\baseline_check.py", 'identity', '--repo', $Worktree, $Folder,
+        '--expect-commit', $RunCommit, '--mtime', '--out', $Out)
+    $StepState.Commands.Add([ordered]@{ label = "identity_check_$Part"; command = "$DevPython $($All -join ' ')" })
+    & $DevPython @All *> "$Folder\logs\identity_check_$Part.log"
+    $Code = $LASTEXITCODE
+    $StepState.Codes["identity_check_$Part"] = $Code
+    if ($Code -ne 0) { Stop-Step 2 "baseline_check identity ($Part) exit $Code ($Out)" }
+}
+
 function Get-ListedSha([string]$File) {
     # a file's sha256 from the fixed list (the judge tools check the file against it)
     $Relative = Get-RepoPath $File

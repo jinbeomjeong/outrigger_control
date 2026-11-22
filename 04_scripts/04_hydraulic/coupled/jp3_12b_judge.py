@@ -74,11 +74,13 @@ exit    status              meaning
 0       ``needs_b3`` / ``needs_b4``  decide: run that VBK0 block, then decide again with it
 0       ``pass``            judge: every 6.3.7 count 0
 0       ``written``         grade-judge / dry-c: the record written
-1       ``failed``          judge: a 6.3.7 failure (stop, 8 5: re-design)
+1       ``failed``          judge: a 6.3.7 failure (stop, 8 5: re-design) - also with setting
+                            defects / not-judgeable reasons found in the same run, which are
+                            kept in ``problems`` (erratum 2 2-10)
 2       ``aa_floor_stop``   decide: A/A 3 pairs or more (not judgeable, not a failure; ask
                             again, no rerun before the answer, 6.3.8)
-2       ``setting_defect``  a not-latched pair, a pair identity / plan / revision mismatch, a
-                            VBK-only pre-trigger fallback (outranks the others)
+2       ``setting_defect``  no failure; a not-latched pair, a pair identity / plan / revision
+                            mismatch, a VBK-only pre-trigger fallback (outranks not_judgeable)
 2       ``not_judgeable``   a missing line, key or array (X-2), another cell table, a decision
                             record of another sha or status, ``N_opp < 301`` / ``k < 45`` after
                             the top-up, 0 judged rows, an existing ``--out``
@@ -160,11 +162,16 @@ class Problems:
     failures: list[str] = field(default_factory=list)
 
     def status(self) -> str:
+        """Erratum 2 2-10: a counted failure wins (exit 1, the other reasons stay in the
+        lists), then setting_defect, then not_judgeable (exit 2), else pass. A stop before
+        any item is judged has no failure, so it keeps exit 2."""
+        if self.failures:
+            return "failed"
         if self.setting_defects:
             return "setting_defect"
         if self.not_judgeable:
             return "not_judgeable"
-        return "failed" if self.failures else "pass"
+        return "pass"
 
     def counts(self) -> dict[str, int]:
         return {"setting_defects": len(self.setting_defects),

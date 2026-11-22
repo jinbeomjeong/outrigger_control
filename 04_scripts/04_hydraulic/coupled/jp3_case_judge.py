@@ -31,10 +31,12 @@ Exit codes and ``status`` (the same for both sub-commands):
 exit    status             meaning
 ======  =================  ===================================================================
 0       ``pass``           the prediction holds
-1       ``failed``         it does not (13.3 / 13.8: stop and look for the cause)
-2       ``not_judgeable``  a row, key or column missing, rows of another count; an existing
-                           ``--out`` (never overwritten)
-2       ``setting_defect`` a wrong identity or P4 evidence (outranks ``not_judgeable``)
+1       ``failed``         it does not (13.3 / 13.8: stop and look for the cause), whatever
+                           else was found (the other kinds stay, edition 5 erratum 2 2-10)
+2       ``not_judgeable``  no failure, no defect: a row, key or column missing, rows of another
+                           count; an existing ``--out`` (never overwritten)
+2       ``setting_defect`` no failure: a wrong identity or P4 evidence (outranks
+                           ``not_judgeable``)
 3       ``error``          an unexpected input error (file missing, broken JSON; addendum 4a-5
                            5.1: a tool error, not a judgement)
 ======  =================  ===================================================================

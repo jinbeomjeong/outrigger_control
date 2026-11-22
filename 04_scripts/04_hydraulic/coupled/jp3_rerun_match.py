@@ -52,8 +52,9 @@ stdout's last line is JSON with ``status`` and counts. ``--old`` may be given mo
 each item is compared with every earlier attempt (``by_old``), its status is the worst of
 them. The run steps pass ``fa997f4c`` alone (4a-7 2.1: b51ed6e1 is not read again).
 
-Exit codes: 0 all the same, 1 a value differs, 2 an input missing (a folder, file, key or
-code) or other value names on the two sides (another pair or row count), 3 a tool error.
+Exit codes: 0 all the same, 1 a value differs (also when an input is missing elsewhere,
+erratum 2 2-10), 2 an input missing (a folder, file, key or code) or other value names on the
+two sides (another pair or row count) and no value differing, 3 a tool error.
 
 Usage (dynamics-dev, worktree root; the run steps call it after each judgement):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_rerun_match.py --old <j9_runs>/fa997f4c
@@ -454,7 +455,9 @@ def _x11_values(folder: Path) -> dict:
             "FL 49.0 s class": read["class"], "FL 49.0 s gap_bar": read["gap_bar"]}
 
 
-STATUS_RANK = {"same": 0, "differs": 1, "missing": 2}
+STATUS_RANK = {"same": 0, "missing": 1, "differs": 2}
+"""Erratum 2 2-10: a differing value outranks a missing input (the missing ones are kept)."""
+EXIT_OF_STATUS = {"same": EXIT_SAME, "differs": EXIT_DIFFERS, "missing": EXIT_MISSING}
 
 
 def _compare_one(before: dict, after: dict) -> dict:
@@ -472,9 +475,12 @@ def _compare_one(before: dict, after: dict) -> dict:
 
 def compare_items(olds: list[Side], new: Side, items: list[str]) -> tuple[dict, int]:
     """Per item and per earlier attempt the names of the same and the differing values (no
-    value in the report); the item's ``status`` is the worst over the attempts (missing >
-    differs > same) and ``differing`` the union of the differing names."""
-    report, code = {"items": {}}, EXIT_SAME
+    value in the report); the item's ``status`` is the worst over the attempts (differs >
+    missing > same, erratum 2 2-10) and ``differing`` the union of the differing names; the
+    exit code follows the worst item (1 a value differs, also with a missing input; 2 a
+    missing input only)."""
+    report: dict = {"items": {}}
+    worst = "same"
     for item in items:
         entry: dict = {"by_old": {}}
         try:
@@ -482,7 +488,7 @@ def compare_items(olds: list[Side], new: Side, items: list[str]) -> tuple[dict, 
         except Missing as exc:
             entry.update(status="missing", reason=f"new: {exc}")
             report["items"][item] = entry
-            code = max(code, EXIT_MISSING)
+            worst = max(worst, "missing", key=STATUS_RANK.__getitem__)
             continue
         for old in olds:
             try:
@@ -503,8 +509,8 @@ def compare_items(olds: list[Side], new: Side, items: list[str]) -> tuple[dict, 
         entry["differing"] = sorted({name for found in entry["by_old"].values()
                                      for name in found.get("differing", [])})
         report["items"][item] = entry
-        code = max(code, STATUS_RANK[entry["status"]])
-    return report, code
+        worst = max(worst, entry["status"], key=STATUS_RANK.__getitem__)
+    return report, EXIT_OF_STATUS[worst]
 
 
 def _parser() -> argparse.ArgumentParser:
