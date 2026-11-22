@@ -456,6 +456,61 @@ def test_rerun_match_differs_outranks_missing(monkeypatch) -> None:
     assert code == rerun.EXIT_MISSING
 
 
+def test_rerun_match_nonzero_baseline_code_is_not_judgeable(monkeypatch) -> None:
+    """Erratum 2 2-10.1 4: a baseline tool exit code not 0 is never compared (exit 2)."""
+    values = {"old": {"code tool:case_f": 2, "x": 1}, "new": {"code tool:case_f": 2, "x": 1}}
+    monkeypatch.setattr(rerun, "item_values", lambda side, item: dict(values[side.root.name]))
+
+    class Side:
+        def __init__(self, name: str) -> None:
+            self.root = Path(name)
+    report, code = rerun.compare_items([Side("old")], Side("new"), ["casef"])
+    assert code == rerun.EXIT_MISSING and report["items"]["casef"]["status"] == "missing"
+    assert report["items"]["casef"]["by_old"]["old"]["nonzero_baseline_codes"] == [
+        "code tool:case_f"]
+    values["old"]["code tool:case_f"] = values["new"]["code tool:case_f"] = 0
+    _, code = rerun.compare_items([Side("old")], Side("new"), ["casef"])
+    assert code == rerun.EXIT_SAME
+
+
+def _hold_row(breaches: int = 0, **record) -> dict:
+    check = {"rule_revision": 6, "spec_edition": "fe6f5844",
+             "carry_end_rule": "inherit_when_gate_shut", "retract_start_rule": "with_tracker",
+             "identity_consistent": True, "sensor_grade": "normal",
+             "jp3a_breach_reads": [breaches, 0, 0, 0], "jp3b_breach_over_tol_reads": [0] * 4,
+             "jp3c_breach_reads": [0] * 4, **record}
+    return {"p3_expected": True, "run_extend_start_rule": "tracked_bound",
+            "run_extend_start_revision": 6, "setting": "VBJ", "extend_bound_check": check}
+
+
+def test_worse_status_default_order_unchanged() -> None:
+    """2-10.1 5 (coordinator item 3): the sealed tools' order stays; edition 5 passes its own."""
+    assert inputs._worse_status("H-7", "setting_defect") == "setting_defect"
+    assert inputs._worse_status("H-7", "no_judged_runs") == "no_judged_runs"
+    assert inputs._worse_status("H-7", "setting_defect", inputs.STATUS_ORDER_ED5) == "H-7"
+    assert inputs._worse_status("pass", "no_judged_runs", inputs.STATUS_ORDER_ED5) == (
+        "no_judged_runs")
+
+
+def test_j_p3_over_rows_edition5_order_reads_h7_first() -> None:
+    """A breach on a judged rev 6 row and a defect row: default setting_defect (sealed order,
+    unchanged); edition 5 order H-7 with the defect kept in the revision judgement."""
+    rows = [_hold_row(breaches=1), _hold_row(carry_end_rule="fresh_stretch")]
+    default = inputs.j_p3_over_rows([dict(row) for row in rows])
+    assert default["status"] == "setting_defect"
+    assert default["status_by_revision"]["6"] == "setting_defect"
+    edition5 = inputs.j_p3_over_rows([dict(row) for row in rows], edition5_order=True)
+    assert edition5["status"] == "H-7" and edition5["status_by_revision"]["6"] == "H-7"
+    assert edition5["rev6"]["status"] == "setting_defect"  # the revision's own result kept
+    assert inputs.has_judged_breach(edition5["rev6"])
+    clean = inputs.j_p3_over_rows([_hold_row()], edition5_order=True)
+    assert clean["status"] == "pass"
+    unkeyed = {key: value for key, value in _hold_row(breaches=1).items()
+               if key != "run_extend_start_revision"}
+    mixed = inputs.j_p3_over_rows([_hold_row(breaches=1), unkeyed], edition5_order=True)
+    assert mixed["status"] == "H-7" and mixed["revision_key_missing_runs"] == 1
+
+
 def test_dry5_retry_compares_whole_lines_without_run_meta(tmp_path) -> None:
     first = _dry_folder(tmp_path / "run" / "dry_a1")
     entry, _ = _compare(first, _dry_folder(tmp_path / "run2" / "dry_a2", wall_s=5.0),

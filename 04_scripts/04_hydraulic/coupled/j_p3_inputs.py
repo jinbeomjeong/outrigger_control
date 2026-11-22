@@ -164,7 +164,7 @@ def record_revision(row: dict) -> object:
     return record.get(REVISION_5_RECORD_KEY)
 
 
-def j_p3_over_rows(rows: list[dict]) -> dict:
+def j_p3_over_rows(rows: list[dict], *, edition5_order: bool = False) -> dict:
     """J-P3 of the expected rows (``p3_expected`` True, or a ``tracked_bound`` own rule).
 
     Row keys read: ``p3_expected``, :data:`RULE_KEY`, :data:`REVISION_KEY`,
@@ -179,7 +179,15 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
     defect), it never goes to the revision 4 judgement, which itself refuses a revision 5
     record. ``status_by_revision`` keeps both statuses apart (``no_judged_runs`` of revision 5
     does not hide a revision 4 H-7).
+
+    ``edition5_order`` (edition 5 erratum 2 2-10.1 5; the j9_main judge): a hold revision whose
+    judged rows have a breach (:func:`has_judged_breach`) counts as H-7 in
+    ``status_by_revision`` and in the combination, which takes :data:`STATUS_ORDER_ED5` (H-7 >
+    setting_defect > not judgeable > pass), the row-level defects included; the revision's own
+    judgement (``rev<n>``) keeps its status and the defect counts stay in the result. Default
+    False: the order of the sealed tools, unchanged.
     """
+    order = STATUS_ORDER_ED5 if edition5_order else STATUS_ORDER
     from outrigger_sim.control.extend_start_bound import j_p3_judgement, j_p3_judgement_rev5
 
     test_only_runs = sum(is_test_only_setting(row.get("setting")) for row in rows)
@@ -207,11 +215,13 @@ def j_p3_over_rows(rows: list[dict]) -> dict:
         # 436.9 6.1 / edition 5 4.6: each hold revision apart, never mixed into one sum
         judgement.update(_revision_5_judgement(hold_rows, j_p3_judgement_rev5,
                                                label=f"rev{revision}"))
-        status_by_revision[str(revision)] = judgement[f"rev{revision}"]["status"]
-        judgement["status"] = _worse_status(judgement["status"],
-                                            judgement[f"rev{revision}"]["status"])
+        revision_status = judgement[f"rev{revision}"]["status"]
+        if edition5_order and has_judged_breach(judgement[f"rev{revision}"]):
+            revision_status = "H-7"
+        status_by_revision[str(revision)] = revision_status
+        judgement["status"] = _worse_status(judgement["status"], revision_status, order)
     if rule_missing or test_only_runs or unkeyed_hold or key_record_mismatch or l1_reference_runs:
-        judgement["status"] = "setting_defect"
+        judgement["status"] = _worse_status(judgement["status"], "setting_defect", order)
     judgement.update(runs_expected=len(expected), rule_missing_runs=rule_missing,
                      test_only_setting_runs=test_only_runs, l1_reference_runs=l1_reference_runs,
                      revision_key_missing_runs=len(unkeyed_hold),
@@ -246,10 +256,22 @@ def _judgement_inputs(rows: list[dict]) -> tuple[list, list[bool], list[bool]]:
 
 STATUS_ORDER = ("no_p3_runs", "pass", "H-7", "no_judged_runs", "judged_key_missing",
                 "setting_defect")
+STATUS_ORDER_ED5 = ("no_p3_runs", "pass", "no_judged_runs", "judged_key_missing",
+                    "setting_defect", "H-7")
+"""Edition 5 erratum 2 2-10.1 5: H-7 > setting_defect > not judgeable > pass, for the
+edition 5 judges only (``j_p3_over_rows(..., edition5_order=True)``); :data:`STATUS_ORDER`
+stays the order of the sealed tools that share this module (436.8 / edition 4a replays)."""
 
 
-def _worse_status(first: str, second: str) -> str:
-    """The more severe of two J-P3 statuses (``no_p3_runs`` < pass < H-7 < ``no_judged_runs``
-    (edition 4a 13.2: not judgeable) < ``judged_key_missing`` (addendum 4a-5 3.3) <
-    setting_defect)."""
-    return max(first, second, key=STATUS_ORDER.index)
+def _worse_status(first: str, second: str, order: tuple[str, ...] = STATUS_ORDER) -> str:
+    """The more severe of two J-P3 statuses in ``order`` (default :data:`STATUS_ORDER`:
+    ``no_p3_runs`` < pass < H-7 < ``no_judged_runs`` (edition 4a 13.2: not judgeable) <
+    ``judged_key_missing`` (addendum 4a-5 3.3) < setting_defect)."""
+    return max(first, second, key=order.index)
+
+
+def has_judged_breach(judgement: dict | None) -> bool:
+    """Edition 5 erratum 2 2-10.1 5: a judged row of a hold revision judgement
+    (``j_p3_judgement_rev5``) has a judged key > 0 (``runs_with_breach``) - H-7 read from the
+    judged rows whatever its combined status (defect rows are no judged rows)."""
+    return bool((judgement or {}).get("runs_with_breach"))

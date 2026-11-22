@@ -687,15 +687,20 @@ def _judge_ready(vbk: Line, vbk0: Line, pair: dict, problems: Problems) -> None:
 
 def _judge_jp3(jp3: dict, judged_rows: int, problems: Problems) -> None:
     """6.3.7 (4): H-7 fails, a defect is a setting defect, 0 rows or missing keys are not
-    judgeable (13.2, 4a-5 3.3)."""
+    judgeable (13.2, 4a-5 3.3). Erratum 2 2-10.1 5: the H-7 is read from the rev 6 judged
+    rows directly (``j_p3_inputs.has_judged_breach``), never hidden by the combined status;
+    a setting defect or a not-judgeable status of the same judgement is kept as a reason."""
+    from j_p3_inputs import has_judged_breach
+
     status = jp3["status"]
     if judged_rows == 0:
         problems.not_judgeable.append("J-P3: 0 judged VBK lines (6.3.7 (4))")
-    elif status == "H-7":
+        return
+    if status == "H-7" or has_judged_breach(jp3):
         problems.failures.append("J-P3 H-7 on the VBK lines (4)")
-    elif status == "setting_defect":
+    if status == "setting_defect":
         problems.setting_defects.append("J-P3 setting defect on the VBK lines")
-    elif status != "pass":
+    elif status not in ("pass", "H-7"):
         problems.not_judgeable.append(f"J-P3 {status} on the VBK lines")
 
 

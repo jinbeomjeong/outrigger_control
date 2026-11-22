@@ -720,6 +720,35 @@ def test_12b_no_failure_and_not_judgeable_is_exit_2(world, capsys, cwd_elsewhere
     assert report["problems"]["failures"] == []
 
 
+def test_judge_jp3_reads_h7_under_a_defect() -> None:
+    """Erratum 2 2-10.1 5: a breach of a judged row is a failure although the combined status
+    is setting_defect; the defect stays a reason."""
+    problems = judge.Problems()
+    judge._judge_jp3({"status": "setting_defect", "runs_with_breach": 1}, 3, problems)
+    assert problems.failures and problems.setting_defects
+    assert problems.status() == "failed"
+    problems = judge.Problems()
+    judge._judge_jp3({"status": "judged_key_missing", "runs_with_breach": 0}, 3, problems)
+    assert problems.status() == "not_judgeable" and not problems.failures
+
+
+def test_12b_jp3_h7_and_setting_defect_is_exit_1(world, capsys, cwd_elsewhere) -> None:
+    """2-10.1 5: J-P3 H-7 on one VBK line and a J-P3 identity defect on another: exit 1."""
+    def edit(block, vbk0, vbk):
+        if block == "b1":
+            records = [vbk.rows[vbk.key_at(index)]["hydraulics_record"]["extend_bound_check"]
+                       for index in (4, 5)]
+            records[0]["jp3a_breach_reads"] = [0, 1, 0, 0]
+            records[1]["carry_end_rule"] = "fresh_stretch"
+    written0, written1, decision = _decided(world, capsys, edit)
+    code, last, report = run_main(judge_args(world, written0, written1, decision,
+                                             world["runs"] / "judge.json"), capsys)
+    assert code == 1 and last["status"] == "failed", report["problems"]
+    assert report["jp3"]["status"] == "setting_defect"
+    assert "J-P3 H-7 on the VBK lines (4)" in report["problems"]["failures"]
+    assert "J-P3 setting defect on the VBK lines" in report["problems"]["setting_defects"]
+
+
 def test_12b_stop_before_judging_is_exit_2_even_with_a_failing_pair(world, capsys,
                                                                     cwd_elsewhere) -> None:
     """2-10: a load-time stop (a T4h array missing) ends before any item is judged: exit 2,

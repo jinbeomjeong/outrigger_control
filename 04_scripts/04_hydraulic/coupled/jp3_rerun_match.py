@@ -53,8 +53,9 @@ each item is compared with every earlier attempt (``by_old``), its status is the
 them. The run steps pass ``fa997f4c`` alone (4a-7 2.1: b51ed6e1 is not read again).
 
 Exit codes: 0 all the same, 1 a value differs (also when an input is missing elsewhere,
-erratum 2 2-10), 2 an input missing (a folder, file, key or code) or other value names on the
-two sides (another pair or row count) and no value differing, 3 a tool error.
+erratum 2 2-10), 2 an input missing (a folder, file, key or code), other value names on the
+two sides (another pair or row count) or a baseline tool exit code not 0 (2-10.1 4: such a
+code is never compared) and no value differing, 3 a tool error.
 
 Usage (dynamics-dev, worktree root; the run steps call it after each judgement):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_rerun_match.py --old <j9_runs>/fa997f4c
@@ -162,7 +163,7 @@ def _codes(side: Side, item: str) -> dict:
     missing = [name for name in ITEM_CODES[item] if name not in codes]
     if missing:
         raise Missing(f"{item}: codes {missing} missing")
-    return {f"code {name}": codes[name] for name in ITEM_CODES[item]}
+    return {f"{CODE_PREFIX}{name}": codes[name] for name in ITEM_CODES[item]}
 
 
 def item_values(side: Side, item: str) -> dict:
@@ -460,6 +461,18 @@ STATUS_RANK = {"same": 0, "missing": 1, "differs": 2}
 EXIT_OF_STATUS = {"same": EXIT_SAME, "differs": EXIT_DIFFERS, "missing": EXIT_MISSING}
 
 
+CODE_PREFIX = "code "
+"""Value names of the tool exit codes (:func:`_codes`)."""
+
+
+def baseline_nonzero_codes(before: dict) -> list[str]:
+    """Erratum 2 2-10.1 4: the baseline's tool exit codes that are not 0. Such a code was
+    reached under the status order before 2-10, so it is never compared as it is: the item is
+    not judgeable (exit 2; every baseline of edition 5 has 0)."""
+    return sorted(name for name, value in before.items()
+                  if name.startswith(CODE_PREFIX) and value != 0)
+
+
 def _compare_one(before: dict, after: dict) -> dict:
     """Same / differs per value name; other names on the two sides (another pair or row
     count) are a missing input (4a-7 5 H-3: exit 2)."""
@@ -493,6 +506,13 @@ def compare_items(olds: list[Side], new: Side, items: list[str]) -> tuple[dict, 
         for old in olds:
             try:
                 before = item_values(old, item)
+                nonzero = baseline_nonzero_codes(before)
+                if nonzero:
+                    entry["by_old"][old.root.name] = {
+                        "status": "missing", "nonzero_baseline_codes": nonzero,
+                        "reason": "a baseline exit code is not 0: not judgeable (erratum 2 "
+                                  "2-10.1 4: no comparison of an old-order exit code)"}
+                    continue
                 found_after = after
                 if item == "dry5":
                     before, found_after, recorded = _dry5_judged(before, after)

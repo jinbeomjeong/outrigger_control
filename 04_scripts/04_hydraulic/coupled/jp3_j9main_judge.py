@@ -337,7 +337,7 @@ def judge(rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
     no_reference = {f"{table_name} {s}": part["no_reference"]
                     for table_name, table in (("J_vs_V0", j_vs_v0), ("LS_vs_VB", ls_vs_vb))
                     for s, part in table.items() if part["no_reference"]}
-    jp3 = j_p3_over_rows(j_p3_rows(rows, folders))
+    jp3 = j_p3_over_rows(j_p3_rows(rows, folders), edition5_order=True)  # 2-10.1 5
     report = {"rule": "jp3_remedy_spec_v5.md 6.5, erratum 2 2-7.1 (path 1, 436.8 D-07 .. D-17)",
               "setting_map": SETTING_MAP, "rows": len(rows), "v0_rows": len(v0),
               "inputs": {"rows": {"path": str(rows_path), "sha256": file_sha256(rows_path)},
@@ -362,6 +362,9 @@ def judge(rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
 
 JP3_NOT_JUDGEABLE = ("no_judged_runs", "judged_key_missing", "no_p3_runs")
 """J-P3 statuses with no judged row (2-10: a reason, never a pass)."""
+JP3_ROW_DEFECT_COUNTS = ("rule_missing_runs", "test_only_setting_runs", "l1_reference_runs",
+                         "revision_key_missing_runs", "revision_key_mismatch_runs")
+"""``j_p3_over_rows`` row-level setting defect counts (kept as reasons under an H-7)."""
 
 
 def status_basis(report: dict) -> dict[str, list[str]]:
@@ -369,32 +372,44 @@ def status_basis(report: dict) -> dict[str, list[str]]:
     judgement, all kept (a failure never hides the reasons, the reasons never hide it).
 
     Failures: VBJ J1 .. J11, the R15 worsening, the S8 SA-4 items, L-a / L-b / L-c, the stops
-    (J11 H-7 / L-e, the criteria 6 F-5 stop values) and J-P3 H-7 (overall or of one
-    revision). Setting defects: the rev 6 identity (H-2) and a J-P3 setting defect.
-    Not judgeable: ``no_reference``, the not-judgeable items, a J-P3 status without judged
-    rows (the overall one: an empty revision 4 side alone is not a reason) and 0 VBJ rows.
+    (J11 H-7 / L-e, the criteria 6 F-5 stop values) and J-P3 H-7 (2-10.1 5: overall, of one
+    revision, or a judged row with a breach read from the revision judgement).
+    Setting defects: the rev 6 identity (H-2) and a J-P3 setting defect (overall, of one
+    revision's own judgement, or a row-level count). Not judgeable: ``no_reference``, the
+    not-judgeable items, a J-P3 status without judged rows (overall or of a hold revision's
+    own judgement; an empty revision 4 side alone is not a reason) and 0 VBJ rows.
     """
+    from j_p3_inputs import HOLD_REVISIONS, has_judged_breach
+
     jp3 = report["J-P3"]
     revision_statuses = set((jp3.get("status_by_revision") or {}).values())
+    hold_judgements = [jp3.get(f"rev{revision}") or {} for revision in HOLD_REVISIONS]
+    own_statuses = {judgement.get("status") for judgement in hold_judgements}
+    is_h7 = (jp3["status"] == "H-7" or "H-7" in revision_statuses
+             or any(has_judged_breach(judgement) for judgement in hold_judgements))
     counted = {"VBJ J1 .. J11": report["vb_fail_items"],
                "R15 worsening (J2)": len(report["r15_worsening"]["failures"]),
                "S8 SA-4": len(report["S8"]["failures"]),
                "L-a": len(report["L-a"]), "L-b": len(report["L-b"]), "L-c": len(report["L-c"]),
                "stops (J11 H-7 / L-e, criteria 6 F-5)": len(report["stops"]),
-               "J-P3 H-7": int(jp3["status"] == "H-7" or "H-7" in revision_statuses)}
+               "J-P3 H-7": int(is_h7)}
     failures = [f"{name}: {count}" for name, count in counted.items() if count]
     defects = []
     if report["identity_defects"]:
         defects.append(f"rev 6 identity (H-2): {len(report['identity_defects'])} lines")
-    if jp3["status"] == "setting_defect":
+    row_defects = sum(jp3.get(key) or 0 for key in JP3_ROW_DEFECT_COUNTS)
+    if (jp3["status"] == "setting_defect" or "setting_defect" in own_statuses | revision_statuses
+            or row_defects):
         defects.append("J-P3 setting_defect")
     not_judgeable = []
     if report["no_reference"]:
         not_judgeable.append(f"no_reference: {sum(map(len, report['no_reference'].values()))}")
     if report["not_judgeable_items"]:
         not_judgeable.append(f"not-judgeable items: {len(report['not_judgeable_items'])}")
-    if jp3["status"] in JP3_NOT_JUDGEABLE:
-        not_judgeable.append(f"J-P3 {jp3['status']}")
+    unjudged = sorted({status for status in {jp3["status"], *own_statuses}
+                       if status in JP3_NOT_JUDGEABLE} - {None})
+    for status in unjudged:
+        not_judgeable.append(f"J-P3 {status}")
     if not report["J_vs_V0"].get("VB", {}).get("runs"):
         not_judgeable.append("0 judged VBJ rows")
     return {"failures": failures, "setting_defects": defects, "not_judgeable": not_judgeable}
@@ -422,11 +437,13 @@ WITNESS_OPTION_KEYS = ("extend_start_tracked", "extend_start_hold", "extend_star
 
 
 def line_identity_problems(row: dict) -> list[str]:
-    """H-2 on one line: the tag base is ``final_C4G2_P3W`` and names revision 6; the run's
-    revision is 6 (``run_extend_start_revision`` when the line has it; run_v5 lines do not
-    write that key, so then the run's ``hydraulic_options`` must declare revision 6); a ③
-    record (``hydraulics_record.extend_bound_check``) has ``rule_revision`` 6 and
-    ``spec_edition`` fe6f5844. A line without a record is J-P3's (its run-case table)."""
+    """H-2 on one line (erratum 2 2-10.1 1 / 3): the tag base is ``final_C4G2_P3W`` and names
+    revision 6; the revision mark: ``run_extend_start_revision`` 6 when the line has the key
+    (run_v5 lines do not write it), else the three ``hydraulic_options`` flags all true, and a
+    key with ``hydraulic_options`` that disagree is a defect too; a ③ record
+    (``hydraulics_record.extend_bound_check``) has ``rule_revision`` 6 and ``spec_edition``
+    fe6f5844. A line without a record (None) skips the record items only - declared head-only
+    or not, its J-P3 is the run-case table's - the tag and the revision mark are checked."""
     from j_p3_inputs import REVISION_KEY
 
     from outrigger_sim.hydraulics.v5_options import extend_start_revision_of_tag, switch_base_tag
@@ -437,14 +454,15 @@ def line_identity_problems(row: dict) -> list[str]:
         problems.append(f"controller_tag {tag!r}: base is not {WITNESS_BASE_TAG}")
     elif extend_start_revision_of_tag(tag) != WITNESS_REVISION:
         problems.append(f"controller_tag {tag!r} is not revision {WITNESS_REVISION}")
+    options = row.get("hydraulic_options")
+    undeclared = [key for key in WITNESS_OPTION_KEYS if (options or {}).get(key) is not True]
     if REVISION_KEY in row:
         if row[REVISION_KEY] != WITNESS_REVISION:
             problems.append(f"{REVISION_KEY} {row[REVISION_KEY]!r}")
-    else:
-        options = row.get("hydraulic_options") or {}
-        undeclared = [key for key in WITNESS_OPTION_KEYS if options.get(key) is not True]
-        if undeclared:
-            problems.append(f"no {REVISION_KEY} and hydraulic_options {undeclared} not true")
+        elif options is not None and undeclared:  # 2-10.1 1: key and options disagree
+            problems.append(f"{REVISION_KEY} 6 but hydraulic_options {undeclared} not true")
+    elif undeclared:
+        problems.append(f"no {REVISION_KEY} and hydraulic_options {undeclared} not true")
     check = (row.get("hydraulics_record") or {}).get("extend_bound_check")
     if check is not None and not isinstance(check, dict):
         problems.append("extend_bound_check is not an object")

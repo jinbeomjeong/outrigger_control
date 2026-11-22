@@ -312,6 +312,42 @@ def test_line_identity_problems() -> None:
     assert j9.line_identity_problems(no_record) == []  # J-P3's run-case table
 
 
+def test_line_identity_revision_mark_and_head_only_lines() -> None:
+    """Erratum 2 2-10.1 1 / 3: a key and options that disagree are a defect; a declared
+    head-only line without a record skips the record items only (tag and mark checked)."""
+    metric = _steady("VB", "a")
+    disagree = _line("VBJ", metric, run_extend_start_revision=6,
+                     hydraulic_options={**WITNESS_OPTIONS, "extend_start_witness": False})
+    (problem,) = j9.line_identity_problems(disagree)
+    assert "run_extend_start_revision 6 but hydraulic_options" in problem
+    key_only = _line("VBJ", metric, run_extend_start_revision=6)
+    del key_only["hydraulic_options"]
+    assert j9.line_identity_problems(key_only) == []
+    head_only = _line("VBJ", metric, head_only_declared=True,
+                      hydraulics_record={"extend_bound_check": None})
+    assert j9.line_identity_problems(head_only) == []
+    head_only_tag = {**head_only, "controller_tag": "final_C4G2_P3H_LAS_K1"}
+    assert len(j9.line_identity_problems(head_only_tag)) == 1
+    head_only_mark = {**head_only, "hydraulic_options": {**WITNESS_OPTIONS,
+                                                         "extend_start_hold": False}}
+    assert len(j9.line_identity_problems(head_only_mark)) == 1
+
+
+def test_status_basis_reads_jp3_h7_and_keeps_the_defect() -> None:
+    """2-10.1 5: a rev 6 judged-row breach under a combined setting_defect is a failure, the
+    defect a reason."""
+    jp3 = {"status": "setting_defect", "status_by_revision": {"4": "no_p3_runs",
+                                                              "6": "setting_defect"},
+           "rev6": {"status": "setting_defect", "runs_with_breach": 1}}
+    report = {"no_reference": {}, "not_judgeable_items": [], "vb_fail_items": 0, "L-a": [],
+              "L-b": [], "L-c": [], "stops": [], "identity_defects": [],
+              "r15_worsening": {"failures": []}, "S8": {"failures": []},
+              "J_vs_V0": {"VB": {"runs": 100}}, "J-P3": jp3}
+    basis = j9.status_basis(report)
+    assert basis["failures"] == ["J-P3 H-7: 1"]
+    assert basis["setting_defects"] == ["J-P3 setting_defect"]
+
+
 # ------------------------------------------------------- synthetic judge (2-10, warning 5)
 def _synthetic_world(*, vb_r1_class: str = "pass", vb_r15_force: float | None = -0.3,
                      extra_vb: bool = False, identity_change: dict | None = None):
