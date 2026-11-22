@@ -1,0 +1,273 @@
+{
+ "status": "written",
+ "rule": "jp3_remedy_spec_v5_erratum2.md 2-9.1 (R3-E1 precedent: first and last line of every row)",
+ "source": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+  "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+ },
+ "rows": 24,
+ "jobs": [
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FL",
+    "fs_kN": 4.0
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "bottom",
+    "leg": "RR",
+    "fs_kN": 4.0
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "setting": "V0"
+  },
+  {
+   "case": "R15",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "setting": "V0"
+  },
+  {
+   "case": "R15",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R14",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "setting": "V0"
+  },
+  {
+   "case": "R14",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R16",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "setting": "V0"
+  },
+  {
+   "case": "R16",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "setting": "V0"
+  },
+  {
+   "case": "S1",
+   "eps": 0.001,
+   "setting": "V0"
+  },
+  {
+   "case": "S1",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "S4",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "S4",
+   "eps": 0.003,
+   "setting": "V0"
+  },
+  {
+   "case": "S5",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "S5",
+   "eps": 0.003,
+   "setting": "V0"
+  },
+  {
+   "case": "S8",
+   "eps": 0.001,
+   "setting": "V0"
+  },
+  {
+   "case": "S8",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "S7",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "S7",
+   "eps": 0.003,
+   "setting": "V0"
+  },
+  {
+   "case": "R2",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R2",
+   "eps": 0.001,
+   "setting": "V0"
+  },
+  {
+   "case": "R2",
+   "decision": "reanchor_on",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R2",
+   "decision": "reanchor_on",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R7",
+   "eps": 0.003,
+   "setting": "V0"
+  },
+  {
+   "case": "R7",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R1",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R1",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R6",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R6",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R5",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R5",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R8",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R8",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R10",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R10",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R9",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R9",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R11",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R11",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R3",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "R3",
+   "eps": 0.003,
+   "setting": "V0"
+  },
+  {
+   "case": "S3",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "S3",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R4",
+   "eps": 0.002,
+   "setting": "V0"
+  },
+  {
+   "case": "R4",
+   "eps": 0.003,
+   "setting": "V0"
+  },
+  {
+   "case": "S2",
+   "eps": 0.0,
+   "setting": "V0"
+  },
+  {
+   "case": "S2",
+   "eps": 0.003,
+   "setting": "V0"
+  }
+ ]
+}

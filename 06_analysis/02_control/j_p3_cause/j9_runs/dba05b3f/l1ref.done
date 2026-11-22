@@ -1,0 +1,51 @@
+{
+  "step": "l1ref",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1",
+  "exit_code": 0,
+  "commit": "dba05b3f9ee80621b3d57d09711acc40c9d0df9e",
+  "started": "2026-11-22 13:09:25 +09:00",
+  "done": "2026-11-22 13:47:08 +09:00",
+  "codes": {
+    "run:L1_VBJ0": 0,
+    "run:L1_VBJ": 0,
+    "identity_check": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "L1_VBJ0",
+      "mask": "0x00FF",
+      "environment": {
+        "R72_PATH": "per_leg",
+        "LAS_T3_DG3_P3": "on",
+        "LAS_T3_DG3_LAS": "on",
+        "LAS_T3_DG3_K1": "on",
+        "R79_V5_SETTING": "VBJ0",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ0_t4h",
+        "R79_ROD_MODEL": "plant_truth"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\l1_keys_12b.txt --workers 4 --affinity 0x00FF",
+      "pid": 22176
+    },
+    {
+      "label": "L1_VBJ",
+      "mask": "0xFF00",
+      "environment": {
+        "R72_PATH": "per_leg",
+        "LAS_T3_DG3_P3": "on",
+        "LAS_T3_DG3_LAS": "on",
+        "LAS_T3_DG3_K1": "on",
+        "R79_V5_SETTING": "VBJ",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ_t4h",
+        "R79_ROD_MODEL": "plant_truth"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1\\L1_VBJ.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\l1_keys_12b.txt --workers 4 --affinity 0xFF00",
+      "pid": 14152
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\l1ref_a1 --expect-commit dba05b3f9ee80621b3d57d09711acc40c9d0df9e --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\dba05b3f\\_identity_checks\\l1ref_a1.md"
+    }
+  ]
+}
