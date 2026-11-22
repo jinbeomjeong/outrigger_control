@@ -27,8 +27,10 @@
 . "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
-$RunCommit = '<ED5_RUN_COMMIT>'
-$Worktree = '<ED5_RUN_WORKTREE>'
+$RunCommit = 'dba05b3f9ee80621b3d57d09711acc40c9d0df9e'
+# the master merge of z4369-ed5 (edition 5 code, errata 1 .. 3), one commit for every edition 5
+# step; the locked worktree ed5-run (2026-11-22), as edition 4a's z4369-jp3
+$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run'
 $Ed5Placeholder = '^<ED5_'
 
 function Assert-Ed5Configured {
