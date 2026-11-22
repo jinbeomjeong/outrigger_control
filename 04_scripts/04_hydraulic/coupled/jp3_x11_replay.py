@@ -51,7 +51,9 @@ BASE_SETTING = "LSJ4"
 extend_start_bound.ALLOW_FRESH_STRETCH_FOR_TEST = True
 extend_start_bound.ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST = True
 for _name, _ in ARMS.values():
-    run_v5.ALL_SETTINGS[_name] = run_v5.JP3_SETTINGS[BASE_SETTING]
+    # edition 5 (control review of 8a3c48c7 B-1): the arm stays on ③ revision 5, the edition 4a
+    # P4-5a definition (baseline LSJ4 hash, FL 49.0 s HOLD +10.674 bar); LSJ4 itself runs rev 6
+    run_v5.ALL_SETTINGS[_name] = run_v5.JP3_REV5_SETTINGS[BASE_SETTING]
 run_v5.T4H_SETTINGS = (*run_v5.T4H_SETTINGS, *(name for name, _ in ARMS.values()))
 _apply_controller_options = v5_options.apply_controller_options
 

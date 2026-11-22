@@ -16,6 +16,11 @@ The closure starts at ``--entry`` and follows, in every Python file it reaches:
 Names outside the repository (standard library, installed packages) are not followed. Data
 files (YAML parameters, keys files) are not code and are not part of the closure.
 
+Edition 5 X-6 (``jp3_remedy_spec_v5.md`` 7): ``--entry`` may be given more than once (the
+closure is the union of the entries'), and ``--with-run-tools`` adds :data:`RUN_TOOL_ENTRIES`
+(the run identity wrapper every judged run goes through and the r79 grade tool the judges read
+grades from), so a change of either meets the closure like a runner change.
+
 Exit codes (and ``status``):
 
 ======  =================  ==========================================================
@@ -49,6 +54,9 @@ SEARCH_TOPS = ("04_scripts", "05_tests")
 SOURCE_TOP = "03_src"
 SKIPPED_PARTS = ("__pycache__", ".git", ".venv", "venv")
 EXIT_DISJOINT, EXIT_MEETS, EXIT_INPUT, EXIT_ERROR = 0, 1, 2, 3
+RUN_TOOL_ENTRIES = ("04_scripts/04_hydraulic/coupled/jp3_run_identity.py",
+                    "04_scripts/03_control/s8/r79_sensor_judge.py")
+"""X-6: the identity wrapper of the judged runs and the r79 grade tool."""
 
 
 class InputError(Exception):
@@ -123,15 +131,16 @@ def imported_names(path: Path, folders: list[Path]) -> tuple[set[str], set[str]]
     return names, literals
 
 
-def import_closure(repo: Path, entry: Path) -> Closure:
-    """The closure of ``entry`` (module docstring)."""
+def import_closure(repo: Path, entry: Path | list[Path]) -> Closure:
+    """The closure of ``entry`` (one path or several: the union; module docstring)."""
+    entries = entry if isinstance(entry, list) else [entry]
     folders = search_folders(repo)
     by_file_name: dict[str, list[Path]] = {}
     for folder in folders:
         for path in folder.glob("*.py"):
             by_file_name.setdefault(path.name, []).append(path)
     closure = Closure(repo)
-    todo = [(entry, entry)]
+    todo = [(path, path) for path in entries]
     while todo:
         path, origin = todo.pop()
         relative = path.resolve().relative_to(repo).as_posix()
@@ -160,7 +169,10 @@ def _parser() -> argparse.ArgumentParser:
                                      epilog="exit codes: 0 disjoint, 1 meets, 2 input error, "
                                             "3 tool error")
     parser.add_argument("--repo", type=Path, required=True)
-    parser.add_argument("--entry", required=True, help="repository-relative runner path")
+    parser.add_argument("--entry", required=True, action="append",
+                        help="repository-relative runner path (repeat for more entries)")
+    parser.add_argument("--with-run-tools", action="store_true",
+                        help="add the run identity wrapper and the r79 grade tool (X-6)")
     parser.add_argument("--base", required=True, help="the commit the outputs were made at")
     parser.add_argument("--head", required=True, help="the fixed commit")
     parser.add_argument("--out", type=Path, required=True)
@@ -169,15 +181,20 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    report: dict = {"entry": args.entry, "base": args.base, "head": args.head}
+    names = [*args.entry, *(RUN_TOOL_ENTRIES if args.with_run_tools else ())]
+    report: dict = {"entry": args.entry[0] if len(names) == 1 else names, "base": args.base,
+                    "head": args.head}
     try:
         if args.out.exists():
             raise InputError(f"{args.out} exists (never overwritten)")
         repo = args.repo.resolve()
-        entry = (repo / args.entry).resolve()
-        if not entry.is_file() or repo not in entry.parents:
-            raise InputError(f"--entry {args.entry} is not a file of {repo}")
-        closure = import_closure(repo, entry)
+        entries = []
+        for name in names:
+            entry = (repo / name).resolve()
+            if not entry.is_file() or repo not in entry.parents:
+                raise InputError(f"--entry {name} is not a file of {repo}")
+            entries.append(entry)
+        closure = import_closure(repo, entries)
         changed = changed_files(repo, args.base, args.head)
         meeting = sorted(set(changed) & set(closure.files))
         report.update(closure=sorted(closure.files), closure_files=len(closure.files),

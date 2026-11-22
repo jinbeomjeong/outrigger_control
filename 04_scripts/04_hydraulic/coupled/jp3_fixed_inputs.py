@@ -23,6 +23,15 @@ GRID_SHA256 = "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827"
 DRY_KEYS_FILE_SHA256 = "1a79e02fc33ae8844d0cd5672e9e5e745215c354e58e9a8095376939c4335e74"
 """4a-4 erratum 1: ``j4a_remedy_b06e409e/dryrun_selection_r79_key.txt`` (one line
 ``L2|s25|g6|0|g6|G1+J1@FL|top|Fs0``), the r79 dry key file of ``select`` / ``summarize``."""
+DRY_KEYS_FILE_SHA256_G8 = "b7c7470a800ce1146d30caefa8050fbb1a73c18058af2b23af7dedf399619bd4"
+"""Edition 5 erratum 1 9.1: the g8 dry key file (one line
+``L2|s25|g8|0|slope|edge|top|4.0|ref|none|0`` + CRLF)."""
+DRY_KEYS_FILE_SHA256_REF = "95ce6f27b44bb13b76fe8fb02d056f6dc5ae1de9be28b29d1529b8fbbd965299"
+"""Edition 5 erratum 1 9.1: the ref dry key file (one line ``L2|s25|ref|0|rigid|B|0,0`` +
+CRLF)."""
+DRY_KEYS_FILE_SHA256_BY_FAMILY = {"g6": DRY_KEYS_FILE_SHA256, "g8": DRY_KEYS_FILE_SHA256_G8,
+                                  "ref": DRY_KEYS_FILE_SHA256_REF}
+"""The fixed key file sha of each r79 dry family (erratum 1 9.1 table)."""
 STORED_H6_R79_JUDGE_SHA256 = (
     "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b")
 """436.8 path 1 r79 judge of the stored H-6 (``verif_matrix/v5_resume_4368/judge_932f1fb/

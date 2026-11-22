@@ -388,7 +388,12 @@ FAMILY_KEYS = {"g6": "L2|s25|g6|0|g6|G1+J1@FL|top|Fs0",
                "g8": "L2|s25|g8|0|slope|edge|top|4.0|ref|none|0",
                "ref": "L2|s25|ref|0|rigid|B|0,0"}
 """Addendum 4a-8 3: the generated dry key of each family (the base keys of its table)."""
-FAMILY_KEYS_FILE_SHA256 = {"g6": DRY_KEYS_FILE_SHA256, "g8": "8" * 64, "ref": "f" * 64}
+FAMILY_KEYS_FILE_SHA256 = {
+    "g6": DRY_KEYS_FILE_SHA256,
+    "g8": "b7c7470a800ce1146d30caefa8050fbb1a73c18058af2b23af7dedf399619bd4",
+    "ref": "95ce6f27b44bb13b76fe8fb02d056f6dc5ae1de9be28b29d1529b8fbbd965299"}
+"""Edition 5 erratum 1 9.1 table, typed from the document (the g8 / ref key files are fixed
+from edition 5; the edition 4a tests take the same values)."""
 SELECTION = {"r79_key": FAMILY_KEYS["g6"], "r79_seed": 25,
              "r79_keys_file": {"sha256": DRY_KEYS_FILE_SHA256},
              "r79_families": {family: {"key": key, "seed": 25,

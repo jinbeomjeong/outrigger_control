@@ -106,7 +106,7 @@ def test_4a3_k7_case_c_and_d_plants_carry_the_evidence_keys(tmp_path) -> None:
     """Addendum 4a-3 5.1 / K-7 (no run of the case replay): the armed VB + P1 plants of C and D
     (``jp3_case_replay.CASE_SETTINGS``) write both P4 evidence keys in ``plant_record``."""
     report = _run_check("case_replay_record_keys", tmp_path)
-    for setting in ("VBG4", "VBG5"):
+    for setting in ("VBG4", "VBG6"):
         assert report[setting]["has_keys"] is True
         assert report[setting]["options"]["line_fill_gate"]["kind"] == "VN"
         assert report[setting]["evidence"] == {"rod_reading_truth_calls": 0,

@@ -122,6 +122,7 @@ from outrigger_sim.control.extend_start_bound import (
     PeriodClass,
     PremiseRecord,
     period_class_of,
+    release_witness_moved_m,
 )
 from outrigger_sim.params import LEG_ORDER
 from outrigger_sim.sensors.pressure_error import (
@@ -1036,6 +1037,9 @@ class LockStartSource(StrEnum):
     retraction won (spec 2.10; appended last, edition 4a J4a-4)."""
 
 
+WITNESS_LOG_COLUMNS = ("leg", "witness_t_s", "witness_ds_m", "witness_ref_m", "direction",
+                       "carry_start_t_s")
+"""Revision 6 ``extend_start_record.witness_log`` row keys (spec v5 4.1 record)."""
 STRETCH_CLOSED_ABOVE_HOLD = "above_hold"
 STRETCH_OPEN_AT_RUN_END = "run_end"
 MAX_STRETCH_LOG_ROWS = 2000
@@ -1193,6 +1197,14 @@ class _CarryState:
     need_ub_m: float | None = None
     last_t_s: float = math.nan
     """Read time of the last carry period."""
+    # ③ revision 6 R5-8 (jp3_remedy_spec_v5.md 4.1; immutable defaults for pickles)
+    witness_ref_m: float = math.nan
+    """``s_ref``: the ``stroke_m`` reading of the read before the carry's first period (or
+    before its last direction change); NaN = none (no witness possible)."""
+    witness_t_s: float | None = None
+    """Read time of the release witness (None = not witnessed)."""
+    witness_ds_m: float | None = None
+    """``sign(u) (s_n - s_ref)`` at the witness."""
 
 
 def _finite_or_none(value: float) -> float | None:
@@ -1462,7 +1474,9 @@ class TwoPressureMonitor:
         self._step_rule_suspended_by = None
         self.__dict__.pop("_extend_tracker", None)
         self.__dict__.pop("_premise_record", None)
-        for name in ("_carry_states", "_extend_trace_row", "_stretch_log", "_carry_log"):
+        for name in ("_carry_states", "_extend_trace_row", "_stretch_log", "_carry_log",
+                     "_witness_previous_stroke_m", "_witness_log", "_read_witnesses",
+                     "_read_r510_candidates"):
             self.__dict__.pop(name, None)
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
@@ -2400,9 +2414,14 @@ class TwoPressureMonitor:
 
     @property
     def _uses_extend_hold(self) -> bool:
-        """③ revision 5 (436.9): the period classes of ``jp3_remedy_spec.md`` 2.1."""
+        """③ revision 5 or 6 (436.9): the period classes of ``jp3_remedy_spec.md`` 2.1."""
         bound = self.settings.extend_start_bound
         return self._uses_extend_bound and bound is not None and bound.is_hold_revision
+
+    @property
+    def _uses_extend_witness(self) -> bool:
+        """③ revision 6 (edition 5): R5-8 .. R5-10 (``jp3_remedy_spec_v5.md`` 4)."""
+        return self._uses_extend_hold and self.settings.extend_start_bound.is_witness_revision
 
     # --- ③ revision 5: micro-command lock hold (jp3_remedy_spec.md 2) ---
 
@@ -2410,6 +2429,9 @@ class TwoPressureMonitor:
         """One read of revision 5: classify every leg once (spec 2.1), advance the tracker and
         the column bound with that class, keep the per-read trace."""
         classes = self._period_classes(commanded)
+        if self._uses_extend_witness:
+            self._read_witnesses = [False] * LEG_COUNT
+            self._read_r510_candidates = [0] * LEG_COUNT
         carry_bound_Pa = self._advance_hold_bound(t_s, head, commanded, stroke, classes)
         for leg in range(LEG_COUNT):
             self._update_hold_column_bound(leg, t_s, float(head[leg]), float(rod[leg]),
@@ -2417,6 +2439,10 @@ class TwoPressureMonitor:
                                            classes[leg])
         self._extend_trace_row = self._hold_trace_row(t_s, head, commanded, classes,
                                                       carry_bound_Pa)
+        if self._uses_extend_witness:
+            # R5-8 s_ref of a carry that starts at the next read (spec v5 4.1); not
+            # _previous_stroke_m, which the stroke rate updates at the start of a read
+            self._witness_previous_stroke_m = np.array(stroke, dtype=float)
 
     def _carry_state_list(self) -> list[_CarryState | None]:
         if self._carry_states is None:
@@ -2431,8 +2457,15 @@ class TwoPressureMonitor:
         stretches, carries = self._stretch_states(), self._carry_state_list()
         return [period_class_of(float(commanded[leg]), hold_speed_m_s,
                                 stretches[leg].is_open or carries[leg] is not None,
-                                bool(tracker.gate.is_open[leg]))
+                                self._is_carry_released(leg, tracker))
                 for leg in range(LEG_COUNT)]
+
+    def _is_carry_released(self, leg: int, tracker: ExtendStartTracker) -> bool:
+        """The tracker gate is open, or (revision 6 R5-8) the leg's carry was witnessed: a
+        witnessed carry is handled as one whose gate opened (spec v5 4.1)."""
+        carry = self._carry_state_list()[leg]
+        is_witnessed = carry is not None and carry.witness_t_s is not None
+        return bool(tracker.gate.is_open[leg]) or is_witnessed
 
     def _advance_hold_bound(self, t_s, head, commanded, stroke,
                             classes: list[PeriodClass]) -> NDArray[np.float64]:
@@ -2446,9 +2479,21 @@ class TwoPressureMonitor:
             if period_class.is_carry:
                 carry_bound_Pa[leg] = self._carry_period_bound_Pa(
                     leg, t_s, float(head[leg]), float(commanded[leg]), tracker)
+        release_floor_Pa = (self._release_floor_Pa(tracker, head)
+                            if self._uses_extend_witness else None)
         tracker.advance(commanded, stroke, floor_Pa, self.period_s, head_Pa=head,
-                        period_class=classes, carry_bound_Pa=carry_bound_Pa)
+                        period_class=classes, carry_bound_Pa=carry_bound_Pa,
+                        release_floor_Pa=release_floor_Pa)
         return carry_bound_Pa
+
+    def _release_floor_Pa(self, tracker: ExtendStartTracker, head) -> list[float]:
+        """R5-9 floor term ``max(p_ret, 13 bar + p_h^ub / 3)`` per leg (the retract model at
+        ``p_h^ub``; NaN with a NaN head)."""
+        _, head_ub_Pa = tracker.release_head_bounds_Pa(head)
+        return [max(self._retract_lock_floor_Pa[leg],
+                    self._retract_rod_estimate_Pa(float(head_ub_Pa[leg])))
+                if math.isfinite(head_ub_Pa[leg]) else math.nan
+                for leg in range(LEG_COUNT)]
 
     def _carry_period_bound_Pa(self, leg, t_s, head_Pa, command_m_s,
                                tracker: ExtendStartTracker) -> float:
@@ -2459,7 +2504,12 @@ class TwoPressureMonitor:
         if carry is None:
             carry = self._start_carry(leg, t_s, command_m_s, tracker)
             carries[leg] = carry
-        carry.direction = math.copysign(1.0, command_m_s)
+        direction = math.copysign(1.0, command_m_s)
+        if self._uses_extend_witness and direction != carry.direction:
+            # R5-8 s_ref: the reading of the update that gave the carry's first command (or
+            # the changed one), i.e. the previous read (a new carry has direction 0)
+            carry.witness_ref_m = self._previous_stroke_reading_m(leg)
+        carry.direction = direction
         if command_m_s < 0.0:
             # R5-2 carry candidate: no p_hat term (R5-7 does not apply here, R9)
             model_Pa = self._lock_start_model_Pa(leg, -1.0, head_Pa)
@@ -2471,6 +2521,39 @@ class TwoPressureMonitor:
         carry.bound_Pa = self._candidate_bound_Pa(leg, carry.candidates,
                                                   carry.stroke_window_max_m, head_Pa)
         return carry.bound_Pa
+
+    def _previous_stroke_reading_m(self, leg: int) -> float:
+        """``stroke_m`` of the previous read (NaN before the first one, or for a monitor
+        pickled before revision 6)."""
+        previous = self.__dict__.get("_witness_previous_stroke_m")
+        return math.nan if previous is None else float(previous[leg])
+
+    def _note_release_witness(self, leg: int, t_s: float, stroke_m: float,
+                              command_m_s: float) -> None:
+        """R5-8 (spec v5 4.1) on a carry read: ``sign(u) (s_n - s_ref) >= Delta s_w`` marks the
+        carry witnessed (handled as an opened gate from the next read on); a retract witness is
+        R5-9 release evidence of the tracker."""
+        carry = self._carry_state_list()[leg]
+        if carry is None or carry.witness_t_s is not None:
+            return
+        moved_m = release_witness_moved_m(command_m_s, stroke_m, carry.witness_ref_m)
+        threshold_m = self.settings.extend_start_bound.release_relief.witness_stroke_m
+        if not moved_m >= threshold_m:  # NaN: no witness
+            return
+        carry.witness_t_s = t_s
+        carry.witness_ds_m = moved_m
+        self._read_witnesses[leg] = True
+        self._append_witness_log({"leg": LEG_ORDER[leg], "witness_t_s": t_s,
+                                  "witness_ds_m": moved_m, "witness_ref_m": carry.witness_ref_m,
+                                  "direction": carry.direction,
+                                  "carry_start_t_s": carry.start_t_s})
+        if command_m_s < 0.0:
+            self._extend_bound_state().note_release_evidence(leg)
+
+    def _append_witness_log(self, row: dict[str, Any]) -> None:
+        log = self.__dict__.setdefault("_witness_log", [])
+        if len(log) < MAX_STRETCH_LOG_ROWS:
+            log.append(row)
 
     def _start_carry(self, leg, t_s, command_m_s, tracker: ExtendStartTracker) -> _CarryState:
         """R5-3 exit seed with the stretch's ④ of the previous read, both directions."""
@@ -2507,6 +2590,8 @@ class TwoPressureMonitor:
             if period_class.is_carry:
                 self._close_stretch_for_carry(leg, stretch, t_s)
                 self._note_gate_opening(leg, t_s)
+                if self._uses_extend_witness:
+                    self._note_release_witness(leg, t_s, stroke_m, command_m_s)
             else:
                 self._end_carry(leg, t_s, period_class)
                 self._close_lock_stretch(leg, stretch)
@@ -2522,6 +2607,8 @@ class TwoPressureMonitor:
         carry = self._carry_state_list()[leg]
         rule = self.settings.extend_start_bound.carry_end_rule
         if carry is None or carry.gate_open_t_s is not None or rule != CARRY_END_INHERIT:
+            return None
+        if carry.witness_t_s is not None:  # revision 6 R5-8: a witnessed carry hands nothing
             return None
         return carry
 
@@ -2542,14 +2629,30 @@ class TwoPressureMonitor:
         if period_class is PeriodClass.HOLD:
             stretch.hold_periods += 1
             if command_m_s < 0.0:
-                # R5-2 hold candidate: no p_hat term (R5-7 does not apply here, R9)
-                model_Pa = self._lock_start_model_Pa(leg, -1.0, head_Pa)
-                self._append_candidate(stretch, model_Pa, head_Pa,
-                                       LockStartSource.RETRACT_HOLD.value, t_s)
+                # R5-2 hold candidate: no p_hat term (R5-7 does not apply here, R9), but
+                # R5-10 after a retract run with R5-9 on (revision 6)
+                start_Pa, source = self._retract_hold_candidate(leg, head_Pa)
+                self._append_candidate(stretch, start_Pa, head_Pa, source, t_s)
                 stretch.retract_hold_candidates += 1
         self._track_valid_reading(leg, stretch, t_s, head_Pa, rod_Pa, stroke_m)
         if self._is_tracking_online_ratio and period_class is PeriodClass.LOCK:
             self._track_online_ratio(leg, stretch, t_s, head_Pa, rod_Pa, stroke_m)
+
+    def _retract_hold_candidate(self, leg: int, head_Pa: float) -> tuple[float, str]:
+        """``(M, source)`` of a retracting hold period: R5-2 ``max(retract model, p_ret)``; after
+        a retract run in which R5-9 was on (revision 6 R5-10, spec v5 4.3) also the term
+        ``p_hat + delta_m`` (source ``retract_tracker`` when that term wins)."""
+        model_Pa = self._lock_start_model_Pa(leg, -1.0, head_Pa)
+        tracker = self._extend_tracker
+        is_r510 = (self._uses_extend_witness and tracker is not None
+                   and bool(tracker.release_relief_ran[leg]))
+        if not is_r510:
+            return model_Pa, LockStartSource.RETRACT_HOLD.value
+        self._read_r510_candidates[leg] += 1
+        tracker_Pa = self._extend_bound_Pa(leg)
+        if tracker_Pa > model_Pa:
+            return tracker_Pa, LockStartSource.RETRACT_TRACKER.value
+        return model_Pa, LockStartSource.RETRACT_HOLD.value
 
     @staticmethod
     def _inherit_carry_candidates(stretch, carry: _CarryState) -> None:
@@ -2628,17 +2731,20 @@ class TwoPressureMonitor:
         self._append_carry_log(self._carry_log_row(leg, carry, end_class.value, is_inherited))
         carries[leg] = None
 
-    @staticmethod
-    def _carry_log_row(leg, carry: _CarryState, end_class: str,
+    def _carry_log_row(self, leg, carry: _CarryState, end_class: str,
                        is_inherited: bool) -> dict[str, Any]:
-        """Edition 4 ``carry_log`` row (spec 6.3)."""
-        return {"leg": LEG_ORDER[leg], "t_start_s": carry.start_t_s,
-                "t_end_s": _finite_or_none(carry.last_t_s),
-                "direction": carry.direction, "periods": carry.periods,
-                "sum_abs_u_T_m": carry.travel_m,
-                "gate_opened": carry.gate_open_t_s is not None,
-                "gate_open_t_s": carry.gate_open_t_s, "need_ub_m_at_end": carry.need_ub_m,
-                "end_class": end_class, "inherited_to_stretch": is_inherited}
+        """Edition 4 ``carry_log`` row (spec 6.3); revision 6 adds the R5-8 columns."""
+        row = {"leg": LEG_ORDER[leg], "t_start_s": carry.start_t_s,
+               "t_end_s": _finite_or_none(carry.last_t_s),
+               "direction": carry.direction, "periods": carry.periods,
+               "sum_abs_u_T_m": carry.travel_m,
+               "gate_opened": carry.gate_open_t_s is not None,
+               "gate_open_t_s": carry.gate_open_t_s, "need_ub_m_at_end": carry.need_ub_m,
+               "end_class": end_class, "inherited_to_stretch": is_inherited}
+        if self._uses_extend_witness:
+            row.update(witness_t_s=carry.witness_t_s, witness_ds_m=carry.witness_ds_m,
+                       witness_ref_m=_finite_or_none(carry.witness_ref_m))
+        return row
 
     def _append_carry_log(self, row: dict[str, Any]) -> None:
         if self._carry_log is None:
@@ -2682,7 +2788,20 @@ class TwoPressureMonitor:
                 **self._dominant_candidate_columns(t_s, classes),
                 "is_fallback": [state is RodSensorState.FALLBACK for state in self.rod_state],
                 "f_min_N": self.F_min_N,
-                "identity": self.settings.extend_start_bound.identity()}
+                "identity": self.settings.extend_start_bound.identity(),
+                **self._witness_trace_columns(tracker)}
+
+    def _witness_trace_columns(self, tracker: ExtendStartTracker) -> dict[str, list[Any]]:
+        """Revision 6 per-read coverage of this read (spec v5 6.3.9): the R5-8 witness, the R5-9
+        sub-steps of the period, the R5-10 candidates and the end-guard sub-steps; none on
+        revision 5."""
+        if not self._uses_extend_witness:
+            return {}
+        return {"r58_witness": list(self._read_witnesses),
+                "r59_substeps": tracker.period_relief_substeps.tolist(),
+                "r510_candidates": list(self._read_r510_candidates),
+                "r59_end_guard_substeps": tracker.period_end_guard_substeps.tolist(),
+                "r59_nan_stroke_substeps": tracker._nan_stroke_period_array().tolist()}
 
     def _dominant_candidate_columns(self, t_s: float,
                                     classes: list[PeriodClass]) -> dict[str, list[Any]]:
@@ -2808,6 +2927,9 @@ class TwoPressureMonitor:
             record["stretch_log"] = self._stretch_log_meta()
             record["carry_log"] = self._carry_log_meta()
             record.update(self.settings.extend_start_bound.identity())
+        if self._uses_extend_witness:
+            record["witness_log"] = [dict(row) for row in self.__dict__.get("_witness_log", [])]
+            record["witness_log_columns"] = list(WITNESS_LOG_COLUMNS)
         return {"extend_start_record": record}
 
     # --- review records of the ③ premises (criteria rev. 6 14.5), with the option on or off ---

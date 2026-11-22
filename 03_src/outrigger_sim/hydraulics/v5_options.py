@@ -66,8 +66,21 @@ EXTEND_HOLD_TAGS = (EXTEND_HOLD_CONTROLLER_TAG,
                     + ORDER_GATE_TAG_SUFFIX)
 """Tags of a run with ③ revision 5 (a list only: judge with :func:`is_extend_start_tag` and
 :func:`extend_start_revision_of_tag`)."""
+EXTEND_WITNESS_CONTROLLER_TAG = "final_C4G2_P3W"
+"""436.9 edition 5 (``jp3_remedy_spec_v5.md`` 4.6): controller tag of a run with
+``extend_start_witness`` (③ revision 6: release witness R5-8, retract relief R5-9, hold
+candidate R5-10). Its switch suffixes follow in the usual order (``final_C4G2_P3W_LAS_K1``).
+The revision 5 tag :data:`EXTEND_HOLD_CONTROLLER_TAG` stays for the stored records."""
+EXTEND_WITNESS_TAGS = (EXTEND_WITNESS_CONTROLLER_TAG,
+                       EXTEND_WITNESS_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX,
+                       EXTEND_WITNESS_CONTROLLER_TAG + ORDER_GATE_TAG_SUFFIX,
+                       EXTEND_WITNESS_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
+                       + ORDER_GATE_TAG_SUFFIX)
+"""The four tag forms of ③ revision 6 (a list only, the tag audit list of 4.6: judge with
+:func:`extend_start_revision_of_tag`)."""
 EXTEND_START_REVISION_OF_BASE_TAG = {EXTEND_START_CONTROLLER_TAG: 4,
-                                     EXTEND_HOLD_CONTROLLER_TAG: 5}
+                                     EXTEND_HOLD_CONTROLLER_TAG: 5,
+                                     EXTEND_WITNESS_CONTROLLER_TAG: 6}
 """③ bound revision per base tag (:func:`switch_base_tag`)."""
 ALLOW_GATE_WITH_REV4_FOR_TEST = False
 """Test-only switch (``jp3_remedy_spec.md`` 4.2, case replay C): with True the P1 line-fill gate
@@ -145,8 +158,9 @@ class LockClosureSetting:
         return self.overlap_ratio * max_speed_m_s
 
 
-OPTIONAL_FIELDS = ("extend_start_tracked", "extend_start_hold", "line_fill_gate",
-                   "lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
+OPTIONAL_FIELDS = ("extend_start_tracked", "extend_start_hold", "extend_start_witness",
+                   "line_fill_gate", "lock_anchor_continuous", "rod_flow_cap_all",
+                   "rod_reading_truth")
 """Fields :meth:`HydraulicOptions.to_dict` leaves out while off (stored digests unchanged)."""
 M2_PLANT_FIELDS = ("lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
 """P2, P3 and P4: defined on the M2 rod pressure only."""
@@ -170,6 +184,9 @@ class HydraulicOptions:
         extend_start_hold: ③ revision 5 (``ExtendStartBound(revision=5)``: micro-command lock
             hold, line-fill gate of the tracker; ``jp3_remedy_spec.md`` 2); needs
             ``extend_start_tracked``. Tag :data:`EXTEND_HOLD_CONTROLLER_TAG`.
+        extend_start_witness: ③ revision 6 (``ExtendStartBound(revision=6)``: R5-8 .. R5-10,
+            ``jp3_remedy_spec_v5.md`` 4); needs ``extend_start_hold``. Tag
+            :data:`EXTEND_WITNESS_CONTROLLER_TAG`.
         line_fill_gate: P1, the M1c line state as the release gate of a locked leg
             (``check_open_delay.CheckOpenGate``; harness only).
         lock_anchor_continuous: P2, every lock anchor continues the M2 lag (no r5 step).
@@ -189,6 +206,7 @@ class HydraulicOptions:
     lock_anchor_continuous: bool = False
     rod_flow_cap_all: bool = False
     rod_reading_truth: bool = False
+    extend_start_witness: bool = False
 
     def __post_init__(self) -> None:
         if self.lock_window_follows_plant and self.lock_closure is None:
@@ -196,6 +214,8 @@ class HydraulicOptions:
                              "(spec 2.6: controller alone is refused)")
         if self.extend_start_hold and not self.extend_start_tracked:
             raise ValueError("extend_start_hold (③ revision 5) needs extend_start_tracked")
+        if self.extend_start_witness and not self.extend_start_hold:
+            raise ValueError("extend_start_witness (③ revision 6) needs extend_start_hold")
         _check_jp3_plant_options(self)
         if self.extend_start_tracked:
             check_extend_start(self, EXTEND_START_TRACKED_RULE, self.extend_start_revision)
@@ -206,10 +226,12 @@ class HydraulicOptions:
 
     @property
     def extend_start_revision(self) -> int | None:
-        """③ bound revision of these options (5 with ``extend_start_hold``, 4 with the bound
-        alone, None without it)."""
+        """③ bound revision of these options (6 with ``extend_start_witness``, 5 with
+        ``extend_start_hold``, 4 with the bound alone, None without it)."""
         if not self.extend_start_tracked:
             return None
+        if self.extend_start_witness:
+            return 6
         return 5 if self.extend_start_hold else 4
 
     @property
@@ -288,7 +310,8 @@ class HydraulicOptions:
                             else CheckDelaySetting.from_dict(line_fill_gate)),
             lock_anchor_continuous=bool(values.get("lock_anchor_continuous", False)),
             rod_flow_cap_all=bool(values.get("rod_flow_cap_all", False)),
-            rod_reading_truth=bool(values.get("rod_reading_truth", False)))
+            rod_reading_truth=bool(values.get("rod_reading_truth", False)),
+            extend_start_witness=bool(values.get("extend_start_witness", False)))
 
     def without_flow(self) -> HydraulicOptions:
         """The plant options alone (the runners keep the flow limit on their own path)."""
@@ -342,6 +365,10 @@ def _add_jp3_arguments(group) -> None:
                        default=argparse.SUPPRESS,
                        help="③ revision 5: micro-command lock hold and line-fill gate "
                             "(needs --extend-start-tracked)")
+    group.add_argument("--extend-start-witness", dest="extend_start_witness",
+                       action="store_true", default=argparse.SUPPRESS,
+                       help="③ revision 6: release witness, retract relief bound and hold "
+                            "candidate (needs --extend-start-hold)")
     group.add_argument("--line-fill-gate", dest="line_fill_gate",
                        choices=[kind.value for kind in CheckCircuit], default=argparse.SUPPRESS,
                        help="P1: M1c line fill gates the release of a locked leg (harness)")
@@ -406,7 +433,8 @@ def hydraulic_options_from_args(args: argparse.Namespace) -> HydraulicOptions:
         line_fill_gate=_delay_setting_from_args(args, "line_fill_gate"),
         lock_anchor_continuous=hasattr(args, "lock_anchor_continuous"),
         rod_flow_cap_all=hasattr(args, "rod_flow_cap_all"),
-        rod_reading_truth=hasattr(args, "rod_reading_truth"))
+        rod_reading_truth=hasattr(args, "rod_reading_truth"),
+        extend_start_witness=hasattr(args, "extend_start_witness"))
 
 
 def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harness",
@@ -527,13 +555,10 @@ def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: 
     if not options.extend_start_tracked:
         return config
     changes: dict[str, Any] = {"extend_start_rule": EXTEND_START_TRACKED_RULE}
-    if options.extend_start_hold:  # ③ revision 5 (436.9); revision 4 keeps the default bound
-        from outrigger_sim.control.extend_start_bound import (
-            EXTEND_HOLD_REVISION,
-            ExtendStartBound,
-        )
+    if options.extend_start_hold:  # ③ revision 5 / 6 (436.9); revision 4 keeps the default
+        from outrigger_sim.control.extend_start_bound import ExtendStartBound
 
-        changes["extend_start_bound"] = ExtendStartBound(revision=EXTEND_HOLD_REVISION)
+        changes["extend_start_bound"] = ExtendStartBound(revision=options.extend_start_revision)
     two_pressure = replace(config.two_pressure, **changes)
     return replace(config, two_pressure=two_pressure)
 
@@ -658,6 +683,7 @@ def is_extend_start_tag(tag: str | None) -> bool:
 
 def extend_start_revision_of_tag(tag: str | None) -> int | None:
     """③ bound revision of a recorded tag: ``final_C4G2_P3*`` -> 4, ``final_C4G2_P3H*`` -> 5,
+    ``final_C4G2_P3W*`` -> 6 (the base tag after the switch suffixes, never a prefix test),
     any other tag (or None) -> None. Every tool that rebuilds a setting from a tag uses this
     (``jp3_remedy_spec.md`` 4.3): a revision 5 row must never be re-tagged as revision 4."""
     if tag is None:
@@ -686,7 +712,9 @@ def controller_tag(options: HydraulicOptions | None, config: Any | None = None) 
     ``config`` the tag is the one before the LAS-b switch (callers that know the controller
     pass it)."""
     tag = None
-    if options is not None and options.extend_start_hold:
+    if options is not None and options.extend_start_witness:
+        tag = EXTEND_WITNESS_CONTROLLER_TAG
+    elif options is not None and options.extend_start_hold:
         tag = EXTEND_HOLD_CONTROLLER_TAG
     elif options is not None and options.extend_start_tracked:
         tag = EXTEND_START_CONTROLLER_TAG
@@ -721,6 +749,8 @@ __all__ = [
     "EXTEND_START_LAS_CONTROLLER_TAG",
     "EXTEND_START_LAS_K1_CONTROLLER_TAG",
     "EXTEND_START_TAGS",
+    "EXTEND_WITNESS_CONTROLLER_TAG",
+    "EXTEND_WITNESS_TAGS",
     "extend_start_revision_of_tag",
     "LAS_CONTROLLER_TAG",
     "LAS_K1_CONTROLLER_TAG",

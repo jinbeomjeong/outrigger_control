@@ -173,13 +173,26 @@ def pass_grades(monkeypatch):
         for run in results})
 
 
-def test_n1_t12_mismatch_line_is_a_failure_not_not_judgeable(pass_grades) -> None:
+def test_n1_t12_mismatch_line_is_a_setting_defect(pass_grades) -> None:
+    """Edition 5 erratum 3 3-1 (sealed 7bab9217) replaces N-1 for t12: a lock window mismatch
+    line is a run record defect (setting_defect, exit 2), no failure."""
     new = _dg3_document()
     new["results"][9]["error"] = MISMATCH
     report, problems = tjr.judge_t12("VBH", _dg3_document(setting="VB"), {}, new, {})
-    assert problems.status() == compare.STATUS_FAILED, problems.as_dict()
+    assert problems.status() == compare.STATUS_SETTING_DEFECT, problems.as_dict()
     assert report["lock_window_mismatch_keys"] == ["L3|s0|h|9|inner"]
-    assert any("T-JR-14 failure" in text for text in problems.failures)
+    assert problems.failures == [] and report["record_failures"] == []
+    assert any("run record mismatch" in text for text in problems.setting_defects)
+
+
+def test_t12_record_failures_are_the_13_9_list(pass_grades) -> None:
+    """Erratum 3 3-1 (sealed 7bab9217): a 13.9 failure (new FAULT) is named in
+    ``record_failures``."""
+    report, problems = tjr.judge_t12("VBH", _dg3_document(setting="VB"), {},
+                                     _dg3_document(fault="FAULT_NEW"), {})
+    assert problems.failures and report["record_failures"] == problems.failures
+    assert all(any(key in text for key in tjr.T12_RECORD_FAILURE_KEYS)
+               for text in report["record_failures"])
 
 
 @pytest.mark.parametrize("side", ["other_error_new", "mismatch_base"])
@@ -194,7 +207,9 @@ def test_n1_t12_other_error_lines_stay_not_judgeable(pass_grades, monkeypatch, s
     assert problems.status() == compare.STATUS_NOT_JUDGEABLE
 
 
-def test_n1_t12_command_exit_1(tmp_path, pass_grades) -> None:
+def test_n1_t12_command_lock_window_mismatch_exit_2(tmp_path, pass_grades) -> None:
+    """Erratum 3 3-1 (sealed 7bab9217): "lock window 불일치 -> 종료 2" through ``main`` (was
+    exit 1 under N-1); the VBJ report has no J-P3 judgement (``jp3_outcome`` not_computed)."""
     new = _dg3_document()
     new["results"][9]["error"] = MISMATCH
     files = {"base": tmp_path / "base.json", "new": tmp_path / "new.json",
@@ -218,7 +233,10 @@ def test_n1_t12_command_exit_1(tmp_path, pass_grades) -> None:
                      str(files["new"]), "--new-judge", str(files["new_judge"]),
                      "--base-judge-sha256", compare.file_sha256(files["base_judge"]),
                      "--new-judge-sha256", compare.file_sha256(files["new_judge"])])
-    assert code == 1
+    assert code == 2
+    report = json.loads((tmp_path / "out.json").read_text(encoding="utf-8"))
+    assert report["status"] == compare.STATUS_SETTING_DEFECT
+    assert report["jp3_outcome"] == "not_computed" and report["failures"] == []
 
 
 # --- N-3 --------------------------------------------------------------------------------------
@@ -239,7 +257,7 @@ def test_n3_any_exception_is_exit_3(tmp_path, monkeypatch, error) -> None:
     monkeypatch.setattr(dryrun, "summarize", _raise(error))
     cases = [(tjr.main, ["records"]), (compare.main, ["baseline", "--new", "x.jsonl"]),
              (case_judge.main, ["case-f", "--rows", "r", "--grid", "g"]),
-             (dryrun.main, ["summarize", "--selection", str(selection)])]
+             (dryrun.main, ["summarize", "--selection", str(selection), "--edition", "4a"])]
     for index, (main, argv) in enumerate(cases):
         out = tmp_path / f"out_{index}.json"
         assert main([*argv, "--out", str(out)]) == 3, index

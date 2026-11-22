@@ -2,7 +2,7 @@
 baseline (``jp3_remedy_spec.md`` 5.7 P4-1 .. P4-4, P4-9, 13.1; addendum 4a-1 section 1;
 addendum 4a-2 sections 2, 3 and table 4: J4a-9 R1 .. R4, B2, B3, X11).
 
-Checks (every problem is collected; the status is the worst kind found):
+Checks (every problem is collected; the status: failed > setting defect > not judgeable):
 
 1. Baseline: the sha256 of ``SHA256SUMS`` is :data:`BASELINE_SUMS_SHA256`; every listed file
    has its hash; no baseline file outside the list is opened (CRLF lines: ``\\r`` cut). A
@@ -38,11 +38,13 @@ Exit codes and ``status`` (the J4a-9 rows of 13.1 and 4a-2 R3):
 exit    status             meaning
 ======  =================  ===================================================================
 0       ``pass``           every check passes
-1       ``failed``         a prediction (P4-1 .. P4-4, P4-9) failed, the inputs being sound
-2       ``not_judgeable``  baseline, pairing, a missing column / key, zero judged rows or seed
-                           rows, an ``m2_shift_clipped`` seed row (13.1, 4a-2 2.2 / 3.4)
-2       ``setting_defect`` a test-only setting, a non-default identity or P4 evidence (13.6,
-                           4a-2 R3, B2, X11); it outranks the other kinds
+1       ``failed``         a prediction (P4-1 .. P4-4, P4-9) failed; it outranks the other
+                           kinds, which stay in the report (edition 5 erratum 2 2-10)
+2       ``not_judgeable``  no failure, no defect: baseline, pairing, a missing column / key,
+                           zero judged rows or seed rows, an ``m2_shift_clipped`` seed row
+                           (13.1, 4a-2 2.2 / 3.4)
+2       ``setting_defect`` no failure: a test-only setting, a non-default identity or P4
+                           evidence (13.6, 4a-2 R3, B2, X11); it outranks not_judgeable
 3       ``error``          an unexpected input error (file missing, malformed JSON)
 ======  =================  ===================================================================
 
@@ -78,6 +80,14 @@ BASELINE_SUMS_SHA256 = fixed.BASELINE_SUMS_SHA256
 SPEC_EDITION = "8be9de22"
 DEFAULT_IDENTITY = {"spec_edition": SPEC_EDITION, "carry_end_rule": "inherit_when_gate_shut",
                     "retract_start_rule": "with_tracker"}
+SPEC_EDITION_V5 = "fe6f5844"
+"""Edition 5 (``jp3_remedy_spec_v5.md``): the ``spec_edition`` of a ③ revision 6 record."""
+HOLD_REVISIONS = (5, 6)
+"""③ hold revisions (``extend_start_bound.HOLD_REVISIONS``); a revision 6 row is never read
+as a revision 4 or 5 row (edition 5 4.6)."""
+IDENTITY_OF_REVISION = {5: DEFAULT_IDENTITY,
+                        6: {**DEFAULT_IDENTITY, "spec_edition": SPEC_EDITION_V5}}
+"""The sealed identity of each hold revision's record (13.6, edition 5 4.6)."""
 BASELINE_ROW_FILES = ("j9_cases.jsonl", "cd.jsonl")
 JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JUDGED_KEYS = ("jp3a_breach_reads", "jp3b_breach_over_tol_reads", "jp3c_breach_reads")
@@ -116,9 +126,9 @@ an uncaught one would leave Python's exit 1 = failed; prelaunch audit N-3: ``Run
 EXIT_TABLE = """exit codes (addendum 4a-5 5.1, the J-P3 judge tools):
   0  pass             passed (a record tool: written as expected)
   1  failed           a prediction or judgement failed (base-judge-compare: grades differ,
-                      a record); stop
-  2  not_judgeable /  not judgeable, a setting defect, or an argument error (an existing
-     setting_defect   --out is refused); stop and find the cause
+                      a record), whatever else was found (erratum 2 2-10); stop
+  2  not_judgeable /  no failure: not judgeable, a setting defect, or an argument error (an
+     setting_defect   existing --out is refused); stop and find the cause
   3  error            a tool error (unexpected input: file missing, broken JSON); not a
                       judgement"""
 STATUS_EXIT = {STATUS_PASS: EXIT_PASS, STATUS_FAILED: EXIT_FAILED,
@@ -131,8 +141,8 @@ class NotJudgeable(Exception):
 
 
 class Problems:
-    """The three kinds of findings of one comparison (status order: defect > not judgeable >
-    failed)."""
+    """The three kinds of findings of one comparison (status order, edition 5 erratum 2 2-10:
+    failed > defect > not judgeable; a failure never hides the other kinds, all are kept)."""
 
     def __init__(self) -> None:
         self.setting_defects: list[str] = []
@@ -140,11 +150,13 @@ class Problems:
         self.failures: list[str] = []
 
     def status(self) -> str:
+        if self.failures:
+            return STATUS_FAILED
         if self.setting_defects:
             return STATUS_SETTING_DEFECT
         if self.not_judgeable:
             return STATUS_NOT_JUDGEABLE
-        return STATUS_FAILED if self.failures else STATUS_PASS
+        return STATUS_PASS
 
     def as_dict(self) -> dict:
         return {"setting_defects": self.setting_defects, "not_judgeable": self.not_judgeable,
@@ -231,7 +243,9 @@ def _check(record: dict) -> dict:
 
 
 def _is_revision_5(record: dict) -> bool:
-    return _check(record).get("rule_revision") == 5
+    """A hold revision row (``rule_revision`` 5 or 6, edition 5 4.6): the revision 5 rules of
+    this tool apply to both, each with its own sealed identity (:func:`identity_problems`)."""
+    return _check(record).get("rule_revision") in HOLD_REVISIONS
 
 
 def pair_rows(baseline: Baseline, new_rows: list[dict],
@@ -312,8 +326,10 @@ def judged_line_evidence_problems(record: dict | None, is_declared: bool,
     return []
 
 
-R79_KEY = re.compile(r"^L\d+\|s\d+\|")
-"""Addendum 4a-8 2: an r79 line's key (``L<level>|s<seed>|...``, ``cand=...#`` cut first)."""
+R79_KEY = re.compile(r"^L\d+[A-Za-z]*\|s\d+\|")
+"""Addendum 4a-8 2: an r79 line's key (``L<level>|s<seed>|...``, ``cand=...#`` cut first);
+edition 5 X-3: the level token is ``L`` and a digit then letters (``L2``, ``L2nocal``,
+``L2imuideal``)."""
 CANDIDATE_PREFIX = re.compile(r"^cand=[^#]*#")
 DOUBLE_READ_FAMILY = "g8"
 """4a-8 2: the r79 G8 path reads the P4 truth twice per control period (the case step,
@@ -403,12 +419,14 @@ def judge_rows_problems(label: str, lines: list[dict], judge: dict,
 
 def identity_problems(record: dict) -> list[str]:
     """13.6 / 4a-2 R3: a new revision 5 row (VBG5 included) of the sealed edition with the
-    default rules; revision 4 rows have no identity."""
+    default rules, a revision 6 row likewise with the edition 5 ``spec_edition`` (4.6);
+    revision 4 rows have no identity."""
     if not _is_revision_5(record):
         return []
     check = _check(record)
+    expected = IDENTITY_OF_REVISION[check.get("rule_revision")]
     return [f"{record['job']['setting']}: {key} {check.get(key)!r}"
-            for key, value in DEFAULT_IDENTITY.items() if check.get(key) != value]
+            for key, value in expected.items() if check.get(key) != value]
 
 
 # --- P4-2 (addendum 4a-2 section 2) ---------------------------------------------------------

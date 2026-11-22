@@ -409,7 +409,7 @@ def test_e7_tool_errors_exit_3(tmp_path, monkeypatch) -> None:
         (case_judge.main, ["case-f", "--rows", str(broken), "--grid",
                            str(tmp_path / "missing_grid.json")]),
         (compare.main, [str(tmp_path / "baseline"), "--new", str(broken)]),
-        (dryrun.main, ["summarize", "--selection", str(broken)]),
+        (dryrun.main, ["summarize", "--selection", str(broken), "--edition", "4a"]),
     ]
     for index, (main, argv) in enumerate(cases):
         out = tmp_path / f"out_{index}.json"

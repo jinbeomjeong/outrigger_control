@@ -8,9 +8,11 @@ replay (spec #5).
 
 from __future__ import annotations
 
+import hashlib
 import importlib
 import inspect
 import json
+import re
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -33,6 +35,61 @@ WEIGHT_N = 376.7e3
 STAGE3_RESULTS = PROJECT_ROOT / "07_results" / "S8"
 """Case folders of batch ``V5-STAGE3_20261107_184341`` (``v5s3_<setting>_<case>_<stamp>``)."""
 STAGE3_ROW_COUNT = 23
+STAGE3_BATCH = PROJECT_ROOT / "07_results" / "S9" / "batch_V5-STAGE3_20261107_184341"
+STAGE3_PROGRESS_SHA256 = "5fa9cf6b7ad3db0fbe51fbdf2ccc764baff9cb647b1cc1c6a5a6bc33d06588fc"
+STAGE3_ROWS = (
+    ("v5s3_VB_E_RE1bF_Fs8_20261107_184342", "E_RE1bF_Fs8",
+     "11a1d625e51535ab31684749daaca387b28534ea6080618946adee7f262ed802"),
+    ("v5s3_LS1_E_RE1bF_Fs8_20261107_184342", "E_RE1bF_Fs8",
+     "33ff9ffded40771585ecffbcecc2cccd4c13972abaf6dad3da99b5e6a9b825b7"),
+    ("v5s3_VB_G1R_FS24_FL_top_o050_Fs0_20261107_191411", "G1R_FS24_FL_top_o050_Fs0",
+     "18ea85609338a625b03caca7b9fcf2025f97cc1bd7839aba988ef2276e4a13a3"),
+    ("v5s3_LS4_E_RE1bF_Fs8_20261107_191407", "E_RE1bF_Fs8",
+     "914cef307824501e0fa9b8495b2d9898525e1e2e4844c075915adee7ab17bd58"),
+    ("v5s3_VB_E_G4_Fs4_20261107_194230", "E_G4_Fs4",
+     "9ca6fe5887af08ab20520fc217626418f32cef82eda010bd080473fd741cc05d"),
+    ("v5s3_VB_E_G4_Fs4_ph0.05_20261107_194516", "E_G4_Fs4_ph0.05",
+     "068a3854a156aedb4190ab19fdafa2dcd993855777faaeca7ace9368a9adc1a2"),
+    ("v5s3_V0_G1R_FS24_FL_top_o050_Fs0_20261107_200458", "G1R_FS24_FL_top_o050_Fs0",
+     "9c392f3a30378a8cf20da2e3326ededfda2215371f040ca3b983b9325791cabc"),
+    ("v5s3_VB_K0V_top_fdown3.5_Fs0_20261107_200743", "K0V_top_fdown3.5_Fs0",
+     "18b41b23fc0dfb7b1a01855463b90d0986307325a103bac4017a57d17e5fbede"),
+    ("v5s3_VB_K0_top_fdown3.2_Fs0_20261107_202521", "K0_top_fdown3.2_Fs0",
+     "968fc7123579f1879b74db50283d35268bdde519e96afa6c893ab69401e4bdf9"),
+    ("v5s3_VB_E_RE1bF_Fs0_20261107_202305", "E_RE1bF_Fs0",
+     "a1663f47e3ece9402ae5d1a8f7f89641882dd1fce7c3097db8c4d39473325226"),
+    ("v5s3_V0_E_G4_Fs4_ph0.05_20261107_204252", "E_G4_Fs4_ph0.05",
+     "2cdfedbe86418317dbde644f75cabdd082d34eb4f38630259abfa55157bda312"),
+    ("v5s3_VB_K8_top_rpB_Fs8_20261107_205024", "K8_top_rpB_Fs8",
+     "08f92806916898a893fdbb9ded5c1f35b862b12f494b2230518965cda2aa6464"),
+    ("v5s3_VB_K0V_top_fup3.5_Fs0_20261107_205714", "K0V_top_fup3.5_Fs0",
+     "ccbbcd33843ed14961f26b546639bd51854c99a64b2e15f6196c5d13a0016a51"),
+    ("v5s3_LS1_K0V_top_fup3.5_Fs0_20261107_210733", "K0V_top_fup3.5_Fs0",
+     "650d4bc45317ab423969a564ef67c7f8c6ed328a2a85292ff924bd627c66a139"),
+    ("v5s3_LS4_K0V_top_fup3.5_Fs0_20261107_211219", "K0V_top_fup3.5_Fs0",
+     "91a75257c8fec33f3bbefcc67e41e70c8054f8bcc30acc1b123f7a9e5db13c2f"),
+    ("v5s3_VB_K0V_top_roll5.5_Fs0_20261107_212243", "K0V_top_roll5.5_Fs0",
+     "725be82c6dda4f9b7b98cbefe32e276c8d76468d0289e4bd8acabd0c4d24dedd"),
+    ("v5s3_VB_K0_top_fup3.2_Fs0_20261107_212720", "K0_top_fup3.2_Fs0",
+     "ca33c798612385ee3fe42814af1d8d2d5217138937a5152bb60ea4c5987ed1aa"),
+    ("v5s3_VB_K0_top_rpBop_Fs0_20261107_213744", "K0_top_rpBop_Fs0",
+     "69c8c0eda4cf8b19b61ee58f689580b4211a87ca5a938d14a5ff68e2ac4461a4"),
+    ("v5s3_VB_E_G4_Fs8_20261107_214226", "E_G4_Fs8",
+     "f22dabc2734508164cfe7369f4fa05c1fcff216c38cfe88f222850e4fb26bc77"),
+    ("v5s3_LS1_E_G4_Fs8_20261107_215219", "E_G4_Fs8",
+     "c940b426f97138399d6ff70189b708ffefdf67ebe8b4315abc4322dd7f761187"),
+    ("v5s3_LS4_E_G4_Fs8_20261107_220449", "E_G4_Fs8",
+     "218b9f9eb4770284292f355a7dbb1c5ca720d611de65c871812a7d56fe78289f"),
+    ("v5s3_VB_K8_top_fdown3.5_Fs8_20261107_221440", "K8_top_fdown3.5_Fs8",
+     "3bf99479dbc6f4bc6ae86a41fb2938dd096403610b5da8e7dea3525862c66bf2"),
+    ("v5s3_VB_S_top_fdown3.5_wika_Fs8_20261107_222708", "S_top_fdown3.5_wika_Fs8",
+     "6a3c121c18a71c8977f4cbc0959bbcc6b701881dbe08eb46d9eb46d5b5eed9fc"),
+)
+"""Erratum 3 3-1 (sealed 7bab9217): the 23 S8 folders of batch V5-STAGE3_20261107_184341 as its
+``progress.log`` END lines name them (the inner folder is the case's ``--only`` in
+``batch.json``), with the sha256 of each ``result.json`` (fixed 2026-11-22). No date or name
+glob: later reruns of the same cases (``v5s3_*`` of 2026-11-14 ..) sit in the same folder."""
+STAGE3_END_LINE = re.compile(r"^END \S+ \S+ rc=\d+ .* (\S+)$")
 STAGE3_T45_ROWS = {
     "VB": ("K0V_top_fup3.5_Fs0", "K0_top_fup3.2_Fs0", "K0V_top_roll5.5_Fs0",
            "K0_top_fdown3.2_Fs0", "K0V_top_fdown3.5_Fs0", "E_G4_Fs8", "K0_top_rpBop_Fs0",
@@ -46,9 +103,12 @@ REV7_REFERENCE = (PROJECT_ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v
 
 
 def _stage3_case(setting: str, case: str) -> Path:
-    folders = sorted(STAGE3_RESULTS.glob(f"v5s3_{setting}_{case}_2*"))
-    assert len(folders) == 1, (setting, case, folders)
-    return folders[0] / case
+    """The fixed stage 3 row of (setting, case) (:data:`STAGE3_ROWS`, never a glob)."""
+    found = [(folder, inner) for folder, inner, _ in STAGE3_ROWS
+             if inner == case and folder.startswith(f"v5s3_{setting}_{case}_2")]
+    assert len(found) == 1, (setting, case, found)
+    folder, inner = found[0]
+    return STAGE3_RESULTS / folder / inner
 
 
 @pytest.fixture(scope="module")
@@ -259,15 +319,30 @@ def test_rev7_b1_own_excess(t45) -> None:
     assert t45.own_excess_N(raw, plain).tolist() == [1.0e3, 0.3e3, -0.7e3]
 
 
+def _stage3_folders() -> list[Path]:
+    """The fixed 23 rows, checked against the batch's own record and their result sha256."""
+    progress = STAGE3_BATCH / "progress.log"
+    assert hashlib.sha256(progress.read_bytes()).hexdigest() == STAGE3_PROGRESS_SHA256
+    ended = [Path(match.group(1)).name
+             for line in progress.read_text(encoding="utf-8").splitlines()
+             if (match := STAGE3_END_LINE.match(line))]
+    assert ended == [folder for folder, _, _ in STAGE3_ROWS]
+    folders = []
+    for folder, inner, sha256 in STAGE3_ROWS:
+        result = STAGE3_RESULTS / folder / inner / "result.json"
+        assert hashlib.sha256(result.read_bytes()).hexdigest() == sha256, folder
+        folders.append(result.parent)
+    return folders
+
+
 @pytest.mark.slow
-@pytest.mark.skipif(not STAGE3_RESULTS.is_dir() or not any(STAGE3_RESULTS.glob("v5s3_*")),
-                    reason="stored stage 3 records not present")
+@pytest.mark.skipif(not STAGE3_BATCH.is_dir(), reason="stored stage 3 records not present")
 def test_rev7_regression_on_the_stage3_records(t45) -> None:
     """Criteria rev. 7 4 / 5: the 18 stored stage 3 rows give the sealed reference values
     (``rev7_ref/h7_exclusion_v2.json``, off path); T5 runs on the F_s 8 rows (the only rows
-    with T5 excess under rev. 6). The guard is 3.2 (forced lower < 0), not ``guard_bad``."""
-    folders = sorted(path for path in STAGE3_RESULTS.glob("v5s3_*/*")
-                     if (path / "result.json").is_file())
+    with T5 excess under rev. 6). The guard is 3.2 (forced lower < 0), not ``guard_bad``.
+    The rows are the fixed 23 of the batch record (:data:`STAGE3_ROWS`, erratum 3 3-1)."""
+    folders = _stage3_folders()
     assert len(folders) == STAGE3_ROW_COUNT
     sensor_rows = [folder.name for folder in folders if t45.is_sensor_model_row(
         json.loads((folder / "result.json").read_text(encoding="utf-8")))]

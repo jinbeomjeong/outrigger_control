@@ -24,6 +24,10 @@ from dataclasses import dataclass
 
 import numpy as np
 
+HOLD_REVISIONS = (5, 6)
+"""``extend_start_bound.HOLD_REVISIONS`` (the ③ revisions with hold stretches); kept here so
+this module stays without project imports (a unit test checks that the two agree)."""
+
 LEGS = ("FL", "FR", "RL", "RR")
 TIME_TOL_S = 1.0e-6
 """Plant lock state read at ``W + TIME_TOL_S``; unlocks counted before ``t_c - T - TIME_TOL_S``."""
@@ -252,10 +256,11 @@ def lock_window_alignment(t_s, applied_output_m_s, lock_events, monitor_meta: di
 
 
 def monitor_hold_speed_m_s(monitor_meta: dict) -> float | None:
-    """``u_hold`` of a ③ revision 5 run (``extend_start_record.hold_speed_m_s``); None for the
-    other runs (zero-command stretches)."""
+    """``u_hold`` of a ③ revision 5 or 6 run (``extend_start_record.hold_speed_m_s``; revision
+    6 keeps the hold stretches of revision 5, edition 5 4.5); None for the other runs
+    (zero-command stretches)."""
     record = monitor_meta.get("extend_start_record") or {}
-    if record.get("rule_revision") != 5:
+    if record.get("rule_revision") not in HOLD_REVISIONS:
         return None
     return float(record["hold_speed_m_s"])
 

@@ -66,6 +66,30 @@ retract need at ``F_band`` 0 and ``p_r`` = floor). A carry run that ends in a lo
 period with the gate still shut hands its candidates to the new stretch (``carry_end_rule``,
 implementer addition pending control-expert confirmation). A revision 4 meta stays as it was
 (:meth:`ExtendStartBound.to_meta`).
+
+Revision 6 (edition 5, ``06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5.md`` 4) adds to
+revision 5, on every leg whatever its rod sensor state (4.5; only a fallback leg's lower bound
+reaches a command, so a run without a fallback has the revision 5 commands, P5-1):
+
+* R5-8 release witness (monitor): a carry read ``n`` with ``sign(u_n) (s_n - s_ref) >= 1.0 mm``
+  (``stroke_m`` oil-volume reading, ``s_ref`` = the reading of the read before the carry's
+  first period or its last direction change) ends the carry as an open gate would: from the
+  next read EXT / RET, no ④c raise, no R5-6 inheritance.
+* R5-9 retract relief (this tracker, 1 ms sub-steps): in a same-sign retract run (RET /
+  CARRY_RET) after release evidence (a retract witness or the gate opening, the earlier one;
+  from the next sub-step)::
+
+      p <- max(p - A_ann kappa_x |u_v| f_lb dt / (h C_r(s)),
+               p*_ub + (p - p*_ub) exp(-dt / tau), max(p_ret, 13 bar + p_h^ub / 3))
+
+  with ``f_lb``, ``p*_ub = p*_ret(p_h^ub A_h - p_floor A_ann)`` and ``p_h^lb`` / ``p_h^ub`` of
+  :class:`ReleaseReliefParams`. A sub-step of pump saturation, of a head reading at the relief
+  stop or NaN, of a zero acting command, or with the stroke reading at or below 15.2 mm (the
+  retract end guard, ``r59_end_guard_substeps``) takes the floor term only. A lock or hold
+  period stops it; a sign change or a new run clears the evidence.
+* R5-10 (monitor): a retracting hold candidate after a retract run with R5-9 on is
+  ``max(13 bar + p_h / 3, p_ret, p_hat + delta_m)``.
+* ``M_j``: the window candidates after a retraction keep R5-7 at each sample's ``p_hat(t_j)``.
 """
 
 from __future__ import annotations
@@ -137,7 +161,13 @@ the normal-grade +-4 bar)."""
 EXTEND_HOLD_REVISION = 5
 """436.9 revision (module docstring): micro-command lock hold R5-1 / R5-5, retract hold
 candidate R5-2 (rule (i)), exit seed in both directions R5-3, line-fill gate R5-4."""
-SUPPORTED_REVISIONS = (EXTEND_START_REVISION, EXTEND_HOLD_REVISION)
+EXTEND_WITNESS_REVISION = 6
+"""436.9 edition 5 (``jp3_remedy_spec_v5.md`` 4): revision 5 plus the release witness R5-8,
+the retract relief bound R5-9 after release evidence, the retract hold candidate R5-10 and
+the re-lock start ``M_j`` of each window sample (module docstring, revision 6)."""
+SUPPORTED_REVISIONS = (EXTEND_START_REVISION, EXTEND_HOLD_REVISION, EXTEND_WITNESS_REVISION)
+HOLD_REVISIONS = (EXTEND_HOLD_REVISION, EXTEND_WITNESS_REVISION)
+"""Revisions with the period classes of revision 5 (revision 6 builds on them)."""
 HOLD_SPEED_RATIO = 0.01
 """``u_hold / v_max`` (user decision 146: the ratio, 0.20924 mm/s at the YAML ``v_max``)."""
 HOLD_SPEED_RATIO_MAX = 0.012
@@ -152,6 +182,12 @@ JP3_SPEC_EDITION = "8be9de22"
 """First 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec.md`` edition 4a (13.6): the
 ``spec_edition`` of every revision 5 ``extend_bound_check``; the judgement refuses other values
 (output of an older edition's code)."""
+JP3_SPEC_EDITION_V5 = "fe6f5844"
+"""First 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec_v5.md`` (edition 5): the
+``spec_edition`` of every revision 6 record."""
+JP3_SPEC_EDITION_OF_REVISION = {EXTEND_HOLD_REVISION: JP3_SPEC_EDITION,
+                                EXTEND_WITNESS_REVISION: JP3_SPEC_EDITION_V5}
+"""The sealed edition each hold revision's record must carry (13.6 / edition 5 4.6)."""
 CARRY_END_INHERIT = "inherit_when_gate_shut"
 """R5-6 (spec 2.9, user decision 152): a carry run that ends in a lock or hold period before
 the tracker gate opened hands its candidates to the new stretch (the plant may never have left
@@ -188,6 +224,87 @@ conservative end (user decision 147, review 3.3; the spec's 8 kN was the wrong e
 GATE_ROD_FLOOR_PA = 0.1e5 - 1.01325e5
 """``p_r`` of the retract need upper bound: the floor 0.1 bar abs as a gauge value (-0.913 bar;
 the need falls with ``p_r``; user decision 147, review 3.3)."""
+REVISION_6_FIELDS = ("release_relief",)
+"""Fields of :class:`ExtendStartBound` that a revision 4 or 5 meta does not carry."""
+
+
+@dataclass(frozen=True)
+class ReleaseReliefParams:
+    """Revision 6 values of R5-8 and R5-9 (``jp3_remedy_spec_v5.md`` 4.1, 4.2; ASSUMPTIONS, all
+    on the conservative side). ``kappa_x``, ``h C_r(s)`` and ``tau`` are the bound's own
+    ``speed_factor``, compliance and ``lag_s``.
+
+    Attributes:
+        witness_stroke_m: ``Delta s_w`` of the release witness (1.0 mm).
+        head_reading_margin_Pa: ``e_h`` of ``p_h^lb`` / ``p_h^ub`` (9 bar).
+        head_back_Pa: ``p_bA`` of ``f_lb`` and of the retract target ``p*_ret`` (5 bar).
+        tank_Pa: ``p_T`` of ``f_lb`` (2 bar).
+        retract_end_stroke_m: ``s_lo`` of the retract end guard (15.2 mm).
+        pilot_ratio: ``psi`` of ``p*_ret`` (plant POC pilot ratio 3.5).
+        crack_Pa: ``p_cr`` of ``p*_ret`` (3 bar).
+        relief_Pa: Upper clip of ``p*_ret`` (210 bar).
+        rod_floor_Pa: ``p_floor`` of ``F_ub = p_h^ub A_h - p_floor A_ann`` (0.1 bar abs).
+    """
+
+    witness_stroke_m: float = 1.0e-3
+    head_reading_margin_Pa: float = 9.0e5
+    head_back_Pa: float = 5.0e5
+    tank_Pa: float = 2.0e5
+    retract_end_stroke_m: float = 0.0152
+    pilot_ratio: float = 3.5
+    crack_Pa: float = 3.0e5
+    relief_Pa: float = 210.0e5
+    rod_floor_Pa: float = GATE_ROD_FLOOR_PA
+
+    def __post_init__(self) -> None:
+        positive = ("witness_stroke_m", "pilot_ratio", "relief_Pa")
+        for name in positive:
+            value = getattr(self, name)
+            if not (math.isfinite(value) and value > 0.0):
+                raise ValueError(f"{name} must be a finite value > 0, got {value!r}")
+        if not self.head_back_Pa > self.tank_Pa:
+            raise ValueError("head_back_Pa (p_bA) must exceed tank_Pa (p_T)")
+        if not (math.isfinite(self.retract_end_stroke_m) and self.retract_end_stroke_m >= 0.0):
+            raise ValueError("retract_end_stroke_m must be a finite value >= 0")
+
+
+def retract_target_rod_pressure_Pa(force_N: float, head_area_m2: float, annulus_area_m2: float,
+                                   params: ReleaseReliefParams) -> float:
+    """``p*_ret(F)`` of the plant (``RodChamberLegParams.moving_target_rod_pressure_Pa`` with
+    the RET mode: the head POC pilot threshold, clipped at the relief), on the values of
+    ``params``.
+
+    Args:
+        force_N: Cylinder net force ``F``.
+        head_area_m2: ``A_h``.
+        annulus_area_m2: ``A_ann``.
+        params: ``psi``, ``p_cr``, ``p_bA`` and the relief.
+    """
+    area_ratio = head_area_m2 / annulus_area_m2
+    inverse_pilot = 1.0 / params.pilot_ratio
+    threshold_head_Pa = (force_N / annulus_area_m2 + params.crack_Pa
+                         + params.head_back_Pa * (1.0 - inverse_pilot)) / (
+        area_ratio - inverse_pilot)
+    head_Pa = max(params.head_back_Pa, threshold_head_Pa)
+    target_Pa = (head_Pa * head_area_m2 - force_N) / annulus_area_m2
+    return min(target_Pa, params.relief_Pa)
+
+
+def release_witness_moved_m(command_m_s: float, stroke_m: float, reference_m: float) -> float:
+    """R5-8 movement ``sign(u_n) (s_n - s_ref)`` of a carry read (spec v5 4.1); NaN when the
+    stroke reading or the reference is unknown. The carry is witnessed when this is at least
+    ``witness_stroke_m`` (a NaN never is)."""
+    if not (math.isfinite(stroke_m) and math.isfinite(reference_m)):
+        return math.nan
+    return math.copysign(1.0, command_m_s) * (stroke_m - reference_m)
+
+
+def relief_flow_factor(head_lower_Pa: float, params: ReleaseReliefParams) -> float:
+    """``f_lb = [sqrt((p_h^lb - p_T)^+ / (p_bA - p_T)) - 1]^+`` (0 for a NaN head)."""
+    if not math.isfinite(head_lower_Pa):
+        return 0.0
+    ratio = max(head_lower_Pa - params.tank_Pa, 0.0) / (params.head_back_Pa - params.tank_Pa)
+    return max(math.sqrt(ratio) - 1.0, 0.0)
 
 
 @dataclass(frozen=True)
@@ -268,6 +385,8 @@ class ExtendStartBound:
             (:data:`CARRY_END_RULES`; ``fresh_stretch`` only under the test constant).
         retract_start_rule: Revision 5 lock start model after a retraction, R5-7
             (:data:`RETRACT_START_RULES`; ``model_only`` only under the test constant).
+        release_relief: Revision 6 R5-8 / R5-9 values; None on revision 6 = the defaults
+            (left out of a revision 4 or 5 meta).
     """
 
     bulk_modulus_Pa: float = BOUND_BULK_MODULUS_PA
@@ -291,6 +410,7 @@ class ExtendStartBound:
     line_fill_gate: LineFillGateParams | None = None
     carry_end_rule: str = CARRY_END_INHERIT
     retract_start_rule: str = RETRACT_START_WITH_TRACKER
+    release_relief: ReleaseReliefParams | None = None
 
     def __post_init__(self) -> None:
         if self.revision not in SUPPORTED_REVISIONS:
@@ -308,6 +428,10 @@ class ExtendStartBound:
             raise ValueError("lag_s and margin_Pa must be >= 0")
         if self.is_hold_revision:
             self._check_hold_fields()
+        if self.is_witness_revision and self.release_relief is None:
+            object.__setattr__(self, "release_relief", ReleaseReliefParams())
+        elif not self.is_witness_revision and self.release_relief is not None:
+            raise ValueError(f"release_relief is a revision 6 field (revision {self.revision})")
 
     def _check_hold_fields(self) -> None:
         if not 0.0 < self.hold_speed_ratio <= HOLD_SPEED_RATIO_MAX:
@@ -350,15 +474,26 @@ class ExtendStartBound:
         """R5-7 is on (revision 5 with ``retract_start_rule`` ``with_tracker``)."""
         return self.is_hold_revision and self.retract_start_rule == RETRACT_START_WITH_TRACKER
 
-    def identity(self) -> dict[str, str]:
-        """Edition 4a 13.6: the rule identity a revision 5 record carries."""
-        return {"spec_edition": JP3_SPEC_EDITION, "carry_end_rule": self.carry_end_rule,
-                "retract_start_rule": self.retract_start_rule}
+    def identity(self) -> dict[str, Any]:
+        """Edition 4a 13.6: the rule identity a revision 5 record carries; a revision 6 record
+        carries the edition 5 ``spec_edition`` and its ``rule_revision`` (4.6)."""
+        identity: dict[str, Any] = {
+            "spec_edition": JP3_SPEC_EDITION_OF_REVISION.get(self.revision, JP3_SPEC_EDITION),
+            "carry_end_rule": self.carry_end_rule,
+            "retract_start_rule": self.retract_start_rule}
+        if self.is_witness_revision:
+            identity["rule_revision"] = self.revision
+        return identity
 
     @property
     def is_hold_revision(self) -> bool:
-        """Revision 5 (436.9): the period classes, the hold and the line-fill gate."""
-        return self.revision == EXTEND_HOLD_REVISION
+        """Revision 5 or 6 (436.9): the period classes, the hold and the line-fill gate."""
+        return self.revision in HOLD_REVISIONS
+
+    @property
+    def is_witness_revision(self) -> bool:
+        """Revision 6 (edition 5): R5-8 witness, R5-9 retract relief, R5-10 hold candidate."""
+        return self.revision == EXTEND_WITNESS_REVISION
 
     def hold_speed_m_s(self, max_speed_m_s: float) -> float:
         """``u_hold`` of revision 5."""
@@ -366,8 +501,12 @@ class ExtendStartBound:
 
     def to_meta(self) -> dict[str, Any]:
         """The fields; a revision 4 meta keeps exactly its keys of before 436.9 (the revision 5
+        fields are left out) and a revision 5 meta its keys of before edition 5 (the revision 6
         fields are left out), so stored metas and digests compare as before."""
         meta = asdict(self)
+        if not self.is_witness_revision:
+            for name in REVISION_6_FIELDS:
+                meta.pop(name, None)
         if not self.is_hold_revision:
             for name in REVISION_5_FIELDS:
                 del meta[name]
@@ -624,8 +763,38 @@ class ExtendStartTracker:
         self.lock_seed_raises = np.zeros(LEG_COUNT, dtype=np.int64)
         """Extensions after a lock that raised ``p`` to the lock's ④ (revision 4)."""
         self._law = RodPressureFlowLaw()
+        self._last_substep_saturated = False
         if bound.is_hold_revision:
             self._init_hold_state()
+        if bound.is_witness_revision:
+            self._init_release_state()
+
+    def _init_release_state(self) -> None:
+        """Revision 6 state (spec 4.2, 4.3); absent on a revision 4 or 5 tracker. It runs on
+        every leg whatever its rod sensor state (4.5)."""
+        self.release_evidence = np.zeros(LEG_COUNT, dtype=bool)
+        """R5-9: release evidence in the leg's current retract run (relief from the next
+        sub-step on)."""
+        self.release_relief_ran = np.zeros(LEG_COUNT, dtype=bool)
+        """R5-10: R5-9 was on in the leg's last retract run (kept through the hold after it)."""
+        self.release_evidence_runs = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Retract runs that got release evidence (witness or gate opening)."""
+        self.release_relief_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Sub-steps that counted the R5-9 relief (``jp3_r59_substeps`` per run)."""
+        self.release_end_guard_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Sub-steps under release evidence that the retract end guard did not count (stroke
+        reading at or below ``s_lo``; ``r59_end_guard_substeps``)."""
+        self.release_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Sub-steps under release evidence with a NaN stroke reading (not counted, the guard's
+        conservative side; ``r59_nan_stroke_substeps``, kept apart from the end guard)."""
+        self.period_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.release_uncounted_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Sub-steps under release evidence without counted relief (any guard)."""
+        self.period_relief_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        """:attr:`release_relief_substeps` of the last period (the per-read trace)."""
+        self.period_end_guard_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        self._run_sign = np.zeros(LEG_COUNT)
+        self._was_locked_period = np.ones(LEG_COUNT, dtype=bool)
 
     def _init_hold_state(self) -> None:
         """Revision 5 state (spec 2.1, 6.3 records); absent on a revision 4 tracker."""
@@ -698,12 +867,15 @@ class ExtendStartTracker:
         self.bound.check_allowed()
         if "gate" not in self.__dict__:
             self._init_hold_state()
+        if self.bound.is_witness_revision and "release_evidence" not in self.__dict__:
+            self._init_release_state()
 
     def advance(self, command_m_s: ArrayLike, stroke_m: ArrayLike,
                 retract_floor_Pa: ArrayLike, period_s: float,
                 head_Pa: ArrayLike | None = None,
                 period_class: Sequence[PeriodClass] | None = None,
-                carry_bound_Pa: ArrayLike | None = None) -> None:
+                carry_bound_Pa: ArrayLike | None = None,
+                release_floor_Pa: ArrayLike | None = None) -> None:
         """One controller period with the acting command ``command_m_s``.
 
         Args:
@@ -716,10 +888,14 @@ class ExtendStartTracker:
             period_class: Revision 5 class per leg (module docstring); None = the revision 4
                 period, line for line.
             carry_bound_Pa: Revision 5 ④c per leg of the carry periods (NaN elsewhere).
+            release_floor_Pa: Revision 6 R5-9 floor term ``max(p_ret, 13 bar + p_h^ub / 3)``
+                per leg at :meth:`release_head_bounds_Pa` (NaN = unknown: no floor raise);
+                None = no floor term.
         """
         if period_class is not None:
             self._advance_classified(command_m_s, stroke_m, retract_floor_Pa, period_s,
-                                     head_Pa, list(period_class), carry_bound_Pa)
+                                     head_Pa, list(period_class), carry_bound_Pa,
+                                     release_floor_Pa)
             return
         command = np.asarray(command_m_s, dtype=float)
         stroke = np.asarray(stroke_m, dtype=float)
@@ -750,8 +926,9 @@ class ExtendStartTracker:
         return is_stopped
 
     def _advance_classified(self, command_m_s, stroke_m, retract_floor_Pa, period_s, head_Pa,
-                            classes: list[PeriodClass], carry_bound_Pa) -> None:
-        """Revision 5 period (module docstring table)."""
+                            classes: list[PeriodClass], carry_bound_Pa,
+                            release_floor_Pa=None) -> None:
+        """Revision 5 period (module docstring table); revision 6 adds the R5-9 sub-steps."""
         self.ensure_hold_state()
         command = np.asarray(command_m_s, dtype=float)
         stroke = np.asarray(stroke_m, dtype=float)
@@ -760,6 +937,9 @@ class ExtendStartTracker:
         is_carry = np.array([period_class.is_carry for period_class in classes])
         is_retracting = np.array([period_class.is_retracting for period_class in classes])
         is_hold = np.array([period_class is PeriodClass.HOLD for period_class in classes])
+        is_witness = self.bound.is_witness_revision
+        if is_witness:
+            self._start_release_period(command, classes, is_carry)
         self._finish_carry_runs(is_carry)
         for leg in np.flatnonzero(is_carry):
             self.carry_raise_to(int(leg), float(carry_bound[leg]))
@@ -773,6 +953,8 @@ class ExtendStartTracker:
         self.carry_periods += is_carry
         compliance = [self.compliance_m3_Pa(leg, float(stroke[leg])) for leg in range(LEG_COUNT)]
         head_ub_Pa = self._gate_head_bound_Pa(head_Pa)
+        relief = (self._release_period_inputs(head_Pa, release_floor_Pa, stroke, command)
+                  if is_witness else None)
         is_stopped = self._relief_stop(head_Pa)
         self.saturation_stop_periods += is_stopped & ~is_retracting
         is_at_end = np.isfinite(stroke) & (stroke >= self.bound.stroke_end_m)
@@ -782,11 +964,143 @@ class ExtendStartTracker:
             skips_relief = is_retracting | is_hold | is_gate_shut
             mean_valve_m_s = self._substep(command, skips_relief, is_at_end | is_stopped,
                                            compliance)
+            if relief is not None:
+                self._release_substep(mean_valve_m_s, is_retracting, is_stopped, compliance,
+                                      relief)
             for leg in np.flatnonzero(is_gate_shut):
-                is_gate_shut[leg] = not self._advance_gate(
+                is_open = self._advance_gate(
                     int(leg), float(mean_valve_m_s[leg]), float(head_ub_Pa[leg]),
                     float(stroke[leg]), int(direction[leg]))
+                is_gate_shut[leg] = not is_open
+                if is_open and is_witness and direction[leg] < 0:
+                    # R5-9 evidence: the gate opening, counted from the next sub-step on
+                    self.note_release_evidence(int(leg))
         self._was_carry = is_carry
+
+    # --- revision 6: R5-9 retract relief after release evidence (spec v5 4.2) ---
+
+    def note_release_evidence(self, leg: int) -> None:
+        """Release evidence of the leg's retract run (a retract-direction R5-8 witness, or the
+        gate opening in a retract carry): R5-9 counts from the next sub-step on. A second piece
+        of evidence in the same run changes nothing (the earlier one counts)."""
+        if not self.bound.is_witness_revision or self.release_evidence[leg]:
+            return
+        self.release_evidence[leg] = True
+        self.release_evidence_runs[leg] += 1
+
+    def _nan_stroke_total_array(self) -> NDArray[np.int64]:
+        if "release_nan_stroke_substeps" not in self.__dict__:  # a tracker of 8a3c48c7
+            self.release_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        return self.release_nan_stroke_substeps
+
+    def _nan_stroke_period_array(self) -> NDArray[np.int64]:
+        if "period_nan_stroke_substeps" not in self.__dict__:
+            self.period_nan_stroke_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        return self.period_nan_stroke_substeps
+
+    def release_head_bounds_Pa(self, head_Pa: ArrayLike
+                               ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+        """``(p_h^lb, p_h^ub)`` per leg: the smaller / larger of this head reading and the
+        previous one, minus / plus ``e_h`` (the previous one is the one :meth:`advance` keeps;
+        read only, call it before :meth:`advance`)."""
+        head = np.asarray(head_Pa, dtype=float).reshape(LEG_COUNT)
+        previous = self.previous_head_Pa
+        lower = head if previous is None else np.minimum(head, previous)
+        upper = head if previous is None else np.maximum(head, previous)
+        margin_Pa = self.bound.release_relief.head_reading_margin_Pa
+        return lower - margin_Pa, upper + margin_Pa
+
+    def _start_release_period(self, command: NDArray[np.float64], classes: list[PeriodClass],
+                              is_carry: NDArray[np.bool_]) -> None:
+        """Stop and reset of R5-9 (spec v5 4.2): a period with ``|u| <= u_hold`` (lock, hold)
+        stops it; a sign change or a new run (the first moving period after a lock or hold, a
+        new carry) clears the evidence and the R5-10 mark of the run before."""
+        self.period_relief_substeps[:] = 0
+        self.period_end_guard_substeps[:] = 0
+        self._nan_stroke_period_array()[:] = 0
+        for leg, period_class in enumerate(classes):
+            if period_class.is_locked:
+                self.release_evidence[leg] = False
+                self._was_locked_period[leg] = True
+                continue
+            sign = math.copysign(1.0, float(command[leg]))
+            is_new_carry = bool(is_carry[leg]) and not bool(self._was_carry[leg])
+            if self._was_locked_period[leg] or sign != self._run_sign[leg] or is_new_carry:
+                self.release_evidence[leg] = False
+                self.release_relief_ran[leg] = False
+            self._run_sign[leg] = sign
+            self._was_locked_period[leg] = False
+
+    def _release_period_inputs(self, head_Pa, release_floor_Pa, stroke, command
+                               ) -> dict[str, NDArray[np.float64]]:
+        """The R5-9 terms that hold over the period: ``f_lb``, ``p*_ub``, the floor term and the
+        sub-steps that never count (retract end guard, tail cut)."""
+        params = self.bound.release_relief
+        geometry = self.geometry
+        floor = (np.full(LEG_COUNT, np.nan) if release_floor_Pa is None
+                 else np.asarray(release_floor_Pa, dtype=float).reshape(LEG_COUNT))
+        if head_Pa is None:
+            lower = upper = np.full(LEG_COUNT, np.nan)
+        else:
+            lower, upper = self.release_head_bounds_Pa(head_Pa)
+        flow_factor = np.array([relief_flow_factor(float(value), params) for value in lower])
+        target_ub = np.full(LEG_COUNT, np.nan)
+        for leg in range(LEG_COUNT):
+            if math.isfinite(upper[leg]):
+                force_ub_N = (upper[leg] * geometry.head_area_m2[leg]
+                              - params.rod_floor_Pa * geometry.annulus_area_m2[leg])
+                target_ub[leg] = retract_target_rod_pressure_Pa(
+                    force_ub_N, geometry.head_area_m2[leg], geometry.annulus_area_m2[leg], params)
+        is_end_guard = np.isfinite(stroke) & (stroke <= params.retract_end_stroke_m)
+        # a NaN stroke reading may be at the end: not counted either (the conservative side),
+        # recorded apart from the end guard
+        is_nan_stroke = ~np.isfinite(stroke)
+        is_tail_cut = np.abs(command) <= ZERO_COMMAND_M_S
+        return {"flow_factor": flow_factor, "target_ub_Pa": target_ub, "floor_Pa": floor,
+                "is_end_guard": is_end_guard, "is_nan_stroke": is_nan_stroke,
+                "is_tail_cut": is_tail_cut}
+
+    def _release_substep(self, mean_valve_m_s: NDArray[np.float64],
+                         is_retracting: NDArray[np.bool_], is_stopped: NDArray[np.bool_],
+                         compliance: list[float], relief: dict[str, NDArray[np.float64]]) -> None:
+        """One R5-9 sub-step on the retracting legs with release evidence::
+
+            p <- max(p - A_ann kappa_x |u_v| f_lb dt / (h C_r(s)),
+                     p*_ub + (p - p*_ub) exp(-dt / tau), floor)
+
+        A sub-step of pump saturation, of a head reading at the relief stop or NaN, of a zero
+        acting command or at the retract end takes the floor term only."""
+        bound, geometry = self.bound, self.geometry
+        step_s = bound.substep_s
+        keep = math.exp(-step_s / bound.lag_s) if bound.lag_s > 0.0 else 0.0
+        for leg in np.flatnonzero(is_retracting & self.release_evidence):
+            pressure_Pa = float(self.pressure_Pa[leg])
+            floor_Pa = float(relief["floor_Pa"][leg])
+            floor_Pa = floor_Pa if math.isfinite(floor_Pa) else -math.inf
+            is_end_guard = bool(relief["is_end_guard"][leg])
+            is_nan_stroke = bool(relief["is_nan_stroke"][leg])
+            is_counted = not (self._last_substep_saturated or bool(is_stopped[leg])
+                              or bool(relief["is_tail_cut"][leg]) or is_end_guard
+                              or is_nan_stroke)
+            self.release_relief_ran[leg] = True
+            if not is_counted:
+                self.pressure_Pa[leg] = max(pressure_Pa, floor_Pa)
+                self.release_uncounted_substeps[leg] += 1
+                if is_end_guard:
+                    self.release_end_guard_substeps[leg] += 1
+                    self.period_end_guard_substeps[leg] += 1
+                if is_nan_stroke:
+                    self._nan_stroke_total_array()[leg] += 1
+                    self._nan_stroke_period_array()[leg] += 1
+                continue
+            drop_Pa = (geometry.annulus_area_m2[leg] * bound.speed_factor
+                       * abs(float(mean_valve_m_s[leg])) * float(relief["flow_factor"][leg])
+                       * step_s / compliance[leg])
+            target_Pa = float(relief["target_ub_Pa"][leg])
+            lag_Pa = target_Pa + (pressure_Pa - target_Pa) * keep
+            self.pressure_Pa[leg] = max(pressure_Pa - drop_Pa, lag_Pa, floor_Pa)
+            self.release_relief_substeps[leg] += 1
+            self.period_relief_substeps[leg] += 1
 
     def _finish_carry_runs(self, is_carry: NDArray[np.bool_]) -> None:
         """A carry run that ends in a lock or hold period without the gate opened counts in
@@ -829,6 +1143,7 @@ class ExtendStartTracker:
         demand_m3_s = self._pump_demand_m3_s(start_valve_m_s, self.valve_m_s)
         is_saturated = demand_m3_s > bound.volumetric_efficiency * bound.pump_flow_m3_s
         self.saturated_substeps += int(is_saturated)
+        self._last_substep_saturated = is_saturated  # the R5-9 sub-step of revision 6 reads it
         cut_m_s = bound.overlap_cut_ratio * geometry.max_speed_m_s
         for leg in range(LEG_COUNT):
             if is_retracting[leg]:
@@ -883,13 +1198,20 @@ class ExtendStartTracker:
             "lock_seed_raises": self.lock_seed_raises.tolist()}
         if self.bound.is_hold_revision and "gate" in self.__dict__:
             record.update({
-                "rule_revision": EXTEND_HOLD_REVISION,
+                "rule_revision": self.bound.revision,
                 "retract_seed_raises": self.retract_seed_raises.tolist(),
                 "carry_raises": self.carry_raises.tolist(),
                 "hold_periods": self.hold_periods.tolist(),
                 "carry_periods": self.carry_periods.tolist(),
                 "gate_open_substeps": [list(values) for values in self.gate_open_substeps],
                 "gate_never_opened_carries": self.gate_never_opened_carries.tolist()})
+        if self.bound.is_witness_revision and "release_evidence" in self.__dict__:
+            record.update({
+                "release_evidence_runs": self.release_evidence_runs.tolist(),
+                "r59_substeps": self.release_relief_substeps.tolist(),
+                "r59_end_guard_substeps": self.release_end_guard_substeps.tolist(),
+                "r59_nan_stroke_substeps": self._nan_stroke_total_array().tolist(),
+                "r59_uncounted_substeps": self.release_uncounted_substeps.tolist()})
         return record
 
 
@@ -1314,6 +1636,14 @@ class ExtendBoundTrace:
                       "used_bound_Pa", "p_tr_Pa", "p_star_ret_Pa", "head_read_Pa",
                       "gate_fill_m", "model_bound_age_s", "model_bound_head_Pa",
                       "ret_after_gate_s")
+    REVISION_6_FIELDS = {"r58_witness": bool, "r59_substeps": np.int32,
+                         "r510_candidates": np.int32, "r59_end_guard_substeps": np.int32,
+                         "r59_nan_stroke_substeps": np.int32}
+    """Revision 6 per-read coverage columns (``jp3_<name>`` arrays; spec v5 6.3.9), kept only
+    when the monitor's rows carry them (a revision 5 trace has none)."""
+
+    rev6_values: dict[str, list[list[Any]]] | None = None
+    """Revision 6 columns per read (class default None: a trace without them)."""
 
     def __init__(self) -> None:
         self.t_s: list[float] = []
@@ -1346,6 +1676,28 @@ class ExtendBoundTrace:
             self.values[name].append(
                 [math.nan] * LEG_COUNT if values is None
                 else [math.nan if value is None else float(value) for value in values])
+        self._add_revision_6_columns(row)
+
+    def _add_revision_6_columns(self, row: Mapping[str, Any]) -> None:
+        if not any(name in row for name in self.REVISION_6_FIELDS):
+            if self.rev6_values is not None:  # a row without them after rows with them
+                for name, kind in self.REVISION_6_FIELDS.items():
+                    self.rev6_values[name].append([kind(0)] * LEG_COUNT)
+            return
+        if self.rev6_values is None:
+            reads_before = len(self.t_s) - 1
+            self.rev6_values = {name: [[kind(0)] * LEG_COUNT for _ in range(reads_before)]
+                                for name, kind in self.REVISION_6_FIELDS.items()}
+        for name, kind in self.REVISION_6_FIELDS.items():
+            values = row.get(name) or [0] * LEG_COUNT
+            self.rev6_values[name].append([kind(value) for value in values])
+
+    def revision_6_totals(self) -> dict[str, list[int]] | None:
+        """Per-leg sums of the revision 6 columns (None without them)."""
+        if self.rev6_values is None:
+            return None
+        return {name: [int(sum(int(row[leg]) for row in rows)) for leg in range(LEG_COUNT)]
+                for name, rows in self.rev6_values.items()}
 
     def arrays(self) -> dict[str, NDArray[Any]]:
         """``jp3_*`` arrays (n reads, n x 4) for the T4h npz."""
@@ -1366,6 +1718,10 @@ class ExtendBoundTrace:
         for name in self.PER_LEG_FIELDS:
             arrays[f"jp3_{name}"] = np.asarray(self.values[name],
                                                dtype=float).reshape(count, LEG_COUNT)
+        for name, kind in self.REVISION_6_FIELDS.items():
+            if self.rev6_values is not None:
+                arrays[f"jp3_{name}"] = np.asarray(self.rev6_values[name],
+                                                   dtype=kind).reshape(count, LEG_COUNT)
         return arrays
 
     def excerpt(self) -> tuple[list[list[Any]], bool]:
@@ -1620,7 +1976,9 @@ class ExtendBoundCheckRev5:
         jp3a, jp3b, jp3c = self.jp3a, self.jp3b, self.jp3c
         identity = self.identity or {}
         return {
-            "rule_revision": EXTEND_HOLD_REVISION,
+            # a revision 6 monitor names its revision in the identity (spec v5 4.6)
+            "rule_revision": identity.get("rule_revision", EXTEND_HOLD_REVISION),
+            **self._revision_6_record(),
             "rule_rev5": EXTEND_BOUND_CHECK_REV5_RULE,
             "spec_edition": identity.get("spec_edition"),
             "carry_end_rule": identity.get("carry_end_rule"),
@@ -1674,6 +2032,18 @@ class ExtendBoundCheckRev5:
             "trace_excerpt": excerpt,
             "trace_excerpt_columns": list(ExtendBoundTrace.EXCERPT_COLUMNS),
             "trace_excerpt_truncated": is_truncated}
+
+    def _revision_6_record(self) -> dict[str, list[int]]:
+        """Spec v5 6.3.9 coverage keys, per leg over the whole run (the T4h ``jp3_*`` columns
+        give them per read); empty for a revision 5 record."""
+        totals = self.trace.revision_6_totals()
+        if totals is None:
+            return {}
+        return {"jp3_r58_witness_carries": totals["r58_witness"],
+                "jp3_r59_substeps": totals["r59_substeps"],
+                "jp3_r510_candidates": totals["r510_candidates"],
+                "r59_end_guard_substeps": totals["r59_end_guard_substeps"],
+                "r59_nan_stroke_substeps": totals["r59_nan_stroke_substeps"]}
 
 
 J_P3_NAME = "extend_bound_check.ext_moving.breach_reads == 0"
@@ -1740,9 +2110,9 @@ def j_p3_judgement(records: list[dict[str, object] | None],
     declared = [False] * len(records) if head_only_declared is None else list(head_only_declared)
     cases = [j_p3_run_case(record, has_rod, is_declared)
              for record, has_rod, is_declared in zip(records, rod, declared, strict=True)]
-    # addendum 4a-2 R6: a revision 5 record never goes into the revision 4 sum
+    # addendum 4a-2 R6: a revision 5 (or 6) record never goes into the revision 4 sum
     cases = [J_P3_DEFECT_REVISION_5_RECORD
-             if case == J_P3_JUDGED and record.get("rule_revision") == EXTEND_HOLD_REVISION
+             if case == J_P3_JUDGED and record.get("rule_revision") in HOLD_REVISIONS
              else case for record, case in zip(records, cases, strict=True)]
     judged = [record for record, case in zip(records, cases, strict=True)
               if case == J_P3_JUDGED]
@@ -1798,15 +2168,21 @@ J_P3_RECORD_ONLY_GRADES = ("conservative", "old_worst")
 J_P3_JUDGED_KEY_MISSING = "judged_key_missing"
 """Addendum 4a-5 3.3: a judged row without the judged keys as per-leg lists (not judgeable;
 a reason apart from ``no_judged_runs``, the name path 2 uses too)."""
+J_P3_DEFECT_MIXED_REVISIONS = "defect_mixed_hold_revisions"
+"""Edition 5 4.6: judged rows of revision 5 and revision 6 in one judgement (a setting
+defect; each revision is judged on its own)."""
 J_P3_DEFECT_IDENTITY = "defect_rule_identity_not_default"
 """Edition 4a 13.6: a revision 5 row of a test-only rule (``fresh_stretch``, ``model_only``) or
 of another spec edition's code (``spec_edition`` missing or not :data:`JP3_SPEC_EDITION`)."""
 
 
 def is_default_rule_identity(record: Mapping[str, Any] | None) -> bool:
-    """The revision 5 record carries the sealed edition and the default rules (13.6)."""
+    """The revision 5 or 6 record carries the sealed edition of its revision (revision 5:
+    :data:`JP3_SPEC_EDITION`, revision 6: :data:`JP3_SPEC_EDITION_V5`) and the default rules
+    (13.6, edition 5 4.6)."""
     record = record or {}
-    return (record.get("spec_edition") == JP3_SPEC_EDITION
+    edition = JP3_SPEC_EDITION_OF_REVISION.get(record.get("rule_revision", EXTEND_HOLD_REVISION))
+    return (edition is not None and record.get("spec_edition") == edition
             and record.get("carry_end_rule") == CARRY_END_INHERIT
             and record.get("retract_start_rule") == RETRACT_START_WITH_TRACKER
             and record.get("identity_consistent", True) is True)
@@ -1855,11 +2231,17 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     cases = [j_p3_run_case(record, has_rod, is_declared)
              for record, has_rod, is_declared in zip(records, rod, declared, strict=True)]
     cases = [J_P3_DEFECT_NOT_REVISION_5
-             if case == J_P3_JUDGED and record.get("rule_revision") != EXTEND_HOLD_REVISION
+             if case == J_P3_JUDGED and record.get("rule_revision") not in HOLD_REVISIONS
              else case for record, case in zip(records, cases, strict=True)]
     cases = [J_P3_DEFECT_IDENTITY
              if case == J_P3_JUDGED and not is_default_rule_identity(record) else case
              for record, case in zip(records, cases, strict=True)]
+    # edition 5 4.6: revision 5 and revision 6 rows are two definitions, never one sum
+    revisions = sorted({record.get("rule_revision") for record, case in
+                        zip(records, cases, strict=True) if case == J_P3_JUDGED})
+    if len(revisions) > 1:
+        cases = [J_P3_DEFECT_MIXED_REVISIONS if case == J_P3_JUDGED else case
+                 for case in cases]
     cases = [_graded_case(case, grade) for case, grade in zip(cases, grades, strict=True)]
     judged = [record for record, case in zip(records, cases, strict=True)
               if case == J_P3_JUDGED]
@@ -1875,7 +2257,8 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
     record_only_sums = {key: sum(total(record, key) for record in record_only)
                         for key in J_P3_REV5_JUDGED_KEYS}
     defects = sum(case in (*J_P3_DEFECT_CASES, J_P3_DEFECT_NOT_REVISION_5,
-                           J_P3_DEFECT_GRADE_MISSING, J_P3_DEFECT_IDENTITY) for case in cases)
+                           J_P3_DEFECT_GRADE_MISSING, J_P3_DEFECT_IDENTITY,
+                           J_P3_DEFECT_MIXED_REVISIONS) for case in cases)
     is_count_wrong = expected_judged_runs is not None and len(judged) != expected_judged_runs
     if not records:
         status = "no_p3_runs"
@@ -1897,7 +2280,9 @@ def j_p3_judgement_rev5(records: list[dict[str, object] | None],
             "runs_by_case": {name: cases.count(name) for name in
                              (J_P3_JUDGED, J_P3_NO_ROD_READING, *J_P3_DEFECT_CASES,
                               J_P3_DEFECT_NOT_REVISION_5, J_P3_DEFECT_GRADE_MISSING,
-                              J_P3_DEFECT_IDENTITY, J_P3_RECORD_ONLY_GRADE)},
+                              J_P3_DEFECT_IDENTITY, J_P3_RECORD_ONLY_GRADE)
+                             + ((J_P3_DEFECT_MIXED_REVISIONS,) if len(revisions) > 1 else ())},
+            "rule_revisions": revisions,
             **sums, "record_only_grade_sums": record_only_sums,
             "runs_with_breach": sum(any(total(record, key) for key in J_P3_REV5_JUDGED_KEYS)
                                     for record in judged),
@@ -1949,7 +2334,7 @@ def check_extend_start_meta(settings_meta: Mapping[str, Any]) -> int | None:
         settings_meta: ``TwoPressureSettings.to_meta()`` of a stored run.
 
     Returns:
-        The bound revision (4 or 5) of a ``tracked_bound`` meta, None for another rule.
+        The bound revision (4, 5 or 6) of a ``tracked_bound`` meta, None for another rule.
 
     Raises:
         ValueError: The rule is ``tracked_bound`` and its bound has no ``revision`` (v1) or a
@@ -1970,11 +2355,14 @@ def initial_pressure_Pa(retract_floor_Pa: ArrayLike) -> NDArray[np.float64]:
     return np.array(retract_floor_Pa, dtype=float).reshape(LEG_COUNT)
 
 
-__all__ = ["EXTEND_HOLD_REVISION", "EXTEND_START_REVISION", "SUPPORTED_REVISIONS",
+__all__ = ["EXTEND_HOLD_REVISION", "EXTEND_START_REVISION", "EXTEND_WITNESS_REVISION",
+           "HOLD_REVISIONS", "SUPPORTED_REVISIONS",
            "BoundGeometry", "ExtendBoundCheck", "ExtendBoundCheckRev5", "ExtendBoundState",
            "ExtendBoundTrace", "ExtendStartBound", "ExtendStartTracker", "LineFillGateBound",
-           "LineFillGateParams", "PeriodClass", "PremiseRecord", "TensionTruthCounter",
-           "check_extend_start_meta", "extend_bound_states", "initial_pressure_Pa",
-           "j_p3_judgement_rev5", "period_class_of", "plant_leg_states",
+           "LineFillGateParams", "PeriodClass", "PremiseRecord", "ReleaseReliefParams",
+           "TensionTruthCounter", "check_extend_start_meta", "extend_bound_states",
+           "initial_pressure_Pa", "j_p3_judgement_rev5", "period_class_of", "plant_leg_states",
+           "relief_flow_factor", "release_witness_moved_m", "retract_target_rod_pressure_Pa",
            "ALLOW_FRESH_STRETCH_FOR_TEST", "ALLOW_MODEL_ONLY_RETRACT_START_FOR_TEST",
-           "JP3_SPEC_EDITION", "JP3_SOURCE_NAMES", "is_default_rule_identity"]
+           "JP3_SPEC_EDITION", "JP3_SPEC_EDITION_OF_REVISION", "JP3_SPEC_EDITION_V5",
+           "JP3_SOURCE_NAMES", "is_default_rule_identity"]
