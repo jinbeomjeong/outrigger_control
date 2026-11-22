@@ -20,15 +20,18 @@ plan per block, all before any run:
   ``retract_witness_after:LEVEL``; STUCK -100 bar, ``delay_reads`` 0 (6.3.2).
 * the c dry check (6.3.10): seeds 90 and 91, outside the judged set, 160 pairs = 20 per cell
   (seed 90: ranks 0 .. 79, seed 91: ranks 80 .. 159; the same cell table). A dry seed found in
-  the scan stops (exit 2): the spec fixes those two seeds.
+  the scan stops (exit 2): the spec fixes those two seeds. One plan per dry seed (prelaunch
+  audit B-1 (a)): a dry run takes one seed's key file, and the runner's X-10 guard needs the
+  plan keys to be exactly the run's job keys.
 
 One plan serves both arms of a block (VBK0 and VBK, ``R79_ROD_FAULT_PLAN``): the pair identity
 (다) is the plan sha256 by construction. Per block a key file (one ``L2|s<seed>|...`` key per
 line, LF) for ``r79_L3L4_final.py run --keys-file``.
 
 Outputs in ``--out-dir`` (a new or empty folder; an existing file is never overwritten):
-``b<j>_plan.json``, ``b<j>_keys.txt`` (j = 1 .. 4), ``c90_91_plan.json``, ``c90_keys.txt``,
-``c91_keys.txt``, ``selection.json`` (inputs and their sha256, the scan evidence: files
+``b<j>_plan.json``, ``b<j>_keys.txt`` (j = 1 .. 4), ``c90_plan.json``, ``c90_keys.txt``,
+``c91_plan.json``, ``c91_keys.txt``, ``selection.json`` (``dry.runs`` names each dry run's plan
+and key file; inputs and their sha256, the scan evidence: files
 scanned, per-file sha256 and key count, the largest seed; the seeds and repeat count, the cell
 table, every output file with its sha256 and the run commands).
 
@@ -228,14 +231,22 @@ def block_plan(table: list[dict], block: int, seed: int, phase_rule: str) -> dic
     return {"schema": PLAN_SCHEMA, "faults": faults}
 
 
-def dry_plan(table: list[dict], scanned: frozenset[str]) -> tuple[dict, dict[int, list[str]]]:
-    """The c dry check plan (6.3.10) and its keys per seed.
+def dry_run_name(seed: int) -> str:
+    """The dry run of one seed (``c90``, ``c91``): its plan and key file names start with it."""
+    return f"c{seed}"
+
+
+def dry_plans(table: list[dict], scanned: frozenset[str]
+              ) -> tuple[dict[int, dict], dict[int, list[str]]]:
+    """The c dry check plans (6.3.10), one per dry seed, and their keys (prelaunch audit B-1
+    (a): a plan's keys are exactly its seed's key file, the run's job keys).
 
     Raises:
         NotUsable: A dry key is in the scan.
     """
-    faults, keys = {}, {seed: [] for seed in DRY_SEEDS}
+    plans, keys = {}, {}
     for index, seed in enumerate(DRY_SEEDS):
+        faults, keys[seed] = {}, []
         for row in table[index * DRY_PAIRS_PER_SEED:(index + 1) * DRY_PAIRS_PER_SEED]:
             plain = key_of(row["case"], seed)
             if plain in scanned:
@@ -244,7 +255,37 @@ def dry_plan(table: list[dict], scanned: frozenset[str]) -> tuple[dict, dict[int
             faults[CANDIDATE_PREFIX + plain] = fault_entry(
                 f"12b-c-s{seed}-r{row['rank']:03d}-{row['leg']}-{row['phase']}", row["leg"],
                 row["phase"])
-    return {"schema": PLAN_SCHEMA, "faults": faults}, keys
+        plans[seed] = {"schema": PLAN_SCHEMA, "faults": faults}
+    return plans, keys
+
+
+DRY_PAIRS = 160
+DRY_PAIRS_PER_CELL = 20
+
+
+def dry_union_check(plans: dict[int, dict]) -> dict:
+    """Erratum 4 4-2: the two dry plans together are the 160 pairs of 6.3.10, 20 per cell (leg,
+    anchor), each key in one plan only (a record of selection.json ``dry.union_check``).
+
+    Raises:
+        NotUsable: The union is not that.
+    """
+    per_cell: dict[str, int] = {}
+    keys: list[str] = []
+    for seed in DRY_SEEDS:
+        for key, fault in plans[seed]["faults"].items():
+            keys.append(key)
+            cell = f"{fault['leg']} {fault['anchor']}"
+            per_cell[cell] = per_cell.get(cell, 0) + 1
+    check = {"pairs": len(keys), "distinct_keys": len(set(keys)), "cells": len(per_cell),
+             "per_cell": dict(sorted(per_cell.items()))}
+    check["ok"] = (check["pairs"] == check["distinct_keys"] == DRY_PAIRS
+                   and check["cells"] == len(CELLS)
+                   and set(per_cell.values()) == {DRY_PAIRS_PER_CELL})
+    if not check["ok"]:
+        raise NotUsable(f"the dry plans' union is not {DRY_PAIRS} pairs, {DRY_PAIRS_PER_CELL} per "
+                        f"cell: {check}")
+    return check
 
 
 def _write_new(path: Path, text: str) -> str:
@@ -292,7 +333,8 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     scan = merged_scan(scan_root, tuple(extra_roots))
     seeds, repeats = block_seeds(cases, scan.keys)
     table = cell_table(cases)
-    dry, dry_keys = dry_plan(table, scan.keys)
+    dry, dry_keys = dry_plans(table, scan.keys)
+    union_check = dry_union_check(dry)
     out_dir.mkdir(parents=True, exist_ok=True)
     outputs = {}
     for block, (seed, phase_rule) in enumerate(zip(seeds, BLOCK_PHASES, strict=True), start=1):
@@ -302,10 +344,14 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         outputs[f"b{block}_keys.txt"] = _write_new(
             out_dir / f"b{block}_keys.txt",
             _keys_text([plain_key(key) for key in plan["faults"]]))
-    outputs["c90_91_plan.json"] = _write_new(out_dir / "c90_91_plan.json", _json_text(dry))
-    for seed, keys in dry_keys.items():
-        outputs[f"c{seed}_keys.txt"] = _write_new(out_dir / f"c{seed}_keys.txt",
-                                                  _keys_text(keys))
+    dry_runs = {}
+    for seed in DRY_SEEDS:
+        run = dry_run_name(seed)
+        dry_runs[run] = {"seed": seed, "plan": f"{run}_plan.json", "keys": f"{run}_keys.txt"}
+        outputs[f"{run}_plan.json"] = _write_new(out_dir / f"{run}_plan.json",
+                                                 _json_text(dry[seed]))
+        outputs[f"{run}_keys.txt"] = _write_new(out_dir / f"{run}_keys.txt",
+                                                _keys_text(dry_keys[seed]))
     document = {
         "rule": "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)",
         "inputs": {"noise": {"path": str(noise_path), "sha256": noise_sha256},
@@ -323,7 +369,7 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
                                                                   strict=True), start=1)},
         "seed_repeats": repeats, "seed_step": SEED_STEP,
         "dry": {"seeds": list(DRY_SEEDS), "pairs": sum(len(keys) for keys in dry_keys.values()),
-                "plan": "c90_91_plan.json"},
+                "runs": dry_runs, "union_check": union_check},
         "cell_table": table, "outputs": outputs,
         "run_commands": _run_commands(seeds)}
     _write_new(out_dir / "selection.json", _json_text(document))

@@ -98,17 +98,26 @@ def test_x11_blocks_seeds_cells_and_plans(selected) -> None:
 
 
 def test_x11_dry_plan_seeds_90_91_twenty_per_cell(selected) -> None:
-    out = selected["out"]
-    dry = rfp.load_plan(out / "c90_91_plan.json").faults
-    assert len(dry) == 160
-    per_cell = {}
-    for fault in dry.values():
-        cell = (fault.leg, fault.anchor.text)
-        per_cell[cell] = per_cell.get(cell, 0) + 1
+    """6.3.10 with prelaunch audit B-1 (a): one plan per dry seed whose keys are exactly that
+    seed's key file (the runner's X-10 guard), 160 pairs = 20 per cell over both."""
+    out, document = selected["out"], selected["doc"]
+    assert not (out / "c90_91_plan.json").exists()
+    per_cell, seeds = {}, set()
+    for run in ("c90", "c91"):
+        assert document["dry"]["runs"][run] == {"seed": int(run[1:]), "plan": f"{run}_plan.json",
+                                                "keys": f"{run}_keys.txt"}
+        dry = rfp.load_plan(out / f"{run}_plan.json")
+        assert dry.sha256 == document["outputs"][f"{run}_plan.json"]
+        keys = (out / f"{run}_keys.txt").read_text(encoding="utf-8").splitlines()
+        assert len(keys) == 80
+        assert dry.key_problems([plan.CANDIDATE_PREFIX + key for key in keys]) == []
+        for key, fault in dry.faults.items():
+            cell = (fault.leg, fault.anchor.text)
+            per_cell[cell] = per_cell.get(cell, 0) + 1
+            seeds.add(key.split("|")[1])
+        assert {key.split("|")[1] for key in dry.faults} == {f"s{run[1:]}"}
     assert len(per_cell) == 8 and set(per_cell.values()) == {20}
-    seeds = {key.split("|")[1] for key in dry}
-    assert seeds == {"s90", "s91"}
-    assert len((out / "c90_keys.txt").read_text(encoding="utf-8").splitlines()) == 80
+    assert seeds == {"s90", "s91"} and document["dry"]["pairs"] == 160
 
 
 def test_x11_scan_collision_raises_all_seeds_by_10(tmp_path) -> None:
@@ -1000,23 +1009,26 @@ def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cw
     assert len(calls) == 1
 
 
-def _dry_arms(world, change_vbk_hash: int) -> dict[str, list[str]]:
-    """Both arms of the dry plan, split per dry seed into c90 / c91 run files."""
+def _dry_arms(world, change_vbk_hash: int, plan_of_run=None) -> dict[str, list[str]]:
+    """Both arms of the dry check: per dry run (c90 / c91) its own plan's lines (prelaunch
+    audit B-1 (a)); ``plan_of_run`` maps a run to another plan stem (a defect case)."""
     args: dict[str, list[str]] = {"vbk0": [], "vbk0_t4h": [], "vbk": [], "vbk_t4h": []}
     for arm_name in ("vbk0", "vbk"):
-        arm = Arm(world["runs"], world["doc"], world["plans"], "c90_91", arm_name)
-        for index, row in enumerate(arm.rows.values()):
-            changed = arm_name == "vbk" and index < change_vbk_hash
-            row["commands_sha256"] = ("a" if changed else "b") * 64
-        result, t4h = arm.write()
-        rows = json.loads(result.read_text(encoding="utf-8"))["results"]
+        changed_so_far = 0
         for run in judge.DRY_RUNS:
-            token = "s" + run.removeprefix("c")
-            path = world["runs"] / f"{arm_name}_{run}.json"
-            path.write_text(json.dumps({"meta": {}, "results": [
-                row for row in rows if judge.plain_key(row["key"]).split("|")[1] == token]}),
-                encoding="utf-8")
-            args[arm_name].append(f"{run}={path}")
+            stem = (plan_of_run or {}).get(run, run)
+            arm = Arm(world["runs"], world["doc"], world["plans"], run, arm_name)
+            if stem != run:  # the lines carry another plan's sha256
+                arm.plan_file = world["plans"] / f"{stem}_plan.json"
+                for row in arm.rows.values():
+                    row["rod_fault"]["plan_sha256"] = hashlib.sha256(
+                        arm.plan_file.read_bytes()).hexdigest()
+            for row in arm.rows.values():
+                changed = arm_name == "vbk" and changed_so_far < change_vbk_hash
+                changed_so_far += changed
+                row["commands_sha256"] = ("a" if changed else "b") * 64
+            result, t4h = arm.write()
+            args[arm_name].append(f"{run}={result}")
             args[f"{arm_name}_t4h"].append(f"{run}={t4h}")
     return args
 
@@ -1041,6 +1053,15 @@ def test_dry_c_share_of_changed_opportunity_pairs(world, capsys, cwd_elsewhere) 
     assert report["c"] == pytest.approx(40 / 160)
     code, last, _ = run_main(_dry_args(world, found, "dry_c2.json", drop_vbk_c91=True), capsys)
     assert code == 2 and last["status"] == "not_judgeable"
+
+
+def test_dry_c_each_run_against_its_own_plan(world, capsys, cwd_elsewhere) -> None:
+    """Prelaunch audit B-1 (a): c91 lines that carry the c90 plan's sha256 are a setting
+    defect (exit 2); each run is checked against its own plan."""
+    found = _dry_arms(world, change_vbk_hash=0, plan_of_run={"c91": "c90"})
+    code, last, report = run_main(_dry_args(world, found, "dry_c3.json"), capsys)
+    assert code == 2 and last["status"] == "setting_defect"
+    assert any("not the c91 dry plan" in text for text in report["problems"]["setting_defects"])
 
 
 def test_12b_existing_out_and_tool_errors(world, capsys, cwd_elsewhere) -> None:

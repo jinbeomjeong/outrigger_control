@@ -9,6 +9,8 @@
 #   1. prelaunch_ed5.ps1 -Part dry       X-4 dry selection
 #   2. prelaunch_ed5.ps1 -Part l1keys    the 12b L1 key file (erratum 2 2-1)
 #   3. step_l1ref.ps1                    the two L1 reference runs
+#      step_p5fixed.ps1                  the P5-2 / P5-4 fixed values (case replays A .. F once,
+#                                        spec v5 5 / 8 1; prelaunch audit B-2)
 #   4. prelaunch_ed5.ps1 -Part x11       the X-11 plans, once
 #      prelaunch_ed5.ps1 -Part ckdrop    the T-CK / DROPOUT keys and plans (2-9.5; after x11)
 #      prelaunch_ed5.ps1 -Part v0sample  the j9_main V0 sample key list (2-9.1)
@@ -18,19 +20,19 @@
 #   8. step0_cdry.ps1, then the steps 1 .. 7 (6b / 6c for 12b), step7b_ckdrop.ps1 (a record),
 #      step8_j9main.ps1
 # A step refuses to start while a placeholder is left or the fixed list is not tracked and
-# equal to its files (Initialize-Ed5Step). One exception: step_l1ref.ps1 runs before the list
-# exists (its outputs go into it), so it takes the edition 4a start checks only (run commit,
-# clean tree, the 4a fixed inputs; Initialize-Step).
+# equal to its files (Initialize-Ed5Step). Two exceptions: step_l1ref.ps1 and step_p5fixed.ps1
+# run before the list exists (their outputs go into it), so they take the edition 4a start
+# checks only (run commit, clean tree, the 4a fixed inputs; Initialize-Step).
 
 . "$PSScriptRoot\..\run_steps\common.ps1"
 . "$PSScriptRoot\..\run_steps\record_helper.ps1"
 . "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
-$RunCommit = 'dba05b3f9ee80621b3d57d09711acc40c9d0df9e'
-# the master merge of z4369-ed5 (edition 5 code, errata 1 .. 3), one commit for every edition 5
-# step; the locked worktree ed5-run (2026-11-22), as edition 4a's z4369-jp3
-$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run'
+$RunCommit = '<ED5_RUN_COMMIT>'
+# the run commit is filled in after each fix merge (the first, dba05b3f in worktree ed5-run, is
+# superseded by the prelaunch audit fixes of ed5-fix1: B-1, B-2, W-1 .. W-3)
+$Worktree = '<ED5_RUN_WORKTREE>'
 $Ed5Placeholder = '^<ED5_'
 
 function Assert-Ed5Configured {
@@ -65,6 +67,22 @@ $PreviousRunsRoot = "$CauseDir\j9_runs\$($PreviousRunCommit.Substring(0, 8))"
 # possible): the P-1 import closure (meets = the content comparison path, erratum 2 2-4) and
 # the T-JR-12a bundles (6.2)
 $RecordCodeTools += @('tool:p1_import_closure', 'tool:t12_VBH', 'tool:t12_VBJ')
+
+function Read-PreviousStops([string]$StepName) {
+    # edition 5 override of ..\run_steps\common.ps1 (that file stays as edition 4a listed it):
+    # the earlier attempts' stop records go into this attempt's record; a judged failure of an
+    # earlier attempt - a judge tool exit 1 outside $RecordCodeTools, or a judged-failure marker
+    # 'judged:*' = 1 (prelaunch audit W-1: the T-JR-12a VBJ J-P3 H-7 inside a record tool) -
+    # refuses any new attempt (4a-5 5.4: a failure is never run again)
+    $Stops = @(Get-ChildItem -LiteralPath $RunsRoot -File | Where-Object { $_.Name -like "$StepName.stop*" })
+    foreach ($Stop in $Stops) {
+        $Previous = Get-Content -Raw -LiteralPath $Stop.FullName | ConvertFrom-Json
+        $StepState.PreviousStops += [ordered]@{ path = $Stop.FullName; folder = $Previous.folder
+            exit_code = $Previous.exit_code; reason = $Previous.reason }
+        $Refused = Get-RefusedPreviousStop $Stop.FullName $RecordCodeTools
+        if ($Refused) { Stop-Step 2 "refused: $Refused in $($Stop.Name); 4a-5 5.4: a failure is never run again" }
+    }
+}
 
 # the fixed key files of the three dry families (erratum 1 9.1; jp3_fixed_inputs checks the values)
 $FixedInputs['DRY_KEYS_FILE_SHA256_G8'] = @("$Ed5Inputs\dry_selection_r79_key_g8.txt",
@@ -170,6 +188,10 @@ function Assert-RecordReport([string]$ReportPath, [switch]$VbjJp3) {
     # the record list stops 2, record failures alone go on
     $Stop = Get-RecordToolStop $ReportPath -VbjJp3:$VbjJp3
     $StepState.Codes["record_gate:$(Split-Path -Leaf $ReportPath)"] = if ($Stop) { $Stop.reason } else { 'go on' }
+    # prelaunch audit W-1: a judged failure (the VBJ J-P3 H-7) leaves its marker for
+    # Read-PreviousStops, which refuses a new attempt
+    $Markers = Get-JudgedFailureMarkers $Stop -VbjJp3:$VbjJp3
+    foreach ($Name in $Markers.Keys) { $StepState.Codes[$Name] = $Markers[$Name] }
     if ($Stop) { Stop-Step $Stop.code $Stop.reason }
 }
 
@@ -212,6 +234,25 @@ $V0SampleCommandFile = "$Ed5Inputs\j9main_v0_sample_keys.command.txt"
 $CkdropFolder = "$Ed5Inputs\ckdrop"
 $L1Settings = @('VBJ0', 'VBJ')
 function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Setting.json" }
+# prelaunch audit B-2: the P5-2 / P5-4 fixed records of step_p5fixed.ps1 (fixed list entries)
+$P5FixedNames = @('p52.json', 'p54.json')
+# erratum 4 4-1: the disclosure sentence of the fixed computation (step record, judgement head)
+$P5FixedDisclosure = 'P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). 단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.'
+# erratum 4 4-1: the simulation path of the fixed values (case replay and replay runners; the
+# static import closure of these entries decides whether another commit's records may serve)
+$P5FixedEntries = @("$Coupled/run_v5.py", "$Coupled/jp3_case_replay.py", "$Coupled/jp3_p5_fixed_values.py")
+function Get-P5FixedFile([string]$Name) { return "$(Get-StepFolder 'p5fixed')\judge\$Name" }
+
+function Invoke-P52Compare([string]$Label, [string[]]$Rows) {
+    # prelaunch audit B-2 (P5-2 "고정 수와 차 > 0"): the case replay rows of this step against
+    # the fixed P5-2 record (its sha256 from the fixed list); returns the tool code (1 failed,
+    # 2 not judgeable, 3 error)
+    $Fixed = Get-P5FixedFile 'p52.json'
+    $Arguments = @("$Coupled/jp3_p5_fixed_values.py", 'p52-compare', '--fixed', $Fixed,
+        '--fixed-sha256', (Get-ListedSha $Fixed), '--rows') + $Rows +
+        @('--out', "$($StepState.Folder)\judge\$Label.json")
+    return Invoke-Tool $Label $Arguments
+}
 
 function Assert-NoL1Inputs([string[]]$Inputs) {
     # erratum 2 2-1 / 2-7.1 / G-1: call before a j9_main judge command. The L1 reference sha256

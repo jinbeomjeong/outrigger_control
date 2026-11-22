@@ -2,7 +2,8 @@
 # Step (4a) case replay A .. E and X11 (spec v5 8 4.(4); erratum 1 1, 2): at once run_v5
 # j9_cases (--workers 5), jp3_case_replay.py (C = VBG4, D = VBG6 on ③ rev 6; --workers 2) and
 # jp3_x11_replay.py --arm both (LSJ4_X11 on ③ rev 5, the 4a P4-5a arm), mask 0xFFFF ->
-# jp3_baseline_compare.py (P4-*) and jp3_case_judge.py x11 (P4-5a, rev 5 identity) -> P5-1
+# jp3_baseline_compare.py (P4-*), jp3_case_judge.py x11 (P4-5a, rev 5 identity) and P5-2
+# (jp3_p5_fixed_values.py p52-compare against step_p5fixed's record; prelaunch audit B-2) -> P5-1
 # against the 78fd5d2d rows (cases; case D VBG6 against the 4a VBG5 job; X11 whatever the
 # fallbacks, erratum 1 1). Needs step 2. A judge != 0 stops (a 1 makes the step 1).
 param([int]$Attempt = 1)
@@ -29,8 +30,11 @@ $CompareCode = Invoke-Tool 'baseline_compare' @("$Coupled/jp3_baseline_compare.p
     '--new', $Cases, $CaseCD, '--out', "$Folder\judge\baseline_compare.json")
 $X11Code = Invoke-Tool 'x11' @("$Coupled/jp3_case_judge.py", 'x11', '--both', $X11, '--baseline', $BaselineDir,
     '--out', "$Folder\judge\x11.json")
-$StepCode = Get-StepCode @($CompareCode, $X11Code)
-if ($StepCode -ne 0) { Stop-Step $StepCode "baseline_compare exit $CompareCode, x11 exit $X11Code" }
+# prelaunch audit B-2: P5-2 per case row against the fixed record (a rev 6 count differing or a
+# P4-on judged key > 0 is a failure)
+$P52Code = Invoke-P52Compare 'p52_compare' @("j9_cases.jsonl=$Cases", "cd.jsonl=$CaseCD")
+$StepCode = Get-StepCode @($CompareCode, $X11Code, $P52Code)
+if ($StepCode -ne 0) { Stop-Step $StepCode "baseline_compare exit $CompareCode, x11 exit $X11Code, p52_compare exit $P52Code" }
 
 $Previous = Get-PreviousStepFolder 'cases'
 Invoke-P51 'j9_cases' "$Previous\j9_cases.jsonl" $Cases "$Previous\j9_cases_t4h" "$Folder\j9_cases_t4h"

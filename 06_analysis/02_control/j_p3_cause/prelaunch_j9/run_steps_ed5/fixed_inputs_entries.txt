@@ -10,6 +10,9 @@
 06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum2.md.sha256
 06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum3.md
 06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum3.md.sha256
+# erratum 4 (sealed 4bc4ecdd: P5-2 / P5-4 calculation commit, c dry plan split)
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum4.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum4.md.sha256
 # stored inputs (common.ps1 $FixedInputs; jp3_fixed_inputs.py)
 06_analysis/02_control/j_p3_cause/baseline_221456d/SHA256SUMS
 06_analysis/03_hydraulic/coupled/v5/main.jsonl
@@ -43,6 +46,8 @@
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/casef_a*/j9_case_f.jsonl
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/t8_a*/j9_t8.jsonl
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dg3_a1/dg3_VB*.json
+# prelaunch audit B-2: the stored VBH T4h the P5-4 open-loop replay reads (step_p5fixed.ps1)
+06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/dg3_a1/VBH_t4h/*.npz
 # erratum 2 2-4: the 78fd5d2d P-1 outputs and codes compared by jp3_rerun_match.py --items p1
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/p1_a*/h6_base_judge*.json
 06_analysis/02_control/j_p3_cause/j9_runs/78fd5d2d/p1_a*/step_record.json

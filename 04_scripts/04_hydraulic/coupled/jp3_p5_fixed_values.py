@@ -9,7 +9,19 @@ main session runs it).
          ``jp3_r58_witness_carries``, ``jp3_r59_substeps``, ``jp3_r510_candidates`` (per leg and
          summed). A row without its ``extend_bound_check`` or without a judged key is listed in
          ``problems`` (never read as 0). X11 rows (``*_X11``, ③ rev 5 under test constants) are
-         not P5-2 rows (edition 5 erratum 1 1): listed in ``excluded_rows``, not counted.
+         not P5-2 rows (edition 5 erratum 1 1): listed in ``excluded_rows``, not counted. Each
+         row keeps its ``identity`` (the job without ``mask`` / ``t4h_dir``), its ``source``
+         (the rows file name), ``is_rev6`` and ``p4_on`` (``hydraulic_options``
+         ``rod_reading_truth``); ``judged_key_total`` sums the P4-on rev 6 rows only (erratum 1
+         1A, prelaunch audit B-2: E's VBJ / LSJ1 .. 4 and F's E branch); ``judged_key_record``
+         keeps the sums of the rev 4 rows (A, C) and the P4-off rev 6 rows (B, D, F-B) as
+         records; ``inputs`` names every rows file with its sha256 and ``disclosure`` the
+         erratum 4 4-1 sentence. ``p54`` lists every replayed T4h file with its sha256.
+``p52-compare``  Prelaunch audit B-2 (P5-2 stops "고정 수와 차 > 0", "판정 키 > 0") at steps (4a) /
+         (4b): ``--rows <source>=<file>`` against the fixed ``--fixed`` record (its sha256 from
+         the fixed list): exit 0 pass, 1 a rev 6 row's per-leg rev 6 counts differ or a P4-on
+         rev 6 row has a judged key > 0, 2 not judgeable (another sha256, a source or row set
+         other than the record's, a missing key), 3 a tool error.
 ``p54``  Open-loop replay (commands fixed) of stored T4h records (P5-4: the stored VBH T4h) with
          the run's own monitor setting at ③ revision 5 and at revision 6
          (``t4h_replay.checked_run_config``), the rod fallbacks forced at the run's own
@@ -28,8 +40,11 @@ Usage (dynamics-dev or Chrono-dev, project root; read only, one output file each
       --out <p52.json>
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_p5_fixed_values.py p54 --t4h <folder>
       --out <p54.json>
-Exit 0 written, 2 an existing ``--out`` or no input, 3 a tool error. The stdout's last line is
-JSON with ``status``, the counts and the output path.
+  python -I -B ... p52-compare --fixed <p52.json> --fixed-sha256 <sha> --rows
+      j9_cases.jsonl=<file> cd.jsonl=<file> --out <report.json>
+p52 / p54: exit 0 written, 2 an existing ``--out`` or no input, 3 a tool error. The stdout's
+last line is JSON with ``status``, the counts and the output path. The fixed records are made
+by ``step_p5fixed.ps1`` (prelaunch, before the c dry check; spec v5 8 1).
 """
 from __future__ import annotations
 
@@ -53,6 +68,15 @@ EXIT_WRITTEN, EXIT_NOT_USABLE, EXIT_ERROR = 0, 2, 3
 
 
 # ------------------------------------------------------------------------------- P5-2
+RUNTIME_JOB_FIELDS = ("mask", "t4h_dir")
+"""Run-time job fields (placement, output folder): not part of a row's identity."""
+P4_OPTION = "rod_reading_truth"
+"""``hydraulic_options`` flag of a P4-on run (addendum 4a-2 B2)."""
+REV6 = 6
+P52_COMPARED_KEYS = COVERAGE_KEYS
+"""Prelaunch audit B-2: the rev 6 counts each row of the fixed record must keep (per leg)."""
+
+
 def read_rows(path: Path) -> list[dict]:
     text = path.read_text(encoding="utf-8")
     try:
@@ -69,19 +93,37 @@ def _check_of(row: dict) -> dict | None:
     return record.get("extend_bound_check") or row.get("extend_bound_check")
 
 
-def p52_row(row: dict, problems: list[str]) -> dict:
+def row_identity(row: dict) -> str:
+    """The row's job without its run-time fields (an r79 row: its key without the candidate
+    prefix), with the setting - the same row of another run has the same identity."""
+    if row.get("key"):
+        key = str(row["key"])
+        return json.dumps({"key": key.split("#", 1)[1] if "#" in key else key,
+                           "setting": _setting_of(row)}, sort_keys=True)
+    job = {name: value for name, value in (row.get("job") or {}).items()
+           if name not in RUNTIME_JOB_FIELDS}
+    return json.dumps(job, sort_keys=True)
+
+
+def is_p4_on(row: dict) -> bool:
+    return (row.get("hydraulic_options") or {}).get(P4_OPTION) is True
+
+
+def p52_row(row: dict, problems: list[str], source: str = "") -> dict:
     """The P5-2 values of one case replay row."""
     label = row.get("key") or json.dumps(row.get("job"), sort_keys=True)
     check = _check_of(row)
-    out = {"row": label, "setting": row.get("v5_setting") or (row.get("job") or {}).get("setting"),
-           "rule_revision": None if check is None else check.get("rule_revision")}
+    revision = None if check is None else check.get("rule_revision")
+    out = {"row": label, "identity": row_identity(row), "source": source,
+           "setting": _setting_of(row), "rule_revision": revision,
+           "is_rev6": revision == REV6, "p4_on": is_p4_on(row)}
     if check is None:
         problems.append(f"{label}: no extend_bound_check")
         return out
     for key in (*JUDGED_KEYS, *COVERAGE_KEYS):
         values = check.get(key)
         if not (isinstance(values, list) and len(values) == 4):
-            if key in JUDGED_KEYS or check.get("rule_revision") == 6:
+            if key in JUDGED_KEYS or revision == REV6:
                 problems.append(f"{label}: {key} missing")
             continue
         out[key] = values
@@ -98,6 +140,9 @@ def _setting_of(row: dict) -> str | None:
 
 
 def p52(paths: list[Path]) -> dict:
+    """The P5-2 record (erratum 1 1A): every row with its rev 6 counts; ``judged_key_total``
+    sums the judged keys of the P4-on rev 6 rows only (E: VBJ, LSJ1 .. 4; F: the E branch);
+    the other rows' judged keys stay per row (prelaunch audit B-2)."""
     problems: list[str] = []
     rows, excluded = [], []
     for path in paths:
@@ -106,13 +151,109 @@ def p52(paths: list[Path]) -> dict:
             if setting is not None and setting.endswith(X11_SETTING_SUFFIX):
                 excluded.append({"setting": setting, "job": row.get("job")})
                 continue
-            rows.append(p52_row(row, problems))
+            rows.append(p52_row(row, problems, source=path.name))
+    judged = [row for row in rows if row["is_rev6"] and row["p4_on"]]
     return {"rule": "jp3_remedy_spec_v5.md P5-2 (fixed after implementation, before the run; "
-                    "erratum 1 1: cases A .. F)",
-            "inputs": [str(path) for path in paths], "rows": rows, "problems": problems,
-            "excluded_rows": excluded,
-            "judged_key_total": sum(row.get(f"{key}_sum", 0) for row in rows
-                                    for key in JUDGED_KEYS)}
+                    "erratum 1 1: cases A .. F, 1A: the rev 6 counts on the rev 6 rows, the judged "
+                    "key total on the P4-on rev 6 rows; erratum 4 4-1)",
+            "inputs": [{"path": str(path), "sha256": file_sha256(path)} for path in paths],
+            "rows": rows, "problems": problems, "excluded_rows": excluded,
+            "rev6_rows": sum(row["is_rev6"] for row in rows), "p4_on_rev6_rows": len(judged),
+            "judged_key_total": _judged_sum(judged),
+            # erratum 4 4-1: records only (A / C rev 4; the P4-off rev 6 rows B, D, F-B are
+            # judged at step (4) by the edition 4a 5.3 case conditions)
+            "judged_key_record": {
+                "rev4_rows": _judged_sum([row for row in rows if row["rule_revision"] == 4]),
+                "p4_off_rev6_rows": _judged_sum([row for row in rows
+                                                 if row["is_rev6"] and not row["p4_on"]])},
+            "disclosure": P52_DISCLOSURE}
+
+
+P52_DISCLOSURE = ("P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). "
+                  "단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.")
+"""Erratum 4 4-1: the disclosure sentence of the P5-2 fixed computation (as written)."""
+
+
+def _judged_sum(rows: list[dict]) -> int:
+    return sum(row.get(f"{key}_sum", 0) for row in rows for key in JUDGED_KEYS)
+
+
+def file_sha256(path: Path) -> str:
+    import hashlib
+
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _rows_of_sources(values: list[str]) -> dict[str, Path]:
+    """``<source name>=<path>`` arguments (the fixed record's ``source`` names)."""
+    out = {}
+    for value in values:
+        name, separator, path = value.partition("=")
+        if not separator or name in out:
+            raise ValueError(f"--rows {value!r}: one <source name>=<path> per source")
+        out[name] = Path(path)
+    return out
+
+
+def p52_compare(fixed_path: Path, fixed_sha256: str, rows: dict[str, Path]) -> dict:
+    """Prelaunch audit B-2 (P5-2 stop "고정 수와 차 > 0", "판정 키 > 0"): the rows of the given
+    sources against the fixed record. Failed: a rev 6 row whose per-leg rev 6 counts differ
+    from the fixed ones, or a P4-on rev 6 row with a judged key > 0. Not judgeable: another
+    fixed sha256, a source the record does not name, other row identities than the record's
+    (per source), a problem of the record or of the new rows (a missing key)."""
+    import hashlib
+
+    report: dict = {"rule": "jp3_remedy_spec_v5.md P5-2 / erratum 1 1A (prelaunch audit B-2)",
+                    "fixed": {"path": str(fixed_path), "sha256": fixed_sha256},
+                    "failures": [], "not_judgeable": []}
+    if hashlib.sha256(fixed_path.read_bytes()).hexdigest() != fixed_sha256:
+        report["not_judgeable"].append("--fixed is not of the given sha256")
+        return report
+    fixed = json.loads(fixed_path.read_text(encoding="utf-8"))
+    if fixed.get("problems"):
+        report["not_judgeable"].append(f"the fixed record has {len(fixed['problems'])} problems")
+    new = p52(list(rows.values()))
+    source_of = {path.name: name for name, path in rows.items()}
+    if new["problems"]:
+        report["not_judgeable"] += new["problems"]
+    for name in rows:
+        if not any(row["source"] == name for row in fixed["rows"]):
+            report["not_judgeable"].append(f"source {name}: not in the fixed record")
+    compared = 0
+    for name in rows:
+        fixed_rows = {row["identity"]: row for row in fixed["rows"] if row["source"] == name}
+        new_rows = {row["identity"]: row for row in new["rows"]
+                    if source_of.get(row["source"]) == name}
+        if set(fixed_rows) != set(new_rows):
+            report["not_judgeable"].append(
+                f"source {name}: {len(set(fixed_rows) ^ set(new_rows))} rows on one side only")
+            continue
+        for identity, row in new_rows.items():
+            before = fixed_rows[identity]
+            if before["is_rev6"] != row["is_rev6"] or before["p4_on"] != row["p4_on"]:
+                report["not_judgeable"].append(f"{row['row']}: another revision / P4 state")
+                continue
+            if not row["is_rev6"]:
+                continue
+            # erratum 4 4-1 (audit N-1): a difference is judged only with both values present;
+            # a missing value on either side is not judgeable, never "no difference"
+            absent = [key for key in P52_COMPARED_KEYS
+                      if before.get(key) is None or row.get(key) is None]
+            if absent:
+                report["not_judgeable"].append(f"{row['row']}: {absent} missing on a side")
+                continue
+            compared += 1
+            differing = [key for key in P52_COMPARED_KEYS if before.get(key) != row.get(key)]
+            if differing:
+                report["failures"].append(f"{row['row']}: {differing} differ from the fixed")
+            if row["p4_on"] and any(row.get(f"{key}_sum", 0) for key in JUDGED_KEYS):
+                report["failures"].append(f"{row['row']}: a J-P3 judged key > 0")
+    if compared == 0 and not report["not_judgeable"]:
+        report["not_judgeable"].append("no rev 6 row compared")
+    report["rev6_rows_compared"] = compared
+    report["status"] = ("failed" if report["failures"] else
+                        "not_judgeable" if report["not_judgeable"] else "pass")
+    return report
 
 
 # ------------------------------------------------------------------------------- P5-4
@@ -191,8 +332,11 @@ def p54(folder: Path) -> dict:
             "max_over_kN_p90": float(np.percentile(over, 90)) if over else None,
             "max_over_kN_max": max(over) if over else None, "files": rows}
     before, after = (per_revision[str(revision)]["dominated_reads"] for revision in REVISIONS)
-    return {"rule": "jp3_remedy_spec_v5.md P5-4 (record; expected reduction about 23 %, F8)",
-            "t4h_folder": str(folder), "files": len(files), "by_revision": per_revision,
+    return {"rule": "jp3_remedy_spec_v5.md P5-4 (record; expected reduction about 23 %, F8; "
+                    "erratum 4 4-1: the edition 4a VBH run's T4h)",
+            "t4h_folder": str(folder), "files": len(files),
+            "inputs": [{"file": path.name, "sha256": file_sha256(path)} for path in files],
+            "by_revision": per_revision,
             "dominated_reduction": None if before == 0 else 1.0 - after / before,
             "plant_rod_pressure": proxy_disclosure()}
 
@@ -224,6 +368,30 @@ def proxy_disclosure() -> dict:
             "dominated_reads_use_it": False, "judged": False}
 
 
+EXIT_OF_COMPARE = {"pass": 0, "failed": 1, "not_judgeable": 2}
+
+
+def _main_compare(args) -> int:
+    """``p52-compare`` (module docstring): exit 0 pass, 1 failed, 2 not judgeable, 3 error."""
+    try:
+        report = p52_compare(args.fixed, args.fixed_sha256, _rows_of_sources(args.rows))
+    except ValueError as exc:
+        print(f"input error: {exc}", file=sys.stderr)
+        print(json.dumps({"status": "not_judgeable"}))
+        return EXIT_NOT_USABLE
+    except Exception as exc:  # noqa: BLE001 (every other failure is a tool error)
+        print(f"error: {type(exc).__name__}: {exc}", file=sys.stderr)
+        print(json.dumps({"status": "error"}))
+        return EXIT_ERROR
+    report["status"] = ("failed" if report["failures"] else
+                        "not_judgeable" if report["not_judgeable"] else "pass")
+    with args.out.open("x", encoding="utf-8") as handle:
+        json.dump(report, handle, indent=1)
+    print(json.dumps({"status": report["status"], "failures": len(report["failures"]),
+                      "not_judgeable": len(report["not_judgeable"]), "out": str(args.out)}))
+    return EXIT_OF_COMPARE[report["status"]]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -233,10 +401,18 @@ def main(argv: list[str] | None = None) -> int:
     replay_parser = sub.add_parser("p54")
     replay_parser.add_argument("--t4h", type=Path, required=True)
     replay_parser.add_argument("--out", type=Path, required=True)
+    compare_parser = sub.add_parser("p52-compare")
+    compare_parser.add_argument("--fixed", type=Path, required=True)
+    compare_parser.add_argument("--fixed-sha256", required=True)
+    compare_parser.add_argument("--rows", nargs="+", required=True,
+                                help="<source name>=<rows file> (the fixed record's names)")
+    compare_parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.out.exists():
         print(json.dumps({"status": "not_usable", "reason": "--out exists"}))
         return EXIT_NOT_USABLE
+    if args.command == "p52-compare":
+        return _main_compare(args)
     try:
         document = p52(args.rows) if args.command == "p52" else p54(args.t4h)
     except Exception as exc:  # a tool error

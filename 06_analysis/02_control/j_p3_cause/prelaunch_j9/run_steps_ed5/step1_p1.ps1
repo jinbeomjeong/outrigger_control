@@ -1,5 +1,6 @@
 #Requires -Version 7
-# Step (1) P-1 (spec v5 8 4.(1); 4a-4 6, erratum 1 R-2; stored data only): base-judge -> R-2
+# Step (1) P-1 (spec v5 8 4.(1); 4a-4 6, erratum 1 R-2; stored data only); needs cdry.done with
+# c < 0.5 (prelaunch audit W-3): base-judge -> R-2
 # record -> t12-selfcheck, single, mask 0xFFFF; the P-1 output list at its end (the main session
 # commits it before step 6). Edition 5 changes the simulation code by design: no 4a-7 2.2 path
 # check and no fa997f4c match (erratum 2 2-4); instead git diff --stat 78fd5d2d..run commit
@@ -10,7 +11,13 @@
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed5.ps1"
 
-$Folder = Initialize-Ed5Step 'p1' $Attempt @()
+$Folder = Initialize-Ed5Step 'p1' $Attempt @('cdry')
+# prelaunch audit W-3 (spec v5 6.3.10, 8 2): the c dry check is done and its c < 0.5; c >= 0.5
+# (or no c) stops before step (1) and asks (record_gates_ed5.ps1 Get-DryCStop)
+$DryC = "$(Get-StepFolder 'cdry')\judge\dry_c.json"
+$DryCStop = Get-DryCStop $DryC
+$StepState.Codes['dry_c_gate'] = if ($DryCStop) { $DryCStop.reason } else { 'c < 0.5' }
+if ($DryCStop) { Stop-Step $DryCStop.code $DryCStop.reason }
 Write-DiffStat
 $JudgeFile = "$Folder\h6_base_judge.json"
 $BaseReport = "$Folder\judge\bj.json"

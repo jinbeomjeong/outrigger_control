@@ -46,11 +46,12 @@ Sub-commands, run in the order of 8 4.(6) (VBK0 first):
             opportunity pairs, and the cached ``u_hold`` of the witness count (2-5).
 ``l1-overlap`` (erratum 2 2-1, a record) the keys the 12b L1 reference and the T-JR-12a L1
             reference of one setting share, with the same / differing command hash counts.
-``dry-c``   The c dry check (6.3.10): the VBK0 and VBK lines of the dry plan (``c90=`` /
-            ``c91=`` run files and T4h folders per arm; the lines must carry the dry plan's
-            sha256), the 6.3.2 categories and c = the share of opportunity pairs whose
-            ``commands_sha256`` changed. ``written`` (exit 0) records c; the decision on it
-            (c >= 0.5) is the main session's.
+``dry-c``   The c dry check (6.3.10): the VBK0 and VBK lines of the two dry plans (``c90=`` /
+            ``c91=`` run files and T4h folders per arm; one plan per dry seed, ``selection.json``
+            ``dry.runs``; a run's lines must carry its own plan's sha256 and a plan's keys must
+            be its key file's, prelaunch audit B-1 (a)), the 6.3.2 categories and c = the share
+            of opportunity pairs whose ``commands_sha256`` changed. ``written`` (exit 0) records
+            c; c >= 0.5 stops at step (1) (prelaunch audit W-3, ``step1_p1.ps1``).
 
 Edition 5 erratum 1 (``jp3_remedy_spec_v5_erratum1.md``): 6 a pair counts as "no trigger"
 when no fault read was injected in the run, by the injection record itself (``is_armed``,
@@ -946,14 +947,36 @@ def cmd_l1_overlap(args) -> tuple[str, dict]:
 
 
 # ------------------------------------------------------------------------------- dry c (6.3.10)
-def dry_keys(selection: dict, plans_dir: Path) -> list[str]:
-    """The plain keys of the c dry plan (``selection.json`` ``dry.plan``)."""
-    plan = json.loads((plans_dir / selection["dry"]["plan"]).read_text(encoding="utf-8"))
-    return [plain_key(key) for key in plan["faults"]]
-
-
 DRY_RUNS = ("c90", "c91")
-"""The dry runs of one arm, one per dry seed (``c90_keys.txt`` / ``c91_keys.txt``)."""
+"""The dry runs of one arm, one per dry seed, each with its own plan and key file
+(``c90_plan.json`` / ``c90_keys.txt``, ``c91_...``; prelaunch audit B-1 (a))."""
+
+
+def dry_run_keys(selection: dict, plans_dir: Path, problems: Problems) -> dict[str, list[str]]:
+    """Per dry run the plain keys of its plan (``selection.json`` ``dry.runs``); a plan whose
+    keys are not exactly its key file's is a setting defect (the runner's X-10 guard).
+
+    Raises:
+        Stop: The selection names other dry runs (not judgeable).
+    """
+    runs = (selection.get("dry") or {}).get("runs") or {}
+    if set(runs) != set(DRY_RUNS):
+        raise Stop("not_judgeable", f"selection dry runs {sorted(runs)}, {list(DRY_RUNS)} "
+                                    "expected (one plan per dry seed)")
+    out = {}
+    for run in DRY_RUNS:
+        plan = json.loads((plans_dir / runs[run]["plan"]).read_text(encoding="utf-8"))
+        keys = [plain_key(key) for key in plan["faults"]]
+        listed = (plans_dir / runs[run]["keys"]).read_text(encoding="utf-8").splitlines()
+        if keys != listed:
+            problems.setting_defects.append(f"{run}: plan keys are not its key file's")
+        out[run] = keys
+    return out
+
+
+def dry_plan_sha256(selection: dict, run: str) -> str:
+    """The sha256 the selection recorded for the plan of one dry run."""
+    return selection["outputs"][selection["dry"]["runs"][run]["plan"]]
 
 
 def parse_dry_paths(values: list[str] | None, option: str) -> dict[str, Path]:
@@ -973,17 +996,13 @@ def parse_dry_paths(values: list[str] | None, option: str) -> dict[str, Path]:
     return paths
 
 
-def load_dry_arm(expected: list[str], results: list[str], t4h: list[str], arm: str,
-                 problems: Problems) -> dict[str, Line]:
-    """The dry lines of one arm: per dry run the expected keys of its seed token."""
+def load_dry_arm(expected: dict[str, list[str]], results: list[str], t4h: list[str], arm: str,
+                 problems: Problems) -> dict[str, dict[str, Line]]:
+    """The dry lines of one arm per dry run: the keys of that run's plan."""
     result_paths = parse_dry_paths(results, f"--{arm}")
     t4h_paths = parse_dry_paths(t4h, f"--{arm}-t4h")
-    lines: dict[str, Line] = {}
-    for run in DRY_RUNS:
-        seed_token = "s" + run.removeprefix("c")
-        keys = [key for key in expected if key.split("|")[1] == seed_token]
-        lines.update(load_lines(result_paths[run], t4h_paths[run], keys, arm, problems))
-    return lines
+    return {run: load_lines(result_paths[run], t4h_paths[run], expected[run], arm, problems)
+            for run in DRY_RUNS}
 
 
 def cmd_dry_c(args) -> tuple[str, dict]:
@@ -991,17 +1010,22 @@ def cmd_dry_c(args) -> tuple[str, dict]:
     ``commands_sha256``), and the trigger existence of the dry pairs (record). The decision of
     the next step (c >= 0.5 stops and asks) is the main session's."""
     selection = load_selection(args.selection, args.selection_sha256)
-    expected = dry_keys(selection, args.selection.parent)
     problems = Problems()
-    lines = {arm: load_dry_arm(expected, getattr(args, arm), getattr(args, f"{arm}_t4h"), arm,
-                               problems)
-             for arm in SETTING_OF_ARM}
-    dry_plan_sha = selection["outputs"][selection["dry"]["plan"]]
-    for arm, arm_lines in lines.items():
-        check_presence(arm_lines, arm, problems)
-        problems.setting_defects += [
-            f"{arm} {key}: plan sha256 is not the dry plan" for key, line in arm_lines.items()
-            if (line.row.get("rod_fault") or {}).get("plan_sha256") != dry_plan_sha]
+    expected_by_run = dry_run_keys(selection, args.selection.parent, problems)
+    expected = [key for run in DRY_RUNS for key in expected_by_run[run]]
+    by_run = {arm: load_dry_arm(expected_by_run, getattr(args, arm), getattr(args, f"{arm}_t4h"),
+                                arm, problems)
+              for arm in SETTING_OF_ARM}
+    lines = {arm: {key: line for run in DRY_RUNS for key, line in runs[run].items()}
+             for arm, runs in by_run.items()}
+    for arm, runs in by_run.items():
+        check_presence(lines[arm], arm, problems)
+        for run, run_lines in runs.items():  # B-1 (a): each run against its own plan
+            plan_sha = dry_plan_sha256(selection, run)
+            problems.setting_defects += [
+                f"{arm} {key}: plan sha256 is not the {run} dry plan"
+                for key, line in run_lines.items()
+                if (line.row.get("rod_fault") or {}).get("plan_sha256") != plan_sha]
     report = {"rule": "jp3_remedy_spec_v5.md 6.3.10 (X-13 dry-c)", "pairs": len(expected),
               "inputs": {arm: {run: {"path": str(path), "sha256": file_sha256(path)}
                                for run, path in parse_dry_paths(getattr(args, arm),
