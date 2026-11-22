@@ -174,8 +174,8 @@ def pass_grades(monkeypatch):
 
 
 def test_n1_t12_mismatch_line_is_a_setting_defect(pass_grades) -> None:
-    """Edition 5 erratum 3 3-1 (draft) replaces N-1 for t12: a lock window mismatch line is a
-    run record defect (setting_defect, exit 2), no failure."""
+    """Edition 5 erratum 3 3-1 (sealed 7bab9217) replaces N-1 for t12: a lock window mismatch
+    line is a run record defect (setting_defect, exit 2), no failure."""
     new = _dg3_document()
     new["results"][9]["error"] = MISMATCH
     report, problems = tjr.judge_t12("VBH", _dg3_document(setting="VB"), {}, new, {})
@@ -186,7 +186,8 @@ def test_n1_t12_mismatch_line_is_a_setting_defect(pass_grades) -> None:
 
 
 def test_t12_record_failures_are_the_13_9_list(pass_grades) -> None:
-    """Erratum 3 3-1 (draft): a 13.9 failure (new FAULT) is named in ``record_failures``."""
+    """Erratum 3 3-1 (sealed 7bab9217): a 13.9 failure (new FAULT) is named in
+    ``record_failures``."""
     report, problems = tjr.judge_t12("VBH", _dg3_document(setting="VB"), {},
                                      _dg3_document(fault="FAULT_NEW"), {})
     assert problems.failures and report["record_failures"] == problems.failures
@@ -207,8 +208,8 @@ def test_n1_t12_other_error_lines_stay_not_judgeable(pass_grades, monkeypatch, s
 
 
 def test_n1_t12_command_lock_window_mismatch_exit_2(tmp_path, pass_grades) -> None:
-    """Erratum 3 3-1 (draft): "lock window 불일치 -> 종료 2" through ``main`` (was exit 1 under
-    N-1); the VBJ report has no J-P3 judgement (``jp3_outcome`` not_computed)."""
+    """Erratum 3 3-1 (sealed 7bab9217): "lock window 불일치 -> 종료 2" through ``main`` (was
+    exit 1 under N-1); the VBJ report has no J-P3 judgement (``jp3_outcome`` not_computed)."""
     new = _dg3_document()
     new["results"][9]["error"] = MISMATCH
     files = {"base": tmp_path / "base.json", "new": tmp_path / "new.json",

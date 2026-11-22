@@ -163,7 +163,7 @@ function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '
 
 function Assert-RecordReport([string]$ReportPath, [switch]$VbjJp3) {
     # after a record tool whose exit 1 goes on (T-JR-12a VBH / VBJ, base-judge-compare): the
-    # erratum 3 3-1 order of record_gates_ed5.ps1 Get-RecordToolStop - VBJ J-P3 H-7 stops 1,
+    # erratum 3 (sealed 7bab9217) 3-1 order of record_gates_ed5.ps1 Get-RecordToolStop - VBJ J-P3 H-7 stops 1,
     # no VBJ J-P3 judgement / a setting defect / a not-judgeable reason / a failure outside
     # the record list stops 2, record failures alone go on
     $Stop = Get-RecordToolStop $ReportPath -VbjJp3:$VbjJp3

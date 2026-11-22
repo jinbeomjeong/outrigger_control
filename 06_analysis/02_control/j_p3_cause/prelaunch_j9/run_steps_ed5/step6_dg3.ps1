@@ -76,7 +76,7 @@ foreach ($Setting in $Placement.Keys) {
 }
 
 # 6.2: T-JR-12a is a record (exit 1 = the 13.9 indicators moved; written down, not a stop),
-# but (re-audit K-1, erratum 3 3-1 draft) the report then goes through Assert-RecordReport:
+# but (re-audit K-1, erratum 3 3-1, sealed 7bab9217) the report then goes through Assert-RecordReport:
 # VBJ J-P3 H-7 (its judged rows) stops 1; no VBJ J-P3 judgement, a setting defect, a
 # not-judgeable reason or a failure outside the 13.9 record list stops 2; 13.9 record failures
 # alone go on. VBH J-P3 stays a record (A7).

@@ -621,7 +621,7 @@ def _compare_report(failures: list[str]) -> dict:
 
 @pytest.mark.parametrize("match_item", ["p1", "p1_content"])
 def test_p1_grade_difference_stops_2_on_both_paths(tmp_path, match_item) -> None:
-    """Erratum 3 3-1 (7bab9217 draft): "sha 경로 + 등급 차이 -> P-1 종료 2" and "내용 경로 +
+    """Erratum 3 3-1 (sealed 7bab9217): "sha 경로 + 등급 차이 -> P-1 종료 2" and "내용 경로 +
     등급 차이 -> P-1 종료 2" (base-judge-compare exit 1, its R-2 difference no record)."""
     report = _compare_report([GRADE_DIFFERENCE])
     call = f"Get-P1CompareStop {{report}} 1 '{match_item}'"

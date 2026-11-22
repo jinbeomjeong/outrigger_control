@@ -51,7 +51,7 @@ $ClosureCode = Invoke-Judge 'p1_import_closure' @("$Coupled/jp3_import_closure.p
     '--out', "$Folder\judge\p1_import_closure.json") -ContinueCodes @(0, 1)
 $MatchItem = if ($ClosureCode -eq 0) { 'p1' } else { 'p1_content' }
 $StepState.Codes['p1_match_path'] = $MatchItem
-# erratum 3 3-1 (7bab9217 draft): base-judge-compare must be 0 on both paths - an R-2 grade
+# erratum 3 3-1 (sealed 7bab9217): base-judge-compare must be 0 on both paths - an R-2 grade
 # difference is no record failure and stops P-1 with exit 2 (record_gates_ed5.ps1)
 $CompareStop = Get-P1CompareStop "$Folder\judge\h6_judge_compare.json" $StepState.Codes['tool:base_judge_compare'] $MatchItem
 if ($CompareStop) { Stop-Step $CompareStop.code $CompareStop.reason }

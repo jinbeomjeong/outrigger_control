@@ -85,7 +85,7 @@ STAGE3_ROWS = (
     ("v5s3_VB_S_top_fdown3.5_wika_Fs8_20261107_222708", "S_top_fdown3.5_wika_Fs8",
      "6a3c121c18a71c8977f4cbc0959bbcc6b701881dbe08eb46d9eb46d5b5eed9fc"),
 )
-"""Erratum 3 3-1 (draft): the 23 S8 folders of batch V5-STAGE3_20261107_184341 as its
+"""Erratum 3 3-1 (sealed 7bab9217): the 23 S8 folders of batch V5-STAGE3_20261107_184341 as its
 ``progress.log`` END lines name them (the inner folder is the case's ``--only`` in
 ``batch.json``), with the sha256 of each ``result.json`` (fixed 2026-11-22). No date or name
 glob: later reruns of the same cases (``v5s3_*`` of 2026-11-14 ..) sit in the same folder."""

@@ -1,6 +1,6 @@
 #Requires -Version 7
 # 436.9 J-P3 edition 5: the stop decision on the report of a record tool whose exit 1 goes on
-# (T-JR-12a VBH / VBJ, base-judge-compare; re-audit K-1, erratum 3 3-1 draft). No dependency
+# (T-JR-12a VBH / VBJ, base-judge-compare; re-audit K-1, erratum 3 3-1, sealed 7bab9217). No dependency
 # on the other run step files: common_ed5.ps1 dot-sources it, the unit tests run it alone.
 #
 # Get-RecordToolStop <report> [-VbjJp3], in this order (erratum 3 3-1):
@@ -13,7 +13,7 @@
 #      T-JR-12a - new FAULT, first READY, L2 grade, dominated-read reduction; the grade
 #      differences of base-judge-compare) -> an input defect, stop 2
 #   5. otherwise (record failures only, or none) -> go on
-# Get-P1CompareStop <report> <exit code> <p1 | p1_content> (erratum 3 3-1, 7bab9217 draft):
+# Get-P1CompareStop <report> <exit code> <p1 | p1_content> (erratum 3 3-1, sealed 7bab9217):
 #   base-judge-compare in P-1 - an exit other than 0 (an R-2 grade difference is no record
 #   failure) stops P-1 with exit 2 on the sha path and on the content path alike; exit 0 then
 #   goes through Get-RecordToolStop (a defect / not-judgeable reason still stops 2)

@@ -591,9 +591,10 @@ def t8_inputs(args: argparse.Namespace, problems: compare.Problems) -> tuple[T8I
 
 # --- t12 (T-JR-12) --------------------------------------------------------------------------
 T12_RECORD_FAILURE_KEYS = ("l2_pass_to_fail", "new_fault", "ready_failures")
-"""Erratum 3 3-1 (draft): the closed list of T-JR-12a record failures - the 13.9 indicators
-(L2 grade, new FAULT, first READY; the dominated-read reduction is a record without a failure,
-``records``). A report's ``record_failures`` names them; any other failure is not a record."""
+"""Erratum 3 3-1 (sealed 7bab9217): the closed list of T-JR-12a record failures - the 13.9
+indicators (L2 grade, new FAULT, first READY; the dominated-read reduction is a record without
+a failure, ``records``). A report's ``record_failures`` names them; any other failure is not a
+record."""
 
 
 def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: dict,
@@ -699,7 +700,7 @@ def _dg3_lines(results: list[dict], label: str, problems: compare.Problems, *,
                mismatch_is_defect: bool = False) -> dict[str, dict]:
     """The result lines by plain key. An error line is not judgeable; a
     ``LockWindowMismatchError`` line of the new side (``mismatch_is_defect``) is a setting
-    defect: erratum 3 3-1 (draft) reads the run record mismatch as an input defect, not a
+    defect: erratum 3 3-1 (sealed 7bab9217) reads the run record mismatch as an input defect, not a
     record failure (the edition 4a prelaunch audit N-1 failure is replaced; T-JR-14 in
     ``records`` judges the mismatch on its own)."""
     import h8_noise_judge_4368 as h8
@@ -1759,7 +1760,7 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         report, problems, files = compare_base_judges(JudgeCompareInputs(
             args.h6, args.new_judge, args.new_judge_sha256, args.stored_judge,
             args.stored_h6_judge, args.new_l1_reference, args.stored_l1_reference))
-        # erratum 3 3-1 (7bab9217 draft): an R-2 grade difference is not a record failure (the
+        # erratum 3 3-1 (sealed 7bab9217): an R-2 grade difference is not a record failure (the
         # closed list is the T-JR-12a 13.9 indicators); step 1 stops P-1 with exit 2 on it
         report["record_failures"] = []
         return report, problems, files
