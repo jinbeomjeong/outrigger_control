@@ -1,0 +1,53 @@
+{
+ "record_only": "4a-4 erratum 1 R-2: not a judgement condition",
+ "stored_judge": {
+  "keys": 135,
+  "differing": 0,
+  "rows": [],
+  "grade_counts_new": {
+   "pass": 102,
+   "flag": 23,
+   "fail": 10
+  }
+ },
+ "stored_h6_judge": {
+  "keys": 135,
+  "differing": 0,
+  "rows": [],
+  "grade_counts_new": {
+   "pass": 102,
+   "flag": 23,
+   "fail": 10
+  }
+ },
+ "l1_reference": {
+  "new_sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+  "stored_sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+  "equal": true,
+  "stored_is_fixed": true
+ },
+ "record_failures": [],
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "base-judge-compare",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge.json",
+   "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_r79_judge.json",
+   "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\harness_path1\\h6_judge.json",
+   "sha256": "f8352c5d12d31aebcffe2a4bc5bdfa7919e605a3f3261da8455640df3bad0d0b"
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "judge_run": {
+  "command": [
+   "-I",
+   "-B",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+   "judge",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge_L1_reference.json",
+   "--s4-late-loc"
+  ],
+  "exit_code": 0,
+  "last_line": "unmatched 0 errors 0 -> C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge.json",
+  "stderr_tail": []
+ },
+ "judge_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge.json",
+ "judge_sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b",
+ "l1_reference_sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "base-judge",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+   "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge_L1_reference.json",
+   "sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7"
+  }
+ ]
+}

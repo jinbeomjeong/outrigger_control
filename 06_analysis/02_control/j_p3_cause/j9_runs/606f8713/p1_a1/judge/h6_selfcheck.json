@@ -1,0 +1,89 @@
+{
+ "t12_report": {
+  "bundle": "VBH",
+  "base": "stored H-6 (rev 4)",
+  "pairs": 135,
+  "l2_pass_to_fail": [],
+  "grade_transitions_record": {
+   "L2": {
+    "pass->pass": 1
+   },
+   "L3": {
+    "pass->pass": 101,
+    "flag->flag": 23,
+    "fail->fail": 10
+   }
+  },
+  "new_fault": [],
+  "ready_failures": [],
+  "ready_both_missing_record": [
+   {
+    "key": "L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "base_final_phase": "level",
+    "new_final_phase": "level"
+   },
+   {
+    "key": "L3|s0|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+    "base_final_phase": "probe",
+    "new_final_phase": "probe"
+   },
+   {
+    "key": "L3|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0",
+    "base_final_phase": "level",
+    "new_final_phase": "level"
+   },
+   {
+    "key": "L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "base_final_phase": "level",
+    "new_final_phase": "level"
+   },
+   {
+    "key": "L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+    "base_final_phase": "probe",
+    "new_final_phase": "probe"
+   },
+   {
+    "key": "L3|s1|ref|2|rigid|B|-4.4,0",
+    "base_final_phase": "probe",
+    "new_final_phase": "probe"
+   },
+   {
+    "key": "L3|s1|ref|7|rigid|B|2.2,-1.6",
+    "base_final_phase": "probe",
+    "new_final_phase": "probe"
+   }
+  ],
+  "ready_improved_record": [],
+  "record_failures": [],
+  "records": {
+   "retract_tracker_dominated_reads": 0,
+   "retract_tracker_over_tol_reads": 0,
+   "retract_tracker_false_drop_reads": 0,
+   "ret_after_gate_s_values": 0,
+   "ret_after_gate_s_max": null,
+   "ret_after_gate_s_resolution": "read grid 0.1 s: ret_after_gate_s = first RET read - T (the read before it), so it differs from the gate-opening sub-step by up to 0.1 s; a record, not a judged column (4a-2 R9)"
+  }
+ },
+ "t12_problems": {
+  "setting_defects": [],
+  "not_judgeable": [],
+  "failures": []
+ },
+ "l2_lines": 1,
+ "expectation_misses": [],
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "t12-selfcheck",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge.json",
+   "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b"
+  }
+ ]
+}
