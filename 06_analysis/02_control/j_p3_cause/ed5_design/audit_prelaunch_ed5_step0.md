@@ -322,3 +322,4 @@
 - 경고 2: P5-2 첫 고정 시도 8003083d p5fixed는 종료 2(33 problems, rev 4 줄에 rev 5/6 키를 요구한 도구 결함)로 멈췄다. 줄마다 자기 revision의 판정 키를 읽도록 고친 뒤(3f801778, control 해석) ae9d0b2d에서 다시 계산했다. 멈춤 기준(P4 켬 rev 6 줄)의 키·문턱은 바뀌지 않았다. 판정서에 이 사실을 공개한다.
 - 경고 3: step0_cdry.ps1 6행 주석 정정은 다음 커밋으로 미룬다(동작 무관).
 - 경고 4: 백업 폴더에 SHA256SUMS를 더했다.
+- c 건식 첫 기동(19:53:33)은 러너가 단계 스크립트를 worktree 경로(ed5-run3, 자리 표시 `<ED5_RUN_COMMIT>`가 남은 ae9d0b2d판 common_ed5)로 불러 1 s 만에 종료 1로 끝났다. 단계 폴더·예약·판정 출력은 생기지 않았다(`Initialize-Ed5Step` 전에 멈춤). 러너를 prep3와 같은 메인 checkout 경로·cwd로 고쳐 20:04:24에 `-Attempt 1`로 다시 띄웠다. 첫 기동 로그는 `~/.claude/runners/outrigger-ed5-cdry/logs/cdry_try0_wrongpath.log`.
