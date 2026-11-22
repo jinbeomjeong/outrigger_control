@@ -13,6 +13,10 @@
 #      T-JR-12a - new FAULT, first READY, L2 grade, dominated-read reduction; the grade
 #      differences of base-judge-compare) -> an input defect, stop 2
 #   5. otherwise (record failures only, or none) -> go on
+# Get-P1CompareStop <report> <exit code> <p1 | p1_content> (erratum 3 3-1, 7bab9217 draft):
+#   base-judge-compare in P-1 - an exit other than 0 (an R-2 grade difference is no record
+#   failure) stops P-1 with exit 2 on the sha path and on the content path alike; exit 0 then
+#   goes through Get-RecordToolStop (a defect / not-judgeable reason still stops 2)
 # Returns $null (go on) or @{ code = <exit>; reason = <text> }; a missing report or list is a
 # tool error (3).
 
@@ -64,4 +68,14 @@ function Get-RecordToolStop([string]$ReportPath, [switch]$VbjJp3) {
         return @{ code = 2; reason = "${Name}: $($Outside.Count) failures outside the record list (an input defect, erratum 3 3-1)" }
     }
     return $null
+}
+
+function Get-P1CompareStop([string]$ReportPath, [int]$ExitCode, [string]$MatchItem) {
+    if (@('p1', 'p1_content') -notcontains $MatchItem) {
+        return @{ code = 3; reason = "P-1 match path '$MatchItem' is neither p1 nor p1_content" }
+    }
+    if ($ExitCode -ne 0) {
+        return @{ code = 2; reason = "base-judge-compare exit $ExitCode on the $MatchItem path (erratum 3 3-1: an R-2 grade difference stops P-1)" }
+    }
+    return Get-RecordToolStop $ReportPath
 }

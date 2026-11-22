@@ -530,8 +530,9 @@ GATES_PS1 = (ROOT / "06_analysis" / "02_control" / "j_p3_cause" / "prelaunch_j9"
              / "run_steps_ed5" / "record_gates_ed5.ps1")
 
 
-def _gate(tmp_path: Path, report: dict, *, vbj: bool = True) -> str:
-    """Run ``Get-RecordToolStop`` of ``record_gates_ed5.ps1`` alone on a report (pwsh)."""
+def _gate(tmp_path: Path, report: dict, *, vbj: bool = True, call: str | None = None) -> str:
+    """Run a gate of ``record_gates_ed5.ps1`` alone on a report (pwsh): ``Get-RecordToolStop``
+    or ``call`` (a command with ``{report}`` for the report path)."""
     import shutil
 
     pwsh = shutil.which("pwsh")
@@ -541,8 +542,10 @@ def _gate(tmp_path: Path, report: dict, *, vbj: bool = True) -> str:
     report_path.write_text(json.dumps(report), encoding="utf-8")
     script = tmp_path / f"gate_{index}.ps1"
     switch = " -VbjJp3" if vbj else ""
+    command = (f"Get-RecordToolStop '{report_path}'{switch}" if call is None
+               else call.format(report=f"'{report_path}'"))
     script.write_text(
-        f". '{GATES_PS1}'\n$Stop = Get-RecordToolStop '{report_path}'{switch}\n"
+        f". '{GATES_PS1}'\n$Stop = {command}\n"
         "if ($Stop) { Write-Output \"$($Stop.code)|$($Stop.reason)\" }\n"
         "else { Write-Output 'go' }\n",
         encoding="utf-8")
@@ -605,6 +608,65 @@ def test_record_gate_failure_outside_the_record_list_stops_2(tmp_path) -> None:
     assert _gate(tmp_path, report).startswith("2|")
     without = {key: value for key, value in _vbj_report().items() if key != "record_failures"}
     assert _gate(tmp_path, without).startswith("3|")
+
+
+GRADE_DIFFERENCE = "stored r79 judge: 2 keys of other grades (record)"
+"""A base-judge-compare R-2 failure (``_grade_differences``)."""
+
+
+def _compare_report(failures: list[str]) -> dict:
+    return {"failures": failures, "record_failures": [], "setting_defects": [],
+            "not_judgeable": []}
+
+
+@pytest.mark.parametrize("match_item", ["p1", "p1_content"])
+def test_p1_grade_difference_stops_2_on_both_paths(tmp_path, match_item) -> None:
+    """Erratum 3 3-1 (7bab9217 draft): "sha 경로 + 등급 차이 -> P-1 종료 2" and "내용 경로 +
+    등급 차이 -> P-1 종료 2" (base-judge-compare exit 1, its R-2 difference no record)."""
+    report = _compare_report([GRADE_DIFFERENCE])
+    call = f"Get-P1CompareStop {{report}} 1 '{match_item}'"
+    assert _gate(tmp_path, report, call=call).startswith("2|")
+    clean = f"Get-P1CompareStop {{report}} 0 '{match_item}'"
+    assert _gate(tmp_path, _compare_report([]), call=clean) == "go"
+    assert _gate(tmp_path, report, call="Get-P1CompareStop {report} 1 'other'").startswith("3|")
+    # the same report through the record gate alone: outside the record list, an input defect
+    assert _gate(tmp_path, report, vbj=False).startswith("2|")
+
+
+def test_base_judge_compare_has_no_record_failures(tmp_path, monkeypatch, capsys) -> None:
+    """3-1: the R-2 grade difference stays out of ``record_failures`` (exit 1 of the tool)."""
+    def compare_base_judges(inputs):
+        problems = tjr.compare.Problems()
+        problems.failures.append(GRADE_DIFFERENCE)
+        return {"record_only": "R-2"}, problems, []
+    monkeypatch.setattr(tjr, "compare_base_judges", compare_base_judges)
+    out = tmp_path / "h6_judge_compare.json"
+    code = tjr.main(["base-judge-compare", "--h6", "h6.json", "--new-judge", "nj.json",
+                     "--new-judge-sha256", "a" * 64, "--stored-judge", "sj.json",
+                     "--out", str(out)])
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert code == 1 and report["record_failures"] == []
+    assert report["failures"] == [GRADE_DIFFERENCE]
+    capsys.readouterr()
+
+
+def test_record_failure_and_a_failure_outside_the_list_stop_2(tmp_path, monkeypatch) -> None:
+    """Audit item 2 (erratum 3 3-1): the gate tells records by string equality, so a real t12
+    13.9 failure must be the same string in ``failures`` and ``record_failures``; with it a
+    failure outside the list stops 2, alone the record goes on."""
+    import h8_noise_judge_4368 as h8
+    from test_jp3_addendum_4a2 import _dg3_document
+
+    monkeypatch.setattr(h8, "grade_lines", lambda results, judge: {
+        h8.plain_key(run["key"]): {"grade": h8.GRADE_PASS, "level": run["level"]}
+        for run in results})
+    report, problems = tjr.judge_t12("VBH", _dg3_document(setting="VB"), {},
+                                     _dg3_document(fault="FAULT_NEW"), {})
+    assert problems.failures and report["record_failures"] == problems.failures
+    written = {**report, **problems.as_dict()}
+    assert _gate(tmp_path, written, vbj=False) == "go"
+    outside = {**written, "failures": [*problems.failures, "VBH: something else"]}
+    assert _gate(tmp_path, outside, vbj=False).startswith("2|")
 
 
 def test_worse_status_default_order_unchanged() -> None:

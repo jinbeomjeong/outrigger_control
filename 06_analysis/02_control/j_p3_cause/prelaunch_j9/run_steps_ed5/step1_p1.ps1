@@ -30,7 +30,6 @@ Invoke-Judge 'base_judge_compare' @("$Coupled/jp3_tjr_judge.py", 'base-judge-com
     '--new-l1-reference', "$Folder\h6_base_judge_L1_reference.json",
     '--stored-l1-reference', (Get-FixedPath 'STORED_H6_L1_REFERENCE_SHA256'),
     '--out', "$Folder\judge\h6_judge_compare.json") -ContinueCodes @(0, 1) | Out-Null
-Assert-RecordReport "$Folder\judge\h6_judge_compare.json"  # exit 1 is a record (erratum 3 3-1)
 
 Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--h6', $H6,
     '--judge', $JudgeFile, '--judge-sha256', $JudgeSha, '--out', "$Folder\judge\h6_selfcheck.json") | Out-Null
@@ -42,7 +41,9 @@ Write-P1Outputs $Folder
 #   disjoint (0): item p1 - the two file sha256 and the two codes as 78fd5d2d's
 #   meets (1):    item p1_content - the judge file's sorted runs / table / unmatched / errors
 #                 and the L1 extract JSON as 78fd5d2d's; t12-selfcheck judged by its 4a-4 6
-#                 expectation table (its exit 0 above) and base-judge-compare exit 0
+#                 expectation table (its exit 0 above)
+#   both paths:   base-judge-compare exit 0, else P-1 stops 2 (erratum 3 3-1: R-2 grade
+#                 differences are no record failure)
 $ClosureCode = Invoke-Judge 'p1_import_closure' @("$Coupled/jp3_import_closure.py", '--repo', $Worktree,
     '--entry', '04_scripts/03_control/s8/r79_sensor_judge.py',
     '--entry', "$Coupled/h8_noise_judge_4368.py", '--entry', "$Coupled/jp3_tjr_judge.py",
@@ -50,9 +51,10 @@ $ClosureCode = Invoke-Judge 'p1_import_closure' @("$Coupled/jp3_import_closure.p
     '--out', "$Folder\judge\p1_import_closure.json") -ContinueCodes @(0, 1)
 $MatchItem = if ($ClosureCode -eq 0) { 'p1' } else { 'p1_content' }
 $StepState.Codes['p1_match_path'] = $MatchItem
-if ($MatchItem -eq 'p1_content' -and $StepState.Codes['tool:base_judge_compare'] -ne 0) {
-    Stop-Step 1 "erratum 2 2-4 content path: base-judge-compare exit $($StepState.Codes['tool:base_judge_compare']), 0 required"
-}
+# erratum 3 3-1 (7bab9217 draft): base-judge-compare must be 0 on both paths - an R-2 grade
+# difference is no record failure and stops P-1 with exit 2 (record_gates_ed5.ps1)
+$CompareStop = Get-P1CompareStop "$Folder\judge\h6_judge_compare.json" $StepState.Codes['tool:base_judge_compare'] $MatchItem
+if ($CompareStop) { Stop-Step $CompareStop.code $CompareStop.reason }
 Invoke-RerunMatch $MatchItem  # against 78fd5d2d ($PreviousRunsRoot, its p1.done)
 
 Complete-Step

@@ -1254,7 +1254,9 @@ def compare_base_judges(inputs: JudgeCompareInputs
     stored H-6 under the new ``base-judge`` file against the 436.8 path 1 r79 judge of the same
     H-6 (``STORED_H6_R79_JUDGE_SHA256``); with ``stored_h6_judge`` also against that
     ``h6_judge_4368`` report's ``line_details`` grades. A difference is a failure here (exit 1:
-    find its cause before T-JR-12); a missing or other input is not judgeable (exit 2)."""
+    find its cause before T-JR-12); a missing or other input is not judgeable (exit 2).
+    Edition 5 erratum 3 3-1: a difference is no record failure (``record_failures`` stays
+    empty), so the P-1 step stops with exit 2 on either comparison path."""
     import h8_noise_judge_4368 as h8
 
     problems = compare.Problems()
@@ -1757,8 +1759,9 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         report, problems, files = compare_base_judges(JudgeCompareInputs(
             args.h6, args.new_judge, args.new_judge_sha256, args.stored_judge,
             args.stored_h6_judge, args.new_l1_reference, args.stored_l1_reference))
-        # erratum 3 3-1: every failure of this tool is a grade difference record (R-2)
-        report["record_failures"] = list(problems.failures)
+        # erratum 3 3-1 (7bab9217 draft): an R-2 grade difference is not a record failure (the
+        # closed list is the T-JR-12a 13.9 indicators); step 1 stops P-1 with exit 2 on it
+        report["record_failures"] = []
         return report, problems, files
     t4h_names, sums_problems = t4h_names_of(args.t4h_sums)
     h6_keys, h6_problems = h6_keys_of(args.h6)
