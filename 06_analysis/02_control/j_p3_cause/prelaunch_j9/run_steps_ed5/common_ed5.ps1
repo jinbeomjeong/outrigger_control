@@ -138,6 +138,18 @@ function Write-DiffStat {
     $StepState.Codes['git_diff_stat'] = Get-RepoPath $Log
 }
 
+function Invoke-RecordTool([string]$Label, [string[]]$Arguments) {
+    # erratum 2 2-1 (re-audit warnings 2 / 3): a record item (l1_overlap, l1_hash_record) never
+    # stops the step - exit 2 / 3 go on and leave "<label>_record_status.json" with computed
+    # false and the reason; exit 0 leaves computed true
+    $Code = Invoke-Judge $Label $Arguments -ContinueCodes @(0, 2, 3)
+    $Status = if ($Code -eq 0) { [ordered]@{ label = $Label; computed = $true; exit_code = 0 } } else {
+        [ordered]@{ label = $Label; computed = $false; exit_code = $Code; reason = "$Label exit $Code (a record, erratum 2 2-1)" }
+    }
+    Write-JsonFile "$($StepState.Folder)\judge\${Label}_record_status.json" $Status
+    return $Code
+}
+
 function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '') {
     # the T-JR-12 runner environment; a rod fault plan for VBK / VBK0 (X-10, 6.3.1)
     $Environment = @{ R79_V5_SETTING = $Setting; R79_T4H_DIR = $T4hDir; R79_ROD_MODEL = $R79RodModel[$Setting] } + $R79Common
@@ -160,17 +172,25 @@ function Get-X11Sha { return Get-ListedSha $X11Selection }
 # erratum 2 2-1: the L1 grade reference of 12b (key file from the case source, two L1 runs at
 # the run commit, both in the fixed list)
 $L1KeysFile = "$Ed5Inputs\l1_keys_12b.txt"
+# erratum 2 2-7.1: the fixed V0 sample key list of j9_main (a fixed list entry; its selection
+# rule is the main session's / control's, see the run step report)
+$V0SampleKeysFile = "$Ed5Inputs\j9main_v0_sample_keys.json"
 $L1Settings = @('VBJ0', 'VBJ')
 function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Setting.json" }
 
 function Assert-NoL1Inputs([string[]]$Inputs) {
-    # erratum 2 2-1 (file level, recommended): call before a j9_main judge command - an input
-    # file of the sha256 of an L1 reference run (12b l1ref VBJ / VBJ0, T-JR-12a step 6 VBJ /
-    # VBJ0) stops as a setting defect (exit 2) before the judge starts
-    $Dg3Folder = Get-StepFolder 'dg3'
+    # erratum 2 2-1 / 2-7.1 / G-1: call before a j9_main judge command. The L1 reference sha256
+    # set: the two 12b l1ref runs by their FIXED_INPUTS sha256, the two T-JR-12a L1 runs of the
+    # attempt dg3.done names by their files (dg3.done or a file missing: not judgeable, exit
+    # 2). An input file of one of these sha256 stops as a setting defect (exit 2).
+    $DonePath = "$RunsRoot\dg3.done"
+    if (-not (Test-Path -LiteralPath $DonePath)) { Stop-Step 2 "dg3.done missing (erratum 2 G-1: no T-JR-12a L1 reference)" }
+    $Dg3Folder = "$RunsRoot\$(Split-Path -Leaf (Get-Content -Raw -LiteralPath $DonePath | ConvertFrom-Json).folder)"
     $Arguments = @("$Coupled/jp3_l1_input_guard.py", '--out', "$($StepState.Folder)\judge\l1_input_guard.json")
     foreach ($Setting in $L1Settings) {
-        $Arguments += @('--l1-reference', (Get-L1Run $Setting), '--l1-reference', "$Dg3Folder\l1_$Setting.json")
+        $Dg3L1 = "$Dg3Folder\l1_$Setting.json"
+        if (-not (Test-Path -LiteralPath $Dg3L1)) { Stop-Step 2 "$Dg3L1 missing (erratum 2 G-1)" }
+        $Arguments += @('--l1-reference-sha256', (Get-ListedSha (Get-L1Run $Setting)), '--l1-reference', $Dg3L1)
     }
     foreach ($InputFile in $Inputs) { $Arguments += @('--input', $InputFile) }
     Invoke-Judge 'l1_input_guard' $Arguments | Out-Null

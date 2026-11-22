@@ -56,7 +56,8 @@ foreach ($Setting in $L1Placement.Keys) {  # 4a-8 4.3: plant_truth (R79RodModel 
 }
 Wait-Runs $Runs
 Invoke-IdentityCheck
-Invoke-Judge 'l1_hash_record' @($Tjr, 'l1-hash-record', '--vbj-l1', "$Folder\l1_VBJ.json",
+# 4a-8 4.5: a record (erratum 2 2-1: exit 2 / 3 go on as "not computed")
+Invoke-RecordTool 'l1_hash_record' @($Tjr, 'l1-hash-record', '--vbj-l1', "$Folder\l1_VBJ.json",
     '--vbj0-l1', "$Folder\l1_VBJ0.json", '--out', "$Folder\judge\l1_hash_record.json") | Out-Null
 
 $JudgeSha = @{}
@@ -90,7 +91,7 @@ foreach ($Setting in $Placement.Keys) {
 
 # erratum 2 2-1 (audit warning 5): the keys the 12b and the 12a L1 references share, same /
 # differing command hash counts (a record; a differing key is published and looked into)
-Invoke-Judge 'l1_overlap' @("$Coupled/jp3_12b_judge.py", 'l1-overlap',
+Invoke-RecordTool 'l1_overlap' @("$Coupled/jp3_12b_judge.py", 'l1-overlap',
     '--pair', "VBJ=$(Get-L1Run 'VBJ'),$Folder\l1_VBJ.json", '--pair', "VBJ0=$(Get-L1Run 'VBJ0'),$Folder\l1_VBJ0.json",
     '--out', "$Folder\judge\l1_overlap.json") | Out-Null
 

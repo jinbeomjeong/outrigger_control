@@ -1085,11 +1085,16 @@ def cmd_judge(args) -> tuple[str, dict]:
     if found["n_opp"] == 0:  # X-5: no judged row is never a pass
         problems.not_judgeable.append("no opportunity pair")
     report.update(found)
-    report["grade_transitions"] = grade_transitions(
-        blocks0, blocks1, decision, {"vbk0": (args.vbk0_grade_judge, args.vbk0_grade_judge_sha256),
-                                     "vbk": (args.vbk_grade_judge, args.vbk_grade_judge_sha256)},
-        {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]},
-        {"vbk0": args.vbk0_grade_judge_exit, "vbk": args.vbk_grade_judge_exit})
+    try:
+        report["grade_transitions"] = grade_transitions(
+            blocks0, blocks1, decision,
+            {"vbk0": (args.vbk0_grade_judge, args.vbk0_grade_judge_sha256),
+             "vbk": (args.vbk_grade_judge, args.vbk_grade_judge_sha256)},
+            {(pair["block"], pair["key"]): pair["category"] for pair in found["pairs"]},
+            {"vbk0": args.vbk0_grade_judge_exit, "vbk": args.vbk_grade_judge_exit})
+    except Exception as exc:  # noqa: BLE001 (erratum 2 2-1: a record; the judgement stands)
+        report["grade_transitions"] = {"computed": False,
+                                       "reason": f"exception {type(exc).__name__}: {exc}"}
     report["hold_speed_m_s"] = _hold_speed_record()  # erratum 2 2-5
     report["pass_sentence"] = {"n_opp": decision.get("n_opp"),
                                "upper_bound_n_opp": upper_bound(decision.get("n_opp") or 0),

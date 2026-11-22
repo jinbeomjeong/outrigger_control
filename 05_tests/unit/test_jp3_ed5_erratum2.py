@@ -200,6 +200,13 @@ def test_l1_input_guard_stops_on_an_l1_reference_input(tmp_path, monkeypatch, ca
     assert guard.main([*base[:6], "--input", str(rows), "--out", str(tmp_path / "c.json")]) == 2
     assert guard.main([*base, "--input", str(tmp_path / "none.jsonl"),
                        "--out", str(tmp_path / "d.json")]) == 2
+    # G-1: the two 12b references by their fixed list sha256, the two 12a ones by file
+    shas = [hashlib.sha256(path.read_bytes()).hexdigest() for path in references[:2]]
+    mixed = [*(arg for sha in shas for arg in ("--l1-reference-sha256", sha)),
+             *(arg for path in references[2:] for arg in ("--l1-reference", str(path)))]
+    assert guard.main([*mixed, "--input", str(rows), "--out", str(tmp_path / "e.json")]) == 0
+    assert guard.main([*mixed, "--input", str(references[0]),
+                       "--out", str(tmp_path / "f.json")]) == 2
 
 
 def test_probe_record_form_is_read_by_the_12b_scan(tmp_path) -> None:

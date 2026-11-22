@@ -250,6 +250,8 @@ def batch_jobs(name: str) -> list[dict]:
         return u9_targeted_jobs()
     if name == J9_MAIN_BATCH:
         return j9_main_jobs()
+    if name == J9_V0_SAMPLE_BATCH:
+        return j9_v0_sample_jobs(J9_V0_SAMPLE_FILE[0])
     if name == J9_CASES_BATCH:
         return j9_case_jobs()
     if name == J9_CASE_F_BATCH:
@@ -276,6 +278,31 @@ J9_CASE_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", "VBH", "LSH1", "LSH2", "LS
 def j9_main_jobs() -> list[dict]:
     jobs = [{**row, "setting": s} for s in JP3_JUDGED_SETTINGS for row in required_rows()]
     return jobs + [{**row, "setting": "VBJ"} for row in regression_rows()]
+
+
+J9_V0_SAMPLE_BATCH = "j9_v0_sample"
+"""436.9 edition 5 erratum 2 2-7.1: the fixed V0 sample of the j9_main reference (``--jobs-file``,
+each job a V0 job of the ``main`` batch), run again to compare its command hashes with the
+stored V0 lines (``jp3_j9main_judge.py v0-sample``)."""
+J9_V0_SAMPLE_FILE: list[Path | None] = [None]
+
+
+def j9_v0_sample_jobs(path: Path | None) -> list[dict]:
+    """The jobs of the V0 sample key file (JSON list or ``{"jobs": [...]}``).
+
+    Raises:
+        SystemExit: No file, or a job that is not a V0 job of the ``main`` batch.
+    """
+    if path is None:
+        raise SystemExit(f"{J9_V0_SAMPLE_BATCH} needs --jobs-file")
+    document = json.loads(Path(path).read_text(encoding="utf-8"))
+    jobs = document["jobs"] if isinstance(document, dict) else document
+    main_keys = {job_key(job) for job in batch_jobs("main") if job["setting"] == "V0"}
+    outside = [job for job in jobs if job_key(job) not in main_keys]
+    if not jobs or outside:
+        raise SystemExit(f"--jobs-file {path}: {len(outside)} jobs are no V0 job of the main "
+                         f"batch (of {len(jobs)})")
+    return [dict(job) for job in jobs]
 
 
 def j9_case_jobs() -> list[dict]:
@@ -667,7 +694,13 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--p3-hash-source", type=Path, default=None,
                         help="j9_t8 only: the stored v5/main.jsonl of the 22-job rule "
                              "(addendum 4a-3 2; a worktree has none)")
+    parser.add_argument("--jobs-file", type=Path, default=None,
+                        help=f"{J9_V0_SAMPLE_BATCH} only: the fixed V0 sample key file "
+                             "(erratum 2 2-7.1)")
     args = parser.parse_args(argv)
+    if (args.jobs_file is not None) != (args.batch == J9_V0_SAMPLE_BATCH):
+        parser.error(f"--jobs-file belongs to the {J9_V0_SAMPLE_BATCH} batch (and it needs it)")
+    J9_V0_SAMPLE_FILE[0] = args.jobs_file
     if args.p3_hash_source is not None:
         if args.batch != J9_T8_BATCH:
             parser.error("--p3-hash-source belongs to the j9_t8 batch")
