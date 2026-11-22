@@ -1,0 +1,9 @@
+# 436.9 edition 5 P5-3 set item 3 at run commit ae9d0b2d (erratum 5 5-1 3, sealed 8487bd55):
+# test functions newly added to existing test files in df95158d..ae9d0b2d, run by node id.
+# Extraction: git diff --diff-filter=M -U0 df95158d ae9d0b2d -- '05_tests/unit/test_*.py',
+# '+def test_*' lines -> these 3 nodes (same as the erratum 5 list). Removed in the same diff
+# (renamed, not run): test_n1_t12_mismatch_line_is_a_failure_not_not_judgeable,
+# test_n1_t12_command_exit_1 (both test_jp3_prelaunch_audit2.py).
+test_jp3_prelaunch_audit2.py::test_n1_t12_mismatch_line_is_a_setting_defect
+test_jp3_prelaunch_audit2.py::test_t12_record_failures_are_the_13_9_list
+test_jp3_prelaunch_audit2.py::test_n1_t12_command_lock_window_mismatch_exit_2

@@ -1,0 +1,13 @@
+# 436.9 edition 5 regression record at run commit ae9d0b2d (erratum 5 5-1: not a P5-3 judgement).
+# The edition 4a test files edition 5 changed:
+# git diff --name-status --diff-filter=M 5632b618 ae9d0b2d -- 05_tests/unit/test_*.py
+# without test_x10_rod_fault.py (in the P5-3 set).
+test_chrono_t45_replay.py
+test_jp3_addendum_4a2.py
+test_jp3_addendum_4a3.py
+test_jp3_addendum_4a4.py
+test_jp3_addendum_4a5.py
+test_jp3_harness_units.py
+test_jp3_judge_main_e2e.py
+test_jp3_prelaunch_audit2.py
+test_s9_batch_code_at_launch.py

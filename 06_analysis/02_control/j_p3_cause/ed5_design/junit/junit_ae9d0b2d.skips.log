@@ -1,0 +1,22 @@
+# 시험 건너뜀 점검 (junit_skips)
+
+- 보고서 1개, 시험 797개: 통과 796, 실패 1, 오류 0, 건너뜀 0, 예상 실패 0, 예상 실패 통과 0(필수 0)
+- 건너뜀·예상 실패는 통과가 아니다. 필수 시험의 건너뜀·예상 실패는 미실행으로 센다.
+- JUnit XML에는 xfail의 strict 여부가 없고, strict 아닌 XPASS는 통과로 적힌다.
+
+## 건너뜀
+
+건너뛴 시험 없음.
+
+## 예상 실패 (xfail·XPASS)
+
+예상 실패 없음.
+
+## 발견 사항
+
+### 오류 (error) — 1건
+
+| 분류 | 위치 | 대상 | 내용 |
+|---|---|---|---|
+| test_failed | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d.xml | 05_tests.unit.test_jp3_addendum_4a4::test_d1a_selection_of_the_stored_data | 05_tests.unit.test_jp3_addendum_4a4::test_d1a_selection_of_the_stored_data: failed (jp3_dryrun_evidence.Stop: the s25 key of the g6 base key is in the scan outside 02_control/j_p3_cause/j9_runs/ (generated s26; 4a-6 G-3: not judgeable)) |
+{"status": "findings", "ok": true, "exit_code": 1, "tool": "junit_skips", "command": "check", "reports": 1, "tests": 797, "passed": 796, "failed": 1, "errors": 0, "skipped": 0, "xfailed": 0, "xpassed": 0, "critical_skipped": 0, "error": 1, "warning": 0, "info": 0, "categories": {"test_failed": 1}}

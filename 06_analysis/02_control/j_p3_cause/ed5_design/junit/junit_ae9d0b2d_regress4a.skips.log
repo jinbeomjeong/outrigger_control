@@ -1,0 +1,33 @@
+# 시험 건너뜀 점검 (junit_skips)
+
+- 보고서 1개, 시험 249개: 통과 243, 실패 1, 오류 0, 건너뜀 5, 예상 실패 0, 예상 실패 통과 0(필수 5)
+- 건너뜀·예상 실패는 통과가 아니다. 필수 시험의 건너뜀·예상 실패는 미실행으로 센다.
+- JUnit XML에는 xfail의 strict 여부가 없고, strict 아닌 XPASS는 통과로 적힌다.
+
+## 건너뜀
+
+| 시험 | 결과 | 종류 | strict | 사유 |
+|---|---|---|---|---|
+| `05_tests.unit.test_chrono_t45_replay::test_replay_case_of_a_stage3_vb_record_with_m2_records` | skipped | pytest.skip | - | stored stage 3 VB record not present |
+| `05_tests.unit.test_chrono_t45_replay::test_b_t4_0_on_a_stored_v0_record` | skipped | pytest.skip | - | stored V0 Chrono record not present |
+| `05_tests.unit.test_chrono_t45_replay::test_t5_copied_state_equals_a_full_replay` | skipped | pytest.skip | - | stored VB Chrono record not present |
+| `05_tests.unit.test_chrono_t45_replay::test_r4_lock_window_of_a_stored_vb_record` | skipped | pytest.skip | - | stored VB Chrono record not present |
+| `05_tests.unit.test_chrono_t45_replay::test_rev7_regression_on_the_stage3_records` | skipped | pytest.skip | - | stored stage 3 records not present |
+
+## 예상 실패 (xfail·XPASS)
+
+예상 실패 없음.
+
+## 발견 사항
+
+### 오류 (error) — 6건
+
+| 분류 | 위치 | 대상 | 내용 |
+|---|---|---|---|
+| test_failed | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d_regress4a.xml | 05_tests.unit.test_jp3_addendum_4a4::test_d1a_selection_of_the_stored_data | 05_tests.unit.test_jp3_addendum_4a4::test_d1a_selection_of_the_stored_data: failed (jp3_dryrun_evidence.Stop: the s25 key of the g6 base key is in the scan outside 02_control/j_p3_cause/j9_runs/ (generated s26; 4a-6 G-3: not judgeable)) |
+| critical_skipped | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d_regress4a.xml | 05_tests.unit.test_chrono_t45_replay::test_replay_case_of_a_stage3_vb_record_with_m2_records | 05_tests.unit.test_chrono_t45_replay::test_replay_case_of_a_stage3_vb_record_with_m2_records: 필수 시험이 건너뜀 = 미실행 (패턴 ., 사유: stored stage 3 VB record not present) |
+| critical_skipped | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d_regress4a.xml | 05_tests.unit.test_chrono_t45_replay::test_b_t4_0_on_a_stored_v0_record | 05_tests.unit.test_chrono_t45_replay::test_b_t4_0_on_a_stored_v0_record: 필수 시험이 건너뜀 = 미실행 (패턴 ., 사유: stored V0 Chrono record not present) |
+| critical_skipped | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d_regress4a.xml | 05_tests.unit.test_chrono_t45_replay::test_t5_copied_state_equals_a_full_replay | 05_tests.unit.test_chrono_t45_replay::test_t5_copied_state_equals_a_full_replay: 필수 시험이 건너뜀 = 미실행 (패턴 ., 사유: stored VB Chrono record not present) |
+| critical_skipped | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d_regress4a.xml | 05_tests.unit.test_chrono_t45_replay::test_r4_lock_window_of_a_stored_vb_record | 05_tests.unit.test_chrono_t45_replay::test_r4_lock_window_of_a_stored_vb_record: 필수 시험이 건너뜀 = 미실행 (패턴 ., 사유: stored VB Chrono record not present) |
+| critical_skipped | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed5_design\junit\junit_ae9d0b2d_regress4a.xml | 05_tests.unit.test_chrono_t45_replay::test_rev7_regression_on_the_stage3_records | 05_tests.unit.test_chrono_t45_replay::test_rev7_regression_on_the_stage3_records: 필수 시험이 건너뜀 = 미실행 (패턴 ., 사유: stored stage 3 records not present) |
+{"status": "findings", "ok": true, "exit_code": 1, "tool": "junit_skips", "command": "check", "reports": 1, "tests": 249, "passed": 243, "failed": 1, "errors": 0, "skipped": 5, "xfailed": 0, "xpassed": 0, "critical_skipped": 5, "error": 6, "warning": 0, "info": 0, "categories": {"critical_skipped": 5, "test_failed": 1}}

@@ -1,0 +1,38 @@
+{
+  "purpose": "regression",
+  "head": "ae9d0b2d9b809f907ee9806f28d66d66bc1c5d4e",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run3",
+  "list_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\regress4a_ae9d0b2d.txt",
+  "list_file_sha256": "20734765c3dc1ca8a9771361110df8a9ef6da622d8ecd13d0804b68e9157ae3a",
+  "test_files": [
+    "test_chrono_t45_replay.py",
+    "test_jp3_addendum_4a2.py",
+    "test_jp3_addendum_4a3.py",
+    "test_jp3_addendum_4a4.py",
+    "test_jp3_addendum_4a5.py",
+    "test_jp3_harness_units.py",
+    "test_jp3_judge_main_e2e.py",
+    "test_jp3_prelaunch_audit2.py",
+    "test_s9_batch_code_at_launch.py"
+  ],
+  "environment": {
+    "python": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "workers": 6,
+    "dist": "loadfile",
+    "affinity_mask": "0x0FFF0000",
+    "OUTRIGGER_RECORDS_ROOT": "C:\\workspace\\outrigger_control",
+    "X10_BASE_ROOT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\x10base",
+    "MKL_THREADING_LAYER": "TBB"
+  },
+  "junit_skips": {
+    "critical": ".",
+    "fail_on_skip": true
+  },
+  "hashed_files": {},
+  "started": "2026-11-22T19:03:36.6335985+09:00",
+  "ended": "2026-11-22T19:04:07.7117176+09:00",
+  "pytest_exit": 1,
+  "junit_skips_exit": 1,
+  "junit": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\junit_ae9d0b2d_regress4a.xml",
+  "junit_sha256": "3454ccce4006c511b4f66680bd5b6423156ed8a7a7344ddb3053ea12f538e953"
+}

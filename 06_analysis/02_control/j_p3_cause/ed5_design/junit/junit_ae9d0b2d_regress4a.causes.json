@@ -1,0 +1,26 @@
+{
+  "purpose": "regression record of the edition 4a test files edition 5 changed (erratum 5 5-1; not a P5-3 judgement)",
+  "head": "ae9d0b2d9b809f907ee9806f28d66d66bc1c5d4e",
+  "run": "junit_ae9d0b2d_regress4a.xml (run_p53_set.ps1, list regress4a_ae9d0b2d.txt): 249 tests, 243 passed, 1 failed, 5 skipped; pytest exit 1, junit_skips exit 1",
+  "failures": [
+    {
+      "test": "05_tests/unit/test_jp3_addendum_4a4.py::test_d1a_selection_of_the_stored_data",
+      "cause": "test_environment",
+      "detail": "the test rescans the main checkout 06_analysis outside j9_runs/ (4a-6 G-1); the edition 5 prelaunch output prelaunch_j9/ed5_inputs/dry_selection.json (bf22ffb3) holds the generated s25 keys, so the rescan generates s26 and stops (4a-6 G-3). The run path only reads the stored selection (erratum 5 5-2). Same failure as the first P5-3 run junit_ae9d0b2d.xml."
+    }
+  ],
+  "skips": [
+    {
+      "tests": [
+        "05_tests/unit/test_chrono_t45_replay.py::test_replay_case_of_a_stage3_vb_record_with_m2_records",
+        "05_tests/unit/test_chrono_t45_replay.py::test_b_t4_0_on_a_stored_v0_record",
+        "05_tests/unit/test_chrono_t45_replay.py::test_t5_copied_state_equals_a_full_replay",
+        "05_tests/unit/test_chrono_t45_replay.py::test_r4_lock_window_of_a_stored_vb_record",
+        "05_tests/unit/test_chrono_t45_replay.py::test_rev7_regression_on_the_stage3_records"
+      ],
+      "cause": "test_environment",
+      "detail": "the stored records are read at PROJECT_ROOT/07_results (PROJECT_ROOT = the test file's worktree, no 07_results there). Rerun with the main checkout's 07_results through ~/.claude/tools/verif/worktree_tests.py (worktree ed5-run3 code, probe outrigger_sim / chrono_t45_replay / j_p3_inputs all from the worktree, originals unchanged): 19 tests, 19 passed, 0 skipped, exit 0 -> junit_ae9d0b2d_regress4a_t45data.xml, junit_ae9d0b2d_regress4a_t45data.worktree_tests.json"
+    }
+  ],
+  "code_defects": []
+}

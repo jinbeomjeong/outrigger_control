@@ -1,0 +1,15 @@
+# 436.9 edition 5 P5-3 test set at run commit ae9d0b2d (erratum 5 5-1, draft before sealing).
+# 1. git diff --name-status --diff-filter=A 5632b618 ae9d0b2d -- 05_tests/unit/test_*.py (10 files,
+#    same as the erratum 5 5-1 list)
+# 2. test_x10_rod_fault.py (7.2 X-10 bit identity and fault injection; X10_BASE_ROOT)
+test_jp3_12b_tools.py
+test_jp3_ckdrop.py
+test_jp3_ed5_erratum1.py
+test_jp3_ed5_erratum2.py
+test_jp3_ed5_prelaunch_fix.py
+test_jp3_j9main.py
+test_jp3_p51_compare.py
+test_jp3_p5_fixed_values.py
+test_jp3_rev6.py
+test_s9_batch_inputs_exit.py
+test_x10_rod_fault.py

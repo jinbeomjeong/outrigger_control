@@ -1,0 +1,71 @@
+bringing up nodes...
+bringing up nodes...
+
+........................................................................ [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 27%]
+........................................................................ [ 36%]
+........................................................................ [ 45%]
+........................................................................ [ 54%]
+........................................................................ [ 63%]
+........................................................................ [ 72%]
+..F..................................................................... [ 81%]
+........................................................................ [ 90%]
+........................................................................ [ 99%]
+.....                                                                    [100%]
+================================== FAILURES ===================================
+____________________ test_d1a_selection_of_the_stored_data ____________________
+[gw0] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3111/popen-gw0/test_d1a_selection_of_the_stor0')
+
+    @pytest.mark.skipif(not NOISE_PATH.is_file(), reason="stored h8_noise_VB.json not present")
+    def test_d1a_selection_of_the_stored_data(tmp_path) -> None:
+        """4a-4 1 / 2 on the main checkout's ``06_analysis``: seed max 24 in the scan outside the
+        J-P3 run outputs (``j9_runs/`` left out, user decision 2026-11-21: their dry r79 runs hold
+        the dry key itself; only paths are listed, no value is read), the generated key ``s25`` of
+        the base key, in neither the scan nor the Dg-3 keys."""
+        analysis = DATA_ROOT / "06_analysis"
+        v5 = analysis / "03_hydraulic" / "coupled" / "v5"
+        inputs = dryrun.SelectInputs(analysis, v5 / "main.jsonl",
+                                     analysis / "02_control" / "j_p3_cause" / "baseline_221456d",
+                                     v5 / "resume_k1" / "h6_dg3_v4on.json", NOISE_PATH)
+>       selection = dryrun.select(inputs)
+                    ^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_jp3_addendum_4a4.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+04_scripts\04_hydraulic\coupled\jp3_dryrun_evidence.py:277: in select
+    families = {family: family_key(family, noise_runs, dg3_keys, scan)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = 'g6'
+noise_runs = [{'key': 'cand=current#L1|s0|g6|0|g6|G1+J1@FL|top|Fs0', 'level': 'L1', 'seed_index': 0, 'seed': 20261028, ...}, {'key'....}, {'key': 'cand=current#L1|s0|g6|5|g6|G1+J1@FR|top|Fs4', 'level': 'L1', 'seed_index': 0, 'seed': 20261033, ...}, ...]
+dg3_keys = {'L2|s0|g6|52|ref|J1|top|Fs0', 'L3|s0|g6|104|g6r|rigid+S1@RL|top|Fs0', 'L3|s0|g6|106|g6r|rigid+S1@RL|bottom|Fs0', 'L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4', 'L3|s0|g6|113|ref|rigid|top|Fs4', 'L3|s0|g6|115|ref|rigid|bottom|Fs4', ...}
+scan = KeyScan(keys=frozenset({'L3|s2|g6|19|g6|G1+J2@FL|bottom|Fs4', 'L4|s0|g6|90|g6r|rigid+J2@RL|bottom|Fs0', 'L2nocal|s2|g6...fa997f4c/t8_a1/step_record.json', '5566f42df9b6d003170b51e358a0a5507b1ba10eff565793389cb70ab382b56c', 0, frozenset())))
+
+    def family_key(family: str, noise_runs: list[dict], dg3_keys: set[str],
+                   scan: KeyScan) -> dict:
+        """4a-8 3: the family's base key (the first L2 key of the noise file in file order of that
+        family and not a Dg-3 key) and its generated key (4a-4 2).
+    
+        Raises:
+            Stop: No such base key, or its ``s25`` key in the scan outside the run outputs
+                (4a-6 G-3 (b)).
+        """
+        base_key = next((plain_key(run["key"]) for run in noise_runs
+                         if run.get("level") == R79_LEVEL and family_of(run["key"]) == family
+                         and plain_key(run["key"]) not in dg3_keys), None)
+        if base_key is None:
+            raise Stop(f"no {family} L2 noise key outside the Dg-3 135 keys (4a-8 3)")
+        key, seed = generated_key(base_key, scan.keys)
+        if seed != DRY_SEED_START:  # 4a-6 G-3 (b): the key outside the run outputs stops
+>           raise Stop(f"the s{DRY_SEED_START} key of the {family} base key is in the scan outside "
+                       f"{SCAN_EXCLUDED_FOLDER} (generated s{seed}; 4a-6 G-3: not judgeable)")
+E           jp3_dryrun_evidence.Stop: the s25 key of the g6 base key is in the scan outside 02_control/j_p3_cause/j9_runs/ (generated s26; 4a-6 G-3: not judgeable)
+
+04_scripts\04_hydraulic\coupled\jp3_dryrun_evidence.py:327: Stop
+=========================== short test summary info ===========================
+FAILED 05_tests/unit/test_jp3_addendum_4a4.py::test_d1a_selection_of_the_stored_data
+1 failed, 796 passed in 267.29s (0:04:27)
