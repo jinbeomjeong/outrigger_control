@@ -94,6 +94,77 @@ def test_status_order() -> None:
     assert j9._status({**base, "no_reference": {"x": [["R1", 0]]}}) == "not_judgeable"
 
 
+def test_v0_sample_keys_first_and_last_line_of_every_row(tmp_path, monkeypatch) -> None:
+    """2-9.1: rows without the phase fields (the G4 twins one row), first and last line."""
+    jobs = [job for job in run_v5.batch_jobs("main") if job["setting"] == "V0"]
+    stored = _write_rows(tmp_path / "main.jsonl", [{"job": {**job, "mask": 3},
+                                                    "commands_sha256": SHA} for job in jobs])
+    sha = hashlib.sha256(stored.read_bytes()).hexdigest()
+    document = j9.v0_sample_keys(stored, sha)
+    assert document["rows"] == 24 and len(document["jobs"]) <= 48
+    assert all("mask" not in job for job in document["jobs"])
+    by_row: dict[str, list[dict]] = {}
+    for job in jobs:
+        by_row.setdefault(j9._row_identity(job), []).append(job)
+    expected = [job for group in by_row.values()
+                for job in ([group[0]] if len(group) == 1 else [group[0], group[-1]])]
+    assert document["jobs"] == expected
+    twins = [job for job in document["jobs"] if job.get("twin")]
+    assert len(twins) == 2  # the G4 width grid is one row: its first and last line
+    monkeypatch.setattr(j9, "V0_SAMPLE_ROWS", 23)
+    with pytest.raises(j9.NotJudgeable, match="24 V0 rows"):
+        j9.v0_sample_keys(stored, sha)
+
+
+def _s8_row(setting: str, phase: str, *, margin=1.0, after=10.0, ready=None) -> dict:
+    return {"row": "S8", "phase": phase, "setting": setting, "t_ready": ready,
+            "events_full": [(10.0, "WARN_LIFT_STROKE_LIMITED:FL"),
+                            (10.0, "FAULT_LIFT_STROKE_LIMIT:soil:FL")],
+            "events_capped": False, "sa4": {"F_min_after_stop_N": [2e4] * 4,
+                                            "lift_after_stop_ms": [0, 0, 0, 0]},
+            "F_after": 20.0, "p_move": 100.0, "pressure": {"saturation_leg_chunks": 0},
+            "s8": {"margin_at_stop_kN": margin, "max_after_stop_kN": after}}
+
+
+def test_s8_f5_record_sa4_failure_and_stop() -> None:
+    record = j9.s8_items({"VB": [_s8_row("VB", "eps 0.0", margin=-1.0)]})
+    assert record["f5_records"] and not record["failures"] and not record["stops"]
+    record = j9.s8_items({"VB": [_s8_row("VB", "eps 0.0", margin=-7.0)]})
+    assert record["stops"][0]["item"] == "F-5"
+    record = j9.s8_items({"VB": [_s8_row("VB", "eps 0.0", after=14.3)]})
+    assert record["stops"]
+    record = j9.s8_items({"LS1": [_s8_row("LS1", "eps 0.0", ready=50.0)]})
+    assert record["failures"][0]["detail"] == ["no_ready"]
+
+
+def test_limit_cycle_and_r15_rules() -> None:
+    rows_by = {"V0": [{"group": "R1", "n_rev": 10}],
+               "LS1": [{"group": "R1", "row": "R1", "phase": "eps 0.0", "n_rev": 20}],
+               "LS2": [{"group": "R1", "row": "R1", "phase": "eps 0.0", "n_rev": 15}]}
+    assert [s["setting"] for s in j9.limit_cycle_suspects(rows_by)] == ["LS1"]
+
+    def r15(setting, phase, force_kN):
+        return {"row": "R15", "group": "R15", "phase": phase, "setting": setting,
+                "is_event": True, "F_after_W_min_kN": force_kN, "F_after_event": force_kN}
+
+    worse = {"V0": [r15("V0", "a", -0.2), r15("V0", "b", -0.7)],
+             "VB": [r15("VB", "a", -3.0), r15("VB", "b", -3.5)]}
+    assert j9.r15_worsening(worse)["failures"]
+    within = {"V0": worse["V0"], "VB": [r15("VB", "a", -0.3), r15("VB", "b", -0.6)]}
+    assert not j9.r15_worsening(within)["failures"]
+    assert j9.r15_worsening({"V0": [], "VB": []})["state"] == "no R15 pair"
+
+
+@pytest.mark.skipif(not MAIN_JSONL.is_file(), reason="stored v5/main.jsonl not present")
+def test_v0_sample_keys_of_the_stored_file(tmp_path) -> None:
+    sha = hashlib.sha256(MAIN_JSONL.read_bytes()).hexdigest()
+    document = j9.v0_sample_keys(MAIN_JSONL, sha)
+    assert (document["rows"], len(document["jobs"])) == (24, 48)
+    keys = tmp_path / "keys.json"
+    keys.write_text(json.dumps(document), encoding="utf-8")
+    assert len(run_v5.j9_v0_sample_jobs(keys)) == 48
+
+
 @pytest.mark.skipif(not MAIN_JSONL.is_file(), reason="stored v5/main.jsonl not present")
 def test_judge_end_to_end_on_stored_lines(tmp_path, monkeypatch, capsys) -> None:
     """The stored VB / LS lines renamed VBJ / LSJ are exactly the j9_main jobs; the judge runs

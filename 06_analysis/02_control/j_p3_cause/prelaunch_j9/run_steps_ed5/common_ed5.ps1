@@ -10,10 +10,13 @@
 #   2. prelaunch_ed5.ps1 -Part l1keys    the 12b L1 key file (erratum 2 2-1)
 #   3. step_l1ref.ps1                    the two L1 reference runs
 #   4. prelaunch_ed5.ps1 -Part x11       the X-11 plans, once
+#      prelaunch_ed5.ps1 -Part ckdrop    the T-CK / DROPOUT keys and plans (2-9.5; after x11)
+#      prelaunch_ed5.ps1 -Part v0sample  the j9_main V0 sample key list (2-9.1)
 #   5. (main session commit: this file filled in, the parts 1 .. 4)
 #   6. prelaunch_ed5.ps1 -Part list      FIXED_INPUTS_<run commit 8>.SHA256SUMS
 #   7. (main session commit: the fixed list)
-#   8. step0_cdry.ps1, then the steps 1 .. 7 (6b / 6c for 12b)
+#   8. step0_cdry.ps1, then the steps 1 .. 7 (6b / 6c for 12b), step7b_ckdrop.ps1 (a record),
+#      step8_j9main.ps1
 # A step refuses to start while a placeholder is left or the fixed list is not tracked and
 # equal to its files (Initialize-Ed5Step). One exception: step_l1ref.ps1 runs before the list
 # exists (its outputs go into it), so it takes the edition 4a start checks only (run commit,
@@ -175,6 +178,9 @@ $L1KeysFile = "$Ed5Inputs\l1_keys_12b.txt"
 # erratum 2 2-7.1: the fixed V0 sample key list of j9_main (a fixed list entry; its selection
 # rule is the main session's / control's, see the run step report)
 $V0SampleKeysFile = "$Ed5Inputs\j9main_v0_sample_keys.json"
+$V0SampleCommandFile = "$Ed5Inputs\j9main_v0_sample_keys.command.txt"
+# erratum 2 2-9.5: the T-CK / DROPOUT keys and plans (jp3_ckdrop_plan.py, fixed list entries)
+$CkdropFolder = "$Ed5Inputs\ckdrop"
 $L1Settings = @('VBJ0', 'VBJ')
 function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Setting.json" }
 

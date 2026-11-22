@@ -82,5 +82,8 @@ foreach ($Arm in @('vbk0', 'vbk')) {
     }
 }
 Invoke-Judge 'judge' $Arguments | Out-Null
+# erratum 2 2-9.6: the done marker names the judge file and its sha256 (step 8 checks them)
+$StepState.Codes['judge_file'] = Get-RepoPath "$Folder\judge\judge.json"
+$StepState.Codes['judge_sha256'] = (Get-FileHash -Algorithm SHA256 -LiteralPath "$Folder\judge\judge.json").Hash.ToLower()
 
 Complete-Step

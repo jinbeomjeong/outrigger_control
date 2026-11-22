@@ -3,6 +3,9 @@ criteria stage 1 J items of the ``j9_main`` rows and their J-P3 (③ revision 6)
 
 Sub-commands:
 
+``v0-sample-keys`` (2-9.1) the fixed V0 sample key list: the V0 lines of ``main.jsonl``
+               grouped by row (the job without ``eps`` / ``offset_s``; the G4 width grid twins
+               are one row), the first and the last line of every row (24 rows, at most 48).
 ``v0-sample``  The V0 sample hash comparison (2-7.1, R3-E1 precedent): every job of the fixed
                V0 sample key file is in the re-run rows once (no error) and in the stored V0
                reference rows once, with the same ``commands_sha256``. Exit 0 same, 1 a
@@ -15,7 +18,15 @@ Sub-commands:
                  row, same phase); every J1 .. J11 ``fail`` counts (the 436.8 H-2 count).
                * ``LS_vs_VB``: LS (= LSJ) against VB; L-a = the J1 / J2 / J4 / J6 / J7 fails
                  of LS on the rows VB passes, L-b = the J3 / J5 fails; J11 stops (L-e / H-7).
+               * L-c (2-9.4): LS limit-cycle suspicion (criteria 4 against the V0 n_rev
+                 maximum of the group); L-e: LS J11 stops. L-a / L-b / L-c stop (H-6).
                * L-d: record (D-16).
+               * 2-9.3: baseline failures are not counted (a J item fails only where V0 passes;
+                 except R15: worse than V0 and "구분됨" = a J2 failure, weak basis); S8: the
+                 criteria 6 clause alone is ``F-5 기록``, another SA-4 item fails, the clause
+                 margin < -6.92 kN / post-stop maximum > 14.21 kN stops; phase-scatter
+                 suspects (a VBJ failure with the item failing in another V0 phase of the row)
+                 are failures, counted and listed (H-2).
                * J-P3 (2-7.1 3): the rev 6 rows (VBJ, LSJ1 .. LSJ4) through
                  ``j_p3_inputs.j_p3_over_rows`` (the run's ③ revision from its tag, its record
                  ``extend_bound_check``, the rod reading of its T4h, the head-only declaration);
@@ -60,7 +71,8 @@ V0_SETTING = "V0"
 L_A_ITEMS = ("J1", "J2", "J4", "J6", "J7")
 L_B_ITEMS = ("J3", "J5")
 J_P3_ITEM = "J-P3"
-EXIT_OF_STATUS = {"pass": EXIT_PASS, "same": EXIT_PASS, "failed": EXIT_FAILED,
+EXIT_OF_STATUS = {"pass": EXIT_PASS, "same": EXIT_PASS, "written": EXIT_PASS,
+                  "failed": EXIT_FAILED,
                   "differs": EXIT_FAILED, "setting_defect": EXIT_STOP,
                   "not_judgeable": EXIT_STOP}
 
@@ -98,6 +110,45 @@ def stored_v0_rows(path: Path, expected_sha256: str) -> list[dict]:
 
 
 # ------------------------------------------------------------------------------- V0 sample
+PHASE_FIELDS = ("eps", "offset_s")
+"""Erratum 2 2-9.1: the phase fields a row (job identity) leaves out."""
+RUNTIME_JOB_FIELDS = ("mask", "t4h_dir")
+V0_SAMPLE_ROWS = 24
+"""2-9.1: required 13 + regression 11 rows."""
+
+
+def _row_identity(job: dict) -> str:
+    """The row of a job: without its phase fields; the G4 width grid's ``twin`` (14 twins x 2
+    offsets, criteria 5 "G4 폭 격자", one row) counts as a phase too, only its presence is
+    kept (with it the 100 V0 lines are the 24 rows of 2-9.1)."""
+    identity = {k: v for k, v in job.items() if k not in (*PHASE_FIELDS, *RUNTIME_JOB_FIELDS)}
+    if "twin" in identity:
+        identity["twin"] = "G4 width grid"
+    return json.dumps(identity, sort_keys=True)
+
+
+def v0_sample_keys(v0_path: Path, v0_sha256: str) -> dict:
+    """2-9.1: the V0 lines of ``main.jsonl`` grouped by row (the job without its phase fields),
+    file order inside a row; the first and the last line of every row (one line: that one).
+
+    Raises:
+        NotJudgeable: Another sha256, or not 24 rows / more than 48 jobs.
+    """
+    rows: dict[str, list[dict]] = {}
+    for line in stored_v0_rows(v0_path, v0_sha256):
+        job = {k: v for k, v in line["job"].items() if k not in RUNTIME_JOB_FIELDS}
+        rows.setdefault(_row_identity(job), []).append(job)
+    jobs = []
+    for group in rows.values():
+        jobs += [group[0]] if len(group) == 1 else [group[0], group[-1]]
+    if len(rows) != V0_SAMPLE_ROWS or len(jobs) > 2 * V0_SAMPLE_ROWS:
+        raise NotJudgeable(f"{len(rows)} V0 rows ({V0_SAMPLE_ROWS} expected), {len(jobs)} jobs")
+    return {"rule": "jp3_remedy_spec_v5_erratum2.md 2-9.1 (R3-E1 precedent: first and last line "
+                    "of every row)",
+            "source": {"path": str(v0_path), "sha256": v0_sha256},
+            "rows": len(rows), "jobs": jobs}
+
+
 def v0_sample(keys_path: Path, sample_path: Path, v0_path: Path, v0_sha256: str) -> dict:
     """``v0-sample`` (module docstring)."""
     import run_v5
@@ -259,8 +310,14 @@ def judge(rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
            and (i["row"], i["phase"]) not in vb_failed_rows]
     l_b = [dict(i, setting=s) for s, part in ls_vs_vb.items() for i in part["items"]
            if i["kind"] == "fail" and i["item"] in L_B_ITEMS]
+    l_c = limit_cycle_suspects(rows_by)
     stops = [dict(i, setting=s) for table in (j_vs_v0, ls_vs_vb) for s, part in table.items()
              for i in part["items"] if i["kind"] == "stop"]
+    l_e = [item for item in stops if item["setting"] in path1.LS_SETTINGS
+           and item["item"] == "J11"]
+    s8 = s8_items(rows_by)
+    stops += s8["stops"]
+    r15 = r15_worsening(rows_by)
     unjudgeable = [dict(i, setting=s) for table in (j_vs_v0, ls_vs_vb)
                    for s, part in table.items() for i in part["items"]
                    if i["kind"] == "not_judgeable"]
@@ -276,10 +333,17 @@ def judge(rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
               "L-d": {s: path1.l_d(rows_by.get(path1.JUDGED_SETTING, []), rows_by.get(s, []))
                       for s in path1.LS_SETTINGS},
               "vb_fail_items": sum(i["kind"] == "fail" for i in vb_items),
-              "vb_fail_items_base_other_phase": sum(
-                  i["kind"] == "fail" and i["base_other_phase_has_it"] for i in vb_items),
-              "L-a": l_a, "L-b": l_b, "stops": stops, "not_judgeable_items": unjudgeable,
+              "baseline_failures": {
+                  "counted": 0, "rule": "2-9.3: a J item fails only where the paired V0 passes "
+                  "it (D-07 .. D-17 by construction); a V0 failure is never a VBJ failure, "
+                  "except the R15 worsening rule (r15_worsening)"},
+              "phase_scatter_suspects": [i for i in vb_items if i["kind"] == "fail"
+                                         and i["base_other_phase_has_it"]],
+              "r15_worsening": r15, "S8": s8,
+              "L-a": l_a, "L-b": l_b, "L-c": l_c, "L-e": l_e, "stops": stops,
+              "not_judgeable_items": unjudgeable + s8["not_judgeable"],
               "no_reference": no_reference, "J-P3": jp3}
+    report["phase_scatter_suspect_count"] = len(report["phase_scatter_suspects"])
     report["status"] = _status(report)
     return report
 
@@ -291,10 +355,95 @@ def _status(report: dict) -> str:
         return "not_judgeable"
     if jp3_status == "setting_defect":
         return "setting_defect"
-    if (report["vb_fail_items"] or report["L-a"] or report["L-b"] or report["stops"]
-            or jp3_status == "H-7"):
+    if (report["vb_fail_items"] or report.get("r15_worsening", {}).get("failures")
+            or report.get("S8", {}).get("failures") or report["L-a"] or report["L-b"]
+            or report.get("L-c") or report["stops"] or jp3_status == "H-7"):
         return "failed"
     return "pass"
+
+
+# ------------------------------------------------------------------------------- 2-9.3 / 2-9.4
+LIMIT_CYCLE_FACTOR = 2
+LIMIT_CYCLE_MARGIN = 6
+"""Criteria 4 (2-9.4 L-c): n_rev >= 2 n_rev_off_max and n_rev >= n_rev_off_max + 6."""
+F5_STOP_MARGIN_KN = -6.92
+F5_STOP_MAX_AFTER_KN = 14.21
+"""Criteria 6: clause margin < -6.92 kN or post-stop maximum > 14.21 kN stops."""
+R15_ROW = "R15"
+
+
+def limit_cycle_suspects(rows_by: dict) -> list[dict]:
+    """L-c: LS rows whose ``n_rev`` meets the criteria 4 limit-cycle rule against the largest
+    V0 ``n_rev`` of the same group (the flow-off maximum)."""
+    import judge_stage1_4368 as path1
+
+    off_max: dict[str, int] = {}
+    for row in rows_by.get(V0_SETTING, []):
+        off_max[row["group"]] = max(off_max.get(row["group"], 0), row["n_rev"])
+    suspects = []
+    for setting in path1.LS_SETTINGS:
+        for row in rows_by.get(setting, []):
+            reference = off_max.get(row["group"])
+            if reference is None:
+                continue
+            if (row["n_rev"] >= LIMIT_CYCLE_FACTOR * reference
+                    and row["n_rev"] >= reference + LIMIT_CYCLE_MARGIN):
+                suspects.append({"setting": setting, "row": row["row"], "phase": row["phase"],
+                                 "n_rev": row["n_rev"], "n_rev_off_max": reference})
+    return suspects
+
+
+def s8_items(rows_by: dict) -> dict:
+    """2-9.3 F-5 on the S8 lines of VB (= VBJ) and LS (= LSJ): the criteria 6 clause alone
+    failing is ``F-5 기록`` (flow-on settings, not a failure); another SA-4 item failing is a
+    failure; the clause margin < -6.92 kN or the post-stop maximum > 14.21 kN stops; a SA-4
+    item without a record is not judgeable."""
+    import judge_stage1_4368 as path1
+
+    out = {"f5_records": [], "failures": [], "stops": [], "not_judgeable": []}
+    for setting in (path1.JUDGED_SETTING, *path1.LS_SETTINGS):
+        for row in rows_by.get(setting, []):
+            if row["row"] != path1.S8_ROW:
+                continue
+            sa4 = path1.sa4_items(row)
+            where = {"setting": setting, "row": row["row"], "phase": row["phase"]}
+            if sa4["state"] == "fail":
+                out["failures"].append({**where, "item": "SA-4", "kind": "fail",
+                                        "detail": [k for k, v in sa4["items"].items() if not v]})
+            elif sa4["state"] != "pass":
+                out["not_judgeable"].append({**where, "item": "SA-4", "kind": "not_judgeable",
+                                             "detail": "a SA-4 item without a record"})
+            crawler = row.get("s8") or {}
+            margin, after = crawler.get("margin_at_stop_kN"), crawler.get("max_after_stop_kN")
+            if margin is not None and margin < 0:
+                out["f5_records"].append({**where, "margin_at_stop_kN": margin})
+            if (margin is not None and margin < F5_STOP_MARGIN_KN) or (
+                    after is not None and after > F5_STOP_MAX_AFTER_KN):
+                out["stops"].append({**where, "item": "F-5", "kind": "stop",
+                                     "detail": "criteria 6 stop value"})
+    return out
+
+
+def r15_worsening(rows_by: dict) -> dict:
+    """2-9.3 exception: R15 (criteria 5 "V0 실패, 나빠짐만 판정", the minimum force): VBJ fails
+    when its J2 value (E-3 for a rigid event row) is below V0's and the ``m1_criteria`` 5 phase
+    test says "구분됨" (2 phases: a weak basis)."""
+    import judge_stage1_4368 as path1
+
+    pairs = []
+    vb = {r["phase"]: r for r in rows_by.get(path1.JUDGED_SETTING, []) if r["row"] == R15_ROW}
+    for row in rows_by.get(V0_SETTING, []):
+        if row["row"] == R15_ROW and row["phase"] in vb:
+            pairs.append((path1._j2_value_N(row), path1._j2_value_N(vb[row["phase"]])))
+    usable = [(a, b) for a, b in pairs if a is not None and b is not None]
+    if not usable:
+        return {"pairs": len(pairs), "state": "판정 불가" if pairs else "no R15 pair",
+                "failures": []}
+    scatter = path1.phase_scatter([a for a, _ in usable], [b for _, b in usable])
+    worse = scatter["state"] == "구분됨" and scatter["E"] < 0
+    return {"pairs": len(pairs), "scatter": scatter, "weak_basis": True,
+            "failures": [{"row": R15_ROW, "item": "J2", "kind": "fail",
+                          "detail": "R15 worsening (구분됨)"}] if worse else []}
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -305,7 +454,8 @@ def _parser() -> argparse.ArgumentParser:
     sample = sub.add_parser("v0-sample")
     sample.add_argument("--sample-keys", type=Path, required=True)
     sample.add_argument("--sample", type=Path, required=True)
-    for command in (judged, sample):
+    keys = sub.add_parser("v0-sample-keys", help="write the fixed V0 sample key list (2-9.1)")
+    for command in (judged, sample, keys):
         command.add_argument("--v0", type=Path, required=True)
         command.add_argument("--v0-sha256", required=True)
         command.add_argument("--out", type=Path, required=True)
@@ -320,6 +470,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "judge":
             report = judge(args.rows, args.v0, args.v0_sha256)
+        elif args.command == "v0-sample-keys":
+            report = {"status": "written", **v0_sample_keys(args.v0, args.v0_sha256)}
         else:
             report = v0_sample(args.sample_keys, args.sample, args.v0, args.v0_sha256)
     except NotJudgeable as exc:

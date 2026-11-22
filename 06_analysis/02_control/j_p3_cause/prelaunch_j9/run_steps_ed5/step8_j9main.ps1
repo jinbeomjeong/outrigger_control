@@ -3,7 +3,8 @@
 # decision 2026-11-22) - run_v5 batch j9_main (required rows x VBJ, LSJ1 .. LSJ4, regression
 # rows x VBJ; ③ rev 6, tag base final_C4G2_P3W) at the run commit.
 #   preconditions (2-6 10): steps (1) .. (7) done (p1, dry, fpath, cases, casef, t8, dg3,
-#     12b_vbk, records; 12b_vbk.done exists only after a 12b judge exit 0 = pass) and dg3.done
+#     12b_vbk, records) and dg3.done; the 12b judge file of 12b_vbk.done with its sha256,
+#     status pass and exit 0 (2-9.6); T-CK / DROPOUT are not a precondition (2-9.5)
 #   1. the V0 sample (2-7.1): run_v5 j9_v0_sample on the fixed V0 sample key file, then
 #      jp3_j9main_judge.py v0-sample against the stored V0 lines (v5/main.jsonl, fixed sha):
 #      a differing hash stops
@@ -20,7 +21,27 @@ param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mand
 . "$PSScriptRoot\common_ed5.ps1"
 
 $Required = @('p1', 'dry', 'fpath', 'cases', 'casef', 't8', 'dg3', '12b_vbk', 'records')
+# (the record bundles T-CK / DROPOUT are no precondition, erratum 2 2-9.5)
 $Folder = Initialize-Ed5Step 'j9main' $Attempt $Required
+
+# erratum 2 2-9.6: the 12b judge file the 12b_vbk.done marker names - its sha256 the marker's,
+# status pass, exit 0 (else j9_main does not start)
+$MarkerCodes = (Get-Content -Raw -LiteralPath "$RunsRoot\12b_vbk.done" | ConvertFrom-Json).codes
+$FileProperty = $MarkerCodes.PSObject.Properties['judge_file']
+$ShaProperty = $MarkerCodes.PSObject.Properties['judge_sha256']
+if (-not $FileProperty -or -not $ShaProperty) { Stop-Step 2 '12b_vbk.done names no judge file / sha256' }
+$JudgeFile12b = Join-Path $MainRoot ([string]$FileProperty.Value)
+if (-not (Test-Path -LiteralPath $JudgeFile12b)) { Stop-Step 2 "12b judge file $JudgeFile12b missing" }
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $JudgeFile12b).Hash.ToLower() -ne [string]$ShaProperty.Value) {
+    Stop-Step 2 "12b judge file $JudgeFile12b is not of the marker's sha256"
+}
+$Judged12b = Get-Content -Raw -LiteralPath $JudgeFile12b | ConvertFrom-Json
+$StatusProperty = $Judged12b.PSObject.Properties['status']
+$ExitProperty = $Judged12b.PSObject.Properties['exit']
+if (-not $StatusProperty -or -not $ExitProperty -or $StatusProperty.Value -ne 'pass' -or $ExitProperty.Value -ne 0) {
+    Stop-Step 2 '12b judge file: status pass and exit 0 required'
+}
+$StepState.Codes['12b_judge_sha256'] = [string]$ShaProperty.Value
 $V0Rows = Get-FixedPath 'MAIN_JSONL_SHA256'
 $V0Sha = $FixedInputs['MAIN_JSONL_SHA256'][1]
 $Judge = "$Coupled/jp3_j9main_judge.py"
