@@ -44,6 +44,12 @@ Edition 5 erratum 6 (sealed ``9a92bd34``):
   LSH4; J-P3b on VBH, LSH1, LSH2, LSH4) and case D ((D-가) J-P3a / b / c 0, (D-나) the VBG6
   gap > 0 at every C breach read, (D-다) the numeric conditions under C's command order).
 
+Erratum 7 (sealed ``38fdc574``): 7-1 the same order also needs C's RR 49.1 s acting command
+above u_hold (an extension), and "49.1 s CARRY" is ``carry_ext`` only; 7-2 a missing VBG6
+49.1 s read, zero HOLD reads in the window or a missing C read makes (D-다) "not computed"
+with its reason (no status change, never a pass), and a revision 6 P4-2 that cannot be
+computed is ``record_status`` ``not_computed`` in ``p4_records``.
+
 Exit codes and ``status`` (the J4a-9 rows of 13.1 and 4a-2 R3):
 
 ======  =================  ===================================================================
@@ -707,7 +713,8 @@ CARRY_READ_S = 49.1
 CARRY_GAP_MIN_PA = 15.0e5
 HOLD_GAP_MIN_PA = 10.0e5
 """(D-다): 49.1 s CARRY, its gap >= +15 bar, the HOLD reads' gap >= +10 bar (5.3 D row)."""
-CARRY_CLASSES = ("carry_ext", "carry_ret")
+CARRY_EXTENSION_CLASS = "carry_ext"
+"""(D-다) "49.1 s CARRY" is the extension carry only (erratum 7 7-1)."""
 HOLD_CLASS = "hold"
 HOLD_SPEED_RATIO = 0.01
 """(D-다): u_hold = 0.01 x YAML ``actuator.max_speed_m_s`` (decision 146,
@@ -897,10 +904,24 @@ def _hold_speed_problem(d_row: dict, u_hold: float) -> str | None:
     return None
 
 
+NUMERIC_JUDGED, NUMERIC_RECORD, NUMERIC_NOT_COMPUTED = "judged", "record", "not_computed"
+"""(D-다) report status: judged (same order), a record (another order) or not computed
+(erratum 7 7-2: a reason, no status change; never written as a pass)."""
+
+
+def _window_reads(times: np.ndarray) -> np.ndarray:
+    low, high = SAME_ORDER_WINDOW_S
+    times = np.asarray(times, float)
+    return np.flatnonzero((times >= low - TIME_MATCH_TOLERANCE_S)
+                          & (times <= high + TIME_MATCH_TOLERANCE_S))
+
+
 def _same_command_order(c_npz: Path, u_hold: float) -> tuple[bool | None, str]:
-    """(D-다): whether every RR read of C in the window has an acting command (the update
-    ``k - 1``'s output, zero before the first) of at most u_hold; None (a record, no status
-    change) when C's T4h or its target reads are missing."""
+    """(D-다) with erratum 7 7-1: C ran the same command order when every RR read of the
+    48.7 .. 49.0 s window has an acting command (the update ``k - 1``'s output, zero before
+    the first) of at most u_hold and the RR read at 49.1 s an acting command above u_hold
+    (an extension). None (not computed, erratum 7 7-2) when C's T4h or one of these reads is
+    missing."""
     if not c_npz.is_file():
         return None, f"C T4h {c_npz.name} missing"
     with np.load(c_npz, allow_pickle=False) as data:
@@ -908,68 +929,77 @@ def _same_command_order(c_npz: Path, u_hold: float) -> tuple[bool | None, str]:
             return None, f"C T4h without {list(C_COMMAND_COLUMNS)}"
         times = np.asarray(data["t_s"], float)
         commands = np.asarray(data["command_m_s"], float)
-    low, high = SAME_ORDER_WINDOW_S
-    reads = np.flatnonzero((times >= low - TIME_MATCH_TOLERANCE_S)
-                           & (times <= high + TIME_MATCH_TOLERANCE_S))
+    reads = _window_reads(times)
     if reads.size == 0:
         return None, "no C RR read in 48.7 .. 49.0 s"
-    acting = [commands[read - 1, RR_LEG] if read > 0 else 0.0 for read in reads]
-    return all(abs(value) <= u_hold for value in acting), f"{reads.size} C reads"
+    carry = _matching_read(times, CARRY_READ_S)
+    if carry is None:
+        return None, "not exactly one C RR read at 49.1 s"
+
+    def acting(read: int) -> float:
+        return float(commands[read - 1, RR_LEG]) if read > 0 else 0.0
+
+    is_micro = all(abs(acting(read)) <= u_hold for read in reads)
+    is_extension = acting(carry) > u_hold
+    return is_micro and is_extension, (f"{reads.size} C window reads, micro {is_micro}; "
+                                       f"49.1 s extension {is_extension}")
 
 
 def _numeric_conditions(c_row: dict, d_row: dict, trace: dict | None,
                         problems: Problems) -> dict:
-    """(D-다): 49.1 s CARRY, its gap >= +15 bar and every HOLD read's gap >= +10 bar on RR,
-    judged only when C ran the same command order; otherwise (or when it cannot be told) a
-    record that leaves the status as it is."""
+    """(D-다): 49.1 s ``carry_ext``, its gap >= +15 bar and every HOLD read's gap >= +10 bar on
+    RR, judged only when C ran the same command order (erratum 7 7-1); another order makes it a
+    record and a missing read (erratum 7 7-2) "not computed" with the reason - neither changes
+    the status. (D-가) / (D-나) are judged apart."""
     u_hold = u_hold_m_s()
     defect = _hold_speed_problem(d_row, u_hold)
     if defect is not None:
         problems.setting_defects.append(defect)
     same_order, basis = _same_command_order(_new_t4h_path(c_row), u_hold)
-    judged = same_order is True
-    report: dict = {"u_hold_m_s": u_hold, "same_order": same_order, "basis": basis,
-                    "status": "judged" if judged else "record"}
+    report: dict = {"u_hold_m_s": u_hold, "same_order": same_order, "basis": basis}
+    if same_order is None:
+        return {**report, "status": NUMERIC_NOT_COMPUTED, "reason": basis}
     if trace is None:
-        return report
-    target = problems if judged else Problems()
-    findings = _numeric_findings(trace, target)
+        return {**report, "status": NUMERIC_NOT_COMPUTED, "reason": "VBG6 T4h columns missing"}
+    findings, failures, reason = _numeric_findings(trace)
     report.update(findings)
-    if not judged:
-        report["record_findings"] = target.as_dict()
-    return report
+    if not same_order:  # another order: the whole of (D-다) is a record (erratum 6)
+        return {**report, "status": NUMERIC_RECORD, "record_failures": failures,
+                **({} if reason is None else {"record_note": reason})}
+    if reason is not None:  # erratum 7 7-2: same order, a read missing
+        return {**report, "status": NUMERIC_NOT_COMPUTED, "reason": reason,
+                "record_failures": failures}
+    problems.failures += failures
+    return {**report, "status": NUMERIC_JUDGED, "failures": failures}
 
 
-def _numeric_findings(trace: dict, target: Problems) -> dict:
+def _numeric_findings(trace: dict) -> tuple[dict, list[str], str | None]:
+    """(D-다) on the VBG6 trace: (findings, failures, the not-computed reason or None)."""
     names = trace["class_names"]
-    read = _matching_read(trace["jp3_t_s"], CARRY_READ_S)
     out: dict = {}
+    failures: list[str] = []
+    read = _matching_read(trace["jp3_t_s"], CARRY_READ_S)
     if read is None:
-        target.not_judgeable.append("6-2A (D-다): not exactly one VBG6 read at 49.1 s")
-    else:
-        code = int(trace["jp3_class"][read, RR_LEG])
-        name = names[code] if 0 <= code < len(names) else None
-        gap = _gap_Pa(trace, read, RR_LEG)
-        out["carry_read"] = {"class": name, "gap_Pa": gap}
-        if name not in CARRY_CLASSES:
-            target.failures.append(f"6-2A (D-다): RR 49.1 s class {name!r}, CARRY needed")
-        if not math.isfinite(gap) or gap < CARRY_GAP_MIN_PA:
-            target.failures.append("6-2A (D-다): RR 49.1 s gap below +15 bar")
-    low, high = SAME_ORDER_WINDOW_S
-    times = np.asarray(trace["jp3_t_s"], float)
-    window = np.flatnonzero((times >= low - TIME_MATCH_TOLERANCE_S)
-                            & (times <= high + TIME_MATCH_TOLERANCE_S))
+        return out, failures, "not exactly one VBG6 RR read at 49.1 s"
+    code = int(trace["jp3_class"][read, RR_LEG])
+    name = names[code] if 0 <= code < len(names) else None
+    gap = _gap_Pa(trace, read, RR_LEG)
+    out["carry_read"] = {"class": name, "gap_Pa": gap}
+    if name != CARRY_EXTENSION_CLASS:  # erratum 7 7-1: carry_ret is no 49.1 s CARRY
+        failures.append(f"6-2A (D-다): RR 49.1 s class {name!r}, {CARRY_EXTENSION_CLASS} needed")
+    if not math.isfinite(gap) or gap < CARRY_GAP_MIN_PA:
+        failures.append("6-2A (D-다): RR 49.1 s gap below +15 bar")
     hold_code = names.index(HOLD_CLASS) if HOLD_CLASS in names else None
-    holds = [int(k) for k in window
+    holds = [int(k) for k in _window_reads(trace["jp3_t_s"])
              if hold_code is not None and int(trace["jp3_class"][k, RR_LEG]) == hold_code]
     out["hold_reads"] = len(holds)
     if not holds:
-        target.not_judgeable.append("6-2A (D-다): no VBG6 RR HOLD read in 48.7 .. 49.0 s")
+        return out, failures, "no VBG6 RR HOLD read in 48.7 .. 49.0 s"
     for k in holds:
         gap = _gap_Pa(trace, k, RR_LEG)
         if not math.isfinite(gap) or gap < HOLD_GAP_MIN_PA:
-            target.failures.append(f"6-2A (D-다): RR HOLD read {k} gap below +10 bar")
-    return out
+            failures.append(f"6-2A (D-다): RR HOLD read {k} gap below +10 bar")
+    return out, failures, None
 
 
 # --- comparison ------------------------------------------------------------------------------
@@ -1058,9 +1088,13 @@ def _is_revision_6(record: dict) -> bool:
 def _p4_record(setting: str, check: dict, recorded: Problems) -> dict:
     """Erratum 6 6-2: the P4-2 / P4-4 / P4-9 findings of a revision 6 row as a record (a
     finding of these items never changes the status), with the row's revision 6 reason
-    counts (None = the key missing; a record, not a judgement)."""
+    counts (None = the key missing; a record, not a judgement). ``record_status`` is
+    ``not_computed`` when an item could not be computed (erratum 7 7-2: a missing column; the
+    reason stays in ``findings.not_judgeable``), else ``recorded`` - never a pass."""
+    findings = recorded.as_dict()
     return {"setting": setting, "items": ["P4-2", "P4-4", "P4-9"],
-            "findings": recorded.as_dict(),
+            "record_status": "not_computed" if findings["not_judgeable"] else "recorded",
+            "findings": findings,
             "revision_6_reasons": {key: check.get(key) for key in REVISION_6_REASON_KEYS}}
 
 

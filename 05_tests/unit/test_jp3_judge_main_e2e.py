@@ -121,7 +121,15 @@ def test_baseline_compare_finds_each_new_t4h_next_to_its_rows_file(tmp_path, mon
     out = tmp_path / "report.json"
     code = compare.main([str(baseline), "--new", *map(str, news), "--out", str(out)])
     report = json.loads(out.read_text(encoding="utf-8"))
-    assert code != compare.EXIT_ERROR, report.get("error")
+    # erratum 7 7-4: one exact exit code - three rows without a ③ record have no judged row,
+    # no class read and none of the 6-2A rows (B five, D): not judgeable, nothing else
+    assert code == compare.EXIT_NOT_JUDGEABLE and report["status"] == "not_judgeable"
+    assert report["failures"] == [] and report["setting_defects"] == []
+    assert report["not_judgeable"] == [
+        "no judged row of VBJ, LSJ1 .. 4 (13.1, 4a-2 R2)",
+        "no reads of class ['lock', 'hold', 'carry_ext', 'carry_ret', 'ext'] over the "
+        "revision 5 rows",
+        "6-2A: rows ['LSH1', 'LSH2', 'LSH3', 'LSH4', 'VBG6'] missing (B five, C and D needed)"]
     expected = {}
     for name, rows in files.items():
         for row in rows:

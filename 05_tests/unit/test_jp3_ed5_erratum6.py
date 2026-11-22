@@ -200,6 +200,7 @@ def test_rev4_unchanged_and_rev6_p4_records(tmp_path, monkeypatch) -> None:
     assert set(records) == set(REV6_SETTINGS)
     for record in records.values():
         assert record["items"] == ["P4-2", "P4-4", "P4-9"]
+        assert record["record_status"] == "recorded"
         assert record["findings"] == {"setting_defects": [], "not_judgeable": [], "failures": []}
         assert record["revision_6_reasons"] == dict.fromkeys(compare.REVISION_6_REASON_KEYS,
                                                              [0, 0, 0, 0])
@@ -313,15 +314,22 @@ def test_covering_fails_when_the_vbg6_gap_is_not_positive(tmp_path, monkeypatch)
 
 # --- (D-다) under C's command order -------------------------------------------------------------
 
-def _same_order_arrays(carry_gap_bar: float, hold_gap_bar: float) -> ArraysEdit:
-    """C's RR acting commands in 48.7 .. 49.0 s set to 0 (same order); VBG6 RR 49.1 s CARRY
-    with ``carry_gap_bar``, the window reads HOLD with ``hold_gap_bar``."""
+EXTENSION_M_S = 4.71e-3
+"""The 4a 5.3 C premise: RR 49.0 -> 49.1 s a 4.71 mm/s extension (erratum 7 7-1)."""
+
+
+def _same_order_arrays(carry_gap_bar: float, hold_gap_bar: float, carry_class: str = "carry_ext",
+                       carry_acting_m_s: float = EXTENSION_M_S) -> ArraysEdit:
+    """C's RR acting commands in 48.7 .. 49.0 s set to 0 and at 49.1 s to
+    ``carry_acting_m_s`` (same order when above u_hold, erratum 7 7-1); VBG6 RR 49.1 s
+    ``carry_class`` with ``carry_gap_bar``, the window reads HOLD with ``hold_gap_bar``."""
     def edit(name: str, arrays: dict) -> None:
         if name == "VBG4":
             times = arrays["t_s"]
             commands = arrays["command_m_s"].copy()
             for read in np.flatnonzero((times >= 48.7 - 1e-6) & (times <= 49.0 + 1e-6)):
                 commands[read - 1, compare.RR_LEG] = 0.0
+            commands[_read_near(times, compare.CARRY_READ_S) - 1, compare.RR_LEG] = carry_acting_m_s
             arrays["command_m_s"] = commands
         if name == "VBG6":
             names = [str(item) for item in arrays["jp3_class_names"].tolist()]
@@ -333,7 +341,7 @@ def _same_order_arrays(carry_gap_bar: float, hold_gap_bar: float) -> ArraysEdit:
                 classes[read, compare.RR_LEG] = names.index("hold")
                 used[read, compare.RR_LEG] = truth[read, compare.RR_LEG] + hold_gap_bar * BAR
             carry = _read_near(times, compare.CARRY_READ_S)
-            classes[carry, compare.RR_LEG] = names.index("carry_ext")
+            classes[carry, compare.RR_LEG] = names.index(carry_class)
             used[carry, compare.RR_LEG] = truth[carry, compare.RR_LEG] + carry_gap_bar * BAR
             arrays["jp3_class"], arrays["jp3_used_bound_Pa"] = classes, used
     return edit
@@ -372,7 +380,91 @@ def test_numeric_conditions_are_records_in_another_order(tmp_path, monkeypatch) 
     assert _classes(report) == {"failures": [], "setting_defects": [], "not_judgeable": []}
     numeric = report["case_bd"]["D"]["numeric"]
     assert numeric["status"] == "record" and numeric["same_order"] is False
-    assert numeric["record_findings"]["failures"]
+    failures = numeric["record_failures"]
+    assert failures[0] == "6-2A (D-다): RR 49.1 s gap below +15 bar" and len(failures) >= 2
+    assert all(text.startswith("6-2A (D-다): RR HOLD read ") for text in failures[1:])
+
+
+def test_case_bd_d_numeric_requires_extension_at_49_1(tmp_path, monkeypatch) -> None:
+    """Erratum 7 7-1: the window micro commands alone are not the same order - with C's RR
+    49.1 s acting command at or below u_hold the failing gaps stay a record (exit 0)."""
+    code, report = _run(tmp_path, monkeypatch, None,
+                        _same_order_arrays(10.0, 1.0, carry_acting_m_s=0.0))
+    assert code == compare.EXIT_PASS and report["status"] == "pass"
+    assert _classes(report) == {"failures": [], "setting_defects": [], "not_judgeable": []}
+    numeric = report["case_bd"]["D"]["numeric"]
+    assert numeric["status"] == "record" and numeric["same_order"] is False
+    assert "49.1 s extension False" in numeric["basis"] and numeric["record_failures"]
+
+
+def test_case_bd_d_carry_ret_fails_numeric_when_same_order(tmp_path, monkeypatch) -> None:
+    """Erratum 7 7-1: under the same order a 49.1 s ``carry_ret`` is no 49.1 s CARRY - a
+    failure (exit 1) even with every gap met."""
+    code, report = _run(tmp_path, monkeypatch, None,
+                        _same_order_arrays(20.0, 12.0, carry_class="carry_ret"))
+    assert code == compare.EXIT_FAILED and report["status"] == "failed"
+    assert _classes(report) == {"setting_defects": [], "not_judgeable": [], "failures": [
+        "6-2A (D-다): RR 49.1 s class 'carry_ret', carry_ext needed"]}
+    assert report["case_bd"]["D"]["numeric"]["status"] == "judged"
+
+
+def _shift_read(column: str, t_s: float, to_s: float) -> Callable[[dict], None]:
+    def edit(arrays: dict) -> None:
+        times = np.asarray(arrays[column], float).copy()
+        times[_read_near(times, t_s)] = to_s
+        arrays[column] = times
+    return edit
+
+
+@pytest.mark.parametrize("case, setting, reason", [
+    ("VBG6 49.1 s read missing", "VBG6", "not exactly one VBG6 RR read at 49.1 s"),
+    ("no HOLD read in the window", "VBG6", "no VBG6 RR HOLD read in 48.7 .. 49.0 s"),
+    ("C 49.1 s read missing", "VBG4", "not exactly one C RR read at 49.1 s"),
+])
+def test_case_bd_d_numeric_unjudgeable_is_record(tmp_path, monkeypatch, case, setting,
+                                                 reason) -> None:
+    """Erratum 7 7-2: under the same order a missing VBG6 49.1 s read, zero HOLD reads in the
+    window or a missing C read makes (D-다) "not computed" with its reason - status and exit
+    unchanged (0), (D-가) / (D-나) still judged, and (D-다) never written as judged or pass."""
+    def arrays_edit(name: str, arrays: dict) -> None:
+        _same_order_arrays(10.0, 1.0)(name, arrays)  # failing gaps: must not count
+        if name != setting:
+            return
+        if case == "VBG6 49.1 s read missing":
+            _shift_read("jp3_t_s", compare.CARRY_READ_S, 49.15)(arrays)
+        elif case == "no HOLD read in the window":
+            names = [str(item) for item in arrays["jp3_class_names"].tolist()]
+            classes = arrays["jp3_class"].copy()
+            for read in compare._window_reads(arrays["jp3_t_s"]):
+                classes[read, compare.RR_LEG] = names.index("ext")
+            arrays["jp3_class"] = classes
+        else:
+            _shift_read("t_s", compare.CARRY_READ_S, 49.15)(arrays)
+
+    code, report = _run(tmp_path, monkeypatch, None, arrays_edit)
+    assert code == compare.EXIT_PASS and report["status"] == "pass", case
+    assert _classes(report) == {"failures": [], "setting_defects": [], "not_judgeable": []}
+    numeric = report["case_bd"]["D"]["numeric"]
+    assert numeric["status"] == compare.NUMERIC_NOT_COMPUTED and numeric["reason"] == reason
+    assert "failures" not in numeric and numeric["status"] not in ("judged", "pass")
+    assert report["case_bd"]["D"]["covering"]["judged_reads"] == 1  # (D-나) still judged
+
+
+def test_rev6_p4_2_not_computed_is_no_pass(tmp_path, monkeypatch) -> None:
+    """Erratum 7 7-2: a revision 6 P4-2 that cannot be computed (a trace column missing) is
+    ``not_computed`` in ``p4_records`` with its reason; status and exit unchanged."""
+    def arrays_edit(name: str, arrays: dict) -> None:
+        if name == "LSH4":
+            del arrays["jp3_model_bound_inherited"]
+
+    code, report = _run(tmp_path, monkeypatch, None, arrays_edit)
+    assert code == compare.EXIT_PASS and report["status"] == "pass"
+    assert _classes(report) == {"failures": [], "setting_defects": [], "not_judgeable": []}
+    records = {record["setting"]: record for record in report["p4_records"]}
+    assert records["LSH4"]["record_status"] == "not_computed"
+    assert len(records["LSH4"]["findings"]["not_judgeable"]) == 1
+    assert "jp3_model_bound_inherited" in records["LSH4"]["findings"]["not_judgeable"][0]
+    assert all(r["record_status"] == "recorded" for s, r in records.items() if s != "LSH4")
 
 
 def test_u_hold_and_the_vbg6_hold_speed_record(tmp_path, monkeypatch) -> None:
@@ -443,6 +535,34 @@ def test_a_failure_outranks_a_not_judgeable_reason(tmp_path, monkeypatch) -> Non
     assert report["failures"] == ["VBH: 6-2A B J-P3a jp3a_breach_reads sum 1 (0 needed)"]
     assert report["not_judgeable"] == [
         "6-2A (D-나): C has no moving-extension breach read (no covering row)"]
+
+
+def test_rev6_identity_defect_is_a_setting_defect(tmp_path, monkeypatch) -> None:
+    """13.6 / erratum 6 6-2: a revision 6 row of another ``spec_edition`` is a setting defect
+    (exit 2) - P4-1 and the identity stay judged on revision 6 rows."""
+    def edit(row: dict) -> None:
+        _check(row)["spec_edition"] = "8be9de22"
+
+    code, report = _run(tmp_path, monkeypatch, _only("LSJ1", edit))
+    assert code == compare.EXIT_NOT_JUDGEABLE and report["status"] == "setting_defect"
+    assert _classes(report) == {"failures": [], "not_judgeable": [],
+                                "setting_defects": ["LSJ1: spec_edition '8be9de22'"]}
+
+
+def test_baseline_row_without_a_new_row_is_not_judgeable(tmp_path, monkeypatch) -> None:
+    """6-1: the baseline VBG5 row without its VBG6 pair (the ``ae9d0b2d`` stop) is not
+    judgeable (exit 2) before any P4 item."""
+    news = _world(tmp_path)
+    cd = next(path for path in news if path.name == "cd.jsonl")
+    kept = [line for line in cd.read_text(encoding="utf-8").splitlines()
+            if json.loads(line)["job"]["setting"] != "VBG6"]
+    cd.write_text("".join(line + "\n" for line in kept), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    out = tmp_path / "report.json"
+    code = compare.main([str(BASELINE), "--new", *map(str, news), "--out", str(out)])
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert code == compare.EXIT_NOT_JUDGEABLE and report["status"] == "not_judgeable"
+    assert report["not_judgeable"] == ["VBG5: 0 new rows"] and "pairs" not in report
 
 
 def test_case_bd_rows_missing_is_not_judgeable() -> None:
