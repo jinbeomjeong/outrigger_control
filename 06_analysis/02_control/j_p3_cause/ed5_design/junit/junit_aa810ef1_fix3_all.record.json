@@ -1,0 +1,51 @@
+{
+  "purpose": "P5-3",
+  "head": "aa810ef1ed7d1e46b036f00f223e0820e392daa6",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+  "list_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\fix3_all_aa810ef1.txt",
+  "list_file_sha256": "8a9cfc0f56a8d8e4c29a932f02c908fc1388366b113de08130ec3f235113b8d6",
+  "test_files": [
+    "test_jp3_12b_tools.py",
+    "test_jp3_ckdrop.py",
+    "test_jp3_ed5_erratum1.py",
+    "test_jp3_ed5_erratum2.py",
+    "test_jp3_ed5_prelaunch_fix.py",
+    "test_jp3_j9main.py",
+    "test_jp3_p51_compare.py",
+    "test_jp3_p5_fixed_values.py",
+    "test_jp3_rev6.py",
+    "test_s9_batch_inputs_exit.py",
+    "test_x10_rod_fault.py",
+    "test_jp3_ed5_erratum6.py",
+    "test_jp3_ed5_erratum7.py",
+    "test_jp3_ed5_s1_stored.py",
+    "test_jp3_addendum_4a2.py",
+    "test_jp3_addendum_4a3.py",
+    "test_jp3_addendum_4a4.py",
+    "test_jp3_addendum_4a5.py",
+    "test_jp3_harness_units.py",
+    "test_jp3_judge_main_e2e.py",
+    "test_jp3_prelaunch_audit2.py",
+    "test_s9_batch_code_at_launch.py"
+  ],
+  "environment": {
+    "python": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "workers": 6,
+    "dist": "loadfile",
+    "affinity_mask": "0x0FFF0000",
+    "OUTRIGGER_RECORDS_ROOT": "C:\\workspace\\outrigger_control",
+    "X10_BASE_ROOT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\x10base",
+    "MKL_THREADING_LAYER": "TBB"
+  },
+  "junit_skips": {
+    "critical": ".",
+    "fail_on_skip": true
+  },
+  "hashed_files": {},
+  "started": "2026-11-22T23:39:21.0468526+09:00",
+  "ended": "2026-11-22T23:43:56.8281774+09:00",
+  "pytest_exit": 0,
+  "junit_skips_exit": 0,
+  "junit": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\06_analysis\\02_control\\j_p3_cause\\ed5_design\\junit\\junit_aa810ef1_fix3_all.xml",
+  "junit_sha256": "1eb0b25d25e0bd6bb5cc66f4a6302db715059a6d3648cc2f1a15a2e64686fc8e"
+}
