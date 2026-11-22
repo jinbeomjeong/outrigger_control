@@ -1,0 +1,51 @@
+{
+  "step": "p5fixed",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1",
+  "exit_code": 2,
+  "reason": "p52.json: 33 problems (a fixed record with a gap)",
+  "commit": "8003083db362cb01116882e84819d128629b2c54",
+  "started": "2026-11-22 16:09:45 +09:00",
+  "stopped": "2026-11-22 16:17:06 +09:00",
+  "codes": {
+    "run:j9_cases": 0,
+    "run:case_cd": 0,
+    "run:j9_case_f": 0,
+    "identity_check": 0,
+    "p5fixed_commit": "8003083db362cb01116882e84819d128629b2c54",
+    "p5fixed_disclosure": "P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). 단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.",
+    "tool:p52": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "j9_cases",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_cases --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\j9_cases.jsonl --workers 5 --mask 0xFFFF",
+      "pid": 19676
+    },
+    {
+      "label": "case_cd",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\cd.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_case_replay.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\cd.jsonl --settings VBG4,VBG6 --workers 2 --mask 0xFFFF",
+      "pid": 3388
+    },
+    {
+      "label": "j9_case_f",
+      "mask": "0xFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_case_f --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\j9_case_f.jsonl --workers 8 --mask 0xFFFF",
+      "pid": 27884
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run2 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1 --expect-commit 8003083db362cb01116882e84819d128629b2c54 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\_identity_checks\\p5fixed_a1.md"
+    },
+    {
+      "label": "p52",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_p5_fixed_values.py p52 --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\j9_cases.jsonl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\cd.jsonl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\j9_case_f.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\judge\\p52.json"
+    }
+  ]
+}

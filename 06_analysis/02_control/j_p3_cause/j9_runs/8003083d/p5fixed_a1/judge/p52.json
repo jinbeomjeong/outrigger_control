@@ -1,0 +1,1233 @@
+{
+ "rule": "jp3_remedy_spec_v5.md P5-2 (fixed after implementation, before the run; erratum 1 1: cases A .. F, 1A: the rev 6 counts on the rev 6 rows, the judged key total on the P4-on rev 6 rows; erratum 4 4-1)",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\j9_cases.jsonl",
+   "sha256": "738cc7a0196d3fe1eefa5f5f1dc4b99a126521cb3a06997e6e62a44a66d4c945"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\cd.jsonl",
+   "sha256": "54617d5306dadf5a032a387360f85a682667d8b56a912c22e63b878290dbea18"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8003083d\\p5fixed_a1\\j9_case_f.jsonl",
+   "sha256": "60bca2adee9b1c18c692c055ae3b0cb6f304477f7641738d693d4e576bb7372d"
+  }
+ ],
+ "rows": [
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "VB",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LS3",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LS2",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LS4",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LS1",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSH2",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    5,
+    7,
+    6
+   ],
+   "jp3_r58_witness_carries_sum": 22,
+   "jp3_r59_substeps": [
+    800,
+    1700,
+    2100,
+    800
+   ],
+   "jp3_r59_substeps_sum": 5400,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    3,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSH3",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    6,
+    7,
+    6
+   ],
+   "jp3_r58_witness_carries_sum": 23,
+   "jp3_r59_substeps": [
+    800,
+    1800,
+    2100,
+    800
+   ],
+   "jp3_r59_substeps_sum": 5500,
+   "jp3_r510_candidates": [
+    0,
+    3,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSH1",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    5,
+    7,
+    5
+   ],
+   "jp3_r58_witness_carries_sum": 21,
+   "jp3_r59_substeps": [
+    800,
+    1700,
+    2100,
+    800
+   ],
+   "jp3_r59_substeps_sum": 5400,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    3,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBH\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBH\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "VBH",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    5,
+    7,
+    6
+   ],
+   "jp3_r58_witness_carries_sum": 22,
+   "jp3_r59_substeps": [
+    800,
+    1700,
+    2100,
+    800
+   ],
+   "jp3_r59_substeps_sum": 5400,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    3,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSH4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSH4",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    5,
+    7,
+    5
+   ],
+   "jp3_r58_witness_carries_sum": 21,
+   "jp3_r59_substeps": [
+    800,
+    1600,
+    2000,
+    800
+   ],
+   "jp3_r59_substeps_sum": 5200,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 8
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSJ1",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    2,
+    2,
+    4,
+    2
+   ],
+   "jp3_r58_witness_carries_sum": 10,
+   "jp3_r59_substeps": [
+    0,
+    1700,
+    1914,
+    0
+   ],
+   "jp3_r59_substeps_sum": 3614,
+   "jp3_r510_candidates": [
+    0,
+    3,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSJ4",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    3,
+    2,
+    4,
+    2
+   ],
+   "jp3_r58_witness_carries_sum": 11,
+   "jp3_r59_substeps": [
+    0,
+    1700,
+    2017,
+    0
+   ],
+   "jp3_r59_substeps_sum": 3717,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    3,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSJ3",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    2,
+    2,
+    4,
+    2
+   ],
+   "jp3_r58_witness_carries_sum": 10,
+   "jp3_r59_substeps": [
+    0,
+    1800,
+    1917,
+    0
+   ],
+   "jp3_r59_substeps_sum": 3717,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 8
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBJ\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBJ\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "VBJ",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    2,
+    2,
+    4,
+    1
+   ],
+   "jp3_r58_witness_carries_sum": 9,
+   "jp3_r59_substeps": [
+    0,
+    1700,
+    3317,
+    0
+   ],
+   "jp3_r59_substeps_sum": 5017,
+   "jp3_r510_candidates": [
+    0,
+    4,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 8
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LSJ2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "j9_cases.jsonl",
+   "setting": "LSJ2",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    2,
+    2,
+    4,
+    1
+   ],
+   "jp3_r58_witness_carries_sum": 9,
+   "jp3_r59_substeps": [
+    0,
+    1800,
+    3214,
+    0
+   ],
+   "jp3_r59_substeps_sum": 5014,
+   "jp3_r510_candidates": [
+    0,
+    3,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "cd.jsonl",
+   "setting": "VBG4",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG6\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG6\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}",
+   "source": "cd.jsonl",
+   "setting": "VBG6",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    2,
+    4,
+    5,
+    3
+   ],
+   "jp3_r58_witness_carries_sum": 14,
+   "jp3_r59_substeps": [
+    0,
+    1799,
+    2099,
+    0
+   ],
+   "jp3_r59_substeps_sum": 3898,
+   "jp3_r510_candidates": [
+    0,
+    3,
+    4,
+    0
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LS3",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "VB",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LS2",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LS4",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LS1",
+   "rule_revision": null,
+   "is_rev6": false,
+   "p4_on": false
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBH\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBH\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "VBH",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    5,
+    4,
+    5,
+    7
+   ],
+   "jp3_r58_witness_carries_sum": 21,
+   "jp3_r59_substeps": [
+    1900,
+    800,
+    800,
+    2200
+   ],
+   "jp3_r59_substeps_sum": 5700,
+   "jp3_r510_candidates": [
+    4,
+    0,
+    0,
+    4
+   ],
+   "jp3_r510_candidates_sum": 8
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSH2",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    5,
+    4,
+    6,
+    7
+   ],
+   "jp3_r58_witness_carries_sum": 22,
+   "jp3_r59_substeps": [
+    1900,
+    800,
+    800,
+    2300
+   ],
+   "jp3_r59_substeps_sum": 5800,
+   "jp3_r510_candidates": [
+    4,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSH1",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    6,
+    4,
+    6,
+    7
+   ],
+   "jp3_r58_witness_carries_sum": 23,
+   "jp3_r59_substeps": [
+    2000,
+    800,
+    800,
+    2300
+   ],
+   "jp3_r59_substeps_sum": 5900,
+   "jp3_r510_candidates": [
+    3,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 6
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSH4",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    6,
+    4,
+    6,
+    7
+   ],
+   "jp3_r58_witness_carries_sum": 23,
+   "jp3_r59_substeps": [
+    1900,
+    800,
+    800,
+    2300
+   ],
+   "jp3_r59_substeps_sum": 5800,
+   "jp3_r510_candidates": [
+    4,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 7
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSJ1",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    0,
+    3,
+    4
+   ],
+   "jp3_r58_witness_carries_sum": 11,
+   "jp3_r59_substeps": [
+    2100,
+    0,
+    0,
+    2100
+   ],
+   "jp3_r59_substeps_sum": 4200,
+   "jp3_r510_candidates": [
+    3,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 6
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBJ\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBJ\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "VBJ",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    0,
+    3,
+    4
+   ],
+   "jp3_r58_witness_carries_sum": 11,
+   "jp3_r59_substeps": [
+    2200,
+    0,
+    0,
+    2100
+   ],
+   "jp3_r59_substeps_sum": 4300,
+   "jp3_r510_candidates": [
+    3,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 6
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSJ3",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    0,
+    3,
+    4
+   ],
+   "jp3_r58_witness_carries_sum": 11,
+   "jp3_r59_substeps": [
+    2100,
+    0,
+    0,
+    2100
+   ],
+   "jp3_r59_substeps_sum": 4200,
+   "jp3_r510_candidates": [
+    3,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 6
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSJ4",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    4,
+    0,
+    3,
+    4
+   ],
+   "jp3_r58_witness_carries_sum": 11,
+   "jp3_r59_substeps": [
+    2100,
+    0,
+    0,
+    2100
+   ],
+   "jp3_r59_substeps_sum": 4200,
+   "jp3_r510_candidates": [
+    3,
+    0,
+    0,
+    3
+   ],
+   "jp3_r510_candidates_sum": 6
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSH3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSH3",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": false,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    6,
+    4,
+    5,
+    7
+   ],
+   "jp3_r58_witness_carries_sum": 22,
+   "jp3_r59_substeps": [
+    1900,
+    800,
+    800,
+    2200
+   ],
+   "jp3_r59_substeps_sum": 5700,
+   "jp3_r510_candidates": [
+    4,
+    0,
+    0,
+    4
+   ],
+   "jp3_r510_candidates_sum": 8
+  },
+  {
+   "row": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "identity": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LSJ2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "source": "j9_case_f.jsonl",
+   "setting": "LSJ2",
+   "rule_revision": 6,
+   "is_rev6": true,
+   "p4_on": true,
+   "jp3a_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3a_breach_reads_sum": 0,
+   "jp3b_breach_over_tol_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3b_breach_over_tol_reads_sum": 0,
+   "jp3c_breach_reads": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "jp3c_breach_reads_sum": 0,
+   "jp3_r58_witness_carries": [
+    6,
+    2,
+    2,
+    6
+   ],
+   "jp3_r58_witness_carries_sum": 16,
+   "jp3_r59_substeps": [
+    4000,
+    3700,
+    0,
+    3000
+   ],
+   "jp3_r59_substeps_sum": 10700,
+   "jp3_r510_candidates": [
+    15,
+    36,
+    0,
+    16
+   ],
+   "jp3_r510_candidates_sum": 67
+  }
+ ],
+ "problems": [
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBG4\", \"twin\": {\"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS3\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VB\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS2\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS4\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3c_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3a_breach_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3b_breach_over_tol_reads missing",
+  "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"LS1\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}: jp3c_breach_reads missing"
+ ],
+ "excluded_rows": [],
+ "rev6_rows": 21,
+ "p4_on_rev6_rows": 10,
+ "judged_key_total": 0,
+ "judged_key_record": {
+  "rev4_rows": 0,
+  "p4_off_rev6_rows": 0
+ },
+ "disclosure": "P5-2 \uace0\uc815 \uacc4\uc0b0\uc5d0\uc11c \uc0ac\ub840 \uc7ac\uc0dd \uc904\uc758 \ud310\uc815 \ud0a4\ub97c \uc2e4\ud589 \uc804\uc5d0 \ubcf4\uc558\ub2e4(\uc6d0\ud310 5\uc808 \uc124\uacc4). \ub2e8\uacc4 (4)\ub294 \uac19\uc740 \ucf54\ub4dc\ub85c \ub2e4\uc2dc \ub3cc\ub824 \uace0\uc815\uac12\uacfc \uac19\uc544\uc57c \ud55c\ub2e4."
+}
