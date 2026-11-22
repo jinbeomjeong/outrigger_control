@@ -1,0 +1,43 @@
+{
+ "rule": "jp3_remedy_spec_v5.md 6.3.10 (X-13 dry-c)",
+ "pairs": 160,
+ "inputs": {
+  "vbk0": {
+   "c92": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cdry_a1\\VBK0_c92.json",
+    "sha256": "c38f41d444074765d6a75cc56146a620bd778202d70aeeb506a12dcb328d474b"
+   },
+   "c93": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cdry_a1\\VBK0_c93.json",
+    "sha256": "819656cb9a9c91e091ddcb888b5ad16245cb0f5ba63305ce247214f4c67c82a8"
+   }
+  },
+  "vbk": {
+   "c92": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cdry_a1\\VBK_c92.json",
+    "sha256": "7d71d779bf1bc9baeff77b6d88378f3f22ae2148a469f2f8ac53c26dbabf6dc4"
+   },
+   "c93": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cdry_a1\\VBK_c93.json",
+    "sha256": "4ad355e019942eb73e61152f6a588c389301cb500528d13b70b6987f1296b1ad"
+   }
+  }
+ },
+ "categories": {
+  "no_trigger": 0,
+  "pre_trigger_fallback": 0,
+  "unlatched": 0,
+  "vbk0_ready_unreached": 2,
+  "opportunity": 158
+ },
+ "changed_opportunity_pairs": 20,
+ "c": 0.12658227848101267,
+ "trigger_share": 1.0,
+ "problems": {
+  "setting_defects": [],
+  "not_judgeable": [],
+  "failures": []
+ },
+ "status": "written",
+ "exit": 0
+}
