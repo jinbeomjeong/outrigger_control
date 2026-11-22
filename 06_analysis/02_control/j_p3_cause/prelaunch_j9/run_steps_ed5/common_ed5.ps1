@@ -29,14 +29,16 @@
 . "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
-$RunCommit = '876d8a49fe8b89c66d7781d0d0440ff87486fb2d'
-# master after the ed5-fix3 merge (errata 6 / 7), the ae9d0b2d archive (erratum 6 6-4 / 6-5),
-# the errata 5 .. 7 fixed list entries and the merged-master tests, in the locked worktree
-# ed5-run4 (2026-11-22); superseded run commits: dba05b3f (worktree ed5-run, prelaunch audit),
-# 8003083d (worktree ed5-run2, p5fixed stopped 2: the rev 4 judged key), ae9d0b2d (worktree
-# ed5-run3, step (4a) cases stopped 2: VBG5 without its VBG6 pair, erratum 6); their prelaunch
-# outputs are in j9_runs/<commit 8>
-$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run4'
+$RunCommit = '606f87131a7f13468f1db37cf6c811c442a6caf0'
+# made inside the locked worktree ed5-run5 on the 876d8a49 archive 81871a68 (user decision (ga),
+# 2026-11-23: the run commit's one changed file, ed5_design/run_commit_note.txt, was written in
+# the run worktree before the commit, so the identity --mtime check sees it older than the
+# commit); superseded run commits: dba05b3f (worktree ed5-run, prelaunch audit), 8003083d
+# (worktree ed5-run2, p5fixed stopped 2: the rev 4 judged key), ae9d0b2d (worktree ed5-run3,
+# step (4a) cases stopped 2: VBG5 without its VBG6 pair, erratum 6), 876d8a49 (worktree
+# ed5-run4, l1ref stopped 2: identity --mtime warnings on the files the commit added, the
+# worktree made after the commit); their prelaunch outputs are in j9_runs/<commit 8>
+$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run5'
 $Ed5Placeholder = '^<ED5_'
 
 function Assert-Ed5Configured {
