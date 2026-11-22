@@ -106,6 +106,35 @@ def test_records_t_jr_13_replay_jp3_and_runs_over_are_records(tmp_path, monkeypa
     assert [row["runs_over"] for row in report["T-JR-13"]] == [9, 9]
 
 
+def test_records_t_jr_14_leg_records_do_not_change_the_status(tmp_path, monkeypatch,
+                                                              elsewhere) -> None:
+    """T-JR-14: ``n_late_by_leg`` and ``margin_min_s_by_leg`` are copied as records; only
+    ``n_late_fallback`` is judged - extreme leg values leave exit 0 and every class empty."""
+    folder = tmp_path / "records"
+    folder.mkdir()
+    paths = [_write_json(folder / f"replay_{index}.json", document)
+             for index, document in enumerate(_replays())]
+    for setting in tjr.T_JR_14_BUNDLES:
+        document = _dg3_document(setting=setting)
+        for line in document["results"]:
+            line["lock_window_alignment"].update(
+                n_late_by_leg={"FL": 99, "FR": 99, "RL": 99, "RR": 99},
+                margin_min_s_by_leg={"FL": -50.0, "FR": -50.0, "RL": -50.0, "RR": -50.0})
+        _write_json(folder / f"dg3_{setting}.json", document)
+    rows = _write_rows(folder / "rows.jsonl", valid_lock_rows())
+    monkeypatch.setattr(tjr, "t4h_names_of", lambda sums: (T4H_NAMES, []))
+    monkeypatch.setattr(tjr, "h6_keys_of", lambda path: (h6_keys(), []))
+    out = folder / "out.json"
+    code = tjr.main(["records", "--out", str(out), "--replay", *map(str, paths),
+                     "--dg3", str(folder / "dg3_VBH.json"), str(folder / "dg3_VBJ.json"),
+                     "--lock-rows", str(rows), "--t4h-sums", "unused", "--h6", "unused"])
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert code == compare.EXIT_PASS and report["status"] == "pass"
+    assert _classes(report) == {"failures": [], "setting_defects": [], "not_judgeable": []}
+    first = report["T-JR-14"]["VBJ"]["rows"][0]
+    assert first["n_late_by_leg"]["RR"] == 99 and first["margin_min_s_by_leg"]["FL"] == -50.0
+
+
 def test_records_t_jr_15_vbh_rows_are_records(tmp_path, monkeypatch, elsewhere) -> None:
     """T-JR-15: a VBH row's relock count is a record (only VBJ / LSJ rows are judged)."""
     rows = valid_lock_rows() + [_lock_row(GOOD_SEED_ROWS, setting="VBH", relocks=3)]

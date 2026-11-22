@@ -43,6 +43,9 @@ Edition 5 erratum 6 (sealed ``9a92bd34``):
 * 6-2A: :func:`case_bd_conditions` judges the 5.3 conditions of case B (J-P3a on VBH, LSH1 ..
   LSH4; J-P3b on VBH, LSH1, LSH2, LSH4) and case D ((D-가) J-P3a / b / c 0, (D-나) the VBG6
   gap > 0 at every C breach read, (D-다) the numeric conditions under C's command order).
+  (D-나) reads C's rev 4 judged key ``extend_bound_check.ext_moving.breach_reads`` (the name of
+  ``extend_start_bound.J_P3_NAME``; ``ext_moving`` is the moving-extension stretch) from the
+  flat record keys ``extend_bound_check.breach_reads`` and ``extend_bound_check.first_breach_t_s``.
 
 Erratum 7 (sealed ``38fdc574``): 7-1 the same order also needs C's RR 49.1 s acting command
 above u_hold (an extension), and "49.1 s CARRY" is ``carry_ext`` only; 7-2 a missing VBG6

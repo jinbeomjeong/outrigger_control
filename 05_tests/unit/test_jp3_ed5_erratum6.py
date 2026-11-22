@@ -537,6 +537,35 @@ def test_a_failure_outranks_a_not_judgeable_reason(tmp_path, monkeypatch) -> Non
         "6-2A (D-나): C has no moving-extension breach read (no covering row)"]
 
 
+def test_covering_records_of_c_do_not_change_the_status(tmp_path, monkeypatch) -> None:
+    """(D-나): C's locked and retract breach counts are records (not rev 4 judged keys) -
+    extreme values leave exit 0 and every class empty; they are reported as they are."""
+    def edit(row: dict) -> None:
+        check = _check(row)
+        check["locked_breach_reads"] = [500, 500, 500, 500]
+        check["locked_breach_over_tol_reads"] = [400, 400, 400, 400]
+        check["retract_breach_reads"] = [300, 300, 300, 300]
+
+    code, report = _run(tmp_path, monkeypatch, _only("VBG4", edit))
+    assert code == compare.EXIT_PASS and report["status"] == "pass"
+    assert _classes(report) == {"failures": [], "setting_defects": [], "not_judgeable": []}
+    assert report["case_bd"]["D"]["covering"]["records"] == {
+        "locked_breach_reads": [500] * 4, "locked_breach_over_tol_reads": [400] * 4,
+        "retract_breach_reads": [300] * 4}
+
+
+def test_p4_1_without_a_command_hash_is_a_tool_error(tmp_path, monkeypatch) -> None:
+    """P4-1: ``commands_sha256`` is a field every paired row has; a row without it is an
+    input error of the tool (exit 3, ``_compare_pair`` reads it, ``main`` catches every
+    exception as ``error``), never a pass or a judged failure."""
+    def edit(row: dict) -> None:
+        del row["commands_sha256"]
+
+    code, report = _run(tmp_path, monkeypatch, _only("LS3", edit))
+    assert code == compare.EXIT_ERROR and report["status"] == "error"
+    assert report["error"] == "KeyError: 'commands_sha256'"
+
+
 def test_rev6_identity_defect_is_a_setting_defect(tmp_path, monkeypatch) -> None:
     """13.6 / erratum 6 6-2: a revision 6 row of another ``spec_edition`` is a setting defect
     (exit 2) - P4-1 and the identity stay judged on revision 6 rows."""
