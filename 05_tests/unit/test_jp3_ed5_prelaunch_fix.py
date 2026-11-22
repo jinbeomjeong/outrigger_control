@@ -169,6 +169,99 @@ def test_p52_judged_total_counts_the_p4_on_rev6_rows_only(tmp_path) -> None:
     assert with_p4["judged_key_total"] == 1
 
 
+def test_stored_violation_of_case_a_does_not_stop_the_fixed_step(tmp_path) -> None:
+    """Erratum 4 4-1: A's stored violation (VB / LS, rev 4: judged keys > 0) and a P4-off rev 6
+    row's keys are records; the step_p5fixed gate stops only on the P4-on rev 6 rows. The
+    record keeps the rows files' sha256 and the disclosure sentence."""
+    rows = _write_rows(tmp_path / "j9_cases.jsonl", [
+        _case_row("VB", 4, p4=False, judged=2), _case_row("LS2", 4, p4=False, judged=3),
+        _case_row("VBH", 6, p4=False, judged=1), _case_row("VBJ", 6, p4=True)])
+    report = p5.p52([rows])
+    assert report["judged_key_total"] == 0
+    assert report["judged_key_record"] == {"rev4_rows": 5, "p4_off_rev6_rows": 1}
+    assert report["inputs"] == [{"path": str(rows),
+                                 "sha256": hashlib.sha256(rows.read_bytes()).hexdigest()}]
+    assert report["disclosure"] == p5.P52_DISCLOSURE
+    out = _gate(tmp_path, "$Stop = Get-P5FixedStop {r}\n" + SHOW, {"r": report})
+    assert out == "go"
+    common = (STEPS / "common_ed5.ps1").read_text(encoding="utf-8")
+    assert f"$P5FixedDisclosure = '{p5.P52_DISCLOSURE}'" in common
+
+
+def test_p52_problems_stop_the_fixed_step_with_exit_2(tmp_path) -> None:
+    """Erratum 4 4-1 (audit N-1): a fixed record with problems is not fixed - no ③ record, a
+    judged key missing, a rev 6 row without its R5-8 .. R5-10 counts each stop 2."""
+    no_record = {"job": {"case": "R1", "setting": "VBJ"}, "hydraulic_options": {}}
+    no_judged = _case_row("VBJ", 6, p4=True)
+    del no_judged["hydraulics_record"]["extend_bound_check"]["jp3a_breach_reads"]
+    no_counts = _case_row("LSJ1", 6, p4=True)
+    del no_counts["hydraulics_record"]["extend_bound_check"]["jp3_r510_candidates"]
+    for name, bad in (("record", no_record), ("judged", no_judged), ("counts", no_counts)):
+        rows = _write_rows(tmp_path / name / "j9_cases.jsonl", [_case_row("VBJ", 6, p4=True),
+                                                                bad])
+        report = p5.p52([rows])
+        assert report["problems"], name
+        out = _gate(tmp_path / name, "$Stop = Get-P5FixedStop {r}\n" + SHOW, {"r": report})
+        assert out.startswith("2|"), (name, out)
+
+
+def test_p52_compare_without_a_fixed_count_is_not_judgeable(tmp_path, monkeypatch,
+                                                           capsys) -> None:
+    """Erratum 4 4-1 (audit N-1): a rev 6 count missing on either side is not judgeable (exit
+    2), never a pass of two missing values."""
+    (tmp_path / "cwd").mkdir()
+    monkeypatch.chdir(tmp_path / "cwd")
+    gap = _case_row("VBJ", 6, p4=True)
+    del gap["hydraulics_record"]["extend_bound_check"]["jp3_r58_witness_carries"]
+    code, report = _compare(tmp_path, [gap], [gap], "both_missing")
+    assert code == 2 and report["status"] == "not_judgeable" and not report["failures"]
+    code, report = _compare(tmp_path, [_case_row("VBJ", 6, p4=True)], [gap], "new_missing")
+    assert code == 2 and report["not_judgeable"]
+    capsys.readouterr()
+
+
+def test_p54_record_lists_the_input_files_sha(tmp_path, monkeypatch) -> None:
+    """Erratum 4 4-1: the P5-4 record lists every T4h file it replays with its sha256."""
+    folder = tmp_path / "VBH_t4h"
+    folder.mkdir()
+    for index in range(3):
+        (folder / f"k{index}.npz").write_bytes(bytes([index]) * 10)
+    monkeypatch.setattr(p5, "p54_record", lambda path, revision: {
+        "file": path.name, "revision": revision, "dominated_reads": 1, "stretches": 0,
+        "max_over_kN": []})
+    monkeypatch.setattr(p5, "proxy_disclosure", lambda: {})
+    report = p5.p54(folder)
+    assert [entry["file"] for entry in report["inputs"]] == ["k0.npz", "k1.npz", "k2.npz"]
+    assert report["inputs"][1]["sha256"] == hashlib.sha256(bytes([1]) * 10).hexdigest()
+
+
+def test_dry_union_check(prelaunch_outputs) -> None:
+    """Erratum 4 4-2: X-11 records that c90 + c91 are the 160 pairs, 20 per cell; a broken
+    union is not usable; step 0 reads the record."""
+    selection = json.loads((prelaunch_outputs["x11"] / "selection.json").read_text(
+        encoding="utf-8"))
+    check = selection["dry"]["union_check"]
+    assert check["ok"] is True and (check["pairs"], check["cells"]) == (160, 8)
+    assert set(check["per_cell"].values()) == {20}
+    plans = {seed: json.loads((prelaunch_outputs["x11"] / f"c{seed}_plan.json").read_text(
+        encoding="utf-8")) for seed in plan.DRY_SEEDS}
+    plans[91]["faults"].pop(next(iter(plans[91]["faults"])))
+    with pytest.raises(plan.NotUsable, match="160 pairs"):
+        plan.dry_union_check(plans)
+    assert "union_check" in (STEPS / "step0_cdry.ps1").read_text(encoding="utf-8")
+
+
+def test_fixed_values_commit_record_and_closure_path() -> None:
+    """Erratum 4 4-1: step_p5fixed names the run commit and the disclosure; -Part list takes
+    another commit's records only through a jp3_import_closure.py report (listed too)."""
+    step = (STEPS / "step_p5fixed.ps1").read_text(encoding="utf-8")
+    assert "Codes['p5fixed_commit'] = $RunCommit" in step
+    assert "Codes['p5fixed_disclosure'] = $P5FixedDisclosure" in step
+    prelaunch = (STEPS / "prelaunch_ed5.ps1").read_text(encoding="utf-8")
+    assert "$P5FixedCommit -ne $RunCommit" in prelaunch
+    assert "jp3_import_closure.py" in prelaunch and "--add', $Closure" in prelaunch
+
+
 def _fixed(tmp_path: Path, rows: list[dict]) -> tuple[Path, str]:
     source = _write_rows(tmp_path / "fixed_src" / "j9_cases.jsonl", rows)
     path = tmp_path / "p52.json"

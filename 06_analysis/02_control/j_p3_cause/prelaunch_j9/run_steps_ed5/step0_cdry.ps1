@@ -10,7 +10,13 @@ param([int]$Attempt = 1)
 
 $Folder = Initialize-Ed5Step 'cdry' $Attempt @()
 # prelaunch audit B-1 (a): each run takes its own seed's plan and key file (c90 / c91), so the
-# runner's X-10 guard sees plan keys = job keys
+# runner's X-10 guard sees plan keys = job keys; erratum 4 4-2: the two plans together are the
+# 160 pairs, 20 per cell (X-11's selection.json dry.union_check, recorded here; both plans are
+# fixed list entries through the selection)
+$Dry = (Get-Content -Raw -LiteralPath $X11Selection | ConvertFrom-Json).dry
+$Union = $Dry.PSObject.Properties['union_check']
+if (-not $Union -or $Union.Value.ok -ne $true) { Stop-Step 2 'selection.json dry.union_check missing or not ok (erratum 4 4-2)' }
+$StepState.Codes['dry_union_check'] = "pairs $($Union.Value.pairs), cells $($Union.Value.cells), ok"
 $Placement = [ordered]@{ 'VBK0_c90' = '0x000F'; 'VBK0_c91' = '0x00F0'; 'VBK_c90' = '0x0F00'; 'VBK_c91' = '0xF000' }
 $RunEstimatesS['VBK0_c90'] = 900; $RunEstimatesS['VBK0_c91'] = 900
 $RunEstimatesS['VBK_c90'] = 900; $RunEstimatesS['VBK_c91'] = 900

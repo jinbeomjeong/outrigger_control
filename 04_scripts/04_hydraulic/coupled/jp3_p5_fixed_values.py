@@ -13,7 +13,10 @@ main session runs it).
          row keeps its ``identity`` (the job without ``mask`` / ``t4h_dir``), its ``source``
          (the rows file name), ``is_rev6`` and ``p4_on`` (``hydraulic_options``
          ``rod_reading_truth``); ``judged_key_total`` sums the P4-on rev 6 rows only (erratum 1
-         1A, prelaunch audit B-2: E's VBJ / LSJ1 .. 4 and F's E branch).
+         1A, prelaunch audit B-2: E's VBJ / LSJ1 .. 4 and F's E branch); ``judged_key_record``
+         keeps the sums of the rev 4 rows (A, C) and the P4-off rev 6 rows (B, D, F-B) as
+         records; ``inputs`` names every rows file with its sha256 and ``disclosure`` the
+         erratum 4 4-1 sentence. ``p54`` lists every replayed T4h file with its sha256.
 ``p52-compare``  Prelaunch audit B-2 (P5-2 stops "고정 수와 차 > 0", "판정 키 > 0") at steps (4a) /
          (4b): ``--rows <source>=<file>`` against the fixed ``--fixed`` record (its sha256 from
          the fixed list): exit 0 pass, 1 a rev 6 row's per-leg rev 6 counts differ or a P4-on
@@ -152,12 +155,33 @@ def p52(paths: list[Path]) -> dict:
     judged = [row for row in rows if row["is_rev6"] and row["p4_on"]]
     return {"rule": "jp3_remedy_spec_v5.md P5-2 (fixed after implementation, before the run; "
                     "erratum 1 1: cases A .. F, 1A: the rev 6 counts on the rev 6 rows, the judged "
-                    "key total on the P4-on rev 6 rows)",
-            "inputs": [str(path) for path in paths], "rows": rows, "problems": problems,
-            "excluded_rows": excluded,
+                    "key total on the P4-on rev 6 rows; erratum 4 4-1)",
+            "inputs": [{"path": str(path), "sha256": file_sha256(path)} for path in paths],
+            "rows": rows, "problems": problems, "excluded_rows": excluded,
             "rev6_rows": sum(row["is_rev6"] for row in rows), "p4_on_rev6_rows": len(judged),
-            "judged_key_total": sum(row.get(f"{key}_sum", 0) for row in judged
-                                    for key in JUDGED_KEYS)}
+            "judged_key_total": _judged_sum(judged),
+            # erratum 4 4-1: records only (A / C rev 4; the P4-off rev 6 rows B, D, F-B are
+            # judged at step (4) by the edition 4a 5.3 case conditions)
+            "judged_key_record": {
+                "rev4_rows": _judged_sum([row for row in rows if row["rule_revision"] == 4]),
+                "p4_off_rev6_rows": _judged_sum([row for row in rows
+                                                 if row["is_rev6"] and not row["p4_on"]])},
+            "disclosure": P52_DISCLOSURE}
+
+
+P52_DISCLOSURE = ("P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). "
+                  "단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.")
+"""Erratum 4 4-1: the disclosure sentence of the P5-2 fixed computation (as written)."""
+
+
+def _judged_sum(rows: list[dict]) -> int:
+    return sum(row.get(f"{key}_sum", 0) for row in rows for key in JUDGED_KEYS)
+
+
+def file_sha256(path: Path) -> str:
+    import hashlib
+
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def _rows_of_sources(values: list[str]) -> dict[str, Path]:
@@ -210,6 +234,13 @@ def p52_compare(fixed_path: Path, fixed_sha256: str, rows: dict[str, Path]) -> d
                 report["not_judgeable"].append(f"{row['row']}: another revision / P4 state")
                 continue
             if not row["is_rev6"]:
+                continue
+            # erratum 4 4-1 (audit N-1): a difference is judged only with both values present;
+            # a missing value on either side is not judgeable, never "no difference"
+            absent = [key for key in P52_COMPARED_KEYS
+                      if before.get(key) is None or row.get(key) is None]
+            if absent:
+                report["not_judgeable"].append(f"{row['row']}: {absent} missing on a side")
                 continue
             compared += 1
             differing = [key for key in P52_COMPARED_KEYS if before.get(key) != row.get(key)]
@@ -301,8 +332,11 @@ def p54(folder: Path) -> dict:
             "max_over_kN_p90": float(np.percentile(over, 90)) if over else None,
             "max_over_kN_max": max(over) if over else None, "files": rows}
     before, after = (per_revision[str(revision)]["dominated_reads"] for revision in REVISIONS)
-    return {"rule": "jp3_remedy_spec_v5.md P5-4 (record; expected reduction about 23 %, F8)",
-            "t4h_folder": str(folder), "files": len(files), "by_revision": per_revision,
+    return {"rule": "jp3_remedy_spec_v5.md P5-4 (record; expected reduction about 23 %, F8; "
+                    "erratum 4 4-1: the edition 4a VBH run's T4h)",
+            "t4h_folder": str(folder), "files": len(files),
+            "inputs": [{"file": path.name, "sha256": file_sha256(path)} for path in files],
+            "by_revision": per_revision,
             "dominated_reduction": None if before == 0 else 1.0 - after / before,
             "plant_rod_pressure": proxy_disclosure()}
 

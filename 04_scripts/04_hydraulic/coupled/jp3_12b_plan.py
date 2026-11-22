@@ -259,6 +259,35 @@ def dry_plans(table: list[dict], scanned: frozenset[str]
     return plans, keys
 
 
+DRY_PAIRS = 160
+DRY_PAIRS_PER_CELL = 20
+
+
+def dry_union_check(plans: dict[int, dict]) -> dict:
+    """Erratum 4 4-2: the two dry plans together are the 160 pairs of 6.3.10, 20 per cell (leg,
+    anchor), each key in one plan only (a record of selection.json ``dry.union_check``).
+
+    Raises:
+        NotUsable: The union is not that.
+    """
+    per_cell: dict[str, int] = {}
+    keys: list[str] = []
+    for seed in DRY_SEEDS:
+        for key, fault in plans[seed]["faults"].items():
+            keys.append(key)
+            cell = f"{fault['leg']} {fault['anchor']}"
+            per_cell[cell] = per_cell.get(cell, 0) + 1
+    check = {"pairs": len(keys), "distinct_keys": len(set(keys)), "cells": len(per_cell),
+             "per_cell": dict(sorted(per_cell.items()))}
+    check["ok"] = (check["pairs"] == check["distinct_keys"] == DRY_PAIRS
+                   and check["cells"] == len(CELLS)
+                   and set(per_cell.values()) == {DRY_PAIRS_PER_CELL})
+    if not check["ok"]:
+        raise NotUsable(f"the dry plans' union is not {DRY_PAIRS} pairs, {DRY_PAIRS_PER_CELL} per "
+                        f"cell: {check}")
+    return check
+
+
 def _write_new(path: Path, text: str) -> str:
     """Write ``text`` (UTF-8, LF) to a new file; returns its sha256."""
     data = text.encode("utf-8")
@@ -305,6 +334,7 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     seeds, repeats = block_seeds(cases, scan.keys)
     table = cell_table(cases)
     dry, dry_keys = dry_plans(table, scan.keys)
+    union_check = dry_union_check(dry)
     out_dir.mkdir(parents=True, exist_ok=True)
     outputs = {}
     for block, (seed, phase_rule) in enumerate(zip(seeds, BLOCK_PHASES, strict=True), start=1):
@@ -339,7 +369,7 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
                                                                   strict=True), start=1)},
         "seed_repeats": repeats, "seed_step": SEED_STEP,
         "dry": {"seeds": list(DRY_SEEDS), "pairs": sum(len(keys) for keys in dry_keys.values()),
-                "runs": dry_runs},
+                "runs": dry_runs, "union_check": union_check},
         "cell_table": table, "outputs": outputs,
         "run_commands": _run_commands(seeds)}
     _write_new(out_dir / "selection.json", _json_text(document))

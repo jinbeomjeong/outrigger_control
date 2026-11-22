@@ -236,6 +236,11 @@ $L1Settings = @('VBJ0', 'VBJ')
 function Get-L1Run([string]$Setting) { return "$(Get-StepFolder 'l1ref')\L1_$Setting.json" }
 # prelaunch audit B-2: the P5-2 / P5-4 fixed records of step_p5fixed.ps1 (fixed list entries)
 $P5FixedNames = @('p52.json', 'p54.json')
+# erratum 4 4-1: the disclosure sentence of the fixed computation (step record, judgement head)
+$P5FixedDisclosure = 'P5-2 고정 계산에서 사례 재생 줄의 판정 키를 실행 전에 보았다(원판 5절 설계). 단계 (4)는 같은 코드로 다시 돌려 고정값과 같아야 한다.'
+# erratum 4 4-1: the simulation path of the fixed values (case replay and replay runners; the
+# static import closure of these entries decides whether another commit's records may serve)
+$P5FixedEntries = @("$Coupled/run_v5.py", "$Coupled/jp3_case_replay.py", "$Coupled/jp3_p5_fixed_values.py")
 function Get-P5FixedFile([string]$Name) { return "$(Get-StepFolder 'p5fixed')\judge\$Name" }
 
 function Invoke-P52Compare([string]$Label, [string[]]$Rows) {
