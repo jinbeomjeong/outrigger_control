@@ -55,8 +55,11 @@ Sub-commands:
              the bundle's setting or not rev 5, a VBJ base line not VBJ0, the new file equal to
              the base file. Not judgeable (M-8): a new (VBJ: also base) file whose meta
              ``keys_file`` is not the stored H-6 (135 keys). A new-side
-             ``LockWindowMismatchError`` error line is the T-JR-14 (가) failure (exit 1, the
-             pairs are not compared; prelaunch audit N-1); other error lines are not judgeable.
+             ``LockWindowMismatchError`` error line is a setting defect (exit 2, the pairs are
+             not compared; erratum 3 3-1 replaces the prelaunch audit N-1 failure: a run record
+             mismatch is an input defect; T-JR-14 of ``records`` judges it); other error lines
+             are not judgeable. ``record_failures`` lists the failures of the closed 13.9
+             record list (:data:`T12_RECORD_FAILURE_KEYS`).
              Addendum 4a-8 5: each received judge file must grade every line of its side
              (row count and key set = the lines, unmatched 0, errors 0; a mismatch line is
              left out), else not judgeable.
@@ -587,6 +590,11 @@ def t8_inputs(args: argparse.Namespace, problems: compare.Problems) -> tuple[T8I
 
 
 # --- t12 (T-JR-12) --------------------------------------------------------------------------
+T12_RECORD_FAILURE_KEYS = ("l2_pass_to_fail", "new_fault", "ready_failures")
+"""Erratum 3 3-1 (draft): the closed list of T-JR-12a record failures - the 13.9 indicators
+(L2 grade, new FAULT, first READY; the dominated-read reduction is a record without a failure,
+``records``). A report's ``record_failures`` names them; any other failure is not a record."""
+
 
 def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: dict,
               *, check_settings: bool = True) -> tuple[dict, compare.Problems]:
@@ -597,7 +605,7 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
 
     problems = compare.Problems()
     base_lines = _dg3_lines(base["results"], "base", problems)
-    new_lines = _dg3_lines(new["results"], "new", problems, mismatch_fails=True)
+    new_lines = _dg3_lines(new["results"], "new", problems, mismatch_is_defect=True)
     if check_settings:
         problems.setting_defects += bundle_setting_problems(bundle, base_lines, new_lines)
         problems.not_judgeable += keys_file_problems("new", new)
@@ -605,8 +613,9 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
             problems.not_judgeable += keys_file_problems("base", base)
     mismatches = sorted(h8.plain_key(run["key"]) for run in new["results"]
                         if is_lock_window_mismatch(run))
-    if mismatches:  # prelaunch audit N-1: a failure as it is, the pairs are not compared
-        return {"bundle": bundle, "lock_window_mismatch_keys": mismatches}, problems
+    if mismatches:  # erratum 3 3-1: a run record defect (exit 2), the pairs are not compared
+        return {"bundle": bundle, "lock_window_mismatch_keys": mismatches,
+                "record_failures": []}, problems
     if len(base_lines) != DG3_PAIRS or set(base_lines) != set(new_lines):
         problems.not_judgeable.append(f"{bundle}: {len(base_lines)} base / {len(new_lines)} new "
                                       f"keys, {DG3_PAIRS} equal keys expected")
@@ -623,10 +632,12 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
               "new_fault": _new_faults(base_lines, new_lines, problems),
               "ready_failures": ready["failures"],
               "ready_both_missing_record": ready["both_missing"],
-              "ready_improved_record": ready["improved"]}
-    for key in ("l2_pass_to_fail", "new_fault", "ready_failures"):
+              "ready_improved_record": ready["improved"], "record_failures": []}
+    for key in T12_RECORD_FAILURE_KEYS:
         if report[key]:
-            problems.failures.append(f"{bundle}: {len(report[key])} {key} keys")
+            text = f"{bundle}: {len(report[key])} {key} keys"
+            problems.failures.append(text)
+            report["record_failures"].append(text)
     _check_lines(bundle, base_lines, new_lines, problems)
     if bundle == "VBJ":
         report["J-P3"] = _dg3_j_p3(list(new_lines.values()), problems)
@@ -685,19 +696,20 @@ def keys_file_problems(label: str, document: dict) -> list[str]:
 
 
 def _dg3_lines(results: list[dict], label: str, problems: compare.Problems, *,
-               mismatch_fails: bool = False) -> dict[str, dict]:
-    """The result lines by plain key. An error line is not judgeable, except a
-    ``LockWindowMismatchError`` line of the new side (``mismatch_fails``): the T-JR-14 (가)
-    failure of 4a-5 1, reported here as a failure so that step 6 does not stop as not
-    judgeable (prelaunch audit N-1)."""
+               mismatch_is_defect: bool = False) -> dict[str, dict]:
+    """The result lines by plain key. An error line is not judgeable; a
+    ``LockWindowMismatchError`` line of the new side (``mismatch_is_defect``) is a setting
+    defect: erratum 3 3-1 (draft) reads the run record mismatch as an input defect, not a
+    record failure (the edition 4a prelaunch audit N-1 failure is replaced; T-JR-14 in
+    ``records`` judges the mismatch on its own)."""
     import h8_noise_judge_4368 as h8
 
     lines = {}
     for run in results:
         key = h8.plain_key(run["key"])
-        if mismatch_fails and is_lock_window_mismatch(run):
-            problems.failures.append(f"{label} {key}: T-JR-14 failure "
-                                     f"({LOCK_WINDOW_MISMATCH_ERROR})")
+        if mismatch_is_defect and is_lock_window_mismatch(run):
+            problems.setting_defects.append(f"{label} {key}: run record mismatch "
+                                            f"({LOCK_WINDOW_MISMATCH_ERROR}; erratum 3 3-1)")
             continue
         if "error" in run:
             problems.not_judgeable.append(f"{label} {key}: error line (no result)")
@@ -867,8 +879,8 @@ def t12_judge_row_problems(documents: dict[str, dict]) -> list[str]:
 
 
 def mismatch_keys(lines: list[dict]) -> frozenset[str]:
-    """Plain keys of the ``LockWindowMismatchError`` lines: a T-JR-14 failure as it is
-    (prelaunch audit N-1), not an ungraded line of 4a-8 5."""
+    """Plain keys of the ``LockWindowMismatchError`` lines: not an ungraded line of 4a-8 5
+    (in t12 a setting defect of its own, erratum 3 3-1; in ``records`` a T-JR-14 failure)."""
     import h8_noise_judge_4368 as h8
 
     return frozenset(h8.plain_key(line["key"]) for line in lines
@@ -1723,6 +1735,7 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
             ("new_judge", args.new_judge))}
         report, problems = judge_t12(args.bundle, documents["base"], documents["base_judge"],
                                      documents["new"], documents["new_judge"])
+        report.setdefault("record_failures", [])  # erratum 3 3-1: the record list
         if args.bundle == "VBJ":  # re-audit K-1: the J-P3 judgement apart from the record
             report["jp3_outcome"] = (report.get("J-P3") or {}).get("outcome", "not_computed")
         problems.not_judgeable[:0] = [*input_problems, *t12_judge_row_problems(documents)]
@@ -1741,9 +1754,12 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
     if args.command == "t12-selfcheck":
         return t12_selfcheck(args.h6, args.judge, args.judge_sha256)
     if args.command == "base-judge-compare":
-        return compare_base_judges(JudgeCompareInputs(
+        report, problems, files = compare_base_judges(JudgeCompareInputs(
             args.h6, args.new_judge, args.new_judge_sha256, args.stored_judge,
             args.stored_h6_judge, args.new_l1_reference, args.stored_l1_reference))
+        # erratum 3 3-1: every failure of this tool is a grade difference record (R-2)
+        report["record_failures"] = list(problems.failures)
+        return report, problems, files
     t4h_names, sums_problems = t4h_names_of(args.t4h_sums)
     h6_keys, h6_problems = h6_keys_of(args.h6)
     report, problems = judge_records(RecordsInputs(

@@ -530,17 +530,19 @@ GATES_PS1 = (ROOT / "06_analysis" / "02_control" / "j_p3_cause" / "prelaunch_j9"
              / "run_steps_ed5" / "record_gates_ed5.ps1")
 
 
-def _gate(tmp_path: Path, function: str, report: dict) -> str:
-    """Run one gate function of ``record_gates_ed5.ps1`` alone on a report (pwsh)."""
+def _gate(tmp_path: Path, report: dict, *, vbj: bool = True) -> str:
+    """Run ``Get-RecordToolStop`` of ``record_gates_ed5.ps1`` alone on a report (pwsh)."""
     import shutil
 
     pwsh = shutil.which("pwsh")
     assert pwsh is not None, "pwsh (PowerShell 7) is needed for the run step gate tests"
-    report_path = tmp_path / f"{function}.json"
+    index = len(list(tmp_path.glob("gate_*.json")))
+    report_path = tmp_path / f"gate_{index}.json"
     report_path.write_text(json.dumps(report), encoding="utf-8")
-    script = tmp_path / f"{function}.ps1"
+    script = tmp_path / f"gate_{index}.ps1"
+    switch = " -VbjJp3" if vbj else ""
     script.write_text(
-        f". '{GATES_PS1}'\n$Stop = {function} '{report_path}'\n"
+        f". '{GATES_PS1}'\n$Stop = Get-RecordToolStop '{report_path}'{switch}\n"
         "if ($Stop) { Write-Output \"$($Stop.code)|$($Stop.reason)\" }\n"
         "else { Write-Output 'go' }\n",
         encoding="utf-8")
@@ -550,25 +552,59 @@ def _gate(tmp_path: Path, function: str, report: dict) -> str:
     return done.stdout.strip().splitlines()[-1]
 
 
-def test_step6_gate_13_9_record_failure_alone_goes_on(tmp_path) -> None:
-    """K-1: T-JR-12a VBJ with a 13.9 indicator failure only (jp3_outcome pass): go on."""
-    report = {"jp3_outcome": "pass", "failures": ["VBJ: 1 new_fault keys"],
-              "setting_defects": [], "not_judgeable": []}
-    assert _gate(tmp_path, "Get-T12Jp3Stop", report) == "go"
-    assert _gate(tmp_path, "Get-RecordReportStop", report) == "go"
+RECORD_FAILURE = "VBJ: 1 new_fault keys"
+JP3_BLOCK = {"status": "pass", "runs_judged": 1}
 
 
-def test_step6_gate_jp3_h7_stops(tmp_path) -> None:
-    """K-1: the J-P3 H-7 of the T-JR-12a VBJ bundle stops the step with exit 1; a J-P3 not
-    judged or without the field stops 2 / 3; a record's defect stops 2."""
-    report = {"jp3_outcome": "H-7", "failures": ["VBJ: J-P3 H-7"], "setting_defects": [],
-              "not_judgeable": []}
-    assert _gate(tmp_path, "Get-T12Jp3Stop", report).startswith("1|")
-    assert _gate(tmp_path, "Get-T12Jp3Stop", {**report, "jp3_outcome": "not_computed"}
+def _vbj_report(**changes) -> dict:
+    report = {"jp3_outcome": "pass", "J-P3": dict(JP3_BLOCK), "failures": [],
+              "record_failures": [], "setting_defects": [], "not_judgeable": []}
+    report.update(changes)
+    return report
+
+
+def test_record_gate_13_9_record_failure_alone_goes_on(tmp_path) -> None:
+    """Erratum 3 3-1 (4): a 13.9 record failure only - go on (VBJ and VBH)."""
+    report = _vbj_report(failures=[RECORD_FAILURE], record_failures=[RECORD_FAILURE])
+    assert _gate(tmp_path, report) == "go"
+    vbh = {key: value for key, value in report.items() if key not in ("jp3_outcome", "J-P3")}
+    assert _gate(tmp_path, vbh, vbj=False) == "go"
+
+
+def test_record_gate_vbj_jp3_h7_with_a_defect_stops_1(tmp_path) -> None:
+    """3-1 (1): VBJ J-P3 H-7 (read from its judged rows) with a setting defect: exit 1."""
+    report = _vbj_report(jp3_outcome="H-7", failures=["VBJ: J-P3 H-7"],
+                         setting_defects=["VBJ: J-P3 setting defect"],
+                         **{"J-P3": {"status": "setting_defect", "runs_judged": 1}})
+    assert _gate(tmp_path, report).startswith("1|")
+
+
+def test_record_gate_vbj_without_a_jp3_judgement_stops_2(tmp_path) -> None:
+    """3-1 (2): no J-P3 block, a block without its keys, or 0 judged rows: exit 2."""
+    no_block = {key: value for key, value in _vbj_report().items() if key != "J-P3"}
+    assert _gate(tmp_path, {**no_block, "jp3_outcome": "not_computed"}).startswith("2|")
+    assert _gate(tmp_path, _vbj_report(**{"J-P3": {"status": "pass"}})).startswith("2|")
+    zero = _vbj_report(**{"J-P3": {"status": "no_judged_runs", "runs_judged": 0}})
+    assert _gate(tmp_path, zero).startswith("2|")
+
+
+def test_record_gate_record_failure_with_a_setting_defect_stops_2(tmp_path) -> None:
+    """3-1 (3): a 13.9 record failure and a setting defect: exit 2."""
+    report = _vbj_report(failures=[RECORD_FAILURE], record_failures=[RECORD_FAILURE],
+                         setting_defects=["new k: line evidence"])
+    assert _gate(tmp_path, report).startswith("2|")
+    assert _gate(tmp_path, {**report, "setting_defects": [], "not_judgeable": ["x"]}
                  ).startswith("2|")
-    assert _gate(tmp_path, "Get-T12Jp3Stop", {"failures": []}).startswith("3|")
-    defect = {**report, "jp3_outcome": "pass", "setting_defects": ["x"]}
-    assert _gate(tmp_path, "Get-RecordReportStop", defect).startswith("2|")
+
+
+def test_record_gate_failure_outside_the_record_list_stops_2(tmp_path) -> None:
+    """3-1 closed list: a failure not in ``record_failures`` is an input defect (exit 2); a
+    report without the lists is a tool error (3)."""
+    report = _vbj_report(failures=[RECORD_FAILURE, "VBJ: something else"],
+                         record_failures=[RECORD_FAILURE])
+    assert _gate(tmp_path, report).startswith("2|")
+    without = {key: value for key, value in _vbj_report().items() if key != "record_failures"}
+    assert _gate(tmp_path, without).startswith("3|")
 
 
 def test_worse_status_default_order_unchanged() -> None:

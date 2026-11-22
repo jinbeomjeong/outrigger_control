@@ -161,17 +161,13 @@ function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '
     return $Environment
 }
 
-function Assert-RecordReport([string]$ReportPath) {
-    # after a record tool whose exit 1 goes on (re-audit K-1, erratum 2 2-10): its setting
-    # defects / not-judgeable reasons still stop (exit 2), as before 2-10 (record_gates_ed5.ps1)
-    $Stop = Get-RecordReportStop $ReportPath
-    if ($Stop) { Stop-Step $Stop.code $Stop.reason }
-}
-
-function Assert-T12Jp3([string]$ReportPath) {
-    # T-JR-12a VBJ (spec v5 6.2): its J-P3 is a judgement - H-7 stops 1, not judged stops 2
-    $Stop = Get-T12Jp3Stop $ReportPath
-    $StepState.Codes['t12_VBJ_jp3_outcome'] = if ($Stop) { $Stop.reason } else { 'pass' }
+function Assert-RecordReport([string]$ReportPath, [switch]$VbjJp3) {
+    # after a record tool whose exit 1 goes on (T-JR-12a VBH / VBJ, base-judge-compare): the
+    # erratum 3 3-1 order of record_gates_ed5.ps1 Get-RecordToolStop - VBJ J-P3 H-7 stops 1,
+    # no VBJ J-P3 judgement / a setting defect / a not-judgeable reason / a failure outside
+    # the record list stops 2, record failures alone go on
+    $Stop = Get-RecordToolStop $ReportPath -VbjJp3:$VbjJp3
+    $StepState.Codes["record_gate:$(Split-Path -Leaf $ReportPath)"] = if ($Stop) { $Stop.reason } else { 'go on' }
     if ($Stop) { Stop-Step $Stop.code $Stop.reason }
 }
 

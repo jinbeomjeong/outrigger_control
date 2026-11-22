@@ -30,7 +30,7 @@ Invoke-Judge 'base_judge_compare' @("$Coupled/jp3_tjr_judge.py", 'base-judge-com
     '--new-l1-reference', "$Folder\h6_base_judge_L1_reference.json",
     '--stored-l1-reference', (Get-FixedPath 'STORED_H6_L1_REFERENCE_SHA256'),
     '--out', "$Folder\judge\h6_judge_compare.json") -ContinueCodes @(0, 1) | Out-Null
-Assert-RecordReport "$Folder\judge\h6_judge_compare.json"  # exit 1 is a record; defects stop (2-10)
+Assert-RecordReport "$Folder\judge\h6_judge_compare.json"  # exit 1 is a record (erratum 3 3-1)
 
 Invoke-Judge 't12_selfcheck' @("$Coupled/jp3_tjr_judge.py", 't12-selfcheck', '--h6', $H6,
     '--judge', $JudgeFile, '--judge-sha256', $JudgeSha, '--out', "$Folder\judge\h6_selfcheck.json") | Out-Null

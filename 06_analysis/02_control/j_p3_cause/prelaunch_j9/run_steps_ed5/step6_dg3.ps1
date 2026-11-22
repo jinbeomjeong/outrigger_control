@@ -5,7 +5,8 @@
 # 4a-8 L1 key file (l1_keys_d3c6c57e.json, 102 keys) -> the 4a-8 4.5 command hash record ->
 # dg3-judge (VBH with the P-1 L1 extract; VBJ / VBJ0 each with its own L1 run) -> t12 --bundle
 # VBH / VBJ (12a: records; exit 1 is written down and the step goes on, except the VBJ J-P3
-# judgement H-7 (stop 1) and any setting defect / not-judgeable reason (stop 2)) -> P5-1 of the three
+# judgement H-7 (stop 1), no VBJ J-P3 judgement, any setting defect / not-judgeable reason or
+# a failure outside the 13.9 record list (stop 2); erratum 3 3-1) -> P5-1 of the three
 # Dg-3 files against 78fd5d2d dg3_a1 -> the overlap record of the 12b and the 12a L1 references
 # (erratum 2 2-1, a record). Needs steps 1 (its P-1 list committed), 2 and the l1ref step.
 param([int]$Attempt = 1)
@@ -75,9 +76,10 @@ foreach ($Setting in $Placement.Keys) {
 }
 
 # 6.2: T-JR-12a is a record (exit 1 = the 13.9 indicators moved; written down, not a stop),
-# but (re-audit K-1) the VBJ bundle's J-P3 is a judgement: its jp3_outcome H-7 stops 1, a J-P3
-# not judged stops 2 (Assert-T12Jp3); a setting defect / not-judgeable reason of either
-# bundle stops 2 whatever the exit (Assert-RecordReport, 2-10). VBH J-P3 stays a record (A7).
+# but (re-audit K-1, erratum 3 3-1 draft) the report then goes through Assert-RecordReport:
+# VBJ J-P3 H-7 (its judged rows) stops 1; no VBJ J-P3 judgement, a setting defect, a
+# not-judgeable reason or a failure outside the 13.9 record list stops 2; 13.9 record failures
+# alone go on. VBH J-P3 stays a record (A7).
 Invoke-Judge 't12_VBH' @($Tjr, 't12', '--bundle', 'VBH', '--base', $H6, '--base-judge', $BaseJudge,
     '--base-judge-sha256', $BaseJudgeSha, '--new', "$Folder\dg3_VBH.json",
     '--new-judge', "$Folder\judge\dg3_VBH_judge.json", '--new-judge-sha256', $JudgeSha['VBH'],
@@ -87,8 +89,7 @@ Invoke-Judge 't12_VBJ' @($Tjr, 't12', '--bundle', 'VBJ', '--base', "$Folder\dg3_
     '--base-judge', "$Folder\judge\dg3_VBJ0_judge.json", '--base-judge-sha256', $JudgeSha['VBJ0'],
     '--new', "$Folder\dg3_VBJ.json", '--new-judge', "$Folder\judge\dg3_VBJ_judge.json",
     '--new-judge-sha256', $JudgeSha['VBJ'], '--out', "$Folder\judge\t12_VBJ.json") -ContinueCodes @(0, 1) | Out-Null
-Assert-T12Jp3 "$Folder\judge\t12_VBJ.json"
-Assert-RecordReport "$Folder\judge\t12_VBJ.json"
+Assert-RecordReport "$Folder\judge\t12_VBJ.json" -VbjJp3
 
 $Previous = Get-PreviousStepFolder 'dg3'
 foreach ($Setting in $Placement.Keys) {
