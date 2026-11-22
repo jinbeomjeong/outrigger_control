@@ -13,6 +13,15 @@
 # erratum 4 (sealed 4bc4ecdd: P5-2 / P5-4 calculation commit, c dry plan split)
 06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum4.md
 06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum4.md.sha256
+# erratum 5 (sealed 8487bd55: P5-3 test set), erratum 6 (sealed 9a92bd34: VBG6 pairing, rev 6
+# P4 records, case B / D, c dry seeds 92 / 93, re-prep) and erratum 7 (sealed 38fdc574: (D-다)
+# same order, not computed cases, 6-6 coverage)
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum5.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum5.md.sha256
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum6.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum6.md.sha256
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum7.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum7.md.sha256
 # stored inputs (common.ps1 $FixedInputs; jp3_fixed_inputs.py)
 06_analysis/02_control/j_p3_cause/baseline_221456d/SHA256SUMS
 06_analysis/03_hydraulic/coupled/v5/main.jsonl
