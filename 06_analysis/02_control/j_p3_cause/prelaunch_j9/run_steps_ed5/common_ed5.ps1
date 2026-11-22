@@ -29,12 +29,14 @@
 . "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
-$RunCommit = 'ae9d0b2d9b809f907ee9806f28d66d66bc1c5d4e'
-# the master merge of ed5-fix2 (P5-2 judged key by the row's ③ revision) in the locked
-# worktree ed5-run3 (2026-11-22); superseded run commits: dba05b3f (worktree ed5-run,
-# prelaunch audit), 8003083d (worktree ed5-run2, p5fixed stopped 2: the rev 4 judged key);
-# their prelaunch outputs are in j9_runs/<commit 8>
-$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run3'
+$RunCommit = '876d8a49fe8b89c66d7781d0d0440ff87486fb2d'
+# master after the ed5-fix3 merge (errata 6 / 7), the ae9d0b2d archive (erratum 6 6-4 / 6-5),
+# the errata 5 .. 7 fixed list entries and the merged-master tests, in the locked worktree
+# ed5-run4 (2026-11-22); superseded run commits: dba05b3f (worktree ed5-run, prelaunch audit),
+# 8003083d (worktree ed5-run2, p5fixed stopped 2: the rev 4 judged key), ae9d0b2d (worktree
+# ed5-run3, step (4a) cases stopped 2: VBG5 without its VBG6 pair, erratum 6); their prelaunch
+# outputs are in j9_runs/<commit 8>
+$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run4'
 $Ed5Placeholder = '^<ED5_'
 
 function Assert-Ed5Configured {
