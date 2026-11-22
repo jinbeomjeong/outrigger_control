@@ -1,0 +1,282 @@
+{
+  "tool": "worktree_tests",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+  "data_root": "C:\\workspace\\outrigger_control",
+  "python": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+  "inifile": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\pyproject.toml",
+  "rebase_dirs": [
+    "07_results"
+  ],
+  "probe_modules": [
+    "outrigger_sim",
+    "chrono_t45_replay",
+    "j_p3_inputs"
+  ],
+  "pin_modules": [],
+  "run_dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-ed5impl\\wt_runs\\wt_tests_20261122_225016_20164",
+  "pytest": {
+    "command": [
+      "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+      "-B",
+      "-m",
+      "pytest",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-ed5impl\\wt_runs\\wt_tests_20261122_225016_20164\\tree\\05_tests\\unit\\test_chrono_t45_replay.py",
+      "--rootdir",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-ed5impl\\wt_runs\\wt_tests_20261122_225016_20164\\tree",
+      "--confcutdir",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-ed5impl\\wt_runs\\wt_tests_20261122_225016_20164\\tree",
+      "-c",
+      "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\pyproject.toml",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "_wt_probe",
+      "--junitxml",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\\scratchpad\\python-ed5impl\\wt_runs\\wt_tests_20261122_225016_20164\\junit.xml",
+      "-q",
+      "-rfEsxX",
+      "-n",
+      "4",
+      "--dist",
+      "loadfile"
+    ],
+    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+    "dropped_environment": [],
+    "set_environment": [
+      "MKL_THREADING_LAYER",
+      "OUTRIGGER_RECORDS_ROOT",
+      "X10_BASE_ROOT"
+    ],
+    "exit_code": 0,
+    "wall_s": 221.2,
+    "log_tail": [
+      "bringing up nodes...",
+      "bringing up nodes...",
+      "",
+      "...................                                                      [100%]",
+      "19 passed in 220.61s (0:03:40)"
+    ]
+  },
+  "tests": {
+    "tests": 19,
+    "passed": 19,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0
+  },
+  "cases": [],
+  "probe_records": [
+    {
+      "worker": "gw0",
+      "pid": 31268,
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+      "modules": {
+        "outrigger_sim": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\03_src\\outrigger_sim\\__init__.py",
+        "chrono_t45_replay": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\04_scripts\\04_hydraulic\\coupled\\chrono_t45_replay.py",
+        "j_p3_inputs": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\04_scripts\\04_hydraulic\\coupled\\j_p3_inputs.py"
+      },
+      "pinned": {},
+      "rebase": {
+        "rebased": 5,
+        "already_in_data_root": 0,
+        "unmatched": 0
+      },
+      "rebased_examples": [
+        [
+          "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\07_results",
+          "C:\\workspace\\outrigger_control\\07_results"
+        ]
+      ],
+      "unmatched_values": []
+    },
+    {
+      "worker": "gw1",
+      "pid": 15544,
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+      "modules": {
+        "outrigger_sim": null,
+        "chrono_t45_replay": null,
+        "j_p3_inputs": null
+      },
+      "pinned": {},
+      "rebase": {
+        "rebased": 5,
+        "already_in_data_root": 0,
+        "unmatched": 0
+      },
+      "rebased_examples": [
+        [
+          "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\07_results",
+          "C:\\workspace\\outrigger_control\\07_results"
+        ]
+      ],
+      "unmatched_values": []
+    },
+    {
+      "worker": "gw2",
+      "pid": 26936,
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+      "modules": {
+        "outrigger_sim": null,
+        "chrono_t45_replay": null,
+        "j_p3_inputs": null
+      },
+      "pinned": {},
+      "rebase": {
+        "rebased": 5,
+        "already_in_data_root": 0,
+        "unmatched": 0
+      },
+      "rebased_examples": [
+        [
+          "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\07_results",
+          "C:\\workspace\\outrigger_control\\07_results"
+        ]
+      ],
+      "unmatched_values": []
+    },
+    {
+      "worker": "gw3",
+      "pid": 1888,
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+      "modules": {
+        "outrigger_sim": null,
+        "chrono_t45_replay": null,
+        "j_p3_inputs": null
+      },
+      "pinned": {},
+      "rebase": {
+        "rebased": 5,
+        "already_in_data_root": 0,
+        "unmatched": 0
+      },
+      "rebased_examples": [
+        [
+          "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\07_results",
+          "C:\\workspace\\outrigger_control\\07_results"
+        ]
+      ],
+      "unmatched_values": []
+    },
+    {
+      "worker": "main",
+      "pid": 14620,
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3",
+      "modules": {
+        "outrigger_sim": null,
+        "chrono_t45_replay": null,
+        "j_p3_inputs": null
+      },
+      "pinned": {},
+      "rebase": {
+        "rebased": 0,
+        "already_in_data_root": 0,
+        "unmatched": 0
+      },
+      "rebased_examples": [],
+      "unmatched_values": []
+    }
+  ],
+  "rebase_totals": {
+    "rebased": 20,
+    "already_in_data_root": 0,
+    "unmatched": 0
+  },
+  "copies": [
+    {
+      "file": "05_tests/unit/test_chrono_t45_replay.py",
+      "is_test": true,
+      "file_references": 1,
+      "wrapped": [
+        {
+          "line": 25,
+          "expression": "PROJECT_ROOT / \"07_results\""
+        },
+        {
+          "line": 28,
+          "expression": "PROJECT_ROOT / \"07_results\""
+        },
+        {
+          "line": 31,
+          "expression": "PROJECT_ROOT / \"07_results\""
+        },
+        {
+          "line": 35,
+          "expression": "PROJECT_ROOT / \"07_results\""
+        },
+        {
+          "line": 38,
+          "expression": "PROJECT_ROOT / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": []
+    },
+    {
+      "file": "05_tests/conftest.py",
+      "is_test": false,
+      "file_references": 1,
+      "wrapped": [],
+      "unwrapped_literals": []
+    }
+  ],
+  "originals": {
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\05_tests\\unit\\test_chrono_t45_replay.py": "f186c291fdb9e809e9baf77f1bb708355c3206c0688a69c37fcaf08c3deb86fb",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\05_tests\\conftest.py": "035a1b6ff423b47e59e4d0def251c442e3601dc8bfe256d8cc763fedd4749edc"
+  },
+  "summary": {
+    "tool": "worktree_tests",
+    "command": "run",
+    "pytest_exit": 0,
+    "pytest_exit_text": "모든 시험 통과",
+    "tests": 19,
+    "passed": 19,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0,
+    "probe": {
+      "outrigger_sim": "worktree",
+      "chrono_t45_replay": "worktree",
+      "j_p3_inputs": "worktree"
+    },
+    "rebased_paths": 20,
+    "copies": 2,
+    "originals_unchanged": true,
+    "run_dir_removed": false,
+    "error": 0,
+    "warning": 0,
+    "info": 3,
+    "categories": {
+      "probe_worktree": 3
+    }
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "category": "probe_worktree",
+      "file": "probe",
+      "line": 0,
+      "message": "worktree에서 import됨: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\03_src\\outrigger_sim\\__init__.py (gw0)",
+      "target": "outrigger_sim"
+    },
+    {
+      "severity": "info",
+      "category": "probe_worktree",
+      "file": "probe",
+      "line": 0,
+      "message": "worktree에서 import됨: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\04_scripts\\04_hydraulic\\coupled\\chrono_t45_replay.py (gw0)",
+      "target": "chrono_t45_replay"
+    },
+    {
+      "severity": "info",
+      "category": "probe_worktree",
+      "file": "probe",
+      "line": 0,
+      "message": "worktree에서 import됨: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-fix3\\04_scripts\\04_hydraulic\\coupled\\j_p3_inputs.py (gw0)",
+      "target": "j_p3_inputs"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# 436.9 ed5-fix3 (commit 748eef51, erratum 6): the P5-3 set (erratum 5 5-1 items 1 / 2), the
+# erratum 6 tests (6-1 .. 6-3, 6-6) and the edition 4a regression files (erratum 5 5-1, with
+# test_d1a of D-5; test_chrono_t45_replay runs apart through verif/worktree_tests.py).
+# P5-3 set
+test_jp3_12b_tools.py
+test_jp3_ckdrop.py
+test_jp3_ed5_erratum1.py
+test_jp3_ed5_erratum2.py
+test_jp3_ed5_prelaunch_fix.py
+test_jp3_j9main.py
+test_jp3_p51_compare.py
+test_jp3_p5_fixed_values.py
+test_jp3_rev6.py
+test_s9_batch_inputs_exit.py
+test_x10_rod_fault.py
+# erratum 6
+test_jp3_ed5_erratum6.py
+# edition 4a regression (without test_chrono_t45_replay.py)
+test_jp3_addendum_4a2.py
+test_jp3_addendum_4a3.py
+test_jp3_addendum_4a4.py
+test_jp3_addendum_4a5.py
+test_jp3_harness_units.py
+test_jp3_judge_main_e2e.py
+test_jp3_prelaunch_audit2.py
+test_s9_batch_code_at_launch.py
