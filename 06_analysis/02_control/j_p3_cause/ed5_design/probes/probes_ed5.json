@@ -1,0 +1,11 @@
+{"results": [
+ {"key": "L2|s30|ref|0|rigid|B|0,0", "setting": "VBJ, VBJ0, VBK0, VBK", "commit": "8a3c48c7",
+  "purpose": "X-10 unit tests (test_x10_rod_fault.py RUN_KEY; harness runs of the VBJ / VBJ0 bit identity, VBK0 / VBK fault plans)",
+  "output": "pytest temporary folders (not kept)"},
+ {"key": "L2|s30|ref|3|rigid|B|0,3.2", "setting": "VBK, VBK0", "commit": "8a3c48c7",
+  "purpose": "X-10 unit tests (test_x10_rod_fault.py TRW_KEY; TRw fault plan on RL)",
+  "output": "pytest temporary folders (not kept)"},
+ {"key": "L2|s30|ref|3|rigid|B|0,3.2", "setting": "VBJ", "commit": "8a3c48c7",
+  "purpose": "VBJ probe that chose TRW_KEY (retract carry start 373, witness 388 on RL; run on the working tree that became 8a3c48c7)",
+  "output": "session scratchpad (deleted after the run)"}
+]}
