@@ -209,3 +209,116 @@
 - 원본 불변: 확인 — 원본 쓰기 0회, 원본 디렉터리 쓰기 0건 (sha jp3_remedy_spec_v5.md fe6f5844…, jp3_remedy_spec_v5.md.sha256 0dd1676c…, jp3_remedy_spec_v5_erratum1.md 4721352e…, jp3_remedy_spec_v5_erratum1.md.sha256 d508c2df…, jp3_remedy_spec_v5_erratum2.md 639c54e9…, jp3_remedy_spec_v5_erratum2.md.sha256 054bfb8d…, jp3_remedy_spec_v5_erratum3.md 7bab9217…, jp3_remedy_spec_v5_erratum3.md.sha256 29f02a7f…, common_ed5.ps1 bca56c3e…, fixed_inputs_entries.txt 1cd96da9…, prelaunch_ed5.ps1 8133318d…, record_gates_ed5.ps1 bf7e7bc5…, step_l1ref.ps1 935d019e…, step0_cdry.ps1 38add1e5…, step1_p1.ps1 9152a599…, step2_dry.ps1 53a49b6d…, step3_fpath.ps1 b30111dc…, step4a_cases.ps1 dfe44ac3…, step4b_casef.ps1 639a7884…, step5_t8.ps1 c13a193d…, step6_dg3.ps1 31e0634e…, step6b_vbk0.ps1 52c22177…, step6c_vbk.ps1 43d6907e…, step7_records.ps1 fab0465a…, step7b_ckdrop.ps1 460d9670…, step8_j9main.ps1 2f8e97a4…, common.ps1 308041cf…, record_helper.ps1 c1de0464…, FIXED_INPUTS_dba05b3f.SHA256SUMS b1b01251…, jp3_rev6_p2_handoff_ed5_e1.md b87d665c…, jp3_rev6_p2_handoff_ed5_e1.md.sha256 566d3984…, jp3_rev6_p2_handoff_ed5.md 3ce9ecd8…, jp3_rev6_p2_handoff_ed5.md.sha256 46746226…, dry_selection_r79_key_g8.txt b7c7470a…, dry_selection_r79_key_ref.txt 95ce6f27…, dry_selection.json 533e1cb6…, j9main_v0_sample_keys.command.txt aa736ae0…, j9main_v0_sample_keys.json 7da16a4f…, l1_keys_12b.txt 9f815533…, ckdrop_selection.json 7d411988…, dropout_FL_plan.json b9645722…, dropout_FR_plan.json 630f49c7…, dropout_keys.txt ac8cc9c9…, dropout_RL_plan.json b05ce5f4…, dropout_RR_plan.json 1e158a8a…, tck_FL_plan.json e427bc00…, tck_FR_plan.json 752a6e3b…, tck_keys.txt e2a0e79c…, tck_RL_plan.json fb760588…, tck_RR_plan.json 7f39d569…, b1_keys.txt 6383abf3…, b1_plan.json 65bde6ac…, b2_keys.txt 70425890…, b2_plan.json f85f81b5…, b3_keys.txt 4325b640…, b3_plan.json d7818cb5…, b4_keys.txt 03363fdc…, b4_plan.json a97061b1…, c90_91_plan.json 9330cb97…, c90_keys.txt 19caacb7…, c91_keys.txt 5f768a32…, selection.json ab8b47c3…, l1ref_a1_LOCAL_ONLY.SHA256SUMS 7558abba…, l1ref.done 0c958287…, L1_VBJ.identity.json 6c59b9ab…, L1_VBJ.json 47e57ecd…, L1_VBJ.json.partial.jsonl ba899183…, L1_VBJ0.identity.json 11a20602…, L1_VBJ0.json 70083e3c…, L1_VBJ0.json.partial.jsonl 3dcb759a…, step_record.json 0c958287…, l1ref_a1.md e6109199…, 디렉터리 목록 동일, ~$ 임시 파일 없음)
 - 최종 판정 직전 다시 확인: worktree HEAD dba05b3f·깨끗함, master 0a80914d, 입력 72개 불변(위 source_guard verify)
 - 사용한 스킬: 없음
+
+
+---
+
+## 재감사 (step0_cdry 직전, 실행 커밋 ae9d0b2d, 2026-11-22) — hand-back 원문
+
+## 판정(실행 커밋 ae9d0b2d, step0_cdry 직전 재감사)
+**step0_cdry를 시작해도 됩니다.** 차단은 0건이고, 경고 4건과 정보 몇 건이 있습니다.
+
+- 대상:
+  - 실행 커밋 `ae9d0b2d9b80…`(worktree `ed5-run3`, HEAD 일치, 추적 트리 깨끗함)
+  - master HEAD `2d2d22f4`(감사 중에 정오 5 봉인 커밋이 들어옴). 그 아래 준비 커밋 `7e475e58`·`94c5d8da`·`cb30bbab`·`feac845f`
+- 본 결과(값은 열지 않음):
+  - `p52.json`: 키 이름, `judged_key_reading`·`disclosure`·`rule` 문자열, 줄 수 32, problems 0, 줄 키 이름
+  - `p54.json`: 키 이름, 입력 sha 개수
+  - `selection.json`의 `dry.union_check`(구조 값: 짝 160, 서로 다른 키 160, 셀 8, ok)
+  - 8003083d `p5fixed.stop`의 reason·exit_code
+  - L1 두 실행의 `commands_sha256`은 같음·다름 개수만 셌습니다.
+  - judge 값과 c 건식 출력은 열지 않았습니다.
+
+## 1. 앞 감사 항목
+- **B-1(a): 닫혔습니다.**
+  - `x11/c90_plan.json`·`c91_plan.json`과 키 파일이 seed별로 나뉘었고, 계획 키 80 = 키 파일 80으로 집합이 같습니다.
+  - `union_check`는 짝 160, 서로 다른 키 160, 셀 8, ok입니다.
+  - 네 파일과 `selection.json`이 FIXED에 있고 sha도 같습니다(c90 계획 `a4db942f`, c91 계획 `0492ebdf`).
+  - `step0_cdry.ps1`은 실행마다 자기 seed의 계획과 키 파일을 줍니다(26~32행). `union_check`가 ok가 아니면 종료 2로 멈춥니다(17~19행).
+  - dry-c는 줄의 `plan_sha256`을 실행별 계획 sha와 대조합니다(`jp3_12b_judge.py` 977·1024~1028행).
+- **B-2: 닫혔습니다.**
+  - FIXED에 들어 있는 것: `l1_keys_12b.txt`, `L1_VBJ.json`(`88da0091`), `L1_VBJ0.json`, `p52.json`, `p54.json`.
+  - `L1_VBJ.json` sha는 디스크, LOCAL_ONLY 목록, 백업 세 곳 모두 `88da0091`로 같습니다.
+  - p5fixed의 정체성 기록은 head ae9d0b2d, 깨끗한 트리입니다(`baseline_check identity` 종료 0).
+  - 단계 (4)의 고정값 대조 경로가 생겼습니다(`step4a_cases.ps1` 33~37행, `step4b_casef.ps1` 18~21행의 `p52-compare`).
+- **W-1: 닫혔습니다.**
+  - VBJ J-P3 H-7로 멈추면 `judged:t12_VBJ_jp3`=1 표지가 남습니다(`record_gates_ed5.ps1` 120행).
+  - `common_ed5.ps1`의 `Read-PreviousStops`가 판 4a 함수를 대신하고, `Get-RefusedPreviousStop`으로 `judged:*`=1인 이전 시도가 있으면 재시도를 거부합니다(71~85행, `record_gates_ed5.ps1` 125~137행).
+- **W-2: 닫혔습니다.**
+  - junit이 `ed5_design/junit/`에 커밋됐습니다(`feac845f`).
+  - `junit_ae9d0b2d_p53set.xml`은 295건이고, `junit_skips` 결과는 종료 0, skip 0, xfail 0입니다. `_p53set3.xml`은 3건이고 역시 종료 0입니다.
+  - 기록 파일에 head ae9d0b2d, worktree `ed5-run3`, `X10_BASE_ROOT`=`.claude/worktrees/x10base`가 있고, x10base HEAD는 `df95158d…`입니다.
+- **W-3: 닫혔습니다.**
+  - `step1_p1.ps1` 14행이 `cdry`를 요구합니다.
+  - `Get-DryCStop`은 ĉ ≥ 0.5, c 없음, `written`이 아닌 상태면 종료 2입니다(`record_gates_ed5.ps1` 139~148행).
+- **W-4: 닫혔습니다(감사 원문 99행 기준: "exclude 한 줄 + sha를 붙인 저장소 밖 백업").**
+  - exclude는 `.git/info/exclude:85`에 있습니다(`check-ignore`로 확인).
+  - 백업은 `~/.claude/backups/outrigger-ed5/ae9d0b2d_l1ref_a1/L1_VBJ.json`이고 sha가 같습니다.
+  - 다만 백업 폴더에는 sha 파일이 없고 저장소의 LOCAL_ONLY 목록만 sha를 담고 있습니다(경고 4).
+
+## 2. 정오 4 구현
+- 줄별 revision은 `rule_revision`과 `revision_source` 키로 들어 있습니다(메인이 말한 `row_revision`). `judged_key_total`·`judged_key_record`·`rev6_rows`·`p4_on_rev6_rows`도 있고, problems는 0입니다.
+- `disclosure` 문자열은 봉인된 정오 4 22행의 공개 문구와 글자가 같습니다.
+- `judged_key_reading`("rev 4 = `ext_moving.breach_reads`, rev 5·6 = jp3a/b/c")은 봉인 문서에 없는 해석입니다(경고 2).
+- p54 `inputs`에는 64자 sha가 135개 있습니다. `VBH_t4h` 135개와 수가 맞습니다.
+
+## 3. 정오 5 이행
+- 5-1의 1(새 파일 10개)·2(`test_x10_rod_fault`, 78건, 비트 동일 (i) `test_i_*` 포함)·3(`test_jp3_prelaunch_audit2`의 함수 3개)이 junit 노드에 모두 있습니다. skip·xfail은 0입니다.
+- 회귀 기록 `junit_ae9d0b2d_regress4a.causes.json`이 공개되어 있습니다: 249건, 실패 1(`test_d1a`, 원인 시험 환경), skip 5(t45). t45는 worktree_tests로 19건 통과했습니다.
+- 5-2의 키 sha 셋은 FIXED 항목에 있습니다(g6 `1a79e02f`, g8 `b7c7470a`, ref `95ce6f27`, `dry_selection.json` `bf22ffb3`). 단계 기록은 시작할 때마다 `Assert-FixedList`가 다시 확인합니다.
+
+## 4. 워커 affinity가 섞여 보인 문제: 결과와 실행 정체성에 영향 없음
+- 두 L1 실행의 정체성 기록에 `OMP/MKL/NUMBA/OPENBLAS_NUM_THREADS`=1이 있습니다. affinity는 실행별로 VBJ0 `0xff`, VBJ `0xff00`이 기록됩니다.
+- 스레드를 1로 고정하면 어느 코어에서 돌든 결과 비트가 같습니다. 두 마스크 모두 P 코어의 논리 프로세서입니다.
+- 실측으로도 확인했습니다. 8003083d와 ae9d0b2d의 `L1_VBJ0.json`·`L1_VBJ.json`에서 167키 모두 `commands_sha256`이 같았습니다(다른 것 0, 해시 없음 0). 두 커밋 사이 `03_src`·`04_scripts/03_control`·`harness_hydraulics.py`·`run_v5.py`의 diff도 비어 있습니다.
+- 판정에 더 필요한 확인은 없습니다. 부모 사슬 재확인은 기록용으로만 권합니다.
+
+## 5. 도구 결과
+- 종료 0:
+  - `ps1_lint`(`step0_cdry`·`common_ed5`·`record_gates_ed5`·`run_p53_set`)
+  - `baseline_check identity`(l1ref, p5fixed)
+  - `junit_skips`(두 junit)
+- 종료 1이지만 결함은 아닙니다:
+  - **`baseline_check sums`**(FIXED, `--base repo-root`): 248항목에 불일치 0, 없음 0입니다. `cited_ignored`·`cited_untracked` 8건은 설계상 로컬 전용인 저장 입력입니다.
+    - ignored 4: `main.jsonl`, 78fd5d2d `dg3_VBH`/`dg3_VBJ.json`, `L1_VBJ.json`
+    - untracked 4: `h10_reuse_rerun.jsonl`, `h6_dg3_v4on.json`, `h8_noise_VB.json`, `grid_r67_top.json`
+    - 모두 판 4a 이후 sha 고정 정책 그대로입니다.
+  - **`seal_check`**: warning은 `sums_entry_missing` 248(경로 기준 차이일 뿐입니다. 위 `baseline_check`가 불일치 0을 확인), `seal_missing` 1(`jp3_remedy_spec_v5_draft`, 규칙 문서 아님), 끝 줄바꿈 없음 info 1입니다.
+  - **`placeholder_scan --pattern-set both`**: 18건이 모두 주석 줄입니다. 예: `common_ed5.ps1` 18행 `FIXED_INPUTS_<run commit 8>`, `record_gates_ed5.ps1` 6·16·29행의 사용법 설명. 실행되는 문자열에는 없습니다. `--allow`로 이 자리 이름들을 넘기면 종료 0이 됩니다.
+- `ref_check`는 이번에 돌리지 않았습니다. 정오 5 문안 감사에서 인용 경로를 이미 대조했습니다.
+
+## 6. 트리 깨끗함 관문: worktree만 봅니다
+- `Initialize-Step`은 `git -C $Worktree status --porcelain --untracked-files=no`로 봅니다(`run_steps/common.ps1` 142행).
+- 정체성 확인은 `--repo $Worktree`로 합니다.
+- 메인 checkout에 대해서는 `Assert-FixedList`가 FIXED 목록 파일이 추적되고 HEAD와 같은지, 각 항목의 sha가 맞는지만 봅니다(`common_ed5.ps1` 96~105행).
+- 그래서 메인 checkout의 다른 세션 미추적 파일과 `.claude/agents/paper-reviewer.md`(M)는 관문에 영향을 주지 않습니다. 실행 스크립트(`run_steps_ed5/*.ps1`, `run_steps/common.ps1`)는 FIXED에 고정되어 있고 sha가 같습니다.
+
+## 경고
+1. **정오 5와 그 `.sha256`이 FIXED 목록(248항목)에 없습니다.**
+   - 목록은 `cb30bbab`에서 만들어졌고, 정오 5는 그 뒤 `2d2d22f4`로 봉인·커밋됐습니다.
+   - 단계가 시작할 때 정오 5의 sha를 다시 확인하는 경로가 없습니다.
+   - 권고: step0 실행 기록(또는 실행 전 감사 기록)에 정오 5 sha `8487bd55…`와 커밋 `2d2d22f4`를 적어 둡니다. 다음 목록을 만들 때 넣습니다.
+2. **P5-2 "판정 키"의 줄별 판 읽기가 봉인 문서에 없고, 첫 고정 시도 사실도 공개해야 합니다.**
+   - `p52.json`의 `judged_key_reading`과 `3f801778`("control reading of erratum 4 4-1")는 8003083d `p5fixed`가 "33 problems"로 종료 2를 낸 뒤 들어왔습니다.
+   - 그 멈춤은 값이 아니라 키가 비어 생긴 구조적 멈춤이었습니다. 멈춤 기준인 P4 켬 rev 6 줄은 jp3a/b/c를 그대로 쓰므로 판정 문턱은 바뀌지 않았습니다.
+   - 권고: 판정서(또는 실행 기록)에 "p5fixed 첫 시도 8003083d 종료 2(33 problems), 줄 판별로 판정 키 읽기를 고친 뒤 ae9d0b2d에서 다시 계산"과 해석 문장을 공개합니다.
+3. **`step0_cdry.ps1` 6행 주석이 낡았습니다.** "c ≥ 0.5 is the main session's stop"이라고 적혀 있지만, 지금은 step1의 `Get-DryCStop`이 막습니다. 동작에는 영향이 없습니다.
+4. **W-4 백업에 sha 파일이 없습니다.** 백업 폴더에 `L1_VBJ.json`만 있습니다. LOCAL_ONLY 목록(`88da0091`)이 저장소에 있으니 지금은 충분하지만, sha 파일을 같이 두기를 권합니다. `L1_VBJ.json.partial.jsonl`(LOCAL_ONLY에 있음)은 백업 대상이 아닌 중간 파일입니다.
+
+## 실행한 검증
+- git 조회: `log`, `rev-parse`, `status`, `ls-files`, `check-ignore`, `diff --stat`, `worktree`.
+- python-dev `-I -B` 즉석 스크립트(지운 뒤 없음 확인):
+  - `chk.py`: FIXED 248항목 재해시, 항목 포함 여부, L1 sha 세 곳, selection 구조, c90/c91 계획·키 대조, p52·p54 구조와 문자열, junit 노드·skip
+  - `rd.py`: 도구 상세 보고 요약
+  - `l1cmp.py`: 두 커밋의 L1 명령 해시 같음·다름 수
+- verif 도구: `junit_skips` ×2, `baseline_check sums`·`identity` ×2, `seal_check`, `placeholder_scan`, `ps1_lint`.
+- 단계 스크립트·`record_gates`·`common_ed5`·`step0`·`step1`·`step4a`/`4b`·dry-c 코드의 해당 줄을 읽었습니다.
+- scratchpad 폴더 `C:\Users\jinbeom\AppData\Local\Temp\claude\63917d480778c1ba\bd7ff3b9-880c-4e9e-afd1-7024158f16f4\scratchpad\verif-ed5step0\`는 지웠습니다. 원본 쓰기는 없습니다.
+- source_guard는 쓰지 않았습니다(읽기와 해시만).
+- 사용한 스킬: 없음
+
+## 메인 세션 기록 (2026-11-22)
+- 경고 1: 정오 5는 FIXED 목록(cb30bbab) 뒤에 봉인됐다. 정오 5 sha256 `8487bd55dc23c75dc66a5c7d5eada76a7bc84af5cafe57c4db229810d9df4cf8`, 봉인 커밋 `2d2d22f4`. 다음 목록에 넣는다.
+- 경고 2: P5-2 첫 고정 시도 8003083d p5fixed는 종료 2(33 problems, rev 4 줄에 rev 5/6 키를 요구한 도구 결함)로 멈췄다. 줄마다 자기 revision의 판정 키를 읽도록 고친 뒤(3f801778, control 해석) ae9d0b2d에서 다시 계산했다. 멈춤 기준(P4 켬 rev 6 줄)의 키·문턱은 바뀌지 않았다. 판정서에 이 사실을 공개한다.
+- 경고 3: step0_cdry.ps1 6행 주석 정정은 다음 커밋으로 미룬다(동작 무관).
+- 경고 4: 백업 폴더에 SHA256SUMS를 더했다.
