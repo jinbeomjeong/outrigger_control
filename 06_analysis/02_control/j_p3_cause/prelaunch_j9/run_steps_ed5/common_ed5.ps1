@@ -24,6 +24,7 @@
 
 . "$PSScriptRoot\..\run_steps\common.ps1"
 . "$PSScriptRoot\..\run_steps\record_helper.ps1"
+. "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
 $RunCommit = '<ED5_RUN_COMMIT>'
@@ -158,6 +159,20 @@ function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '
     $Environment = @{ R79_V5_SETTING = $Setting; R79_T4H_DIR = $T4hDir; R79_ROD_MODEL = $R79RodModel[$Setting] } + $R79Common
     if ($Plan) { $Environment['R79_ROD_FAULT_PLAN'] = $Plan }
     return $Environment
+}
+
+function Assert-RecordReport([string]$ReportPath) {
+    # after a record tool whose exit 1 goes on (re-audit K-1, erratum 2 2-10): its setting
+    # defects / not-judgeable reasons still stop (exit 2), as before 2-10 (record_gates_ed5.ps1)
+    $Stop = Get-RecordReportStop $ReportPath
+    if ($Stop) { Stop-Step $Stop.code $Stop.reason }
+}
+
+function Assert-T12Jp3([string]$ReportPath) {
+    # T-JR-12a VBJ (spec v5 6.2): its J-P3 is a judgement - H-7 stops 1, not judged stops 2
+    $Stop = Get-T12Jp3Stop $ReportPath
+    $StepState.Codes['t12_VBJ_jp3_outcome'] = if ($Stop) { $Stop.reason } else { 'pass' }
+    if ($Stop) { Stop-Step $Stop.code $Stop.reason }
 }
 
 function Invoke-IdentityCheckPart([string]$Part) {

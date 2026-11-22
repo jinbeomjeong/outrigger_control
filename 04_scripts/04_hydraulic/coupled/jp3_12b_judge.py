@@ -693,10 +693,12 @@ def _judge_jp3(jp3: dict, judged_rows: int, problems: Problems) -> None:
     from j_p3_inputs import has_judged_breach
 
     status = jp3["status"]
+    # re-audit warning 2: the judge file says whether the H-7 came from the judged rows
+    jp3["h7_from_judged_rows"] = judged_rows > 0 and (status == "H-7" or has_judged_breach(jp3))
     if judged_rows == 0:
         problems.not_judgeable.append("J-P3: 0 judged VBK lines (6.3.7 (4))")
         return
-    if status == "H-7" or has_judged_breach(jp3):
+    if jp3["h7_from_judged_rows"]:
         problems.failures.append("J-P3 H-7 on the VBK lines (4)")
     if status == "setting_defect":
         problems.setting_defects.append("J-P3 setting defect on the VBK lines")

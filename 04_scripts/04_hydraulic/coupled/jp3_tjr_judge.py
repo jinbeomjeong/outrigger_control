@@ -38,7 +38,10 @@ Sub-commands:
              none = fail; both none and base none / new READY = records). VBJ: J-P3
              (``j_p3_judgement_rev5``, 1 judged row expected; ``judged_key_missing``,
              ``no_judged_runs`` and, judged rows but not 1, ``judged_row_count_mismatch`` are
-             not judgeable, 4a-5 3.3, 4a-7 erratum 1 7) and the P4 evidence of the VBJ lines
+             not judgeable, 4a-5 3.3, 4a-7 erratum 1 7; H-7 read from the judged rows,
+             2-10.1 5; the report's ``jp3_outcome`` - pass / H-7 / setting_defect /
+             not_judgeable / not_computed - is this judgement apart from the 13.9 record,
+             re-audit K-1) and the P4 evidence of the VBJ lines
              (also ① = k ② > 0, erratum 1 9: event-path lines; addendum 4a-8 2: k = 2 on an
              r79 key whose third token is ``g8``, else 1) and of their VBJ0 base lines
              (4a-2 B2, 4a-3 4.4; VBJ and VBJ0 run with
@@ -795,8 +798,18 @@ def _dg3_identity(line: dict) -> list[str]:
             if check.get(key) != value]
 
 
+J_P3_OUTCOMES = ("pass", "H-7", "setting_defect", "not_judgeable", "not_computed")
+"""Re-audit K-1: ``jp3_outcome`` of a T-JR-12a VBJ report, the J-P3 judgement apart from the
+13.9 record (``step6_dg3.ps1``: H-7 stops 1, pass goes on, the others stop 2)."""
+
+
 def _dg3_j_p3(lines: list[dict], problems: compare.Problems) -> dict:
-    """J-P3 of the VBJ bundle: exactly 1 judged (normal grade) row (13.9)."""
+    """J-P3 of the VBJ bundle: exactly 1 judged (normal grade) row (13.9). Erratum 2 2-10.1 5
+    (re-audit K-1): the H-7 is read from the judged rows (``j_p3_inputs.has_judged_breach``),
+    a setting defect / not-judgeable status stays a reason; ``outcome`` is the J-P3 judgement
+    alone (H-7 > setting_defect > not_judgeable > pass)."""
+    from j_p3_inputs import has_judged_breach
+
     from outrigger_sim.control.extend_start_bound import j_p3_judgement_rev5
 
     records = [(line.get("hydraulics_record") or {}).get("extend_bound_check") for line in lines]
@@ -807,13 +820,21 @@ def _dg3_j_p3(lines: list[dict], problems: compare.Problems) -> dict:
     if status == "no_judged_runs" and judgement["runs_judged"]:
         # erratum 1 7: judged rows, but not the fixed number (both not judgeable)
         status = judgement["status"] = JUDGED_ROW_COUNT_MISMATCH
-    if status == "H-7":
+    is_h7 = status == "H-7" or has_judged_breach(judgement)
+    if is_h7:
         problems.failures.append("VBJ: J-P3 H-7")
-    elif status == "setting_defect":
+    if status == "setting_defect":
         problems.setting_defects.append("VBJ: J-P3 setting defect")
-    elif status != "pass":
+    elif status not in ("pass", "H-7"):
         problems.not_judgeable.append(f"VBJ: J-P3 {status}")
-    return {key: judgement[key] for key in ("status", "runs", "runs_judged", "runs_by_case")}
+    if is_h7:
+        outcome = "H-7"
+    elif status in ("pass", "setting_defect"):
+        outcome = status
+    else:
+        outcome = "not_judgeable"
+    out = {key: judgement[key] for key in ("status", "runs", "runs_judged", "runs_by_case")}
+    return {**out, "h7_from_judged_rows": is_h7, "outcome": outcome}
 
 
 def _r5_7_records(lines: list[dict]) -> dict:
@@ -1702,6 +1723,8 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
             ("new_judge", args.new_judge))}
         report, problems = judge_t12(args.bundle, documents["base"], documents["base_judge"],
                                      documents["new"], documents["new_judge"])
+        if args.bundle == "VBJ":  # re-audit K-1: the J-P3 judgement apart from the record
+            report["jp3_outcome"] = (report.get("J-P3") or {}).get("outcome", "not_computed")
         problems.not_judgeable[:0] = [*input_problems, *t12_judge_row_problems(documents)]
         problems.setting_defects[:0] = t12_file_defects(args.base, args.new)
         return report, problems, [args.base, args.base_judge, args.new, args.new_judge]

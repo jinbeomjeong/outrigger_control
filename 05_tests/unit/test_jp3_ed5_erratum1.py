@@ -483,6 +483,94 @@ def _hold_row(breaches: int = 0, **record) -> dict:
             "run_extend_start_revision": 6, "setting": "VBJ", "extend_bound_check": check}
 
 
+def _dg3_lines(*records: dict) -> list[dict]:
+    return [{"hydraulics_record": {"extend_bound_check": record}} for record in records]
+
+
+def test_dg3_j_p3_reads_h7_under_a_defect() -> None:
+    """Re-audit K-1 / 2-10.1 5: the T-JR-12a VBJ J-P3 reads H-7 from its judged row although a
+    defect row makes the combined status setting_defect; the defect stays a reason."""
+    breach, defect = _hold_row(breaches=1), _hold_row(carry_end_rule="fresh_stretch")
+    problems = tjr.compare.Problems()
+    record = tjr._dg3_j_p3(_dg3_lines(breach["extend_bound_check"],
+                                      defect["extend_bound_check"]), problems)
+    assert record["status"] == "setting_defect"
+    assert record["h7_from_judged_rows"] is True and record["outcome"] == "H-7"
+    assert problems.failures == ["VBJ: J-P3 H-7"]
+    assert problems.setting_defects == ["VBJ: J-P3 setting defect"]
+    clean = tjr._dg3_j_p3(_dg3_lines(_hold_row()["extend_bound_check"]), tjr.compare.Problems())
+    assert (clean["outcome"], clean["h7_from_judged_rows"]) == ("pass", False)
+
+
+@pytest.mark.parametrize(("outcome", "failures"), [("pass", ["VBJ: 1 new_fault keys"]),
+                                                   ("H-7", ["VBJ: J-P3 H-7"])])
+def test_t12_vbj_report_carries_the_jp3_outcome(tmp_path, monkeypatch, capsys, outcome,
+                                               failures) -> None:
+    """K-1: the t12 VBJ report holds ``jp3_outcome`` apart from the 13.9 record; both cases
+    exit 1 (a record failure / the J-P3 failure) - the run step tells them apart."""
+    def judge_t12(bundle, base, base_judge, new, new_judge):
+        problems = tjr.compare.Problems()
+        problems.failures += failures
+        return {"J-P3": {"outcome": outcome}}, problems
+    monkeypatch.setattr(tjr, "judge_t12", judge_t12)
+    for name in ("t12_input_problems", "judge_sha_problems", "t12_judge_row_problems",
+                 "t12_file_defects"):
+        monkeypatch.setattr(tjr, name, lambda *args, **kwargs: [])
+    monkeypatch.setattr(tjr, "_read_json", lambda path: {})
+    out = tmp_path / "t12_VBJ.json"
+    code = tjr.main(["t12", "--bundle", "VBJ", "--base", "b.json", "--base-judge", "bj.json",
+                     "--base-judge-sha256", "a" * 64, "--new", "n.json", "--new-judge",
+                     "nj.json", "--new-judge-sha256", "b" * 64, "--out", str(out)])
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert code == 1 and report["jp3_outcome"] == outcome
+    capsys.readouterr()
+
+
+GATES_PS1 = (ROOT / "06_analysis" / "02_control" / "j_p3_cause" / "prelaunch_j9"
+             / "run_steps_ed5" / "record_gates_ed5.ps1")
+
+
+def _gate(tmp_path: Path, function: str, report: dict) -> str:
+    """Run one gate function of ``record_gates_ed5.ps1`` alone on a report (pwsh)."""
+    import shutil
+
+    pwsh = shutil.which("pwsh")
+    assert pwsh is not None, "pwsh (PowerShell 7) is needed for the run step gate tests"
+    report_path = tmp_path / f"{function}.json"
+    report_path.write_text(json.dumps(report), encoding="utf-8")
+    script = tmp_path / f"{function}.ps1"
+    script.write_text(
+        f". '{GATES_PS1}'\n$Stop = {function} '{report_path}'\n"
+        "if ($Stop) { Write-Output \"$($Stop.code)|$($Stop.reason)\" }\n"
+        "else { Write-Output 'go' }\n",
+        encoding="utf-8")
+    done = subprocess.run([pwsh, "-NoProfile", "-NonInteractive", "-File", str(script)],
+                          capture_output=True, text=True, timeout=120, check=False)
+    assert done.returncode == 0, done.stderr
+    return done.stdout.strip().splitlines()[-1]
+
+
+def test_step6_gate_13_9_record_failure_alone_goes_on(tmp_path) -> None:
+    """K-1: T-JR-12a VBJ with a 13.9 indicator failure only (jp3_outcome pass): go on."""
+    report = {"jp3_outcome": "pass", "failures": ["VBJ: 1 new_fault keys"],
+              "setting_defects": [], "not_judgeable": []}
+    assert _gate(tmp_path, "Get-T12Jp3Stop", report) == "go"
+    assert _gate(tmp_path, "Get-RecordReportStop", report) == "go"
+
+
+def test_step6_gate_jp3_h7_stops(tmp_path) -> None:
+    """K-1: the J-P3 H-7 of the T-JR-12a VBJ bundle stops the step with exit 1; a J-P3 not
+    judged or without the field stops 2 / 3; a record's defect stops 2."""
+    report = {"jp3_outcome": "H-7", "failures": ["VBJ: J-P3 H-7"], "setting_defects": [],
+              "not_judgeable": []}
+    assert _gate(tmp_path, "Get-T12Jp3Stop", report).startswith("1|")
+    assert _gate(tmp_path, "Get-T12Jp3Stop", {**report, "jp3_outcome": "not_computed"}
+                 ).startswith("2|")
+    assert _gate(tmp_path, "Get-T12Jp3Stop", {"failures": []}).startswith("3|")
+    defect = {**report, "jp3_outcome": "pass", "setting_defects": ["x"]}
+    assert _gate(tmp_path, "Get-RecordReportStop", defect).startswith("2|")
+
+
 def test_worse_status_default_order_unchanged() -> None:
     """2-10.1 5 (coordinator item 3): the sealed tools' order stays; edition 5 passes its own."""
     assert inputs._worse_status("H-7", "setting_defect") == "setting_defect"

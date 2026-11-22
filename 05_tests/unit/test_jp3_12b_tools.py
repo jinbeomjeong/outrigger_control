@@ -724,12 +724,19 @@ def test_judge_jp3_reads_h7_under_a_defect() -> None:
     """Erratum 2 2-10.1 5: a breach of a judged row is a failure although the combined status
     is setting_defect; the defect stays a reason."""
     problems = judge.Problems()
-    judge._judge_jp3({"status": "setting_defect", "runs_with_breach": 1}, 3, problems)
+    jp3 = {"status": "setting_defect", "runs_with_breach": 1}
+    judge._judge_jp3(jp3, 3, problems)
     assert problems.failures and problems.setting_defects
     assert problems.status() == "failed"
+    assert jp3["h7_from_judged_rows"] is True  # re-audit warning 2: in the judge file
     problems = judge.Problems()
-    judge._judge_jp3({"status": "judged_key_missing", "runs_with_breach": 0}, 3, problems)
+    jp3 = {"status": "judged_key_missing", "runs_with_breach": 0}
+    judge._judge_jp3(jp3, 3, problems)
     assert problems.status() == "not_judgeable" and not problems.failures
+    assert jp3["h7_from_judged_rows"] is False
+    jp3 = {"status": "no_judged_runs"}
+    judge._judge_jp3(jp3, 0, judge.Problems())
+    assert jp3["h7_from_judged_rows"] is False
 
 
 def test_12b_jp3_h7_and_setting_defect_is_exit_1(world, capsys, cwd_elsewhere) -> None:
@@ -745,6 +752,7 @@ def test_12b_jp3_h7_and_setting_defect_is_exit_1(world, capsys, cwd_elsewhere) -
                                              world["runs"] / "judge.json"), capsys)
     assert code == 1 and last["status"] == "failed", report["problems"]
     assert report["jp3"]["status"] == "setting_defect"
+    assert report["jp3"]["h7_from_judged_rows"] is True
     assert "J-P3 H-7 on the VBK lines (4)" in report["problems"]["failures"]
     assert "J-P3 setting defect on the VBK lines" in report["problems"]["setting_defects"]
 
