@@ -29,10 +29,11 @@
 . "$PSScriptRoot\record_gates_ed5.ps1"
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
-$RunCommit = '<ED5_RUN_COMMIT>'
-# the run commit is filled in after each fix merge (the first, dba05b3f in worktree ed5-run, is
-# superseded by the prelaunch audit fixes of ed5-fix1: B-1, B-2, W-1 .. W-3)
-$Worktree = '<ED5_RUN_WORKTREE>'
+$RunCommit = '8003083db362cb01116882e84819d128629b2c54'
+# the master merge of ed5-fix1 (prelaunch audit fixes B-1, B-2, W-1 .. W-3, erratum 4) in the
+# locked worktree ed5-run2 (2026-11-22); the first run commit dba05b3f (worktree ed5-run) is
+# superseded, its prelaunch outputs are in j9_runs/dba05b3f
+$Worktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-run2'
 $Ed5Placeholder = '^<ED5_'
 
 function Assert-Ed5Configured {
