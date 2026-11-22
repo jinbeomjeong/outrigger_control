@@ -6,7 +6,8 @@
 #                 runs the two L1 reference runs and step_p5fixed.ps1 the P5-2 / P5-4 fixed
 #                 values (simulations, before the fixed list; prelaunch audit B-2)
 #   -Part x11     X-11 plans (jp3_12b_plan.py), ONCE, just before step0_cdry.ps1 (the c dry seeds
-#                 90 / 91 must not collide with keys written later; user decision 2026-11-22)
+#                 92 / 93, erratum 6 6-3, must not collide with keys written later; user
+#                 decision 2026-11-22)
 #   -Part ckdrop  the T-CK / DROPOUT seeds, keys and plans (erratum 2 2-9.5, jp3_ckdrop_plan.py;
 #                 after x11: it reads the 12b cell table and seeds; the same scan as x11)
 #   -Part v0sample  the j9_main V0 sample key list (2-9.1, jp3_j9main_judge.py v0-sample-keys)

@@ -97,13 +97,14 @@ def test_x11_blocks_seeds_cells_and_plans(selected) -> None:
         assert hashlib.sha256((out / name).read_bytes()).hexdigest() == sha
 
 
-def test_x11_dry_plan_seeds_90_91_twenty_per_cell(selected) -> None:
+def test_x11_dry_plan_seeds_92_93_twenty_per_cell(selected) -> None:
     """6.3.10 with prelaunch audit B-1 (a): one plan per dry seed whose keys are exactly that
-    seed's key file (the runner's X-10 guard), 160 pairs = 20 per cell over both."""
+    seed's key file (the runner's X-10 guard), 160 pairs = 20 per cell over both; erratum 6
+    6-3: the seeds are 92 / 93."""
     out, document = selected["out"], selected["doc"]
-    assert not (out / "c90_91_plan.json").exists()
+    assert not (out / "c92_93_plan.json").exists() and not (out / "c90_plan.json").exists()
     per_cell, seeds = {}, set()
-    for run in ("c90", "c91"):
+    for run in ("c92", "c93"):
         assert document["dry"]["runs"][run] == {"seed": int(run[1:]), "plan": f"{run}_plan.json",
                                                 "keys": f"{run}_keys.txt"}
         dry = rfp.load_plan(out / f"{run}_plan.json")
@@ -117,7 +118,27 @@ def test_x11_dry_plan_seeds_90_91_twenty_per_cell(selected) -> None:
             seeds.add(key.split("|")[1])
         assert {key.split("|")[1] for key in dry.faults} == {f"s{run[1:]}"}
     assert len(per_cell) == 8 and set(per_cell.values()) == {20}
-    assert seeds == {"s90", "s91"} and document["dry"]["pairs"] == 160
+    assert seeds == {"s92", "s93"} and document["dry"]["pairs"] == 160
+
+
+def test_x11_ae9d0b2d_c_dry_keys_in_the_scan_do_not_stop(tmp_path) -> None:
+    """Erratum 6 6-3 (D-3): the ``ae9d0b2d`` c dry outputs (seeds 90 / 91, under ``j9_runs``,
+    scanned by 6.3.1) no longer stop the X-11 plan of a new run commit; a 92 / 93 key does."""
+    noise = tmp_path / "noise.json"
+    sha = write_noise(noise)
+    scan = tmp_path / "scan"
+    old_run = scan / "02_control" / "j_p3_cause" / "j9_runs" / "ae9d0b2d" / "cdry_a1"
+    old_run.mkdir(parents=True)
+    (old_run / "VBK_c90.json").write_text(json.dumps({"results": [
+        {"key": "cand=current#L2|s90|g6|0|x0|top|Fs0"},
+        {"key": "cand=current#L2|s91|g6|1|x1|top|Fs0"}]}), encoding="utf-8")
+    document = plan.select(noise, scan, tmp_path / "plans", noise_sha256=sha)
+    assert document["dry"]["seeds"] == [92, 93]
+    assert set(document["dry"]["runs"]) == {"c92", "c93"}
+    (scan / "new.json").write_text(json.dumps({"key": "L2|s92|g6|0|x0|top|Fs0"}),
+                                   encoding="utf-8")
+    with pytest.raises(plan.NotUsable, match="dry key"):
+        plan.select(noise, scan, tmp_path / "plans2", noise_sha256=sha)
 
 
 def test_x11_scan_collision_raises_all_seeds_by_10(tmp_path) -> None:
@@ -177,7 +198,7 @@ def test_x11_refusals(tmp_path, selected, monkeypatch, capsys) -> None:
     with pytest.raises(plan.NotUsable, match="has files"):
         plan.select(selected["noise"], selected["scan"], selected["out"],
                     noise_sha256=selected["sha"])
-    (selected["scan"] / "dry.json").write_text(json.dumps({"key": "L2|s90|g6|0|x0|top|Fs0"}),
+    (selected["scan"] / "dry.json").write_text(json.dumps({"key": "L2|s92|g6|0|x0|top|Fs0"}),
                                                 encoding="utf-8")
     with pytest.raises(plan.NotUsable, match="dry key"):
         plan.select(selected["noise"], selected["scan"], tmp_path / "plans2",
@@ -1010,7 +1031,7 @@ def test_w6_grade_judge_runs_the_r79_judge_and_records_the_sha(world, capsys, cw
 
 
 def _dry_arms(world, change_vbk_hash: int, plan_of_run=None) -> dict[str, list[str]]:
-    """Both arms of the dry check: per dry run (c90 / c91) its own plan's lines (prelaunch
+    """Both arms of the dry check: per dry run (c92 / c93) its own plan's lines (prelaunch
     audit B-1 (a)); ``plan_of_run`` maps a run to another plan stem (a defect case)."""
     args: dict[str, list[str]] = {"vbk0": [], "vbk0_t4h": [], "vbk": [], "vbk_t4h": []}
     for arm_name in ("vbk0", "vbk"):
@@ -1033,12 +1054,12 @@ def _dry_arms(world, change_vbk_hash: int, plan_of_run=None) -> dict[str, list[s
     return args
 
 
-def _dry_args(world, found: dict[str, list[str]], out: str, drop_vbk_c91=False) -> list[str]:
+def _dry_args(world, found: dict[str, list[str]], out: str, drop_vbk_c93=False) -> list[str]:
     args = ["dry-c", "--selection", str(world["selection"]), "--selection-sha256",
             world["selection_sha"], "--out", str(world["runs"] / out)]
     for arm in ("vbk0", "vbk"):
         for value in found[arm]:
-            if not (drop_vbk_c91 and arm == "vbk" and value.startswith("c91=")):
+            if not (drop_vbk_c93 and arm == "vbk" and value.startswith("c93=")):
                 args += [f"--{arm}", value]
         for value in found[f"{arm}_t4h"]:
             args += [f"--{arm}-t4h", value]
@@ -1051,17 +1072,27 @@ def test_dry_c_share_of_changed_opportunity_pairs(world, capsys, cwd_elsewhere) 
     assert code == 0 and last["status"] == "written", report.get("problems")
     assert report["pairs"] == 160 and report["categories"][judge.OPPORTUNITY] == 160
     assert report["c"] == pytest.approx(40 / 160)
-    code, last, _ = run_main(_dry_args(world, found, "dry_c2.json", drop_vbk_c91=True), capsys)
+    code, last, _ = run_main(_dry_args(world, found, "dry_c2.json", drop_vbk_c93=True), capsys)
     assert code == 2 and last["status"] == "not_judgeable"
 
 
 def test_dry_c_each_run_against_its_own_plan(world, capsys, cwd_elsewhere) -> None:
-    """Prelaunch audit B-1 (a): c91 lines that carry the c90 plan's sha256 are a setting
+    """Prelaunch audit B-1 (a): c93 lines that carry the c92 plan's sha256 are a setting
     defect (exit 2); each run is checked against its own plan."""
-    found = _dry_arms(world, change_vbk_hash=0, plan_of_run={"c91": "c90"})
+    found = _dry_arms(world, change_vbk_hash=0, plan_of_run={"c93": "c92"})
     code, last, report = run_main(_dry_args(world, found, "dry_c3.json"), capsys)
     assert code == 2 and last["status"] == "setting_defect"
-    assert any("not the c91 dry plan" in text for text in report["problems"]["setting_defects"])
+    assert any("not the c93 dry plan" in text for text in report["problems"]["setting_defects"])
+
+
+def test_dry_runs_follow_the_dry_seeds() -> None:
+    """Erratum 6 6-3: the judge's dry run names are the plan's dry seeds (92 / 93), and the
+    ckdrop taken seeds hold both the old (90 / 91) and the new c dry seeds."""
+    import jp3_ckdrop_plan as ckdrop
+
+    assert judge.DRY_RUNS == tuple(plan.dry_run_name(seed) for seed in plan.DRY_SEEDS)
+    assert judge.DRY_RUNS == ("c92", "c93")
+    assert {90, 91, 92, 93, 25} <= ckdrop.TAKEN_SEEDS
 
 
 def test_12b_existing_out_and_tool_errors(world, capsys, cwd_elsewhere) -> None:

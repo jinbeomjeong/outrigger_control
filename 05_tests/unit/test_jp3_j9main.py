@@ -474,11 +474,18 @@ def test_judge_end_to_end_on_stored_lines(tmp_path, monkeypatch, capsys) -> None
     code = j9.main(["judge", "--rows", str(rows_path), "--v0", str(MAIN_JSONL), "--v0-sha256",
                     sha, "--out", str(out)])
     report = json.loads(out.read_text(encoding="utf-8"))
-    assert code in (0, 1, 2) and report["status"] in ("pass", "failed", "setting_defect",
-                                                      "not_judgeable")
+    # erratum 6 6-6 (다): one exact exit code and every problem class - the stored lines are
+    # ③ revision 4 VB / LS lines, so every renamed line misses the rev 6 identity (H-2) and the
+    # J-P3 rev 6 judgement is a setting defect; no J item fails; the 436.8 records' own
+    # not-judgeable items stay as they are (the fixed main.jsonl)
+    assert code == 2 and report["status"] == "setting_defect"
+    assert report["status_basis"] == {
+        "failures": [],
+        "setting_defects": [f"rev 6 identity (H-2): {len(rows)} lines", "J-P3 setting_defect"],
+        "not_judgeable": ["not-judgeable items: 40"]}
+    assert len(report["identity_defects"]) == len(rows)
+    assert report["J-P3"]["status"] == "setting_defect"
     assert report["rows"] == len(run_v5.j9_main_jobs())
     assert report["J_vs_V0"]["VB"]["runs"] == 100 and report["no_reference"] == {}
     assert {report["LS_vs_VB"][s]["runs"] for s in ("LS1", "LS2", "LS3", "LS4")} == {72}
     assert all(i["item"] != "J-P3" for i in report["J_vs_V0"]["VB"]["items"])
-    assert "rev6" in report["J-P3"] or report["J-P3"]["status"] in ("setting_defect",
-                                                                    "no_p3_runs")

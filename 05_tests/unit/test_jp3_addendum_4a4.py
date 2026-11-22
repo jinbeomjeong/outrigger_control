@@ -6,6 +6,7 @@ dry commands of the T-JR-12 runner), W2 (the VB record makes T-JR-10 alone not j
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sys
@@ -197,18 +198,71 @@ def test_d1a_empty_scan_is_not_judgeable(tmp_path, monkeypatch) -> None:
         dryrun.select(inputs)
 
 
+STORED_DRY_SELECTION = (DATA_ROOT / "06_analysis" / "02_control" / "j_p3_cause" / "prelaunch_j9"
+                        / "ed5_inputs" / "dry_selection.json")
+"""The edition 5 prelaunch dry selection of the current run commit (``prelaunch_ed5.ps1 -Part
+dry``), once written."""
+
+
+def _listed_scan(scan_root: Path, stored_scan: dict) -> dryrun.KeyScan:
+    """Erratum 6 (D-5): the 4a-4 1 scan over exactly the files a stored selection recorded
+    (path and sha256 each, scanned and excluded); a changed or missing file fails the test.
+    The same key rule as :func:`jp3_dryrun_evidence.scan_r79_keys` (no value is read)."""
+    def read(item: dict) -> tuple[str, str, list]:
+        relative = item["path"]
+        path = scan_root / relative
+        assert path.is_file(), f"stored scan file {relative} missing"
+        data = path.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        assert digest == item["sha256"], f"stored scan file {relative} changed"
+        return relative, digest, dryrun.R79_KEY_PATTERN.findall(data)
+
+    keys: set[str] = set()
+    files, excluded, seed_max = [], [], None
+    for item in stored_scan["files"]:  # the recorded order (the scan's own path order)
+        relative, digest, found = read(item)
+        assert not dryrun.is_scan_excluded(relative), relative
+        for key, seed in found:
+            keys.add(dryrun.plain_key(key.decode("utf-8")))
+            seed_max = int(seed) if seed_max is None else max(seed_max, int(seed))
+        files.append((relative, digest, len(found)))
+    for item in stored_scan["excluded"]:
+        relative, digest, found = read(item)
+        assert dryrun.is_scan_excluded(relative), relative
+        excluded.append((relative, digest, len(found),
+                         frozenset(dryrun.plain_key(key.decode("utf-8")) for key, _ in found)))
+    return dryrun.KeyScan(frozenset(keys), tuple(files), seed_max, tuple(excluded))
+
+
 @pytest.mark.skipif(not NOISE_PATH.is_file(), reason="stored h8_noise_VB.json not present")
-def test_d1a_selection_of_the_stored_data(tmp_path) -> None:
+def test_d1a_selection_of_the_stored_data(tmp_path, monkeypatch) -> None:
     """4a-4 1 / 2 on the main checkout's ``06_analysis``: seed max 24 in the scan outside the
     J-P3 run outputs (``j9_runs/`` left out, user decision 2026-11-21: their dry r79 runs hold
     the dry key itself; only paths are listed, no value is read), the generated key ``s25`` of
-    the base key, in neither the scan nor the Dg-3 keys."""
+    the base key, in neither the scan nor the Dg-3 keys.
+
+    Edition 5 erratum 6 (D-5): once the run commit's prelaunch dry selection exists, the scan
+    is the one it recorded (every listed file with its sha256; the selection's own outputs were
+    written after it), and the reproduced selection must equal the stored one."""
     analysis = DATA_ROOT / "06_analysis"
     v5 = analysis / "03_hydraulic" / "coupled" / "v5"
     inputs = dryrun.SelectInputs(analysis, v5 / "main.jsonl",
                                  analysis / "02_control" / "j_p3_cause" / "baseline_221456d",
                                  v5 / "resume_k1" / "h6_dg3_v4on.json", NOISE_PATH)
+    stored = None
+    if STORED_DRY_SELECTION.is_file():
+        stored = json.loads(STORED_DRY_SELECTION.read_text(encoding="utf-8"))
+        monkeypatch.setattr(dryrun, "scan_r79_keys",
+                            lambda root: _listed_scan(root, stored["scan"]))
     selection = dryrun.select(inputs)
+    if stored is not None:
+        for name in ("event_job", "r79_base_key", "r79_key", "r79_seed", "r79_key_in_scan",
+                     "r79_key_in_dg3"):
+            assert selection[name] == stored[name], name
+        # ``keys_file`` is added by ``main`` after ``select`` (the key file it writes)
+        assert {family: {k: v for k, v in chosen.items() if k != "keys_file"}
+                for family, chosen in stored["r79_families"].items()} == selection["r79_families"]
+        assert selection["scan"] == {**stored["scan"], "root": str(analysis)}
     assert selection["r79_base_key"] == BASE_KEY
     # 24 in the stored runs; 30 once the edition 5 probe record (erratum 2 2-3,
     # ed5_design/probes/probes_ed5.json, s30 keys) is under 06_analysis: no s25 key either way

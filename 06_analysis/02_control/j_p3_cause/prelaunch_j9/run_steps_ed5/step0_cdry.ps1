@@ -1,5 +1,6 @@
 #Requires -Version 7
-# Step (0) c dry check (spec v5 6.3.10, 8 2): the dry plans of X-11 (seeds 90 / 91, one plan
+# Step (0) c dry check (spec v5 6.3.10, 8 2): the dry plans of X-11 (seeds 92 / 93 from erratum
+# 6 6-3; ae9d0b2d ran 90 / 91), one plan
 # and key file per seed, 160 pairs, outside the judged set) under VBK0 and VBK at once, 4 runs
 # x 4 workers on the P threads ->
 # jp3_12b_judge.py dry-c (c = share of opportunity pairs whose commands changed; a record).
@@ -9,7 +10,7 @@ param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed5.ps1"
 
 $Folder = Initialize-Ed5Step 'cdry' $Attempt @()
-# prelaunch audit B-1 (a): each run takes its own seed's plan and key file (c90 / c91), so the
+# prelaunch audit B-1 (a): each run takes its own seed's plan and key file (c92 / c93), so the
 # runner's X-10 guard sees plan keys = job keys; erratum 4 4-2: the two plans together are the
 # 160 pairs, 20 per cell (X-11's selection.json dry.union_check, recorded here; both plans are
 # fixed list entries through the selection)
@@ -17,9 +18,10 @@ $Dry = (Get-Content -Raw -LiteralPath $X11Selection | ConvertFrom-Json).dry
 $Union = $Dry.PSObject.Properties['union_check']
 if (-not $Union -or $Union.Value.ok -ne $true) { Stop-Step 2 'selection.json dry.union_check missing or not ok (erratum 4 4-2)' }
 $StepState.Codes['dry_union_check'] = "pairs $($Union.Value.pairs), cells $($Union.Value.cells), ok"
-$Placement = [ordered]@{ 'VBK0_c90' = '0x000F'; 'VBK0_c91' = '0x00F0'; 'VBK_c90' = '0x0F00'; 'VBK_c91' = '0xF000' }
-$RunEstimatesS['VBK0_c90'] = 900; $RunEstimatesS['VBK0_c91'] = 900
-$RunEstimatesS['VBK_c90'] = 900; $RunEstimatesS['VBK_c91'] = 900
+$DryRuns = @('c92', 'c93')  # jp3_12b_plan.DRY_SEEDS / jp3_12b_judge.DRY_RUNS
+$Placement = [ordered]@{ 'VBK0_c92' = '0x000F'; 'VBK0_c93' = '0x00F0'; 'VBK_c92' = '0x0F00'; 'VBK_c93' = '0xF000' }
+$RunEstimatesS['VBK0_c92'] = 900; $RunEstimatesS['VBK0_c93'] = 900
+$RunEstimatesS['VBK_c92'] = 900; $RunEstimatesS['VBK_c93'] = 900
 
 $Runs = @()
 foreach ($Label in $Placement.Keys) {
@@ -37,7 +39,7 @@ $Arguments = @("$Coupled/jp3_12b_judge.py", 'dry-c', '--selection', $X11Selectio
     '--out', "$Folder\judge\dry_c.json")
 foreach ($Arm in @('VBK0', 'VBK')) {
     $Lower = $Arm.ToLower()
-    foreach ($Run in @('c90', 'c91')) {
+    foreach ($Run in $DryRuns) {
         $Arguments += @("--$Lower", "$Run=$Folder\${Arm}_$Run.json", "--$Lower-t4h", "$Run=$Folder\${Arm}_${Run}_t4h")
     }
 }

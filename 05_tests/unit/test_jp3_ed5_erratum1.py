@@ -225,13 +225,13 @@ def test_dry_summarize_edition_5_needs_every_t4h_folder(tmp_path, monkeypatch, c
 
 
 # ------------------------------------------------------------------------------- seed rule
-def test_seed_rule_12b_blocks_start_at_40_and_c_dry_stays_90_91() -> None:
+def test_seed_rule_12b_blocks_start_at_40_and_c_dry_is_92_93() -> None:
     """Erratum 1 seed rule 1 / 4: b1 .. b4 start at 40 .. 43 (30 .. 33 never again: a raise
-    only adds 10), the c dry seeds stay 90 / 91."""
+    only adds 10); erratum 6 6-3: the c dry seeds of a new run commit are 92 / 93."""
     import jp3_12b_plan as plan
 
     assert plan.BLOCK_SEEDS == (40, 41, 42, 43) and plan.SEED_STEP == 10
-    assert plan.DRY_SEEDS == (90, 91)
+    assert plan.DRY_SEEDS == (92, 93)
     seeds, repeats = plan.block_seeds(["L2|g6|0|x"], frozenset({"L2|s41|g6|0|x"}))
     assert seeds == (50, 51, 52, 53) and repeats == 1
 

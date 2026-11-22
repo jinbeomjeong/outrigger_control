@@ -1,0 +1,18 @@
+# 시험 건너뜀 점검 (junit_skips)
+
+- 보고서 1개, 시험 570개: 통과 570, 실패 0, 오류 0, 건너뜀 0, 예상 실패 0, 예상 실패 통과 0(필수 0)
+- 건너뜀·예상 실패는 통과가 아니다. 필수 시험의 건너뜀·예상 실패는 미실행으로 센다.
+- JUnit XML에는 xfail의 strict 여부가 없고, strict 아닌 XPASS는 통과로 적힌다.
+
+## 건너뜀
+
+건너뛴 시험 없음.
+
+## 예상 실패 (xfail·XPASS)
+
+예상 실패 없음.
+
+## 발견 사항
+
+발견 사항 없음.
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "junit_skips", "command": "check", "reports": 1, "tests": 570, "passed": 570, "failed": 0, "errors": 0, "skipped": 0, "xfailed": 0, "xpassed": 0, "critical_skipped": 0, "error": 0, "warning": 0, "info": 0, "categories": {}}

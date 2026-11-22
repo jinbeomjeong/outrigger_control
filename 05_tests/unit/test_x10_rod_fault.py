@@ -617,7 +617,7 @@ TRW_KEY = "cand=current#L2|s96|ref|3|rigid|B|0,3.2"
 """A short ref key (pitch 3.2 deg) whose VBJ run has a witnessed retract carry on RL after LEVEL
 (the tests below check it); :data:`RUN_KEY` has none. Erratum 1 seed rule: every key a test
 runs through the harness has a seed of s95 .. s99 only, outside every judged set (12b b1 .. b4
-start at 40 .. 43, the c dry seeds are 90 / 91)."""
+start at 40 .. 43, the c dry seeds are 92 / 93 from erratum 6 6-3, 90 / 91 before)."""
 TRW_LEG = "RL"
 
 
