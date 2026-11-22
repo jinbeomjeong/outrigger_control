@@ -1,0 +1,94 @@
+{
+  "step": "cdry",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1",
+  "exit_code": 0,
+  "commit": "ae9d0b2d9b809f907ee9806f28d66d66bc1c5d4e",
+  "started": "2026-11-22 20:04:24 +09:00",
+  "done": "2026-11-22 20:46:45 +09:00",
+  "codes": {
+    "fixed_list": "06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_ae9d0b2d.SHA256SUMS",
+    "dry_union_check": "pairs 160, cells 8, ok",
+    "run:VBK0_c90": 0,
+    "run:VBK0_c91": 0,
+    "run:VBK_c90": 0,
+    "run:VBK_c91": 0,
+    "identity_check": 0,
+    "tool:dry_c": 0
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "VBK0_c90",
+      "mask": "0x000F",
+      "environment": {
+        "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c90_plan.json",
+        "R72_PATH": "per_leg",
+        "R79_ROD_MODEL": "plant_truth",
+        "R79_V5_SETTING": "VBK0",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_P3": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c90_t4h",
+        "LAS_T3_DG3_LAS": "on"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c90.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c90.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c90_keys.txt --workers 4 --affinity 0x000F",
+      "pid": 30176
+    },
+    {
+      "label": "VBK0_c91",
+      "mask": "0x00F0",
+      "environment": {
+        "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c91_plan.json",
+        "R72_PATH": "per_leg",
+        "R79_ROD_MODEL": "plant_truth",
+        "R79_V5_SETTING": "VBK0",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_P3": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c91_t4h",
+        "LAS_T3_DG3_LAS": "on"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c91.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c91.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c91_keys.txt --workers 4 --affinity 0x00F0",
+      "pid": 23496
+    },
+    {
+      "label": "VBK_c90",
+      "mask": "0x0F00",
+      "environment": {
+        "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c90_plan.json",
+        "R72_PATH": "per_leg",
+        "R79_ROD_MODEL": "plant_truth",
+        "R79_V5_SETTING": "VBK",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_P3": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c90_t4h",
+        "LAS_T3_DG3_LAS": "on"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c90.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c90.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c90_keys.txt --workers 4 --affinity 0x0F00",
+      "pid": 5476
+    },
+    {
+      "label": "VBK_c91",
+      "mask": "0xF000",
+      "environment": {
+        "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c91_plan.json",
+        "R72_PATH": "per_leg",
+        "R79_ROD_MODEL": "plant_truth",
+        "R79_V5_SETTING": "VBK",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_P3": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c91_t4h",
+        "LAS_T3_DG3_LAS": "on"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c91.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run3 run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c91.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c91_keys.txt --workers 4 --affinity 0xF000",
+      "pid": 27040
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run3 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1 --expect-commit ae9d0b2d9b809f907ee9806f28d66d66bc1c5d4e --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\_identity_checks\\cdry_a1.md"
+    },
+    {
+      "label": "dry_c",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_judge.py dry-c --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\selection.json --selection-sha256 6a8abd0ec41a00b2e4ff11caf238f0fbe211895442901448e0853a405dd0e2e0 --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\judge\\dry_c.json --vbk0 c90=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c90.json --vbk0-t4h c90=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c90_t4h --vbk0 c91=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c91.json --vbk0-t4h c91=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c91_t4h --vbk c90=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c90.json --vbk-t4h c90=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c90_t4h --vbk c91=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c91.json --vbk-t4h c91=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c91_t4h"
+    }
+  ]
+}

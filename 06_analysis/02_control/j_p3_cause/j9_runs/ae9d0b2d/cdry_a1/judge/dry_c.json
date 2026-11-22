@@ -1,0 +1,43 @@
+{
+ "rule": "jp3_remedy_spec_v5.md 6.3.10 (X-13 dry-c)",
+ "pairs": 160,
+ "inputs": {
+  "vbk0": {
+   "c90": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c90.json",
+    "sha256": "cb38e8fba7b696730e427ff9622caabdb42a71ea97ae1c663ef026d9bae3d155"
+   },
+   "c91": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK0_c91.json",
+    "sha256": "c850e49e1f3abc3159a011358507f3cfecb7ee826dc73052adef6a4fbeca60c8"
+   }
+  },
+  "vbk": {
+   "c90": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c90.json",
+    "sha256": "18d05c7495ecfe61592ebb60e4e2b0873ef90bfb7179b320171dd28f0d86dcff"
+   },
+   "c91": {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\ae9d0b2d\\cdry_a1\\VBK_c91.json",
+    "sha256": "97037ba30aa23cfd4fcd761d8aa1d5538c7b57447418de3e8dfa6ae2ac74ec3f"
+   }
+  }
+ },
+ "categories": {
+  "no_trigger": 0,
+  "pre_trigger_fallback": 0,
+  "unlatched": 0,
+  "vbk0_ready_unreached": 1,
+  "opportunity": 159
+ },
+ "changed_opportunity_pairs": 21,
+ "c": 0.1320754716981132,
+ "trigger_share": 1.0,
+ "problems": {
+  "setting_defects": [],
+  "not_judgeable": [],
+  "failures": []
+ },
+ "status": "written",
+ "exit": 0
+}
