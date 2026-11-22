@@ -91,6 +91,64 @@ def test_record_lines_and_not_computed(tmp_path, monkeypatch, capsys) -> None:
     tck = next(line for line in lines if line["bundle"] == "tck" and line["fault_leg"] == "FL")
     assert tck["zero_calibration_status"]["FL"] == "calibrated"
     assert tck["fault_events"] == ["FAULT_HEAD_PRESSURE:FL"] and tck["t_ready_s"] == 40.0
+    assert dropout["d1_undecided_periods"]["reason"] == "기록 키 없음: 시뮬레이션 경로 변경 필요"
     missing = next(line for line in lines if line["fault_leg"] == "FR")
     assert missing["computed"] is False
+    pairs = json.loads(out.read_text(encoding="utf-8"))["tck_pairs"]
+    assert pairs == [{"key": "cand=current#L2|s81|g6|0|x0|top|Fs0", "fault_leg": "FL",
+                      "computed": False, "reason": "the pair has one arm only"}]
     assert record.main(["--run", "bad=x", "--out", str(tmp_path / "b.json")]) == 2
+
+
+def _tck_arm(tmp_path: Path, arm: str, rows: list[tuple[str, list, list | None, float | None]]
+             ) -> tuple[Path, Path]:
+    """Run file and T4h folder of one T-CK arm: rows of (key, events, phase, t_ready_s)."""
+    folder = tmp_path / f"t4h_{arm}"
+    folder.mkdir()
+    results = []
+    for index, (key, events, phase, ready) in enumerate(rows):
+        arrays = {"meta_json": np.array(json.dumps({"events": events}))}
+        if phase is not None:
+            arrays["phase"] = np.array(phase)
+        np.savez(folder / f"r{index}.npz", **arrays)
+        results.append({"key": key, "t4h_file": f"r{index}.npz", "rod_fault": {},
+                        "base": {"t_ready_s": ready}})
+    run = tmp_path / f"run_{arm}.json"
+    run.write_text(json.dumps({"results": results}), encoding="utf-8")
+    return run, folder
+
+
+def test_tck_pairs_new_faults_and_ready(tmp_path, monkeypatch) -> None:
+    key_a, key_b = "cand=current#L2|s80|g6|0|x0|top|Fs0", "cand=current#L2|s80|g9|1|x0|top|Fs0"
+    run0, t4h0 = _tck_arm(tmp_path, "VBK0", [
+        (key_a, [[1.0, "FAULT_ROD_PRESSURE:FL"]], ["CHECK", "LIFT"], 40.0),
+        (key_b, [], ["CHECK", "LIFT"], 50.0)])
+    run1, t4h1 = _tck_arm(tmp_path, "VBK", [
+        (key_a, [[1.0, "FAULT_ROD_PRESSURE:FL"], [2.0, "FAULT_STUCK:FR"]],
+         ["CHECK", "fault", "fault"], 42.5),
+        (key_b, [], ["CHECK", "LIFT"], None)])
+    (tmp_path / "cwd").mkdir()
+    monkeypatch.chdir(tmp_path / "cwd")
+    out = tmp_path / "record.json"
+    assert record.main(["--run", f"tck:FL:VBK0={run0}", "--t4h", f"tck:FL:VBK0={t4h0}",
+                        "--run", f"tck:FL:VBK={run1}", "--t4h", f"tck:FL:VBK={t4h1}",
+                        "--out", str(out)]) == 0
+    pairs = {pair["key"]: pair for pair in json.loads(out.read_text(encoding="utf-8"))["tck_pairs"]}
+    assert pairs[key_a] == {"key": key_a, "fault_leg": "FL", "ready_vbk0_s": 40.0,
+                            "ready_vbk_s": 42.5, "ready_difference_s": 2.5,
+                            "vbk0_ready_vbk_not": False,
+                            "new_faults": [["FAULT_STUCK", "FR"], ["PHASE_FAULT", "–"]]}
+    assert pairs[key_b] == {"key": key_b, "fault_leg": "FL", "ready_vbk0_s": 50.0,
+                            "ready_vbk_s": None, "ready_difference_s": None,
+                            "vbk0_ready_vbk_not": True, "new_faults": []}
+
+
+def test_tck_pairs_missing_t4h_is_not_computed(tmp_path) -> None:
+    key = "cand=current#L2|s80|g6|0|x0|top|Fs0"
+    run0, t4h0 = _tck_arm(tmp_path, "VBK0", [(key, [], None, 40.0)])
+    run1, _ = _tck_arm(tmp_path, "VBK", [(key, [], None, 41.0)])
+    report = record.record({("tck", "FL", "VBK0"): run0, ("tck", "FL", "VBK"): run1},
+                           {("tck", "FL", "VBK0"): t4h0})
+    (pair,) = report["tck_pairs"]
+    assert pair["new_faults"] == {"computed": False, "reason": "a T4h record missing"}
+    assert pair["ready_difference_s"] == 1.0 and pair["vbk0_ready_vbk_not"] is False

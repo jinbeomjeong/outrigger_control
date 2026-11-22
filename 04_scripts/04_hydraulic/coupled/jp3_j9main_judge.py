@@ -318,6 +318,7 @@ def judge(rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
     s8 = s8_items(rows_by)
     stops += s8["stops"]
     r15 = r15_worsening(rows_by)
+    r15_baseline = r15_baseline_failures(rows_by)
     unjudgeable = [dict(i, setting=s) for table in (j_vs_v0, ls_vs_vb)
                    for s, part in table.items() for i in part["items"]
                    if i["kind"] == "not_judgeable"]
@@ -336,7 +337,9 @@ def judge(rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
               "baseline_failures": {
                   "counted": 0, "rule": "2-9.3: a J item fails only where the paired V0 passes "
                   "it (D-07 .. D-17 by construction); a V0 failure is never a VBJ failure, "
-                  "except the R15 worsening rule (r15_worsening)"},
+                  "except the R15 worsening rule on J2 (r15_worsening); V0's other R15 "
+                  "failures are listed here (recorded only)",
+                  "R15": r15_baseline, "R15_count": len(r15_baseline)},
               "phase_scatter_suspects": [i for i in vb_items if i["kind"] == "fail"
                                          and i["base_other_phase_has_it"]],
               "r15_worsening": r15, "S8": s8,
@@ -444,6 +447,74 @@ def r15_worsening(rows_by: dict) -> dict:
     return {"pairs": len(pairs), "scatter": scatter, "weak_basis": True,
             "failures": [{"row": R15_ROW, "item": "J2", "kind": "fail",
                           "detail": "R15 worsening (구분됨)"}] if worse else []}
+
+
+R15_WORSENING_ITEM = "J2"
+"""Erratum 2 final 2-9.3: the one R15 item judged by worsening; V0's other R15 failures are
+baseline failures (recorded only)."""
+
+
+def own_item_failures(row: dict) -> list[dict]:
+    """The J items a metric row fails on its own: the "V0 passes" premise of the 436.8 path-1
+    definitions (D-07 .. D-17; J1 / J2 / J3 of ``judge_stage1_4368``, J4 / J5 / J6 / J10 of
+    ``judge_stage1_r5.J_fails``) is false for it. J7 / J8 / J9 / J11 have no such premise."""
+    import judge4368_common as common
+    import judge_stage1_4368 as path1
+
+    old = path1.old
+    out = []
+
+    def add(item: str, detail: str) -> None:
+        out.append({"item": item, "detail": detail})
+
+    if row["is_event"]:
+        for gate in row["gates"]:
+            add("J1", f"gate {gate}")
+        if row["t_back"] is None or row["t_back"] > old.RETURN_LIMIT:
+            add("J5", f"t_back {row['t_back']}")
+        if row["att_end"] is not None and row["att_end"] > old.ATT_LIMIT:
+            add("J6", f"att_end {row['att_end']}")
+        if row["p_move_ev"] is not None and row["p_move_ev"] > old.P_MOVE:
+            add("J10", f"p_move_out {row['p_move_ev']}")
+    else:
+        if row["row"] != path1.S8_ROW and row["class"] not in path1.PASSING_CLASSES:
+            add("J1", f"class {row['class']}")
+        if row["row"] in path1.SOIL_READY_ROWS and (
+                row["t_ready"] is None
+                or common.is_above(row["t_ready"], path1.SOIL_READY_LIMIT_S)):
+            add("J3", f"t_ready {row['t_ready']}")
+        if row["att_last5"] is None or row["att_last5"] > old.ATT_LIMIT:
+            add("J6", f"att_last5 {row['att_last5']}")
+        if row["p_move"] is not None and row["p_move"] > old.P_MOVE:
+            add("J10", f"p_move {row['p_move']}")
+    if not common.is_at_least(path1._j2_value_N(row), common.F_MIN_N):
+        add("J2", f"F {path1._j2_value_N(row)} N")
+    j4_reasons = [f"final {row['final']}"] if row["final"] != "ready" else []
+    if not row["is_event"] and row["t_ready"] is None:
+        j4_reasons.append("no first READY")
+    if j4_reasons:
+        add("J4", ", ".join(j4_reasons))
+    return out
+
+
+def r15_baseline_failures(rows_by: dict) -> list[dict]:
+    """2-9.3: V0's R15 failures other than J2, per (phase, item) of every V0 / VBJ R15 pair - a
+    baseline failure (recorded, never counted); ``vbj_also_fails`` is the VBJ row's own state."""
+    import judge_stage1_4368 as path1
+
+    vb = {r["phase"]: r for r in rows_by.get(path1.JUDGED_SETTING, []) if r["row"] == R15_ROW}
+    out = []
+    for row in rows_by.get(V0_SETTING, []):
+        if row["row"] != R15_ROW or row["phase"] not in vb:
+            continue
+        vbj_items = {failure["item"] for failure in own_item_failures(vb[row["phase"]])}
+        for failure in own_item_failures(row):
+            if failure["item"] == R15_WORSENING_ITEM:
+                continue
+            out.append({"row": R15_ROW, "phase": row["phase"], **failure,
+                        "kind": "baseline_failure",
+                        "vbj_also_fails": failure["item"] in vbj_items})
+    return out
 
 
 def _parser() -> argparse.ArgumentParser:

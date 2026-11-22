@@ -103,6 +103,8 @@ def test_v0_sample_keys_first_and_last_line_of_every_row(tmp_path, monkeypatch) 
     document = j9.v0_sample_keys(stored, sha)
     assert document["rows"] == 24 and len(document["jobs"]) <= 48
     assert all("mask" not in job for job in document["jobs"])
+    twin_jobs = [job for job in jobs if job.get("twin")]
+    assert len({j9._row_identity(job) for job in twin_jobs}) == 1  # twin is not an identity
     by_row: dict[str, list[dict]] = {}
     for job in jobs:
         by_row.setdefault(j9._row_identity(job), []).append(job)
@@ -153,6 +155,42 @@ def test_limit_cycle_and_r15_rules() -> None:
     within = {"V0": worse["V0"], "VB": [r15("VB", "a", -0.3), r15("VB", "b", -0.6)]}
     assert not j9.r15_worsening(within)["failures"]
     assert j9.r15_worsening({"V0": [], "VB": []})["state"] == "no R15 pair"
+
+
+def _r15_event(setting: str, phase: str, *, gates: list[str], force_kN: float,
+               t_back: float | None = 30.0) -> dict:
+    return {"row": "R15", "group": "R15", "phase": phase, "setting": setting, "is_event": True,
+            "gates": gates, "F_after_W_min_kN": force_kN, "F_after_event": force_kN,
+            "t_back": t_back, "att_end": 0.05, "p_move_ev": 150.0, "final": "ready",
+            "t_ready": 20.0}
+
+
+def test_r15_baseline_failures_leave_j2_to_the_worsening_rule() -> None:
+    """Erratum 2 final 2-9.3: V0's R15 failures other than J2 are baseline failures (records);
+    J2 is the worsening rule's; a VBJ pass on the item is kept as ``vbj_also_fails`` False."""
+    rows_by = {"V0": [_r15_event("V0", "a", gates=["min_force"], force_kN=-0.2, t_back=None),
+                      _r15_event("V0", "b", gates=["min_force"], force_kN=-0.7)],
+               "VB": [_r15_event("VB", "a", gates=["min_force"], force_kN=-0.3),
+                      _r15_event("VB", "b", gates=[], force_kN=-0.6)]}
+    listed = j9.r15_baseline_failures(rows_by)
+    assert [(i["phase"], i["item"], i["vbj_also_fails"]) for i in listed] == [
+        ("a", "J1", True), ("a", "J5", False), ("b", "J1", False)]
+    assert all(i["kind"] == "baseline_failure" and i["item"] != "J2" for i in listed)
+    assert j9.r15_baseline_failures({"V0": rows_by["V0"], "VB": []}) == []
+    other = {"V0": [{**rows_by["V0"][0], "row": "R14"}], "VB": [{**rows_by["VB"][0],
+                                                                  "row": "R14"}]}
+    assert j9.r15_baseline_failures(other) == []
+    assert j9.r15_worsening(rows_by)["failures"] == []
+
+
+def test_own_item_failures_non_event_row() -> None:
+    row = {"row": "S1", "is_event": False, "class": "fault", "t_ready": None, "att_last5": 0.3,
+           "p_move": 190.0, "F_after": 5.0, "final": "fault"}
+    items = [i["item"] for i in j9.own_item_failures(row)]
+    assert items == ["J1", "J3", "J6", "J10", "J2", "J4"]
+    passing = {**row, "class": "pass", "t_ready": 30.0, "att_last5": 0.1, "p_move": 100.0,
+               "F_after": 20.0, "final": "ready"}
+    assert j9.own_item_failures(passing) == []
 
 
 @pytest.mark.skipif(not MAIN_JSONL.is_file(), reason="stored v5/main.jsonl not present")
