@@ -1,0 +1,79 @@
+{
+ "rule": "jp3_remedy_spec_v5_erratum2.md 2-9.5 (spec v5 6.4, a record)",
+ "inputs": {
+  "selection": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\selection.json",
+   "sha256": "fc3875d855e1e04ca0c755e29d3c60287752fe12f487aaf54198190968c009f4"
+  },
+  "scan_root": "C:\\workspace\\outrigger_control\\06_analysis",
+  "scan_extra": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5\\05_tests"
+  ]
+ },
+ "scan": {
+  "files_scanned": 4373,
+  "r79_keys": 2859,
+  "seed_max": 99
+ },
+ "cases": [
+  {
+   "rank": 0,
+   "case": "L2|g6|0|g6|G1+J1@FL|top|Fs0"
+  },
+  {
+   "rank": 1,
+   "case": "L2|g6|1|g6|G1+J1@FL|top|Fs4"
+  }
+ ],
+ "taken_seeds": [
+  25,
+  40,
+  41,
+  42,
+  43,
+  80,
+  81,
+  90,
+  91,
+  92,
+  93,
+  95,
+  96,
+  97,
+  98,
+  99
+ ],
+ "seeds": {
+  "tck": {
+   "start": 80,
+   "seed": 80,
+   "repeats": 0
+  },
+  "dropout": {
+   "start": 81,
+   "seed": 81,
+   "repeats": 0
+  }
+ },
+ "legs": [
+  "FL",
+  "FR",
+  "RL",
+  "RR"
+ ],
+ "anchor": "phase_enter:CHECK",
+ "delay_reads": 0,
+ "outputs": {
+  "tck_keys.txt": "e2a0e79c38e10ec541faeedf7c0e45a76adacc6155743c39d4eb5e9a4ebf52ec",
+  "tck_FL_plan.json": "e427bc00c5efb65a60ab075f0f2d53efe3126b0958f2ec2c08f60b5a76220efe",
+  "tck_FR_plan.json": "752a6e3b7c51e227eaf87066c6dac05c330cbe590a3a857a256646d01016702d",
+  "tck_RL_plan.json": "fb7605886142ea85b20d651f4e8e2a2e5696ec530a2f74b95074814f4082c8f9",
+  "tck_RR_plan.json": "7f39d5698dabd7e4ac00d4e04aff71eb48949efa6c7c274789f4aa5d67445f20",
+  "dropout_keys.txt": "ac8cc9c9f2ebf4945a51631a7884568d36b969c5d83e8b0078ec4574c8876a5c",
+  "dropout_FL_plan.json": "b964572218b85ad4d09551248d52add11ed5575624222d364f71ae6bb7c62dd2",
+  "dropout_FR_plan.json": "630f49c7b5504db80233b3c175b3701f670fafa25b258cdfce6319102a1b26a4",
+  "dropout_RL_plan.json": "b05ce5f475aa02b6bb5429c7d19e44f983102097a8defa519c4f47471b47fa07",
+  "dropout_RR_plan.json": "1e158a8a35cbdcd4d11eedcee7c24c71571c3a386f879aca17f463c7ced60405"
+ },
+ "lines_per_bundle": 16
+}

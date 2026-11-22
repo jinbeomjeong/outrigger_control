@@ -1,0 +1,21 @@
+{
+ "schema": "r79_rod_fault_plan/1",
+ "faults": {
+  "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0": {
+   "fault_id": "tck-s80-r000-FL",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_enter:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4": {
+   "fault_id": "tck-s80-r001-FL",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_enter:CHECK",
+   "delay_reads": 0
+  }
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "schema": "r79_rod_fault_plan/1",
+ "faults": {
+  "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0": {
+   "fault_id": "dropout-s81-r000-RL",
+   "leg": "RL",
+   "kind": "DROPOUT",
+   "value_bar": null,
+   "anchor": "phase_enter:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4": {
+   "fault_id": "dropout-s81-r001-RL",
+   "leg": "RL",
+   "kind": "DROPOUT",
+   "value_bar": null,
+   "anchor": "phase_enter:CHECK",
+   "delay_reads": 0
+  }
+ }
+}
