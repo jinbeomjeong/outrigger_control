@@ -1,0 +1,69 @@
+{
+ "src_params_files": 159,
+ "compared_hex64_leaves": 2402,
+ "hits": [
+  {
+   "file": "harness_path1/h6_L1_reference.json",
+   "path": [
+    "meta",
+    "c2_py_sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/control/c2.py [crlf]",
+   "d_scope": true
+  },
+  {
+   "file": "harness_path2/harness.json",
+   "path": [
+    "v5_options",
+    "sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/hydraulics/v5_options.py [crlf]",
+   "d_scope": true
+  },
+  {
+   "file": "harness_path2/p2v5c_grid.json",
+   "path": [
+    "v5_options",
+    "sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/hydraulics/v5_options.py [crlf]",
+   "d_scope": true
+  },
+  {
+   "file": "harness_path2/p2v5c_noise.json",
+   "path": [
+    "v5_options",
+    "sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/hydraulics/v5_options.py [crlf]",
+   "d_scope": true
+  },
+  {
+   "file": "harness_path2/p2v5c_stage1.json",
+   "path": [
+    "v5_options",
+    "sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/hydraulics/v5_options.py [crlf]",
+   "d_scope": true
+  },
+  {
+   "file": "harness_path2/u3.json",
+   "path": [
+    "v5_options",
+    "sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/hydraulics/v5_options.py [crlf]",
+   "d_scope": false
+  },
+  {
+   "file": "harness_path2/v5j_u9.json",
+   "path": [
+    "v5_options",
+    "sha256"
+   ],
+   "src_file": "03_src/outrigger_sim/hydraulics/v5_options.py [crlf]",
+   "d_scope": true
+  }
+ ]
+}

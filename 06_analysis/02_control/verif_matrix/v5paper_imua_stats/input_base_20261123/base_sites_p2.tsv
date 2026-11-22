@@ -1,0 +1,179 @@
+p2_4368.py	34	<module>	line of ``<batch>/<case>.log`` (relocated under ``<repo>/07_results`` when that folder has no result.json),
+p2_4368.py	513	check_seals	def check_seals(repo, appendix=True, r4=True):
+p2_4368.py	530	check_seals	p = repo / rel
+p2_4368.py	532	check_seals	sp = repo / seal
+p2_4368.py	543	check_seals	p = repo / rel
+p2_4368.py	565	git_head	def git_head(repo):
+p2_4368.py	566	git_head	"""``git rev-parse HEAD`` of ``repo`` (None if git fails)."""
+p2_4368.py	569	git_head	r = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True,
+p2_4368.py	577	head_check	def head_check(repo, expect):
+p2_4368.py	584	head_check	out["head"] = git_head(repo)
+p2_4368.py	595	load_is_extend_start	def load_is_extend_start(repo):
+p2_4368.py	597	load_is_extend_start	src = repo / "03_src"
+p2_4368.py	912	rel_posix	def rel_posix(path, repo):
+p2_4368.py	915	rel_posix	return Path(path).resolve().relative_to(Path(repo).resolve()).as_posix()
+p2_4368.py	971	key_source_index	def key_source_index(path, fmt, repo):
+p2_4368.py	975	key_source_index	p = repo / p
+p2_4368.py	1056	_rel_entry_path	def _rel_entry_path(p, repo):
+p2_4368.py	1060	_rel_entry_path	return rel_posix(q if q.is_absolute() else Path(repo) / q, repo)
+p2_4368.py	1063	r4_input_check	def r4_input_check(manifest_files, repo):
+p2_4368.py	1068	r4_input_check	rel = _rel_entry_path(e.get("path"), repo)
+p2_4368.py	1079	r4_input_check	"format": e.get("format"), "key_source": _rel_entry_path(e.get("key_source"), repo),
+p2_4368.py	1080	r4_input_check	"key_source_override": _rel_entry_path(e.get("key_source_override"), repo)}
+p2_4368.py	1085	r4_input_check	if p and not (Path(repo) / p).is_file():
+p2_4368.py	1101	cmd_harness	def cmd_harness(args, repo):
+p2_4368.py	1103	cmd_harness	is_p3, mod_info = load_is_extend_start(repo)
+p2_4368.py	1116	cmd_harness	path = repo / path
+p2_4368.py	1137	cmd_harness	sp = repo / sp
+p2_4368.py	1151	cmd_harness	rel = rel_posix(path, repo)
+p2_4368.py	1162	cmd_harness	idx, ks_path, ks_sha = key_source_index(entry[ks_name], entry.get(ks_name + "_format", fmt), repo)
+p2_4368.py	1377	cmd_harness	stops, input_check = r4_input_check(manifest["files"], repo)
+p2_4368.py	1456	cmd_anchors	def cmd_anchors(args, repo):
+p2_4368.py	1458	cmd_anchors	v5 = Path(args.v5_root) if args.v5_root else repo / _V5
+p2_4368.py	1575	check_chrono_seals	def check_chrono_seals(repo):
+p2_4368.py	1579	check_chrono_seals	p, sp = repo / rel, repo / seal
+p2_4368.py	1622	resolve_result	def resolve_result(batch_dir, row, repo):
+p2_4368.py	1631	resolve_result	q = repo / ("07_results/" + s.split("07_results/", 1)[1])
+p2_4368.py	1644	resolve_result	base = repo / "07_results" / sub
+p2_4368.py	1700	resolve_runner_row	def resolve_runner_row(batch_dir, row, repo, argv):
+p2_4368.py	1721	resolve_runner_row	folder = repo / "07_results" / s.split("07_results/", 1)[1]
+p2_4368.py	1742	resolve_runner_row	root = runner_root(repo, engine)
+p2_4368.py	1758	runner_root	def runner_root(repo, engine):
+p2_4368.py	1760	runner_root	return repo / "07_results" / ("S8" if engine == "L2b" else "S6")
+p2_4368.py	2221	chrono_row	def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest=None, git_at_start=None):
+p2_4368.py	2251	chrono_row	rpath, r75 = resolve_runner_row(batch_dir, row, repo, argv)
+p2_4368.py	2261	chrono_row	rpath = resolve_result(batch_dir, row, repo)
+p2_4368.py	2592	cmd_chrono	def cmd_chrono(args, repo):
+p2_4368.py	2593	cmd_chrono	is_p3, mod_info = load_is_extend_start(repo)
+p2_4368.py	2604	cmd_chrono	mpath = Path(args.rows_manifest) if getattr(args, "rows_manifest", None) else repo / ROWS_MANIFEST_REL
+p2_4368.py	2617	cmd_chrono	r = chrono_row(bd, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest,
+p2_4368.py	2716	cmd_oc5k	def cmd_oc5k(args, repo):
+p2_4368.py	2788	jp_result_json	def jp_result_json(bd, case, repo):
+p2_4368.py	2791	jp_result_json	``<repo>/07_results/`` with its tail); else ``<batch>/<case>/result.json``. Returns (path or None, source)."""
+p2_4368.py	2801	jp_result_json	q = Path(repo) / "07_results" / s.split("07_results/", 1)[1]
+p2_4368.py	2834	cmd_jp	def cmd_jp(args, repo):
+p2_4368.py	2872	cmd_jp	rpath, src = jp_result_json(bd, case, repo)
+p2_4368.py	2930	yaml_vmax	def yaml_vmax(repo):
+p2_4368.py	2932	yaml_vmax	text = (repo / "02_params" / "rexome33.yaml").read_text("utf-8")
+p2_4368.py	2974	cmd_openloop	def cmd_openloop(args, repo):
+p2_4368.py	2976	cmd_openloop	script = Path(args.script) if args.script else repo / _V5 / "paper_runs/scripts/openloop_compare.py"
+p2_4368.py	2978	cmd_openloop	vmax = yaml_vmax(repo)
+p2_4368.py	3019	cmd_compare	def cmd_compare(args, repo):
+p2_4368.py	3053	build_parser	ap.add_argument("--repo", default=None, help="repository root (default: 5 levels above this file)")
+p2_4368.py	3076	build_parser	"<repo>/" + ROWS_MANIFEST_REL + "; missing or unreadable = input error, S-11)")
+p2_4368.py	3105	main	repo = Path(args.repo) if args.repo else Path(__file__).resolve().parents[5]
+p2_4368.py	3110	main	seals = check_seals(repo, r4=r4_cmd)
+p2_4368.py	3112	main	seals["chrono_rev16_21"] = check_chrono_seals(repo)
+p2_4368.py	3114	main	hc = head_check(repo, getattr(args, "expect_head", None)) if args.cmd in R4_CMDS else None
+p2_4368.py	3126	main	body, status = CMDS[args.cmd](args, repo)
+p2_d1.py	611	main	ap.add_argument("--repo", default=None)
+p2_d1.py	615	main	repo = Path(args.repo) if args.repo else _HERE.parents[4]
+p2_d1.py	620	main	seals = core.check_seals(repo)
+p2_d1.py	621	main	d1s = {rel: core.sha256_file(repo / rel) if (repo / rel).is_file() else None for rel in D1_RULES}
+p2_t3k.py	88	check_las_seals	def check_las_seals(repo):
+p2_t3k.py	93	check_las_seals	seal = repo / (R0K_KEYS_REL.rsplit(".", 1)[0].replace("_r0k_keys", "") + ".sha256")
+p2_t3k.py	102	check_las_seals	p = repo / rel
+p2_t3k.py	568	identity_check	def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=(), steps=()):
+p2_t3k.py	664	recount	def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3, gs=False):
+p2_t3k.py	666	recount	keys = json.loads((repo / REV3_KEYS_REL).read_text("utf-8"))
+p2_t3k.py	667	recount	r0k_list = json.loads((repo / R0K_KEYS_REL).read_text("utf-8"))
+p2_t3k.py	893	main	ap.add_argument("--repo", default=None)
+p2_t3k.py	906	main	repo = Path(args.repo) if args.repo else _HERE.parents[4]
+p2_t3k.py	911	main	seals = core.check_seals(repo)
+p2_t3k.py	912	main	ok_las, las = check_las_seals(repo)
+p2_t3k.py	916	main	is_p3, mod = core.load_is_extend_start(repo)
+p2_t3k.py	930	main	body, f = recount(repo, core.read_jsonl(args.r0), core.read_jsonl(args.r0k), core.read_jsonl(args.t3),
+p2_t3k.py	932	main	body["K-0"] = identity_check({"R-0": args.r0, "R-0K": args.r0k, "T-3K": args.t3}, f, repo,
+p2_u3.py	79	study_keys	def study_keys(repo, study):
+p2_u3.py	82	study_keys	data = json.loads((repo / rel).read_text("utf-8"))
+p2_u3.py	106	settle_v2_recount	def settle_v2_recount(block, repo=None, table_target=False):
+p2_u3.py	167	settle_v2_recount	if isinstance(table, str) and repo is not None:
+p2_u3.py	168	settle_v2_recount	p = repo / table
+p2_u3.py	183	settle_grade	def settle_grade(rec, block, repo):
+p2_u3.py	186	settle_grade	r = settle_v2_recount(block, repo)
+p2_u3.py	413	recount_u3	def recount_u3(files, h1_path, is_p3, repo=None):
+p2_u3.py	464	recount_u3	if repo is None:
+p2_u3.py	465	recount_u3	fnd.note(f"{s}:B+C+D", "repo not given: study key files not read (R3-B2)")
+p2_u3.py	468	recount_u3	ks = study_keys(repo, study)
+p2_u3.py	480	rd7_row	rel = core.rel_posix(path, repo) if repo is not None else Path(path).as_posix()
+p2_u3.py	528	graded	ov, why, r = settle_grade(rec, block, repo)
+p2_u3.py	537	graded	rt = settle_v2_recount(block, repo, table_target=True)
+p2_u3.py	731	main	ap.add_argument("--repo", default=None)
+p2_u3.py	739	main	repo = Path(args.repo) if args.repo else _HERE.parents[4]
+p2_u3.py	744	main	seals = core.check_seals(repo)
+p2_u3.py	745	main	rs = {rel: core.sha256_file(repo / rel) if (repo / rel).is_file() else None for rel in U3_RULES}
+p2_u3.py	746	main	hc = core.head_check(repo, args.expect_head)
+p2_u3.py	752	main	is_p3, mod = core.load_is_extend_start(repo)
+p2_u3.py	758	main	body, f3 = recount_u3(files, args.h1, is_p3, repo)
+p2_v5j.py	792	main	ap.add_argument("--repo", default=None)
+p2_v5j.py	810	main	repo = Path(args.repo) if args.repo else _HERE.parents[4]
+p2_v5j.py	815	main	seals = core.check_seals(repo)
+p2_v5j.py	816	main	rs = {rel: core.sha256_file(repo / rel) if (repo / rel).is_file() else None for rel in U9_RULES}
+p2_v5j.py	817	main	hc = core.head_check(repo, args.expect_head)
+p2_v5j.py	823	main	is_p3, mod = core.load_is_extend_start(repo)
+p2_x16.py	125	cmd_g3	def cmd_g3(args, repo):
+p2_x16.py	128	cmd_g3	lk = Path(args.las_k1_dir) if args.las_k1_dir else repo / "06_analysis/02_control/v5_rerun/las_k1"
+p2_x16.py	135	cmd_g3	row = {"script": script, "key": key, "field": field, "none_file": core.rel_posix(p_none, repo),
+p2_x16.py	136	cmd_g3	"compare_file": core.rel_posix(p_cmp, repo), "none_hash": None, "compare_hash": None,
+p2_x16.py	406	cmd_c16	def cmd_c16(args, repo):
+p2_x16.py	447	cmd_c16	rows[name] = {"bundle": bundle, "folder": core.rel_posix(folder, repo), "present": True, "files": files,
+p2_x16.py	576	cmd_items	def cmd_items(args, repo):
+p2_x16.py	590	build_parser	ap.add_argument("--repo", default=None, help="repository root (default: 5 levels above this file)")
+p2_x16.py	596	build_parser	g.add_argument("--las-k1-dir", default=None, help="v5_rerun/las_k1 (default: under --repo)")
+p2_x16.py	612	run_d1	def run_d1(args, repo):
+p2_x16.py	616	run_d1	hc = core.head_check(repo, args.expect_head)
+p2_x16.py	618	run_d1	if "--repo" not in rest:
+p2_x16.py	619	run_d1	rest = ["--repo", str(repo)] + rest
+p2_x16.py	633	main	repo = Path(args.repo) if args.repo else _HERE.parents[4]
+p2_x16.py	635	main	return run_d1(args, repo)
+p2_x16.py	640	main	seals = core.check_seals(repo)
+p2_x16.py	641	main	hc = core.head_check(repo, args.expect_head) if args.cmd in ("g3", "c16") else None
+p2_x16.py	647	main	body, status = CMDS[args.cmd](args, repo)
+p2v5c_common.py	68	<module>	REPO_DEFAULT = HERE.parents[4]
+p2v5c_common.py	149	_check_one	def _check_one(repo, rel, want, seal_rel):
+p2v5c_common.py	150	_check_one	p, sp = Path(repo) / rel, Path(repo) / seal_rel
+p2v5c_common.py	203	check_rev3	def check_rev3(repo):
+p2v5c_common.py	206	check_rev3	items = [_check_one(repo, *r) for r in LATER_RULES]
+p2v5c_common.py	245	rel_file	def rel_file(path, repo):
+p2v5c_common.py	246	rel_file	"""RD-7 3 result file: relative to the repository root with '/' (absolute posix path outside the repo)."""
+p2v5c_common.py	248	rel_file	return Path(path).resolve().relative_to(Path(repo).resolve()).as_posix()
+p2v5c_common.py	511	git_commits_since	def git_commits_since(repo, base, head, rel):
+p2v5c_common.py	515	git_commits_since	out = subprocess.run(["git", "-C", str(repo), "log", "--format=%H", f"{base}..{head}", "--", rel],
+p2v5c_common.py	524	git_diff_stat	def git_diff_stat(repo, base, head, rel):
+p2v5c_common.py	528	git_diff_stat	out = subprocess.run(["git", "-C", str(repo), "diff", "--stat", f"{base}..{head}", "--", rel],
+p2v5c_common.py	535	git_head	def git_head(repo):
+p2v5c_common.py	538	git_head	out = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True,
+p2v5c_common.py	613	run_main	repo = Path(args.repo) if args.repo else REPO_DEFAULT
+p2v5c_common.py	623	run_main	seals = core.check_seals(repo, appendix=True, r4=True)   # R4 RD-2: original + rev1~rev25
+p2v5c_common.py	624	run_main	rev3 = check_rev3(repo)
+p2v5c_common.py	626	run_main	head = core.head_check(repo, getattr(args, "expect_head", None))   # R4 RD-1 5
+p2v5c_common.py	635	run_main	body, status = cmds[args.cmd](args, repo, v5j, core)
+p2v5c_common.py	661	add_common_args	ap.add_argument("--repo", default=None, help="repository root (default: 5 levels above this file)")
+p2v5c_common.py	667	add_common_args	help="R4 RD-1 5: full 40-hex M4 commit; must equal git rev-parse HEAD of --repo (else S-12, "
+p2v5c_grid.py	396	cmd_grid	def cmd_grid(args, repo, v5j, core):
+p2v5c_grid.py	397	cmd_grid	is_p3, mod = core.load_is_extend_start(repo)
+p2v5c_grid.py	409	cmd_grid	v0_rfile = cm.rel_file(path, repo)
+p2v5c_grid.py	439	cmd_grid	rfile = cm.rel_file(path, repo)
+p2v5c_noise.py	81	dg3_keys	def dg3_keys(repo, path, core):
+p2v5c_noise.py	85	dg3_keys	p = Path(path) if path else Path(repo) / DG3_KEY_SOURCE
+p2v5c_noise.py	130	run_judge	def run_judge(repo, judge_dir, name, args_in, merged=None):
+p2v5c_noise.py	134	run_judge	script = Path(repo) / JUDGE_REL
+p2v5c_noise.py	459	cmd_noise	def cmd_noise(args, repo, v5j, core):
+p2v5c_noise.py	460	cmd_noise	is_p3, mod = core.load_is_extend_start(repo)
+p2v5c_noise.py	465	cmd_noise	commits = cm.git_commits_since(repo, SEAL_BASE, head, JUDGE_REL) if head else None
+p2v5c_noise.py	466	cmd_noise	jtool = {"path": JUDGE_REL, "sha256": cm.sha256_file(Path(repo) / JUDGE_REL), "git_at_start": head,
+p2v5c_noise.py	470	cmd_noise	"related_modules_diff_stat": {m: (cm.git_diff_stat(repo, SEAL_BASE, head, m) if head else None)
+p2v5c_noise.py	484	cmd_noise	dg3, dg3_rec = dg3_keys(repo, getattr(args, "dg3_key_source", None), core)
+p2v5c_noise.py	510	cmd_noise	rf = {k: cm.rel_file(p, repo) for k, p in (("vb", args.noise_vb), ("v0", args.noise_v0), ("h6", args.h6))}
+p2v5c_noise.py	523	cmd_noise	p_vb, jrec["VB_with_H6"] = run_judge(repo, judge_dir, "judge_VB_with_H6", [args.noise_vb], merged=args.h6)
+p2v5c_noise.py	524	cmd_noise	p_v0, jrec["V0"] = run_judge(repo, judge_dir, "judge_V0", [args.noise_v0])
+p2v5c_noise.py	604	cmd_noise	rfile=cm.rel_file(args.seedext_vb, repo), pos=pos_sv[0])
+p2v5c_noise.py	606	cmd_noise	rfile=cm.rel_file(args.seedext_v0, repo), pos=pos_s0[0])
+p2v5c_noise.py	613	cmd_noise	pj, jrec[f"seedext_{s}"] = run_judge(repo, judge_dir, f"judge_seedext_{s}", [se_path, noise_path])
+p2v5c_noise.py	689	build_parser	help=f"dg3-substituted key source (supplement 2-1, default <repo>/{DG3_KEY_SOURCE}); its sha256 "
+p2v5c_stage1.py	511	cmd_stage1	def cmd_stage1(args, repo, v5j, core):
+p2v5c_stage1.py	526	cmd_stage1	is_p3, mod = core.load_is_extend_start(repo)
+p2v5c_stage1.py	536	cmd_stage1	rf = cm.rel_file(args.h10 if nm == "h10" else args.h9, repo)
+p2v5c_stage1.py	562	cmd_stage1	rd_scan(v5j, core, is_p3, rd, "H-9", cm.rel_file(args.h9, repo), h9, nums9, by_id, dirs9, f9, t4h_log9)
+p2v5c_stage1.py	563	cmd_stage1	rd_scan(v5j, core, is_p3, rd, "H-10", cm.rel_file(args.h10, repo), h10, nums10, by_id, t4h_dirs, f10, t4h_log)
+p2v5c_stage1.py	699	cmd_merge	def cmd_merge(args, repo, v5j, core):

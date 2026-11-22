@@ -1,0 +1,53 @@
+h6_judge_4368.py	52	<module>	ROOT = HERE.parents[2]
+h6_judge_4368.py	53	<module>	for _path in (HERE, ROOT / "03_src"):
+h8_noise_judge_4368.py	56	<module>	ROOT = HERE.parents[2]
+h8_noise_judge_4368.py	62	<module>	R79_JUDGE = ROOT / "04_scripts" / "03_control" / "s8" / "r79_sensor_judge.py"
+h8_noise_judge_4368.py	63	<module>	R79_FINAL = ROOT / "04_scripts" / "03_control" / "s8" / "r79_L3L4_final.py"
+judge4368_common.py	39	<module>	ROOT = HERE.parents[2]
+judge4368_common.py	40	<module>	RULES_DIR = ROOT / "06_analysis" / "02_control" / "verif_matrix"
+judge4368_common.py	687	repo_relative	base = ROOT if root is None else Path(root)
+judge4368_common.py	769	_relative	return path.resolve().relative_to(ROOT).as_posix()
+judge_stage1_4368.py	70	<module>	ROOT = HERE.parents[2]
+judge_stage1_4368.py	71	<module>	STAGE1_SCRIPTS = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "paper_runs" / "scripts"
+judge_stage1_4368.py	75	<module>	ROOT / "04_scripts" / "03_control" / "m1_check",
+judge_stage1_4368.py	76	<module>	ROOT / "04_scripts" / "03_control" / "s9",
+judge_stage1_4368.py	77	<module>	ROOT / "03_src",
+resume4368_judge.py	181	<module>	ROOT = HERE.parents[3]
+resume4368_judge.py	182	<module>	for _path in (ROOT / "03_src",):
+resume4368_judge.py	1652	saturation_rule	coupled = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+resume4368_judge.py	3197	<module>	COUPLED_DIR = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+resume4368_judge.py	4618	_chrono_modules	chrono_dir = ROOT / "04_scripts" / "02_chrono"
+resume4368_judge.py	4638	scm_p3_items	params = rows_judge.load_params(ROOT / "02_params" / "rexome33.yaml")
+resume4368_judge.py	5127	_parser	p.add_argument("--root", type=Path, default=ROOT,
+resume4368_judge.py	5189	_parser	p.add_argument("--root", type=Path, default=ROOT, help="checkout (git_at_start)")
+resume4368_judge.py	5196	_parser	p.add_argument("--root", type=Path, default=ROOT, help="checkout (git_at_start)")
+resume4368_judge.py	5210	_add_r4_parsers	p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
+resume4368_judge.py	5213	_add_r4_parsers	p.add_argument("--root", type=Path, default=ROOT,
+resume4368_judge.py	5217	_add_r4_parsers	p.add_argument("--root", type=Path, default=ROOT, help="checkout with the R2 results")
+resume4368_judge.py	5224	_add_r4_parsers	p.add_argument("--las-k1-dir", type=Path, default=ROOT / LAS_K1_DIR,
+resume4368_judge.py	5247	_add_r4_parsers	p.add_argument("--root", type=Path, default=ROOT)
+resume_k1_family.py	48	<module>	ROOT = HERE.parents[2]
+resume_k1_family.py	49	<module>	S8_DIR = ROOT / "04_scripts" / "03_control" / "s8"
+resume_k1_family.py	50	<module>	S9_DIR = ROOT / "04_scripts" / "03_control" / "s9"
+resume_k1_family.py	51	<module>	for _path in (HERE, S8_DIR, S9_DIR, ROOT / "03_src"):
+resume_k1_family.py	100	_argv_as_root	sys.argv = [saved[0] if saved else "", str(ROOT)]
+resume_k1_family.py	209	u3_rows	def u3_rows(data_root: Path) -> list[dict]:
+resume_k1_family.py	212	u3_rows	rows += u3_suite_rows(data_root / steps.RV85 / f"{ids}.json", suite)
+resume_k1_family.py	213	u3_rows	rows += u3_c_rows(data_root / steps.RV85 / "fin_x426_C.json")
+resume_k1_family.py	214	u3_rows	rows += u3_d_rows(data_root / steps.RV85 / "fin_x426_D.json")
+resume_k1_family.py	233	u6_rows	def u6_rows(data_root: Path) -> list[dict]:
+resume_k1_family.py	238	u6_rows	for key in v5_rerun.ids_from(data_root / steps.RV84 / f"{ids}.json", pad):
+resume_k1_family.py	258	r79_rows	def r79_rows(data_root: Path) -> list[dict]:
+resume_k1_family.py	266	r79_rows	relative, document = steps.stored_source(data_root, name)
+resume_k1_family.py	327	build_table	def build_table(data_root: Path) -> dict:
+resume_k1_family.py	331	build_table	rows += u3_rows(data_root) + u6_rows(data_root) + r79_rows(data_root) + grid_rows()
+resume_k1_family.py	367	main	default=ROOT,
+resume_k1_family.py	371	main	table = build_table(args.data_root)
+t4h_replay.py	45	<module>	ROOT = HERE.parents[2]
+t4h_replay.py	46	<module>	for _path in (HERE, ROOT / "04_scripts" / "03_control" / "s9", ROOT / "03_src"):
+u3_judge_4368.py	49	<module>	ROOT = HERE.parents[2]
+u3_judge_4368.py	50	<module>	for _path in (HERE, ROOT / "04_scripts" / "03_control" / "s9", ROOT / "03_src"):
+u3_judge_k1.py	58	<module>	ROOT = HERE.parents[2]
+u3_judge_k1.py	59	<module>	S9_DIR = ROOT / "04_scripts" / "03_control" / "s9"
+u3_judge_k1.py	60	<module>	for _path in (HERE, S9_DIR, ROOT / "03_src"):
+u3_judge_k1.py	75	<module>	DEFAULT_V4_DIR = ROOT / "06_analysis" / "02_control" / "s9"

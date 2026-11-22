@@ -1,0 +1,29 @@
+{
+  "tool": "stats_calc",
+  "command": "maxsel",
+  "formula": "m one-sided N(0,1) statistics, equicorrelation ρ: P(max > z_α) = 1 − ∫ Φ((z_α − √ρ w)/√(1−ρ))^m φ(w) dw; Šidák 1 − (1−α)^(1/m), Bonferroni α/m; E[max] = √(1−ρ) E[max of m iid]",
+  "inputs": {
+    "m": 4,
+    "alpha": 0.05,
+    "rho": 0.5
+  },
+  "result": {
+    "p_max_passes": 0.1441137090135054,
+    "p_max_passes_independent": 0.18549375000000012,
+    "sidak_alpha": 0.012741455098566168,
+    "bonferroni_alpha": 0.0125,
+    "alpha_for_fwer": 0.015373439160675743,
+    "expected_max_z": 0.7278783066375348
+  },
+  "crosschecks": [],
+  "expectations": [],
+  "summary": {
+    "tool": "stats_calc",
+    "command": "maxsel",
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}

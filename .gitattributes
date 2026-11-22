@@ -159,3 +159,10 @@
 # numpy·Hopsan 기준 시계열: 그림 스크립트가 sha로 대조하므로 줄바꿈 변환 금지(2026-11-22)
 05_tests/data/*.csv -text
 06_analysis/02_control/imu_attitude_only/** -text
+# rev26 seal (2026-11-23)
+06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md -text
+06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256 -text
+06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_seal_candidate_draft.md -text
+06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/** -text
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_rev26_*/** -text
+06_analysis/02_control/verif_matrix/v5paper_imua_stats/** -text

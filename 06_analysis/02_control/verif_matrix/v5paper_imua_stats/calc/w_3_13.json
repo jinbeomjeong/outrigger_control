@@ -1,0 +1,42 @@
+{
+  "tool": "stats_calc",
+  "command": "wilson",
+  "formula": "Wilson: (x + z²/2)/(n + z²) ± z √(x(n−x)/n + z²/4)/(n + z²); exact: Clopper-Pearson beta quantiles",
+  "inputs": {
+    "x": 3,
+    "n": 13,
+    "level": 0.95
+  },
+  "result": {
+    "p_hat": 0.23076923076923078,
+    "wilson_low": 0.08179528718498563,
+    "wilson_high": 0.502563759467275,
+    "wilson_half_width": 0.2103842361411447,
+    "exact_low": 0.05038107349115155,
+    "exact_high": 0.5381315392340409
+  },
+  "crosschecks": [
+    {
+      "label": "wilson_low",
+      "ours": 0.08179528718498563,
+      "statsmodels": 0.08179528718498569,
+      "ok": true
+    },
+    {
+      "label": "wilson_high",
+      "ours": 0.502563759467275,
+      "statsmodels": 0.5025637594672749,
+      "ok": true
+    }
+  ],
+  "expectations": [],
+  "summary": {
+    "tool": "stats_calc",
+    "command": "wilson",
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}
