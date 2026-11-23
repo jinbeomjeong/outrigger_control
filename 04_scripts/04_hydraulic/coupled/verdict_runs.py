@@ -278,6 +278,8 @@ def p1_read_arrays(plant, t_s: np.ndarray) -> dict:
 
 LSB_COMPONENTS_KEY = "lsb_components"
 LSB_RECORD_KEY = "lsb_record"
+LSB_SETTINGS_KEY = "lsb_settings"
+"""Every edition 6 value the run used (components and thresholds; in the T4h meta too)."""
 """Edition 6 record keys (``jp3_remedy_spec_v6.md`` 3.4, 8 Y-3): a line and a T4h meta carry
 them only with a component on."""
 
@@ -289,7 +291,8 @@ def lock_start_b_meta(controller, *, with_record: bool = False) -> dict:
     settings = getattr(config, "lock_start_b", None)
     if not getattr(settings, "is_enabled", False):
         return {}
-    meta = {LSB_COMPONENTS_KEY: list(settings.components)}
+    meta = {LSB_COMPONENTS_KEY: list(settings.components),
+            LSB_SETTINGS_KEY: meta_for_json(settings.to_meta())}
     if with_record:
         meta[LSB_RECORD_KEY] = meta_for_json(controller.lock_start_b_record())
     return meta

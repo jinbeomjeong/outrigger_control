@@ -179,10 +179,11 @@ JP3_REV5_SETTINGS: dict[str, tuple[bool, dict]] = {
 the X-10 bit-for-bit test runs VBJ under a test alias, and the X11 counterexample arm
 ``jp3_x11_replay.py`` builds ``LSJ4_X11`` on LSJ4 of revision 5, P4-5a as in edition 4a,
 control review of 8a3c48c7 B-1)."""
-LSB_COMPONENTS_FULL = ("A_i", "A_ii", "B1", "B3")
-"""Edition 6 (``jp3_remedy_spec_v6.md`` 3.4): every component. The VBL family runs these until
-the probe (spec 4.2) fixes the sealed range; a run's own list is its ``lsb_components``."""
-_LSB = {"lsb_components": list(LSB_COMPONENTS_FULL)}
+LSB_COMPONENTS_SEALED = ("A_i", "A_ii", "B3")
+"""Edition 6 sealed range (spec revision 6, Q6-14, user decision 2026-11-24): A(i), A(ii) and
+B3; B1 is out (no activation in the 320 probe lines of 1bd405c8). The VBL family runs these; a
+run's own list is its ``lsb_components``."""
+_LSB = {"lsb_components": list(LSB_COMPONENTS_SEALED)}
 
 
 def _gate(volume_scale: float, c_v: float) -> dict:
@@ -652,7 +653,7 @@ def run_one(job: dict) -> dict:
                                                 "lock_window_alignment", "controller_tag",
                                                 "head_only_declared", "d1", RESUME_K1_KEY,
                                                 HARNESS_HASH_KEY, "lsb_components",
-                                                "lsb_record")
+                                                "lsb_settings", "lsb_record")
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure

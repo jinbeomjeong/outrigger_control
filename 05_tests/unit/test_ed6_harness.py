@@ -84,6 +84,8 @@ B3_ONLY_JOBS = {"B3_S5": ({**S5, "setting": B3_ONLY_SETTING}, OFF_HASHES["VBJ_S5
 B3 on must give the VBJ command hash (S5 e0.0 and R15 o0.05 of the 606f8713 j9_main)."""
 PROBE_KEYS = "R12_o0.0,S5_e0.0"
 LSB_TAG = "final_C4G2_P3W_LAS_K1_LSB"
+SEALED = ["A_i", "A_ii", "B3"]
+"""Spec revision 6 Q6-14: the sealed range (B1 out) the VBL family runs."""
 
 
 def _environment() -> dict:
@@ -219,13 +221,13 @@ def test_vbl_lines_carry_the_edition_6_identity_and_records(harness) -> None:
     for name in ("VBL_R12", "VBL_S5"):
         report = reports[name]
         assert report["controller_tag"] == LSB_TAG, name
-        assert report["lsb_components"] == ["A_i", "A_ii", "B1", "B3"], name
-        assert report["hydraulic_options"]["lsb_components"] == ["A_i", "A_ii", "B1", "B3"], name
-        assert report["lsb_record"]["components"] == ["A_i", "A_ii", "B1", "B3"], name
+        assert report["lsb_components"] == SEALED, name
+        assert report["hydraulic_options"]["lsb_components"] == SEALED, name
+        assert report["lsb_record"]["components"] == SEALED, name
         t4h = report["t4h"]
         assert t4h["lsb_read_found"] == t4h["reads"] > 0, name
         assert t4h["meta_controller_tag"] == LSB_TAG, name
-        assert t4h["meta_lsb_components"] == ["A_i", "A_ii", "B1", "B3"], name
+        assert t4h["meta_lsb_components"] == SEALED, name
         assert report["foreign_modules"] == [], name
     assert reports["VBL_R12"]["hash"] != OFF_HASHES["VBJ_R12"][1]  # the components act
     assert reports["VBL0_R12"]["controller_tag"] == "final_C4G2_LAS_K1_LSB"
@@ -311,3 +313,9 @@ def test_importing_the_probe_switches_nothing() -> None:
     assert settings["P6-c04-a1a2bh"][1]["lsb_parameters"] == {"a2_hold_after_fill_s": 1.0}
     assert "lsb_parameters" not in settings["P6-c04-a1a2b"][1]
     assert settings["P6-c04-a2"][1]["line_fill_gate"]["c_v"] == 0.04
+    # spec revision 6 Q6-14: the sealed-range check arm, only on request
+    assert "a1a2b3" in probe.ALL_ARMS and "a1a2b3" not in probe.ARMS
+    assert settings["P6-J-a1a2b3"][1]["lsb_components"] == SEALED
+    assert probe.split_setting_name("P6-v15-a1a2b3") == ("v15", "a1a2b3")
+    assert probe.arm_parameters("a1a2bh", {"a1_cap_m_s": 1e-3}) == {
+        "a1_cap_m_s": 1e-3, "a2_hold_after_fill_s": 1.0}

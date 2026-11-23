@@ -185,7 +185,7 @@ def test_lsb_suffix_follows_las_and_k1_and_keeps_the_revision() -> None:
 
 # ------------------------------------------------------------------------------ run_v5
 def test_edition_6_settings_are_spec_3_4(run_v5) -> None:
-    lsb = ["A_i", "A_ii", "B1", "B3"]
+    lsb = ["A_i", "A_ii", "B3"]  # spec revision 6 Q6-14: the sealed range, B1 out
     vbj = run_v5.JP3_SETTINGS["VBJ"]
     assert run_v5.ED6_SETTINGS["VBL"] == (True, {**vbj[1], "lsb_components": lsb})
     assert run_v5.ED6_SETTINGS["VBL0"] == (True, {**run_v5.JP3_SETTINGS["VBJ0"][1],

@@ -1076,6 +1076,7 @@ class LockStartB:
     def record(self) -> dict[str, Any]:
         """The ``lsb_record`` of the run (spec 3.1 .. 3.3 "기록"; record only)."""
         return {"components": list(self.settings.components),
+                "settings": self.settings.to_meta(),
                 "legs": {LEG_ORDER[leg]: counts.to_meta()
                          for leg, counts in enumerate(self.counts)},
                 "b_episodes": [dict(episode) for episode in self.b_episodes],

@@ -28,6 +28,8 @@ a1a2b    A_i, A_ii, B1,    arm 6 (all)
 a1a2bh   as a1a2b          arm 7: ``a2_hold_after_fill_s`` 1.0 (one increment held as a
                            speed floor after the plan, until a witness, at most 1 s)
 a1a2b1   A_i, A_ii, B1     arm 8 (= all - B3, Q6-12)
+a1a2b3   A_i, A_ii, B3     check arm, only with ``--arms``: the sealed range of spec
+                           revision 6 (Q6-14, B1 out), the B1-off check of a1a2b
 =======  ================  ========================================================
 
 Setting names ``P6-<plant>-<arm>`` (``P6-c04-a1a2b``); they live in this script only
@@ -42,7 +44,9 @@ in :data:`PARAMETERS_ENV`. They are part of each line's ``hydraulic_options`` (a
 other values is refused: ``run_v5._done_keys``).
 
 Output: one ``run_v5.run_one`` line per run in ``--out`` (appended, finished jobs skipped), an
-``ed6_probe`` block per line (plant, arm, parameters, modules imported from another checkout),
+``ed6_probe`` block per line (plant, arm, components, the ``--lsb-param`` values
+``cli_lsb_parameters``, the arm's effective ``lsb_parameters`` and every value it ran with
+``lsb_settings``, modules imported from another checkout),
 T4h records in ``<out stem>_t4h/`` (with the ``lsb_*`` and ``p1_*`` per-read arrays), the run
 identity ``<out stem>.identity.json`` (start and end) and the progress file
 ``<out stem>.progress.json`` (keys ``stage``, ``done``, ``total``, ``unit``, ``started_at``,
@@ -96,6 +100,10 @@ ARMS: dict[str, tuple[str, ...]] = {"a2": ("A_ii",), "b": _B, "a2b": ("A_ii", *_
                                     "a1a2bh": ("A_i", "A_ii", *_B),
                                     "a1a2b1": ("A_i", "A_ii", "B1")}
 """Arm name -> components (spec revision 1 4.2 arms 1 .. 7 and "all - B3")."""
+CHECK_ARMS: dict[str, tuple[str, ...]] = {"a1a2b3": ("A_i", "A_ii", "B3")}
+"""Arms run only when named in ``--arms`` (not in the 320-job default): ``a1a2b3`` is the sealed
+range of spec revision 6 (Q6-14: the full arm without B1), the B1-off check of a1a2b."""
+ALL_ARMS: dict[str, tuple[str, ...]] = {**ARMS, **CHECK_ARMS}
 ARM_PARAMETERS: dict[str, dict] = {"a1a2bh": {"a2_hold_after_fill_s": 1.0}}
 """Arm-own ``LockStartBSettings`` values (on top of ``--lsb-param``; the arm wins)."""
 PARAMETERS_ENV = "ED6_PROBE_LSB_PARAMETERS"
@@ -114,7 +122,7 @@ def split_setting_name(name: str) -> tuple[str, str]:
         ValueError: Not a probe setting name.
     """
     prefix, plant, arm = (name.split("-") + ["", ""])[:3]
-    if prefix != SETTING_PREFIX or plant not in PLANTS or arm not in ARMS:
+    if prefix != SETTING_PREFIX or plant not in PLANTS or arm not in ALL_ARMS:
         raise ValueError(f"{name!r} is not a probe setting")
     return plant, arm
 
@@ -123,14 +131,19 @@ def probe_settings(parameters: dict | None = None) -> dict[str, tuple[bool, dict
     """Every probe setting: (flow limit on, plant options as ``HydraulicOptions`` keys)."""
     settings = {}
     for plant, sensitivity in PLANTS.items():
-        for arm, components in ARMS.items():
+        for arm, components in ALL_ARMS.items():
             options = {**run_v5.ed6_plant(sensitivity), **run_v5._P3W,
                        "lsb_components": list(components)}
-            arm_parameters = {**(parameters or {}), **ARM_PARAMETERS.get(arm, {})}
-            if arm_parameters:
-                options["lsb_parameters"] = arm_parameters
+            own_parameters = arm_parameters(arm, parameters)
+            if own_parameters:
+                options["lsb_parameters"] = own_parameters
             settings[setting_name(plant, arm)] = (True, options)
     return settings
+
+
+def arm_parameters(arm: str, parameters: dict | None = None) -> dict:
+    """The ``lsb_parameters`` an arm runs with (``--lsb-param`` values, then the arm's own)."""
+    return {**(parameters or {}), **ARM_PARAMETERS.get(arm, {})}
 
 
 def parameters_from_environment() -> dict:
@@ -165,8 +178,11 @@ def run_probe_job(job: dict) -> dict:
     install_probe_switches()
     record = run_v5.run_one(job)
     plant, arm = split_setting_name(job["setting"])
-    record["ed6_probe"] = {"plant": plant, "arm": arm, "components": list(ARMS[arm]),
-                           "lsb_parameters": parameters_from_environment(),
+    cli_parameters = parameters_from_environment()
+    record["ed6_probe"] = {"plant": plant, "arm": arm, "components": list(ALL_ARMS[arm]),
+                           "cli_lsb_parameters": cli_parameters,
+                           "lsb_parameters": arm_parameters(arm, cli_parameters),
+                           "lsb_settings": record.get("lsb_settings"),
                            "p1_read_record": harness_hydraulics.is_p1_read_record_on(),
                            "foreign_modules": d0.modules_outside_checkout()}
     return record
@@ -263,7 +279,7 @@ def run_batch(args: argparse.Namespace, jobs: list[dict]) -> dict:
 def _selection(args: argparse.Namespace) -> list[dict]:
     """The planned jobs of the CLI choice (refusals raise ``ValueError``)."""
     plants = d0._names(args.plants, PLANTS, "plants")
-    arms = d0._names(args.arms, ARMS, "arms")
+    arms = tuple(ARMS) if args.arms is None else d0._names(args.arms, ALL_ARMS, "arms")
     keys = d0._names(args.keys, d0.D0_KEYS, "keys")
     if args.mask is not None:
         int(args.mask, 16)

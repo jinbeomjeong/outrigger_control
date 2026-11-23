@@ -161,10 +161,10 @@ def line_problems(record: dict, t4h_dir: Path, parameters: dict) -> list[str]:
         problems.append(f"options {record.get('hydraulic_options')} != {expected.to_dict()}")
     if record.get("controller_tag") != PROBE_TAG:
         problems.append(f"controller_tag {record.get('controller_tag')} != {PROBE_TAG}")
-    if record.get("lsb_components") != list(probe.ARMS[arm]):
+    if record.get("lsb_components") != list(probe.ALL_ARMS[arm]):
         problems.append(f"lsb_components {record.get('lsb_components')} != "
-                        f"{list(probe.ARMS[arm])}")
-    if (record.get("lsb_record") or {}).get("components") != list(probe.ARMS[arm]):
+                        f"{list(probe.ALL_ARMS[arm])}")
+    if (record.get("lsb_record") or {}).get("components") != list(probe.ALL_ARMS[arm]):
         problems.append("lsb_record components differ from the arm")
     block = record.get("ed6_probe") or {}
     if block.get("foreign_modules"):
@@ -192,13 +192,36 @@ def read_lines(rows_path: Path, t4h_dir: Path) -> list[dict]:
     return lines
 
 
+def _cli_parameters(line: dict) -> dict:
+    """The ``--lsb-param`` values of a line (``cli_lsb_parameters``; lines before it was added
+    kept them in ``lsb_parameters``)."""
+    block = line.get("ed6_probe") or {}
+    if "cli_lsb_parameters" in block:
+        return block["cli_lsb_parameters"] or {}
+    return block.get("lsb_parameters") or {}
+
+
 def run_parameters(lines: list[dict]) -> tuple[dict, list[str]]:
     """The ``--lsb-param`` values of the run (one set for every line) and the problems."""
-    found = {json.dumps((line.get("ed6_probe") or {}).get("lsb_parameters") or {},
-                        sort_keys=True) for line in lines if "error" not in line}
+    found = {json.dumps(_cli_parameters(line), sort_keys=True)
+             for line in lines if "error" not in line}
     if len(found) > 1:
         return {}, [f"lines with {len(found)} different lsb_parameters"]
     return (json.loads(found.pop()) if found else {}), []
+
+
+def arm_settings(lines: list[dict], parameters: dict) -> dict:
+    """Per arm: the effective ``lsb_parameters`` (``--lsb-param`` values, then the arm's own)
+    and every value the lines ran with (``lsb_settings``; one set per arm, else listed)."""
+    out: dict = {}
+    for line in lines:
+        _, arm = probe.split_setting_name(line["job"]["setting"])
+        entry = out.setdefault(arm, {"lsb_parameters": probe.arm_parameters(arm, parameters),
+                                     "lsb_settings": []})
+        settings = line.get("lsb_settings") or (line.get("lsb_record") or {}).get("settings")
+        if settings is not None and settings not in entry["lsb_settings"]:
+            entry["lsb_settings"].append(settings)
+    return out
 
 
 # ------------------------------------------------------------------------------ V0 pairing
@@ -261,14 +284,14 @@ def share_decision(groups: dict, rows: list[dict], plants: tuple[str, ...]) -> d
 
     def activations(component: str) -> int:
         return sum(row[key] for row in rows if row["arm"] in BASE_ARMS
-                   and set(COMPONENT_PARTS[component]) & set(probe.ARMS[row["arm"]])
+                   and set(COMPONENT_PARTS[component]) & set(probe.ALL_ARMS[row["arm"]])
                    for key in ACTIVATION_KEYS[component])
 
     problems = [f"{plant} {arm}: {reason}" for (plant, arm), group in groups.items()
                 for reason, has_it in (("no_reference", group["no_reference"]),
                                        ("not-judgeable items", group["not_judgeable_items"]))
                 if has_it]
-    counts = {arm: failed_count(arm) for arm in probe.ARMS}
+    counts = {arm: failed_count(arm) for arm in probe.ALL_ARMS}
     compared = (FULL_ARM, *ARM_WITHOUT.values())
     problems += [f"arm {arm}: not every plant has its group" for arm in compared
                  if counts[arm] is None]
@@ -346,7 +369,8 @@ def summarize(lines: list[dict], t4h_dir: Path, v0_rows: list[dict],
         grouped.setdefault(probe.split_setting_name(record["job"]["setting"]), []).append(record)
     groups = {key: group_judgement(group, t4h_dir, v0_rows) for key, group in grouped.items()}
     share = share_decision(groups, rows, plants)
-    return {"lsb_parameters": parameters, "rows": rows, "checks": checks,
+    return {"lsb_parameters": parameters, "arm_settings": arm_settings(good, parameters),
+            "rows": rows, "checks": checks,
             "groups": {f"{plant} {arm}": group for (plant, arm), group in groups.items()},
             "share": share}
 
@@ -383,7 +407,9 @@ def main(argv: list[str] | None = None) -> int:
             raise InputError(f"--out {args.out} exists (a report is never overwritten)")
         try:
             plants = probe.d0._names(args.plants, probe.PLANTS, "plants")
-            planned = probe.probe_jobs(plants, probe.d0._names(args.arms, probe.ARMS, "arms"),
+            arms = (tuple(probe.ARMS) if args.arms is None
+                    else probe.d0._names(args.arms, probe.ALL_ARMS, "arms"))
+            planned = probe.probe_jobs(plants, arms,
                                        probe.d0._names(args.keys, probe.d0.D0_KEYS, "keys"))
         except ValueError as exc:
             raise InputError(str(exc)) from exc
