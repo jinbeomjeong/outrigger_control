@@ -30,7 +30,10 @@ Sub-commands:
              on either side of a T-JR-10 or T-JR-11 pair makes that test not judgeable (a
              broken record, not a T8 difference).
 ``t12``      T-JR-12 (13.9, 4a-3 4) of one bundle: ``--bundle VBH`` = VBH against the stored H-6
-             (rev 4), ``--bundle VBJ`` = VBJ against VBJ0. Exactly 135 pairs by plain key,
+             (rev 4), ``--bundle VBJ`` = VBJ against VBJ0, ``--bundle VBL`` = VBL against VBL0
+             (edition 6 T-JR-12a, :data:`ED6_BUNDLE`: as VBJ plus the 6.1 identity of both
+             sides from ``--new-t4h`` / ``--base-t4h``, and J-P3 judged rows other than 1 a
+             setting defect). Exactly 135 pairs by plain key,
              exactly 1 L2 line. Failure: the L2 line's base grade pass / flag and new grade fail
              (``r79_sensor_judge`` via ``h8_noise_judge_4368.grade_line``; every level's grade
              transitions are a record), a new FAULT name, and the READY table of 4a-3 4.2 (READY
@@ -222,11 +225,18 @@ that name). Not judgeable either way."""
 JUDGED_LEVEL = "L2"
 """4a-3 4.3: pass -> fail is judged on the L2 line only (all transitions are recorded)."""
 READY_DELAY_LIMIT_S = 30.0
-BUNDLE_BASE = {"VBH": "stored H-6 (rev 4)", "VBJ": "VBJ0"}
-BUNDLE_BASE_SETTING = {"VBH": "VB", "VBJ": "VBJ0"}
+BUNDLE_BASE = {"VBH": "stored H-6 (rev 4)", "VBJ": "VBJ0", "VBL": "VBL0"}
+BUNDLE_BASE_SETTING = {"VBH": "VB", "VBJ": "VBJ0", "VBL": "VBL0"}
+RUN_BASE_BUNDLES = ("VBJ", "VBL")
+"""Bundles whose base is a 436.9 Dg-3 run (its keys file checked, J-P3 judged on the new side)."""
+ED6_BUNDLE = "VBL"
+"""Edition 6 T-JR-12a (``jp3_remedy_spec_v6.md`` 6.5, erratum 1 1-3, Y-13): VBL against VBL0,
+both with the lock-start components; the identity of 6.1 (``jp3_ed6_judge``) on both sides from
+the line and its T4h meta (``--new-t4h`` / ``--base-t4h``, required); J-P3 judged rows other
+than 1 are a setting defect (0: not judgeable)."""
 """Prelaunch audit M-3: the ``v5_setting`` of the base lines (the stored H-6 is a VB run)."""
 JP3_LINE_SETTINGS = ("VBH", "VBJ", "VBJ0", "LSH1", "LSH2", "LSH3", "LSH4", "LSJ1", "LSJ2",
-                     "LSJ3", "LSJ4", "VBK", "VBK0")
+                     "LSJ3", "LSJ4", "VBK", "VBK0", "VBL", "VBL0")
 """436.9 settings (``run_v5.JP3_SETTINGS``): their lines carry the P4 evidence keys (B-1);
 edition 5 VBK / VBK0 (the VBJ / VBJ0 plant, P4 on) too."""
 REPLAY_RUN_COUNTS = (426, 135)
@@ -610,7 +620,7 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
     if check_settings:
         problems.setting_defects += bundle_setting_problems(bundle, base_lines, new_lines)
         problems.not_judgeable += keys_file_problems("new", new)
-        if bundle == "VBJ":
+        if bundle in RUN_BASE_BUNDLES:
             problems.not_judgeable += keys_file_problems("base", base)
     mismatches = sorted(h8.plain_key(run["key"]) for run in new["results"]
                         if is_lock_window_mismatch(run))
@@ -640,8 +650,8 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
             problems.failures.append(text)
             report["record_failures"].append(text)
     _check_lines(bundle, base_lines, new_lines, problems)
-    if bundle == "VBJ":
-        report["J-P3"] = _dg3_j_p3(list(new_lines.values()), problems)
+    if bundle in RUN_BASE_BUNDLES:
+        report["J-P3"] = _dg3_j_p3(list(new_lines.values()), problems, bundle)
     report["records"] = _r5_7_records(list(new_lines.values()))
     return report, problems
 
@@ -816,11 +826,12 @@ J_P3_OUTCOMES = ("pass", "H-7", "setting_defect", "not_judgeable", "not_computed
 13.9 record (``step6_dg3.ps1``: H-7 stops 1, pass goes on, the others stop 2)."""
 
 
-def _dg3_j_p3(lines: list[dict], problems: compare.Problems) -> dict:
-    """J-P3 of the VBJ bundle: exactly 1 judged (normal grade) row (13.9). Erratum 2 2-10.1 5
-    (re-audit K-1): the H-7 is read from the judged rows (``j_p3_inputs.has_judged_breach``),
-    a setting defect / not-judgeable status stays a reason; ``outcome`` is the J-P3 judgement
-    alone (H-7 > setting_defect > not_judgeable > pass)."""
+def _dg3_j_p3(lines: list[dict], problems: compare.Problems, bundle: str = "VBJ") -> dict:
+    """J-P3 of the VBJ / VBL bundle: exactly 1 judged (normal grade) row (13.9). Erratum 2
+    2-10.1 5 (re-audit K-1): the H-7 is read from the judged rows
+    (``j_p3_inputs.has_judged_breach``), a setting defect / not-judgeable status stays a reason;
+    ``outcome`` is the J-P3 judgement alone (H-7 > setting_defect > not_judgeable > pass).
+    VBL (edition 6 6.5): judged rows other than 1 are a setting defect, 0 not judgeable."""
     from j_p3_inputs import has_judged_breach
 
     from outrigger_sim.control.extend_start_bound import j_p3_judgement_rev5
@@ -831,23 +842,63 @@ def _dg3_j_p3(lines: list[dict], problems: compare.Problems) -> dict:
                                     expected_judged_runs=DG3_L2_LINES)
     status = judgement["status"]
     if status == "no_judged_runs" and judgement["runs_judged"]:
-        # erratum 1 7: judged rows, but not the fixed number (both not judgeable)
+        # erratum 1 7: judged rows, but not the fixed number (VBJ: not judgeable; VBL: 6.5
+        # setting defect)
         status = judgement["status"] = JUDGED_ROW_COUNT_MISMATCH
+    is_count_defect = bundle == ED6_BUNDLE and status == JUDGED_ROW_COUNT_MISMATCH
     is_h7 = status == "H-7" or has_judged_breach(judgement)
     if is_h7:
-        problems.failures.append("VBJ: J-P3 H-7")
-    if status == "setting_defect":
-        problems.setting_defects.append("VBJ: J-P3 setting defect")
+        problems.failures.append(f"{bundle}: J-P3 H-7")
+    if status == "setting_defect" or is_count_defect:
+        problems.setting_defects.append(f"{bundle}: J-P3 {status}")
     elif status not in ("pass", "H-7"):
-        problems.not_judgeable.append(f"VBJ: J-P3 {status}")
+        problems.not_judgeable.append(f"{bundle}: J-P3 {status}")
     if is_h7:
         outcome = "H-7"
     elif status in ("pass", "setting_defect"):
         outcome = status
+    elif is_count_defect:
+        outcome = "setting_defect"
     else:
         outcome = "not_judgeable"
     out = {key: judgement[key] for key in ("status", "runs", "runs_judged", "runs_by_case")}
     return {**out, "h7_from_judged_rows": is_h7, "outcome": outcome}
+
+
+def ed6_bundle_problems(base: dict, new: dict, base_t4h: Path | None,
+                        new_t4h: Path | None) -> dict[str, list[str]]:
+    """Edition 6 6.1 on the VBL bundle (erratum 1 1-3 4): every VBL line has the ③-on identity
+    (tag, revision 6 items, ``lsb_components`` = {A_i, A_ii, B3}, ``lsb_settings`` = the sealed
+    defaults), every VBL0 line the ③-off one and no ③ record. ``lsb_components``,
+    ``lsb_settings`` and ``controller_tag`` are read from the T4h meta of the line (where the
+    r79 runner writes them); a folder, file or key missing is not judgeable."""
+    import jp3_ed6_judge as ed6
+
+    expected = ed6.sealed_lsb_settings()
+    out: dict[str, list[str]] = {"setting_defects": [], "not_judgeable": []}
+    for side, document, folder in (("new", new, new_t4h), ("base", base, base_t4h)):
+        if folder is None or not Path(folder).is_dir():
+            out["not_judgeable"].append(f"--{side}-t4h missing (edition 6 identity)")
+            continue
+        for line in document.get("results") or []:
+            if "error" in line:
+                continue  # an error line is reported by _dg3_lines
+            key = str(line.get("key"))
+            meta = _t4h_meta(Path(folder), line)
+            if meta is None or not {"lsb_components", "lsb_settings"} <= set(meta):
+                out["not_judgeable"].append(f"{side} {key}: no T4h meta lsb_components / "
+                                            "lsb_settings")
+                continue
+            view = {**line, **{name: meta.get(name) for name in (
+                "lsb_components", "lsb_settings", "controller_tag")}}
+            if side == "new":
+                problems = ed6.ed6_identity_problems(view, expected)
+            else:
+                problems = ed6.ed6_identity_problems(view, expected, p3_on=False)
+                if (line.get("hydraulics_record") or {}).get("extend_bound_check") is not None:
+                    problems.append("a ③ record on a ③-off VBL0 line")
+            out["setting_defects"] += [f"{side} {key}: {problem}" for problem in problems]
+    return out
 
 
 def _r5_7_records(lines: list[dict]) -> dict:
@@ -1016,7 +1067,9 @@ class Dg3JudgeInputs:
     """4a-8 6.2 3: the fixed sha256 of a stored Dg-3 file (None: not asserted)."""
 
 
-PLANT_TRUTH_SETTINGS = ("VBJ", "VBJ0")
+PLANT_TRUTH_SETTINGS = ("VBJ", "VBJ0", "VBL", "VBL0")
+DG3_JUDGE_SETTINGS = (*T8_JUDGED_SETTINGS, "VBL", "VBL0")
+"""``dg3-judge --setting``: the edition 5 settings and the edition 6 VBL / VBL0 (Y-13)."""
 """4a-8 4.1: their L1 reference is a new L1 run of the same setting (``plant_truth``)."""
 L1_ROD_MODEL = "plant_truth"
 L1_LEVEL = "L1"
@@ -1644,10 +1697,13 @@ def _parser() -> argparse.ArgumentParser:
                           "report; required, without it not judgeable)")
     t12.add_argument("--new-judge-sha256", default=None,
                      help="the sha256 of --new-judge (its dg3-judge report; required)")
+    for side in ("new", "base"):
+        t12.add_argument(f"--{side}-t4h", type=Path, default=None,
+                         help=f"VBL: the T4h folder of --{side} (R79_T4H_DIR; required there)")
     dg3_judge = commands.add_parser(
         "dg3-judge", help="M-8: the judge file of a new-side Dg-3 run with the P-1a L1 extract")
     dg3_judge.add_argument("--out", type=Path, required=True)
-    dg3_judge.add_argument("--setting", choices=T8_JUDGED_SETTINGS, required=True)
+    dg3_judge.add_argument("--setting", choices=DG3_JUDGE_SETTINGS, required=True)
     dg3_judge.add_argument("--dg3", type=Path, required=True,
                            help="las_t3_dg3 output of the setting (--keys-file = stored H-6)")
     dg3_judge.add_argument("--l1-reference", type=Path, required=True,
@@ -1739,7 +1795,12 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
         report, problems = judge_t12(args.bundle, documents["base"], documents["base_judge"],
                                      documents["new"], documents["new_judge"])
         report.setdefault("record_failures", [])  # erratum 3 3-1: the record list
-        if args.bundle == "VBJ":  # re-audit K-1: the J-P3 judgement apart from the record
+        if args.bundle == ED6_BUNDLE:  # edition 6 6.1 identity of both sides
+            found = ed6_bundle_problems(documents["base"], documents["new"], args.base_t4h,
+                                        args.new_t4h)
+            problems.setting_defects += found["setting_defects"]
+            problems.not_judgeable += found["not_judgeable"]
+        if args.bundle in RUN_BASE_BUNDLES:  # re-audit K-1: the J-P3 judgement apart
             report["jp3_outcome"] = (report.get("J-P3") or {}).get("outcome", "not_computed")
         problems.not_judgeable[:0] = [*input_problems, *t12_judge_row_problems(documents)]
         problems.setting_defects[:0] = t12_file_defects(args.base, args.new)

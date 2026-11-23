@@ -16,6 +16,13 @@ checkout):
 * ``--add`` (repeatable): more files, e.g. the 12b L1 key file and the two L1 reference runs
   of erratum 2 2-1.
 
+Edition 6 (``--edition 6``, ``jp3_remedy_spec_v6.md`` 6.2 .. 6.5 and erratum 1 1-2 / 1-3):
+``--dry-selection`` is optional (edition 6 runs no X-4 / c dry step); the entries must hold
+every file of :data:`ED6_REQUIRED_SHA256` with that sha256 - the 12b L1 key file reused from
+edition 5 (``ed5_inputs/l1_keys_12b.txt``), the T-JR-12a L1 key file and the three sealed key
+lists. The two 12b L1 reference runs (VBL0 / VBL, ``plant_truth``) and the two T-JR-12a L1
+runs go in by ``--add`` once they exist (before any 12b output, erratum 1 1-2).
+
 Checks (any miss: not usable, nothing written):
 
 * ``--commit`` is a full sha; the run worktree's HEAD is that commit and its tracked tree is
@@ -68,6 +75,21 @@ CODE_PREFIXES = ("02_params/", "03_src/", "04_scripts/", "05_tests/")
 """Code paths: listed only with the bytes of the run commit. Data, documents and the run steps
 (``06_analysis/``, filled in the main checkout after the run commit, as in edition 4a) are the
 main checkout's files."""
+
+
+ED6_REQUIRED_SHA256 = {
+    "06_analysis/02_control/j_p3_cause/prelaunch_j9/ed5_inputs/l1_keys_12b.txt":
+        "9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5",
+    "06_analysis/02_control/j_p3_cause/prelaunch_j9/l1_keys_d3c6c57e.json":
+        "eea8ed0d5f3aa79ecb5cf1cb892fa82f7d4bac780f8b3b17dbd069200765c6af",
+    "06_analysis/02_control/j_p3_cause/ed6_design/keys/sens_keys_v2.json":
+        "70f4bb6d7afaa3f8b7ac3437db3ce5d2e4d9cca05e74b9a5c38f3b0269b77f74",
+    "06_analysis/02_control/j_p3_cause/ed6_design/keys/confirm_a_keys_v2.json":
+        "75413549fa9a9127744df1bc4cc92f0e99ee5881e1542726bd5d4f7b09869721",
+    "06_analysis/02_control/j_p3_cause/ed6_design/keys/confirm_b_grid192.json":
+        "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+}
+"""Edition 6 fixed inputs with their sealed sha256 (spec v6 6.2 / 6.3 / 6.5, erratum 1 1-2)."""
 
 
 class NotUsable(Exception):
@@ -183,7 +205,15 @@ def build_list(args: argparse.Namespace) -> list[tuple[str, str]]:
     assert_run_commit(args.worktree, args.commit)
     expected: dict[str, str | None] = dict.fromkeys(read_entries(args.entries, args.repo))
     expected.update(x11_entries(args.x11_selection, args.repo))
-    expected.update(dry_entries(args.dry_selection, args.repo))
+    if args.dry_selection is not None:
+        expected.update(dry_entries(args.dry_selection, args.repo))
+    elif args.edition == 5:
+        raise NotUsable("--dry-selection is required in edition 5")
+    if args.edition == 6:
+        missing = [name for name in ED6_REQUIRED_SHA256 if name not in expected]
+        if missing:
+            raise NotUsable(f"edition 6 entries missing: {missing}")
+        expected.update(ED6_REQUIRED_SHA256)
     for path in args.add:  # erratum 2 2-1: the L1 key file and the two L1 runs
         expected.setdefault(_relative(path, args.repo), None)
     if NOISE_PATH not in expected:
@@ -216,7 +246,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--commit", required=True, help="the run commit (full sha)")
     parser.add_argument("--entries", type=Path, required=True)
     parser.add_argument("--x11-selection", type=Path, required=True)
-    parser.add_argument("--dry-selection", type=Path, required=True)
+    parser.add_argument("--dry-selection", type=Path, default=None,
+                        help="required in edition 5; edition 6 runs no dry step")
+    parser.add_argument("--edition", type=int, choices=(5, 6), default=5)
     parser.add_argument("--add", type=Path, action="append", default=[],
                         help="one more file under --repo (repeatable): the 12b L1 key file and "
                              "the two L1 reference runs (erratum 2 2-1)")

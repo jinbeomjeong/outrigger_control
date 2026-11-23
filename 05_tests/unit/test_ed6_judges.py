@@ -117,28 +117,31 @@ def test_pair_items_count_j1_once_per_pair() -> None:
 
 
 # ------------------------------------------------------------------------------- reading (3)
-def _s8_rows(setting_chunks: int, v0_chunks: int, margin=None) -> dict:
-    def row(setting, chunks, value):
+def _s8_rows(setting_chunks: int, v0_chunks: int, margin=None, after=None) -> dict:
+    def row(setting, chunks, margin_kN, after_kN):
         return {"setting": setting, "row": "S8", "phase": "eps 0.0", "sa4": None,
-                "soil_stop_crawler": {"after_stop_chunks": chunks, "margin_at_stop_kN": value,
-                                      "max_after_stop_kN": value}}
+                "soil_stop_crawler": {"after_stop_chunks": chunks, "margin_at_stop_kN": margin_kN,
+                                      "max_after_stop_kN": after_kN}}
 
-    return {"V0": [row("V0", v0_chunks, None)], "VB": [row("VB", setting_chunks, margin)]}
+    return {"V0": [row("V0", v0_chunks, None, None)],
+            "VB": [row("VB", setting_chunks, margin, margin if after is None else after)]}
 
 
-@pytest.mark.parametrize(("chunks", "v0_chunks", "margin", "groups"), [
-    (0, 0, None, {"not_applicable_harness"}),
-    (0, 3, None, {"not_judgeable"}),
-    (2, 0, None, {"not_judgeable"}),
-    (2, 2, -7.5, {"stops", "f5_records"}),
-    (2, 2, -1.0, {"f5_records"}),
+@pytest.mark.parametrize(("chunks", "v0_chunks", "margin", "after", "groups"), [
+    (0, 0, None, None, {"not_applicable_harness"}),
+    (0, 3, None, None, {"not_judgeable"}),  # erratum 1 1-7: None with V0 samples
+    (2, 0, None, None, {"not_judgeable"}),
+    (2, 2, -7.5, 3.0, {"stops", "f5_records"}),  # erratum 1 1-7: margin < -6.92 kN stops
+    (2, 2, 0.5, 15.0, {"stops"}),  # erratum 1 1-7: post-stop maximum > 14.21 kN stops
+    (2, 2, -1.0, 3.0, {"f5_records"}),
+    (2, 2, 0.5, 14.21, set()),
 ])
-def test_reading_3_s8_without_post_stop_samples(monkeypatch, chunks, v0_chunks, margin,
+def test_reading_3_s8_without_post_stop_samples(monkeypatch, chunks, v0_chunks, margin, after,
                                                 groups) -> None:
     import judge_stage1_4368 as path1
 
     monkeypatch.setattr(path1, "sa4_items", lambda row: {"state": "pass", "items": {}})
-    found = ed6.s8_items(_s8_rows(chunks, v0_chunks, margin), ("VB",))
+    found = ed6.s8_items(_s8_rows(chunks, v0_chunks, margin, after), ("VB",))
     assert {name: len(values) for name, values in found.items() if values} == dict.fromkeys(
         groups, 1)
 
