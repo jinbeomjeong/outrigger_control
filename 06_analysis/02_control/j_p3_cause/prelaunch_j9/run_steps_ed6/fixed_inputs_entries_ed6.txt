@@ -1,0 +1,34 @@
+# 436.9 J-P3 edition 6: the fixed list entries (jp3_fixed_inputs_list.py --edition 6 --entries),
+# repository-relative; a line with * ? [ is a glob (at least one match). The X-11 selection and
+# its plans / key files come from --x11-selection, the four L1 reference runs from --add, and
+# --edition 6 asserts the sealed key lists and the two L1 key files with their sha256
+# (ED6_REQUIRED_SHA256). The run steps are not listed either: they run from the run worktree.
+# rules
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v6.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v6.md.sha256
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v6_erratum1.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v6_erratum1.md.sha256
+# stored inputs (common.ps1 $FixedInputs; jp3_fixed_inputs.py)
+06_analysis/02_control/j_p3_cause/baseline_221456d/SHA256SUMS
+06_analysis/03_hydraulic/coupled/v5/main.jsonl
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json
+06_analysis/02_control/j_p3_cause/j4a_remedy_b06e409e/dryrun_selection_r79_key.txt
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_r79_judge.json
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_judge.json
+06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/harness_path1/h6_L1_reference.json
+06_analysis/02_control/j_p3_cause/prelaunch_j9/h10_reuse_rerun_t4h.SHA256SUMS
+06_analysis/02_control/j_p3_cause/prelaunch_j9/h6_dg3_v4on_t4h.SHA256SUMS
+# the stored V0 grid of confirmation (나) (spec 6.3: the key file's V0 pairs)
+06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r6*.json
+# the sealed key lists and L1 key files (also asserted by --edition 6)
+06_analysis/02_control/j_p3_cause/ed6_design/keys/sens_keys_v2.json
+06_analysis/02_control/j_p3_cause/ed6_design/keys/confirm_a_keys_v2.json
+06_analysis/02_control/j_p3_cause/ed6_design/keys/confirm_b_grid192.json
+06_analysis/02_control/j_p3_cause/prelaunch_j9/ed5_inputs/l1_keys_12b.txt
+06_analysis/02_control/j_p3_cause/prelaunch_j9/l1_keys_d3c6c57e.json
+# The code is not listed: the list tool reads --repo (the main checkout, which holds master, not
+# the run commit's tools); every step asserts the run worktree's HEAD, its clean tree and
+# 03_src = ac3c25a7 instead (common_ed6.ps1).
