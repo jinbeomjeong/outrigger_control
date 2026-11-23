@@ -450,6 +450,10 @@ def p3_hash_jobs(source: Path = P3_HASH_SOURCE) -> list[tuple[int, dict]]:
     return list(jobs.values())
 
 
+GRID_TWIN_FIELDS = ("event", "timing")
+"""Twin fields of a stored-grid row (edition 6 confirmation grid, spec 6.3 (나): the r67 event
+name and timing of ``EventTwin``); a job twin with them gets them in its T4h file name, so the
+FS24 / G4 / RE1bF rows of one (level, leg, F_s, offset) do not share a file."""
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
 """Job entries ``main`` adds for the worker only (not part of the job identity)."""
 T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", *JP3_JUDGED_SETTINGS, *JP3_DIAG_SETTINGS,
@@ -470,6 +474,9 @@ def t4h_file_name(job: dict) -> str:
     if job.get("twin"):
         twin = job["twin"]
         phase = f"{twin['level']}-{twin['leg']}-Fs{twin['fs_kN']:g}-o{job.get('offset_s')}"
+        for field in GRID_TWIN_FIELDS:  # edition 6 grid rows (6.3 (나)); absent elsewhere
+            if field in twin:
+                phase += f"-{twin[field]}"
     elif job.get("offset_s") is not None:
         phase = f"o{job['offset_s']}"
     else:
