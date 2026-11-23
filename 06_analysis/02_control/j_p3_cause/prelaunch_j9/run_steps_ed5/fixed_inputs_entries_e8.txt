@@ -1,0 +1,28 @@
+# 436.9 J-P3 edition 5 erratum 8 8-9: the entries of FIXED_INPUTS_<tool commit 8>.SHA256SUMS
+# (prelaunch_ed5.ps1 -Part list_e8, jp3_fixed_inputs_list.py --entries), repository-relative;
+# a line with * ? [ is a glob (at least one match). The list tool adds the X-11 plans and the dry
+# selection with its key files itself. No code path is listed: the judge tool is the tool
+# checkout's (HEAD and clean tree checked by every step, 8-9 (a')).
+# erratum 8 and the path 2 erratum e8 (sealed together, cd2de978)
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum8.md
+06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v5_erratum8.md.sha256
+06_analysis/02_control/j_p3_cause/jp3_rev6_p2_handoff_ed5_e8.md
+06_analysis/02_control/j_p3_cause/jp3_rev6_p2_handoff_ed5_e8.md.sha256
+# 8-1.3: the b1 / b2 VBK0 outputs taken again (their T4h digests are checked by decide, 8-9 (d))
+06_analysis/02_control/j_p3_cause/j9_runs/606f8713/12b_vbk0_base_a1/VBK0_b1.json
+06_analysis/02_control/j_p3_cause/j9_runs/606f8713/12b_vbk0_base_a1/VBK0_b2.json
+# the evidence folders of erratum 8
+06_analysis/02_control/j_p3_cause/ed5_design/stats_e8/SHA256SUMS
+06_analysis/02_control/j_p3_cause/ed5_design/stats_e8_review/SHA256SUMS
+06_analysis/02_control/j_p3_cause/ed5_design/aa_stop_606f8713/SHA256SUMS
+06_analysis/02_control/j_p3_cause/ed5_design/e8_p2_leak/SHA256SUMS
+# 8-9 (a''): the run commit's fixed list (the two lists are linked through this line)
+06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_606f8713.SHA256SUMS
+# the case source (the list tool requires it with its fixed sha256)
+06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json
+# the run steps of the tool commit (the main checkout's files, the tool commit filled in)
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/common.ps1
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/record_helper.ps1
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/*.ps1
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/fixed_inputs_entries.txt
+06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/fixed_inputs_entries_e8.txt

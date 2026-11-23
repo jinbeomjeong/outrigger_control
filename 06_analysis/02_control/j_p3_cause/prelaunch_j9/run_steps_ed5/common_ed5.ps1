@@ -17,16 +17,35 @@
 #   5. (main session commit: this file filled in, the parts 1 .. 4)
 #   6. prelaunch_ed5.ps1 -Part list      FIXED_INPUTS_<run commit 8>.SHA256SUMS
 #   7. (main session commit: the fixed list)
-#   8. step0_cdry.ps1, then the steps 1 .. 7 (6b / 6c for 12b), step7b_ckdrop.ps1 (a record),
-#      step8_j9main.ps1
+#   8. step0_cdry.ps1, then the steps 1 .. 6 and 6b base at the run commit (done / stopped)
 # A step refuses to start while a placeholder is left or the fixed list is not tracked and
 # equal to its files (Initialize-Ed5Step). Two exceptions: step_l1ref.ps1 and step_p5fixed.ps1
 # run before the list exists (their outputs go into it), so they take the edition 4a start
 # checks only (run commit, clean tree, the 4a fixed inputs; Initialize-Step).
+#
+# Erratum 8 (jp3_remedy_spec_v5_erratum8.md, sealed cd2de978; two commits, 8-9): the steps after
+# 6b run with the run step scripts and the judge tool of the tool commit, the simulations still
+# at the run commit in ed5-run5. Order (8-9 "12b 진행"):
+#   9. (main session: the tool commit merged, $ToolCommit below filled in and committed)
+#  10. prelaunch_ed5.ps1 -Part list_e8   FIXED_INPUTS_<tool commit 8>.SHA256SUMS (the entries of
+#      fixed_inputs_entries_e8.txt; it lists FIXED_INPUTS_<run commit 8> too), then commit it
+#  11. step6b_decide_e8.ps1 (12b_decide_e8), if needs_b4: step6b_vbk0.ps1 -Phase b4 (12b_vbk0_b4) and
+#      step6b_decide_e8_b4.ps1 (12b_decide_e8_b4); step6c_vbk.ps1 (12b_vbk), step7_records.ps1,
+#      step7b_ckdrop.ps1, step8_j9main.ps1
+# Each of them starts with Initialize-E8Step: the run commit checks of Initialize-Step, then
+# the tool checkout (HEAD = $ToolCommit, clean; 8-9 (a')), the run steps here = the tool
+# commit's but the $ToolCommit line (8-9 (f)), git diff --name-status of the run commit against
+# the tool commit and against HEAD of this checkout (the list commit) by the rule of 8-9 (a),
+# the two fixed lists (8-9 (a''): FIXED_INPUTS_<run commit 8> first, its run step lines replaced
+# by the tool list's; then FIXED_INPUTS_<tool commit 8>) and the static import closure of the
+# VBK / VBK0 runners (las_t3_dg3.py, jp3_run_identity.py) against the tool commit's changes
+# (8-9, disjoint or stop 3). Judge commands run in the tool checkout (Invoke-ToolJudge).
 
 . "$PSScriptRoot\..\run_steps\common.ps1"
 . "$PSScriptRoot\..\run_steps\record_helper.ps1"
 . "$PSScriptRoot\record_gates_ed5.ps1"
+. "$PSScriptRoot\e8_gates_ed5.ps1"
+$Ed5StepsDir = $PSScriptRoot
 
 # --- run commit and paths (the main session fills them in) -----------------------------------
 $RunCommit = '606f87131a7f13468f1db37cf6c811c442a6caf0'
@@ -73,6 +92,9 @@ $PreviousRunsRoot = "$CauseDir\j9_runs\$($PreviousRunCommit.Substring(0, 8))"
 # possible): the P-1 import closure (meets = the content comparison path, erratum 2 2-4) and
 # the T-JR-12a bundles (6.2)
 $RecordCodeTools += @('tool:p1_import_closure', 'tool:t12_VBH', 'tool:t12_VBJ')
+# erratum 8 8-9: the import closure exit 1 (meets) stops 3 as a broken precondition, never as a
+# judged failure
+$RecordCodeTools += @('tool:e8_tool_closure')
 
 function Read-PreviousStops([string]$StepName) {
     # edition 5 override of ..\run_steps\common.ps1 (that file stays as edition 4a listed it):
@@ -168,11 +190,13 @@ function Write-DiffStat {
     $StepState.Codes['git_diff_stat'] = Get-RepoPath $Log
 }
 
-function Invoke-RecordTool([string]$Label, [string[]]$Arguments) {
+function Invoke-RecordTool([string]$Label, [string[]]$Arguments, [switch]$InToolCheckout) {
     # erratum 2 2-1 (re-audit warnings 2 / 3): a record item (l1_overlap, l1_hash_record) never
     # stops the step - exit 2 / 3 go on and leave "<label>_record_status.json" with computed
-    # false and the reason; exit 0 leaves computed true
-    $Code = Invoke-Judge $Label $Arguments -ContinueCodes @(0, 2, 3)
+    # false and the reason; exit 0 leaves computed true. -InToolCheckout: the tool commit's
+    # tool (erratum 8 8-9 (f), step7b_ckdrop.ps1)
+    $Code = if ($InToolCheckout) { Invoke-ToolJudge $Label $Arguments -ContinueCodes @(0, 2, 3) }
+    else { Invoke-Judge $Label $Arguments -ContinueCodes @(0, 2, 3) }
     $Status = if ($Code -eq 0) { [ordered]@{ label = $Label; computed = $true; exit_code = 0 } } else {
         [ordered]@{ label = $Label; computed = $false; exit_code = $Code; reason = "$Label exit $Code (a record, erratum 2 2-1)" }
     }
@@ -266,7 +290,8 @@ function Assert-NoL1Inputs([string[]]$Inputs) {
     # erratum 2 2-1 / 2-7.1 / G-1: call before a j9_main judge command. The L1 reference sha256
     # set: the two 12b l1ref runs by their FIXED_INPUTS sha256, the two T-JR-12a L1 runs of the
     # attempt dg3.done names by their files (dg3.done or a file missing: not judgeable, exit
-    # 2). An input file of one of these sha256 stops as a setting defect (exit 2).
+    # 2). An input file of one of these sha256 stops as a setting defect (exit 2). The guard is
+    # a judge command of step 8, so it runs in the tool checkout (erratum 8 8-9 (f)).
     $DonePath = "$RunsRoot\dg3.done"
     if (-not (Test-Path -LiteralPath $DonePath)) { Stop-Step 2 "dg3.done missing (erratum 2 G-1: no T-JR-12a L1 reference)" }
     $Dg3Folder = "$RunsRoot\$(Split-Path -Leaf (Get-Content -Raw -LiteralPath $DonePath | ConvertFrom-Json).folder)"
@@ -277,5 +302,229 @@ function Assert-NoL1Inputs([string[]]$Inputs) {
         $Arguments += @('--l1-reference-sha256', (Get-ListedSha (Get-L1Run $Setting)), '--l1-reference', $Dg3L1)
     }
     foreach ($InputFile in $Inputs) { $Arguments += @('--input', $InputFile) }
-    Invoke-Judge 'l1_input_guard' $Arguments | Out-Null
+    Invoke-ToolJudge 'l1_input_guard' $Arguments | Out-Null
+}
+
+# --- erratum 8: the tool commit (8-9) ----------------------------------------------------------
+# The main session writes the tool commit (the commit of jp3_12b_judge.py with erratum 8 8-8,
+# its tests and these run steps) after it is made; the tool checkout is the locked worktree at
+# that commit. Judge commands run there; simulations stay at $RunCommit in $Worktree.
+$ToolCommit = '<ED5_TOOL_COMMIT>'
+$ToolWorktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-tool8'
+$E8RunStepsDir = "$PrelaunchDir\run_steps_ed5"
+$E8EntriesFile = "$PSScriptRoot\fixed_inputs_entries_e8.txt"
+# erratum 8 8-1.3: the fixed b1 / b2 VBK0 outputs of 12b_vbk0_base_a1 (run file sha256 and the
+# T4h digest of jp3_12b_judge.input_record); decide checks them (8-9 (d))
+$E8Vbk0Expected = [ordered]@{
+    b1 = @{ run_sha256 = '87e76b0bcc4d32cadd10592cac8314452a9408b6fde4765b77388061caf23c4e'
+        t4h_digest = '561438f1da1335cf76e48fd5a1eaafeab3caf778161139ec6998abbad32d031d' }
+    b2 = @{ run_sha256 = '205079fec5c7ea8c6460dd172b3e44129dd355242e675378a5f0147441cd0a8a'
+        t4h_digest = 'b0c4a79be083e14515692b5a996d775e4fb799c8a252af1f7e741f04c4a616a8' }
+}
+# erratum 8 8-9 (c), user confirmation 2026-11-23: the environment variables the VBK runs need
+# beyond the b1 / b2 VBK0 ones (name = value). None: Get-R79Environment gives VBK the same
+# variables as VBK0 (R79_ROD_MODEL plant_truth for both, re-audit R-16) but the setting name,
+# the plan and the T4h folder, which 8-9 (c) allows to differ.
+$E8VbkExtraEnvironment = @{}
+$E8RunMasks = @('0x000F', '0x00F0', '0x0F00', '0xF000')  # one P quarter per block (as 6b / 6c)
+
+function Assert-ToolConfigured {
+    # the tool commit filled in (a full sha, not the run commit); no step starts before
+    if ($ToolCommit -match $Ed5Placeholder -or $ToolCommit -notmatch '^[0-9a-f]{40}$') {
+        Write-Host "STOP: common_ed5.ps1 tool commit $ToolCommit is not filled in (erratum 8 8-9: the main session writes it after the tool commit)"
+        exit 3
+    }
+    if ($ToolCommit -eq $RunCommit) { Write-Host 'STOP: the tool commit is the run commit'; exit 3 }
+    if ($Ed5StepsDir -ne $E8RunStepsDir) {
+        Write-Host "STOP: run the steps from $E8RunStepsDir (the fixed lists name the main checkout's files), not $Ed5StepsDir"
+        exit 3
+    }
+}
+
+function Get-ToolList { return "$PrelaunchDir\FIXED_INPUTS_$($ToolCommit.Substring(0, 8)).SHA256SUMS" }
+
+function Assert-ToolCheckout {
+    # 8-9 (a'): the tool checkout's HEAD is the tool commit and its tracked tree is clean (a git
+    # failure is never read as clean)
+    $Head = (& git -C $ToolWorktree rev-parse HEAD)
+    if ($LASTEXITCODE -ne 0) { Stop-Step 3 'git rev-parse of the tool checkout failed (no identity)' }
+    if ($Head.Trim() -ne $ToolCommit) { Stop-Step 3 "tool checkout HEAD $Head is not the tool commit $ToolCommit" }
+    $Status = (& git -C $ToolWorktree status --porcelain --untracked-files=no)
+    if ($LASTEXITCODE -ne 0) { Stop-Step 3 'git status of the tool checkout failed (no identity)' }
+    if ($Status) { Stop-Step 3 "tool checkout not clean: $($Status -join '; ')" }
+}
+
+function Get-GitLines([string[]]$Arguments) {
+    # git output lines decoded as UTF-8 (paths outside ASCII); a git failure stops 3
+    $Previous = [Console]::OutputEncoding
+    [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
+    try { $Lines = @(& git -C $MainRoot -c core.quotepath=false @Arguments) }
+    finally { [Console]::OutputEncoding = $Previous }
+    if ($LASTEXITCODE -ne 0) { Stop-Step 3 "git $($Arguments -join ' ') failed (no identity)" }
+    return , $Lines
+}
+
+function Assert-ToolScripts {
+    # 8-9 (f): the run steps run here are the tool commit's; only the $ToolCommit line of this
+    # file may differ (the main session fills it in after the tool commit)
+    $Relative = Get-RepoPath $E8RunStepsDir
+    $Changed = Get-GitLines @('diff', '--no-renames', '--name-status', $ToolCommit, '--', $Relative)
+    $CommonLine = "M`t$Relative/common_ed5.ps1"
+    foreach ($Line in $Changed) {
+        if ($Line -cne $CommonLine) { Stop-Step 3 "run step '$Line' differs from the tool commit (erratum 8 8-9 (f))" }
+    }
+    if ($Changed -ccontains $CommonLine) {
+        $Diff = Get-GitLines @('diff', '-U0', $ToolCommit, '--', "$Relative/common_ed5.ps1")
+        $Edits = @($Diff | Where-Object { $_ -match '^[+-]' -and $_ -notmatch '^(\+\+\+|---) ' })
+        $ToolLines = @($Edits | Where-Object { $_ -match "^[+-]\`$ToolCommit = '[^']*'$" })
+        if ($Edits.Count -ne 2 -or $ToolLines.Count -ne 2) {
+            Stop-Step 3 'common_ed5.ps1 differs from the tool commit beyond the $ToolCommit line (erratum 8 8-9 (f))'
+        }
+    }
+    $StepState.Codes['e8_run_steps'] = "the tool commit's ($ToolCommit) but the `$ToolCommit line"
+}
+
+function Assert-ToolDiff {
+    # 8-9 (a): git diff --name-status of the run commit against the tool commit and against HEAD
+    # of this checkout (the list commit) into the step logs, each by the rule of
+    # e8_gates_ed5.ps1 Get-E8DiffStop (a line outside it stops 3)
+    $MainHead = (Get-GitLines @('rev-parse', 'HEAD'))[0].Trim()
+    foreach ($Target in @(@('tool_commit', $ToolCommit), @('main_head', $MainHead))) {
+        $Lines = Get-GitLines @('diff', '--no-renames', '--name-status', $RunCommit, $Target[1])
+        $Log = "$($StepState.Folder)\logs\e8_diff_$($Target[0]).txt"
+        [IO.File]::WriteAllText($Log, "# git diff --no-renames --name-status $RunCommit $($Target[1])`n" + ($Lines -join "`n") + "`n")
+        $StepState.Codes["e8_diff:$($Target[0])"] = "$($Target[1]) $(Get-RepoPath $Log)"
+        $Stop = Get-E8DiffStop $Lines
+        if ($Stop) { Stop-Step $Stop.code "$($Target[0]) $($Target[1]): $($Stop.reason)" }
+    }
+}
+
+function Assert-TrackedList([string]$List) {
+    # a fixed list is tracked and equal to HEAD of this checkout (else not judgeable: exit 2)
+    $Relative = Get-RepoPath $List
+    & git -C $MainRoot ls-files --error-unmatch -- $Relative *> $null
+    if ($LASTEXITCODE -ne 0) { Stop-Step 2 "$Relative is not tracked by git" }
+    & git -C $MainRoot diff --quiet HEAD -- $Relative
+    if ($LASTEXITCODE -ne 0) { Stop-Step 2 "$Relative differs from HEAD (or git failed)" }
+}
+
+function Assert-E8FixedLists {
+    # 8-9 (a''): both lists from this checkout - FIXED_INPUTS_<run commit 8> first (its run step
+    # lines are replaced by the tool list's: the tool commit changed the run steps), then
+    # FIXED_INPUTS_<tool commit 8>, which names the first list with its sha256
+    $ToolList = Get-ToolList
+    Assert-TrackedList $FixedList
+    Assert-TrackedList $ToolList
+    $Stop = Get-E8FixedListStop $FixedList $ToolList $MainRoot $E8RunStepsPrefix
+    if ($Stop) { Stop-Step $Stop.code $Stop.reason }
+    $StepState.Codes['fixed_list'] = Get-RepoPath $FixedList
+    $StepState.Codes['fixed_list_tool'] = Get-RepoPath $ToolList
+}
+
+function Assert-ToolClosure {
+    # 8-9: no file the tool commit changed is in the static import closure of the VBK / VBK0
+    # runners (P-1 closure check of erratum 2 2-4, the run commit's tool on the run worktree);
+    # meets (1) stops 3, 2 / 3 stop with their code
+    $Out = "$($StepState.Folder)\judge\e8_tool_closure.json"
+    $Code = Invoke-Tool 'e8_tool_closure' @("$Coupled/jp3_import_closure.py", '--repo', $Worktree,
+        '--entry', "$Coupled/las_t3_dg3.py", '--entry', "$Coupled/jp3_run_identity.py",
+        '--base', $RunCommit, '--head', $ToolCommit, '--out', $Out)
+    if ($Code -eq 1) { Stop-Step 3 "erratum 8 8-9: a file of the tool commit is in the runner import closure ($Out)" }
+    if ($Code -ne 0) { Stop-Step $Code "e8_tool_closure exit $Code" }
+}
+
+function Initialize-E8Step([string]$StepName, [int]$Attempt, [string[]]$Requires) {
+    # the edition 4a step start at the run commit (Initialize-Step), then the erratum 8 checks
+    # of the tool commit (8-9 (a) .. (a''), (f)); the two identity expectations go into the record
+    Assert-ToolConfigured
+    $Folder = Initialize-Step $StepName $Attempt $Requires
+    $StepState.Codes['expect_simulation'] = "$RunCommit ($Worktree)"
+    $StepState.Codes['expect_judge'] = "$ToolCommit ($ToolWorktree)"
+    Assert-ToolCheckout
+    Assert-ToolScripts
+    Assert-ToolDiff
+    Assert-E8FixedLists
+    Assert-ToolClosure
+    return $Folder
+}
+
+function Invoke-ToolJudge([string]$Label, [string[]]$Arguments, [int[]]$ContinueCodes = @(0)) {
+    # 8-9 (a'): a judge command in the tool checkout - its working folder and its script (the
+    # first argument, repository-relative) there, the checkout at the tool commit and clean;
+    # both go into the step record. Returns the exit code; a code outside ContinueCodes stops.
+    Assert-ToolCheckout
+    $Script = [IO.Path]::GetFullPath((Join-Path $ToolWorktree $Arguments[0]))
+    if (-not $Script.StartsWith("$ToolWorktree\", [StringComparison]::OrdinalIgnoreCase) -or
+        -not (Test-Path -LiteralPath $Script -PathType Leaf)) {
+        Stop-Step 3 "judge script $Script is not a file of the tool checkout"
+    }
+    Push-Location -LiteralPath $ToolWorktree
+    try {
+        $WorkingFolder = (Get-Location).Path
+        $Code = Invoke-Tool $Label (@($Script) + @($Arguments | Select-Object -Skip 1))
+    } finally { Pop-Location }
+    $StepState.Codes["judge_identity:$Label"] = [ordered]@{ commit = $ToolCommit; is_clean = $true
+        working_folder = $WorkingFolder; script = $Script }
+    if ($ContinueCodes -notcontains $Code) { Stop-Step $Code "$Label exit $Code" }
+    return $Code
+}
+
+function Get-E8BaseVbk0Folder {
+    # 8-9 (e): the stopped 12b_vbk0_base_a1 (its b1 / b2 VBK0 outputs pass only through the
+    # decide check of 8-9 (d))
+    $Result = Get-E8BaseStop $RunsRoot
+    if ($Result.ContainsKey('code')) { Stop-Step $Result.code $Result.reason }
+    $StepState.Codes['e8_base_vbk0'] = Get-RepoPath $Result.folder
+    return $Result.folder
+}
+
+function Invoke-E8Decide([string]$Out, [hashtable]$Vbk0Folders) {
+    # jp3_12b_judge.py decide (erratum 8 8-8.1) in the tool checkout on the VBK0 blocks of
+    # $Vbk0Folders (block -> folder with VBK0_<block>.json and VBK0_<block>_t4h) with the 8-1.3
+    # expectations of b1 / b2 (8-9 (d)); exit 2 / 3 stop
+    $Arguments = @("$Coupled/jp3_12b_judge.py", 'decide', '--selection', $X11Selection,
+        '--selection-sha256', (Get-X11Sha), '--out', $Out)
+    foreach ($Block in @('b1', 'b2', 'b4')) {
+        if (-not $Vbk0Folders.ContainsKey($Block)) { continue }
+        $Source = $Vbk0Folders[$Block]
+        $Arguments += @('--vbk0', "$Block=$Source\VBK0_$Block.json", '--vbk0-t4h', "$Block=$Source\VBK0_${Block}_t4h")
+    }
+    foreach ($Block in $E8Vbk0Expected.Keys) {
+        $Arguments += @('--expect-vbk0-sha256', "$Block=$($E8Vbk0Expected[$Block].run_sha256)",
+            '--expect-vbk0-t4h-digest', "$Block=$($E8Vbk0Expected[$Block].t4h_digest)")
+    }
+    Invoke-ToolJudge 'decide' $Arguments | Out-Null
+}
+
+function Assert-E8Decision([string]$Path, [string[]]$Allowed) {
+    # the decision record of this step has an allowed status (8-9 (d), 3); its file and sha256
+    # go into the step record
+    $Stop = Get-E8DecisionStop $Path $Allowed
+    if ($Stop) { Stop-Step $Stop.code $Stop.reason }
+    $StepState.Codes['decision_file'] = Get-RepoPath $Path
+    $StepState.Codes['decision_sha256'] = (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLower()
+    $StepState.Codes['decision_status'] = [string](Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json).status
+}
+
+function Assert-E8RunCondition([string]$BaseFolder, [string]$Setting, [hashtable]$Environment, [int]$Workers) {
+    # 8-9 (c) before a VBK or b4 VBK0 run: its environment and --workers against the b1 / b2
+    # VBK0 runs of the base step record
+    $Record = Get-Content -Raw -LiteralPath "$BaseFolder\step_record.json" | ConvertFrom-Json
+    foreach ($Block in $E8Vbk0Expected.Keys) {
+        $Command = @($Record.commands | Where-Object { $_.label -eq "VBK0_$Block" })
+        if ($Command.Count -ne 1) { Stop-Step 3 "base step record without one VBK0_$Block command" }
+        $Stop = Get-E8EnvironmentStop $Command[0].environment $Environment $Setting $E8VbkExtraEnvironment
+        if (-not $Stop) { $Stop = Get-E8WorkersStop $Command[0].command $Workers }
+        if ($Stop) { Stop-Step $Stop.code "against VBK0_${Block}: $($Stop.reason)" }
+    }
+    $StepState.Codes["e8_run_condition:$Setting"] = 'environment and --workers as the b1 / b2 VBK0 runs (8-9 (c))'
+}
+
+function Assert-E8RunIdentity([string]$BaseFolder, [string]$IdentityPath) {
+    # 8-9 (c) after a run: its identity record against the b1 / b2 VBK0 ones
+    foreach ($Block in $E8Vbk0Expected.Keys) {
+        $Stop = Get-E8IdentityStop "$BaseFolder\VBK0_$Block.identity.json" $IdentityPath $RunCommit
+        if ($Stop) { Stop-Step $Stop.code $Stop.reason }
+    }
+    $StepState.Codes["e8_identity:$(Split-Path -Leaf $IdentityPath)"] = 'as the b1 / b2 VBK0 runs (8-9 (c))'
 }

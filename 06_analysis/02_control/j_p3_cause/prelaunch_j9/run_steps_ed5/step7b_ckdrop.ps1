@@ -7,10 +7,14 @@
 # -100 bar, DROPOUT NaN), R79_ROD_MODEL=plant_truth, 1 worker each, all at once on -MaskHex
 # (the placement is the main session's). Then jp3_ckdrop_record.py: exit 2 / 3 are written as
 # "not computed" (Invoke-RecordTool) and stop nothing.
+# Erratum 8 8-9 (f): the script of the tool commit (Initialize-E8Step), the runs at the run
+# commit in ed5-run5, jp3_ckdrop_record.py in the tool checkout (the same blob as the run
+# commit's; it reads fault_pairs / phase_fault_pairs / ready_time of jp3_12b_judge.py, which
+# erratum 8 leaves as they were).
 param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex)
 . "$PSScriptRoot\common_ed5.ps1"
 
-$Folder = Initialize-Ed5Step 'ckdrop' $Attempt @('records')
+$Folder = Initialize-E8Step 'ckdrop' $Attempt @('records')
 $Bundles = @('tck', 'dropout')
 $Legs = @('FL', 'FR', 'RL', 'RR')
 $Arms = @('VBK0', 'VBK')
@@ -43,6 +47,6 @@ foreach ($Bundle in $Bundles) {
 }
 Wait-Runs $Runs
 Invoke-IdentityCheck
-Invoke-RecordTool 'ckdrop_record' $RecordArguments | Out-Null
+Invoke-RecordTool 'ckdrop_record' $RecordArguments -InToolCheckout | Out-Null
 
 Complete-Step

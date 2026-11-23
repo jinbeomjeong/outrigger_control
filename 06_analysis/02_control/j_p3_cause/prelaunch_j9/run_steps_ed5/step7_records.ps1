@@ -3,10 +3,13 @@
 # and the judge takes revision 6 reports only): t4h_replay --extend-start tracked_bound
 # --extend-start-revision 6 of the stored h10 T4h (426) then the stored H-6 T4h (135), single,
 # mask 0xFFFF -> jp3_tjr_judge.py records. Needs steps 2, 4a (j9_cases) and 6 (Dg-3).
+# Erratum 8 8-9 (f): the script of the tool commit (Initialize-E8Step), the replays at the run
+# commit in ed5-run5, the records judge in the tool checkout (the same blob as the run commit's:
+# 8-9 (a) changes no judge tool but jp3_12b_judge.py).
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed5.ps1"
 
-$Folder = Initialize-Ed5Step 'records' $Attempt @('dry', 'cases', 'dg3')
+$Folder = Initialize-E8Step 'records' $Attempt @('dry', 'cases', 'dg3')
 $CasesFolder = Get-StepFolder 'cases'
 $Dg3Folder = Get-StepFolder 'dg3'
 $Replays = [ordered]@{ h10 = "$ResumeK1\h10_reuse_rerun_t4h"; h6 = "$ResumeK1\h6_dg3_v4on_t4h" }
@@ -20,7 +23,7 @@ foreach ($Name in $Replays.Keys) {
 }
 Invoke-IdentityCheck
 
-Invoke-Judge 'records' @("$Coupled/jp3_tjr_judge.py", 'records',
+Invoke-ToolJudge 'records' @("$Coupled/jp3_tjr_judge.py", 'records',
     '--replay', "$Folder\t4h_replay_h10.json", "$Folder\t4h_replay_h6.json",
     '--t4h-sums', (Get-FixedPath 'H10_T4H_SUMS_SHA256'), (Get-FixedPath 'H6_T4H_SUMS_SHA256'),
     '--dg3', "$Dg3Folder\dg3_VBH.json", "$Dg3Folder\dg3_VBJ.json",

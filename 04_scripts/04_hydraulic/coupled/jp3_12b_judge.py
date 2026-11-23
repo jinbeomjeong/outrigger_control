@@ -3,29 +3,41 @@
 Sub-commands, run in the order of 8 4.(6) (VBK0 first):
 
 ``decide``  VBK0 outputs only (no VBK path argument; no VBK file is opened). On the blocks
-            given (b1, b2, then b3 / b4 when a decision asked for them): the key presence gate
-            (6.6, X-2), the plan and cell check against the X-11 ``selection.json``, the A/A
-            floor (6.3.8: b1 against b2, all 167 cases; one side without READY, or the first
-            READY difference rounded to 1e-6 s above 30 s; 3 pairs or more stop), the VBK0
-            classification (6.3.2 order: no trigger, pre-trigger fallback, not latched, VBK0
-            READY not reached, opportunity), the N top-up (6.3.5: ``N_opp < 0.9 N`` of b1 + b2
-            asks for b3; ``N_opp < 301`` after it is not judgeable) and the witness top-up
-            (6.3.6: ``k`` = opportunity pairs whose VBK0 columns show a witnessed retract carry
-            of the fault leg after the latch, ``rod_fault_plan.retract_witnesses`` with the TRw
-            form; ``k < 45`` asks for b4, whose opportunity pairs all count; ``k < 45`` after it
-            is not judgeable). Writes the decision record (inputs with their sha256, counts,
-            decisions, exit code).
-``judge``   The decision record (its sha256 given; status ``decided``, else exit 2 before any VBK
-            file is opened, also when its VBK0 inputs changed), the VBK0 and VBK outputs of the
-            decided blocks. Per pair the identity (가) trigger read, (나) pre-trigger command
-            sha256, (다) plan sha256 / fault id / leg / anchor / ``delay_reads`` 0 (6.3.4), the
-            pair classification (both arms; a VBK-only pre-trigger fallback or missing latch is
-            a setting defect, 6.3.5), the rev 6 identity of every VBK line (tag base
-            ``final_C4G2_P3W``, ``hydraulics_record.extend_bound_check.rule_revision`` and
-            ``run_extend_start_revision`` all 6, 4.6), then 6.3.7: (1) a new (name, leg) FAULT
-            pair of the T4h ``meta_json`` events on an opportunity or VBK0-READY-missing pair,
-            (2) READY more than 30 s later (rounded to 1e-6 s), (3) READY lost, (4) J-P3 of
-            those VBK lines (``j_p3_judgement_rev5``; 0 judged rows is not judgeable). Records:
+            given (b1, b2, then b4 when a decision asked for it): the input fixing of erratum 8
+            8-9 (d) (the expected run file sha256 and T4h digest of b1 and b2 are required
+            arguments; a missing or differing one is not judgeable and the record then holds
+            the status, the reason and the input sha256 only), the key presence gate (6.6, X-2),
+            the plan and cell check against the X-11 ``selection.json``, the A/A floor (a record
+            since erratum 8 8-1: b1 against b2, all 167 cases; one side without READY, or the
+            first READY difference rounded to 1e-6 s above 30 s; written as ``aa_floor``, never a
+            stop), the VBK0 classification (6.3.2 order: no trigger, pre-trigger fallback, not
+            latched, VBK0 READY not reached, opportunity), the N top-up (6.3.5 with erratum 8
+            8-8.1: ``N_opp < 0.9 N`` of b1 + b2 needs b3, and b3 has no allowance, so it is not
+            judgeable, also when b3 is given) and the witness top-up (6.3.6: ``k`` = opportunity
+            pairs whose VBK0 columns show a witnessed retract carry of the fault leg after the
+            latch, ``rod_fault_plan.retract_witnesses`` with the TRw form; ``k < 45`` asks for
+            b4, whose opportunity pairs all count; ``k < 45`` after it is not judgeable). A
+            ``decided`` record names the blocks (``blocks``, the same set as ``blocks_used``)
+            and the allowance ``allow_k`` of erratum 8 8-2 (b1 b2: 7, b1 b2 b4: 9). Writes the
+            decision record (inputs with their sha256, counts, decisions, exit code).
+``judge``   The decision record (its sha256 given; status ``decided`` with ``blocks_used`` and
+            ``allow_k`` of erratum 8 8-2, else exit 2 before any VBK file is opened, also when
+            its VBK0 inputs changed), the VBK0 and VBK outputs of the decided blocks. Per pair
+            the identity (가) trigger read, (나) pre-trigger command sha256, (다) plan sha256 /
+            fault id / leg / anchor / ``delay_reads`` 0 (6.3.4), the pair classification (both
+            arms; a VBK-only pre-trigger fallback or missing latch is a setting defect, 6.3.5),
+            the rev 6 identity of every VBK line (tag base ``final_C4G2_P3W``,
+            ``hydraulics_record.extend_bound_check.rule_revision`` and
+            ``run_extend_start_revision`` all 6, 4.6), then 6.3.7 with erratum 8 8-2: (1) a new
+            (name, leg) FAULT pair of the T4h ``meta_json`` events on an opportunity or
+            VBK0-READY-missing pair (0 count), (2)+(3) ``n23`` = the opportunity pairs whose
+            READY was lost or came more than 30 s later (rounded to 1e-6 s) over every used
+            block, failed when ``n23 > allow_k`` (the ``ready_rule`` block), (4) J-P3 of those
+            VBK lines (``j_p3_judgement_rev5``; 0 judged rows is not judgeable). Records: the
+            ``ready_rule`` record keys (``n_vbk0_worse*``, the LEVEL stall signature of erratum 8
+            8-3, ``by_cell``, ``by_block``; an exception there leaves that item ``computed``
+            False with its reason and never changes the status, erratum 8 8-8.2 W-4),
+            ``n_fault_judged`` (the (1) denominator N_1),
             category counts per block and cell, tau_R pairs by the phase of the trigger update
             (LEVEL / PROBE), the coverage keys of 6.3.9 after the latch on the fault leg (sums of
             ``jp3_r58_witness`` / ``jp3_r59_substeps`` / ``jp3_r510_candidates`` of the VBK T4h),
@@ -62,7 +74,9 @@ event pair (``PHASE_FAULT``, '–') of 6.3.7 (1).
 
 Inputs: ``--selection`` and ``--selection-sha256`` (the X-11 record), ``--vbk0 b<j>=<run json>``
 and ``--vbk0-t4h b<j>=<T4h folder>`` (the r79 runner output and its ``R79_T4H_DIR``; a line's
-``t4h_file`` is a name in that folder, never a path of the working folder), and for ``judge``
+``t4h_file`` is a name in that folder, never a path of the working folder), for ``decide``
+``--expect-vbk0-sha256 b<j>=<sha256>`` and ``--expect-vbk0-t4h-digest b<j>=<digest>`` of b1
+and b2 (erratum 8 8-1.3 fixed values; required, 8-9 (d)), and for ``judge``
 ``--vbk`` / ``--vbk-t4h`` alike plus ``--decision`` / ``--decision-sha256`` and
 ``--vbk0-grade-judge`` / ``--vbk-grade-judge`` with their sha256 (optional: a missing one is a
 grade record defect, F-1). ``--out`` must not exist. The
@@ -71,22 +85,29 @@ stdout's last line is JSON with ``status``, the problem counts and the output pa
 ======  ==================  ===================================================================
 exit    status              meaning
 ======  ==================  ===================================================================
-0       ``decided``         decide: the blocks are decided (``blocks``)
-0       ``needs_b3`` / ``needs_b4``  decide: run that VBK0 block, then decide again with it
-0       ``pass``            judge: every 6.3.7 count 0
+0       ``decided``         decide: the blocks are decided (``blocks``, ``blocks_used``,
+                            ``allow_k``)
+0       ``needs_b4``        decide: run the b4 VBK0 block, then decide again with it
+0       ``pass``            judge: (1) and (4) count 0 and ``n23 <= allow_k``
 0       ``written``         grade-judge / dry-c: the record written
-1       ``failed``          judge: a 6.3.7 failure (stop, 8 5: re-design) - also with setting
+1       ``failed``          judge: a 6.3.7 failure ((1) or (4) count 1 or more, or
+                            ``n23 > allow_k``; stop, 8 5: re-design) - also with setting
                             defects / not-judgeable reasons found in the same run, which are
                             kept in ``problems`` (erratum 2 2-10)
-2       ``aa_floor_stop``   decide: A/A 3 pairs or more (not judgeable, not a failure; ask
-                            again, no rerun before the answer, 6.3.8)
 2       ``setting_defect``  no failure; a not-latched pair, a pair identity / plan / revision
                             mismatch, a VBK-only pre-trigger fallback (outranks not_judgeable)
 2       ``not_judgeable``   a missing line, key or array (X-2), another cell table, a decision
-                            record of another sha or status, ``N_opp < 301`` / ``k < 45`` after
-                            the top-up, 0 judged rows, an existing ``--out``
+                            record of another sha, status, ``blocks_used`` or ``allow_k``
+                            (erratum 8 8-8.2), a missing or differing expected VBK0 input
+                            (8-9 (d)), b3 needed or given (8-8.1), ``N_opp < 301`` / ``k < 45``
+                            after the top-up, 0 judged rows, an existing ``--out``
 3       ``error``           a tool error (unreadable file, broken JSON, another shape)
 ======  ==================  ===================================================================
+
+Erratum 8 (``jp3_remedy_spec_v5_erratum8.md``, sealed cd2de978): the A/A stop of 6.3.8 is
+gone (the status ``aa_floor_stop`` is no longer written and a decision record that holds it is
+refused by ``judge``); (2) and (3) are one allowance count ``n23`` (8-2); the record keys of
+the ``ready_rule`` block are listed in 8-8.2.
 """
 from __future__ import annotations
 
@@ -95,7 +116,9 @@ import functools
 import hashlib
 import json
 import math
+import re
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -119,7 +142,24 @@ JUDGED_CATEGORIES = (OPPORTUNITY, VBK0_NOT_READY)
 """6.3.7 (1) and (4): opportunity pairs and VBK0-READY-missing pairs."""
 READY_LIMIT_S = 30.0
 READY_ROUND_DIGITS = 6
-AA_STOP_PAIRS = 3
+READY_LOSS, READY_PLUS30, READY_OK = "loss", "plus30", "ok"
+"""Erratum 8 8-8.2: the READY outcome of one opportunity pair."""
+ALLOW_K_BY_BLOCKS = {("b1", "b2"): 7, ("b1", "b2", "b4"): 9}
+"""Erratum 8 8-2: the allowance of ``n23`` by the used blocks (sorted); any other
+combination (every one with b3) has no allowance and is not judgeable."""
+B3_REASON = "b3 block combination has no allowance (erratum 8 8-2)"
+AA_RULE = "erratum 8 8-1: record"
+STALL_WINDOW_S = 20.0
+STALL_WINDOW_TOLERANCE_S = 1e-6
+STALL_SPAN_M = 1e-3
+STALL_LAST_PHASES = ("level", "probe")
+STALL_SIGNATURE_ARRAYS = ("t_s", "phase", "motor_stroke_m")
+"""Erratum 8 8-3: the T4h arrays of the LEVEL stall signature (a record)."""
+TRW_CELL = "TRw"
+"""Erratum 8 8-6: the cell name of the b4 (TRw) layer in ``by_cell``."""
+SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
+EXPECTED_VBK0_BLOCKS = ("b1", "b2")
+"""Erratum 8 8-1.3 / 8-9 (d): the VBK0 blocks with fixed values (b4 is recorded only)."""
 N_TOPUP_RATIO = 0.9
 N_OPP_MIN = 301
 K_MIN = 45
@@ -440,7 +480,8 @@ def classify_pair(vbk: Line, vbk0: Line, problems: Problems) -> str:
 
 # ------------------------------------------------------------------------------- decide
 def aa_floor(blocks: dict[str, dict[str, Line]], selection: dict) -> dict:
-    """6.3.8: b1 against b2 over all 167 cases (missing lines are not judgeable)."""
+    """6.3.8 count, a record since erratum 8 8-1: b1 against b2 over all 167 cases (missing
+    lines are not judgeable); it never stops the decision (``is_stop`` False, no ``stop_at``)."""
     first = {case_of(key): line for key, line in blocks["b1"].items()}
     second = {case_of(key): line for key, line in blocks["b2"].items()}
     cases = [row["case"] for row in selection["cell_table"]]
@@ -456,7 +497,7 @@ def aa_floor(blocks: dict[str, dict[str, Line]], selection: dict) -> dict:
                 READY_LIMIT_S:
             counted.append(case)
     return {"pairs": len(cases), "counted_pairs": len(counted), "counted": counted,
-            "stop_at": AA_STOP_PAIRS, "is_stop": len(counted) >= AA_STOP_PAIRS}
+            "rule": AA_RULE, "is_stop": False}
 
 
 def witness_after_latch(line: Line) -> bool:
@@ -496,14 +537,16 @@ def count_categories(lines: dict[str, Line]) -> dict[str, list[str]]:
     return by_category
 
 
+def allowance_of(blocks_used: list[str]) -> int | None:
+    """Erratum 8 8-2: ``k_allow`` of the used blocks (None: no allowance, not judgeable)."""
+    return ALLOW_K_BY_BLOCKS.get(tuple(sorted(blocks_used)))
+
+
 def decide(selection: dict, blocks: dict[str, dict[str, Line]]) -> dict:
-    """The decisions of 6.3.5, 6.3.6 and 6.3.8 on VBK0 lines (module docstring)."""
+    """The decisions of 6.3.5, 6.3.6 and the A/A record (erratum 8 8-8.1, module docstring)."""
     if not {"b1", "b2"} <= set(blocks):
         raise Stop("not_judgeable", "decide needs the VBK0 blocks b1 and b2")
-    aa = aa_floor(blocks, selection)
-    out: dict = {"aa": aa}
-    if aa["is_stop"]:
-        raise _with_record(Stop("aa_floor_stop", f"A/A: {aa['counted_pairs']} pairs"), out)
+    out: dict = {"aa_floor": aa_floor(blocks, selection)}
     categories = {block: count_categories(lines) for block, lines in blocks.items()}
     out["categories"] = {block: {name: len(keys) for name, keys in found.items()}
                          for block, found in categories.items()}
@@ -515,15 +558,12 @@ def decide(selection: dict, blocks: dict[str, dict[str, Line]]) -> dict:
     needs_b3 = opportunity_12 < N_TOPUP_RATIO * n_12
     out["n_topup"] = {"n_opp_b1_b2": opportunity_12, "n_b1_b2": n_12,
                       "threshold": N_TOPUP_RATIO * n_12, "needs_b3": needs_b3}
-    if needs_b3 and "b3" not in blocks:
-        out["status"], out["blocks"] = "needs_b3", ["b1", "b2"]
-        return out
-    if not needs_b3 and "b3" in blocks:
-        raise _with_record(Stop("not_judgeable", "b3 given but not asked for (6.3.5)"), out)
-    used = ["b1", "b2"] + (["b3"] if needs_b3 else [])
+    if needs_b3 or "b3" in blocks:  # erratum 8 8-8.1: b3 is never run (no allowance)
+        raise _with_record(Stop("not_judgeable", B3_REASON), out)
+    used = ["b1", "b2"]
     n_opp = sum(len(categories[block][OPPORTUNITY]) for block in used)
     if n_opp < N_OPP_MIN:
-        raise _with_record(Stop("not_judgeable", f"N_opp {n_opp} < {N_OPP_MIN} after b3"), out)
+        raise _with_record(Stop("not_judgeable", f"N_opp {n_opp} < {N_OPP_MIN}"), out)
     witness_pairs = [key for block in used for key in categories[block][OPPORTUNITY]
                      if witness_after_latch(blocks[block][key])]
     k = len(witness_pairs)
@@ -544,7 +584,9 @@ def decide(selection: dict, blocks: dict[str, dict[str, Line]]) -> dict:
         out["witness_topup"]["b4_opportunity_pairs"] = len(b4_pairs)
         if k < K_MIN:
             raise _with_record(Stop("not_judgeable", f"k {k} < {K_MIN} after b4"), out)
-    out.update(status="decided", blocks=used, n=CASES_PER_BLOCK * len(used), n_opp=n_opp, k=k)
+    # erratum 8 8-8.1: blocks (VBK runs, pair loop) and blocks_used (the allowance) agree
+    out.update(status="decided", blocks=used, blocks_used=list(used),
+               allow_k=allowance_of(used), n=CASES_PER_BLOCK * len(used), n_opp=n_opp, k=k)
     return out
 
 
@@ -654,8 +696,10 @@ def judge_pairs(blocks0: dict, blocks1: dict, decision: dict, problems: Problems
                     problems.failures.append(f"{key}: new FAULT {new_faults} (1)")
             elif new_faults:
                 records["new_faults_recorded"].append(pair)
+            if category == VBK0_NOT_READY:  # erratum 8 8-2: the READY of this pair is a record
+                pair["ready_s"], pair["ready0_s"] = ready_time(vbk.row), None
             if category == OPPORTUNITY:
-                _judge_ready(vbk, vbk0, pair, problems)
+                _judge_ready(vbk, vbk0, pair)
                 pair["coverage"] = coverage(vbk)
                 for name, value in pair["coverage"].items():
                     totals[name] += value
@@ -672,18 +716,187 @@ def judge_pairs(blocks0: dict, blocks1: dict, decision: dict, problems: Problems
     opportunity = sum(counts[OPPORTUNITY] for counts in by_block.values())
     return {"pairs": pairs, "categories_by_block": by_block, "jp3": jp3,
             "tau_r_trigger_phase": tau_r_phases, "coverage_totals": totals,
-            "n_opp": opportunity, **records}
+            "n_opp": opportunity, "n_fault_judged": len(judged_lines), **records}
 
 
-def _judge_ready(vbk: Line, vbk0: Line, pair: dict, problems: Problems) -> None:
-    """6.3.7 (2) and (3) on an opportunity pair (VBK0 reached READY)."""
+def ready_outcome(ready: float | None, ready0: float) -> str:
+    """Erratum 8 8-2 on a pair whose VBK0 reached READY: ``loss`` (VBK without READY),
+    ``plus30`` (VBK - VBK0 rounded to 1e-6 s with ``round`` above 30 s) or ``ok``."""
+    if ready is None:
+        return READY_LOSS
+    if round(ready - ready0, READY_ROUND_DIGITS) > READY_LIMIT_S:
+        return READY_PLUS30
+    return READY_OK
+
+
+def _judge_ready(vbk: Line, vbk0: Line, pair: dict) -> None:
+    """Erratum 8 8-8.2: the READY outcome of an opportunity pair (no failure per pair; the
+    allowance counts them in :func:`judge_ready_rule`)."""
     ready, ready0 = ready_time(vbk.row), ready_time(vbk0.row)
     pair["ready_s"], pair["ready0_s"] = ready, ready0
-    if ready is None:
-        problems.failures.append(f"{vbk.key}: READY lost (3)")
-        return
-    if round(ready - ready0, READY_ROUND_DIGITS) > READY_LIMIT_S:
-        problems.failures.append(f"{vbk.key}: READY more than {READY_LIMIT_S} s later (2)")
+    pair["ready_outcome"] = ready_outcome(ready, ready0)
+
+
+def judge_ready_rule(pairs: list[dict], decision: dict, n_fault_judged: int,
+                     problems: Problems) -> dict:
+    """Erratum 8 8-2 / 8-8.2: ``n23`` over the opportunity pairs of every used block against
+    ``allow_k`` of the (checked) decision record; ``n23 > allow_k`` is one failure. No
+    opportunity pair gives the verdict ``not_judgeable`` (never a pass on an empty set; the
+    status is not judgeable through :func:`cmd_judge`)."""
+    outcomes = [pair["ready_outcome"] for pair in pairs if pair["category"] == OPPORTUNITY]
+    n_loss = outcomes.count(READY_LOSS)
+    n_plus30 = outcomes.count(READY_PLUS30)
+    n_vbk_worse = n_loss + n_plus30
+    allow_k = decision["allow_k"]
+    if not outcomes:
+        verdict = "not_judgeable"
+    elif n_vbk_worse > allow_k:
+        verdict = "failed"
+        problems.failures.append(f"(2)+(3) n23 {n_vbk_worse} > allow {allow_k} (erratum 8 8-2)")
+    else:
+        verdict = "pass"
+    return {"rule": "erratum 8 8-2: n23 = READY lost + READY more than 30 s later over the "
+                    "opportunity pairs of every used block; pass if n23 <= allow_k",
+            "n_opp": len(outcomes), "n_ready_loss": n_loss, "n_ready_plus30": n_plus30,
+            "n_vbk_worse": n_vbk_worse, "allow_k": allow_k,
+            "blocks_used": list(decision["blocks_used"]), "verdict": verdict,
+            "n_fault_judged": n_fault_judged, "aa_floor": decision.get("aa_floor")}
+
+
+# ------------------------------------------------------------------- ready_rule records (W-4)
+def _cell_names(selection: dict) -> dict[str, str]:
+    """Plain case -> cell name ("0" .. "7") of the X-11 cell table."""
+    return {row["case"]: str(row["cell"]) for row in selection["cell_table"]}
+
+
+def _cell_of(pair: dict, cells: dict[str, str]) -> str:
+    """Erratum 8 8-6: the cell of a pair; every b4 pair is the TRw layer."""
+    if pair["block"] == "b4":
+        return TRW_CELL
+    return cells[case_of(pair["key"])]
+
+
+def _ready_counts(pairs: list[dict]) -> dict[str, int]:
+    """``n_opp`` / ``n_vbk_worse`` / ``n_ready_loss`` / ``n_ready_plus30`` of some pairs."""
+    outcomes = [pair["ready_outcome"] for pair in pairs if pair["category"] == OPPORTUNITY]
+    loss, plus30 = outcomes.count(READY_LOSS), outcomes.count(READY_PLUS30)
+    return {"n_opp": len(outcomes), "n_vbk_worse": loss + plus30, "n_ready_loss": loss,
+            "n_ready_plus30": plus30}
+
+
+def by_cell_record(pairs: list[dict], selection: dict, blocks_used: list[str]) -> dict:
+    cells = _cell_names(selection)
+    names = sorted(set(cells.values()), key=int) + ([TRW_CELL] if "b4" in blocks_used else [])
+    grouped: dict[str, list[dict]] = {name: [] for name in names}
+    for pair in pairs:
+        grouped[_cell_of(pair, cells)].append(pair)
+    return {"by_cell": {name: _ready_counts(found) for name, found in grouped.items()}}
+
+
+def by_block_record(pairs: list[dict], blocks_used: list[str]) -> dict:
+    grouped: dict[str, list[dict]] = {block: [] for block in blocks_used}
+    for pair in pairs:
+        grouped[pair["block"]].append(pair)
+    return {"by_block": {block: _ready_counts(found) for block, found in grouped.items()}}
+
+
+def vbk0_worse_record(pairs: list[dict]) -> dict:
+    """Erratum 8 8-6 (W-4): VBK0 without READY and VBK with it (the "VBK0 READY not reached"
+    pairs), and VBK0 READY more than 30 s after VBK's on the opportunity pairs where both
+    reached READY (rounded to 1e-6 s)."""
+    loss = sum(1 for pair in pairs
+               if pair["category"] == VBK0_NOT_READY and pair["ready_s"] is not None)
+    plus30 = sum(1 for pair in pairs
+                 if pair["category"] == OPPORTUNITY and pair["ready_s"] is not None
+                 and round(pair["ready0_s"] - pair["ready_s"], READY_ROUND_DIGITS)
+                 > READY_LIMIT_S)
+    return {"n_vbk0_worse": loss + plus30, "n_vbk0_worse_loss": loss,
+            "n_vbk0_worse_plus30": plus30}
+
+
+def is_stall_signature(line: Line) -> bool:
+    """Erratum 8 8-3 (a record): no READY, no fault phase entry (``PHASE_FAULT``), the last T4h
+    ``phase`` row ``level`` or ``probe`` (compared in lower case), and every leg's
+    ``motor_stroke_m`` span below 1 mm over the reads with ``t_s`` >= last ``t_s`` - 20 s
+    - 1e-6 s.
+
+    Raises:
+        ValueError: The three arrays do not have one row per read and four legs.
+    """
+    if ready_time(line.row) is not None:
+        return False
+    arrays = line.arrays()
+    times = np.asarray(arrays["t_s"], float)
+    phases = [str(value).lower() for value in arrays["phase"]]
+    strokes = np.asarray(arrays["motor_stroke_m"], float)
+    if (times.ndim != 1 or len(times) == 0 or len(phases) != len(times)
+            or strokes.shape != (len(times), len(LEGS))):
+        raise ValueError(f"{line.key}: t_s {times.shape}, phase {len(phases)}, motor_stroke_m "
+                         f"{strokes.shape} are not one row per read")
+    if phase_fault_pairs(phases) or phases[-1] not in STALL_LAST_PHASES:
+        return False
+    window = times >= times[-1] - STALL_WINDOW_S - STALL_WINDOW_TOLERANCE_S
+    spans = strokes[window].max(axis=0) - strokes[window].min(axis=0)
+    return bool((spans < STALL_SPAN_M).all())
+
+
+def _signature_entry(block: str, line: Line) -> dict:
+    return {"block": block, "key": line.key,
+            "last_t_s": float(np.asarray(line.arrays()["t_s"], float)[-1])}
+
+
+def stall_signature_record(pairs: list[dict], blocks0: dict, blocks1: dict,
+                           blocks_used: list[str]) -> tuple[dict, list[str]]:
+    """Erratum 8 8-3 / 8-6: the READY-lost pairs whose VBK line is a stall signature and the
+    VBK0 lines of the used blocks that are; a missing signature array leaves the item not
+    computed (its reasons returned, the status unchanged)."""
+    lost = [(pair["block"], blocks1[pair["block"]][pair["key"]]) for pair in pairs
+            if pair.get("ready_outcome") == READY_LOSS]
+    unready0 = [(block, line) for block in blocks_used for line in blocks0[block].values()
+                if ready_time(line.row) is None]
+    missing = sorted({f"{name} of {line.key}" for _, line in lost + unready0
+                      for name in STALL_SIGNATURE_ARRAYS if name not in line.arrays()})
+    if missing:
+        return {}, [f"T4h array {text} missing" for text in missing[:5]] + (
+            [f"(+{len(missing) - 5})"] if len(missing) > 5 else [])
+    return {"stall_signature_pairs": [_signature_entry(block, line) for block, line in lost
+                                      if is_stall_signature(line)],
+            "stall_signature_vbk0_lines": [_signature_entry(block, line)
+                                           for block, line in unready0
+                                           if is_stall_signature(line)]}, []
+
+
+RECORD_ITEM_KEYS = {
+    "stall_signature": ("stall_signature_pairs", "stall_signature_vbk0_lines"),
+    "n_vbk0_worse": ("n_vbk0_worse", "n_vbk0_worse_loss", "n_vbk0_worse_plus30"),
+    "by_cell": ("by_cell",),
+    "by_block": ("by_block",),
+}
+"""Erratum 8 8-8.2 (W-4): the ``ready_rule`` record items and their value keys."""
+
+
+def computed_record(item: str, compute: Callable[[], tuple[dict, list[str]]]) -> dict:
+    """One ``ready_rule`` record item with ``<item>_computed`` and ``<item>_reasons``: an
+    exception or a returned reason leaves its values None and ``computed`` False. A record
+    item never touches ``problems`` (erratum 8 8-8.2 W-4, like the grade transitions)."""
+    try:
+        values, reasons = compute()
+    except Exception as exc:  # noqa: BLE001 (W-4: a record item never ends the judgement)
+        values, reasons = {}, [f"exception {type(exc).__name__}: {exc}"]
+    if reasons:
+        values = dict.fromkeys(RECORD_ITEM_KEYS[item])
+    return {**values, f"{item}_computed": not reasons, f"{item}_reasons": reasons}
+
+
+def ready_rule_records(pairs: list[dict], blocks0: dict, blocks1: dict, selection: dict,
+                       blocks_used: list[str]) -> dict:
+    """The record keys of the ``ready_rule`` block (erratum 8 8-6, 8-8.2)."""
+    return {**computed_record("n_vbk0_worse", lambda: (vbk0_worse_record(pairs), [])),
+            **computed_record("stall_signature", lambda: stall_signature_record(
+                pairs, blocks0, blocks1, blocks_used)),
+            **computed_record("by_cell", lambda: (by_cell_record(pairs, selection,
+                                                                 blocks_used), [])),
+            **computed_record("by_block", lambda: (by_block_record(pairs, blocks_used), []))}
 
 
 def _judge_jp3(jp3: dict, judged_rows: int, problems: Problems) -> None:
@@ -707,11 +920,36 @@ def _judge_jp3(jp3: dict, judged_rows: int, problems: Problems) -> None:
         problems.not_judgeable.append(f"J-P3 {status} on the VBK lines")
 
 
+def decision_block_problems(decision: dict) -> list[str]:
+    """Erratum 8 8-8.2 (W-5): why a ``decided`` record cannot give the allowance - ``allow_k``
+    or ``blocks_used`` missing, ``blocks_used`` not the set of ``blocks``, ``blocks_used``
+    neither {b1, b2} nor {b1, b2, b4}, or ``allow_k`` not the 8-2 value of ``blocks_used``."""
+    missing = [name for name in ("allow_k", "blocks_used") if name not in decision]
+    if missing:
+        return [f"decision record without {name} (erratum 8 8-8.2)" for name in missing]
+    blocks_used, blocks, allow_k = decision["blocks_used"], decision.get("blocks"), \
+        decision["allow_k"]
+    if not isinstance(blocks_used, list) or not isinstance(blocks, list):
+        return ["decision record blocks / blocks_used are not lists"]
+    problems = []
+    if set(blocks_used) != set(blocks):
+        problems.append(f"blocks_used {blocks_used} is not the set of blocks {blocks}")
+    expected = allowance_of(blocks_used) if len(set(blocks_used)) == len(blocks_used) else None
+    if expected is None:
+        problems.append(f"blocks_used {blocks_used} is neither [b1, b2] nor [b1, b2, b4] "
+                        "(erratum 8 8-2: no allowance)")
+    elif type(allow_k) is not int or allow_k != expected:
+        problems.append(f"allow_k {allow_k!r} is not {expected} of blocks_used {blocks_used}")
+    return problems
+
+
 def load_decision(path: Path, expected_sha256: str, vbk0_inputs: dict) -> dict:
-    """The decision record (its sha256, status ``decided``, the same VBK0 inputs).
+    """The decision record (its sha256, status ``decided``, the same VBK0 inputs, the blocks
+    and allowance of erratum 8 8-8.2).
 
     Raises:
-        Stop: Another sha, another status, or changed VBK0 inputs (not judgeable).
+        Stop: Another sha, another status, changed VBK0 inputs or a block / allowance problem
+            (not judgeable).
     """
     if not path.is_file():
         raise Stop("not_judgeable", f"--decision {path} missing")
@@ -724,6 +962,9 @@ def load_decision(path: Path, expected_sha256: str, vbk0_inputs: dict) -> dict:
         raise Stop("not_judgeable", f"decision status {decision.get('status')!r}, not decided")
     if decision.get("inputs", {}).get("vbk0") != vbk0_inputs:
         raise Stop("not_judgeable", "the VBK0 inputs are not the decision's")
+    block_problems = decision_block_problems(decision)
+    if block_problems:
+        raise Stop("not_judgeable", "; ".join(block_problems))
     return decision
 
 
@@ -1073,15 +1314,65 @@ def _plain(value):
     raise TypeError(f"not JSON: {type(value).__name__}")
 
 
+def _parse_expected(values: list[str] | None, option: str,
+                    problems: list[str]) -> dict[str, str]:
+    """``b<j>=<sha256>`` expectations by block; a malformed or repeated one is a problem."""
+    expected: dict[str, str] = {}
+    for value in values or []:
+        block, separator, sha = value.partition("=")
+        if not separator or block not in BLOCKS or block in expected or not SHA256_HEX.match(sha):
+            problems.append(f"{option} {value!r}: one b<j>=<64 hex sha256> per block")
+            continue
+        expected[block] = sha
+    return expected
+
+
+def expected_input_problems(args, vbk0_inputs: dict) -> tuple[dict, list[str]]:
+    """Erratum 8 8-9 (d): the run file sha256 and T4h digest of b1 and b2 against the given
+    expectations (8-1.3 fixed values; both required for both blocks; no other block has a
+    fixed value). Returns the expectations and why they do not hold (empty: they hold)."""
+    problems: list[str] = []
+    runs = _parse_expected(args.expect_vbk0_sha256, "--expect-vbk0-sha256", problems)
+    digests = _parse_expected(args.expect_vbk0_t4h_digest, "--expect-vbk0-t4h-digest",
+                              problems)
+    for name, given in (("--expect-vbk0-sha256", runs),
+                        ("--expect-vbk0-t4h-digest", digests)):
+        missing = [block for block in EXPECTED_VBK0_BLOCKS if block not in given]
+        other = sorted(set(given) - set(EXPECTED_VBK0_BLOCKS))
+        if missing:
+            problems.append(f"{name} missing for {missing} (required, erratum 8 8-9 (d))")
+        if other:
+            problems.append(f"{name} for {other}: no fixed value (erratum 8 8-8.1, recorded "
+                            "only)")
+    for block in EXPECTED_VBK0_BLOCKS:
+        actual = vbk0_inputs.get(block)
+        if actual is None:
+            problems.append(f"VBK0 {block} not given")
+            continue
+        for key, given in (("run_sha256", runs), ("t4h_sha256_digest", digests)):
+            if block in given and actual[key] != given[block]:  # full values: any digit counts
+                problems.append(f"VBK0 {block} {key} {actual[key]} is not the expected "
+                                f"{given[block]}")
+    expected = {block: {"run_sha256": runs.get(block), "t4h_sha256_digest": digests.get(block)}
+                for block in EXPECTED_VBK0_BLOCKS}
+    return expected, problems
+
+
 def cmd_decide(args) -> tuple[str, dict]:
     selection = load_selection(args.selection, args.selection_sha256)
     results = parse_block_paths(args.vbk0, "--vbk0")
     t4h_dirs = parse_block_paths(args.vbk0_t4h, "--vbk0-t4h")
     problems = Problems()
     blocks = load_arm(selection, results, t4h_dirs, "vbk0", problems)
-    record = {"rule": "jp3_remedy_spec_v5.md 6.3.5 / 6.3.6 / 6.3.8 (X-13 decide)",
+    record = {"rule": "jp3_remedy_spec_v5.md 6.3.5 / 6.3.6 with erratum 8 8-8.1 (X-13 decide)",
               "inputs": {"selection_sha256": args.selection_sha256,
                          "vbk0": input_record(results, t4h_dirs, blocks)}}
+    expected, expected_problems = expected_input_problems(args, record["inputs"]["vbk0"])
+    if expected_problems:  # 8-9 (d): status, reason and input sha256 only, no decision keys
+        record.update(status="not_judgeable",
+                      reason="erratum 8 8-9 (d): " + "; ".join(expected_problems))
+        return record["status"], record
+    record["inputs"]["vbk0_expected"] = {**expected, "matched": True}
     status = problems.status()
     if status != "pass":
         record.update(status=status, problems=problems.__dict__)
@@ -1111,13 +1402,14 @@ def cmd_judge(args) -> tuple[str, dict]:
         raise Stop("not_judgeable", f"VBK blocks {sorted(results1)} are not the decided "
                                     f"{decision['blocks']}")
     blocks1 = load_arm(selection, results1, t4h1, "vbk", problems)
-    report = {"rule": "jp3_remedy_spec_v5.md 6.3.7 (X-13 judge)",
+    report = {"rule": "jp3_remedy_spec_v5.md 6.3.7 with erratum 8 8-2 (X-13 judge)",
               "inputs": {"selection_sha256": args.selection_sha256,
                          "decision_sha256": args.decision_sha256,
                          "vbk0": input_record(results0, t4h0, blocks0),
                          "vbk": input_record(results1, t4h1, blocks1)},
               "decision": {name: decision.get(name) for name in
-                           ("blocks", "n", "n_opp", "k", "aa", "n_topup", "witness_topup")}}
+                           ("blocks", "blocks_used", "allow_k", "n", "n_opp", "k", "aa_floor",
+                            "n_topup", "witness_topup")}}
     if problems.not_judgeable or problems.setting_defects:
         report.update(status=problems.status(), problems=problems.__dict__)
         return report["status"], report
@@ -1125,6 +1417,10 @@ def cmd_judge(args) -> tuple[str, dict]:
     if found["n_opp"] == 0:  # X-5: no judged row is never a pass
         problems.not_judgeable.append("no opportunity pair")
     report.update(found)
+    report["ready_rule"] = {
+        **judge_ready_rule(found["pairs"], decision, found["n_fault_judged"], problems),
+        **ready_rule_records(found["pairs"], blocks0, blocks1, selection,
+                             decision["blocks_used"])}
     try:
         report["grade_transitions"] = grade_transitions(
             blocks0, blocks1, decision,
@@ -1136,8 +1432,14 @@ def cmd_judge(args) -> tuple[str, dict]:
         report["grade_transitions"] = {"computed": False,
                                        "reason": f"exception {type(exc).__name__}: {exc}"}
     report["hold_speed_m_s"] = _hold_speed_record()  # erratum 2 2-5
-    report["pass_sentence"] = {"n_opp": decision.get("n_opp"),
-                               "upper_bound_n_opp": upper_bound(decision.get("n_opp") or 0),
+    # erratum 8 8-10: the (1) denominator is N_1 = opportunity + VBK0-READY-missing pairs
+    n_fault_judged = found["n_fault_judged"]
+    report["pass_sentence"] = {"blocks_used": decision["blocks_used"],
+                               "n_opp": decision.get("n_opp"),
+                               "n_fault_judged": n_fault_judged,
+                               "upper_bound_n_fault_judged": upper_bound(n_fault_judged),
+                               "n_vbk_worse": report["ready_rule"]["n_vbk_worse"],
+                               "allow_k": decision["allow_k"],
                                "k": decision.get("k"),
                                "upper_bound_k": upper_bound(decision.get("k") or 0)}
     report.update(status=problems.status(), problems=problems.__dict__,
@@ -1145,10 +1447,10 @@ def cmd_judge(args) -> tuple[str, dict]:
     return report["status"], report
 
 
-EXIT_OF_STATUS = {"decided": EXIT_OK, "needs_b3": EXIT_OK, "needs_b4": EXIT_OK,
-                  "pass": EXIT_OK, "written": EXIT_OK, "failed": EXIT_FAILED,
-                  "aa_floor_stop": EXIT_NOT_JUDGEABLE, "setting_defect": EXIT_NOT_JUDGEABLE,
-                  "not_judgeable": EXIT_NOT_JUDGEABLE}
+EXIT_OF_STATUS = {"decided": EXIT_OK, "needs_b4": EXIT_OK, "pass": EXIT_OK,
+                  "written": EXIT_OK, "failed": EXIT_FAILED,
+                  "setting_defect": EXIT_NOT_JUDGEABLE, "not_judgeable": EXIT_NOT_JUDGEABLE}
+"""Erratum 8 8-8.1: ``aa_floor_stop`` and ``needs_b3`` are no longer written."""
 COMMANDS = {"decide": cmd_decide, "judge": cmd_judge, "grade-judge": cmd_grade_judge,
             "dry-c": cmd_dry_c, "l1-overlap": cmd_l1_overlap}
 
@@ -1163,6 +1465,11 @@ def _parser() -> argparse.ArgumentParser:
         command.add_argument("--vbk0", action="append", required=True)
         command.add_argument("--vbk0-t4h", action="append", required=True)
         command.add_argument("--out", type=Path, required=True)
+        if name == "decide":  # erratum 8 8-9 (d): required, checked by the tool (exit 2)
+            command.add_argument("--expect-vbk0-sha256", action="append", default=None,
+                                 help="b1|b2=<run file sha256> (erratum 8 8-1.3)")
+            command.add_argument("--expect-vbk0-t4h-digest", action="append", default=None,
+                                 help="b1|b2=<T4h digest of input_record> (erratum 8 8-1.3)")
         if name == "judge":
             command.add_argument("--decision", type=Path, required=True)
             command.add_argument("--decision-sha256", required=True)

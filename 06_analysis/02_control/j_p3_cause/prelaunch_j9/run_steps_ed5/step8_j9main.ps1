@@ -4,7 +4,12 @@
 # rows x VBJ; ③ rev 6, tag base final_C4G2_P3W) at the run commit.
 #   preconditions (2-6 10): steps (1) .. (7) done (p1, dry, fpath, cases, casef, t8, dg3,
 #     12b_vbk, records) and dg3.done; the 12b judge file of 12b_vbk.done with its sha256,
-#     status pass and exit 0 (2-9.6); T-CK / DROPOUT are not a precondition (2-9.5)
+#     status pass and exit 0 (2-9.6), and with erratum 8 8-10 its ready_rule: verdict pass
+#     and allow_k = the 8-2 value of blocks_used (a missing block or key is no pass);
+#     T-CK / DROPOUT are not a precondition (2-9.5)
+#   erratum 8 8-9 (f): the script of the tool commit (Initialize-E8Step), the runs at the run
+#     commit in ed5-run5, the judge commands (v0-sample, the L1 input guard, judge) in the
+#     tool checkout (the same blobs as the run commit's)
 #   1. the V0 sample (2-7.1): run_v5 j9_v0_sample on the fixed V0 sample key file, the identity
 #      check of the folder so far (re-audit warning 4: Invoke-IdentityCheckPart v0_sample), then
 #      jp3_j9main_judge.py v0-sample against the stored V0 lines (v5/main.jsonl, fixed sha):
@@ -25,7 +30,7 @@ param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mand
 
 $Required = @('p1', 'dry', 'fpath', 'cases', 'casef', 't8', 'dg3', '12b_vbk', 'records')
 # (the record bundles T-CK / DROPOUT are no precondition, erratum 2 2-9.5)
-$Folder = Initialize-Ed5Step 'j9main' $Attempt $Required
+$Folder = Initialize-E8Step 'j9main' $Attempt $Required
 
 # erratum 2 2-9.6: the 12b judge file the 12b_vbk.done marker names - its sha256 the marker's,
 # status pass, exit 0 (else j9_main does not start)
@@ -44,7 +49,10 @@ $ExitProperty = $Judged12b.PSObject.Properties['exit']
 if (-not $StatusProperty -or -not $ExitProperty -or $StatusProperty.Value -ne 'pass' -or $ExitProperty.Value -ne 0) {
     Stop-Step 2 '12b judge file: status pass and exit 0 required'
 }
+$ReadyRuleStop = Get-E8ReadyRuleStop $JudgeFile12b  # erratum 2 2-9.6 with erratum 8 8-10 (W-5)
+if ($ReadyRuleStop) { Stop-Step $ReadyRuleStop.code $ReadyRuleStop.reason }
 $StepState.Codes['12b_judge_sha256'] = [string]$ShaProperty.Value
+$StepState.Codes['12b_ready_rule'] = 'verdict pass, allow_k of blocks_used (erratum 8 8-10)'
 $V0Rows = Get-FixedPath 'MAIN_JSONL_SHA256'
 $V0Sha = $FixedInputs['MAIN_JSONL_SHA256'][1]
 $Judge = "$Coupled/jp3_j9main_judge.py"
@@ -62,7 +70,7 @@ $Run = Start-Run -Label 'j9_v0_sample' -MaskHex $SampleMaskHex -TaskType 'run_v5
         '--workers', "$SampleWorkers", '--mask', $SampleMaskHex)
 Wait-Runs @($Run)
 Invoke-IdentityCheckPart 'v0_sample'
-Invoke-Judge 'v0_sample' @($Judge, 'v0-sample', '--sample-keys', $V0SampleKeysFile, '--sample', $Sample,
+Invoke-ToolJudge 'v0_sample' @($Judge, 'v0-sample', '--sample-keys', $V0SampleKeysFile, '--sample', $Sample,
     '--v0', $V0Rows, '--v0-sha256', $V0Sha, '--out', "$Folder\judge\v0_sample.json") | Out-Null
 
 # 2. the j9_main run
@@ -77,7 +85,7 @@ Invoke-IdentityCheck
 Assert-NoL1Inputs @($Rows, $V0Rows)
 
 # 5. v5 criteria stage 1 (path 1) and J-P3 rev 6
-Invoke-Judge 'j9main_judge' @($Judge, 'judge', '--rows', $Rows, '--v0', $V0Rows, '--v0-sha256', $V0Sha,
+Invoke-ToolJudge 'j9main_judge' @($Judge, 'judge', '--rows', $Rows, '--v0', $V0Rows, '--v0-sha256', $V0Sha,
     '--out', "$Folder\judge\j9main_judge.json") | Out-Null
 
 Complete-Step

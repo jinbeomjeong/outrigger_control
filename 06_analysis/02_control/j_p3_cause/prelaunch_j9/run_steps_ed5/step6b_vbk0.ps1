@@ -1,46 +1,43 @@
 #Requires -Version 7
-# Step (6b) T-JR-12b, VBK0 only (spec v5 6.3, 8 4.(6) 1 .. 4; user decision 2026-11-21: VBK0
-# first). -Phase base runs b1 and b2; -Phase b3 (N top-up) / b4 (witness top-up) run that block
-# after the decision of the phase before asked for it (its status needs_b3 / needs_b4). Each
-# block: 4 workers on its own P quarter. Then jp3_12b_judge.py decide on every VBK0 block run so
-# far (the folders of the done 12b_vbk0_* phases and this one). No VBK file exists yet and none
-# is named. Exit: decide's code (0 decided / needs_b3 / needs_b4; 2 aa_floor_stop or not
-# judgeable: stop and ask the user, no rerun before the answer, 6.3.8).
+# Step (6b) T-JR-12b VBK0 (spec v5 6.3, 8 4.(6)) in the erratum 8 form (jp3_remedy_spec_v5_erratum8.md
+# 8-9 "12b 진행" 1 / 3 and (f), sealed cd2de978; the script of the tool commit, the simulation at the
+# run commit in ed5-run5). The decisions are separate steps now (step6b_decide_e8.ps1,
+# step6b_decide_e8_b4.ps1); this script runs one VBK0 block and no judge command.
+#   -Phase base   ran once at the run commit (12b_vbk0_base_a1, stopped 2 by the A/A floor of the
+#                 old decide; taken again by 8-9 (d) / (e), never run again, 8-1.3): exit 2
+#   -Phase b3     no allowance (8-2, 8-8.1: b3 is never run): exit 2
+#   -Phase b4     step 12b_vbk0_b4, only after 12b_decide_e8 said needs_b4: the b4 (seed 43) VBK0
+#                 run, 4 workers on one P quarter, with the run condition of the b1 / b2 VBK0 runs
+#                 of 12b_vbk0_base_a1 (8-9 (c): environment and --workers before the run, the
+#                 identity record after it). Output 12b_vbk0_b4_a<k>\VBK0_b4.json, VBK0_b4_t4h\.
+# Exit: 0 done (go to step6b_decide_e8_b4.ps1); 2 base / b3, the decision is not needs_b4 or a
+# run condition differs; 3 a run failed or a broken precondition.
 param([int]$Attempt = 1, [Parameter(Mandatory)][ValidateSet('base', 'b3', 'b4')][string]$Phase)
+if ($Phase -ne 'b4') {
+    # nothing starts and nothing is written (no step marker)
+    Write-Host "STOP: step6b_vbk0.ps1 -Phase ${Phase} is replaced by erratum 8 8-9 (base: never run again; b3: no allowance); only -Phase b4 runs"
+    exit 2
+}
 . "$PSScriptRoot\common_ed5.ps1"
 
-$PhaseBlocks = [ordered]@{ base = @('b1', 'b2'); b3 = @('b3'); b4 = @('b4') }
-$Earlier = @(if ($Phase -ne 'base') { '12b_vbk0_base' })
-$Folder = Initialize-Ed5Step "12b_vbk0_$Phase" $Attempt (@('dry', 'l1ref') + $Earlier)  # erratum 2 2-1: L1 first
-$EarlierFolders = @($Earlier | ForEach-Object { Get-StepFolder $_ })
-if ($Phase -eq 'b4' -and (Test-Path -LiteralPath "$RunsRoot\12b_vbk0_b3.done")) {
-    $EarlierFolders += Get-StepFolder '12b_vbk0_b3'  # b4 after a b3 top-up: all decided blocks
-}
-$Masks = @('0x000F', '0x00F0')
+$Block = $Phase
+$Folder = Initialize-E8Step "12b_vbk0_$Block" $Attempt @('dry', 'l1ref', '12b_decide_e8')
+$FirstDecision = "$(Get-StepFolder '12b_decide_e8')\decision.json"
+$Stop = Get-E8DecisionStop $FirstDecision @('needs_b4')
+if ($Stop) { Stop-Step $Stop.code $Stop.reason }
+$BaseFolder = Get-E8BaseVbk0Folder
 
-$Runs = @()
-$Index = 0
-foreach ($Block in $PhaseBlocks[$Phase]) {
-    $Label = "VBK0_$Block"
-    $Out = "$Folder\$Label.json"
-    $RunEstimatesS[$Label] = 1900
-    $Runs += Start-Run -Label $Label -MaskHex $Masks[$Index] -WrapOutput $Out `
-        -Environment (Get-R79Environment 'VBK0' "$Folder\${Label}_t4h" "$X11Folder\${Block}_plan.json") `
-        -TaskType 'jp3_12b_vbk0' -Workers 4 -Arguments @("$Coupled/las_t3_dg3.py", $Worktree, 'run', $Out,
-            '--levels', 'L2', '--keys-file', "$X11Folder\${Block}_keys.txt", '--workers', '4', '--affinity', $Masks[$Index])
-    $Index++
-}
-Wait-Runs $Runs
+$Label = "VBK0_$Block"
+$Out = "$Folder\$Label.json"
+$Environment = Get-R79Environment 'VBK0' "$Folder\${Label}_t4h" "$X11Folder\${Block}_plan.json"
+Assert-E8RunCondition $BaseFolder 'VBK0' $Environment $E8RequiredWorkers
+$RunEstimatesS[$Label] = 1900
+$Run = Start-Run -Label $Label -MaskHex $E8RunMasks[0] -WrapOutput $Out -Environment $Environment `
+    -TaskType 'jp3_12b_vbk0' -Workers $E8RequiredWorkers -Arguments @("$Coupled/las_t3_dg3.py", $Worktree, 'run', $Out,
+        '--levels', 'L2', '--keys-file', "$X11Folder\${Block}_keys.txt", '--workers', "$E8RequiredWorkers",
+        '--affinity', $E8RunMasks[0])
+Wait-Runs @($Run)
 Invoke-IdentityCheck
-
-$Arguments = @("$Coupled/jp3_12b_judge.py", 'decide', '--selection', $X11Selection, '--selection-sha256', (Get-X11Sha),
-    '--out', "$Folder\judge\decision.json")
-foreach ($Source in @($EarlierFolders) + @($Folder)) {
-    foreach ($File in @(Get-ChildItem -LiteralPath $Source -File -Filter 'VBK0_b?.json')) {
-        $Block = $File.BaseName.Substring(5)
-        $Arguments += @('--vbk0', "$Block=$($File.FullName)", '--vbk0-t4h', "$Block=$Source\VBK0_${Block}_t4h")
-    }
-}
-Invoke-Judge 'decide' $Arguments | Out-Null
+Assert-E8RunIdentity $BaseFolder "$Folder\$Label.identity.json"
 
 Complete-Step

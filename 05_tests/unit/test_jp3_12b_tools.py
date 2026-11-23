@@ -3,6 +3,9 @@
 form the r79 runner writes (result rows with a T4h file name, the T4h npz in their folder).
 
 Every ``main`` test runs with the working folder elsewhere than the inputs (tool rule (가)).
+Erratum 8 (sealed cd2de978) changed the A/A stop (a record now), b3 (not judgeable), (2)+(3)
+(the allowance ``n23 <= allow_k``) and decide's input expectations (8-9 (d)); its numbered
+tests 1 .. 14 of 8-8.3 are in ``test_jp3_12b_erratum8.py``, which reuses the builders here.
 """
 
 from __future__ import annotations
@@ -332,11 +335,42 @@ def arms(world, block: str, **kwargs) -> tuple[Arm, Arm]:
             Arm(world["runs"], world["doc"], world["plans"], block, "vbk", **kwargs))
 
 
-def decide_args(world, written: dict[str, tuple[Path, Path]], out: Path) -> list[str]:
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def expected_vbk0(written: dict[str, tuple[Path, Path]]) -> dict[str, tuple[str, str]]:
+    """Erratum 8 8-1.3 / 8-9 (d), computed here without the tool: per block the run file
+    sha256 and the T4h digest (the sha256 of "<sha256>  <name>\\n" of the files the lines name,
+    sorted by name)."""
+    expected = {}
+    for block, (result, t4h) in written.items():
+        rows = json.loads(result.read_text(encoding="utf-8"))["results"]
+        names = sorted(row["t4h_file"] for row in rows if (t4h / row["t4h_file"]).is_file())
+        digest = hashlib.sha256("".join(f"{_sha256(t4h / name)}  {name}\n"
+                                        for name in names).encode()).hexdigest()
+        expected[block] = (_sha256(result), digest)
+    return expected
+
+
+def expect_args(expected: dict[str, tuple[str, str]]) -> list[str]:
+    args = []
+    for block, (run_sha, digest) in expected.items():
+        args += ["--expect-vbk0-sha256", f"{block}={run_sha}",
+                 "--expect-vbk0-t4h-digest", f"{block}={digest}"]
+    return args
+
+
+def decide_args(world, written: dict[str, tuple[Path, Path]], out: Path,
+                expect: bool = True) -> list[str]:
+    """``decide`` arguments; ``expect``: the b1 / b2 expectations of 8-9 (d) from the files."""
     args = ["decide", "--selection", str(world["selection"]), "--selection-sha256",
             world["selection_sha"], "--out", str(out)]
     for block, (result, t4h) in written.items():
         args += ["--vbk0", f"{block}={result}", "--vbk0-t4h", f"{block}={t4h}"]
+    if expect:
+        args += expect_args(expected_vbk0({block: written[block] for block in ("b1", "b2")
+                                           if block in written}))
     return args
 
 
@@ -406,7 +440,9 @@ def test_12b_pass_end_to_end(world, capsys, cwd_elsewhere) -> None:
     code, last, record = run_main(decide_args(world, written0, decision), capsys)
     assert code == 0 and last["status"] == "decided"
     assert record["blocks"] == ["b1", "b2"] and record["n_opp"] == 334 and record["k"] == 334
-    assert record["aa"]["counted_pairs"] == 0 and not record["n_topup"]["needs_b3"]
+    assert record["blocks_used"] == ["b1", "b2"] and record["allow_k"] == 7  # erratum 8 8-8.1
+    assert record["aa_floor"]["counted_pairs"] == 0 and not record["n_topup"]["needs_b3"]
+    assert record["inputs"]["vbk0_expected"]["matched"] is True
     assert record["witness_topup"]["hold_speed_m_s"]["value"] > 0  # erratum 2 2-5
     out = world["runs"] / "judge.json"
     code, last, report = run_main(judge_args(world, written0, written1, decision, out), capsys)
@@ -416,7 +452,13 @@ def test_12b_pass_end_to_end(world, capsys, cwd_elsewhere) -> None:
     assert report["coverage_totals"]["jp3_r58_witness_carries"] == 334
     assert sum(report["tau_r_trigger_phase"].values()) == sum(
         1 for row in world["doc"]["cell_table"] if row["phase"] == "tau_R") * 2
-    assert report["pass_sentence"]["upper_bound_n_opp"] == pytest.approx(1 - 0.05 ** (1 / 334))
+    rule = report["ready_rule"]
+    assert (rule["verdict"], rule["n_vbk_worse"], rule["allow_k"], rule["n_opp"]) == (
+        "pass", 0, 7, 334)
+    assert rule["n_fault_judged"] == 334 and rule["blocks_used"] == ["b1", "b2"]
+    sentence = report["pass_sentence"]
+    assert sentence["n_fault_judged"] == 334 and sentence["allow_k"] == 7
+    assert sentence["upper_bound_n_fault_judged"] == pytest.approx(1 - 0.05 ** (1 / 334))
     assert set(last) >= {"status", "out", "setting_defects", "not_judgeable", "failures"}
 
 
@@ -462,10 +504,11 @@ class _FileWatch:
                 or marker in Path(path).parent.name]
 
 
-def test_12b_aa_floor_stop_and_no_vbk_file_read(world, capsys, cwd_elsewhere,
-                                                monkeypatch) -> None:
-    """6.3.8: 3 A/A pairs stop with exit 2 ``aa_floor_stop``; the judge then refuses the
-    decision before it opens any VBK file (file access watch)."""
+def test_12b_aa_three_pairs_are_a_record_and_no_vbk_file_read(world, capsys, cwd_elsewhere,
+                                                               monkeypatch) -> None:
+    """Erratum 8 8-1.3 / 8-8.1: 3 A/A pairs no longer stop (decided, ``aa_floor`` a record);
+    decide opens no VBK file; a decision record of the old form (status ``aa_floor_stop``)
+    is refused by the judge before it opens any VBK file (file access watch)."""
     def edit(block, vbk0, vbk):
         if block == "b2":
             for rank in range(3):
@@ -474,17 +517,23 @@ def test_12b_aa_floor_stop_and_no_vbk_file_read(world, capsys, cwd_elsewhere,
     decision = world["runs"] / "decision.json"
     watch = _FileWatch(monkeypatch)
     code, last, record = run_main(decide_args(world, written0, decision), capsys)
-    assert code == 2 and last["status"] == "aa_floor_stop"
-    assert record["aa"]["counted_pairs"] == 3 and record["exit"] == 2
+    assert code == 0 and last["status"] == "decided"
+    floor = record["aa_floor"]
+    assert floor["counted_pairs"] == 3 and floor["is_stop"] is False and "stop_at" not in floor
+    assert floor["rule"] == "erratum 8 8-1: record" and len(floor["counted"]) == 3
     assert watch.touched("vbk_") == []
+    old = {key: value for key, value in record.items() if key not in ("blocks_used", "allow_k")}
+    old.update(status="aa_floor_stop", aa=floor)
+    old_decision = world["runs"] / "decision_old.json"
+    old_decision.write_text(json.dumps(old), encoding="utf-8")
     empty = {"vbk0": {"runs": []}, "vbk": {"runs": []}}  # the test itself reads no VBK file
-    code, last, _ = run_main(judge_args(world, written0, written1, decision,
+    code, last, _ = run_main(judge_args(world, written0, written1, old_decision,
                                         world["runs"] / "judge.json", empty), capsys)
     assert code == 2 and last["status"] == "not_judgeable"
     assert watch.touched("vbk_") == []
 
 
-def test_12b_aa_two_pairs_and_rounding_do_not_stop(world, capsys, cwd_elsewhere) -> None:
+def test_12b_aa_two_pairs_and_rounding(world, capsys, cwd_elsewhere) -> None:
     def edit(block, vbk0, vbk):
         if block == "b2":
             vbk0.rows[vbk0.key_at(0)]["base"]["t_ready_s"] = None
@@ -492,7 +541,7 @@ def test_12b_aa_two_pairs_and_rounding_do_not_stop(world, capsys, cwd_elsewhere)
             vbk0.rows[vbk0.key_at(2)]["base"]["t_ready_s"] = READY_S + 31.0
     written0, _ = build(world, edit=edit)
     code, last, record = run_main(decide_args(world, written0, world["runs"] / "d.json"), capsys)
-    assert record["aa"]["counted_pairs"] == 2 and not record["aa"]["is_stop"]
+    assert record["aa_floor"]["counted_pairs"] == 2 and not record["aa_floor"]["is_stop"]
     assert record["categories"]["b2"]["vbk0_ready_unreached"] == 1
 
 
@@ -508,20 +557,21 @@ def test_12b_decision_sha_and_status_are_checked(world, capsys, cwd_elsewhere,
     assert code == 2 and last["status"] == "not_judgeable" and watch.touched("vbk_") == []
 
 
-def test_12b_needs_b3_then_b3_below_301_is_not_judgeable(world, capsys, cwd_elsewhere) -> None:
+def test_12b_b3_needed_or_given_is_not_judgeable(world, capsys, cwd_elsewhere) -> None:
+    """Erratum 8 8-8.1: N_opp < 0.9 N of b1 + b2 (here also below 301) needs b3, which has no
+    allowance: not judgeable (exit 2), never ``needs_b3``; b3 given is the same."""
     def edit(block, vbk0, vbk):
-        for rank in range(70):  # no trigger on 70 pairs per block: 3 x 97 < 301
+        for rank in range(70):  # no trigger on 70 pairs per block: 2 x 97 < 300.6
             for arm in (vbk0, vbk):
                 arm.rows[arm.key_at(rank)]["rod_fault"].update(is_armed=False,
                                                                first_applied_read=None)
     written0, _ = build(world, blocks=("b1", "b2", "b3"), edit=edit)
     first = {block: written0[block] for block in ("b1", "b2")}
-    code, last, record = run_main(decide_args(world, first, world["runs"] / "d1.json"), capsys)
-    assert code == 0 and last["status"] == "needs_b3"
-    code, last, record = run_main(decide_args(world, written0, world["runs"] / "d2.json"),
-                                  capsys)
-    assert code == 2 and last["status"] == "not_judgeable"
-    assert record["reason"].startswith("N_opp")
+    for name, given in (("d1.json", first), ("d2.json", written0)):
+        code, last, record = run_main(decide_args(world, given, world["runs"] / name), capsys)
+        assert code == 2 and last["status"] == "not_judgeable"
+        assert record["reason"] == judge.B3_REASON and record["n_topup"]["needs_b3"] is True
+        assert not {"blocks", "blocks_used", "allow_k"} & set(record)
 
 
 def test_12b_needs_b4_and_b4_counts_its_opportunity_pairs(world, capsys, cwd_elsewhere) -> None:
@@ -529,9 +579,11 @@ def test_12b_needs_b4_and_b4_counts_its_opportunity_pairs(world, capsys, cwd_els
     first = {block: written0[block] for block in ("b1", "b2")}
     code, last, record = run_main(decide_args(world, first, world["runs"] / "d1.json"), capsys)
     assert last["status"] == "needs_b4" and record["witness_topup"]["k_without_b4"] == 0
+    assert not {"blocks_used", "allow_k"} & set(record)  # only a decided record has them
     decision = world["runs"] / "d2.json"
     code, last, record = run_main(decide_args(world, written0, decision), capsys)
     assert code == 0 and record["blocks"] == ["b1", "b2", "b4"] and record["k"] == 167
+    assert record["blocks_used"] == ["b1", "b2", "b4"] and record["allow_k"] == 9
     assert record["n_opp"] == 501
 
 
@@ -643,9 +695,11 @@ def test_12b_new_fault_judged_on_ready_missing_pairs_recorded_on_fallback(world,
     assert len(report["new_faults_recorded"]) == 1
 
 
-@pytest.mark.parametrize(("delay_s", "is_failure"), [(30.0000004, False), (30.000001, True),
-                                                     (None, True)])
-def test_12b_ready_rules(world, capsys, cwd_elsewhere, delay_s, is_failure) -> None:
+@pytest.mark.parametrize(("delay_s", "outcome"), [(30.0000004, "ok"), (30.000001, "plus30"),
+                                                  (None, "loss")])
+def test_12b_ready_rules(world, capsys, cwd_elsewhere, delay_s, outcome) -> None:
+    """Erratum 8 8-2 / 8-8.2: one delayed or lost pair is counted in n23 (no failure per pair;
+    n23 = 1 <= 7 passes)."""
     def edit(block, vbk0, vbk):
         if block == "b2":
             key = vbk.key_at(3)
@@ -653,7 +707,13 @@ def test_12b_ready_rules(world, capsys, cwd_elsewhere, delay_s, is_failure) -> N
     written0, written1, decision = _decided(world, capsys, edit)
     code, last, report = run_main(judge_args(world, written0, written1, decision,
                                              world["runs"] / "judge.json"), capsys)
-    assert (code == 1) is is_failure, report["problems"]
+    assert code == 0 and last["status"] == "pass", report["problems"]
+    outcomes = [pair["ready_outcome"] for pair in report["pairs"] if "ready_outcome" in pair]
+    assert outcomes.count(outcome) == (334 if outcome == "ok" else 1)
+    rule = report["ready_rule"]
+    assert rule["n_vbk_worse"] == (0 if outcome == "ok" else 1)
+    assert (rule["n_ready_loss"], rule["n_ready_plus30"]) == (
+        int(outcome == "loss"), int(outcome == "plus30"))
 
 
 def test_12b_jp3_breach_fails_and_missing_inputs_are_not_judgeable(world, capsys,
@@ -944,7 +1004,8 @@ def test_f1_failure_with_a_grade_input_defect_is_exit_1(world, capsys, cwd_elsew
     never a not-judgeable 2 that a rerun could take; the transitions record "not computed"."""
     def edit(block, vbk0, vbk):
         if block == "b2":
-            vbk.rows[vbk.key_at(3)]["base"]["t_ready_s"] = None  # READY lost (3)
+            for rank in range(3, 11):  # 8 READY lost: n23 8 > 7 (erratum 8 8-2)
+                vbk.rows[vbk.key_at(rank)]["base"]["t_ready_s"] = None
     written0, written1, decision = _decided(world, capsys, edit)
     args = judge_args(world, written0, written1, decision, world["runs"] / f"f1_{defect}.json")
     if defect == "sha":
@@ -1100,7 +1161,8 @@ def test_12b_existing_out_and_tool_errors(world, capsys, cwd_elsewhere) -> None:
     out = world["runs"] / "exists.json"
     out.write_text("{}", encoding="utf-8")
     assert judge.main(decide_args(world, written0, out)) == 2
+    args = decide_args(world, written0, world["runs"] / "d.json")  # before the file breaks
     written0["b1"][0].write_text("{broken", encoding="utf-8")
-    code = judge.main(decide_args(world, written0, world["runs"] / "d.json"))
+    code = judge.main(args)
     assert code == 3
     assert json.loads(capsys.readouterr().out.splitlines()[-1])["status"] == "error"

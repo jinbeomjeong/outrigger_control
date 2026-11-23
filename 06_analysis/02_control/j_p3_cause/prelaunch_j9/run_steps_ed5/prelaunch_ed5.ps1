@@ -20,11 +20,17 @@
 #                 jp3_import_closure.py report of the simulation path, listed too;
 #                 erratum 4 4-1) too; the main
 #                 session then commits the list before step0_cdry.ps1 (order: common_ed5.ps1)
+#   -Part list_e8 FIXED_INPUTS_<tool commit 8>.SHA256SUMS (erratum 8 8-9: jp3_fixed_inputs_list.py
+#                 at the tool commit in the tool checkout, the entries of
+#                 fixed_inputs_entries_e8.txt: erratum 8 and the path 2 erratum with their
+#                 .sha256, the 8-1.3 VBK0 files, the four evidence SHA256SUMS, the run commit's
+#                 fixed list and the run steps) after the main session filled in $ToolCommit in
+#                 common_ed5.ps1 and committed it; the main session then commits the list
 #   -ScanExtra    (x11) more probe record folders whose r79 key strings the seed scan reads
 #                 (erratum 2 2-3: the run worktree's 05_tests is always scanned; the probe file
 #                 ed5_design/probes/probes_ed5.json lies under 06_analysis, the base scan)
 # Every part refuses an existing output (never overwritten). Exit: the tool's code.
-param([Parameter(Mandatory)][ValidateSet('dry', 'l1keys', 'x11', 'ckdrop', 'v0sample', 'list')][string]$Part,
+param([Parameter(Mandatory)][ValidateSet('dry', 'l1keys', 'x11', 'ckdrop', 'v0sample', 'list', 'list_e8')][string]$Part,
     [string[]]$ScanExtra = @(), [string]$P5FixedCommit = '')
 . "$PSScriptRoot\common_ed5.ps1"
 
@@ -115,6 +121,14 @@ switch ($Part) {
         & $DevPython -I -B "$Coupled/jp3_fixed_inputs_list.py" --repo $MainRoot --worktree $Worktree `
             --commit $RunCommit --entries $EntriesFile --x11-selection $X11Selection `
             --dry-selection $DrySelection --out $FixedList @Add
+    }
+    'list_e8' {
+        # erratum 8 8-9: the tool commit's list; the list tool checks the tool checkout's HEAD
+        # and clean tree, every entry and the .sha256 files against their documents
+        Assert-ToolConfigured
+        & $DevPython -I -B "$Coupled/jp3_fixed_inputs_list.py" --repo $MainRoot --worktree $ToolWorktree `
+            --commit $ToolCommit --entries $E8EntriesFile --x11-selection $X11Selection `
+            --dry-selection $DrySelection --out (Get-ToolList)
     }
 }
 exit $LASTEXITCODE
