@@ -37,7 +37,10 @@ New-Item -ItemType Directory -Path "$OutDir\scratch" | Out-Null
 $env:PYTHONDONTWRITEBYTECODE = '1'
 & $DevPython -I -B "$VerifTools\worktree_tests.py" --worktree $Worktree --data-root $MainRoot `
     --python $TestPython --scratch "$OutDir\scratch" --test $TestGlob `
-    --probe-module outrigger_sim --keep --timeout $TimeoutS --out "$OutDir\worktree_tests.md" *> "$OutDir\worktree_tests.log"
+    --probe-module outrigger_sim --env "OUTRIGGER_RECORDS_ROOT=$MainRoot" --keep --timeout $TimeoutS `
+    --out "$OutDir\worktree_tests.md" *> "$OutDir\worktree_tests.log"
+# OUTRIGGER_RECORDS_ROOT: the stored records the tests read from the main checkout (the same on
+# both sides; without it those tests skip in a worktree)
 $ToolCode = $LASTEXITCODE  # 1 = findings (failures, skips): judged below from the JUnit
 $Junit = @(Get-ChildItem -LiteralPath "$OutDir\scratch" -Recurse -Filter 'junit.xml')
 if ($Junit.Count -ne 1) { Stop-Suite 3 "worktree_tests exit $ToolCode, $($Junit.Count) junit.xml files" }
