@@ -1,0 +1,8174 @@
+{
+ "rule": "jp3_remedy_spec_v5.md 6.5, erratum 2 2-7.1 (path 1, 436.8 D-07 .. D-17)",
+ "setting_map": {
+  "VBJ": "VB",
+  "LSJ1": "LS1",
+  "LSJ2": "LS2",
+  "LSJ3": "LS3",
+  "LSJ4": "LS4"
+ },
+ "rows": 388,
+ "v0_rows": 100,
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\j9main_a1\\j9_main.jsonl",
+   "sha256": "883a2538f61d2a6a6c577c9a327601fc04da076b212db9bcccad22694817c001"
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  }
+ },
+ "J_vs_V0": {
+  "VB": {
+   "runs": 100,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "offset 0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13750.0 N -> 2050.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.075",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.075",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12980.0 N -> 830.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.025",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.025",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12010.0 N -> 3390.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 14160.0 N -> 1820.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|4|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13750.0 N -> -20.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13830.0 N -> 2720.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 15990.0 N -> 3250.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12600.0 N -> 5550.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 15280.0 N -> 1600.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13670.0 N -> 3320.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|8|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|8|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12280.0 N -> 2180.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|8|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|8|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13870.0 N -> 950.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12130.0 N -> 2900.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|4|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12930.0 N -> 2210.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "offset 0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12170.0 N -> 4690.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|8|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|8|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 14120.0 N -> 4730.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|8|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|8|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12040.0 N -> 3520.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13770.0 N -> -330.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 14360.0 N -> 4790.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12770.0 N -> 1020.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 22.6 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|4|0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|0|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12040.0 N -> 1210.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate no_lift",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 15320.0 N -> 2790.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|4|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13750.0 N -> 2050.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|8|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|8|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 11870.0 N -> 5800.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|0|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13020.0 N -> 7930.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|8|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|8|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13650.0 N -> 8420.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|4|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12170.0 N -> 4690.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|RR|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|RR|4|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12860.0 N -> 1730.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|RR|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|RR|4|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 11100.0 N -> 4770.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 12980.0 N -> 3980.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R15",
+     "phase": "offset 0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R15",
+     "phase": "offset 0.05",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 38.05 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R15",
+     "phase": "offset 0.05",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R15",
+     "phase": "offset 0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R15",
+     "phase": "offset 0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 37.7 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R15",
+     "phase": "offset 0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate Fmin_after_event",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.0",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 13440.0 N -> 1900.0 N",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 22.6 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "S5",
+     "phase": "eps 0.0",
+     "item": "J3",
+     "kind": "fail",
+     "detail": "t_ready 77.5 -> 117.9",
+     "base_other_phase_has_it": false
+    }
+   ],
+   "by_kind": {
+    "fail": 77
+   },
+   "by_item": {
+    "J1:fail": 37,
+    "J2:fail": 31,
+    "J5:fail": 4,
+    "J4:fail": 4,
+    "J3:fail": 1
+   }
+  }
+ },
+ "LS_vs_VB": {
+  "LS1": {
+   "runs": 72,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 26.1 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 24.8 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> level",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 54310.0 N -> -150.0 N",
+     "base_other_phase_has_it": true
+    }
+   ],
+   "by_kind": {
+    "fail": 7
+   },
+   "by_item": {
+    "J1:fail": 2,
+    "J5:fail": 2,
+    "J4:fail": 2,
+    "J2:fail": 1
+   }
+  },
+  "LS2": {
+   "runs": 72,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "offset 0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate no_lift",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 26.1 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|4|0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 54310.0 N -> 370.0 N",
+     "base_other_phase_has_it": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate no_lift",
+     "base_other_phase_has_it": false
+    }
+   ],
+   "by_kind": {
+    "fail": 6
+   },
+   "by_item": {
+    "J1:fail": 3,
+    "J5:fail": 1,
+    "J4:fail": 1,
+    "J2:fail": 1
+   }
+  },
+  "LS3": {
+   "runs": 72,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate no_lift",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "S1",
+     "phase": "eps 0.001",
+     "item": "J3",
+     "kind": "fail",
+     "detail": "t_ready 64.7 -> 113.0",
+     "base_other_phase_has_it": false
+    }
+   ],
+   "by_kind": {
+    "fail": 2
+   },
+   "by_item": {
+    "J1:fail": 1,
+    "J3:fail": 1
+   }
+  },
+  "LS4": {
+   "runs": 72,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.05",
+     "item": "J2",
+     "kind": "fail",
+     "detail": "F 54310.0 N -> 110.0 N",
+     "base_other_phase_has_it": true
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": true
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.05",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 43.75 -> None",
+     "base_other_phase_has_it": true
+    },
+    {
+     "row": "R12",
+     "phase": "bottom|FL|4|0.05",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": true
+    }
+   ],
+   "by_kind": {
+    "fail": 4
+   },
+   "by_item": {
+    "J2:fail": 1,
+    "J1:fail": 1,
+    "J5:fail": 1,
+    "J4:fail": 1
+   }
+  }
+ },
+ "L-d": {
+  "LS1": [
+   {
+    "group": "G4|bottom|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.08,
+     "E": -0.18000000000000016,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.19999999999999996
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|bottom|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.0399999999999996,
+     "E": -0.16500000000000004,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.17999999999999972
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 1.9000000000000021,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 3.8000000000000007
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.07,
+     "E": -0.73,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.75
+    },
+    "T_s": {
+     "S": 9.049999999999997,
+     "E": -5.549999999999997,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 10.099999999999998
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.65,
+     "E": -0.17999999999999972,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.18999999999999995
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -2.1000000000000014,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 2.1000000000000014
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5500000000000003,
+     "E": -0.20999999999999996,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.2600000000000007
+    },
+    "T_s": {
+     "S": 2.150000000000002,
+     "E": 0.04999999999999716,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.09999999999999787
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 1.65,
+     "E": 0.9700000000000002,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 1.0
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -1.1000000000000014,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 1.1000000000000014
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.3,
+     "E": 0.040000000000000036,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.050000000000000044
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -0.10000000000000142,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5700000000000003,
+     "E": 0.1200000000000001,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.16000000000000014
+    },
+    "T_s": {
+     "S": 1.25,
+     "E": -0.05000000000000071,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.15,
+     "E": 1.02,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 1.05
+    },
+    "T_s": {
+     "S": 4.949999999999999,
+     "E": -0.30000000000000426,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.5
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.23,
+     "E": 0.07000000000000006,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.08
+    },
+    "T_s": {
+     "S": 4.350000000000001,
+     "E": -2.1000000000000014,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.200000000000003
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.51,
+     "E": 0.32499999999999996,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.57
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": 1.3500000000000014,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 2.6999999999999993
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 6.72,
+     "E": -0.7500000000000004,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.75
+    },
+    "T_s": {
+     "S": 0.75,
+     "E": -0.20000000000000284,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.40000000000000213
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.6400000000000006,
+     "E": -0.20500000000000007,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.20999999999999996
+    },
+    "T_s": {
+     "S": 4.050000000000001,
+     "E": -2.1999999999999957,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.199999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.62,
+     "E": -0.21999999999999886,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.22999999999999954
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R12",
+    "phases": 4,
+    "F_kN": {
+     "S": 3.8600000000000003,
+     "E": -0.20999999999999996,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.2200000000000002
+    },
+    "T_s": {
+     "S": 4.32,
+     "E": -0.09999999999999787,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 4.199999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R14",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.30000000000000004,
+     "E": 0.015000000000000013,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.030000000000000027
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R15",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R16",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "S": 0.6700000000000017,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.2896000000000001,
+     "E": 0.10584999999999667,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.15510000000000446
+    },
+    "T_s": {
+     "S": 0.3999999999999986,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2ra",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.34280000000000044,
+     "E": -0.4007000000000005,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.4847999999999999
+    },
+    "T_s": {
+     "S": 0.3999999999999915,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.07030000000000314,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.07030000000000314
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -0.10000000000000142,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": false
+   },
+   {
+    "group": "S1",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.6076999999999941,
+     "E": 0.015050000000002228,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.02190000000000225
+    },
+    "T_s": {
+     "S": 20.599999999999994,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S4",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0391000000000048,
+     "E": -0.001300000000000523,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0014000000000038426
+    },
+    "T_s": {
+     "S": 1.7000000000000028,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 1.6000000000000085
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S5",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0204000000000093,
+     "E": 0.00025000000000829914,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.000999999999990564
+    },
+    "T_s": {
+     "S": 39.10000000000001,
+     "E": -8.25,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 39.2
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.10649999999999693,
+     "E": -0.0033499999999975216,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.003900000000001569
+    },
+    "T_s": {
+     "S": 0.09999999999999432,
+     "E": -0.10000000000000853,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.10000000000000853
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S8",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.3691000000000031,
+     "E": -0.010199999999997544,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.013599999999996726
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   }
+  ],
+  "LS2": [
+   {
+    "group": "G4|bottom|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.08,
+     "E": 0.010000000000000231,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.030000000000000027
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|bottom|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.0399999999999996,
+     "E": -0.04499999999999993,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.07999999999999918
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 1.9000000000000021,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 3.8000000000000007
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.07,
+     "E": -0.2999999999999998,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.34999999999999964
+    },
+    "T_s": {
+     "S": 9.049999999999997,
+     "E": -5.049999999999997,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 9.599999999999998
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.65,
+     "E": -2.3249999999999997,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.779999999999999
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -0.10000000000000142,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5500000000000003,
+     "E": -0.18500000000000005,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.31000000000000005
+    },
+    "T_s": {
+     "S": 2.150000000000002,
+     "E": 7.949999999999996,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": true,
+     "max_abs_change": 15.800000000000004
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 1.65,
+     "E": 0.33000000000000007,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.3500000000000001
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": -0.05000000000000426,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.3,
+     "E": 0.16999999999999993,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.2200000000000002
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5700000000000003,
+     "E": 0.355,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.3600000000000001
+    },
+    "T_s": {
+     "S": 1.25,
+     "E": 0.9499999999999993,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 1.5999999999999979
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.15,
+     "E": 0.29999999999999993,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.33
+    },
+    "T_s": {
+     "S": 4.949999999999999,
+     "E": -2.450000000000003,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.899999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.23,
+     "E": 0.19000000000000017,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.26000000000000023
+    },
+    "T_s": {
+     "S": 4.350000000000001,
+     "E": 0.5999999999999979,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 1.0999999999999979
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.51,
+     "E": 0.7349999999999999,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 1.0899999999999999
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 6.72,
+     "E": -0.3250000000000002,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.3999999999999999
+    },
+    "T_s": {
+     "S": 0.75,
+     "E": 0.10000000000000142,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.1999999999999993
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.6400000000000006,
+     "E": -2.6350000000000002,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 5.41
+    },
+    "T_s": {
+     "S": 4.050000000000001,
+     "E": -2.1999999999999957,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.199999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.62,
+     "E": -2.2299999999999995,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.529999999999999
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R12",
+    "phases": 4,
+    "F_kN": {
+     "S": 3.8600000000000003,
+     "E": -1.2049999999999998,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 5.41
+    },
+    "T_s": {
+     "S": 4.32,
+     "E": -0.09999999999999787,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 4.199999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R14",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.30000000000000004,
+     "E": 0.015000000000000013,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.030000000000000027
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": 0.04999999999999716,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R15",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R16",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "S": 0.6700000000000017,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.2896000000000001,
+     "E": 0.04534999999999911,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.07839999999999492
+    },
+    "T_s": {
+     "S": 0.3999999999999986,
+     "E": 0.04999999999999716,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2ra",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.34280000000000044,
+     "E": 1.119600000000002,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 2.8180000000000014
+    },
+    "T_s": {
+     "S": 0.3999999999999915,
+     "E": 0.30000000000001137,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 7.299999999999997
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": -0.024099999999997124,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.024099999999997124
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S1",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.6076999999999941,
+     "E": -0.008049999999997226,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.07280000000000086
+    },
+    "T_s": {
+     "S": 20.599999999999994,
+     "E": 0.30000000000001137,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.9000000000000057
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S4",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0391000000000048,
+     "E": -0.006799999999998363,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.04540000000000077
+    },
+    "T_s": {
+     "S": 1.7000000000000028,
+     "E": 0.8999999999999915,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 3.5
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S5",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0204000000000093,
+     "E": -9.99999999891088e-05,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0009000000000014552
+    },
+    "T_s": {
+     "S": 39.10000000000001,
+     "E": -3.1999999999999886,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 29.200000000000003
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.10649999999999693,
+     "E": 0.005400000000008731,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.025399999999997647
+    },
+    "T_s": {
+     "S": 0.09999999999999432,
+     "E": 0.09999999999999432,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.5
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S8",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.3691000000000031,
+     "E": 0.023200000000002774,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.02949999999999875
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   }
+  ],
+  "LS3": [
+   {
+    "group": "G4|bottom|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.08,
+     "E": -0.06000000000000005,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.06999999999999984
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -8.100000000000001,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 8.100000000000001
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|bottom|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.0399999999999996,
+     "E": -0.040000000000000036,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.050000000000000044
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.07,
+     "E": 0.4950000000000001,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.5099999999999998
+    },
+    "T_s": {
+     "S": 9.049999999999997,
+     "E": -4.549999999999997,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 9.099999999999998
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.65,
+     "E": 0.03500000000000014,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.040000000000000036
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5500000000000003,
+     "E": 0.010000000000000231,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.020000000000000018
+    },
+    "T_s": {
+     "S": 2.150000000000002,
+     "E": -0.05000000000000071,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.09999999999999787
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 1.65,
+     "E": -0.44999999999999996,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.4700000000000002
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.19999999999999574,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.3999999999999986
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.3,
+     "E": -0.03500000000000014,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.06999999999999984
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5700000000000003,
+     "E": -0.1299999999999999,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.13
+    },
+    "T_s": {
+     "S": 1.25,
+     "E": 0.15000000000000213,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.3000000000000007
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.15,
+     "E": -0.44499999999999995,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.5
+    },
+    "T_s": {
+     "S": 4.949999999999999,
+     "E": -2.3999999999999986,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.899999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.23,
+     "E": -0.1399999999999999,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.21000000000000002
+    },
+    "T_s": {
+     "S": 4.350000000000001,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.51,
+     "E": -0.05500000000000005,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10999999999999988
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": 0.5,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 1.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 6.72,
+     "E": 0.40499999999999936,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.47
+    },
+    "T_s": {
+     "S": 0.75,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.6400000000000006,
+     "E": 0.024999999999999467,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.02999999999999936
+    },
+    "T_s": {
+     "S": 4.050000000000001,
+     "E": -0.09999999999999787,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.1999999999999993
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.62,
+     "E": 0.10000000000000053,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000053
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.05000000000000426,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R12",
+    "phases": 4,
+    "F_kN": {
+     "S": 3.8600000000000003,
+     "E": 0.025000000000000355,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.029999999999999805
+    },
+    "T_s": {
+     "S": 4.32,
+     "E": -0.0849999999999973,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.1999999999999993
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R14",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.30000000000000004,
+     "E": -0.025000000000000022,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.050000000000000044
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": -0.05000000000000071,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.09999999999999787
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R15",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R16",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "S": 0.6700000000000017,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.2896000000000001,
+     "E": -0.009250000000001535,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.028700000000000614
+    },
+    "T_s": {
+     "S": 0.3999999999999986,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2ra",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.34280000000000044,
+     "E": 0.01529999999999987,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0218999999999987
+    },
+    "T_s": {
+     "S": 0.3999999999999915,
+     "E": 7.75,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 7.799999999999997
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": -0.015799999999998704,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.015799999999998704
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S1",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.6076999999999941,
+     "E": -0.04085000000000605,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.454899999999995
+    },
+    "T_s": {
+     "S": 20.599999999999994,
+     "E": 0.3500000000000085,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 48.3
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S4",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0391000000000048,
+     "E": -0.0002999999999957481,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0005000000000023874
+    },
+    "T_s": {
+     "S": 1.7000000000000028,
+     "E": 0.14999999999999147,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 1.6000000000000085
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S5",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0204000000000093,
+     "E": -0.0002499999999940883,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0002999999999957481
+    },
+    "T_s": {
+     "S": 39.10000000000001,
+     "E": -7.849999999999994,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 38.30000000000001
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.10649999999999693,
+     "E": -0.0010499999999922238,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0013999999999967372
+    },
+    "T_s": {
+     "S": 0.09999999999999432,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S8",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.3691000000000031,
+     "E": -0.002899999999996794,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.004199999999997317
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   }
+  ],
+  "LS4": [
+   {
+    "group": "G4|bottom|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.08,
+     "E": 0.004999999999999893,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.010000000000000009
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|bottom|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.0399999999999996,
+     "E": 0.004999999999999893,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.010000000000000009
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.07,
+     "E": -0.3500000000000001,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.4600000000000004
+    },
+    "T_s": {
+     "S": 9.049999999999997,
+     "E": -5.649999999999999,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 10.199999999999996
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.65,
+     "E": -0.04999999999999982,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.06000000000000005
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5500000000000003,
+     "E": -0.1200000000000001,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.1200000000000001
+    },
+    "T_s": {
+     "S": 2.150000000000002,
+     "E": 0.04999999999999716,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.09999999999999787
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 1.65,
+     "E": 0.5500000000000003,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.6200000000000001
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": -1.1000000000000014,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": true,
+     "max_abs_change": 1.1000000000000014
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.3,
+     "E": 0.025000000000000355,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.06000000000000005
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|FR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.5700000000000003,
+     "E": 0.1499999999999999,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.15000000000000013
+    },
+    "T_s": {
+     "S": 1.25,
+     "E": 0.15000000000000213,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.3000000000000007
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.15,
+     "E": 0.44000000000000006,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.47000000000000003
+    },
+    "T_s": {
+     "S": 4.949999999999999,
+     "E": -2.6000000000000014,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 5.099999999999998
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.23,
+     "E": 0.04500000000000015,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.08000000000000007
+    },
+    "T_s": {
+     "S": 4.350000000000001,
+     "E": -2.150000000000002,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.300000000000001
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RL|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 3.51,
+     "E": 0.48999999999999977,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.83
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": -0.04999999999999716,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|0",
+    "phases": 2,
+    "F_kN": {
+     "S": 6.72,
+     "E": -2.6300000000000003,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.949999999999999
+    },
+    "T_s": {
+     "S": 0.75,
+     "E": -0.3999999999999986,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.8000000000000007
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|4",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.6400000000000006,
+     "E": -0.050000000000000266,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0600000000000005
+    },
+    "T_s": {
+     "S": 4.050000000000001,
+     "E": -2.1999999999999957,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 4.199999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "G4|top|RR|8",
+    "phases": 2,
+    "F_kN": {
+     "S": 2.62,
+     "E": -0.1299999999999999,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.13000000000000078
+    },
+    "T_s": {
+     "S": 0.05000000000000071,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R12",
+    "phases": 4,
+    "F_kN": {
+     "S": 3.8600000000000003,
+     "E": -0.04999999999999982,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0600000000000005
+    },
+    "T_s": {
+     "S": 4.32,
+     "E": -0.09999999999999787,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 4.199999999999999
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R14",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.30000000000000004,
+     "E": 0.015000000000000013,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.030000000000000027
+    },
+    "T_s": {
+     "S": 0.15000000000000213,
+     "E": 0.04999999999999716,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R15",
+    "phases": 2,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": true,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R16",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "T_s": {
+     "S": 0.6700000000000017,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.2896000000000001,
+     "E": 0.016199999999997772,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.01850000000000307
+    },
+    "T_s": {
+     "S": 0.3999999999999986,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R2ra",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.34280000000000044,
+     "E": 0.08094999999999786,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.11059999999999803
+    },
+    "T_s": {
+     "S": 0.3999999999999915,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "R7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0,
+     "E": -0.001300000000000523,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.001300000000000523
+    },
+    "T_s": {
+     "S": 0.0,
+     "E": -0.10000000000000142,
+     "state": "\uad6c\ubd84\ub428",
+     "weak": false,
+     "max_abs_change": 0.10000000000000142
+    },
+    "sensitive_record": false
+   },
+   {
+    "group": "S1",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.6076999999999941,
+     "E": 0.0146000000000015,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.5071999999999974
+    },
+    "T_s": {
+     "S": 20.599999999999994,
+     "E": -0.14999999999999147,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 22.4
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S4",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0391000000000048,
+     "E": -0.00014999999999076863,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.00039999999999906777
+    },
+    "T_s": {
+     "S": 1.7000000000000028,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 1.7000000000000028
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S5",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.0204000000000093,
+     "E": 0.0004000000000132786,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.0005999999999914962
+    },
+    "T_s": {
+     "S": 39.10000000000001,
+     "E": -8.999999999999986,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 39.2
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S7",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.10649999999999693,
+     "E": 0.000950000000003115,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.03169999999999362
+    },
+    "T_s": {
+     "S": 0.09999999999999432,
+     "E": 0.0,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.7999999999999972
+    },
+    "sensitive_record": true
+   },
+   {
+    "group": "S8",
+    "phases": 4,
+    "F_kN": {
+     "S": 0.3691000000000031,
+     "E": 0.0036999999999949296,
+     "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+     "weak": false,
+     "max_abs_change": 0.004699999999999704
+    },
+    "T_s": {
+     "state": "\ud310\uc815 \ubd88\uac00",
+     "phases": [
+      0,
+      0
+     ],
+     "max_abs_change": null
+    },
+    "sensitive_record": true
+   }
+  ]
+ },
+ "vb_fail_items": 77,
+ "identity_defects": [],
+ "baseline_failures": {
+  "counted": 0,
+  "rule": "erratum 2 2-9.3: same pair, the reference fails the item too -> a baseline failure (recorded only); R15 J2 is the worsening rule's",
+  "J_vs_V0": [
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R16",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R16",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R16",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R16",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U57_outside",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R2",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R2",
+    "phase": "eps 0.001",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R2",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R2",
+    "phase": "eps 0.003",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R7",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R7",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R7",
+    "phase": "eps 0.001",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R7",
+    "phase": "eps 0.003",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R1",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R1",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R5",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R5",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R10",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R10",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R6",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R8",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R8",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R9",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R6",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R9",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R11",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R11",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R3",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R3",
+    "phase": "eps 0.001",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R3",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R3",
+    "phase": "eps 0.003",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R4",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R4",
+    "phase": "eps 0.001",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R4",
+    "phase": "eps 0.002",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "VB",
+    "reference": "V0",
+    "row": "R4",
+    "phase": "eps 0.003",
+    "item": "J3",
+    "reference_state": "record",
+    "detail": "case_floor_deg missing: FLAG limit \ubbf8\uc815",
+    "value_missing": true,
+    "reason": "case_floor_deg None",
+    "setting_state": "pass"
+   }
+  ],
+  "LS_vs_VB": [
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 830.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3390.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5550.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2180.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1600.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3250.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1020.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3320.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3520.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 950.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1820.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -20.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -330.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate no_lift",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 7930.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8420.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5800.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3980.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4770.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U57_outside",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8920.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS1",
+    "reference": "VB",
+    "row": "S5",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "fail",
+    "detail": "t_ready 117.9",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3390.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 830.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3250.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1600.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2180.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5550.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1020.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3320.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 950.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3520.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -330.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1820.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -20.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate no_lift",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 7930.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8420.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5800.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3980.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4770.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U57_outside",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8920.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS2",
+    "reference": "VB",
+    "row": "S5",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "fail",
+    "detail": "t_ready 117.9",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3390.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 830.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5550.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2180.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3250.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1600.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3320.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1020.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 950.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -330.0 N",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3520.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1820.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -20.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate no_lift",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 7930.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8420.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5800.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3980.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4770.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8920.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U57_outside",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS3",
+    "reference": "VB",
+    "row": "S5",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "fail",
+    "detail": "t_ready 117.9",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.025",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3390.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "offset 0.075",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 830.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5550.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2180.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FL|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3250.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1600.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1020.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3320.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 950.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -330.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|FR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3520.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1820.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -20.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2790.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1210.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RL|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate no_lift",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|0|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 7930.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 2050.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4690.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 5800.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "top|RR|8|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8420.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1900.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 1730.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|RR|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 4770.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_event",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R12",
+    "phase": "bottom|FL|4|0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 3980.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U57_outside",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F -720.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.05",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.05",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate Fmin_after_W",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate end_att",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J5",
+    "reference_state": "fail",
+    "detail": "t_back None",
+    "value_missing": true,
+    "reason": "t_back None",
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J2",
+    "reference_state": "fail",
+    "detail": "F 8920.0 N",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final probe",
+    "value_missing": false,
+    "setting_state": "pass"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.075",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "R16",
+    "phase": "offset 0.025",
+    "item": "J1",
+    "reference_state": "fail",
+    "detail": "gate U832_pair_union",
+    "value_missing": false,
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J6",
+    "reference_state": "fail",
+    "detail": "att_last5 None",
+    "value_missing": true,
+    "reason": "att_last5 None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "J4",
+    "reference_state": "fail",
+    "detail": "final fault, no first READY",
+    "value_missing": true,
+    "reason": "t_ready None",
+    "setting_state": "fail"
+   },
+   {
+    "setting": "LS4",
+    "reference": "VB",
+    "row": "S5",
+    "phase": "eps 0.0",
+    "item": "J3",
+    "reference_state": "fail",
+    "detail": "t_ready 117.9",
+    "value_missing": false,
+    "setting_state": "pass"
+   }
+  ],
+  "count": 431,
+  "value_missing_count": 86
+ },
+ "phase_scatter_suspects": [],
+ "r15_worsening": {
+  "pairs": 2,
+  "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+  "scatter": {
+   "S": 500.0,
+   "E": 4570.0,
+   "state": "\uc704\uc0c1 \uc0b0\ud3ec \uc548",
+   "weak": true
+  },
+  "weak_basis": true,
+  "failures": []
+ },
+ "S8": {
+  "f5_records": [],
+  "failures": [],
+  "stops": [],
+  "not_judgeable": [
+   {
+    "setting": "VB",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "VB",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "VB",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "VB",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS1",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS1",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS1",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS1",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS2",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS2",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS2",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS2",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS3",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS3",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS3",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS3",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS4",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS4",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS4",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   },
+   {
+    "setting": "LS4",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "not_judgeable",
+    "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+   }
+  ]
+ },
+ "L-a": [],
+ "L-b": [
+  {
+   "row": "R12",
+   "phase": "top|FL|4|0.0",
+   "item": "J5",
+   "kind": "fail",
+   "detail": "t_back 26.1 -> None",
+   "base_other_phase_has_it": false,
+   "setting": "LS1"
+  },
+  {
+   "row": "R12",
+   "phase": "top|FR|0|0.0",
+   "item": "J5",
+   "kind": "fail",
+   "detail": "t_back 24.8 -> None",
+   "base_other_phase_has_it": false,
+   "setting": "LS1"
+  },
+  {
+   "row": "R12",
+   "phase": "top|FL|4|0.0",
+   "item": "J5",
+   "kind": "fail",
+   "detail": "t_back 26.1 -> None",
+   "base_other_phase_has_it": false,
+   "setting": "LS2"
+  },
+  {
+   "row": "S1",
+   "phase": "eps 0.001",
+   "item": "J3",
+   "kind": "fail",
+   "detail": "t_ready 64.7 -> 113.0",
+   "base_other_phase_has_it": false,
+   "setting": "LS3"
+  },
+  {
+   "row": "R12",
+   "phase": "bottom|FL|4|0.05",
+   "item": "J5",
+   "kind": "fail",
+   "detail": "t_back 43.75 -> None",
+   "base_other_phase_has_it": true,
+   "setting": "LS4"
+  }
+ ],
+ "L-c": [],
+ "L-e": [],
+ "stops": [],
+ "not_judgeable_items": [
+  {
+   "setting": "VB",
+   "row": "S8",
+   "phase": "eps 0.0",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "VB",
+   "row": "S8",
+   "phase": "eps 0.002",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "VB",
+   "row": "S8",
+   "phase": "eps 0.001",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "VB",
+   "row": "S8",
+   "phase": "eps 0.003",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS1",
+   "row": "S8",
+   "phase": "eps 0.0",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS1",
+   "row": "S8",
+   "phase": "eps 0.001",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS1",
+   "row": "S8",
+   "phase": "eps 0.002",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS1",
+   "row": "S8",
+   "phase": "eps 0.003",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS2",
+   "row": "S8",
+   "phase": "eps 0.0",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS2",
+   "row": "S8",
+   "phase": "eps 0.001",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS2",
+   "row": "S8",
+   "phase": "eps 0.003",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS2",
+   "row": "S8",
+   "phase": "eps 0.002",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS3",
+   "row": "S8",
+   "phase": "eps 0.0",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS3",
+   "row": "S8",
+   "phase": "eps 0.001",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS3",
+   "row": "S8",
+   "phase": "eps 0.003",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS3",
+   "row": "S8",
+   "phase": "eps 0.002",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS4",
+   "row": "S8",
+   "phase": "eps 0.0",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS4",
+   "row": "S8",
+   "phase": "eps 0.001",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS4",
+   "row": "S8",
+   "phase": "eps 0.002",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  },
+  {
+   "setting": "LS4",
+   "row": "S8",
+   "phase": "eps 0.003",
+   "item": "F-5",
+   "kind": "not_judgeable",
+   "detail": "criteria 6 stop values None: ['margin_at_stop_kN', 'max_after_stop_kN']"
+  }
+ ],
+ "no_reference": {},
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "pass",
+  "runs": 0,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_revision_5_record_in_revision_4_judgement": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "rev6": {
+   "name": "extend_bound_check rev5: jp3a_breach_reads + jp3b_breach_over_tol_reads + jp3c_breach_reads == 0",
+   "status": "pass",
+   "runs": 388,
+   "runs_judged": 200,
+   "expected_judged_runs": null,
+   "judged_key_missing_runs": 0,
+   "runs_by_case": {
+    "judged": 200,
+    "no_rod_reading": 188,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_record_not_revision_5": 0,
+    "defect_sensor_grade_missing": 0,
+    "defect_rule_identity_not_default": 0,
+    "record_only_sensor_grade": 0
+   },
+   "rule_revisions": [
+    6
+   ],
+   "jp3a_breach_reads": 0,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0,
+   "record_only_grade_sums": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   },
+   "runs_with_breach": 0,
+   "jp3b_breach_reads_flag": 0,
+   "jp3a_margin_used_reads_flag": 0,
+   "lock_ext_breach_over_tol_reads_flag": 0,
+   "ret_breach_reads_flag": 25
+  },
+  "rev6_unjudged_setting_runs": 0,
+  "runs_expected": 388,
+  "rule_missing_runs": 0,
+  "test_only_setting_runs": 0,
+  "l1_reference_runs": 0,
+  "revision_key_missing_runs": 0,
+  "revision_key_mismatch_runs": 0,
+  "status_by_revision": {
+   "4": "no_p3_runs",
+   "6": "pass"
+  }
+ },
+ "phase_scatter_suspect_count": 0,
+ "status_basis": {
+  "failures": [
+   "VBJ J1 .. J11: 77",
+   "L-b: 5"
+  ],
+  "setting_defects": [],
+  "not_judgeable": [
+   "not-judgeable items: 20"
+  ]
+ },
+ "status": "failed"
+}

@@ -1,0 +1,24 @@
+{
+ "rule": "jp3_remedy_spec_v5_erratum2.md 2-1 (file level)",
+ "status": "clean",
+ "inputs": 2,
+ "l1_references": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\l1_VBJ0.json",
+   "sha256": "caeef2967916625d549cd1b251c0302182acc9ccb583008991cef67c010f46e0"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\l1_VBJ.json",
+   "sha256": "5b0dbd0cf7164ce08979b4ba8fa4ba540ca22c0d2737f11a5385df8312015e22"
+  },
+  {
+   "path": "(fixed list sha256 2ab6f76d90b7)",
+   "sha256": "2ab6f76d90b7ad7d3bc0839d5925a2a38d54b0659649c2690b0ed77c0053b428"
+  },
+  {
+   "path": "(fixed list sha256 304023ff36a6)",
+   "sha256": "304023ff36a6f2d719f6923487e560c7be6c639332aa0b9c758bc906a93c0eb7"
+  }
+ ],
+ "shared": []
+}

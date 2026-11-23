@@ -1,0 +1,834 @@
+{
+ "rule": "jp3_remedy_spec_v5_erratum2.md 2-9.5 (spec v5 6.4, a record)",
+ "status": "written",
+ "runs": 16,
+ "runs_expected": 16,
+ "lines": [
+  {
+   "bundle": "dropout",
+   "fault_leg": "FL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FL_VBK.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 76.00000000018086,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FL_VBK.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.40000000016367,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FL_VBK0.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 76.00000000018086,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FL_VBK0.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.40000000016367,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FR_VBK.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.10000000016224,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FR_VBK.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 68.80000000014648,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FR_VBK0.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.10000000016224,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "FR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_FR_VBK0.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 68.80000000014648,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RL_VBK.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.10000000016224,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RL_VBK.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 70.20000000015317,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RL_VBK0.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.10000000016224,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RL_VBK0.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 70.20000000015317,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RR_VBK.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": null,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RR_VBK.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 68.90000000014696,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RR_VBK0.json",
+   "key": "cand=current#L2|s81|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "dropout-s81-r000-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 75.90000000018038,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "dropout",
+   "fault_leg": "RR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\dropout_RR_VBK0.json",
+   "key": "cand=current#L2|s81|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "dropout-s81-r001-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 68.90000000014696,
+   "fault_events": [],
+   "fault_head_pressure_count": 0,
+   "d1_undecided_periods": {
+    "computed": false,
+    "reason": "\uae30\ub85d \ud0a4 \uc5c6\uc74c: \uc2dc\ubbac\ub808\uc774\uc158 \uacbd\ub85c \ubcc0\uacbd \ud544\uc694"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FL_VBK.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.10000000016224,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FL_VBK.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 69.10000000014792,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "implausible",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FL_VBK0.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 72.10000000016224,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FL_VBK0.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-FL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 69.10000000014792,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "implausible",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FR_VBK.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 71.00000000015699,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FR_VBK.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 71.4000000001589,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "implausible",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FR_VBK0.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 71.00000000015699,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "FR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_FR_VBK0.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-FR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 71.4000000001589,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "implausible",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RL_VBK.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 69.6000000001503,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RL",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RL_VBK.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 71.30000000015842,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "implausible",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RL_VBK0.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 69.6000000001503,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RL",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RL_VBK0.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-RL",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 71.30000000015842,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "implausible",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RR_VBK.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": null,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RR",
+   "arm": "VBK",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RR_VBK.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 69.10000000014792,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "implausible"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RR_VBK0.json",
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_id": "tck-s80-r000-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 74.80000000017513,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "calibrated"
+   }
+  },
+  {
+   "bundle": "tck",
+   "fault_leg": "RR",
+   "arm": "VBK0",
+   "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\ckdrop_a1\\tck_RR_VBK0.json",
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_id": "tck-s80-r001-RR",
+   "latched": {
+    "is_latched": true,
+    "reason": "D1",
+    "t_s": 0.1,
+    "reads_after_first": 0,
+    "is_same_read_d1": true
+   },
+   "first_applied_t_s": 0.10000000000000007,
+   "t_ready_s": 69.10000000014792,
+   "fault_events": [],
+   "zero_calibration_status": {
+    "FL": "calibrated",
+    "FR": "calibrated",
+    "RL": "calibrated",
+    "RR": "implausible"
+   }
+  }
+ ],
+ "tck_pairs": [
+  {
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_leg": "FL",
+   "ready_vbk0_s": 72.10000000016224,
+   "ready_vbk_s": 72.10000000016224,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_leg": "FL",
+   "ready_vbk0_s": 69.10000000014792,
+   "ready_vbk_s": 69.10000000014792,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_leg": "FR",
+   "ready_vbk0_s": 71.00000000015699,
+   "ready_vbk_s": 71.00000000015699,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_leg": "FR",
+   "ready_vbk0_s": 71.4000000001589,
+   "ready_vbk_s": 71.4000000001589,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_leg": "RL",
+   "ready_vbk0_s": 69.6000000001503,
+   "ready_vbk_s": 69.6000000001503,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_leg": "RL",
+   "ready_vbk0_s": 71.30000000015842,
+   "ready_vbk_s": 71.30000000015842,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|0|g6|G1+J1@FL|top|Fs0",
+   "fault_leg": "RR",
+   "ready_vbk0_s": 74.80000000017513,
+   "ready_vbk_s": null,
+   "ready_difference_s": null,
+   "vbk0_ready_vbk_not": true,
+   "new_faults": []
+  },
+  {
+   "key": "cand=current#L2|s80|g6|1|g6|G1+J1@FL|top|Fs4",
+   "fault_leg": "RR",
+   "ready_vbk0_s": 69.10000000014792,
+   "ready_vbk_s": 69.10000000014792,
+   "ready_difference_s": 0.0,
+   "vbk0_ready_vbk_not": false,
+   "new_faults": []
+  }
+ ]
+}
