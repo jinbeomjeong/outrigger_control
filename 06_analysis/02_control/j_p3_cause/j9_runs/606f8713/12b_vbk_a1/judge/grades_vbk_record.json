@@ -1,0 +1,43 @@
+{
+ "rule": "X-13 grade-judge (control review of 8a3c48c7 W-6)",
+ "arm": "vbk",
+ "inputs": {
+  "b1": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\VBK_b1.json",
+   "sha256": "c7617e6d2ddcffcb3cea57bf04ce8244b151f0a7803e055e8a56636de18b422d"
+  },
+  "b2": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\VBK_b2.json",
+   "sha256": "7c826a6f28f90505ddc3b01e6fb0741010f7a0dfbe34af1e218caa49f98e0740"
+  },
+  "l1_reference": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\l1ref_a1\\L1_VBJ.json",
+   "sha256": "304023ff36a6f2d719f6923487e560c7be6c639332aa0b9c758bc906a93c0eb7",
+   "setting": "VBJ",
+   "rod_model": "plant_truth"
+  },
+  "l1_keys": {
+   "sha256": "9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5"
+  }
+ },
+ "judge_run": {
+  "command": [
+   "-I",
+   "-B",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+   "judge",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\judge\\grades_vbk.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\VBK_b1.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\VBK_b2.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\l1ref_a1\\L1_VBJ.json",
+   "--s4-late-loc"
+  ],
+  "exit_code": 0,
+  "last_line": "unmatched 0 errors 0 -> C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\judge\\grades_vbk.json",
+  "stderr_tail": []
+ },
+ "status": "written",
+ "judge_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\judge\\grades_vbk.json",
+ "judge_sha256": "9792ed9d463c96145755a7642064b7f57002139b6e419d01a5cf5ed35bf1a971",
+ "exit": 0
+}

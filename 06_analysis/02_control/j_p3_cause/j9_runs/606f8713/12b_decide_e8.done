@@ -1,0 +1,41 @@
+{
+  "step": "12b_decide_e8",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_decide_e8_a1",
+  "exit_code": 0,
+  "commit": "606f87131a7f13468f1db37cf6c811c442a6caf0",
+  "started": "2026-11-23 15:08:22 +09:00",
+  "done": "2026-11-23 15:08:53 +09:00",
+  "codes": {
+    "expect_simulation": "606f87131a7f13468f1db37cf6c811c442a6caf0 (C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5)",
+    "expect_judge": "74a4bbf4a27fc119d0116f8b67bfe40ee168cadc (C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8)",
+    "e8_run_steps": "the tool commit's (74a4bbf4a27fc119d0116f8b67bfe40ee168cadc) but the $ToolCommit line",
+    "e8_diff:tool_commit": "74a4bbf4a27fc119d0116f8b67bfe40ee168cadc 06_analysis/02_control/j_p3_cause/j9_runs/606f8713/12b_decide_e8_a1/logs/e8_diff_tool_commit.txt",
+    "e8_diff:main_head": "437829325538c4955fca3497888a1abd1389f6f0 06_analysis/02_control/j_p3_cause/j9_runs/606f8713/12b_decide_e8_a1/logs/e8_diff_main_head.txt",
+    "fixed_list": "06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_606f8713.SHA256SUMS",
+    "fixed_list_tool": "06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_74a4bbf4.SHA256SUMS",
+    "tool:e8_tool_closure": 0,
+    "e8_base_vbk0": "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/12b_vbk0_base_a1",
+    "tool:decide": 0,
+    "judge_identity:decide": {
+      "commit": "74a4bbf4a27fc119d0116f8b67bfe40ee168cadc",
+      "is_clean": true,
+      "working_folder": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8",
+      "script": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8\\04_scripts\\04_hydraulic\\coupled\\jp3_12b_judge.py"
+    },
+    "decision_file": "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/12b_decide_e8_a1/decision.json",
+    "decision_sha256": "9c33f420ad1b7a87c9410293506b6b4efbbdd5e6dd38450289e650aa1473457c",
+    "decision_status": "decided"
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "e8_tool_closure",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_import_closure.py --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5 --entry 04_scripts/04_hydraulic/coupled/las_t3_dg3.py --entry 04_scripts/04_hydraulic/coupled/jp3_run_identity.py --base 606f87131a7f13468f1db37cf6c811c442a6caf0 --head 74a4bbf4a27fc119d0116f8b67bfe40ee168cadc --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_decide_e8_a1\\judge\\e8_tool_closure.json"
+    },
+    {
+      "label": "decide",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8\\04_scripts\\04_hydraulic\\coupled\\jp3_12b_judge.py decide --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\selection.json --selection-sha256 fc3875d855e1e04ca0c755e29d3c60287752fe12f487aaf54198190968c009f4 --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_decide_e8_a1\\decision.json --vbk0 b1=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b1.json --vbk0-t4h b1=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b1_t4h --vbk0 b2=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b2.json --vbk0-t4h b2=C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b2_t4h --expect-vbk0-sha256 b1=87e76b0bcc4d32cadd10592cac8314452a9408b6fde4765b77388061caf23c4e --expect-vbk0-t4h-digest b1=561438f1da1335cf76e48fd5a1eaafeab3caf778161139ec6998abbad32d031d --expect-vbk0-sha256 b2=205079fec5c7ea8c6460dd172b3e44129dd355242e675378a5f0147441cd0a8a --expect-vbk0-t4h-digest b2=b0c4a79be083e14515692b5a996d775e4fb799c8a252af1f7e741f04c4a616a8"
+    }
+  ]
+}

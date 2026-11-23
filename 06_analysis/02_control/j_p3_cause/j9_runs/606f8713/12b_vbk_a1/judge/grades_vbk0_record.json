@@ -1,0 +1,43 @@
+{
+ "rule": "X-13 grade-judge (control review of 8a3c48c7 W-6)",
+ "arm": "vbk0",
+ "inputs": {
+  "b1": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b1.json",
+   "sha256": "87e76b0bcc4d32cadd10592cac8314452a9408b6fde4765b77388061caf23c4e"
+  },
+  "b2": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b2.json",
+   "sha256": "205079fec5c7ea8c6460dd172b3e44129dd355242e675378a5f0147441cd0a8a"
+  },
+  "l1_reference": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\l1ref_a1\\L1_VBJ0.json",
+   "sha256": "2ab6f76d90b7ad7d3bc0839d5925a2a38d54b0659649c2690b0ed77c0053b428",
+   "setting": "VBJ0",
+   "rod_model": "plant_truth"
+  },
+  "l1_keys": {
+   "sha256": "9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5"
+  }
+ },
+ "judge_run": {
+  "command": [
+   "-I",
+   "-B",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+   "judge",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\judge\\grades_vbk0.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b1.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b2.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\l1ref_a1\\L1_VBJ0.json",
+   "--s4-late-loc"
+  ],
+  "exit_code": 0,
+  "last_line": "unmatched 0 errors 0 -> C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\judge\\grades_vbk0.json",
+  "stderr_tail": []
+ },
+ "status": "written",
+ "judge_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk_a1\\judge\\grades_vbk0.json",
+ "judge_sha256": "99f98646853bc2eb8ef39879d25e4c7d16b75f1f1db95689906b3f1c39df2aaa",
+ "exit": 0
+}
