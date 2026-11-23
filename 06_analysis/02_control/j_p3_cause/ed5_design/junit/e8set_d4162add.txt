@@ -1,0 +1,12 @@
+# 436.9 edition 5 erratum 8 test set at the test commit d4162add (tool code of c895bb72) (8-8.3; the 12b judge tests
+# and the tests whose code imports the judge tool or reads the edition 5 run steps):
+# test_jp3_12b_* (12b judge, erratum 8 numbered tests 1 .. 14 and the run step gates),
+# test_jp3_ckdrop.py (jp3_ckdrop_record imports jp3_12b_judge), test_jp3_ed5_erratum2.py
+# (l1-overlap / grade input problems of jp3_12b_judge), test_jp3_ed5_erratum1.py and
+# test_jp3_ed5_prelaunch_fix.py (record_gates_ed5.ps1 and the run step texts).
+test_jp3_12b_tools.py
+test_jp3_12b_erratum8.py
+test_jp3_ckdrop.py
+test_jp3_ed5_erratum2.py
+test_jp3_ed5_erratum1.py
+test_jp3_ed5_prelaunch_fix.py

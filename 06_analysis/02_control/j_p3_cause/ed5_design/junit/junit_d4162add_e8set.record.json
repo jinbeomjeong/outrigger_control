@@ -1,0 +1,34 @@
+{
+  "purpose": "erratum 8 8-8.3 test set at the tool commit (python-expert)",
+  "head": "d4162addfbfb9d4af90784922b68c9e3b6c5f8af",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-tool8",
+  "clean_before": true,
+  "clean_after": true,
+  "list_file": "e8set_d4162add.txt",
+  "test_files": [
+    "test_jp3_12b_tools.py",
+    "test_jp3_12b_erratum8.py",
+    "test_jp3_ckdrop.py",
+    "test_jp3_ed5_erratum2.py",
+    "test_jp3_ed5_erratum1.py",
+    "test_jp3_ed5_prelaunch_fix.py"
+  ],
+  "environment": {
+    "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "invocation": "python.exe -B -m pytest -q -p no:cacheprovider",
+    "MKL_THREADING_LAYER": "TBB",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OUTRIGGER_RECORDS_ROOT": "C:\\workspace\\outrigger_control",
+    "coverage": "--cov=04_scripts/04_hydraulic/coupled --cov-branch"
+  },
+  "junit_skips": {
+    "critical": ".",
+    "fail_on_skip": true
+  },
+  "started": "2026-11-23T14:35:35.2400947+09:00",
+  "ended": "2026-11-23T14:41:34.7370923+09:00",
+  "pytest_exit": 0,
+  "junit_skips_exit": 0,
+  "junit": "junit_d4162add_e8set.xml",
+  "junit_sha256": "809fd1317091d87ad26e4ecb3d024fdf508156f8e2c967a853cf444aa8f35cc0"
+}
