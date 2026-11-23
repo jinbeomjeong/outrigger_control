@@ -1,10 +1,10 @@
 """436.9 edition 5 j9_main failure (run 606f8713), D0 plant split: a record, not a judgement.
 
-The eight j9_main VBJ failure keys run on seven plant variants (user decision 2026-11-23;
+The eight j9_main VBJ failure keys run on eight plant variants (user decisions 2026-11-23;
 ``06_analysis/02_control/j_p3_cause/ed5_j9fail_606f8713/j9fail_cause_analysis.md`` 4 and
 ``hydraulics/h1_p1_review_report.md`` 7). Each variant keeps the controller of its base setting:
-VBJ variants run ③ revision 6 (tag ``final_C4G2_P3W_LAS_K1``), D0-3 the VB controller (③
-revision 4, tag ``final_C4G2_P3_LAS_K1``).
+VBJ and VBH variants run ③ revision 6 (tag ``final_C4G2_P3W_LAS_K1``), D0-3 the VB controller
+(③ revision 4, tag ``final_C4G2_P3_LAS_K1``).
 
 =======  =================================================  ===========================
 variant  plant                                              controller (base setting)
@@ -16,7 +16,12 @@ D0-4     VBJ, P1 volume_scale 0.5                           VBJ
 D0-5     VBJ, P1 c_v 0.002                                  VBJ
 D0-6     VBJ, P1 c_v 0.04                                   VBJ
 D0-7     VBJ, P1 c_v 0.002 + volume_scale 0.5               VBJ
+D0-8     VBH (old plant) + P1 nominal, no P2 .. P4          VBH (= ``VBG6``)
 =======  =================================================  ===========================
+
+D0-8 is case D of ``jp3_case_replay`` (``VBG6 = {**_VB_PLANT, "line_fill_gate": _vn(1.0),
+**_P3W}``), built here as VBH plus the nominal P1: the same options, so D0-3 and D0-8 differ in
+the ③ revision only (4 against 6).
 
 The settings live in this script only (``jp3_case_replay`` precedent: not in ``run_v5.SETTINGS``,
 so no pinned setting, tag or stored digest changes). D0-3 is P1 with the ③ bound of revision 4,
@@ -83,6 +88,7 @@ def _without_gate(plant: dict) -> dict:
 
 
 _VBJ_PLANT = run_v5.JP3_SETTINGS["VBJ"][1]
+_VBH_PLANT = run_v5.JP3_SETTINGS["VBH"][1]
 _VB_PLANT = run_v5.SETTINGS["VB"][1]
 D0_SETTINGS: dict[str, tuple[bool, dict]] = {
     "D0-1": (True, dict(_VBJ_PLANT)),
@@ -92,10 +98,11 @@ D0_SETTINGS: dict[str, tuple[bool, dict]] = {
     "D0-5": (True, {**_VBJ_PLANT, "line_fill_gate": _gate(c_v=0.002)}),
     "D0-6": (True, {**_VBJ_PLANT, "line_fill_gate": _gate(c_v=0.04)}),
     "D0-7": (True, {**_VBJ_PLANT, "line_fill_gate": _gate(volume_scale=0.5, c_v=0.002)}),
+    "D0-8": (True, {**_VBH_PLANT, "line_fill_gate": _gate()}),
 }
 """(flow limit on, plant options) per variant (module docstring table)."""
 D0_BASE_SETTING = {"D0-1": "VBJ", "D0-2": "VBJ", "D0-3": "VB", "D0-4": "VBJ", "D0-5": "VBJ",
-                   "D0-6": "VBJ", "D0-7": "VBJ"}
+                   "D0-6": "VBJ", "D0-7": "VBJ", "D0-8": "VBH"}
 """The setting whose controller (and flow limit) each variant keeps."""
 D0_KEY_JOBS: tuple[dict, ...] = (
     {"case": "R12", "eps": 0.0, "offset_s": 0.0},
@@ -139,7 +146,7 @@ D0_KEYS: dict[str, dict] = {key_name(job): dict(job) for job in D0_KEY_JOBS}
 
 def d0_jobs(variants: tuple[str, ...] = tuple(D0_SETTINGS),
             keys: tuple[str, ...] = tuple(D0_KEYS)) -> list[dict]:
-    """Variant-major job list (56 jobs for the defaults)."""
+    """Variant-major job list (64 jobs for the defaults)."""
     return [{**D0_KEYS[key], "setting": variant} for variant in variants for key in keys]
 
 

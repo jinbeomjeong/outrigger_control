@@ -1,6 +1,6 @@
 """D0 plant split of the 606f8713 j9_main failure (record, user decision 2026-11-23).
 
-Fast checks: the seven variants and eight keys, the test-only switch of D0-3 and that importing
+Fast checks: the eight variants and eight keys, the test-only switch of D0-3 and that importing
 the runner switches nothing, the ``_empty_line`` record fix of ``check_open_delay`` and the
 per-read P1 log. The slow check runs the harness in dynamics-dev: V0 keeps its golden hash,
 VBJ (no D0 switch) and D0-1 (P1 read record on) keep the 606f8713 j9_main command hashes, every
@@ -50,6 +50,9 @@ J9_MAIN_VBJ_HASH = {
 2026-11-23; S5 is also the T8 hash of the cause analysis 0.1)."""
 SLOW_KEYS = ("R12_o0.0", "S5_e0.0")
 """Event path and steady path."""
+VARIANT_COUNT = 8
+PLANNED_JOBS = 8 * VARIANT_COUNT
+SLOW_RUNS = len(SLOW_KEYS) * VARIANT_COUNT
 
 
 @pytest.fixture(scope="module")
@@ -78,10 +81,17 @@ def test_variants_are_the_user_decision(d0) -> None:
         "D0-5": {**vbj[1], "line_fill_gate": {**nominal, "c_v": 0.002}},
         "D0-6": {**vbj[1], "line_fill_gate": {**nominal, "c_v": 0.04}},
         "D0-7": {**vbj[1], "line_fill_gate": {**nominal, "volume_scale": 0.5, "c_v": 0.002}},
+        # jp3_case_replay VBG6 (case D), written out as that script builds it
+        "D0-8": {**d0.run_v5._VB_PLANT, "line_fill_gate": d0.run_v5._vn(1.0),
+                 **d0.run_v5._P3W},
     }
     assert {name: plant for name, (_, plant) in d0.D0_SETTINGS.items()} == expected
     assert all(is_flow for is_flow, _ in d0.D0_SETTINGS.values()) and vbj[0] and vb[0]
-    assert d0.D0_BASE_SETTING == {"D0-3": "VB", **{n: "VBJ" for n in expected if n != "D0-3"}}
+    vbh = d0.run_v5.JP3_SETTINGS["VBH"][1]
+    assert expected["D0-8"] == {**vbh, "line_fill_gate": nominal}  # VBH + P1, no P2 .. P4
+    assert not {"lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth"} & set(vbh)
+    base = {"D0-3": "VB", "D0-8": "VBH"}
+    assert d0.D0_BASE_SETTING == {n: base.get(n, "VBJ") for n in expected}
 
 
 def test_importing_the_runner_switches_nothing(d0) -> None:
@@ -93,19 +103,23 @@ def test_importing_the_runner_switches_nothing(d0) -> None:
     assert harness_hydraulics.is_p1_read_record_on() is False
 
 
-def test_keys_are_eight_j9_main_jobs_and_the_batch_is_56(d0) -> None:
+def test_keys_are_eight_j9_main_jobs_and_the_batch_is_64(d0) -> None:
     assert tuple(d0.D0_KEYS) == EXPECTED_KEYS
     j9_main = {d0.run_v5.job_key(job) for job in d0.run_v5.j9_main_jobs()}
     for job in d0.D0_KEYS.values():
         assert d0.run_v5.job_key({**job, "setting": "VBJ"}) in j9_main, job
     jobs = d0.d0_jobs()
-    assert len(jobs) == 56 == len({d0.run_v5.job_key(job) for job in jobs})
+    assert len(jobs) == 64 == len({d0.run_v5.job_key(job) for job in jobs})
     assert d0.run_v5.t4h_file_name(jobs[0]) == "R12_o0.0_D0-1.npz"
 
 
 def test_d0_3_runs_only_with_the_test_switch_and_keeps_the_vb_tag(d0, monkeypatch) -> None:
     with pytest.raises(ValueError, match="revision 4"):
         HydraulicOptions.from_dict(d0.D0_SETTINGS["D0-3"][1])
+    d0_8 = HydraulicOptions.from_dict(d0.D0_SETTINGS["D0-8"][1])  # rev 6 + P1: no switch needed
+    assert d0_8.extend_start_revision == 6 and d0_8.rod_release_force
+    assert not (d0_8.lock_anchor_continuous or d0_8.rod_flow_cap_all or d0_8.rod_reading_truth)
+    assert d0_8.m2_law == "flow_limited_r5"
     monkeypatch.setattr(v5_options, "ALLOW_GATE_WITH_REV4_FOR_TEST", True)
     for name, (_, plant) in d0.D0_SETTINGS.items():
         options = HydraulicOptions.from_dict(plant)
@@ -226,9 +240,10 @@ def _last_json(process: subprocess.CompletedProcess) -> dict:
     return json.loads(process.stdout.strip().splitlines()[-1])
 
 
-def test_runner_lists_56_jobs_and_refuses_unknown_names(tmp_path: Path) -> None:
+def test_runner_lists_64_jobs_and_refuses_unknown_names(tmp_path: Path) -> None:
     listed = _run(RUNNER, "--out", str(tmp_path / "d0.jsonl"), "--list", cwd=tmp_path)
-    assert listed.returncode == 0 and _last_json(listed)["planned"] == 56
+    assert listed.returncode == 0 and _last_json(listed)["planned"] == PLANNED_JOBS
+    assert sum(text.startswith("D0-8 ") for text in listed.stdout.splitlines()) == 8
     bad = _run(RUNNER, "--out", str(tmp_path / "d0.jsonl"), "--variants", "D0-9", cwd=tmp_path)
     assert bad.returncode == 2 and _last_json(bad)["status"] == "input_error"
     assert not (tmp_path / "d0.jsonl").exists()
@@ -253,7 +268,8 @@ def test_summary_input_errors_incomplete_and_tool_error(tmp_path: Path) -> None:
                       cwd=tmp_path)
     assert incomplete.returncode == 2 and _last_json(incomplete)["status"] == "incomplete"
     report = json.loads((tmp_path / "b.json").read_text(encoding="utf-8"))
-    assert len(report["checks"]["error_lines"]) == 1 and len(report["checks"]["missing_jobs"]) == 56
+    assert len(report["checks"]["error_lines"]) == 1
+    assert len(report["checks"]["missing_jobs"]) == PLANNED_JOBS
     existing = _run(SUMMARY, "--rows", str(rows), "--out", str(tmp_path / "b.json"), cwd=tmp_path)
     assert existing.returncode == 2 and _last_json(existing)["status"] == "input_error"
     broken = tmp_path / "broken.jsonl"
@@ -273,7 +289,7 @@ def _check_job(job: dict, folder: Path) -> subprocess.Popen:
 
 @pytest.fixture(scope="module")
 def harness_runs(tmp_path_factory, d0) -> dict:
-    """All harness runs at once: the D0 runner on two keys x seven variants, and V0 / VBJ
+    """All harness runs at once: the D0 runner on two keys x eight variants, and V0 / VBJ
     through ``run_v5.run_one`` without any D0 switch (each from its own working folder)."""
     if not HARNESS_PYTHON.exists():
         pytest.skip("dynamics-dev missing")
@@ -283,7 +299,7 @@ def harness_runs(tmp_path_factory, d0) -> dict:
     out = root / "runs" / "d0.jsonl"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "PYTHONDONTWRITEBYTECODE": "1"}
     runner = subprocess.Popen([str(HARNESS_PYTHON), "-I", "-B", str(RUNNER), "--out", str(out),
-                               "--keys", ",".join(SLOW_KEYS), "--workers", "14"],
+                               "--keys", ",".join(SLOW_KEYS), "--workers", str(SLOW_RUNS)],
                               cwd=work, env=environment, stdout=subprocess.PIPE, text=True,
                               encoding="utf-8")
     checks = {"V0_R12_o0.0": {**d0.D0_KEYS["R12_o0.0"], "setting": "V0"},
@@ -358,7 +374,7 @@ def test_every_variant_runs_its_plant(harness_runs, d0, monkeypatch) -> None:
 def test_progress_and_identity_files(harness_runs) -> None:
     out = harness_runs["out"]
     progress = json.loads(out.with_name("d0.progress.json").read_text(encoding="utf-8"))
-    assert progress["stage"] == "end" and progress["done"] == progress["total"] == 14
+    assert progress["stage"] == "end" and progress["done"] == progress["total"] == SLOW_RUNS
     assert set(progress) == {"stage", "done", "total", "unit", "started_at", "updated_at"}
     identity = json.loads(out.with_name("d0.identity.json").read_text(encoding="utf-8"))
     assert set(identity) == {"start", "end"}
@@ -378,7 +394,8 @@ def test_summary_end_to_end_from_another_folder(harness_runs, tmp_path: Path) ->
                    "--reference", str(reference), "--keys", keys, cwd=tmp_path)
     assert process.returncode == 0, process.stdout + process.stderr
     report = json.loads((tmp_path / "s.json").read_text(encoding="utf-8"))
-    assert report["status"] == "written" and len(report["rows"]) == 14
+    assert report["status"] == "written" and len(report["rows"]) == SLOW_RUNS
+    assert report["by_variant"]["D0-8"]["lines"] == len(SLOW_KEYS)
     checks = report["checks"]
     assert checks["line_problems"] == {} and checks["missing_jobs"] == []
     assert checks["unplanned_jobs"] == [] and checks["error_lines"] == []

@@ -29,7 +29,7 @@ Per line (``rows`` of the report and the CSV beside it):
 Checks (``checks`` of the report): every line runs the options of its D0 variant
 (``hydraulic_options``), the controller tag of its base setting, no module from another
 checkout, P1 variants carry the ``p1_*`` arrays and D0-2 none; every planned job (``--variants``
-/ ``--keys``, default all 56) has one line without error and no other job has one; with
+/ ``--keys``, default all 64) has one line without error and no other job has one; with
 ``--reference`` the D0-1 command hash of each key against the reference VBJ line (606f8713
 ``j9_main.jsonl``).
 
@@ -88,7 +88,8 @@ J_ITEMS = ("J1", "J2", "J3", "J4", "J5")
 EVENT_ONLY_ITEMS = ("J5",)
 STEADY_ONLY_ITEMS = ("J3",)
 P1_FOUND_ARRAY = "p1_read_found"
-CONTROLLER_TAG_OF_BASE = {"VBJ": "final_C4G2_P3W_LAS_K1", "VB": "final_C4G2_P3_LAS_K1"}
+CONTROLLER_TAG_OF_BASE = {"VBJ": "final_C4G2_P3W_LAS_K1", "VBH": "final_C4G2_P3W_LAS_K1",
+                          "VB": "final_C4G2_P3_LAS_K1"}
 """Expected recorded tag per base setting (③ revision 6 / 4 with the LAS-b and K1 switches)."""
 
 
