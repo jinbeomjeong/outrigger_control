@@ -1208,6 +1208,11 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant, rod_fault=None) -> s
     extra_arrays = {"lower_reading_N": lower_reading_N, "lower_estimate_N": lower_estimate_N}
     # X-1: the per-read J-P3 arrays of a ③ revision 5 / 6 run, as run_v5 writes them
     extra_arrays.update(verdict_runs.jp3_trace_arrays(plant) or {})
+    # Edition 6: the components, settings, record and lsb_* per-read arrays of a run with a
+    # component on (as run_v5 writes them; the record too, the r79 row has none); a run
+    # with every component off keeps its former record.
+    meta.update(verdict_runs.lock_start_b_meta(ctrl, with_record=True))
+    extra_arrays.update(verdict_runs.lock_start_b_arrays(ctrl, period["t"]))
     if rod_fault is not None:
         meta[ROD_FAULT_KEY] = rod_fault.record(ctrl)
         meta[ROD_FAULT_PLAN_KEY] = rod_fault_plan_meta()

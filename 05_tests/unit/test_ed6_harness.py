@@ -4,7 +4,8 @@ P6-0: every setting with the components off keeps the 606f8713 command hashes (V
 of ``main.jsonl``, VBJ / VBJ0 / VB / VBH / LSJ4 of j9_main and T8, LS1 / LSH1 of the j9_cases
 event row, two 12b VBK0 b1 keys through ``las_t3_dg3``), with no edition 6 key in its line
 or T4h. On: VBL lines carry the ``_LSB`` tag, ``lsb_components``, ``lsb_record`` and the
-``lsb_*`` arrays on every T4h read; P6-1 preview (VBL R12 against VBL0 R12); P6-6 (B3 alone
+``lsb_*`` arrays on every T4h read (the r79 VBKL0 T4h too); P6-1 preview (VBL R12 against
+VBL0 R12); P6-6 (B3 alone
 on lines without R-5 keeps the VBJ commands). The probe runner
 (320 jobs, refusals) and the share tool end to end from another working folder.
 
@@ -22,6 +23,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -137,13 +139,13 @@ def _vbk0_plan(path: Path) -> None:
     path.write_text(json.dumps(plan), encoding="utf-8")
 
 
-def _vbk0_run(folder: Path) -> subprocess.Popen:
+def _vbk0_run(folder: Path, setting: str = "VBK0") -> subprocess.Popen:
     folder.mkdir(parents=True)
     keys = folder / "keys.txt"
     keys.write_text("\n".join(VBK0_KEYS) + "\n", encoding="utf-8")
     _vbk0_plan(folder / "b1_plan_sample.json")
     environment = {**_environment(), "R72_PATH": "per_leg", "LAS_T3_DG3_LAS": "on",
-                   "LAS_T3_DG3_K1": "on", "LAS_T3_DG3_P3": "on", "R79_V5_SETTING": "VBK0",
+                   "LAS_T3_DG3_K1": "on", "LAS_T3_DG3_P3": "on", "R79_V5_SETTING": setting,
                    "R79_ROD_MODEL": "plant_truth",
                    "R79_ROD_FAULT_PLAN": str(folder / "b1_plan_sample.json"),
                    "R79_T4H_DIR": str(folder / "t4h")}
@@ -169,6 +171,7 @@ def harness(tmp_path_factory) -> dict:
     processes.update({name: _check_job(job, root / name, b3_only)
                       for name, (job, _) in B3_ONLY_JOBS.items()})
     vbk0 = _vbk0_run(root / "vbk0")
+    vbkl0 = _vbk0_run(root / "vbkl0", "VBKL0")
     probe_out = root / "probe" / "ed6_probe.jsonl"
     (root / "probe_work").mkdir()
     probe = subprocess.Popen([str(HARNESS_PYTHON), "-I", "-B", str(PROBE), "--out",
@@ -178,6 +181,7 @@ def harness(tmp_path_factory) -> dict:
                              stdout=subprocess.PIPE, text=True, encoding="utf-8")
     probe_stdout, _ = probe.communicate(timeout=TIMEOUT_S)
     vbk0.wait(timeout=TIMEOUT_S)
+    vbkl0.wait(timeout=TIMEOUT_S)
     for process in processes.values():
         process.wait(timeout=TIMEOUT_S)
     failed = [name for name, process in processes.items() if process.returncode != 0]
@@ -188,6 +192,7 @@ def harness(tmp_path_factory) -> dict:
                   (root / "vbk0" / "vbk0.json.partial.jsonl").read_text(
                       encoding="utf-8").splitlines() if text.strip()]
     return {"root": root, "reports": reports, "vbk0_exit": vbk0.returncode,
+            "vbkl0_exit": vbkl0.returncode,
             "vbk0_lines": vbk0_lines, "probe_out": probe_out, "probe_exit": probe.returncode,
             "probe_last": json.loads(probe_stdout.strip().splitlines()[-1])}
 
@@ -213,6 +218,30 @@ def test_p6_0_12b_vbk0_sample_keeps_its_hashes(harness) -> None:
              for line in harness["vbk0_lines"]}
     assert found == VBK0_KEYS
     assert all(line["controller_tag"] == "final_C4G2_LAS_K1" for line in harness["vbk0_lines"])
+    for meta, arrays in _r79_t4h(harness["root"] / "vbk0" / "t4h"):  # the former record
+        assert "lsb_components" not in meta and "lsb_record" not in meta
+        assert not any(name.startswith("lsb_") for name in arrays)
+
+
+def _r79_t4h(folder: Path) -> list[tuple[dict, list[str]]]:
+    records = []
+    for path in sorted(folder.glob("*.npz")):
+        with np.load(path, allow_pickle=False) as data:
+            records.append((json.loads(str(data["meta_json"])), list(data.files)))
+    assert records, folder
+    return records
+
+
+@pytest.mark.slow
+def test_r79_vbkl0_t4h_carries_the_edition_6_records(harness) -> None:
+    """The 12b reference arm on the r79 path writes the components, settings, record and the
+    lsb_* per-read arrays into its T4h (12b / 12a lines run there)."""
+    assert harness["vbkl0_exit"] == 0
+    for meta, arrays in _r79_t4h(harness["root"] / "vbkl0" / "t4h"):
+        assert meta["controller_tag"] == "final_C4G2_LAS_K1_LSB"
+        assert meta["lsb_components"] == SEALED and meta["lsb_record"]["components"] == SEALED
+        assert "lsb_settings" in meta
+        assert any(name.startswith("lsb_") for name in arrays)
 
 
 @pytest.mark.slow
