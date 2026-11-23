@@ -309,7 +309,7 @@ function Assert-NoL1Inputs([string[]]$Inputs) {
 # The main session writes the tool commit (the commit of jp3_12b_judge.py with erratum 8 8-8,
 # its tests and these run steps) after it is made; the tool checkout is the locked worktree at
 # that commit. Judge commands run there; simulations stay at $RunCommit in $Worktree.
-$ToolCommit = '<ED5_TOOL_COMMIT>'
+$ToolCommit = '74a4bbf4a27fc119d0116f8b67bfe40ee168cadc'
 $ToolWorktree = 'C:\workspace\outrigger_control\.claude\worktrees\ed5-tool8'
 $E8RunStepsDir = "$PrelaunchDir\run_steps_ed5"
 $E8EntriesFile = "$PSScriptRoot\fixed_inputs_entries_e8.txt"
