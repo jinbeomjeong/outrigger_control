@@ -222,8 +222,9 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
         if t4h is not None:
             write_t4h_record(t4h["path"], plant, controller, period,
                              {**_meta_with_controller_tag(t4h["meta"], _LAST_FINISHED_CONFIG[0]),
+                              **lock_start_b_meta(controller),
                               "commands_sha256": _command_digest(period["command"])},
-                             extra_arrays=_t4h_extra_arrays(plant, period["t"]))
+                             extra_arrays=_t4h_extra_arrays(plant, period["t"], controller))
     thresholds = controller.config.thresholds
     values = run_values(limiter.rows(), period, events, limiter,
                         controller.geometry.twist_vector, controller.geometry.head_area_m2,
@@ -244,6 +245,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
     import resume_k1_record  # 436.8 rules 4.2 / 7.2: record only, after the run
 
     result[resume_k1_record.RECORD_KEY] = resume_k1_record.controller_record(controller)
+    result.update(lock_start_b_meta(controller, with_record=True))
     stop_values = _soil_stop_values(plant, limiter, events)
     if stop_values is not None:  # v5 X-12, criteria 6: runs with a soil-guard stop only
         result["soil_stop_crawler"] = stop_values
@@ -274,13 +276,40 @@ def p1_read_arrays(plant, t_s: np.ndarray) -> dict:
     return {} if arrays_at is None else arrays_at(t_s)
 
 
-def _t4h_extra_arrays(plant, t_s: np.ndarray) -> dict | None:
-    """The J-P3 trace arrays, plus the P1 read arrays when that record is on."""
+LSB_COMPONENTS_KEY = "lsb_components"
+LSB_RECORD_KEY = "lsb_record"
+"""Edition 6 record keys (``jp3_remedy_spec_v6.md`` 3.4, 8 Y-3): a line and a T4h meta carry
+them only with a component on."""
+
+
+def lock_start_b_meta(controller, *, with_record: bool = False) -> dict:
+    """``lsb_components`` (and with ``with_record`` the run's ``lsb_record``) of a controller
+    with an edition 6 component on; empty otherwise, so other lines keep their keys."""
+    config = getattr(controller, "config", None)
+    settings = getattr(config, "lock_start_b", None)
+    if not getattr(settings, "is_enabled", False):
+        return {}
+    meta = {LSB_COMPONENTS_KEY: list(settings.components)}
+    if with_record:
+        meta[LSB_RECORD_KEY] = meta_for_json(controller.lock_start_b_record())
+    return meta
+
+
+def lock_start_b_arrays(controller, t_s: np.ndarray) -> dict:
+    """The ``lsb_*`` per-read arrays (``lock_start_b.LockStartB.trace_arrays_at``); empty
+    without an edition 6 component."""
+    arrays_at = getattr(controller, "lock_start_b_trace_arrays", None)
+    return {} if arrays_at is None else arrays_at(t_s)
+
+
+def _t4h_extra_arrays(plant, t_s: np.ndarray, controller=None) -> dict | None:
+    """The J-P3 trace arrays, plus the P1 read arrays and the edition 6 arrays when those
+    records are on."""
     extra = jp3_trace_arrays(plant)
-    p1_arrays = p1_read_arrays(plant, t_s)
-    if not p1_arrays:
+    added = {**p1_read_arrays(plant, t_s), **lock_start_b_arrays(controller, t_s)}
+    if not added:
         return extra
-    return {**(extra or {}), **p1_arrays}
+    return {**(extra or {}), **added}
 
 
 def _meta_with_controller_tag(meta: dict, config) -> dict:
@@ -690,6 +719,8 @@ def plant_options_record(hydraulics=None, t_lift_s: float | None = None, *,
     if hydraulics.lock_window_follows_plant:
         harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
     harness_hydraulics.check_last_extend_start(hydraulics)
+    if hydraulics.lsb_components:  # edition 6 identity guard (spec 3.4)
+        harness_hydraulics.check_last_lock_start_b(hydraulics, config)
     record = {"hydraulic_options": hydraulics.to_dict(),
               "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
     tag = controller_tag(hydraulics, config)

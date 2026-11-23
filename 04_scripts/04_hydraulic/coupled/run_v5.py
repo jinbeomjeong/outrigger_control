@@ -179,10 +179,50 @@ JP3_REV5_SETTINGS: dict[str, tuple[bool, dict]] = {
 the X-10 bit-for-bit test runs VBJ under a test alias, and the X11 counterexample arm
 ``jp3_x11_replay.py`` builds ``LSJ4_X11`` on LSJ4 of revision 5, P4-5a as in edition 4a,
 control review of 8a3c48c7 B-1)."""
-ROD_FAULT_SETTINGS = ("VBK", "VBK0")
+LSB_COMPONENTS_FULL = ("A_i", "A_ii", "B1", "B3")
+"""Edition 6 (``jp3_remedy_spec_v6.md`` 3.4): every component. The VBL family runs these until
+the probe (spec 4.2) fixes the sealed range; a run's own list is its ``lsb_components``."""
+_LSB = {"lsb_components": list(LSB_COMPONENTS_FULL)}
+
+
+def _gate(volume_scale: float, c_v: float) -> dict:
+    return {"kind": "VN", "volume_scale": volume_scale, "c_v": c_v}
+
+
+ED6_P1_SENSITIVITY: dict[str, dict] = {"c005": _gate(1.0, 0.005), "c04": _gate(1.0, 0.04),
+                                       "v05": _gate(0.5, 0.02), "v15": _gate(1.5, 0.02)}
+"""Spec 3.4 sensitivity rows: the VBJ plant with the P1 ``c_v`` 0.005 / 0.04 or the P1
+``volume_scale`` 0.5 / 1.5 (one at a time; names ``VBL<key>``)."""
+
+
+def ed6_plant(sensitivity: str | None = None) -> dict:
+    """The VBJ plant (P1 .. P4 + LC), with the P1 gate of :data:`ED6_P1_SENSITIVITY` when
+    ``sensitivity`` names one (None = the nominal P1)."""
+    if sensitivity is None:
+        return dict(_VB_PLANT_J)
+    return {**_VB_PLANT_J, "line_fill_gate": dict(ED6_P1_SENSITIVITY[sensitivity])}
+
+
+ED6_SETTINGS: dict[str, tuple[bool, dict]] = {
+    "VBL": (True, {**ed6_plant(), **_P3W, **_LSB}),
+    **{f"LSL{n}": (True, {**ed6_plant(), "lock_closure": _lc(*closure), **_P3W, **_LSB})
+       for n, closure in LS_CLOSURES.items()},
+    "VBL0": (True, {**ed6_plant(), **_LSB}),
+    **{f"VBL{key}": (True, {**ed6_plant(key), **_P3W, **_LSB}) for key in ED6_P1_SENSITIVITY},
+    "VBKL": (True, {**ed6_plant(), **_P3W, **_LSB}),
+    "VBKL0": (True, {**ed6_plant(), **_LSB}),
+}
+"""Edition 6 settings (spec 3.4, user decision Q6-1 2026-11-23): VBL / LSL1 .. LSL4 = VBJ /
+LSJ1 .. LSJ4 with the components (judged), VBL0 = VBJ0 with them (③ off, the T8 pair and the
+12b reference arm), VBLc005 / VBLc04 / VBLv05 / VBLv15 the sensitivity rows, VBKL / VBKL0 =
+VBK / VBK0 with them (rod fault plan, T-JR-12b). Every other setting keeps the components
+off (P6-0)."""
+ED6_JUDGED_SETTINGS = ("VBL", "LSL1", "LSL2", "LSL3", "LSL4")
+ED6_SENSITIVITY_SETTINGS = tuple(f"VBL{key}" for key in ED6_P1_SENSITIVITY)
+ROD_FAULT_SETTINGS = ("VBK", "VBK0", "VBKL", "VBKL0")
 """Edition 5 6.3.1: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
-one without the other by this list, audit W15)."""
-ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS}
+one without the other by this list, audit W15); edition 6 adds VBKL / VBKL0 (spec 3.4)."""
+ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS, **ED6_SETTINGS}
 JP3_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JP3_DIAG_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4", "VBJ0")
 
@@ -411,9 +451,10 @@ def p3_hash_jobs(source: Path = P3_HASH_SOURCE) -> list[tuple[int, dict]]:
 
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
 """Job entries ``main`` adds for the worker only (not part of the job identity)."""
-T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", *JP3_JUDGED_SETTINGS, *JP3_DIAG_SETTINGS)
+T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", *JP3_JUDGED_SETTINGS, *JP3_DIAG_SETTINGS,
+                *ED6_SETTINGS)
 """Criteria 9 T4h (control-expert B): the runs that write a T4h record (436.9: the VBJ, LSJ,
-VBJ0, VBH and LSH settings too, spec 6.3)."""
+VBJ0, VBH and LSH settings too, spec 6.3; edition 6: every :data:`ED6_SETTINGS` run)."""
 
 
 def job_key(job: dict) -> str:
@@ -610,7 +651,8 @@ def run_one(job: dict) -> dict:
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
                                                 "lock_window_alignment", "controller_tag",
                                                 "head_only_declared", "d1", RESUME_K1_KEY,
-                                                HARNESS_HASH_KEY)
+                                                HARNESS_HASH_KEY, "lsb_components",
+                                                "lsb_record")
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure

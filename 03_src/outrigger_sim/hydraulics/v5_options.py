@@ -51,6 +51,12 @@ TOUCH_CREEP_TAG_SUFFIX = "_TCL"
 2026-11-10, ``k2_touch_creep_rules.md`` 1.2 Q-3): Touch CreeP Latch, always last after ``_LAS`` /
 ``_K1`` (``final_C4G2_LAS_TCL``, ``final_C4G2_LAS_K1_TCL``). :data:`EXTEND_START_TAGS` keeps its
 three entries; :func:`is_extend_start_tag` recognises the ``_TCL`` forms."""
+LOCK_START_B_TAG_SUFFIX = "_LSB"
+"""Edition 6 (``jp3_remedy_spec_v6.md`` 3.4, user decision Q6-1 2026-11-23): Lock-Start + B,
+after ``_LAS`` and ``_K1`` and before a K-2 ``_TCL``: ``final_C4G2_P3W_LAS_K1_LSB``. The
+components a run has on are its ``lsb_components`` meta (the suffix stays when fewer are on).
+No other tag token is ``LSB`` (grep 2026-11-23: the word appears only as "least significant
+bit" in an IMU study)."""
 EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG,
                      EXTEND_START_LAS_K1_CONTROLLER_TAG)
 """Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1). A list only: the ③
@@ -160,8 +166,10 @@ class LockClosureSetting:
 
 OPTIONAL_FIELDS = ("extend_start_tracked", "extend_start_hold", "extend_start_witness",
                    "line_fill_gate", "lock_anchor_continuous", "rod_flow_cap_all",
-                   "rod_reading_truth")
+                   "rod_reading_truth", "lsb_components", "lsb_parameters")
 """Fields :meth:`HydraulicOptions.to_dict` leaves out while off (stored digests unchanged)."""
+LSB_FIELDS = ("lsb_components", "lsb_parameters")
+"""Edition 6 controller fields (``jp3_remedy_spec_v6.md`` 3.4): empty = off."""
 M2_PLANT_FIELDS = ("lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
 """P2, P3 and P4: defined on the M2 rod pressure only."""
 
@@ -192,6 +200,11 @@ class HydraulicOptions:
         lock_anchor_continuous: P2, every lock anchor continues the M2 lag (no r5 step).
         rod_flow_cap_all: P3, M2 law ``flow_limited_r6`` (flow cap on all four branches).
         rod_reading_truth: P4, the controller's rod reading is the M2 plant truth.
+        lsb_components: Edition 6 controller components (``A_i``, ``A_ii``, ``B``;
+            ``control.lock_start_b``, ``jp3_remedy_spec_v6.md`` 3); empty = off. Tag suffix
+            :data:`LOCK_START_B_TAG_SUFFIX`. Harness only.
+        lsb_parameters: ``(name, value)`` pairs of the other ``LockStartBSettings`` fields of
+            the run (the spec 3 placeholders); empty = the defaults. Needs ``lsb_components``.
     """
 
     flow: FlowLimitSetting | None = None
@@ -207,8 +220,13 @@ class HydraulicOptions:
     rod_flow_cap_all: bool = False
     rod_reading_truth: bool = False
     extend_start_witness: bool = False
+    lsb_components: tuple[str, ...] = ()
+    lsb_parameters: tuple[tuple[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
+        components, parameters = _checked_lsb_fields(self.lsb_components, self.lsb_parameters)
+        object.__setattr__(self, "lsb_components", components)
+        object.__setattr__(self, "lsb_parameters", parameters)
         if self.lock_window_follows_plant and self.lock_closure is None:
             raise SystemExit("the controller lock window needs the plant lock rule "
                              "(spec 2.6: controller alone is refused)")
@@ -248,8 +266,10 @@ class HydraulicOptions:
         436.9 fields appear only when on, so the dicts (and digests) of the runs without them
         stay as they were (criteria revision 8, ``jp3_remedy_spec.md`` 4.4)."""
         values = asdict(self)
+        values["lsb_components"] = list(self.lsb_components)  # JSON form (a stored line)
+        values["lsb_parameters"] = dict(self.lsb_parameters)
         for name in OPTIONAL_FIELDS:
-            if values[name] in (False, None):
+            if values[name] in (False, None) or (name in LSB_FIELDS and not values[name]):
                 del values[name]
         if self.rod_release_force:
             values["m2_law"] = self.m2_law
@@ -311,7 +331,13 @@ class HydraulicOptions:
             lock_anchor_continuous=bool(values.get("lock_anchor_continuous", False)),
             rod_flow_cap_all=bool(values.get("rod_flow_cap_all", False)),
             rod_reading_truth=bool(values.get("rod_reading_truth", False)),
-            extend_start_witness=bool(values.get("extend_start_witness", False)))
+            extend_start_witness=bool(values.get("extend_start_witness", False)),
+            lsb_components=tuple(values.get("lsb_components", ())),
+            lsb_parameters=tuple(dict(values.get("lsb_parameters", {})).items()))
+
+    @property
+    def lsb_parameter_dict(self) -> dict[str, Any]:
+        return dict(self.lsb_parameters)
 
     def without_flow(self) -> HydraulicOptions:
         """The plant options alone (the runners keep the flow limit on their own path)."""
@@ -463,6 +489,8 @@ def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harne
     if engine != "harness" and any(option not in (None, False) for option in jp3_plant_options):
         raise SystemExit("P1 .. P4 (436.9) are harness options; the L2b plant has none "
                          "(jp3_remedy_spec.md 3, user decision 146)")
+    if engine != "harness" and options.lsb_components:
+        raise SystemExit("the edition 6 components are harness only (jp3_remedy_spec_v6.md 9)")
     closure = options.lock_closure
     if closure is not None and not options.lock_window_follows_plant \
             and closure.closing_delay_s > period_s:
@@ -502,6 +530,32 @@ def check_extend_start(options: HydraulicOptions | None, extend_start_rule: str,
     if options.line_fill_gate is not None and is_revision_4 and not ALLOW_GATE_WITH_REV4_FOR_TEST:
         raise ValueError("the P1 line-fill gate with the ③ bound of revision 4 is refused "
                          "(jp3_remedy_spec.md 3: counterexample ⑥, revision 5 needed)")
+
+
+def _checked_lsb_fields(
+    components: Any, parameters: Any
+) -> tuple[tuple[str, ...], tuple[tuple[str, Any], ...]]:
+    """The edition 6 fields in canonical form: components in ``A_i``, ``A_ii``, ``B`` order,
+    parameters sorted by name; checked by building the controller settings.
+
+    Raises:
+        ValueError: An unknown component or parameter, parameters without a component, or a
+            value ``LockStartBSettings`` refuses.
+    """
+    components = tuple(str(name) for name in components)
+    parameters = tuple(sorted((str(name), value) for name, value in parameters))
+    if not components:
+        if parameters:
+            raise ValueError("lsb_parameters need lsb_components (edition 6)")
+        return (), ()
+    # Imported here: control.lock_start_b imports check_open_delay, which imports this module.
+    from outrigger_sim.control.lock_start_b import LockStartBSettings, parameter_names
+
+    unknown = sorted(name for name, _ in parameters if name not in parameter_names())
+    if unknown:
+        raise ValueError(f"unknown lsb_parameters {unknown}")
+    settings = LockStartBSettings(components=components, **dict(parameters))
+    return settings.components, parameters
 
 
 def _check_jp3_plant_options(options: HydraulicOptions) -> None:
@@ -546,14 +600,21 @@ def apply_lock_window(config: Any, options: HydraulicOptions, v_max_m_s: float,
 def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: float,
                              valve_tau_s: float) -> Any:
     """The C2 configuration with every controller-side v5 option: the lock window
-    (:func:`apply_lock_window`) and the ③ start bound (``extend_start_tracked``).
+    (:func:`apply_lock_window`), the ③ start bound (``extend_start_tracked``) and the edition 6
+    components (``lsb_components``, ``C2Config.with_lock_start_b``).
 
     Returns:
-        ``config`` itself when both are off (bit-identical path), else a copy.
+        ``config`` itself when all are off (bit-identical path), else a copy.
     """
     config = apply_lock_window(config, options, v_max_m_s, valve_tau_s)
-    if not options.extend_start_tracked:
-        return config
+    if options.extend_start_tracked:
+        config = _with_extend_start_bound(config, options)
+    if options.lsb_components:
+        config = config.with_lock_start_b(options.lsb_components, options.lsb_parameter_dict)
+    return config
+
+
+def _with_extend_start_bound(config: Any, options: HydraulicOptions) -> Any:
     changes: dict[str, Any] = {"extend_start_rule": EXTEND_START_TRACKED_RULE}
     if options.extend_start_hold:  # ③ revision 5 / 6 (436.9); revision 4 keeps the default
         from outrigger_sim.control.extend_start_bound import ExtendStartBound
@@ -586,21 +647,47 @@ def is_touch_creep_on(config: Any | None) -> bool:
     return bool(getattr(settings, "enable", False))
 
 
+def is_lock_start_b_on(config: Any | None) -> bool:
+    """The C2 configuration has an edition 6 component on (``lock_start_b.is_enabled``; False
+    for ``None`` and a config from code before edition 6)."""
+    settings = getattr(config, "lock_start_b", None)
+    return bool(getattr(settings, "is_enabled", False))
+
+
+def lsb_components_of(config: Any | None) -> list[str]:
+    """The edition 6 components a C2 configuration has on (the ``lsb_components`` meta)."""
+    settings = getattr(config, "lock_start_b", None)
+    return list(getattr(settings, "components", ()))
+
+
+def _split_suffix(tag: str, suffix: str) -> tuple[str, bool]:
+    """``(tag without a trailing suffix, whether it had one)``."""
+    if tag.endswith(suffix):
+        return tag[: -len(suffix)], True
+    return tag, False
+
+
 def _split_order_gate_suffix(tag: str) -> tuple[str, bool]:
     """``(tag without a trailing _K1, whether it had one)``."""
-    if tag.endswith(ORDER_GATE_TAG_SUFFIX):
-        return tag[: -len(ORDER_GATE_TAG_SUFFIX)], True
-    return tag, False
+    return _split_suffix(tag, ORDER_GATE_TAG_SUFFIX)
 
 
 def _split_touch_creep_suffix(tag: str) -> tuple[str, bool]:
     """``(tag without a trailing _TCL, whether it had one)``."""
-    if tag.endswith(TOUCH_CREEP_TAG_SUFFIX):
-        return tag[: -len(TOUCH_CREEP_TAG_SUFFIX)], True
-    return tag, False
+    return _split_suffix(tag, TOUCH_CREEP_TAG_SUFFIX)
 
 
-def _with_touch_creep_suffix(tag: str, has_touch_creep: bool) -> str:
+def _split_tail(tag: str) -> tuple[str, bool, bool]:
+    """``(tag without a trailing _TCL and then _LSB, had _LSB, had _TCL)``: the suffixes that
+    follow ``_LAS`` / ``_K1`` (:data:`LOCK_START_B_TAG_SUFFIX` before the K-2 one)."""
+    tag, has_touch_creep = _split_touch_creep_suffix(tag)
+    tag, has_lock_start_b = _split_suffix(tag, LOCK_START_B_TAG_SUFFIX)
+    return tag, has_lock_start_b, has_touch_creep
+
+
+def _with_tail(tag: str, has_lock_start_b: bool, has_touch_creep: bool) -> str:
+    if has_lock_start_b:
+        tag += LOCK_START_B_TAG_SUFFIX
     return tag + TOUCH_CREEP_TAG_SUFFIX if has_touch_creep else tag
 
 
@@ -608,25 +695,35 @@ def with_liftoff_slow_tag(tag: str | None) -> str:
     """The LAS-b tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_LAS``,
     any other tag gets :data:`LIFTOFF_SLOW_TAG_SUFFIX` once (``ABL`` -> ``ABL_LAS``). A tag
     with the K1 suffix keeps it last (``final_C4G2_K1`` -> ``final_C4G2_LAS_K1``;
-    ``final_C4G2_LAS_K1`` is returned as it is); a K-2 suffix stays after both."""
+    ``final_C4G2_LAS_K1`` is returned as it is); an edition 6 ``_LSB`` and a K-2 suffix stay
+    after both."""
     if tag is None:
         return LAS_CONTROLLER_TAG
-    tag, has_touch_creep = _split_touch_creep_suffix(tag)
+    tag, has_lock_start_b, has_touch_creep = _split_tail(tag)
     base, has_order_gate = _split_order_gate_suffix(tag)
     if not base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
         base += LIFTOFF_SLOW_TAG_SUFFIX
     tag = base + ORDER_GATE_TAG_SUFFIX if has_order_gate else base
-    return _with_touch_creep_suffix(tag, has_touch_creep)
+    return _with_tail(tag, has_lock_start_b, has_touch_creep)
 
 
 def with_order_gate_tag(tag: str | None) -> str:
     """The K1 tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_K1``,
-    any other tag gets :data:`ORDER_GATE_TAG_SUFFIX` once (``ABL_LAS`` -> ``ABL_LAS_K1``); a
-    K-2 suffix stays last."""
+    any other tag gets :data:`ORDER_GATE_TAG_SUFFIX` once (``ABL_LAS`` -> ``ABL_LAS_K1``); an
+    edition 6 ``_LSB`` and a K-2 suffix stay last."""
     base = FINAL_CONTROLLER_TAG if tag is None else tag
-    base, has_touch_creep = _split_touch_creep_suffix(base)
+    base, has_lock_start_b, has_touch_creep = _split_tail(base)
     tag = base if base.endswith(ORDER_GATE_TAG_SUFFIX) else base + ORDER_GATE_TAG_SUFFIX
-    return _with_touch_creep_suffix(tag, has_touch_creep)
+    return _with_tail(tag, has_lock_start_b, has_touch_creep)
+
+
+def with_lock_start_b_tag(tag: str | None) -> str:
+    """The edition 6 tag of a run tag: ``None`` -> ``final_C4G2_LSB``, any other tag gets
+    :data:`LOCK_START_B_TAG_SUFFIX` once, after ``_LAS`` / ``_K1`` and before a K-2 suffix
+    (``final_C4G2_P3W_LAS_K1`` -> ``final_C4G2_P3W_LAS_K1_LSB``)."""
+    base = FINAL_CONTROLLER_TAG if tag is None else tag
+    base, _, has_touch_creep = _split_tail(base)
+    return _with_tail(base, True, has_touch_creep)
 
 
 def with_touch_creep_tag(tag: str | None) -> str:
@@ -639,22 +736,31 @@ def with_touch_creep_tag(tag: str | None) -> str:
 
 def is_liftoff_slow_tag(tag: str | None) -> bool:
     """A recorded tag of a run with LAS-b on (records without a tag ran before the switch);
-    true with or without the K1 suffix after ``_LAS`` (``final_C4G2_P3_LAS_K1``) and a K-2
-    suffix after that."""
+    true with or without the K1 suffix after ``_LAS`` (``final_C4G2_P3_LAS_K1``) and an
+    edition 6 / K-2 suffix after that."""
     if tag is None:
         return False
-    tag, _ = _split_touch_creep_suffix(tag)
+    tag, _, _ = _split_tail(tag)
     base, _ = _split_order_gate_suffix(tag)
     return base.endswith(LIFTOFF_SLOW_TAG_SUFFIX)
 
 
 def is_order_gate_tag(tag: str | None) -> bool:
-    """A recorded tag of a run with the LAS-b K1 order gate on (suffix ``_K1``, before a K-2
-    suffix when there is one)."""
+    """A recorded tag of a run with the LAS-b K1 order gate on (suffix ``_K1``, before an
+    edition 6 or K-2 suffix when there is one)."""
     if tag is None:
         return False
-    tag, _ = _split_touch_creep_suffix(tag)
+    tag, _, _ = _split_tail(tag)
     return tag.endswith(ORDER_GATE_TAG_SUFFIX)
+
+
+def is_lock_start_b_tag(tag: str | None) -> bool:
+    """A recorded tag of a run with an edition 6 component on (suffix ``_LSB``, before a K-2
+    suffix when there is one). Which components: the run's ``lsb_components``."""
+    if tag is None:
+        return False
+    _, has_lock_start_b, _ = _split_tail(tag)
+    return has_lock_start_b
 
 
 def is_touch_creep_tag(tag: str | None) -> bool:
@@ -664,9 +770,10 @@ def is_touch_creep_tag(tag: str | None) -> bool:
 
 def switch_base_tag(tag: str) -> str:
     """``tag`` without the switch suffixes :func:`with_switch_tags` adds (a trailing ``_TCL``,
-    then ``_K1``, then ``_LAS``): ``final_C4G2_P3_LAS_K1`` / ``final_C4G2_P3_K1`` ->
-    ``final_C4G2_P3``, ``ABL_LAS`` -> ``ABL``."""
-    tag, _ = _split_touch_creep_suffix(tag)
+    then ``_LSB``, then ``_K1``, then ``_LAS``): ``final_C4G2_P3_LAS_K1`` /
+    ``final_C4G2_P3_K1`` -> ``final_C4G2_P3``, ``final_C4G2_P3W_LAS_K1_LSB`` ->
+    ``final_C4G2_P3W``, ``ABL_LAS`` -> ``ABL``."""
+    tag, _, _ = _split_tail(tag)
     base, _ = _split_order_gate_suffix(tag)
     if base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
         base = base[: -len(LIFTOFF_SLOW_TAG_SUFFIX)]
@@ -693,12 +800,14 @@ def extend_start_revision_of_tag(tag: str | None) -> int | None:
 
 def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
     """``tag`` with the suffixes of the switches ``config`` has on: ``_LAS`` (LAS-b), then
-    ``_K1`` (order gate), then the K-2 ``_TCL`` (TOUCH creep latch). Unchanged
-    (possibly None) when all are off."""
+    ``_K1`` (order gate), then the edition 6 ``_LSB``, then the K-2 ``_TCL`` (TOUCH creep
+    latch). Unchanged (possibly None) when all are off."""
     if is_liftoff_slow_on(config):
         tag = with_liftoff_slow_tag(tag)
     if is_order_gate_on(config):
         tag = with_order_gate_tag(tag)
+    if is_lock_start_b_on(config):
+        tag = with_lock_start_b_tag(tag)
     if is_touch_creep_on(config):
         tag = with_touch_creep_tag(tag)
     return tag
@@ -742,8 +851,35 @@ def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: Hydraulic
         raise RuntimeError(f"controller lock window meta differs from the options: {differing}")
 
 
+def check_lock_start_b_config(config: Any | None, options: HydraulicOptions) -> None:
+    """Edition 6 identity guard (spec 3.4): the C2 configuration a run built has exactly the
+    components and thresholds of its options (none with the options off).
+
+    Raises:
+        RuntimeError: No configuration with components on, or other components / values.
+    """
+    if not options.lsb_components:
+        if is_lock_start_b_on(config):
+            raise RuntimeError(f"edition 6 components {lsb_components_of(config)} are on, the "
+                               "options have none")
+        return
+    if config is None:
+        raise RuntimeError("no C2 configuration was built for the edition 6 options")
+    settings = config.lock_start_b
+    expected = type(settings)(components=options.lsb_components, **options.lsb_parameter_dict)
+    if settings != expected:
+        raise RuntimeError(f"edition 6 settings {settings.to_meta()} differ from the options "
+                           f"{expected.to_meta()}")
+
+
 __all__ = [
     "ALLOW_GATE_WITH_REV4_FOR_TEST",
+    "LOCK_START_B_TAG_SUFFIX",
+    "check_lock_start_b_config",
+    "is_lock_start_b_on",
+    "is_lock_start_b_tag",
+    "lsb_components_of",
+    "with_lock_start_b_tag",
     "EXTEND_HOLD_CONTROLLER_TAG",
     "EXTEND_HOLD_TAGS",
     "EXTEND_START_LAS_CONTROLLER_TAG",

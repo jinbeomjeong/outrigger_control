@@ -85,6 +85,7 @@ from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     LOCK_SPEED_EPS_M_S,
     HydraulicOptions,
     apply_controller_options,
+    check_lock_start_b_config,
     check_lock_window_meta,
     validate,
 )
@@ -1067,7 +1068,7 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
     def make_class(base, setting):
         return make_hydraulics_plant_class(make_flow_plant_class(base, setting), options, damping)
 
-    if options.lock_window_follows_plant or options.extend_start_tracked:
+    if options.lock_window_follows_plant or options.extend_start_tracked or options.lsb_components:
         install_lock_window(options, load_params().v_max)
     install_extend_bound_check()
     if options.rod_reading_truth:
@@ -1110,8 +1111,9 @@ def install_rod_reading_truth() -> None:
 def install_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:
     """Every ``C2Config.with_10hz_d1`` preset of this process gets the controller options of
     ``options`` (``apply_controller_options``: the plant lock window, spec 2.6, ``acc_common.py``
-    precedent, and the ③ start bound of the VB / LS definition, criteria revision 8). Once per
-    process; the last preset is kept for the meta check (:func:`check_last_lock_window`)."""
+    precedent, the ③ start bound of the VB / LS definition, criteria revision 8, and the
+    edition 6 components). Once per process; the last preset is kept for the meta checks
+    (:func:`check_last_lock_window`, :func:`check_last_lock_start_b`)."""
     from outrigger_sim.control import c2
 
     if getattr(c2.C2Config, "_v5_lock_window", None) is not None:
@@ -1148,6 +1150,21 @@ def check_last_extend_start(options: HydraulicOptions) -> None:
     if revision != options.extend_start_revision:  # 436.9: hold runs build revision 5
         raise RuntimeError(f"③ bound revision {revision!r} of the preset is not "
                            f"{options.extend_start_revision} of the options")
+
+
+def check_last_lock_start_b(options: HydraulicOptions, run_config=None) -> None:
+    """Edition 6 identity guard (``jp3_remedy_spec_v6.md`` 3.4): the preset this process built
+    and the run's own controller config both carry the components and thresholds of
+    ``options``.
+
+    Raises:
+        RuntimeError: No preset was built, or a config differs from the options.
+    """
+    if _LAST_PRESET[0] is None:
+        raise RuntimeError("no C2 preset was built with the edition 6 options installed")
+    check_lock_start_b_config(_LAST_PRESET[0], options)
+    if run_config is not None:
+        check_lock_start_b_config(run_config, options)
 
 
 def check_last_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:

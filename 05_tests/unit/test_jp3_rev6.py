@@ -216,7 +216,8 @@ def test_guard_list_and_prefix_agree() -> None:
     import r79_sensor_screen as screen
     import run_v5
 
-    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0")
+    # edition 6 (jp3_remedy_spec_v6.md 3.4) adds VBKL / VBKL0 with the same prefix
+    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0", "VBKL", "VBKL0")
     for name in run_v5.ALL_SETTINGS:
         assert screen.is_rod_fault_setting(name) == name.startswith(
             screen.ROD_FAULT_SETTING_PREFIX), name
