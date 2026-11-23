@@ -1,0 +1,3074 @@
+{
+ "plan_check": {
+  "b1_top_keys": [
+   "schema"
+  ],
+  "b2_top_keys": [
+   "schema"
+  ],
+  "same_after_normalising": true,
+  "n_faults": {
+   "b1": 167,
+   "b2": 167
+  },
+  "keys_same_after_normalising": true,
+  "non_fault_fields_b1": {
+   "schema": "r79_rod_fault_plan/1"
+  },
+  "non_fault_fields_b2": {
+   "schema": "r79_rod_fault_plan/1"
+  }
+ },
+ "h8_sha_ok": true,
+ "cases": {
+  "L2|g6|52|ref|J1|top|Fs0": {
+   "b1": {
+    "final_phase": "level",
+    "pass": false,
+    "t_ready_s": null,
+    "t_done_s": null,
+    "t_P_s": 40.100000000009445,
+    "t_loc_s": 40.900000000013264,
+    "t_off_s": 39.90000000000849,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.2,
+      "level"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 0,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.08046922452039598,
+     0.07416178560142905
+    ],
+    "loc_revokes": [
+     40.00000000000897
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 40.900000000013264,
+     "t_off_s": 39.90000000000849,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 40.00000000000897,
+     "revokes_off_to_loc_s": [
+      40.00000000000897
+     ],
+     "loc_minus_departure_s": 1.0000000000047748,
+     "loc_minus_later_event_s": 0.9000000000042974,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.8,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 68.17483046975123,
+    "max_motor_stroke_mm": 522.0506099053374,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 2,
+     "INFO_LIFT_PAUSED": 1,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": false,
+     "G6-6_fault_ready": false,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r044-RL-tau_C",
+     "leg": "RL",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 2400,
+     "reads": 2501,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      21.1
+     ],
+     [
+      31.1,
+      "level",
+      219.0
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "30.1 INFO_TOUCH_DIP_HELD:RL",
+     "30.1 INFO_TOUCH_DIP_HELD:RR",
+     "31.2 floor_estimate_touch",
+     "31.2 INFO_TOUCH_TWIST_HOLD:0.067",
+     "31.4 INFO_LIFT_PAUSED:RL",
+     "34.1 soil_mode_start",
+     "39.6 crawler_liftoff_confirmed",
+     "39.6 INFO_CLEARANCE_BIAS:FL=51.4,FR=54.4,RL=64.1,RR=67.1",
+     "39.6 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "40.0 INFO_LOC_REVOKED:2.2",
+     "40.1 soil_mode_start",
+     "40.6 INFO_DIFF_SINK_HOLD:FL,RL:6.3",
+     "40.9 crawler_liftoff_confirmed",
+     "40.9 INFO_CLEARANCE_BIAS:FL=64.7,FR=53.0,RL=76.3,RR=64.6",
+     "42.4 INFO_DIFF_SINK_RELEASE:settled"
+    ]
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 92.30000000025869,
+    "t_done_s": 62.5000000001164,
+    "t_P_s": 40.100000000009445,
+    "t_loc_s": 40.900000000013264,
+    "t_off_s": 40.00000000000897,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.2,
+      "level"
+     ],
+     [
+      62.5,
+      "done"
+     ],
+     [
+      62.6,
+      "probe"
+     ],
+     [
+      66.3,
+      "level"
+     ],
+     [
+      80.3,
+      "done"
+     ],
+     [
+      80.4,
+      "probe"
+     ],
+     [
+      92.3,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.10675992178641397,
+     0.03896668829934664
+    ],
+    "loc_revokes": [
+     40.00000000000897
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 40.900000000013264,
+     "t_off_s": 40.00000000000897,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 40.00000000000897,
+     "revokes_off_to_loc_s": [
+      40.00000000000897
+     ],
+     "loc_minus_departure_s": 0.9000000000042974,
+     "loc_minus_later_event_s": 0.9000000000042974,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.8,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 67.87574122737348,
+    "max_motor_stroke_mm": 523.0951564208067,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 2,
+     "INFO_LIFT_PAUSED": 1,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r044-RL-tau_C",
+     "leg": "RL",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 922,
+     "reads": 1023,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      21.1
+     ],
+     [
+      31.1,
+      "level",
+      31.3
+     ],
+     [
+      62.4,
+      "done",
+      0.1
+     ],
+     [
+      62.5,
+      "probe",
+      3.7
+     ],
+     [
+      66.2,
+      "level",
+      14.0
+     ],
+     [
+      80.2,
+      "done",
+      0.1
+     ],
+     [
+      80.3,
+      "probe",
+      11.9
+     ],
+     [
+      92.2,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "30.1 INFO_TOUCH_DIP_HELD:RL",
+     "30.1 INFO_TOUCH_DIP_HELD:RR",
+     "31.2 floor_estimate_touch",
+     "31.2 INFO_TOUCH_TWIST_HOLD:0.057",
+     "31.4 INFO_LIFT_PAUSED:RL",
+     "34.2 soil_mode_start",
+     "39.7 crawler_liftoff_confirmed",
+     "39.7 INFO_CLEARANCE_BIAS:FL=51.4,FR=53.5,RL=63.4,RR=65.4",
+     "39.7 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "40.0 INFO_LOC_REVOKED:2.6",
+     "40.1 soil_mode_start",
+     "40.7 INFO_DIFF_SINK_HOLD:FL,RL:6.5",
+     "40.9 crawler_liftoff_confirmed",
+     "40.9 INFO_CLEARANCE_BIAS:FL=63.1,FR=54.3,RL=75.1,RR=66.4",
+     "42.5 INFO_DIFF_SINK_RELEASE:settled",
+     "92.3 reanchor_skipped:disabled",
+     "92.3 ready_heave_tail"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     77.90000000018993,
+     "probe",
+     true
+    ],
+    [
+     "s1",
+     93.40000000026394,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     93.6000000002649,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     94.10000000026729,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     77.70000000018898,
+     "probe",
+     true
+    ]
+   ]
+  },
+  "L2|g6|56|ref|J2|top|Fs0": {
+   "b1": {
+    "final_phase": "level",
+    "pass": false,
+    "t_ready_s": null,
+    "t_done_s": null,
+    "t_P_s": 45.300000000034274,
+    "t_loc_s": 46.30000000003905,
+    "t_off_s": 45.300000000034274,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.0,
+      "level"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 0,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.07367307088320496,
+     0.07799260573016627
+    ],
+    "loc_revokes": [
+     45.200000000033796
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": false,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 46.30000000003905,
+     "t_off_s": 45.300000000034274,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 45.200000000033796,
+     "revokes_off_to_loc_s": [],
+     "loc_minus_departure_s": 1.0000000000047748,
+     "loc_minus_later_event_s": 1.0000000000047748,
+     "n_revokes": 0,
+     "total_delay_limit_s": 2.9,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 66.8851163244068,
+    "max_motor_stroke_mm": 561.7540867467691,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 1,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": false,
+     "G6-6_fault_ready": false,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r048-FL-tau_C",
+     "leg": "FL",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 2400,
+     "reads": 2501,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      20.9
+     ],
+     [
+      30.9,
+      "level",
+      219.2
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:FL",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:FL:D1",
+     "31.0 floor_estimate_touch",
+     "31.0 INFO_TOUCH_TWIST_HOLD:-0.055",
+     "31.2 INFO_LIFT_PAUSED:RR",
+     "35.0 soil_mode_start",
+     "44.9 crawler_liftoff_confirmed",
+     "44.9 INFO_CLEARANCE_BIAS:FL=73.5,FR=80.5,RL=86.9,RR=93.9",
+     "44.9 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "45.2 INFO_LOC_REVOKED:3.1",
+     "45.3 soil_mode_start",
+     "45.9 INFO_DIFF_SINK_HOLD:FL,RL:7.9",
+     "46.3 crawler_liftoff_confirmed",
+     "46.3 INFO_CLEARANCE_BIAS:FL=86.6,FR=81.4,RL=95.6,RR=90.5",
+     "50.2 INFO_DIFF_SINK_RELEASE:reversed"
+    ]
+   },
+   "b2": {
+    "final_phase": "level",
+    "pass": false,
+    "t_ready_s": null,
+    "t_done_s": null,
+    "t_P_s": 45.10000000003332,
+    "t_loc_s": 46.000000000037616,
+    "t_off_s": 45.00000000003284,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.0,
+      "level"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 0,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.07690399452236016,
+     0.06873041618092171
+    ],
+    "loc_revokes": [
+     45.00000000003284
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 46.000000000037616,
+     "t_off_s": 45.00000000003284,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 45.00000000003284,
+     "revokes_off_to_loc_s": [
+      45.00000000003284
+     ],
+     "loc_minus_departure_s": 1.0000000000047748,
+     "loc_minus_later_event_s": 1.0000000000047748,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.8,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 66.7310798493358,
+    "max_motor_stroke_mm": 562.8154724959636,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 1,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": false,
+     "G6-6_fault_ready": false,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r048-FL-tau_C",
+     "leg": "FL",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 2400,
+     "reads": 2501,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      20.9
+     ],
+     [
+      30.9,
+      "level",
+      219.2
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:FL",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:FL:D1",
+     "31.0 floor_estimate_touch",
+     "31.0 INFO_TOUCH_TWIST_HOLD:-0.058",
+     "31.2 INFO_LIFT_PAUSED:RR",
+     "34.9 soil_mode_start",
+     "44.6 crawler_liftoff_confirmed",
+     "44.6 INFO_CLEARANCE_BIAS:FL=72.9,FR=80.8,RL=87.8,RR=95.7",
+     "44.6 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "45.0 INFO_LOC_REVOKED:3.5",
+     "45.1 soil_mode_start",
+     "45.6 INFO_DIFF_SINK_HOLD:FL,RL:7.6",
+     "46.0 crawler_liftoff_confirmed",
+     "46.0 INFO_CLEARANCE_BIAS:FL=87.1,FR=85.3,RL=105.3,RR=103.4",
+     "49.5 INFO_DIFF_SINK_RELEASE:reversed"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     93.6000000002649,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     95.00000000027158,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     93.90000000026633,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     98.60000000028877,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     77.20000000018659,
+     "probe",
+     true
+    ]
+   ]
+  },
+  "L2|g6|59|ref|J2|bottom|Fs4": {
+   "b1": {
+    "final_phase": "level",
+    "pass": false,
+    "t_ready_s": null,
+    "t_done_s": null,
+    "t_P_s": 42.80000000002234,
+    "t_loc_s": 44.500000000030454,
+    "t_off_s": 43.90000000002759,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.1,
+      "level"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 0,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.07724238310835478,
+     0.07681080724027707
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 68.17076672253326,
+    "max_motor_stroke_mm": 554.7269738140585,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": false,
+     "G6-6_fault_ready": false,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r051-FR-tau_R",
+     "leg": "FR",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 1097,
+     "first_applied_t_s": 109.90000000034273,
+     "applied_periods": 1403,
+     "reads": 2501,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 109.9,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      31.0,
+      "level",
+      219.1
+     ]
+    ],
+    "events_head": [
+     "31.1 floor_estimate_touch",
+     "32.7 soil_mode_start",
+     "44.5 crawler_liftoff_confirmed",
+     "44.5 INFO_CLEARANCE_BIAS:FL=83.8,FR=80.3,RL=98.3,RR=94.9",
+     "44.5 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "45.5 INFO_DIFF_SINK_HOLD:FL,RL:3.2",
+     "50.9 INFO_DIFF_SINK_RELEASE:settled",
+     "109.9 WARN_ROD_PRESSURE_FALLBACK:FR",
+     "109.9 INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+    ]
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 80.00000000019996,
+    "t_done_s": 68.00000000014266,
+    "t_P_s": 43.20000000002425,
+    "t_loc_s": 44.900000000032364,
+    "t_off_s": 43.90000000002759,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.1,
+      "level"
+     ],
+     [
+      68.0,
+      "done"
+     ],
+     [
+      68.1,
+      "probe"
+     ],
+     [
+      80.0,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.06687245621937023,
+     0.061085687656384495
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 68.5841206809025,
+    "max_motor_stroke_mm": 547.9460529336719,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r051-FR-tau_R",
+     "leg": "FR",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 504,
+     "first_applied_t_s": 50.60000000005958,
+     "applied_periods": 395,
+     "reads": 900,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 50.6,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      31.0,
+      "level",
+      36.9
+     ],
+     [
+      67.9,
+      "done",
+      0.1
+     ],
+     [
+      68.0,
+      "probe",
+      11.9
+     ],
+     [
+      79.9,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "31.1 floor_estimate_touch",
+     "32.7 soil_mode_start",
+     "44.9 crawler_liftoff_confirmed",
+     "44.9 INFO_CLEARANCE_BIAS:FL=85.9,FR=79.3,RL=100.0,RR=93.4",
+     "44.9 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "50.6 WARN_ROD_PRESSURE_FALLBACK:FR",
+     "50.6 INFO_ROD_PRESSURE_FAULT_REASON:FR:D1",
+     "80.0 reanchor_skipped:disabled",
+     "80.0 ready_heave_tail"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     80.20000000020092,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     79.10000000019566,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     80.10000000020044,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     79.70000000019853,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     80.40000000020187,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+   "b1": {
+    "final_phase": "level",
+    "pass": false,
+    "flags": [],
+    "att_end_deg": [
+     -0.0655,
+     0.0686
+    ],
+    "gates": {
+     "Fmin_plus5": true,
+     "no_lift": true,
+     "end_att": true,
+     "ready": false,
+     "fault0": true,
+     "stroke_end": true,
+     "crawler_clear": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r130-FR-tau_C",
+     "leg": "FR",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 1700,
+     "reads": 1801,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      21.4
+     ],
+     [
+      31.4,
+      "level",
+      23.1
+     ],
+     [
+      54.5,
+      "done",
+      0.1
+     ],
+     [
+      54.6,
+      "probe",
+      0.8
+     ],
+     [
+      55.4,
+      "level",
+      6.6
+     ],
+     [
+      62.0,
+      "done",
+      0.1
+     ],
+     [
+      62.1,
+      "probe",
+      0.9
+     ],
+     [
+      63.0,
+      "level",
+      6.1
+     ],
+     [
+      69.1,
+      "done",
+      0.1
+     ],
+     [
+      69.2,
+      "probe",
+      0.9
+     ],
+     [
+      70.1,
+      "level",
+      18.1
+     ],
+     [
+      88.2,
+      "done",
+      0.1
+     ],
+     [
+      88.3,
+      "probe",
+      9.7
+     ],
+     [
+      98.0,
+      "level",
+      3.1
+     ],
+     [
+      101.1,
+      "done",
+      0.1
+     ],
+     [
+      101.2,
+      "probe",
+      0.9
+     ],
+     [
+      102.1,
+      "level",
+      4.0
+     ],
+     [
+      106.1,
+      "done",
+      0.1
+     ],
+     [
+      106.2,
+      "probe",
+      1.0
+     ],
+     [
+      107.2,
+      "level",
+      4.2
+     ],
+     [
+      111.4,
+      "done",
+      0.1
+     ],
+     [
+      111.5,
+      "probe",
+      9.7
+     ],
+     [
+      121.2,
+      "level",
+      5.7
+     ],
+     [
+      126.9,
+      "done",
+      0.1
+     ],
+     [
+      127.0,
+      "probe",
+      1.0
+     ],
+     [
+      128.0,
+      "level",
+      5.2
+     ],
+     [
+      133.2,
+      "done",
+      0.1
+     ],
+     [
+      133.3,
+      "probe",
+      9.7
+     ],
+     [
+      143.0,
+      "level",
+      3.1
+     ],
+     [
+      146.1,
+      "done",
+      0.1
+     ],
+     [
+      146.2,
+      "probe",
+      0.9
+     ],
+     [
+      147.1,
+      "level",
+      4.4
+     ],
+     [
+      151.5,
+      "done",
+      0.1
+     ],
+     [
+      151.6,
+      "probe",
+      1.0
+     ],
+     [
+      152.6,
+      "level",
+      4.0
+     ],
+     [
+      156.6,
+      "done",
+      0.1
+     ],
+     [
+      156.7,
+      "probe",
+      1.0
+     ],
+     [
+      157.7,
+      "level",
+      4.1
+     ],
+     [
+      161.8,
+      "done",
+      0.1
+     ],
+     [
+      161.9,
+      "probe",
+      1.0
+     ],
+     [
+      162.9,
+      "level",
+      4.1
+     ],
+     [
+      167.0,
+      "done",
+      0.1
+     ],
+     [
+      167.1,
+      "probe",
+      1.1
+     ],
+     [
+      168.2,
+      "level",
+      5.5
+     ],
+     [
+      173.7,
+      "done",
+      0.1
+     ],
+     [
+      173.8,
+      "probe",
+      0.9
+     ],
+     [
+      174.7,
+      "level",
+      4.1
+     ],
+     [
+      178.8,
+      "done",
+      0.1
+     ],
+     [
+      178.9,
+      "probe",
+      1.0
+     ],
+     [
+      179.9,
+      "level",
+      0.2
+     ]
+    ],
+    "events_head": []
+   },
+   "b2": {
+    "final_phase": "probe",
+    "pass": false,
+    "flags": [],
+    "att_end_deg": [
+     -0.0471,
+     0.0859
+    ],
+    "gates": {
+     "Fmin_plus5": true,
+     "no_lift": true,
+     "end_att": true,
+     "ready": false,
+     "fault0": true,
+     "stroke_end": true,
+     "crawler_clear": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r130-FR-tau_C",
+     "leg": "FR",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 1700,
+     "reads": 1801,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      21.4
+     ],
+     [
+      31.4,
+      "level",
+      23.2
+     ],
+     [
+      54.6,
+      "done",
+      0.1
+     ],
+     [
+      54.7,
+      "probe",
+      0.8
+     ],
+     [
+      55.5,
+      "level",
+      12.8
+     ],
+     [
+      68.3,
+      "done",
+      0.1
+     ],
+     [
+      68.4,
+      "probe",
+      9.8
+     ],
+     [
+      78.2,
+      "level",
+      3.2
+     ],
+     [
+      81.4,
+      "done",
+      0.1
+     ],
+     [
+      81.5,
+      "probe",
+      0.9
+     ],
+     [
+      82.4,
+      "level",
+      4.9
+     ],
+     [
+      87.3,
+      "done",
+      0.1
+     ],
+     [
+      87.4,
+      "probe",
+      1.0
+     ],
+     [
+      88.4,
+      "level",
+      4.9
+     ],
+     [
+      93.3,
+      "done",
+      0.1
+     ],
+     [
+      93.4,
+      "probe",
+      1.0
+     ],
+     [
+      94.4,
+      "level",
+      4.5
+     ],
+     [
+      98.9,
+      "done",
+      0.1
+     ],
+     [
+      99.0,
+      "probe",
+      1.0
+     ],
+     [
+      100.0,
+      "level",
+      4.4
+     ],
+     [
+      104.4,
+      "done",
+      0.1
+     ],
+     [
+      104.5,
+      "probe",
+      1.0
+     ],
+     [
+      105.5,
+      "level",
+      4.4
+     ],
+     [
+      109.9,
+      "done",
+      0.1
+     ],
+     [
+      110.0,
+      "probe",
+      1.1
+     ],
+     [
+      111.1,
+      "level",
+      5.6
+     ],
+     [
+      116.7,
+      "done",
+      0.1
+     ],
+     [
+      116.8,
+      "probe",
+      1.0
+     ],
+     [
+      117.8,
+      "level",
+      4.2
+     ],
+     [
+      122.0,
+      "done",
+      0.1
+     ],
+     [
+      122.1,
+      "probe",
+      1.0
+     ],
+     [
+      123.1,
+      "level",
+      4.0
+     ],
+     [
+      127.1,
+      "done",
+      0.1
+     ],
+     [
+      127.2,
+      "probe",
+      1.0
+     ],
+     [
+      128.2,
+      "level",
+      4.1
+     ],
+     [
+      132.3,
+      "done",
+      0.1
+     ],
+     [
+      132.4,
+      "probe",
+      1.0
+     ],
+     [
+      133.4,
+      "level",
+      3.8
+     ],
+     [
+      137.2,
+      "done",
+      0.1
+     ],
+     [
+      137.3,
+      "probe",
+      9.8
+     ],
+     [
+      147.1,
+      "level",
+      10.4
+     ],
+     [
+      157.5,
+      "done",
+      0.1
+     ],
+     [
+      157.6,
+      "probe",
+      9.7
+     ],
+     [
+      167.3,
+      "level",
+      2.8
+     ],
+     [
+      170.1,
+      "done",
+      0.1
+     ],
+     [
+      170.2,
+      "probe",
+      0.9
+     ],
+     [
+      171.1,
+      "level",
+      3.8
+     ],
+     [
+      174.9,
+      "done",
+      0.1
+     ],
+     [
+      175.0,
+      "probe",
+      5.1
+     ]
+    ],
+    "events_head": []
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     66.5000000001355,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     66.5000000001355,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     66.60000000013598,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     66.70000000013646,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     66.60000000013598,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|ref|16|J1|B|0,0": {
+   "b1": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 100.80000000029928,
+    "t_done_s": 88.80000000024198,
+    "t_P_s": 37.09999999999512,
+    "t_loc_s": 38.500000000001805,
+    "t_off_s": 38.80000000000324,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.2,
+      "level"
+     ],
+     [
+      88.8,
+      "done"
+     ],
+     [
+      88.9,
+      "probe"
+     ],
+     [
+      100.8,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.020800450913461686,
+     0.03850940896770025
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 68.45629524630803,
+    "max_motor_stroke_mm": 523.9608526311694,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 4,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r164-RL-tau_C",
+     "leg": "RL",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 1007,
+     "reads": 1108,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      21.1
+     ],
+     [
+      31.1,
+      "level",
+      57.6
+     ],
+     [
+      88.7,
+      "done",
+      0.1
+     ],
+     [
+      88.8,
+      "probe",
+      11.9
+     ],
+     [
+      100.7,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "30.4 INFO_TOUCH_DIP_HELD:RL",
+     "30.4 INFO_TOUCH_DIP_HELD:RR",
+     "30.7 INFO_TOUCH_DIP_HELD:FL",
+     "30.7 INFO_TOUCH_DIP_HELD:FR",
+     "31.2 floor_estimate_touch",
+     "31.2 INFO_TOUCH_TWIST_HOLD:0.072",
+     "32.9 soil_mode_start",
+     "38.5 crawler_liftoff_confirmed",
+     "38.5 INFO_CLEARANCE_BIAS:FL=52.0,FR=53.8,RL=64.2,RR=66.0",
+     "38.5 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "39.5 INFO_DIFF_SINK_HOLD:FL,RL:5.5",
+     "42.3 INFO_DIFF_SINK_RELEASE:settled",
+     "100.8 reanchor_skipped:disabled",
+     "100.8 ready_heave_tail"
+    ]
+   },
+   "b2": {
+    "final_phase": "level",
+    "pass": false,
+    "t_ready_s": null,
+    "t_done_s": null,
+    "t_P_s": 39.80000000000801,
+    "t_loc_s": 40.60000000001183,
+    "t_off_s": 38.80000000000324,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.3,
+      "level"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 0,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.07785615176675592,
+     0.06708357700477996
+    ],
+    "loc_revokes": [
+     39.700000000007535
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 40.60000000001183,
+     "t_off_s": 38.80000000000324,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 39.700000000007535,
+     "revokes_off_to_loc_s": [
+      39.700000000007535
+     ],
+     "loc_minus_departure_s": 1.8000000000085947,
+     "loc_minus_later_event_s": 0.9000000000042974,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.8,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 67.84242664088539,
+    "max_motor_stroke_mm": 534.9300917108749,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 3,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": false,
+     "G6-6_fault_ready": false,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r164-RL-tau_C",
+     "leg": "RL",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 2400,
+     "reads": 2501,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      21.2
+     ],
+     [
+      31.2,
+      "level",
+      218.9
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "30.4 INFO_TOUCH_DIP_HELD:RL",
+     "30.4 INFO_TOUCH_DIP_HELD:RR",
+     "30.7 INFO_TOUCH_DIP_HELD:FR",
+     "31.3 floor_estimate_touch",
+     "31.3 INFO_TOUCH_TWIST_HOLD:-0.635",
+     "32.9 soil_mode_start",
+     "38.5 crawler_liftoff_confirmed",
+     "38.5 INFO_CLEARANCE_BIAS:FL=51.9,FR=53.6,RL=63.9,RR=65.6",
+     "38.5 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "39.5 INFO_DIFF_SINK_HOLD:FL,RL:6.0",
+     "39.7 INFO_LOC_REVOKED:2.1",
+     "39.8 soil_mode_start",
+     "40.6 crawler_liftoff_confirmed",
+     "40.6 INFO_CLEARANCE_BIAS:FL=79.1,FR=64.2,RL=91.5,RR=76.6",
+     "41.7 INFO_DIFF_SINK_RELEASE:reversed"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     74.60000000017418,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     88.20000000023911,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     72.7000000001651,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     76.00000000018086,
+     "level",
+     true
+    ],
+    [
+     "s4",
+     73.10000000016701,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|g6|61|ref|S1|top|Fs4": {
+   "b1": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 149.49999999992073,
+    "t_done_s": 137.5000000002045,
+    "t_P_s": 46.800000000041436,
+    "t_loc_s": 48.400000000049076,
+    "t_off_s": 47.200000000043346,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      33.8,
+      "level"
+     ],
+     [
+      137.5,
+      "done"
+     ],
+     [
+      137.6,
+      "probe"
+     ],
+     [
+      149.5,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.04649284929162759,
+     0.058199232456084035
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 67.52933023322954,
+    "max_motor_stroke_mm": 547.9777526360573,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r053-RL-tau_R",
+     "leg": "RL",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 1362,
+     "first_applied_t_s": 136.4000000002305,
+     "applied_periods": 232,
+     "reads": 1595,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 136.4,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      33.7,
+      "level",
+      103.7
+     ],
+     [
+      137.4,
+      "done",
+      0.1
+     ],
+     [
+      137.5,
+      "probe",
+      11.9
+     ],
+     [
+      149.4,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "33.8 floor_estimate_touch",
+     "36.2 soil_mode_start",
+     "48.4 crawler_liftoff_confirmed",
+     "48.4 INFO_CLEARANCE_BIAS:FL=77.1,FR=75.8,RL=119.1,RR=117.9",
+     "48.4 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "136.4 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "136.4 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "149.5 reanchor_skipped:disabled",
+     "149.5 ready_heave_tail"
+    ]
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 196.59999999880696,
+    "t_done_s": 184.59999999909073,
+    "t_P_s": 46.70000000004096,
+    "t_loc_s": 48.3000000000486,
+    "t_off_s": 47.200000000043346,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      33.8,
+      "level"
+     ],
+     [
+      184.6,
+      "done"
+     ],
+     [
+      184.7,
+      "probe"
+     ],
+     [
+      196.6,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.05150524173746096,
+     0.058934562750265894
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 67.59648982952673,
+    "max_motor_stroke_mm": 547.9918238982137,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r053-RL-tau_R",
+     "leg": "RL",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 670,
+     "first_applied_t_s": 67.20000000013884,
+     "applied_periods": 1395,
+     "reads": 2066,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 67.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      33.7,
+      "level",
+      150.8
+     ],
+     [
+      184.5,
+      "done",
+      0.1
+     ],
+     [
+      184.6,
+      "probe",
+      11.9
+     ],
+     [
+      196.5,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "33.8 floor_estimate_touch",
+     "36.2 soil_mode_start",
+     "48.3 crawler_liftoff_confirmed",
+     "48.3 INFO_CLEARANCE_BIAS:FL=75.7,FR=75.1,RL=118.8,RR=118.2",
+     "48.3 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "67.2 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "67.2 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "196.6 reanchor_skipped:disabled",
+     "196.6 ready_heave_tail"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     82.60000000021238,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     83.60000000021715,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     91.70000000025583,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     69.70000000015078,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     83.00000000021429,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|g6|55|ref|J1|bottom|Fs4": {
+   "b1": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 91.00000000025248,
+    "t_done_s": 79.00000000019519,
+    "t_P_s": 37.49999999999703,
+    "t_loc_s": 39.00000000000419,
+    "t_off_s": 38.500000000001805,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.2,
+      "level"
+     ],
+     [
+      79.0,
+      "done"
+     ],
+     [
+      79.1,
+      "probe"
+     ],
+     [
+      91.0,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.08662377897927755,
+     0.030131675043757675
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 69.30856470601509,
+    "max_motor_stroke_mm": 518.2767070637303,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r047-RR-tau_R",
+     "leg": "RR",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 549,
+     "first_applied_t_s": 55.10000000008107,
+     "applied_periods": 460,
+     "reads": 1010,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 55.1,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      31.1,
+      "level",
+      47.8
+     ],
+     [
+      78.9,
+      "done",
+      0.1
+     ],
+     [
+      79.0,
+      "probe",
+      11.9
+     ],
+     [
+      90.9,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "31.2 floor_estimate_touch",
+     "31.2 INFO_TOUCH_TWIST_HOLD:-0.275",
+     "32.7 soil_mode_start",
+     "39.0 crawler_liftoff_confirmed",
+     "39.0 INFO_CLEARANCE_BIAS:FL=54.9,FR=53.3,RL=67.8,RR=66.3",
+     "39.0 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "55.1 WARN_ROD_PRESSURE_FALLBACK:RR",
+     "55.1 INFO_ROD_PRESSURE_FAULT_REASON:RR:D1",
+     "91.0 reanchor_skipped:disabled",
+     "91.0 ready_heave_tail"
+    ]
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 72.50000000016415,
+    "t_done_s": 60.50000000010685,
+    "t_P_s": 37.299999999996075,
+    "t_loc_s": 38.70000000000276,
+    "t_off_s": 38.40000000000133,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.1,
+      "level"
+     ],
+     [
+      60.5,
+      "done"
+     ],
+     [
+      60.6,
+      "probe"
+     ],
+     [
+      72.5,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.05929623019017604,
+     0.05558470413953485
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 69.27162779071462,
+    "max_motor_stroke_mm": 519.1001659806607,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r047-RR-tau_R",
+     "leg": "RR",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 558,
+     "first_applied_t_s": 56.000000000085365,
+     "applied_periods": 266,
+     "reads": 825,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 56.0,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      31.0,
+      "level",
+      29.4
+     ],
+     [
+      60.4,
+      "done",
+      0.1
+     ],
+     [
+      60.5,
+      "probe",
+      11.9
+     ],
+     [
+      72.4,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "31.1 floor_estimate_touch",
+     "31.1 INFO_TOUCH_TWIST_HOLD:0.046",
+     "32.7 soil_mode_start",
+     "38.7 crawler_liftoff_confirmed",
+     "38.7 INFO_CLEARANCE_BIAS:FL=54.2,FR=53.5,RL=64.8,RR=64.1",
+     "38.7 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "56.0 WARN_ROD_PRESSURE_FALLBACK:RR",
+     "56.0 INFO_ROD_PRESSURE_FAULT_REASON:RR:D1",
+     "72.5 reanchor_skipped:disabled",
+     "72.5 ready_heave_tail"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     71.60000000015985,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     71.90000000016128,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     72.00000000016176,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     73.40000000016845,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     71.90000000016128,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|ref|18|J2|B|0,0": {
+   "b1": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 84.00000000021906,
+    "t_done_s": 72.00000000016176,
+    "t_P_s": 43.50000000002568,
+    "t_loc_s": 44.400000000029976,
+    "t_off_s": 43.4000000000252,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.1,
+      "level"
+     ],
+     [
+      72.0,
+      "done"
+     ],
+     [
+      72.1,
+      "probe"
+     ],
+     [
+      84.0,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.02877871350250972,
+     0.05066021284414453
+    ],
+    "loc_revokes": [
+     43.4000000000252
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 44.400000000029976,
+     "t_off_s": 43.4000000000252,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 43.4000000000252,
+     "revokes_off_to_loc_s": [
+      43.4000000000252
+     ],
+     "loc_minus_departure_s": 1.0000000000047748,
+     "loc_minus_later_event_s": 1.0000000000047748,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.8,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 66.86434990476909,
+    "max_motor_stroke_mm": 568.9707653544765,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 1
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r165-RL-tau_R",
+     "leg": "RL",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 528,
+     "first_applied_t_s": 53.00000000007104,
+     "applied_periods": 411,
+     "reads": 940,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 53.0,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      31.0,
+      "level",
+      40.9
+     ],
+     [
+      71.9,
+      "done",
+      0.1
+     ],
+     [
+      72.0,
+      "probe",
+      11.9
+     ],
+     [
+      83.9,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "31.1 floor_estimate_touch",
+     "31.1 INFO_TOUCH_TWIST_HOLD:0.045",
+     "32.7 soil_mode_start",
+     "43.0 crawler_liftoff_confirmed",
+     "43.0 INFO_CLEARANCE_BIAS:FL=75.8,FR=80.3,RL=88.6,RR=93.2",
+     "43.0 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "43.4 INFO_LOC_REVOKED:3.3",
+     "43.5 soil_mode_start",
+     "44.0 INFO_DIFF_SINK_HOLD:FL,RL:6.9",
+     "44.4 crawler_liftoff_confirmed",
+     "44.4 INFO_CLEARANCE_BIAS:FL=90.4,FR=84.8,RL=103.6,RR=97.9",
+     "50.3 INFO_DIFF_SINK_RELEASE:reversed",
+     "53.0 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "53.0 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "72.0 INFO_TWIST_UNSETTLED:-4.1",
+     "84.0 reanchor_skipped:disabled",
+     "84.0 ready_heave_tail",
+     "86.0 INFO_FLOOR_NONPLANAR"
+    ]
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 99.10000000029116,
+    "t_done_s": 87.10000000023386,
+    "t_P_s": 43.4000000000252,
+    "t_loc_s": 44.3000000000295,
+    "t_off_s": 43.300000000024724,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      31.1,
+      "level"
+     ],
+     [
+      87.1,
+      "done"
+     ],
+     [
+      87.2,
+      "probe"
+     ],
+     [
+      99.1,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.013860548861801667,
+     0.038545978374152
+    ],
+    "loc_revokes": [
+     43.300000000024724
+    ],
+    "late_loc_revoked": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 44.3000000000295,
+     "t_off_s": 43.300000000024724,
+     "limit_s": 2.9,
+     "t_revoke_last_s": 43.300000000024724,
+     "revokes_off_to_loc_s": [
+      43.300000000024724
+     ],
+     "loc_minus_departure_s": 1.0000000000047748,
+     "loc_minus_later_event_s": 1.0000000000047748,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.8,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 66.95355019140776,
+    "max_motor_stroke_mm": 557.1885054273671,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r165-RL-tau_R",
+     "leg": "RL",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 579,
+     "first_applied_t_s": 58.10000000009539,
+     "applied_periods": 511,
+     "reads": 1091,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 58.1,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      31.0,
+      "level",
+      56.0
+     ],
+     [
+      87.0,
+      "done",
+      0.1
+     ],
+     [
+      87.1,
+      "probe",
+      11.9
+     ],
+     [
+      99.0,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "31.1 floor_estimate_touch",
+     "31.1 INFO_TOUCH_TWIST_HOLD:0.064",
+     "32.7 soil_mode_start",
+     "42.9 crawler_liftoff_confirmed",
+     "42.9 INFO_CLEARANCE_BIAS:FL=75.7,FR=80.8,RL=89.5,RR=94.5",
+     "42.9 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "43.3 INFO_LOC_REVOKED:3.4",
+     "43.4 soil_mode_start",
+     "43.9 INFO_DIFF_SINK_HOLD:FL,RL:6.8",
+     "44.3 crawler_liftoff_confirmed",
+     "44.3 INFO_CLEARANCE_BIAS:FL=90.1,FR=84.1,RL=104.7,RR=98.8",
+     "45.6 INFO_DIFF_SINK_RELEASE:reversed",
+     "58.1 WARN_ROD_PRESSURE_FALLBACK:RL",
+     "58.1 INFO_ROD_PRESSURE_FAULT_REASON:RL:D1",
+     "99.1 reanchor_skipped:disabled",
+     "99.1 ready_heave_tail"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     74.10000000017179,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     92.80000000026108,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     91.60000000025535,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     75.00000000017609,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     74.70000000017465,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|g8|49|main|flat|top|4.0|RR|lowered|150.0": {
+   "b1": {
+    "final_phase": "ready",
+    "pass": true,
+    "flags": [],
+    "att_end_deg": [
+     -0.0949,
+     0.0499
+    ],
+    "gates": {
+     "Fmin_plus5": true,
+     "no_lift": true,
+     "end_att": true,
+     "ready": true,
+     "fault0": true,
+     "stroke_end": true,
+     "crawler_clear": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r149-RL-tau_R",
+     "leg": "RL",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 533,
+     "first_applied_t_s": 53.50000000007343,
+     "applied_periods": 324,
+     "reads": 858,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 53.5,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      45.0,
+      "level",
+      23.7
+     ],
+     [
+      68.7,
+      "done",
+      0.1
+     ],
+     [
+      68.8,
+      "probe",
+      11.9
+     ],
+     [
+      80.7,
+      "ready",
+      5.1
+     ]
+    ],
+    "events_head": []
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "flags": [],
+    "att_end_deg": [
+     -0.0762,
+     0.0678
+    ],
+    "gates": {
+     "Fmin_plus5": true,
+     "no_lift": true,
+     "end_att": true,
+     "ready": true,
+     "fault0": true,
+     "stroke_end": true,
+     "crawler_clear": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r149-RL-tau_R",
+     "leg": "RL",
+     "anchor": "retract_start_after:LEVEL",
+     "trigger_read": 614,
+     "first_applied_t_s": 61.600000000112104,
+     "applied_periods": 92,
+     "reads": 707,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 61.6,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      53.7,
+      "probe",
+      11.9
+     ],
+     [
+      65.6,
+      "ready",
+      5.1
+     ]
+    ],
+    "events_head": []
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     65.70000000013168,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     66.20000000013407,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     65.80000000013216,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     65.70000000013168,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     65.6000000001312,
+     "ready",
+     true
+    ]
+   ]
+  },
+  "L2|ref|20|S1|B|0,0": {
+   "b1": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 91.90000000025678,
+    "t_done_s": 79.90000000019948,
+    "t_P_s": 46.90000000004191,
+    "t_loc_s": 48.50000000004955,
+    "t_off_s": 47.200000000043346,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      33.8,
+      "level"
+     ],
+     [
+      79.9,
+      "done"
+     ],
+     [
+      80.0,
+      "probe"
+     ],
+     [
+      91.9,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.042852178622593794,
+     0.07465085146838679
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 67.12427198702865,
+    "max_motor_stroke_mm": 550.3652331224673,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b1-s40-r166-RR-tau_C",
+     "leg": "RR",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 918,
+     "reads": 1019,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      23.7
+     ],
+     [
+      33.7,
+      "level",
+      46.1
+     ],
+     [
+      79.8,
+      "done",
+      0.1
+     ],
+     [
+      79.9,
+      "probe",
+      11.9
+     ],
+     [
+      91.8,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:RR",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:RR:D1",
+     "33.8 floor_estimate_touch",
+     "33.8 INFO_TOUCH_TWIST_HOLD:-0.052",
+     "36.2 soil_mode_start",
+     "48.5 crawler_liftoff_confirmed",
+     "48.5 INFO_CLEARANCE_BIAS:FL=77.6,FR=76.8,RL=119.7,RR=118.9",
+     "48.5 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "91.9 reanchor_skipped:disabled",
+     "91.9 ready_heave_tail"
+    ]
+   },
+   "b2": {
+    "final_phase": "ready",
+    "pass": true,
+    "t_ready_s": 79.800000000199,
+    "t_done_s": 67.80000000014171,
+    "t_P_s": 46.800000000041436,
+    "t_loc_s": 48.400000000049076,
+    "t_off_s": 47.200000000043346,
+    "phase_path": [
+     [
+      10.1,
+      "touch"
+     ],
+     [
+      33.8,
+      "level"
+     ],
+     [
+      67.8,
+      "done"
+     ],
+     [
+      67.9,
+      "probe"
+     ],
+     [
+      79.8,
+      "ready"
+     ]
+    ],
+    "n_relevel": 0,
+    "n_reapproach": 0,
+    "n_probe_rounds": 1,
+    "n_warn": 1,
+    "warnings": [
+     "WARN_ROD_PRESSURE_FALLBACK"
+    ],
+    "flags": [],
+    "att_end_deg": [
+     -0.023065835326256664,
+     0.07594799618152788
+    ],
+    "weak_leg": null,
+    "min_true_Fcyl_after_off_kN": 67.58356796905426,
+    "max_motor_stroke_mm": 549.7546783250822,
+    "info_counts": {
+     "INFO_TOUCH_DIP_HELD": 0,
+     "INFO_LIFT_PAUSED": 0,
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_LOC_CLEARANCE_ANCHOR": 0,
+     "INFO_TWIST_UNSETTLED": 0
+    },
+    "gates": {
+     "G6-1_crawler": true,
+     "G6-2_loc": true,
+     "G6-3_Fmin": true,
+     "G6-4_att": true,
+     "G6-5_rut_stroke": true,
+     "G6-6_fault_ready": true,
+     "G6-7_preloc": true
+    },
+    "rod_fault_brief": {
+     "fault_id": "12b-b2-s41-r166-RR-tau_C",
+     "leg": "RR",
+     "anchor": "phase_exit:CHECK",
+     "trigger_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 797,
+     "reads": 898,
+     "pre_trigger_fallback": false,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     }
+    },
+    "phase_runs_from_fault": [
+     [
+      0.0,
+      "check",
+      10.0
+     ],
+     [
+      10.0,
+      "touch",
+      23.7
+     ],
+     [
+      33.7,
+      "level",
+      34.0
+     ],
+     [
+      67.7,
+      "done",
+      0.1
+     ],
+     [
+      67.8,
+      "probe",
+      11.9
+     ],
+     [
+      79.7,
+      "ready",
+      10.1
+     ]
+    ],
+    "events_head": [
+     "10.2 WARN_ROD_PRESSURE_FALLBACK:RR",
+     "10.2 INFO_ROD_PRESSURE_FAULT_REASON:RR:D1",
+     "33.8 floor_estimate_touch",
+     "36.2 soil_mode_start",
+     "48.4 crawler_liftoff_confirmed",
+     "48.4 INFO_CLEARANCE_BIAS:FL=76.8,FR=76.4,RL=119.3,RR=118.8",
+     "48.4 INFO_LOC_FLAT_SOIL_MARGIN:80",
+     "79.8 reanchor_skipped:disabled",
+     "79.8 ready_heave_tail"
+    ]
+   },
+   "h8_fault_free_L2_rows": [
+    [
+     "s0",
+     70.00000000015221,
+     "ready",
+     true
+    ],
+    [
+     "s1",
+     83.70000000021763,
+     "ready",
+     true
+    ],
+    [
+     "s2",
+     70.10000000015269,
+     "ready",
+     true
+    ],
+    [
+     "s3",
+     82.80000000021333,
+     "ready",
+     true
+    ],
+    [
+     "s4",
+     81.70000000020808,
+     "ready",
+     true
+    ]
+   ]
+  }
+ }
+}

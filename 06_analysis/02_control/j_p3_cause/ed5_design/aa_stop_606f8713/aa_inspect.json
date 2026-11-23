@@ -1,0 +1,3277 @@
+{
+ "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1",
+ "aa_recount": {
+  "pairs": 167,
+  "counted": 4,
+  "items": [
+   {
+    "case": "L2|g6|52|ref|J1|top|Fs0",
+    "why": "one_side_no_ready",
+    "t_ready_b1": null,
+    "t_ready_b2": 92.30000000025869,
+    "cell": {
+     "rank": 44,
+     "case": "L2|g6|52|ref|J1|top|Fs0",
+     "cell": 4,
+     "leg": "RL",
+     "phase": "tau_C"
+    }
+   },
+   {
+    "case": "L2|g6|59|ref|J2|bottom|Fs4",
+    "why": "one_side_no_ready",
+    "t_ready_b1": null,
+    "t_ready_b2": 80.00000000019996,
+    "cell": {
+     "rank": 51,
+     "case": "L2|g6|59|ref|J2|bottom|Fs4",
+     "cell": 3,
+     "leg": "FR",
+     "phase": "tau_R"
+    }
+   },
+   {
+    "case": "L2|g6|61|ref|S1|top|Fs4",
+    "why": "dready_gt_30",
+    "t_ready_b1": 149.49999999992073,
+    "t_ready_b2": 196.59999999880696,
+    "cell": {
+     "rank": 53,
+     "case": "L2|g6|61|ref|S1|top|Fs4",
+     "cell": 5,
+     "leg": "RL",
+     "phase": "tau_R"
+    }
+   },
+   {
+    "case": "L2|ref|16|J1|B|0,0",
+    "why": "one_side_no_ready",
+    "t_ready_b1": 100.80000000029928,
+    "t_ready_b2": null,
+    "cell": {
+     "rank": 164,
+     "case": "L2|ref|16|J1|B|0,0",
+     "cell": 4,
+     "leg": "RL",
+     "phase": "tau_C"
+    }
+   }
+  ]
+ },
+ "both_no_ready": [
+  "L2|g6|56|ref|J2|top|Fs0",
+  "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0"
+ ],
+ "dready_quantiles_s": {
+  "0.5": 0.5,
+  "0.9": 6.170000000000002,
+  "0.95": 9.374999999999995,
+  "0.99": 16.425999999999952,
+  "1.0": 47.1
+ },
+ "dready_bins": {
+  ">1": 62,
+  ">5": 20,
+  ">10": 6,
+  ">20": 1,
+  ">30": 1
+ },
+ "top10_dready": [
+  [
+   "L2|g6|61|ref|S1|top|Fs4",
+   47.1,
+   149.49999999992073,
+   196.59999999880696
+  ],
+  [
+   "L2|g6|55|ref|J1|bottom|Fs4",
+   18.5,
+   91.00000000025248,
+   72.50000000016415
+  ],
+  [
+   "L2|g8|49|main|flat|top|4.0|RR|lowered|150.0",
+   15.1,
+   80.80000000020378,
+   65.70000000013168
+  ],
+  [
+   "L2|ref|18|J2|B|0,0",
+   15.1,
+   84.00000000021906,
+   99.10000000029116
+  ],
+  [
+   "L2|ref|20|S1|B|0,0",
+   12.1,
+   91.90000000025678,
+   79.800000000199
+  ],
+  [
+   "L2|g6|28|g6|G1+J2@RR|top|Fs0",
+   11.0,
+   107.50000000033127,
+   96.50000000027875
+  ],
+  [
+   "L2|g6|57|ref|J2|top|Fs4",
+   9.9,
+   106.5000000003265,
+   96.60000000027922
+  ],
+  [
+   "L2|g6|27|g6|G1+J2@RL|bottom|Fs4",
+   9.4,
+   108.60000000033652,
+   118.0000000003814
+  ],
+  [
+   "L2|g6|31|g6|G1+J2@RR|bottom|Fs4",
+   9.4,
+   110.60000000034607,
+   101.20000000030119
+  ],
+  [
+   "L2|g6|13|g6|G1+J1@RR|top|Fs4",
+   8.9,
+   71.00000000015699,
+   79.90000000019948
+  ]
+ ],
+ "no_ready_b1": [
+  "L2|g6|52|ref|J1|top|Fs0",
+  "L2|g6|56|ref|J2|top|Fs0",
+  "L2|g6|59|ref|J2|bottom|Fs4",
+  "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0"
+ ],
+ "no_ready_b2": [
+  "L2|g6|56|ref|J2|top|Fs0",
+  "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+  "L2|ref|16|J1|B|0,0"
+ ],
+ "categories": {
+  "b1": {
+   "opportunity": 163,
+   "vbk0_ready_unreached": 4
+  },
+  "b2": {
+   "opportunity": 164,
+   "vbk0_ready_unreached": 3
+  }
+ },
+ "doc_meta": {
+  "b1": {
+   "meta": {
+    "script": "04_scripts/03_control/s8/r79_L3L4_final.py",
+    "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+    "levels": "L2",
+    "set": "all",
+    "seeds": "keys file",
+    "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+    "candidate": "current",
+    "rod_model": "plant_truth",
+    "r72_path": "per_leg",
+    "workers": 4,
+    "affinity": "0x000F",
+    "keys_option": false,
+    "n_jobs": 167,
+    "n_errors": 0,
+    "wall_s_this_start": 3547.3,
+    "git_head": "606f87131a7f13468f1db37cf6c811c442a6caf0",
+    "c2_py_sha256": "01c4a89e672177baffac8b44bd37ab4bf3346b65c75c595806d683a1171aca38",
+    "preset_settings": {
+     "lift_stroke_guard.enable": true,
+     "lift_stroke_guard.soil_stop": true,
+     "lift_stroke_guard.soil_stop_scope": "any_loc",
+     "slope_clearance_margin.enable": true,
+     "slope_clearance_margin.flat_soil_margin_m": 0.03,
+     "loc_revoke.enable": true,
+     "loc_revoke.soil_gate": true,
+     "diff_sink.enable": true,
+     "period_s": 0.1,
+     "soil.enable": true,
+     "zero_calibration.mode": "airborne_roundtrip",
+     "target.check_time_s": 2.0,
+     "target.gyro_noise_std_rad_s": 0.0,
+     "two_pressure.extend_start_rule": "constant",
+     "liftoff_approach_slow.enable": true,
+     "slope_clearance_margin.flat_soil_margin_order_gate": true,
+     "full_config": {
+      "clip_returned_command": true,
+      "contact": "combined",
+      "diff_sink": {
+       "add_cap_fraction": 0.75,
+       "confirm_s": 1.0,
+       "enable": true,
+       "gain": 1.5,
+       "gate_max_settle_tilt_rad": 0.017453292519943295,
+       "max_s": 10.0,
+       "release_m_s": 0.001,
+       "release_s": 0.5,
+       "stroke_margin_m": 0.04,
+       "threshold_m_s": 0.003,
+       "track_w_m": [
+        2.648,
+        2.411
+       ]
+      },
+      "fault_reground": {
+       "attitude_abort": false,
+       "attitude_abort_rad": 0.008726646259971648,
+       "attitude_window_s": 0.5,
+       "contact_margin_N": 5000.0,
+       "contact_rule": "all_legs_hold",
+       "enable": true,
+       "faulty_contact_samples": 2,
+       "faulty_contact_window_s": 0.2,
+       "faulty_rod_rise_fraction": 0.5,
+       "healthy_contact_samples": 3,
+       "healthy_lifted_level_N": 0.0,
+       "healthy_lifted_samples": 2,
+       "hold_confirm_samples": 10,
+       "max_leg_duration_s": 8.0,
+       "max_total_duration_s": 15.0,
+       "max_travel_m": 0.03,
+       "own_pre_fault_cue": true,
+       "plane_gap_scaled": true,
+       "plane_gap_threshold_m": 0.005,
+       "plane_residual_threshold_m": 0.0014,
+       "protect_samples": 5,
+       "speed_fraction_faulty": 0.15,
+       "speed_fraction_healthy": 0.25,
+       "stroke_end_abort_margin_m": 0.01,
+       "stroke_end_entry": true,
+       "stroke_end_travel_m": 0.03,
+       "target_window_s": 0.3,
+       "travel_gap_margin_m": 0.005
+      },
+      "filters": {
+       "attitude_stage_count": 2,
+       "attitude_time_constant_s": 0.8,
+       "clearance_time_constant_s": 0.2,
+       "completion_time_constant_s": 1.0,
+       "crawler_rule_pressure_time_constant_s": 0.2,
+       "twist_load_time_constant_s": 0.2
+      },
+      "gains": {
+       "attitude_ki_1_s2": 0.01,
+       "attitude_kp_1_s": 0.2,
+       "guard_kg_1_s": 0.15,
+       "heave_kz_1_s": 0.5,
+       "twist_ktw_1_s": 0.5
+      },
+      "geometry_judge": {
+       "mismatch_load_change_N": 3000.0,
+       "mode": "active",
+       "repeat_window_s": 30.0
+      },
+      "initial_seal_band_N": 13000.0,
+      "lift_stroke_guard": {
+       "enable": true,
+       "extra_margin_m": 0.002,
+       "hold_limit_s": 3.0,
+       "lookahead_periods": 2,
+       "name_stroke_end_fault": true,
+       "shift_clearance_margin_m": 0.005,
+       "soil_stop": true,
+       "soil_stop_scope": "any_loc"
+      },
+      "liftoff_approach_slow": {
+       "enable": true,
+       "end_ramp_periods": 0,
+       "light_leg_fraction_of_F_min": 3.5,
+       "max_s": 1.5,
+       "min_active_periods": 0,
+       "off_periods": 5,
+       "require_soil_response": true,
+       "rho_on": 0.18,
+       "slow_mean_fraction": 0.16,
+       "sum_off_fraction_W": 0.85,
+       "sum_on_fraction_W": 0.6
+      },
+      "liftoff_window_reapproach": {
+       "mode": "restart"
+      },
+      "load_estimate": "net",
+      "loc_revoke": {
+       "confirm_periods": 2,
+       "enable": true,
+       "gate_min_clearance_at_P_m": 0.01,
+       "gate_tilt_min_rad": 0.017453292519943295,
+       "keep_slope_margin_on_revoke": true,
+       "max_revokes": 2,
+       "mean_s": 1.0,
+       "rise_N": 2000.0,
+       "rise_fraction_W": 0.005,
+       "soil_gate": true,
+       "stroke_guard": true,
+       "stroke_margin_m": 0.04,
+       "watch_m": 0.02
+      },
+      "lock_tail": {
+       "enable": true,
+       "end_overshoot_margin_m": 0.0005,
+       "mode": "ready_heave",
+       "settle_s": 0.2,
+       "speed_fraction": 0.25,
+       "tail_m": 0.0015
+      },
+      "output_ramp_time_s": null,
+      "period_s": 0.1,
+      "pre_loc_lift_pause": {
+       "enable": true,
+       "falling_N": 2000.0,
+       "max_pause_s": 3.0,
+       "off_fraction_of_F_min": 3.5,
+       "on_fraction_of_F_min": 3.0,
+       "only_before_soil_mode": true,
+       "reapproach_speed_factor": 4.0,
+       "slow_lift_mean_fraction": 0.16
+      },
+      "pressure_offset_allowance_N": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "probe": {
+       "attitude_agreement_ratio": 0.5,
+       "attitude_drift_ratio": 0.25,
+       "attitude_limit_rad": 0.0013962634015954637,
+       "attitude_ripple_ratio": 0.15,
+       "attitude_window_s": 0.3,
+       "depth_m": 0.002,
+       "grounded_stiffness_ratio": 0.3,
+       "hold_s": 0.4,
+       "max_rounds": 3,
+       "min_travel_m": 0.0002,
+       "move_duration_s": 0.56,
+       "profile": "trapezoid",
+       "ramp_s": 0.36,
+       "reground_load_margin_N": 15000.0,
+       "reground_min_load_step_N": 5000.0,
+       "reground_rule": "load_first",
+       "seal_band_margin_N": 1000.0,
+       "seal_band_min_N": 1000.0,
+       "seal_band_rule": "measured_first",
+       "sensitivity": "measured_if_grounded",
+       "sequence": "extend_retract",
+       "speed_fraction": 0.25,
+       "stiffness_window": "second_half",
+       "stroke_guard_margin_m": 0.005,
+       "tail_m": 0.0003,
+       "tail_settle_s": 0.2,
+       "tail_speed_fraction": 0.1,
+       "use_combined_verdict": true
+      },
+      "probe_correction_sensitivity_N_m": [
+       5830000.0,
+       5830000.0,
+       6980000.0,
+       6980000.0
+      ],
+      "r8": {
+       "check_attitude_from_raw_tilt": true,
+       "confirmation": {
+        "above_samples": 3,
+        "below_samples": 2,
+        "relevel_samples": 2
+       },
+       "end_slowdown_speed_fraction": 0.25,
+       "end_slowdown_window_m": 0.015,
+       "fast_relevel": {
+        "fallback_nominal_head_dead_m": 0.05,
+        "fallback_nominal_rod_dead_m": 0.05,
+        "fallback_plant_ratio": null,
+        "fallback_ratio_source": "column_nominal",
+        "fallback_slope": "nominal_gap",
+        "horizon_periods": 4,
+        "rate_intervals": 3,
+        "rate_threshold_N_s": 20000.0
+       },
+       "imu_sample_period_s": 0.01,
+       "increment_limit": {
+        "fraction_per_period": 0.25,
+        "guard_fraction_per_period": 0.25
+       },
+       "is_instant_sampling": true,
+       "lifted_reapproach": {
+        "enable": true,
+        "exit_margin_N": 5000.0,
+        "exit_samples": 3,
+        "load_fraction_of_F_min": 1.4,
+        "max_duration_s": 10.0,
+        "max_travel_m": 0.04,
+        "mode": "twist",
+        "opposite_strong_level_N": 0.0,
+        "opposite_strong_samples": 2,
+        "opposite_window_s": 0.8,
+        "protect_margin_N": 5000.0,
+        "retrigger_samples": 1,
+        "retrigger_speed_factor": 0.6,
+        "retrigger_window_s": 2.0,
+        "samples": 1,
+        "single_leg": true,
+        "speed_fraction": 0.25,
+        "twist_speed_fraction": 0.25
+       },
+       "measured_stiffness_scale_max": 1.5,
+       "measured_stiffness_scale_min": 1.0,
+       "output_delay_periods": 1,
+       "pre_probe_stiffness_scale": 1.2,
+       "probe_abort_on_low_load": true,
+       "stiffness_warning_range": [
+        0.8,
+        2.3
+       ],
+       "touch_free_air_cap_excess_N": [
+        8000.0,
+        8000.0,
+        6666.4,
+        6666.4
+       ],
+       "touch_free_air_min_samples": 3,
+       "touch_free_air_min_travel_m": 0.0005,
+       "touch_hold_dip_samples": 2,
+       "touch_seen_samples": 2,
+       "touch_window_m": 0.04,
+       "touch_window_speed_fraction": 0.5,
+       "twist_gain_reference": "measured_Sii"
+      },
+      "reanchor": {
+       "after_probe": true,
+       "attitude_abort_rad": 0.0012217304763960308,
+       "direction": "nose_down_only",
+       "enable": true,
+       "floor_abs_N": 20000.0,
+       "floor_margin_N": 11500.0,
+       "hold2_s": 1.0,
+       "hold_guard_margin_N": 0.0,
+       "hold_s": 1.0,
+       "max_step_stroke_m": 0.008,
+       "other_margin_N": 5000.0,
+       "speed_fraction": 0.1,
+       "stair_N": [
+        45000.0,
+        30000.0,
+        20000.0,
+        20000.0
+       ],
+       "stop_predictor": "reading_rate",
+       "stop_predictor_intervals": 3,
+       "stroke_end_margin_m": 0.01,
+       "targets": [
+        "RR",
+        "RL"
+       ],
+       "theta_min_rad": 0.04363323129985824,
+       "wait_s": 2.0
+      },
+      "rod_stroke_fallback": "operating_oil_column",
+      "slope_clearance_margin": {
+       "enable": true,
+       "flat_soil_margin_m": 0.03,
+       "flat_soil_margin_order_gate": true,
+       "margin_m": 0.03,
+       "min_clearance_at_P_m": 0.01,
+       "require_soil_use": false,
+       "tilt_min_rad": 0.017453292519943295
+      },
+      "soil": {
+       "corner_bias_deadzone_m": 0.02,
+       "enable": true,
+       "loc_anchor_deadzone_m": 0.02,
+       "loc_anchor_enable": true,
+       "loc_anchor_offset_m": 0.005,
+       "max_push_m": 0.15,
+       "mode_defer_periods": 0,
+       "mode_defer_rise_factor": 4.0,
+       "mode_defer_shadow": false,
+       "mode_defer_stroke_m": 0.0,
+       "plateau_mean_speed_fraction": 0.15,
+       "plateau_rise_max_N": 2000.0,
+       "plateau_window_m": 0.01,
+       "plausibility_fraction": 0.85,
+       "push_speed_fraction": 0.25,
+       "settle_tilt_samples": 10,
+       "weight_record_range": [
+        0.9,
+        1.15
+       ]
+      },
+      "standstill_gate": {
+       "hold_s": 0.5,
+       "mean_rate_limit_rad_s": 0.00034906585039886593,
+       "mean_window_s": 1.0,
+       "rate_rms_limit_rad_s": 0.00034906585039886593,
+       "rms_window_s": 1.0,
+       "zero_command_s": 1.0
+      },
+      "support_pad_stiffness_N_m": [
+       216600000.0,
+       216600000.0,
+       205100000.0,
+       205100000.0
+      ],
+      "target": {
+       "acceptance": "reject",
+       "check_average_s": 1.0,
+       "check_max_s": 10.0,
+       "check_quiet_after_motion_s": 0.5,
+       "check_time_s": 2.0,
+       "crawler_settle_map": null,
+       "gyro_bias_max_rate_rms_cap_rad_s": 0.00034906585039886593,
+       "gyro_bias_max_rate_rms_rad_s": 0.00017453292519943296,
+       "gyro_bias_max_rate_rms_window_s": 2.0,
+       "gyro_bias_plausible_rad_s": 0.0002908882086657216,
+       "gyro_bias_target_std_rad_s": 1.939254724438144e-05,
+       "gyro_noise_std_rad_s": 0.0,
+       "pitch_ramp_rate_rad_s": 0.004363323129985824,
+       "relative_pitch_span_nose_up_rad": null,
+       "roll_ramp_rate_rad_s": 0.006981317007977318,
+       "slope_limit_mode": "operating",
+       "target": {
+        "pitch_rad": 0.0,
+        "roll_rad": 0.0
+       }
+      },
+      "thresholds": {
+       "allow_legacy_relevel_margin": false,
+       "clearance_target_m": 0.05,
+       "crawler_zone_rearm_m": 0.01,
+       "crawler_zone_release_m": 0.02,
+       "done_attitude_rad": 0.0005235987755982988,
+       "done_clearance_tolerance_m": 0.002,
+       "done_hold_s": 1.0,
+       "done_twist_N": 3000.0,
+       "free_air_window_s": 5.0,
+       "guard_margin_N": 5000.0,
+       "integrator_band_mode": "joint",
+       "integrator_band_rad": [
+        0.00017453292519943296,
+        0.003490658503988659
+       ],
+       "integrator_limit_rad_s": 0.02,
+       "lifted_clearance_m": 0.01,
+       "locked_pressure_prewarning_Pa": 30000000.0,
+       "locked_pressure_warning_margin_Pa": 500000.0,
+       "relevel_attitude_rad": 0.0012217304763960308,
+       "relevel_load_margin_N": 7500.0,
+       "rod_weight_N": 1047.2,
+       "stroke_end_clip_margin_m": 0.0001,
+       "stroke_end_fault_margin_m": 0.001,
+       "stroke_end_fault_speed_m_s": 1e-05,
+       "stroke_end_fault_time_s": 2.0,
+       "touch_approach_speed_fraction": 0.25,
+       "touch_hold_s": 0.5,
+       "touch_load_factor": 1.5,
+       "twist_deadband_N": 2000.0
+      },
+      "touch_creep_latch": {
+       "cap_m": 0.015,
+       "creep_frac": 0.05,
+       "enable": false,
+       "latch_mean_factor": 1.5,
+       "latch_min_factor": 1.0,
+       "latch_window": 5
+      },
+      "touch_twist_hold": {
+       "cap_m": 0.003,
+       "deadband_N": 1000.0,
+       "enable": true,
+       "estimate_samples": 3,
+       "gain_1_s": 2.5,
+       "hold_s": 1.5,
+       "ramp_twist_tol_m_s": 0.0002,
+       "vector_ramp": true
+      },
+      "twist_completion_relax": {
+       "drop_N": 0.0,
+       "enable": true,
+       "max_twist_N": 15000.0,
+       "require_loads_ge_F_min": true,
+       "rise_tol_N": 600.0,
+       "settle_s": 10.0,
+       "window_s": 5.0
+      },
+      "two_pressure": {
+       "counterbalance": null,
+       "counterbalance_extend_estimate_margin_Pa": 2340000.0,
+       "counterbalance_lag_tau_s": null,
+       "counterbalance_moving_rule": "lag_bound",
+       "counterbalance_retract_estimate_margin_Pa": 120000.0,
+       "counterbalance_rod_margin_Pa": 1500000.0,
+       "crawler_recontact_watch": true,
+       "d4_hold_s": 0.2,
+       "d4_min_samples": 2,
+       "diagnostics": true,
+       "drift_hold_s": 30.0,
+       "drift_sum_N": 4000.0,
+       "explained_step_sum_ratio": 0.5,
+       "extend_min_head_Pa": 2000000.0,
+       "extend_rod_range_Pa": [
+        -100000.0,
+        1200000.0
+       ],
+       "extend_start_bound": null,
+       "extend_start_rule": "constant",
+       "fallback_cracking_Pa": 300000.0,
+       "fallback_extend_Pa": 800000.0,
+       "fallback_floor_Pa": -90000.0,
+       "fallback_head_back_Pa": 1500000.0,
+       "fallback_locked_ratio": [
+        1.296,
+        1.296,
+        1.232,
+        1.232
+       ],
+       "fallback_lower_deficit_cap_N": null,
+       "fallback_min_band_N": 13000.0,
+       "fallback_pilot_ratio": 3.0,
+       "force_sigma_N": [
+        414.0,
+        414.0,
+        300.0,
+        300.0
+       ],
+       "imu_gyro_sample_period_s": 0.01,
+       "imu_lever_arm_m": null,
+       "imu_lever_correction": true,
+       "imu_mass_before_ready": "yaml",
+       "imu_mass_calibration": "median",
+       "imu_mass_min_samples": 3,
+       "imu_mass_nominal_kg": null,
+       "imu_mass_slope_min_rms_m_s2": 0.02,
+       "imu_mass_slope_min_samples": 50,
+       "imu_residual_step_ratio": 0.5,
+       "imu_seal_band_factor": 0.0,
+       "liftoff_rod_share": [
+        0.269,
+        0.269,
+        0.289,
+        0.289
+       ],
+       "load_drop_N": 20000.0,
+       "load_drop_hold_s": 0.5,
+       "load_reference_mean_s": 1.5,
+       "load_reference_settle_s": 0.5,
+       "lock_valve": "pilot_check",
+       "lock_window_closing_delay_s": 0.0,
+       "lock_window_eps_m_s": 1e-06,
+       "lock_window_valve_tau_s": 0.1,
+       "locked_ratio_head_dead_max_m": 0.08,
+       "locked_ratio_kappa": 1.1,
+       "locked_ratio_rod_dead_min_m": 0.02,
+       "locked_ratio_rule": "column_bound",
+       "locked_ratio_stroke_margin_m": 0.005,
+       "locked_ratio_stroke_max_m": null,
+       "locked_start_extend_Pa": 1300000.0,
+       "locked_start_lookback_s": 0.3,
+       "locked_start_retract_floor_Pa": null,
+       "max_step_Pa": 10000000.0,
+       "moving_settle_s": 1.0,
+       "moving_speed_fraction": 0.25,
+       "moving_stroke_check": true,
+       "moving_stroke_speed_fraction": 0.1,
+       "pressure_noise_std_Pa": 0.0,
+       "probe_consistency_check": true,
+       "probe_misses": 2,
+       "probe_rise_head_ratio": 0.08333333333333333,
+       "probe_rise_min_Pa": 300000.0,
+       "recontact_clear_N": 15000.0,
+       "recontact_hold_s": 1.0,
+       "recontact_min_threshold_N": 30000.0,
+       "recontact_seal_factor": 2.0,
+       "recontact_seal_margin_N": 10000.0,
+       "recontact_window_s": 1.0,
+       "regain_ratio_margin": 1.4,
+       "regain_stroke_change_max_m": 0.001,
+       "retract_average_s": 0.5,
+       "retract_check": true,
+       "retract_cracking_Pa": 100000.0,
+       "retract_head_back_Pa": 300000.0,
+       "retract_pad_limit_N": 2500.0,
+       "retract_pilot_ratio": 6.0,
+       "retract_settle_s": 0.3,
+       "retract_speed_fraction": 0.1,
+       "retract_upper_Pa": 21500000.0,
+       "reversal_exclusion_s": 2.0,
+       "rising_load_tolerance_N": 3000.0,
+       "rising_min_Pa": 500000.0,
+       "rising_window_s": 10.0,
+       "rod_drain_hold_ratio": 0.5,
+       "rod_limit_Pa": 35000000.0,
+       "rod_prewarning_Pa": 30000000.0,
+       "rod_warning_margin_Pa": 500000.0,
+       "rod_weight_N": null,
+       "sensor_range_Pa": [
+        -600000.0,
+        41000000.0
+       ],
+       "signal_current_range_mA": [
+        3.8,
+        20.5
+       ],
+       "step_rule": "explained_imu",
+       "stuck_window_s": 10.0,
+       "sum_extra_N": 2500.0,
+       "sum_hold_s": 0.5,
+       "suspend_steps_after_head_fault": true,
+       "violation_hold_s": 1.0
+      },
+      "zero_calibration": {
+       "air_seal_friction_record_N": 15000.0,
+       "failure_allowance_N": [
+        5500.0,
+        5500.0,
+        4000.0,
+        4000.0
+       ],
+       "hold_s": 1.0,
+       "hold_std_ddof": 1,
+       "max_hold_std_N": 500.0,
+       "max_hold_std_per_leg_N": [
+        730.0,
+        730.0,
+        530.0,
+        530.0
+       ],
+       "mode": "airborne_roundtrip",
+       "move_m": 0.003,
+       "move_timeout_factor": 3.0,
+       "plausible_offset_N": [
+        7000.0,
+        7000.0,
+        6000.0,
+        6000.0
+       ],
+       "recalibration_temperature_change_K": 15.0,
+       "return_timeout_tolerance_m": 0.0005,
+       "speed_fraction": 0.25
+      }
+     },
+     "full_config_sha256": "7e4e8e8cd002e6d5601d25c60133e72fcb9de1c261cf9197e69e3922e409e4e7"
+    },
+    "keys_file": {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\b1_keys.txt",
+     "n_keys": 167,
+     "sha256": "6383abf331b021c7dcc5a2dd3faf5ae0886756d0c8d03091fe37ddb026084c5f"
+    },
+    "rod_fault_plan": {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\b1_plan.json",
+     "sha256": "65bde6acfdc8a27b453969ddf181e8230d8472975c2a726bf5af29bc36b09f43",
+     "n_faults": 167,
+     "schema": "r79_rod_fault_plan/1"
+    }
+   }
+  },
+  "b2": {
+   "meta": {
+    "script": "04_scripts/03_control/s8/r79_L3L4_final.py",
+    "purpose": "r79 L3 / L4 with the final controller (user decision 2026-10-31)",
+    "levels": "L2",
+    "set": "all",
+    "seeds": "keys file",
+    "excluded": "S1 front patches (S1@FL, S1@FR) and pad A reference runs",
+    "candidate": "current",
+    "rod_model": "plant_truth",
+    "r72_path": "per_leg",
+    "workers": 4,
+    "affinity": "0x00F0",
+    "keys_option": false,
+    "n_jobs": 167,
+    "n_errors": 0,
+    "wall_s_this_start": 3552.8,
+    "git_head": "606f87131a7f13468f1db37cf6c811c442a6caf0",
+    "c2_py_sha256": "01c4a89e672177baffac8b44bd37ab4bf3346b65c75c595806d683a1171aca38",
+    "preset_settings": {
+     "lift_stroke_guard.enable": true,
+     "lift_stroke_guard.soil_stop": true,
+     "lift_stroke_guard.soil_stop_scope": "any_loc",
+     "slope_clearance_margin.enable": true,
+     "slope_clearance_margin.flat_soil_margin_m": 0.03,
+     "loc_revoke.enable": true,
+     "loc_revoke.soil_gate": true,
+     "diff_sink.enable": true,
+     "period_s": 0.1,
+     "soil.enable": true,
+     "zero_calibration.mode": "airborne_roundtrip",
+     "target.check_time_s": 2.0,
+     "target.gyro_noise_std_rad_s": 0.0,
+     "two_pressure.extend_start_rule": "constant",
+     "liftoff_approach_slow.enable": true,
+     "slope_clearance_margin.flat_soil_margin_order_gate": true,
+     "full_config": {
+      "clip_returned_command": true,
+      "contact": "combined",
+      "diff_sink": {
+       "add_cap_fraction": 0.75,
+       "confirm_s": 1.0,
+       "enable": true,
+       "gain": 1.5,
+       "gate_max_settle_tilt_rad": 0.017453292519943295,
+       "max_s": 10.0,
+       "release_m_s": 0.001,
+       "release_s": 0.5,
+       "stroke_margin_m": 0.04,
+       "threshold_m_s": 0.003,
+       "track_w_m": [
+        2.648,
+        2.411
+       ]
+      },
+      "fault_reground": {
+       "attitude_abort": false,
+       "attitude_abort_rad": 0.008726646259971648,
+       "attitude_window_s": 0.5,
+       "contact_margin_N": 5000.0,
+       "contact_rule": "all_legs_hold",
+       "enable": true,
+       "faulty_contact_samples": 2,
+       "faulty_contact_window_s": 0.2,
+       "faulty_rod_rise_fraction": 0.5,
+       "healthy_contact_samples": 3,
+       "healthy_lifted_level_N": 0.0,
+       "healthy_lifted_samples": 2,
+       "hold_confirm_samples": 10,
+       "max_leg_duration_s": 8.0,
+       "max_total_duration_s": 15.0,
+       "max_travel_m": 0.03,
+       "own_pre_fault_cue": true,
+       "plane_gap_scaled": true,
+       "plane_gap_threshold_m": 0.005,
+       "plane_residual_threshold_m": 0.0014,
+       "protect_samples": 5,
+       "speed_fraction_faulty": 0.15,
+       "speed_fraction_healthy": 0.25,
+       "stroke_end_abort_margin_m": 0.01,
+       "stroke_end_entry": true,
+       "stroke_end_travel_m": 0.03,
+       "target_window_s": 0.3,
+       "travel_gap_margin_m": 0.005
+      },
+      "filters": {
+       "attitude_stage_count": 2,
+       "attitude_time_constant_s": 0.8,
+       "clearance_time_constant_s": 0.2,
+       "completion_time_constant_s": 1.0,
+       "crawler_rule_pressure_time_constant_s": 0.2,
+       "twist_load_time_constant_s": 0.2
+      },
+      "gains": {
+       "attitude_ki_1_s2": 0.01,
+       "attitude_kp_1_s": 0.2,
+       "guard_kg_1_s": 0.15,
+       "heave_kz_1_s": 0.5,
+       "twist_ktw_1_s": 0.5
+      },
+      "geometry_judge": {
+       "mismatch_load_change_N": 3000.0,
+       "mode": "active",
+       "repeat_window_s": 30.0
+      },
+      "initial_seal_band_N": 13000.0,
+      "lift_stroke_guard": {
+       "enable": true,
+       "extra_margin_m": 0.002,
+       "hold_limit_s": 3.0,
+       "lookahead_periods": 2,
+       "name_stroke_end_fault": true,
+       "shift_clearance_margin_m": 0.005,
+       "soil_stop": true,
+       "soil_stop_scope": "any_loc"
+      },
+      "liftoff_approach_slow": {
+       "enable": true,
+       "end_ramp_periods": 0,
+       "light_leg_fraction_of_F_min": 3.5,
+       "max_s": 1.5,
+       "min_active_periods": 0,
+       "off_periods": 5,
+       "require_soil_response": true,
+       "rho_on": 0.18,
+       "slow_mean_fraction": 0.16,
+       "sum_off_fraction_W": 0.85,
+       "sum_on_fraction_W": 0.6
+      },
+      "liftoff_window_reapproach": {
+       "mode": "restart"
+      },
+      "load_estimate": "net",
+      "loc_revoke": {
+       "confirm_periods": 2,
+       "enable": true,
+       "gate_min_clearance_at_P_m": 0.01,
+       "gate_tilt_min_rad": 0.017453292519943295,
+       "keep_slope_margin_on_revoke": true,
+       "max_revokes": 2,
+       "mean_s": 1.0,
+       "rise_N": 2000.0,
+       "rise_fraction_W": 0.005,
+       "soil_gate": true,
+       "stroke_guard": true,
+       "stroke_margin_m": 0.04,
+       "watch_m": 0.02
+      },
+      "lock_tail": {
+       "enable": true,
+       "end_overshoot_margin_m": 0.0005,
+       "mode": "ready_heave",
+       "settle_s": 0.2,
+       "speed_fraction": 0.25,
+       "tail_m": 0.0015
+      },
+      "output_ramp_time_s": null,
+      "period_s": 0.1,
+      "pre_loc_lift_pause": {
+       "enable": true,
+       "falling_N": 2000.0,
+       "max_pause_s": 3.0,
+       "off_fraction_of_F_min": 3.5,
+       "on_fraction_of_F_min": 3.0,
+       "only_before_soil_mode": true,
+       "reapproach_speed_factor": 4.0,
+       "slow_lift_mean_fraction": 0.16
+      },
+      "pressure_offset_allowance_N": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "probe": {
+       "attitude_agreement_ratio": 0.5,
+       "attitude_drift_ratio": 0.25,
+       "attitude_limit_rad": 0.0013962634015954637,
+       "attitude_ripple_ratio": 0.15,
+       "attitude_window_s": 0.3,
+       "depth_m": 0.002,
+       "grounded_stiffness_ratio": 0.3,
+       "hold_s": 0.4,
+       "max_rounds": 3,
+       "min_travel_m": 0.0002,
+       "move_duration_s": 0.56,
+       "profile": "trapezoid",
+       "ramp_s": 0.36,
+       "reground_load_margin_N": 15000.0,
+       "reground_min_load_step_N": 5000.0,
+       "reground_rule": "load_first",
+       "seal_band_margin_N": 1000.0,
+       "seal_band_min_N": 1000.0,
+       "seal_band_rule": "measured_first",
+       "sensitivity": "measured_if_grounded",
+       "sequence": "extend_retract",
+       "speed_fraction": 0.25,
+       "stiffness_window": "second_half",
+       "stroke_guard_margin_m": 0.005,
+       "tail_m": 0.0003,
+       "tail_settle_s": 0.2,
+       "tail_speed_fraction": 0.1,
+       "use_combined_verdict": true
+      },
+      "probe_correction_sensitivity_N_m": [
+       5830000.0,
+       5830000.0,
+       6980000.0,
+       6980000.0
+      ],
+      "r8": {
+       "check_attitude_from_raw_tilt": true,
+       "confirmation": {
+        "above_samples": 3,
+        "below_samples": 2,
+        "relevel_samples": 2
+       },
+       "end_slowdown_speed_fraction": 0.25,
+       "end_slowdown_window_m": 0.015,
+       "fast_relevel": {
+        "fallback_nominal_head_dead_m": 0.05,
+        "fallback_nominal_rod_dead_m": 0.05,
+        "fallback_plant_ratio": null,
+        "fallback_ratio_source": "column_nominal",
+        "fallback_slope": "nominal_gap",
+        "horizon_periods": 4,
+        "rate_intervals": 3,
+        "rate_threshold_N_s": 20000.0
+       },
+       "imu_sample_period_s": 0.01,
+       "increment_limit": {
+        "fraction_per_period": 0.25,
+        "guard_fraction_per_period": 0.25
+       },
+       "is_instant_sampling": true,
+       "lifted_reapproach": {
+        "enable": true,
+        "exit_margin_N": 5000.0,
+        "exit_samples": 3,
+        "load_fraction_of_F_min": 1.4,
+        "max_duration_s": 10.0,
+        "max_travel_m": 0.04,
+        "mode": "twist",
+        "opposite_strong_level_N": 0.0,
+        "opposite_strong_samples": 2,
+        "opposite_window_s": 0.8,
+        "protect_margin_N": 5000.0,
+        "retrigger_samples": 1,
+        "retrigger_speed_factor": 0.6,
+        "retrigger_window_s": 2.0,
+        "samples": 1,
+        "single_leg": true,
+        "speed_fraction": 0.25,
+        "twist_speed_fraction": 0.25
+       },
+       "measured_stiffness_scale_max": 1.5,
+       "measured_stiffness_scale_min": 1.0,
+       "output_delay_periods": 1,
+       "pre_probe_stiffness_scale": 1.2,
+       "probe_abort_on_low_load": true,
+       "stiffness_warning_range": [
+        0.8,
+        2.3
+       ],
+       "touch_free_air_cap_excess_N": [
+        8000.0,
+        8000.0,
+        6666.4,
+        6666.4
+       ],
+       "touch_free_air_min_samples": 3,
+       "touch_free_air_min_travel_m": 0.0005,
+       "touch_hold_dip_samples": 2,
+       "touch_seen_samples": 2,
+       "touch_window_m": 0.04,
+       "touch_window_speed_fraction": 0.5,
+       "twist_gain_reference": "measured_Sii"
+      },
+      "reanchor": {
+       "after_probe": true,
+       "attitude_abort_rad": 0.0012217304763960308,
+       "direction": "nose_down_only",
+       "enable": true,
+       "floor_abs_N": 20000.0,
+       "floor_margin_N": 11500.0,
+       "hold2_s": 1.0,
+       "hold_guard_margin_N": 0.0,
+       "hold_s": 1.0,
+       "max_step_stroke_m": 0.008,
+       "other_margin_N": 5000.0,
+       "speed_fraction": 0.1,
+       "stair_N": [
+        45000.0,
+        30000.0,
+        20000.0,
+        20000.0
+       ],
+       "stop_predictor": "reading_rate",
+       "stop_predictor_intervals": 3,
+       "stroke_end_margin_m": 0.01,
+       "targets": [
+        "RR",
+        "RL"
+       ],
+       "theta_min_rad": 0.04363323129985824,
+       "wait_s": 2.0
+      },
+      "rod_stroke_fallback": "operating_oil_column",
+      "slope_clearance_margin": {
+       "enable": true,
+       "flat_soil_margin_m": 0.03,
+       "flat_soil_margin_order_gate": true,
+       "margin_m": 0.03,
+       "min_clearance_at_P_m": 0.01,
+       "require_soil_use": false,
+       "tilt_min_rad": 0.017453292519943295
+      },
+      "soil": {
+       "corner_bias_deadzone_m": 0.02,
+       "enable": true,
+       "loc_anchor_deadzone_m": 0.02,
+       "loc_anchor_enable": true,
+       "loc_anchor_offset_m": 0.005,
+       "max_push_m": 0.15,
+       "mode_defer_periods": 0,
+       "mode_defer_rise_factor": 4.0,
+       "mode_defer_shadow": false,
+       "mode_defer_stroke_m": 0.0,
+       "plateau_mean_speed_fraction": 0.15,
+       "plateau_rise_max_N": 2000.0,
+       "plateau_window_m": 0.01,
+       "plausibility_fraction": 0.85,
+       "push_speed_fraction": 0.25,
+       "settle_tilt_samples": 10,
+       "weight_record_range": [
+        0.9,
+        1.15
+       ]
+      },
+      "standstill_gate": {
+       "hold_s": 0.5,
+       "mean_rate_limit_rad_s": 0.00034906585039886593,
+       "mean_window_s": 1.0,
+       "rate_rms_limit_rad_s": 0.00034906585039886593,
+       "rms_window_s": 1.0,
+       "zero_command_s": 1.0
+      },
+      "support_pad_stiffness_N_m": [
+       216600000.0,
+       216600000.0,
+       205100000.0,
+       205100000.0
+      ],
+      "target": {
+       "acceptance": "reject",
+       "check_average_s": 1.0,
+       "check_max_s": 10.0,
+       "check_quiet_after_motion_s": 0.5,
+       "check_time_s": 2.0,
+       "crawler_settle_map": null,
+       "gyro_bias_max_rate_rms_cap_rad_s": 0.00034906585039886593,
+       "gyro_bias_max_rate_rms_rad_s": 0.00017453292519943296,
+       "gyro_bias_max_rate_rms_window_s": 2.0,
+       "gyro_bias_plausible_rad_s": 0.0002908882086657216,
+       "gyro_bias_target_std_rad_s": 1.939254724438144e-05,
+       "gyro_noise_std_rad_s": 0.0,
+       "pitch_ramp_rate_rad_s": 0.004363323129985824,
+       "relative_pitch_span_nose_up_rad": null,
+       "roll_ramp_rate_rad_s": 0.006981317007977318,
+       "slope_limit_mode": "operating",
+       "target": {
+        "pitch_rad": 0.0,
+        "roll_rad": 0.0
+       }
+      },
+      "thresholds": {
+       "allow_legacy_relevel_margin": false,
+       "clearance_target_m": 0.05,
+       "crawler_zone_rearm_m": 0.01,
+       "crawler_zone_release_m": 0.02,
+       "done_attitude_rad": 0.0005235987755982988,
+       "done_clearance_tolerance_m": 0.002,
+       "done_hold_s": 1.0,
+       "done_twist_N": 3000.0,
+       "free_air_window_s": 5.0,
+       "guard_margin_N": 5000.0,
+       "integrator_band_mode": "joint",
+       "integrator_band_rad": [
+        0.00017453292519943296,
+        0.003490658503988659
+       ],
+       "integrator_limit_rad_s": 0.02,
+       "lifted_clearance_m": 0.01,
+       "locked_pressure_prewarning_Pa": 30000000.0,
+       "locked_pressure_warning_margin_Pa": 500000.0,
+       "relevel_attitude_rad": 0.0012217304763960308,
+       "relevel_load_margin_N": 7500.0,
+       "rod_weight_N": 1047.2,
+       "stroke_end_clip_margin_m": 0.0001,
+       "stroke_end_fault_margin_m": 0.001,
+       "stroke_end_fault_speed_m_s": 1e-05,
+       "stroke_end_fault_time_s": 2.0,
+       "touch_approach_speed_fraction": 0.25,
+       "touch_hold_s": 0.5,
+       "touch_load_factor": 1.5,
+       "twist_deadband_N": 2000.0
+      },
+      "touch_creep_latch": {
+       "cap_m": 0.015,
+       "creep_frac": 0.05,
+       "enable": false,
+       "latch_mean_factor": 1.5,
+       "latch_min_factor": 1.0,
+       "latch_window": 5
+      },
+      "touch_twist_hold": {
+       "cap_m": 0.003,
+       "deadband_N": 1000.0,
+       "enable": true,
+       "estimate_samples": 3,
+       "gain_1_s": 2.5,
+       "hold_s": 1.5,
+       "ramp_twist_tol_m_s": 0.0002,
+       "vector_ramp": true
+      },
+      "twist_completion_relax": {
+       "drop_N": 0.0,
+       "enable": true,
+       "max_twist_N": 15000.0,
+       "require_loads_ge_F_min": true,
+       "rise_tol_N": 600.0,
+       "settle_s": 10.0,
+       "window_s": 5.0
+      },
+      "two_pressure": {
+       "counterbalance": null,
+       "counterbalance_extend_estimate_margin_Pa": 2340000.0,
+       "counterbalance_lag_tau_s": null,
+       "counterbalance_moving_rule": "lag_bound",
+       "counterbalance_retract_estimate_margin_Pa": 120000.0,
+       "counterbalance_rod_margin_Pa": 1500000.0,
+       "crawler_recontact_watch": true,
+       "d4_hold_s": 0.2,
+       "d4_min_samples": 2,
+       "diagnostics": true,
+       "drift_hold_s": 30.0,
+       "drift_sum_N": 4000.0,
+       "explained_step_sum_ratio": 0.5,
+       "extend_min_head_Pa": 2000000.0,
+       "extend_rod_range_Pa": [
+        -100000.0,
+        1200000.0
+       ],
+       "extend_start_bound": null,
+       "extend_start_rule": "constant",
+       "fallback_cracking_Pa": 300000.0,
+       "fallback_extend_Pa": 800000.0,
+       "fallback_floor_Pa": -90000.0,
+       "fallback_head_back_Pa": 1500000.0,
+       "fallback_locked_ratio": [
+        1.296,
+        1.296,
+        1.232,
+        1.232
+       ],
+       "fallback_lower_deficit_cap_N": null,
+       "fallback_min_band_N": 13000.0,
+       "fallback_pilot_ratio": 3.0,
+       "force_sigma_N": [
+        414.0,
+        414.0,
+        300.0,
+        300.0
+       ],
+       "imu_gyro_sample_period_s": 0.01,
+       "imu_lever_arm_m": null,
+       "imu_lever_correction": true,
+       "imu_mass_before_ready": "yaml",
+       "imu_mass_calibration": "median",
+       "imu_mass_min_samples": 3,
+       "imu_mass_nominal_kg": null,
+       "imu_mass_slope_min_rms_m_s2": 0.02,
+       "imu_mass_slope_min_samples": 50,
+       "imu_residual_step_ratio": 0.5,
+       "imu_seal_band_factor": 0.0,
+       "liftoff_rod_share": [
+        0.269,
+        0.269,
+        0.289,
+        0.289
+       ],
+       "load_drop_N": 20000.0,
+       "load_drop_hold_s": 0.5,
+       "load_reference_mean_s": 1.5,
+       "load_reference_settle_s": 0.5,
+       "lock_valve": "pilot_check",
+       "lock_window_closing_delay_s": 0.0,
+       "lock_window_eps_m_s": 1e-06,
+       "lock_window_valve_tau_s": 0.1,
+       "locked_ratio_head_dead_max_m": 0.08,
+       "locked_ratio_kappa": 1.1,
+       "locked_ratio_rod_dead_min_m": 0.02,
+       "locked_ratio_rule": "column_bound",
+       "locked_ratio_stroke_margin_m": 0.005,
+       "locked_ratio_stroke_max_m": null,
+       "locked_start_extend_Pa": 1300000.0,
+       "locked_start_lookback_s": 0.3,
+       "locked_start_retract_floor_Pa": null,
+       "max_step_Pa": 10000000.0,
+       "moving_settle_s": 1.0,
+       "moving_speed_fraction": 0.25,
+       "moving_stroke_check": true,
+       "moving_stroke_speed_fraction": 0.1,
+       "pressure_noise_std_Pa": 0.0,
+       "probe_consistency_check": true,
+       "probe_misses": 2,
+       "probe_rise_head_ratio": 0.08333333333333333,
+       "probe_rise_min_Pa": 300000.0,
+       "recontact_clear_N": 15000.0,
+       "recontact_hold_s": 1.0,
+       "recontact_min_threshold_N": 30000.0,
+       "recontact_seal_factor": 2.0,
+       "recontact_seal_margin_N": 10000.0,
+       "recontact_window_s": 1.0,
+       "regain_ratio_margin": 1.4,
+       "regain_stroke_change_max_m": 0.001,
+       "retract_average_s": 0.5,
+       "retract_check": true,
+       "retract_cracking_Pa": 100000.0,
+       "retract_head_back_Pa": 300000.0,
+       "retract_pad_limit_N": 2500.0,
+       "retract_pilot_ratio": 6.0,
+       "retract_settle_s": 0.3,
+       "retract_speed_fraction": 0.1,
+       "retract_upper_Pa": 21500000.0,
+       "reversal_exclusion_s": 2.0,
+       "rising_load_tolerance_N": 3000.0,
+       "rising_min_Pa": 500000.0,
+       "rising_window_s": 10.0,
+       "rod_drain_hold_ratio": 0.5,
+       "rod_limit_Pa": 35000000.0,
+       "rod_prewarning_Pa": 30000000.0,
+       "rod_warning_margin_Pa": 500000.0,
+       "rod_weight_N": null,
+       "sensor_range_Pa": [
+        -600000.0,
+        41000000.0
+       ],
+       "signal_current_range_mA": [
+        3.8,
+        20.5
+       ],
+       "step_rule": "explained_imu",
+       "stuck_window_s": 10.0,
+       "sum_extra_N": 2500.0,
+       "sum_hold_s": 0.5,
+       "suspend_steps_after_head_fault": true,
+       "violation_hold_s": 1.0
+      },
+      "zero_calibration": {
+       "air_seal_friction_record_N": 15000.0,
+       "failure_allowance_N": [
+        5500.0,
+        5500.0,
+        4000.0,
+        4000.0
+       ],
+       "hold_s": 1.0,
+       "hold_std_ddof": 1,
+       "max_hold_std_N": 500.0,
+       "max_hold_std_per_leg_N": [
+        730.0,
+        730.0,
+        530.0,
+        530.0
+       ],
+       "mode": "airborne_roundtrip",
+       "move_m": 0.003,
+       "move_timeout_factor": 3.0,
+       "plausible_offset_N": [
+        7000.0,
+        7000.0,
+        6000.0,
+        6000.0
+       ],
+       "recalibration_temperature_change_K": 15.0,
+       "return_timeout_tolerance_m": 0.0005,
+       "speed_fraction": 0.25
+      }
+     },
+     "full_config_sha256": "7e4e8e8cd002e6d5601d25c60133e72fcb9de1c261cf9197e69e3922e409e4e7"
+    },
+    "keys_file": {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\b2_keys.txt",
+     "n_keys": 167,
+     "sha256": "7042589006c3750fd7bb719e362edfb2dc3deee1befba5c5bd6a109cadd2f1e5"
+    },
+    "rod_fault_plan": {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\b2_plan.json",
+     "sha256": "f85f81b5bd2e6bd6d8fefa16f64f1246c4121b517261fc4feeb9ebea1a3777a4",
+     "n_faults": 167,
+     "schema": "r79_rod_fault_plan/1"
+    }
+   }
+  }
+ },
+ "detail": {
+  "L2|g6|52|ref|J1|top|Fs0": {
+   "b1": {
+    "key": "cand=current#L2|s40|g6|52|ref|J1|top|Fs0",
+    "t_ready": null,
+    "base": {
+     "t_ready_s": null,
+     "pass": false,
+     "final_phase": "level"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "late_loc_revoked",
+     "level",
+     "loc_delay_s",
+     "loc_revokes",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_final_s",
+     "t_loc_first_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "65bde6acfdc8a27b453969ddf181e8230d8472975c2a726bf5af29bc36b09f43",
+     "fault_id": "12b-b1-s40-r044-RL-tau_C",
+     "leg": "RL",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "phase_exit:CHECK",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 101,
+     "armed_t_s": 10.200000000000975,
+     "first_applied_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 2400,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "3a5919f2240378c936c0d3c02bbfce19c86c1d2eacd6af55f2c62931ccb7c579",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 2400,
+      "n_finite": 2400,
+      "first_N": 37243.58086575,
+      "min_N": 33159.51042075,
+      "max_N": 41618.248630875
+     },
+     "reads": 2501,
+     "updates": 2501
+    },
+    "commands_sha256": "d8ffb27c6a1bdd419283626e8ea34f8cb1903271f27010958629beb44671770a",
+    "events_head": [
+     [
+      10.2,
+      "WARN_ROD_PRESSURE_FALLBACK:RL"
+     ],
+     [
+      10.2,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+     ],
+     [
+      30.1,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      30.1,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      31.2,
+      "floor_estimate_touch"
+     ],
+     [
+      31.2,
+      "INFO_TOUCH_TWIST_HOLD:0.067"
+     ],
+     [
+      31.4,
+      "INFO_LIFT_PAUSED:RL"
+     ],
+     [
+      34.1,
+      "soil_mode_start"
+     ],
+     [
+      39.6,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      39.6,
+      "INFO_CLEARANCE_BIAS:FL=51.4,FR=54.4,RL=64.1,RR=67.1"
+     ],
+     [
+      39.6,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      39.7,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      40.0,
+      "INFO_LOC_REVOKED:2.2"
+     ],
+     [
+      40.1,
+      "soil_mode_start"
+     ],
+     [
+      40.6,
+      "INFO_DIFF_SINK_HOLD:FL,RL:6.3"
+     ],
+     [
+      40.9,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      40.9,
+      "INFO_CLEARANCE_BIAS:FL=64.7,FR=53.0,RL=76.3,RR=64.6"
+     ],
+     [
+      42.4,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "vbk0_ready_unreached"
+   },
+   "b2": {
+    "key": "cand=current#L2|s41|g6|52|ref|J1|top|Fs0",
+    "t_ready": 92.30000000025869,
+    "base": {
+     "t_ready_s": 92.30000000025869,
+     "pass": true,
+     "final_phase": "ready"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "late_loc_revoked",
+     "level",
+     "loc_delay_s",
+     "loc_revokes",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_final_s",
+     "t_loc_first_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "f85f81b5bd2e6bd6d8fefa16f64f1246c4121b517261fc4feeb9ebea1a3777a4",
+     "fault_id": "12b-b2-s41-r044-RL-tau_C",
+     "leg": "RL",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "phase_exit:CHECK",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 101,
+     "armed_t_s": 10.200000000000975,
+     "first_applied_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 922,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "26b6b4a87194e1e666ac8f8a4b91d5431920415bb371f5e5d9a196e2193c0599",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 922,
+      "n_finite": 922,
+      "first_N": 36528.868537875,
+      "min_N": 32295.572442,
+      "max_N": 41021.346027375
+     },
+     "reads": 1023,
+     "updates": 1023
+    },
+    "commands_sha256": "cc487681273aaf3e5f22b84570f23c6252e14d3f1813b3a1a98b2289fe9eaaf9",
+    "events_head": [
+     [
+      10.2,
+      "WARN_ROD_PRESSURE_FALLBACK:RL"
+     ],
+     [
+      10.2,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+     ],
+     [
+      30.1,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      30.1,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      31.2,
+      "floor_estimate_touch"
+     ],
+     [
+      31.2,
+      "INFO_TOUCH_TWIST_HOLD:0.057"
+     ],
+     [
+      31.4,
+      "INFO_LIFT_PAUSED:RL"
+     ],
+     [
+      34.2,
+      "soil_mode_start"
+     ],
+     [
+      39.7,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      39.7,
+      "INFO_CLEARANCE_BIAS:FL=51.4,FR=53.5,RL=63.4,RR=65.4"
+     ],
+     [
+      39.7,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      39.8,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      40.0,
+      "INFO_LOC_REVOKED:2.6"
+     ],
+     [
+      40.1,
+      "soil_mode_start"
+     ],
+     [
+      40.7,
+      "INFO_DIFF_SINK_HOLD:FL,RL:6.5"
+     ],
+     [
+      40.9,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      40.9,
+      "INFO_CLEARANCE_BIAS:FL=63.1,FR=54.3,RL=75.1,RR=66.4"
+     ],
+     [
+      42.5,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      92.3,
+      "reanchor_skipped:disabled"
+     ],
+     [
+      92.3,
+      "ready_heave_tail"
+     ],
+     [
+      92.6,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "opportunity"
+   },
+   "b1_t4h": {
+    "t4h_file": "cand_current_L2_s40_g6_52_ref_J1_top_Fs0.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 2501,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      211
+     ],
+     [
+      311,
+      "level",
+      2190
+     ]
+    ],
+    "n_phase_runs": 3,
+    "event_name_counts": {
+     "[4.400000000000281, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[10.200000000000975, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[10.200000000000975, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[30.0999999999752, 'INFO_TOUCH_DIP_HELD": 2,
+     "[31.199999999972636, 'floor_estimate_touch']": 1,
+     "[31.199999999972636, 'INFO_TOUCH_TWIST_HOLD": 1,
+     "[31.39999999997217, 'INFO_LIFT_PAUSED": 1,
+     "[34.099999999980795, 'soil_mode_start']": 1,
+     "[39.60000000000706, 'crawler_liftoff_confirmed']": 1,
+     "[39.60000000000706, 'INFO_CLEARANCE_BIAS": 1,
+     "[39.60000000000706, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[39.700000000007535, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[40.00000000000897, 'INFO_LOC_REVOKED": 1,
+     "[40.100000000009445, 'soil_mode_start']": 1,
+     "[40.60000000001183, 'INFO_DIFF_SINK_HOLD": 1,
+     "[40.900000000013264, 'crawler_liftoff_confirmed']": 1,
+     "[40.900000000013264, 'INFO_CLEARANCE_BIAS": 1,
+     "[42.40000000002043, 'INFO_DIFF_SINK_RELEASE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 101
+   },
+   "b2_t4h": {
+    "t4h_file": "cand_current_L2_s41_g6_52_ref_J1_top_Fs0.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 1023,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      211
+     ],
+     [
+      311,
+      "level",
+      313
+     ],
+     [
+      624,
+      "done",
+      1
+     ],
+     [
+      625,
+      "probe",
+      37
+     ],
+     [
+      662,
+      "level",
+      140
+     ],
+     [
+      802,
+      "done",
+      1
+     ],
+     [
+      803,
+      "probe",
+      119
+     ],
+     [
+      922,
+      "ready",
+      101
+     ]
+    ],
+    "n_phase_runs": 9,
+    "event_name_counts": {
+     "[4.300000000000336, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[10.200000000000975, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[10.200000000000975, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[30.0999999999752, 'INFO_TOUCH_DIP_HELD": 2,
+     "[31.199999999972636, 'floor_estimate_touch']": 1,
+     "[31.199999999972636, 'INFO_TOUCH_TWIST_HOLD": 1,
+     "[31.39999999997217, 'INFO_LIFT_PAUSED": 1,
+     "[34.19999999998127, 'soil_mode_start']": 1,
+     "[39.700000000007535, 'crawler_liftoff_confirmed']": 1,
+     "[39.700000000007535, 'INFO_CLEARANCE_BIAS": 1,
+     "[39.700000000007535, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[39.80000000000801, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[40.00000000000897, 'INFO_LOC_REVOKED": 1,
+     "[40.100000000009445, 'soil_mode_start']": 1,
+     "[40.70000000001231, 'INFO_DIFF_SINK_HOLD": 1,
+     "[40.900000000013264, 'crawler_liftoff_confirmed']": 1,
+     "[40.900000000013264, 'INFO_CLEARANCE_BIAS": 1,
+     "[42.500000000020904, 'INFO_DIFF_SINK_RELEASE": 1,
+     "[92.30000000025869, 'reanchor_skipped": 1,
+     "[92.30000000025869, 'ready_heave_tail']": 1,
+     "[92.60000000026012, 'INFO_D1_IMU_MASS_SOURCE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 101
+   }
+  },
+  "L2|g6|59|ref|J2|bottom|Fs4": {
+   "b1": {
+    "key": "cand=current#L2|s40|g6|59|ref|J2|bottom|Fs4",
+    "t_ready": null,
+    "base": {
+     "t_ready_s": null,
+     "pass": false,
+     "final_phase": "level"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "level",
+     "loc_delay_s",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "65bde6acfdc8a27b453969ddf181e8230d8472975c2a726bf5af29bc36b09f43",
+     "fault_id": "12b-b1-s40-r051-FR-tau_R",
+     "leg": "FR",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "retract_start_after:LEVEL",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 1097,
+     "armed_t_s": 109.80000000034225,
+     "first_applied_read": 1098,
+     "first_applied_t_s": 109.90000000034273,
+     "applied_periods": 1403,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 109.9,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "d3467a5e7336027390c95e7f840d2041118c88981d2e6091c452fb31fba89c20",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 1403,
+      "n_finite": 1403,
+      "first_N": 39565.2178341,
+      "min_N": 39235.35060585,
+      "max_N": 39791.4125049
+     },
+     "reads": 2501,
+     "updates": 2501
+    },
+    "commands_sha256": "8e8136440f3574dfc129ccf8ecf4eabc5e65621fdb1c809a96bdb220e40c1ee7",
+    "events_head": [
+     [
+      31.1,
+      "floor_estimate_touch"
+     ],
+     [
+      32.7,
+      "soil_mode_start"
+     ],
+     [
+      44.5,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      44.5,
+      "INFO_CLEARANCE_BIAS:FL=83.8,FR=80.3,RL=98.3,RR=94.9"
+     ],
+     [
+      44.5,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      44.6,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      45.5,
+      "INFO_DIFF_SINK_HOLD:FL,RL:3.2"
+     ],
+     [
+      50.9,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      109.9,
+      "WARN_ROD_PRESSURE_FALLBACK:FR"
+     ],
+     [
+      109.9,
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "vbk0_ready_unreached"
+   },
+   "b2": {
+    "key": "cand=current#L2|s41|g6|59|ref|J2|bottom|Fs4",
+    "t_ready": 80.00000000019996,
+    "base": {
+     "t_ready_s": 80.00000000019996,
+     "pass": true,
+     "final_phase": "ready"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "level",
+     "loc_delay_s",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "f85f81b5bd2e6bd6d8fefa16f64f1246c4121b517261fc4feeb9ebea1a3777a4",
+     "fault_id": "12b-b2-s41-r051-FR-tau_R",
+     "leg": "FR",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "retract_start_after:LEVEL",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 504,
+     "armed_t_s": 50.5000000000591,
+     "first_applied_read": 505,
+     "first_applied_t_s": 50.60000000005958,
+     "applied_periods": 395,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 50.6,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "6488b4c18fcc107b578407c7e9dd848a4e88b761ae0b61358b44905de4835112",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 395,
+      "n_finite": 395,
+      "first_N": 39452.1204987,
+      "min_N": 39103.403714550004,
+      "max_N": 50290.6151412
+     },
+     "reads": 900,
+     "updates": 900
+    },
+    "commands_sha256": "bbbac09b1b7a4e3461e1fffdd96c1ce134f61b3079b99a0c711c1d779b5982b0",
+    "events_head": [
+     [
+      31.1,
+      "floor_estimate_touch"
+     ],
+     [
+      32.7,
+      "soil_mode_start"
+     ],
+     [
+      44.9,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      44.9,
+      "INFO_CLEARANCE_BIAS:FL=85.9,FR=79.3,RL=100.0,RR=93.4"
+     ],
+     [
+      44.9,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      45.0,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      50.6,
+      "WARN_ROD_PRESSURE_FALLBACK:FR"
+     ],
+     [
+      50.6,
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+     ],
+     [
+      80.0,
+      "reanchor_skipped:disabled"
+     ],
+     [
+      80.0,
+      "ready_heave_tail"
+     ],
+     [
+      80.3,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "opportunity"
+   },
+   "b1_t4h": {
+    "t4h_file": "cand_current_L2_s40_g6_59_ref_J2_bottom_Fs4.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 2501,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      210
+     ],
+     [
+      310,
+      "level",
+      2191
+     ]
+    ],
+    "n_phase_runs": 3,
+    "event_name_counts": {
+     "[4.60000000000017, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[31.09999999997287, 'floor_estimate_touch']": 1,
+     "[32.69999999997411, 'soil_mode_start']": 1,
+     "[44.500000000030454, 'crawler_liftoff_confirmed']": 1,
+     "[44.500000000030454, 'INFO_CLEARANCE_BIAS": 1,
+     "[44.500000000030454, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[44.60000000003093, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[45.50000000003523, 'INFO_DIFF_SINK_HOLD": 1,
+     "[50.90000000006101, 'INFO_DIFF_SINK_RELEASE": 1,
+     "[109.90000000034273, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[109.90000000034273, 'INFO_ROD_PRESSURE_FAULT_REASON": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 1098
+   },
+   "b2_t4h": {
+    "t4h_file": "cand_current_L2_s41_g6_59_ref_J2_bottom_Fs4.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 900,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      210
+     ],
+     [
+      310,
+      "level",
+      369
+     ],
+     [
+      679,
+      "done",
+      1
+     ],
+     [
+      680,
+      "probe",
+      119
+     ],
+     [
+      799,
+      "ready",
+      101
+     ]
+    ],
+    "n_phase_runs": 6,
+    "event_name_counts": {
+     "[4.200000000000392, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[31.09999999997287, 'floor_estimate_touch']": 1,
+     "[32.69999999997411, 'soil_mode_start']": 1,
+     "[44.900000000032364, 'crawler_liftoff_confirmed']": 1,
+     "[44.900000000032364, 'INFO_CLEARANCE_BIAS": 1,
+     "[44.900000000032364, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[45.00000000003284, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[50.60000000005958, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[50.60000000005958, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[80.00000000019996, 'reanchor_skipped": 1,
+     "[80.00000000019996, 'ready_heave_tail']": 1,
+     "[80.3000000002014, 'INFO_D1_IMU_MASS_SOURCE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 505
+   }
+  },
+  "L2|g6|61|ref|S1|top|Fs4": {
+   "b1": {
+    "key": "cand=current#L2|s40|g6|61|ref|S1|top|Fs4",
+    "t_ready": 149.49999999992073,
+    "base": {
+     "t_ready_s": 149.49999999992073,
+     "pass": true,
+     "final_phase": "ready"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "level",
+     "loc_delay_s",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "65bde6acfdc8a27b453969ddf181e8230d8472975c2a726bf5af29bc36b09f43",
+     "fault_id": "12b-b1-s40-r053-RL-tau_R",
+     "leg": "RL",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "retract_start_after:LEVEL",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 1362,
+     "armed_t_s": 136.30000000023287,
+     "first_applied_read": 1363,
+     "first_applied_t_s": 136.4000000002305,
+     "applied_periods": 232,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 136.4,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "7ec5f8c23b48ab9efda2a5c6e4d87c01a87a05c293f06396db39bfaef7387f7f",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 232,
+      "n_finite": 232,
+      "first_N": 40699.332780749995,
+      "min_N": 32774.665321125,
+      "max_N": 40809.2885235
+     },
+     "reads": 1595,
+     "updates": 1595
+    },
+    "commands_sha256": "03e88e27e074a2efc22827fdc31a3370043a93f0ca89e30ef0caadddf11b4545",
+    "events_head": [
+     [
+      33.8,
+      "floor_estimate_touch"
+     ],
+     [
+      36.2,
+      "soil_mode_start"
+     ],
+     [
+      48.4,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      48.4,
+      "INFO_CLEARANCE_BIAS:FL=77.1,FR=75.8,RL=119.1,RR=117.9"
+     ],
+     [
+      48.4,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      48.5,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      136.4,
+      "WARN_ROD_PRESSURE_FALLBACK:RL"
+     ],
+     [
+      136.4,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+     ],
+     [
+      149.5,
+      "reanchor_skipped:disabled"
+     ],
+     [
+      149.5,
+      "ready_heave_tail"
+     ],
+     [
+      149.8,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "opportunity"
+   },
+   "b2": {
+    "key": "cand=current#L2|s41|g6|61|ref|S1|top|Fs4",
+    "t_ready": 196.59999999880696,
+    "base": {
+     "t_ready_s": 196.59999999880696,
+     "pass": true,
+     "final_phase": "ready"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "level",
+     "loc_delay_s",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "f85f81b5bd2e6bd6d8fefa16f64f1246c4121b517261fc4feeb9ebea1a3777a4",
+     "fault_id": "12b-b2-s41-r053-RL-tau_R",
+     "leg": "RL",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "retract_start_after:LEVEL",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 670,
+     "armed_t_s": 67.10000000013837,
+     "first_applied_read": 671,
+     "first_applied_t_s": 67.20000000013884,
+     "applied_periods": 1395,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 67.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "6a1f57e83611ddfa61c2224547aa30c3b5907d9a9813c346c1d7f2b15acc900c",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 1395,
+      "n_finite": 1395,
+      "first_N": 33010.284769875,
+      "min_N": 32664.709578374997,
+      "max_N": 40597.231019625
+     },
+     "reads": 2066,
+     "updates": 2066
+    },
+    "commands_sha256": "d5a790f1621baac345c8d4027ecd7fb22e3be494126f1319f09cee21bbbc8141",
+    "events_head": [
+     [
+      33.8,
+      "floor_estimate_touch"
+     ],
+     [
+      36.2,
+      "soil_mode_start"
+     ],
+     [
+      48.3,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      48.3,
+      "INFO_CLEARANCE_BIAS:FL=75.7,FR=75.1,RL=118.8,RR=118.2"
+     ],
+     [
+      48.3,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      48.4,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      67.2,
+      "WARN_ROD_PRESSURE_FALLBACK:RL"
+     ],
+     [
+      67.2,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+     ],
+     [
+      196.6,
+      "reanchor_skipped:disabled"
+     ],
+     [
+      196.6,
+      "ready_heave_tail"
+     ],
+     [
+      196.9,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "opportunity"
+   },
+   "b1_t4h": {
+    "t4h_file": "cand_current_L2_s40_g6_61_ref_S1_top_Fs4.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 1595,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      237
+     ],
+     [
+      337,
+      "level",
+      1037
+     ],
+     [
+      1374,
+      "done",
+      1
+     ],
+     [
+      1375,
+      "probe",
+      119
+     ],
+     [
+      1494,
+      "ready",
+      101
+     ]
+    ],
+    "n_phase_runs": 6,
+    "event_name_counts": {
+     "[4.60000000000017, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[33.79999999997936, 'floor_estimate_touch']": 1,
+     "[36.19999999999082, 'soil_mode_start']": 1,
+     "[48.400000000049076, 'crawler_liftoff_confirmed']": 1,
+     "[48.400000000049076, 'INFO_CLEARANCE_BIAS": 1,
+     "[48.400000000049076, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[48.50000000004955, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[136.4000000002305, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[136.4000000002305, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[149.49999999992073, 'reanchor_skipped": 1,
+     "[149.49999999992073, 'ready_heave_tail']": 1,
+     "[149.79999999991364, 'INFO_D1_IMU_MASS_SOURCE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 1363
+   },
+   "b2_t4h": {
+    "t4h_file": "cand_current_L2_s41_g6_61_ref_S1_top_Fs4.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 2066,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      237
+     ],
+     [
+      337,
+      "level",
+      1508
+     ],
+     [
+      1845,
+      "done",
+      1
+     ],
+     [
+      1846,
+      "probe",
+      119
+     ],
+     [
+      1965,
+      "ready",
+      101
+     ]
+    ],
+    "n_phase_runs": 6,
+    "event_name_counts": {
+     "[4.400000000000281, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[33.79999999997936, 'floor_estimate_touch']": 1,
+     "[36.19999999999082, 'soil_mode_start']": 1,
+     "[48.3000000000486, 'crawler_liftoff_confirmed']": 1,
+     "[48.3000000000486, 'INFO_CLEARANCE_BIAS": 1,
+     "[48.3000000000486, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[48.400000000049076, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[67.20000000013884, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[67.20000000013884, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[196.59999999880696, 'reanchor_skipped": 1,
+     "[196.59999999880696, 'ready_heave_tail']": 1,
+     "[196.89999999879987, 'INFO_D1_IMU_MASS_SOURCE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 671
+   }
+  },
+  "L2|ref|16|J1|B|0,0": {
+   "b1": {
+    "key": "cand=current#L2|s40|ref|16|J1|B|0,0",
+    "t_ready": 100.80000000029928,
+    "base": {
+     "t_ready_s": 100.80000000029928,
+     "pass": true,
+     "final_phase": "ready"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "level",
+     "loc_delay_s",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "65bde6acfdc8a27b453969ddf181e8230d8472975c2a726bf5af29bc36b09f43",
+     "fault_id": "12b-b1-s40-r164-RL-tau_C",
+     "leg": "RL",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "phase_exit:CHECK",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 101,
+     "armed_t_s": 10.200000000000975,
+     "first_applied_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 1007,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "f5067c2547d2c6c332002786a3826b74e42cf93456c9c88a75c04c9410a9ca32",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 1007,
+      "n_finite": 1007,
+      "first_N": 40840.70445,
+      "min_N": 33583.625428499996,
+      "max_N": 41602.540667625
+     },
+     "reads": 1108,
+     "updates": 1108
+    },
+    "commands_sha256": "b21e16b0b21d0716e8f5dc1295d521cb5ce1a934c0a8a7eb5602ee23983950f8",
+    "events_head": [
+     [
+      10.2,
+      "WARN_ROD_PRESSURE_FALLBACK:RL"
+     ],
+     [
+      10.2,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+     ],
+     [
+      30.4,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      30.4,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      30.7,
+      "INFO_TOUCH_DIP_HELD:FL"
+     ],
+     [
+      30.7,
+      "INFO_TOUCH_DIP_HELD:FR"
+     ],
+     [
+      31.2,
+      "floor_estimate_touch"
+     ],
+     [
+      31.2,
+      "INFO_TOUCH_TWIST_HOLD:0.072"
+     ],
+     [
+      32.9,
+      "soil_mode_start"
+     ],
+     [
+      38.5,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      38.5,
+      "INFO_CLEARANCE_BIAS:FL=52.0,FR=53.8,RL=64.2,RR=66.0"
+     ],
+     [
+      38.5,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      38.6,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      39.5,
+      "INFO_DIFF_SINK_HOLD:FL,RL:5.5"
+     ],
+     [
+      42.3,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      100.8,
+      "reanchor_skipped:disabled"
+     ],
+     [
+      100.8,
+      "ready_heave_tail"
+     ],
+     [
+      101.1,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "opportunity"
+   },
+   "b2": {
+    "key": "cand=current#L2|s41|ref|16|J1|B|0,0",
+    "t_ready": null,
+    "base": {
+     "t_ready_s": null,
+     "pass": false,
+     "final_phase": "level"
+    },
+    "base_keys": [
+     "D8_margin_kN",
+     "anchor_applied",
+     "anchor_events",
+     "att_end_deg",
+     "att_max_after_off_deg",
+     "base",
+     "c_min_tP_mm",
+     "clear_est_end_mm",
+     "commands_sha256",
+     "corner_bias_mm",
+     "crawler_N_max_after_ready",
+     "crawler_recontact",
+     "events_head",
+     "final_phase",
+     "flags",
+     "fs_kN",
+     "gates",
+     "guard_events",
+     "info_counts",
+     "key",
+     "late_loc_reapproach",
+     "late_loc_revoked",
+     "level",
+     "loc_delay_s",
+     "loc_revokes",
+     "max_motor_stroke_mm",
+     "min_true_Fcyl_after_off_kN",
+     "n_probe_rounds",
+     "n_reapproach",
+     "n_relevel",
+     "n_warn",
+     "pass",
+     "phase_path",
+     "pre_loc_events",
+     "preloc_flag_ok",
+     "preloc_starts",
+     "rut_clear_end_mm",
+     "rut_clear_ready_mm",
+     "settle",
+     "settle_hook",
+     "sink_final_mm",
+     "sink_rate_max_mm_s",
+     "soil",
+     "t_P_s",
+     "t_done_s",
+     "t_loc_final_s",
+     "t_loc_first_s",
+     "t_loc_s",
+     "t_off_s",
+     "t_ready_s",
+     "twist_unsettled_D_kN",
+     "wall_s",
+     "warnings",
+     "weak_leg",
+     "weak_leg_events"
+    ],
+    "rod_fault": {
+     "plan_sha256": "f85f81b5bd2e6bd6d8fefa16f64f1246c4121b517261fc4feeb9ebea1a3777a4",
+     "fault_id": "12b-b2-s41-r164-RL-tau_C",
+     "leg": "RL",
+     "kind": "STUCK",
+     "value": -100.0,
+     "value_unit": "bar",
+     "anchor": "phase_exit:CHECK",
+     "delay_reads": 0,
+     "hold_speed_m_s": 0.000209243016,
+     "hold_speed_source": "outrigger_sim.control.extend_start_bound.HOLD_SPEED_RATIO x YAML actuator.max_speed_m_s (outrigger_sim.params.load_params)",
+     "is_armed": true,
+     "trigger_read": 101,
+     "armed_t_s": 10.200000000000975,
+     "first_applied_read": 101,
+     "first_applied_t_s": 10.200000000000975,
+     "applied_periods": 2400,
+     "latched": {
+      "is_latched": true,
+      "reason": "D1",
+      "t_s": 10.2,
+      "reads_after_first": 0,
+      "is_same_read_d1": true
+     },
+     "pre_trigger_commands_sha256": "66e2dcf51dc0ed3098c69ea8ee87e457a2e26a5c7db0b99d0f7ace8838601829",
+     "pre_trigger_fallback": false,
+     "pre_trigger_fallback_events": [],
+     "rod_fault_sum_offset_N": {
+      "rule": "change of the four-leg net-force sum (two_pressure._net_sum_N) on the fault leg: -A_ann (p_fault - p_rod before the fault), per faulty read",
+      "n_reads": 2400,
+      "n_finite": 2400,
+      "first_N": 40377.319534124996,
+      "min_N": 33175.218384,
+      "max_N": 41241.257512874996
+     },
+     "reads": 2501,
+     "updates": 2501
+    },
+    "commands_sha256": "2dd47232d101c25b8c236084e8549a9a133132e1a53df3f0e834a529f947b9c4",
+    "events_head": [
+     [
+      10.2,
+      "WARN_ROD_PRESSURE_FALLBACK:RL"
+     ],
+     [
+      10.2,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+     ],
+     [
+      30.4,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      30.4,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      30.7,
+      "INFO_TOUCH_DIP_HELD:FR"
+     ],
+     [
+      31.3,
+      "floor_estimate_touch"
+     ],
+     [
+      31.3,
+      "INFO_TOUCH_TWIST_HOLD:-0.635"
+     ],
+     [
+      32.9,
+      "soil_mode_start"
+     ],
+     [
+      38.5,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      38.5,
+      "INFO_CLEARANCE_BIAS:FL=51.9,FR=53.6,RL=63.9,RR=65.6"
+     ],
+     [
+      38.5,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      38.6,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      39.5,
+      "INFO_DIFF_SINK_HOLD:FL,RL:6.0"
+     ],
+     [
+      39.7,
+      "INFO_LOC_REVOKED:2.1"
+     ],
+     [
+      39.8,
+      "soil_mode_start"
+     ],
+     [
+      40.6,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      40.6,
+      "INFO_CLEARANCE_BIAS:FL=79.1,FR=64.2,RL=91.5,RR=76.6"
+     ],
+     [
+      41.7,
+      "INFO_DIFF_SINK_RELEASE:reversed"
+     ]
+    ],
+    "warn_fault": null,
+    "category": "vbk0_ready_unreached"
+   },
+   "b1_t4h": {
+    "t4h_file": "cand_current_L2_s40_ref_16_J1_B_0_0.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 1108,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      211
+     ],
+     [
+      311,
+      "level",
+      576
+     ],
+     [
+      887,
+      "done",
+      1
+     ],
+     [
+      888,
+      "probe",
+      119
+     ],
+     [
+      1007,
+      "ready",
+      101
+     ]
+    ],
+    "n_phase_runs": 6,
+    "event_name_counts": {
+     "[4.300000000000336, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[10.200000000000975, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[10.200000000000975, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[30.3999999999745, 'INFO_TOUCH_DIP_HELD": 2,
+     "[30.6999999999738, 'INFO_TOUCH_DIP_HELD": 2,
+     "[31.199999999972636, 'floor_estimate_touch']": 1,
+     "[31.199999999972636, 'INFO_TOUCH_TWIST_HOLD": 1,
+     "[32.899999999975066, 'soil_mode_start']": 1,
+     "[38.500000000001805, 'crawler_liftoff_confirmed']": 1,
+     "[38.500000000001805, 'INFO_CLEARANCE_BIAS": 1,
+     "[38.500000000001805, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[38.60000000000228, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[39.50000000000658, 'INFO_DIFF_SINK_HOLD": 1,
+     "[42.30000000001995, 'INFO_DIFF_SINK_RELEASE": 1,
+     "[100.80000000029928, 'reanchor_skipped": 1,
+     "[100.80000000029928, 'ready_heave_tail']": 1,
+     "[101.10000000030071, 'INFO_D1_IMU_MASS_SOURCE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 101
+   },
+   "b2_t4h": {
+    "t4h_file": "cand_current_L2_s41_ref_16_J1_B_0_0.npz",
+    "arrays": [
+     "t_s",
+     "head_pressure_Pa",
+     "rod_pressure_Pa",
+     "motor_stroke_m",
+     "command_m_s",
+     "phase",
+     "seal_band_N",
+     "true_force_N",
+     "true_force_min_N",
+     "locked",
+     "lock_events",
+     "meta_json",
+     "lower_reading_N",
+     "lower_estimate_N",
+     "rod_pressure_pre_fault_Pa",
+     "rod_fault_applied"
+    ],
+    "n_updates": 2501,
+    "phase_runs": [
+     [
+      0,
+      "check",
+      100
+     ],
+     [
+      100,
+      "touch",
+      212
+     ],
+     [
+      312,
+      "level",
+      2189
+     ]
+    ],
+    "n_phase_runs": 3,
+    "event_name_counts": {
+     "[4.500000000000226, 'INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "[10.200000000000975, 'WARN_ROD_PRESSURE_FALLBACK": 1,
+     "[10.200000000000975, 'INFO_ROD_PRESSURE_FAULT_REASON": 1,
+     "[30.3999999999745, 'INFO_TOUCH_DIP_HELD": 2,
+     "[30.6999999999738, 'INFO_TOUCH_DIP_HELD": 1,
+     "[31.299999999972403, 'floor_estimate_touch']": 1,
+     "[31.299999999972403, 'INFO_TOUCH_TWIST_HOLD": 1,
+     "[32.899999999975066, 'soil_mode_start']": 1,
+     "[38.500000000001805, 'crawler_liftoff_confirmed']": 1,
+     "[38.500000000001805, 'INFO_CLEARANCE_BIAS": 1,
+     "[38.500000000001805, 'INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "[38.60000000000228, 'INFO_D1_IMU_MASS_SOURCE": 1,
+     "[39.50000000000658, 'INFO_DIFF_SINK_HOLD": 1,
+     "[39.700000000007535, 'INFO_LOC_REVOKED": 1,
+     "[39.80000000000801, 'soil_mode_start']": 1,
+     "[40.60000000001183, 'crawler_liftoff_confirmed']": 1,
+     "[40.60000000001183, 'INFO_CLEARANCE_BIAS": 1,
+     "[41.700000000017084, 'INFO_DIFF_SINK_RELEASE": 1
+    },
+    "fault_events": [],
+    "first_applied_update": 101
+   }
+  }
+ },
+ "category_pair_table": {
+  "opportunity|opportunity": 162,
+  "vbk0_ready_unreached|opportunity": 2,
+  "vbk0_ready_unreached|vbk0_ready_unreached": 2,
+  "opportunity|vbk0_ready_unreached": 1
+ }
+}

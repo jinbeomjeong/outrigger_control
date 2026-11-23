@@ -1,0 +1,236 @@
+{
+ "judge_module": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5\\04_scripts\\04_hydraulic\\coupled\\jp3_12b_judge.py",
+ "fault_floor": {
+  "pairs": 167,
+  "parse_mismatch_own_vs_judge": [],
+  "lines_with_any_fault_pair": {
+   "b1": 0,
+   "b2": 0
+  },
+  "fault_pair_counts_all_lines": {},
+  "b2_new_pairs": 0,
+  "b1_new_pairs": 0,
+  "either_direction_pairs": 0,
+  "b2_new": {},
+  "b1_new": {}
+ },
+ "n23_aa_analogue": {
+  "base_b1_other_b2": {
+   "n_ready_loss": 1,
+   "n_ready_plus30": 1,
+   "n23": 2,
+   "keys": [
+    "L2|g6|61|ref|S1|top|Fs4",
+    "L2|ref|16|J1|B|0,0"
+   ],
+   "both_missing_excluded": 2
+  },
+  "base_b2_other_b1": {
+   "n_ready_loss": 2,
+   "n_ready_plus30": 0,
+   "n23": 2,
+   "keys": [
+    "L2|g6|52|ref|J1|top|Fs0",
+    "L2|g6|59|ref|J2|bottom|Fs4"
+   ],
+   "both_missing_excluded": 2
+  }
+ },
+ "signature_12b_vbk0_no_ready": {
+  "b1:L2|g6|52|ref|J1|top|Fs0": {
+   "is_signature": true,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": true
+   },
+   "last_t_s": 250.1,
+   "last_phase": "level",
+   "span_mm": [
+    0.513,
+    0.397,
+    0.553,
+    0.547
+   ],
+   "n_window_reads": 201
+  },
+  "b1:L2|g6|56|ref|J2|top|Fs0": {
+   "is_signature": true,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": true
+   },
+   "last_t_s": 250.1,
+   "last_phase": "level",
+   "span_mm": [
+    0.618,
+    0.483,
+    0.496,
+    0.557
+   ],
+   "n_window_reads": 201
+  },
+  "b1:L2|g6|59|ref|J2|bottom|Fs4": {
+   "is_signature": true,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": true
+   },
+   "last_t_s": 250.1,
+   "last_phase": "level",
+   "span_mm": [
+    0.622,
+    0.533,
+    0.631,
+    0.538
+   ],
+   "n_window_reads": 201
+  },
+  "b1:L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+   "is_signature": false,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": false
+   },
+   "last_t_s": 180.1,
+   "last_phase": "level",
+   "span_mm": [
+    2.662,
+    0.646,
+    0.459,
+    0.581
+   ],
+   "n_window_reads": 201
+  },
+  "b2:L2|g6|56|ref|J2|top|Fs0": {
+   "is_signature": true,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": true
+   },
+   "last_t_s": 250.1,
+   "last_phase": "level",
+   "span_mm": [
+    0.54,
+    0.536,
+    0.603,
+    0.602
+   ],
+   "n_window_reads": 201
+  },
+  "b2:L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+   "is_signature": false,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": false
+   },
+   "last_t_s": 180.1,
+   "last_phase": "probe",
+   "span_mm": [
+    2.96,
+    2.38,
+    2.721,
+    2.341
+   ],
+   "n_window_reads": 201
+  },
+  "b2:L2|ref|16|J1|B|0,0": {
+   "is_signature": true,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": true
+   },
+   "last_t_s": 250.1,
+   "last_phase": "level",
+   "span_mm": [
+    0.656,
+    0.513,
+    0.537,
+    0.556
+   ],
+   "n_window_reads": 201
+  }
+ },
+ "signature_12b_vbk0_counts": {
+  "b1": 3,
+  "b2": 2
+ },
+ "signature_false_on_ready_lines": 0,
+ "signature_cdry_vbk0_no_ready": {
+  "c92:L2|g6|52|ref|J1|top|Fs0": {
+   "is_signature": true,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": true
+   },
+   "last_t_s": 250.1,
+   "last_phase": "level",
+   "span_mm": [
+    0.638,
+    0.537,
+    0.515,
+    0.609
+   ],
+   "n_window_reads": 201
+  },
+  "c93:L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+   "is_signature": false,
+   "parts": {
+    "ready_missing": true,
+    "no_fault_phase_entry": true,
+    "last_phase_level_or_probe": true,
+    "stroke_span_below_1mm": false
+   },
+   "last_t_s": 180.1,
+   "last_phase": "level",
+   "span_mm": [
+    3.256,
+    0.572,
+    1.488,
+    2.095
+   ],
+   "n_window_reads": 201
+  }
+ },
+ "cdry_vbk0_fault_lines": {
+  "lines": 160,
+  "with_fault_pair": 0
+ },
+ "fault_false_fail_bound": {
+  "vbk0_rod_fault_lines": 494,
+  "lines_with_fault_pair": 0,
+  "p_line_upper95_one_sided": 0.006045885008623686,
+  "judged_pairs_b1_b2": 334,
+  "bounds": {
+   "c_point_0.127": {
+    "lambda_upper": 0.25561083454181155,
+    "P1_upper": 0.22555670326435306
+   },
+   "c_cp95_0.189": {
+    "lambda_upper": 0.38106189963990267,
+    "P1_upper": 0.31686439753666384
+   },
+   "c_1": {
+    "lambda_upper": 2.0193255928803113,
+    "P1_upper": 0.8672550409554712
+   }
+  },
+  "note": "record only; point estimate 0"
+ },
+ "signature_arrays_missing": []
+}

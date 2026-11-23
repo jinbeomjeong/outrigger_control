@@ -1,0 +1,4557 @@
+{
+ "L2|g6|52|ref|J1|top|Fs0": {
+  "b1": {
+   "t_first_level": 31.2,
+   "t_end": 250.1,
+   "u_shape": [
+    2501,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.2,
+      51.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      144.22,
+      129.9,
+      176.29,
+      163.33
+     ],
+     "true_force_min_kN": [
+      33.3,
+      33.1,
+      26.4,
+      25.5
+     ],
+     "locked_frac": [
+      0.01,
+      0.01,
+      0.02,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.2,
+      71.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -1.77,
+      1.82,
+      -5.75,
+      -3.1
+     ],
+     "true_force_min_kN": [
+      118.5,
+      115.3,
+      71.3,
+      69.7
+     ],
+     "locked_frac": [
+      0.0,
+      0.52,
+      0.32,
+      0.46
+     ]
+    },
+    {
+     "t": [
+      71.2,
+      91.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.21,
+      -0.1,
+      -0.23,
+      -0.55
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.5,
+      71.8,
+      69.9
+     ],
+     "locked_frac": [
+      0.92,
+      1.0,
+      0.7,
+      0.57
+     ]
+    },
+    {
+     "t": [
+      91.2,
+      111.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.04,
+      0.2,
+      0.02,
+      -0.07
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      111.2,
+      131.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.1,
+      0.08,
+      0.06,
+      0.36
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      131.2,
+      151.2
+     ],
+     "phases": {
+      "level": 201
+     },
+     "n_nonzero_u": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "d_stroke_mm": [
+      -0.05,
+      -0.07,
+      0.02,
+      0.02
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      151.2,
+      171.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.07,
+      0.14,
+      -0.06,
+      0.14
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      171.2,
+      191.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.2,
+      0.17,
+      0.07,
+      -0.12
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      191.2,
+      211.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.16,
+      -0.06,
+      -0.05,
+      -0.06
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      211.2,
+      231.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.16,
+      -0.19,
+      0.02,
+      -0.03
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      231.2,
+      251.2
+     ],
+     "phases": {
+      "level": 189
+     },
+     "n_nonzero_u": [
+      189,
+      189,
+      189,
+      189
+     ],
+     "d_stroke_mm": [
+      0.05,
+      0.02,
+      -0.11,
+      0.24
+     ],
+     "true_force_min_kN": [
+      118.8,
+      115.8,
+      72.1,
+      69.9
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "soil_mode_start": 2,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_CLEARANCE_BIAS": 2,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_LOC_REVOKED": 1,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_DIFF_SINK_RELEASE": 1
+   },
+   "events_after_level_head": [
+    [
+     31.2,
+     "floor_estimate_touch"
+    ],
+    [
+     31.2,
+     "INFO_TOUCH_TWIST_HOLD:0.067"
+    ],
+    [
+     31.4,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     34.1,
+     "soil_mode_start"
+    ],
+    [
+     39.6,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     39.6,
+     "INFO_CLEARANCE_BIAS:FL=51.4,FR=54.4,RL=64.1,RR=67.1"
+    ],
+    [
+     39.6,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     39.7,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     40.0,
+     "INFO_LOC_REVOKED:2.2"
+    ],
+    [
+     40.1,
+     "soil_mode_start"
+    ],
+    [
+     40.6,
+     "INFO_DIFF_SINK_HOLD:FL,RL:6.3"
+    ],
+    [
+     40.9,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     40.9,
+     "INFO_CLEARANCE_BIAS:FL=64.7,FR=53.0,RL=76.3,RR=64.6"
+    ],
+    [
+     42.4,
+     "INFO_DIFF_SINK_RELEASE:settled"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "b2": {
+   "t_first_level": 31.2,
+   "t_end": 102.3,
+   "u_shape": [
+    1023,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.2,
+      51.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      145.17,
+      131.09,
+      176.75,
+      164.64
+     ],
+     "true_force_min_kN": [
+      33.2,
+      33.0,
+      26.3,
+      25.5
+     ],
+     "locked_frac": [
+      0.01,
+      0.01,
+      0.02,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.2,
+      71.2
+     ],
+     "phases": {
+      "level": 162,
+      "done": 1,
+      "probe": 37
+     },
+     "n_nonzero_u": [
+      183,
+      170,
+      163,
+      163
+     ],
+     "d_stroke_mm": [
+      -2.47,
+      0.33,
+      -5.31,
+      -0.33
+     ],
+     "true_force_min_kN": [
+      116.3,
+      113.6,
+      70.3,
+      68.7
+     ],
+     "locked_frac": [
+      0.6,
+      0.16,
+      0.22,
+      0.42
+     ]
+    },
+    {
+     "t": [
+      71.2,
+      91.2
+     ],
+     "phases": {
+      "level": 91,
+      "done": 1,
+      "probe": 108
+     },
+     "n_nonzero_u": [
+      113,
+      113,
+      113,
+      105
+     ],
+     "d_stroke_mm": [
+      -0.22,
+      1.42,
+      0.77,
+      1.74
+     ],
+     "true_force_min_kN": [
+      116.5,
+      111.8,
+      68.6,
+      67.9
+     ],
+     "locked_frac": [
+      0.54,
+      0.92,
+      0.46,
+      0.96
+     ]
+    },
+    {
+     "t": [
+      91.2,
+      111.2
+     ],
+     "phases": {
+      "probe": 11,
+      "ready": 101
+     },
+     "n_nonzero_u": [
+      3,
+      3,
+      3,
+      11
+     ],
+     "d_stroke_mm": [
+      1.64,
+      2.0,
+      1.01,
+      0.75
+     ],
+     "true_force_min_kN": [
+      116.7,
+      112.8,
+      69.7,
+      68.8
+     ],
+     "locked_frac": [
+      0.96,
+      0.96,
+      0.96,
+      0.91
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "soil_mode_start": 2,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_CLEARANCE_BIAS": 2,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 2,
+    "INFO_LOC_REVOKED": 1,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_DIFF_SINK_RELEASE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "events_after_level_head": [
+    [
+     31.2,
+     "floor_estimate_touch"
+    ],
+    [
+     31.2,
+     "INFO_TOUCH_TWIST_HOLD:0.057"
+    ],
+    [
+     31.4,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     34.2,
+     "soil_mode_start"
+    ],
+    [
+     39.7,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     39.7,
+     "INFO_CLEARANCE_BIAS:FL=51.4,FR=53.5,RL=63.4,RR=65.4"
+    ],
+    [
+     39.7,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     39.8,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     40.0,
+     "INFO_LOC_REVOKED:2.6"
+    ],
+    [
+     40.1,
+     "soil_mode_start"
+    ],
+    [
+     40.7,
+     "INFO_DIFF_SINK_HOLD:FL,RL:6.5"
+    ],
+    [
+     40.9,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     40.9,
+     "INFO_CLEARANCE_BIAS:FL=63.1,FR=54.3,RL=75.1,RR=66.4"
+    ],
+    [
+     42.5,
+     "INFO_DIFF_SINK_RELEASE:settled"
+    ],
+    [
+     92.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     92.3,
+     "ready_heave_tail"
+    ],
+    [
+     92.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "ready": [
+   null,
+   92.30000000025869
+  ]
+ },
+ "L2|g6|56|ref|J2|top|Fs0": {
+  "b1": {
+   "t_first_level": 31.0,
+   "t_end": 250.1,
+   "u_shape": [
+    2501,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.0,
+      51.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      163.35,
+      157.72,
+      199.15,
+      180.44
+     ],
+     "true_force_min_kN": [
+      27.5,
+      27.7,
+      25.2,
+      25.1
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.01,
+      0.01
+     ]
+    },
+    {
+     "t": [
+      51.0,
+      71.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      14.65,
+      7.58,
+      9.05,
+      2.55
+     ],
+     "true_force_min_kN": [
+      118.6,
+      114.8,
+      71.9,
+      68.9
+     ],
+     "locked_frac": [
+      0.0,
+      0.4,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "t": [
+      71.0,
+      91.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.01,
+      0.09,
+      -0.73,
+      -0.87
+     ],
+     "true_force_min_kN": [
+      118.5,
+      115.9,
+      72.2,
+      69.7
+     ],
+     "locked_frac": [
+      0.96,
+      1.0,
+      0.44,
+      0.44
+     ]
+    },
+    {
+     "t": [
+      91.0,
+      111.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.2,
+      -0.06,
+      -0.34,
+      -0.16
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      111.0,
+      131.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.07,
+      -0.18,
+      -0.03,
+      0.1
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      131.0,
+      151.0
+     ],
+     "phases": {
+      "level": 201
+     },
+     "n_nonzero_u": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "d_stroke_mm": [
+      -0.02,
+      -0.11,
+      -0.18,
+      0.04
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      151.0,
+      171.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.07,
+      0.2,
+      -0.13,
+      0.01
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      171.0,
+      191.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.01,
+      0.04,
+      -0.04,
+      0.07
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      191.0,
+      211.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.1,
+      0.15,
+      -0.25,
+      0.03
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      211.0,
+      231.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.16,
+      -0.08,
+      0.1,
+      0.03
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      231.0,
+      251.0
+     ],
+     "phases": {
+      "level": 191
+     },
+     "n_nonzero_u": [
+      191,
+      191,
+      191,
+      191
+     ],
+     "d_stroke_mm": [
+      -0.43,
+      -0.03,
+      -0.15,
+      0.12
+     ],
+     "true_force_min_kN": [
+      118.5,
+      116.0,
+      72.3,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "soil_mode_start": 2,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_CLEARANCE_BIAS": 2,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_LOC_REVOKED": 1,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_DIFF_SINK_RELEASE": 1
+   },
+   "events_after_level_head": [
+    [
+     31.0,
+     "floor_estimate_touch"
+    ],
+    [
+     31.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.055"
+    ],
+    [
+     31.2,
+     "INFO_LIFT_PAUSED:RR"
+    ],
+    [
+     35.0,
+     "soil_mode_start"
+    ],
+    [
+     44.9,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     44.9,
+     "INFO_CLEARANCE_BIAS:FL=73.5,FR=80.5,RL=86.9,RR=93.9"
+    ],
+    [
+     44.9,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     45.0,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.2,
+     "INFO_LOC_REVOKED:3.1"
+    ],
+    [
+     45.3,
+     "soil_mode_start"
+    ],
+    [
+     45.9,
+     "INFO_DIFF_SINK_HOLD:FL,RL:7.9"
+    ],
+    [
+     46.3,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     46.3,
+     "INFO_CLEARANCE_BIAS:FL=86.6,FR=81.4,RL=95.6,RR=90.5"
+    ],
+    [
+     50.2,
+     "INFO_DIFF_SINK_RELEASE:reversed"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "b2": {
+   "t_first_level": 31.0,
+   "t_end": 250.1,
+   "u_shape": [
+    2501,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.0,
+      51.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      166.94,
+      161.03,
+      198.94,
+      183.68
+     ],
+     "true_force_min_kN": [
+      27.5,
+      27.7,
+      25.2,
+      25.1
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.01,
+      0.01
+     ]
+    },
+    {
+     "t": [
+      51.0,
+      71.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      13.75,
+      7.5,
+      9.72,
+      3.66
+     ],
+     "true_force_min_kN": [
+      118.6,
+      115.3,
+      71.8,
+      68.6
+     ],
+     "locked_frac": [
+      0.12,
+      0.32,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "t": [
+      71.0,
+      91.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.13,
+      0.17,
+      -1.07,
+      -0.53
+     ],
+     "true_force_min_kN": [
+      118.6,
+      115.6,
+      71.9,
+      69.7
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      0.0,
+      0.4
+     ]
+    },
+    {
+     "t": [
+      91.0,
+      111.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.14,
+      -0.12,
+      -0.91,
+      -0.06
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      0.54,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      111.0,
+      131.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.01,
+      0.13,
+      -0.08,
+      0.24
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      131.0,
+      151.0
+     ],
+     "phases": {
+      "level": 201
+     },
+     "n_nonzero_u": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "d_stroke_mm": [
+      0.02,
+      -0.19,
+      0.1,
+      -0.22
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      151.0,
+      171.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.18,
+      0.11,
+      0.38,
+      -0.26
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      171.0,
+      191.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.25,
+      -0.11,
+      -0.16,
+      0.09
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      191.0,
+      211.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.0,
+      -0.06,
+      0.03,
+      0.03
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      211.0,
+      231.0
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.04,
+      0.04,
+      0.13,
+      0.01
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      231.0,
+      251.0
+     ],
+     "phases": {
+      "level": 191
+     },
+     "n_nonzero_u": [
+      191,
+      191,
+      191,
+      191
+     ],
+     "d_stroke_mm": [
+      0.05,
+      -0.28,
+      -0.11,
+      -0.21
+     ],
+     "true_force_min_kN": [
+      119.0,
+      115.5,
+      71.8,
+      70.2
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "soil_mode_start": 2,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_CLEARANCE_BIAS": 2,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_LOC_REVOKED": 1,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_DIFF_SINK_RELEASE": 1
+   },
+   "events_after_level_head": [
+    [
+     31.0,
+     "floor_estimate_touch"
+    ],
+    [
+     31.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.058"
+    ],
+    [
+     31.2,
+     "INFO_LIFT_PAUSED:RR"
+    ],
+    [
+     34.9,
+     "soil_mode_start"
+    ],
+    [
+     44.6,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     44.6,
+     "INFO_CLEARANCE_BIAS:FL=72.9,FR=80.8,RL=87.8,RR=95.7"
+    ],
+    [
+     44.6,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     44.7,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.0,
+     "INFO_LOC_REVOKED:3.5"
+    ],
+    [
+     45.1,
+     "soil_mode_start"
+    ],
+    [
+     45.6,
+     "INFO_DIFF_SINK_HOLD:FL,RL:7.6"
+    ],
+    [
+     46.0,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     46.0,
+     "INFO_CLEARANCE_BIAS:FL=87.1,FR=85.3,RL=105.3,RR=103.4"
+    ],
+    [
+     49.5,
+     "INFO_DIFF_SINK_RELEASE:reversed"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "ready": [
+   null,
+   null
+  ]
+ },
+ "L2|g6|59|ref|J2|bottom|Fs4": {
+  "b1": {
+   "t_first_level": 31.1,
+   "t_end": 250.1,
+   "u_shape": [
+    2501,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.1,
+      51.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      162.82,
+      157.75,
+      203.82,
+      186.66
+     ],
+     "true_force_min_kN": [
+      44.9,
+      44.4,
+      36.4,
+      36.4
+     ],
+     "locked_frac": [
+      0.01,
+      0.01,
+      0.02,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.1,
+      71.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      5.46,
+      4.07,
+      -2.64,
+      -3.97
+     ],
+     "true_force_min_kN": [
+      114.1,
+      120.1,
+      68.8,
+      66.3
+     ],
+     "locked_frac": [
+      0.13,
+      0.55,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "t": [
+      71.1,
+      91.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.37,
+      0.3,
+      -0.35,
+      -0.24
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      0.65,
+      0.59
+     ]
+    },
+    {
+     "t": [
+      91.1,
+      111.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.09,
+      -0.01,
+      0.09,
+      0.14
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      111.1,
+      131.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.21,
+      0.08,
+      -0.17,
+      -0.02
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      131.1,
+      151.1
+     ],
+     "phases": {
+      "level": 201
+     },
+     "n_nonzero_u": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "d_stroke_mm": [
+      0.17,
+      -0.17,
+      0.13,
+      0.02
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      151.1,
+      171.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.01,
+      0.2,
+      0.12,
+      0.03
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      171.1,
+      191.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.08,
+      0.04,
+      0.07,
+      -0.22
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      191.1,
+      211.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.11,
+      0.25,
+      -0.09,
+      0.1
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      211.1,
+      231.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.11,
+      0.11,
+      -0.05,
+      0.21
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      231.1,
+      251.1
+     ],
+     "phases": {
+      "level": 190
+     },
+     "n_nonzero_u": [
+      190,
+      190,
+      190,
+      190
+     ],
+     "d_stroke_mm": [
+      0.08,
+      0.38,
+      0.02,
+      -0.14
+     ],
+     "true_force_min_kN": [
+      114.5,
+      120.1,
+      69.2,
+      66.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "soil_mode_start": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_DIFF_SINK_RELEASE": 1,
+    "WARN_ROD_PRESSURE_FALLBACK": 1,
+    "INFO_ROD_PRESSURE_FAULT_REASON": 1
+   },
+   "events_after_level_head": [
+    [
+     31.1,
+     "floor_estimate_touch"
+    ],
+    [
+     32.7,
+     "soil_mode_start"
+    ],
+    [
+     44.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     44.5,
+     "INFO_CLEARANCE_BIAS:FL=83.8,FR=80.3,RL=98.3,RR=94.9"
+    ],
+    [
+     44.5,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     44.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.5,
+     "INFO_DIFF_SINK_HOLD:FL,RL:3.2"
+    ],
+    [
+     50.9,
+     "INFO_DIFF_SINK_RELEASE:settled"
+    ],
+    [
+     109.9,
+     "WARN_ROD_PRESSURE_FALLBACK:FR"
+    ],
+    [
+     109.9,
+     "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "b2": {
+   "t_first_level": 31.1,
+   "t_end": 90.0,
+   "u_shape": [
+    900,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.1,
+      51.1
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      162.43,
+      156.01,
+      195.39,
+      185.75
+     ],
+     "true_force_min_kN": [
+      44.9,
+      44.4,
+      36.4,
+      36.4
+     ],
+     "locked_frac": [
+      0.01,
+      0.01,
+      0.02,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.1,
+      71.1
+     ],
+     "phases": {
+      "level": 169,
+      "done": 1,
+      "probe": 30
+     },
+     "n_nonzero_u": [
+      191,
+      171,
+      171,
+      171
+     ],
+     "d_stroke_mm": [
+      4.22,
+      2.14,
+      -0.36,
+      -0.6
+     ],
+     "true_force_min_kN": [
+      112.6,
+      113.6,
+      68.3,
+      66.5
+     ],
+     "locked_frac": [
+      0.06,
+      0.53,
+      0.14,
+      0.54
+     ]
+    },
+    {
+     "t": [
+      71.1,
+      91.1
+     ],
+     "phases": {
+      "probe": 89,
+      "ready": 101
+     },
+     "n_nonzero_u": [
+      3,
+      23,
+      23,
+      23
+     ],
+     "d_stroke_mm": [
+      1.54,
+      2.01,
+      2.33,
+      2.34
+     ],
+     "true_force_min_kN": [
+      114.8,
+      109.9,
+      67.5,
+      65.9
+     ],
+     "locked_frac": [
+      0.97,
+      0.9,
+      0.9,
+      0.9
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "soil_mode_start": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 2,
+    "WARN_ROD_PRESSURE_FALLBACK": 1,
+    "INFO_ROD_PRESSURE_FAULT_REASON": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "events_after_level_head": [
+    [
+     31.1,
+     "floor_estimate_touch"
+    ],
+    [
+     32.7,
+     "soil_mode_start"
+    ],
+    [
+     44.9,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     44.9,
+     "INFO_CLEARANCE_BIAS:FL=85.9,FR=79.3,RL=100.0,RR=93.4"
+    ],
+    [
+     44.9,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     45.0,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.6,
+     "WARN_ROD_PRESSURE_FALLBACK:FR"
+    ],
+    [
+     50.6,
+     "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+    ],
+    [
+     80.0,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     80.0,
+     "ready_heave_tail"
+    ],
+    [
+     80.3,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "ready": [
+   null,
+   80.00000000019996
+  ]
+ },
+ "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+  "b1": {
+   "t_first_level": 31.5,
+   "t_end": 180.1,
+   "u_shape": [
+    1801,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.5,
+      51.5
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      135,
+      198
+     ],
+     "d_stroke_mm": [
+      203.97,
+      332.32,
+      32.65,
+      151.35
+     ],
+     "true_force_min_kN": [
+      30.3,
+      63.4,
+      39.3,
+      30.9
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.38,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.5,
+      71.5
+     ],
+     "phases": {
+      "level": 171,
+      "done": 3,
+      "probe": 26
+     },
+     "n_nonzero_u": [
+      200,
+      174,
+      174,
+      174
+     ],
+     "d_stroke_mm": [
+      7.29,
+      7.73,
+      2.84,
+      4.41
+     ],
+     "true_force_min_kN": [
+      113.0,
+      104.7,
+      56.0,
+      72.1
+     ],
+     "locked_frac": [
+      0.16,
+      0.52,
+      0.76,
+      0.73
+     ]
+    },
+    {
+     "t": [
+      71.5,
+      91.5
+     ],
+     "phases": {
+      "level": 168,
+      "done": 1,
+      "probe": 31
+     },
+     "n_nonzero_u": [
+      190,
+      170,
+      170,
+      170
+     ],
+     "d_stroke_mm": [
+      -2.25,
+      -3.4,
+      0.14,
+      -0.53
+     ],
+     "true_force_min_kN": [
+      110.3,
+      103.1,
+      53.7,
+      67.7
+     ],
+     "locked_frac": [
+      0.07,
+      0.52,
+      0.3,
+      0.3
+     ]
+    },
+    {
+     "t": [
+      91.5,
+      111.5
+     ],
+     "phases": {
+      "probe": 85,
+      "level": 113,
+      "done": 2
+     },
+     "n_nonzero_u": [
+      133,
+      134,
+      134,
+      121
+     ],
+     "d_stroke_mm": [
+      -0.96,
+      0.62,
+      0.13,
+      0.32
+     ],
+     "true_force_min_kN": [
+      113.3,
+      93.0,
+      51.2,
+      65.0
+     ],
+     "locked_frac": [
+      0.38,
+      0.92,
+      0.82,
+      0.68
+     ]
+    },
+    {
+     "t": [
+      111.5,
+      131.5
+     ],
+     "phases": {
+      "done": 2,
+      "probe": 107,
+      "level": 91
+     },
+     "n_nonzero_u": [
+      123,
+      113,
+      113,
+      100
+     ],
+     "d_stroke_mm": [
+      0.18,
+      -0.29,
+      -0.04,
+      0.27
+     ],
+     "true_force_min_kN": [
+      110.1,
+      95.2,
+      53.1,
+      61.1
+     ],
+     "locked_frac": [
+      0.5,
+      0.76,
+      0.68,
+      0.68
+     ]
+    },
+    {
+     "t": [
+      131.5,
+      151.5
+     ],
+     "phases": {
+      "level": 93,
+      "done": 2,
+      "probe": 106
+     },
+     "n_nonzero_u": [
+      124,
+      115,
+      115,
+      102
+     ],
+     "d_stroke_mm": [
+      0.04,
+      0.55,
+      0.2,
+      -0.0
+     ],
+     "true_force_min_kN": [
+      113.2,
+      91.8,
+      49.7,
+      64.5
+     ],
+     "locked_frac": [
+      0.44,
+      0.93,
+      0.81,
+      0.67
+     ]
+    },
+    {
+     "t": [
+      151.5,
+      171.5
+     ],
+     "phases": {
+      "done": 4,
+      "probe": 41,
+      "level": 155
+     },
+     "n_nonzero_u": [
+      199,
+      159,
+      159,
+      159
+     ],
+     "d_stroke_mm": [
+      0.98,
+      -0.06,
+      0.0,
+      -0.5
+     ],
+     "true_force_min_kN": [
+      112.7,
+      104.3,
+      56.0,
+      71.5
+     ],
+     "locked_frac": [
+      0.08,
+      1.0,
+      1.0,
+      0.84
+     ]
+    },
+    {
+     "t": [
+      171.5,
+      191.5
+     ],
+     "phases": {
+      "level": 65,
+      "done": 2,
+      "probe": 19
+     },
+     "n_nonzero_u": [
+      86,
+      67,
+      67,
+      67
+     ],
+     "d_stroke_mm": [
+      1.6,
+      0.05,
+      -0.05,
+      -0.14
+     ],
+     "true_force_min_kN": [
+      112.6,
+      105.3,
+      57.2,
+      71.4
+     ],
+     "locked_frac": [
+      0.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_R5_FALLBACK_SLOPE": 91,
+    "relevel_predicted": 16,
+    "probe_aborted_low_load": 16
+   },
+   "events_after_level_head": [
+    [
+     31.5,
+     "floor_estimate_touch"
+    ],
+    [
+     31.5,
+     "INFO_TOUCH_TWIST_HOLD:0.923"
+    ],
+    [
+     33.8,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     33.8,
+     "INFO_LOC_CLEARANCE_ANCHOR:43.9,-65.7,-17.7,-127.4"
+    ],
+    [
+     33.9,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     55.2,
+     "INFO_R5_FALLBACK_SLOPE:FR:24.71:9.37"
+    ],
+    [
+     55.3,
+     "INFO_R5_FALLBACK_SLOPE:FR:32.39:12.04"
+    ],
+    [
+     55.4,
+     "INFO_R5_FALLBACK_SLOPE:FR:34.53:12.51"
+    ],
+    [
+     55.5,
+     "INFO_R5_FALLBACK_SLOPE:FR:36.74:12.88"
+    ],
+    [
+     55.5,
+     "relevel_predicted:FR"
+    ],
+    [
+     55.5,
+     "probe_aborted_low_load:FR"
+    ],
+    [
+     62.7,
+     "INFO_R5_FALLBACK_SLOPE:FR:12.04:4.72"
+    ],
+    [
+     62.8,
+     "INFO_R5_FALLBACK_SLOPE:FR:30.12:11.57"
+    ],
+    [
+     62.9,
+     "INFO_R5_FALLBACK_SLOPE:FR:40.22:15.55"
+    ],
+    [
+     63.0,
+     "INFO_R5_FALLBACK_SLOPE:FR:36.14:13.68"
+    ],
+    [
+     63.1,
+     "INFO_R5_FALLBACK_SLOPE:FR:30.56:10.48"
+    ],
+    [
+     63.1,
+     "relevel_predicted:FR"
+    ],
+    [
+     63.1,
+     "probe_aborted_low_load:FR"
+    ],
+    [
+     69.8,
+     "INFO_R5_FALLBACK_SLOPE:FR:9.36:3.57"
+    ],
+    [
+     69.9,
+     "INFO_R5_FALLBACK_SLOPE:FR:11.47:4.49"
+    ],
+    [
+     70.0,
+     "INFO_R5_FALLBACK_SLOPE:FR:21.32:8.23"
+    ],
+    [
+     70.1,
+     "INFO_R5_FALLBACK_SLOPE:FR:31.36:11.80"
+    ],
+    [
+     70.2,
+     "INFO_R5_FALLBACK_SLOPE:FR:44.52:16.97"
+    ],
+    [
+     70.2,
+     "relevel_predicted:FR"
+    ],
+    [
+     70.2,
+     "probe_aborted_low_load:FR"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "b2": {
+   "t_first_level": 31.5,
+   "t_end": 180.1,
+   "u_shape": [
+    1801,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.5,
+      51.5
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      135,
+      198
+     ],
+     "d_stroke_mm": [
+      203.48,
+      332.23,
+      32.07,
+      150.61
+     ],
+     "true_force_min_kN": [
+      30.3,
+      63.4,
+      39.1,
+      30.9
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.38,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.5,
+      71.5
+     ],
+     "phases": {
+      "level": 160,
+      "done": 2,
+      "probe": 38
+     },
+     "n_nonzero_u": [
+      191,
+      163,
+      163,
+      163
+     ],
+     "d_stroke_mm": [
+      5.87,
+      5.44,
+      3.13,
+      3.84
+     ],
+     "true_force_min_kN": [
+      117.4,
+      105.8,
+      57.0,
+      73.7
+     ],
+     "locked_frac": [
+      0.06,
+      0.82,
+      0.64,
+      0.82
+     ]
+    },
+    {
+     "t": [
+      71.5,
+      91.5
+     ],
+     "phases": {
+      "probe": 87,
+      "level": 111,
+      "done": 2
+     },
+     "n_nonzero_u": [
+      131,
+      132,
+      132,
+      120
+     ],
+     "d_stroke_mm": [
+      -1.09,
+      0.46,
+      0.14,
+      0.39
+     ],
+     "true_force_min_kN": [
+      113.3,
+      95.6,
+      53.9,
+      64.5
+     ],
+     "locked_frac": [
+      0.38,
+      0.92,
+      0.82,
+      0.84
+     ]
+    },
+    {
+     "t": [
+      91.5,
+      111.5
+     ],
+     "phases": {
+      "level": 155,
+      "done": 4,
+      "probe": 41
+     },
+     "n_nonzero_u": [
+      199,
+      159,
+      159,
+      159
+     ],
+     "d_stroke_mm": [
+      1.9,
+      0.16,
+      0.14,
+      0.12
+     ],
+     "true_force_min_kN": [
+      112.7,
+      104.7,
+      56.5,
+      71.8
+     ],
+     "locked_frac": [
+      0.01,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      111.5,
+      131.5
+     ],
+     "phases": {
+      "level": 167,
+      "done": 3,
+      "probe": 30
+     },
+     "n_nonzero_u": [
+      200,
+      170,
+      170,
+      170
+     ],
+     "d_stroke_mm": [
+      -2.09,
+      -0.19,
+      0.3,
+      -0.28
+     ],
+     "true_force_min_kN": [
+      112.1,
+      105.2,
+      57.1,
+      71.1
+     ],
+     "locked_frac": [
+      0.06,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      131.5,
+      151.5
+     ],
+     "phases": {
+      "level": 91,
+      "done": 2,
+      "probe": 108
+     },
+     "n_nonzero_u": [
+      123,
+      113,
+      113,
+      101
+     ],
+     "d_stroke_mm": [
+      -1.4,
+      -1.07,
+      1.35,
+      0.5
+     ],
+     "true_force_min_kN": [
+      108.8,
+      96.6,
+      54.8,
+      59.7
+     ],
+     "locked_frac": [
+      0.44,
+      0.8,
+      0.93,
+      0.76
+     ]
+    },
+    {
+     "t": [
+      151.5,
+      171.5
+     ],
+     "phases": {
+      "level": 92,
+      "done": 2,
+      "probe": 106
+     },
+     "n_nonzero_u": [
+      123,
+      114,
+      114,
+      101
+     ],
+     "d_stroke_mm": [
+      2.13,
+      -0.13,
+      -0.68,
+      -0.41
+     ],
+     "true_force_min_kN": [
+      110.9,
+      94.4,
+      52.5,
+      61.8
+     ],
+     "locked_frac": [
+      0.63,
+      0.77,
+      0.53,
+      0.51
+     ]
+    },
+    {
+     "t": [
+      171.5,
+      191.5
+     ],
+     "phases": {
+      "level": 34,
+      "done": 1,
+      "probe": 51
+     },
+     "n_nonzero_u": [
+      56,
+      51,
+      36,
+      36
+     ],
+     "d_stroke_mm": [
+      -0.72,
+      -1.27,
+      0.01,
+      -0.7
+     ],
+     "true_force_min_kN": [
+      112.9,
+      96.3,
+      54.4,
+      66.8
+     ],
+     "locked_frac": [
+      0.4,
+      0.92,
+      1.0,
+      0.7
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_R5_FALLBACK_SLOPE": 91,
+    "relevel_predicted": 15,
+    "probe_aborted_low_load": 15
+   },
+   "events_after_level_head": [
+    [
+     31.5,
+     "floor_estimate_touch"
+    ],
+    [
+     31.5,
+     "INFO_TOUCH_TWIST_HOLD:0.906"
+    ],
+    [
+     31.9,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     33.8,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     33.8,
+     "INFO_LOC_CLEARANCE_ANCHOR:43.9,-65.6,-18.2,-127.7"
+    ],
+    [
+     33.9,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     55.3,
+     "INFO_R5_FALLBACK_SLOPE:FR:24.89:9.41"
+    ],
+    [
+     55.4,
+     "INFO_R5_FALLBACK_SLOPE:FR:28.40:10.42"
+    ],
+    [
+     55.5,
+     "INFO_R5_FALLBACK_SLOPE:FR:39.87:14.56"
+    ],
+    [
+     55.6,
+     "INFO_R5_FALLBACK_SLOPE:FR:35.25:12.27"
+    ],
+    [
+     55.6,
+     "relevel_predicted:FR"
+    ],
+    [
+     55.6,
+     "probe_aborted_low_load:FR"
+    ],
+    [
+     69.2,
+     "INFO_R5_FALLBACK_SLOPE:FR:15.02:5.70"
+    ],
+    [
+     69.3,
+     "INFO_R5_FALLBACK_SLOPE:FR:29.39:10.92"
+    ],
+    [
+     69.4,
+     "INFO_R5_FALLBACK_SLOPE:FR:32.42:11.95"
+    ],
+    [
+     69.5,
+     "INFO_R5_FALLBACK_SLOPE:FR:20.15:7.01"
+    ],
+    [
+     69.8,
+     "INFO_R5_FALLBACK_SLOPE:FR:8.30:1.65"
+    ],
+    [
+     77.3,
+     "INFO_R5_FALLBACK_SLOPE:FR:9.22:3.87"
+    ],
+    [
+     78.2,
+     "INFO_R5_FALLBACK_SLOPE:FR:26.13:10.59"
+    ],
+    [
+     78.3,
+     "INFO_R5_FALLBACK_SLOPE:FR:53.77:21.01"
+    ],
+    [
+     78.3,
+     "relevel_predicted:FR"
+    ],
+    [
+     78.3,
+     "probe_aborted_low_load:FR"
+    ],
+    [
+     82.4,
+     "INFO_R5_FALLBACK_SLOPE:FR:20.55:7.71"
+    ],
+    [
+     82.5,
+     "INFO_R5_FALLBACK_SLOPE:FR:43.95:16.60"
+    ],
+    [
+     82.5,
+     "relevel_predicted:FR"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "ready": [
+   null,
+   null
+  ]
+ },
+ "L2|ref|16|J1|B|0,0": {
+  "b1": {
+   "t_first_level": 31.2,
+   "t_end": 110.8,
+   "u_shape": [
+    1108,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.2,
+      51.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      146.81,
+      132.19,
+      178.42,
+      165.29
+     ],
+     "true_force_min_kN": [
+      30.7,
+      30.5,
+      30.3,
+      29.8
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.02,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.2,
+      71.2
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -1.89,
+      0.15,
+      -5.8,
+      -1.93
+     ],
+     "true_force_min_kN": [
+      115.0,
+      111.3,
+      68.0,
+      67.0
+     ],
+     "locked_frac": [
+      0.38,
+      0.38,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "t": [
+      71.2,
+      91.2
+     ],
+     "phases": {
+      "level": 176,
+      "done": 1,
+      "probe": 23
+     },
+     "n_nonzero_u": [
+      195,
+      178,
+      178,
+      178
+     ],
+     "d_stroke_mm": [
+      1.77,
+      -0.71,
+      -0.84,
+      0.66
+     ],
+     "true_force_min_kN": [
+      114.5,
+      110.5,
+      67.7,
+      67.3
+     ],
+     "locked_frac": [
+      0.77,
+      0.8,
+      0.1,
+      0.56
+     ]
+    },
+    {
+     "t": [
+      91.2,
+      111.2
+     ],
+     "phases": {
+      "probe": 96,
+      "ready": 101
+     },
+     "n_nonzero_u": [
+      6,
+      23,
+      23,
+      23
+     ],
+     "d_stroke_mm": [
+      0.81,
+      2.73,
+      1.83,
+      2.07
+     ],
+     "true_force_min_kN": [
+      112.6,
+      108.7,
+      66.5,
+      65.4
+     ],
+     "locked_frac": [
+      0.95,
+      0.91,
+      0.91,
+      0.91
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "soil_mode_start": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 2,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_DIFF_SINK_RELEASE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "events_after_level_head": [
+    [
+     31.2,
+     "floor_estimate_touch"
+    ],
+    [
+     31.2,
+     "INFO_TOUCH_TWIST_HOLD:0.072"
+    ],
+    [
+     32.9,
+     "soil_mode_start"
+    ],
+    [
+     38.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     38.5,
+     "INFO_CLEARANCE_BIAS:FL=52.0,FR=53.8,RL=64.2,RR=66.0"
+    ],
+    [
+     38.5,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     38.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     39.5,
+     "INFO_DIFF_SINK_HOLD:FL,RL:5.5"
+    ],
+    [
+     42.3,
+     "INFO_DIFF_SINK_RELEASE:settled"
+    ],
+    [
+     100.8,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     100.8,
+     "ready_heave_tail"
+    ],
+    [
+     101.1,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "b2": {
+   "t_first_level": 31.3,
+   "t_end": 250.1,
+   "u_shape": [
+    2501,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      31.3,
+      51.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      155.31,
+      143.01,
+      189.55,
+      175.33
+     ],
+     "true_force_min_kN": [
+      51.6,
+      25.1,
+      31.1,
+      34.6
+     ],
+     "locked_frac": [
+      0.01,
+      0.02,
+      0.02,
+      0.02
+     ]
+    },
+    {
+     "t": [
+      51.3,
+      71.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.13,
+      2.21,
+      -2.29,
+      0.06
+     ],
+     "true_force_min_kN": [
+      114.9,
+      114.3,
+      68.0,
+      67.1
+     ],
+     "locked_frac": [
+      0.51,
+      0.0,
+      0.46,
+      0.94
+     ]
+    },
+    {
+     "t": [
+      71.3,
+      91.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.17,
+      1.11,
+      -0.16,
+      -0.04
+     ],
+     "true_force_min_kN": [
+      119.1,
+      120.0,
+      68.8,
+      67.3
+     ],
+     "locked_frac": [
+      1.0,
+      0.17,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      91.3,
+      111.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.26,
+      -0.01,
+      -0.04,
+      0.08
+     ],
+     "true_force_min_kN": [
+      119.1,
+      120.0,
+      69.0,
+      67.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      111.3,
+      131.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.09,
+      -0.15,
+      -1.29,
+      -0.01
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.0,
+      67.3
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      0.52,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      131.3,
+      151.3
+     ],
+     "phases": {
+      "level": 201
+     },
+     "n_nonzero_u": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "d_stroke_mm": [
+      0.41,
+      0.01,
+      -0.14,
+      -0.07
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.8,
+      67.4
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      151.3,
+      171.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.08,
+      0.07,
+      0.18,
+      -0.3
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.8,
+      67.4
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      171.3,
+      191.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.07,
+      -0.2,
+      0.06,
+      -0.09
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.8,
+      67.4
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      191.3,
+      211.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.07,
+      -0.09,
+      -0.01,
+      -0.09
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.8,
+      67.4
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      211.3,
+      231.3
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.33,
+      0.47,
+      0.1,
+      -0.09
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.8,
+      67.4
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      231.3,
+      251.3
+     ],
+     "phases": {
+      "level": 188
+     },
+     "n_nonzero_u": [
+      188,
+      188,
+      188,
+      188
+     ],
+     "d_stroke_mm": [
+      -0.11,
+      -0.06,
+      -0.14,
+      0.05
+     ],
+     "true_force_min_kN": [
+      119.1,
+      119.0,
+      68.8,
+      67.4
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "soil_mode_start": 2,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_CLEARANCE_BIAS": 2,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 1,
+    "INFO_DIFF_SINK_HOLD": 1,
+    "INFO_LOC_REVOKED": 1,
+    "INFO_DIFF_SINK_RELEASE": 1
+   },
+   "events_after_level_head": [
+    [
+     31.3,
+     "floor_estimate_touch"
+    ],
+    [
+     31.3,
+     "INFO_TOUCH_TWIST_HOLD:-0.635"
+    ],
+    [
+     32.9,
+     "soil_mode_start"
+    ],
+    [
+     38.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     38.5,
+     "INFO_CLEARANCE_BIAS:FL=51.9,FR=53.6,RL=63.9,RR=65.6"
+    ],
+    [
+     38.5,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     38.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     39.5,
+     "INFO_DIFF_SINK_HOLD:FL,RL:6.0"
+    ],
+    [
+     39.7,
+     "INFO_LOC_REVOKED:2.1"
+    ],
+    [
+     39.8,
+     "soil_mode_start"
+    ],
+    [
+     40.6,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     40.6,
+     "INFO_CLEARANCE_BIAS:FL=79.1,FR=64.2,RL=91.5,RR=76.6"
+    ],
+    [
+     41.7,
+     "INFO_DIFF_SINK_RELEASE:reversed"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "ready": [
+   100.80000000029928,
+   null
+  ]
+ },
+ "L2|g6|61|ref|S1|top|Fs4": {
+  "b1": {
+   "t_first_level": 33.8,
+   "t_end": 159.5,
+   "u_shape": [
+    1595,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      33.8,
+      53.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      213.31,
+      213.04,
+      166.13,
+      165.56
+     ],
+     "true_force_min_kN": [
+      17.7,
+      17.8,
+      17.9,
+      17.9
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.01,
+      0.01
+     ]
+    },
+    {
+     "t": [
+      53.8,
+      73.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      1.36,
+      -0.92,
+      2.47,
+      0.79
+     ],
+     "true_force_min_kN": [
+      120.6,
+      111.5,
+      68.1,
+      72.5
+     ],
+     "locked_frac": [
+      0.26,
+      0.0,
+      0.0,
+      0.62
+     ]
+    },
+    {
+     "t": [
+      73.8,
+      93.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.21,
+      -0.01,
+      -0.72,
+      0.26
+     ],
+     "true_force_min_kN": [
+      120.6,
+      119.2,
+      67.9,
+      72.6
+     ],
+     "locked_frac": [
+      1.0,
+      0.65,
+      0.07,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      93.8,
+      113.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.03,
+      -0.04,
+      -0.28,
+      -0.18
+     ],
+     "true_force_min_kN": [
+      120.6,
+      119.2,
+      68.0,
+      72.6
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      113.8,
+      133.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.02,
+      0.29,
+      -0.3,
+      -0.15
+     ],
+     "true_force_min_kN": [
+      120.6,
+      119.2,
+      68.0,
+      72.6
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      133.8,
+      153.8
+     ],
+     "phases": {
+      "level": 37,
+      "done": 1,
+      "probe": 119,
+      "ready": 44
+     },
+     "n_nonzero_u": [
+      62,
+      62,
+      62,
+      62
+     ],
+     "d_stroke_mm": [
+      2.27,
+      2.53,
+      1.79,
+      1.71
+     ],
+     "true_force_min_kN": [
+      112.0,
+      108.2,
+      66.3,
+      65.7
+     ],
+     "locked_frac": [
+      0.92,
+      0.91,
+      0.91,
+      0.91
+     ]
+    },
+    {
+     "t": [
+      153.8,
+      173.8
+     ],
+     "phases": {
+      "ready": 57
+     },
+     "n_nonzero_u": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "d_stroke_mm": [
+      0.21,
+      -0.07,
+      0.08,
+      0.01
+     ],
+     "true_force_min_kN": [
+      122.0,
+      118.9,
+      74.3,
+      72.5
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "soil_mode_start": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 2,
+    "WARN_ROD_PRESSURE_FALLBACK": 1,
+    "INFO_ROD_PRESSURE_FAULT_REASON": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "events_after_level_head": [
+    [
+     33.8,
+     "floor_estimate_touch"
+    ],
+    [
+     36.2,
+     "soil_mode_start"
+    ],
+    [
+     48.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     48.4,
+     "INFO_CLEARANCE_BIAS:FL=77.1,FR=75.8,RL=119.1,RR=117.9"
+    ],
+    [
+     48.4,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     48.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     136.4,
+     "WARN_ROD_PRESSURE_FALLBACK:RL"
+    ],
+    [
+     136.4,
+     "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+    ],
+    [
+     149.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     149.5,
+     "ready_heave_tail"
+    ],
+    [
+     149.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "b2": {
+   "t_first_level": 33.8,
+   "t_end": 206.6,
+   "u_shape": [
+    2066,
+    4
+   ],
+   "windows": [
+    {
+     "t": [
+      33.8,
+      53.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      198,
+      198,
+      198,
+      198
+     ],
+     "d_stroke_mm": [
+      213.1,
+      213.71,
+      165.9,
+      165.79
+     ],
+     "true_force_min_kN": [
+      17.6,
+      16.7,
+      17.8,
+      17.8
+     ],
+     "locked_frac": [
+      0.02,
+      0.02,
+      0.01,
+      0.01
+     ]
+    },
+    {
+     "t": [
+      53.8,
+      73.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      1.55,
+      -0.46,
+      3.95,
+      0.59
+     ],
+     "true_force_min_kN": [
+      113.8,
+      111.4,
+      68.8,
+      65.8
+     ],
+     "locked_frac": [
+      0.0,
+      0.35,
+      0.51,
+      0.0
+     ]
+    },
+    {
+     "t": [
+      73.8,
+      93.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.15,
+      0.38,
+      -1.63,
+      -0.04
+     ],
+     "true_force_min_kN": [
+      114.4,
+      119.0,
+      67.8,
+      66.5
+     ],
+     "locked_frac": [
+      0.95,
+      0.75,
+      0.42,
+      0.96
+     ]
+    },
+    {
+     "t": [
+      93.8,
+      113.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      -0.02,
+      -0.35,
+      -0.31,
+      0.14
+     ],
+     "true_force_min_kN": [
+      115.5,
+      119.0,
+      67.8,
+      67.6
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      113.8,
+      133.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.04,
+      0.08,
+      0.06,
+      -0.13
+     ],
+     "true_force_min_kN": [
+      115.5,
+      119.0,
+      67.8,
+      67.6
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      133.8,
+      153.8
+     ],
+     "phases": {
+      "level": 201
+     },
+     "n_nonzero_u": [
+      201,
+      201,
+      201,
+      201
+     ],
+     "d_stroke_mm": [
+      -0.02,
+      0.12,
+      -0.2,
+      -0.29
+     ],
+     "true_force_min_kN": [
+      115.5,
+      119.0,
+      67.8,
+      67.6
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      153.8,
+      173.8
+     ],
+     "phases": {
+      "level": 200
+     },
+     "n_nonzero_u": [
+      200,
+      200,
+      200,
+      200
+     ],
+     "d_stroke_mm": [
+      0.12,
+      0.12,
+      0.25,
+      0.2
+     ],
+     "true_force_min_kN": [
+      115.5,
+      119.0,
+      67.8,
+      67.6
+     ],
+     "locked_frac": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "t": [
+      173.8,
+      193.8
+     ],
+     "phases": {
+      "level": 107,
+      "done": 1,
+      "probe": 92
+     },
+     "n_nonzero_u": [
+      129,
+      129,
+      129,
+      110
+     ],
+     "d_stroke_mm": [
+      0.74,
+      0.41,
+      0.65,
+      0.51
+     ],
+     "true_force_min_kN": [
+      112.2,
+      108.3,
+      66.1,
+      67.6
+     ],
+     "locked_frac": [
+      0.94,
+      0.94,
+      0.92,
+      0.92
+     ]
+    },
+    {
+     "t": [
+      193.8,
+      213.8
+     ],
+     "phases": {
+      "probe": 27,
+      "ready": 101
+     },
+     "n_nonzero_u": [
+      3,
+      3,
+      3,
+      22
+     ],
+     "d_stroke_mm": [
+      1.95,
+      1.88,
+      0.93,
+      1.9
+     ],
+     "true_force_min_kN": [
+      117.2,
+      114.1,
+      72.8,
+      65.7
+     ],
+     "locked_frac": [
+      0.96,
+      0.96,
+      0.97,
+      0.86
+     ]
+    }
+   ],
+   "event_names_after_level": {
+    "floor_estimate_touch": 1,
+    "soil_mode_start": 1,
+    "crawler_liftoff_confirmed": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+    "INFO_D1_IMU_MASS_SOURCE": 2,
+    "WARN_ROD_PRESSURE_FALLBACK": 1,
+    "INFO_ROD_PRESSURE_FAULT_REASON": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "events_after_level_head": [
+    [
+     33.8,
+     "floor_estimate_touch"
+    ],
+    [
+     36.2,
+     "soil_mode_start"
+    ],
+    [
+     48.3,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     48.3,
+     "INFO_CLEARANCE_BIAS:FL=75.7,FR=75.1,RL=118.8,RR=118.2"
+    ],
+    [
+     48.3,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     48.4,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     67.2,
+     "WARN_ROD_PRESSURE_FALLBACK:RL"
+    ],
+    [
+     67.2,
+     "INFO_ROD_PRESSURE_FAULT_REASON:RL:D1"
+    ],
+    [
+     196.6,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     196.6,
+     "ready_heave_tail"
+    ],
+    [
+     196.9,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "meta_keys": [
+    "F_min_N",
+    "commands_sha256",
+    "controller_tag",
+    "events",
+    "extend_bound_check",
+    "fallback_start_s",
+    "hydraulic_options",
+    "job",
+    "lower_reading_rule",
+    "period_s",
+    "pressure_offset_allowance_N",
+    "pressure_offset_allowance_from_s",
+    "rod_fault",
+    "rod_fault_plan",
+    "tension_truth",
+    "true_force_rule",
+    "two_pressure_settings",
+    "zero_offset_N"
+   ]
+  },
+  "ready": [
+   149.49999999992073,
+   196.59999999880696
+  ]
+ }
+}

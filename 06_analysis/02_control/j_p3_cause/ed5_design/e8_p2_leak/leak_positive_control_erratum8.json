@@ -1,0 +1,3459 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": false,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md"
+  ],
+  "leaks": [
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 8,
+      "names": [
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 64
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 100
+        }
+      ],
+      "text": "- 시점: 실행 커밋 `606f87131a7f13468f1db37cf6c811c442a6caf0`의 단계 6b `12b_vbk0_base_a1`이 `aa_floor_stop`(`decide` 종료 2)으로 멈춘 뒤, **12b VBK 실행 전**이다. 12b VBK 출력은 없다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 10,
+      "names": [
+        {
+          "name": "ed5_design",
+          "category": "folders",
+          "column": 74
+        },
+        {
+          "name": "aa_stop_606f8713",
+          "category": "folders",
+          "column": 85
+        }
+      ],
+      "text": "- 원인 분석(control-expert 2026-11-23): `06_analysis/02_control/j_p3_cause/ed5_design/aa_stop_606f8713/`(스크립트·결과, `SHA256SUMS` sha256 `e387907e651d8c8d57741f394295…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 11,
+      "names": [
+        {
+          "name": "ed5_design",
+          "category": "folders",
+          "column": 79
+        },
+        {
+          "name": "stats_e8",
+          "category": "folders",
+          "column": 90
+        }
+      ],
+      "text": "- 통계 설계(stats-design-expert 2026-11-23): `06_analysis/02_control/j_p3_cause/ed5_design/stats_e8/`(`SHA256SUMS` sha256 `8b906fb9155425e3d406a128cc05f6550a0fe3b3…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 12,
+      "names": [
+        {
+          "name": "ed5_design",
+          "category": "folders",
+          "column": 79
+        },
+        {
+          "name": "stats_e8_review",
+          "category": "folders",
+          "column": 90
+        },
+        {
+          "name": "e8_review_check",
+          "category": "files",
+          "column": 109
+        },
+        {
+          "name": "e8_review_check",
+          "category": "files",
+          "column": 205
+        },
+        {
+          "name": "stats_e8",
+          "category": "folders",
+          "column": 405
+        }
+      ],
+      "text": "- 통계 검토(stats-design-expert 2026-11-23): `06_analysis/02_control/j_p3_cause/ed5_design/stats_e8_review/`(`e8_review_check.py` sha256 `ab2b0764d7d677c2acff245e3…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 13,
+      "names": [
+        {
+          "name": "ed5_design",
+          "category": "folders",
+          "column": 49
+        }
+      ],
+      "text": "- 봉인 전 감사: `06_analysis/02_control/j_p3_cause/ed5_design/audit_preseal_erratum8_ed5.md`(차단 B-1, 실행 전 수정 W-1~W-7, 기록 R-1~R-9). 이 판은 그 지적을 반영했다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 20,
+      "names": [
+        {
+          "name": "judge",
+          "category": "outputs",
+          "column": 52
+        },
+        {
+          "name": "decision.json",
+          "category": "files",
+          "column": 58
+        },
+        {
+          "name": "aa_inspect",
+          "category": "files",
+          "column": 90
+        }
+      ],
+      "text": "- VBK0 b1(seed 40) 대 b2(seed 41), 167쌍에서 센 쌍은 4개다(`judge/decision.json` `aa` 블록, 독립 재계수 `aa_inspect.json`과 같음)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 37,
+      "names": [
+        {
+          "name": "jp3_12b_judge.py",
+          "category": "files",
+          "column": 6
+        },
+        {
+          "name": "aa_floor",
+          "category": "functions",
+          "column": 25
+        }
+      ],
+      "text": "- `jp3_12b_judge.py` `aa_floor`(442~459행)는 6.3.8 문장과 같다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 44,
+      "names": [
+        {
+          "name": "ed5_design",
+          "category": "folders",
+          "column": 24
+        },
+        {
+          "name": "l2_floor",
+          "category": "reaudit",
+          "column": 43
+        }
+      ],
+      "text": "- 바닥 3쌍은 고장 없는 저장 줄(`ed5_design/stats_b/l2_floor.json`: READY 미도달 0/835, 순서쌍 실패 0/3340)을 보고 정했다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 51,
+      "names": [
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 18
+        }
+      ],
+      "text": "- b1·b2 VBK0 출력(`12b_vbk0_base_a1`)을 그대로 쓴다. 다시 돌리지 않는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 54,
+      "names": [
+        {
+          "name": "jp3_12b_judge",
+          "category": "files",
+          "column": 14
+        },
+        {
+          "name": "input_record",
+          "category": "functions",
+          "column": 28
+        }
+      ],
+      "text": "- T4h 요약은 `jp3_12b_judge.input_record`의 규칙(줄이 가리키는 파일의 sha256 목록을 이름순으로 이은 문자열의 sha256)이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 55,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 44
+        }
+      ],
+      "text": "- **6.3.8 A/A 멈춤은 이 정오로 해소하고 앞으로는 폐지한다.** `decide`는 A/A를 계산해 기록하고 계속한다(8-8)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 72,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 56
+        }
+      ],
+      "text": "- 실패 판정과 종료 코드는 정오 2 2-10의 순서(실패 > `setting_defect` > `not_judgeable` > 통과)를 따른다. $n_{23}>k_{allow}$는 \"실패\"로 센다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 73,
+      "names": [
+        {
+          "name": "stats_e8",
+          "category": "folders",
+          "column": 28
+        },
+        {
+          "name": "stats_e8_review",
+          "category": "folders",
+          "column": 82
+        },
+        {
+          "name": "e8_review_check",
+          "category": "files",
+          "column": 98
+        }
+      ],
+      "text": "- 근거(stats-design-expert, `stats_e8/e8_rule_tables.txt`·`e8_b4_ext.json`; 검토 계산 `stats_e8_review/e8_review_check.json`)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 97,
+      "names": [
+        {
+          "name": "meta_json",
+          "category": "outputs",
+          "column": 48
+        },
+        {
+          "name": "setting",
+          "category": "outputs",
+          "column": 73
+        }
+      ],
+      "text": "- 시간 제한 값은 결과 줄과 T4h에 기록되지 않는다(줄 스칼라 키, T4h `meta_json` `job`은 `key`·`setting`·`contact`뿐, 2026-11-23 확인)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 99,
+      "names": [
+        {
+          "name": "aa_fault_floor",
+          "category": "files",
+          "column": 147
+        }
+      ],
+      "text": "- 필요한 T4h 배열 `t_s`·`phase`·`motor_stroke_m`은 이번 VBK0 b1·b2 334파일과 c 건식 VBK0 160파일에 모두 있다(봉인 전 감사의 `key_presence --npz-dir` 확인 4건, 종료 0; 감사 R-1). `aa_fault_floo…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 101,
+      "names": [
+        {
+          "name": "aa_fault_floor",
+          "category": "files",
+          "column": 22
+        }
+      ],
+      "text": "- 이번 VBK0 적용 결과(기록, `aa_fault_floor.json`)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 109,
+      "names": [
+        {
+          "name": "aa_fault_floor",
+          "category": "files",
+          "column": 7
+        },
+        {
+          "name": "aa_fault_floor",
+          "category": "files",
+          "column": 27
+        }
+      ],
+      "text": "- 집계(`aa_fault_floor.py`·`aa_fault_floor.json`)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 110,
+      "names": [
+        {
+          "name": "meta_json",
+          "category": "outputs",
+          "column": 52
+        }
+      ],
+      "text": "- 대상: VBK0 b1 대 b2 167쌍, 두 방향. 6.3.7 (1) 분해(T4h `meta_json` `events`의 `FAULT…` 사건을 ':'·','로 나눈 (이름, 다리))와 정오 1 7절 `PHASE_FAULT`를 쓴다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 111,
+      "names": [
+        {
+          "name": "jp3_12b_judge",
+          "category": "files",
+          "column": 37
+        },
+        {
+          "name": "fault_pairs",
+          "category": "functions",
+          "column": 51
+        },
+        {
+          "name": "phase_fault_pairs",
+          "category": "functions",
+          "column": 65
+        }
+      ],
+      "text": "- 분해는 두 경로로 했다(스크립트 자체 분해, 실행 커밋 `jp3_12b_judge.fault_pairs`·`phase_fault_pairs`). 334줄 모두 같았다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 125,
+      "names": [
+        {
+          "name": "stats_e8_review",
+          "category": "folders",
+          "column": 38
+        },
+        {
+          "name": "e8_review_check",
+          "category": "files",
+          "column": 54
+        },
+        {
+          "name": "e8_review_check",
+          "category": "files",
+          "column": 158
+        }
+      ],
+      "text": "**표: 0/494로는 배제할 수 없는 거짓 실패 확률**(출처 `stats_e8_review/e8_review_check.json`, sha256 `78fe972488b086c03c7877089fe7d89fc7a099d9f974f82f9ccc7f2d027a3bef`; 스크립트 `e8…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 139,
+      "names": [
+        {
+          "name": "n_ready_loss",
+          "category": "outputs",
+          "column": 31
+        },
+        {
+          "name": "n_ready_plus30",
+          "category": "outputs",
+          "column": 58
+        },
+        {
+          "name": "n_vbk_worse",
+          "category": "outputs",
+          "column": 78
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 96
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 112
+        }
+      ],
+      "text": "- $n_{23}$과 그 분해: READY 상실 수 `n_ready_loss`, READY 지연 수 `n_ready_plus30`, 합 `n_vbk_worse`, 허용 `allow_k`, 쓴 블록 `blocks_used`."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 141,
+      "names": [
+        {
+          "name": "n_vbk0_worse",
+          "category": "outputs",
+          "column": 21
+        }
+      ],
+      "text": "- **VBK0만 나쁜 짝 수** `n_vbk0_worse`(기록)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 142,
+      "names": [
+        {
+          "name": "n_vbk0_worse_loss",
+          "category": "outputs",
+          "column": 33
+        }
+      ],
+      "text": "- VBK0 READY 미도달·VBK 도달인 짝 수 `n_vbk0_worse_loss`(분류 \"VBK0 READY 미도달\" 짝 가운데)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 143,
+      "names": [
+        {
+          "name": "n_vbk0_worse_plus30",
+          "category": "outputs",
+          "column": 79
+        }
+      ],
+      "text": "- **두 쪽 모두 READY에 닿은 기회 짝**에서 (VBK0 − VBK)를 1×10⁻⁶ s로 반올림한 값이 30 s보다 큰 짝 수 `n_vbk0_worse_plus30`(VBK READY가 없는 기회 짝은 대상이 아니다; 감사 W-4)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 144,
+      "names": [
+        {
+          "name": "stall_signature_pairs",
+          "category": "outputs",
+          "column": 42
+        },
+        {
+          "name": "stall_signature_vbk0_lines",
+          "category": "outputs",
+          "column": 93
+        }
+      ],
+      "text": "- 교착 서명: READY 상실 짝 가운데 VBK 줄이 서명인 짝의 키 `stall_signature_pairs`, 쓴 블록의 VBK0 줄 가운데 서명인 줄의 키 `stall_signature_vbk0_lines`, 줄마다 마지막 `t_s`."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 151,
+      "names": [
+        {
+          "name": "cdry_a1",
+          "category": "folders",
+          "column": 6
+        },
+        {
+          "name": "judge",
+          "category": "outputs",
+          "column": 14
+        },
+        {
+          "name": "dry_c.json",
+          "category": "files",
+          "column": 20
+        },
+        {
+          "name": "rule",
+          "category": "outputs",
+          "column": 39
+        },
+        {
+          "name": "pairs",
+          "category": "outputs",
+          "column": 46
+        },
+        {
+          "name": "inputs",
+          "category": "outputs",
+          "column": 54
+        },
+        {
+          "name": "categories",
+          "category": "outputs",
+          "column": 63
+        },
+        {
+          "name": "problems",
+          "category": "outputs",
+          "column": 124
+        },
+        {
+          "name": "status",
+          "category": "functions",
+          "column": 135
+        },
+        {
+          "name": "exit",
+          "category": "outputs",
+          "column": 144
+        }
+      ],
+      "text": "- `cdry_a1/judge/dry_c.json`(최상위 키 `rule`·`pairs`·`inputs`·`categories`·`changed_opportunity_pairs`·`c`·`trigger_share`·`problems`·`status`·`exit`)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 153,
+      "names": [
+        {
+          "name": "categories",
+          "category": "outputs",
+          "column": 48
+        },
+        {
+          "name": "problems",
+          "category": "outputs",
+          "column": 120
+        },
+        {
+          "name": "setting_defects",
+          "category": "outputs",
+          "column": 137
+        },
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 155
+        },
+        {
+          "name": "failures",
+          "category": "outputs",
+          "column": 171
+        },
+        {
+          "name": "status",
+          "category": "functions",
+          "column": 184
+        },
+        {
+          "name": "exit",
+          "category": "outputs",
+          "column": 194
+        }
+      ],
+      "text": "- stats-design-expert가 읽은 26~42행(오염 보고)에는 `categories`(분류 다섯), `changed_opportunity_pairs`, `c`, `trigger_share`, `problems`의 세 목록(`setting_defects`·`not_judge…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 154,
+      "names": [
+        {
+          "name": "failures",
+          "category": "outputs",
+          "column": 53
+        },
+        {
+          "name": "dry-c",
+          "category": "subcommands",
+          "column": 65
+        }
+      ],
+      "text": "- **확인 결과**(봉인 전 감사 R-8, 실행 커밋 blob에서 코드로 확인): `failures`는 `dry-c` 경로에서 쓰는 곳이 없어 입력과 무관하게 언제나 빈 목록이다. 그래서 이 파일은 c 건식 VBK의 (1)~(3) 결과를 담을 수 없다. 다른 두 빈 목록은 존재 정보…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 158,
+      "names": [
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 19
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 27
+        },
+        {
+          "name": "cdry_a1",
+          "category": "folders",
+          "column": 36
+        },
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 55
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 63
+        },
+        {
+          "name": "cdry_a1",
+          "category": "folders",
+          "column": 72
+        },
+        {
+          "name": "_t4h",
+          "category": "outputs",
+          "column": 124
+        },
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 143
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 151
+        },
+        {
+          "name": "cdry_a1",
+          "category": "folders",
+          "column": 160
+        }
+      ],
+      "text": "- c 건식 VBK: 글롭 `j9_runs/606f8713/cdry_a1/VBK_c92*`·`j9_runs/606f8713/cdry_a1/VBK_c93*`(결과 줄, partial, `.identity.json`, `_t4h/` 폴더 모두 포함)와 `j9_runs/606f8713/cd…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 165,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 12
+        }
+      ],
+      "text": "### 8-8.1 `decide`"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 166,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 42
+        }
+      ],
+      "text": "- A/A는 지금처럼 계산한다(b1 대 b2, 167쌍 전부, 결측이면 `not_judgeable`). **멈추지 않는다.** 결정 기록에 다음을 쓴다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 167,
+      "names": [
+        {
+          "name": "aa_floor",
+          "category": "functions",
+          "column": 6
+        },
+        {
+          "name": "pairs",
+          "category": "outputs",
+          "column": 18
+        },
+        {
+          "name": "counted_pairs",
+          "category": "outputs",
+          "column": 27
+        },
+        {
+          "name": "counted",
+          "category": "outputs",
+          "column": 44
+        },
+        {
+          "name": "rule",
+          "category": "outputs",
+          "column": 61
+        },
+        {
+          "name": "record",
+          "category": "outputs",
+          "column": 86
+        },
+        {
+          "name": "is_stop",
+          "category": "outputs",
+          "column": 97
+        },
+        {
+          "name": "stop_at",
+          "category": "outputs",
+          "column": 116
+        }
+      ],
+      "text": "- `aa_floor`: `pairs`, `counted_pairs`, `counted`(키 목록), `rule` = `\"erratum 8 8-1: record\"`, `is_stop` = false. `stop_at` 키는 두지 않는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 169,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 49
+        },
+        {
+          "name": "block",
+          "category": "outputs",
+          "column": 77
+        }
+      ],
+      "text": "- N 보충이 b3을 요구하면(사용자 결정 2026-11-23) b3을 돌리지 않고 `not_judgeable`(종료 2, 사유 \"b3 block combination has no allowance (erratum 8 8-2)\")로 멈춘다. b3이 입력으로 주어져도 같다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 170,
+      "names": [
+        {
+          "name": "aa_inspect",
+          "category": "files",
+          "column": 76
+        }
+      ],
+      "text": "- 이번 실행에서는 닿지 않는다. b1·b2 VBK0 분류로 $N_{opp}$ = 327 ≥ 0.9 × 334 = 300.6이다(`aa_inspect.json`). 시험으로만 확인한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 171,
+      "names": [
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 4
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 24
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 39
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 84
+        }
+      ],
+      "text": "- `decided`일 때 결정 기록에 `blocks_used`와 `allow_k`(b1·b2 → 7, b1·b2·b4 → 9)를 쓴다. 기존 키 `blocks`(VBK 실행 블록 선택과 판정 짝 순회에 쓰는 키)도 그대로 쓰고, 두 키의 블록 집합은 같아야 한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 172,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 91
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 144
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 153
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 167
+        }
+      ],
+      "text": "- 입력 고정 대조(8-9 (d)): 블록별 기대값 인자(VBK0 결과 파일 sha256과 T4h 요약)를 필수로 받는다. 기대값이 없거나 입력 기록과 다르면 `not_judgeable`(종료 2)이고, 그때 쓰는 기록에는 상태·사유·입력 sha만 두며 `blocks`·`blocks_…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 173,
+      "names": [
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 60
+        },
+        {
+          "name": "judge",
+          "category": "outputs",
+          "column": 77
+        },
+        {
+          "name": "decision.json",
+          "category": "files",
+          "column": 83
+        }
+      ],
+      "text": "- `aa_floor_stop` 상태는 더 이상 내지 않는다. 종료 코드 표에서 지우고, 옛 결정 기록(`12b_vbk0_base_a1/judge/decision.json`)은 입력으로 받지 않는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 175,
+      "names": [
+        {
+          "name": "judge",
+          "category": "outputs",
+          "column": 12
+        }
+      ],
+      "text": "### 8-8.2 `judge`"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 176,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 43
+        }
+      ],
+      "text": "- 결정 기록 검사에 더한다(감사 W-5). 다음 가운데 하나라도 맞으면 `not_judgeable`이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 177,
+      "names": [
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 6
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 19
+        }
+      ],
+      "text": "- `allow_k` 또는 `blocks_used` 키가 없다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 178,
+      "names": [
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 10
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 30
+        }
+      ],
+      "text": "- `set(blocks_used) != set(blocks)`"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 179,
+      "names": [
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 6
+        }
+      ],
+      "text": "- `blocks_used`가 {b1, b2} 또는 {b1, b2, b4}가 아니다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 180,
+      "names": [
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 6
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 17
+        }
+      ],
+      "text": "- `allow_k`가 `blocks_used`의 규칙 값(8-2)과 다르다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 181,
+      "names": [
+        {
+          "name": "_judge_ready",
+          "category": "functions",
+          "column": 4
+        },
+        {
+          "name": "ready_outcome",
+          "category": "outputs",
+          "column": 44
+        },
+        {
+          "name": "ready_s",
+          "category": "outputs",
+          "column": 88
+        },
+        {
+          "name": "ready0_s",
+          "category": "outputs",
+          "column": 99
+        }
+      ],
+      "text": "- `_judge_ready`는 짝마다 실패를 더하지 않고 결과만 남긴다: `ready_outcome` ∈ {`loss`, `plus30`, `ok`}, `ready_s`, `ready0_s`."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 182,
+      "names": [
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 14
+        },
+        {
+          "name": "n_vbk_worse",
+          "category": "outputs",
+          "column": 35
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 49
+        }
+      ],
+      "text": "- 모든 짝을 본 뒤 `ready_rule` 블록을 쓰고, `n_vbk_worse > allow_k`이면 실패 하나(`\"(2)+(3) n23 {n} > allow {k} (erratum 8 8-2)\"`)를 더한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 183,
+      "names": [
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "- `ready_rule` 키(판정 파일)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 187,
+      "names": [
+        {
+          "name": "n_ready_loss",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `n_ready_loss` | 기회 짝 READY 상실 수 | 판정 입력 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 188,
+      "names": [
+        {
+          "name": "n_ready_plus30",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `n_ready_plus30` | 기회 짝 READY 지연(> 30 s) 수 | 판정 입력 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 189,
+      "names": [
+        {
+          "name": "n_vbk_worse",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `n_vbk_worse` | $n_{23}$ = 위 둘의 합 | 판정 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 190,
+      "names": [
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `allow_k` | 7 또는 9(결정 기록에서) | 판정 입력 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 191,
+      "names": [
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `blocks_used` | 결정 기록의 블록 | 판정 입력 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 192,
+      "names": [
+        {
+          "name": "pass",
+          "category": "outputs",
+          "column": 16
+        },
+        {
+          "name": "failed",
+          "category": "outputs",
+          "column": 25
+        }
+      ],
+      "text": "| `verdict` | `pass` / `failed` | 판정 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 193,
+      "names": [
+        {
+          "name": "n_vbk0_worse",
+          "category": "outputs",
+          "column": 4
+        },
+        {
+          "name": "n_vbk0_worse_loss",
+          "category": "outputs",
+          "column": 20
+        },
+        {
+          "name": "n_vbk0_worse_plus30",
+          "category": "outputs",
+          "column": 41
+        }
+      ],
+      "text": "| `n_vbk0_worse`, `n_vbk0_worse_loss`, `n_vbk0_worse_plus30` | 8-6 | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 194,
+      "names": [
+        {
+          "name": "stall_signature_pairs",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `stall_signature_pairs` | READY 상실 짝 가운데 VBK 줄이 서명인 키 | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 195,
+      "names": [
+        {
+          "name": "stall_signature_vbk0_lines",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `stall_signature_vbk0_lines` | 쓴 블록 VBK0 줄 가운데 서명인 키 | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 196,
+      "names": [
+        {
+          "name": "stall_signature_computed",
+          "category": "outputs",
+          "column": 4
+        },
+        {
+          "name": "stall_signature_reasons",
+          "category": "outputs",
+          "column": 32
+        }
+      ],
+      "text": "| `stall_signature_computed`, `stall_signature_reasons` | 서명 계산 여부와 사유 | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 197,
+      "names": [
+        {
+          "name": "by_cell",
+          "category": "outputs",
+          "column": 4
+        },
+        {
+          "name": "n_opp",
+          "category": "outputs",
+          "column": 35
+        },
+        {
+          "name": "n_vbk_worse",
+          "category": "outputs",
+          "column": 43
+        },
+        {
+          "name": "n_ready_loss",
+          "category": "outputs",
+          "column": 57
+        },
+        {
+          "name": "n_ready_plus30",
+          "category": "outputs",
+          "column": 72
+        }
+      ],
+      "text": "| `by_cell` | 셀(0~7, b4는 `TRw`)별 `n_opp`·`n_vbk_worse`·`n_ready_loss`·`n_ready_plus30` | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 198,
+      "names": [
+        {
+          "name": "by_block",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `by_block` | 블록별 같은 키 | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 199,
+      "names": [
+        {
+          "name": "aa_floor",
+          "category": "functions",
+          "column": 4
+        }
+      ],
+      "text": "| `aa_floor` | 결정 기록에서 옮긴 값 | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 200,
+      "names": [
+        {
+          "name": "n_fault_judged",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `n_fault_judged` | $N_1$ = 기회 짝 + VBK0 READY 미도달 짝 수((1) 판정 짝, 통과 문장 분모) | 기록 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 202,
+      "names": [
+        {
+          "name": "stall_signature_computed",
+          "category": "outputs",
+          "column": 59
+        }
+      ],
+      "text": "- 서명 계산에 필요한 T4h 배열(`t_s`·`phase`·`motor_stroke_m`)이 없으면 `stall_signature_computed` = false와 사유를 남긴다. **상태와 종료 코드는 바꾸지 않는다**(정오 2 2-1 F-1과 같은 꼴). `t_s`를 존재 관문(…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 203,
+      "names": [
+        {
+          "name": "n_vbk0_worse",
+          "category": "outputs",
+          "column": 43
+        },
+        {
+          "name": "n_vbk0_worse_loss",
+          "category": "outputs",
+          "column": 58
+        },
+        {
+          "name": "n_vbk0_worse_plus30",
+          "category": "outputs",
+          "column": 78
+        },
+        {
+          "name": "by_cell",
+          "category": "outputs",
+          "column": 101
+        },
+        {
+          "name": "by_block",
+          "category": "outputs",
+          "column": 112
+        },
+        {
+          "name": "computed",
+          "category": "outputs",
+          "column": 163
+        }
+      ],
+      "text": "- **기록 항목의 예외 처리**(감사 W-4): 기록 항목(교착 서명, `n_vbk0_worse`·`n_vbk0_worse_loss`·`n_vbk0_worse_plus30`, `by_cell`, `by_block`)을 계산하다 예외가 나면(배열 길이 불일치, 값 형식 등) 그 항목마…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 204,
+      "names": [
+        {
+          "name": "n_vbk0_worse_plus30",
+          "category": "outputs",
+          "column": 6
+        }
+      ],
+      "text": "- `n_vbk0_worse_plus30`의 대상은 두 쪽 모두 READY에 닿은 기회 짝이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 210,
+      "names": [
+        {
+          "name": "pass",
+          "category": "outputs",
+          "column": 27
+        },
+        {
+          "name": "failed",
+          "category": "outputs",
+          "column": 45
+        }
+      ],
+      "text": "1. b1·b2, $n_{23}$ = 7 → `pass`(종료 0), 8 → `failed`(종료 1)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 211,
+      "names": [
+        {
+          "name": "pass",
+          "category": "outputs",
+          "column": 30
+        },
+        {
+          "name": "failed",
+          "category": "outputs",
+          "column": 43
+        }
+      ],
+      "text": "2. b1·b2·b4, $n_{23}$ = 9 → `pass`, 10 → `failed`."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 212,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 21
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 44
+        }
+      ],
+      "text": "3. b3이 들어간 결정 기록 → `not_judgeable`(종료 2). `decide`가 b3을 요구하는 입력 → 종료 2, b3 실행 없음."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 216,
+      "names": [
+        {
+          "name": "n_vbk0_worse_loss",
+          "category": "outputs",
+          "column": 78
+        }
+      ],
+      "text": "5. 두 쪽 모두 READY 없음 → 분류 \"VBK0 READY 미도달\", $n_{23}$에 넣지 않음. VBK0 없음·VBK 도달 → `n_vbk0_worse_loss` +1, $n_{23}$ 그대로."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 217,
+      "names": [
+        {
+          "name": "n_ready_loss",
+          "category": "outputs",
+          "column": 23
+        },
+        {
+          "name": "stall_signature_pairs",
+          "category": "outputs",
+          "column": 42
+        },
+        {
+          "name": "n_ready_loss",
+          "category": "outputs",
+          "column": 87
+        },
+        {
+          "name": "stall_signature_computed",
+          "category": "outputs",
+          "column": 121
+        }
+      ],
+      "text": "6. VBK 교착 줄(서명 만족) → `n_ready_loss` +1, `stall_signature_pairs`에 키. 서명 불만족 READY 상실도 `n_ready_loss` +1. `t_s` 없는 T4h → `stall_signature_computed` false, 상태·종료 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 218,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 5
+        },
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 32
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 45
+        },
+        {
+          "name": "aa_floor",
+          "category": "functions",
+          "column": 63
+        },
+        {
+          "name": "is_stop",
+          "category": "outputs",
+          "column": 72
+        },
+        {
+          "name": "counted",
+          "category": "outputs",
+          "column": 89
+        }
+      ],
+      "text": "7. `decide`: A/A 4쌍(≥ 3) 입력 → `decided` 또는 `needs_b4`(종료 0), `aa_floor.is_stop` false, `counted` 기록."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 219,
+      "names": [
+        {
+          "name": "failed",
+          "category": "outputs",
+          "column": 36
+        },
+        {
+          "name": "failed",
+          "category": "outputs",
+          "column": 56
+        },
+        {
+          "name": "failed",
+          "category": "outputs",
+          "column": 103
+        }
+      ],
+      "text": "8. (1) 새 FAULT 1 + $n_{23}$ = 0 → `failed`. (4) H-7 → `failed`. $n_{23}$ = 8 + `setting_defect` 사유 → `failed`, 사유 보존(2-10)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 220,
+      "names": [
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 11
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 26
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 36
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 56
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 66
+        },
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 93
+        }
+      ],
+      "text": "9. 결정 기록 `allow_k` 불일치, `allow_k`·`blocks_used` 키 없음, `blocks`와 `blocks_used`의 집합 불일치 → 각각 `not_judgeable`."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 221,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 39
+        }
+      ],
+      "text": "10. 판정 행 0(기회 짝 0)·$N_{opp}$ < 301 → `not_judgeable`(원판 그대로)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 222,
+      "names": [
+        {
+          "name": "computed",
+          "category": "outputs",
+          "column": 64
+        }
+      ],
+      "text": "11. 기록 항목 계산 예외(예: 서명용 `t_s`와 `motor_stroke_m` 길이 불일치) → 그 항목 `computed` false와 사유, 상태·종료 코드는 예외가 없을 때와 같음. 대문자 `phase` 값(`LEVEL`)도 서명 조건 3을 만족함."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 224,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 76
+        },
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 94
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 115
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 124
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 138
+        }
+      ],
+      "text": "13. 8-9 (d): 기대값과 다른 VBK0 입력(결과 파일 sha 또는 T4h 요약 하나만 달라도), 또는 기대값 인자 없음 → `decide` 종료 2, 상태 `not_judgeable`, 기록에 `blocks`·`blocks_used`·`allow_k` 없음."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 225,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 15
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 25
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 62
+        },
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 72
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 83
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 113
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 133
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 146
+        }
+      ],
+      "text": "14. b4 사슬: 첫 `decide`가 `needs_b4`(종료 0) → b1·b2·b4 입력의 두 번째 `decide`가 `decided`, `blocks_used` = {b1, b2, b4}, `allow_k` = 9. 두 번째 `decide`가 다시 `needs_b4`를 내는 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 228,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 45
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 65
+        }
+      ],
+      "text": "- 두 커밋 운용(사용자 결정 2026-11-23). 시뮬레이션은 실행 커밋 `606f8713`(worktree `ed5-run5`, 잠금)에서 그대로 돈다. VBK0 b1·b2를 다시 쓰므로 VBK·b4 VBK0도 같은 코드여야 한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 230,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 13
+        }
+      ],
+      "text": "- 도구 커밋과 `606f8713`의 차이는 판정 도구·시험·실행 스크립트·정오 8과 경로 2 정오·근거 폴더·목록 파일로 한정한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 231,
+      "names": [
+        {
+          "name": "las_t3_dg3.py",
+          "category": "files",
+          "column": 25
+        },
+        {
+          "name": "jp3_run_identity.py",
+          "category": "files",
+          "column": 42
+        }
+      ],
+      "text": "- 바뀐 파일이 VBK·VBK0 러너(`las_t3_dg3.py`, `jp3_run_identity.py`)의 정적 import 폐포에 없음을 P-1 폐포 검사(정오 2 2-4)로 보이고 기록한다. 있으면 멈춘다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 232,
+      "names": [
+        {
+          "name": "stats_e8",
+          "category": "folders",
+          "column": 79
+        },
+        {
+          "name": "stats_e8_review",
+          "category": "folders",
+          "column": 102
+        },
+        {
+          "name": "aa_stop_606f8713",
+          "category": "folders",
+          "column": 132
+        },
+        {
+          "name": "e8_p2_leak",
+          "category": "reaudit",
+          "column": 163
+        }
+      ],
+      "text": "- `FIXED_INPUTS_<도구 커밋>` 목록에 정오 8과 경로 2 정오의 `.sha256`, 8-1.3의 VBK0 고정 sha, `stats_e8/SHA256SUMS`, `stats_e8_review/SHA256SUMS`, `aa_stop_606f8713/SHA256SUMS`, …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 236,
+      "names": [
+        {
+          "name": "jp3_12b_judge.py",
+          "category": "files",
+          "column": 42
+        }
+      ],
+      "text": "- `04_scripts/04_hydraulic/coupled/jp3_12b_judge.py`"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 238,
+      "names": [
+        {
+          "name": "prelaunch_j9",
+          "category": "folders",
+          "column": 44
+        },
+        {
+          "name": "run_steps_ed5",
+          "category": "folders",
+          "column": 57
+        }
+      ],
+      "text": "- `06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/` 아래 파일(실행 스크립트, `fixed_inputs_entries.txt`)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 239,
+      "names": [
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 87
+        },
+        {
+          "name": "run_steps_ed5",
+          "category": "folders",
+          "column": 209
+        }
+      ],
+      "text": "- 추가(A)만 허용: 그 밖의 `06_analysis/` 아래 파일(정오 8, 경로 2 정오, 각 `.sha256`, 근거 폴더, 감사 기록, `j9_runs/` 출력, `FIXED_INPUTS_*`·`P1_OUTPUTS_*` 목록)과 `00_docs/` 아래 문서. **`06_an…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 240,
+      "names": [
+        {
+          "name": "prelaunch_j9",
+          "category": "folders",
+          "column": 55
+        },
+        {
+          "name": "run_steps_ed5",
+          "category": "folders",
+          "column": 190
+        },
+        {
+          "name": "common_ed5",
+          "category": "reaudit",
+          "column": 204
+        },
+        {
+          "name": "common_ed5",
+          "category": "reaudit",
+          "column": 227
+        }
+      ],
+      "text": "- **공용 실행 스크립트 `06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/`는 바꾸지 않는다**(위 규칙상 M이면 멈춤). 도구 checkout 처리(도구 checkout 경로 변수, 판정 명령의 작업 폴더·스크립트 경로, 도구…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 241,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 43
+        },
+        {
+          "name": "9460b2e0",
+          "category": "reaudit",
+          "column": 52
+        },
+        {
+          "name": "run_steps_ed5",
+          "category": "folders",
+          "column": 101
+        },
+        {
+          "name": "common_ed5",
+          "category": "reaudit",
+          "column": 115
+        }
+      ],
+      "text": "- 참고(재감사 확인): `git diff --name-status 606f8713 9460b2e0`의 경로는 모두 `06_analysis/` 아래이고, A가 아닌 것은 `run_steps_ed5/common_ed5.ps1`(M) 하나다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 242,
+      "names": [
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 29
+        },
+        {
+          "name": "12b_decide_e8_b4",
+          "category": "reaudit",
+          "column": 45
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 204
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 217
+        }
+      ],
+      "text": "- (a′) 판정 명령의 정체성: 판정 명령(`12b_decide_e8`·`12b_decide_e8_b4`·12b 판정과 (f) 표의 판정 단계)마다 작업 폴더와 판정 스크립트 경로가 도구 checkout 안인지, 도구 checkout의 HEAD가 도구 커밋이고 작업 트리가 깨끗한지 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 243,
+      "names": [
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 85
+        },
+        {
+          "name": "common_ed5",
+          "category": "reaudit",
+          "column": 229
+        }
+      ],
+      "text": "- (a″) 고정 입력 목록의 연결(재개 직전 감사 항목): 지금 실행 스크립트의 고정 입력 대조는 `FIXED_INPUTS_606f8713`과 `ed5-run5`의 고정 입력 도구를 읽는다. 도구 커밋 이후 단계는 이 대조에 더해 `FIXED_INPUTS_<도구 커밋 앞 8자>`(이…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 244,
+      "names": [
+        {
+          "name": "las_t3_dg3.py",
+          "category": "files",
+          "column": 61
+        }
+      ],
+      "text": "- (b) `05_tests/unit/pre_las_preset_runner.py`는 바꾸지 않는다. `las_t3_dg3.py`가 LAS 끔일 때 `importlib`로 실행하는 파일이라 정적 폐포 밖에 있다. (a)의 diff에 이 파일이 있으면 멈춘다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 245,
+      "names": [
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 159
+        }
+      ],
+      "text": "- (c) 실행 조건 대조: VBK 실행과 b4 VBK0 실행의 identity 기록(`threads`의 다섯 값, `python`, `python_version`, `git.head`, `git.is_clean`, `rules_seals`)과 환경 변수를 b1·b2 VBK0(`12b…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 248,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 45
+        },
+        {
+          "name": "inputs",
+          "category": "outputs",
+          "column": 115
+        },
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 122
+        },
+        {
+          "name": "run_sha256",
+          "category": "outputs",
+          "column": 138
+        },
+        {
+          "name": "t4h_sha256_digest",
+          "category": "outputs",
+          "column": 151
+        },
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 186
+        },
+        {
+          "name": "12b_decide_e8_b4",
+          "category": "reaudit",
+          "column": 202
+        },
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 232
+        }
+      ],
+      "text": "- (d) 입력 고정 대조(재감사 N-3): **판정 도구가 맡는다.** `decide`는 기대값 인자(블록마다 VBK0 결과 파일 sha256과 T4h 요약, 8-1.3 값)를 받아, 입력 기록의 `inputs.vbk0.b1`·`b2`의 `run_sha256`·`t4h_sha256_…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 249,
+      "names": [
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 12
+        },
+        {
+          "name": "not_judgeable",
+          "category": "outputs",
+          "column": 50
+        },
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 81
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 94
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 103
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 117
+        },
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 150
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 160
+        }
+      ],
+      "text": "- 다르면 `not_judgeable`(종료 2)이다. 이때 쓰는 기록은 상태 `not_judgeable`과 사유, 입력 sha뿐이며 `decided` 기록(`blocks`·`blocks_used`·`allow_k`)을 쓰지 않는다. 실행 스크립트는 상태가 `decided`·`need…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 250,
+      "names": [
+        {
+          "name": "12b_vbk0_base",
+          "category": "outputs",
+          "column": 24
+        },
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 82
+        }
+      ],
+      "text": "- (e) 멈춘 단계 출력의 수용: `12b_vbk0_base`는 `.stop`(종료 2)으로 끝나 `.done`이 없다. 이 단계의 출력 `12b_vbk0_base_a1`은 (d)의 sha 대조를 통과한 경우에만 다음 단계의 입력·선행 조건으로 받는다. 이것은 정오 2 2-6 103…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 253,
+      "names": [
+        {
+          "name": "las_t3_dg3.py",
+          "category": "files",
+          "column": 36
+        }
+      ],
+      "text": "| 단계 | 실행 스크립트(ps1) 커밋 | 시뮬레이션 코드(`las_t3_dg3.py`에 넘기는 worktree)와 시뮬레이션 단계 `--expect-commit` | 판정 도구 커밋과 판정 단계 정체성 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 255,
+      "names": [
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `12b_decide_e8`(새 단계) | 도구 커밋 | 없음(시뮬레이션 없음) | 도구 커밋 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 256,
+      "names": [
+        {
+          "name": "12b_vbk0_b4",
+          "category": "reaudit",
+          "column": 12
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 43
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 54
+        }
+      ],
+      "text": "| b4 VBK0 `12b_vbk0_b4`(필요할 때) | 도구 커밋 | `606f8713`(`ed5-run5`) | — |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 257,
+      "names": [
+        {
+          "name": "12b_decide_e8_b4",
+          "category": "reaudit",
+          "column": 4
+        }
+      ],
+      "text": "| `12b_decide_e8_b4`(b4를 돌렸을 때) | 도구 커밋 | 없음 | 도구 커밋 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 258,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 39
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 50
+        }
+      ],
+      "text": "| 12b VBK(`step6c`의 실행 부분) | 도구 커밋 | `606f8713`(`ed5-run5`) | — |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 260,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 46
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 57
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 106
+        }
+      ],
+      "text": "| (7) T-JR-13~15(`step7_records`) | 도구 커밋 | `606f8713`(`ed5-run5`) | 도구 커밋(판정 도구는 (a) 목록상 12b 판정 도구 밖이면 `606f8713`과 같은 blob) |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 261,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 44
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 55
+        }
+      ],
+      "text": "| T-CK·DROPOUT(`step7b_ckdrop`) | 도구 커밋 | `606f8713`(`ed5-run5`) | 도구 커밋(같은 조건) |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 262,
+      "names": [
+        {
+          "name": "step8_j9main",
+          "category": "outputs",
+          "column": 12
+        },
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 43
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 69
+        },
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 80
+        }
+      ],
+      "text": "| j9_main(`step8_j9main`) | 도구 커밋(2-9.6의 `ready_rule` 대조가 들어간 판) | `606f8713`(`ed5-run5`) | 도구 커밋(같은 조건) |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 265,
+      "names": [
+        {
+          "name": "ed5-run5",
+          "category": "reaudit",
+          "column": 113
+        }
+      ],
+      "text": "- `step6c` 한 단계 안에서 정체성 기대가 둘로 갈린다. 시뮬레이션 명령은 `--expect-commit 606f87131a7f13468f1db37cf6c811c442a6caf0`(저장소 `ed5-run5`), 판정 명령은 도구 커밋(도구 커밋 checkout)이다. 단계 기록…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 266,
+      "names": [
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 55
+        }
+      ],
+      "text": "- 실행 스크립트를 도구 커밋에서 돌려도 시뮬레이션 실행 파일과 그 폐포는 (a)·(b)로 `606f8713`과 같다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 268,
+      "names": [
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 22
+        }
+      ],
+      "text": "1. b1·b2 VBK0: 끝남(`12b_vbk0_base_a1`, 재실행 없음, (e)로 받음)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 269,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 7
+        },
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 28
+        },
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 48
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 56
+        },
+        {
+          "name": "decision.json",
+          "category": "files",
+          "column": 82
+        },
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 208
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 219
+        }
+      ],
+      "text": "2. `decide`(정오 8): 새 단계 `12b_decide_e8`, 출력 `j9_runs/606f8713/12b_decide_e8_a1/decision.json`(`_a<k>`는 4a-5 5.2대로 같은 단계의 재시도에만 쓴다). 입력은 b1·b2 VBK0와 (d)의 기대값이다.…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 270,
+      "names": [
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 11
+        }
+      ],
+      "text": "3. 상태가 `needs_b4`이면"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 271,
+      "names": [
+        {
+          "name": "12b_vbk0_b4",
+          "category": "reaudit",
+          "column": 12
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 45
+        },
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 66
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 74
+        }
+      ],
+      "text": "- 단계 `12b_vbk0_b4`: b4(seed 43) VBK0를 `606f8713`에서 돌린다. 출력 `j9_runs/606f8713/12b_vbk0_b4_a1/`(`VBK0_b4.json`과 T4h 폴더)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 272,
+      "names": [
+        {
+          "name": "12b_decide_e8_b4",
+          "category": "reaudit",
+          "column": 12
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 32
+        },
+        {
+          "name": "j9_runs",
+          "category": "folders",
+          "column": 79
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 87
+        },
+        {
+          "name": "decision.json",
+          "category": "files",
+          "column": 116
+        },
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 140
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 175
+        },
+        {
+          "name": "12b_vbk0_b4",
+          "category": "reaudit",
+          "column": 188
+        }
+      ],
+      "text": "- 단계 `12b_decide_e8_b4`: `decide`를 b1·b2·b4 VBK0와 (d)의 기대값으로 다시 부른다. 출력 `j9_runs/606f8713/12b_decide_e8_b4_a1/decision.json`. 선행 조건은 `12b_decide_e8.done`(가리키는 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 273,
+      "names": [
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 22
+        },
+        {
+          "name": "needs_b4",
+          "category": "outputs",
+          "column": 57
+        }
+      ],
+      "text": "- 이 결정 기록의 상태는 `decided`이거나 종료 2($k$ < 45 등)다. 다시 `needs_b4`가 나오면 설정 결함으로 멈춘다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 274,
+      "names": [
+        {
+          "name": "12b_decide_e8_b4",
+          "category": "reaudit",
+          "column": 44
+        },
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 93
+        },
+        {
+          "name": "decided",
+          "category": "outputs",
+          "column": 140
+        },
+        {
+          "name": "blocks",
+          "category": "outputs",
+          "column": 158
+        },
+        {
+          "name": "606f8713",
+          "category": "reaudit",
+          "column": 173
+        }
+      ],
+      "text": "4. VBK 단계(`step6c`)가 읽는 결정 기록은 하나로 정한다: `12b_decide_e8_b4.done`이 있으면 그것이 가리키는 결정 기록, 없으면 `12b_decide_e8.done`이 가리키는 결정 기록이다. 어느 쪽이든 상태가 `decided`여야 하고, 그 `bloc…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 275,
+      "names": [
+        {
+          "name": "judge",
+          "category": "outputs",
+          "column": 7
+        },
+        {
+          "name": "12b_vbk",
+          "category": "reaudit",
+          "column": 27
+        }
+      ],
+      "text": "5. `judge`(정오 8). 끝 표지 `12b_vbk.done`은 판정 파일 sha를 적는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 283,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 44
+        }
+      ],
+      "text": "- **원판 6.3.8**: 절 전체를 \"**폐지(정오 8).** A/A는 `decide`가 b1 대 b2 167쌍으로 계산해 기록한다. 멈춤 조건이 아니다. 판 5 실행의 값은 167쌍 중 4다(정오 8 8-1).\"로 바꾼다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 285,
+      "names": [
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 26
+        }
+      ],
+      "text": "> '기회 짝 $N_{opp}$개(블록 {blocks_used}). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBK0 READY 미도달 짝 수 = {N_1}개, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) READY 지연·상실 $n_…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 291,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 91
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 119
+        }
+      ],
+      "text": "- **원판 7.2 시험 456행**: \"A/A 3쌍이면 종료 2(`aa_floor_stop`)이고, VBK 파일을 읽지 않는다\" → \"A/A 3쌍 이상이어도 `decide`는 멈추지 않고 A/A를 기록한다. `decide`는 VBK 경로를 받지 않는다(VBK 파일을 열지 않음은 그대…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 294,
+      "names": [
+        {
+          "name": "12b_vbk0_base_a1",
+          "category": "outputs",
+          "column": 75
+        }
+      ],
+      "text": "- **정오 2 2-6 103행**: \"앞 단계가 종료 0으로 끝나기 전에는 다음으로 가지 않는다.\" 뒤에 \"예외: 판 5 실행의 `12b_vbk0_base_a1`(종료 2, `.stop`)은 정오 8 8-9 (d)·(e)로 받는다.\"를 더한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 296,
+      "names": [
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 39
+        },
+        {
+          "name": "pass",
+          "category": "outputs",
+          "column": 62
+        },
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 70
+        },
+        {
+          "name": "allow_k",
+          "category": "outputs",
+          "column": 81
+        },
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 92
+        },
+        {
+          "name": "blocks_used",
+          "category": "outputs",
+          "column": 103
+        },
+        {
+          "name": "ready_rule",
+          "category": "outputs",
+          "column": 133
+        }
+      ],
+      "text": "- **정오 2 2-9.6**: 대조 항목에 더한다. 판정 파일의 `ready_rule.verdict` = `pass`, `ready_rule.allow_k`가 `ready_rule.blocks_used`의 규칙 값(8-2)과 같다. `ready_rule` 블록이 없거나 이 키 가운데…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 297,
+      "names": [
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 20
+        },
+        {
+          "name": "decide",
+          "category": "functions",
+          "column": 68
+        }
+      ],
+      "text": "- **정오 2 2-10**: \"`decide` 하위 명령(A/A·보충)은 실패를 세지 않으므로 바뀌지 않는다\" → \"`decide`는 실패를 세지 않는다. 정오 8로 A/A 멈춤이 없어졌다.\""
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 309,
+      "names": [
+        {
+          "name": "stats_e8_review",
+          "category": "folders",
+          "column": 50
+        }
+      ],
+      "text": "- stats-design-expert: 8-2·8-5 대조 끝(2026-11-23, `stats_e8_review/`). 이 정오는 그 검토를 반영했다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 310,
+      "names": [
+        {
+          "name": "dry-c",
+          "category": "subcommands",
+          "column": 33
+        }
+      ],
+      "text": "- verif-protocol-auditor: 8-7의 `dry-c` 실패 계수 경로 확인 — **끝남**(봉인 전 감사 R-8, 2026-11-23)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 311,
+      "names": [
+        {
+          "name": "12b_decide_e8",
+          "category": "outputs",
+          "column": 46
+        },
+        {
+          "name": "12b_vbk0_b4",
+          "category": "reaudit",
+          "column": 62
+        },
+        {
+          "name": "12b_decide_e8_b4",
+          "category": "reaudit",
+          "column": 76
+        },
+        {
+          "name": "common_ed5",
+          "category": "reaudit",
+          "column": 152
+        }
+      ],
+      "text": "- python-expert: 8-8 구현과 시험(도구 커밋), 실행 스크립트(`12b_decide_e8`·`12b_vbk0_b4`·`12b_decide_e8_b4` 단계, `step6c`의 결정 기록 선택, 8-9 (a)~(e)의 확인, 도구 checkout 처리는 `common_e…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 313,
+      "names": [
+        {
+          "name": "aa_stop_606f8713",
+          "category": "folders",
+          "column": 122
+        },
+        {
+          "name": "stats_e8",
+          "category": "folders",
+          "column": 142
+        },
+        {
+          "name": "stats_e8_review",
+          "category": "folders",
+          "column": 154
+        }
+      ],
+      "text": "- 메인: 정오 8과 경로 2 정오 `jp3_rev6_p2_handoff_ed5_e8.md`의 `.sha256` 생성과 같은 커밋 봉인, `fixed_inputs_entries.txt` 갱신, 8-11 별건 등록, `aa_stop_606f8713/`·`stats_e8/`·`stats_…"
+    }
+  ],
+  "leak_names": [
+    "12b_decide_e8",
+    "12b_decide_e8_b4",
+    "12b_vbk",
+    "12b_vbk0_b4",
+    "12b_vbk0_base",
+    "12b_vbk0_base_a1",
+    "606f8713",
+    "9460b2e0",
+    "_judge_ready",
+    "_t4h",
+    "aa_fault_floor",
+    "aa_floor",
+    "aa_inspect",
+    "aa_stop_606f8713",
+    "allow_k",
+    "block",
+    "blocks",
+    "blocks_used",
+    "by_block",
+    "by_cell",
+    "categories",
+    "cdry_a1",
+    "common_ed5",
+    "computed",
+    "counted",
+    "counted_pairs",
+    "decide",
+    "decided",
+    "decision.json",
+    "dry-c",
+    "dry_c.json",
+    "e8_p2_leak",
+    "e8_review_check",
+    "ed5-run5",
+    "ed5_design",
+    "exit",
+    "failed",
+    "failures",
+    "fault_pairs",
+    "input_record",
+    "inputs",
+    "is_stop",
+    "j9_runs",
+    "jp3_12b_judge",
+    "jp3_12b_judge.py",
+    "jp3_run_identity.py",
+    "judge",
+    "l2_floor",
+    "las_t3_dg3.py",
+    "meta_json",
+    "n_fault_judged",
+    "n_opp",
+    "n_ready_loss",
+    "n_ready_plus30",
+    "n_vbk0_worse",
+    "n_vbk0_worse_loss",
+    "n_vbk0_worse_plus30",
+    "n_vbk_worse",
+    "needs_b4",
+    "not_judgeable",
+    "pairs",
+    "pass",
+    "phase_fault_pairs",
+    "prelaunch_j9",
+    "problems",
+    "ready0_s",
+    "ready_outcome",
+    "ready_rule",
+    "ready_s",
+    "record",
+    "rule",
+    "run_sha256",
+    "run_steps_ed5",
+    "setting",
+    "setting_defects",
+    "stall_signature_computed",
+    "stall_signature_pairs",
+    "stall_signature_reasons",
+    "stall_signature_vbk0_lines",
+    "stats_e8",
+    "stats_e8_review",
+    "status",
+    "step8_j9main",
+    "stop_at",
+    "t4h_sha256_digest",
+    "vbk0"
+  ],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 289,
+    "names_skipped_short": 0,
+    "leak_lines": 119,
+    "leak_names": 86,
+    "blocks": 0,
+    "error": 119,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "name_leak": 119
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 8,
+      "message": "12b_vbk0_base_a1 (outputs), decide (functions) — - 시점: 실행 커밋 `606f87131a7f13468f1db37cf6c811c442a6caf0`의 단계 6b `12b_vbk0_base_a1`이 `aa_floor_stop`(`decide` 종료 2)으로 멈춘 뒤, **12b VBK 실행 전**이다. 12b VBK 출력은 없다.",
+      "target": "12b_vbk0_base_a1, decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 10,
+      "message": "ed5_design (folders), aa_stop_606f8713 (folders) — - 원인 분석(control-expert 2026-11-23): `06_analysis/02_control/j_p3_cause/ed5_design/aa_stop_606f8713/`(스크립트·결과, `SHA256SUMS` sha256 `e387907e651d8c8d57741f394295…",
+      "target": "ed5_design, aa_stop_606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 11,
+      "message": "ed5_design (folders), stats_e8 (folders) — - 통계 설계(stats-design-expert 2026-11-23): `06_analysis/02_control/j_p3_cause/ed5_design/stats_e8/`(`SHA256SUMS` sha256 `8b906fb9155425e3d406a128cc05f6550a0fe3b3…",
+      "target": "ed5_design, stats_e8"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 12,
+      "message": "ed5_design (folders), stats_e8_review (folders), e8_review_check (files), e8_review_check (files), stats_e8 (folders) — - 통계 검토(stats-design-expert 2026-11-23): `06_analysis/02_control/j_p3_cause/ed5_design/stats_e8_review/`(`e8_review_check.py` sha256 `ab2b0764d7d677c2acff245e3…",
+      "target": "ed5_design, stats_e8_review, e8_review_check, e8_review_check, stats_e8"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 13,
+      "message": "ed5_design (folders) — - 봉인 전 감사: `06_analysis/02_control/j_p3_cause/ed5_design/audit_preseal_erratum8_ed5.md`(차단 B-1, 실행 전 수정 W-1~W-7, 기록 R-1~R-9). 이 판은 그 지적을 반영했다.",
+      "target": "ed5_design"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 20,
+      "message": "judge (outputs), decision.json (files), aa_inspect (files) — - VBK0 b1(seed 40) 대 b2(seed 41), 167쌍에서 센 쌍은 4개다(`judge/decision.json` `aa` 블록, 독립 재계수 `aa_inspect.json`과 같음).",
+      "target": "judge, decision.json, aa_inspect"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 37,
+      "message": "jp3_12b_judge.py (files), aa_floor (functions) — - `jp3_12b_judge.py` `aa_floor`(442~459행)는 6.3.8 문장과 같다.",
+      "target": "jp3_12b_judge.py, aa_floor"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 44,
+      "message": "ed5_design (folders), l2_floor (reaudit) — - 바닥 3쌍은 고장 없는 저장 줄(`ed5_design/stats_b/l2_floor.json`: READY 미도달 0/835, 순서쌍 실패 0/3340)을 보고 정했다.",
+      "target": "ed5_design, l2_floor"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 51,
+      "message": "12b_vbk0_base_a1 (outputs) — - b1·b2 VBK0 출력(`12b_vbk0_base_a1`)을 그대로 쓴다. 다시 돌리지 않는다.",
+      "target": "12b_vbk0_base_a1"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 54,
+      "message": "jp3_12b_judge (files), input_record (functions) — - T4h 요약은 `jp3_12b_judge.input_record`의 규칙(줄이 가리키는 파일의 sha256 목록을 이름순으로 이은 문자열의 sha256)이다.",
+      "target": "jp3_12b_judge, input_record"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 55,
+      "message": "decide (functions) — - **6.3.8 A/A 멈춤은 이 정오로 해소하고 앞으로는 폐지한다.** `decide`는 A/A를 계산해 기록하고 계속한다(8-8).",
+      "target": "decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 72,
+      "message": "not_judgeable (outputs) — - 실패 판정과 종료 코드는 정오 2 2-10의 순서(실패 > `setting_defect` > `not_judgeable` > 통과)를 따른다. $n_{23}>k_{allow}$는 \"실패\"로 센다.",
+      "target": "not_judgeable"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 73,
+      "message": "stats_e8 (folders), stats_e8_review (folders), e8_review_check (files) — - 근거(stats-design-expert, `stats_e8/e8_rule_tables.txt`·`e8_b4_ext.json`; 검토 계산 `stats_e8_review/e8_review_check.json`)",
+      "target": "stats_e8, stats_e8_review, e8_review_check"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 97,
+      "message": "meta_json (outputs), setting (outputs) — - 시간 제한 값은 결과 줄과 T4h에 기록되지 않는다(줄 스칼라 키, T4h `meta_json` `job`은 `key`·`setting`·`contact`뿐, 2026-11-23 확인).",
+      "target": "meta_json, setting"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 99,
+      "message": "aa_fault_floor (files) — - 필요한 T4h 배열 `t_s`·`phase`·`motor_stroke_m`은 이번 VBK0 b1·b2 334파일과 c 건식 VBK0 160파일에 모두 있다(봉인 전 감사의 `key_presence --npz-dir` 확인 4건, 종료 0; 감사 R-1). `aa_fault_floo…",
+      "target": "aa_fault_floor"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 101,
+      "message": "aa_fault_floor (files) — - 이번 VBK0 적용 결과(기록, `aa_fault_floor.json`)",
+      "target": "aa_fault_floor"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 109,
+      "message": "aa_fault_floor (files), aa_fault_floor (files) — - 집계(`aa_fault_floor.py`·`aa_fault_floor.json`)",
+      "target": "aa_fault_floor, aa_fault_floor"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 110,
+      "message": "meta_json (outputs) — - 대상: VBK0 b1 대 b2 167쌍, 두 방향. 6.3.7 (1) 분해(T4h `meta_json` `events`의 `FAULT…` 사건을 ':'·','로 나눈 (이름, 다리))와 정오 1 7절 `PHASE_FAULT`를 쓴다.",
+      "target": "meta_json"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 111,
+      "message": "jp3_12b_judge (files), fault_pairs (functions), phase_fault_pairs (functions) — - 분해는 두 경로로 했다(스크립트 자체 분해, 실행 커밋 `jp3_12b_judge.fault_pairs`·`phase_fault_pairs`). 334줄 모두 같았다.",
+      "target": "jp3_12b_judge, fault_pairs, phase_fault_pairs"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 125,
+      "message": "stats_e8_review (folders), e8_review_check (files), e8_review_check (files) — **표: 0/494로는 배제할 수 없는 거짓 실패 확률**(출처 `stats_e8_review/e8_review_check.json`, sha256 `78fe972488b086c03c7877089fe7d89fc7a099d9f974f82f9ccc7f2d027a3bef`; 스크립트 `e8…",
+      "target": "stats_e8_review, e8_review_check, e8_review_check"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 139,
+      "message": "n_ready_loss (outputs), n_ready_plus30 (outputs), n_vbk_worse (outputs), allow_k (outputs), blocks_used (outputs) — - $n_{23}$과 그 분해: READY 상실 수 `n_ready_loss`, READY 지연 수 `n_ready_plus30`, 합 `n_vbk_worse`, 허용 `allow_k`, 쓴 블록 `blocks_used`.",
+      "target": "n_ready_loss, n_ready_plus30, n_vbk_worse, allow_k, blocks_used"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 141,
+      "message": "n_vbk0_worse (outputs) — - **VBK0만 나쁜 짝 수** `n_vbk0_worse`(기록)",
+      "target": "n_vbk0_worse"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 142,
+      "message": "n_vbk0_worse_loss (outputs) — - VBK0 READY 미도달·VBK 도달인 짝 수 `n_vbk0_worse_loss`(분류 \"VBK0 READY 미도달\" 짝 가운데)",
+      "target": "n_vbk0_worse_loss"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 143,
+      "message": "n_vbk0_worse_plus30 (outputs) — - **두 쪽 모두 READY에 닿은 기회 짝**에서 (VBK0 − VBK)를 1×10⁻⁶ s로 반올림한 값이 30 s보다 큰 짝 수 `n_vbk0_worse_plus30`(VBK READY가 없는 기회 짝은 대상이 아니다; 감사 W-4)",
+      "target": "n_vbk0_worse_plus30"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 144,
+      "message": "stall_signature_pairs (outputs), stall_signature_vbk0_lines (outputs) — - 교착 서명: READY 상실 짝 가운데 VBK 줄이 서명인 짝의 키 `stall_signature_pairs`, 쓴 블록의 VBK0 줄 가운데 서명인 줄의 키 `stall_signature_vbk0_lines`, 줄마다 마지막 `t_s`.",
+      "target": "stall_signature_pairs, stall_signature_vbk0_lines"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 151,
+      "message": "cdry_a1 (folders), judge (outputs), dry_c.json (files), rule (outputs), pairs (outputs), inputs (outputs), categories (outputs), problems (outputs), status (functions), exit (outputs) — - `cdry_a1/judge/dry_c.json`(최상위 키 `rule`·`pairs`·`inputs`·`categories`·`changed_opportunity_pairs`·`c`·`trigger_share`·`problems`·`status`·`exit`)",
+      "target": "cdry_a1, judge, dry_c.json, rule, pairs, inputs, categories, problems, status, exit"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 153,
+      "message": "categories (outputs), problems (outputs), setting_defects (outputs), not_judgeable (outputs), failures (outputs), status (functions), exit (outputs) — - stats-design-expert가 읽은 26~42행(오염 보고)에는 `categories`(분류 다섯), `changed_opportunity_pairs`, `c`, `trigger_share`, `problems`의 세 목록(`setting_defects`·`not_judge…",
+      "target": "categories, problems, setting_defects, not_judgeable, failures, status, exit"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 154,
+      "message": "failures (outputs), dry-c (subcommands) — - **확인 결과**(봉인 전 감사 R-8, 실행 커밋 blob에서 코드로 확인): `failures`는 `dry-c` 경로에서 쓰는 곳이 없어 입력과 무관하게 언제나 빈 목록이다. 그래서 이 파일은 c 건식 VBK의 (1)~(3) 결과를 담을 수 없다. 다른 두 빈 목록은 존재 정보…",
+      "target": "failures, dry-c"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 158,
+      "message": "j9_runs (folders), 606f8713 (reaudit), cdry_a1 (folders), j9_runs (folders), 606f8713 (reaudit), cdry_a1 (folders), _t4h (outputs), j9_runs (folders), 606f8713 (reaudit), cdry_a1 (folders) — - c 건식 VBK: 글롭 `j9_runs/606f8713/cdry_a1/VBK_c92*`·`j9_runs/606f8713/cdry_a1/VBK_c93*`(결과 줄, partial, `.identity.json`, `_t4h/` 폴더 모두 포함)와 `j9_runs/606f8713/cd…",
+      "target": "j9_runs, 606f8713, cdry_a1, j9_runs, 606f8713, cdry_a1, _t4h, j9_runs, 606f8713, cdry_a1"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 165,
+      "message": "decide (functions) — ### 8-8.1 `decide`",
+      "target": "decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 166,
+      "message": "not_judgeable (outputs) — - A/A는 지금처럼 계산한다(b1 대 b2, 167쌍 전부, 결측이면 `not_judgeable`). **멈추지 않는다.** 결정 기록에 다음을 쓴다.",
+      "target": "not_judgeable"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 167,
+      "message": "aa_floor (functions), pairs (outputs), counted_pairs (outputs), counted (outputs), rule (outputs), record (outputs), is_stop (outputs), stop_at (outputs) — - `aa_floor`: `pairs`, `counted_pairs`, `counted`(키 목록), `rule` = `\"erratum 8 8-1: record\"`, `is_stop` = false. `stop_at` 키는 두지 않는다.",
+      "target": "aa_floor, pairs, counted_pairs, counted, rule, record, is_stop, stop_at"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 169,
+      "message": "not_judgeable (outputs), block (outputs) — - N 보충이 b3을 요구하면(사용자 결정 2026-11-23) b3을 돌리지 않고 `not_judgeable`(종료 2, 사유 \"b3 block combination has no allowance (erratum 8 8-2)\")로 멈춘다. b3이 입력으로 주어져도 같다.",
+      "target": "not_judgeable, block"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 170,
+      "message": "aa_inspect (files) — - 이번 실행에서는 닿지 않는다. b1·b2 VBK0 분류로 $N_{opp}$ = 327 ≥ 0.9 × 334 = 300.6이다(`aa_inspect.json`). 시험으로만 확인한다.",
+      "target": "aa_inspect"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 171,
+      "message": "decided (outputs), blocks_used (outputs), allow_k (outputs), blocks (outputs) — - `decided`일 때 결정 기록에 `blocks_used`와 `allow_k`(b1·b2 → 7, b1·b2·b4 → 9)를 쓴다. 기존 키 `blocks`(VBK 실행 블록 선택과 판정 짝 순회에 쓰는 키)도 그대로 쓰고, 두 키의 블록 집합은 같아야 한다.",
+      "target": "decided, blocks_used, allow_k, blocks"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 172,
+      "message": "not_judgeable (outputs), blocks (outputs), blocks_used (outputs), allow_k (outputs) — - 입력 고정 대조(8-9 (d)): 블록별 기대값 인자(VBK0 결과 파일 sha256과 T4h 요약)를 필수로 받는다. 기대값이 없거나 입력 기록과 다르면 `not_judgeable`(종료 2)이고, 그때 쓰는 기록에는 상태·사유·입력 sha만 두며 `blocks`·`blocks_…",
+      "target": "not_judgeable, blocks, blocks_used, allow_k"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 173,
+      "message": "12b_vbk0_base_a1 (outputs), judge (outputs), decision.json (files) — - `aa_floor_stop` 상태는 더 이상 내지 않는다. 종료 코드 표에서 지우고, 옛 결정 기록(`12b_vbk0_base_a1/judge/decision.json`)은 입력으로 받지 않는다.",
+      "target": "12b_vbk0_base_a1, judge, decision.json"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 175,
+      "message": "judge (outputs) — ### 8-8.2 `judge`",
+      "target": "judge"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 176,
+      "message": "not_judgeable (outputs) — - 결정 기록 검사에 더한다(감사 W-5). 다음 가운데 하나라도 맞으면 `not_judgeable`이다.",
+      "target": "not_judgeable"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 177,
+      "message": "allow_k (outputs), blocks_used (outputs) — - `allow_k` 또는 `blocks_used` 키가 없다.",
+      "target": "allow_k, blocks_used"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 178,
+      "message": "blocks_used (outputs), blocks (outputs) — - `set(blocks_used) != set(blocks)`",
+      "target": "blocks_used, blocks"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 179,
+      "message": "blocks_used (outputs) — - `blocks_used`가 {b1, b2} 또는 {b1, b2, b4}가 아니다.",
+      "target": "blocks_used"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 180,
+      "message": "allow_k (outputs), blocks_used (outputs) — - `allow_k`가 `blocks_used`의 규칙 값(8-2)과 다르다.",
+      "target": "allow_k, blocks_used"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 181,
+      "message": "_judge_ready (functions), ready_outcome (outputs), ready_s (outputs), ready0_s (outputs) — - `_judge_ready`는 짝마다 실패를 더하지 않고 결과만 남긴다: `ready_outcome` ∈ {`loss`, `plus30`, `ok`}, `ready_s`, `ready0_s`.",
+      "target": "_judge_ready, ready_outcome, ready_s, ready0_s"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 182,
+      "message": "ready_rule (outputs), n_vbk_worse (outputs), allow_k (outputs) — - 모든 짝을 본 뒤 `ready_rule` 블록을 쓰고, `n_vbk_worse > allow_k`이면 실패 하나(`\"(2)+(3) n23 {n} > allow {k} (erratum 8 8-2)\"`)를 더한다.",
+      "target": "ready_rule, n_vbk_worse, allow_k"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 183,
+      "message": "ready_rule (outputs) — - `ready_rule` 키(판정 파일)",
+      "target": "ready_rule"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 187,
+      "message": "n_ready_loss (outputs) — | `n_ready_loss` | 기회 짝 READY 상실 수 | 판정 입력 |",
+      "target": "n_ready_loss"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 188,
+      "message": "n_ready_plus30 (outputs) — | `n_ready_plus30` | 기회 짝 READY 지연(> 30 s) 수 | 판정 입력 |",
+      "target": "n_ready_plus30"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 189,
+      "message": "n_vbk_worse (outputs) — | `n_vbk_worse` | $n_{23}$ = 위 둘의 합 | 판정 |",
+      "target": "n_vbk_worse"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 190,
+      "message": "allow_k (outputs) — | `allow_k` | 7 또는 9(결정 기록에서) | 판정 입력 |",
+      "target": "allow_k"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 191,
+      "message": "blocks_used (outputs) — | `blocks_used` | 결정 기록의 블록 | 판정 입력 |",
+      "target": "blocks_used"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 192,
+      "message": "pass (outputs), failed (outputs) — | `verdict` | `pass` / `failed` | 판정 |",
+      "target": "pass, failed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 193,
+      "message": "n_vbk0_worse (outputs), n_vbk0_worse_loss (outputs), n_vbk0_worse_plus30 (outputs) — | `n_vbk0_worse`, `n_vbk0_worse_loss`, `n_vbk0_worse_plus30` | 8-6 | 기록 |",
+      "target": "n_vbk0_worse, n_vbk0_worse_loss, n_vbk0_worse_plus30"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 194,
+      "message": "stall_signature_pairs (outputs) — | `stall_signature_pairs` | READY 상실 짝 가운데 VBK 줄이 서명인 키 | 기록 |",
+      "target": "stall_signature_pairs"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 195,
+      "message": "stall_signature_vbk0_lines (outputs) — | `stall_signature_vbk0_lines` | 쓴 블록 VBK0 줄 가운데 서명인 키 | 기록 |",
+      "target": "stall_signature_vbk0_lines"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 196,
+      "message": "stall_signature_computed (outputs), stall_signature_reasons (outputs) — | `stall_signature_computed`, `stall_signature_reasons` | 서명 계산 여부와 사유 | 기록 |",
+      "target": "stall_signature_computed, stall_signature_reasons"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 197,
+      "message": "by_cell (outputs), n_opp (outputs), n_vbk_worse (outputs), n_ready_loss (outputs), n_ready_plus30 (outputs) — | `by_cell` | 셀(0~7, b4는 `TRw`)별 `n_opp`·`n_vbk_worse`·`n_ready_loss`·`n_ready_plus30` | 기록 |",
+      "target": "by_cell, n_opp, n_vbk_worse, n_ready_loss, n_ready_plus30"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 198,
+      "message": "by_block (outputs) — | `by_block` | 블록별 같은 키 | 기록 |",
+      "target": "by_block"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 199,
+      "message": "aa_floor (functions) — | `aa_floor` | 결정 기록에서 옮긴 값 | 기록 |",
+      "target": "aa_floor"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 200,
+      "message": "n_fault_judged (outputs) — | `n_fault_judged` | $N_1$ = 기회 짝 + VBK0 READY 미도달 짝 수((1) 판정 짝, 통과 문장 분모) | 기록 |",
+      "target": "n_fault_judged"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 202,
+      "message": "stall_signature_computed (outputs) — - 서명 계산에 필요한 T4h 배열(`t_s`·`phase`·`motor_stroke_m`)이 없으면 `stall_signature_computed` = false와 사유를 남긴다. **상태와 종료 코드는 바꾸지 않는다**(정오 2 2-1 F-1과 같은 꼴). `t_s`를 존재 관문(…",
+      "target": "stall_signature_computed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 203,
+      "message": "n_vbk0_worse (outputs), n_vbk0_worse_loss (outputs), n_vbk0_worse_plus30 (outputs), by_cell (outputs), by_block (outputs), computed (outputs) — - **기록 항목의 예외 처리**(감사 W-4): 기록 항목(교착 서명, `n_vbk0_worse`·`n_vbk0_worse_loss`·`n_vbk0_worse_plus30`, `by_cell`, `by_block`)을 계산하다 예외가 나면(배열 길이 불일치, 값 형식 등) 그 항목마…",
+      "target": "n_vbk0_worse, n_vbk0_worse_loss, n_vbk0_worse_plus30, by_cell, by_block, computed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 204,
+      "message": "n_vbk0_worse_plus30 (outputs) — - `n_vbk0_worse_plus30`의 대상은 두 쪽 모두 READY에 닿은 기회 짝이다.",
+      "target": "n_vbk0_worse_plus30"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 210,
+      "message": "pass (outputs), failed (outputs) — 1. b1·b2, $n_{23}$ = 7 → `pass`(종료 0), 8 → `failed`(종료 1).",
+      "target": "pass, failed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 211,
+      "message": "pass (outputs), failed (outputs) — 2. b1·b2·b4, $n_{23}$ = 9 → `pass`, 10 → `failed`.",
+      "target": "pass, failed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 212,
+      "message": "not_judgeable (outputs), decide (functions) — 3. b3이 들어간 결정 기록 → `not_judgeable`(종료 2). `decide`가 b3을 요구하는 입력 → 종료 2, b3 실행 없음.",
+      "target": "not_judgeable, decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 216,
+      "message": "n_vbk0_worse_loss (outputs) — 5. 두 쪽 모두 READY 없음 → 분류 \"VBK0 READY 미도달\", $n_{23}$에 넣지 않음. VBK0 없음·VBK 도달 → `n_vbk0_worse_loss` +1, $n_{23}$ 그대로.",
+      "target": "n_vbk0_worse_loss"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 217,
+      "message": "n_ready_loss (outputs), stall_signature_pairs (outputs), n_ready_loss (outputs), stall_signature_computed (outputs) — 6. VBK 교착 줄(서명 만족) → `n_ready_loss` +1, `stall_signature_pairs`에 키. 서명 불만족 READY 상실도 `n_ready_loss` +1. `t_s` 없는 T4h → `stall_signature_computed` false, 상태·종료 …",
+      "target": "n_ready_loss, stall_signature_pairs, n_ready_loss, stall_signature_computed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 218,
+      "message": "decide (functions), decided (outputs), needs_b4 (outputs), aa_floor (functions), is_stop (outputs), counted (outputs) — 7. `decide`: A/A 4쌍(≥ 3) 입력 → `decided` 또는 `needs_b4`(종료 0), `aa_floor.is_stop` false, `counted` 기록.",
+      "target": "decide, decided, needs_b4, aa_floor, is_stop, counted"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 219,
+      "message": "failed (outputs), failed (outputs), failed (outputs) — 8. (1) 새 FAULT 1 + $n_{23}$ = 0 → `failed`. (4) H-7 → `failed`. $n_{23}$ = 8 + `setting_defect` 사유 → `failed`, 사유 보존(2-10).",
+      "target": "failed, failed, failed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 220,
+      "message": "allow_k (outputs), allow_k (outputs), blocks_used (outputs), blocks (outputs), blocks_used (outputs), not_judgeable (outputs) — 9. 결정 기록 `allow_k` 불일치, `allow_k`·`blocks_used` 키 없음, `blocks`와 `blocks_used`의 집합 불일치 → 각각 `not_judgeable`.",
+      "target": "allow_k, allow_k, blocks_used, blocks, blocks_used, not_judgeable"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 221,
+      "message": "not_judgeable (outputs) — 10. 판정 행 0(기회 짝 0)·$N_{opp}$ < 301 → `not_judgeable`(원판 그대로).",
+      "target": "not_judgeable"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 222,
+      "message": "computed (outputs) — 11. 기록 항목 계산 예외(예: 서명용 `t_s`와 `motor_stroke_m` 길이 불일치) → 그 항목 `computed` false와 사유, 상태·종료 코드는 예외가 없을 때와 같음. 대문자 `phase` 값(`LEVEL`)도 서명 조건 3을 만족함.",
+      "target": "computed"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 224,
+      "message": "decide (functions), not_judgeable (outputs), blocks (outputs), blocks_used (outputs), allow_k (outputs) — 13. 8-9 (d): 기대값과 다른 VBK0 입력(결과 파일 sha 또는 T4h 요약 하나만 달라도), 또는 기대값 인자 없음 → `decide` 종료 2, 상태 `not_judgeable`, 기록에 `blocks`·`blocks_used`·`allow_k` 없음.",
+      "target": "decide, not_judgeable, blocks, blocks_used, allow_k"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 225,
+      "message": "decide (functions), needs_b4 (outputs), decide (functions), decided (outputs), blocks_used (outputs), allow_k (outputs), decide (functions), needs_b4 (outputs) — 14. b4 사슬: 첫 `decide`가 `needs_b4`(종료 0) → b1·b2·b4 입력의 두 번째 `decide`가 `decided`, `blocks_used` = {b1, b2, b4}, `allow_k` = 9. 두 번째 `decide`가 다시 `needs_b4`를 내는 …",
+      "target": "decide, needs_b4, decide, decided, blocks_used, allow_k, decide, needs_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 228,
+      "message": "606f8713 (reaudit), ed5-run5 (reaudit) — - 두 커밋 운용(사용자 결정 2026-11-23). 시뮬레이션은 실행 커밋 `606f8713`(worktree `ed5-run5`, 잠금)에서 그대로 돈다. VBK0 b1·b2를 다시 쓰므로 VBK·b4 VBK0도 같은 코드여야 한다.",
+      "target": "606f8713, ed5-run5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 230,
+      "message": "606f8713 (reaudit) — - 도구 커밋과 `606f8713`의 차이는 판정 도구·시험·실행 스크립트·정오 8과 경로 2 정오·근거 폴더·목록 파일로 한정한다.",
+      "target": "606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 231,
+      "message": "las_t3_dg3.py (files), jp3_run_identity.py (files) — - 바뀐 파일이 VBK·VBK0 러너(`las_t3_dg3.py`, `jp3_run_identity.py`)의 정적 import 폐포에 없음을 P-1 폐포 검사(정오 2 2-4)로 보이고 기록한다. 있으면 멈춘다.",
+      "target": "las_t3_dg3.py, jp3_run_identity.py"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 232,
+      "message": "stats_e8 (folders), stats_e8_review (folders), aa_stop_606f8713 (folders), e8_p2_leak (reaudit) — - `FIXED_INPUTS_<도구 커밋>` 목록에 정오 8과 경로 2 정오의 `.sha256`, 8-1.3의 VBK0 고정 sha, `stats_e8/SHA256SUMS`, `stats_e8_review/SHA256SUMS`, `aa_stop_606f8713/SHA256SUMS`, …",
+      "target": "stats_e8, stats_e8_review, aa_stop_606f8713, e8_p2_leak"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 236,
+      "message": "jp3_12b_judge.py (files) — - `04_scripts/04_hydraulic/coupled/jp3_12b_judge.py`",
+      "target": "jp3_12b_judge.py"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 238,
+      "message": "prelaunch_j9 (folders), run_steps_ed5 (folders) — - `06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed5/` 아래 파일(실행 스크립트, `fixed_inputs_entries.txt`)",
+      "target": "prelaunch_j9, run_steps_ed5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 239,
+      "message": "j9_runs (folders), run_steps_ed5 (folders) — - 추가(A)만 허용: 그 밖의 `06_analysis/` 아래 파일(정오 8, 경로 2 정오, 각 `.sha256`, 근거 폴더, 감사 기록, `j9_runs/` 출력, `FIXED_INPUTS_*`·`P1_OUTPUTS_*` 목록)과 `00_docs/` 아래 문서. **`06_an…",
+      "target": "j9_runs, run_steps_ed5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 240,
+      "message": "prelaunch_j9 (folders), run_steps_ed5 (folders), common_ed5 (reaudit), common_ed5 (reaudit) — - **공용 실행 스크립트 `06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps/`는 바꾸지 않는다**(위 규칙상 M이면 멈춤). 도구 checkout 처리(도구 checkout 경로 변수, 판정 명령의 작업 폴더·스크립트 경로, 도구…",
+      "target": "prelaunch_j9, run_steps_ed5, common_ed5, common_ed5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 241,
+      "message": "606f8713 (reaudit), 9460b2e0 (reaudit), run_steps_ed5 (folders), common_ed5 (reaudit) — - 참고(재감사 확인): `git diff --name-status 606f8713 9460b2e0`의 경로는 모두 `06_analysis/` 아래이고, A가 아닌 것은 `run_steps_ed5/common_ed5.ps1`(M) 하나다.",
+      "target": "606f8713, 9460b2e0, run_steps_ed5, common_ed5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 242,
+      "message": "12b_decide_e8 (outputs), 12b_decide_e8_b4 (reaudit), ed5-run5 (reaudit), 606f8713 (reaudit) — - (a′) 판정 명령의 정체성: 판정 명령(`12b_decide_e8`·`12b_decide_e8_b4`·12b 판정과 (f) 표의 판정 단계)마다 작업 폴더와 판정 스크립트 경로가 도구 checkout 안인지, 도구 checkout의 HEAD가 도구 커밋이고 작업 트리가 깨끗한지 …",
+      "target": "12b_decide_e8, 12b_decide_e8_b4, ed5-run5, 606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 243,
+      "message": "ed5-run5 (reaudit), common_ed5 (reaudit) — - (a″) 고정 입력 목록의 연결(재개 직전 감사 항목): 지금 실행 스크립트의 고정 입력 대조는 `FIXED_INPUTS_606f8713`과 `ed5-run5`의 고정 입력 도구를 읽는다. 도구 커밋 이후 단계는 이 대조에 더해 `FIXED_INPUTS_<도구 커밋 앞 8자>`(이…",
+      "target": "ed5-run5, common_ed5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 244,
+      "message": "las_t3_dg3.py (files) — - (b) `05_tests/unit/pre_las_preset_runner.py`는 바꾸지 않는다. `las_t3_dg3.py`가 LAS 끔일 때 `importlib`로 실행하는 파일이라 정적 폐포 밖에 있다. (a)의 diff에 이 파일이 있으면 멈춘다.",
+      "target": "las_t3_dg3.py"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 245,
+      "message": "12b_vbk0_base_a1 (outputs) — - (c) 실행 조건 대조: VBK 실행과 b4 VBK0 실행의 identity 기록(`threads`의 다섯 값, `python`, `python_version`, `git.head`, `git.is_clean`, `rules_seals`)과 환경 변수를 b1·b2 VBK0(`12b…",
+      "target": "12b_vbk0_base_a1"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 248,
+      "message": "decide (functions), inputs (outputs), vbk0 (outputs), run_sha256 (outputs), t4h_sha256_digest (outputs), 12b_decide_e8 (outputs), 12b_decide_e8_b4 (reaudit), not_judgeable (outputs) — - (d) 입력 고정 대조(재감사 N-3): **판정 도구가 맡는다.** `decide`는 기대값 인자(블록마다 VBK0 결과 파일 sha256과 T4h 요약, 8-1.3 값)를 받아, 입력 기록의 `inputs.vbk0.b1`·`b2`의 `run_sha256`·`t4h_sha256_…",
+      "target": "decide, inputs, vbk0, run_sha256, t4h_sha256_digest, 12b_decide_e8, 12b_decide_e8_b4, not_judgeable"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 249,
+      "message": "not_judgeable (outputs), not_judgeable (outputs), decided (outputs), blocks (outputs), blocks_used (outputs), allow_k (outputs), decided (outputs), needs_b4 (outputs) — - 다르면 `not_judgeable`(종료 2)이다. 이때 쓰는 기록은 상태 `not_judgeable`과 사유, 입력 sha뿐이며 `decided` 기록(`blocks`·`blocks_used`·`allow_k`)을 쓰지 않는다. 실행 스크립트는 상태가 `decided`·`need…",
+      "target": "not_judgeable, not_judgeable, decided, blocks, blocks_used, allow_k, decided, needs_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 250,
+      "message": "12b_vbk0_base (outputs), 12b_vbk0_base_a1 (outputs) — - (e) 멈춘 단계 출력의 수용: `12b_vbk0_base`는 `.stop`(종료 2)으로 끝나 `.done`이 없다. 이 단계의 출력 `12b_vbk0_base_a1`은 (d)의 sha 대조를 통과한 경우에만 다음 단계의 입력·선행 조건으로 받는다. 이것은 정오 2 2-6 103…",
+      "target": "12b_vbk0_base, 12b_vbk0_base_a1"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 253,
+      "message": "las_t3_dg3.py (files) — | 단계 | 실행 스크립트(ps1) 커밋 | 시뮬레이션 코드(`las_t3_dg3.py`에 넘기는 worktree)와 시뮬레이션 단계 `--expect-commit` | 판정 도구 커밋과 판정 단계 정체성 |",
+      "target": "las_t3_dg3.py"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 255,
+      "message": "12b_decide_e8 (outputs) — | `12b_decide_e8`(새 단계) | 도구 커밋 | 없음(시뮬레이션 없음) | 도구 커밋 |",
+      "target": "12b_decide_e8"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 256,
+      "message": "12b_vbk0_b4 (reaudit), 606f8713 (reaudit), ed5-run5 (reaudit) — | b4 VBK0 `12b_vbk0_b4`(필요할 때) | 도구 커밋 | `606f8713`(`ed5-run5`) | — |",
+      "target": "12b_vbk0_b4, 606f8713, ed5-run5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 257,
+      "message": "12b_decide_e8_b4 (reaudit) — | `12b_decide_e8_b4`(b4를 돌렸을 때) | 도구 커밋 | 없음 | 도구 커밋 |",
+      "target": "12b_decide_e8_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 258,
+      "message": "606f8713 (reaudit), ed5-run5 (reaudit) — | 12b VBK(`step6c`의 실행 부분) | 도구 커밋 | `606f8713`(`ed5-run5`) | — |",
+      "target": "606f8713, ed5-run5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 260,
+      "message": "606f8713 (reaudit), ed5-run5 (reaudit), 606f8713 (reaudit) — | (7) T-JR-13~15(`step7_records`) | 도구 커밋 | `606f8713`(`ed5-run5`) | 도구 커밋(판정 도구는 (a) 목록상 12b 판정 도구 밖이면 `606f8713`과 같은 blob) |",
+      "target": "606f8713, ed5-run5, 606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 261,
+      "message": "606f8713 (reaudit), ed5-run5 (reaudit) — | T-CK·DROPOUT(`step7b_ckdrop`) | 도구 커밋 | `606f8713`(`ed5-run5`) | 도구 커밋(같은 조건) |",
+      "target": "606f8713, ed5-run5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 262,
+      "message": "step8_j9main (outputs), ready_rule (outputs), 606f8713 (reaudit), ed5-run5 (reaudit) — | j9_main(`step8_j9main`) | 도구 커밋(2-9.6의 `ready_rule` 대조가 들어간 판) | `606f8713`(`ed5-run5`) | 도구 커밋(같은 조건) |",
+      "target": "step8_j9main, ready_rule, 606f8713, ed5-run5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 265,
+      "message": "ed5-run5 (reaudit) — - `step6c` 한 단계 안에서 정체성 기대가 둘로 갈린다. 시뮬레이션 명령은 `--expect-commit 606f87131a7f13468f1db37cf6c811c442a6caf0`(저장소 `ed5-run5`), 판정 명령은 도구 커밋(도구 커밋 checkout)이다. 단계 기록…",
+      "target": "ed5-run5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 266,
+      "message": "606f8713 (reaudit) — - 실행 스크립트를 도구 커밋에서 돌려도 시뮬레이션 실행 파일과 그 폐포는 (a)·(b)로 `606f8713`과 같다.",
+      "target": "606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 268,
+      "message": "12b_vbk0_base_a1 (outputs) — 1. b1·b2 VBK0: 끝남(`12b_vbk0_base_a1`, 재실행 없음, (e)로 받음).",
+      "target": "12b_vbk0_base_a1"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 269,
+      "message": "decide (functions), 12b_decide_e8 (outputs), j9_runs (folders), 606f8713 (reaudit), decision.json (files), decided (outputs), needs_b4 (outputs) — 2. `decide`(정오 8): 새 단계 `12b_decide_e8`, 출력 `j9_runs/606f8713/12b_decide_e8_a1/decision.json`(`_a<k>`는 4a-5 5.2대로 같은 단계의 재시도에만 쓴다). 입력은 b1·b2 VBK0와 (d)의 기대값이다.…",
+      "target": "decide, 12b_decide_e8, j9_runs, 606f8713, decision.json, decided, needs_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 270,
+      "message": "needs_b4 (outputs) — 3. 상태가 `needs_b4`이면",
+      "target": "needs_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 271,
+      "message": "12b_vbk0_b4 (reaudit), 606f8713 (reaudit), j9_runs (folders), 606f8713 (reaudit) — - 단계 `12b_vbk0_b4`: b4(seed 43) VBK0를 `606f8713`에서 돌린다. 출력 `j9_runs/606f8713/12b_vbk0_b4_a1/`(`VBK0_b4.json`과 T4h 폴더).",
+      "target": "12b_vbk0_b4, 606f8713, j9_runs, 606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 272,
+      "message": "12b_decide_e8_b4 (reaudit), decide (functions), j9_runs (folders), 606f8713 (reaudit), decision.json (files), 12b_decide_e8 (outputs), needs_b4 (outputs), 12b_vbk0_b4 (reaudit) — - 단계 `12b_decide_e8_b4`: `decide`를 b1·b2·b4 VBK0와 (d)의 기대값으로 다시 부른다. 출력 `j9_runs/606f8713/12b_decide_e8_b4_a1/decision.json`. 선행 조건은 `12b_decide_e8.done`(가리키는 …",
+      "target": "12b_decide_e8_b4, decide, j9_runs, 606f8713, decision.json, 12b_decide_e8, needs_b4, 12b_vbk0_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 273,
+      "message": "decided (outputs), needs_b4 (outputs) — - 이 결정 기록의 상태는 `decided`이거나 종료 2($k$ < 45 등)다. 다시 `needs_b4`가 나오면 설정 결함으로 멈춘다.",
+      "target": "decided, needs_b4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 274,
+      "message": "12b_decide_e8_b4 (reaudit), 12b_decide_e8 (outputs), decided (outputs), blocks (outputs), 606f8713 (reaudit) — 4. VBK 단계(`step6c`)가 읽는 결정 기록은 하나로 정한다: `12b_decide_e8_b4.done`이 있으면 그것이 가리키는 결정 기록, 없으면 `12b_decide_e8.done`이 가리키는 결정 기록이다. 어느 쪽이든 상태가 `decided`여야 하고, 그 `bloc…",
+      "target": "12b_decide_e8_b4, 12b_decide_e8, decided, blocks, 606f8713"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 275,
+      "message": "judge (outputs), 12b_vbk (reaudit) — 5. `judge`(정오 8). 끝 표지 `12b_vbk.done`은 판정 파일 sha를 적는다.",
+      "target": "judge, 12b_vbk"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 283,
+      "message": "decide (functions) — - **원판 6.3.8**: 절 전체를 \"**폐지(정오 8).** A/A는 `decide`가 b1 대 b2 167쌍으로 계산해 기록한다. 멈춤 조건이 아니다. 판 5 실행의 값은 167쌍 중 4다(정오 8 8-1).\"로 바꾼다.",
+      "target": "decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 285,
+      "message": "blocks_used (outputs) — > '기회 짝 $N_{opp}$개(블록 {blocks_used}). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBK0 READY 미도달 짝 수 = {N_1}개, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) READY 지연·상실 $n_…",
+      "target": "blocks_used"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 291,
+      "message": "decide (functions), decide (functions) — - **원판 7.2 시험 456행**: \"A/A 3쌍이면 종료 2(`aa_floor_stop`)이고, VBK 파일을 읽지 않는다\" → \"A/A 3쌍 이상이어도 `decide`는 멈추지 않고 A/A를 기록한다. `decide`는 VBK 경로를 받지 않는다(VBK 파일을 열지 않음은 그대…",
+      "target": "decide, decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 294,
+      "message": "12b_vbk0_base_a1 (outputs) — - **정오 2 2-6 103행**: \"앞 단계가 종료 0으로 끝나기 전에는 다음으로 가지 않는다.\" 뒤에 \"예외: 판 5 실행의 `12b_vbk0_base_a1`(종료 2, `.stop`)은 정오 8 8-9 (d)·(e)로 받는다.\"를 더한다.",
+      "target": "12b_vbk0_base_a1"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 296,
+      "message": "ready_rule (outputs), pass (outputs), ready_rule (outputs), allow_k (outputs), ready_rule (outputs), blocks_used (outputs), ready_rule (outputs) — - **정오 2 2-9.6**: 대조 항목에 더한다. 판정 파일의 `ready_rule.verdict` = `pass`, `ready_rule.allow_k`가 `ready_rule.blocks_used`의 규칙 값(8-2)과 같다. `ready_rule` 블록이 없거나 이 키 가운데…",
+      "target": "ready_rule, pass, ready_rule, allow_k, ready_rule, blocks_used, ready_rule"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 297,
+      "message": "decide (functions), decide (functions) — - **정오 2 2-10**: \"`decide` 하위 명령(A/A·보충)은 실패를 세지 않으므로 바뀌지 않는다\" → \"`decide`는 실패를 세지 않는다. 정오 8로 A/A 멈춤이 없어졌다.\"",
+      "target": "decide, decide"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 309,
+      "message": "stats_e8_review (folders) — - stats-design-expert: 8-2·8-5 대조 끝(2026-11-23, `stats_e8_review/`). 이 정오는 그 검토를 반영했다.",
+      "target": "stats_e8_review"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 310,
+      "message": "dry-c (subcommands) — - verif-protocol-auditor: 8-7의 `dry-c` 실패 계수 경로 확인 — **끝남**(봉인 전 감사 R-8, 2026-11-23).",
+      "target": "dry-c"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 311,
+      "message": "12b_decide_e8 (outputs), 12b_vbk0_b4 (reaudit), 12b_decide_e8_b4 (reaudit), common_ed5 (reaudit) — - python-expert: 8-8 구현과 시험(도구 커밋), 실행 스크립트(`12b_decide_e8`·`12b_vbk0_b4`·`12b_decide_e8_b4` 단계, `step6c`의 결정 기록 선택, 8-9 (a)~(e)의 확인, 도구 checkout 처리는 `common_e…",
+      "target": "12b_decide_e8, 12b_vbk0_b4, 12b_decide_e8_b4, common_ed5"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v5_erratum8.md",
+      "line": 313,
+      "message": "aa_stop_606f8713 (folders), stats_e8 (folders), stats_e8_review (folders) — - 메인: 정오 8과 경로 2 정오 `jp3_rev6_p2_handoff_ed5_e8.md`의 `.sha256` 생성과 같은 커밋 봉인, `fixed_inputs_entries.txt` 갱신, 8-11 별건 등록, `aa_stop_606f8713/`·`stats_e8/`·`stats_…",
+      "target": "aa_stop_606f8713, stats_e8, stats_e8_review"
+    }
+  ]
+}

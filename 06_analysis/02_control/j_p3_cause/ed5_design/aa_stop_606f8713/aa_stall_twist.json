@@ -1,0 +1,472 @@
+{
+ "L2|g6|52|ref|J1|top|Fs0": {
+  "b1": {
+   "window": "stall_last_20s",
+   "t": [
+    230.1,
+    250.1
+   ],
+   "u_mean_mm_s": [
+    0.0488,
+    -0.2347,
+    0.076,
+    -0.1293
+   ],
+   "u_rms_mm_s": [
+    0.0595,
+    0.2364,
+    0.0813,
+    0.1338
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.1196,
+    "roll": 0.2444,
+    "pitch": -0.0663,
+    "twist": 0.0391
+   },
+   "twist_true_kN": NaN,
+   "twist_lower_estimate_kN": -2.09,
+   "lower_estimate_kN": [
+    107.2,
+    101.2,
+    64.1,
+    56.1
+   ],
+   "lower_reading_kN": [
+    120.2,
+    114.2,
+    77.1,
+    69.1
+   ],
+   "true_force_kN": [
+    NaN,
+    NaN,
+    NaN,
+    NaN
+   ],
+   "fault_leg": "RL"
+  },
+  "b2": {
+   "window": "5s_before_first_DONE",
+   "t": [
+    57.6,
+    62.4
+   ],
+   "u_mean_mm_s": [
+    -0.3611,
+    -0.0892,
+    -0.3007,
+    -0.0209
+   ],
+   "u_rms_mm_s": [
+    0.3634,
+    0.0935,
+    0.3063,
+    0.0821
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.386,
+    "roll": -0.2758,
+    "pitch": -0.0644,
+    "twist": 0.004
+   },
+   "twist_true_kN": 3.02,
+   "twist_lower_estimate_kN": 7.78,
+   "lower_estimate_kN": [
+    104.8,
+    100.9,
+    53.7,
+    57.6
+   ],
+   "lower_reading_kN": [
+    117.8,
+    113.9,
+    66.7,
+    70.6
+   ],
+   "true_force_kN": [
+    119.2,
+    115.4,
+    71.3,
+    70.6
+   ],
+   "fault_leg": "RL"
+  }
+ },
+ "L2|g6|56|ref|J2|top|Fs0": {
+  "b1": {
+   "window": "stall_last_20s",
+   "t": [
+    230.1,
+    250.1
+   ],
+   "u_mean_mm_s": [
+    -0.0271,
+    0.0505,
+    -0.0111,
+    0.003
+   ],
+   "u_rms_mm_s": [
+    0.0388,
+    0.0583,
+    0.0301,
+    0.0308
+   ],
+   "u_modes_mm_s": {
+    "heave": 0.0077,
+    "roll": -0.0459,
+    "pitch": 0.0158,
+    "twist": -0.0318
+   },
+   "twist_true_kN": NaN,
+   "twist_lower_estimate_kN": -6.51,
+   "lower_estimate_kN": [
+    98.7,
+    100.8,
+    60.3,
+    55.9
+   ],
+   "lower_reading_kN": [
+    111.7,
+    113.8,
+    73.3,
+    68.9
+   ],
+   "true_force_kN": [
+    NaN,
+    NaN,
+    NaN,
+    NaN
+   ],
+   "fault_leg": "FL"
+  },
+  "b2": {
+   "window": "stall_last_20s",
+   "t": [
+    230.1,
+    250.1
+   ],
+   "u_mean_mm_s": [
+    -0.2604,
+    -0.1501,
+    -0.053,
+    -0.0681
+   ],
+   "u_rms_mm_s": [
+    0.2622,
+    0.1533,
+    0.0602,
+    0.0734
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.2658,
+    "roll": -0.0476,
+    "pitch": -0.1447,
+    "twist": -0.0627
+   },
+   "twist_true_kN": NaN,
+   "twist_lower_estimate_kN": -5.9,
+   "lower_estimate_kN": [
+    99.3,
+    104.0,
+    57.7,
+    56.5
+   ],
+   "lower_reading_kN": [
+    112.3,
+    117.0,
+    70.7,
+    69.5
+   ],
+   "true_force_kN": [
+    NaN,
+    NaN,
+    NaN,
+    NaN
+   ],
+   "fault_leg": "FL"
+  }
+ },
+ "L2|g6|59|ref|J2|bottom|Fs4": {
+  "b1": {
+   "window": "stall_last_20s",
+   "t": [
+    230.1,
+    250.1
+   ],
+   "u_mean_mm_s": [
+    -0.0504,
+    -0.1271,
+    -0.0207,
+    0.0013
+   ],
+   "u_rms_mm_s": [
+    0.0586,
+    0.1305,
+    0.0343,
+    0.0243
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.0985,
+    "roll": 0.0274,
+    "pitch": -0.079,
+    "twist": 0.0494
+   },
+   "twist_true_kN": NaN,
+   "twist_lower_estimate_kN": 6.89,
+   "lower_estimate_kN": [
+    101.9,
+    94.1,
+    55.1,
+    54.3
+   ],
+   "lower_reading_kN": [
+    114.9,
+    107.1,
+    68.1,
+    67.3
+   ],
+   "true_force_kN": [
+    NaN,
+    NaN,
+    NaN,
+    NaN
+   ],
+   "fault_leg": "FR"
+  },
+  "b2": {
+   "window": "5s_before_first_DONE",
+   "t": [
+    63.1,
+    67.9
+   ],
+   "u_mean_mm_s": [
+    -0.2211,
+    -0.262,
+    -0.3975,
+    -0.4267
+   ],
+   "u_rms_mm_s": [
+    0.2268,
+    0.2669,
+    0.403,
+    0.4285
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.6537,
+    "roll": 0.035,
+    "pitch": 0.1705,
+    "twist": 0.0059
+   },
+   "twist_true_kN": -3.85,
+   "twist_lower_estimate_kN": 14.92,
+   "lower_estimate_kN": [
+    103.8,
+    89.6,
+    56.3,
+    57.0
+   ],
+   "lower_reading_kN": [
+    116.8,
+    102.6,
+    69.3,
+    70.0
+   ],
+   "true_force_kN": [
+    114.7,
+    119.5,
+    68.6,
+    69.6
+   ],
+   "fault_leg": "FR"
+  }
+ },
+ "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+  "b1": {
+   "window": "stall_last_20s",
+   "t": [
+    160.1,
+    180.1
+   ],
+   "u_mean_mm_s": [
+    -0.4865,
+    -0.1332,
+    -0.1216,
+    -0.1284
+   ],
+   "u_rms_mm_s": [
+    0.5386,
+    0.1471,
+    0.129,
+    0.2351
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.4349,
+    "roll": -0.1732,
+    "pitch": -0.1848,
+    "twist": -0.1801
+   },
+   "twist_true_kN": NaN,
+   "twist_lower_estimate_kN": 39.85,
+   "lower_estimate_kN": [
+    106.7,
+    81.7,
+    49.6,
+    64.4
+   ],
+   "lower_reading_kN": [
+    119.7,
+    94.7,
+    62.6,
+    77.4
+   ],
+   "true_force_kN": [
+    NaN,
+    NaN,
+    NaN,
+    NaN
+   ],
+   "fault_leg": "FR"
+  },
+  "b2": {
+   "window": "stall_last_20s",
+   "t": [
+    167.4,
+    174.9
+   ],
+   "u_mean_mm_s": [
+    -0.443,
+    -0.1912,
+    -0.3493,
+    -0.366
+   ],
+   "u_rms_mm_s": [
+    0.5113,
+    0.2263,
+    0.3832,
+    0.5684
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.6747,
+    "roll": -0.1176,
+    "pitch": 0.0406,
+    "twist": -0.1342
+   },
+   "twist_true_kN": 23.01,
+   "twist_lower_estimate_kN": 36.85,
+   "lower_estimate_kN": [
+    107.5,
+    84.0,
+    49.8,
+    63.2
+   ],
+   "lower_reading_kN": [
+    120.5,
+    97.0,
+    62.8,
+    76.2
+   ],
+   "true_force_kN": [
+    120.6,
+    109.7,
+    63.3,
+    75.4
+   ],
+   "fault_leg": "FR"
+  }
+ },
+ "L2|ref|16|J1|B|0,0": {
+  "b1": {
+   "window": "5s_before_first_DONE",
+   "t": [
+    83.9,
+    88.7
+   ],
+   "u_mean_mm_s": [
+    -0.25,
+    -0.2404,
+    0.0855,
+    0.1906
+   ],
+   "u_rms_mm_s": [
+    0.2802,
+    0.2948,
+    0.168,
+    0.255
+   ],
+   "u_modes_mm_s": {
+    "heave": -0.1072,
+    "roll": -0.0574,
+    "pitch": -0.3832,
+    "twist": 0.0477
+   },
+   "twist_true_kN": 1.73,
+   "twist_lower_estimate_kN": -1.22,
+   "lower_estimate_kN": [
+    101.1,
+    98.4,
+    58.1,
+    54.3
+   ],
+   "lower_reading_kN": [
+    114.1,
+    111.4,
+    71.1,
+    67.3
+   ],
+   "true_force_kN": [
+    115.2,
+    111.4,
+    71.1,
+    69.1
+   ],
+   "fault_leg": "RL"
+  },
+  "b2": {
+   "window": "stall_last_20s",
+   "t": [
+    230.1,
+    250.1
+   ],
+   "u_mean_mm_s": [
+    0.1907,
+    0.1586,
+    0.0023,
+    0.044
+   ],
+   "u_rms_mm_s": [
+    0.1924,
+    0.1612,
+    0.0275,
+    0.053
+   ],
+   "u_modes_mm_s": {
+    "heave": 0.1978,
+    "roll": -0.0048,
+    "pitch": 0.1515,
+    "twist": 0.0369
+   },
+   "twist_true_kN": NaN,
+   "twist_lower_estimate_kN": 0.48,
+   "lower_estimate_kN": [
+    107.3,
+    104.3,
+    56.2,
+    53.7
+   ],
+   "lower_reading_kN": [
+    120.3,
+    117.3,
+    69.2,
+    66.7
+   ],
+   "true_force_kN": [
+    NaN,
+    NaN,
+    NaN,
+    NaN
+   ],
+   "fault_leg": "RL"
+  }
+ }
+}

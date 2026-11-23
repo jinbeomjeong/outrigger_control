@@ -1,0 +1,319 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": true,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md"
+  ],
+  "leaks": [
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 5,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 36
+        }
+      ],
+      "text": "- 시점: T-JR-12b의 VBK 출력이 나오기 전 정오다. VBK0 블록 b1·b2의 출력을 본 뒤, 사용자 결정(2026-11-23)으로 판정 문장을 바꿨다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 17,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 12
+        }
+      ],
+      "text": "- b1·b2의 VBK0 출력만 보고 $N_{opp}<0.9N$이면 b3을 돌리지 않고 **판정 불가로 멈추고 다시 묻는다.** b3을 쓴 블록 조합에는 2.7의 허용 값이 없기 때문이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 18,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 36
+        }
+      ],
+      "text": "- $N_{opp}\\ge301$ 검사, $k\\ge45$ 검사, VBK0 분류로 센다는 문장, b4(목격 보충)는 그대로다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 26,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 15
+        }
+      ],
+      "text": "> - READY 상실: VBK0가 READY에 닿았는데 VBK가 닿지 못했다(시간 초과·FAULT·중단·LEVEL 교착 포함)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 27,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 41
+        }
+      ],
+      "text": "> - READY 지연: 두 쪽 모두 READY에 닿았고, (VBK − VBK0)를 1×10⁻⁶ s로 반올림한 값이 30 s보다 크다(`>`). 반올림은 두 READY 시각(배정밀도)의 차에 소수 여섯째 자리 반올림을 적용한 값이다. 반올림은 IEEE 배정밀도 차를 그 이진값 그대로 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 34,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 3
+        }
+      ],
+      "text": "> VBK0가 READY에 닿지 못한 짝(두 쪽 모두 미도달인 짝 포함)은 $n_{23}$에 넣지 않는다. 이 짝의 READY는 기록이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 39,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 72
+        }
+      ],
+      "text": "> '기회 짝 $N_{opp}$개(쓴 블록 명시). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBK0 READY 미도달 짝 수, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) READY 지연·상실 $n_{23}$ ≤ 허용 $k_{all…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 40,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 60
+        }
+      ],
+      "text": "- 넘김 6 통과 문장은 (1)의 분모를 $N_{opp}$로 적었다. (1)의 판정 대상은 기회 짝과 VBK0 READY 미도달 짝이므로 분모를 $N_1$로 바로잡는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 45,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 9
+        }
+      ],
+      "text": "- 대상: VBK0 b1 대 b2(같은 사례·같은 셀) 167쌍 전부. 기회 제외와 무관하고, b4를 더해도 b1·b2만 센다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 48,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 14
+        },
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 24
+        }
+      ],
+      "text": "- 실행 순서는 그대로 VBK0 먼저다. VBK0 블록으로 N 보충, 목격 보충을 결정한 뒤 VBK를 돌린다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 54,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 3
+        }
+      ],
+      "text": "- VBK0만 나쁜 짝 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 55,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 6
+        }
+      ],
+      "text": "- \"VBK0 READY 미도달\" 짝 가운데 VBK가 READY에 닿은 짝 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 56,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 32
+        }
+      ],
+      "text": "- 두 쪽 모두 READY에 닿은 기회 짝 가운데 (VBK0 − VBK)를 1×10⁻⁶ s로 반올림한 값이 30 s보다 큰 짝 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 57,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "outputs",
+          "column": 58
+        }
+      ],
+      "text": "- **LEVEL 교착 서명**: READY 상실 짝 가운데 VBK 줄이 서명인 짝의 키, 쓴 블록의 VBK0 줄 가운데 서명인 줄의 키, 줄마다 T4h 마지막 `t_s`. 서명은 $n_{23}$과 판정 상태를 바꾸지 않는다(교착도 READY 상실로 센다)."
+    }
+  ],
+  "leak_names": [
+    "vbk0"
+  ],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 289,
+    "names_skipped_short": 0,
+    "leak_lines": 14,
+    "leak_names": 1,
+    "blocks": 0,
+    "error": 14,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "name_leak": 14
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 5,
+      "message": "vbk0 (outputs) — - 시점: T-JR-12b의 VBK 출력이 나오기 전 정오다. VBK0 블록 b1·b2의 출력을 본 뒤, 사용자 결정(2026-11-23)으로 판정 문장을 바꿨다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 17,
+      "message": "vbk0 (outputs) — - b1·b2의 VBK0 출력만 보고 $N_{opp}<0.9N$이면 b3을 돌리지 않고 **판정 불가로 멈추고 다시 묻는다.** b3을 쓴 블록 조합에는 2.7의 허용 값이 없기 때문이다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 18,
+      "message": "vbk0 (outputs) — - $N_{opp}\\ge301$ 검사, $k\\ge45$ 검사, VBK0 분류로 센다는 문장, b4(목격 보충)는 그대로다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 26,
+      "message": "vbk0 (outputs) — > - READY 상실: VBK0가 READY에 닿았는데 VBK가 닿지 못했다(시간 초과·FAULT·중단·LEVEL 교착 포함).",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 27,
+      "message": "vbk0 (outputs) — > - READY 지연: 두 쪽 모두 READY에 닿았고, (VBK − VBK0)를 1×10⁻⁶ s로 반올림한 값이 30 s보다 크다(`>`). 반올림은 두 READY 시각(배정밀도)의 차에 소수 여섯째 자리 반올림을 적용한 값이다. 반올림은 IEEE 배정밀도 차를 그 이진값 그대로 …",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 34,
+      "message": "vbk0 (outputs) — > VBK0가 READY에 닿지 못한 짝(두 쪽 모두 미도달인 짝 포함)은 $n_{23}$에 넣지 않는다. 이 짝의 READY는 기록이다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 39,
+      "message": "vbk0 (outputs) — > '기회 짝 $N_{opp}$개(쓴 블록 명시). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBK0 READY 미도달 짝 수, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) READY 지연·상실 $n_{23}$ ≤ 허용 $k_{all…",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 40,
+      "message": "vbk0 (outputs) — - 넘김 6 통과 문장은 (1)의 분모를 $N_{opp}$로 적었다. (1)의 판정 대상은 기회 짝과 VBK0 READY 미도달 짝이므로 분모를 $N_1$로 바로잡는다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 45,
+      "message": "vbk0 (outputs) — - 대상: VBK0 b1 대 b2(같은 사례·같은 셀) 167쌍 전부. 기회 제외와 무관하고, b4를 더해도 b1·b2만 센다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 48,
+      "message": "vbk0 (outputs), vbk0 (outputs) — - 실행 순서는 그대로 VBK0 먼저다. VBK0 블록으로 N 보충, 목격 보충을 결정한 뒤 VBK를 돌린다.",
+      "target": "vbk0, vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 54,
+      "message": "vbk0 (outputs) — - VBK0만 나쁜 짝 수",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 55,
+      "message": "vbk0 (outputs) — - \"VBK0 READY 미도달\" 짝 가운데 VBK가 READY에 닿은 짝 수",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 56,
+      "message": "vbk0 (outputs) — - 두 쪽 모두 READY에 닿은 기회 짝 가운데 (VBK0 − VBK)를 1×10⁻⁶ s로 반올림한 값이 30 s보다 큰 짝 수",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed5_e8.md",
+      "line": 57,
+      "message": "vbk0 (outputs) — - **LEVEL 교착 서명**: READY 상실 짝 가운데 VBK 줄이 서명인 짝의 키, 쓴 블록의 VBK0 줄 가운데 서명인 줄의 키, 줄마다 T4h 마지막 `t_s`. 서명은 $n_{23}$과 판정 상태를 바꾸지 않는다(교착도 READY 상실로 센다).",
+      "target": "vbk0"
+    }
+  ]
+}
