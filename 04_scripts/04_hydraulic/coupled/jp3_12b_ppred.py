@@ -36,9 +36,10 @@ P-pred (:func:`k_allow_pred`; per parameter draw, in this generator order, as st
    0), a b4 opportunity line with step 4's value; a line that does not stall exceeds 30 s with
    ``r2``; n23 = the count (c = 1).
 
-``k_allow`` = the smallest k with P(n23 > k) <= alpha (0.10), from ``n_par`` 1000 x ``n_rep``
-20 draws of ``numpy.random.default_rng(seed)`` (seed 20261125, user decision 2026-11-24); the
-b1 / b2 decision and the b4 recalculation each start a new generator with that seed.
+``k_allow`` = the smallest k with P(n23 > k) <= alpha (0.10), from ``n_par`` 20000 x
+``n_rep`` 10 draws of ``numpy.random.default_rng(seed)`` (seed 20261125, user decisions
+2026-11-24); the b1 / b2 decision and the b4 recalculation each start a new generator with
+that seed.
 
 The decision record (:func:`decision_record`): ``K_c``, ``N_c``, ``a30``, ``n_both``, per case
 ``(k_i, n_i)``, ``K_TRw`` / ``N_TRw`` (b4), the blocks used, the P-pred seed, ``k_allow``,
@@ -59,8 +60,10 @@ if str(HERE) not in sys.path:
 import jp3_12b_judge as judge  # noqa: E402
 
 ALPHA = 0.10
-N_PAR = 1000
-N_REP = 20
+N_PAR = 20000
+N_REP = 10
+"""Spec 6.4 draw counts (user decision 2026-11-24, stats `s41_keys_review`: with 20000 x 10
+the edition 5 data give k_allow 10 on every one of ten seeds; 1000 x 20 gave 9 or 10)."""
 P_PRED_SEED = 20261125
 """Spec 6.4 P-pred seed (user decision 2026-11-24; the seal writes it into the spec)."""
 READY_LIMIT_S = judge.READY_LIMIT_S

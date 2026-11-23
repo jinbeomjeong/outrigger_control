@@ -83,7 +83,7 @@ def test_key_lists_counts_probe_units_and_declarations(tmp_path, monkeypatch, ca
     argv = ["--out-dir", str(out), "--grid-sample", str(grid), "--grid-sample-sha256", sha]
     assert key_lists.main(argv) == key_lists.EXIT_WRITTEN
     status = json.loads(capsys.readouterr().out.splitlines()[-1])
-    assert status["lines"] == {"sens_keys.json": 184, "confirm_a_keys.json": 104,
+    assert status["lines"] == {"sens_keys_v2.json": 184, "confirm_a_keys_v2.json": 216,
                                "confirm_b_grid192.json": 192}
     documents = {name: json.loads((out / name).read_text(encoding="utf-8"))
                  for name in key_lists.OUTPUTS}
@@ -94,16 +94,25 @@ def test_key_lists_counts_probe_units_and_declarations(tmp_path, monkeypatch, ca
         assert len(document["lines"]) == document["expected_lines"]
         judged = sum(not line["head_only_declared"] for line in document["lines"])
         assert judged == document["expected_j_p3_judged_rows"] > 0
-    sens = documents["sens_keys.json"]
+    sens = documents["sens_keys_v2.json"]
     assert sens["probe_seen_units"] == 32
+    assert sens["subset"]["g4_twin_choice"] == key_lists.G4_CHOICE_RULE
+    assert "without looking at any row result" in key_lists.G4_CHOICE_RULE
     assert {line["job"]["setting"] for line in sens["lines"]} == set(
         run_v5.ED6_SENSITIVITY_SETTINGS)
     assert all(line["v0_pair"]["job"]["setting"] == "V0" for line in sens["lines"])
-    assert not any(line["probe_seen"] for line in documents["confirm_a_keys.json"]["lines"])
+    confirm_a = documents["confirm_a_keys_v2.json"]
+    assert not any(line["probe_seen"] for line in confirm_a["lines"])
+    assert confirm_a["expected_j_p3_judged_rows"] == 56  # the other G4 twins x 2 x 4
+    regression = {line["key"] for line in confirm_a["lines"]
+                  if line["job"]["case"] in ("R1", "R3", "S2")}
+    assert regression == {"R1_e0.0", "R1_e0.002", *(f"{case}_e{eps}" for case in ("R3", "S2")
+                                                     for eps in run_v5.EPS_ALL)}
     sens_keys = {(line["job"]["setting"], line["key"]) for line in sens["lines"]}
     confirm = {(line["job"]["setting"], line["key"])
-               for line in documents["confirm_a_keys.json"]["lines"]}
-    assert not sens_keys & confirm and len(sens_keys | confirm) == 4 * len(run_v5.required_rows())
+               for line in confirm_a["lines"]}
+    assert not sens_keys & confirm
+    assert len(sens_keys | confirm) == 4 * len(key_lists.main_rows()) == 4 * (72 + 28)
     grid_doc = documents["confirm_b_grid192.json"]
     assert {line["job"]["setting"] for line in grid_doc["lines"]} == {"VBL"}
     assert len({line["t4h_file"] for line in grid_doc["lines"]}) == 192
@@ -119,17 +128,36 @@ def test_key_lists_refuse_an_existing_output_and_another_sample(tmp_path, capsys
                            "--grid-sample-sha256", "0" * 64]) == key_lists.EXIT_INPUT
     assert json.loads(capsys.readouterr().out.splitlines()[-1])["status"] == "input_error"
     assert not any(out.iterdir())
-    (out / "sens_keys.json").write_text("{}", encoding="utf-8")
+    (out / "sens_keys_v2.json").write_text("{}", encoding="utf-8")
     assert key_lists.main(["--out-dir", str(out), "--grid-sample", str(grid),
                            "--grid-sample-sha256", sha]) == key_lists.EXIT_INPUT
-    assert (out / "sens_keys.json").read_text(encoding="utf-8") == "{}"
+    assert (out / "sens_keys_v2.json").read_text(encoding="utf-8") == "{}"
+    assert key_lists.main(["--out-dir", str(out), "--grid-sample", str(grid),
+                           "--grid-sample-sha256", sha, "--only", "x.json"]) == key_lists.EXIT_INPUT
+
+
+def test_key_lists_only_writes_the_named_files(tmp_path, capsys) -> None:
+    """Change 14: the revision 2 files beside the existing grid file."""
+    grid = tmp_path / "s50.csv"
+    sha = _write_grid(grid)
+    out = tmp_path / "keys"
+    out.mkdir()
+    (out / "confirm_b_grid192.json").write_text("{}", encoding="utf-8")
+    only = "sens_keys_v2.json,confirm_a_keys_v2.json"
+    assert key_lists.main(["--out-dir", str(out), "--grid-sample", str(grid),
+                           "--grid-sample-sha256", sha, "--only", only]) == key_lists.EXIT_WRITTEN
+    assert set(json.loads(capsys.readouterr().out.splitlines()[-1])["sha256"]) == set(
+        only.split(","))
+    assert (out / "confirm_b_grid192.json").read_text(encoding="utf-8") == "{}"
+    document = json.loads((out / "sens_keys_v2.json").read_text(encoding="utf-8"))
+    assert document["generation_command"].endswith(f"--only {only}")
 
 
 def test_key_lists_stop_when_the_counts_differ(tmp_path, monkeypatch) -> None:
     grid = tmp_path / "s50.csv"
     sha = _write_grid(grid)
-    monkeypatch.setitem(key_lists.EXPECTED, "sens_keys.json", (183, 104))
-    with pytest.raises(key_lists.InputError, match="sens_keys.json: 184 lines"):
+    monkeypatch.setitem(key_lists.EXPECTED, "sens_keys_v2.json", (183, 104))
+    with pytest.raises(key_lists.InputError, match="sens_keys_v2.json: 184 lines"):
         key_lists.build(grid, sha, "cmd")
 
 
@@ -273,6 +301,9 @@ def pattern_blocks(table: list[dict], pattern: dict) -> dict[str, dict[str, judg
     return blocks
 
 
+S41_ROWS = ((1, 0.1029, 0.073145), (20261124, 0.10364, 0.073545))
+"""Stats ``s41_keys_review.json`` part 2, n_par 20000 x n_rep 10: (seed, P(n23 > 9),
+P(n23 > 10)) on the edition 5 pattern."""
 ED5_STALLS = {0: (1, 1), 1: (1, 1), 2: (1, 0), 3: (0, 1), 84: (1, 0)}
 """Edition 5 VBK0 b1 / b2 stall pattern (erratum 8 8-1, stats s70 ``ed5_replay``)."""
 
@@ -306,17 +337,19 @@ def test_ppred_input_statistics_of_the_edition_5_pattern() -> None:
 
 
 def test_ppred_k_allow_of_the_edition_5_pattern_with_the_sealed_seed() -> None:
-    """Spec 6.4 ("판 5 자료로 계산하면 10"): the draws equal stats ``s70 inner_pred`` and
-    ``s71 inner`` bit for bit for the same generator (checked 2026-11-24 on seeds 1,
-    20261114, 20261124, 777, 20261125: k 10, 9, 9, 10, 10); the sealed seed 20261125 gives 10."""
+    """Spec 6.4 ("판 5 자료로 계산하면 10") with 20000 x 10 draws (change 14): P(n23 > 9) and
+    P(n23 > 10) equal stats ``s41_keys_review`` (``s70 inner_pred``, same generator) exactly,
+    so the draws are the same; k_allow is 10 for every seed s41 tried."""
     stats = _ed5_stats()
     result = ppred.k_allow_pred(stats)
-    assert (result["seed"], result["n_par"], result["n_rep"]) == (20261125, 1000, 20)
+    assert (result["seed"], result["n_par"], result["n_rep"]) == (20261125, 20000, 10)
     assert result["k_allow"] == 10
-    assert result["p_n23_gt_k"] <= ppred.ALPHA < result["p_n23_gt_k_minus_1"]
+    assert (result["p_n23_gt_k_minus_1"], result["p_n23_gt_k"]) == (0.102945, 0.072775)
     assert ppred.k_allow_pred(stats) == result  # a new generator per call
-    assert ppred.k_allow_pred(stats, seed=1)["k_allow"] == 10
-    assert ppred.k_allow_pred(stats, seed=20261124)["k_allow"] == 9
+    for seed, p_gt9, p_gt10 in S41_ROWS:
+        other = ppred.k_allow_pred(stats, seed=seed)
+        assert other["k_allow"] == 10, seed
+        assert (other["p_n23_gt_k_minus_1"], other["p_n23_gt_k"]) == (p_gt9, p_gt10), seed
 
 
 S71_INPUTS = {
@@ -334,8 +367,9 @@ S71_INPUTS = {
 """Stats ``s71_ppred_rev9.gen`` inputs (generator seeds 11 / 12 / 13; truth T0 with rho 0.6,
 f_pre 0.5, p_TRw = 2 p_C, independent TRw case rates) as sparse codes per block (``1`` READY
 not reached, ``p`` stall before the trigger = no trigger), the A/A > 30 s cases, and s71's
-``pick(inner(default_rng(20261125), v, inputs(v, "spec"), b4mode, 1000, 20))`` for b4mode
-None and "B" (computed 2026-11-24 with the stats script; the draws were equal bit for bit)."""
+``pick(inner(default_rng(20261125), v, inputs(v, "spec"), b4mode, n_par, n_rep))`` for b4mode
+None and "B", the same k at 1000 x 20 and at 20000 x 10 (computed 2026-11-24 with the stats
+script; the draws were equal bit for bit at both)."""
 
 
 def _s71_pattern(sparse: dict, aa30: list[int]) -> dict:

@@ -2,15 +2,19 @@
 revision 9 G-6, spec 8 Y-8).
 
 Three files in ``--out-dir`` (``06_analysis/02_control/j_p3_cause/ed6_design/keys/``; an
-existing file is never overwritten):
+existing file is never overwritten; ``--only`` writes a subset). Revision 2 (change 14, user
+decision 2026-11-24, stats ``s41_keys_review``): ``sens_keys_v2.json`` = the same lines with the
+G4 choice rule in its meta, ``confirm_a_keys_v2.json`` = 54 rows per setting (the required rows
+outside the subset and the regression rows); the first files stay as they are.
 
-* ``sens_keys.json`` (6.2 sensitivity rows): ``VBLc005``, ``VBLc04``, ``VBLv05``, ``VBLv15`` x
+* ``sens_keys_v2.json`` (6.2 sensitivity rows): ``VBLc005``, ``VBLc04``, ``VBLv05``, ``VBLv15`` x
   the subset R12 4 phases + G4 :data:`SENS_G4_TWINS` (7 twins x the 2 G4 offsets) + R14 + R15
   + R16 + S1 + S4 + S5 + S7 + R2ra (the ``run_v5`` phases of each row); a line the probe
   1bd405c8 covers (``d0_plant_split.D0_KEYS``) is marked ``probe_seen`` (32 units: a stop
   condition only, never judged evidence).
-* ``confirm_a_keys.json`` (6.3 (가)): the same four settings x the j9_main required rows
-  outside the subset (the other G4 twins, S8, R2, R7); no probe key is among them.
+* ``confirm_a_keys_v2.json`` (6.3 (가)): the same four settings x every j9_main row outside
+  the subset: the required rows (the other G4 twins, S8, R2, R7; 26) and the regression rows
+  (R1, R5, R6, R8 .. R11, S3 at 2 phases, R3, R4, S2 at 4; 28); no probe key is among them.
 * ``confirm_b_grid192.json`` (6.3 (나)): setting ``VBL`` x the 192 grid rows of stats
   ``ed6_design/stats_v6/s50_grid_sample.csv`` (seed 20261123, one offset per cluster; its
   sha256 is checked), each an R12 event job with the stored row's twin (level, leg, F_s,
@@ -28,6 +32,7 @@ pair is missing), 3 = tool error. The stdout's last line is JSON with ``status``
 Usage (dynamics-dev or Chrono-dev, the code checkout root):
   python -I -B 04_scripts/04_hydraulic/coupled/ed6_key_lists.py --out-dir <keys folder>
       --grid-sample <s50_grid_sample.csv> --grid-sample-sha256 <sha>
+      [--only sens_keys_v2.json,confirm_a_keys_v2.json]
 """
 from __future__ import annotations
 
@@ -52,16 +57,19 @@ SENS_ROWS = ("R12", "R14", "R15", "R16", "S1", "S4", "S5", "S7", "R2ra")
 SENS_G4_TWINS = (("top", "FL", 8.0), ("bottom", "FL", 4.0), ("top", "FR", 4.0),
                  ("top", "RL", 4.0), ("top", "RR", 4.0), ("bottom", "RR", 4.0),
                  ("top", "FL", 0.0))
-"""The 7 G4 width-grid twins of the subset (stats s40 frame: 7 keys x 2 offsets). The first
-three are the probe keys; the other four (PROVISIONAL, a python-expert proposal for the
-stats / control decision): the two rear legs at the top with F_s 4, the rear bottom twin, and
-the FL top twin with F_s 0, so every leg, both levels and F_s 0 / 4 / 8 are in."""
+"""The 7 G4 width-grid twins of the subset (stats s40 frame: 7 keys x 2 offsets): the three
+probe keys and four more chosen by :data:`G4_CHOICE_RULE` (accepted by the user 2026-11-24)."""
+G4_CHOICE_RULE = (
+    "The three probe keys (top-FL-Fs8, bottom-FL-Fs4, top-FR-Fs4) plus four keys chosen by a "
+    "coverage rule without looking at any row result: top-RL-Fs4, top-RR-Fs4, bottom-RR-Fs4 "
+    "and top-FL-Fs0, so that the seven cover all four legs, both levels (top, bottom) and "
+    "F_s 0 / 4 / 8 kN (user decision 2026-11-24, stats s41_keys_review).")
 GRID_SAMPLE_COLUMNS = ("level", "fs_kN", "timing", "leg", "event", "offset_s", "file", "key",
                        "run_id", "v0_commands_sha256", "v0_pass")
 GRID_SETTING = "VBL"
 GRID_FILE_ROOT = "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid"
-OUTPUTS = ("sens_keys.json", "confirm_a_keys.json", "confirm_b_grid192.json")
-EXPECTED = {"sens_keys.json": (184, 104), "confirm_a_keys.json": (104, 56),
+OUTPUTS = ("sens_keys_v2.json", "confirm_a_keys_v2.json", "confirm_b_grid192.json")
+EXPECTED = {"sens_keys_v2.json": (184, 104), "confirm_a_keys_v2.json": (216, 56),
             "confirm_b_grid192.json": (192, 192)}
 """(lines, J-P3 judged rows) the spec counts give; the tool stops when its lists differ."""
 
@@ -117,12 +125,17 @@ def _v0_keys() -> set[str]:
     return {run_v5.job_key(job) for job in run_v5.batch_jobs("main") if job["setting"] == "V0"}
 
 
-def required_lines(selector, settings: tuple[str, ...]) -> list[dict]:
-    """Every (setting, required row) the selector keeps, with its V0 pair and declarations."""
+def main_rows() -> list[dict]:
+    """The j9_main rows of a setting: required, then regression (``run_v5.batch_jobs``)."""
+    return [*run_v5.required_rows(), *run_v5.regression_rows()]
+
+
+def required_lines(selector, settings: tuple[str, ...], rows: list[dict]) -> list[dict]:
+    """Every (setting, row) the selector keeps, with its V0 pair and declarations."""
     v0_keys, probe = _v0_keys(), _probe_keys()
     lines = []
     for setting in settings:
-        for row in run_v5.required_rows():
+        for row in rows:
             if not selector(row):
                 continue
             job = {**row, "setting": setting}
@@ -179,21 +192,22 @@ def build(grid_sample: Path, grid_sha256: str, command: str) -> dict[str, dict]:
     if hashlib.sha256(grid_sample.read_bytes()).hexdigest() != grid_sha256:
         raise InputError(f"--grid-sample {grid_sample} is not of the given sha256")
     sens_settings = run_v5.ED6_SENSITIVITY_SETTINGS
-    sens = required_lines(is_sens_row, sens_settings)
-    confirm_a = required_lines(lambda job: not is_sens_row(job), sens_settings)
+    sens = required_lines(is_sens_row, sens_settings, run_v5.required_rows())
+    confirm_a = required_lines(lambda job: not is_sens_row(job), sens_settings, main_rows())
     if any(line["probe_seen"] for line in confirm_a):
         raise InputError("a probe key is outside the sensitivity subset")
     grid = grid_lines(grid_sample)
     common = {**identity, "settings": list(sens_settings)}
     return {
-        "sens_keys.json": _document(sens, "sens_keys.json", command, {
+        "sens_keys_v2.json": _document(sens, "sens_keys_v2.json", command, {
             **common, "subset": {"rows": list(SENS_ROWS),
                                  "g4_twins": [list(twin) for twin in SENS_G4_TWINS],
-                                 "g4_twin_choice": "provisional (module docstring)"},
+                                 "g4_twin_choice": G4_CHOICE_RULE},
             "probe_seen_units": sum(line["probe_seen"] for line in sens),
             "probe_source": "j9_runs/1bd405c8/ed6_probe_a1/ed6_probe.jsonl (D0 8 keys)"}),
-        "confirm_a_keys.json": _document(confirm_a, "confirm_a_keys.json", command, {
-            **common, "rows": "run_v5.required_rows() outside the sens_keys subset"}),
+        "confirm_a_keys_v2.json": _document(confirm_a, "confirm_a_keys_v2.json", command, {
+            **common, "rows": ("run_v5.required_rows() and run_v5.regression_rows() outside the "
+                               "sens_keys subset (26 + 28 per setting)")}),
         "confirm_b_grid192.json": _document(grid, "confirm_b_grid192.json", command, {
             **identity, "settings": [GRID_SETTING], "grid_sample": {"path": str(grid_sample),
                                                         "sha256": grid_sha256},
@@ -204,17 +218,28 @@ def build(grid_sample: Path, grid_sha256: str, command: str) -> dict[str, dict]:
     }
 
 
+def selected_outputs(text: str) -> tuple[str, ...]:
+    names = tuple(name for name in text.split(",") if name)
+    unknown = [name for name in names if name not in OUTPUTS]
+    if unknown or not names:
+        raise InputError(f"--only {text}: names of {OUTPUTS}")
+    return names
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--grid-sample", type=Path, required=True)
     parser.add_argument("--grid-sample-sha256", required=True)
+    parser.add_argument("--only", default=",".join(OUTPUTS),
+                        help="comma-separated outputs to write (default: all three)")
     args = parser.parse_args(argv)
     command = ("python -I -B 04_scripts/04_hydraulic/coupled/ed6_key_lists.py --out-dir "
                f"{args.out_dir} --grid-sample {args.grid_sample} --grid-sample-sha256 "
-               f"{args.grid_sample_sha256}")
+               f"{args.grid_sample_sha256} --only {args.only}")
     try:
-        if any((args.out_dir / name).exists() for name in OUTPUTS):
+        selected = selected_outputs(args.only)
+        if any((args.out_dir / name).exists() for name in selected):
             raise InputError("an output exists (never overwritten)")
         documents = build(args.grid_sample, args.grid_sample_sha256, command)
     except InputError as exc:
@@ -226,13 +251,14 @@ def main(argv: list[str] | None = None) -> int:
         return EXIT_TOOL
     args.out_dir.mkdir(parents=True, exist_ok=True)
     shas = {}
-    for name, document in documents.items():
+    for name in selected:
+        document = documents[name]
         data = (json.dumps(document, indent=1) + "\n").encode("utf-8")
         with (args.out_dir / name).open("xb") as handle:
             handle.write(data)
         shas[name] = hashlib.sha256(data).hexdigest()
     print(json.dumps({"status": "written", "sha256": shas,
-                      "lines": {name: doc["expected_lines"] for name, doc in documents.items()}}))
+                      "lines": {name: documents[name]["expected_lines"] for name in selected}}))
     return EXIT_WRITTEN
 
 
