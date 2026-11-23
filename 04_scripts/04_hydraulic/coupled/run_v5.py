@@ -33,6 +33,7 @@ Usage (dynamics-dev, project root):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -291,6 +292,10 @@ def batch_jobs(name: str) -> list[dict]:
         return u9_targeted_jobs()
     if name == J9_MAIN_BATCH:
         return j9_main_jobs()
+    if name == ED6_J9_MAIN_BATCH:
+        return ed6_j9_main_jobs()
+    if name == ED6_KEYS_BATCH:
+        return ed6_key_jobs(J9_V0_SAMPLE_FILE[0])
     if name == J9_V0_SAMPLE_BATCH:
         return j9_v0_sample_jobs(J9_V0_SAMPLE_FILE[0])
     if name == J9_CASES_BATCH:
@@ -319,6 +324,42 @@ J9_CASE_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", "VBH", "LSH1", "LSH2", "LS
 def j9_main_jobs() -> list[dict]:
     jobs = [{**row, "setting": s} for s in JP3_JUDGED_SETTINGS for row in required_rows()]
     return jobs + [{**row, "setting": "VBJ"} for row in regression_rows()]
+
+
+ED6_J9_MAIN_BATCH = "ed6_j9_main"
+"""Edition 6 j9_main (``jp3_remedy_spec_v6.md`` 4 step 7, 6.2): the ``j9_main`` layout with
+VBJ / LSJ1 .. LSJ4 replaced by VBL / LSL1 .. LSL4 (VBL 100 + LSL 4 x 72 = 388 lines)."""
+ED6_KEYS_BATCH = "ed6_keys"
+"""Edition 6 sensitivity / confirmation rows (spec 6.2 / 6.3): the jobs of one sealed key file
+(``--jobs-file``: ``sens_keys_v2.json``, ``confirm_a_keys_v2.json`` or
+``confirm_b_grid192.json``, refused unless its sha256 is one of :data:`ED6_KEY_FILE_SHA256`)."""
+ED6_KEY_FILE_SHA256 = {
+    "sens_keys_v2.json": "70f4bb6d7afaa3f8b7ac3437db3ce5d2e4d9cca05e74b9a5c38f3b0269b77f74",
+    "confirm_a_keys_v2.json": "75413549fa9a9127744df1bc4cc92f0e99ee5881e1542726bd5d4f7b09869721",
+    "confirm_b_grid192.json": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+}
+"""Spec v6 6.2 / 6.3 (revision 14): the sealed key files."""
+
+
+def ed6_j9_main_jobs() -> list[dict]:
+    jobs = [{**row, "setting": s} for s in ED6_JUDGED_SETTINGS for row in required_rows()]
+    return jobs + [{**row, "setting": "VBL"} for row in regression_rows()]
+
+
+def ed6_key_jobs(path: Path | None) -> list[dict]:
+    """The jobs of a sealed edition 6 key file (:data:`ED6_KEYS_BATCH`)."""
+    if path is None:
+        raise SystemExit(f"{ED6_KEYS_BATCH} needs --jobs-file")
+    data = Path(path).read_bytes()
+    expected = ED6_KEY_FILE_SHA256.get(Path(path).name)
+    if expected is None or hashlib.sha256(data).hexdigest() != expected:
+        raise SystemExit(f"--jobs-file {path} is not a sealed edition 6 key file")
+    lines = json.loads(data)["lines"]
+    jobs = [dict(line["job"]) for line in lines]
+    unknown = sorted({job["setting"] for job in jobs} - set(ALL_SETTINGS))
+    if unknown or len(jobs) != json.loads(data)["expected_lines"]:
+        raise SystemExit(f"--jobs-file {path}: settings {unknown} / line count")
+    return jobs
 
 
 J9_V0_SAMPLE_BATCH = "j9_v0_sample"
@@ -745,11 +786,12 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help="j9_t8 only: the stored v5/main.jsonl of the 22-job rule "
                              "(addendum 4a-3 2; a worktree has none)")
     parser.add_argument("--jobs-file", type=Path, default=None,
-                        help=f"{J9_V0_SAMPLE_BATCH} only: the fixed V0 sample key file "
-                             "(erratum 2 2-7.1)")
+                        help=f"{J9_V0_SAMPLE_BATCH}: the fixed V0 sample key file (erratum 2 "
+                             f"2-7.1); {ED6_KEYS_BATCH}: a sealed edition 6 key file")
     args = parser.parse_args(argv)
-    if (args.jobs_file is not None) != (args.batch == J9_V0_SAMPLE_BATCH):
-        parser.error(f"--jobs-file belongs to the {J9_V0_SAMPLE_BATCH} batch (and it needs it)")
+    jobs_file_batches = (J9_V0_SAMPLE_BATCH, ED6_KEYS_BATCH)
+    if (args.jobs_file is not None) != (args.batch in jobs_file_batches):
+        parser.error(f"--jobs-file belongs to the {jobs_file_batches} batches (and they need it)")
     J9_V0_SAMPLE_FILE[0] = args.jobs_file
     if args.p3_hash_source is not None:
         if args.batch != J9_T8_BATCH:
