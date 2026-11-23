@@ -49,24 +49,30 @@ $Ed6ConfigFile = if ($IsEd6Dry) { "$Ed6DryRoot\ed6_run_config.json" } else { "$P
 $ControllerCommit = 'ac3c25a754013d1b673a150a4e2c877a02fb02be'
 # spec v6 4 step 4a / erratum 1 1-1: the controller blobs (03_src) of the run commit are these
 
-function Read-Ed6Config {
-    if (-not (Test-Path -LiteralPath $Ed6ConfigFile)) {
-        Write-Host "STOP: $Ed6ConfigFile missing (copy ed6_run_config.template.json and fill it in)"
-        exit 3
-    }
-    $Config = Get-Content -Raw -LiteralPath $Ed6ConfigFile | ConvertFrom-Json
-    foreach ($Value in @($Config.run_commit, $Config.worktree)) {
-        if ([string]$Value -match $Ed6Placeholder) { Write-Host "STOP: $Ed6ConfigFile still holds $Value"; exit 3 }
-    }
-    if ([string]$Config.run_commit -notmatch '^[0-9a-f]{40}$') { Write-Host 'STOP: run commit is not a full sha'; exit 3 }
-    return $Config
+function Exit-Ed6([int]$Code, [string]$Reason) {
+    # a stop before any step folder exists: `exit` in this dot-sourced file (or in a function)
+    # would return to the step script, so the process ends here with the code
+    Write-Host "STOP: $Reason"
+    [Console]::Out.Flush()
+    [Environment]::Exit($Code)
 }
-$Ed6Config = Read-Ed6Config
+
+function Get-Ed6ConfigProblem($Config) {
+    # why the config file cannot name the run ($null: it can)
+    if ($null -eq $Config) { return "$Ed6ConfigFile missing (copy ed6_run_config.template.json and fill it in)" }
+    foreach ($Value in @($Config.run_commit, $Config.worktree)) {
+        if ([string]$Value -match $Ed6Placeholder) { return "$Ed6ConfigFile still holds $Value" }
+    }
+    if ([string]$Config.run_commit -notmatch '^[0-9a-f]{40}$') { return 'run commit is not a full sha' }
+    return $null
+}
+$Ed6Config = if (Test-Path -LiteralPath $Ed6ConfigFile) { Get-Content -Raw -LiteralPath $Ed6ConfigFile | ConvertFrom-Json } else { $null }
+$Ed6ConfigProblem = Get-Ed6ConfigProblem $Ed6Config
+if ($Ed6ConfigProblem) { Exit-Ed6 3 $Ed6ConfigProblem }
 $RunCommit = [string]$Ed6Config.run_commit
 $Worktree = [string]$Ed6Config.worktree
 if (-not $Ed6StepsDir.StartsWith("$Worktree\", [StringComparison]::OrdinalIgnoreCase)) {
-    Write-Host "STOP: run the steps from the run worktree ($Worktree), not $Ed6StepsDir (the run commit's scripts)"
-    exit 3
+    Exit-Ed6 3 "run the steps from the run worktree ($Worktree), not $Ed6StepsDir (the run commit's scripts)"
 }
 
 $RunShort = $RunCommit.Substring(0, 8)
