@@ -1,0 +1,37 @@
+{
+ "rule": "jp3_remedy_spec_v5.md 6.3.5 / 6.3.6 / 6.3.8 (X-13 decide)",
+ "inputs": {
+  "selection_sha256": "fc3875d855e1e04ca0c755e29d3c60287752fe12f487aaf54198190968c009f4",
+  "vbk0": {
+   "b1": {
+    "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b1.json",
+    "run_sha256": "87e76b0bcc4d32cadd10592cac8314452a9408b6fde4765b77388061caf23c4e",
+    "t4h_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b1_t4h",
+    "t4h_files": 167,
+    "t4h_sha256_digest": "561438f1da1335cf76e48fd5a1eaafeab3caf778161139ec6998abbad32d031d"
+   },
+   "b2": {
+    "run": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b2.json",
+    "run_sha256": "205079fec5c7ea8c6460dd172b3e44129dd355242e675378a5f0147441cd0a8a",
+    "t4h_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\12b_vbk0_base_a1\\VBK0_b2_t4h",
+    "t4h_files": 167,
+    "t4h_sha256_digest": "b0c4a79be083e14515692b5a996d775e4fb799c8a252af1f7e741f04c4a616a8"
+   }
+  }
+ },
+ "aa": {
+  "pairs": 167,
+  "counted_pairs": 4,
+  "counted": [
+   "L2|g6|52|ref|J1|top|Fs0",
+   "L2|g6|59|ref|J2|bottom|Fs4",
+   "L2|g6|61|ref|S1|top|Fs4",
+   "L2|ref|16|J1|B|0,0"
+  ],
+  "stop_at": 3,
+  "is_stop": true
+ },
+ "status": "aa_floor_stop",
+ "reason": "A/A: 4 pairs",
+ "exit": 2
+}
