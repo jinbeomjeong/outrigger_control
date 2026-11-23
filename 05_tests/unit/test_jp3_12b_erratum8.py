@@ -256,16 +256,25 @@ def test_e8_05_vbk0_without_ready(world, capsys, cwd_elsewhere) -> None:
 def test_e8_06_stall_signature(world, capsys, cwd_elsewhere) -> None:
     """8-8.3 6: a VBK stall line (no READY, last phase level, no fault phase, every leg's
     stroke span < 1 mm over the last 20 s) is READY lost and listed; a lost pair without the
-    signature counts the same; a VBK0 stall line is listed too. Without ``t_s`` in a T4h the
-    signature is not computed and the status and exit code stay."""
+    signature (stroke span 3.6 mm, last phase done, a fault phase entry) counts the same; a
+    VBK0 stall line is listed too. Without ``t_s`` in a T4h the signature is not computed and
+    the status and exit code stay."""
     constant = np.full((ROWS, 4), CONSTANT_STROKE_M)
 
     def edit(block, vbk0, vbk):
         if block != "b1":
             return
-        for rank in (0, 1):
+        for rank in (0, 1, 3, 4):  # 3: last phase done; 4: a fault phase entry on both arms
             vbk.rows[vbk.key_at(rank)]["base"]["t_ready_s"] = None
-        vbk.columns[vbk.key_at(0)]["motor_stroke_m"] = constant.copy()
+        for rank in (0, 3, 4):
+            vbk.columns[vbk.key_at(rank)]["motor_stroke_m"] = constant.copy()
+        done = vbk.columns[vbk.key_at(3)]["phase"].copy()
+        done[-5:] = "done"
+        vbk.columns[vbk.key_at(3)]["phase"] = done
+        for arm in (vbk0, vbk):  # the same entry on both arms: no new FAULT (1)
+            faulted = arm.columns[arm.key_at(4)]["phase"].copy()
+            faulted[30:33] = "fault"
+            arm.columns[arm.key_at(4)]["phase"] = faulted
         for arm in (vbk0, vbk):
             arm.rows[arm.key_at(2)]["base"]["t_ready_s"] = None
         vbk0.columns[vbk0.key_at(2)]["motor_stroke_m"] = constant.copy()
@@ -275,7 +284,7 @@ def test_e8_06_stall_signature(world, capsys, cwd_elsewhere) -> None:
     rows = json.loads(written0["b1"][0].read_text(encoding="utf-8"))["results"]
     keys = [plain(row["key"]) for row in rows[:3]]
     rule = report["ready_rule"]
-    assert (rule["n_ready_loss"], rule["n_vbk_worse"]) == (2, 2)
+    assert (rule["n_ready_loss"], rule["n_vbk_worse"]) == (4, 4)
     assert rule["stall_signature_computed"] is True and rule["stall_signature_reasons"] == []
     last_t_s = float((ROWS - 1) * 0.1)
     assert rule["stall_signature_pairs"] == [
@@ -289,7 +298,7 @@ def test_e8_06_stall_signature(world, capsys, cwd_elsewhere) -> None:
     assert rule["stall_signature_computed"] is False
     assert rule["stall_signature_pairs"] is None and rule["stall_signature_vbk0_lines"] is None
     assert any("t_s of" in text for text in rule["stall_signature_reasons"])
-    assert rule["n_vbk_worse"] == 2 and again["problems"] == report["problems"]
+    assert rule["n_vbk_worse"] == 4 and again["problems"] == report["problems"]
 
 
 # ------------------------------------------------------------------------------- 7
@@ -350,7 +359,8 @@ def test_e8_09_decision_blocks_and_allowance(world, capsys, cwd_elsewhere, monke
     variants = {"allow_9": {"allow_k": 9}, "no_allow": {"allow_k": None},
                 "no_used": {"blocks_used": None},
                 "set_differs": {"blocks_used": ["b1", "b2", "b4"], "allow_k": 9},
-                "allow_text": {"allow_k": "7"}, "repeated": {"blocks_used": ["b1", "b1", "b2"]}}
+                "allow_text": {"allow_k": "7"}, "repeated": {"blocks_used": ["b1", "b1", "b2"]},
+                "used_text": {"blocks_used": "b1,b2"}}
     watch = _FileWatch(monkeypatch)
     for name, changes in variants.items():
         decision = crafted_decision(world, record, f"d_{name}.json", **changes)
@@ -461,14 +471,24 @@ def test_e8_13_expected_vbk0_inputs(world, capsys, cwd_elsewhere, monkeypatch) -
         "none": {}, "b1_only": {"b1": expected["b1"]},
         "b4_extra": {**expected, "b4": (other, other)}}
     watch = _FileWatch(monkeypatch)
-    for name, given in variants.items():
-        args = [*base, *expect_args(given)]
+    malformed = ["--expect-vbk0-sha256", "b1=xyz"]  # not 64 hex
+    without_b1 = decide_args(world, {"b2": written0["b2"]}, world["runs"] / "unused.json",
+                             expect=False)
+    runs = {**{name: [*base, *expect_args(given)] for name, given in variants.items()},
+            "malformed": [*base, *expect_args({"b2": expected["b2"]}), *malformed,
+                          "--expect-vbk0-t4h-digest", f"b1={expected['b1'][1]}"],
+            "b1_not_given": [*without_b1, *expect_args(expected)]}
+    for name, args in runs.items():
         args[args.index("--out") + 1] = str(world["runs"] / f"d_{name}.json")
         code, last, record = run_main(args, capsys)
         assert (code, last["status"]) == (2, "not_judgeable"), name
         assert set(record) == {"rule", "inputs", "status", "reason", "exit"}, name
         assert record["reason"].startswith("erratum 8 8-9 (d)"), name
-        assert record["inputs"]["vbk0"]["b1"]["run_sha256"] == expected["b1"][0]
+        assert record["inputs"]["vbk0"]["b2"]["run_sha256"] == expected["b2"][0], name
+    assert "one b<j>=<64 hex sha256> per block" in json.loads(
+        (world["runs"] / "d_malformed.json").read_text(encoding="utf-8"))["reason"]
+    assert "VBK0 b1 not given" in json.loads(
+        (world["runs"] / "d_b1_not_given.json").read_text(encoding="utf-8"))["reason"]
     assert watch.touched("vbk_") == []
     code, last, record = run_main(decide_args(world, written0, world["runs"] / "d_ok.json"),
                                   capsys)
