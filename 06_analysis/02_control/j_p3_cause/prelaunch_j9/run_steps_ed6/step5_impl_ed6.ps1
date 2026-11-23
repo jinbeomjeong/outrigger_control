@@ -38,6 +38,8 @@ function Assert-Listed([string[]]$Files) {
     }
 }
 
+# judge labels end in _judge or start with p51_: a run label's log (logs\LABEL.log) is never
+# overwritten by its judge's
 function Invoke-HashMatch([string]$Label, [string]$Reference, [string]$Rows, [string]$SubCommand = 'hash-match') {
     Invoke-Judge $Label @($Ed6Judge, $SubCommand, '--reference', $Reference, '--rows', $Rows,
         '--out', "$Folder\judge\$Label.json") | Out-Null
@@ -60,9 +62,9 @@ switch ($Part) {
                     '--mask', $MaskHex)))
         Wait-Runs $Runs
         Invoke-IdentityCheck
-        Invoke-Judge 'v0_sample' @("$Coupled/jp3_j9main_judge.py", 'v0-sample', '--sample-keys', $V0SampleKeys,
-            '--sample', $Sample, '--v0', $V0Rows, '--v0-sha256', $V0Sha, '--out', "$Folder\judge\v0_sample.json") | Out-Null
-        Invoke-HashMatch 'd0_1' $D0Stored $D0 'd0-1'
+        Invoke-Judge 'v0_sample_judge' @("$Coupled/jp3_j9main_judge.py", 'v0-sample', '--sample-keys', $V0SampleKeys,
+            '--sample', $Sample, '--v0', $V0Rows, '--v0-sha256', $V0Sha, '--out', "$Folder\judge\v0_sample_judge.json") | Out-Null
+        Invoke-HashMatch 'd0_1_judge' $D0Stored $D0 'd0-1'
     }
     'p51' {
         $References = [ordered]@{ j9_cases = "$Ed5Runs\cases_a1\j9_cases.jsonl"; case_cd = "$Ed5Runs\cases_a1\cd.jsonl"
@@ -91,8 +93,8 @@ switch ($Part) {
                 '--workers', "$Workers", '--mask', $MaskHex)
         Wait-Runs @($Run)
         Invoke-IdentityCheck
-        Invoke-Judge 't8' @($Ed6Judge, 't8', '--rows', $Rows, '--main-jsonl', $V0Rows,
-            '--out', "$Folder\judge\t8.json") | Out-Null
+        Invoke-Judge 't8_judge' @($Ed6Judge, 't8', '--rows', $Rows, '--main-jsonl', $V0Rows,
+            '--out', "$Folder\judge\t8_judge.json") | Out-Null
     }
     'cases' {
         $Rows = "$Folder\ed6_cases.jsonl"
@@ -100,7 +102,7 @@ switch ($Part) {
             -Arguments @("$Coupled/run_v5.py", 'ed6_cases', '--out', $Rows, '--workers', '10', '--mask', $MaskHex)
         Wait-Runs @($Run)
         Invoke-IdentityCheck
-        Invoke-Judge 'cases' @($Ed6Judge, 'cases', '--rows', $Rows, '--out', "$Folder\judge\cases.json") | Out-Null
+        Invoke-Judge 'cases_judge' @($Ed6Judge, 'cases', '--rows', $Rows, '--out', "$Folder\judge\cases_judge.json") | Out-Null
     }
     'probe' {
         Assert-Listed @($ProbeStored)
@@ -112,7 +114,7 @@ switch ($Part) {
                 '--mask', $MaskHex)
         Wait-Runs @($Run)
         Invoke-IdentityCheck
-        Invoke-HashMatch 'probe' $ProbeStored $Rows
+        Invoke-HashMatch 'probe_judge' $ProbeStored $Rows
     }
 }
 
