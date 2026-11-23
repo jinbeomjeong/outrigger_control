@@ -9,7 +9,8 @@
 param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mandatory)][int]$Workers)
 . "$PSScriptRoot\common_ed6.ps1"
 
-$Folder = Initialize-Ed6Step 'confirm' $Attempt @('l1ref')
+$Folder = Initialize-Ed6Step 'confirm' $Attempt @('l1ref', 'impl_v0d0', 'impl_p51', 'impl_t8', 'impl_cases', 'impl_probe')
+# erratum 2 2-1: step 5 (step5_impl_ed6.ps1, five parts) before the confirmation
 foreach ($File in @($ConfirmAKeys, $GridKeys)) {
     if ((Get-FileHash -Algorithm SHA256 -LiteralPath $File).Hash.ToLower() -ne (Get-ListedSha $File)) {
         Stop-Step 2 "$File is not the fixed list's file"

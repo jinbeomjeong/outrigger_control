@@ -43,6 +43,24 @@ Sub-commands (every one writes ``--out``, never overwritten):
             and never judged (6.3 revision 8 reading); the 18 V0-failing lines: FAULT and J-P3
             only.
 
+Edition 6 erratum 2 2-1 (step 5, implementation checks; Y-14):
+
+``hash-match``  ``--reference`` rows (a stored output) against ``--rows`` (the rerun) by job:
+            every reference job (``--setting`` keeps only that setting's lines) has exactly
+            one rerun line without an error and the same ``commands_sha256``; the rerun has
+            no other job. Used for P5-1-type invariance (606f8713 cases / case F / C·D / X11)
+            and the probe reproduction (cbdb4d28, P6-3).
+``d0-1``        ``hash-match`` of D0 variant 1 (``--setting D0-1``, 8 lines) against the stored
+            D0 run (390f88a9, P6-0).
+``t8``          P6-1: the ``ed6_t8`` rows (22 jobs x VBL, VBL0; ``--main-jsonl`` gives the jobs):
+            a pair without ``WARN_ROD_PRESSURE_FALLBACK`` on both lines has the same
+            ``commands_sha256`` (else failed); a pair with it is a record; no pair without it
+            is not judgeable; a missing or extra line, an error line, a line without
+            ``event_names`` / ``events`` or a 64-character hash: not judgeable.
+``cases``       P6-2: the ``ed6_cases`` rows (cases E and F x VBL, LSL1 .. LSL4): the 6.1
+            identity, every row a judged J-P3 row (10; else setting defect, 0 not judgeable),
+            J-P3 without a breach (H-7 failed); the ``lsb_record`` activations are a record.
+
 ======  ==================  ====================================================================
 exit    status              meaning
 ======  ==================  ====================================================================
@@ -60,6 +78,10 @@ Usage (dynamics-dev, the code checkout root):
   python -I -B ... sens --keys <sens_keys_v2.json> --rows <run.jsonl> --v0 ... --out ...
   python -I -B ... grid --keys <confirm_b_grid192.json> --rows <run.jsonl> --grid-root <repo>
       --out ...
+  python -I -B ... hash-match --reference <stored.jsonl> --rows <rerun.jsonl> --out ...
+  python -I -B ... d0-1 --reference <d0_plant_split.jsonl> --rows <d0_1.jsonl> --out ...
+  python -I -B ... t8 --rows <ed6_t8.jsonl> --main-jsonl <v5/main.jsonl> --out ...
+  python -I -B ... cases --rows <ed6_cases.jsonl> --out ...
 The stdout's last line is JSON with ``status`` and the report path (no judged values).
 """
 from __future__ import annotations
@@ -741,6 +763,161 @@ def judge_grid(keys_path: Path, rows_path: Path, grid_root: Path) -> dict:
             "status_basis": basis, "status": status_of(basis)}
 
 
+# ------------------------------------------------------------------------------- step 5
+HASH_LENGTH = 64
+D0_1_SETTING = "D0-1"
+D0_1_LINES = 8
+CASE_ROWS = 10
+
+
+def _require_files(*paths: Path) -> None:
+    missing = [str(path) for path in paths if not path.is_file()]
+    if missing:
+        raise NotJudgeable(f"input files missing: {missing}")
+
+
+def _rows_by_job(rows: list[dict], label: str, problems: list[str]) -> dict[str, dict]:
+    import run_v5
+
+    out: dict[str, dict] = {}
+    for row in rows:
+        key = run_v5.job_key(row["job"])
+        if key in out:
+            problems.append(f"{label}: job {key} twice")
+        if "error" in row:
+            problems.append(f"{label}: an error line ({key})")
+        out[key] = row
+    return out
+
+
+def judge_hash_match(reference_paths: list[Path], rows_paths: list[Path],
+                     setting: str | None = None, expected_lines: int | None = None) -> dict:
+    """``hash-match`` (module docstring)."""
+    _require_files(*reference_paths, *rows_paths)
+    problems: list[str] = []
+    reference = [row for path in reference_paths for row in base.read_rows(path)
+                 if setting is None or row["job"].get("setting") == setting]
+    rows = [row for path in rows_paths for row in base.read_rows(path)]
+    reference_by = _rows_by_job(reference, "reference", problems)
+    rows_by = _rows_by_job(rows, "rows", problems)
+    missing = sorted(set(reference_by) - set(rows_by))
+    extra = sorted(set(rows_by) - set(reference_by))
+    if missing:
+        problems.append(f"{len(missing)} reference jobs without a rerun line")
+    if extra:
+        problems.append(f"{len(extra)} rerun lines outside the reference")
+    if not reference_by:
+        problems.append("no reference line")
+    if expected_lines is not None and len(reference_by) != expected_lines:
+        problems.append(f"{len(reference_by)} reference lines, {expected_lines} expected")
+    shared = set(reference_by) & set(rows_by)
+    broken = sorted(key for key in shared for row in (reference_by[key], rows_by[key])
+                    if not _is_hash(row.get("commands_sha256")))
+    if broken:
+        problems.append(f"{len(set(broken))} jobs without a 64-character commands_sha256")
+    differing = sorted(key for key in shared if key not in broken
+                       and rows_by[key]["commands_sha256"]
+                       != reference_by[key]["commands_sha256"])
+    basis = {"failures": [f"commands_sha256 differs: {len(differing)} jobs"] if differing else [],
+             "setting_defects": [], "not_judgeable": problems}
+    return {"rule": "jp3_remedy_spec_v6_erratum2.md 2-1 (hash match)",
+            "inputs": {"reference": [{"path": str(p), "sha256": base.file_sha256(p)}
+                                     for p in reference_paths],
+                       "rows": [{"path": str(p), "sha256": base.file_sha256(p)}
+                                for p in rows_paths]},
+            "setting": setting, "compared": len(set(reference_by) & set(rows_by)),
+            "differing_jobs": differing, "status_basis": basis, "status": status_of(basis)}
+
+
+def _is_hash(value: object) -> bool:
+    return isinstance(value, str) and len(value) == HASH_LENGTH
+
+
+def judge_t8(rows_path: Path, main_jsonl: Path) -> dict:
+    """``t8`` (module docstring)."""
+    import jp3_t8_rules as t8_rules
+    import run_v5
+
+    _require_files(rows_path, main_jsonl)
+    rows = base.read_rows(rows_path)
+    expected = run_v5.ed6_t8_jobs(main_jsonl)
+    problems: list[str] = []
+    rows_by = _rows_by_job(rows, "rows", problems)
+    wanted = {run_v5.job_key(job) for job in expected}
+    if set(rows_by) != wanted:
+        problems.append(f"rows are not the ed6_t8 jobs ({len(wanted - set(rows_by))} missing, "
+                        f"{len(set(rows_by) - wanted)} extra)")
+    pairs, differing, records = 0, [], []
+    for job in expected:
+        if job["setting"] != "VBL":
+            continue
+        new = rows_by.get(run_v5.job_key(job))
+        old = rows_by.get(run_v5.job_key({**job, "setting": "VBL0"}))
+        if new is None or old is None:
+            continue
+        name = job["case"]
+        fallback = [t8_rules.has_fallback_event(line) for line in (new, old)]
+        if None in fallback:
+            problems.append(f"{name}: a line without event_names / events")
+            continue
+        if any(fallback):
+            records.append(name)
+            continue
+        if not (_is_hash(new.get("commands_sha256")) and _is_hash(old.get("commands_sha256"))):
+            problems.append(f"{name}: a line without a 64-character commands_sha256")
+            continue
+        pairs += 1
+        if new["commands_sha256"] != old["commands_sha256"]:
+            differing.append(name)
+    if pairs == 0:
+        problems.append("no pair without a fallback (not judgeable)")
+    basis = {"failures": [f"VBL != VBL0 commands: {len(differing)} pairs"] if differing else [],
+             "setting_defects": [], "not_judgeable": problems}
+    return {"rule": "jp3_remedy_spec_v6_erratum2.md 2-1 (ii), spec 5 P6-1",
+            "inputs": {"rows": {"path": str(rows_path), "sha256": base.file_sha256(rows_path)},
+                       "main_jsonl": {"path": str(main_jsonl),
+                                      "sha256": base.file_sha256(main_jsonl)}},
+            "judged_pairs": pairs, "differing_pairs": differing,
+            "fallback_pairs_record": records, "status_basis": basis,
+            "status": status_of(basis)}
+
+
+def judge_cases(rows_path: Path) -> dict:
+    """``cases`` (module docstring)."""
+    import judge4368_common as common
+    import run_v5
+    from j_p3_inputs import j_p3_over_rows
+
+    _require_files(rows_path)
+    rows = base.read_rows(rows_path)
+    problems: list[str] = []
+    rows_by = _rows_by_job(rows, "rows", problems)
+    wanted = {run_v5.job_key(job) for job in run_v5.ed6_case_jobs()}
+    if set(rows_by) != wanted:
+        problems.append(f"rows are not the ed6_cases jobs ({len(wanted - set(rows_by))} missing, "
+                        f"{len(set(rows_by) - wanted)} extra)")
+    folders = tuple(common.t4h_folders(rows_path, rows))
+    jp3 = j_p3_over_rows(base.j_p3_rows(rows, folders), edition5_order=True)
+    expected = sealed_lsb_settings()
+    identity = [{"job": row["job"], "problems": found} for row in rows
+                if (found := ed6_identity_problems(row, expected))]
+    head_only = [row["job"] for row in rows if row.get("head_only_declared")]
+    failures, defects, unjudged = jp3_basis(jp3, CASE_ROWS)
+    if identity:
+        defects.insert(0, f"identity: {len(identity)} lines")
+    if head_only:
+        defects.append(f"{len(head_only)} head-only lines (every case row is a judged row)")
+    basis = {"failures": failures, "setting_defects": defects,
+             "not_judgeable": problems + unjudged}
+    return {"rule": "jp3_remedy_spec_v6_erratum2.md 2-1 (iii), spec 5 P6-2",
+            "inputs": {"rows": {"path": str(rows_path), "sha256": base.file_sha256(rows_path)}},
+            "rows": len(rows), "identity_defects": identity, "J-P3": jp3,
+            "J-P3_judged_rows": jp3_judged_rows(jp3),
+            "lsb_record": [{"job": row["job"], "lsb_record": row.get("lsb_record")}
+                           for row in rows],
+            "status_basis": basis, "status": status_of(basis)}
+
+
 # ------------------------------------------------------------------------------- CLI
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -759,6 +936,20 @@ def _parser() -> argparse.ArgumentParser:
         command.add_argument("--keys", type=Path, required=True)
     grid.add_argument("--grid-root", type=Path, required=True,
                       help="the folder the key file's V0 grid paths are relative to (repo root)")
+    hashes = sub.add_parser("hash-match")
+    d0 = sub.add_parser("d0-1")
+    for command in (hashes, d0):
+        command.add_argument("--reference", type=Path, action="append", required=True)
+        command.add_argument("--rows", type=Path, action="append", required=True)
+        command.add_argument("--out", type=Path, required=True)
+    hashes.add_argument("--setting", default=None)
+    t8 = sub.add_parser("t8")
+    t8.add_argument("--rows", type=Path, required=True)
+    t8.add_argument("--main-jsonl", type=Path, required=True)
+    t8.add_argument("--out", type=Path, required=True)
+    cases = sub.add_parser("cases")
+    cases.add_argument("--rows", type=Path, required=True)
+    cases.add_argument("--out", type=Path, required=True)
     return parser
 
 
@@ -770,6 +961,14 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "j9main":
             report = judge_j9main(args.rows, args.v0, args.v0_sha256, args.edition)
+        elif args.command == "hash-match":
+            report = judge_hash_match(args.reference, args.rows, args.setting)
+        elif args.command == "d0-1":
+            report = judge_hash_match(args.reference, args.rows, D0_1_SETTING, D0_1_LINES)
+        elif args.command == "t8":
+            report = judge_t8(args.rows, args.main_jsonl)
+        elif args.command == "cases":
+            report = judge_cases(args.rows)
         elif args.command == "sens":
             report = judge_sens(args.keys, args.rows, args.v0, args.v0_sha256)
         else:

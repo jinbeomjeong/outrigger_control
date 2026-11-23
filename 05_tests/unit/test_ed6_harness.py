@@ -84,6 +84,15 @@ B3_ONLY_JOBS = {"B3_S5": ({**S5, "setting": B3_ONLY_SETTING}, OFF_HASHES["VBJ_S5
                            "fe88988aa5e72d17cdabb41200182e50e1124c4adfc25ad7084565a0a59c39e2")}
 """Lines without an R-5 ``relevel_predicted`` (``b3_r5_census``: R-5 only on R12 and R14):
 B3 on must give the VBJ command hash (S5 e0.0 and R15 o0.05 of the 606f8713 j9_main)."""
+B3_R14_JOBS = {
+    "B3_R14_o0.0": ({"case": "R14", "eps": 0.0, "offset_s": 0.0, "setting": B3_ONLY_SETTING},
+                    "0201f7c4dd34c0b7699d983d860132c95e82879b7fc2ea56526b7b2b16b33ad6"),
+    "B3_R14_o0.05": ({"case": "R14", "eps": 0.0, "offset_s": 0.05, "setting": B3_ONLY_SETTING},
+                     "2eafca6e8cfedc316dc1ca0c682468d4c77b605dc75c40f1bda4fb2f81c4faae"),
+}
+"""Erratum 2 2-1 (vi), spec 3.3 P6-6: R14 has its R-5 prediction on the read where the formal
+re-approach starts, so B3 hands over in that period and the commands are the VBJ ones (the
+606f8713 j9_main VBJ R14 lines, both phases)."""
 PROBE_KEYS = "R12_o0.0,S5_e0.0"
 LSB_TAG = "final_C4G2_P3W_LAS_K1_LSB"
 SEALED = ["A_i", "A_ii", "B3"]
@@ -169,7 +178,7 @@ def harness(tmp_path_factory) -> dict:
     processes.update({name: _check_job(job, root / name) for name, job in ON_JOBS.items()})
     b3_only = _b3_only_settings()
     processes.update({name: _check_job(job, root / name, b3_only)
-                      for name, (job, _) in B3_ONLY_JOBS.items()})
+                      for name, (job, _) in {**B3_ONLY_JOBS, **B3_R14_JOBS}.items()})
     vbk0 = _vbk0_run(root / "vbk0")
     vbkl0 = _vbk0_run(root / "vbkl0", "VBKL0")
     probe_out = root / "probe" / "ed6_probe.jsonl"
@@ -264,6 +273,10 @@ def test_vbl_lines_carry_the_edition_6_identity_and_records(harness) -> None:
 
 @pytest.mark.slow
 def test_p6_6_b3_without_r5_keeps_the_commands(harness) -> None:
+    for name, (_, stored) in B3_R14_JOBS.items():  # erratum 2 2-1 (vi): R-5 there, same commands
+        report = harness["reports"][name]
+        assert report["hash"] == stored, name
+        assert report["lsb_components"] == ["B3"], name
     for name, (_, stored) in B3_ONLY_JOBS.items():
         report = harness["reports"][name]
         assert report["hash"] == stored, name

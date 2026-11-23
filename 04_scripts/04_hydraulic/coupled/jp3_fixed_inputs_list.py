@@ -78,6 +78,10 @@ main checkout's files."""
 
 
 ED6_REQUIRED_SHA256 = {
+    # erratum 2 2-1 (v): the probe reproduction reference (B1-off check lines, cbdb4d28...)
+    ("06_analysis/02_control/j_p3_cause/ed6_design/probe_1bd405c8/b1off_check/"
+     "ed6_probe_a1a2b3.jsonl"):
+        "cbdb4d28df9a7e7f16d012b25728f5990cc876ec65219dfa45f03d691621c062",
     "06_analysis/02_control/j_p3_cause/prelaunch_j9/ed5_inputs/l1_keys_12b.txt":
         "9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5",
     "06_analysis/02_control/j_p3_cause/prelaunch_j9/l1_keys_d3c6c57e.json":
@@ -90,6 +94,10 @@ ED6_REQUIRED_SHA256 = {
         "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
 }
 """Edition 6 fixed inputs with their sealed sha256 (spec v6 6.2 / 6.3 / 6.5, erratum 1 1-2)."""
+
+
+ED6_HEADER_PREFIX = "# run_commit "
+"""Edition 6 (erratum 2 2-3 3): the first line of the list names the run commit."""
 
 
 class NotUsable(Exception):
@@ -262,6 +270,8 @@ def main(argv: list[str] | None = None) -> int:
             raise NotUsable(f"{args.out.name} does not name the run commit {args.commit[:8]}")
         lines = build_list(args)
         with args.out.open("x", encoding="utf-8", newline="\n") as handle:
+            if args.edition == 6:  # erratum 2 2-3 3: the run commit heads the list
+                handle.write(f"{ED6_HEADER_PREFIX}{args.commit}\n")
             handle.write("".join(f"{sha} *{path}\n" for sha, path in lines))
         count, code = len(lines), EXIT_WRITTEN
     except NotUsable as exc:

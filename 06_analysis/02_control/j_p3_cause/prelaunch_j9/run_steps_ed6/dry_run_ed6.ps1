@@ -14,6 +14,11 @@ New-Item -ItemType Directory -Path $DryRoot | Out-Null
 $Pwsh = (Get-Process -Id $PID).Path
 $Steps = @(
     @('step_l1ref_ed6.ps1'), @('prelaunch_ed6.ps1', '-Part', 'list'),
+    @('step5_impl_ed6.ps1', '-Part', 'v0d0', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
+    @('step5_impl_ed6.ps1', '-Part', 'p51', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
+    @('step5_impl_ed6.ps1', '-Part', 't8', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
+    @('step5_impl_ed6.ps1', '-Part', 'cases', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
+    @('step5_impl_ed6.ps1', '-Part', 'probe', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
     @('step6_confirm_ed6.ps1', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
     @('step7_j9main_ed6.ps1', '-MaskHex', $MaskHex, '-Workers', "$Workers"),
     @('step8a_dg3_ed6.ps1'), @('step8b_vbkl0_ed6.ps1', '-Phase', 'base'), @('step8c_decide_ed6.ps1'),

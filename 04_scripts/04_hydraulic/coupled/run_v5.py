@@ -306,6 +306,10 @@ def batch_jobs(name: str) -> list[dict]:
         return j9_case_f_path_jobs()
     if name == J9_T8_BATCH:
         return j9_t8_jobs(P3_HASH_SOURCE_OVERRIDE[0])
+    if name == ED6_T8_BATCH:
+        return ed6_t8_jobs(P3_HASH_SOURCE_OVERRIDE[0])
+    if name == ED6_CASES_BATCH:
+        return ed6_case_jobs()
     raise ValueError(f"unknown batch {name!r}")
 
 
@@ -440,6 +444,31 @@ def j9_t8_jobs(source: Path | None = None) -> list[dict]:
     """The :data:`J9_T8_BATCH` jobs (``source`` = the stored ``main.jsonl``, None = default)."""
     jobs = p3_hash_jobs() if source is None else p3_hash_jobs(source)
     return [{**job, "setting": setting} for setting in J9_T8_SETTINGS for _, job in jobs]
+
+
+ED6_T8_BATCH = "ed6_t8"
+"""Edition 6 T8 = P6-1 (``jp3_remedy_spec_v6_erratum2.md`` 2-1 (ii)): the 22 jobs of
+:func:`p3_hash_jobs` x VBL, VBL0 = 44 runs (``--p3-hash-source`` = the stored ``main.jsonl``);
+``jp3_ed6_judge.py t8`` compares each VBL line with its VBL0 line."""
+ED6_T8_SETTINGS = ("VBL", "VBL0")
+ED6_CASES_BATCH = "ed6_cases"
+"""Edition 6 P6-2 (erratum 2 2-1 (iii)): case E (R12 bottom-FL-Fs4 offset 0.0, the j9_cases row)
+and case F (the j9_case_f FR row) x VBL, LSL1 .. LSL4 = 10 runs, all on the event path
+(``jp3_ed6_judge.py cases``)."""
+
+
+def ed6_t8_jobs(source: Path | None = None) -> list[dict]:
+    """The :data:`ED6_T8_BATCH` jobs (``source`` = the stored ``main.jsonl``, None = default)."""
+    jobs = p3_hash_jobs() if source is None else p3_hash_jobs(source)
+    return [{**job, "setting": setting} for setting in ED6_T8_SETTINGS for _, job in jobs]
+
+
+def ed6_case_jobs() -> list[dict]:
+    case_e = {"case": "R12", "eps": 0.0, "offset_s": 0.0, "twin": dict(J9_CASE_TWIN)}
+    case_f = {"case": "R12", "eps": 0.0, "offset_s": J9_CASE_F_OFFSET_S,
+              "twin": dict(J9_CASE_F_TWIN)}
+    return [{**row, "setting": setting} for row in (case_e, case_f)
+            for setting in ED6_JUDGED_SETTINGS]
 
 
 U9_BATCH = "u9_targeted"
@@ -794,8 +823,8 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error(f"--jobs-file belongs to the {jobs_file_batches} batches (and they need it)")
     J9_V0_SAMPLE_FILE[0] = args.jobs_file
     if args.p3_hash_source is not None:
-        if args.batch != J9_T8_BATCH:
-            parser.error("--p3-hash-source belongs to the j9_t8 batch")
+        if args.batch not in (J9_T8_BATCH, ED6_T8_BATCH):
+            parser.error("--p3-hash-source belongs to the j9_t8 / ed6_t8 batches")
         import jp3_fixed_inputs
 
         problem = jp3_fixed_inputs.sha_problem(args.p3_hash_source,

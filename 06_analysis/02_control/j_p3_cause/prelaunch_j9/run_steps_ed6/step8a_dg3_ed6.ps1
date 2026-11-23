@@ -5,7 +5,8 @@
 # t12 --bundle VBL with --new-t4h / --base-t4h (6.1 identity of both sides; J-P3 judged rows 1).
 # t12 is a record tool (exit 1 = 13.9 indicators moved, written down) and its report goes
 # through Assert-RecordReport: J-P3 H-7 stops 1, no J-P3 judgement / a setting defect / a
-# not-judgeable reason stops 2. Needs the j9main step.
+# not-judgeable reason stops 2, and an H-7 leaves 'judged:t12_VBL_jp3' (erratum 2 2-4). Needs
+# the j9main step.
 param([int]$Attempt = 1)
 . "$PSScriptRoot\common_ed6.ps1"
 
@@ -35,6 +36,9 @@ foreach ($Setting in $Placement.Keys) {
         '--judge-out', "$Folder\judge\dg3_${Setting}_judge.json", '--out', $Report) | Out-Null
     $JudgeSha[$Setting] = Read-ReportField $Report 'judge_sha256'
 }
+# erratum 2 2-4: the command hash record of the two L1a runs (a record, never a stop)
+Invoke-RecordTool 'l1_hash_record' @($Tjr, 'l1-hash-record', '--bundle', 'VBL', '--vbl-l1', (Get-L1Run 'L1a_VBL'),
+    '--vbl0-l1', (Get-L1Run 'L1a_VBL0'), '--out', "$Folder\judge\l1_hash_record.json") | Out-Null
 Invoke-Judge 't12_VBL' @($Tjr, 't12', '--bundle', 'VBL', '--base', "$Folder\dg3_VBL0.json",
     '--base-judge', "$Folder\judge\dg3_VBL0_judge.json", '--base-judge-sha256', $JudgeSha['VBL0'],
     '--new', "$Folder\dg3_VBL.json", '--new-judge', "$Folder\judge\dg3_VBL_judge.json",

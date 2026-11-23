@@ -1201,16 +1201,19 @@ def make_dg3_judge(inputs: Dg3JudgeInputs) -> tuple[dict, compare.Problems, list
     return report, problems, files
 
 
-def l1_hash_record(vbj_l1: Path, vbj0_l1: Path) -> tuple[dict, compare.Problems, list[Path]]:
+def l1_hash_record(vbj_l1: Path, vbj0_l1: Path,
+                   bundle: str = "VBJ") -> tuple[dict, compare.Problems, list[Path]]:
     """Addendum 4a-8 4.5 (a record, not a judgement): per (harness, inner) whether the VBJ L1
     and the VBJ0 L1 lines have the same command hash (``base.commands_sha256``, else
     ``base.cmd_sha256``); counts only. Not judgeable: a file missing or a pair on one side
     only."""
     problems = compare.Problems()
     by_pair = {}
+    # edition 6 (erratum 2 2-4): bundle VBL names the VBL / VBL0 L1a runs in the messages
+    names = {"VBJ": bundle, "VBJ0": f"{bundle}0"}
     for label, path in (("VBJ", vbj_l1), ("VBJ0", vbj0_l1)):
         if not path.is_file():
-            problems.not_judgeable.append(f"{label} L1 run {path} missing")
+            problems.not_judgeable.append(f"{names[label]} L1 run {path} missing")
             return {}, problems, [vbj_l1, vbj0_l1]
         by_pair[label] = {(str(line.get("harness")), str(line.get("inner"))): line
                           for line in _read_json(path).get("results") or []}
@@ -1735,8 +1738,10 @@ def _parser() -> argparse.ArgumentParser:
     l1_hashes = commands.add_parser("l1-hash-record",
                                     help="4a-8 4.5: VBJ / VBJ0 L1 command hash counts (record)")
     l1_hashes.add_argument("--out", type=Path, required=True)
-    l1_hashes.add_argument("--vbj-l1", type=Path, required=True)
-    l1_hashes.add_argument("--vbj0-l1", type=Path, required=True)
+    l1_hashes.add_argument("--vbj-l1", "--vbl-l1", type=Path, required=True)
+    l1_hashes.add_argument("--vbj0-l1", "--vbl0-l1", type=Path, required=True)
+    l1_hashes.add_argument("--bundle", choices=("VBJ", "VBL"), default="VBJ",
+                           help="the pair's names (VBL: edition 6 L1a, erratum 2 2-4)")
     base_judge = commands.add_parser("base-judge",
                                      help="4a-3 4.4: the H-6 base judge file (r79_sensor_judge)")
     base_judge.add_argument("--out", type=Path, required=True)
@@ -1821,7 +1826,7 @@ def _run(args: argparse.Namespace) -> tuple[dict, compare.Problems, list[Path]]:
     if args.command == "l1-keys":
         return make_l1_keys(args.h6, args.keys_out, args.l1_extract)
     if args.command == "l1-hash-record":
-        return l1_hash_record(args.vbj_l1, args.vbj0_l1)
+        return l1_hash_record(args.vbj_l1, args.vbj0_l1, args.bundle)
     if args.command == "base-judge":
         return make_base_judge(args.h6, args.noise, args.judge_out)
     if args.command == "t12-selfcheck":

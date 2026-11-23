@@ -214,6 +214,9 @@ def test_fixed_list_edition_6(list_repo, tmp_path, monkeypatch) -> None:  # noqa
         return fixed_list.main(args)
 
     assert run("ed6", "--edition", "6") == fixed_list.EXIT_WRITTEN
+    written = (tmp_path / f"ed6_{commit[:8]}.SHA256SUMS").read_text(encoding="utf-8").splitlines()
+    assert written[0] == f"# run_commit {commit}"  # erratum 2 2-3 3
+    assert all(not line.startswith("#") for line in written[1:])
     assert run("ed5") == fixed_list.EXIT_NOT_USABLE  # edition 5 needs --dry-selection
     monkeypatch.setattr(fixed_list, "ED6_REQUIRED_SHA256", {"06_analysis/doc.md": "0" * 64})
     assert run("sha", "--edition", "6") == fixed_list.EXIT_NOT_USABLE

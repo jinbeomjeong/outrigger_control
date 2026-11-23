@@ -19,13 +19,19 @@
 #                                12a VBL0 / VBL on l1_keys_d3c6c57e.json; plant_truth), before
 #                                any 12a / 12b output (erratum 1 1-2), before the fixed list
 #   2. prelaunch_ed6.ps1 -Part list   FIXED_INPUTS_RUN8.SHA256SUMS (--edition 6, the
-#                                four L1 runs by --add), then the main session commits it
+#                                four L1 runs by --add; its first line '# run_commit SHA',
+#                                erratum 2 2-3 3), then the main session commits it
+#   2b. step5_impl_ed6.ps1 -Part v0d0 | p51 | t8 | cases | probe   step 5 implementation checks
+#                                (erratum 2 2-1, Y-14), in this order
 #   3. step6_confirm_ed6.ps1     confirmation (가) 216 and (나) 192 (spec 4 step 6, 6.3)
 #   4. step7_j9main_ed6.ps1      j9_main 388 and the sensitivity rows 184 (4 step 7, 6.2)
 #   5. step8a_dg3_ed6.ps1        T-JR-12a VBL against VBL0 (4 step 8, 6.5, erratum 1 1-3)
 #   6. step8b_vbkl0_ed6.ps1 -Phase base, step8c_decide_ed6.ps1 (P-pred), when needs_b4:
 #      step8b_vbkl0_ed6.ps1 -Phase b4 and step8c_decide_ed6.ps1 -WithB4, then step8d_vbkl_ed6.ps1
 #      (T-JR-12b, 6.4, the order of 4 step 8)
+# Every step records its identity at the start and at the end (HEAD, is_clean, 03_src tree id;
+# erratum 2 2-3 1): a start not equal to the run commit stops 3, an end that differs stops 3 and
+# the step's outputs are not used (no .done).
 # Every judge step goes on only on the judge tool's exit 0 (4 "멈춤": 1 failed / 2 / 3 stop and
 # ask; a failure is never run again, Read-PreviousStops). No step prints a judged value: the
 # tools write their reports, the console gets the step marker only.
@@ -37,6 +43,7 @@
 . "$PSScriptRoot\..\run_steps\common.ps1"
 . "$PSScriptRoot\..\run_steps\record_helper.ps1"
 . "$PSScriptRoot\..\run_steps_ed5\record_gates_ed5.ps1"
+. "$PSScriptRoot\record_gates_ed6.ps1"
 $Ed6StepsDir = $PSScriptRoot
 
 # --- dry run ---------------------------------------------------------------------------------
@@ -48,6 +55,8 @@ $Ed6Placeholder = '^<ED6_'
 $Ed6ConfigFile = if ($IsEd6Dry) { "$Ed6DryRoot\ed6_run_config.json" } else { "$PrelaunchDir\ed6_run_config.json" }
 $ControllerCommit = 'ac3c25a754013d1b673a150a4e2c877a02fb02be'
 # spec v6 4 step 4a / erratum 1 1-1: the controller blobs (03_src) of the run commit are these
+$ControllerTree = 'f6bb6033d36fadfda7d81b881c077e40f8e293c7'
+# erratum 2 2-3 1: git rev-parse ac3c25a7:03_src (the 03_src tree id every step records)
 
 function Exit-Ed6([int]$Code, [string]$Reason) {
     # a stop before any step folder exists: `exit` in this dot-sourced file (or in a function)
@@ -102,7 +111,8 @@ $L1Labels = [ordered]@{ L1_VBL0 = @('VBL0', $L1Keys12b); L1_VBL = @('VBL', $L1Ke
 
 # the edition 6 settings run with the plant of the rod-truth reading (spec 6.4 / 6.5)
 foreach ($Setting in @('VBL', 'VBL0', 'VBKL', 'VBKL0')) { $R79RodModel[$Setting] = 'plant_truth' }
-# the T-JR-12a VBL report is a record tool (its J-P3 H-7 is a judged marker, record_gates_ed5)
+# the T-JR-12a VBL report is a record tool (its J-P3 H-7 leaves the judged marker
+# 'judged:t12_VBL_jp3', record_gates_ed6.ps1; erratum 2 2-4)
 $RecordCodeTools += @('tool:t12_VBL')
 
 function Read-PreviousStops([string]$StepName) {
@@ -119,6 +129,57 @@ function Read-PreviousStops([string]$StepName) {
     }
 }
 
+function Get-RunIdentity {
+    # erratum 2 2-3 1: HEAD, is_clean and the 03_src tree id of the run worktree (a git failure
+    # gives $null fields, never "clean")
+    $Head = (& git -C $Worktree rev-parse HEAD)
+    $HeadOk = $LASTEXITCODE -eq 0
+    $Status = (& git -C $Worktree status --porcelain --untracked-files=no)
+    $StatusOk = $LASTEXITCODE -eq 0
+    $Tree = (& git -C $Worktree rev-parse 'HEAD:03_src')
+    $TreeOk = $LASTEXITCODE -eq 0
+    return [ordered]@{ head = if ($HeadOk) { [string]$Head.Trim() } else { $null }
+        is_clean = if ($StatusOk) { -not $Status } else { $null }
+        src_tree = if ($TreeOk) { [string]$Tree.Trim() } else { $null }
+        time = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') }
+}
+
+function Get-IdentityProblem($Identity) {
+    # why an identity is not the run's ($null: it is)
+    if ($Identity.head -ne $RunCommit) { return "HEAD $($Identity.head) is not $RunCommit" }
+    if ($Identity.is_clean -ne $true) { return 'the run worktree is not clean (or git failed)' }
+    if ($Identity.src_tree -ne $ControllerTree) { return "03_src tree $($Identity.src_tree) is not $ControllerTree" }
+    return $null
+}
+
+function Complete-Step {
+    # common.ps1 Complete-Step with erratum 2 2-3 1: the end identity against the start one; a
+    # change stops 3 and the step's outputs are not used (no .done marker)
+    $End = Get-RunIdentity
+    $StepState.Codes['identity_end'] = $End
+    $Problem = Get-IdentityProblem $End
+    if ($Problem) { Stop-Step 3 "identity at the end: $Problem (erratum 2 2-3: outputs not used)" }
+    $Record = [ordered]@{ step = $StepState.Name; folder = $StepState.Folder; exit_code = 0
+        commit = $RunCommit; started = $StepState.Started
+        done = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz'); codes = $StepState.Codes
+        previous_attempts = $StepState.PreviousStops; cleared_variables = $StepState.ClearedVariables
+        commands = $StepState.Commands }
+    Write-JsonFile "$($StepState.Folder)\step_record.json" $Record
+    Write-JsonFile "$RunsRoot\$($StepState.Name).done" $Record
+    Write-Host "DONE $($StepState.Name) -> $($StepState.Folder)"
+    exit 0
+}
+
+function Invoke-RecordTool([string]$Label, [string[]]$Arguments) {
+    # a record (erratum 2 2-4 l1_hash_record): exit 2 / 3 go on with "not computed" and the reason
+    $Code = Invoke-Judge $Label $Arguments -ContinueCodes @(0, 2, 3)
+    $Status = if ($Code -eq 0) { [ordered]@{ label = $Label; computed = $true; exit_code = 0 } } else {
+        [ordered]@{ label = $Label; computed = $false; exit_code = $Code; reason = "$Label exit $Code (a record)" }
+    }
+    Write-JsonFile "$($StepState.Folder)\judge\${Label}_record_status.json" $Status
+    return $Code
+}
+
 function Assert-ControllerBlobs {
     # erratum 1 1-1: 03_src of the run commit is the controller commit's (else stop 3, P6-3)
     & git -C $Worktree diff --quiet $ControllerCommit $RunCommit -- 03_src
@@ -131,12 +192,16 @@ function Assert-FixedList {
     # line's file still has its sha256 (else not judgeable: exit 2); a dry run only notes it
     if ($IsEd6Dry) { $StepState.Codes['fixed_list'] = "dry run: $(Get-RepoPath $FixedList) not checked"; return }
     $Relative = Get-RepoPath $FixedList
+    $Header = @(Get-Content -LiteralPath $FixedList -TotalCount 1)
+    if ($Header.Count -ne 1 -or $Header[0] -ne "# run_commit $RunCommit") {
+        Stop-Step 2 "$Relative does not start with '# run_commit $RunCommit' (erratum 2 2-3 3)"
+    }
     & git -C $MainRoot ls-files --error-unmatch -- $Relative *> $null
     if ($LASTEXITCODE -ne 0) { Stop-Step 2 "$Relative is not tracked by git (prelaunch_ed6.ps1 -Part list, then commit)" }
     & git -C $MainRoot diff --quiet HEAD -- $Relative
     if ($LASTEXITCODE -ne 0) { Stop-Step 2 "$Relative differs from HEAD (or git failed)" }
     foreach ($Line in (Get-Content -LiteralPath $FixedList)) {
-        if (-not $Line.Trim()) { continue }
+        if (-not $Line.Trim() -or $Line.StartsWith('#')) { continue }
         $Sha, $Path = $Line -split ' \*', 2
         $File = Join-Path $MainRoot $Path
         if (-not (Test-Path -LiteralPath $File)) { Stop-Step 2 "fixed input $Path missing" }
@@ -154,6 +219,7 @@ function Get-ListedSha([string]$File) {
     }
     $Relative = Get-RepoPath $File
     foreach ($Line in (Get-Content -LiteralPath $FixedList)) {
+        if ($Line.StartsWith('#')) { continue }
         $Sha, $Path = $Line -split ' \*', 2
         if ($Path -eq $Relative) { return $Sha }
     }
@@ -165,6 +231,10 @@ function Initialize-Ed6Step([string]$StepName, [int]$Attempt, [string[]]$Require
     # attempt folder), the controller blobs, then the edition 6 fixed list (not before it exists)
     $Folder = Initialize-Step $StepName $Attempt $Requires
     Assert-ControllerBlobs
+    $Start = Get-RunIdentity
+    $StepState.Codes['identity_start'] = $Start
+    $Problem = Get-IdentityProblem $Start
+    if ($Problem) { Stop-Step 3 "identity at the start: $Problem" }
     if (-not $BeforeList) { Assert-FixedList }
     $StepState.Codes['run_steps'] = "$Ed6StepsDir (run commit $RunCommit)"
     return $Folder
@@ -195,7 +265,7 @@ function Assert-RecordReport([string]$ReportPath, [switch]$VbjJp3) {
     # alone go on; a judged failure leaves its marker for Read-PreviousStops
     $Stop = Get-RecordToolStop $ReportPath -VbjJp3:$VbjJp3
     $StepState.Codes["record_gate:$(Split-Path -Leaf $ReportPath)"] = if ($Stop) { $Stop.reason } else { 'go on' }
-    $Markers = Get-JudgedFailureMarkers $Stop -VbjJp3:$VbjJp3
+    $Markers = Get-Ed6JudgedFailureMarkers $Stop -Jp3:$VbjJp3  # erratum 2 2-4
     foreach ($Name in $Markers.Keys) { $StepState.Codes[$Name] = $Markers[$Name] }
     if ($Stop) { Stop-Step $Stop.code $Stop.reason }
 }
