@@ -225,7 +225,9 @@ class LockStartBSettings:
     b1_exit_samples: int = 3
     """``N_B``: consecutive samples at the exit level."""
     b2_required_samples: int | None = None
-    """B2 ``required_samples`` of the predicted leg; None = unchanged (stats Q-G: B2 off)."""
+    """B2 ``required_samples`` of the predicted leg; None = unchanged (stats Q-G: B2 off). The
+    R8 preset re-approach starts on one low sample already (``LiftedReapproachSettings.samples``
+    = 1), so 1 here changes nothing in the preset."""
     b3_end_periods: int = 2
     """``N_B3`` (stats s30, user decision 2026-11-23): the leg's lower load estimate at or
     above P5 and not below the previous period's, this many LEVEL periods in a row, ends the
@@ -544,6 +546,9 @@ class _LegCounts:
 TRACE_FLOAT_FIELDS = ("input_m_s", "output_m_s", "a1_floor_m_s", "a2_lower_bound_m",
                       "a2_planned_m_s", "a2_commanded_m")
 TRACE_FLAG_FIELDS = ("a1_on", "a2_on", "b1_blocked", "protected")
+TRACE_PERIOD_FLAGS = ("g2_split",)
+"""Per-read flags (one value per read): ``g2_split`` = the G2 vector ramp acted in a period
+with a leg the A rules raised (spec revision 5)."""
 
 
 @dataclass(frozen=True)
@@ -601,6 +606,7 @@ class LockStartB:
         self.pre_twist = _PreTwist()
         self.b3_episodes: list[dict[str, Any]] = []
         self.protect_blocked_legs: set[int] = set()
+        self.g2_split_periods = 0
         self.events: list[tuple[float, str]] = []
         """Events of the last :meth:`apply_floors` (the controller adds them to its log)."""
         self._trace_t_s: list[float] = []
@@ -638,6 +644,14 @@ class LockStartB:
         if self._trace_rows:
             self._trace_rows[-1]["a2_commanded_m"] = np.array(
                 [fill.commanded_m if fill.is_on else np.nan for fill in self._fill])
+
+    def note_g2_split(self, is_split: bool) -> None:
+        """G2 acted in this period while an A rule had raised a leg (record only)."""
+        if not is_split:
+            return
+        self.g2_split_periods += 1
+        if self._trace_rows:
+            self._trace_rows[-1]["g2_split"] = np.array(True)
 
     def _remember_acting(self, inputs: FloorInputs) -> None:
         """Acting history (``N_lock``) and the lock anchors (the read a lock estimate began)."""
@@ -1031,7 +1045,8 @@ class LockStartB:
             "event_leg": np.array(NO_LEG if self.event_leg is None else self.event_leg,
                                   np.int8),
             "pre_twist_leg": np.array(
-                NO_LEG if self.pre_twist_leg is None else self.pre_twist_leg, np.int8)})
+                NO_LEG if self.pre_twist_leg is None else self.pre_twist_leg, np.int8),
+            "g2_split": np.array(False)})
         self._pending_b1_blocked = np.zeros(LEG_COUNT, bool)
 
     def trace_arrays_at(self, t_s: NDArray[np.float64]) -> dict[str, NDArray[Any]]:
@@ -1044,6 +1059,7 @@ class LockStartB:
         arrays.update({name: np.zeros(shape, bool) for name in TRACE_FLAG_FIELDS})
         arrays["event_leg"] = np.full(len(t_s), NO_LEG, np.int8)
         arrays["pre_twist_leg"] = np.full(len(t_s), NO_LEG, np.int8)
+        arrays.update({name: np.zeros(len(t_s), bool) for name in TRACE_PERIOD_FLAGS})
         found = np.zeros(len(t_s), bool)
         logged_t = np.asarray(self._trace_t_s, float)
         for k, read_t in enumerate(t_s):
@@ -1067,6 +1083,7 @@ class LockStartB:
                 "b3_episodes": [dict(episode) for episode in self.b3_episodes],
                 "b3_active_leg": (None if self.pre_twist_leg is None
                                   else LEG_ORDER[self.pre_twist_leg]),
+                "g2_split_periods": self.g2_split_periods,
                 "trace_reads": len(self._trace_t_s)}
 
 

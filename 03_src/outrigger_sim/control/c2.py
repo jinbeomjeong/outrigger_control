@@ -10247,7 +10247,9 @@ class C2Controller:
         if self._is_pre_twist_protected(reading, leg, rate):
             lsb.end_pre_twist(reading.t_s, B3End.PROTECT)
             return None
-        travel_m = abs(float(self.geometry.twist_vector[leg]) * rate) * self.config.period_s
+        # Spec revision 5: the commanded travel of the fastest leg of the twist.
+        fastest_n = float(np.max(np.abs(self.geometry.twist_vector)))
+        travel_m = fastest_n * abs(rate) * self.config.period_s
         max_travel_m = self.config.r8.lifted_reapproach.max_travel_m
         if not lsb.command_pre_twist(reading.t_s, travel_m, max_travel_m):
             return None
@@ -10275,7 +10277,8 @@ class C2Controller:
 
     def _pre_twist_rate(self, reading: _Reading, leg: int) -> float:
         """B3 ``tau_dot_lift`` toward ``leg``: the re-approach formula and protection, times the
-        factor a re-approach started now would take (RT 2 re-trigger, P-S8-30 pre-LOC)."""
+        RT 2 re-trigger factor, at most 1 (spec revision 5, control-expert: no P-S8-30 pre-LOC
+        speed-up; the 44 kN protection and the stats s31 exposure assume a factor of 1)."""
         twist_rate = self._lift_twist_rate(reading, leg)
         if twist_rate is None:
             return 0.0
@@ -10283,10 +10286,7 @@ class C2Controller:
         factor = 1.0
         if settings.is_retrigger(reading.t_s, self._state.reapproach_last_end_s):
             factor = settings.retrigger_speed_factor
-        pause_settings = self.config.pre_loc_lift_pause
-        if pause_settings.enable and self._is_in_pre_loc_window():
-            factor *= pause_settings.reapproach_speed_factor
-        return twist_rate * factor
+        return twist_rate * min(factor, 1.0)
 
     def _is_pre_twist_released(self, leg: int) -> bool:
         """B3 release period (stats s30, user decision 2026-11-23): the leg's lower load
@@ -10437,18 +10437,20 @@ class C2Controller:
         requested_change: NDArray[np.float64],
         limited_change: NDArray[np.float64],
     ) -> NDArray[np.float64]:
-        """G2 with the edition 6 rules on (hydraulics review 7): the common-ratio ramp sees the
-        legs the A rules raised at their command before the rules, so a cut fill request does
-        not slow the other legs; a raised leg takes its own per-leg increment limit."""
+        """G2 with the edition 6 rules on (hydraulics review 7, spec revision 5 conditions): the
+        common-ratio ramp sees the legs the A rules raised at their command before the rules,
+        so a cut fill request does not slow the other legs; a raised leg takes its own per-leg
+        (symmetric) increment limit. A period in which G2 acted with a raised leg is recorded
+        (``lsb_g2_split``)."""
         lsb = self._lock_start_b_state()
         raised = lsb.last_raised
         if not raised.any():
             return self._vector_ramp_increment(leg_speeds, requested_change, limited_change)
         base_speeds = np.where(raised, lsb.last_input_m_s, leg_speeds)
         base_change = base_speeds - self._state.previous_output_m_s
-        base_limited = self._vector_ramp_increment(
-            base_speeds, base_change, self._limited_increment(base_speeds)
-        )
+        base_per_leg = self._limited_increment(base_speeds)
+        base_limited = self._vector_ramp_increment(base_speeds, base_change, base_per_leg)
+        lsb.note_g2_split(bool(np.any(base_limited != base_per_leg)))
         return np.where(raised, limited_change, base_limited)
 
     def _vector_ramp_increment(

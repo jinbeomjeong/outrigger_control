@@ -687,10 +687,7 @@ def test_b3_starts_with_the_reapproach_conditions_and_takes_its_rate() -> None:
     lsb = controller._lock_start_b_state()
     assert lsb.pre_twist_leg == 3 and lsb.event_leg is None  # B3 alone: no B1 episode
     rate = controller._twist_channel_rate(reading, is_held=True, pre_twist_leg=3)
-    pause = controller.config.pre_loc_lift_pause
-    factor = (pause.reapproach_speed_factor
-              if pause.enable and controller._is_in_pre_loc_window() else 1.0)
-    assert rate == pytest.approx(controller._lift_twist_rate(reading, 3) * factor)
+    assert rate == controller._lift_twist_rate(reading, 3)  # factor 1 (spec revision 5)
     assert rate != 0.0
     blocked = _b3_controller()
     blocked._state.is_reapproach_armed[3] = False
@@ -700,6 +697,46 @@ def test_b3_starts_with_the_reapproach_conditions_and_takes_its_rate() -> None:
     single._state.active_reapproaches[1] = object()  # another leg re-approaches
     single._start_event_order(3, reading)
     assert single._lock_start_b_state().pre_twist_leg is None
+
+
+def test_b3_factor_is_at_most_one_in_the_pre_loc_window() -> None:
+    """Spec revision 5: no P-S8-30 x4 for the pre-twist; the RT 2 re-trigger factor stays."""
+    controller = _b3_controller()
+    pause = controller.config.pre_loc_lift_pause
+    assert pause.enable and pause.reapproach_speed_factor > 1.0
+    assert controller._is_in_pre_loc_window()  # no LOC yet
+    reading = _reading(50.0)
+    base = controller._lift_twist_rate(reading, 3)
+    assert controller._pre_twist_rate(reading, 3) == base
+    settings = controller.config.r8.lifted_reapproach
+    controller._state.reapproach_last_end_s = 49.9  # a re-trigger window
+    assert settings.is_retrigger(50.0, 49.9) and settings.retrigger_speed_factor == 0.6
+    assert controller._pre_twist_rate(reading, 3) == pytest.approx(base * 0.6)
+
+
+def test_b3_travel_cap_counts_the_fastest_leg() -> None:
+    """Spec revision 5: the commanded travel is max|n| |tau_dot| T, also for a leg whose own
+    component is smaller (front and rear legs differ)."""
+    controller = _b3_controller()
+    twist = controller.geometry.twist_vector
+    slow_leg = int(np.argmin(np.abs(twist)))
+    assert abs(twist[slow_leg]) < np.max(np.abs(twist))
+    controller._start_event_order(slow_leg, _reading(50.0))
+    reading = _loads_reading(50.1, 60e3)
+    rate = controller._pre_twist_rate(reading, slow_leg)
+    assert controller._update_pre_twist(reading, np.zeros(4, bool)) == slow_leg
+    commanded = controller._lock_start_b_state().pre_twist.commanded_m
+    assert commanded == pytest.approx(float(np.max(np.abs(twist))) * abs(rate) * 0.1)
+    assert commanded > abs(twist[slow_leg] * rate) * 0.1
+    periods = 1
+    while controller._update_pre_twist(_loads_reading(50.1 + 0.1 * periods, 60e3),
+                                       np.zeros(4, bool)) is not None:
+        periods += 1
+    lsb = controller._lock_start_b_state()
+    episode = lsb.b3_episodes[-1]
+    assert episode["end"] == "travel_cap"
+    assert episode["commanded_travel_m"] <= 0.065 * 0.04 + 1e-12
+    assert episode["commanded_travel_m"] + commanded > 0.065 * 0.04
 
 
 def test_b3_protection_holds_the_pre_twist_at_zero() -> None:
@@ -847,6 +884,29 @@ def test_vector_ramp_ignores_the_raised_legs() -> None:
     output = with_rules._apply_output_ramp(floored)
     assert np.allclose(output[1:], expected[1:])
     assert output[FL] == pytest.approx(-0.25 * with_rules.geometry.max_speed_m_s)
+
+
+def test_g2_raised_leg_keeps_at_least_the_common_ratio_and_the_split_is_recorded() -> None:
+    """Spec revision 5 G2 conditions: (가) the raised leg takes its own symmetric limit,
+    (다) its output is at least its pre-rule command times the G2 common ratio, (라) the
+    period is recorded as ``lsb_g2_split``."""
+    base = np.array([-0.5e-3, 10e-3, 2e-3, 10e-3])
+    controller = _level_controller()
+    previous = controller._state.previous_output_m_s.copy()
+    floored = controller._apply_lock_start_floors(_reading(1.0), _measurements(1.0), base,
+                                                  controller._lift_guard_period_count())
+    output = controller._apply_output_ramp(floored)
+    step = 0.25 * controller.geometry.max_speed_m_s
+    assert abs(output[FL] - previous[FL]) <= step + 1e-12  # (가)
+    change = base - previous
+    per_leg = np.clip(change, -step, step)
+    cut = np.abs(change) > np.abs(per_leg) + 1e-12
+    ratio = float(np.min(np.abs(per_leg[cut]) / np.abs(change[cut])))
+    assert abs(output[FL]) >= abs(previous[FL] + ratio * change[FL]) - 1e-12  # (다)
+    lsb = controller._lock_start_b_state()
+    assert lsb.g2_split_periods == 1 and lsb.record()["g2_split_periods"] == 1  # (라)
+    arrays = lsb.trace_arrays_at(np.array([1.0, 0.9]))
+    assert arrays["lsb_g2_split"].tolist() == [True, False]
 
 
 def test_a_guard_period_protects_every_leg_and_clipped_legs_keep_zero() -> None:
