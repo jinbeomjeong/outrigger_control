@@ -1,10 +1,11 @@
 #Requires -Version 7
 # Prelaunch parts of edition 6 (no simulation):
-#   -Part list   FIXED_INPUTS_RUN8.SHA256SUMS by jp3_fixed_inputs_list.py --edition 6
+#   -Part list   FIXED_INPUTS_ + the run commit's first 8 characters + .SHA256SUMS (the
+#                common_ed6.ps1 $FixedList) by jp3_fixed_inputs_list.py --edition 6
 #                (erratum 1 1-2 / 1-4): the entries of fixed_inputs_entries_ed6.txt, the X-11
 #                selection of ed6_inputs\x11 (seeds 50 .. 53) and its outputs, and by --add the
 #                four L1 runs of the done l1ref step. Never overwritten; the main session commits
-#                it before step 6.
+#                it before step 5 v0d0 (every step from step 5 on asserts the committed list).
 #   -Part check  the start checks only (config, run commit, clean tree, 03_src, fixed inputs,
 #                the X-11 selection sha256): exit 0 or the stop code; writes nothing.
 param([Parameter(Mandatory)][ValidateSet('list', 'check')][string]$Part)

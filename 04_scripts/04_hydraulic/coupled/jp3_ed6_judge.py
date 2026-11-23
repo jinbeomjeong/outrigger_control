@@ -36,7 +36,14 @@ Sub-commands (every one writes ``--out``, never overwritten):
             (``probe_seen``) only stop; the others take the cluster rule (k = 2): a (setting,
             row) with 2+ failing phases, or more than 2 single-phase failures, fails. J-P3:
             expected judged rows (104 / 56).
-``grid``    ``--keys confirm_b_grid192.json``, ``--rows`` the VBL grid run: the 174 opportunity
+            Erratum 3 3-1 (``sens_keys_v2.json`` only): per sensitivity setting the R15
+            worsening of edition 5 erratum 2 2-9.3 - J2 value (``_j2_value_N``) of the two R15
+            phases against V0, ``phase_scatter``; "구분됨" with E < 0 is a probe-unit stop
+            (failed), outside the cluster rule; a missing phase line or a J2 value None is not
+            judgeable; S, E, state and the two values per setting are recorded.
+``grid``    ``--keys confirm_b_grid192.json``, ``--rows`` the VBL grid run. Erratum 3 3-2: every
+            line must carry :data:`GRID_REQUIRED_KEYS` before any FAULT 0 reading (a missing
+            key: not judgeable, with the line count and key names). Then the 174 opportunity
             lines (key file ``v0_pass``) fail by ``event_output.pass`` false (allowed 1), every
             line has FAULT 0 (``fault_periods``, ``fault_events``, gate ``fault0``, a ``FAULT``
             event), J-P3 judged rows 192; WARN names are recorded against the stored V0 grid line
@@ -99,6 +106,7 @@ for _path in (HERE, ROOT / "03_src"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+import jp3_12b_judge as judge12b  # noqa: E402
 import jp3_j9main_judge as base  # noqa: E402
 
 EXIT_PASS, EXIT_FAILED, EXIT_STOP, EXIT_ERROR = 0, 1, 2, 3
@@ -129,6 +137,13 @@ SEALED_KEY_FILES = {
 """Spec v6 6.2 / 6.3 (revision 14): (sha256, lines, J-P3 judged rows) of the sealed key files."""
 GRID_ALLOWED_FAILURES = 1
 FAULT_PREFIX = "FAULT"
+GRID_REQUIRED_KEYS = ("event_output.pass", "event_output.gates.fault0",
+                      "event_output.fault_periods", "event_output.fault_events", "events")
+"""Erratum 3 3-2: the keys every grid line must carry before the FAULT 0 reading."""
+R15_ROW = "R15"
+R15_PHASES = 2
+R15_KEY_FILE = "sens_keys_v2.json"
+"""Erratum 3 3-1: the key file whose sensitivity settings take the R15 worsening (6.2)."""
 KEY_PRESENCE = {
     "rows": ("job", "controller_tag", "lsb_components", "lsb_settings",
              "hydraulics_record.extend_bound_check.rule_revision",
@@ -136,14 +151,14 @@ KEY_PRESENCE = {
              "hydraulic_options.extend_start_tracked", "hydraulic_options.extend_start_hold",
              "hydraulic_options.extend_start_witness", "head_only_declared", "commands_sha256",
              "t4h_file", "events", "event_output", "soil_stop_crawler"),
-    "grid_rows": ("event_output.pass", "event_output.gates", "event_output.fault_periods",
-                  "event_output.fault_events", "event_output.warnings"),
+    "grid_rows": (*GRID_REQUIRED_KEYS, "event_output.warnings"),
     "t4h_meta": ("head_only_declared", "events"),
     "t4h_arrays_j_p3_rows": ("rod_pressure_Pa",),
     "t4h_arrays_j7_exempt_record": ("t_s", "phase"),
-    "t4h_arrays_12b": ("t_s", "phase", "command_m_s", "motor_stroke_m", "rod_fault_applied",
-                       "jp3_t_s", "jp3_r58_witness", "jp3_r59_substeps",
-                       "jp3_r510_candidates"),
+    # erratum 3 3-3: one source - the arrays jp3_12b_judge reads (T4H_ARRAYS, and for the vbk
+    # arm T4H_REV6_ARRAYS, with jp3_r59_end_guard_substeps)
+    "t4h_arrays_12b": tuple(dict.fromkeys(("t_s", *judge12b.T4H_ARRAYS,
+                                           *judge12b.T4H_REV6_ARRAYS))),
 }
 """Spec v6 6.6 (revision 13, M-10): the names these judges read (rows, T4h meta, T4h arrays;
 ``jp3_12b_judge_ed6`` reads the 12b arrays through ``jp3_12b_judge``). A missing
@@ -599,6 +614,37 @@ def cluster_rule(failing: dict[tuple, list[str]], units: list[tuple]) -> dict:
             "is_failed": bool(clusters) or singles > CLUSTER_K, "k": CLUSTER_K}
 
 
+def sens_r15_worsening(rows_by: dict, settings: tuple[str, ...]) -> dict[str, dict]:
+    """Erratum 3 3-1: per setting the R15 worsening against V0 (edition 5 erratum 2 2-9.3):
+    J2 value of the two R15 phases, ``phase_scatter``; worse = "구분됨" and E < 0."""
+    import judge_stage1_4368 as path1
+
+    v0 = {str(r["phase"]): r for r in rows_by.get(base.V0_SETTING, []) if r["row"] == R15_ROW}
+    out: dict[str, dict] = {}
+    for setting in settings:
+        own = {str(r["phase"]): r for r in rows_by.get(setting, []) if r["row"] == R15_ROW}
+        phases = sorted(own)
+        if len(phases) != R15_PHASES or any(phase not in v0 for phase in phases):
+            out[setting] = {"state": "판정 불가", "worse": False,
+                            "reason": f"R15 phase lines: {len(phases)} of the setting "
+                                      f"(V0 pairs {sum(p in v0 for p in phases)}), "
+                                      f"{R15_PHASES} expected"}
+            continue
+        off = [path1._j2_value_N(v0[phase]) for phase in phases]
+        on = [path1._j2_value_N(own[phase]) for phase in phases]
+        values = {phase: {"V0_N": a, "setting_N": b}
+                  for phase, a, b in zip(phases, off, on, strict=True)}
+        if any(value is None for value in off + on):
+            out[setting] = {"state": "판정 불가", "worse": False, "values": values,
+                            "reason": "a J2 value None in an R15 pair"}
+            continue
+        scatter = path1.phase_scatter(off, on)
+        out[setting] = {"state": scatter["state"], "S_N": scatter["S"], "E_N": scatter["E"],
+                        "worse": scatter["state"] == "구분됨" and scatter["E"] < 0,
+                        "weak_basis": True, "values": values}
+    return out
+
+
 def judge_sens(keys_path: Path, rows_path: Path, v0_path: Path, v0_sha256: str) -> dict:
     """``sens`` (module docstring)."""
     import judge4368_common as common
@@ -635,6 +681,13 @@ def judge_sens(keys_path: Path, rows_path: Path, v0_path: Path, v0_sha256: str) 
     failing = {(s, r, p): v for (s, r, p), v in failing.items()}
     probe_stops = sorted(f"{s} {r} {p}" for s, r, p in probe_units if (s, r, p) in failing)
     cluster = cluster_rule(failing, judged_units)
+    # erratum 3 3-1: R15 worsening per sensitivity setting (probe units: a stop, never counted
+    # by the cluster rule); only the 6.2 key file has R15 lines
+    r15 = (sens_r15_worsening(rows_by, SENSITIVITY_SETTINGS)
+           if Path(keys_path).name == R15_KEY_FILE else {})
+    r15_worse = [setting for setting, entry in r15.items() if entry["worse"]]
+    r15_unjudged = [f"R15 worsening {setting}: {entry['reason']}"
+                    for setting, entry in r15.items() if entry["state"] == "판정 불가"]
     jp3 = j_p3_over_rows(base.j_p3_rows([row for _, row in pairs], folders),
                          edition5_order=True)
     expected = sealed_lsb_settings()
@@ -645,6 +698,10 @@ def judge_sens(keys_path: Path, rows_path: Path, v0_path: Path, v0_sha256: str) 
     failures = []
     if probe_stops:
         failures.append(f"probe-seen unit stop: {len(probe_stops)}")
+    for setting in r15_worse:
+        entry = r15[setting]
+        failures.append(f"R15 worsening {setting} (probe unit stop): S {entry['S_N']:.1f} N, "
+                        f"E {entry['E_N']:.1f} N, values {entry['values']}")
     if cluster["is_failed"]:
         failures.append("cluster rule (k = 2)")
     jp3_failures, defects, unjudged = jp3_basis(jp3, sealed[2])
@@ -652,11 +709,12 @@ def judge_sens(keys_path: Path, rows_path: Path, v0_path: Path, v0_sha256: str) 
     if identity:
         defects.insert(0, f"identity: {len(identity)} lines")
     not_judgeable = ([f"not-judgeable items: {len(unjudgeable)}"] if unjudgeable else [])
+    not_judgeable += r15_unjudged
     if not judged_units:
         not_judgeable.append("0 judged units")
     basis = {"failures": failures, "setting_defects": defects,
              "not_judgeable": not_judgeable + unjudged}
-    return {"rule": "jp3_remedy_spec_v6.md 6.2 / 6.3 (가), path 1",
+    return {"rule": "jp3_remedy_spec_v6.md 6.2 / 6.3 (가), path 1; erratum 3 3-1",
             "keys": {"path": str(keys_path), "sha256": sealed[0], "lines": sealed[1]},
             "inputs": {"rows": {"path": str(rows_path), "sha256": base.file_sha256(rows_path)},
                        "v0": {"path": str(v0_path), "sha256": v0_sha256}},
@@ -665,6 +723,7 @@ def judge_sens(keys_path: Path, rows_path: Path, v0_path: Path, v0_sha256: str) 
             "j7_stiffness_exempt": exempt, "S8": s8,
             "failing_units": {" ".join(map(str, k)): v for k, v in sorted(failing.items())},
             "probe_unit_stops": probe_stops, "cluster": cluster,
+            "R15_worsening": r15 if r15 else "not applicable (no R15 lines in this key file)",
             "identity_defects": identity, "not_judgeable_items": unjudgeable,
             "J-P3": jp3, "J-P3_judged_rows": jp3_judged_rows(jp3),
             "status_basis": basis, "status": status_of(basis)}
@@ -685,6 +744,33 @@ def grid_v0_run(root: Path, pair: dict) -> dict:
     if run.get("commands_sha256") != pair["v0_commands_sha256"]:
         raise NotJudgeable(f"stored V0 grid run {pair['key']} #{pair['run_id']}: hash differs")
     return run
+
+
+def missing_keys(row: dict, paths: tuple[str, ...]) -> list[str]:
+    """The dotted ``paths`` absent from ``row`` (a None value counts as present)."""
+    missing = []
+    for dotted in paths:
+        node: object = row
+        for part in dotted.split("."):
+            if not isinstance(node, dict) or part not in node:
+                missing.append(dotted)
+                break
+            node = node[part]
+    return missing
+
+
+def grid_key_problems(rows: list[dict]) -> str | None:
+    """Erratum 3 3-2: the reason the grid lines lack :data:`GRID_REQUIRED_KEYS` (None: they do
+    not)."""
+    lines, names = 0, set()
+    for row in rows:
+        missing = missing_keys(row, GRID_REQUIRED_KEYS)
+        if missing:
+            lines += 1
+            names.update(missing)
+    if not lines:
+        return None
+    return f"{lines} grid lines without the keys {sorted(names)} (erratum 3 3-2)"
 
 
 def fault_reasons(row: dict) -> list[str]:
@@ -713,6 +799,9 @@ def judge_grid(keys_path: Path, rows_path: Path, grid_root: Path) -> dict:
         raise NotJudgeable("the grid sub-command takes confirm_b_grid192.json")
     rows = base.read_rows(rows_path)
     pairs = matched_lines(document, rows)
+    key_problem = grid_key_problems([row for _, row in pairs])
+    if key_problem:  # before any FAULT 0 reading: a missing key never reads as "no FAULT"
+        raise NotJudgeable(key_problem)
     folders = tuple(common.t4h_folders(rows_path, rows))
     opportunity_failures, faults, warn_records, lines = [], [], [], []
     for line, row in pairs:

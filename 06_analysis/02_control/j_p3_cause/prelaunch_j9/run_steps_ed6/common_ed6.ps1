@@ -18,9 +18,11 @@
 #   1. step_l1ref_ed6.ps1        the four L1 reference runs (12b VBL0 / VBL on l1_keys_12b.txt,
 #                                12a VBL0 / VBL on l1_keys_d3c6c57e.json; plant_truth), before
 #                                any 12a / 12b output (erratum 1 1-2), before the fixed list
-#   2. prelaunch_ed6.ps1 -Part list   FIXED_INPUTS_RUN8.SHA256SUMS (--edition 6, the
-#                                four L1 runs by --add; its first line '# run_commit SHA',
-#                                erratum 2 2-3 3), then the main session commits it
+#   2. prelaunch_ed6.ps1 -Part list   prelaunch_j9\FIXED_INPUTS_ + the run commit's first 8
+#                                characters + .SHA256SUMS (--edition 6, the four L1 runs by
+#                                --add; its first line '# run_commit SHA', erratum 2 2-3 3);
+#                                the main session commits it before step 5 v0d0 (every step
+#                                from step 5 on asserts the committed list)
 #   2b. step5_impl_ed6.ps1 -Part v0d0 | p51 | t8 | cases | probe   step 5 implementation checks
 #                                (erratum 2 2-1, Y-14), in this order
 #   3. step6_confirm_ed6.ps1     confirmation (가) 216 and (나) 192 (spec 4 step 6, 6.3)
@@ -188,7 +190,7 @@ function Assert-ControllerBlobs {
 }
 
 function Assert-FixedList {
-    # 6.6: FIXED_INPUTS_RUN8 is tracked, equal to HEAD of the main checkout, and every
+    # 6.6: the fixed list ($FixedList) is tracked, equal to HEAD of the main checkout, and every
     # line's file still has its sha256 (else not judgeable: exit 2); a dry run only notes it
     if ($IsEd6Dry) { $StepState.Codes['fixed_list'] = "dry run: $(Get-RepoPath $FixedList) not checked"; return }
     $Relative = Get-RepoPath $FixedList

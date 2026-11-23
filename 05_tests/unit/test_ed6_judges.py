@@ -384,6 +384,27 @@ def test_grid_opportunity_allowance_fault_and_warn(grid_judge) -> None:
     assert faulted["status"] == "failed" and faulted["fault_lines"][0]["line"] == first_v0_fail
 
 
+@pytest.mark.parametrize("dropped", ed6.GRID_REQUIRED_KEYS)
+def test_grid_line_without_a_key_is_not_judgeable(grid_judge, dropped) -> None:
+    """Erratum 3 3-2: one grid line without one of the five keys makes the grid not
+    judgeable before any FAULT 0 reading (never a FAULT-free pass)."""
+    document, run = grid_judge
+    target = document["lines"][7]["t4h_file"]
+
+    def drop(line, row):
+        if line["t4h_file"] != target:
+            return
+        *parents, last = dropped.split(".")
+        node = row
+        for part in parents:
+            node = node[part]
+        del node[last]
+
+    with pytest.raises(ed6.NotJudgeable, match=r"1 grid lines without the keys"):
+        run(drop)
+    assert run()["status"] == "pass"  # all five keys, no FAULT
+
+
 def test_fault_reasons() -> None:
     row = {"event_output": {"fault_periods": 0, "fault_events": [], "gates": {"fault0": True}},
            "events": [[1.0, "WARN_X"], [2.0, "INFO_ROD_PRESSURE_FAULT_REASON"]]}
@@ -531,7 +552,13 @@ def sens_judge(monkeypatch, tmp_path):
     monkeypatch.setattr(ed6, "sealed_lsb_settings", lambda: {})
     monkeypatch.setattr(ed6.base, "j_p3_rows", lambda rows, folders: [])
 
-    def run(failing: set[tuple[str, str]]) -> dict:
+    def run(failing: set[tuple[str, str]], r15: dict | None = None) -> dict:
+        # erratum 3 3-1: the R15 worsening is tested on its own (test_ed6_erratum3.py); here it
+        # is "위상 산포 안" for every setting unless given
+        within = {s: {"state": "위상 산포 안", "worse": False} for s in ed6.SENSITIVITY_SETTINGS}
+        monkeypatch.setattr(ed6, "sens_r15_worsening",
+                            lambda rows_by, settings: r15 if r15 is not None else within)
+
         def full_items(rows_by, settings, reference):
             return {setting: {"runs": 1, "no_reference": [], "items": [
                 {"row": "row", "phase": key, "item": "J2", "kind": "fail", "detail": "F",
@@ -562,3 +589,21 @@ def test_sens_probe_units_stop_and_cluster_rule(sens_judge) -> None:
         rows.setdefault((unit[0], unit[1].split("_", 1)[0]), unit)
     three = set(list(rows.values())[:3])
     assert run(three)["status"] == "failed"
+
+
+def test_sens_r15_worsening_in_the_status(sens_judge) -> None:
+    """Erratum 3 3-1: one worse setting stops (failed) and only that setting is named, outside
+    the cluster rule; a not-judgeable R15 setting is not a pass."""
+    run, _, _ = sens_judge
+    within = {s: {"state": "위상 산포 안", "worse": False} for s in ed6.SENSITIVITY_SETTINGS}
+    worse = {**within, "VBLc04": {"state": "구분됨", "worse": True, "S_N": 500.0,
+                                  "E_N": -900.0, "values": {}}}
+    report = run(set(), worse)
+    assert report["status"] == "failed"
+    reasons = [text for text in report["status_basis"]["failures"] if "R15" in text]
+    assert len(reasons) == 1 and "VBLc04" in reasons[0]
+    assert not report["cluster"]["is_failed"]
+    unjudged = {**within, "VBLv15": {"state": "판정 불가", "worse": False, "reason": "x"}}
+    report = run(set(), unjudged)
+    assert report["status"] == "not_judgeable"
+    assert any("VBLv15" in text for text in report["status_basis"]["not_judgeable"])
