@@ -33,7 +33,9 @@ default; off = none of their lines runs):
   P4 ``rod_reading_truth``       the controller's rod reading is the M2 truth
                                  (:func:`with_plant_truth_pressures`, event path ``r64``)
 Records of a run with any 436.9 option or ③ revision 5: the per-read J-P3 trace in
-``extend_bound_check`` (revision 5 keys) and the per-lock ``lock_log``.
+``extend_bound_check`` (revision 5 keys) and the per-lock ``lock_log``. With
+:func:`enable_p1_read_record` (D0 split runner only) a P1 plant also logs its line state at each
+controller read (:class:`P1ReadLog`, T4h arrays ``p1_*``); off, no line of it runs.
 
 Pressures gauge [Pa], speeds m/s, extension positive.
 """
@@ -389,6 +391,82 @@ class _LockLog:
                 "p1_retract_seed_log_columns": list(SEED_LOG_COLUMNS)}
 
 
+P1_READ_ARRAY_PREFIX = "p1_"
+"""T4h array names of the per-read P1 record (``p1_<field>``)."""
+P1_READ_FLOAT_FIELDS = ("x_m", "need_m", "drain_m_s", "valve_speed_m_s")
+P1_READ_FLAG_FIELDS = ("is_open", "charged", "rod_released", "gate_held")
+_P1_READ_RECORD: list[bool] = [False]
+"""D0 split (2026-11-23): True = every P1 plant armed later in this process logs its line
+state at each controller read. Off by default, so the T4h records of other runs keep their
+arrays; record only either way (:func:`enable_p1_read_record`)."""
+
+
+def enable_p1_read_record() -> None:
+    """Turn the per-read P1 record on for the rest of this process (record only)."""
+    _P1_READ_RECORD[0] = True
+
+
+def is_p1_read_record_on() -> bool:
+    return _P1_READ_RECORD[0]
+
+
+class P1ReadLog:
+    """P1 line state at the controller reads (D0 split, hydraulics review 7; record only).
+
+    One row per read: the ``CheckOpenGate`` state after the chunk that ended at the read and
+    the values of that chunk. ``x_m`` is the line state in stroke units (extend: head area,
+    retract: annulus, as ``check_open_delay``), ``need_m`` the retract dead stroke (NaN on
+    another step), ``drain_m_s`` the neutral drain, ``valve_speed_m_s`` the speed in front of
+    the gate, ``gate_held`` a locked leg with ``|u| > eps`` that the gate kept at speed 0.
+    """
+
+    def __init__(self) -> None:
+        self.t_s: list[float] = []
+        self.rows: list[dict[str, np.ndarray]] = []
+        self._chunk_held = np.zeros(LEG_COUNT, bool)
+        self._chunk_speed_m_s = np.full(LEG_COUNT, np.nan)
+
+    def note_chunk(self, is_held: np.ndarray, valve_speed_m_s: np.ndarray) -> None:
+        self._chunk_held = np.asarray(is_held, bool).copy()
+        self._chunk_speed_m_s = np.asarray(valve_speed_m_s, float).copy()
+
+    def note_read(self, t_s: float, gate: CheckOpenGate) -> None:
+        self.t_s.append(float(t_s))
+        self.rows.append({
+            "x_m": np.asarray(gate.x, float).copy(),
+            "need_m": np.asarray(gate.step_need_m, float).copy(),
+            "drain_m_s": np.asarray(gate.step_drain_m_s, float).copy(),
+            "valve_speed_m_s": self._chunk_speed_m_s.copy(),
+            "line_dir": np.asarray(gate.line_dir, np.int8).copy(),
+            "is_open": np.asarray(gate.is_open, bool).copy(),
+            "charged": np.asarray(gate.charged, bool).copy(),
+            "rod_released": np.asarray(gate.rod_released, bool).copy(),
+            "gate_held": self._chunk_held.copy()})
+
+    def arrays_at(self, t_s: np.ndarray) -> dict[str, np.ndarray]:
+        """``p1_*`` arrays on the T4h reads ``t_s`` (row k = the logged read at ``t_s[k]``);
+        ``p1_read_found`` marks the reads that have a logged row (NaN / 0 / False elsewhere)."""
+        t_s = np.asarray(t_s, float)
+        shape = (len(t_s), LEG_COUNT)
+        arrays: dict[str, np.ndarray] = {name: np.full(shape, np.nan)
+                                         for name in P1_READ_FLOAT_FIELDS}
+        arrays.update({name: np.zeros(shape, bool) for name in P1_READ_FLAG_FIELDS})
+        arrays["line_dir"] = np.zeros(shape, np.int8)
+        found = np.zeros(len(t_s), bool)
+        logged_t = np.asarray(self.t_s, float)
+        for k, read_t in enumerate(t_s):
+            matches = np.flatnonzero(np.abs(logged_t - read_t) <= TIME_TOL_S)
+            if not len(matches):
+                continue
+            found[k] = True
+            row = self.rows[int(matches[-1])]  # a repeated read keeps its last state
+            for name, values in row.items():
+                arrays[name][k] = values
+        out = {P1_READ_ARRAY_PREFIX + name: values for name, values in arrays.items()}
+        out[P1_READ_ARRAY_PREFIX + "read_found"] = found
+        return out
+
+
 def with_plant_truth_pressures(plant, m, ha):
     """P4 reading (spec 3): rod = the M2 truth ``plant_rod_pressure_Pa()`` (moving: the lag,
     locked: ``p_r0 - G_r / A_ann``), head = ``(F_net + p_r A_ann) / A_h``; the sensor error
@@ -477,6 +555,8 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             if options.line_fill_gate is not None:  # P1
                 self.line_fill_gate = CheckOpenGate(
                     options.line_fill_gate, _check_delay_circuit(self.flow_limiter.params))
+            self.p1_read_log = (P1ReadLog() if self.line_fill_gate is not None
+                                and is_p1_read_record_on() else None)
             self.lock_log = _LockLog() if records_jp3 else None
             self.last_monitor_trace = None
             """The monitor's revision 5 trace of the last read (the lock log's class)."""
@@ -508,13 +588,27 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             speed_m_s = np.array(np.broadcast_to(u, (LEG_COUNT,)), dtype=float)
             output = self.line_fill_gate.filter(
                 self._check_delay_inputs(speed_m_s, nsteps, self.line_fill_gate))
-            if self.lock_log is not None:
+            if self.lock_log is not None or self.p1_read_log is not None:
                 is_held = (np.asarray(self.locked, bool) & (np.abs(speed_m_s) > self.eps)
                            & (output.speed_m_s == 0.0))
-                self.lock_log.note_gate_holds(float(self.t), is_held)
+                if self.lock_log is not None:
+                    self.lock_log.note_gate_holds(float(self.t), is_held)
+                if self.p1_read_log is not None:  # D0 record only
+                    self.p1_read_log.note_chunk(is_held, speed_m_s)
             for i in np.flatnonzero(np.isfinite(output.opening_rod_pressure_Pa)):
                 self._seed_rod_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
             return super().step(output.speed_m_s, nsteps)
+
+        def note_p1_read(self, t_s: float) -> None:
+            """Controller read at ``t_s`` (the plant has not moved since): log the P1 state
+            when the D0 record is on (record only)."""
+            if getattr(self, "p1_read_log", None) is not None:
+                self.p1_read_log.note_read(t_s, self.line_fill_gate)
+
+        def p1_read_arrays(self, t_s: np.ndarray) -> dict[str, np.ndarray]:
+            """The ``p1_*`` T4h arrays on the reads ``t_s``; empty with the record off."""
+            log = getattr(self, "p1_read_log", None)
+            return {} if log is None else log.arrays_at(t_s)
 
         def _count_tension_truth(self, u, nsteps: int) -> None:
             """Premise ① truth of this chunk (``tension_premise.md`` S-2, record only): an
@@ -857,6 +951,9 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
     if getattr(plant, "line_fill_gate", None) is not None:
         record["line_fill_gate"] = plant.line_fill_gate.summary()
         record["p1_output_exceptions"] = list(plant.line_fill_gate.summary()["output_exceptions"])
+    if getattr(plant, "p1_read_log", None) is not None:  # D0 record only
+        record["p1_read_record"] = {"reads": len(plant.p1_read_log.t_s),
+                                    "t4h_prefix": P1_READ_ARRAY_PREFIX}
     if getattr(plant, "lock_log", None) is not None:
         record.update(plant.lock_log.record())
     if getattr(plant, "extend_targets", None) is not None:  # an armed v5 plant (B2 evidence)
@@ -887,6 +984,9 @@ def install_extend_bound_check() -> None:
             check = getattr(plant, "check_extend_bound", None)
             if check is None or abs(float(plant.t) - float(measurements.t_s)) > TIME_TOL_S:
                 return output
+            note_p1_read = getattr(plant, "note_p1_read", None)
+            if note_p1_read is not None:  # D0 per-read P1 record (no-op while it is off)
+                note_p1_read(float(measurements.t_s))
             if _has_rod_reading(measurements):  # addendum 4a-2 B2 evidence 2 (record only)
                 plant.two_pressure_reads = getattr(plant, "two_pressure_reads", 0) + 1
             bound_Pa = self.extend_bound_Pa()

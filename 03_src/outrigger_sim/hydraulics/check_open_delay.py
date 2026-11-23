@@ -19,6 +19,10 @@ drops by the head discharge at the opening (after that chunk).
 
 All valve values are ASSUMPTIONS (:class:`CheckValveValues`). Pressures gauge [Pa], speeds m/s,
 extension positive, arrays per leg.
+
+Records added after the port (2026-11-23, no speed changes): ``step_need_m`` and
+``step_drain_m_s`` of the last step (the per-read P1 record of the D0 split), and a direction
+change resets ``fill_start_t``, so the ``start`` of the next fill is its own.
 """
 
 from __future__ import annotations
@@ -223,6 +227,10 @@ class CheckOpenDelay:
         self.void_peak_mm = np.zeros(n)
         self.fills: list = []
         self.ext_starts: list = []
+        self.step_need_m = np.full(n, np.nan)
+        """Record only: retract ``need`` of the last :meth:`filter` step (NaN off retract)."""
+        self.step_drain_m_s = np.full(n, np.nan)
+        """Record only: neutral drain speed of the last step (NaN on a leg without a line)."""
 
     # --- per step ------------------------------------------------------------------------------
     def compliances(self, s_ref_m: float, i: int) -> tuple[float, float]:
@@ -238,6 +246,8 @@ class CheckOpenDelay:
                                np.full(n, np.nan))
         speed = np.abs(u)
         direction = np.where(speed > EPS_M_S, np.sign(u).astype(int), 0)
+        self.step_need_m = np.full(n, np.nan)
+        self.step_drain_m_s = np.full(n, np.nan)
         for i in range(n):
             void = float(inputs.void_m[i])
             self.void_peak_mm[i] = max(self.void_peak_mm[i], void * 1e3)
@@ -258,6 +268,10 @@ class CheckOpenDelay:
         return out
 
     def _empty_line(self, i: int) -> None:
+        # Record fix (hydraulics review 2026-11-23, h1_p1_review_report.md 4): the held time of
+        # the old direction must not become the ``start`` of the next fill. ``fill_start_t``
+        # enters only the ``fills`` record, never a speed.
+        self.fill_start_t[i] = np.nan
         self.x[i] = 0.0
         self.is_open[i] = False
         self.charged[i] = False
@@ -272,6 +286,7 @@ class CheckOpenDelay:
         p_r, p_h = inputs.p_r[i], inputs.p_h[i]
         p_a = p_a_of_x(values, scale, self.x[i], A_h, self.p_T)
         drain = drain_speed(self.K_n[i], gate, p_a, self.p_T, A_h)
+        self.step_drain_m_s[i] = drain
         if d == 0:  # no flow in: the line bleeds down, the head check is shut
             self.x[i] = max(self.x[i] - drain * inputs.dt_s, 0.0)
             self.is_open[i] = False
@@ -329,6 +344,8 @@ class CheckOpenDelay:
         rise = max(values["p_open"] - self.p_T, 0.0)
         level = min(self.x[i] / need, 1.0) if need > 0.0 else 0.0
         drain = self.K_n[i] * gate * math.sqrt(rise * level) / self.A_ann[i]
+        self.step_need_m[i] = need
+        self.step_drain_m_s[i] = drain
         if d == 0:
             self.x[i] = max(self.x[i] - drain * inputs.dt_s, 0.0)
             self.is_open[i] = False

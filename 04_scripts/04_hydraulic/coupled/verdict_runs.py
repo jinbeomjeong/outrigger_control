@@ -223,7 +223,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
             write_t4h_record(t4h["path"], plant, controller, period,
                              {**_meta_with_controller_tag(t4h["meta"], _LAST_FINISHED_CONFIG[0]),
                               "commands_sha256": _command_digest(period["command"])},
-                             extra_arrays=jp3_trace_arrays(plant))
+                             extra_arrays=_t4h_extra_arrays(plant, period["t"]))
     thresholds = controller.config.thresholds
     values = run_values(limiter.rows(), period, events, limiter,
                         controller.geometry.twist_vector, controller.geometry.head_area_m2,
@@ -264,6 +264,23 @@ def jp3_trace_arrays(plant) -> dict | None:
     if check is None or not hasattr(check, "trace_arrays"):
         return None
     return check.trace_arrays()
+
+
+def p1_read_arrays(plant, t_s: np.ndarray) -> dict:
+    """D0 split per-read P1 arrays (``p1_*``, ``harness_hydraulics.P1ReadLog``); empty unless
+    the run turned the record on (``enable_p1_read_record``), so other T4h records keep their
+    arrays."""
+    arrays_at = getattr(plant, "p1_read_arrays", None)
+    return {} if arrays_at is None else arrays_at(t_s)
+
+
+def _t4h_extra_arrays(plant, t_s: np.ndarray) -> dict | None:
+    """The J-P3 trace arrays, plus the P1 read arrays when that record is on."""
+    extra = jp3_trace_arrays(plant)
+    p1_arrays = p1_read_arrays(plant, t_s)
+    if not p1_arrays:
+        return extra
+    return {**(extra or {}), **p1_arrays}
 
 
 def _meta_with_controller_tag(meta: dict, config) -> dict:
