@@ -1,0 +1,59 @@
+path-2 run, 2026-11-23T20:11:24
+tool worktree: C:\workspace\outrigger_control\.claude\worktrees\z4378-p2ed5
+tool commit: dde4499dd6676a580181df17a50532318aa91d93 (branch z4378-p2ed5)
+worktree dirty: []
+env: dynamics-dev python.exe -I -B with PATH(Library\bin) and MKL_THREADING_LAYER=TBB
+input SHA256SUMS check: listed=950 bad=0 extra=0
+
+T-JR-12b command (run_t12b.ps1):
+param([string]$Out)
+$p = 'C:\ProgramData\miniforge3\envs\dynamics-dev'
+$env:PATH = "$p;$p\Library\mingw-w64\bin;$p\Library\usr\bin;$p\Library\bin;$p\Scripts;" + $env:PATH
+$env:MKL_THREADING_LAYER = 'TBB'
+$py = "$p\python.exe"
+$tool = 'C:\workspace\outrigger_control\.claude\worktrees\z4378-p2ed5\04_scripts\path2\tjr12b_p2.py'
+$d = 'C:\Users\jinbeom\.claude\p2_inputs\ed5_606f8713'
+& $py -I -B $tool judge --block b1 --block b2 `
+  --vbk0 "b1=$d\t12b\VBK0_b1.json" --vbk0 "b2=$d\t12b\VBK0_b2.json" `
+  --vbk "b1=$d\t12b\VBK_b1.json" --vbk "b2=$d\t12b\VBK_b2.json" `
+  --t4h0 "b1=$d\t12b\VBK0_b1_t4h" --t4h0 "b2=$d\t12b\VBK0_b2_t4h" `
+  --t4h1 "b1=$d\t12b\VBK_b1_t4h" --t4h1 "b2=$d\t12b\VBK_b2_t4h" `
+  --plan "b1=$d\plans\b1_plan.json" --plan "b2=$d\plans\b2_plan.json" `
+  --keys "b1=$d\plans\b1_keys.txt" --keys "b2=$d\plans\b2_keys.txt" `
+  --seed b1=40 --seed b2=41 `
+  --noise "$d\plans\h8_noise_VB.json" --selection "$d\plans\selection.json" `
+  --out $Out
+"exit=$LASTEXITCODE"
+
+J-P3 T-JR-12a command (run_t12a.ps1):
+param([string]$Out)
+$p = 'C:\ProgramData\miniforge3\envs\dynamics-dev'
+$env:PATH = "$p;$p\Library\mingw-w64\bin;$p\Library\usr\bin;$p\Library\bin;$p\Scripts;" + $env:PATH
+$env:MKL_THREADING_LAYER = 'TBB'
+$py = "$p\python.exe"
+$tool = 'C:\workspace\outrigger_control\.claude\worktrees\z4378-p2ed5\04_scripts\path2\jp3_rev6_judge_p2.py'
+$d = 'C:\Users\jinbeom\.claude\p2_inputs\ed5_606f8713\t12a'
+& $py -I -B $tool judge --records "$d\dg3_VBJ.json=$d\VBJ_t4h" --records "$d\dg3_VBJ0.json=$d\VBJ0_t4h" `
+  --expect-judged-rows 1 --out $Out
+"exit=$LASTEXITCODE"
+tool sha256 jp3_rev6_judge_p2.py = 271fbe4381c58177065ebede24705700318b65c4ada30b7f0864686b20b797cb
+tool sha256 tjr12b_p2.py = d1175933395c7906a5ad5235f252621124274b4280a5abf04a721e580d5e3d5c
+tool sha256 jp3_rev5_judge_p2.py = 50bec08dac1f66585fd8e87d3f524e4a33108f97a775e02fe8cf1922a1833641
+
+==== j9_main J-P3 revision 6 (added 2026-11-23T20:38:48) ====
+tool commit: 65e0678d148592648b2d7d63226e3a8e97e9ad94 (branch z4378-p2ed5); the T-JR-12b / T-JR-12a outputs above were made at dde4499d
+worktree dirty: []
+input SHA256SUMS_j9main check (paths relative to j9main\): listed=389 bad=0 extra=0
+command (run_j9main.ps1):
+param([string]$Out)
+$p = 'C:\ProgramData\miniforge3\envs\dynamics-dev'
+$env:PATH = "$p;$p\Library\mingw-w64\bin;$p\Library\usr\bin;$p\Library\bin;$p\Scripts;" + $env:PATH
+$env:MKL_THREADING_LAYER = 'TBB'
+$py = "$p\python.exe"
+$tool = 'C:\workspace\outrigger_control\.claude\worktrees\z4378-p2ed5\04_scripts\path2\jp3_rev6_judge_p2.py'
+$d = 'C:\Users\jinbeom\.claude\p2_inputs\ed5_606f8713\j9main'
+# the T4h folder is <stem>_t4h next to the jsonl (4a-7 4.8), j9_main_t4h
+& $py -I -B $tool judge-jsonl "$d\j9_main.jsonl" --out $Out
+"exit=$LASTEXITCODE"
+tool sha256 jp3_rev6_judge_p2.py = 601529f44566af9b6a4bc7aea81d55a036fc319d9bf1ab855379f4e667e4a90c
+tool sha256 jp3_rev5_judge_p2.py = 079951dd3dd2ab21082806241926e44d5371807b16db5b7e2a748e84a6759f5a

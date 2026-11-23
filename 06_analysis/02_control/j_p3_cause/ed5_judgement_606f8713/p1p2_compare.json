@@ -1,0 +1,360 @@
+{
+ "inputs": {
+  "j9_runs\\606f8713\\12b_vbk_a1\\judge\\judge.json": "254d95ff21a448dde1038095f24a3d1df54703c485be4fc68f6fe374cfcd8e19",
+  "j9_runs\\606f8713\\dg3_a1\\judge\\t12_VBJ.json": "3bcde45e3673ba02caee3aeb74db3be052e05ff345724ba075352a36257a3a13",
+  "ed5_p2_606f8713\\tjr12b_p2.json": "926823d832a2d45885f2b8cadfc4a8c64d3ce36c3bb8cfc72fc3e391fd6de235",
+  "ed5_p2_606f8713\\jp3_rev6_VBJ_VBJ0_p2.json": "afe5ffaebcdb3ddb2c1a7558f3f724bb2b1a1341520f88995fc8c5405abbb86b"
+ },
+ "rows": [
+  {
+   "item": "status",
+   "kind": "judged",
+   "path1": "pass",
+   "path2": "pass",
+   "equal": true
+  },
+  {
+   "item": "exit",
+   "kind": "judged",
+   "path1": 0,
+   "path2": 0,
+   "equal": true
+  },
+  {
+   "item": "N",
+   "kind": "judged",
+   "path1": 334,
+   "path2": 334,
+   "equal": true
+  },
+  {
+   "item": "N_opp",
+   "kind": "judged",
+   "path1": 327,
+   "path2": 327,
+   "equal": true
+  },
+  {
+   "item": "k",
+   "kind": "judged",
+   "path1": 160,
+   "path2": 160,
+   "equal": true
+  },
+  {
+   "item": "b3_needed",
+   "kind": "judged",
+   "path1": false,
+   "path2": false,
+   "equal": true
+  },
+  {
+   "item": "b4_needed",
+   "kind": "judged",
+   "path1": false,
+   "path2": false,
+   "equal": true
+  },
+  {
+   "item": "(1) judged pairs N1",
+   "kind": "judged",
+   "path1": 334,
+   "path2": 334,
+   "equal": true
+  },
+  {
+   "item": "(1) new FAULT count",
+   "kind": "judged",
+   "path1": 0,
+   "path2": 0,
+   "equal": true
+  },
+  {
+   "item": "(2)+(3) n23",
+   "kind": "judged",
+   "path1": 2,
+   "path2": 2,
+   "equal": true
+  },
+  {
+   "item": "READY loss",
+   "kind": "judged",
+   "path1": 2,
+   "path2": 2,
+   "equal": true
+  },
+  {
+   "item": "READY +30 s",
+   "kind": "judged",
+   "path1": 0,
+   "path2": 0,
+   "equal": true
+  },
+  {
+   "item": "k_allow",
+   "kind": "judged",
+   "path1": 7,
+   "path2": 7,
+   "equal": true
+  },
+  {
+   "item": "READY loss / delay keys",
+   "kind": "judged",
+   "path1": [
+    "L2|s40|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L2|s41|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ],
+   "path2": [
+    "L2|s40|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L2|s41|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ],
+   "equal": true
+  },
+  {
+   "item": "(4) J-P3 status",
+   "kind": "judged",
+   "path1": "pass",
+   "path2": "pass",
+   "equal": true
+  },
+  {
+   "item": "(4) J-P3 judged rows",
+   "kind": "judged",
+   "path1": 334,
+   "path2": 334,
+   "equal": true
+  },
+  {
+   "item": "(4) J-P3 breach a/b/c",
+   "kind": "judged",
+   "path1": [
+    0,
+    0,
+    0
+   ],
+   "path2": [
+    0,
+    0,
+    0
+   ],
+   "equal": true
+  },
+  {
+   "item": "(4) judged_key_missing",
+   "kind": "judged",
+   "path1": 0,
+   "path2": 0,
+   "equal": true
+  },
+  {
+   "item": "by_block opportunity / VBK0 READY unreached",
+   "kind": "record",
+   "path1": {
+    "b1": [
+     163,
+     4
+    ],
+    "b2": [
+     164,
+     3
+    ]
+   },
+   "path2": {
+    "b1": [
+     163,
+     4
+    ],
+    "b2": [
+     164,
+     3
+    ]
+   },
+   "equal": true
+  },
+  {
+   "item": "by_block n23",
+   "kind": "record",
+   "path1": {
+    "b1": 1,
+    "b2": 1
+   },
+   "path2": {
+    "b1": 1,
+    "b2": 1
+   },
+   "equal": true
+  },
+  {
+   "item": "by_cell opportunity",
+   "kind": "record",
+   "path1": {
+    "0": 40,
+    "1": 42,
+    "2": 40,
+    "3": 41,
+    "4": 40,
+    "5": 42,
+    "6": 42,
+    "7": 40
+   },
+   "path2": {
+    "0": 40,
+    "1": 42,
+    "2": 40,
+    "3": 41,
+    "4": 40,
+    "5": 42,
+    "6": 42,
+    "7": 40
+   },
+   "equal": true
+  },
+  {
+   "item": "by_cell n23",
+   "kind": "record",
+   "path1": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 2,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0
+   },
+   "path2": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 2,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0
+   },
+   "equal": true
+  },
+  {
+   "item": "A/A counted pairs",
+   "kind": "record",
+   "path1": [
+    "L2|g6|52|ref|J1|top|Fs0",
+    "L2|g6|59|ref|J2|bottom|Fs4",
+    "L2|g6|61|ref|S1|top|Fs4",
+    "L2|ref|16|J1|B|0,0"
+   ],
+   "path2": [
+    "L2|g6|52|ref|J1|top|Fs0",
+    "L2|g6|59|ref|J2|bottom|Fs4",
+    "L2|g6|61|ref|S1|top|Fs4",
+    "L2|ref|16|J1|B|0,0"
+   ],
+   "equal": true
+  },
+  {
+   "item": "A/A pairs",
+   "kind": "record",
+   "path1": 167,
+   "path2": 167,
+   "equal": true
+  },
+  {
+   "item": "VBK0 stall signature lines",
+   "kind": "record",
+   "path1": [
+    "L2|s40|g6|52|ref|J1|top|Fs0",
+    "L2|s40|g6|56|ref|J2|top|Fs0",
+    "L2|s40|g6|59|ref|J2|bottom|Fs4",
+    "L2|s41|g6|56|ref|J2|top|Fs0",
+    "L2|s41|ref|16|J1|B|0,0"
+   ],
+   "path2": [
+    "L2|s40|g6|52|ref|J1|top|Fs0",
+    "L2|s40|g6|56|ref|J2|top|Fs0",
+    "L2|s40|g6|59|ref|J2|bottom|Fs4",
+    "L2|s41|g6|56|ref|J2|top|Fs0",
+    "L2|s41|ref|16|J1|B|0,0"
+   ],
+   "equal": true
+  },
+  {
+   "item": "VBK stall signature pairs (READY loss)",
+   "kind": "record",
+   "path1": [],
+   "path2": [],
+   "equal": true
+  },
+  {
+   "item": "VBK0-only worse",
+   "kind": "record",
+   "path1": 0,
+   "path2": 0,
+   "equal": true
+  },
+  {
+   "item": "coverage totals (r58 / r59 / r510)",
+   "kind": "record",
+   "path1": [
+    438,
+    121138,
+    494
+   ],
+   "path2": [
+    438,
+    121138,
+    494
+   ],
+   "equal": true
+  },
+  {
+   "item": "tau_R trigger phase (PROBE / LEVEL)",
+   "kind": "record",
+   "path1": [
+    144,
+    21
+   ],
+   "path2": [
+    144,
+    22
+   ],
+   "equal": false
+  },
+  {
+   "item": "T-JR-12a VBJ J-P3 status",
+   "kind": "judged",
+   "path1": "pass",
+   "path2": "pass",
+   "equal": true
+  },
+  {
+   "item": "T-JR-12a VBJ J-P3 judged rows",
+   "kind": "judged",
+   "path1": 1,
+   "path2": 1,
+   "equal": true
+  },
+  {
+   "item": "T-JR-12a VBJ J-P3 record rows",
+   "kind": "judged",
+   "path1": 134,
+   "path2": 134,
+   "equal": true
+  },
+  {
+   "item": "T-JR-12a VBJ J-P3 breach sum",
+   "kind": "judged",
+   "path1": 0,
+   "path2": 0,
+   "equal": true
+  }
+ ],
+ "judged_all_equal": true,
+ "record_unequal": [
+  "tau_R trigger phase (PROBE / LEVEL)"
+ ],
+ "tau_R_set_note": {
+  "path1_tau_R_counted": 165,
+  "path2_tau_R_pairs": 166,
+  "path2_tau_R_opportunity_pairs": 165
+ }
+}

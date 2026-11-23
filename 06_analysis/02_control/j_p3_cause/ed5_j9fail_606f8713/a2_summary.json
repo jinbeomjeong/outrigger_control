@@ -1,0 +1,104 @@
+{
+ "u_hold_mm_s": 0.20924302,
+ "R12_rows": 32,
+ "VB_locked_at_ext": 0,
+ "VBJ_locked_at_ext": 29,
+ "VB_unlock_delay_s": {
+  "n": 32,
+  "min": 0.0,
+  "median": 0.0,
+  "max": 0.0
+ },
+ "VBJ_unlock_delay_s": {
+  "n": 32,
+  "min": 0.0,
+  "median": 0.1,
+  "max": 0.1
+ },
+ "VB_gate_held_reads_to_min": {
+  "n": 32,
+  "min": 0,
+  "median": 1.0,
+  "max": 1
+ },
+ "VBJ_gate_held_reads_to_min": {
+  "n": 32,
+  "min": 4,
+  "median": 5.0,
+  "max": 5
+ },
+ "VB_retract_before_ext_rows": 7,
+ "VBJ_retract_before_ext_rows": 32,
+ "VB_unlocked_before_ext_rows": 32,
+ "VBJ_unlocked_before_ext_rows": 0,
+ "F_at_ext_VB_minus_VBJ_kN": {
+  "n": 32,
+  "min": 1.0079999999999991,
+  "median": 6.249,
+  "max": 11.434
+ },
+ "drop_post_ext_VBJ_minus_VB_kN": {
+  "n": 32,
+  "min": -4.697,
+  "median": 4.4815,
+  "max": 6.064
+ },
+ "rod_term_at_ext_VBJ_minus_VB_kN": {
+  "n": 32,
+  "min": 10.704,
+  "median": 19.152499999999996,
+  "max": 20.369
+ },
+ "Fmin_VB_minus_VBJ_kN": {
+  "n": 32,
+  "min": 2.309000000000001,
+  "median": 10.173,
+  "max": 15.000000000000002
+ },
+ "other_leg_retract_delay_max_s_VB": {
+  "n": 32,
+  "min": 0.0,
+  "median": 0.0,
+  "max": 0.0
+ },
+ "other_leg_retract_delay_max_s_VBJ": {
+  "n": 32,
+  "min": 0.9,
+  "median": 1.0,
+  "max": 1.0
+ },
+ "t_min_minus_t_event_s_VB": {
+  "n": 32,
+  "min": 1.3500000000000014,
+  "median": 1.5,
+  "max": 1.6999999999999957
+ },
+ "t_min_minus_t_event_s_VBJ": {
+  "n": 32,
+  "min": 1.2999999999999972,
+  "median": 1.3999999999999986,
+  "max": 1.5499999999999972
+ },
+ "dead_zone_extend_r_at_p_h_bar": {
+  "10": 0.01225,
+  "30": 0.0159,
+  "60": 0.01706,
+  "90": 0.01757,
+  "130": 0.01796
+ },
+ "dead_zone_extend_mm_s_at_p_h_bar": {
+  "10": 0.2564,
+  "30": 0.3326,
+  "60": 0.357,
+  "90": 0.3677,
+  "130": 0.3758
+ },
+ "level_rows": 84,
+ "level_held_leg_reads_all_388": 33422,
+ "level_held_leg_reads_above_1p05_cv_vmax": 8309,
+ "held_stretches_ge_1s": 751,
+ "held_stretch_reads_ge_1s": 28948,
+ "held_stretches_ge_1s_all_u_le_1p05_cv_vmax": 242,
+ "rows_with_fallback": [],
+ "rows_checked_for_fallback": 388
+}
