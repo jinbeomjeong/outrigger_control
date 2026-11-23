@@ -236,7 +236,7 @@ the line and its T4h meta (``--new-t4h`` / ``--base-t4h``, required); J-P3 judge
 than 1 are a setting defect (0: not judgeable)."""
 """Prelaunch audit M-3: the ``v5_setting`` of the base lines (the stored H-6 is a VB run)."""
 JP3_LINE_SETTINGS = ("VBH", "VBJ", "VBJ0", "LSH1", "LSH2", "LSH3", "LSH4", "LSJ1", "LSJ2",
-                     "LSJ3", "LSJ4", "VBK", "VBK0", "VBL", "VBL0")
+                     "LSJ3", "LSJ4", "VBK", "VBK0")
 """436.9 settings (``run_v5.JP3_SETTINGS``): their lines carry the P4 evidence keys (B-1);
 edition 5 VBK / VBK0 (the VBJ / VBJ0 plant, P4 on) too."""
 REPLAY_RUN_COUNTS = (426, 135)
@@ -650,10 +650,17 @@ def judge_t12(bundle: str, base: dict, base_judge: dict, new: dict, new_judge: d
             problems.failures.append(text)
             report["record_failures"].append(text)
     _check_lines(bundle, base_lines, new_lines, problems)
-    if bundle in RUN_BASE_BUNDLES:
+    if bundle == ED6_BUNDLE:
         report["J-P3"] = _dg3_j_p3(list(new_lines.values()), problems, bundle)
+    elif bundle in RUN_BASE_BUNDLES:
+        report["J-P3"] = _dg3_j_p3(list(new_lines.values()), problems)
     report["records"] = _r5_7_records(list(new_lines.values()))
     return report, problems
+
+
+ED6_LINE_SETTINGS = ("VBL", "VBL0")
+"""Edition 6 T-JR-12a settings whose lines carry the P4 evidence keys too (Y-13; apart from
+:data:`JP3_LINE_SETTINGS`, which stays ``run_v5.JP3_SETTINGS``)."""
 
 
 def _check_lines(bundle: str, base_lines: dict, new_lines: dict,
@@ -666,7 +673,7 @@ def _check_lines(bundle: str, base_lines: dict, new_lines: dict,
         for key, line in lines.items():
             if label == "new":
                 problems.setting_defects += [f"{key}: {text}" for text in _dg3_identity(line)]
-            if line.get("v5_setting") not in JP3_LINE_SETTINGS:
+            if line.get("v5_setting") not in (*JP3_LINE_SETTINGS, *ED6_LINE_SETTINGS):
                 continue
             problems.setting_defects += [  # 4a-8 2: k = 2 on the r79 G8 lines
                 f"{label} {key}: {text}" for text in compare.line_evidence_problems(line)]
@@ -849,7 +856,9 @@ def _dg3_j_p3(lines: list[dict], problems: compare.Problems, bundle: str = "VBJ"
     is_h7 = status == "H-7" or has_judged_breach(judgement)
     if is_h7:
         problems.failures.append(f"{bundle}: J-P3 H-7")
-    if status == "setting_defect" or is_count_defect:
+    if status == "setting_defect":
+        problems.setting_defects.append(f"{bundle}: J-P3 setting defect")
+    elif is_count_defect:
         problems.setting_defects.append(f"{bundle}: J-P3 {status}")
     elif status not in ("pass", "H-7"):
         problems.not_judgeable.append(f"{bundle}: J-P3 {status}")
