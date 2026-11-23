@@ -1,0 +1,441 @@
+{
+  "run_commit": "328349a9728d400310730b4fa6d643500ceb03f4",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6",
+  "exit_codes": {
+    "step_l1ref_ed6.ps1": 0,
+    "prelaunch_ed6.ps1 -Part list": 0,
+    "step6_confirm_ed6.ps1 -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step7_j9main_ed6.ps1 -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step8a_dg3_ed6.ps1": 0,
+    "step8b_vbkl0_ed6.ps1 -Phase base": 0,
+    "step8c_decide_ed6.ps1": 0,
+    "step8b_vbkl0_ed6.ps1 -Phase b4": 0,
+    "step8c_decide_ed6.ps1 -WithB4": 0,
+    "step8d_vbkl_ed6.ps1": 0
+  },
+  "steps": [
+    {
+      "step": "12b_decide",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_decide_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "tool:decide": "dry",
+        "decision_file": "Temp/claude/63917d480778c1ba/0d95027e-6012-4053-b99a-1e505935768c/scratchpad/python-ed6run/dry_328349a9/j9_runs/328349a9/12b_decide_a1/decision.json"
+      },
+      "commands": [
+        {
+          "label": "decide",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed6.py decide --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\selection.json --selection-sha256 6687b2dcbd7ec77b0eb28bd8219780967dac4462c16e9e2b57e35e11801f1f70 --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_decide_a1\\decision.json --vbk0 b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1.json --vbk0-t4h b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1_t4h --vbk0 b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2.json --vbk0-t4h b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2_t4h",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_decide_b4",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_decide_b4_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "tool:decide": "dry",
+        "decision_file": "Temp/claude/63917d480778c1ba/0d95027e-6012-4053-b99a-1e505935768c/scratchpad/python-ed6run/dry_328349a9/j9_runs/328349a9/12b_decide_b4_a1/decision.json"
+      },
+      "commands": [
+        {
+          "label": "decide",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed6.py decide --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\selection.json --selection-sha256 6687b2dcbd7ec77b0eb28bd8219780967dac4462c16e9e2b57e35e11801f1f70 --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_decide_b4_a1\\decision.json --vbk0 b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1.json --vbk0-t4h b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1_t4h --vbk0 b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2.json --vbk0-t4h b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2_t4h --vbk0 b4=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_b4_a1\\VBKL0_b4.json --vbk0-t4h b4=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_b4_a1\\VBKL0_b4_t4h",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_vbkl0",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "run:VBKL0_b1": "dry",
+        "run:VBKL0_b2": "dry",
+        "identity_check": "dry"
+      },
+      "commands": [
+        {
+          "label": "VBKL0_b1",
+          "mask": "0x000F",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1_t4h",
+            "R79_V5_SETTING": "VBKL0",
+            "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b1_plan.json",
+            "LAS_T3_DG3_LAS": "on",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b1_keys.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        },
+        {
+          "label": "VBKL0_b2",
+          "mask": "0x00F0",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2_t4h",
+            "R79_V5_SETTING": "VBKL0",
+            "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b2_plan.json",
+            "LAS_T3_DG3_LAS": "on",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b2_keys.txt --workers 4 --affinity 0x00F0",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_vbkl0_b4",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_b4_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "run:VBKL0_b4": "dry",
+        "identity_check": "dry"
+      },
+      "commands": [
+        {
+          "label": "VBKL0_b4",
+          "mask": "0x000F",
+          "environment": {
+            "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b4_plan.json",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBKL0",
+            "LAS_T3_DG3_K1": "on",
+            "LAS_T3_DG3_LAS": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_b4_a1\\VBKL0_b4_t4h",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_b4_a1\\VBKL0_b4.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_b4_a1\\VBKL0_b4.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b4_keys.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_vbkl",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "decision_file": "Temp/claude/63917d480778c1ba/0d95027e-6012-4053-b99a-1e505935768c/scratchpad/python-ed6run/dry_328349a9/j9_runs/328349a9/12b_decide_b4_a1/decision.json",
+        "decision_sha256": "dry",
+        "run:VBKL_b1": "dry",
+        "run:VBKL_b2": "dry",
+        "identity_check": "dry",
+        "tool:grade_judge_vbk0": "dry",
+        "tool:grade_judge_vbk": "dry",
+        "tool:judge": "dry",
+        "judge_file": "Temp/claude/63917d480778c1ba/0d95027e-6012-4053-b99a-1e505935768c/scratchpad/python-ed6run/dry_328349a9/j9_runs/328349a9/12b_vbkl_a1/judge/judge.json"
+      },
+      "commands": [
+        {
+          "label": "VBKL_b1",
+          "mask": "0x000F",
+          "environment": {
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b1_t4h",
+            "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b1_plan.json",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_LAS": "on",
+            "LAS_T3_DG3_K1": "on",
+            "LAS_T3_DG3_P3": "on",
+            "R72_PATH": "per_leg",
+            "R79_V5_SETTING": "VBKL"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b1.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b1.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b1_keys.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        },
+        {
+          "label": "VBKL_b2",
+          "mask": "0x00F0",
+          "environment": {
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b2_t4h",
+            "R79_ROD_FAULT_PLAN": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b2_plan.json",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_LAS": "on",
+            "LAS_T3_DG3_K1": "on",
+            "LAS_T3_DG3_P3": "on",
+            "R72_PATH": "per_leg",
+            "R79_V5_SETTING": "VBKL"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b2.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b2.json --levels L2 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\b2_keys.txt --workers 4 --affinity 0x00F0",
+          "dry_run": true
+        },
+        {
+          "label": "grade_judge_vbk0",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed6.py grade-judge --arm vbk0 --l1-reference C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL0.json --l1-reference-sha256 dry --l1-keys-sha256 9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5 --judge-out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\grades_vbk0.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\grades_vbk0_record.json --runs b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1.json --runs b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2.json",
+          "dry_run": true
+        },
+        {
+          "label": "grade_judge_vbk",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed6.py grade-judge --arm vbk --l1-reference C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL.json --l1-reference-sha256 dry --l1-keys-sha256 9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5 --judge-out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\grades_vbk.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\grades_vbk_record.json --runs b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b1.json --runs b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b2.json",
+          "dry_run": true
+        },
+        {
+          "label": "judge",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed6.py judge --selection C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed6_inputs\\x11\\selection.json --selection-sha256 6687b2dcbd7ec77b0eb28bd8219780967dac4462c16e9e2b57e35e11801f1f70 --decision C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_decide_b4_a1\\decision.json --decision-sha256 dry --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\judge.json --vbk0 b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1.json --vbk0-t4h b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b1_t4h --vbk b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b1.json --vbk-t4h b1=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b1_t4h --vbk0 b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2.json --vbk0-t4h b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl0_a1\\VBKL0_b2_t4h --vbk b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b2.json --vbk-t4h b2=C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\VBKL_b2_t4h --vbk0-grade-judge C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\grades_vbk0.json --vbk0-grade-judge-sha256 dry --vbk-grade-judge C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\12b_vbkl_a1\\judge\\grades_vbk.json --vbk-grade-judge-sha256 dry",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "confirm",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "run:confirm_a": "dry",
+        "run:confirm_b": "dry",
+        "identity_check": "dry",
+        "tool:l1_input_guard": "dry",
+        "tool:confirm_a_judge": "dry",
+        "tool:confirm_b_judge": "dry"
+      },
+      "commands": [
+        {
+          "label": "confirm_a",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_a_keys_v2.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\confirm_a.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        },
+        {
+          "label": "confirm_b",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\confirm_b.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        },
+        {
+          "label": "l1_input_guard",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_l1_input_guard.py --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\judge\\l1_input_guard.json --l1-reference-sha256 dry --l1-reference-sha256 dry --l1-reference-sha256 dry --l1-reference-sha256 dry --input C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\confirm_a.jsonl --input C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\confirm_b.jsonl --input C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+          "dry_run": true
+        },
+        {
+          "label": "confirm_a_judge",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py sens --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_a_keys_v2.json --rows C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\confirm_a.jsonl --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\judge\\confirm_a_judge.json",
+          "dry_run": true
+        },
+        {
+          "label": "confirm_b_judge",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py grid --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json --rows C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\confirm_b.jsonl --grid-root C:\\workspace\\outrigger_control --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\confirm_a1\\judge\\confirm_b_judge.json",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "dg3",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "run:dg3_VBL": "dry",
+        "run:dg3_VBL0": "dry",
+        "identity_check": "dry",
+        "tool:dg3_judge_VBL": "dry",
+        "tool:dg3_judge_VBL0": "dry",
+        "tool:t12_VBL": "dry",
+        "record_gate:t12_VBL.json": "dry"
+      },
+      "commands": [
+        {
+          "label": "dg3_VBL",
+          "mask": "0x00FF",
+          "environment": {
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\VBL_t4h",
+            "LAS_T3_DG3_P3": "on",
+            "R72_PATH": "per_leg",
+            "R79_V5_SETTING": "VBL",
+            "LAS_T3_DG3_LAS": "on",
+            "LAS_T3_DG3_K1": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL.json --levels L2,L3 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --workers 4 --affinity 0x00FF",
+          "dry_run": true
+        },
+        {
+          "label": "dg3_VBL0",
+          "mask": "0xFF00",
+          "environment": {
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\VBL0_t4h",
+            "LAS_T3_DG3_P3": "on",
+            "R72_PATH": "per_leg",
+            "R79_V5_SETTING": "VBL0",
+            "LAS_T3_DG3_LAS": "on",
+            "LAS_T3_DG3_K1": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL0.json --levels L2,L3 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --workers 4 --affinity 0xFF00",
+          "dry_run": true
+        },
+        {
+          "label": "dg3_judge_VBL",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py dg3-judge --setting VBL --dg3 C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL.json --l1-reference C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL.json --l1-reference-sha256 dry --l1-keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --judge-out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\dg3_VBL_judge.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\dg3_VBL_judge_report.json",
+          "dry_run": true
+        },
+        {
+          "label": "dg3_judge_VBL0",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py dg3-judge --setting VBL0 --dg3 C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL0.json --l1-reference C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL0.json --l1-reference-sha256 dry --l1-keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --judge-out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\dg3_VBL0_judge.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\dg3_VBL0_judge_report.json",
+          "dry_run": true
+        },
+        {
+          "label": "t12_VBL",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge.py t12 --bundle VBL --base C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL0.json --base-judge C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\dg3_VBL0_judge.json --base-judge-sha256 dry --new C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\dg3_VBL.json --new-judge C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\dg3_VBL_judge.json --new-judge-sha256 dry --new-t4h C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\VBL_t4h --base-t4h C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\VBL0_t4h --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\dg3_a1\\judge\\t12_VBL.json",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "j9main",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "fixed_list": "dry run: 06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_328349a9.SHA256SUMS not checked",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "run:j9_main": "dry",
+        "run:sens": "dry",
+        "identity_check": "dry",
+        "tool:l1_input_guard": "dry",
+        "tool:j9main_judge": "dry",
+        "tool:sens_judge": "dry"
+      },
+      "commands": [
+        {
+          "label": "j9_main",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_j9_main --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\j9_main.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        },
+        {
+          "label": "sens",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\sens_keys_v2.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\sens.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        },
+        {
+          "label": "l1_input_guard",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_l1_input_guard.py --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\judge\\l1_input_guard.json --l1-reference-sha256 dry --l1-reference-sha256 dry --l1-reference-sha256 dry --l1-reference-sha256 dry --input C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\j9_main.jsonl --input C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\sens.jsonl --input C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+          "dry_run": true
+        },
+        {
+          "label": "j9main_judge",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py j9main --edition 6 --rows C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\j9_main.jsonl --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\judge\\j9main_judge.json",
+          "dry_run": true
+        },
+        {
+          "label": "sens_judge",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py sens --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\sens_keys_v2.json --rows C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\sens.jsonl --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\j9main_a1\\judge\\sens_judge.json",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "l1ref",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1",
+      "codes": {
+        "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 328349a9728d400310730b4fa6d643500ceb03f4)",
+        "run:L1_VBL0": "dry",
+        "run:L1_VBL": "dry",
+        "run:L1a_VBL0": "dry",
+        "run:L1a_VBL": "dry",
+        "identity_check": "dry"
+      },
+      "commands": [
+        {
+          "label": "L1_VBL0",
+          "mask": "0x000F",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBL0",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL0_t4h",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_LAS": "on",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\l1_keys_12b.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        },
+        {
+          "label": "L1_VBL",
+          "mask": "0x00F0",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBL",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL_t4h",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_LAS": "on",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1_VBL.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\l1_keys_12b.txt --workers 4 --affinity 0x00F0",
+          "dry_run": true
+        },
+        {
+          "label": "L1a_VBL0",
+          "mask": "0x0F00",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBL0",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL0_t4h",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_LAS": "on",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --workers 4 --affinity 0x0F00",
+          "dry_run": true
+        },
+        {
+          "label": "L1a_VBL",
+          "mask": "0xF000",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBL",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL_t4h",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_LAS": "on",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6run\\dry_328349a9\\j9_runs\\328349a9\\l1ref_a1\\L1a_VBL.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --workers 4 --affinity 0xF000",
+          "dry_run": true
+        }
+      ]
+    }
+  ]
+}
