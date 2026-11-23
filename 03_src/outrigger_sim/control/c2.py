@@ -313,6 +313,15 @@ from outrigger_sim.control.ground_contact import (
     attitude_sensitivity_rad_m,
     classify_load,
 )
+from outrigger_sim.control.lock_start_b import (
+    B3End,
+    BEnd,
+    CylinderGeometry,
+    FloorInputs,
+    LockStartB,
+    LockStartBSettings,
+    LsbComponent,
+)
 from outrigger_sim.control.standstill import (
     GyroBiasEstimate,
     GyroBiasOutcome,
@@ -2592,6 +2601,10 @@ class C2Config:
     touch_creep_latch: TouchCreepLatchSettings = TouchCreepLatchSettings()
     """K-2 TOUCH latch with a slow creep; off by default and in the preset, a plain class-level
     default as ``soil``."""
+    lock_start_b: LockStartBSettings = LockStartBSettings()
+    """Edition 6 A(i) / A(ii) / B (``lock_start_b.py``); off by default and in
+    :meth:`with_10hz_d1`, on through :meth:`with_lock_start_b`. A plain class-level default as
+    ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -2663,6 +2676,24 @@ class C2Config:
                                                            valve_tau_s)
         return replace(self, two_pressure=two_pressure)
 
+    def with_lock_start_b(
+        self, components: Sequence[str], parameters: dict[str, Any] | None = None
+    ) -> C2Config:
+        """Copy with the edition 6 components on (``jp3_remedy_spec_v6.md`` 3).
+
+        Args:
+            components: Names of :class:`LsbComponent` (``A_i``, ``A_ii``, ``B``).
+            parameters: Other :class:`LockStartBSettings` fields (the placeholders of spec 3);
+                None = the defaults.
+
+        Raises:
+            ValueError: No component, an unknown name, or a value the settings refuse.
+        """
+        if not components:
+            raise ValueError("with_lock_start_b needs at least one component")
+        settings = LockStartBSettings(components=tuple(components), **(parameters or {}))
+        return replace(self, lock_start_b=settings)
+
     def with_fallback_ratio_source(
         self, source: str, plant_ratio: tuple[float, ...] | None = None
     ) -> C2Config:
@@ -2700,6 +2731,7 @@ class C2Config:
         liftoff_approach_slow: bool = True,
         flat_soil_margin_order_gate: bool = True,
         touch_creep_latch: bool = False,
+        lock_start_b_components: Sequence[str] = (),
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2797,6 +2829,10 @@ class C2Config:
             touch_creep_latch: K-2 TOUCH creep latch (:class:`TouchCreepLatchSettings`,
                 ``k2_touch_creep_rules.md`` K2-8). Off by default (not adopted); ``True`` gives
                 the K-2 arm of its verification.
+            lock_start_b_components: Edition 6 components (``jp3_remedy_spec_v6.md`` 3,
+                :meth:`with_lock_start_b` with the default thresholds). Empty by default (not
+                sealed); empty keeps the preset bit for bit. The v5 harness turns them on
+                through ``HydraulicOptions.lsb_components`` instead.
         """
         retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()
@@ -2869,7 +2905,7 @@ class C2Config:
             flat_soil_margin_m=flat_soil_margin_m,
             flat_soil_margin_order_gate=flat_soil_margin_order_gate,
         )
-        return replace(
+        preset = replace(
             config,
             clip_returned_command=clip_returned_command,
             touch_twist_hold=replace(
@@ -2921,6 +2957,9 @@ class C2Config:
                 ),
             ),
         )
+        if not lock_start_b_components:
+            return preset
+        return preset.with_lock_start_b(lock_start_b_components)
 
     def with_soil_response(self) -> C2Config:
         """Copy of :meth:`with_10hz_d1` with the soil response S-1 .. S-5 on (P-S9-8, spec
@@ -4548,6 +4587,9 @@ class _RunState:
     soil_deferrals: tuple[_SoilModeDefer, ...] = ()
     """Every acting S2D deferral of the run in start order (the objects are updated as they
     run, so the record holds their end too); kept like ``soil_mode_starts``."""
+    # Edition 6 (immutable default: class attribute for run states pickled before it)
+    lock_start_b: LockStartB | None = None
+    """A(i) / A(ii) / B state and record; created by the first update with a component on."""
 
 
 @dataclass(frozen=True)
@@ -4743,6 +4785,9 @@ class C2Controller:
         self._update_lifted_reapproach(reading)
         if self.config.liftoff_approach_slow.enable:
             self._liftoff_slow_state().has_level_step_run = False
+        is_lock_start_b_on = self.config.lock_start_b.is_enabled
+        if is_lock_start_b_on:
+            guard_periods_before = self._lift_guard_period_count()
         leg_speeds = self._phase_command(reading)
         if self.config.liftoff_approach_slow.enable:
             self._finish_liftoff_slow_period(reading.t_s)
@@ -4752,9 +4797,15 @@ class C2Controller:
         self._update_support_shadow(reading, phase_before)
         state.rate_attitude_recent.append(state.rate_attitude_rad)
         state.sample_count += 1
+        if is_lock_start_b_on:
+            leg_speeds = self._apply_lock_start_floors(
+                reading, measurements, leg_speeds, guard_periods_before
+            )
         slowed_speeds = self._slow_near_stroke_end(reading, leg_speeds)
         self._note_output_limit(OutputLimit.STROKE_END, leg_speeds, slowed_speeds)
         output = self._apply_output_ramp(slowed_speeds)
+        if is_lock_start_b_on:
+            self._lock_start_b_state().after_output(output)
         moving = output != 0.0
         state.last_nonzero_output_m_s = np.where(moving, output, state.last_nonzero_output_m_s)
         applied = self._delay_output(output)
@@ -4810,7 +4861,7 @@ class C2Controller:
         """Name, settings and current friction band (JSON-serialisable, new dict per call)."""
         geometry = self.geometry
         r8 = self.config.r8
-        return {
+        meta: dict[str, Any] = {
             "controller": C2_CONTROLLER_NAME,
             "design": DESIGN_SOURCE,
             "revision": R8_REVISION if r8.is_active else C2_REVISION,
@@ -4898,6 +4949,9 @@ class C2Controller:
                 "crawler_xy_box_m": [list(bounds) for bounds in CRAWLER_XY_BOX_M],
             },
         }
+        if self.config.lock_start_b.is_enabled:  # edition 6: the key only with it on (P6-0)
+            meta["lock_start_b"] = self._lock_start_b_meta()
+        return meta
 
     def _twist_gain_stiffness_meta(self) -> dict[str, Any]:
         """P-8 / P-R8-7: gain reference, raw and used scale, denominator, leg count."""
@@ -6053,6 +6107,8 @@ class C2Controller:
         predicted_leg = self._leg_falling_below(relevel_level_N, reading.t_s, probed_leg)
         if predicted_leg is not None:
             self._note_probe_abort(reading.t_s, predicted_leg)
+            if self.config.lock_start_b.has_event_rules:
+                self._start_event_order(predicted_leg, reading)
             return True
         loads = self._load_estimate_N(reading.cylinder_force_lower_N)
         if probed_leg is not None:
@@ -6206,6 +6262,8 @@ class C2Controller:
             if run.exit_samples_seen >= settings.exit_samples:
                 self._end_reapproach(leg, reading, "contact")
                 self._add_event(reading.t_s, f"leg_reapproach_contact:{LEG_ORDER[leg]}")
+                if self.config.lock_start_b.is_enabled:
+                    self._end_event_order_on_contact(leg, reading.t_s)
             elif travel > settings.max_travel_m or settings.has_run_too_long(
                 reading.t_s, run.start_s
             ):
@@ -6247,14 +6305,17 @@ class C2Controller:
             state.reapproach_low_counts[leg] += 1
             is_strong = loads_N[leg] < settings.opposite_strong_level_N
             strong_counts[leg] = strong_counts[leg] + 1 if is_strong else 0
-            if state.reapproach_low_counts[leg] < required_samples:
+            leg_required_samples = self._reapproach_required_samples(leg, required_samples)
+            if state.reapproach_low_counts[leg] < leg_required_samples:
                 continue
             if self._defers_reapproach(leg, reading.t_s, strong_counts[leg], settings):
                 # The low count keeps rising while a start is deferred, so it equals the
                 # requirement only on the first sample of a deferred stretch.
-                if state.reapproach_low_counts[leg] == required_samples:
+                if state.reapproach_low_counts[leg] == leg_required_samples:
                     self._add_event(reading.t_s, self._deferred_event_name(leg, reading.t_s))
                 continue
+            if state.reapproach_low_counts[leg] < required_samples:  # B2 (spec 3.3) record
+                self._lock_start_b_state().note_early_start(leg, reading.t_s)
             state.reapproach_low_counts[leg] = 0
             strong_counts[leg] = 0
             self._begin_reapproach(leg, reading, settings)
@@ -6377,22 +6438,30 @@ class C2Controller:
         lift-off (spec 173.1) zeroing ``tau_dot`` would delay the re-contact (reduced plant:
         RR first contact 1.01 -> 1.72 s).
         """
-        settings = self.config.r8.lifted_reapproach
         state = self._state
         lifted_leg = min(state.active_reapproaches)  # single_leg: the only one
-        twist = self.geometry.twist_vector
-        loads = self._load_estimate_N(reading.cylinder_force_lower_N)
-        is_protected = state.touched & (np.sign(twist) != np.sign(twist[lifted_leg]))
-        protect_level_N = self.geometry.F_min_N + settings.protect_margin_N
-        if np.any(loads[is_protected] < protect_level_N):
+        twist_rate = self._lift_twist_rate(reading, lifted_leg)
+        if twist_rate is None:
             state.active_reapproaches[lifted_leg].protected_periods += 1
             return 0.0
-        fastest_leg_speed = settings.twist_speed_fraction * self.geometry.max_speed_m_s
-        twist_rate = math.copysign(1.0, twist[lifted_leg]) * fastest_leg_speed / float(
-            np.max(np.abs(twist))
-        )
         # P-S8-16 RT 2: after the protection test; 1.0 (exact) on a first run.
         return twist_rate * self._reapproach_speed_factor(lifted_leg)
+
+    def _lift_twist_rate(self, reading: _Reading, lifted_leg: int) -> float | None:
+        """``tau_dot_lift`` toward ``lifted_leg`` before the speed factor, or None while a
+        protected grounded leg reads below ``F_min + protect_margin_N`` (shared by the
+        re-approach and the edition 6 B3 pre-twist)."""
+        settings = self.config.r8.lifted_reapproach
+        twist = self.geometry.twist_vector
+        loads = self._load_estimate_N(reading.cylinder_force_lower_N)
+        is_protected = self._state.touched & (np.sign(twist) != np.sign(twist[lifted_leg]))
+        protect_level_N = self.geometry.F_min_N + settings.protect_margin_N
+        if np.any(loads[is_protected] < protect_level_N):
+            return None
+        fastest_leg_speed = settings.twist_speed_fraction * self.geometry.max_speed_m_s
+        return math.copysign(1.0, twist[lifted_leg]) * fastest_leg_speed / float(
+            np.max(np.abs(twist))
+        )
 
     # --- FAULT_REGROUND (P-S8-24, spec rev. 64 323) ---
 
@@ -7404,7 +7473,14 @@ class C2Controller:
             )
         )
         reapproaching = self._reapproaching_legs()
-        twist_rate = self._twist_channel_rate(reading, is_held=bool(reapproaching.any()))
+        pre_twist_leg = None
+        if self.config.lock_start_b.has(LsbComponent.PRE_TWIST):
+            pre_twist_leg = self._update_pre_twist(reading, reapproaching)
+        twist_rate = self._twist_channel_rate(
+            reading,
+            is_held=bool(reapproaching.any()) or pre_twist_leg is not None,
+            pre_twist_leg=pre_twist_leg,
+        )
         unscaled_speeds = geometry.leg_speeds(heave_rate, roll_rate, pitch_rate, twist_rate)
         leg_speeds = scale_to_speed_limit(unscaled_speeds, geometry.max_speed_m_s)
         self._note_output_limit(OutputLimit.SPEED_SCALE, unscaled_speeds, leg_speeds)
@@ -7412,8 +7488,9 @@ class C2Controller:
         if self._is_diff_sink_holding():
             self._state.complete_since_s = None  # P-S8-35: no DONE while the hold runs
             is_complete = False
-        if reapproaching.any():
-            # P-R8-12 / P-R8-13: no DONE while a leg is still in the air.
+        if reapproaching.any() or pre_twist_leg is not None:
+            # P-R8-12 / P-R8-13: no DONE while a leg is still in the air (edition 6 B3: nor
+            # during the pre-twist).
             self._state.complete_since_s = None
             is_complete = False
         relaxed_twist_load_N = self._state.twist_relaxed_load_N
@@ -7424,6 +7501,8 @@ class C2Controller:
             self._note_output_limit(OutputLimit.CRAWLER_RULE, leg_speeds, lifted_speeds)
             leg_speeds = lifted_speeds
         leg_speeds = self._apply_reapproach_speeds(leg_speeds, reapproaching)
+        if self.config.lock_start_b.has(LsbComponent.EVENT_BLOCK):
+            leg_speeds = self._apply_event_order(reading, leg_speeds)  # spec 3.3 B1
         leg_speeds = self._apply_pre_loc_lift_pause(reading, leg_speeds)
         if self.config.liftoff_approach_slow.enable:
             slowed_speeds = self._apply_liftoff_approach_slow(reading, leg_speeds, reapproaching)
@@ -7514,7 +7593,9 @@ class C2Controller:
         flags = self._state.output_limit_flags
         flags[limit.value] = flags[limit.value] | (after_m_s != before_m_s)
 
-    def _twist_channel_rate(self, reading: _Reading, *, is_held: bool) -> float:
+    def _twist_channel_rate(
+        self, reading: _Reading, *, is_held: bool, pre_twist_leg: int | None = None
+    ) -> float:
         """``tau_dot`` of this period (twist loop + F_min guard, design 14.5 steps 4-5).
 
         ``is_held`` (a re-approach is active): the twist and guard terms are dropped. Twist
@@ -7533,9 +7614,11 @@ class C2Controller:
             self._twist_gain_stiffness_N_m(),
         )
         if is_held:
-            if self.config.r8.lifted_reapproach.mode is ReapproachMode.TWIST:
-                return self._reapproach_twist_rate(reading)
-            return 0.0
+            if self.config.r8.lifted_reapproach.mode is not ReapproachMode.TWIST:
+                return 0.0
+            if pre_twist_leg is not None:  # edition 6 B3 (no formal re-approach yet)
+                return self._pre_twist_rate(reading, pre_twist_leg)
+            return self._reapproach_twist_rate(reading)
         if rates.is_guard_active:
             self._state.guard_m_s = geometry.twist_vector * rates.guard_m_s
             self._log_fallback_guard(reading, load_estimates_N)
@@ -10008,6 +10091,262 @@ class C2Controller:
                 reading.t_s, f"WARN_GEOMETRY_PRESSURE_MISMATCH:{leg_name}", is_warning=True
             )
 
+    # --- edition 6 lock-start floors and event order (lock_start_b.py) ---
+
+    def _lock_start_b_state(self) -> LockStartB:
+        """The run's A / B state, created on first use (only with a component on)."""
+        state = self._state
+        if state.lock_start_b is None:
+            geometry = self.geometry
+            limit = self.config.r8.increment_limit
+            cylinders = CylinderGeometry(
+                head_area_m2=np.asarray(geometry.head_area_m2, dtype=float),
+                annulus_area_m2=np.asarray(geometry.annulus_area_m2, dtype=float),
+                stroke_max_m=float(geometry.stroke_max_m),
+                max_speed_m_s=float(geometry.max_speed_m_s),
+                period_s=self.config.period_s,
+                increment_limit_m_s=(
+                    None if limit is None
+                    else limit.fraction_per_period * float(geometry.max_speed_m_s)
+                ),
+            )
+            state.lock_start_b = LockStartB(self.config.lock_start_b, cylinders)
+        return state.lock_start_b
+
+    def _lift_guard_period_count(self) -> int:
+        state = self._state
+        return state.lift_guard_shift_periods + state.lift_guard_hold_periods
+
+    def _apply_lock_start_floors(
+        self,
+        reading: _Reading,
+        measurements: Measurements,
+        leg_speeds: NDArray[np.float64],
+        guard_periods_before: int,
+    ) -> NDArray[np.float64]:
+        """Spec 3.1 / 3.2 on this period's command (the A(i) floor and the A(ii) dead-beat
+        fill, the stage between the phase command and the stroke-end slowdown); also ends a B
+        episode whose LEVEL is over."""
+        lsb = self._lock_start_b_state()
+        state = self._state
+        if lsb.event_leg is not None and state.phase is not C2Phase.LEVEL:
+            lsb.end_event_order(reading.t_s, BEnd.PHASE)
+        if state.phase is not C2Phase.LEVEL:
+            lsb.end_pre_twist(reading.t_s, B3End.PHASE)  # no-op without a pre-twist
+            lsb.clear_protect_block()
+        is_guard_period = self._lift_guard_period_count() != guard_periods_before
+        protected = self._floor_protected_legs(reading, leg_speeds, is_guard_period)
+        inputs = self._floor_inputs(reading, measurements, leg_speeds, protected)
+        floored = lsb.apply_floors(inputs)
+        floored = self._keep_lift_guard_priority(reading, leg_speeds, floored)
+        for t_s, name in lsb.events:
+            self._add_event(t_s, name)
+        return floored
+
+    def _floor_inputs(
+        self,
+        reading: _Reading,
+        measurements: Measurements,
+        leg_speeds: NDArray[np.float64],
+        protected: NDArray[np.bool_],
+    ) -> FloorInputs:
+        state = self._state
+        no_fill_phases = (C2Phase.FAULT, C2Phase.FAULT_REGROUND, C2Phase.IDLE)
+        rod_Pa = measurements.rod_pressure_Pa
+        return FloorInputs(
+            t_s=float(reading.t_s),
+            is_level=state.phase is C2Phase.LEVEL,
+            is_fill_phase=state.phase not in no_fill_phases,
+            is_fault=state.phase is C2Phase.FAULT or self._is_fault_stop_period(),
+            requested_m_s=np.array(leg_speeds, dtype=float),
+            acting_m_s=np.array(state.applied_output_m_s, dtype=float),
+            previous_output_m_s=np.array(state.previous_output_m_s, dtype=float),
+            stroke_m=np.array(reading.motor_stroke_m, dtype=float),
+            head_Pa=np.array(measurements.head_pressure_Pa, dtype=float),
+            rod_Pa=None if rod_Pa is None else np.array(rod_Pa, dtype=float),
+            protected=protected,
+            fallback_legs=frozenset(int(leg) for leg in self._pressures.fallback_legs),
+        )
+
+    def _floor_protected_legs(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64], is_guard_period: bool
+    ) -> NDArray[np.bool_]:
+        """Spec 3.1 priority: legs the floors leave as they are in this period - all legs in a
+        stroke-budget guard period, the legs the crawler-zone rule or the stroke-end clipping
+        changed, and an extending leg at the clipping stroke."""
+        if is_guard_period:
+            return np.ones(LEG_COUNT, dtype=bool)
+        flags = self._state.output_limit_flags
+        protected = flags[OutputLimit.CRAWLER_RULE.value] | flags[OutputLimit.STROKE_END.value]
+        margin_m = self.config.thresholds.stroke_end_clip_margin_m
+        stroke = reading.motor_stroke_m
+        protected = protected | ((stroke >= self.geometry.stroke_soft_max_m - margin_m)
+                                 & (leg_speeds > 0.0))
+        return protected | ((stroke <= margin_m) & (leg_speeds < 0.0))
+
+    def _keep_lift_guard_priority(
+        self,
+        reading: _Reading,
+        leg_speeds: NDArray[np.float64],
+        floored: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
+        """A raised extension must not reach the guard stroke the guard did not see (spec 3.1
+        priority): such a leg keeps its command of before the floors."""
+        settings = self.config.lift_stroke_guard
+        if not settings.enable or self._state.phase is not C2Phase.LEVEL:
+            return floored
+        if not self._is_liftoff_confirmed():
+            return floored
+        newly_guarded = self._lift_guarded_legs(reading, floored) & ~self._lift_guarded_legs(
+            reading, leg_speeds
+        )
+        return np.where(newly_guarded, leg_speeds, floored)
+
+    def _start_event_order(self, leg: int, reading: _Reading) -> None:
+        """Spec 3.3: an R-5 ``relevel_predicted:<leg>`` re-level starts the B1 episode and the
+        B3 pre-twist (each when on)."""
+        lsb = self._lock_start_b_state()
+        if lsb.settings.has(LsbComponent.EVENT_BLOCK):
+            lsb.start_event_order(leg, reading.t_s)
+        if lsb.settings.has(LsbComponent.PRE_TWIST) and self._may_start_pre_twist(leg, reading):
+            lsb.start_pre_twist(leg, reading.t_s)
+
+    def _may_start_pre_twist(self, leg: int, reading: _Reading) -> bool:
+        """B3 keeps the re-approach start conditions it does not replace: the twist mode, the
+        single-leg rule, a touched and armed leg not re-approaching, the K1 re-trigger wait (the
+        R-5 prediction already leaves out the probed leg)."""
+        settings = self.config.r8.lifted_reapproach
+        state = self._state
+        if not settings.enable or settings.mode is not ReapproachMode.TWIST:
+            return False
+        if settings.single_leg and state.active_reapproaches:
+            return False
+        if not (state.touched[leg] and state.is_reapproach_armed[leg]):
+            return False
+        return not self._is_retrigger_waiting(leg, reading.t_s, settings)
+
+    def _update_pre_twist(
+        self, reading: _Reading, reapproaching: NDArray[np.bool_]
+    ) -> int | None:
+        """B3 in the LEVEL step (before the twist rate): a formal re-approach takes over (also
+        one that starts on the read of the R-5 prediction: the pre-twist then never acts), else
+        the release, period, protection and commanded-travel checks; the leg it acts on in this
+        period (None = no pre-twist)."""
+        lsb = self._lock_start_b_state()
+        leg = lsb.pre_twist_leg
+        if leg is None:
+            return None
+        if reapproaching.any():
+            reason = B3End.HANDOVER if reapproaching[leg] else B3End.OTHER_REAPPROACH
+            lsb.end_pre_twist(reading.t_s, reason)
+            return None
+        lsb.update_pre_twist(reading.t_s, self._is_pre_twist_released(leg))
+        if lsb.pre_twist_leg is None:
+            return None
+        rate = self._pre_twist_rate(reading, leg)
+        if self._is_pre_twist_protected(reading, leg, rate):
+            lsb.end_pre_twist(reading.t_s, B3End.PROTECT)
+            return None
+        # Spec revision 5: the commanded travel of the fastest leg of the twist.
+        fastest_n = float(np.max(np.abs(self.geometry.twist_vector)))
+        travel_m = fastest_n * abs(rate) * self.config.period_s
+        max_travel_m = self.config.r8.lifted_reapproach.max_travel_m
+        if not lsb.command_pre_twist(reading.t_s, travel_m, max_travel_m):
+            return None
+        return leg
+
+    def _is_pre_twist_protected(self, reading: _Reading, leg: int, rate: float) -> bool:
+        """B3 protection (dynamics review): a touched leg the pre-twist unloads reads below
+        ``F_min + b3_protect_margin_N``; with ``b3_protect_predictive`` the lower estimate less
+        twice the load this period's twist takes off (``k_tw |n_p| (n^T n) |tau_dot| T``) below
+        ``F_min + b3_predictive_margin_N``."""
+        settings = self.config.lock_start_b
+        twist = self.geometry.twist_vector
+        loads_N = self._load_estimate_N(reading.cylinder_force_lower_N)
+        unloaded = self._state.touched & (np.sign(twist) != np.sign(twist[leg]))
+        if not unloaded.any():
+            return False
+        F_min_N = self.geometry.F_min_N
+        if not settings.b3_protect_predictive:
+            return bool(np.any(loads_N[unloaded] < F_min_N + settings.b3_protect_margin_N))
+        load_step_N = (settings.b3_twist_stiffness_N_m * np.abs(twist) * float(twist @ twist)
+                       * abs(rate) * self.config.period_s)
+        predicted_N = loads_N - 2.0 * load_step_N
+        return bool(np.any(predicted_N[unloaded]
+                           < F_min_N + settings.b3_predictive_margin_N))
+
+    def _pre_twist_rate(self, reading: _Reading, leg: int) -> float:
+        """B3 ``tau_dot_lift`` toward ``leg``: the re-approach formula and protection, times the
+        RT 2 re-trigger factor, at most 1 (spec revision 5, control-expert: no P-S8-30 pre-LOC
+        speed-up; the 44 kN protection and the stats s31 exposure assume a factor of 1)."""
+        twist_rate = self._lift_twist_rate(reading, leg)
+        if twist_rate is None:
+            return 0.0
+        settings = self.config.r8.lifted_reapproach
+        factor = 1.0
+        if settings.is_retrigger(reading.t_s, self._state.reapproach_last_end_s):
+            factor = settings.retrigger_speed_factor
+        return twist_rate * min(factor, 1.0)
+
+    def _is_pre_twist_released(self, leg: int) -> bool:
+        """B3 release period (stats s30, user decision 2026-11-23): the leg's lower load
+        estimate is at or above P5 (``F_min`` + the re-level margin) and not below the previous
+        period's. Computed every LEVEL period from the R-5 estimate history (the R-5
+        prediction itself runs only in READY / PROBE)."""
+        history = self._state.load_estimate_history
+        if len(history) < 2:
+            return False
+        latest, previous = float(history[-1][leg]), float(history[-2][leg])
+        relevel_level_N = self.geometry.F_min_N + self.config.thresholds.relevel_load_margin_N
+        return latest >= relevel_level_N and latest >= previous
+
+    def _apply_event_order(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """B1 (spec 3.3) in the LEVEL step: no retraction of the predicted leg and of the legs
+        with a low re-approach count, until the predicted leg reads ``F_min`` + margin."""
+        lsb = self._lock_start_b_state()
+        leg = lsb.event_leg
+        if leg is None:
+            return leg_speeds
+        loads_N = self._load_estimate_N(reading.cylinder_force_lower_N)
+        exit_level_N = self.geometry.F_min_N + lsb.settings.b1_exit_margin_N
+        lsb.update_event_exit(reading.t_s, float(loads_N[leg]), exit_level_N)
+        return lsb.blocked_retract_speeds(leg_speeds, self._state.reapproach_low_counts)
+
+    def _end_event_order_on_contact(self, leg: int, t_s: float) -> None:
+        """Spec 3.3: the predicted leg's re-approach ended with contact (B1 ends)."""
+        lsb = self._lock_start_b_state()
+        if lsb.event_leg == leg:
+            lsb.end_event_order(t_s, BEnd.CONTACT)
+
+    def _reapproach_required_samples(self, leg: int, default_samples: int) -> int:
+        """B2 (option): fewer start samples for the predicted leg; ``default_samples``
+        otherwise."""
+        if not self.config.lock_start_b.has_event_rules:
+            return default_samples
+        return self._lock_start_b_state().required_samples(leg, default_samples)
+
+    def _lock_start_b_meta(self) -> dict[str, Any]:
+        settings = self.config.lock_start_b
+        lsb = self._state.lock_start_b
+        return {"settings": settings.to_meta(),
+                "record": None if lsb is None else lsb.record()}
+
+    def lock_start_b_trace_arrays(self, t_s: NDArray[np.float64]) -> dict[str, NDArray[Any]]:
+        """The ``lsb_*`` per-read arrays on the read times ``t_s``; empty with every component
+        off (read only, for the T4h record)."""
+        lsb = self._state.lock_start_b
+        if not self.config.lock_start_b.is_enabled or lsb is None:
+            return {}
+        return lsb.trace_arrays_at(t_s)
+
+    def lock_start_b_record(self) -> dict[str, Any] | None:
+        """The run's ``lsb_record`` (None with every component off; read only)."""
+        if not self.config.lock_start_b.is_enabled:
+            return None
+        return self._lock_start_b_state().record()
+
     # --- output ---
 
     def _slow_near_stroke_end(
@@ -10046,7 +10385,11 @@ class C2Controller:
             output = self._zero_speeds()
         elif self.config.r8.increment_limit is not None:
             limited_change = self._limited_increment(leg_speeds)
-            if self.config.touch_twist_hold.vector_ramp:
+            if self.config.touch_twist_hold.vector_ramp and self.config.lock_start_b.is_enabled:
+                limited_change = self._vector_ramp_outside_lock_start(
+                    leg_speeds, requested_change, limited_change
+                )
+            elif self.config.touch_twist_hold.vector_ramp:
                 limited_change = self._vector_ramp_increment(
                     leg_speeds, requested_change, limited_change
                 )
@@ -10087,6 +10430,28 @@ class C2Controller:
             is_guard_direction &= guard != 0.0
             max_change[is_guard_direction] = limit.guard_fraction_per_period * max_speed
         return np.clip(change, -max_change, max_change)
+
+    def _vector_ramp_outside_lock_start(
+        self,
+        leg_speeds: NDArray[np.float64],
+        requested_change: NDArray[np.float64],
+        limited_change: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
+        """G2 with the edition 6 rules on (hydraulics review 7, spec revision 5 conditions): the
+        common-ratio ramp sees the legs the A rules raised at their command before the rules,
+        so a cut fill request does not slow the other legs; a raised leg takes its own per-leg
+        (symmetric) increment limit. A period in which G2 acted with a raised leg is recorded
+        (``lsb_g2_split``)."""
+        lsb = self._lock_start_b_state()
+        raised = lsb.last_raised
+        if not raised.any():
+            return self._vector_ramp_increment(leg_speeds, requested_change, limited_change)
+        base_speeds = np.where(raised, lsb.last_input_m_s, leg_speeds)
+        base_change = base_speeds - self._state.previous_output_m_s
+        base_per_leg = self._limited_increment(base_speeds)
+        base_limited = self._vector_ramp_increment(base_speeds, base_change, base_per_leg)
+        lsb.note_g2_split(bool(np.any(base_limited != base_per_leg)))
+        return np.where(raised, limited_change, base_limited)
 
     def _vector_ramp_increment(
         self,

@@ -37,9 +37,19 @@ and key file; inputs and their sha256, the scan evidence: files
 scanned, per-file sha256 and key count, the largest seed; the seeds and repeat count, the cell
 table, every output file with its sha256 and the run commands).
 
+Edition 6 (``--edition 6``, ``jp3_remedy_spec_v6.md`` 6.4 revision 9, user decision
+2026-11-24): blocks b1 .. b4 = seed_index 50, 51, 52, 53 with the same +10 collision rule, also
+raised while a block seed is one of the other seeds of the procedure (:data:`ED6_RESERVED_SEEDS`:
+T-CK 80, DROPOUT 81, c dry 90 .. 93, dry 25, tests 95 .. 99); no c dry plans (not run in
+edition 6). ``--scan-exclude <glob>`` leaves files out of the scan without opening them
+(``fnmatch`` on the path relative to ``--scan-root``; the blinded edition 5 c dry outputs), and
+``--scan-keys-file <txt>`` adds plain key lists (one key per line; the c dry key files that list
+exactly the excluded runs' keys). ``selection.json`` names the excluded files and the key files.
+
 Usage (python-dev or Chrono-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_plan.py --noise <h8_noise_VB.json>
       --scan-root <repo>/06_analysis --scan-extra <run worktree>/05_tests --out-dir <folder>
+      [--edition 6] [--scan-exclude <glob> ...] [--scan-keys-file <txt> ...]
 
 Exit codes (the stdout's last line is JSON with ``status`` and the output folder):
 
@@ -56,6 +66,7 @@ exit    status            meaning
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import json
 import re
@@ -79,6 +90,11 @@ BLOCK_SEEDS = (40, 41, 42, 43)
 """b1 .. b4 before any collision step (6.3.1; user decision 2026-11-22 after the erratum 1
 audit E-1: 40 .. 43, because the X-10 unit tests and a probe had run b1's former ``s30``
 keys)."""
+ED6_BLOCK_SEEDS = (50, 51, 52, 53)
+"""Edition 6 b1 .. b4 before any collision step (spec v6 6.4 revision 9, G-1)."""
+ED6_RESERVED_SEEDS = (25, 80, 81, 90, 91, 92, 93, 95, 96, 97, 98, 99)
+"""Spec v6 6.4: the other seeds of the procedure no block seed may take (dry 25, T-CK 80,
+DROPOUT 81, c dry 90 .. 93, tests 95 .. 99)."""
 BLOCK_PHASES = ("cell", "cell", "cell", PHASE_TRW)
 """b1 .. b3 take the cell's phase, b4 the TRw phase on the cell's leg."""
 SEED_STEP = 10
@@ -96,6 +112,8 @@ PLAN_SCHEMA = "r79_rod_fault_plan/1"
 R79_KEY_PATTERN = re.compile(rb'"key"\s*:\s*"((?:cand=[^"#]*#)?L\d+[A-Za-z]*\|s(\d+)\|[^"]*)"')
 """4a-4 1 with X-3: an r79 ``"key"`` value (level token ``L``, digits, letters)."""
 SCAN_SUFFIXES = (".json", ".jsonl")
+PLAIN_KEY_LINE = re.compile(r"^(?:cand=[^#\s]*#)?(L\d+[A-Za-z]*\|s(\d+)\|\S*)$")
+"""One r79 key per line of a ``--scan-keys-file`` list (edition 6)."""
 SOURCE_KEY_PATTERN = re.compile(
     rb"""["']((?:cand=[^"'#\s]*#)?L\d+[A-Za-z]*\|s(\d+)\|[^"'\s]*)["']""")
 """An r79 key written as a string literal in a test or probe source (a ``"key"`` field is not
@@ -147,14 +165,21 @@ def l2_cases(noise: dict) -> list[str]:
     return cases
 
 
-def scan_r79_keys(scan_root: Path) -> KeyScan:
-    """Every r79 key of every ``.json`` / ``.jsonl`` under ``scan_root`` (raw bytes; nothing
-    left out, 6.3.1: ``j9_runs`` and the dry outputs included)."""
+def is_excluded(relative: str, excludes: tuple[str, ...]) -> bool:
+    return any(fnmatch.fnmatchcase(relative, pattern) for pattern in excludes)
+
+
+def scan_r79_keys(scan_root: Path, excludes: tuple[str, ...] = ()) -> KeyScan:
+    """Every r79 key of every ``.json`` / ``.jsonl`` under ``scan_root`` (raw bytes, only the
+    ``"key"`` values are taken; nothing left out, 6.3.1: ``j9_runs`` and the dry outputs
+    included), but the files ``excludes`` names, which are not opened."""
     keys: set[str] = set()
     files = []
     seed_max = None
     for path in sorted(p for p in scan_root.rglob("*") if p.suffix in SCAN_SUFFIXES
                        and p.is_file()):
+        if is_excluded(path.relative_to(scan_root).as_posix(), excludes):
+            continue
         data = path.read_bytes()
         found = R79_KEY_PATTERN.findall(data)
         for key, seed in found:
@@ -184,24 +209,56 @@ def scan_source_keys(root: Path) -> KeyScan:
     return KeyScan(frozenset(keys), tuple(files), seed_max)
 
 
-def merged_scan(scan_root: Path, extra_roots: tuple[Path, ...]) -> KeyScan:
-    """The ``--scan-root`` scan and every ``--scan-extra`` source scan together."""
-    scans = [scan_r79_keys(scan_root), *(scan_source_keys(root) for root in extra_roots)]
+def excluded_files(scan_root: Path, excludes: tuple[str, ...]) -> list[str]:
+    """The scan files ``excludes`` leaves out (paths only; the files are not opened)."""
+    return [path.relative_to(scan_root).as_posix() for path in sorted(scan_root.rglob("*"))
+            if path.suffix in SCAN_SUFFIXES and path.is_file()
+            and is_excluded(path.relative_to(scan_root).as_posix(), excludes)]
+
+
+def scan_key_lists(paths: tuple[Path, ...]) -> KeyScan:
+    """Plain key lists (one r79 key per line, ``--scan-keys-file``)."""
+    keys: set[str] = set()
+    files = []
+    seed_max = None
+    for path in paths:
+        data = path.read_bytes()
+        found = [PLAIN_KEY_LINE.match(line.strip()) for line in data.decode("utf-8").splitlines()]
+        found = [match for match in found if match]
+        for match in found:
+            keys.add(match.group(1))
+            seed = int(match.group(2))
+            seed_max = seed if seed_max is None else max(seed_max, seed)
+        files.append((str(path), hashlib.sha256(data).hexdigest(), len(found)))
+    return KeyScan(frozenset(keys), tuple(files), seed_max)
+
+
+def merged_scan(scan_root: Path, extra_roots: tuple[Path, ...],
+                excludes: tuple[str, ...] = (), key_lists: tuple[Path, ...] = ()) -> KeyScan:
+    """The ``--scan-root`` scan (less ``excludes``), every ``--scan-extra`` source scan and the
+    ``--scan-keys-file`` lists together."""
+    scans = [scan_r79_keys(scan_root, excludes),
+             *(scan_source_keys(root) for root in extra_roots)]
+    if key_lists:
+        scans.append(scan_key_lists(key_lists))
     seeds = [scan.seed_max for scan in scans if scan.seed_max is not None]
     return KeyScan(frozenset().union(*(scan.keys for scan in scans)),
                    tuple(item for scan in scans for item in scan.files),
                    max(seeds) if seeds else None)
 
 
-def block_seeds(cases: list[str], scanned: frozenset[str]) -> tuple[tuple[int, ...], int]:
-    """``(seeds of b1 .. b4, repeat count)``: 40 + j, all four +10 while any generated key is
-    in the scan (6.3.1).
+def block_seeds(cases: list[str], scanned: frozenset[str],
+                base: tuple[int, ...] = BLOCK_SEEDS,
+                reserved: tuple[int, ...] = ()) -> tuple[tuple[int, ...], int]:
+    """``(seeds of b1 .. b4, repeat count)``: ``base`` (40 + j; edition 6 50 + j), all four +10
+    while any generated key is in the scan (6.3.1) or a seed is ``reserved`` (edition 6).
 
     Raises:
         NotUsable: No collision-free seeds below :data:`SEED_LIMIT`.
     """
-    seeds, repeats = BLOCK_SEEDS, 0
-    while any(key_of(case, seed) in scanned for seed in seeds for case in cases):
+    seeds, repeats = tuple(base), 0
+    while (any(seed in reserved for seed in seeds)
+           or any(key_of(case, seed) in scanned for seed in seeds for case in cases)):
         seeds = tuple(seed + SEED_STEP for seed in seeds)
         repeats += 1
         if max(seeds) > SEED_LIMIT:
@@ -310,7 +367,8 @@ def _keys_text(keys: list[str]) -> str:
 
 def select(noise_path: Path, scan_root: Path, out_dir: Path,
            noise_sha256: str = fixed.NOISE_VB_SHA256, *,
-           extra_roots: tuple[Path, ...] = ()) -> dict:
+           extra_roots: tuple[Path, ...] = (), edition: int = 5,
+           excludes: tuple[str, ...] = (), key_lists: tuple[Path, ...] = ()) -> dict:
     """Selection and plans (module docstring); returns the ``selection.json`` document.
 
     Args:
@@ -319,6 +377,8 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         out_dir: New or empty output folder.
         noise_sha256: The case source's fixed sha256 (tests give their own file's).
         extra_roots: Test and probe source roots (``--scan-extra``, :func:`scan_source_keys`).
+        edition: 5 (seeds 40 + j and the c dry plans) or 6 (module docstring).
+        excludes: ``--scan-exclude`` globs; key_lists: ``--scan-keys-file`` paths.
 
     Raises:
         NotUsable: Module docstring exit 2.
@@ -334,11 +394,21 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     for root in extra_roots:
         if not root.is_dir():
             raise NotUsable(f"--scan-extra {root} is not a folder")
-    scan = merged_scan(scan_root, tuple(extra_roots))
-    seeds, repeats = block_seeds(cases, scan.keys)
+    if edition not in (5, 6):
+        raise NotUsable(f"edition {edition}: 5 or 6")
+    if edition == 5 and (excludes or key_lists):
+        raise NotUsable("--scan-exclude / --scan-keys-file are edition 6 options")
+    for path in key_lists:
+        if not path.is_file():
+            raise NotUsable(f"--scan-keys-file {path} not found")
+    scan = merged_scan(scan_root, tuple(extra_roots), tuple(excludes), tuple(key_lists))
+    if edition == 6:
+        seeds, repeats = block_seeds(cases, scan.keys, ED6_BLOCK_SEEDS, ED6_RESERVED_SEEDS)
+    else:
+        seeds, repeats = block_seeds(cases, scan.keys)
     table = cell_table(cases)
-    dry, dry_keys = dry_plans(table, scan.keys)
-    union_check = dry_union_check(dry)
+    dry, dry_keys = ({}, {}) if edition == 6 else dry_plans(table, scan.keys)
+    union_check = None if edition == 6 else dry_union_check(dry)
     out_dir.mkdir(parents=True, exist_ok=True)
     outputs = {}
     for block, (seed, phase_rule) in enumerate(zip(seeds, BLOCK_PHASES, strict=True), start=1):
@@ -349,7 +419,7 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
             out_dir / f"b{block}_keys.txt",
             _keys_text([plain_key(key) for key in plan["faults"]]))
     dry_runs = {}
-    for seed in DRY_SEEDS:
+    for seed in dry:
         run = dry_run_name(seed)
         dry_runs[run] = {"seed": seed, "plan": f"{run}_plan.json", "keys": f"{run}_keys.txt"}
         outputs[f"{run}_plan.json"] = _write_new(out_dir / f"{run}_plan.json",
@@ -357,10 +427,13 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         outputs[f"{run}_keys.txt"] = _write_new(out_dir / f"{run}_keys.txt",
                                                 _keys_text(dry_keys[seed]))
     document = {
-        "rule": "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)",
+        "rule": ("jp3_remedy_spec_v6.md 6.4 revision 9 (G-1)" if edition == 6
+                 else "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)"),
         "inputs": {"noise": {"path": str(noise_path), "sha256": noise_sha256},
                    "scan_root": str(scan_root),
-                   "scan_extra": [str(root) for root in extra_roots]},
+                   "scan_extra": [str(root) for root in extra_roots],
+                   **_edition_6_inputs(edition, scan_root, excludes, key_lists)},
+        **({"edition": 6, "reserved_seeds": list(ED6_RESERVED_SEEDS)} if edition == 6 else {}),
         "scan": {"files_scanned": len(scan.files), "r79_keys": len(scan.keys),
                  "seed_max": scan.seed_max,
                  "files": [{"path": path, "sha256": sha, "r79_keys": count}
@@ -372,19 +445,32 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
                    for block, (seed, phase_rule) in enumerate(zip(seeds, BLOCK_PHASES,
                                                                   strict=True), start=1)},
         "seed_repeats": repeats, "seed_step": SEED_STEP,
-        "dry": {"seeds": list(DRY_SEEDS), "pairs": sum(len(keys) for keys in dry_keys.values()),
+        "dry": {"seeds": list(dry), "pairs": sum(len(keys) for keys in dry_keys.values()),
                 "runs": dry_runs, "union_check": union_check},
         "cell_table": table, "outputs": outputs,
-        "run_commands": _run_commands(seeds)}
+        "run_commands": _run_commands(seeds, ("VBKL0", "VBKL") if edition == 6
+                                      else ("VBK0", "VBK"))}
     _write_new(out_dir / "selection.json", _json_text(document))
     return document
 
 
-def _run_commands(seeds: tuple[int, ...]) -> list[str]:
-    """The runner lines per block and arm (VBK0 blocks first, 8 4.(6); the main session
-    launches them, ``R79_ROD_MODEL=plant_truth``)."""
+def _edition_6_inputs(edition: int, scan_root: Path, excludes: tuple[str, ...],
+                      key_lists: tuple[Path, ...]) -> dict:
+    """The edition 6 scan inputs of ``selection.json`` (an edition 5 document keeps its
+    former keys)."""
+    if edition != 6:
+        return {}
+    return {"scan_exclude": list(excludes),
+            "scan_excluded_files": excluded_files(scan_root, tuple(excludes)),
+            "scan_keys_files": [str(path) for path in key_lists]}
+
+
+def _run_commands(seeds: tuple[int, ...], arms: tuple[str, str] = ("VBK0", "VBK")
+                  ) -> list[str]:
+    """The runner lines per block and arm (the reference arm first, 8 4.(6); the main session
+    launches them, ``R79_ROD_MODEL=plant_truth``; edition 6: VBKL0 / VBKL)."""
     lines = []
-    for arm in ("VBK0", "VBK"):
+    for arm in arms:
         for block, _ in enumerate(seeds, start=1):
             lines.append(f"R79_V5_SETTING={arm} R79_ROD_MODEL=plant_truth R79_T4H_DIR=<out>/"
                          f"{arm}_b{block}_t4h R79_ROD_FAULT_PLAN=<plans>/b{block}_plan.json "
@@ -401,10 +487,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scan-extra", type=Path, action="append", required=True,
                         help="a test or probe source root (repeatable; at least the run "
                              "worktree's 05_tests, erratum 1 audit E-1)")
+    parser.add_argument("--edition", type=int, default=5, choices=(5, 6))
+    parser.add_argument("--scan-exclude", action="append", default=[],
+                        help="glob relative to --scan-root: files left out, never opened")
+    parser.add_argument("--scan-keys-file", type=Path, action="append", default=[],
+                        help="a plain key list added to the scan (one key per line)")
     args = parser.parse_args(argv)
     try:
         document = select(args.noise, args.scan_root, args.out_dir,
-                          extra_roots=tuple(args.scan_extra))
+                          extra_roots=tuple(args.scan_extra), edition=args.edition,
+                          excludes=tuple(args.scan_exclude),
+                          key_lists=tuple(args.scan_keys_file))
     except NotUsable as exc:
         print(f"not usable: {exc}", file=sys.stderr)
         print(json.dumps({"status": "not_usable", "out_dir": str(args.out_dir)}))
