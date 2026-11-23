@@ -1,0 +1,23 @@
+{
+ "x11_read": {
+  "t_s": 49.00000000005194,
+  "class": "hold",
+  "gap_bar": 10.674295788008534
+ },
+ "commands_sha256": "3672c7222519",
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "x11",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\lsj4_x11.jsonl",
+   "sha256": "d93263c693dbf7e2f5b813a2fa5e915558cb17e480ae9ca6eb663057a0ccd484"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\lsj4_x11_t4h\\R12_bottom-FL-Fs4-o0.0_LSJ4_X11.npz",
+   "sha256": "90b809ab9282570424ef22cdfeeb727a2513ef32823bf4171abc6e8faffc4093"
+  }
+ ]
+}

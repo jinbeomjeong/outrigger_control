@@ -1,0 +1,29 @@
+{
+ "runs[0]": {
+  "hash_equal": true,
+  "extend_bound_check_equal": true
+ },
+ "runs[1]": {
+  "hash_equal": true,
+  "extend_bound_check_equal": true
+ },
+ "runs[2]": {
+  "hash_equal": true,
+  "extend_bound_check_equal": true
+ },
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "case-f-path",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\fpath_a1\\j9_case_f_path.jsonl",
+   "sha256": "a7eb0793f227aa06226e8490dd5f1c2f08e00c2c5cec77c594b9f590d3463485"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h9_grid\\grid_r67_top.json",
+   "sha256": "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827"
+  }
+ ]
+}

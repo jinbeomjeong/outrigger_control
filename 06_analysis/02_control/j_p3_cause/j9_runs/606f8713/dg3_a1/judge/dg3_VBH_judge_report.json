@@ -1,0 +1,43 @@
+{
+ "setting": "VBH",
+ "judge_run": {
+  "command": [
+   "-I",
+   "-B",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed5-run5\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+   "judge",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\judge\\dg3_VBH_judge.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\dg3_VBH.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge_L1_reference.json",
+   "--s4-late-loc"
+  ],
+  "exit_code": 0,
+  "last_line": "unmatched 0 errors 0 -> C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\judge\\dg3_VBH_judge.json",
+  "stderr_tail": []
+ },
+ "judge_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\judge\\dg3_VBH_judge.json",
+ "judge_sha256": "69186bbaf1b547c34fb93753b0f83ef3d605db06d6b21f9d974c514de807d718",
+ "dg3_sha256": "2d9dbe9dad226e14ee731dfd5e9a74413fe193b01da9c2685dc74b09441a817b",
+ "l1_reference_sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+ "judge_rows": {
+  "runs": 135,
+  "unmatched": 0,
+  "errors": 0,
+  "lines": 135
+ },
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [],
+ "status": "pass",
+ "command": "dg3-judge",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\dg3_VBH.json",
+   "sha256": "2d9dbe9dad226e14ee731dfd5e9a74413fe193b01da9c2685dc74b09441a817b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge_L1_reference.json",
+   "sha256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7"
+  }
+ ]
+}

@@ -1,0 +1,58 @@
+{
+ "rule": "jp3_remedy_spec_v5.md P5-1",
+ "status": "pass",
+ "pairs": 135,
+ "judged_pairs": 131,
+ "differing_pairs": 0,
+ "fallback_pairs_recorded": 4,
+ "problems": [],
+ "differing": [],
+ "recorded": [
+  {
+   "job": "r79:L3|s0|g6|24|g6|G1+J2@RL|top|Fs0",
+   "setting": "VBJ",
+   "fallback": [
+    true,
+    true
+   ],
+   "equal": true
+  },
+  {
+   "job": "r79:L3|s1|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+   "setting": "VBJ",
+   "fallback": [
+    true,
+    true
+   ],
+   "equal": true
+  },
+  {
+   "job": "r79:L3|s1|ref|6|rigid|B|-2.2,1.6",
+   "setting": "VBJ",
+   "fallback": [
+    true,
+    true
+   ],
+   "equal": true
+  },
+  {
+   "job": "r79:L3|s2|ref|7|rigid|B|2.2,-1.6",
+   "setting": "VBJ",
+   "fallback": [
+    true,
+    true
+   ],
+   "equal": true
+  }
+ ],
+ "inputs": {
+  "old": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\dg3_a1\\dg3_VBJ.json",
+   "sha256": "603e4b815d8abc11f09bb85731f9591df5e4c6cc812f2dd9f0e6c7ebae070cd0"
+  },
+  "new": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\dg3_VBJ.json",
+   "sha256": "9406d6338ea8b0cacb61c66c17cdafbbffbddd88c114f60cf84dfa83b5d89274"
+  }
+ }
+}

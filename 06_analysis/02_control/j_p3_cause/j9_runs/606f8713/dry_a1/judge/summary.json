@@ -1,0 +1,217 @@
+{
+ "rows": [
+  {
+   "run": "event_VBJ",
+   "expected": "equal",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 758,
+     "two_pressure_reads": 758
+    }
+   ],
+   "meets": [
+    true
+   ]
+  },
+  {
+   "run": "event_VBH",
+   "expected": "truth_zero_monitor_positive",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 757
+    }
+   ],
+   "meets": [
+    true
+   ]
+  },
+  {
+   "run": "event_VBJ0",
+   "expected": "equal",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 758,
+     "two_pressure_reads": 758
+    }
+   ],
+   "meets": [
+    true
+   ]
+  },
+  {
+   "run": "r79_VBJ",
+   "expected": "equal",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 828,
+     "two_pressure_reads": 828
+    }
+   ],
+   "meets": [
+    true
+   ],
+   "family": "g6",
+   "record_keys_present": [
+    {
+     "hydraulics_record.relock_step_over_1bar_count": true,
+     "hydraulics_record.p1_retract_seed_log_columns": true,
+     "lock_window_alignment.n_late_fallback": true
+    }
+   ],
+   "key_taken": [
+    true
+   ],
+   "keys_file_problems": [],
+   "t4h_problems": []
+  },
+  {
+   "run": "r79_VBJ_g8",
+   "expected": "equal",
+   "evidence": [
+    {
+     "error": false,
+     "k": 2,
+     "rod_reading_truth_calls": 1364,
+     "two_pressure_reads": 682
+    }
+   ],
+   "meets": [
+    true
+   ],
+   "family": "g8",
+   "record_keys_present": [
+    {
+     "hydraulics_record.relock_step_over_1bar_count": true,
+     "hydraulics_record.p1_retract_seed_log_columns": true,
+     "lock_window_alignment.n_late_fallback": true
+    }
+   ],
+   "key_taken": [
+    true
+   ],
+   "keys_file_problems": [],
+   "t4h_problems": []
+  },
+  {
+   "run": "r79_VBJ_ref",
+   "expected": "equal",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 600,
+     "two_pressure_reads": 600
+    }
+   ],
+   "meets": [
+    true
+   ],
+   "family": "ref",
+   "record_keys_present": [
+    {
+     "hydraulics_record.relock_step_over_1bar_count": true,
+     "hydraulics_record.p1_retract_seed_log_columns": true,
+     "lock_window_alignment.n_late_fallback": true
+    }
+   ],
+   "key_taken": [
+    true
+   ],
+   "keys_file_problems": [],
+   "t4h_problems": []
+  },
+  {
+   "run": "r79_VBH",
+   "expected": "truth_zero_monitor_positive",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 812
+    }
+   ],
+   "meets": [
+    true
+   ],
+   "family": "g6",
+   "record_keys_present": [
+    {
+     "hydraulics_record.relock_step_over_1bar_count": true,
+     "hydraulics_record.p1_retract_seed_log_columns": true,
+     "lock_window_alignment.n_late_fallback": true
+    }
+   ],
+   "key_taken": [
+    true
+   ],
+   "keys_file_problems": [],
+   "t4h_problems": []
+  },
+  {
+   "run": "r79_VBH_g8",
+   "expected": "truth_zero_monitor_positive",
+   "evidence": [
+    {
+     "error": false,
+     "k": 2,
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 682
+    }
+   ],
+   "meets": [
+    true
+   ],
+   "family": "g8",
+   "record_keys_present": [
+    {
+     "hydraulics_record.relock_step_over_1bar_count": true,
+     "hydraulics_record.p1_retract_seed_log_columns": true,
+     "lock_window_alignment.n_late_fallback": true
+    }
+   ],
+   "key_taken": [
+    true
+   ],
+   "keys_file_problems": [],
+   "t4h_problems": []
+  },
+  {
+   "run": "r79_VBH_ref",
+   "expected": "truth_zero_monitor_positive",
+   "evidence": [
+    {
+     "error": false,
+     "k": 1,
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 600
+    }
+   ],
+   "meets": [
+    true
+   ],
+   "family": "ref",
+   "record_keys_present": [
+    {
+     "hydraulics_record.relock_step_over_1bar_count": true,
+     "hydraulics_record.p1_retract_seed_log_columns": true,
+     "lock_window_alignment.n_late_fallback": true
+    }
+   ],
+   "key_taken": [
+    true
+   ],
+   "keys_file_problems": [],
+   "t4h_problems": []
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "bundle": "VBH",
+ "base": "stored H-6 (rev 4)",
+ "pairs": 135,
+ "l2_pass_to_fail": [],
+ "grade_transitions_record": {
+  "L2": {
+   "pass->pass": 1
+  },
+  "L3": {
+   "pass->pass": 98,
+   "flag->flag": 21,
+   "fail->fail": 10,
+   "pass->fail": 3,
+   "flag->fail": 2
+  }
+ },
+ "new_fault": [],
+ "ready_failures": [
+  "L3|s0|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+  "L3|s0|g8|2|slope|edge|top|4.0|FL|raised|170.0",
+  "L3|s0|ref|11|rigid|B|0,3.5",
+  "L3|s2|g6|69|g6r|rigid+J1@FR|top|Fs4"
+ ],
+ "ready_both_missing_record": [
+  {
+   "key": "L3|s0|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+   "base_final_phase": "probe",
+   "new_final_phase": "level"
+  },
+  {
+   "key": "L3|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0",
+   "base_final_phase": "level",
+   "new_final_phase": "level"
+  },
+  {
+   "key": "L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+   "base_final_phase": "probe",
+   "new_final_phase": "level"
+  },
+  {
+   "key": "L3|s1|ref|2|rigid|B|-4.4,0",
+   "base_final_phase": "probe",
+   "new_final_phase": "level"
+  },
+  {
+   "key": "L3|s1|ref|7|rigid|B|2.2,-1.6",
+   "base_final_phase": "probe",
+   "new_final_phase": "level"
+  }
+ ],
+ "ready_improved_record": [
+  "L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+  "L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4"
+ ],
+ "record_failures": [
+  "VBH: 4 ready_failures keys"
+ ],
+ "records": {
+  "retract_tracker_dominated_reads": 7812,
+  "retract_tracker_over_tol_reads": 7812,
+  "retract_tracker_false_drop_reads": 311,
+  "ret_after_gate_s_values": 380,
+  "ret_after_gate_s_max": 7.800000000036768,
+  "ret_after_gate_s_resolution": "read grid 0.1 s: ret_after_gate_s = first RET read - T (the read before it), so it differs from the gate-opening sub-step by up to 0.1 s; a record, not a judged column (4a-2 R9)"
+ },
+ "setting_defects": [],
+ "not_judgeable": [],
+ "failures": [
+  "VBH: 4 ready_failures keys"
+ ],
+ "status": "failed",
+ "command": "t12",
+ "inputs": [
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\p1_a1\\h6_base_judge.json",
+   "sha256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\dg3_VBH.json",
+   "sha256": "2d9dbe9dad226e14ee731dfd5e9a74413fe193b01da9c2685dc74b09441a817b"
+  },
+  {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\dg3_a1\\judge\\dg3_VBH_judge.json",
+   "sha256": "69186bbaf1b547c34fb93753b0f83ef3d605db06d6b21f9d974c514de807d718"
+  }
+ ]
+}

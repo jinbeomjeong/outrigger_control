@@ -1,0 +1,21 @@
+{
+ "rule": "jp3_remedy_spec_v5.md P5-1",
+ "status": "pass",
+ "pairs": 2,
+ "judged_pairs": 2,
+ "differing_pairs": 0,
+ "fallback_pairs_recorded": 0,
+ "problems": [],
+ "differing": [],
+ "recorded": [],
+ "inputs": {
+  "old": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\78fd5d2d\\cases_a1\\cd.jsonl",
+   "sha256": "b0cae879cf3a41e3649517f1b48a318549ee09f1ca7403aa792cbe819d390441"
+  },
+  "new": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\cd.jsonl",
+   "sha256": "ea2e53a97a63fe60ad6f7173b68d1a4add02a9399e9cde0874aa565e50e3f8d7"
+  }
+ }
+}
