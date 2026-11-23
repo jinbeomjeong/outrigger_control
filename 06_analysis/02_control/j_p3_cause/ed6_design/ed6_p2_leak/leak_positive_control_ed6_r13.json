@@ -1,0 +1,99 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": false,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\auditor-ed6seal2\\pc\\poscontrol_handoff_ed6_r13.md"
+  ],
+  "leaks": [
+    {
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\auditor-ed6seal2\\pc\\poscontrol_handoff_ed6_r13.md",
+      "line": 61,
+      "names": [
+        {
+          "name": "jp3_12b_ppred.py",
+          "category": "files",
+          "column": 20
+        },
+        {
+          "name": "_vector_ramp_outside_lock_start",
+          "category": "functions",
+          "column": 40
+        },
+        {
+          "name": "probe_1bd405c8",
+          "category": "folders",
+          "column": 78
+        }
+      ],
+      "text": "- (양성 대조) 경로 1 도구 `jp3_12b_ppred.py`와 `_vector_ramp_outside_lock_start`, 폴더 `probe_1bd405c8`."
+    },
+    {
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\auditor-ed6seal2\\pc\\poscontrol_handoff_ed6_r13.md",
+      "line": 121,
+      "names": [
+        {
+          "name": "a1a2b3",
+          "category": "outputs",
+          "column": 13
+        },
+        {
+          "name": "ac3c25a7",
+          "category": "commits",
+          "column": 24
+        },
+        {
+          "name": "LSB_COMPONENTS_SEALED",
+          "category": "constants",
+          "column": 40
+        }
+      ],
+      "text": "- (양성 대조) 팔 a1a2b3, 커밋 ac3c25a7, 설정 상수 LSB_COMPONENTS_SEALED."
+    }
+  ],
+  "leak_names": [
+    "LSB_COMPONENTS_SEALED",
+    "_vector_ramp_outside_lock_start",
+    "a1a2b3",
+    "ac3c25a7",
+    "jp3_12b_ppred.py",
+    "probe_1bd405c8"
+  ],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 989,
+    "names_skipped_short": 0,
+    "leak_lines": 2,
+    "leak_names": 6,
+    "blocks": 0,
+    "error": 2,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "name_leak": 2
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\auditor-ed6seal2\\pc\\poscontrol_handoff_ed6_r13.md",
+      "line": 61,
+      "message": "jp3_12b_ppred.py (files), _vector_ramp_outside_lock_start (functions), probe_1bd405c8 (folders) — - (양성 대조) 경로 1 도구 `jp3_12b_ppred.py`와 `_vector_ramp_outside_lock_start`, 폴더 `probe_1bd405c8`.",
+      "target": "jp3_12b_ppred.py, _vector_ramp_outside_lock_start, probe_1bd405c8"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\auditor-ed6seal2\\pc\\poscontrol_handoff_ed6_r13.md",
+      "line": 121,
+      "message": "a1a2b3 (outputs), ac3c25a7 (commits), LSB_COMPONENTS_SEALED (constants) — - (양성 대조) 팔 a1a2b3, 커밋 ac3c25a7, 설정 상수 LSB_COMPONENTS_SEALED.",
+      "target": "a1a2b3, ac3c25a7, LSB_COMPONENTS_SEALED"
+    }
+  ]
+}

@@ -1,0 +1,4632 @@
+{
+ "rule": "jp3_remedy_spec_v6.md 6.2 / 6.3 (revision 9 G-6, spec 8 Y-8)",
+ "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed6_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys --grid-sample C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\stats_v6\\s50_grid_sample.csv --grid-sample-sha256 6170e240ddb49eb8ff75bcf8189d571b524e952df2e4f3ffe9cf34448b4c8b5f",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-impl",
+  "head": "95cae09d28312327ac0034e6605a6f1671bdff95",
+  "is_clean": true
+ },
+ "settings": [
+  "VBL"
+ ],
+ "grid_sample": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\stats_v6\\s50_grid_sample.csv",
+  "sha256": "6170e240ddb49eb8ff75bcf8189d571b524e952df2e4f3ffe9cf34448b4c8b5f"
+ },
+ "extraction": "stats s50: one offset per (level, F_s, timing, leg, event) cluster, numpy default_rng(20261123), among the V0-passing offsets",
+ "seed": 20261123,
+ "v0_pass_lines": 174,
+ "expected_lines": 192,
+ "expected_j_p3_judged_rows": 192,
+ "head_only_declared_lines": 0,
+ "lines": [
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "aa14c9ae32f7fc353e7880967d0528c856cb967282e84d84a26a1a4ee5624999",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FL",
+    "run_id": 0,
+    "v0_commands_sha256": "eff8906360b129233a851b20bb8a6734a19e9e96c744391ed60910d87bc81432",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FL",
+    "run_id": 3,
+    "v0_commands_sha256": "d8ac27425c01e1969bc39c3c6e20e794a54a99ca55233a02ff8f752ad9aebe5a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "2c4a3420acfcdb293669e4d175147dfcd51656d321a1a702be4efceaa3c65472",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FR",
+    "run_id": 1,
+    "v0_commands_sha256": "53eca730543ef0950939a7f6e6b80f7a96e7790b577c40998b2fa7bdb28a85bc",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FR",
+    "run_id": 2,
+    "v0_commands_sha256": "31931f1d5e34c3d22828a3d86e371016edbd0372c58408cdae16e334144d37a3",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RL",
+    "run_id": 5,
+    "v0_commands_sha256": "6fbe87d0892e19bfcd6deef6c361ff27af25764747d60d72cc5f89ec313e7ffe",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RL",
+    "run_id": 0,
+    "v0_commands_sha256": "c2b9ad39baea1e839d2c6086c2139e07133c9ec73a0d4c34122eaac5009ffc9f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RL",
+    "run_id": 2,
+    "v0_commands_sha256": "c3d403f3ac3a2201386d385923e9d47a925ad91a127abacb86709e29e6418d65",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RR",
+    "run_id": 5,
+    "v0_commands_sha256": "b6bb9853d3d3241581617af35ac4887e5a81056fe4cbf190e54b706f7bbe4025",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RR",
+    "run_id": 1,
+    "v0_commands_sha256": "52dc780687f49aefc30210bd5c267cdfad0d6e4c1afed4e9e742681b096afb21",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "eb1929da1ae1a4f1a1b5777ba9dcc264a95551e442ae402c52cba0399466a9a0",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "1d0ed0bb0468c90711d2c2c0a1cf00149a4edafe249ee43603cf2fe25a593825",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FL",
+    "run_id": 1,
+    "v0_commands_sha256": "d74226a4961fe990126c8a76bb78cebd6636b56c2fdc0c71746a1efd22d72085",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "1be900f8b4a7d34ac715bea52bbebe752b5ac22844448b1533fdd288157b4425",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "1f90e30a1309d4649c73f81254e175f2e43750dbc603d5e19bcfbb4306183522",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.0-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FR",
+    "run_id": 0,
+    "v0_commands_sha256": "e153ea836f9d22e6e926771e3da19545342e20e472d34c08e3ae93f9b1b1ff2c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.05-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FR",
+    "run_id": 3,
+    "v0_commands_sha256": "78cf77a87454d9feea7177c8f31a4c018831545d6b6b0e165a7fc00727ec6f2a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RL",
+    "run_id": 4,
+    "v0_commands_sha256": "88210f84e1c0c9f38876247f7bb8c4845d3d052247a21f819223261eac57e48c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.0-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RL",
+    "run_id": 0,
+    "v0_commands_sha256": "b939d6fb549ae6b2810010bb437dcda2d6dcfc3570fbab94485c3b7c7a1401e3",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.05-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RL",
+    "run_id": 3,
+    "v0_commands_sha256": "238dcc59560c93c661fa80f4f00ba833f79d15edb2c3b674c1786b152884e235",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RR",
+    "run_id": 5,
+    "v0_commands_sha256": "a2f363101cda878b2c7e5cb5d1f60a2c7da9bf377f73f564c65ecfdc68ae7197",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RR",
+    "run_id": 1,
+    "v0_commands_sha256": "aa43ae4447d6372996117bd336596cbd5a10e55f6c1b98f6eee5d9aa28393458",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.05-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "eadc5a93271bee37130a5240c9576829f5793a6c74c2593005040897425a4f8c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FL",
+    "run_id": 11,
+    "v0_commands_sha256": "373dd900229de903f52a0b4b39a1da1a5a4fc6e8d9938f98517bea2c76ed64a4",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "7af14cffd854248e409476b363e2d1746ef0d4425ff88ac06fc4e27e8b0d6637",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FL",
+    "run_id": 7,
+    "v0_commands_sha256": "0da9d63ceafadcec6febed499d9f4885558955f3113c1764f1aa280606590d36",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FR",
+    "run_id": 11,
+    "v0_commands_sha256": "105aff3a049c505f399205f258f9bc9dcd7683d92bc9fa6ea49cd3ed3375f1a0",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FR",
+    "run_id": 0,
+    "v0_commands_sha256": "6225b91f81bae56c306b5ac5ae5e7edb8a7197ec093e955476bb3a8b011829b9",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FR",
+    "run_id": 7,
+    "v0_commands_sha256": "6772d654bacd9f714c22daf56a5aa2ff2c5e6b015236f1f56a267278c11766f1",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RL",
+    "run_id": 11,
+    "v0_commands_sha256": "cbe1f0b8f3e60e497307911b569dab2af99ab15c03de864c544d8fe02ec4f3df",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "82ecf94a56e59587529aa5bced9dcc07f47cbc4d80d248cda657f8413d3f0627",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RL",
+    "run_id": 6,
+    "v0_commands_sha256": "c4ead67050777b0820156864eb65db32d3400035c57b4bf1e13c82b3be2da881",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RR",
+    "run_id": 11,
+    "v0_commands_sha256": "58f8b05e5e079edbe8423b088cdb39207d850278a819bb1edd3d72b4de055e09",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RR",
+    "run_id": 0,
+    "v0_commands_sha256": "261c31778dc2c15c72e091e4b5b7e50a8201a4d765d073a1233f2998234a7bbb",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RR",
+    "run_id": 4,
+    "v0_commands_sha256": "8146f885f525e8ee8d29b182281ee51b74962ebdd29a0c42ffe2d3e45248c76a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FL",
+    "run_id": 8,
+    "v0_commands_sha256": "3c607ccc240a4016f3592c4097597c2a8b24db19461692b4081963bb370ce90f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FL",
+    "run_id": 3,
+    "v0_commands_sha256": "360324282417c7149f64b1fa6780e041b2dac68dda7180b77224d63b07baef0a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FL",
+    "run_id": 4,
+    "v0_commands_sha256": "b08c3e358e31c96bb186bf0123232cdaa047a49f29c077dc1aec405e243fbc4e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FR",
+    "run_id": 8,
+    "v0_commands_sha256": "f619f344cbd624d62b6e9703340d9e77deed55a2f8eff3986d14f292bb279227",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FR",
+    "run_id": 1,
+    "v0_commands_sha256": "02cf0580c1a786f4ba3fc6b061f41b354dd94982d33f00b6edee3752cb449539",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "6eb1aa7557b5c3e2a1647c3abe99743c9fd878eefaec84d5d1de6b1be0367c5a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.025-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RL",
+    "run_id": 9,
+    "v0_commands_sha256": "e9e5ec60fbfb199149be119a58bf3684774844417070fe4ec0660dd3c44507e6",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "4c2cd8a803f44ecd4df2bdc4151bd9ec63c884a69c5fa6d8ef988f9eec5e582f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RL",
+    "run_id": 7,
+    "v0_commands_sha256": "94e916da9ad609f453c119958367941f5b3a4ce9baa9293e19779bf81a112566",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RR",
+    "run_id": 10,
+    "v0_commands_sha256": "93195d1b9bfd733f83abafcc85c5ddc4ced40d1d8408bba75d9ba4100bd3c583",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RR",
+    "run_id": 1,
+    "v0_commands_sha256": "f69aa8314f20414d1c1cbaa39d855033d3f91f8b149481a547f6707125c39a44",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RR",
+    "run_id": 7,
+    "v0_commands_sha256": "2c47707316e49d2ace6b8d7759aafa1e2c27c3f959759ec1dc99a182e279247d",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FL",
+    "run_id": 10,
+    "v0_commands_sha256": "ce82358ec7de290a94363e8f61649ab089b3c8bf338b1e2bdb48a7695a9fa164",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.075-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FL",
+    "run_id": 3,
+    "v0_commands_sha256": "bc2c25ab95f4425065753302f184e3d7d3733d978e2d23b199d3ccd3e07f12ff",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.025-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "87cb4a565b654255c1d8312aed53a86627c6b7c86a040e46de441fde16c1da77",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FR",
+    "run_id": 8,
+    "v0_commands_sha256": "cb53346f8a704c36685e4d789f688b8f31f53ee58a384cdbc53c246fd958a3c1",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FR",
+    "run_id": 1,
+    "v0_commands_sha256": "0f89d23a9290e255d3680a82837d982c8737a907fe84c251c92032e38451ea2c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FR",
+    "run_id": 7,
+    "v0_commands_sha256": "aade15958195bafcba826c1e7786af6a8af52662da0402515e7dcc25c431c5a5",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RL",
+    "run_id": 9,
+    "v0_commands_sha256": "796ac722b59cf68d0d5f7db62feb90bbc344389a26eb65b54e5fd2b3ca77f77d",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "f174064ce67cac78bff3cc69a214e4c5bd1668aa8bb3246ff49a8787c604493e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RL",
+    "run_id": 6,
+    "v0_commands_sha256": "06be7f6e83491a9a294185695f38ffacff5135cc05a9528a56255219daaef643",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RR",
+    "run_id": 9,
+    "v0_commands_sha256": "2b43759d8e07ab2c1704bb94a1b04d3fdd6623e8399452b7bb134e1f31b8f395",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RR",
+    "run_id": 0,
+    "v0_commands_sha256": "ec3e09076f99dbc5a0ed60217115e2a0a14e0db4a9b177d7b57bf95e8ed206a5",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RR",
+    "run_id": 4,
+    "v0_commands_sha256": "490a8123c37972e09ff789e8667bd894e2d8f0552a1b81eacfe2c74871030ec5",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.025-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FL",
+    "run_id": 9,
+    "v0_commands_sha256": "2cfe6e191d8205456c95e45403c42adbd33209230566b045f23a3ce3705c6a31",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "5e64a4f04191a1f6ddf8d79cb0486aaa79f24d49d43f5fb1f798cdbafff45a87",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.05-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FL",
+    "run_id": 6,
+    "v0_commands_sha256": "4f2996961e10573601957e1809305964feeebf7d3909f919df44123f7c3f37c1",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FR",
+    "run_id": 8,
+    "v0_commands_sha256": "30621141eea079061e68abfa0c5bb48b049f5a79e6f1eb44ef02399eac5b7e99",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FR",
+    "run_id": 2,
+    "v0_commands_sha256": "a0082a5bd723492e6ec2d87f7d206e9d42e5601573512e58d9a4c02bac8dd800",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "7383373fe5ca7634f1702325831fc4071d24d9a844e3a164b82c0c92b1093c69",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.025-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RL",
+    "run_id": 9,
+    "v0_commands_sha256": "2e900a4a806afb23927d096871900f089170c77fac9a44d0db40999072d77a0f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RL",
+    "run_id": 3,
+    "v0_commands_sha256": "7091f9596f606f44dc21dd14ce0d1dcb2b141566fbc4d215c52328475863aaf6",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RL",
+    "run_id": 4,
+    "v0_commands_sha256": "e0a328c3b93187c456c8b74cf7a141e9a8d3af1bf305eda0433f3d7e9ef0109e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RR",
+    "run_id": 10,
+    "v0_commands_sha256": "40306d1bf217e65ff23f58801df6f497105583b4ac88c48eccf692954921a5b8",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "41689f8f34935080dbb0edefd078afc3b62b6c11b0827e1ef048c898af15ee5f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RR",
+    "run_id": 7,
+    "v0_commands_sha256": "56a4fb4d76a3d14d5824d8e4c76c772c12a756aae7e31bde507519138840c9a3",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "2f3d93d251d6b423eb8c516e0c874ba837e8111e8909171dad4aa16915a3bec7",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FL",
+    "run_id": 0,
+    "v0_commands_sha256": "50eeb222f1aa43ca5c3bcd6a4a897aa358a4ea4ce49333ce199606f27ed8c1c5",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FL",
+    "run_id": 3,
+    "v0_commands_sha256": "3d08190da96aac32de89c6eab375b42675b9ea9fa1a2fbb0bc326aaa028dcccd",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "d330e72c59440c27bed635ff02182f78665eb78d786fd2df7a2b54213b4d5fc4",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FR",
+    "run_id": 0,
+    "v0_commands_sha256": "bbb1e8ee2cc35261acf77ae737438a0fc606e520248b02eff757e3232af07a15",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FR",
+    "run_id": 3,
+    "v0_commands_sha256": "e119812d13a92bb9cf0b04cb5179b88b3b9ce8b536375e85bd3ac8345cf56ded",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RL",
+    "run_id": 5,
+    "v0_commands_sha256": "882982e7d89ce89b5aa046d901866dfac7331f659f408a70641bc37405b0a205",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "073c27441ee14217bb73447423c70481ada3e1f4204760d708ad1aa44f9c1ea0",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RL",
+    "run_id": 2,
+    "v0_commands_sha256": "9bd0f3ac71c6db2da503f30179910a9fe5402beebe3a78c9378a72d52443f61d",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RR",
+    "run_id": 5,
+    "v0_commands_sha256": "9248b64c850f0ff49de78bcdfd99f413468530ddfcf3f7b729ad5e1c0b999676",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RR",
+    "run_id": 0,
+    "v0_commands_sha256": "778f60a9a7486fa1ba7fb39e81cb76dba34966031bd7483ada9d9b41f186555a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "f9c651230e5cb0ab1a9dfca535c2a5d2bbca0b38bae2ce7468b9b6e66124c731",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FL",
+    "run_id": 4,
+    "v0_commands_sha256": "dcc396d8d6b25ff93f38f07bd9ab901ac9af14cb31af7a70c476cf0b539612d1",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FL",
+    "run_id": 1,
+    "v0_commands_sha256": "cc23d1e433605ceaac8ad61cdc6b4981081860ca7bc135f4c05067d86fc8aab3",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "3255576195ca194b9fc37d4934679163b5b31c3582e814d8960e15765aaa548e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FR",
+    "run_id": 5,
+    "v0_commands_sha256": "05801bfae1f394541d1e00f34ca76be00b115a01e16ecec239a86640a48688bc",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.0-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FR",
+    "run_id": 0,
+    "v0_commands_sha256": "484251591272551ac20b514382a7b446849fbb521a83c3acf4d621a14d81d0ce",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.05-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FR",
+    "run_id": 3,
+    "v0_commands_sha256": "3770d51d3979bfe54fb46dab92762eb2259b6ff429d70e9060f61fe5dffb6605",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RL",
+    "run_id": 4,
+    "v0_commands_sha256": "b4b2762be7dd3c947b7c0ee7614c1a806c8a3cde3cf7cb0566953c76aa2edc1b",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.0-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RL",
+    "run_id": 0,
+    "v0_commands_sha256": "2ecaab1a2e5b586adb3c43d6d462d38fc409532d6f1038b7b1607cff91d95b97",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RL",
+    "run_id": 2,
+    "v0_commands_sha256": "5a3e91aa21bba35732e252d443d6a4575a2133f076d07782f182c5a35f6de36e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RR",
+    "run_id": 4,
+    "v0_commands_sha256": "c2d6441f9c4d7e83d25db07928c3455617a770ecd313fd546e40378dfab654d4",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RR",
+    "run_id": 1,
+    "v0_commands_sha256": "2c31856d903d3bd61281450193749b6759aae46ba8ed4e78e5151347f7a19b51",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RR",
+    "run_id": 2,
+    "v0_commands_sha256": "9ff9323b61b82aa061d5e15cc0f82f241903fd1e21a26e8239140c0401bd5d93",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FL",
+    "run_id": 8,
+    "v0_commands_sha256": "5b7b5780ebb5e03979edff3935902ddf71b3a053ae658adc4b07ad575462f8a0",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "4cedb47fc2cd7257dae1965b29d77746a12fb07e8d9955115017dd84743ebc91",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.025-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "4f45c12b9d8fdf7531271da656964b3ede7521991f6ed449a66c4ad3ffe88ef6",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FR",
+    "run_id": 9,
+    "v0_commands_sha256": "ea7d91207a30d4cafe8387b68e47a4b837869a40ac114a8577712a63da2cebf0",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FR",
+    "run_id": 1,
+    "v0_commands_sha256": "53f33009d46bab2e09b99a3145d46e70f765ed72b5cb85566b6dd20389b9a4db",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.025-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FR",
+    "run_id": 5,
+    "v0_commands_sha256": "b79bb9cb4b4f4cb74890d319928b7722a9d5b8e4f9bb7c4cb9053c1045dd0f3f",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RL",
+    "run_id": 9,
+    "v0_commands_sha256": "9784e0aaa59e595302a5d849e4723fc3e8a6e4909f60bff42ce9631e9616418b",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "92b31b37efeed19c44fcfeac29a4f8334c74ef15cd110029e11f1bdfdbe6b426",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RL",
+    "run_id": 7,
+    "v0_commands_sha256": "2a5b90fa89d2a14fc6046487b01016150506597bb1313ac55ad32ec6d77caa5b",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RR",
+    "run_id": 8,
+    "v0_commands_sha256": "6018a5c46f40f99e1cfa4e1ab9eb49ec1e9e9926816d70f527d368dfbfab7ca4",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.075-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "33a9716749efc35630c4425ee466c0da3fb7667d5de4c633d4904968285013c5",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RR",
+    "run_id": 4,
+    "v0_commands_sha256": "9265633abf6c96d22e3b6959f0ab3d6c8e4b83b24e039334d39276a297a70933",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.075-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FL",
+    "run_id": 11,
+    "v0_commands_sha256": "0a17fa53a3328d87bc5db517026e485400df99cb00eb94989d59969823f53169",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FL",
+    "run_id": 1,
+    "v0_commands_sha256": "4b9707e8c8e526ccce91343811cf528a570e4a90855c7b452c61940014b416ab",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.025-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "625687b247ed4b6cf42c4ea797677539137bb72f8e42e17a050055a2d502b638",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.025-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FR",
+    "run_id": 9,
+    "v0_commands_sha256": "cc714006caff32556cc92f8b4eda33bd5061cc642dfdec9a2469ef8c86223360",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FR",
+    "run_id": 1,
+    "v0_commands_sha256": "eed2c65619f93ffe4b78e4f6cdc5b9454e5c19fe7b8588c962c52657bf75650f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FR",
+    "run_id": 7,
+    "v0_commands_sha256": "f965f1cd38d1a89e284012bf714f4b347f2fb52c346b8cc1915faa3aeb366e5e",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RL",
+    "run_id": 8,
+    "v0_commands_sha256": "8916bbdfcb9386fea05b3b1bd9f2e2a853901423fd0e65ecfec9968117b4526e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RL",
+    "run_id": 3,
+    "v0_commands_sha256": "ab5826e016334733d08636f09225c3ce392600de1ad499c501cd22ac2bc53816",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RL",
+    "run_id": 7,
+    "v0_commands_sha256": "b0ee30aa84568505c810b7eea1c2712edcad4df0983789705a2a40da9544ae75",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RR",
+    "run_id": 8,
+    "v0_commands_sha256": "2ed35ced09ad7a6a82ed82d0c42573f1b944179eb1f0f6edeeb72b8256ef8d68",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "f5f23d5a0d0c6b0c9928f0fb61329c94f15021f51768311fa63524cb32af44ca",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RR",
+    "run_id": 4,
+    "v0_commands_sha256": "1c05e210651cb8ed7380266f45deea68d826bfd7ff68c079af850c4fa8ec0abb",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FL",
+    "run_id": 11,
+    "v0_commands_sha256": "de315d6bd87e344ee9a9dedcd0d9bceaf248530ea5f91f0a7c6733c83101a76b",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FL",
+    "run_id": 1,
+    "v0_commands_sha256": "8f23b95cc14e20b4a466eab0086c57b323b8174bd6665f8be6a20db8121233c5",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.025-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "87906170b769cad0d689f4c16930d930ba620fc6a280980ff739724742b50109",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FR",
+    "run_id": 10,
+    "v0_commands_sha256": "15ec97b861e4af7ada8af07d4cb93969ba8f91dd2c263702fd5312e6d7a0c0e1",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FR",
+    "run_id": 2,
+    "v0_commands_sha256": "aa4d51c2c3b9690246803747625066272c7e393aee55f678e8e5136f7001d39e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FR",
+    "run_id": 7,
+    "v0_commands_sha256": "cb753a5d9d5cf8b4986a92205625ebe42789116b6f3a2be35da9b6578bb12dc9",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RL",
+    "run_id": 9,
+    "v0_commands_sha256": "9846dfd07378415f7ab7f01ac756e0ba39e8c170f032a1be7ca33cbce085c39e",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "261af6eb6892b0d6bdc9aff3001ebbcc714faeb5daa73edf00e5a390c3385885",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RL",
+    "run_id": 6,
+    "v0_commands_sha256": "2f0a3696d1eb97d807c7e6a084797789c7c40bff62c1bfb26cb48097b1e93b5d",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RR",
+    "run_id": 10,
+    "v0_commands_sha256": "b1c02fcb790049365626e7524e234668114d4b64d1afe5f0fb3b2b28c8e29dd7",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.075-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "af1b10cdd12f94845cf80c4b0651cb0aec2fdd78f5b9bdda8f8329eef1d8eb10",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RR",
+    "run_id": 4,
+    "v0_commands_sha256": "93f1fedc07ed70f2a1922d71133ddb515228036b2270f7f8f583c36e11d2de24",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FL",
+    "run_id": 10,
+    "v0_commands_sha256": "d1f43392ba894c4c7776e60d26e83eca239216937cf42fe2a2d22cc0acbb9077",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "3d1e0e431224137f3c8ed4d3ed7665ef54192ef3b71eccb583a6b2ed229b1844",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.025-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FL",
+    "run_id": 5,
+    "v0_commands_sha256": "47f6178009f4eca60190612ec93bbc1f1aefe41f3662cf99c89ac5788ffd82f9",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.075-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FR",
+    "run_id": 11,
+    "v0_commands_sha256": "e1e7a556a86b5ca1c1da9482d993d0de9fde80900e8b0bf6b00cfe9fe16b1958",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FR",
+    "run_id": 2,
+    "v0_commands_sha256": "d5f314743d592e23c79de5909f2624fd1d961eedafac3bc19c857483bf59d394",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.025-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FR",
+    "run_id": 5,
+    "v0_commands_sha256": "707e0c63d31a8ca16dbebd2da8eed84219bee326e1ba67c5e2885e9c4c51388a",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RL",
+    "run_id": 8,
+    "v0_commands_sha256": "040a9f7588ad0e4f259ae255e5141fd3dda43f64af1999ff2ed7d5a48ef21796",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RL",
+    "run_id": 3,
+    "v0_commands_sha256": "ac1a42a744ac05db0e017386b691d3b9ae0316c7f1fc7edcbcc22d3611f1ccf7",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RL",
+    "run_id": 7,
+    "v0_commands_sha256": "19a236041be87eafb13b3486f7edde6c5c08c9a18e2e0024e08b843b962eaf10",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.075-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RR",
+    "run_id": 11,
+    "v0_commands_sha256": "fc5e3f110cca9e0680727cf69476043c1d1c5469b0a3da6c32f829ad716f8c93",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RR",
+    "run_id": 1,
+    "v0_commands_sha256": "9b6642ba753d511c46d314154a7acb67a8f4b45695269cbb23a2be3d081d7e93",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RR",
+    "run_id": 7,
+    "v0_commands_sha256": "fecd55a89ef47ad71fd92513517720e1d7aba51f21f620f93903a546d20acbcf",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FL",
+    "run_id": 8,
+    "v0_commands_sha256": "c8713a2d8e95687a59ade040634f8ef0cc999311523ea08cd56a4381aed18d04",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "ae9d3c71a5d8805f0f6ae86fc03a6ad9d9ba44159b6eab16a05528528c444ae0",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FL",
+    "run_id": 7,
+    "v0_commands_sha256": "49ac9baf63eb91dc32e4d05cb45b1916f18ef24a1c61aa879d024e71ff6089f3",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FR",
+    "run_id": 8,
+    "v0_commands_sha256": "832445979bfba6ee4138d5b0c87e1da53203aa0bd7e01f2fa994b741c1dd53d2",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.075-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FR",
+    "run_id": 3,
+    "v0_commands_sha256": "51c949c58dc58584fc204466128ccbfeec6a03b0f8c3025c086b8d0bb8272647",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "bba008a7d72888d2c19ace3e25dca465a4556750273c4c43e3fd6984920c8979",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RL",
+    "run_id": 11,
+    "v0_commands_sha256": "d4d927bb1965513aec160df628a6efc0237600929b022dd66dc67e24cb416f5c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RL",
+    "run_id": 0,
+    "v0_commands_sha256": "5c9de16fab84dafb442f12ff790f690621031cd9d3cbd95e2d7534263cea3dc6",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.025-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RL",
+    "run_id": 5,
+    "v0_commands_sha256": "df9a1c5752c34232543d4b0df4b6fe9ae4a96aca74e1bde35624c0e1e77b3766",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RR",
+    "run_id": 9,
+    "v0_commands_sha256": "de7492323221d7adf79886333d1d977e03eb0bb8e93fd92058c13dc9350b5cca",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.075-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "de6914c184886be02326a35e9d5991d3be5bbc313eddf27efbbad0ba481f4cac",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RR",
+    "run_id": 7,
+    "v0_commands_sha256": "25c0582f089d93d9ab705611c6edfca8bba8ed0770b2c9e070c3fd029fafb7b9",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.075-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FL",
+    "run_id": 11,
+    "v0_commands_sha256": "ff7209653b4d35d2f388f264e5039e056d32bdb89092041a85ba563275ac586f",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FL",
+    "run_id": 2,
+    "v0_commands_sha256": "888cd8292865a82e6e41ca52abf5d65fb74e8f12f4a874914b17a426b26f4b8a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FL",
+    "run_id": 7,
+    "v0_commands_sha256": "9141a69a0e82a8e65baec159ee4311172836efaeb7b7586932be069509a6ad47",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.075-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FR",
+    "run_id": 11,
+    "v0_commands_sha256": "a5507e96ba6a3751062d110c869060d93dfdbc8876ef85fce8ca6e7a8e2c5036",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.05-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FR",
+    "run_id": 2,
+    "v0_commands_sha256": "c9ac3abac24dd42e6ba0fcf2115e411e03e96ad2b716c46953fe919218b0fb28",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FR",
+    "run_id": 4,
+    "v0_commands_sha256": "219f26a089973fd812291f0b7678d67add728da334515ffc3ce986fabea4792e",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RL",
+    "run_id": 8,
+    "v0_commands_sha256": "bb9497004b20a4859a2c06a9fdfd8cc932f16e8cfc867cf9fafda1924dbe1b5c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RL",
+    "run_id": 3,
+    "v0_commands_sha256": "c4a9cf2bbe280517b2d73b68fc1344c2163fa2760b6893d3c1ca496762cf469a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.0-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RL",
+    "run_id": 4,
+    "v0_commands_sha256": "e89c30f0c7e58609ef3d9b963585a97ed41a117dd810f8ce6cfbfc6b4d1745fd",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.025-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RR",
+    "run_id": 9,
+    "v0_commands_sha256": "93292361ba0c7258570df0dc38be076d90d22a85676c60297f637e9c376a7ccc",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RR",
+    "run_id": 3,
+    "v0_commands_sha256": "4b2917a48985c868660226ebf7582e24552288086d36e584fb72d3478539ea54",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.025-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RR",
+    "run_id": 5,
+    "v0_commands_sha256": "ab302c109f52ab991bbeb8e917a721677fd1c3fd3906406147becf8da656ab65",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.05-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FL",
+    "run_id": 10,
+    "v0_commands_sha256": "90a4e4f7050c3a05b70573604487b5f4c4dcdd5e4fcc51e1ff9956cc0632ab95",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.0-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FL",
+    "run_id": 0,
+    "v0_commands_sha256": "880447bb04527766aafd2366b75c2506f187777c0b08f955fdd70a1cce394ef1",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.0-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FL",
+    "run_id": 4,
+    "v0_commands_sha256": "ae093c198766d43313469435d1b7e5750b20d13dd90dacebe2e7c93ae7805a67",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.075-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FR",
+    "run_id": 11,
+    "v0_commands_sha256": "e1a9ba118b98d6fce5a351e51538bfc87eeba6c1e5dde4ef8f81e0bd55c38d7c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FR",
+    "run_id": 2,
+    "v0_commands_sha256": "d1a1192fba92d7ef3655ac1de1d1d7c4b7d50dddc9c3f50b8f48e8df339c0d38",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FR",
+    "run_id": 7,
+    "v0_commands_sha256": "deec671a407e48d37ab877f22463a2e68e7ff2467eabb9e13ab7b7ee07ed4ad0",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.025-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RL",
+    "run_id": 9,
+    "v0_commands_sha256": "3df83c2a9ab5394bf4a6f1219a9e5c2ea9a78a5f0ad011a77c50204c4bc43cde",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.025-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RL",
+    "run_id": 1,
+    "v0_commands_sha256": "ed746b6371c58e63f15073b8e1058013bc68cc0d9ceb9ec5f80b6cc531e7c7e7",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.05-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RL",
+    "run_id": 6,
+    "v0_commands_sha256": "d06b32bdb2156ab8d87f67026c65fcadb806bb3cdfdc2d2e2d3afec16e2eae70",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.0-FS24-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RR",
+    "run_id": 8,
+    "v0_commands_sha256": "25c9916845fae7e985b71cf79b98398fbba9b82fd36c9c92fbd282f35e49155c",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.05-G4-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RR",
+    "run_id": 2,
+    "v0_commands_sha256": "2e700c669f5e645b2f68b5134a2d089f82a5bd7aaeeafcbfd30ca82492c52df9",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.075-RE1bF-level_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RR",
+    "run_id": 7,
+    "v0_commands_sha256": "55fe9da3972bbc152d3c2694fc2adb543e5c8ed864e13a31e00b06cda0012442",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FL",
+    "run_id": 10,
+    "v0_commands_sha256": "f20970fdf45c71f78527ac5b113e3067f05b435176716152a890257b18788fc3",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.025-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FL",
+    "run_id": 1,
+    "v0_commands_sha256": "44485289db76d7a17a560267c2ba790458dea94cc12dae2299d3291d3eb6b64b",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FL",
+    "run_id": 7,
+    "v0_commands_sha256": "9f545a1efcdb8e87c860a784007a04482620fb730cc1d66132a6032191d6c1aa",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.075-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FR",
+    "run_id": 11,
+    "v0_commands_sha256": "e71cbe6e386b2011d26fe537322df72e2cbbe41a6326429e5d95988b7d8f0d91",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FR",
+    "run_id": 3,
+    "v0_commands_sha256": "d5235e633fa478f422c6db3067838bfaa909e1a15ed32b1d9851011c7d47884b",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.025-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FR",
+    "run_id": 5,
+    "v0_commands_sha256": "e02b3114f2fdd447f0a85da87b5e96b25a71b6c0a908c4469d8e543c3b3f1649",
+    "v0_pass": false
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.0-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RL",
+    "run_id": 8,
+    "v0_commands_sha256": "1eac88a656f590ad9ecf54865dfdc859e004e5c9a9128012a650d987e27569f6",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.075-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RL",
+    "run_id": 3,
+    "v0_commands_sha256": "aad31a64c1710d82a2fa3e34c41c6cbb5971791fd6e1646dff5f25a7578e4eff",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.075-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RL",
+    "run_id": 7,
+    "v0_commands_sha256": "ba71c87938e8f6145c96c891888eab87389d816f176b3cd00093084ac01da559",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.05-FS24-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RR",
+    "run_id": 10,
+    "v0_commands_sha256": "a415df38fd70488d7b47b4e0efc8889f4b694a8a265719b0fe6667ee14ceb6dd",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.0-G4-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RR",
+    "run_id": 0,
+    "v0_commands_sha256": "c64792ce2a1a968112be297fe5eb9589f441d714c3a583519dcf06c4724c0b4a",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBL"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.05-RE1bF-ready_VBL.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RR",
+    "run_id": 6,
+    "v0_commands_sha256": "ed81d1f1f3462c9c5d1988469090729ce2395f21926e7e4ddbea206769a440fb",
+    "v0_pass": true
+   },
+   "head_only_declared": false
+  }
+ ]
+}

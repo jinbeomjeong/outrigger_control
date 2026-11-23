@@ -1,0 +1,1341 @@
+{
+ "schema": "r79_rod_fault_plan/1",
+ "faults": {
+  "cand=current#L2|s52|g6|0|g6|G1+J1@FL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r000-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|1|g6|G1+J1@FL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r001-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|2|g6|G1+J1@FL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r002-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|3|g6|G1+J1@FL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r003-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|4|g6|G1+J1@FR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r004-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|5|g6|G1+J1@FR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r005-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|6|g6|G1+J1@FR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r006-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|7|g6|G1+J1@FR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r007-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|8|g6|G1+J1@RL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r008-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|9|g6|G1+J1@RL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r009-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|10|g6|G1+J1@RL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r010-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|11|g6|G1+J1@RL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r011-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|12|g6|G1+J1@RR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r012-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|13|g6|G1+J1@RR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r013-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|14|g6|G1+J1@RR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r014-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|15|g6|G1+J1@RR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r015-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|16|g6|G1+J2@FL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r016-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|17|g6|G1+J2@FL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r017-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|18|g6|G1+J2@FL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r018-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|19|g6|G1+J2@FL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r019-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|20|g6|G1+J2@FR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r020-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|21|g6|G1+J2@FR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r021-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|22|g6|G1+J2@FR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r022-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|23|g6|G1+J2@FR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r023-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|24|g6|G1+J2@RL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r024-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|25|g6|G1+J2@RL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r025-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|26|g6|G1+J2@RL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r026-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|27|g6|G1+J2@RL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r027-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|28|g6|G1+J2@RR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r028-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|29|g6|G1+J2@RR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r029-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|30|g6|G1+J2@RR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r030-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|31|g6|G1+J2@RR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r031-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|40|g6|G1+S1@RL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r032-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|41|g6|G1+S1@RL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r033-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|42|g6|G1+S1@RL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r034-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|43|g6|G1+S1@RL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r035-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|44|g6|G1+S1@RR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r036-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|45|g6|G1+S1@RR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r037-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|46|g6|G1+S1@RR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r038-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|47|g6|G1+S1@RR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r039-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|48|ref|G1|top|Fs0": {
+   "fault_id": "12b-b3-s52-r040-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|49|ref|G1|top|Fs4": {
+   "fault_id": "12b-b3-s52-r041-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|50|ref|G1|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r042-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|51|ref|G1|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r043-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|52|ref|J1|top|Fs0": {
+   "fault_id": "12b-b3-s52-r044-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|53|ref|J1|top|Fs4": {
+   "fault_id": "12b-b3-s52-r045-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|54|ref|J1|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r046-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|55|ref|J1|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r047-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|56|ref|J2|top|Fs0": {
+   "fault_id": "12b-b3-s52-r048-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|57|ref|J2|top|Fs4": {
+   "fault_id": "12b-b3-s52-r049-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|58|ref|J2|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r050-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|59|ref|J2|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r051-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|60|ref|S1|top|Fs0": {
+   "fault_id": "12b-b3-s52-r052-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|61|ref|S1|top|Fs4": {
+   "fault_id": "12b-b3-s52-r053-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|62|ref|S1|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r054-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|63|ref|S1|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r055-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|64|g6r|rigid+J1@FL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r056-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|65|g6r|rigid+J1@FL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r057-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|66|g6r|rigid+J1@FL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r058-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|67|g6r|rigid+J1@FL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r059-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|68|g6r|rigid+J1@FR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r060-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|69|g6r|rigid+J1@FR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r061-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|70|g6r|rigid+J1@FR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r062-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|71|g6r|rigid+J1@FR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r063-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|72|g6r|rigid+J1@RL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r064-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|73|g6r|rigid+J1@RL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r065-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|74|g6r|rigid+J1@RL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r066-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|75|g6r|rigid+J1@RL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r067-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|76|g6r|rigid+J1@RR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r068-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|77|g6r|rigid+J1@RR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r069-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|78|g6r|rigid+J1@RR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r070-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|79|g6r|rigid+J1@RR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r071-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|80|g6r|rigid+J2@FL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r072-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|81|g6r|rigid+J2@FL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r073-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|82|g6r|rigid+J2@FL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r074-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|83|g6r|rigid+J2@FL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r075-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|84|g6r|rigid+J2@FR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r076-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|85|g6r|rigid+J2@FR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r077-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|86|g6r|rigid+J2@FR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r078-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|87|g6r|rigid+J2@FR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r079-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|88|g6r|rigid+J2@RL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r080-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|89|g6r|rigid+J2@RL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r081-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|90|g6r|rigid+J2@RL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r082-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|91|g6r|rigid+J2@RL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r083-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|92|g6r|rigid+J2@RR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r084-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|93|g6r|rigid+J2@RR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r085-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|94|g6r|rigid+J2@RR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r086-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|95|g6r|rigid+J2@RR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r087-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|104|g6r|rigid+S1@RL|top|Fs0": {
+   "fault_id": "12b-b3-s52-r088-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|105|g6r|rigid+S1@RL|top|Fs4": {
+   "fault_id": "12b-b3-s52-r089-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|106|g6r|rigid+S1@RL|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r090-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|107|g6r|rigid+S1@RL|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r091-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|108|g6r|rigid+S1@RR|top|Fs0": {
+   "fault_id": "12b-b3-s52-r092-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|109|g6r|rigid+S1@RR|top|Fs4": {
+   "fault_id": "12b-b3-s52-r093-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|110|g6r|rigid+S1@RR|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r094-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|111|g6r|rigid+S1@RR|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r095-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|112|ref|rigid|top|Fs0": {
+   "fault_id": "12b-b3-s52-r096-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|113|ref|rigid|top|Fs4": {
+   "fault_id": "12b-b3-s52-r097-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|114|ref|rigid|bottom|Fs0": {
+   "fault_id": "12b-b3-s52-r098-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g6|115|ref|rigid|bottom|Fs4": {
+   "fault_id": "12b-b3-s52-r099-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|0|slope|edge|top|4.0|ref|none|0": {
+   "fault_id": "12b-b3-s52-r100-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|1|slope|edge|top|4.0|FL|raised|140.0": {
+   "fault_id": "12b-b3-s52-r101-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|2|slope|edge|top|4.0|FL|raised|170.0": {
+   "fault_id": "12b-b3-s52-r102-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|3|slope|edge|top|4.0|FL|raised|200.0": {
+   "fault_id": "12b-b3-s52-r103-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|4|slope|edge|top|4.0|FL|raised|230.0": {
+   "fault_id": "12b-b3-s52-r104-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|5|slope|edge|top|4.0|FR|raised|140.0": {
+   "fault_id": "12b-b3-s52-r105-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|6|slope|edge|top|4.0|FR|raised|170.0": {
+   "fault_id": "12b-b3-s52-r106-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|7|slope|edge|top|4.0|FR|raised|200.0": {
+   "fault_id": "12b-b3-s52-r107-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|8|slope|edge|top|4.0|FR|raised|230.0": {
+   "fault_id": "12b-b3-s52-r108-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|9|slope|edge|top|4.0|RL|raised|140.0": {
+   "fault_id": "12b-b3-s52-r109-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|10|slope|edge|top|4.0|RL|raised|170.0": {
+   "fault_id": "12b-b3-s52-r110-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|11|slope|edge|top|4.0|RL|raised|200.0": {
+   "fault_id": "12b-b3-s52-r111-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|12|slope|edge|top|4.0|RL|raised|230.0": {
+   "fault_id": "12b-b3-s52-r112-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|13|slope|edge|top|4.0|RR|raised|140.0": {
+   "fault_id": "12b-b3-s52-r113-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|14|slope|edge|top|4.0|RR|raised|170.0": {
+   "fault_id": "12b-b3-s52-r114-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|15|slope|edge|top|4.0|RR|raised|200.0": {
+   "fault_id": "12b-b3-s52-r115-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|16|slope|edge|top|4.0|RR|raised|230.0": {
+   "fault_id": "12b-b3-s52-r116-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|17|slope|rpB|top|4.0|ref|none|0": {
+   "fault_id": "12b-b3-s52-r117-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|18|slope|rpB|top|4.0|FL|raised|140.0": {
+   "fault_id": "12b-b3-s52-r118-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|19|slope|rpB|top|4.0|FL|raised|170.0": {
+   "fault_id": "12b-b3-s52-r119-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|20|slope|rpB|top|4.0|FL|raised|200.0": {
+   "fault_id": "12b-b3-s52-r120-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|21|slope|rpB|top|4.0|FL|raised|230.0": {
+   "fault_id": "12b-b3-s52-r121-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|22|slope|rpB|top|4.0|FR|raised|140.0": {
+   "fault_id": "12b-b3-s52-r122-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|23|slope|rpB|top|4.0|FR|raised|170.0": {
+   "fault_id": "12b-b3-s52-r123-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|24|slope|rpB|top|4.0|FR|raised|200.0": {
+   "fault_id": "12b-b3-s52-r124-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|25|slope|rpB|top|4.0|FR|raised|230.0": {
+   "fault_id": "12b-b3-s52-r125-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|26|slope|rpB|top|4.0|RL|raised|140.0": {
+   "fault_id": "12b-b3-s52-r126-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|27|slope|rpB|top|4.0|RL|raised|170.0": {
+   "fault_id": "12b-b3-s52-r127-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|28|slope|rpB|top|4.0|RL|raised|200.0": {
+   "fault_id": "12b-b3-s52-r128-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|29|slope|rpB|top|4.0|RL|raised|230.0": {
+   "fault_id": "12b-b3-s52-r129-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|30|slope|rpB|top|4.0|RR|raised|140.0": {
+   "fault_id": "12b-b3-s52-r130-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|31|slope|rpB|top|4.0|RR|raised|170.0": {
+   "fault_id": "12b-b3-s52-r131-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|32|slope|rpB|top|4.0|RR|raised|200.0": {
+   "fault_id": "12b-b3-s52-r132-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|33|slope|rpB|top|4.0|RR|raised|230.0": {
+   "fault_id": "12b-b3-s52-r133-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|34|main|flat|top|4.0|FL|raised|200.0": {
+   "fault_id": "12b-b3-s52-r134-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|35|main|flat|top|4.0|FL|raised|290.0": {
+   "fault_id": "12b-b3-s52-r135-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|36|main|flat|top|4.0|FL|raised|320.0": {
+   "fault_id": "12b-b3-s52-r136-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|37|main|flat|top|4.0|FL|lowered|150.0": {
+   "fault_id": "12b-b3-s52-r137-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|38|main|flat|top|4.0|FR|raised|200.0": {
+   "fault_id": "12b-b3-s52-r138-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|39|main|flat|top|4.0|FR|raised|290.0": {
+   "fault_id": "12b-b3-s52-r139-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|40|main|flat|top|4.0|FR|raised|320.0": {
+   "fault_id": "12b-b3-s52-r140-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|41|main|flat|top|4.0|FR|lowered|150.0": {
+   "fault_id": "12b-b3-s52-r141-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|42|main|flat|top|4.0|RL|raised|200.0": {
+   "fault_id": "12b-b3-s52-r142-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|43|main|flat|top|4.0|RL|raised|290.0": {
+   "fault_id": "12b-b3-s52-r143-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|44|main|flat|top|4.0|RL|raised|320.0": {
+   "fault_id": "12b-b3-s52-r144-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|45|main|flat|top|4.0|RL|lowered|150.0": {
+   "fault_id": "12b-b3-s52-r145-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|46|main|flat|top|4.0|RR|raised|200.0": {
+   "fault_id": "12b-b3-s52-r146-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|47|main|flat|top|4.0|RR|raised|290.0": {
+   "fault_id": "12b-b3-s52-r147-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|48|main|flat|top|4.0|RR|raised|320.0": {
+   "fault_id": "12b-b3-s52-r148-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|g8|49|main|flat|top|4.0|RR|lowered|150.0": {
+   "fault_id": "12b-b3-s52-r149-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|0|rigid|B|0,0": {
+   "fault_id": "12b-b3-s52-r150-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|1|rigid|B|4.4,0": {
+   "fault_id": "12b-b3-s52-r151-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|2|rigid|B|-4.4,0": {
+   "fault_id": "12b-b3-s52-r152-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|3|rigid|B|0,3.2": {
+   "fault_id": "12b-b3-s52-r153-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|4|rigid|B|0,-3.2": {
+   "fault_id": "12b-b3-s52-r154-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|5|rigid|B|2.2,1.6": {
+   "fault_id": "12b-b3-s52-r155-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|6|rigid|B|-2.2,1.6": {
+   "fault_id": "12b-b3-s52-r156-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|7|rigid|B|2.2,-1.6": {
+   "fault_id": "12b-b3-s52-r157-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|8|rigid|B|-2.2,-1.6": {
+   "fault_id": "12b-b3-s52-r158-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|9|rigid|B|2.7355,1.7592": {
+   "fault_id": "12b-b3-s52-r159-RR-tau_R",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|10|rigid|B|5.5,0": {
+   "fault_id": "12b-b3-s52-r160-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|11|rigid|B|0,3.5": {
+   "fault_id": "12b-b3-s52-r161-FL-tau_R",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|12|rigid|B|0,-3.5": {
+   "fault_id": "12b-b3-s52-r162-FR-tau_C",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|14|G1|B|0,0": {
+   "fault_id": "12b-b3-s52-r163-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|16|J1|B|0,0": {
+   "fault_id": "12b-b3-s52-r164-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|18|J2|B|0,0": {
+   "fault_id": "12b-b3-s52-r165-RL-tau_R",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s52|ref|20|S1|B|0,0": {
+   "fault_id": "12b-b3-s52-r166-RR-tau_C",
+   "leg": "RR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  }
+ }
+}

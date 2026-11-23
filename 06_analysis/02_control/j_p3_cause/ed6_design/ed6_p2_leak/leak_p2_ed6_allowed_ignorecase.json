@@ -1,0 +1,508 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": true,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md"
+  ],
+  "leaks": [
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 1,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 20
+        }
+      ],
+      "text": "# 경로 2 넘김 7: 판 6(③ revision 6 + 잠김 출발 보상·사건 응답 순서) 정의 발췌(초안, 2026-11-24)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 24,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 52
+        }
+      ],
+      "text": "| `VBL`, `LSL1`~`LSL4` | VBJ·LSJ와 같음(P1~P4 + LC) | revision 6 | 켬 | j9_main J-P3, 확인 단계 (나) 격자, T-JR-12a |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 26,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 101
+        }
+      ],
+      "text": "| `VBLc005`, `VBLc04`, `VBLv05`, `VBLv15` | VBJ에서 P1 $c_v$ 0.005 / 0.04, `volume_scale` 0.5 / 1.5 | revision 6 | 켬 | 감도 행·확인 단계 (가) J-P3 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 27,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 43
+        }
+      ],
+      "text": "| `VBKL` | VBK와 같음(P1~P4 + 로드 센서 고장 계획) | revision 6 | 켬 | T-JR-12b, VBKL 줄 J-P3 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 35,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 32
+        }
+      ],
+      "text": "- 태그 기저 대응은 `final_C4G2_P3W` → revision 6이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 44,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 94
+        }
+      ],
+      "text": "3. `hydraulics_record.extend_bound_check.spec_edition` = `fe6f5844`. 판 6은 ③ 규칙을 바꾸지 않으므로 ③ revision 6을 정의한 판 5의 값 그대로다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 62,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 25
+        }
+      ],
+      "text": "- J-P3 정의는 앞 넘김 그대로다: ③ revision 6 규칙(넘김 6 1절), 분류, 판정 키, `judged_key_missing`, 헤드 전용 선언, B2 증거(k 규칙), 판정 행 normal 등급 이하."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 93,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "ed5_dictionary",
+          "column": 44
+        }
+      ],
+      "text": "- 넘김 6 2.7 (4)를 그대로 쓴다. 설정 이름은 VBK → VBKL, VBK0 → VBKL0로 바꾼다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 94,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 21
+        }
+      ],
+      "text": "- 판정 행: 기회 짝과 VBKL0 READY 미도달 짝의 VBKL 줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 109,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 20
+        }
+      ],
+      "text": "- 그 밖의 지표(새 FAULT, READY, L2 등급, 지배 읽기 감소율)는 기록이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 121,
+      "names": [
+        {
+          "name": "vbk0",
+          "category": "ed5_dictionary",
+          "column": 153
+        }
+      ],
+      "text": "- 그 밖의 정의는 넘김 6 2.2~2.9와 정오 1·정오 8 그대로다. 대상은 고장, 국면·트리거, 짝 동일성, 기회 분류, 목격 기회 $k$, (1) 새 FAULT, (2)+(3) $n_{23}$의 셈, A/A 기록, 교착 서명이다. 설정 이름은 VBK → VBKL, VBK0 → …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 132,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 24
+        }
+      ],
+      "text": "- 포함 줄: \"기회\"와 \"VBKL0 READY 미도달\" 줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 135,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 31
+        },
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 51
+        }
+      ],
+      "text": "- $s_{ij}$ = 1: 포함 줄이 VBKL0 READY 미도달(넘김 6 2.7의 READY 시각 읽기)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 140,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 33
+        }
+      ],
+      "text": "- 대상 사례: 두 블록 줄이 모두 포함되고 모두 READY에 닿은 사례"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 142,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 34
+        },
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 48
+        }
+      ],
+      "text": "- $a_{30}$: 그 가운데 $\\lvert t_{READY}(b1)-t_{READY}(b2)\\rvert$를 1×10⁻⁶ s로 반올림한 값이 30 s보다 큰 사례 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 144,
+      "names": [
+        {
+          "name": "JEFFREYS",
+          "category": "constants",
+          "column": 55
+        }
+      ],
+      "text": "1. $p_c\\sim\\mathrm{Beta}(K_c+0.5,\\ N_c-K_c+0.5)$(셀별 Jeffreys), $r_2 = 0.5\\cdot\\mathrm{Beta}(a_{30}+0.5,\\ n_{both}-a_{30}+0.5)$"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 155,
+      "names": [
+        {
+          "name": "ALPHA",
+          "category": "constants",
+          "column": 37
+        }
+      ],
+      "text": "5. 모든 재현을 모은 분포에서 $P(n_{23}>k)\\le\\alpha$ = **0.10**인 가장 작은 $k\\ge0$이 $k_{allow}$다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 159,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 37
+        }
+      ],
+      "text": "- $K_{TRw}$: VBKL0 b4 포함 줄(기회 + READY 미도달) 가운데 미도달 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 177,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 65
+        }
+      ],
+      "text": "> (1) 새 FAULT 0: 넘김 6 2.7 (1)과 정오 1 2.7 (1) 그대로(대상: 기회 짝과 VBKL0 READY 미도달 짝)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 178,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 11
+        }
+      ],
+      "text": "> (2)+(3) READY 지연·상실 $n_{23}$(기회 짝): 정오 8 2.7의 셈 그대로. $n_{23}\\le k_{allow}$이면 통과, 넘으면 실패. $k_{allow}$는 3.2의 결정 기록 값이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 187,
+      "names": [
+        {
+          "name": "ready",
+          "category": "outputs",
+          "column": 78
+        }
+      ],
+      "text": "> '기회 짝 $N_{opp}$개(쓴 블록 명시). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBKL0 READY 미도달 짝 수, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) $n_{23}$ ≤ $k_{allow}$(값과 결정 절차 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 202,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 85
+        }
+      ],
+      "text": "| 12b 보고 2 | rev 6 정체성 검사 | 판정한다: 태그, `rule_revision` 6, `spec_edition` `fe6f5844`, revision 표시, `lsb_components`. `carry_end_rule`·`retract_start_rule`은 기록이다(…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 213,
+      "names": [
+        {
+          "name": "REVISION",
+          "category": "ed5_dictionary",
+          "column": 14
+        }
+      ],
+      "text": "- 넘김 6의 1절(③ revision 6 규칙)과 3절(J-P3 정의, B2 증거, r79 key 판별, `stretch_mismatch` 처리)"
+    }
+  ],
+  "leak_names": [
+    "ALPHA",
+    "JEFFREYS",
+    "REVISION",
+    "ready",
+    "vbk0"
+  ],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 991,
+    "names_skipped_short": 0,
+    "leak_lines": 23,
+    "leak_names": 5,
+    "blocks": 0,
+    "error": 23,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "name_leak": 23
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 1,
+      "message": "REVISION (ed5_dictionary) — # 경로 2 넘김 7: 판 6(③ revision 6 + 잠김 출발 보상·사건 응답 순서) 정의 발췌(초안, 2026-11-24)",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 24,
+      "message": "REVISION (ed5_dictionary) — | `VBL`, `LSL1`~`LSL4` | VBJ·LSJ와 같음(P1~P4 + LC) | revision 6 | 켬 | j9_main J-P3, 확인 단계 (나) 격자, T-JR-12a |",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 26,
+      "message": "REVISION (ed5_dictionary) — | `VBLc005`, `VBLc04`, `VBLv05`, `VBLv15` | VBJ에서 P1 $c_v$ 0.005 / 0.04, `volume_scale` 0.5 / 1.5 | revision 6 | 켬 | 감도 행·확인 단계 (가) J-P3 |",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 27,
+      "message": "REVISION (ed5_dictionary) — | `VBKL` | VBK와 같음(P1~P4 + 로드 센서 고장 계획) | revision 6 | 켬 | T-JR-12b, VBKL 줄 J-P3 |",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 35,
+      "message": "REVISION (ed5_dictionary) — - 태그 기저 대응은 `final_C4G2_P3W` → revision 6이다.",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 44,
+      "message": "REVISION (ed5_dictionary) — 3. `hydraulics_record.extend_bound_check.spec_edition` = `fe6f5844`. 판 6은 ③ 규칙을 바꾸지 않으므로 ③ revision 6을 정의한 판 5의 값 그대로다.",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 62,
+      "message": "REVISION (ed5_dictionary) — - J-P3 정의는 앞 넘김 그대로다: ③ revision 6 규칙(넘김 6 1절), 분류, 판정 키, `judged_key_missing`, 헤드 전용 선언, B2 증거(k 규칙), 판정 행 normal 등급 이하.",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 93,
+      "message": "vbk0 (ed5_dictionary) — - 넘김 6 2.7 (4)를 그대로 쓴다. 설정 이름은 VBK → VBKL, VBK0 → VBKL0로 바꾼다.",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 94,
+      "message": "ready (outputs) — - 판정 행: 기회 짝과 VBKL0 READY 미도달 짝의 VBKL 줄",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 109,
+      "message": "ready (outputs) — - 그 밖의 지표(새 FAULT, READY, L2 등급, 지배 읽기 감소율)는 기록이다.",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 121,
+      "message": "vbk0 (ed5_dictionary) — - 그 밖의 정의는 넘김 6 2.2~2.9와 정오 1·정오 8 그대로다. 대상은 고장, 국면·트리거, 짝 동일성, 기회 분류, 목격 기회 $k$, (1) 새 FAULT, (2)+(3) $n_{23}$의 셈, A/A 기록, 교착 서명이다. 설정 이름은 VBK → VBKL, VBK0 → …",
+      "target": "vbk0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 132,
+      "message": "ready (outputs) — - 포함 줄: \"기회\"와 \"VBKL0 READY 미도달\" 줄",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 135,
+      "message": "ready (outputs), ready (outputs) — - $s_{ij}$ = 1: 포함 줄이 VBKL0 READY 미도달(넘김 6 2.7의 READY 시각 읽기)",
+      "target": "ready, ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 140,
+      "message": "ready (outputs) — - 대상 사례: 두 블록 줄이 모두 포함되고 모두 READY에 닿은 사례",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 142,
+      "message": "ready (outputs), ready (outputs) — - $a_{30}$: 그 가운데 $\\lvert t_{READY}(b1)-t_{READY}(b2)\\rvert$를 1×10⁻⁶ s로 반올림한 값이 30 s보다 큰 사례 수",
+      "target": "ready, ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 144,
+      "message": "JEFFREYS (constants) — 1. $p_c\\sim\\mathrm{Beta}(K_c+0.5,\\ N_c-K_c+0.5)$(셀별 Jeffreys), $r_2 = 0.5\\cdot\\mathrm{Beta}(a_{30}+0.5,\\ n_{both}-a_{30}+0.5)$",
+      "target": "JEFFREYS"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 155,
+      "message": "ALPHA (constants) — 5. 모든 재현을 모은 분포에서 $P(n_{23}>k)\\le\\alpha$ = **0.10**인 가장 작은 $k\\ge0$이 $k_{allow}$다.",
+      "target": "ALPHA"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 159,
+      "message": "ready (outputs) — - $K_{TRw}$: VBKL0 b4 포함 줄(기회 + READY 미도달) 가운데 미도달 수",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 177,
+      "message": "ready (outputs) — > (1) 새 FAULT 0: 넘김 6 2.7 (1)과 정오 1 2.7 (1) 그대로(대상: 기회 짝과 VBKL0 READY 미도달 짝).",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 178,
+      "message": "ready (outputs) — > (2)+(3) READY 지연·상실 $n_{23}$(기회 짝): 정오 8 2.7의 셈 그대로. $n_{23}\\le k_{allow}$이면 통과, 넘으면 실패. $k_{allow}$는 3.2의 결정 기록 값이다.",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 187,
+      "message": "ready (outputs) — > '기회 짝 $N_{opp}$개(쓴 블록 명시). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBKL0 READY 미도달 짝 수, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) $n_{23}$ ≤ $k_{allow}$(값과 결정 절차 …",
+      "target": "ready"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 202,
+      "message": "REVISION (ed5_dictionary) — | 12b 보고 2 | rev 6 정체성 검사 | 판정한다: 태그, `rule_revision` 6, `spec_edition` `fe6f5844`, revision 표시, `lsb_components`. `carry_end_rule`·`retract_start_rule`은 기록이다(…",
+      "target": "REVISION"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 213,
+      "message": "REVISION (ed5_dictionary) — - 넘김 6의 1절(③ revision 6 규칙)과 3절(J-P3 정의, B2 증거, r79 key 판별, `stretch_mismatch` 처리)",
+      "target": "REVISION"
+    }
+  ]
+}

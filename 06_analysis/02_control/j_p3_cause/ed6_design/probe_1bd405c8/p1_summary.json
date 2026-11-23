@@ -1,0 +1,334 @@
+{
+ "probe_jsonl_sha256": "efbf5d2333cb4a39fd84060bda09c0db3d5f325cce4ded1fdd59254e8f9ff1c6",
+ "share_sha256": "5f4ff953d67f3444d1f84f3eb0491328137be76def707e447aaccffbd649a09a",
+ "units": 320,
+ "failed_units_by_arm": {
+  "a2": 27,
+  "b": 9,
+  "a2b": 9,
+  "a1b": 3,
+  "a1a2": 20,
+  "a1a2b": 1,
+  "a1a2bh": 8,
+  "a1a2b1": 20
+ },
+ "failed_keys_by_arm_plant": {
+  "a2": {
+   "J": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0",
+    "R15_o0.0",
+    "S5_e0.0"
+   ],
+   "c005": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "c04": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0",
+    "R15_o0.0",
+    "R15_o0.05"
+   ],
+   "v05": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0",
+    "R15_o0.0",
+    "R15_o0.05"
+   ],
+   "v15": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0",
+    "R15_o0.0"
+   ]
+  },
+  "b": {
+   "J": [
+    "R15_o0.0",
+    "R15_o0.05",
+    "S5_e0.0"
+   ],
+   "c005": [],
+   "c04": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R15_o0.0"
+   ],
+   "v05": [
+    "R15_o0.0"
+   ],
+   "v15": [
+    "R12_top-FL-Fs8-o0.0",
+    "R15_o0.0",
+    "R15_o0.05"
+   ]
+  },
+  "a2b": {
+   "J": [
+    "R15_o0.0",
+    "S5_e0.0"
+   ],
+   "c005": [],
+   "c04": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R15_o0.0",
+    "R15_o0.05"
+   ],
+   "v05": [
+    "R15_o0.0",
+    "R15_o0.05"
+   ],
+   "v15": [
+    "R12_top-FL-Fs8-o0.0",
+    "R15_o0.0"
+   ]
+  },
+  "a1b": {
+   "J": [],
+   "c005": [],
+   "c04": [],
+   "v05": [
+    "R15_o0.05"
+   ],
+   "v15": [
+    "R12_top-FL-Fs8-o0.0",
+    "R15_o0.05"
+   ]
+  },
+  "a1a2": {
+   "J": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "c005": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "c04": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "v05": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "v15": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "a1a2b": {
+   "J": [],
+   "c005": [],
+   "c04": [],
+   "v05": [],
+   "v15": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a1a2bh": {
+   "J": [
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   "c005": [
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   "c04": [
+    "R12_top-FL-Fs8-o0.0",
+    "R15_o0.0"
+   ],
+   "v05": [],
+   "v15": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "a1a2b1": {
+   "J": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "c005": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "c04": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "v05": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   "v15": [
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  }
+ },
+ "a1a2b_fail_items": {
+  "v15": [
+   {
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   }
+  ]
+ },
+ "a1a2bh_fail_items": {
+  "J": [
+   {
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   }
+  ],
+  "c005": [
+   {
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   }
+  ],
+  "c04": [
+   {
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   },
+   {
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J1",
+    "kind": "fail",
+    "detail": "gate end_att",
+    "base_other_phase_has_it": false
+   },
+   {
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J5",
+    "kind": "fail",
+    "detail": "t_back 37.7 -> None",
+    "base_other_phase_has_it": false
+   },
+   {
+    "row": "R15",
+    "phase": "offset 0.0",
+    "item": "J4",
+    "kind": "fail",
+    "detail": "final ready -> probe",
+    "base_other_phase_has_it": false
+   }
+  ],
+  "v15": [
+   {
+    "row": "R12",
+    "phase": "offset 0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   },
+   {
+    "row": "R12",
+    "phase": "top|FL|8|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   },
+   {
+    "row": "R12",
+    "phase": "top|FR|4|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   },
+   {
+    "row": "R12",
+    "phase": "bottom|FL|4|0.0",
+    "item": "J7",
+    "kind": "fail",
+    "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "base_other_phase_has_it": false
+   }
+  ]
+ },
+ "share_components": {
+  "A_i": {
+   "keep": true,
+   "rule": "kept: failed keys a2b 9 >= a1a2b 1",
+   "activation": 1355,
+   "c04_stall_lines": {
+    "a2b": 2,
+    "a1a2b": 0
+   }
+  },
+  "A_ii": {
+   "keep": true,
+   "rule": "kept: failed keys a1b 3 >= a1a2b 1",
+   "activation": 2294
+  },
+  "B": {
+   "keep": true,
+   "rule": "kept: failed keys a1a2 20 >= a1a2b 1",
+   "activation": 360
+  },
+  "B3": {
+   "keep": true,
+   "activation": 320,
+   "rule": "kept: failed keys a1a2b1 20 vs a1a2b 1 (drop at 2 fewer)"
+  }
+ },
+ "kept": [
+  "A_i",
+  "A_ii",
+  "B",
+  "B3"
+ ]
+}

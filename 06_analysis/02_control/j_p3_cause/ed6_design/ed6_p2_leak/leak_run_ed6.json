@@ -1,0 +1,37 @@
+{
+ "by": "verif-protocol-auditor, pre-seal audit 2026-11-24 (spec v6 revision 12)",
+ "handoff": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+ "handoff_sha256": "8f160c83c60a5c7e347908b6622ec8ab40d5dfe50aa65017cc2812b22c7bd75a",
+ "names": "p1_names_ed6.json (build_names_ed6.py)",
+ "tool": "~/.claude/tools/verif/handoff_leak.py (python-dev -I -B)",
+ "runs": {
+  "leak_p2_ed6_raw.json": "no --allow: 48 lines / 15 names, all spec-defined rule vocabulary or LaTeX symbols",
+  "leak_p2_ed6_allowed.json": "--allow <list below>: 0 leak lines (exit 0)",
+  "leak_p2_ed6_allowed_ignorecase.json": "--allow + --ignore-case: 23 lines / 5 names (REVISION, vbk0, ready, JEFFREYS, ALPHA): ordinary words / setting VBK0, not leaks",
+  "leak_positive_control_ed6.json": "scratchpad copy of the handoff with 2 inserted lines (6 dictionary names): 2 lines / 6 names caught"
+ },
+ "allow": [
+  "A_ii",
+  "LSL1",
+  "LSL4",
+  "VBKL",
+  "VBKL0",
+  "VBL0",
+  "_LSB",
+  "alpha",
+  "final_C4G2_P3W",
+  "final_C4G2_P3W_LAS_K1_LSB",
+  "hydraulic_options",
+  "lsb_components",
+  "tau_C",
+  "tau_R",
+  "volume_scale"
+ ],
+ "allow_reason": {
+  "VBL0/VBKL/VBKL0/LSL1/LSL4": "setting names defined by spec 3.4 (Q6-1) and used by the judgement",
+  "final_C4G2_P3W_LAS_K1_LSB/final_C4G2_P3W/_LSB": "tag and tag base defined by spec 6.1 (G-7, rule text)",
+  "lsb_components/A_ii": "record key and its sealed value read by the identity check (spec 3.4, 6.1)",
+  "hydraulic_options/volume_scale": "line key read by identity item 4 / plant parameter of the setting table (spec 3.4, 6.1)",
+  "alpha/tau_C/tau_R": "LaTeX symbols (\\alpha, \\tau_C, \\tau_R)"
+ }
+}

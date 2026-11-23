@@ -1,0 +1,36 @@
+{
+ "by": "verif-protocol-auditor, short re-audit 2026-11-24 (spec v6 revision 13)",
+ "handoff": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+ "handoff_sha256": "4b3c6b6c32d856740e0e61a40a65953a5d515f72a84ff2bda723937634c3d151",
+ "names": "p1_names_ed6.json (reused, unchanged)",
+ "runs": {
+  "leak_p2_ed6_r13_raw.json": "no --allow: 50 lines / 17 names (15 of revision 12 + v0_pass, seed_repeats)",
+  "leak_p2_ed6_r13_allowed.json": "--allow <list>: 0 leak lines (exit 0)",
+  "leak_p2_ed6_r13_allowed_ignorecase.json": "--allow + --ignore-case: 25 lines / 7 names (ALPHA, JEFFREYS, REVISION, ready, vbk0 = ordinary words / setting VBK0; seed_repeats, v0_pass = allowed names in other case)",
+  "leak_positive_control_ed6_r13.json": "scratchpad copy with 2 inserted lines (6 dictionary names): all 6 caught"
+ },
+ "allow": [
+  "A_ii",
+  "LSL1",
+  "LSL4",
+  "VBKL",
+  "VBKL0",
+  "VBL0",
+  "_LSB",
+  "alpha",
+  "final_C4G2_P3W",
+  "final_C4G2_P3W_LAS_K1_LSB",
+  "hydraulic_options",
+  "lsb_components",
+  "tau_C",
+  "tau_R",
+  "volume_scale",
+  "v0_pass",
+  "seed_repeats"
+ ],
+ "allow_added_r13": {
+  "v0_pass": "field of the input key list confirm_b_grid192.json read by the judgement (spec 6.3, handoff 2.4)",
+  "seed_repeats": "field of the 12b selection output selection.json that path 2 checks (spec 6.4, handoff 3.1)"
+ },
+ "allow_reason_r12": "see leak_run_ed6.json"
+}

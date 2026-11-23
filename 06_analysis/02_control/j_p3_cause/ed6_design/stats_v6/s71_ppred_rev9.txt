@@ -1,0 +1,23 @@
+alpha 0.1; thinning {'pathwise_le': True, 'P_gt7_c1': 0.7777, 'P_gt7_c03': 0.0104}
+b12|fpre0.0|spec           k q05/50/95 [4, 9, 13] | FPR 3.35% (cond p95 17.3%) | power d2 59.1% d3 84.0%
+b12|fpre0.0|incl           k q05/50/95 [5, 9, 14] | FPR 1.80% (cond p95 10.0%) | power d2 55.7% d3 82.7%
+b12|fpre0.5|spec           k q05/50/95 [5, 9, 12] | FPR 2.94% (cond p95 14.3%) | power d2 60.1% d3 84.3%
+b12|fpre0.5|incl           k q05/50/95 [4, 9, 13] | FPR 2.87% (cond p95 14.6%) | power d2 55.1% d3 80.6%
+b124|pT=pR|shared|A        k q05/50/95 [7, 13, 20] | FPR 1.27% (cond p95 6.0%) | power d2 60.7% d3 87.2%
+b124|pT=pR|shared|B        k q05/50/95 [6, 11, 16] | FPR 2.07% (cond p95 12.1%) | power d2 73.7% d3 93.6%
+b124|pT=pR|shared|C        k q05/50/95 [7, 12, 18] | FPR 1.22% (cond p95 5.9%) | power d2 66.0% d3 90.5%
+b124|pT=pR|indep|A         k q05/50/95 [8, 13, 20] | FPR 0.57% (cond p95 1.5%) | power d2 56.3% d3 85.0%
+b124|pT=pR|indep|B         k q05/50/95 [6, 11, 16] | FPR 2.34% (cond p95 8.9%) | power d2 71.8% d3 93.2%
+b124|pT=pR|indep|C         k q05/50/95 [7, 12, 18] | FPR 1.78% (cond p95 9.4%) | power d2 63.4% d3 89.8%
+b124|pT=pC|shared|A        k q05/50/95 [6, 12, 18] | FPR 4.32% (cond p95 32.7%) | power d2 71.8% d3 92.9%
+b124|pT=pC|shared|B        k q05/50/95 [6, 13, 21] | FPR 2.81% (cond p95 13.2%) | power d2 60.3% d3 86.1%
+b124|pT=pC|shared|C        k q05/50/95 [11, 16, 22] | FPR 0.36% (cond p95 0.4%) | power d2 36.5% d3 70.7%
+b124|pT=pC|indep|A         k q05/50/95 [8, 13, 21] | FPR 3.44% (cond p95 17.2%) | power d2 66.9% d3 88.7%
+b124|pT=pC|indep|B         k q05/50/95 [7, 14, 21] | FPR 2.61% (cond p95 14.8%) | power d2 61.8% d3 86.5%
+b124|pT=pC|indep|C         k q05/50/95 [12, 18, 24] | FPR 0.14% (cond p95 1.1%) | power d2 31.2% d3 63.9%
+b124|pT=2pC|shared|A       k q05/50/95 [7, 11, 17] | FPR 4.96% (cond p95 33.5%) | power d2 74.0% d3 93.5%
+b124|pT=2pC|shared|B       k q05/50/95 [8, 15, 21] | FPR 0.93% (cond p95 6.8%) | power d2 47.0% d3 78.6%
+b124|pT=2pC|shared|C       k q05/50/95 [12, 18, 25] | FPR 0.01% (cond p95 0.0%) | power d2 22.1% d3 57.7%
+b124|pT=2pC|indep|A        k q05/50/95 [8, 13, 19] | FPR 12.74% (cond p95 68.6%) | power d2 81.5% d3 95.5%
+b124|pT=2pC|indep|B        k q05/50/95 [9, 20, 29] | FPR 3.65% (cond p95 23.1%) | power d2 36.0% d3 62.1%
+b124|pT=2pC|indep|C        k q05/50/95 [17, 25, 31] | FPR 0.05% (cond p95 0.1%) | power d2 12.4% d3 36.0%

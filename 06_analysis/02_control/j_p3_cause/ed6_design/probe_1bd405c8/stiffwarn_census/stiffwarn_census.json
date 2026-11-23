@@ -1,0 +1,97 @@
+{
+ "event": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+ "rule": "the whole T4h event list of every line; phase = the last T4h read at or before the event",
+ "inputs": {
+  "probe": {
+   "path": "06_analysis/02_control/j_p3_cause/j9_runs/1bd405c8/ed6_probe_a1/ed6_probe.jsonl",
+   "sha256": "efbf5d2333cb4a39fd84060bda09c0db3d5f325cce4ded1fdd59254e8f9ff1c6"
+  },
+  "b1off": {
+   "path": "06_analysis/02_control/j_p3_cause/ed6_design/probe_1bd405c8/b1off_check/ed6_probe_a1a2b3.jsonl",
+   "sha256": "cbdb4d28df9a7e7f16d012b25728f5990cc876ec65219dfa45f03d691621c062"
+  },
+  "j9main": {
+   "path": "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/j9main_a1/j9_main.jsonl",
+   "sha256": "883a2538f61d2a6a6c577c9a327601fc04da076b212db9bcccad22694817c001"
+  }
+ },
+ "counts": {
+  "probe": {
+   "lines": 320,
+   "error_lines": 0,
+   "lines_with_warning": 14,
+   "warnings": 26,
+   "warning_lines_by_setting": {
+    "P6-J-a1a2bh": 1,
+    "P6-c005-a1a2bh": 1,
+    "P6-c04-a1a2bh": 1,
+    "P6-v15-a2": 1,
+    "P6-v15-b": 1,
+    "P6-v15-a2b": 1,
+    "P6-v15-a1b": 1,
+    "P6-v15-a1a2": 1,
+    "P6-v15-a1a2b": 1,
+    "P6-v15-a1a2bh": 4,
+    "P6-v15-a1a2b1": 1
+   },
+   "warning_lines_by_key": {
+    "R12_top-FL-Fs8-o0.0": 11,
+    "R12_o0.0": 1,
+    "R12_top-FR-Fs4-o0.0": 1,
+    "R12_bottom-FL-Fs4-o0.0": 1
+   },
+   "warnings_by_phase": {
+    "ready": 26
+   },
+   "sole_warning_lines": 14,
+   "warning_lines_by_arm": {
+    "a1a2bh": 7,
+    "a2": 1,
+    "b": 1,
+    "a2b": 1,
+    "a1b": 1,
+    "a1a2": 1,
+    "a1a2b": 1,
+    "a1a2b1": 1
+   },
+   "warning_lines_by_plant": {
+    "J": 1,
+    "c005": 1,
+    "c04": 1,
+    "v15": 11
+   }
+  },
+  "b1off": {
+   "lines": 40,
+   "error_lines": 0,
+   "lines_with_warning": 1,
+   "warnings": 2,
+   "warning_lines_by_setting": {
+    "P6-v15-a1a2b3": 1
+   },
+   "warning_lines_by_key": {
+    "R12_top-FL-Fs8-o0.0": 1
+   },
+   "warnings_by_phase": {
+    "ready": 2
+   },
+   "sole_warning_lines": 1,
+   "warning_lines_by_arm": {
+    "a1a2b3": 1
+   },
+   "warning_lines_by_plant": {
+    "v15": 1
+   }
+  },
+  "j9main": {
+   "lines": 388,
+   "error_lines": 0,
+   "lines_with_warning": 0,
+   "warnings": 0,
+   "warning_lines_by_setting": {},
+   "warning_lines_by_key": {},
+   "warnings_by_phase": {},
+   "sole_warning_lines": 0
+  }
+ }
+}

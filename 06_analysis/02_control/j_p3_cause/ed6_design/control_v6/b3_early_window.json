@@ -1,0 +1,46 @@
+{
+ "drop_to_r5_s": {
+  "n": 32,
+  "min": 0.5,
+  "median": 0.6,
+  "max": 0.7
+ },
+ "r5_to_reapproach_s": {
+  "n": 32,
+  "min": 0.3,
+  "median": 0.4,
+  "max": 0.4
+ },
+ "window_reads": {
+  "n": 32,
+  "min": 3,
+  "median": 4.0,
+  "max": 4
+ },
+ "heave_mean_mm_s": {
+  "n": 32,
+  "min": -0.801,
+  "median": -0.7024999999999999,
+  "max": -0.558
+ },
+ "twist_mean_mm_s": {
+  "n": 32,
+  "min": -0.456,
+  "median": 0.3235,
+  "max": 0.427
+ },
+ "resid_max_mm_s": {
+  "n": 32,
+  "min": 0.095,
+  "median": 0.127,
+  "max": 0.141
+ },
+ "min_leg_force_at_r5_kN": {
+  "n": 32,
+  "min": 36.88,
+  "median": 42.04,
+  "max": 50.4
+ },
+ "rows": 32,
+ "r5_leg_equals_min_leg": 32
+}

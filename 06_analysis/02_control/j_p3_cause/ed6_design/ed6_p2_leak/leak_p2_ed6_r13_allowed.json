@@ -1,0 +1,28 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": false,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md"
+  ],
+  "leaks": [],
+  "leak_names": [],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 989,
+    "names_skipped_short": 0,
+    "leak_lines": 0,
+    "leak_names": 0,
+    "blocks": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}

@@ -1,0 +1,54 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": false,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md"
+  ],
+  "leaks": [
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 17,
+      "names": [
+        {
+          "name": "ed6_design",
+          "category": "folders",
+          "column": 47
+        }
+      ],
+      "text": "- 경로 2는 판 6 명세 원문, 판 5 원문·정오 원문, 판 6 설계 폴더 `ed6_design/`(봉인 전 감사 원문 포함)를 열지 않는다. 중립 사본으로 받은 입력 파일(키 목록, 선정 출력)은 예외다."
+    }
+  ],
+  "leak_names": [
+    "ed6_design"
+  ],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 989,
+    "names_skipped_short": 0,
+    "leak_lines": 1,
+    "leak_names": 1,
+    "blocks": 0,
+    "error": 1,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "name_leak": 1
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 17,
+      "message": "ed6_design (folders) — - 경로 2는 판 6 명세 원문, 판 5 원문·정오 원문, 판 6 설계 폴더 `ed6_design/`(봉인 전 감사 원문 포함)를 열지 않는다. 중립 사본으로 받은 입력 파일(키 목록, 선정 출력)은 예외다.",
+      "target": "ed6_design"
+    }
+  ]
+}

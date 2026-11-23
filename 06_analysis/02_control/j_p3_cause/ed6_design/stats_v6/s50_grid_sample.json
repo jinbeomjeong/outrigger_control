@@ -1,0 +1,23 @@
+{
+ "seed": 20261123,
+ "n_unique_runs": 672,
+ "n_clusters": 192,
+ "n_selected": 192,
+ "n_selected_v0_pass": 174,
+ "n_clusters_no_v0_pass": 18,
+ "by_event": {
+  "FS24": {
+   "n": 64,
+   "v0_pass": 62
+  },
+  "G4": {
+   "n": 64,
+   "v0_pass": 64
+  },
+  "RE1bF": {
+   "n": 64,
+   "v0_pass": 48
+  }
+ },
+ "csv_sha256": "6170e240ddb49eb8ff75bcf8189d571b524e952df2e4f3ffe9cf34448b4c8b5f"
+}

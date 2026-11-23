@@ -1,0 +1,113 @@
+self_checks {'spec_single_cycle': True, 'deadbeat_hits': True, 'ok': True}
+== A(ii) delivered command X_total [mm] (spec / deadbeat) ==
+x_lb   0.1: spec 0.523 (fill 1 cyc, total 1) | deadbeat 0.100 (2 cyc) [np.float64(0.999), np.float64(0.001)]
+x_lb   0.2: spec 0.523 (fill 1 cyc, total 1) | deadbeat 0.200 (2 cyc) [np.float64(1.998), np.float64(0.002)]
+x_lb   0.4: spec 0.523 (fill 1 cyc, total 1) | deadbeat 0.400 (2 cyc) [np.float64(3.999), np.float64(0.001)]
+x_lb 0.523: spec 0.523 (fill 1 cyc, total 1) | deadbeat 0.523 (2 cyc) [np.float64(5.228), np.float64(0.002)]
+x_lb   1.0: spec 2.092 (fill 2 cyc, total 3) | deadbeat 1.000 (3 cyc) [np.float64(5.231), np.float64(4.765), np.float64(0.004)]
+x_lb   1.7: spec 4.708 (fill 3 cyc, total 5) | deadbeat 1.700 (4 cyc) [np.float64(5.231), np.float64(8.495), np.float64(3.274), np.float64(0.0)]
+x_lb   2.5: spec 4.708 (fill 3 cyc, total 5) | deadbeat 2.500 (6 cyc) [np.float64(5.231), np.float64(10.462), np.float64(7.266), np.float64(2.037), np.float64(0.004), np.float64(0.001)]
+x_lb   3.5: spec 8.370 (fill 4 cyc, total 7) | deadbeat 3.500 (7 cyc) [np.float64(5.231), np.float64(10.462), np.float64(11.66), np.float64(6.435), np.float64(1.207), np.float64(0.003), np.float64(0.001)]
+== kappa: p_overfill / overfill p99 mm / max / fill fraction median / x_lb median ==
+exclude|bhose_lo0.5|k1.0       0.00% 0.000 0.014 0.22 0.40
+exclude|bhose_lo0.5|k0.9       0.00% 0.000 -0.021 0.20 0.36
+exclude|bhose_lo0.5|k0.8       0.00% 0.000 -0.056 0.18 0.32
+exclude|bhose_lo0.5|k0.7       0.00% 0.000 -0.090 0.16 0.28
+exclude|bhose_lo0.5|k0.6       0.00% 0.000 -0.113 0.13 0.24
+exclude|bhose_lo1.0|k1.0       0.00% 0.000 -0.027 0.20 0.35
+exclude|bhose_lo1.0|k0.9       0.00% 0.000 -0.059 0.18 0.32
+exclude|bhose_lo1.0|k0.8       0.00% 0.000 -0.089 0.16 0.28
+exclude|bhose_lo1.0|k0.7       0.00% 0.000 -0.109 0.14 0.25
+exclude|bhose_lo1.0|k0.6       0.00% 0.000 -0.130 0.12 0.21
+estimate|bhose_lo0.5|k1.0      0.34% 0.000 0.473 0.51 0.88
+estimate|bhose_lo0.5|k0.9      0.03% 0.000 0.253 0.46 0.79
+estimate|bhose_lo0.5|k0.8      0.00% 0.000 0.105 0.41 0.70
+estimate|bhose_lo0.5|k0.7      0.00% 0.000 -0.026 0.35 0.61
+estimate|bhose_lo0.5|k0.6      0.00% 0.000 -0.095 0.30 0.53
+estimate|bhose_lo1.0|k1.0      0.19% 0.000 0.441 0.48 0.83
+estimate|bhose_lo1.0|k0.9      0.02% 0.000 0.231 0.43 0.75
+estimate|bhose_lo1.0|k0.8      0.00% 0.000 0.084 0.38 0.66
+estimate|bhose_lo1.0|k0.7      0.00% 0.000 -0.044 0.33 0.58
+estimate|bhose_lo1.0|k0.6      0.00% 0.000 -0.112 0.29 0.50
+nominal|bhose_lo0.5|k1.0      40.80% 0.949 1.219 0.91 1.61
+nominal|bhose_lo0.5|k0.9      31.32% 0.795 1.063 0.82 1.45
+nominal|bhose_lo0.5|k0.8      22.79% 0.642 0.907 0.73 1.29
+nominal|bhose_lo0.5|k0.7      15.14% 0.491 0.761 0.64 1.13
+nominal|bhose_lo0.5|k0.6       8.83% 0.339 0.617 0.55 0.97
+nominal|bhose_lo1.0|k1.0      38.05% 0.911 1.177 0.89 1.56
+nominal|bhose_lo1.0|k0.9      29.11% 0.761 1.028 0.80 1.41
+nominal|bhose_lo1.0|k0.8      20.97% 0.613 0.886 0.71 1.25
+nominal|bhose_lo1.0|k0.7      13.86% 0.465 0.745 0.62 1.09
+nominal|bhose_lo1.0|k0.6       8.01% 0.317 0.603 0.53 0.94
+need_true q01/10/50/90/99 [0.5547860031475573, 0.9615755419219983, 1.7505482827068537, 2.6259364179719764, 3.4708910165072515]
+== B: sigma_F 0.321 kN ==
+B1 off0.0|m0.5|N1|W50      95.3291%
+B1 off0.0|m0.5|N2|W50      15.9206%
+B1 off0.0|m0.5|N3|W50       1.0029%
+B1 off0.0|m1.0|N1|W50       4.4366%
+B1 off0.0|m1.0|N2|W50       0.0040%
+B1 off0.0|m1.0|N3|W50       0.0000%
+B1 off0.0|m1.5|N1|W50       0.0072%
+B1 off0.0|m1.5|N2|W50       0.0000%
+B1 off0.0|m1.5|N3|W50       0.0000%
+B1 off0.0|m2.0|N1|W50       0.0000%
+B1 off0.0|m2.0|N2|W50       0.0000%
+B1 off0.0|m2.0|N3|W50       0.0000%
+B1 off0.0|m3.0|N1|W50       0.0000%
+B1 off0.0|m3.0|N2|W50       0.0000%
+B1 off0.0|m3.0|N3|W50       0.0000%
+B1 off0.0|m5.0|N1|W50       0.0000%
+B1 off0.0|m5.0|N2|W50       0.0000%
+B1 off0.0|m5.0|N3|W50       0.0000%
+B1 off0.5|m0.5|N1|W50     100.0000%
+B1 off0.5|m0.5|N2|W50      99.9999%
+B1 off0.5|m0.5|N3|W50      99.8354%
+B1 off0.5|m1.0|N1|W50      95.3291%
+B1 off0.5|m1.0|N2|W50      15.9206%
+B1 off0.5|m1.0|N3|W50       1.0029%
+B1 off0.5|m1.5|N1|W50       4.4366%
+B1 off0.5|m1.5|N2|W50       0.0040%
+B1 off0.5|m1.5|N3|W50       0.0000%
+B1 off0.5|m2.0|N1|W50       0.0072%
+B1 off0.5|m2.0|N2|W50       0.0000%
+B1 off0.5|m2.0|N3|W50       0.0000%
+B1 off0.5|m3.0|N1|W50       0.0000%
+B1 off0.5|m3.0|N2|W50       0.0000%
+B1 off0.5|m3.0|N3|W50       0.0000%
+B1 off0.5|m5.0|N1|W50       0.0000%
+B1 off0.5|m5.0|N2|W50       0.0000%
+B1 off0.5|m5.0|N3|W50       0.0000%
+B1 off1.0|m0.5|N1|W50     100.0000%
+B1 off1.0|m0.5|N2|W50     100.0000%
+B1 off1.0|m0.5|N3|W50     100.0000%
+B1 off1.0|m1.0|N1|W50     100.0000%
+B1 off1.0|m1.0|N2|W50      99.9999%
+B1 off1.0|m1.0|N3|W50      99.8354%
+B1 off1.0|m1.5|N1|W50      95.3291%
+B1 off1.0|m1.5|N2|W50      15.9206%
+B1 off1.0|m1.5|N3|W50       1.0029%
+B1 off1.0|m2.0|N1|W50       4.4366%
+B1 off1.0|m2.0|N2|W50       0.0040%
+B1 off1.0|m2.0|N3|W50       0.0000%
+B1 off1.0|m3.0|N1|W50       0.0000%
+B1 off1.0|m3.0|N2|W50       0.0000%
+B1 off1.0|m3.0|N3|W50       0.0000%
+B1 off1.0|m5.0|N1|W50       0.0000%
+B1 off1.0|m5.0|N2|W50       0.0000%
+B1 off1.0|m5.0|N3|W50       0.0000%
+B2 d0.25|req1|W5           70.7124%
+B2 d0.25|req1|W20          99.2642%
+B2 d0.25|req2|W5           17.6616%
+B2 d0.25|req2|W20          60.2708%
+B2 d0.5|req1|W5            26.3894%
+B2 d0.5|req1|W20           70.6396%
+B2 d0.5|req2|W5             1.4056%
+B2 d0.5|req2|W20            6.5029%
+B2 d1.0|req1|W5             0.4528%
+B2 d1.0|req1|W20            1.7989%
+B2 d1.0|req2|W5             0.0003%
+B2 d1.0|req2|W20            0.0016%
+B2 d1.5|req1|W5             0.0007%
+B2 d1.5|req1|W20            0.0029%
+B2 d1.5|req2|W5             0.0000%
+B2 d1.5|req2|W20            0.0000%

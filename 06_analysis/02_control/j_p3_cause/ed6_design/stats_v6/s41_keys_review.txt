@@ -1,0 +1,33 @@
+== F26: unseen units 104
+  null c2.5: zero 44.5% count2 4.1% clus2 6.8%
+  null c3.0: zero 12.2% count2 0.2% clus2 0.7%
+  null c3.5: zero 2.5% count2 0.0% clus2 0.1%
+  pow D1_one_row_one_setting|mbad1.0     clus2 17.3% count2 8.3%
+  pow D1_one_row_one_setting|mbad0.0     clus2 60.6% count2 42.5%
+  pow D1_one_row_one_setting|mbad-1.0    clus2 93.0% count2 84.3%
+  pow D2_all_rows_one_setting|mbad1.0    clus2 77.9% count2 74.6%
+  pow D2_all_rows_one_setting|mbad0.0    clus2 100.0% count2 100.0%
+  pow D2_all_rows_one_setting|mbad-1.0   clus2 100.0% count2 100.0%
+== F54: unseen units 216
+  null c2.5: zero 70.7% count2 16.7% clus2 19.8%
+  null c3.0: zero 24.4% count2 0.6% clus2 1.5%
+  null c3.5: zero 4.6% count2 0.0% clus2 0.1%
+  pow D1_one_row_one_setting|mbad1.0     clus2 19.2% count2 11.0%
+  pow D1_one_row_one_setting|mbad0.0     clus2 60.9% count2 45.5%
+  pow D1_one_row_one_setting|mbad-1.0    clus2 92.8% count2 85.9%
+  pow D2_all_rows_one_setting|mbad1.0    clus2 98.6% count2 98.5%
+  pow D2_all_rows_one_setting|mbad0.0    clus2 100.0% count2 100.0%
+  pow D2_all_rows_one_setting|mbad-1.0   clus2 100.0% count2 100.0%
+== F38_spec482: unseen units 152
+  null c2.5: zero 58.3% count2 8.6% clus2 11.8%
+  null c3.0: zero 17.7% count2 0.3% clus2 1.0%
+  null c3.5: zero 3.3% count2 0.0% clus2 0.1%
+  pow D1_one_row_one_setting|mbad1.0     clus2 13.5% count2 5.9%
+  pow D1_one_row_one_setting|mbad0.0     clus2 49.5% count2 28.9%
+  pow D1_one_row_one_setting|mbad-1.0    clus2 88.4% count2 72.3%
+  pow D2_all_rows_one_setting|mbad1.0    clus2 92.6% count2 92.0%
+  pow D2_all_rows_one_setting|mbad0.0    clus2 100.0% count2 100.0%
+  pow D2_all_rows_one_setting|mbad-1.0   clus2 100.0% count2 100.0%
+== P-pred npar1000_nrep20: k [9, 10] share k=10 0.7 P(n23>9) mean 0.1040 sd 0.0045
+== P-pred npar5000_nrep20: k [9, 10] share k=10 0.7 P(n23>9) mean 0.1024 sd 0.0031
+== P-pred npar20000_nrep10: k [10] share k=10 1.0 P(n23>9) mean 0.1028 sd 0.0011

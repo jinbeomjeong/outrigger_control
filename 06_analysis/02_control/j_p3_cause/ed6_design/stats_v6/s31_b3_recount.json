@@ -1,0 +1,223 @@
+{
+ "inputs": {
+  "dF_per_cycle_kN": {
+   "rear": 11.35,
+   "front": 10.34
+  },
+  "cap_cycles": 5,
+  "cap_travel_mm": 2.6155,
+  "protected_at_r5_R12_32": {
+   "min": 91.6,
+   "median": 99.6
+  }
+ },
+ "worst_min": {
+  "old_Fmin+5|rear": {
+   "closed_form_floor_kN": -8.285,
+   "scan": {
+    "30.0": {
+     "min_kN": -4.049999999999997,
+     "motion_cycles": 3,
+     "lift": true,
+     "below_Fmin": true
+    },
+    "44.0": {
+     "min_kN": -1.3999999999999986,
+     "motion_cycles": 4,
+     "lift": true,
+     "below_Fmin": true
+    },
+    "50.0": {
+     "min_kN": -6.75,
+     "motion_cycles": 5,
+     "lift": true,
+     "below_Fmin": true
+    },
+    "57.0": {
+     "min_kN": 0.25,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": true
+    },
+    "70.0": {
+     "min_kN": 13.25,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "91.6": {
+     "min_kN": 34.849999999999994,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "99.6": {
+     "min_kN": 42.849999999999994,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    }
+   }
+  },
+  "old_Fmin+5|front": {
+   "closed_form_floor_kN": -6.265000000000001,
+   "scan": {
+    "30.0": {
+     "min_kN": -1.0199999999999996,
+     "motion_cycles": 3,
+     "lift": true,
+     "below_Fmin": true
+    },
+    "44.0": {
+     "min_kN": 2.6400000000000006,
+     "motion_cycles": 4,
+     "lift": false,
+     "below_Fmin": true
+    },
+    "50.0": {
+     "min_kN": -1.7000000000000028,
+     "motion_cycles": 5,
+     "lift": true,
+     "below_Fmin": true
+    },
+    "57.0": {
+     "min_kN": 5.299999999999997,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": true
+    },
+    "70.0": {
+     "min_kN": 18.299999999999997,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "91.6": {
+     "min_kN": 39.89999999999999,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "99.6": {
+     "min_kN": 47.89999999999999,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    }
+   }
+  },
+  "b3_Fmin+35|rear": {
+   "closed_form_floor_kN": 21.715,
+   "scan": {
+    "30.0": {
+     "min_kN": 30.0,
+     "motion_cycles": 0,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "44.0": {
+     "min_kN": 44.0,
+     "motion_cycles": 0,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "50.0": {
+     "min_kN": 27.3,
+     "motion_cycles": 2,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "57.0": {
+     "min_kN": 22.950000000000003,
+     "motion_cycles": 3,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "70.0": {
+     "min_kN": 24.6,
+     "motion_cycles": 4,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "91.6": {
+     "min_kN": 34.849999999999994,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "99.6": {
+     "min_kN": 42.849999999999994,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    }
+   }
+  },
+  "b3_Fmin+35|front": {
+   "closed_form_floor_kN": 23.735,
+   "scan": {
+    "30.0": {
+     "min_kN": 30.0,
+     "motion_cycles": 0,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "44.0": {
+     "min_kN": 44.0,
+     "motion_cycles": 0,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "50.0": {
+     "min_kN": 29.32,
+     "motion_cycles": 2,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "57.0": {
+     "min_kN": 25.98,
+     "motion_cycles": 3,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "70.0": {
+     "min_kN": 28.64,
+     "motion_cycles": 4,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "91.6": {
+     "min_kN": 39.89999999999999,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    },
+    "99.6": {
+     "min_kN": 47.89999999999999,
+     "motion_cycles": 5,
+     "lift": false,
+     "below_Fmin": false
+    }
+   }
+  }
+ },
+ "blocking": {
+  "threshold_kN": 44.415,
+  "observed_block": "0/32 (protected min 91.6 kN at R-5)",
+  "cp95_upper_independent_32": 0.08936819898626475,
+  "cp95_upper_key_clusters_15": 0.18103627252208462,
+  "parametric_sd_kN": 4.263577421962594,
+  "parametric_P_below_thr_at_start": 1.2809459862156503e-38,
+  "read_after_3_cycles_at_min_kN": 57.55,
+  "read_after_4_cycles_at_min_kN": 46.199999999999996,
+  "start_load_needed_to_never_block_before_handover_kN": 78.465,
+  "handover_reads_max": 4,
+  "r5_leg_force_kN_min_median_max": [
+   36.88,
+   42.04,
+   50.4
+  ],
+  "n_csv_rows": 32
+ },
+ "self_check": true
+}

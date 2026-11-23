@@ -1,0 +1,136 @@
+self_checks {'zero_rule_indep': {'mc': 0.899725, 'analytic': 0.8998705002115753, 'ok': np.True_}, 'huge_margin_no_fail': True, 'neg_margin_all_fail': True, 'ok': True}
+== sensitivity G4_3: clusters 48, unseen units 120, seen 32 ==
+ null c2.0|rho0.0  E[f] 2.724 zero  93.7 cnt1  76.1 cnt2  51.1 cnt3  28.9 cnt4  14.0 | cl0  93.7 cl1  76.1 cl2  51.6 cl3  30.6
+ null c2.0|rho0.5  E[f] 2.739 zero  90.2 cnt1  71.5 cnt2  49.3 cnt3  30.2 cnt4  16.4 | cl0  90.2 cl1  71.5 cl2  52.4 cl3  40.1
+ null c2.0|rho0.8  E[f] 2.722 zero  84.2 cnt1  64.3 cnt2  46.6 cnt3  31.6 cnt4  19.7 | cl0  84.2 cl1  64.3 cl2  52.5 cl3  47.8
+ null c2.5|rho0.0  E[f] 0.746 zero  53.2 cnt1  16.8 cnt2   3.9 cnt3   0.6 cnt4   0.1 | cl0  53.2 cl1  16.8 cl2   4.2 cl3   1.1
+ null c2.5|rho0.5  E[f] 0.751 zero  49.2 cnt1  17.9 cnt2   5.9 cnt3   1.7 cnt4   0.4 | cl0  49.2 cl1  17.9 cl2   9.0 cl3   7.1
+ null c2.5|rho0.8  E[f] 0.750 zero  41.5 cnt1  18.9 cnt2   8.9 cnt3   3.7 cnt4   1.3 | cl0  41.5 cl1  18.9 cl2  14.8 cl3  14.2
+ null c3.0|rho0.0  E[f] 0.160 zero  14.8 cnt1   1.2 cnt2   0.1 cnt3   0.0 cnt4   0.0 | cl0  14.8 cl1   1.2 cl2   0.1 cl3   0.0
+ null c3.0|rho0.5  E[f] 0.169 zero  14.6 cnt1   1.9 cnt2   0.3 cnt3   0.0 cnt4   0.0 | cl0  14.6 cl1   1.9 cl2   1.1 cl3   1.1
+ null c3.0|rho0.8  E[f] 0.157 zero  11.4 cnt1   3.0 cnt2   1.0 cnt3   0.3 cnt4   0.0 | cl0  11.4 cl1   3.0 cl2   2.6 cl3   2.6
+ null c3.5|rho0.0  E[f] 0.027 zero   2.7 cnt1   0.0 cnt2   0.0 cnt3   0.0 cnt4   0.0 | cl0   2.7 cl1   0.0 cl2   0.0 cl3   0.0
+ null c3.5|rho0.5  E[f] 0.027 zero   2.6 cnt1   0.1 cnt2   0.0 cnt3   0.0 cnt4   0.0 | cl0   2.6 cl1   0.1 cl2   0.1 cl3   0.1
+ null c3.5|rho0.8  E[f] 0.028 zero   2.1 cnt1   0.4 cnt2   0.1 cnt3   0.1 cnt4   0.0 | cl0   2.1 cl1   0.4 cl2   0.4 cl3   0.4
+ pow  D1_one_4phase_row_one_setting|mbad1.0    zero  46.2 cnt1  20.5 cnt2   9.2 cnt3   3.1 cnt4   0.3 | cl0  46.2 cl1  20.5 cl2  17.7 cl3  17.5
+ pow  D1_one_4phase_row_one_setting|mbad0.0    zero  82.8 cnt1  62.2 cnt2  42.4 cnt3  23.1 cnt4   3.1 | cl0  82.8 cl1  62.2 cl2  59.5 cl3  59.3
+ pow  D1_one_4phase_row_one_setting|mbad-1.0   zero  98.0 cnt1  93.3 cnt2  84.5 cnt3  66.1 cnt4   9.0 | cl0  98.0 cl1  93.3 cl2  92.8 cl3  92.7
+ pow  D3_one_4phase_row_all_settings|mbad1.0   zero  86.3 cnt1  67.5 cnt2  47.8 cnt3  30.5 cnt4  17.6 | cl0  86.3 cl1  67.5 cl2  56.4 cl3  53.4
+ pow  D3_one_4phase_row_all_settings|mbad0.0   zero  99.9 cnt1  99.2 cnt2  97.8 cnt3  94.6 cnt4  89.2 | cl0  99.9 cl1  99.2 cl2  98.3 cl3  97.6
+ pow  D3_one_4phase_row_all_settings|mbad-1.0  zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+ pow  D2_all_rows_one_setting|mbad1.0          zero  98.3 cnt1  92.2 cnt2  81.7 cnt3  67.3 cnt4  51.5 | cl0  98.3 cl1  92.2 cl2  83.8 cl3  76.0
+ pow  D2_all_rows_one_setting|mbad0.0          zero 100.0 cnt1 100.0 cnt2 100.0 cnt3  99.9 cnt4  99.8 | cl0 100.0 cl1 100.0 cl2 100.0 cl3  99.9
+ pow  D2_all_rows_one_setting|mbad-1.0         zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+== sensitivity G4_7: clusters 64, unseen units 152, seen 32 ==
+ null c2.0|rho0.0  E[f] 3.448 zero  96.9 cnt1  85.9 cnt2  67.0 cnt3  45.4 cnt4  26.4 | cl0  96.9 cl1  85.9 cl2  67.3 cl3  46.4
+ null c2.0|rho0.5  E[f] 3.436 zero  95.0 cnt1  82.1 cnt2  63.2 cnt3  43.5 cnt4  27.2 | cl0  95.0 cl1  82.1 cl2  65.1 cl3  51.0
+ null c2.0|rho0.8  E[f] 3.483 zero  91.1 cnt1  76.1 cnt2  59.4 cnt3  43.6 cnt4  30.0 | cl0  91.1 cl1  76.1 cl2  64.2 cl3  57.8
+ null c2.5|rho0.0  E[f] 0.935 zero  60.8 cnt1  24.3 cnt2   6.6 cnt3   1.5 cnt4   0.3 | cl0  60.8 cl1  24.3 cl2   6.9 cl3   1.9
+ null c2.5|rho0.5  E[f] 0.942 zero  57.9 cnt1  24.3 cnt2   8.7 cnt3   2.5 cnt4   0.7 | cl0  57.9 cl1  24.3 cl2  11.6 cl3   8.2
+ null c2.5|rho0.8  E[f] 0.942 zero  49.9 cnt1  24.2 cnt2  11.6 cnt3   5.3 cnt4   2.0 | cl0  49.9 cl1  24.2 cl2  18.0 cl3  17.0
+ null c3.0|rho0.0  E[f] 0.202 zero  18.5 cnt1   1.6 cnt2   0.1 cnt3   0.0 cnt4   0.0 | cl0  18.5 cl1   1.6 cl2   0.2 cl3   0.0
+ null c3.0|rho0.5  E[f] 0.210 zero  18.2 cnt1   2.5 cnt2   0.3 cnt3   0.0 cnt4   0.0 | cl0  18.2 cl1   2.5 cl2   1.1 cl3   1.0
+ null c3.0|rho0.8  E[f] 0.200 zero  14.6 cnt1   3.8 cnt2   1.2 cnt3   0.4 cnt4   0.1 | cl0  14.6 cl1   3.8 cl2   3.2 cl3   3.2
+ null c3.5|rho0.0  E[f] 0.037 zero   3.6 cnt1   0.1 cnt2   0.0 cnt3   0.0 cnt4   0.0 | cl0   3.6 cl1   0.1 cl2   0.0 cl3   0.0
+ null c3.5|rho0.5  E[f] 0.033 zero   3.1 cnt1   0.1 cnt2   0.0 cnt3   0.0 cnt4   0.0 | cl0   3.1 cl1   0.1 cl2   0.1 cl3   0.1
+ null c3.5|rho0.8  E[f] 0.036 zero   2.9 cnt1   0.6 cnt2   0.1 cnt3   0.0 cnt4   0.0 | cl0   2.9 cl1   0.6 cl2   0.5 cl3   0.5
+ pow  D1_one_4phase_row_one_setting|mbad1.0    zero  47.8 cnt1  21.9 cnt2   9.7 cnt3   3.3 cnt4   0.5 | cl0  47.8 cl1  21.9 cl2  18.0 cl3  17.7
+ pow  D1_one_4phase_row_one_setting|mbad0.0    zero  83.9 cnt1  64.4 cnt2  44.3 cnt3  24.4 cnt4   3.9 | cl0  83.9 cl1  64.4 cl2  61.3 cl3  61.0
+ pow  D1_one_4phase_row_one_setting|mbad-1.0   zero  98.1 cnt1  93.7 cnt2  85.0 cnt3  67.1 cnt4  11.1 | cl0  98.1 cl1  93.7 cl2  92.8 cl3  92.8
+ pow  D3_one_4phase_row_all_settings|mbad1.0   zero  87.0 cnt1  67.9 cnt2  47.8 cnt3  31.6 cnt4  18.7 | cl0  87.0 cl1  67.9 cl2  56.6 cl3  53.3
+ pow  D3_one_4phase_row_all_settings|mbad0.0   zero  99.9 cnt1  99.2 cnt2  97.7 cnt3  95.1 cnt4  89.9 | cl0  99.9 cl1  99.2 cl2  98.2 cl3  97.5
+ pow  D3_one_4phase_row_all_settings|mbad-1.0  zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+ pow  D2_all_rows_one_setting|mbad1.0          zero  99.6 cnt1  97.4 cnt2  91.8 cnt3  82.6 cnt4  70.5 | cl0  99.6 cl1  97.4 cl2  92.6 cl3  86.9
+ pow  D2_all_rows_one_setting|mbad0.0          zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+ pow  D2_all_rows_one_setting|mbad-1.0         zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+== sensitivity G4_14: clusters 92, unseen units 208, seen 32 ==
+ null c2.0|rho0.0  E[f] 4.744 zero  99.1 cnt1  95.0 cnt2  85.3 cnt3  70.2 cnt4  51.6 | cl0  99.1 cl1  95.0 cl2  85.3 cl3  70.8
+ null c2.0|rho0.5  E[f] 4.731 zero  98.6 cnt1  93.3 cnt2  82.1 cnt3  66.6 cnt4  49.7 | cl0  98.6 cl1  93.3 cl2  82.8 cl3  70.2
+ null c2.0|rho0.8  E[f] 4.748 zero  96.9 cnt1  89.1 cnt2  77.3 cnt3  63.1 cnt4  48.3 | cl0  96.9 cl1  89.1 cl2  79.8 cl3  72.5
+ null c2.5|rho0.0  E[f] 1.282 zero  72.2 cnt1  36.6 cnt2  14.1 cnt3   4.1 cnt4   1.0 | cl0  72.2 cl1  36.6 cl2  14.3 cl3   4.5
+ null c2.5|rho0.5  E[f] 1.288 zero  69.5 cnt1  36.0 cnt2  15.1 cnt3   5.7 cnt4   1.8 | cl0  69.5 cl1  36.0 cl2  17.8 cl3  11.6
+ null c2.5|rho0.8  E[f] 1.293 zero  62.5 cnt1  35.4 cnt2  17.4 cnt3   8.1 cnt4   3.5 | cl0  62.5 cl1  35.4 cl2  24.7 cl3  22.1
+ null c3.0|rho0.0  E[f] 0.284 zero  24.8 cnt1   3.2 cnt2   0.3 cnt3   0.0 cnt4   0.0 | cl0  24.8 cl1   3.2 cl2   0.3 cl3   0.1
+ null c3.0|rho0.5  E[f] 0.288 zero  24.2 cnt1   4.0 cnt2   0.4 cnt3   0.1 cnt4   0.0 | cl0  24.2 cl1   4.0 cl2   1.3 cl3   1.2
+ null c3.0|rho0.8  E[f] 0.283 zero  20.3 cnt1   5.8 cnt2   1.6 cnt3   0.4 cnt4   0.1 | cl0  20.3 cl1   5.8 cl2   4.6 cl3   4.5
+ null c3.5|rho0.0  E[f] 0.048 zero   4.7 cnt1   0.1 cnt2   0.0 cnt3   0.0 cnt4   0.0 | cl0   4.7 cl1   0.1 cl2   0.0 cl3   0.0
+ null c3.5|rho0.5  E[f] 0.050 zero   4.8 cnt1   0.2 cnt2   0.0 cnt3   0.0 cnt4   0.0 | cl0   4.8 cl1   0.2 cl2   0.1 cl3   0.1
+ null c3.5|rho0.8  E[f] 0.049 zero   4.1 cnt1   0.7 cnt2   0.1 cnt3   0.0 cnt4   0.0 | cl0   4.1 cl1   0.7 cl2   0.7 cl3   0.7
+ pow  D1_one_4phase_row_one_setting|mbad1.0    zero  51.6 cnt1  24.4 cnt2  10.9 cnt3   3.9 cnt4   0.7 | cl0  51.6 cl1  24.4 cl2  18.7 cl3  17.9
+ pow  D1_one_4phase_row_one_setting|mbad0.0    zero  84.4 cnt1  64.9 cnt2  45.0 cnt3  25.4 cnt4   5.4 | cl0  84.4 cl1  64.9 cl2  60.5 cl3  60.1
+ pow  D1_one_4phase_row_one_setting|mbad-1.0   zero  98.4 cnt1  93.9 cnt2  85.2 cnt3  68.1 cnt4  16.2 | cl0  98.4 cl1  93.9 cl2  93.0 cl3  92.8
+ pow  D3_one_4phase_row_all_settings|mbad1.0   zero  88.1 cnt1  69.5 cnt2  49.9 cnt3  32.6 cnt4  19.4 | cl0  88.1 cl1  69.5 cl2  57.8 cl3  53.6
+ pow  D3_one_4phase_row_all_settings|mbad0.0   zero 100.0 cnt1  99.4 cnt2  98.1 cnt3  95.4 cnt4  90.5 | cl0 100.0 cl1  99.4 cl2  98.7 cl3  98.0
+ pow  D3_one_4phase_row_all_settings|mbad-1.0  zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+ pow  D2_all_rows_one_setting|mbad1.0          zero  99.9 cnt1  99.5 cnt2  98.1 cnt3  95.0 cnt4  89.6 | cl0  99.9 cl1  99.5 cl2  98.2 cl3  96.0
+ pow  D2_all_rows_one_setting|mbad0.0          zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+ pow  D2_all_rows_one_setting|mbad-1.0         zero 100.0 cnt1 100.0 cnt2 100.0 cnt3 100.0 cnt4 100.0 | cl0 100.0 cl1 100.0 cl2 100.0 cl3 100.0
+== grid Da_192x1: runs 192 ==
+ null c2.5|rho0.5  E[f] 1.204 zero  70.1 cnt1  34.2 cl0  70.1 cl1  34.2
+ null c2.5|rho0.8  E[f] 1.202 zero  70.2 cnt1  34.1 cl0  70.2 cl1  34.1
+ null c3.0|rho0.5  E[f] 0.258 zero  22.9 cnt1   2.5 cl0  22.9 cl1   2.5
+ null c3.0|rho0.8  E[f] 0.250 zero  21.8 cnt1   2.9 cl0  21.8 cl1   2.9
+ null c3.5|rho0.5  E[f] 0.042 zero   4.1 cnt1   0.1 cl0   4.1 cl1   0.1
+ null c3.5|rho0.8  E[f] 0.044 zero   4.3 cnt1   0.1 cl0   4.3 cl1   0.1
+ null c4.0|rho0.5  E[f] 0.007 zero   0.7 cnt1   0.0 cl0   0.7 cl1   0.0
+ null c4.0|rho0.8  E[f] 0.007 zero   0.7 cnt1   0.0 cl0   0.7 cl1   0.0
+ pow  frac0.01|mbad0.0   zero  76.6 cnt1  27.2 cl0  76.6 cl1  27.2
+ pow  frac0.01|mbad-1.0  zero  97.7 cnt1  72.1 cl0  97.7 cl1  72.1
+ pow  frac0.02|mbad0.0   zero  94.4 cnt1  70.6 cl0  94.4 cl1  70.6
+ pow  frac0.02|mbad-1.0  zero 100.0 cnt1  98.6 cl0 100.0 cl1  98.6
+ pow  frac0.05|mbad0.0   zero  99.9 cnt1  99.0 cl0  99.9 cl1  99.0
+ pow  frac0.05|mbad-1.0  zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad0.0    zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad-1.0   zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+== grid Db_192x2: runs 384 ==
+ null c2.5|rho0.5  E[f] 2.381 zero  90.0 cnt1  67.6 cl0  90.0 cl1  67.6
+ null c2.5|rho0.8  E[f] 2.352 zero  86.1 cnt1  63.4 cl0  86.1 cl1  63.4
+ null c3.0|rho0.5  E[f] 0.512 zero  39.2 cnt1  10.0 cl0  39.2 cl1  10.0
+ null c3.0|rho0.8  E[f] 0.501 zero  35.3 cnt1  11.4 cl0  35.3 cl1  11.4
+ null c3.5|rho0.5  E[f] 0.088 zero   8.3 cnt1   0.5 cl0   8.3 cl1   0.5
+ null c3.5|rho0.8  E[f] 0.093 zero   7.9 cnt1   1.3 cl0   7.9 cl1   1.3
+ null c4.0|rho0.5  E[f] 0.013 zero   1.3 cnt1   0.0 cl0   1.3 cl1   0.0
+ null c4.0|rho0.8  E[f] 0.012 zero   1.1 cnt1   0.1 cl0   1.1 cl1   0.1
+ pow  frac0.01|mbad0.0   zero  90.0 cnt1  68.7 cl0  90.0 cl1  68.7
+ pow  frac0.01|mbad-1.0  zero  99.8 cnt1  97.4 cl0  99.8 cl1  97.4
+ pow  frac0.02|mbad0.0   zero  98.7 cnt1  94.4 cl0  98.7 cl1  94.4
+ pow  frac0.02|mbad-1.0  zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.05|mbad0.0   zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.05|mbad-1.0  zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad0.0    zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad-1.0   zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+== grid Dc_all_672: runs 672 ==
+ null c2.5|rho0.5  E[f] 4.226 zero  97.6 cnt1  89.8 cl0  97.6 cl1  89.8
+ null c2.5|rho0.8  E[f] 4.182 zero  94.2 cnt1  82.8 cl0  94.2 cl1  82.8
+ null c3.0|rho0.5  E[f] 0.910 zero  57.2 cnt1  23.2 cl0  57.2 cl1  23.2
+ null c3.0|rho0.8  E[f] 0.910 zero  47.9 cnt1  23.1 cl0  47.9 cl1  23.1
+ null c3.5|rho0.5  E[f] 0.155 zero  13.9 cnt1   1.3 cl0  13.9 cl1   1.3
+ null c3.5|rho0.8  E[f] 0.157 zero  11.5 cnt1   2.8 cl0  11.5 cl1   2.8
+ null c4.0|rho0.5  E[f] 0.022 zero   2.1 cnt1   0.1 cl0   2.1 cl1   0.1
+ null c4.0|rho0.8  E[f] 0.020 zero   1.7 cnt1   0.2 cl0   1.7 cl1   0.2
+ pow  frac0.01|mbad0.0   zero  94.0 cnt1  81.5 cl0  94.0 cl1  81.5
+ pow  frac0.01|mbad-1.0  zero  99.9 cnt1  99.3 cl0  99.9 cl1  99.3
+ pow  frac0.02|mbad0.0   zero  99.8 cnt1  99.1 cl0  99.8 cl1  99.1
+ pow  frac0.02|mbad-1.0  zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.05|mbad0.0   zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.05|mbad-1.0  zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad0.0    zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad-1.0   zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+== grid Dd_96x2: runs 192 ==
+ null c2.5|rho0.5  E[f] 1.200 zero  68.3 cnt1  33.7 cl0  68.3 cl1  33.7
+ null c2.5|rho0.8  E[f] 1.215 zero  63.6 cnt1  34.4 cl0  63.6 cl1  34.4
+ null c3.0|rho0.5  E[f] 0.256 zero  22.1 cnt1   3.1 cl0  22.1 cl1   3.1
+ null c3.0|rho0.8  E[f] 0.270 zero  20.7 cnt1   5.5 cl0  20.7 cl1   5.5
+ null c3.5|rho0.5  E[f] 0.046 zero   4.5 cnt1   0.1 cl0   4.5 cl1   0.1
+ null c3.5|rho0.8  E[f] 0.044 zero   3.8 cnt1   0.6 cl0   3.8 cl1   0.6
+ null c4.0|rho0.5  E[f] 0.006 zero   0.6 cnt1   0.0 cl0   0.6 cl1   0.0
+ null c4.0|rho0.8  E[f] 0.005 zero   0.5 cnt1   0.0 cl0   0.5 cl1   0.0
+ pow  frac0.01|mbad0.0   zero  67.9 cnt1  33.9 cl0  67.9 cl1  33.9
+ pow  frac0.01|mbad-1.0  zero  94.2 cnt1  75.8 cl0  94.2 cl1  75.8
+ pow  frac0.02|mbad0.0   zero  89.4 cnt1  68.4 cl0  89.4 cl1  68.4
+ pow  frac0.02|mbad-1.0  zero  99.6 cnt1  96.9 cl0  99.6 cl1  96.9
+ pow  frac0.05|mbad0.0   zero  99.6 cnt1  97.9 cl0  99.6 cl1  97.9
+ pow  frac0.05|mbad-1.0  zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad0.0    zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+ pow  frac0.1|mbad-1.0   zero 100.0 cnt1 100.0 cl0 100.0 cl1 100.0
+== probe == {"pi0.01": {"units_indep_40": 0.6689717585696803, "key_property_8": 0.9227446944279201, "plant_property_5": 0.9509900498999999}, "pi0.02": {"units_indep_40": 0.44570040395095073, "key_property_8": 0.8507630225817855, "plant_property_5": 0.9039207967999999}, "pi0.05": {"units_indep_40": 0.12851215656510312, "key_property_8": 0.6634204312890623, "plant_property_5": 0.7737809374999998}, "pi0.1": {"units_indep_40": 0.014780882941434608, "key_property_8": 0.4304672100000001, "plant_property_5": 0.5904900000000001}, "pi0.2": {"units_indep_40": 0.00013292279957849188, "key_property_8": 0.1677721600000001, "plant_property_5": 0.3276800000000001}, "chance_keep_p0.01": 0.23826900035342605, "chance_keep_p0.02": 0.32327847966566386, "chance_keep_p0.05": 0.3947558419899015}

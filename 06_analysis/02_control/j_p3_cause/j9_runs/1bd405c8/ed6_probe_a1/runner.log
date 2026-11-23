@@ -1,0 +1,5 @@
+[reserve] {"id": "r-20261123234831-604ced", "owner": "outrigger-ed6probe", "logical": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "mask": "0x0FFFFFFF", "gpu": null, "vram_mb": null, "ram_mb": 8000.0, "pid": 119296, "pid_create_time": 1795445310.948, "ttl_min": 180.0, "created_at": "2026-11-23T23:48:31+09:00", "renewed_at": null, "expires_at": "2026-11-24T02:48:31+09:00", "expires_epoch": 1795456111.522, "note": "ed6 probe a1 320 lines 20 workers", "conflicts": []}
+[start] 23:48:31 worker PID 122540
+[end] ed6_probe exit 0, wall 2,424 s
+{"status": "written", "lines": 320, "share": "decided", "line_problems": 0, "missing_jobs": 0, "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\1bd405c8\\ed6_probe_a1\\ed6_probe_share.json", "csv": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\1bd405c8\\ed6_probe_a1\\ed6_probe_share.csv"}
+[done] share exit 0

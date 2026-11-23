@@ -1,0 +1,4581 @@
+{
+ "rule": "jp3_remedy_spec_v6.md 6.2 / 6.3 (revision 9 G-6, spec 8 Y-8)",
+ "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed6_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys --grid-sample C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\stats_v6\\s50_grid_sample.csv --grid-sample-sha256 6170e240ddb49eb8ff75bcf8189d571b524e952df2e4f3ffe9cf34448b4c8b5f --only sens_keys_v2.json,confirm_a_keys_v2.json",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-impl",
+  "head": "ac3c25a754013d1b673a150a4e2c877a02fb02be",
+  "is_clean": true
+ },
+ "settings": [
+  "VBLc005",
+  "VBLc04",
+  "VBLv05",
+  "VBLv15"
+ ],
+ "rows": "run_v5.required_rows() and run_v5.regression_rows() outside the sens_keys subset (26 + 28 per setting)",
+ "expected_lines": 216,
+ "expected_j_p3_judged_rows": 56,
+ "head_only_declared_lines": 160,
+ "lines": [
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-FR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-FR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-FR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-FR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc005"
+   },
+   "key": "R12_top-RR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "S8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.001,
+    "setting": "VBLc005"
+   },
+   "key": "S8_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "S8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.003,
+    "setting": "VBLc005"
+   },
+   "key": "S8_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.001,
+    "setting": "VBLc005"
+   },
+   "key": "R2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.003,
+    "setting": "VBLc005"
+   },
+   "key": "R2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.001,
+    "setting": "VBLc005"
+   },
+   "key": "R7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.003,
+    "setting": "VBLc005"
+   },
+   "key": "R7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R6_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R6_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R9_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R9_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R10_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R10_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R11_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R11_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "S3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "S3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.001,
+    "setting": "VBLc005"
+   },
+   "key": "R3_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.003,
+    "setting": "VBLc005"
+   },
+   "key": "R3_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "R4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.001,
+    "setting": "VBLc005"
+   },
+   "key": "R4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "R4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.003,
+    "setting": "VBLc005"
+   },
+   "key": "R4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.0,
+    "setting": "VBLc005"
+   },
+   "key": "S2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.001,
+    "setting": "VBLc005"
+   },
+   "key": "S2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.002,
+    "setting": "VBLc005"
+   },
+   "key": "S2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.003,
+    "setting": "VBLc005"
+   },
+   "key": "S2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-FR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-FR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-FR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-FR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLc04"
+   },
+   "key": "R12_top-RR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "S8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.001,
+    "setting": "VBLc04"
+   },
+   "key": "S8_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "S8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.003,
+    "setting": "VBLc04"
+   },
+   "key": "S8_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.001,
+    "setting": "VBLc04"
+   },
+   "key": "R2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.003,
+    "setting": "VBLc04"
+   },
+   "key": "R2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.001,
+    "setting": "VBLc04"
+   },
+   "key": "R7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.003,
+    "setting": "VBLc04"
+   },
+   "key": "R7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R6_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R6_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R9_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R9_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R10_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R10_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R11_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R11_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "S3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "S3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.001,
+    "setting": "VBLc04"
+   },
+   "key": "R3_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.003,
+    "setting": "VBLc04"
+   },
+   "key": "R3_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "R4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.001,
+    "setting": "VBLc04"
+   },
+   "key": "R4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "R4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.003,
+    "setting": "VBLc04"
+   },
+   "key": "R4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.0,
+    "setting": "VBLc04"
+   },
+   "key": "S2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.001,
+    "setting": "VBLc04"
+   },
+   "key": "S2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.002,
+    "setting": "VBLc04"
+   },
+   "key": "S2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.003,
+    "setting": "VBLc04"
+   },
+   "key": "S2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-FR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-FR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-FR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-FR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv05"
+   },
+   "key": "R12_top-RR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "S8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.001,
+    "setting": "VBLv05"
+   },
+   "key": "S8_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "S8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.003,
+    "setting": "VBLv05"
+   },
+   "key": "S8_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.001,
+    "setting": "VBLv05"
+   },
+   "key": "R2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.003,
+    "setting": "VBLv05"
+   },
+   "key": "R2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.001,
+    "setting": "VBLv05"
+   },
+   "key": "R7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.003,
+    "setting": "VBLv05"
+   },
+   "key": "R7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R6_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R6_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R9_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R9_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R10_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R10_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R11_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R11_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "S3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "S3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.001,
+    "setting": "VBLv05"
+   },
+   "key": "R3_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.003,
+    "setting": "VBLv05"
+   },
+   "key": "R3_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "R4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.001,
+    "setting": "VBLv05"
+   },
+   "key": "R4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "R4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.003,
+    "setting": "VBLv05"
+   },
+   "key": "R4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.0,
+    "setting": "VBLv05"
+   },
+   "key": "S2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.001,
+    "setting": "VBLv05"
+   },
+   "key": "S2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.002,
+    "setting": "VBLv05"
+   },
+   "key": "S2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.003,
+    "setting": "VBLv05"
+   },
+   "key": "S2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-FR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-FR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-FR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-FR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RR-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RR-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RR-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBLv15"
+   },
+   "key": "R12_top-RR-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "S8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.001,
+    "setting": "VBLv15"
+   },
+   "key": "S8_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "S8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S8",
+    "eps": 0.003,
+    "setting": "VBLv15"
+   },
+   "key": "S8_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S8",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.001,
+    "setting": "VBLv15"
+   },
+   "key": "R2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "eps": 0.003,
+    "setting": "VBLv15"
+   },
+   "key": "R2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.001,
+    "setting": "VBLv15"
+   },
+   "key": "R7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R7",
+    "eps": 0.003,
+    "setting": "VBLv15"
+   },
+   "key": "R7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R1",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R5",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R6_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R6",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R6_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R6",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R8_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R8",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R8_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R8",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R9_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R9",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R9_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R9",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R10_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R10",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R10_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R10",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R11_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R11",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R11_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R11",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "S3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S3",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "S3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R3_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.001,
+    "setting": "VBLv15"
+   },
+   "key": "R3_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R3_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R3",
+    "eps": 0.003,
+    "setting": "VBLv15"
+   },
+   "key": "R3_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R3",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "R4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.001,
+    "setting": "VBLv15"
+   },
+   "key": "R4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "R4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "R4",
+    "eps": 0.003,
+    "setting": "VBLv15"
+   },
+   "key": "R4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.0,
+    "setting": "VBLv15"
+   },
+   "key": "S2_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.001,
+    "setting": "VBLv15"
+   },
+   "key": "S2_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.002,
+    "setting": "VBLv15"
+   },
+   "key": "S2_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  },
+  {
+   "job": {
+    "case": "S2",
+    "eps": 0.003,
+    "setting": "VBLv15"
+   },
+   "key": "S2_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S2",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false
+  }
+ ]
+}

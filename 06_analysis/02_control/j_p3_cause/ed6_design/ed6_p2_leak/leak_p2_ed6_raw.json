@@ -1,0 +1,1103 @@
+{
+  "tool": "handoff_leak",
+  "boundary": "word",
+  "ignore_case": false,
+  "min_length": 4,
+  "scope": "all",
+  "files": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md"
+  ],
+  "leaks": [
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 5,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 39
+        }
+      ],
+      "text": "- J-P3: j9_main(VBL·LSL), T-JR-12b의 VBKL 줄, T-JR-12a, 감도 행과 확인 단계의 J-P3"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 24,
+      "names": [
+        {
+          "name": "LSL1",
+          "category": "outputs",
+          "column": 11
+        },
+        {
+          "name": "LSL4",
+          "category": "outputs",
+          "column": 18
+        }
+      ],
+      "text": "| `VBL`, `LSL1`~`LSL4` | VBJ·LSJ와 같음(P1~P4 + LC) | revision 6 | 켬 | j9_main J-P3, 확인 단계 (나) 격자, T-JR-12a |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 25,
+      "names": [
+        {
+          "name": "VBL0",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `VBL0` | 같음 | 끔 | 켬 | T-JR-12a 기준 팔(J-P3 줄 아님) |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 26,
+      "names": [
+        {
+          "name": "volume_scale",
+          "category": "outputs",
+          "column": 75
+        }
+      ],
+      "text": "| `VBLc005`, `VBLc04`, `VBLv05`, `VBLv15` | VBJ에서 P1 $c_v$ 0.005 / 0.04, `volume_scale` 0.5 / 1.5 | revision 6 | 켬 | 감도 행·확인 단계 (가) J-P3 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 27,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 4
+        },
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 70
+        }
+      ],
+      "text": "| `VBKL` | VBK와 같음(P1~P4 + 로드 센서 고장 계획) | revision 6 | 켬 | T-JR-12b, VBKL 줄 J-P3 |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 28,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 4
+        }
+      ],
+      "text": "| `VBKL0` | 같음 | 끔 | 켬 | T-JR-12b 기준 팔(J-P3 줄 아님) |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 34,
+      "names": [
+        {
+          "name": "LSL1",
+          "category": "outputs",
+          "column": 16
+        },
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 32
+        },
+        {
+          "name": "final_C4G2_P3W_LAS_K1_LSB",
+          "category": "outputs",
+          "column": 53
+        }
+      ],
+      "text": "- ③ 켬 판정 줄(VBL·LSL1~4, 감도 4설정, VBKL, 12a VBL)의 태그는 `final_C4G2_P3W_LAS_K1_LSB`다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 35,
+      "names": [
+        {
+          "name": "final_C4G2_P3W",
+          "category": "ed5_dictionary",
+          "column": 14
+        }
+      ],
+      "text": "- 태그 기저 대응은 `final_C4G2_P3W` → revision 6이다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 36,
+      "names": [
+        {
+          "name": "_LSB",
+          "category": "constants",
+          "column": 24
+        }
+      ],
+      "text": "- 태그 기저는 태그 끝에서 접미사 `_LSB`, `_K1`, `_LAS`를 이 순서로 (있으면) 뗀 나머지다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 37,
+      "names": [
+        {
+          "name": "_LSB",
+          "category": "constants",
+          "column": 8
+        },
+        {
+          "name": "lsb_components",
+          "category": "outputs",
+          "column": 79
+        }
+      ],
+      "text": "- 접미사 `_LSB`의 \"LS\"는 A(i)·A(ii), \"B\"는 **B3만**이다. 태그만으로 구성 요소를 판별하지 않고, 구성 요소는 `lsb_components`로 판별한다(1.3)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 41,
+      "names": [
+        {
+          "name": "LSL1",
+          "category": "outputs",
+          "column": 17
+        },
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 33
+        }
+      ],
+      "text": "- **③ 켬 줄**(VBL·LSL1~4, 감도 4설정, VBKL, 12a VBL)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 47,
+      "names": [
+        {
+          "name": "hydraulic_options",
+          "category": "outputs",
+          "column": 16
+        }
+      ],
+      "text": "- 키가 없으면 `hydraulic_options`의 `extend_start_tracked`·`extend_start_hold`·`extend_start_witness`가 모두 참이어야 한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 50,
+      "names": [
+        {
+          "name": "lsb_components",
+          "category": "outputs",
+          "column": 7
+        },
+        {
+          "name": "A_ii",
+          "category": "outputs",
+          "column": 42
+        }
+      ],
+      "text": "5. `lsb_components`가 **집합으로** {`A_i`, `A_ii`, `B3`}와 같다. 순서는 보지 않는다. 중복이 있거나, 다른 이름(예: `B1`)이 있거나, 하나라도 없으면 `setting_defect`다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 51,
+      "names": [
+        {
+          "name": "VBL0",
+          "category": "outputs",
+          "column": 13
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 19
+        }
+      ],
+      "text": "- **③ 끔 줄**(VBL0, VBKL0): 5번만 본다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 68,
+      "names": [
+        {
+          "name": "LSL1",
+          "category": "outputs",
+          "column": 16
+        },
+        {
+          "name": "LSL4",
+          "category": "outputs",
+          "column": 21
+        }
+      ],
+      "text": "- 줄: VBL 100줄, LSL1~LSL4 각 72줄, 모두 388줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 92,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 19
+        }
+      ],
+      "text": "### 2.5 T-JR-12b의 VBKL 줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 93,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 38
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 51
+        }
+      ],
+      "text": "- 넘김 6 2.7 (4)를 그대로 쓴다. 설정 이름은 VBK → VBKL, VBK0 → VBKL0로 바꾼다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 94,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 15
+        },
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 34
+        }
+      ],
+      "text": "- 판정 행: 기회 짝과 VBKL0 READY 미도달 짝의 VBKL 줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 96,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 5
+        }
+      ],
+      "text": "- VBKL 줄: 1~5번"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 97,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 5
+        }
+      ],
+      "text": "- VBKL0 줄: 5번"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 100,
+      "names": [
+        {
+          "name": "VBL0",
+          "category": "outputs",
+          "column": 21
+        }
+      ],
+      "text": "- 짝: **VBL(rev 6) 대 VBL0(③ 끔)**, 둘 다 판 6 구성 요소를 켰다. 판 5의 VBH 대 저장 H-6 짝은 판 6에서 돌리지 않는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 108,
+      "names": [
+        {
+          "name": "VBL0",
+          "category": "outputs",
+          "column": 3
+        }
+      ],
+      "text": "- VBL0 줄은 ③ 끔이라 J-P3 줄이 아니다(정체성 5번만 본다)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 111,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 16
+        }
+      ],
+      "text": "## 3. T-JR-12b(VBKL 비용 관문)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 114,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 25
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 30
+        }
+      ],
+      "text": "- 짝 = (사례, seed, 셀)이 같은 VBKL·VBKL0 두 줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 121,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 147
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 160
+        }
+      ],
+      "text": "- 그 밖의 정의는 넘김 6 2.2~2.9와 정오 1·정오 8 그대로다. 대상은 고장, 국면·트리거, 짝 동일성, 기회 분류, 목격 기회 $k$, (1) 새 FAULT, (2)+(3) $n_{23}$의 셈, A/A 기록, 교착 서명이다. 설정 이름은 VBK → VBKL, VBK0 → …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 124,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 6
+        }
+      ],
+      "text": "1. VBKL0 b1·b2"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 126,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 14
+        }
+      ],
+      "text": "3. b4를 더하면 VBKL0 b4를 돌리고 $k_{allow}$를 다시 결정"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 127,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 6
+        }
+      ],
+      "text": "4. VBKL"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 129,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 33
+        }
+      ],
+      "text": "### 3.2 $k_{allow}$의 결정(P-pred, VBKL 실행 전)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 130,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 16
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 29
+        }
+      ],
+      "text": "- $k_{allow}$는 VBKL을 돌리기 전에 VBKL0 출력만 보고 정한다. 정오 8의 고정값(7·9)은 판 6에 쓰지 않는다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 131,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 13
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 84
+        }
+      ],
+      "text": "- **입력 통계**(VBKL0 b1·b2, 사례 167). 줄 $(i,j)$(사례 $i$, 블록 $j$)의 분류는 정오 1·정오 8의 분류 순서를 VBKL0 줄만으로 적용한다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 132,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 18
+        }
+      ],
+      "text": "- 포함 줄: \"기회\"와 \"VBKL0 READY 미도달\" 줄"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 135,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 25
+        }
+      ],
+      "text": "- $s_{ij}$ = 1: 포함 줄이 VBKL0 READY 미도달(넘김 6 2.7의 READY 시각 읽기)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 136,
+      "names": [
+        {
+          "name": "tau_C",
+          "category": "outputs",
+          "column": 18
+        },
+        {
+          "name": "tau_R",
+          "category": "outputs",
+          "column": 25
+        }
+      ],
+      "text": "- 국면 셀 $c\\in\\{\\tau_C,\\tau_R\\}$(셀 표의 국면)"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 152,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 18
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 30
+        }
+      ],
+      "text": "4. 귀무($c$ = 1: VBKL은 그 사례의 VBKL0 분포에서 새로 뽑은 것) 재현"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 153,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 13
+        }
+      ],
+      "text": "- 기회 줄(VBKL0 도달)마다 독립으로 셈한다: 확률 $\\pi_i$로 상실, 상실이 아니면 확률 $r_2$로 지연."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 155,
+      "names": [
+        {
+          "name": "alpha",
+          "category": "outputs",
+          "column": 37
+        }
+      ],
+      "text": "5. 모든 재현을 모은 분포에서 $P(n_{23}>k)\\le\\alpha$ = **0.10**인 가장 작은 $k\\ge0$이 $k_{allow}$다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 157,
+      "names": [
+        {
+          "name": "tau_C",
+          "category": "outputs",
+          "column": 24
+        },
+        {
+          "name": "tau_R",
+          "category": "outputs",
+          "column": 38
+        }
+      ],
+      "text": "- b1·b2 줄의 매개변수($p_{\\tau_C}$, $p_{\\tau_R}$, ρ, $r_2$)와 사례 사후 확률은 b1·b2 입력으로만 정한다(b4를 더하지 않은 때와 같다)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 159,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 18
+        }
+      ],
+      "text": "- $K_{TRw}$: VBKL0 b4 포함 줄(기회 + READY 미도달) 가운데 미도달 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 160,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 18
+        }
+      ],
+      "text": "- $N_{TRw}$: VBKL0 b4 포함 줄 수"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 172,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 10
+        }
+      ],
+      "text": "- (판정) VBKL0 줄에서 입력 통계를 독립으로 다시 세어 결정 기록과 대조한다. 대상은 $K_c$, $N_c$, $a_{30}$, $n_{both}$, 사례별 $(k_i, n_i)$, 쓴 블록, (b4를 쓰면) $K_{TRw}$, $N_{TRw}$이다. 하나라도 다르면 `sett…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 176,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 22
+        },
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 29
+        }
+      ],
+      "text": "> \"T-JR-12b(판 6): 짝은 VBKL 대 VBKL0, N = 167 × 블록 수, 셀 배정은 고정 표와 같아야 한다(아니면 판정 불가). (1)·(4)는 0 건수이고, (2)+(3)은 허용 건수다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 177,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 59
+        }
+      ],
+      "text": "> (1) 새 FAULT 0: 넘김 6 2.7 (1)과 정오 1 2.7 (1) 그대로(대상: 기회 짝과 VBKL0 READY 미도달 짝)."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 179,
+      "names": [
+        {
+          "name": "VBKL",
+          "category": "outputs",
+          "column": 7
+        }
+      ],
+      "text": "> (4) VBKL 줄의 J-P3를 판정한다(2.5). 판정 행 0이면 판정 불가다."
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 187,
+      "names": [
+        {
+          "name": "VBKL0",
+          "category": "outputs",
+          "column": 72
+        }
+      ],
+      "text": "> '기회 짝 $N_{opp}$개(쓴 블록 명시). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBKL0 READY 미도달 짝 수, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) $n_{23}$ ≤ $k_{allow}$(값과 결정 절차 …"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 201,
+      "names": [
+        {
+          "name": "final_C4G2_P3W",
+          "category": "ed5_dictionary",
+          "column": 46
+        }
+      ],
+      "text": "| 12b 보고 1, j9_main 보고 1 | rev 6 태그 기저 대응 | `final_C4G2_P3W` → 6이 맞다(1.2) |"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 202,
+      "names": [
+        {
+          "name": "lsb_components",
+          "category": "outputs",
+          "column": 99
+        }
+      ],
+      "text": "| 12b 보고 2 | rev 6 정체성 검사 | 판정한다: 태그, `rule_revision` 6, `spec_edition` `fe6f5844`, revision 표시, `lsb_components`. `carry_end_rule`·`retract_start_rule`은 기록이다(…"
+    },
+    {
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 208,
+      "names": [
+        {
+          "name": "hydraulic_options",
+          "category": "outputs",
+          "column": 80
+        }
+      ],
+      "text": "| j9_main 보고 2 | `run_extend_start_revision`을 하네스 줄에 요구하는지 | 요구하지 않는다. 키가 없으면 `hydraulic_options` 세 옵션으로 본다(1.3 4번) |"
+    }
+  ],
+  "leak_names": [
+    "A_ii",
+    "LSL1",
+    "LSL4",
+    "VBKL",
+    "VBKL0",
+    "VBL0",
+    "_LSB",
+    "alpha",
+    "final_C4G2_P3W",
+    "final_C4G2_P3W_LAS_K1_LSB",
+    "hydraulic_options",
+    "lsb_components",
+    "tau_C",
+    "tau_R",
+    "volume_scale"
+  ],
+  "blocks": [],
+  "summary": {
+    "tool": "handoff_leak",
+    "command": "scan",
+    "files": 1,
+    "names_used": 1006,
+    "names_skipped_short": 0,
+    "leak_lines": 48,
+    "leak_names": 15,
+    "blocks": 0,
+    "error": 48,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "name_leak": 48
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 5,
+      "message": "VBKL (outputs) — - J-P3: j9_main(VBL·LSL), T-JR-12b의 VBKL 줄, T-JR-12a, 감도 행과 확인 단계의 J-P3",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 24,
+      "message": "LSL1 (outputs), LSL4 (outputs) — | `VBL`, `LSL1`~`LSL4` | VBJ·LSJ와 같음(P1~P4 + LC) | revision 6 | 켬 | j9_main J-P3, 확인 단계 (나) 격자, T-JR-12a |",
+      "target": "LSL1, LSL4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 25,
+      "message": "VBL0 (outputs) — | `VBL0` | 같음 | 끔 | 켬 | T-JR-12a 기준 팔(J-P3 줄 아님) |",
+      "target": "VBL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 26,
+      "message": "volume_scale (outputs) — | `VBLc005`, `VBLc04`, `VBLv05`, `VBLv15` | VBJ에서 P1 $c_v$ 0.005 / 0.04, `volume_scale` 0.5 / 1.5 | revision 6 | 켬 | 감도 행·확인 단계 (가) J-P3 |",
+      "target": "volume_scale"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 27,
+      "message": "VBKL (outputs), VBKL (outputs) — | `VBKL` | VBK와 같음(P1~P4 + 로드 센서 고장 계획) | revision 6 | 켬 | T-JR-12b, VBKL 줄 J-P3 |",
+      "target": "VBKL, VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 28,
+      "message": "VBKL0 (outputs) — | `VBKL0` | 같음 | 끔 | 켬 | T-JR-12b 기준 팔(J-P3 줄 아님) |",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 34,
+      "message": "LSL1 (outputs), VBKL (outputs), final_C4G2_P3W_LAS_K1_LSB (outputs) — - ③ 켬 판정 줄(VBL·LSL1~4, 감도 4설정, VBKL, 12a VBL)의 태그는 `final_C4G2_P3W_LAS_K1_LSB`다.",
+      "target": "LSL1, VBKL, final_C4G2_P3W_LAS_K1_LSB"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 35,
+      "message": "final_C4G2_P3W (ed5_dictionary) — - 태그 기저 대응은 `final_C4G2_P3W` → revision 6이다.",
+      "target": "final_C4G2_P3W"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 36,
+      "message": "_LSB (constants) — - 태그 기저는 태그 끝에서 접미사 `_LSB`, `_K1`, `_LAS`를 이 순서로 (있으면) 뗀 나머지다.",
+      "target": "_LSB"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 37,
+      "message": "_LSB (constants), lsb_components (outputs) — - 접미사 `_LSB`의 \"LS\"는 A(i)·A(ii), \"B\"는 **B3만**이다. 태그만으로 구성 요소를 판별하지 않고, 구성 요소는 `lsb_components`로 판별한다(1.3).",
+      "target": "_LSB, lsb_components"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 41,
+      "message": "LSL1 (outputs), VBKL (outputs) — - **③ 켬 줄**(VBL·LSL1~4, 감도 4설정, VBKL, 12a VBL)",
+      "target": "LSL1, VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 47,
+      "message": "hydraulic_options (outputs) — - 키가 없으면 `hydraulic_options`의 `extend_start_tracked`·`extend_start_hold`·`extend_start_witness`가 모두 참이어야 한다.",
+      "target": "hydraulic_options"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 50,
+      "message": "lsb_components (outputs), A_ii (outputs) — 5. `lsb_components`가 **집합으로** {`A_i`, `A_ii`, `B3`}와 같다. 순서는 보지 않는다. 중복이 있거나, 다른 이름(예: `B1`)이 있거나, 하나라도 없으면 `setting_defect`다.",
+      "target": "lsb_components, A_ii"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 51,
+      "message": "VBL0 (outputs), VBKL0 (outputs) — - **③ 끔 줄**(VBL0, VBKL0): 5번만 본다.",
+      "target": "VBL0, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 68,
+      "message": "LSL1 (outputs), LSL4 (outputs) — - 줄: VBL 100줄, LSL1~LSL4 각 72줄, 모두 388줄",
+      "target": "LSL1, LSL4"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 92,
+      "message": "VBKL (outputs) — ### 2.5 T-JR-12b의 VBKL 줄",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 93,
+      "message": "VBKL (outputs), VBKL0 (outputs) — - 넘김 6 2.7 (4)를 그대로 쓴다. 설정 이름은 VBK → VBKL, VBK0 → VBKL0로 바꾼다.",
+      "target": "VBKL, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 94,
+      "message": "VBKL0 (outputs), VBKL (outputs) — - 판정 행: 기회 짝과 VBKL0 READY 미도달 짝의 VBKL 줄",
+      "target": "VBKL0, VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 96,
+      "message": "VBKL (outputs) — - VBKL 줄: 1~5번",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 97,
+      "message": "VBKL0 (outputs) — - VBKL0 줄: 5번",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 100,
+      "message": "VBL0 (outputs) — - 짝: **VBL(rev 6) 대 VBL0(③ 끔)**, 둘 다 판 6 구성 요소를 켰다. 판 5의 VBH 대 저장 H-6 짝은 판 6에서 돌리지 않는다.",
+      "target": "VBL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 108,
+      "message": "VBL0 (outputs) — - VBL0 줄은 ③ 끔이라 J-P3 줄이 아니다(정체성 5번만 본다).",
+      "target": "VBL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 111,
+      "message": "VBKL (outputs) — ## 3. T-JR-12b(VBKL 비용 관문)",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 114,
+      "message": "VBKL (outputs), VBKL0 (outputs) — - 짝 = (사례, seed, 셀)이 같은 VBKL·VBKL0 두 줄",
+      "target": "VBKL, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 121,
+      "message": "VBKL (outputs), VBKL0 (outputs) — - 그 밖의 정의는 넘김 6 2.2~2.9와 정오 1·정오 8 그대로다. 대상은 고장, 국면·트리거, 짝 동일성, 기회 분류, 목격 기회 $k$, (1) 새 FAULT, (2)+(3) $n_{23}$의 셈, A/A 기록, 교착 서명이다. 설정 이름은 VBK → VBKL, VBK0 → …",
+      "target": "VBKL, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 124,
+      "message": "VBKL0 (outputs) — 1. VBKL0 b1·b2",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 126,
+      "message": "VBKL0 (outputs) — 3. b4를 더하면 VBKL0 b4를 돌리고 $k_{allow}$를 다시 결정",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 127,
+      "message": "VBKL (outputs) — 4. VBKL",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 129,
+      "message": "VBKL (outputs) — ### 3.2 $k_{allow}$의 결정(P-pred, VBKL 실행 전)",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 130,
+      "message": "VBKL (outputs), VBKL0 (outputs) — - $k_{allow}$는 VBKL을 돌리기 전에 VBKL0 출력만 보고 정한다. 정오 8의 고정값(7·9)은 판 6에 쓰지 않는다.",
+      "target": "VBKL, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 131,
+      "message": "VBKL0 (outputs), VBKL0 (outputs) — - **입력 통계**(VBKL0 b1·b2, 사례 167). 줄 $(i,j)$(사례 $i$, 블록 $j$)의 분류는 정오 1·정오 8의 분류 순서를 VBKL0 줄만으로 적용한다.",
+      "target": "VBKL0, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 132,
+      "message": "VBKL0 (outputs) — - 포함 줄: \"기회\"와 \"VBKL0 READY 미도달\" 줄",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 135,
+      "message": "VBKL0 (outputs) — - $s_{ij}$ = 1: 포함 줄이 VBKL0 READY 미도달(넘김 6 2.7의 READY 시각 읽기)",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 136,
+      "message": "tau_C (outputs), tau_R (outputs) — - 국면 셀 $c\\in\\{\\tau_C,\\tau_R\\}$(셀 표의 국면)",
+      "target": "tau_C, tau_R"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 152,
+      "message": "VBKL (outputs), VBKL0 (outputs) — 4. 귀무($c$ = 1: VBKL은 그 사례의 VBKL0 분포에서 새로 뽑은 것) 재현",
+      "target": "VBKL, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 153,
+      "message": "VBKL0 (outputs) — - 기회 줄(VBKL0 도달)마다 독립으로 셈한다: 확률 $\\pi_i$로 상실, 상실이 아니면 확률 $r_2$로 지연.",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 155,
+      "message": "alpha (outputs) — 5. 모든 재현을 모은 분포에서 $P(n_{23}>k)\\le\\alpha$ = **0.10**인 가장 작은 $k\\ge0$이 $k_{allow}$다.",
+      "target": "alpha"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 157,
+      "message": "tau_C (outputs), tau_R (outputs) — - b1·b2 줄의 매개변수($p_{\\tau_C}$, $p_{\\tau_R}$, ρ, $r_2$)와 사례 사후 확률은 b1·b2 입력으로만 정한다(b4를 더하지 않은 때와 같다).",
+      "target": "tau_C, tau_R"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 159,
+      "message": "VBKL0 (outputs) — - $K_{TRw}$: VBKL0 b4 포함 줄(기회 + READY 미도달) 가운데 미도달 수",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 160,
+      "message": "VBKL0 (outputs) — - $N_{TRw}$: VBKL0 b4 포함 줄 수",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 172,
+      "message": "VBKL0 (outputs) — - (판정) VBKL0 줄에서 입력 통계를 독립으로 다시 세어 결정 기록과 대조한다. 대상은 $K_c$, $N_c$, $a_{30}$, $n_{both}$, 사례별 $(k_i, n_i)$, 쓴 블록, (b4를 쓰면) $K_{TRw}$, $N_{TRw}$이다. 하나라도 다르면 `sett…",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 176,
+      "message": "VBKL (outputs), VBKL0 (outputs) — > \"T-JR-12b(판 6): 짝은 VBKL 대 VBKL0, N = 167 × 블록 수, 셀 배정은 고정 표와 같아야 한다(아니면 판정 불가). (1)·(4)는 0 건수이고, (2)+(3)은 허용 건수다.",
+      "target": "VBKL, VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 177,
+      "message": "VBKL0 (outputs) — > (1) 새 FAULT 0: 넘김 6 2.7 (1)과 정오 1 2.7 (1) 그대로(대상: 기회 짝과 VBKL0 READY 미도달 짝).",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 179,
+      "message": "VBKL (outputs) — > (4) VBKL 줄의 J-P3를 판정한다(2.5). 판정 행 0이면 판정 불가다.",
+      "target": "VBKL"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 187,
+      "message": "VBKL0 (outputs) — > '기회 짝 $N_{opp}$개(쓴 블록 명시). (1) 새 FAULT 0: 판정 짝 $N_1$ = $N_{opp}$ + VBKL0 READY 미도달 짝 수, 짝당 95 % 상한 $1-0.05^{1/N_1}$. (2)+(3) $n_{23}$ ≤ $k_{allow}$(값과 결정 절차 …",
+      "target": "VBKL0"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 201,
+      "message": "final_C4G2_P3W (ed5_dictionary) — | 12b 보고 1, j9_main 보고 1 | rev 6 태그 기저 대응 | `final_C4G2_P3W` → 6이 맞다(1.2) |",
+      "target": "final_C4G2_P3W"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 202,
+      "message": "lsb_components (outputs) — | 12b 보고 2 | rev 6 정체성 검사 | 판정한다: 태그, `rule_revision` 6, `spec_edition` `fe6f5844`, revision 표시, `lsb_components`. `carry_end_rule`·`retract_start_rule`은 기록이다(…",
+      "target": "lsb_components"
+    },
+    {
+      "severity": "error",
+      "category": "name_leak",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_rev6_p2_handoff_ed6.md",
+      "line": 208,
+      "message": "hydraulic_options (outputs) — | j9_main 보고 2 | `run_extend_start_revision`을 하네스 줄에 요구하는지 | 요구하지 않는다. 키가 없으면 `hydraulic_options` 세 옵션으로 본다(1.3 4번) |",
+      "target": "hydraulic_options"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "by": "main session, after integrity check 2026-11-24 (spec v6 revision 14 seal)",
+  "handoff": "jp3_rev6_p2_handoff_ed6.md",
+  "handoff_sha256": "55c8e92e30245e49a9adeaa071b7bbc1f4fe7eaf26d1083960f39d209b4e4f84",
+  "names": "p1_names_ed6.json (reused, unchanged)",
+  "runs": {
+    "leak_p2_ed6_r14_allowed_prev.json": "r13 allow list (17): 1 line / 1 name ed6_design (handoff line 17, prohibition sentence added in revision 14 R-4)",
+    "leak_p2_ed6_r14_allowed.json": "r13 allow + ed6_design: 0 leak lines (exit 0)"
+  },
+  "allow_added_r14": {
+    "ed6_design": "folder name inside the sentence that forbids path 2 to open the edition 6 design folder; not an implementation name"
+  }
+}

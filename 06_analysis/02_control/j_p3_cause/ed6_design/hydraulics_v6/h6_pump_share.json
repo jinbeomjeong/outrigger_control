@@ -1,0 +1,21 @@
+{
+ "extension_at_v_max_L_min": [
+  16.664,
+  16.664,
+  11.931,
+  11.931
+ ],
+ "extension_sum_L_min": 57.19,
+ "retract_at_v_max_L_min": [
+  4.733,
+  4.733,
+  3.944,
+  3.944
+ ],
+ "retract_sum_L_min": 17.354,
+ "pump_times_eta_L_min": 57.19,
+ "four_leg_one_increment_extension_L_min": 14.297,
+ "retract_fill_oil_cm3_front_3p1mm": 11.69,
+ "extension_line_oil_cm3_p90bar": 5.02,
+ "note": "v_max is defined so that sum(A_h) v_max = 0.95 Q_pump; a fill floor that keeps |u| <= v_max per leg cannot ask more than the pump (flow share off in the harness)"
+}
