@@ -1,0 +1,24 @@
+# 기준선 실행 정체성 점검 (baseline_check identity)
+
+- 파일 4개, git 블록 8개, 기대 커밋 7949540527baea680f144ef4e00a970cb10b9830
+- head 값: 7949540527baea680f144ef4e00a970cb10b9830
+
+| 파일 | 위치 | head | is_clean | 실행 시각 |
+|---|---|---|---|---|
+| `L1_VBL.identity.json` | `$.start[0].git` | 7949540527ba | True | 2026-11-24 10:35:46 +0900 |
+| `L1_VBL.identity.json` | `$.end[0].git` | 7949540527ba | True | 2026-11-24 11:42:14 +0900 |
+| `L1_VBL0.identity.json` | `$.start[0].git` | 7949540527ba | True | 2026-11-24 10:35:46 +0900 |
+| `L1_VBL0.identity.json` | `$.end[0].git` | 7949540527ba | True | 2026-11-24 11:39:05 +0900 |
+| `L1a_VBL.identity.json` | `$.start[0].git` | 7949540527ba | True | 2026-11-24 10:35:46 +0900 |
+| `L1a_VBL.identity.json` | `$.end[0].git` | 7949540527ba | True | 2026-11-24 11:20:50 +0900 |
+| `L1a_VBL0.identity.json` | `$.start[0].git` | 7949540527ba | True | 2026-11-24 10:35:46 +0900 |
+| `L1a_VBL0.identity.json` | `$.end[0].git` | 7949540527ba | True | 2026-11-24 11:18:08 +0900 |
+
+## mtime 검사
+
+- 커밋 7949540527baea680f144ef4e00a970cb10b9830 시각 2026-11-24T08:36:03+09:00, 변경 파일 6개, 가장 이른 실행 2026-11-24T10:35:46+09:00
+- 커밋 뒤에 바뀐 파일 0개 
+
+## 발견 사항
+
+발견 사항 없음.

@@ -1,0 +1,23 @@
+{
+  "label": "record after the edition 6 stop; not used for the edition 6 judgement (판정 후 기록용, 판 6 판정에 쓰지 않음)",
+  "part": "A",
+  "dry_run": false,
+  "identity_start": {
+    "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6",
+    "head": "7949540527baea680f144ef4e00a970cb10b9830",
+    "is_clean": true,
+    "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+    "diff_ok": true,
+    "changed_from_run_commit": [],
+    "time": "2026-11-24 13:42:53 +09:00"
+  },
+  "mask": "",
+  "workers": 0,
+  "commands": [
+    {
+      "label": "grid_judge",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py grid --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_b.jsonl --grid-root C:\\workspace\\outrigger_control --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\records_after_stop\\A_a1\\grid_judge.json",
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6"
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+ "rule": "jp3_remedy_spec_v6.md 6.3 (\ub098), path 1",
+ "keys": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json",
+  "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+  "lines": 192
+ },
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_b.jsonl",
+   "sha256": "26d5032cf106f0955c26524b4d40920ddcf6e4dff002beda290adf37b1712f6a"
+  },
+  "grid_root": "C:\\workspace\\outrigger_control"
+ },
+ "lines": 192,
+ "opportunities": 174,
+ "opportunity_failures": [
+  "R12_bottom-FL-Fs0-o0.05-FS24-level_VBL.npz",
+  "R12_bottom-FL-Fs0-o0.05-FS24-ready_VBL.npz",
+  "R12_bottom-FR-Fs0-o0.0-FS24-ready_VBL.npz",
+  "R12_bottom-FR-Fs0-o0.0-G4-ready_VBL.npz",
+  "R12_bottom-FL-Fs2-o0.0-RE1bF-ready_VBL.npz",
+  "R12_bottom-FR-Fs2-o0.0-FS24-ready_VBL.npz",
+  "R12_bottom-FR-Fs2-o0.0-RE1bF-ready_VBL.npz",
+  "R12_bottom-FL-Fs4-o0.025-FS24-ready_VBL.npz",
+  "R12_bottom-FR-Fs4-o0.0-RE1bF-ready_VBL.npz",
+  "R12_top-FL-Fs0-o0.05-G4-level_VBL.npz",
+  "R12_top-FL-Fs2-o0.05-G4-ready_VBL.npz"
+ ],
+ "allowed": 1,
+ "fault_lines": [],
+ "warn_records": [
+  {
+   "line": "R12_bottom-FR-Fs0-o0.0-FS24-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_D1_IMU_GYRO_MISSING"
+   ]
+  },
+  {
+   "line": "R12_bottom-FL-Fs2-o0.0-FS24-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_D1_IMU_GYRO_MISSING"
+   ]
+  },
+  {
+   "line": "R12_bottom-FR-Fs2-o0.0-FS24-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_D1_IMU_GYRO_MISSING"
+   ]
+  },
+  {
+   "line": "R12_bottom-RR-Fs2-o0.075-RE1bF-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_D1_IMU_GYRO_MISSING"
+   ]
+  },
+  {
+   "line": "R12_bottom-FR-Fs8-o0.05-RE1bF-level_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-RR-Fs8-o0.0-G4-level_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-FL-Fs8-o0.0-FS24-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-FL-Fs8-o0.0-RE1bF-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-FR-Fs8-o0.05-RE1bF-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-RL-Fs8-o0.0-FS24-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-RL-Fs8-o0.0-G4-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_bottom-RL-Fs8-o0.0-RE1bF-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "line": "R12_top-FR-Fs8-o0.025-RE1bF-ready_VBL.npz",
+   "new_warn_names": [
+    "WARN_D1_IMU_GYRO_MISSING"
+   ]
+  }
+ ],
+ "identity_defects": [],
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "H-7",
+  "runs": 0,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_revision_5_record_in_revision_4_judgement": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "rev6": {
+   "name": "extend_bound_check rev5: jp3a_breach_reads + jp3b_breach_over_tol_reads + jp3c_breach_reads == 0",
+   "status": "H-7",
+   "runs": 192,
+   "runs_judged": 192,
+   "expected_judged_runs": null,
+   "judged_key_missing_runs": 0,
+   "runs_by_case": {
+    "judged": 192,
+    "no_rod_reading": 0,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_record_not_revision_5": 0,
+    "defect_sensor_grade_missing": 0,
+    "defect_rule_identity_not_default": 0,
+    "record_only_sensor_grade": 0
+   },
+   "rule_revisions": [
+    6
+   ],
+   "jp3a_breach_reads": 62,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0,
+   "record_only_grade_sums": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   },
+   "runs_with_breach": 44,
+   "jp3b_breach_reads_flag": 0,
+   "jp3a_margin_used_reads_flag": 63,
+   "lock_ext_breach_over_tol_reads_flag": 0,
+   "ret_breach_reads_flag": 71
+  },
+  "rev6_unjudged_setting_runs": 0,
+  "runs_expected": 192,
+  "rule_missing_runs": 0,
+  "test_only_setting_runs": 0,
+  "l1_reference_runs": 0,
+  "revision_key_missing_runs": 0,
+  "revision_key_mismatch_runs": 0,
+  "status_by_revision": {
+   "4": "no_p3_runs",
+   "6": "H-7"
+  }
+ },
+ "J-P3_judged_rows": 192,
+ "status_basis": {
+  "failures": [
+   "opportunity failures 11 > 1",
+   "J-P3 H-7"
+  ],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "failed"
+}

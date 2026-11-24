@@ -1,0 +1,272 @@
+== R12_top-FL-Fs4-o0.0_VBLv15.npz leg FL final ready t_end 72.5
+   ev 41.9 ready_heave_tail
+   ev 47.8 relevel_predicted:RR
+   ev 48.9 leg_reapproach_start:RR
+   ev 49.4 leg_reapproach_contact:RR
+   ev 69.5 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  29.8
+   done     29.9-  29.9
+   probe    30.0-  41.8 signs [1, -1] a1 0 a2 2 | hold@31.5 pr   5.05 ph  102.7 ; hold@41.8 pr  35.01 ph  101.9
+   ready    41.9-  47.7
+   level    47.8-  57.4
+   done     57.5-  57.5
+   probe    57.6-  69.4 signs [1, -1] a1 0 a2 2 | hold@59.1 pr   5.01 ph  102.6 ; hold@69.4 pr  35.04 ph  102.1
+   ready    69.5-  72.5
+== R12_top-FL-Fs4-o0.05_VBLv15.npz leg FL final ready t_end 72.2
+   ev 41.9 ready_heave_tail
+   ev 47.9 relevel_predicted:RR
+   ev 49.0 leg_reapproach_start:RR
+   ev 49.5 leg_reapproach_contact:RR
+   ev 69.2 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  29.8
+   done     29.9-  29.9
+   probe    30.0-  41.8 signs [1, -1] a1 0 a2 2 | hold@31.5 pr   5.05 ph  102.7 ; hold@41.8 pr  35.01 ph  101.9
+   ready    41.9-  47.8
+   level    47.9-  57.1
+   done     57.2-  57.2
+   probe    57.3-  69.1 signs [1, -1] a1 0 a2 2 | hold@58.8 pr   5.05 ph  102.8 ; hold@69.1 pr  34.98 ph  102.4
+   ready    69.2-  72.2
+== R12_top-FR-Fs0-o0.0_VBLv15.npz leg FL final ready t_end 73.9
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 50.2 leg_reapproach_start:RL
+   ev 50.6 leg_reapproach_contact:RL
+   ev 70.9 ready_heave_tail
+   ev 71.0 WARN_ROD_PRESSURE_FALLBACK:FL
+   ev 71.0 INFO_ROD_PRESSURE_FAULT_REASON:FL:D6
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  12.81 ph   93.4
+   ready    42.4-  48.2
+   level    48.3-  58.8
+   done     58.9-  58.9
+   probe    59.0-  70.8 signs [1, -1] a1 0 a2 2 | hold@60.5 pr   4.59 ph   99.9 ; hold@70.8 pr  12.20 ph   94.0
+   ready    70.9-  73.9
+== R12_top-FR-Fs0-o0.05_VBLv15.npz leg FL final probe t_end 107.5
+   ev 42.4 ready_heave_tail
+   ev 48.4 relevel_predicted:RL
+   ev 50.3 leg_reapproach_start:RL
+   ev 50.7 leg_reapproach_contact:RL
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  12.81 ph   93.4
+   ready    42.4-  48.3
+   level    48.4- 100.3
+   done    100.4- 100.4
+   probe   100.5- 107.5 signs [1, -1] a1 0 a2 2 | hold@102.0 pr   5.41 ph   98.5 ; hold@107.5 pr  21.97 ph   85.7
+== R12_top-FR-Fs8-o0.0_VBLv15.npz leg FL final ready t_end 73.0
+   ev 42.5 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 49.2 leg_reapproach_start:RL
+   ev 49.7 leg_reapproach_contact:RL
+   ev 70.0 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.7
+   level    21.8-  30.4
+   done     30.5-  30.5
+   probe    30.6-  42.4 signs [1, -1] a1 0 a2 2 | hold@32.1 pr   5.00 ph  106.7 ; hold@42.4 pr  40.72 ph  101.4
+   ready    42.5-  48.2
+   level    48.3-  57.9
+   done     58.0-  58.0
+   probe    58.1-  69.9 signs [1, -1] a1 0 a2 2 | hold@59.6 pr   5.14 ph  107.9 ; hold@69.9 pr  41.20 ph  102.6
+   ready    70.0-  73.0
+== R12_top-FR-Fs8-o0.05_VBLv15.npz leg FL final ready t_end 73.0
+   ev 42.5 ready_heave_tail
+   ev 48.4 relevel_predicted:RL
+   ev 49.4 leg_reapproach_start:RL
+   ev 49.9 leg_reapproach_contact:RL
+   ev 70.0 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.7
+   level    21.8-  30.4
+   done     30.5-  30.5
+   probe    30.6-  42.4 signs [1, -1] a1 0 a2 2 | hold@32.1 pr   5.00 ph  106.7 ; hold@42.4 pr  40.72 ph  101.4
+   ready    42.5-  48.3
+   level    48.4-  57.9
+   done     58.0-  58.0
+   probe    58.1-  69.9 signs [1, -1] a1 0 a2 2 | hold@59.6 pr   5.12 ph  107.9 ; hold@69.9 pr  41.27 ph  102.6
+   ready    70.0-  73.0
+== R12_top-RL-Fs0-o0.0_VBLv15.npz leg FL final ready t_end 74.5
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 49.7 leg_reapproach_start:RL
+   ev 50.2 leg_reapproach_contact:RL
+   ev 71.5 ready_heave_tail
+   ev 71.6 WARN_ROD_PRESSURE_FALLBACK:FL
+   ev 71.6 INFO_ROD_PRESSURE_FAULT_REASON:FL:D6
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  12.81 ph   93.4
+   ready    42.4-  48.2
+   level    48.3-  59.4
+   done     59.5-  59.5
+   probe    59.6-  71.4 signs [1, -1] a1 0 a2 2 | hold@61.1 pr   4.69 ph   99.7 ; hold@71.4 pr  12.05 ph   94.0
+   ready    71.5-  74.5
+== R12_top-RL-Fs0-o0.05_VBLv15.npz leg FL final ready t_end 76.2
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 49.7 leg_reapproach_start:RL
+   ev 50.2 leg_reapproach_contact:RL
+   ev 73.2 ready_heave_tail
+   ev 73.3 WARN_ROD_PRESSURE_FALLBACK:FL
+   ev 73.3 INFO_ROD_PRESSURE_FAULT_REASON:FL:D6
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  12.81 ph   93.4
+   ready    42.4-  48.2
+   level    48.3-  61.1
+   done     61.2-  61.2
+   probe    61.3-  73.1 signs [1, -1] a1 0 a2 3 | hold@62.8 pr   4.60 ph   99.5 ; hold@73.1 pr  10.79 ph   94.7
+   ready    73.2-  76.2
+== R12_top-RL-Fs8-o0.0_VBLv15.npz leg FL final ready t_end 74.0
+   ev 42.5 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 49.2 leg_reapproach_start:RL
+   ev 49.7 leg_reapproach_contact:RL
+   ev 71.0 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.7
+   level    21.8-  30.4
+   done     30.5-  30.5
+   probe    30.6-  42.4 signs [1, -1] a1 0 a2 2 | hold@32.1 pr   5.00 ph  106.7 ; hold@42.4 pr  40.72 ph  101.4
+   ready    42.5-  48.2
+   level    48.3-  58.9
+   done     59.0-  59.0
+   probe    59.1-  70.9 signs [1, -1] a1 0 a2 2 | hold@60.6 pr   5.05 ph  107.5 ; hold@70.9 pr  40.53 ph  102.7
+   ready    71.0-  74.0
+== R12_top-RL-Fs8-o0.05_VBLv15.npz leg FL final ready t_end 75.6
+   ev 42.5 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 49.2 leg_reapproach_start:RL
+   ev 49.8 leg_reapproach_contact:RL
+   ev 72.6 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.7
+   level    21.8-  30.4
+   done     30.5-  30.5
+   probe    30.6-  42.4 signs [1, -1] a1 0 a2 2 | hold@32.1 pr   5.00 ph  106.7 ; hold@42.4 pr  40.72 ph  101.4
+   ready    42.5-  48.2
+   level    48.3-  60.5
+   done     60.6-  60.6
+   probe    60.7-  72.5 signs [1, -1] a1 0 a2 2 | hold@62.2 pr   5.12 ph  107.0 ; hold@72.5 pr  40.03 ph  102.3
+   ready    72.6-  75.6
+== R12_top-RR-Fs0-o0.0_VBLv15.npz leg FL final ready t_end 74.5
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RR
+   ev 49.4 leg_reapproach_start:RR
+   ev 49.9 leg_reapproach_contact:RR
+   ev 71.5 ready_heave_tail
+   ev 71.6 WARN_ROD_PRESSURE_FALLBACK:FL
+   ev 71.6 INFO_ROD_PRESSURE_FAULT_REASON:FL:D6
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  12.81 ph   93.4
+   ready    42.4-  48.2
+   level    48.3-  59.4
+   done     59.5-  59.5
+   probe    59.6-  71.4 signs [1, -1] a1 0 a2 3 | hold@61.1 pr   5.12 ph   98.3 ; hold@71.4 pr  12.93 ph   92.3
+   ready    71.5-  74.5
+== R12_top-RR-Fs0-o0.05_VBLv15.npz leg FL final ready t_end 74.5
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RR
+   ev 49.4 leg_reapproach_start:RR
+   ev 49.9 leg_reapproach_contact:RR
+   ev 71.5 ready_heave_tail
+   ev 71.6 WARN_ROD_PRESSURE_FALLBACK:FL
+   ev 71.6 INFO_ROD_PRESSURE_FAULT_REASON:FL:D6
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  12.81 ph   93.4
+   ready    42.4-  48.2
+   level    48.3-  59.4
+   done     59.5-  59.5
+   probe    59.6-  71.4 signs [1, -1] a1 0 a2 3 | hold@61.1 pr   5.14 ph   98.3 ; hold@71.4 pr  12.94 ph   92.3
+   ready    71.5-  74.5
+== R12_top-RR-Fs8-o0.0_VBLv15.npz leg FL final ready t_end 73.9
+   ev 42.5 ready_heave_tail
+   ev 48.3 relevel_predicted:RR
+   ev 49.2 leg_reapproach_start:RR
+   ev 49.7 leg_reapproach_contact:RR
+   ev 70.9 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.7
+   level    21.8-  30.4
+   done     30.5-  30.5
+   probe    30.6-  42.4 signs [1, -1] a1 0 a2 2 | hold@32.1 pr   5.00 ph  106.7 ; hold@42.4 pr  40.72 ph  101.4
+   ready    42.5-  48.2
+   level    48.3-  58.8
+   done     58.9-  58.9
+   probe    59.0-  70.8 signs [1, -1] a1 0 a2 2 | hold@60.5 pr   5.10 ph  107.0 ; hold@70.8 pr  41.91 ph  100.8
+   ready    70.9-  73.9
+== R12_top-RR-Fs8-o0.05_VBLv15.npz leg FL final ready t_end 74.0
+   ev 42.5 ready_heave_tail
+   ev 48.3 relevel_predicted:RR
+   ev 49.2 leg_reapproach_start:RR
+   ev 49.8 leg_reapproach_contact:RR
+   ev 71.0 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.7
+   level    21.8-  30.4
+   done     30.5-  30.5
+   probe    30.6-  42.4 signs [1, -1] a1 0 a2 2 | hold@32.1 pr   5.00 ph  106.7 ; hold@42.4 pr  40.72 ph  101.4
+   ready    42.5-  48.2
+   level    48.3-  58.9
+   done     59.0-  59.0
+   probe    59.1-  70.9 signs [1, -1] a1 0 a2 2 | hold@60.6 pr   5.09 ph  107.6 ; hold@70.9 pr  42.10 ph  101.6
+   ready    71.0-  74.0
+== R12_top-FR-Fs0-o0.0_VBLv05.npz leg FL final ready t_end 103.6
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 100.6 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   5.02 ph   99.7 ; hold@42.3 pr  35.78 ph  101.3
+   ready    42.4-  48.2
+   level    48.3-  88.5
+   done     88.6-  88.6
+   probe    88.7- 100.5 signs [1, -1] a1 0 a2 2 | hold@90.2 pr   4.92 ph  100.6 ; hold@100.5 pr  37.28 ph  102.1
+   ready   100.6- 103.6
+== R12_top-FR-Fs0-o0.0_VBLc005.npz leg FL final ready t_end 101.4
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   ev 98.4 ready_heave_tail
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  43.37 ph  102.7
+   ready    42.4-  48.2
+   level    48.3-  86.3
+   done     86.4-  86.4
+   probe    86.5-  98.3 signs [1, -1] a1 0 a2 2 | hold@88.0 pr   3.36 ph  101.2 ; hold@98.3 pr  43.34 ph  105.5
+   ready    98.4- 101.4
+== R12_top-FR-Fs0-o0.0_VBLc04.npz leg FL final probe t_end 107.4
+   ev 42.4 ready_heave_tail
+   ev 48.3 relevel_predicted:RL
+   check     0.1-   0.9
+   touch     1.0-  21.5
+   level    21.6-  30.3
+   done     30.4-  30.4
+   probe    30.5-  42.3 signs [1, -1] a1 0 a2 2 | hold@32.0 pr   4.95 ph   99.5 ; hold@42.3 pr  42.92 ph  103.1
+   ready    42.4-  48.2
+   level    48.3-  98.4
+   done     98.5-  98.5
+   probe    98.6- 107.4 signs [-1, 1, -1] a1 0 a2 3 | hold@100.1 pr   2.70 ph  102.1 ; hold@107.4 pr  48.46 ph  100.3

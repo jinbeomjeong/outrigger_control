@@ -1,0 +1,86 @@
+{
+  "step": "impl_p51",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1",
+  "exit_code": 0,
+  "commit": "7949540527baea680f144ef4e00a970cb10b9830",
+  "started": "2026-11-24 11:47:52 +09:00",
+  "done": "2026-11-24 11:53:05 +09:00",
+  "codes": {
+    "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+    "identity_start": {
+      "head": "7949540527baea680f144ef4e00a970cb10b9830",
+      "is_clean": true,
+      "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+      "time": "2026-11-24 11:47:53 +09:00"
+    },
+    "fixed_list": "06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_79495405.SHA256SUMS",
+    "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 7949540527baea680f144ef4e00a970cb10b9830)",
+    "run:j9_cases": 0,
+    "run:j9_case_f": 0,
+    "run:case_cd": 0,
+    "run:x11_both": 0,
+    "identity_check": 0,
+    "tool:p51_j9_cases": 0,
+    "tool:p51_case_cd": 0,
+    "tool:p51_x11": 0,
+    "tool:p51_j9_case_f": 0,
+    "identity_end": {
+      "head": "7949540527baea680f144ef4e00a970cb10b9830",
+      "is_clean": true,
+      "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+      "time": "2026-11-24 11:53:05 +09:00"
+    }
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "j9_cases",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_cases --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\j9_cases.jsonl --workers 5 --mask 0x0FFFFFFF",
+      "pid": 29000
+    },
+    {
+      "label": "j9_case_f",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_case_f --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\j9_case_f.jsonl --workers 8 --mask 0x0FFFFFFF",
+      "pid": 47324
+    },
+    {
+      "label": "case_cd",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\cd.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_case_replay.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\cd.jsonl --settings VBG4,VBG6 --workers 2 --mask 0x0FFFFFFF",
+      "pid": 112824
+    },
+    {
+      "label": "x11_both",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\lsj4_x11.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_x11_replay.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\lsj4_x11.jsonl --arm both --mask 0x0FFFFFFF",
+      "pid": 114912
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1 --expect-commit 7949540527baea680f144ef4e00a970cb10b9830 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\_identity_checks\\impl_p51_a1.md"
+    },
+    {
+      "label": "p51_j9_cases",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py hash-match --reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\j9_cases.jsonl --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\j9_cases.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\judge\\p51_j9_cases.json"
+    },
+    {
+      "label": "p51_case_cd",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py hash-match --reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\cd.jsonl --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\cd.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\judge\\p51_case_cd.json"
+    },
+    {
+      "label": "p51_x11",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py hash-match --reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\lsj4_x11.jsonl --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\lsj4_x11.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\judge\\p51_x11.json"
+    },
+    {
+      "label": "p51_j9_case_f",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py hash-match --reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\casef_a1\\j9_case_f.jsonl --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\j9_case_f.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\judge\\p51_j9_case_f.json"
+    }
+  ]
+}

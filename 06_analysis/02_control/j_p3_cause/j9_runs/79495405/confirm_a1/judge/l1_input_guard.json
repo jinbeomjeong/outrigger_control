@@ -1,0 +1,24 @@
+{
+ "rule": "jp3_remedy_spec_v5_erratum2.md 2-1 (file level)",
+ "status": "clean",
+ "inputs": 3,
+ "l1_references": [
+  {
+   "path": "(fixed list sha256 9539d2257cab)",
+   "sha256": "9539d2257cab3a87a1727fd66577b0e002f3646d69c381b511fbecc2a680bc26"
+  },
+  {
+   "path": "(fixed list sha256 c833b5ff2e3a)",
+   "sha256": "c833b5ff2e3ac8054e648fa9a44838b8bae9250ae83384e66c31a952663391a0"
+  },
+  {
+   "path": "(fixed list sha256 67ec227e9070)",
+   "sha256": "67ec227e90701c4471c5028d07224e5fe630b5d56187cc0e9d34c042ef49fdd2"
+  },
+  {
+   "path": "(fixed list sha256 ff56a91313b9)",
+   "sha256": "ff56a91313b9761428d8ebb58212db81e893664af4c753df222fae1ba2aa0bab"
+  }
+ ],
+ "shared": []
+}

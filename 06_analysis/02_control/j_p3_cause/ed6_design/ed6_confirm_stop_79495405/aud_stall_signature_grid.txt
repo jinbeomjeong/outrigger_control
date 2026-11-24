@@ -1,0 +1,7 @@
+key rows 192 example keys ['head_only_declared', 'job', 't4h_file', 'v0_pair']
+lines 192 phase vocabulary {'level': 192, 'done': 192, 'check': 192, 'ready': 188, 'probe': 192, 'touch': 192} last t range 51.3 107.8 [(54.6, 11), (52.5, 5), (73.2, 5), (74.6, 5)]
+no-ready lines [('R12_bottom-FL-Fs0-o0.05-FS24-level_VBL.npz', 86.9, np.str_('probe')), ('R12_top-FL-Fs0-o0.05-G4-level_VBL.npz', 86.8, np.str_('probe')), ('R12_top-FL-Fs0-o0.025-RE1bF-level_VBL.npz', 86.8, np.str_('probe')), ('R12_top-FR-Fs0-o0.025-RE1bF-level_VBL.npz', 86.8, np.str_('probe'))]
+signature lines 3
+   ('R12_bottom-FR-Fs0-o0.0-FS24-ready_VBL.npz', 107.7, [0.12, 0.12, 0.0, 0.0], False) v0_pass True
+   ('R12_bottom-FR-Fs2-o0.0-FS24-ready_VBL.npz', 107.8, [0.14, 0.16, 0.0, 0.0], False) v0_pass True
+   ('R12_top-FL-Fs2-o0.05-G4-ready_VBL.npz', 107.7, [0.66, 0.27, 0.0, 0.0], False) v0_pass True

@@ -1,0 +1,222 @@
+{
+ "purpose": "record after the edition 6 stop, part D: reproduction check, no judgement",
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\records_after_stop\\D_a1\\grid_cause.jsonl",
+   "sha256": "c6a702748d0924b51e923217df1e1f8b1a5a22714592711de934deb5d101d32c"
+  },
+  "grid_rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_b.jsonl",
+   "sha256": "26d5032cf106f0955c26524b4d40920ddcf6e4dff002beda290adf37b1712f6a"
+  }
+ },
+ "sealed_arm_lines": 12,
+ "same_commands_sha256": 12,
+ "grid_line_missing": 0,
+ "lines": [
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    }
+   },
+   "grid_line_found": true,
+   "error": false,
+   "same_commands_sha256": true
+  }
+ ]
+}

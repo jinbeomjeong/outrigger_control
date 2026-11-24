@@ -1,0 +1,6674 @@
+{
+ "tool": "jp3_ed6_judge_p2",
+ "tool_version": "1",
+ "path": 2,
+ "bundle": "sens",
+ "rules": [
+  "jp3_rev6_p2_handoff_ed6.md (handoff 7, sha256 55c8e92e...) 1.1-1.4, 2.1-2.4",
+  "jp3_rev6_p2_handoff_ed5.md 3 + errata 1, 8 (carried over)",
+  "4a-7 1 / 4 + errata 1-3, 4a-8 8, 4a-8 erratum 1 8 (carried over)"
+ ],
+ "constants": {
+  "u_hold_m_s": 0.000209243016,
+  "u_hold_used_by_class_table_m_s": 0.000209243016,
+  "breach_tol_Pa": 1.0,
+  "hold_tol_bar": [
+   1.5915494327375639,
+   1.5915494327375639,
+   1.9098593192850766,
+   1.9098593192850766
+  ],
+  "tag": "final_C4G2_P3W_LAS_K1_LSB",
+  "rule_revision": 6,
+  "spec_edition": "fe6f5844",
+  "lsb_components": [
+   "A_i",
+   "A_ii",
+   "B3"
+  ]
+ },
+ "input": {
+  "records": "sens.jsonl",
+  "sha256": "716446718db2651c09617041133d2d2dcd73710705552b0dd0aedffaf95d2bc1",
+  "lines": 184,
+  "t4h_dir": "sens_t4h",
+  "t4h_files": 184
+ },
+ "key_list": {
+  "path": "sens_keys_v2.json",
+  "sha256": "70f4bb6d7afaa3f8b7ac3437db3ce5d2e4d9cca05e74b9a5c38f3b0269b77f74",
+  "sha256_expected": "70f4bb6d7afaa3f8b7ac3437db3ce5d2e4d9cca05e74b9a5c38f3b0269b77f74",
+  "lines": 184,
+  "expected_lines": 184,
+  "expected_j_p3_judged_rows": 104,
+  "head_only_declared_lines": 80,
+  "lines_not_declared_in_list": 104,
+  "settings": [
+   "VBLc005",
+   "VBLc04",
+   "VBLv05",
+   "VBLv15"
+  ],
+  "missing_results": [],
+  "result_lines_not_in_list": [],
+  "declaration_mismatch": [],
+  "t4h_file_mismatch": []
+ },
+ "status": "fail",
+ "status_class": "fail",
+ "exit_code": 1,
+ "expect_judged_rows": 104,
+ "judged_rows": 104,
+ "clean_judged_rows": 104,
+ "no_rod_reading_lines": 80,
+ "record_lines": 0,
+ "reference_off_lines": 0,
+ "settings_seen": {
+  "VBLc005": 46,
+  "VBLc04": 46,
+  "VBLv05": 46,
+  "VBLv15": 46
+ },
+ "grades_of_judged": {
+  "ideal": 104
+ },
+ "issues": [],
+ "issue_counts": {},
+ "identity_defect_lines": 0,
+ "totals": {
+  "jp3a_breach_reads": 3,
+  "jp3b_breach_over_tol_reads": 0,
+  "jp3c_breach_reads": 0
+ },
+ "breach_sum": 3,
+ "breach_rows": [
+  {
+   "line": "#107 VBLv05 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\"}",
+   "per_leg": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "count_check": {
+    "FL": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "FR": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "RL": {
+     "a": [
+      1,
+      1
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "RR": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    }
+   },
+   "t4h_index_aligned": true,
+   "by_form": {
+    "J-P3a|carry_ext|moving_ext(prev locked_ext)|phase probe|run after lock/locked_ext|rod_reading_above_bound=True": 1
+   },
+   "reads": [
+    {
+     "leg": "RL",
+     "judgement": "J-P3a",
+     "t_s": 45.00000000003284,
+     "jp3_read": 449,
+     "class": "carry_ext",
+     "plant_state": "moving_ext",
+     "plant_state_prev_read": "locked_ext",
+     "read_index_in_class_run": 2,
+     "class_before_run": "lock",
+     "plant_state_before_run": "locked_ext",
+     "acting_phase": "probe",
+     "phase_row_n": "probe",
+     "p_tr_bar": 26.51723238511227,
+     "bound_bar": 15.462878522389799,
+     "excess_bar": 11.054353862722472,
+     "allowance_bar": 1e-05,
+     "rod_reading_bar": 26.51723238511227,
+     "rod_reading_minus_bound_bar": 11.054353862722472,
+     "head_reading_bar": 88.0072549899558,
+     "used_bound_bar": 15.462878522389799,
+     "ext_bound_bar": 15.462878522389799,
+     "model_bound_bar": NaN,
+     "p_star_ret_bar": 5.0,
+     "u_m_s": 0.002480158730158731,
+     "gate_open": false,
+     "model_bound_source": -1,
+     "r58_witness": false,
+     "r59_substeps": 0,
+     "r510_candidates": 0,
+     "lsb": {
+      "lsb_a1_on": false,
+      "lsb_a2_on": false,
+      "lsb_protected": false,
+      "lsb_b1_blocked": false
+     }
+    }
+   ]
+  },
+  {
+   "line": "#118 VBLv05 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLv05\"}",
+   "per_leg": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "count_check": {
+    "FL": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "FR": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "RL": {
+     "a": [
+      1,
+      1
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "RR": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    }
+   },
+   "t4h_index_aligned": true,
+   "by_form": {
+    "J-P3a|carry_ext|moving_ext(prev locked_ext)|phase probe|run after lock/locked_ext|rod_reading_above_bound=True": 1
+   },
+   "reads": [
+    {
+     "leg": "RL",
+     "judgement": "J-P3a",
+     "t_s": 45.00000000003284,
+     "jp3_read": 449,
+     "class": "carry_ext",
+     "plant_state": "moving_ext",
+     "plant_state_prev_read": "locked_ext",
+     "read_index_in_class_run": 2,
+     "class_before_run": "lock",
+     "plant_state_before_run": "locked_ext",
+     "acting_phase": "probe",
+     "phase_row_n": "probe",
+     "p_tr_bar": 32.297363064026555,
+     "bound_bar": 15.659127242448113,
+     "excess_bar": 16.63823582157844,
+     "allowance_bar": 1e-05,
+     "rod_reading_bar": 32.297363064026555,
+     "rod_reading_minus_bound_bar": 16.63823582157844,
+     "head_reading_bar": 90.16809264086919,
+     "used_bound_bar": 15.659127242448113,
+     "ext_bound_bar": 15.659127242448113,
+     "model_bound_bar": NaN,
+     "p_star_ret_bar": 5.0,
+     "u_m_s": 0.002480158730158731,
+     "gate_open": false,
+     "model_bound_source": -1,
+     "r58_witness": false,
+     "r59_substeps": 0,
+     "r510_candidates": 0,
+     "lsb": {
+      "lsb_a1_on": false,
+      "lsb_a2_on": false,
+      "lsb_protected": false,
+      "lsb_b1_blocked": false
+     }
+    }
+   ]
+  },
+  {
+   "line": "#160 VBLv15 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\"}",
+   "per_leg": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "count_check": {
+    "FL": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "FR": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "RL": {
+     "a": [
+      1,
+      1
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    },
+    "RR": {
+     "a": [
+      0,
+      0
+     ],
+     "b": [
+      0,
+      0
+     ],
+     "c": [
+      0,
+      0
+     ]
+    }
+   },
+   "t4h_index_aligned": true,
+   "by_form": {
+    "J-P3a|carry_ext|moving_ext(prev locked_ext)|phase probe|run after lock/locked_ext|rod_reading_above_bound=True": 1
+   },
+   "reads": [
+    {
+     "leg": "RL",
+     "judgement": "J-P3a",
+     "t_s": 45.10000000003332,
+     "jp3_read": 450,
+     "class": "carry_ext",
+     "plant_state": "moving_ext",
+     "plant_state_prev_read": "locked_ext",
+     "read_index_in_class_run": 3,
+     "class_before_run": "lock",
+     "plant_state_before_run": "locked_ext",
+     "acting_phase": "probe",
+     "phase_row_n": "probe",
+     "p_tr_bar": 21.684454652389736,
+     "bound_bar": 20.48646532436852,
+     "excess_bar": 1.1979893280212162,
+     "allowance_bar": 1e-05,
+     "rod_reading_bar": 21.684454652389736,
+     "rod_reading_minus_bound_bar": 1.1979893280212162,
+     "head_reading_bar": 79.89113245693424,
+     "used_bound_bar": 20.48646532436852,
+     "ext_bound_bar": 20.48646532436852,
+     "model_bound_bar": NaN,
+     "p_star_ret_bar": 5.0,
+     "u_m_s": 0.003392857142857142,
+     "gate_open": false,
+     "model_bound_source": -1,
+     "r58_witness": false,
+     "r59_substeps": 0,
+     "r510_candidates": 0,
+     "lsb": {
+      "lsb_a1_on": false,
+      "lsb_a2_on": false,
+      "lsb_protected": false,
+      "lsb_b1_blocked": false
+     }
+    }
+   ]
+  }
+ ],
+ "breach_form_totals": {
+  "J-P3a|carry_ext|moving_ext(prev locked_ext)|phase probe|run after lock/locked_ext|rod_reading_above_bound=True": 3
+ },
+ "breach_on_rows_with_issues": [],
+ "stretch_mismatch_rows": [],
+ "flags": {
+  "jp3a_reads": 152390,
+  "jp3b_reads": 23586,
+  "jp3c_reads": 6865,
+  "jp3b_breach_reads": 0,
+  "jp3b_tol_near_reads": 0,
+  "jp3a_margin_used_reads": 12148,
+  "jp3c_fill_reads": 3416,
+  "jp3c_fill_breach_reads": 0,
+  "jp3a_used_ne_ext_reads": 0,
+  "jp3b_used_ne_model_reads": 0,
+  "class_boundary_reads": 0,
+  "lock_ext_breach_over_tol_reads": 0,
+  "lock_ret_breach_reads": 0,
+  "ret_breach_reads": 28
+ },
+ "by_setting": {
+  "VBLc005": {
+   "lines": 46,
+   "judged": 26,
+   "clean": 26,
+   "no_rod_reading": 20,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "VBLc04": {
+   "lines": 46,
+   "judged": 26,
+   "clean": 26,
+   "no_rod_reading": 20,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "VBLv05": {
+   "lines": 46,
+   "judged": 26,
+   "clean": 26,
+   "no_rod_reading": 20,
+   "breach_rows": 2,
+   "breach_reads": {
+    "jp3a_breach_reads": 2,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "VBLv15": {
+   "lines": 46,
+   "judged": 26,
+   "clean": 26,
+   "no_rod_reading": 20,
+   "breach_rows": 1,
+   "breach_reads": {
+    "jp3a_breach_reads": 1,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  }
+ },
+ "by_case": {
+  "R12": {
+   "lines": 72,
+   "judged": 72,
+   "clean": 72,
+   "no_rod_reading": 0,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "R14": {
+   "lines": 8,
+   "judged": 8,
+   "clean": 8,
+   "no_rod_reading": 0,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "R16": {
+   "lines": 16,
+   "judged": 16,
+   "clean": 16,
+   "no_rod_reading": 0,
+   "breach_rows": 3,
+   "breach_reads": {
+    "jp3a_breach_reads": 3,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "R15": {
+   "lines": 8,
+   "judged": 8,
+   "clean": 8,
+   "no_rod_reading": 0,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "S1": {
+   "lines": 16,
+   "judged": 0,
+   "clean": 0,
+   "no_rod_reading": 16,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "S4": {
+   "lines": 16,
+   "judged": 0,
+   "clean": 0,
+   "no_rod_reading": 16,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "S5": {
+   "lines": 16,
+   "judged": 0,
+   "clean": 0,
+   "no_rod_reading": 16,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "S7": {
+   "lines": 16,
+   "judged": 0,
+   "clean": 0,
+   "no_rod_reading": 16,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  },
+  "R2": {
+   "lines": 16,
+   "judged": 0,
+   "clean": 0,
+   "no_rod_reading": 16,
+   "breach_rows": 0,
+   "breach_reads": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   }
+  }
+ },
+ "declaration_sources": {
+  "t4h_meta": 184
+ },
+ "identity_values": {
+  "{\"carry_end_rule\": \"inherit_when_gate_shut\", \"controller_tag\": \"final_C4G2_P3W_LAS_K1_LSB\", \"extend_start_options\": {\"extend_start_hold\": true, \"extend_start_tracked\": true, \"extend_start_witness\": true}, \"lsb_components\": [\"A_i\", \"A_ii\", \"B3\"], \"retract_start_rule\": \"with_tracker\", \"rule_revision\": 6, \"run_extend_start_revision\": null, \"run_extend_start_revision_present\": false, \"spec_edition\": \"fe6f5844\", \"tag_base\": \"final_C4G2_P3W\", \"tag_base_revision\": 6}": 104,
+  "{\"controller_tag\": \"final_C4G2_P3W_LAS_K1_LSB\", \"extend_start_options\": {\"extend_start_hold\": true, \"extend_start_tracked\": true, \"extend_start_witness\": true}, \"lsb_components\": [\"A_i\", \"A_ii\", \"B3\"], \"run_extend_start_revision\": null, \"run_extend_start_revision_present\": false, \"tag_base\": \"final_C4G2_P3W\", \"tag_base_revision\": 6}": 80
+ },
+ "recorded_vs_path2_differences": [],
+ "judged_row_differences": [],
+ "lines": [
+  {
+   "line": "#1 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 723,
+    "two_pressure_reads": 723,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.05_VBLc005.npz",
+    "sha256": "9fa57a8292715aacc61b14d70a71d416cbb5ab2b98df831697d83c879da4374c",
+    "reads": 723
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#2 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.0_VBLc005.npz",
+    "sha256": "7ea69c0f8c56e2b040c7630b10b8de8ceea7fa7a616c62199d7433b5b1459b3a",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#3 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 723,
+    "two_pressure_reads": 723,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.0_VBLc005.npz",
+    "sha256": "b86159f19b1c9fbadfd995bb84f4a4afed8fc4b6f8eeea2615cb53620d821abd",
+    "reads": 723
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#4 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.05_VBLc005.npz",
+    "sha256": "7cd9b75acbdd2a6a6665b208c55b7d0e5be24a7e4d9ff54f201ba1182a1bfe95",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#5 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.075_VBLc005.npz",
+    "sha256": "54f4957f5439c908fd01162543f957df35cea3c44bb1d90264c6ecf5282af8a1",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#6 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.05_VBLc005.npz",
+    "sha256": "93a8c2a5c7c1db30c83c6c24323d14ea866ecd842f36b2514628822861c94b66",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#7 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.025_VBLc005.npz",
+    "sha256": "808323ea530a2cdbfca42ac4137f38058237b3034dd0b5708c4a9fbf9350d6d5",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#8 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.0_VBLc005.npz",
+    "sha256": "2d81c47e87dce9ba169d7e4fecf9c467d9ec132df18c6e66fa575a51832037c0",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#9 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.05_VBLc005.npz",
+    "sha256": "8babf5ae0e11cf5d065c00a0882a49ec348bad5f7b58d335f5fb29b5f8701baf",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#10 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.05_VBLc005.npz",
+    "sha256": "558503f0ec85403660c16d600eddfdb4bb61744fa42aecad2ec9e6a4eab4040f",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#11 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.0_VBLc005.npz",
+    "sha256": "62509ba24bcc7d9c37cee35f608eaf778c3a11ebfb3c15e765c8b85f568c5a3e",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#12 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.0_VBLc005.npz",
+    "sha256": "000dba8bf03e598b0baaa051235e170aea811f9c9d6832ba6f98354081081cf7",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#13 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 730,
+    "two_pressure_reads": 730,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.0_VBLc005.npz",
+    "sha256": "7d3ceccd6963386a3bf983f56d6ca637b94fe8f699173b1d392cacdca1e9589a",
+    "reads": 730
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#14 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 746,
+    "two_pressure_reads": 746,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.0_VBLc005.npz",
+    "sha256": "059b990802dc4e611cefde84c7d516ccd3f60452f277f29a7c6a5c6debe198f0",
+    "reads": 746
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#15 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 730,
+    "two_pressure_reads": 730,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.05_VBLc005.npz",
+    "sha256": "c508a9a631ab3d11efc608eaedee5985b61178760b4ef80f9826e94f25735d35",
+    "reads": 730
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#16 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 746,
+    "two_pressure_reads": 746,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.05_VBLc005.npz",
+    "sha256": "ca25de16bc41ed43dfdee649668b3afa367162a1715018f40771ed6a595301a5",
+    "reads": 746
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#17 VBLc005 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 757,
+    "two_pressure_reads": 757,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.0_VBLc005.npz",
+    "sha256": "8aa1c8d5a3dbbfa534b86469dcb5d38209cbc65a3eafb760f51d2166276ef498",
+    "reads": 757
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#18 VBLc005 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 757,
+    "two_pressure_reads": 757,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.05_VBLc005.npz",
+    "sha256": "9d99df360c2c1e84e20440b037d4ab4494b796fbe6320284a080e9741ce3b1c3",
+    "reads": 757
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#19 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 1009,
+    "two_pressure_reads": 1009,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.05_VBLc005.npz",
+    "sha256": "977463b8d7dd9f5d687832ef1f2a4b2a9ef160eb776a5936a4410ff47a4760e2",
+    "reads": 1009
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#20 VBLc005 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 1074,
+    "two_pressure_reads": 1074,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.0_VBLc005.npz",
+    "sha256": "c4a77dce14c8f5b154f8b303d266400b75f020d9e0b4e3c374b138100f366494",
+    "reads": 1074
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#21 VBLc005 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.05_VBLc005.npz",
+    "sha256": "b4e8b856fb39a778334618d4ce4064df8bb075f6c9f91dd0b0a488d37dd84987",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#22 VBLc005 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 540,
+    "two_pressure_reads": 540,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.05_VBLc005.npz",
+    "sha256": "7e51f10c0c3bfb282573daee638c01598a8557695249cf9739be7d2de1649a0d",
+    "reads": 540
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#23 VBLc005 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.075_VBLc005.npz",
+    "sha256": "f8cf1a54bc3603799387d5f179c0dcbc49b10ddbf321ce1ed063ac8975e92272",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#24 VBLc005 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.025_VBLc005.npz",
+    "sha256": "fde067a51a211b7f9f137ac457904176d0c75d6ca6ca4cac292ebd326b89ffe4",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#25 VBLc005 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.0_VBLc005.npz",
+    "sha256": "f230747d4a64dca391bfe3390ac6e1a455fa35e5678310252f5414c6bdb56537",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#26 VBLc005 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 783,
+    "two_pressure_reads": 783,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.0_VBLc005.npz",
+    "sha256": "132a7583e7a832ae40586a7abca7277ea7bde492700097704f8d903e559553a1",
+    "reads": 783
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#27 VBLc005 {\"case\":\"S1\",\"eps\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.0_VBLc005.npz",
+    "sha256": "989c5a51e146442b3af608b90fdeebf32ab24deaea66f415d52e204622154e96",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#28 VBLc005 {\"case\":\"S1\",\"eps\":0.002,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.002_VBLc005.npz",
+    "sha256": "8f8b83c5035a4d6c327e4cea022062f5387ac10276396f706eca94593b84ab5d",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#29 VBLc005 {\"case\":\"S1\",\"eps\":0.001,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.001_VBLc005.npz",
+    "sha256": "10b089ffe54c5fce238f591af45e7bcd34941f39a4464fff48b3bc424866d8d8",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#30 VBLc005 {\"case\":\"S1\",\"eps\":0.003,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.003_VBLc005.npz",
+    "sha256": "735016f4f9f46b5247d728f473249835c66a56ff1aac56b1107f88248999f7cb",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#31 VBLc005 {\"case\":\"S4\",\"eps\":0.002,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.002_VBLc005.npz",
+    "sha256": "d514ef5db888dac89cedede4762333333501e08dca138d5dde8d3ff9041a3647",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#32 VBLc005 {\"case\":\"S4\",\"eps\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.0_VBLc005.npz",
+    "sha256": "ffee753d927fd84104a8ca47ce5eaf6304a87107dc75161cceb8afd7f1b6977c",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#33 VBLc005 {\"case\":\"S4\",\"eps\":0.003,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.003_VBLc005.npz",
+    "sha256": "059b414e69883a68404ab6fdfc1b3a2b8350a1b3879cb2978032f546cd1dd3e6",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#34 VBLc005 {\"case\":\"S4\",\"eps\":0.001,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.001_VBLc005.npz",
+    "sha256": "1dc2a4164a1a78780925913fbbcf38fd795268b7d7e09bb4ff97696dc8d73231",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#35 VBLc005 {\"case\":\"S5\",\"eps\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.0_VBLc005.npz",
+    "sha256": "64cf7fce0c58dff77d085034c47dd95be984c5f8434ab8ea4a3d06007316a46c",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#36 VBLc005 {\"case\":\"S5\",\"eps\":0.001,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.001_VBLc005.npz",
+    "sha256": "94deca118cf0ac06c28cad6ad838f3fb920012fd46aa8ee12c14421ba8fabbc7",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#37 VBLc005 {\"case\":\"S5\",\"eps\":0.003,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.003_VBLc005.npz",
+    "sha256": "89e36b6553c47fcced02c6ecf5e53373fb6718f4dfc46e67a97f1851d3e42b36",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#38 VBLc005 {\"case\":\"S5\",\"eps\":0.002,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.002_VBLc005.npz",
+    "sha256": "13d16403029235335fe87a2e1d01633d2cf3b74a220553cef026c4e18636b2e7",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#39 VBLc005 {\"case\":\"S7\",\"eps\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.0_VBLc005.npz",
+    "sha256": "07d188566e042b139e1db311b351fa22ea0ba541a9a03306a4099a1de87e1166",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#40 VBLc005 {\"case\":\"S7\",\"eps\":0.001,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.001_VBLc005.npz",
+    "sha256": "cf5047f4bcadd13851925801013c3193278fefef0915f309aef5d3f85ba82dd2",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#41 VBLc005 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.002,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.002_VBLc005.npz",
+    "sha256": "82c3bd16628da01e068b855cf5411d9d1bf62c77153f58f09545fa8358ada3e7",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#42 VBLc005 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.0,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.0_VBLc005.npz",
+    "sha256": "f78ad35c18b7fe7744042453afeda2e6938323af8c006e3a973bfcfd490ddcf7",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#43 VBLc005 {\"case\":\"S7\",\"eps\":0.003,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.003_VBLc005.npz",
+    "sha256": "6b36516ccadd1e45281689c59abeb1515d67e38cfed3d5e7b621445ec8956e3d",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#44 VBLc005 {\"case\":\"S7\",\"eps\":0.002,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.002_VBLc005.npz",
+    "sha256": "c3433a786bc4582ee9cb41b64f6a394fd0b21dc3dec61bbc92cf45580606c269",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#45 VBLc005 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.001,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.001_VBLc005.npz",
+    "sha256": "da9c0b8cdbe0a7c9a79c1a34e50c8329f67822076f716a4f875a690dce469638",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#46 VBLc005 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.003,\"setting\":\"VBLc005\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.003_VBLc005.npz",
+    "sha256": "ad4068379c47aea1e6b1cfaf21161cb1db535eaad7621e94ffc5a016ea935d4d",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#47 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.0_VBLc04.npz",
+    "sha256": "0cc770e7e12d21b11a80c34623bb05d93aa662a64c43cc4134aac8dcb0c30f4d",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#48 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 734,
+    "two_pressure_reads": 734,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.025_VBLc04.npz",
+    "sha256": "9029522b2095d3f1e1b7527735e1a1e2f657d21b8309925b2666c4f8858d95a7",
+    "reads": 734
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#49 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 751,
+    "two_pressure_reads": 751,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.05_VBLc04.npz",
+    "sha256": "1545c6350ad3977f7f5d18b3b10be1f96b9aa106ec8e92ca3f288b5270346716",
+    "reads": 751
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#50 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.075_VBLc04.npz",
+    "sha256": "4e5196cc795755a6bb300adfb6428cf4a3be14fb47e28fdecd71868d072634d1",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#51 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 730,
+    "two_pressure_reads": 730,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.0_VBLc04.npz",
+    "sha256": "2ccb0346d42e071317ee5ce0a4051c370a8fe7df1e72f51724ff5282eef092b0",
+    "reads": 730
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#52 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 723,
+    "two_pressure_reads": 723,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.0_VBLc04.npz",
+    "sha256": "72c014ba3093a6e4c54721fb5777805fab8f45acd3747ce532ce2aaa14f8df7d",
+    "reads": 723
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#53 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 730,
+    "two_pressure_reads": 730,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.05_VBLc04.npz",
+    "sha256": "41e9bf451e2efd4977d5fbf075e14bdbb28911f748ff5fe5f6f8adbf5f02f049",
+    "reads": 730
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#54 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 723,
+    "two_pressure_reads": 723,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.05_VBLc04.npz",
+    "sha256": "d3ee992401b1a9c1631e86c1d9460772c6ae62c36f42e5905df0c836150179ba",
+    "reads": 723
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#55 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 887,
+    "two_pressure_reads": 887,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.0_VBLc04.npz",
+    "sha256": "2d024a39b1d83d7adb22fc97910bb49d810bc6496aed92ce64a8249d0e7ff7d3",
+    "reads": 887
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#56 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.0_VBLc04.npz",
+    "sha256": "734363a12314cad2f5fab1a21b599c45d3a7a8b6a7c43d7ebee9c163ca6f2753",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#57 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.05_VBLc04.npz",
+    "sha256": "2c520067323429b46b772a97b4f54e023bc54c10ee1e8ff91a2752a35f8d82a0",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#58 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.0_VBLc04.npz",
+    "sha256": "859f126c7382252b95ef2eb71cbe07581c04d8e0e496273560a2fe9be01b2c17",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#59 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 751,
+    "two_pressure_reads": 751,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.05_VBLc04.npz",
+    "sha256": "1b2eb9a21f7a630857b46660f4fb098e47c8570797a3a43164089945a95093b5",
+    "reads": 751
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#60 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 1052,
+    "two_pressure_reads": 1052,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.05_VBLc04.npz",
+    "sha256": "78dc5a967d1c37bca572dd78641db6666c4988c7c014fc29f730892286368d5e",
+    "reads": 1052
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#61 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.05_VBLc04.npz",
+    "sha256": "a03b83e16bec4694271529d6fb116d283f72bc804dd3f5ff1845e3bf44c8222d",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#62 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 748,
+    "two_pressure_reads": 748,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.0_VBLc04.npz",
+    "sha256": "eee852973baf77a2cb8bb318da66814603f48ceb02a19e987dba1e21594a59d5",
+    "reads": 748
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#63 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 746,
+    "two_pressure_reads": 746,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.0_VBLc04.npz",
+    "sha256": "9ef7f388fcd813db3c163594da7d0ce272dc2325482958c0d2e06f99b20060a6",
+    "reads": 746
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#64 VBLc04 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 757,
+    "two_pressure_reads": 757,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.0_VBLc04.npz",
+    "sha256": "672bb34e7a19b80366fb1d6c25c27be2fd0a24e6856281316b6e7afbcbc86ca1",
+    "reads": 757
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#65 VBLc04 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 762,
+    "two_pressure_reads": 762,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.05_VBLc04.npz",
+    "sha256": "743f592954a201d1f6fba7332e24367908d60e41bf6d2cc5bbff6e3f619fe9bb",
+    "reads": 762
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#66 VBLc04 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 757,
+    "two_pressure_reads": 757,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.05_VBLc04.npz",
+    "sha256": "c9ee9675c07db7c5e8560f9b97297ced027d42e3a3ced1c4640796546d249ced",
+    "reads": 757
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#67 VBLc04 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 540,
+    "two_pressure_reads": 540,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.05_VBLc04.npz",
+    "sha256": "f2af88f509eb79496271bf6634e8ab874dae1924f755fab171e0d115210d9b92",
+    "reads": 540
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#68 VBLc04 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.05_VBLc04.npz",
+    "sha256": "59246726e489ea7e7f4ff74295e46e83f8c630c10a7b59e4ea018eb09ed19f1f",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#69 VBLc04 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.0_VBLc04.npz",
+    "sha256": "9e4b2b969b82f36faa3f3e3ea7f467ac94a580bbf9e20a23e86235c65ed06e9e",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#70 VBLc04 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 808,
+    "two_pressure_reads": 808,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.0_VBLc04.npz",
+    "sha256": "85e45b9fa879adc70831dad47356100b648d188438c840d2a30365ca7a2272cd",
+    "reads": 808
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#71 VBLc04 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.025_VBLc04.npz",
+    "sha256": "9161ab7b6973cc111f93579734dcf4b9dd205a63127429637f682605db8fa7ef",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#72 VBLc04 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLc04\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.075_VBLc04.npz",
+    "sha256": "0decf5afd92ff7f58d9ac04bd6c222100b56a9edcd8d442bdb5e22d305a82721",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#73 VBLc04 {\"case\":\"S1\",\"eps\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.0_VBLc04.npz",
+    "sha256": "1ba60673d1381b295c29ddfb56e255419a6156d07b68988ec8d5a0c608bd8d7a",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#74 VBLc04 {\"case\":\"S1\",\"eps\":0.001,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.001_VBLc04.npz",
+    "sha256": "bd993ce865d531fc2ec82cb5a26318f03655e1fbd24b31f7d27bac9af7df27d7",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#75 VBLc04 {\"case\":\"S1\",\"eps\":0.002,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.002_VBLc04.npz",
+    "sha256": "35478bcd6becf31c0d398fe2dc823b51eeb8d7070d6880299f782d6df6653103",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#76 VBLc04 {\"case\":\"S1\",\"eps\":0.003,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.003_VBLc04.npz",
+    "sha256": "745eb9b38e111914c4a2da88b8faa76f67476eccb8c214745fd46264798d600e",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#77 VBLc04 {\"case\":\"S4\",\"eps\":0.001,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.001_VBLc04.npz",
+    "sha256": "6b23e5b63d7bc589ccb31992271bf2944e70a6381e04f75315c33dbb697c7dfe",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#78 VBLc04 {\"case\":\"S4\",\"eps\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.0_VBLc04.npz",
+    "sha256": "b4b4fa875d2a072cb210c798715ff68ddc4f0ff768fa2e42ae4ff35d191dffcb",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#79 VBLc04 {\"case\":\"S4\",\"eps\":0.002,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.002_VBLc04.npz",
+    "sha256": "223befc339cf86bf37cfc3c8d97ef71c018397bb5bd94728cf3fced8555e5d74",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#80 VBLc04 {\"case\":\"S4\",\"eps\":0.003,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.003_VBLc04.npz",
+    "sha256": "1c2296413a95614b044ad18017696fad7c856bf1911e201bfe8ba06cb3b6ebeb",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#81 VBLc04 {\"case\":\"S7\",\"eps\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.0_VBLc04.npz",
+    "sha256": "8827b99448790382fd1be90ddc86a1199156b38f02f0248bb29a3c7722012ac0",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#82 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 788,
+    "two_pressure_reads": 788,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.0_VBLv05.npz",
+    "sha256": "7dfc8f50a5a4e45a04c38ad1883732e8596ce703289573c5a1a1fc52c4899b89",
+    "reads": 788
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#83 VBLc04 {\"case\":\"S7\",\"eps\":0.002,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.002_VBLc04.npz",
+    "sha256": "f71403abb1dfd885c32dcaeacf8a3e3710ea67055d00f22f97e01c0a2b39e155",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#84 VBLc04 {\"case\":\"S5\",\"eps\":0.001,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.001_VBLc04.npz",
+    "sha256": "02a8ad7fd15a7f79940ab8b73bad94c2033ddc250b67b3fca4b4ce55b273e1be",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#85 VBLc04 {\"case\":\"S7\",\"eps\":0.001,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.001_VBLc04.npz",
+    "sha256": "2711af4a182645dd617c37db919ba1d5c1b48efe38acaf579e07e6fa0a6cff2c",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#86 VBLc04 {\"case\":\"S5\",\"eps\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.0_VBLc04.npz",
+    "sha256": "8e288e1999ab9203a12208f2a58a58e74e7d1fe050209b112c6dfd5fbb2ffab2",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#87 VBLc04 {\"case\":\"S5\",\"eps\":0.003,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.003_VBLc04.npz",
+    "sha256": "fec740ab29e755f8ce7833345e302b3671b1b6498c416df13ec1a9a6de4aeca9",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#88 VBLc04 {\"case\":\"S5\",\"eps\":0.002,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.002_VBLc04.npz",
+    "sha256": "c62da022fe15366461261423dc2c8c22443b1cd7bd8f6760c7dbd9a9e23c22d5",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#89 VBLc04 {\"case\":\"S7\",\"eps\":0.003,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.003_VBLc04.npz",
+    "sha256": "607359bf9f8a2a674a757b86c5c5a8cda2aeeb9ffdfdfb14a28a7135a88c1a53",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#90 VBLc04 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.0,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.0_VBLc04.npz",
+    "sha256": "14df5a7179eb333c57a0ac6d7057ed9dc06869f3063bf1f2d3d113b6671d4153",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#91 VBLc04 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.001,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.001_VBLc04.npz",
+    "sha256": "27931debe8272f22eeb2aa72fca04c46728d65e162d00cc5fa56382d6873c3fe",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#92 VBLc04 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.003,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.003_VBLc04.npz",
+    "sha256": "db2efd3a115041c30b7355eda31e00d52894d355aec1c26df4bad7590074df79",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#93 VBLc04 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.002,\"setting\":\"VBLc04\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.002_VBLc04.npz",
+    "sha256": "72928f05ee73038d7e0ae3c76c4d707bed34ffeefd3a8c9d741fe98b7c93e6b0",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#94 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 771,
+    "two_pressure_reads": 771,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.05_VBLv05.npz",
+    "sha256": "366f7fbc15ecf970141dde7081b3d61533f7e81db5737299d857c7a91f3693c4",
+    "reads": 771
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#95 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 768,
+    "two_pressure_reads": 768,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.025_VBLv05.npz",
+    "sha256": "11fe08418f1cc69daf7617f6ede4809df8c89b806f7955842f9d330d2e346c9c",
+    "reads": 768
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#96 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 790,
+    "two_pressure_reads": 790,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.075_VBLv05.npz",
+    "sha256": "2480bb11adb2e4f88b4fcbf19b688ae71e3cc38906e065372e58e1609aae413c",
+    "reads": 790
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#97 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 835,
+    "two_pressure_reads": 835,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.0_VBLv05.npz",
+    "sha256": "2a96336aa7875e7dc745200c373f6bac83fa9bab044f01d7151bc43793f393be",
+    "reads": 835
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#98 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 773,
+    "two_pressure_reads": 773,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.05_VBLv05.npz",
+    "sha256": "540ca4b3dad84e6a21823f76ed1464e1d443be516e0997abadb790906b66cd29",
+    "reads": 773
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#99 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 1075,
+    "two_pressure_reads": 1075,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.05_VBLv05.npz",
+    "sha256": "3446cbbf1fddb0e9ead7c66d9ce7e0a606ba9661425904a159b55d42c4320bb6",
+    "reads": 1075
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#100 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 903,
+    "two_pressure_reads": 903,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.0_VBLv05.npz",
+    "sha256": "f91bc4ffc96bc9fbad5358447fde452abe494127e8685ec5dc8ab3376789febd",
+    "reads": 903
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#101 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 770,
+    "two_pressure_reads": 770,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.0_VBLv05.npz",
+    "sha256": "e2d7a1b9254da63e3d456a73e8b6470bc7f5b812b840e83105bb576fd00697ef",
+    "reads": 770
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#102 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 769,
+    "two_pressure_reads": 769,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.05_VBLv05.npz",
+    "sha256": "a966ff336d306f61073ecf0a4b37ca97bd3e27e1e7887dc1c342a36f3d71d168",
+    "reads": 769
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#103 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 771,
+    "two_pressure_reads": 771,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.05_VBLv05.npz",
+    "sha256": "703b31cf3f74bdcd29adb971190cc09036f7606aa4761c7c7adf158b6e63bfa1",
+    "reads": 771
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#104 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 771,
+    "two_pressure_reads": 771,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.05_VBLv05.npz",
+    "sha256": "9ffeddeb49644e457210be2106c53f4b5afeef847bbf19bfebe9f0a0e7e6e7d5",
+    "reads": 771
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#105 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 788,
+    "two_pressure_reads": 788,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.0_VBLv05.npz",
+    "sha256": "3d62e4e94ccd6b8c34d870236807c43ef1f40a92f4e771b48ac749135ccb7951",
+    "reads": 788
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#106 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 788,
+    "two_pressure_reads": 788,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.0_VBLv05.npz",
+    "sha256": "f12ed5c7b025fe0944b432c1207cc2624680bc38ed55a11d8c769c9345b747f4",
+    "reads": 788
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#107 VBLv05 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.05_VBLv05.npz",
+    "sha256": "d993af438e6edf30e420dd3a848e047598a09091dca719e99f7f4d10ed24cda6",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#108 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 775,
+    "two_pressure_reads": 775,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.0_VBLv05.npz",
+    "sha256": "b501fcc2910f649bab68d7b8a45759e7835f552068985e3f85ba0216893488d9",
+    "reads": 775
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#109 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 777,
+    "two_pressure_reads": 777,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.05_VBLv05.npz",
+    "sha256": "cdc117281ab10de96e499efc19778377c27632bcf96ccca7e1c6bafc37abb04a",
+    "reads": 777
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#110 VBLv05 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 757,
+    "two_pressure_reads": 757,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.0_VBLv05.npz",
+    "sha256": "396dfd58c329ccc1404fbc33dab77407c9bdd354c76a33b0f0db037fd9b807b8",
+    "reads": 757
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#111 VBLv05 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 758,
+    "two_pressure_reads": 758,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.05_VBLv05.npz",
+    "sha256": "cd878c37ceefa6a71a6713815d50b9d9509567e80e9cefa43833eef861ab9ba1",
+    "reads": 758
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#112 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 945,
+    "two_pressure_reads": 945,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.0_VBLv05.npz",
+    "sha256": "fbc612de15661360e1d63d116a16b301572905db29b22a23ace4babaf4037db7",
+    "reads": 945
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#113 VBLv05 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.0_VBLv05.npz",
+    "sha256": "f7df722e298fd17606d6564f10c0a7cb9272e5a83d3a2434e019d5c0154c87c3",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#114 VBLv05 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 808,
+    "two_pressure_reads": 808,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.05_VBLv05.npz",
+    "sha256": "87ac09bbca9c817221bbd65102a6b24740ea8580fc65a31fd97aa254fe34e076",
+    "reads": 808
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#115 VBLv05 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 800,
+    "two_pressure_reads": 800,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.0_VBLv05.npz",
+    "sha256": "990eee8b6db48e55729792e1709cc3d02e5d57f299de59fdc7a0867410ba8674",
+    "reads": 800
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#116 VBLv05 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv05\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 1025,
+    "two_pressure_reads": 1025,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.05_VBLv05.npz",
+    "sha256": "324fd89708b3027ee008417d5ab4c172af43f5dd7d731fcab2e600ea49fcec0f",
+    "reads": 1025
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#117 VBLv05 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.025_VBLv05.npz",
+    "sha256": "d3d009e57fa4435ecd44765c85128bfa275eb5df58672e885137bdebd62ac26e",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#118 VBLv05 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLv05\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.075_VBLv05.npz",
+    "sha256": "0cc80ea92e816954dea392c70565e8663424bab36aa884f344ef8bef81239a20",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#119 VBLv05 {\"case\":\"S1\",\"eps\":0.001,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.001_VBLv05.npz",
+    "sha256": "10dd13687ea19408e4d3b94251959771fa18f1905164549fedae6f763470af4f",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#120 VBLv05 {\"case\":\"S1\",\"eps\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.0_VBLv05.npz",
+    "sha256": "f36ccbde4ec486f0ea9c9bc3c45da76318a88bd13a3e0029801af659e174fd70",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#121 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.0_VBLv15.npz",
+    "sha256": "cd9ce7aa05f7053e0d27adeb5d56bdae910eda352b41e1dbe86c7327786dc933",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#122 VBLv05 {\"case\":\"S1\",\"eps\":0.002,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.002_VBLv05.npz",
+    "sha256": "75fb906a5aada923cbcc949117d51222652fc4cc57ff3ce6906544ec105e92e9",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#123 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.025_VBLv15.npz",
+    "sha256": "1efb12e30e2ca138c237f8d43b46e3d021321f917c81ccf24a01b045c09220c5",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#124 VBLv05 {\"case\":\"S1\",\"eps\":0.003,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.003_VBLv05.npz",
+    "sha256": "65e4fcb577a36b4e097b11c1b42a12332344e98a8d1e770894585ab5d6325bb6",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#125 VBLv05 {\"case\":\"S4\",\"eps\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.0_VBLv05.npz",
+    "sha256": "68c33421f2339a4cf2db2210a4efa8a070a83733ba0237d1451195465cf0c30c",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#126 VBLv05 {\"case\":\"S4\",\"eps\":0.003,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.003_VBLv05.npz",
+    "sha256": "0422b25d4b1a77bceddcac08f5e2f54fcac1cd90cde74a57e2e4687533b5f3c2",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#127 VBLv05 {\"case\":\"S4\",\"eps\":0.002,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.002_VBLv05.npz",
+    "sha256": "29bad57fdcc464162340af6917dfabdf9da5eb45c4eb4b186d05344ca9d39dda",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#128 VBLv05 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.001,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.001_VBLv05.npz",
+    "sha256": "c97820f7daa3f53422858166d35ef43bb7109fd436f7a920b207b722d3ba9064",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#129 VBLv05 {\"case\":\"S7\",\"eps\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.0_VBLv05.npz",
+    "sha256": "2f9eaf3b7a62f64d7f9291a8609259abc194ef717061f1e7c3b793ec0f9d005d",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#130 VBLv05 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.0_VBLv05.npz",
+    "sha256": "2e41086297ad4c73556e01c2b61d715aa91498ff75f1cbee91c1f375fa199ad2",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#131 VBLv05 {\"case\":\"S5\",\"eps\":0.0,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.0_VBLv05.npz",
+    "sha256": "7fead459efcf20556f70c69f62cfcfc58a1647fb5e3d5a0418c2d629683a5f3d",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#132 VBLv05 {\"case\":\"S5\",\"eps\":0.001,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.001_VBLv05.npz",
+    "sha256": "4c3bb95ade6202c7830f4ab68fec7098c9c07b141d99661c18bd41f3a4adefe2",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#133 VBLv05 {\"case\":\"S7\",\"eps\":0.002,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.002_VBLv05.npz",
+    "sha256": "d5999ac7842ff74c5cfd5069385e3a847fc85535493594d9eb22f98e9b3f389c",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#134 VBLv05 {\"case\":\"S4\",\"eps\":0.001,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.001_VBLv05.npz",
+    "sha256": "c142e78279dc242163e83dc9507d377a3d6723e2eff1e96d886b8daf12dcc6a2",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#135 VBLv05 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.002,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.002_VBLv05.npz",
+    "sha256": "c5222d11f7c153a8c9ce9840eb30e3a3b41ef1f86b602dea7136018b05e0ddc4",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#136 VBLv05 {\"case\":\"S5\",\"eps\":0.003,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.003_VBLv05.npz",
+    "sha256": "245904c88f0780c46e5f7965de3e1fb62a67f35bbc64f9865a7bc2e96774bd86",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#137 VBLv05 {\"case\":\"S7\",\"eps\":0.003,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.003_VBLv05.npz",
+    "sha256": "3efc95fc263ba1832591079fc2ac40bb5591060dd11f6117810f72d7b703c3af",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#138 VBLv05 {\"case\":\"S5\",\"eps\":0.002,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.002_VBLv05.npz",
+    "sha256": "fdbf4e26bc2d2d8b90ecf650185eee9f1bf0cd414bb2432526748b949b60a446",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#139 VBLv05 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.003,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.003_VBLv05.npz",
+    "sha256": "8bbf5187b1cca1b5970cdd3507ebd20a6f683f73922c88241e58f261d20f575e",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#140 VBLv05 {\"case\":\"S7\",\"eps\":0.001,\"setting\":\"VBLv05\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.001_VBLv05.npz",
+    "sha256": "a5187d0a91b94a2621837fb2174a4177e7fd5827726fa353b9145f87bc827a96",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#141 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.05_VBLv15.npz",
+    "sha256": "9b98181e244c46f88b2fb65f08795ecb2d36b4192f43bfe7e785e8182ab1e8ce",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#142 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_o0.075_VBLv15.npz",
+    "sha256": "5ddcbcad65886e50b3ee554242c32f593c27b5295f12d022e7d3f1a7cd55d7d7",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#143 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 726,
+    "two_pressure_reads": 726,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.0_VBLv15.npz",
+    "sha256": "c4a3b93778ebff6647930679623edae600fda9caacc1144ef74a14d9e95ae958",
+    "reads": 726
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#144 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":0.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 727,
+    "two_pressure_reads": 727,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs0-o0.05_VBLv15.npz",
+    "sha256": "ce32b73694ea34292ce12f48ca63870729607177c41147feb6c08f163e023b52",
+    "reads": 727
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#145 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 729,
+    "two_pressure_reads": 729,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.0_VBLv15.npz",
+    "sha256": "b07363fdfe270dc2dad3ac5239b889d3edc38972bc89aeadd48af7468c2f5a44",
+    "reads": 729
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#146 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":8.0,\"leg\":\"FL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 730,
+    "two_pressure_reads": 730,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FL-Fs8-o0.05_VBLv15.npz",
+    "sha256": "3f57bccb73496d23c31f41eb720c3a4bc25b682eb4db180dcb7ff747ef54c08e",
+    "reads": 730
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#147 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 723,
+    "two_pressure_reads": 723,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.0_VBLv15.npz",
+    "sha256": "92ed55f369a60f92f3aabb1951177eb9fab6b9e63a2dbb23c43da763a5964cec",
+    "reads": 723
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#148 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.0_VBLv15.npz",
+    "sha256": "83c8043c6da1667821b328124d429bcb883cdd3a5e92f2b97639f7871c065afe",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#149 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 737,
+    "two_pressure_reads": 737,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-FR-Fs4-o0.05_VBLv15.npz",
+    "sha256": "abc2ce28106de45d19dbbdf01f2da08b6c626885e9aace561e2b31b785ac7140",
+    "reads": 737
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#150 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RL\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 732,
+    "two_pressure_reads": 732,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RL-Fs4-o0.05_VBLv15.npz",
+    "sha256": "8856a4d7c9cede4359150c0b3878100e7edd92d2b6ef8820d25ff4f3b3310323",
+    "reads": 732
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#151 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.0_VBLv15.npz",
+    "sha256": "134a766d562c7ff92647beac4e85855e9b33df6f45d20d44c37115714ecefbda",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#152 VBLv15 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 541,
+    "two_pressure_reads": 541,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.05_VBLv15.npz",
+    "sha256": "626dd09ded332cbed72d92a372a0f44835979059d7a8a94b5a7e66fa200b0908",
+    "reads": 541
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#153 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"top\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_top-RR-Fs4-o0.05_VBLv15.npz",
+    "sha256": "e4ff7747a92a63b6ff6d0e05cd01bbf697b175c94d12407b8c830cfd0541bb74",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#154 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 731,
+    "two_pressure_reads": 731,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.05_VBLv15.npz",
+    "sha256": "080e0f3e85c3963e111b202e2632b2b8097946bdb82598719bd61143128ec429",
+    "reads": 731
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#155 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"FL\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 747,
+    "two_pressure_reads": 747,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-FL-Fs4-o0.0_VBLv15.npz",
+    "sha256": "e4924eff90e4b078520bf0f70832038ce26500d955a7409bace73b7e3c055245",
+    "reads": 747
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#156 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 746,
+    "two_pressure_reads": 746,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.0_VBLv15.npz",
+    "sha256": "ef568eaa484ea6a376c6f54380b6c6371f4410d99b4bbda27e154bbb78652c67",
+    "reads": 746
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#157 VBLv15 {\"case\":\"R12\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\",\"twin\":{\"fs_kN\":4.0,\"leg\":\"RR\",\"level\":\"bottom\"}}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 761,
+    "two_pressure_reads": 761,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R12_bottom-RR-Fs4-o0.05_VBLv15.npz",
+    "sha256": "12719fae8ce34219b58f23149521f183671e2c6d64ff5fb975b7f66e0b7d684a",
+    "reads": 761
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#158 VBLv15 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 758,
+    "two_pressure_reads": 758,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.0_VBLv15.npz",
+    "sha256": "5135c3671cafd4593778865207c686c525164af35100a1f5963e4af52b5ab068",
+    "reads": 758
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#159 VBLv15 {\"case\":\"R14\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 758,
+    "two_pressure_reads": 758,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R14_o0.05_VBLv15.npz",
+    "sha256": "a74145afd095478b26372c8f54de0d28e87b2f944e6a133c180c7fab7d263c0f",
+    "reads": 758
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#160 VBLv15 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.05,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.05_VBLv15.npz",
+    "sha256": "a8a304f1fd684a6273120c3e7ae45df2a4ec5cd235a540c5961faf0c76589923",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#161 VBLv15 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.0_VBLv15.npz",
+    "sha256": "7216c34baabd07045a9d434c61d49eea67a500d52837b19f4aa9c91060695018",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#162 VBLv15 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.025,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 542,
+    "two_pressure_reads": 542,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.025_VBLv15.npz",
+    "sha256": "aedbb6840d6ae8d2c710ce755c32a20a18035193de3ce2329a8e2375a8e8a4ff",
+    "reads": 542
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#163 VBLv15 {\"case\":\"R15\",\"eps\":0.0,\"offset_s\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 814,
+    "two_pressure_reads": 814,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R15_o0.0_VBLv15.npz",
+    "sha256": "582a35f0563eb51ffa59dcaf9257e843a50a81f8ac07a8fac3fab05755a228c1",
+    "reads": 814
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#164 VBLv15 {\"case\":\"R16\",\"eps\":0.0,\"offset_s\":0.075,\"setting\":\"VBLv15\"}",
+   "role": "judged",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": false,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 535,
+    "two_pressure_reads": 535,
+    "k": 1
+   },
+   "grade": "ideal",
+   "t4h": {
+    "file": "R16_o0.075_VBLv15.npz",
+    "sha256": "49786f81986ec8710f7fb0724cd98183bbc0deeb6df8a514dff4c5c33434bbd4",
+    "reads": 535
+   },
+   "breach": {
+    "jp3a_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3b_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "jp3c_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "line": "#165 VBLv15 {\"case\":\"S1\",\"eps\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.0_VBLv15.npz",
+    "sha256": "45cb0476196877b00c29d9802341e5e7a6d6c19c6f147f3578e9a81a2313c4ab",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#166 VBLv15 {\"case\":\"S1\",\"eps\":0.002,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.002_VBLv15.npz",
+    "sha256": "0b101bdaef3257c5e87b38d6a20d9d4627cf90220f98dc9b5196977ee46ea9bb",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#167 VBLv15 {\"case\":\"S1\",\"eps\":0.001,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.001_VBLv15.npz",
+    "sha256": "f26382d677dd6b3a5e07caa077901c099c990353bfb175442189f8f41d3c967c",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#168 VBLv15 {\"case\":\"S7\",\"eps\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.0_VBLv15.npz",
+    "sha256": "e3d325dd8d5a3e714c1e244c4b606be396f0cc232b421d04daef7ed671c1a7e1",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#169 VBLv15 {\"case\":\"S7\",\"eps\":0.002,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.002_VBLv15.npz",
+    "sha256": "6de35706e4c24581232ebcdcb08f32b35792114699a8016a4d76646726cac8bf",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#170 VBLv15 {\"case\":\"S7\",\"eps\":0.001,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.001_VBLv15.npz",
+    "sha256": "2d84caf78b6a3ef53a5bd3e53da4fb5197fc544b3d8e4864c43bc31058fd3f8d",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#171 VBLv15 {\"case\":\"S1\",\"eps\":0.003,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S1_e0.003_VBLv15.npz",
+    "sha256": "e502f2be64ba628828edd91833ba419eb4b49d19c50f440d25de20ccf62982d3",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#172 VBLv15 {\"case\":\"S4\",\"eps\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.0_VBLv15.npz",
+    "sha256": "e17f84ca3c61f835019e2a7c2418bc89d6083c2df33158314b4375e3e46abd87",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#173 VBLv15 {\"case\":\"S4\",\"eps\":0.001,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.001_VBLv15.npz",
+    "sha256": "f2418eef61597aecd766ae688a18f3839aa29bc5560edbed81c8eba7afd7b036",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#174 VBLv15 {\"case\":\"S4\",\"eps\":0.003,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.003_VBLv15.npz",
+    "sha256": "f43c0496f32020421c3b14b6ffdeab74513fa8acc2d77891cc48954a0d739a27",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#175 VBLv15 {\"case\":\"S4\",\"eps\":0.002,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S4_e0.002_VBLv15.npz",
+    "sha256": "8a5d870484a70562da074d4648707e0063c0e662f2df7e818156f0800433102e",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#176 VBLv15 {\"case\":\"S7\",\"eps\":0.003,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S7_e0.003_VBLv15.npz",
+    "sha256": "b441b9f15e115ed72ff05f990e0709c4390121791cbf4111ea2fae4201df8603",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#177 VBLv15 {\"case\":\"S5\",\"eps\":0.003,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.003_VBLv15.npz",
+    "sha256": "2097a6bf4cc3da03a4ec79aa8ec0e66faab727a6138c935d29d9ed0c136e9627",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#178 VBLv15 {\"case\":\"S5\",\"eps\":0.002,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.002_VBLv15.npz",
+    "sha256": "e66349c12ad1adcf08e9234e974951f6076c2f7e0470cd96f02e2fb61057ff3f",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#179 VBLv15 {\"case\":\"S5\",\"eps\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.0_VBLv15.npz",
+    "sha256": "a69bdbd690ecac2d89caf2e44df3ea4254e20968b01de3f6c138c9500170ab2e",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#180 VBLv15 {\"case\":\"S5\",\"eps\":0.001,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "S5_e0.001_VBLv15.npz",
+    "sha256": "0af61eb40e2aa41cd761ec96a3ca6469666e041a092de80c8574c03807fdc4dd",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#181 VBLv15 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.0,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.0_VBLv15.npz",
+    "sha256": "a0bf8297ac267a6b3e170f269dfdd4f4d20f7a46d85e709f7a7f9ec53e77d718",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#182 VBLv15 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.001,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.001_VBLv15.npz",
+    "sha256": "a8b51765e0adc7abba0e70dcebe40f6e53b6e543f973ed4087bdf51fc276efe7",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#183 VBLv15 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.002,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.002_VBLv15.npz",
+    "sha256": "920cb7fce4f521397de59b0b990253557cbe7a8269c6f061015ea5a3003e41fc",
+    "reads": null
+   },
+   "breach": null
+  },
+  {
+   "line": "#184 VBLv15 {\"case\":\"R2\",\"decision\":\"reanchor_on\",\"eps\":0.003,\"setting\":\"VBLv15\"}",
+   "role": "no_rod_reading",
+   "issues": [],
+   "notes": [],
+   "declaration": {
+    "declared": true,
+    "source": "t4h_meta"
+   },
+   "evidence": {
+    "rod_reading_truth_calls": 0,
+    "two_pressure_reads": 0,
+    "k": 1
+   },
+   "grade": null,
+   "t4h": {
+    "file": "R2ra_e0.003_VBLv15.npz",
+    "sha256": "fa57f3a95aa44d13c0c5a7842026b31d53e17b9a29425b5ed25f93b171151b3f",
+    "reads": null
+   },
+   "breach": null
+  }
+ ]
+}

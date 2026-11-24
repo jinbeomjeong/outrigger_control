@@ -1,0 +1,27 @@
+{
+  "label": "record after the edition 6 stop; not used for the edition 6 judgement (판정 후 기록용, 판 6 판정에 쓰지 않음)",
+  "part": "C",
+  "dry_run": false,
+  "identity_start": {
+    "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-records",
+    "head": "652e7c755bfcdfe4908adad3b58500093997e865",
+    "is_clean": true,
+    "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+    "diff_ok": true,
+    "changed_from_run_commit": [
+      "04_scripts/04_hydraulic/coupled/ed6_probe.py",
+      "05_tests/unit/test_ed6_records.py",
+      "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_records_ed6/records_ed6.ps1"
+    ],
+    "time": "2026-11-24 13:52:35 +09:00"
+  },
+  "mask": "0x0FFFFFFF",
+  "workers": 20,
+  "commands": [
+    {
+      "label": "counterfactual",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/ed6_probe.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\records_after_stop\\C_a2\\counterfactual.jsonl --plants J,c04,v05,v15 --arms a1a2b3,a1a2,a2b3,a1b3,none --keys R12_top-FR-Fs0-o0.0,R12_top-FR-Fs0-o0.05,R12_top-RL-Fs0-o0.0 --purpose record-after-ed6-stop_not-for-ed6-judgement --workers 20 --mask 0x0FFFFFFF",
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-records"
+    }
+  ]
+}

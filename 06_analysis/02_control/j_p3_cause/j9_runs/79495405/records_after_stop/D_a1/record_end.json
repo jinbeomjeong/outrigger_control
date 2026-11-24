@@ -1,0 +1,23 @@
+{
+  "identity_end": {
+    "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-records",
+    "head": "3ecf61f1a150a20bf2392c39c18113b9939dbf50",
+    "is_clean": true,
+    "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+    "diff_ok": true,
+    "changed_from_run_commit": [
+      "04_scripts/04_hydraulic/coupled/ed6_probe.py",
+      "04_scripts/04_hydraulic/coupled/ed6_records_d.py",
+      "05_tests/unit/test_ed6_records.py",
+      "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_records_ed6/d_grid_keys12.json",
+      "06_analysis/02_control/j_p3_cause/prelaunch_j9/run_records_ed6/records_ed6.ps1"
+    ],
+    "time": "2026-11-24 15:48:08 +09:00"
+  },
+  "identity_problem": null,
+  "codes": {
+    "run:grid_cause": 0,
+    "judge:reproduction_compare": 0
+  },
+  "done": "2026-11-24 15:48:08 +09:00"
+}

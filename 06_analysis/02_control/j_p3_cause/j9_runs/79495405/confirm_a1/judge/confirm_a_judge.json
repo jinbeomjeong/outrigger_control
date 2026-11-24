@@ -1,0 +1,703 @@
+{
+ "rule": "jp3_remedy_spec_v6.md 6.2 / 6.3 (\uac00), path 1; erratum 3 3-1",
+ "keys": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_a_keys_v2.json",
+  "sha256": "75413549fa9a9127744df1bc4cc92f0e99ee5881e1542726bd5d4f7b09869721",
+  "lines": 216
+ },
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_a.jsonl",
+   "sha256": "2f3b35875ca69ac00a774b801283fa6b959161d97da851486af43a0e01baab81"
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  }
+ },
+ "units": 216,
+ "probe_units": 0,
+ "judged_units": 216,
+ "table": {
+  "VBLc005": {
+   "runs": 54,
+   "no_reference": [],
+   "items": [],
+   "by_kind": {},
+   "by_item": {}
+  },
+  "VBLc04": {
+   "runs": 54,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 26.5 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    }
+   ],
+   "by_kind": {
+    "fail": 3
+   },
+   "by_item": {
+    "J1:fail": 1,
+    "J5:fail": 1,
+    "J4:fail": 1
+   }
+  },
+  "VBLv05": {
+   "runs": 54,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 22.55 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    }
+   ],
+   "by_kind": {
+    "fail": 3
+   },
+   "by_item": {
+    "J1:fail": 1,
+    "J5:fail": 1,
+    "J4:fail": 1
+   }
+  },
+  "VBLv15": {
+   "runs": 54,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.0",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 710",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 22.55 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|0|0.05",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|8|0.0",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|FR|8|0.05",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.0",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 716",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|0|0.05",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 733",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.0",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|RL|8|0.05",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|0|0.0",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 716",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|0|0.05",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 716",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|8|0.0",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|RR|8|0.05",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R7",
+     "phase": "eps 0.0",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R7",
+     "phase": "eps 0.001",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R7",
+     "phase": "eps 0.002",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R7",
+     "phase": "eps 0.003",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    }
+   ],
+   "by_kind": {
+    "fail": 18
+   },
+   "by_item": {
+    "J7:fail": 15,
+    "J1:fail": 1,
+    "J5:fail": 1,
+    "J4:fail": 1
+   }
+  }
+ },
+ "reading_1_moved": [],
+ "j7_stiffness_exempt": [
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|FR|8|0.0",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 70.0,
+     "phase": null,
+     "raw_ratio": 2.661
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|FR|8|0.05",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 70.0,
+     "phase": null,
+     "raw_ratio": 2.665
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|RL|8|0.0",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 71.0,
+     "phase": null,
+     "raw_ratio": 2.73
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|RL|8|0.05",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 72.6,
+     "phase": null,
+     "raw_ratio": 2.763
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|RR|8|0.0",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 70.9,
+     "phase": null,
+     "raw_ratio": 2.871
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|RR|8|0.05",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 71.0,
+     "phase": null,
+     "raw_ratio": 2.864
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R7",
+   "phase": "eps 0.0",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 56.4,
+     "phase": null,
+     "raw_ratio": 2.75
+    }
+   ],
+   "count": 1
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R7",
+   "phase": "eps 0.001",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 56.4,
+     "phase": null,
+     "raw_ratio": 2.75
+    }
+   ],
+   "count": 1
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R7",
+   "phase": "eps 0.002",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 56.4,
+     "phase": null,
+     "raw_ratio": 2.75
+    }
+   ],
+   "count": 1
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R7",
+   "phase": "eps 0.003",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 56.4,
+     "phase": null,
+     "raw_ratio": 2.75
+    }
+   ],
+   "count": 1
+  }
+ ],
+ "S8": {
+  "f5_records": [],
+  "failures": [],
+  "stops": [],
+  "not_judgeable": [],
+  "not_applicable_harness": [
+   {
+    "setting": "VBLc005",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc005",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc005",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc005",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc04",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc04",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc04",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLc04",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv05",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv05",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv05",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv05",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv15",
+    "row": "S8",
+    "phase": "eps 0.0",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv15",
+    "row": "S8",
+    "phase": "eps 0.001",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv15",
+    "row": "S8",
+    "phase": "eps 0.002",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   },
+   {
+    "setting": "VBLv15",
+    "row": "S8",
+    "phase": "eps 0.003",
+    "item": "F-5",
+    "kind": "record",
+    "detail": "no post-stop sample here and in V0 (reading 3)"
+   }
+  ]
+ },
+ "failing_units": {
+  "VBLc04 R12 top|FR|0|0.0": [
+   "J1 fail: gate end_att",
+   "J5 fail: t_back 26.5 -> None",
+   "J4 fail: final ready -> probe"
+  ],
+  "VBLv05 R12 top|FR|0|0.05": [
+   "J1 fail: gate end_att",
+   "J5 fail: t_back 22.55 -> None",
+   "J4 fail: final ready -> probe"
+  ],
+  "VBLv15 R12 top|FR|0|0.0": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 710"
+  ],
+  "VBLv15 R12 top|FR|0|0.05": [
+   "J1 fail: gate end_att",
+   "J5 fail: t_back 22.55 -> None",
+   "J4 fail: final ready -> probe"
+  ],
+  "VBLv15 R12 top|RL|0|0.0": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 716"
+  ],
+  "VBLv15 R12 top|RL|0|0.05": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 733"
+  ],
+  "VBLv15 R12 top|RR|0|0.0": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 716"
+  ],
+  "VBLv15 R12 top|RR|0|0.05": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 716"
+  ]
+ },
+ "probe_unit_stops": [],
+ "cluster": {
+  "cluster_failures": [
+   "VBLv15 R12"
+  ],
+  "single_failures": 2,
+  "is_failed": true,
+  "k": 2
+ },
+ "R15_worsening": "not applicable (no R15 lines in this key file)",
+ "identity_defects": [],
+ "not_judgeable_items": [],
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "pass",
+  "runs": 0,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_revision_5_record_in_revision_4_judgement": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "rev6": {
+   "name": "extend_bound_check rev5: jp3a_breach_reads + jp3b_breach_over_tol_reads + jp3c_breach_reads == 0",
+   "status": "pass",
+   "runs": 216,
+   "runs_judged": 56,
+   "expected_judged_runs": null,
+   "judged_key_missing_runs": 0,
+   "runs_by_case": {
+    "judged": 56,
+    "no_rod_reading": 160,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_record_not_revision_5": 0,
+    "defect_sensor_grade_missing": 0,
+    "defect_rule_identity_not_default": 0,
+    "record_only_sensor_grade": 0
+   },
+   "rule_revisions": [
+    6
+   ],
+   "jp3a_breach_reads": 0,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0,
+   "record_only_grade_sums": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   },
+   "runs_with_breach": 0,
+   "jp3b_breach_reads_flag": 0,
+   "jp3a_margin_used_reads_flag": 0,
+   "lock_ext_breach_over_tol_reads_flag": 0,
+   "ret_breach_reads_flag": 0
+  },
+  "rev6_unjudged_setting_runs": 0,
+  "runs_expected": 216,
+  "rule_missing_runs": 0,
+  "test_only_setting_runs": 0,
+  "l1_reference_runs": 0,
+  "revision_key_missing_runs": 0,
+  "revision_key_mismatch_runs": 0,
+  "status_by_revision": {
+   "4": "no_p3_runs",
+   "6": "pass"
+  }
+ },
+ "J-P3_judged_rows": 56,
+ "status_basis": {
+  "failures": [
+   "cluster rule (k = 2)"
+  ],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "failed"
+}

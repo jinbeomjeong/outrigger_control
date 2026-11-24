@@ -1,0 +1,55 @@
+{
+  "step": "confirm",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1",
+  "exit_code": 1,
+  "reason": "confirm_a_judge exit 1",
+  "commit": "7949540527baea680f144ef4e00a970cb10b9830",
+  "started": "2026-11-24 12:05:11 +09:00",
+  "stopped": "2026-11-24 12:53:43 +09:00",
+  "codes": {
+    "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+    "identity_start": {
+      "head": "7949540527baea680f144ef4e00a970cb10b9830",
+      "is_clean": true,
+      "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+      "time": "2026-11-24 12:05:12 +09:00"
+    },
+    "fixed_list": "06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_79495405.SHA256SUMS",
+    "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 7949540527baea680f144ef4e00a970cb10b9830)",
+    "run:confirm_a": 0,
+    "run:confirm_b": 0,
+    "identity_check": 0,
+    "tool:l1_input_guard": 0,
+    "tool:confirm_a_judge": 1
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "confirm_a",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_a_keys_v2.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_a.jsonl --workers 20 --mask 0x0FFFFFFF",
+      "pid": 30724
+    },
+    {
+      "label": "confirm_b",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_b.jsonl --workers 20 --mask 0x0FFFFFFF",
+      "pid": 33684
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1 --expect-commit 7949540527baea680f144ef4e00a970cb10b9830 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\_identity_checks\\confirm_a1.md"
+    },
+    {
+      "label": "l1_input_guard",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_l1_input_guard.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\judge\\l1_input_guard.json --l1-reference-sha256 9539d2257cab3a87a1727fd66577b0e002f3646d69c381b511fbecc2a680bc26 --l1-reference-sha256 c833b5ff2e3ac8054e648fa9a44838b8bae9250ae83384e66c31a952663391a0 --l1-reference-sha256 67ec227e90701c4471c5028d07224e5fe630b5d56187cc0e9d34c042ef49fdd2 --l1-reference-sha256 ff56a91313b9761428d8ebb58212db81e893664af4c753df222fae1ba2aa0bab --input C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_a.jsonl --input C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_b.jsonl --input C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl"
+    },
+    {
+      "label": "confirm_a_judge",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py sens --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_a_keys_v2.json --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_a.jsonl --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\judge\\confirm_a_judge.json"
+    }
+  ]
+}

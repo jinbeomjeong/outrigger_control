@@ -1,0 +1,47 @@
+{
+  "step": "impl_probe",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_probe_a1",
+  "exit_code": 0,
+  "commit": "7949540527baea680f144ef4e00a970cb10b9830",
+  "started": "2026-11-24 11:59:25 +09:00",
+  "done": "2026-11-24 12:05:11 +09:00",
+  "codes": {
+    "controller_blobs": "03_src = ac3c25a754013d1b673a150a4e2c877a02fb02be",
+    "identity_start": {
+      "head": "7949540527baea680f144ef4e00a970cb10b9830",
+      "is_clean": true,
+      "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+      "time": "2026-11-24 11:59:26 +09:00"
+    },
+    "fixed_list": "06_analysis/02_control/j_p3_cause/prelaunch_j9/FIXED_INPUTS_79495405.SHA256SUMS",
+    "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed6 (run commit 7949540527baea680f144ef4e00a970cb10b9830)",
+    "run:probe": 0,
+    "identity_check": 0,
+    "tool:probe_judge": 0,
+    "identity_end": {
+      "head": "7949540527baea680f144ef4e00a970cb10b9830",
+      "is_clean": true,
+      "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+      "time": "2026-11-24 12:05:11 +09:00"
+    }
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "probe",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/ed6_probe.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_probe_a1\\ed6_probe_a1a2b3.jsonl --arms a1a2b3 --workers 20 --mask 0x0FFFFFFF",
+      "pid": 12432
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6 C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_probe_a1 --expect-commit 7949540527baea680f144ef4e00a970cb10b9830 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\_identity_checks\\impl_probe_a1.md"
+    },
+    {
+      "label": "probe_judge",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py hash-match --reference C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\probe_1bd405c8\\b1off_check\\ed6_probe_a1a2b3.jsonl --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_probe_a1\\ed6_probe_a1a2b3.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_probe_a1\\judge\\probe_judge.json"
+    }
+  ]
+}

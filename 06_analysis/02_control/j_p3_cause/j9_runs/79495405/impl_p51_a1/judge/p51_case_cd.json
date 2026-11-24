@@ -1,0 +1,26 @@
+{
+ "rule": "jp3_remedy_spec_v6_erratum2.md 2-1 (hash match)",
+ "inputs": {
+  "reference": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cases_a1\\cd.jsonl",
+    "sha256": "ea2e53a97a63fe60ad6f7173b68d1a4add02a9399e9cde0874aa565e50e3f8d7"
+   }
+  ],
+  "rows": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_p51_a1\\cd.jsonl",
+    "sha256": "51d53a61255a366b347496a39116a54ffe49f44010576ebf681b64df9603119c"
+   }
+  ]
+ },
+ "setting": null,
+ "compared": 2,
+ "differing_jobs": [],
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass"
+}

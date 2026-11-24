@@ -1,0 +1,35 @@
+===== j9main: keys ['J-P3', 'J-P3_judged_rows', 'J_vs_V0', 'L-a', 'L-b', 'L-b_absolute', 'L-c', 'L-e', 'LS_vs_VB', 'S8', 'baseline_failures', 'edition', 'identity_defects', 'inputs', 'no_reference', 'not_judgeable_items', 'r15_worsening', 'reading_1_moved', 'rows', 'rule', 'setting_map', 'status', 'status_basis', 'stops', 'v0_rows', 'vb_fail_by_item', 'vb_fail_items', 'vb_fail_pair_items']
+status failed
+basis {"failures": ["VB J1 .. J11 (pair items): 3", "L-a: 2", "L-b (relative): 1"], "setting_defects": [], "not_judgeable": []}
+-- r15_worsening: {"pairs": 2, "state": "±¸ºÐµÊ", "scatter": {"S": 500.0, "E": 5860.0, "state": "±¸ºÐµÊ", "weak": true}, "weak_basis": true, "failures": []}
+-- vb_fail_pair_items: 3
+-- vb_fail_by_item: {"J1": 1, "J5": 1, "J4": 1}
+-- L-a: [{"row": "R12", "phase": "top|FL|0|0.05", "item": "J1", "kind": "fail", "detail": "gate end_att", "base_other_phase_has_it": true, "setting": "LS3"}, {"row": "R12", "phase": "top|FL|0|0.05", "item": "J4", "kind": "fail", "detail": "final ready -> probe", "base_other_phase_has_it": true, "setting": "LS3"}]
+-- L-b: [{"row": "R12", "phase": "top|FL|0|0.05", "item": "J5", "kind": "fail", "detail": "t_back 54.45 -> None", "base_other_phase_has_it": true, "setting": "LS3"}]
+-- L-c: []
+-- L-e: []
+-- stops: []
+-- J-P3_judged_rows: 200
+-- identity_defects: []
+-- not_judgeable_items: []
+===== sens: keys ['J-P3', 'J-P3_judged_rows', 'R15_worsening', 'S8', 'cluster', 'failing_units', 'identity_defects', 'inputs', 'j7_stiffness_exempt', 'judged_units', 'keys', 'not_judgeable_items', 'probe_unit_stops', 'probe_units', 'reading_1_moved', 'rule', 'status', 'status_basis', 'table', 'units']
+status failed
+basis {"failures": ["cluster rule (k = 2)", "J-P3 H-7"], "setting_defects": [], "not_judgeable": []}
+-- failing_units: {"VBLv05 R12 top|FL|0|0.05": ["J1 fail: gate end_att", "J5 fail: t_back 22.55 -> None", "J4 fail: final ready -> probe"], "VBLv05 S7 eps 0.001": ["J3 fail: t_ready 77.1 -> 134.8"], "VBLv15 R12 top|FL|0|0.0": ["J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 697"], "VBLv15 R12 top|FL|0|0.05": ["J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 698"]}
+-- cluster: {"cluster_failures": ["VBLv15 R12"], "single_failures": 2, "is_failed": true, "k": 2}
+-- probe_unit_stops: []
+-- R15_worsening: {"VBLc005": {"state": "±¸ºÐµÊ", "S_N": 500.0, "E_N": 5860.0, "worse": false, "weak_basis": true, "values": {"offset 0.0": {"V0_N": -220.0, "setting_N": 8730.0}, "offset 0.05": {"V0_N": -720.0, "setting_N": 2050.0}}}, "VBLc04": {"state": "±¸ºÐµÊ", "S_N": 500.0, "E_N": 5860.0, "worse": false, "weak_basis": true, "values": {"offset 0.0": {"V0_N": -220.0, "setting_N": 8730.0}, "offset 0.05": {"V0_N": -720.0, "setting_N": 2050.0}}}, "VBLv05": {"state": "±¸ºÐµÊ", "S_N": 500.0, "E_N": 5865.0, "worse": false, "weak_basis": true, "values": {"offset 0.0": {"V0_N": -220.0, "setting_N": 8730.0}, "offset 0.05": {"V0_N": -720.0, "setting_N": 2060.0}}}, "VBLv15": {"state": "±¸ºÐµÊ", "S_N": 500.0, "E_N": 5860.0, "worse": false, "weak_basis": true, "values": {"offset 0.0": {"V0_N": -220.0, "setting_N": 8730.0}, "offset 0.05": {"V0_N": -720.0, "setting_N": 2050.0}}}}
+-- J-P3_judged_rows: 104
+-- identity_defects: []
+-- not_judgeable_items: []
+-- j7_stiffness_exempt: [{"setting": "VBLv15", "row": "R12", "phase": "top|FL|8|0.0", "exempt_applied": true, "events": [{"t_s": 42.5, "phase": null, "raw_ratio": 2.468}, {"t_s": 69.9, "phase": null, "raw_ratio": 2.62}], "count": 2}, {"setting": "VBLv15", "row": "R12", "phase": "top|FL|8|0.05", "exempt_applied": true, "events": [{"t_s": 42.5, "phase": null, "raw_ratio": 2.468}, {"t_s": 70.0, "phase": null, "raw_ratio": 2.624}], "count": 2}, {"setting": "VBLv15", "row": "R14", "phase": "offset 0.0", "exempt_applied": true, "events": [{"t_s": 42.5, "phase": null, "raw_ratio": 2.468}, {"t_s": 72.8, "phase": null, "raw_ratio": 2.712}], "count": 2}, {"setting": "VBLv15", "row": "R14", "phase": "offset 0.05", "exempt_applied": true, "events": [{"t_s": 42.5, "phase": null, "raw_ratio": 2.468}, {"t_s": 72.8, "phase": null, "raw_ratio": 2.703}], "count": 2}]
+===== grid: keys ['J-P3', 'J-P3_judged_rows', 'allowed', 'fault_lines', 'identity_defects', 'inputs', 'keys', 'lines', 'opportunities', 'opportunity_failures', 'rule', 'status', 'status_basis', 'warn_records']
+status failed
+basis {"failures": ["opportunity failures 11 > 1", "J-P3 H-7"], "setting_defects": [], "not_judgeable": []}
+-- J-P3_judged_rows: 192
+-- opportunity_failures: ["R12_bottom-FL-Fs0-o0.05-FS24-level_VBL.npz", "R12_bottom-FL-Fs0-o0.05-FS24-ready_VBL.npz", "R12_bottom-FR-Fs0-o0.0-FS24-ready_VBL.npz", "R12_bottom-FR-Fs0-o0.0-G4-ready_VBL.npz", "R12_bottom-FL-Fs2-o0.0-RE1bF-ready_VBL.npz", "R12_bottom-FR-Fs2-o0.0-FS24-ready_VBL.npz", "R12_bottom-FR-Fs2-o0.0-RE1bF-ready_VBL.npz", "R12_bottom-FL-Fs4-o0.025-FS24-ready_VBL.npz", "R12_bottom-FR-Fs4-o0.0-RE1bF-ready_VBL.npz", "R12_top-FL-Fs0-o0.05-G4-level_VBL.npz", "R12_top-FL-Fs2-o0.05-G4-ready_VBL.npz"]
+-- fault_lines: []
+-- opportunities: 174
+-- lines: 192
+-- identity_defects: []
+-- warn_records: [{"line": "R12_bottom-FR-Fs0-o0.0-FS24-ready_VBL.npz", "new_warn_names": ["WARN_D1_IMU_GYRO_MISSING"]}, {"line": "R12_bottom-FL-Fs2-o0.0-FS24-ready_VBL.npz", "new_warn_names": ["WARN_D1_IMU_GYRO_MISSING"]}, {"line": "R12_bottom-FR-Fs2-o0.0-FS24-ready_VBL.npz", "new_warn_names": ["WARN_D1_IMU_GYRO_MISSING"]}, {"line": "R12_bottom-RR-Fs2-o0.075-RE1bF-ready_VBL.npz", "new_warn_names": ["WARN_D1_IMU_GYRO_MISSING"]}, {"line": "R12_bottom-FR-Fs8-o0.05-RE1bF-level_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-RR-Fs8-o0.0-G4-level_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-FL-Fs8-o0.0-FS24-ready_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-FL-Fs8-o0.0-RE1bF-ready_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-FR-Fs8-o0.05-RE1bF-ready_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-RL-Fs8-o0.0-FS24-ready_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-RL-Fs8-o0.0-G4-ready_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_bottom-RL-Fs8-o0.0-RE1bF-ready_VBL.npz", "new_warn_names": ["WARN_PROBE_STIFFNESS_OUT_OF_RANGE"]}, {"line": "R12_top-FR-Fs8-o0.025-RE1bF-ready_VBL.npz", "new_warn_names": ["WARN_D1_IMU_GYRO_MISSING"]}]

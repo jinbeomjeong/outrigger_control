@@ -1,0 +1,38 @@
+{
+  "label": "record after the edition 6 stop; not used for the edition 6 judgement (판정 후 기록용, 판 6 판정에 쓰지 않음)",
+  "part": "B",
+  "dry_run": true,
+  "identity_start": {
+    "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6",
+    "head": "7949540527baea680f144ef4e00a970cb10b9830",
+    "is_clean": true,
+    "src_tree": "f6bb6033d36fadfda7d81b881c077e40f8e293c7",
+    "diff_ok": true,
+    "changed_from_run_commit": [],
+    "time": "2026-11-24 13:42:43 +09:00"
+  },
+  "mask": "0x0FFFFFFF",
+  "workers": 20,
+  "commands": [
+    {
+      "label": "j9_main",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_j9_main --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6rec\\dry\\B_a1\\j9_main.jsonl --workers 20 --mask 0x0FFFFFFF",
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6"
+    },
+    {
+      "label": "sens",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed6_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\sens_keys_v2.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6rec\\dry\\B_a1\\sens.jsonl --workers 20 --mask 0x0FFFFFFF",
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6"
+    },
+    {
+      "label": "j9main_judge",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py j9main --edition 6 --rows C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6rec\\dry\\B_a1\\j9_main.jsonl --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6rec\\dry\\B_a1\\j9main_judge.json",
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6"
+    },
+    {
+      "label": "sens_judge",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_ed6_judge.py sens --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\sens_keys_v2.json --rows C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6rec\\dry\\B_a1\\sens.jsonl --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed6rec\\dry\\B_a1\\sens_judge.json",
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed6-run6"
+    }
+  ]
+}

@@ -1,0 +1,407 @@
+{
+ "rule": "jp3_remedy_spec_v6.md 6.2 / 6.3 (\uac00), path 1; erratum 3 3-1",
+ "keys": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\sens_keys_v2.json",
+  "sha256": "70f4bb6d7afaa3f8b7ac3437db3ce5d2e4d9cca05e74b9a5c38f3b0269b77f74",
+  "lines": 184
+ },
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\records_after_stop\\B_a1\\sens.jsonl",
+   "sha256": "716446718db2651c09617041133d2d2dcd73710705552b0dd0aedffaf95d2bc1"
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  }
+ },
+ "units": 184,
+ "probe_units": 32,
+ "judged_units": 152,
+ "table": {
+  "VBLc005": {
+   "runs": 46,
+   "no_reference": [],
+   "items": [],
+   "by_kind": {},
+   "by_item": {}
+  },
+  "VBLc04": {
+   "runs": 46,
+   "no_reference": [],
+   "items": [],
+   "by_kind": {},
+   "by_item": {}
+  },
+  "VBLv05": {
+   "runs": 46,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.05",
+     "item": "J1",
+     "kind": "fail",
+     "detail": "gate end_att",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.05",
+     "item": "J5",
+     "kind": "fail",
+     "detail": "t_back 22.55 -> None",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.05",
+     "item": "J4",
+     "kind": "fail",
+     "detail": "final ready -> probe",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "S7",
+     "phase": "eps 0.001",
+     "item": "J3",
+     "kind": "fail",
+     "detail": "t_ready 77.1 -> 134.8",
+     "base_other_phase_has_it": false
+    }
+   ],
+   "by_kind": {
+    "fail": 4
+   },
+   "by_item": {
+    "J1:fail": 1,
+    "J5:fail": 1,
+    "J4:fail": 1,
+    "J3:fail": 1
+   }
+  },
+  "VBLv15": {
+   "runs": 46,
+   "no_reference": [],
+   "items": [
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.0",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 697",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|0|0.05",
+     "item": "J7",
+     "kind": "fail",
+     "detail": "WARN_ROD_PRESSURE_FALLBACK:FL at period 698",
+     "base_other_phase_has_it": false
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|8|0.0",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R12",
+     "phase": "top|FL|8|0.05",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R14",
+     "phase": "offset 0.0",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    },
+    {
+     "row": "R14",
+     "phase": "offset 0.05",
+     "item": "J7",
+     "kind": "record",
+     "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+     "base_other_phase_has_it": false,
+     "j7_exempt": true
+    }
+   ],
+   "by_kind": {
+    "fail": 6
+   },
+   "by_item": {
+    "J7:fail": 6
+   }
+  }
+ },
+ "reading_1_moved": [],
+ "j7_stiffness_exempt": [
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|FL|8|0.0",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 69.9,
+     "phase": null,
+     "raw_ratio": 2.62
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R12",
+   "phase": "top|FL|8|0.05",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 70.0,
+     "phase": null,
+     "raw_ratio": 2.624
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R14",
+   "phase": "offset 0.0",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 72.8,
+     "phase": null,
+     "raw_ratio": 2.712
+    }
+   ],
+   "count": 2
+  },
+  {
+   "setting": "VBLv15",
+   "row": "R14",
+   "phase": "offset 0.05",
+   "exempt_applied": true,
+   "events": [
+    {
+     "t_s": 42.5,
+     "phase": null,
+     "raw_ratio": 2.468
+    },
+    {
+     "t_s": 72.8,
+     "phase": null,
+     "raw_ratio": 2.703
+    }
+   ],
+   "count": 2
+  }
+ ],
+ "S8": {
+  "f5_records": [],
+  "failures": [],
+  "stops": [],
+  "not_judgeable": [],
+  "not_applicable_harness": []
+ },
+ "failing_units": {
+  "VBLv05 R12 top|FL|0|0.05": [
+   "J1 fail: gate end_att",
+   "J5 fail: t_back 22.55 -> None",
+   "J4 fail: final ready -> probe"
+  ],
+  "VBLv05 S7 eps 0.001": [
+   "J3 fail: t_ready 77.1 -> 134.8"
+  ],
+  "VBLv15 R12 top|FL|0|0.0": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 697"
+  ],
+  "VBLv15 R12 top|FL|0|0.05": [
+   "J7 fail: WARN_ROD_PRESSURE_FALLBACK:FL at period 698"
+  ]
+ },
+ "probe_unit_stops": [],
+ "cluster": {
+  "cluster_failures": [
+   "VBLv15 R12"
+  ],
+  "single_failures": 2,
+  "is_failed": true,
+  "k": 2
+ },
+ "R15_worsening": {
+  "VBLc005": {
+   "state": "\uad6c\ubd84\ub428",
+   "S_N": 500.0,
+   "E_N": 5860.0,
+   "worse": false,
+   "weak_basis": true,
+   "values": {
+    "offset 0.0": {
+     "V0_N": -220.0,
+     "setting_N": 8730.0
+    },
+    "offset 0.05": {
+     "V0_N": -720.0,
+     "setting_N": 2050.0
+    }
+   }
+  },
+  "VBLc04": {
+   "state": "\uad6c\ubd84\ub428",
+   "S_N": 500.0,
+   "E_N": 5860.0,
+   "worse": false,
+   "weak_basis": true,
+   "values": {
+    "offset 0.0": {
+     "V0_N": -220.0,
+     "setting_N": 8730.0
+    },
+    "offset 0.05": {
+     "V0_N": -720.0,
+     "setting_N": 2050.0
+    }
+   }
+  },
+  "VBLv05": {
+   "state": "\uad6c\ubd84\ub428",
+   "S_N": 500.0,
+   "E_N": 5865.0,
+   "worse": false,
+   "weak_basis": true,
+   "values": {
+    "offset 0.0": {
+     "V0_N": -220.0,
+     "setting_N": 8730.0
+    },
+    "offset 0.05": {
+     "V0_N": -720.0,
+     "setting_N": 2060.0
+    }
+   }
+  },
+  "VBLv15": {
+   "state": "\uad6c\ubd84\ub428",
+   "S_N": 500.0,
+   "E_N": 5860.0,
+   "worse": false,
+   "weak_basis": true,
+   "values": {
+    "offset 0.0": {
+     "V0_N": -220.0,
+     "setting_N": 8730.0
+    },
+    "offset 0.05": {
+     "V0_N": -720.0,
+     "setting_N": 2050.0
+    }
+   }
+  }
+ },
+ "identity_defects": [],
+ "not_judgeable_items": [],
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "H-7",
+  "runs": 0,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_revision_5_record_in_revision_4_judgement": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "rev6": {
+   "name": "extend_bound_check rev5: jp3a_breach_reads + jp3b_breach_over_tol_reads + jp3c_breach_reads == 0",
+   "status": "H-7",
+   "runs": 184,
+   "runs_judged": 104,
+   "expected_judged_runs": null,
+   "judged_key_missing_runs": 0,
+   "runs_by_case": {
+    "judged": 104,
+    "no_rod_reading": 80,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_record_not_revision_5": 0,
+    "defect_sensor_grade_missing": 0,
+    "defect_rule_identity_not_default": 0,
+    "record_only_sensor_grade": 0
+   },
+   "rule_revisions": [
+    6
+   ],
+   "jp3a_breach_reads": 3,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0,
+   "record_only_grade_sums": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   },
+   "runs_with_breach": 3,
+   "jp3b_breach_reads_flag": 0,
+   "jp3a_margin_used_reads_flag": 4,
+   "lock_ext_breach_over_tol_reads_flag": 0,
+   "ret_breach_reads_flag": 28
+  },
+  "rev6_unjudged_setting_runs": 0,
+  "runs_expected": 184,
+  "rule_missing_runs": 0,
+  "test_only_setting_runs": 0,
+  "l1_reference_runs": 0,
+  "revision_key_missing_runs": 0,
+  "revision_key_mismatch_runs": 0,
+  "status_by_revision": {
+   "4": "no_p3_runs",
+   "6": "H-7"
+  }
+ },
+ "J-P3_judged_rows": 104,
+ "status_basis": {
+  "failures": [
+   "cluster rule (k = 2)",
+   "J-P3 H-7"
+  ],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "failed"
+}

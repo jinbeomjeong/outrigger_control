@@ -1,0 +1,22 @@
+{
+ "rule": "jp3_remedy_spec_v6_erratum2.md 2-1 (ii), spec 5 P6-1",
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_t8_a1\\ed6_t8.jsonl",
+   "sha256": "8274b000811b6a7c2e7eab5b74503114a97a27a60de3b36062e6544f57c3f6c3"
+  },
+  "main_jsonl": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  }
+ },
+ "judged_pairs": 22,
+ "differing_pairs": [],
+ "fallback_pairs_record": [],
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass"
+}

@@ -1,0 +1,49 @@
+j9_v0_sample: 48 runs, 48 to do
+1/48 {'case': 'S8', 'eps': 0.001, 'setting': 'V0'}: fault 2f655199 18.5s
+2/48 {'case': 'S8', 'eps': 0.002, 'setting': 'V0'}: fault d1169f7c 18.8s
+3/48 {'case': 'R16', 'eps': 0.0, 'offset_s': 0.05, 'setting': 'V0'}: ready 83afbea0 27.2s
+4/48 {'case': 'R16', 'eps': 0.0, 'offset_s': 0.075, 'setting': 'V0'}: ready 49ac9baf 28.3s
+5/48 {'case': 'S1', 'eps': 0.001, 'setting': 'V0'}: ready a8d4ef02 30.6s
+6/48 {'case': 'S1', 'eps': 0.0, 'setting': 'V0'}: ready 6774044f 30.9s
+7/48 {'case': 'R15', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0'}: ready 7cd664e4 32.0s
+8/48 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 4.0}, 'setting': 'V0'}: ready f412bac4 32.1s
+9/48 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'setting': 'V0'}: ready 4b2917a4 32.7s
+10/48 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0'}: ready aa147ff6 32.9s
+11/48 {'case': 'R14', 'eps': 0.0, 'offset_s': 0.05, 'setting': 'V0'}: ready ed81d1f1 32.9s
+12/48 {'case': 'R15', 'eps': 0.0, 'offset_s': 0.05, 'setting': 'V0'}: ready ecd47c0a 33.0s
+13/48 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0}, 'setting': 'V0'}: ready 8d8c051b 33.0s
+14/48 {'case': 'R14', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0'}: ready da0bc2da 33.2s
+15/48 {'case': 'S7', 'eps': 0.002, 'setting': 'V0'}: ready b8baf87c 34.9s
+16/48 {'case': 'S4', 'eps': 0.003, 'setting': 'V0'}: ready 71cc6dc7 34.9s
+17/48 {'case': 'S7', 'eps': 0.003, 'setting': 'V0'}: ready cdbb3e3d 34.9s
+18/48 {'case': 'S4', 'eps': 0.0, 'setting': 'V0'}: ready fddac251 35.0s
+19/48 {'case': 'S5', 'eps': 0.0, 'setting': 'V0'}: ready 6dba5b41 35.4s
+20/48 {'case': 'S5', 'eps': 0.003, 'setting': 'V0'}: ready 96e45952 35.7s
+21/48 {'case': 'R2', 'eps': 0.001, 'setting': 'V0'}: ready c5b3790e 24.4s
+22/48 {'case': 'R2', 'eps': 0.0, 'setting': 'V0'}: ready 0a71f5ce 25.1s
+23/48 {'case': 'R1', 'eps': 0.0, 'setting': 'V0'}: ready a91e9579 21.3s
+24/48 {'case': 'R1', 'eps': 0.002, 'setting': 'V0'}: ready a6437dfe 21.4s
+25/48 {'case': 'R7', 'eps': 0.003, 'setting': 'V0'}: ready 07673fc9 24.6s
+26/48 {'case': 'R7', 'eps': 0.002, 'setting': 'V0'}: ready 07d3e637 24.9s
+27/48 {'case': 'R10', 'eps': 0.0, 'setting': 'V0'}: ready 12350237 21.1s
+28/48 {'case': 'R10', 'eps': 0.002, 'setting': 'V0'}: ready 2e531974 21.6s
+29/48 {'case': 'R11', 'eps': 0.0, 'setting': 'V0'}: ready 4f87a130 21.3s
+30/48 {'case': 'R5', 'eps': 0.002, 'setting': 'V0'}: ready b8c84f2e 23.7s
+31/48 {'case': 'R2', 'decision': 'reanchor_on', 'eps': 0.0, 'setting': 'V0'}: ready 871d9354 29.9s
+32/48 {'case': 'R11', 'eps': 0.002, 'setting': 'V0'}: ready dde27d9e 21.7s
+33/48 {'case': 'R6', 'eps': 0.0, 'setting': 'V0'}: ready deaaafc2 24.8s
+34/48 {'case': 'R6', 'eps': 0.002, 'setting': 'V0'}: ready 4bc4c255 24.8s
+35/48 {'case': 'R5', 'eps': 0.0, 'setting': 'V0'}: ready 48114616 24.9s
+36/48 {'case': 'R8', 'eps': 0.0, 'setting': 'V0'}: ready 85ca7a29 24.8s
+37/48 {'case': 'R2', 'decision': 'reanchor_on', 'eps': 0.002, 'setting': 'V0'}: ready 0c76e74d 30.0s
+38/48 {'case': 'R8', 'eps': 0.002, 'setting': 'V0'}: ready f94834bb 25.1s
+39/48 {'case': 'R9', 'eps': 0.0, 'setting': 'V0'}: ready 6a4329cf 24.5s
+40/48 {'case': 'R9', 'eps': 0.002, 'setting': 'V0'}: ready 2e486af3 24.4s
+41/48 {'case': 'R3', 'eps': 0.0, 'setting': 'V0'}: ready 6a92acea 20.5s
+42/48 {'case': 'R3', 'eps': 0.003, 'setting': 'V0'}: ready 5373925f 20.2s
+43/48 {'case': 'R4', 'eps': 0.002, 'setting': 'V0'}: ready 734c12f8 14.8s
+44/48 {'case': 'R4', 'eps': 0.003, 'setting': 'V0'}: ready 911a5992 14.5s
+45/48 {'case': 'S3', 'eps': 0.0, 'setting': 'V0'}: ready b09426cc 19.6s
+46/48 {'case': 'S3', 'eps': 0.002, 'setting': 'V0'}: ready e6ed640b 19.9s
+47/48 {'case': 'S2', 'eps': 0.0, 'setting': 'V0'}: ready 70ff4c1f 18.0s
+48/48 {'case': 'S2', 'eps': 0.003, 'setting': 'V0'}: ready 0a731839 18.0s

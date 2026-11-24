@@ -1,0 +1,13 @@
+== confirm_a: judged p1 56 / p2 56; a/b/c p1 (0, 0, 0) / p2 (0, 0, 0); breach rows p1 0 / p2 0; status p1 pass / p2 pass
+  lines 216, path 1 record judged rows 56, judged-row differences 0, per-leg count differences 0, read differences 0, reads matched (leg, first t, excess, rod read, bound, run position) 0
+== confirm_b: judged p1 192 / p2 192; a/b/c p1 (62, 0, 0) / p2 (62, 0, 0); breach rows p1 44 / p2 44; status p1 H-7 / p2 fail
+  lines 192, path 1 record judged rows 192, judged-row differences 0, per-leg count differences 0, read differences 0, reads matched (leg, first t, excess, rod read, bound, run position) 62
+  path 1 form 32 ('carry_ext', 'probe/probe', 'locked_prev=True', 'locked_now=False', 'before=lock', 'pos=3', 'next_over=False')
+  path 1 form 30 ('carry_ext', 'probe/probe', 'locked_prev=True', 'locked_now=False', 'before=lock', 'pos=4', 'next_over=False')
+== sens: judged p1 104 / p2 104; a/b/c p1 (3, 0, 0) / p2 (3, 0, 0); breach rows p1 3 / p2 3; status p1 H-7 / p2 fail
+  lines 184, path 1 record judged rows 104, judged-row differences 0, per-leg count differences 0, read differences 0, reads matched (leg, first t, excess, rod read, bound, run position) 3
+  path 1 form 2 ('carry_ext', 'probe/probe', 'locked_prev=True', 'locked_now=False', 'before=lock', 'pos=3', 'next_over=False')
+  path 1 form 1 ('carry_ext', 'probe/probe', 'locked_prev=True', 'locked_now=False', 'before=lock', 'pos=4', 'next_over=False')
+== j9_main: judged p1 200 / p2 200; a/b/c p1 (0, 0, 0) / p2 (0, 0, 0); breach rows p1 0 / p2 0; status p1 pass / p2 pass
+  lines 388, path 1 record judged rows 200, judged-row differences 0, per-leg count differences 0, read differences 0, reads matched (leg, first t, excess, rod read, bound, run position) 0
+differences total 0

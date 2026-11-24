@@ -1,0 +1,21 @@
+{
+ "rule": "erratum 2 2-7.1 V0 sample hash (R3-E1 precedent)",
+ "status": "same",
+ "sample_jobs": 48,
+ "differing": [],
+ "problems": [],
+ "inputs": {
+  "sample_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\j9main_v0_sample_keys.json",
+   "sha256": "7da16a4f06af56ce57e2025686fcbc613c4af6c4d0deaad75e90d975c2665950"
+  },
+  "sample": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\impl_v0d0_a1\\v0_sample.jsonl",
+   "sha256": "dba4a1494a659d73b2cab9781659116638dc51aa539915239aebafccafe8e663"
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  }
+ }
+}

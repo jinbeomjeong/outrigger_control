@@ -1,0 +1,74 @@
+== (a) hash identity
+a1a2b3/c04 vs confirm_a ('R12', 'top', 'FR', 0.0, 0.05) True
+none/J vs ed5 VBJ ('R12', 'top', 'FR', 0.0, 0.0) True
+none/J vs ed5 VBJ ('R12', 'top', 'FR', 0.0, 0.05) True
+a1a2b3/c04 vs confirm_a ('R12', 'top', 'RL', 0.0, 0.0) True
+none/J vs ed5 VBJ ('R12', 'top', 'RL', 0.0, 0.0) True
+a1a2b3/c04 vs confirm_a ('R12', 'top', 'FR', 0.0, 0.0) True
+a1a2b3/v05 vs confirm_a ('R12', 'top', 'RL', 0.0, 0.0) True
+a1a2b3/v05 vs confirm_a ('R12', 'top', 'FR', 0.0, 0.0) True
+a1a2b3/v05 vs confirm_a ('R12', 'top', 'FR', 0.0, 0.05) True
+a1a2b3/v15 vs confirm_a ('R12', 'top', 'FR', 0.0, 0.0) True
+a1a2b3/v15 vs confirm_a ('R12', 'top', 'RL', 0.0, 0.0) True
+a1a2b3/v15 vs confirm_a ('R12', 'top', 'FR', 0.0, 0.05) True
+== (b) lsb record
+P6-c04-a1a2 FR 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1a2 FR 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1a2 FR 0.05 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1a2 FR 0.05 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1a2 RL 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-none FR 0.0 no lsb_record
+P6-J-none FR 0.05 no lsb_record
+P6-J-a1b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-none RL 0.0 no lsb_record
+P6-J-a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a1a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-J-a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1a2 RL 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-none FR 0.05 no lsb_record
+P6-c04-a1b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-none FR 0.0 no lsb_record
+P6-v05-a1a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-none RL 0.0 no lsb_record
+P6-v05-a1a2 FR 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1a2 FR 0.05 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a1b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1a2 RL 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-c04-a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-none FR 0.0 no lsb_record
+P6-v05-none RL 0.0 no lsb_record
+P6-v15-a1a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-none FR 0.05 no lsb_record
+P6-v15-a1a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1a2 FR 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1a2 FR 0.05 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1a2 RL 0.0 b3 [] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a2b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v05-a1b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a2b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1b3 RL 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a1b3 FR 0.0 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-a2b3 FR 0.05 b3 [(-1, None, 'RL')] a1 {} keys ['b3_active_leg', 'b3_episodes', 'b_active_leg', 'b_episodes', 'components', 'g2_split_periods', 'legs', 'settings', 'trace_reads']
+P6-v15-none RL 0.0 no lsb_record
+P6-v15-none FR 0.0 no lsb_record
+P6-v15-none FR 0.05 no lsb_record
