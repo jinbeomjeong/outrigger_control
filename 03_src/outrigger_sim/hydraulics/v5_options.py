@@ -673,11 +673,14 @@ def _checked_probe_d6_fields(values: Any) -> tuple[tuple[str, Any], ...]:
 
 def _check_p1_patch(options: HydraulicOptions) -> None:
     """Edition 7 3.3: the supplement sits on the P1 gate, whose uniform ``volume_scale`` it
-    replaces by the split scales (so the gate's scale must be 1), and needs M2 (the rod truth).
+    replaces by the split scales (so the gate's scale must be 1), and needs M2 (the rod truth)
+    and P4 (``rod_reading_truth``): spec 3.3 (b) raises the rod truth only together with the
+    head reading solved from it, never a rod rise with a separate head reading (hydraulics
+    review ``hydraulics_p1a_review.md`` 2, defence guard).
 
     Raises:
-        ValueError: ``p1_patch`` without P1, with a P1 ``volume_scale`` other than 1, or
-            without M2.
+        ValueError: ``p1_patch`` without P1, with a P1 ``volume_scale`` other than 1, without
+            M2 or without P4.
     """
     if options.p1_patch is None:
         return
@@ -689,6 +692,9 @@ def _check_p1_patch(options: HydraulicOptions) -> None:
                          f"the gate's volume_scale must be 1, got {gate.volume_scale}")
     if not options.rod_release_force:
         raise ValueError("p1_patch needs M2 (rod_release_force): it shapes the M2 rod truth")
+    if not options.rod_reading_truth:
+        raise ValueError("p1_patch needs P4 (rod_reading_truth): the raised rod truth must "
+                         "reach the controller's rod and head readings together")
 
 
 def check_probe_d6_config(config: Any | None, options: HydraulicOptions) -> None:

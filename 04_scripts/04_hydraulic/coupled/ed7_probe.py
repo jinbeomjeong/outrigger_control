@@ -105,9 +105,11 @@ PROBE_KEY_JOBS: tuple[dict, ...] = (
 """Spec 4.2 keys (stats S3): the (가) failure keys R12 top-FR-Fs0 o0.0 / o0.05 (also the
 counterfactual C dwell key of FR-Fs0), the counterfactual C dwell key top-RL-Fs0 o0.0
 (``cf_f3_blind_band.csv``), the long normal-row dwells S7 e0.001 (sensitivity v05, 49 s),
-R2 e0.001 / e0.003 (LSL) and S4 e0.002 (the S4 phase with the most dwell rows in
-``dynamics_v7/d2_dwells.csv``; chosen by python-expert, 확인 필요), and the eight D0 keys of
-the edition 6 probe: 15 keys."""
+R2 e0.001 / e0.003 (LSL) and S4 e0.002, and the eight D0 keys of the edition 6 probe: 15
+keys. S4 phase: in ``dynamics_v7/d2_dwells.csv`` the S4 phases with the most dwell rows are
+e0.002 and e0.003 (8 rows each, 14 / 15 dwell events); e0.002 is the one of the two with an
+opposite-sign dwell (the latch and ``n_rev`` path), chosen by python-expert and confirmed by
+control-expert (control review 5)."""
 _D_TWINS = (("top", "RR", 0.0, "FS24", 0.0), ("bottom", "RR", 0.0, "FS24", 0.05),
             ("top", "RL", 8.0, "FS24", 0.025), ("bottom", "FL", 2.0, "FS24", 0.075),
             ("top", "RR", 0.0, "G4", 0.075), ("bottom", "RR", 0.0, "G4", 0.05),

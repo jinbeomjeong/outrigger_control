@@ -317,7 +317,9 @@ class LockStartBSettings:
     ib_condition: str = BlindCondition.WITH_TWIST.value
     """Condition 3 (:class:`BlindCondition`; probe arms 3 and 4 take the other two)."""
     ib_twist_limit_N: float | None = None
-    """``|D|`` limit of condition (다); None = the controller's relax ``max_twist_N``."""
+    """``|D|`` limit of condition (다); None = the controller's relax ``max_twist_N`` (the R8
+    preset value ``c2.R8_TWIST_RELAX_MAX_TWIST_N``, 15 kN, set in ``with_10hz_d1``; not the
+    class default of ``TwistCompletionRelaxSettings``)."""
     ib_latch_reversals: int = 2
     """More opposite-sign triggers than this in one LEVEL stretch latch the leg off."""
     ib_protect: bool = True
@@ -699,7 +701,8 @@ class FloorInputs:
     twist_load_N: float = math.nan
     """``D = n^T F`` of the completion test (raw reading)."""
     twist_limit_N: float = math.nan
-    """The relax ``max_twist_N`` of the controller (condition (다) limit by default)."""
+    """The relax ``max_twist_N`` of the controller's configuration (condition (다) limit by
+    default; the R8 preset sets ``c2.R8_TWIST_RELAX_MAX_TWIST_N``)."""
     lower_load_N: NDArray[np.float64] | None = None
     """``F_lo``: the lower load estimate B3 protection uses (``_load_estimate_N``)."""
     force_N: NDArray[np.float64] | None = None
@@ -738,6 +741,9 @@ class _BlindShot:
     start_t_s: float
     twist_before_N: float
     force_before_N: list[float]
+    completion_known: bool = True
+    """The trigger period had LEVEL completion flags (False: condition 3 open because the
+    completion was not evaluated, e.g. before the LOC confirmation; control review 3)."""
     end_t_s: float | None = None
     end: str | None = None
     twist_after_N: float | None = None
@@ -752,6 +758,7 @@ class _BlindShot:
         grew = (None if delta_D is None
                 else abs(self.twist_after_N) > abs(self.twist_before_N))
         return {"leg": LEG_ORDER[self.leg], "sign": self.sign, "start_t_s": self.start_t_s,
+                "completion_known": self.completion_known,
                 "end_t_s": self.end_t_s, "end": self.end,
                 "twist_before_N": self.twist_before_N, "twist_after_N": self.twist_after_N,
                 "delta_D_N": delta_D, "delta_F_N": delta_F, "twist_grew": grew}
@@ -763,6 +770,8 @@ class _BlindCounts:
 
     triggers: int = 0
     trigger_periods: list[int] = field(default_factory=list)
+    triggers_completion_unknown: int = 0
+    """Fired triggers of periods without LEVEL completion flags (control review 3)."""
     end: Counter = field(default_factory=Counter)
     latches: int = 0
     reversals: int = 0
@@ -771,6 +780,7 @@ class _BlindCounts:
 
     def to_meta(self) -> dict[str, Any]:
         return {"triggers": self.triggers, "trigger_periods": list(self.trigger_periods),
+                "triggers_completion_unknown": self.triggers_completion_unknown,
                 "end": dict(self.end), "latches": self.latches, "n_rev": self.reversals,
                 "protect_blocked_periods": self.protect_blocked_periods,
                 "raised_periods": self.raised_periods}
@@ -1145,6 +1155,8 @@ class LockStartB:
         counts = self.blind_counts[leg]
         counts.triggers += 1
         counts.trigger_periods.append(state.stretch_periods)
+        is_completion_known = inputs.completion is not None
+        counts.triggers_completion_unknown += int(not is_completion_known)
         state.is_floor_on = True
         state.floor_sign = state.stretch_sign
         state.floor_m_s = min(self.hold_m_s + settings.a1_step_m_s, settings.a1_cap_m_s)
@@ -1153,7 +1165,8 @@ class LockStartB:
         self.blind_shots.append(_BlindShot(leg=leg, sign=state.floor_sign,
                                            start_t_s=float(inputs.t_s),
                                            twist_before_N=self._last_twist_N,
-                                           force_before_N=list(self._last_force_N)))
+                                           force_before_N=list(self._last_force_N),
+                                           completion_known=is_completion_known))
         self._reset_blind_stretch(state)
 
     def _next_blind_floor(self, state: _BlindLeg, leg: int, inputs: FloorInputs,

@@ -10,8 +10,9 @@ The rev 7 judged set adds, on a judged plant (the VBM family, P1 supplement on),
 * On an old plant (no P1 supplement: VBL, VBJ, ...) the line is a record only: each breach is
   ``plant_seed_artifact`` when the release before it started at a seed that came from a moving
   retract opening (``stale_seed_release`` of the line, harness record key), ``seed_not_stale``
-  when its seed was not stale, ``no_seed`` without a logged seed; without the record key the
-  line is ``not_judgeable`` (a record line; it never changes a judged status).
+  when its seed was not stale, ``no_seed`` without a logged seed, ``seed_log_truncated`` after
+  the last row of a capped log; without the record key the line is ``not_judgeable`` (a
+  record line; it never changes a judged status).
 
 Status of a set of judged lines (spec 6.1 order: fail > setting_defect > not_judgeable >
 pass): a judged line with a condition breach fails; a judged line without the T4h arrays or the
@@ -68,6 +69,8 @@ JUDGED_PLANT_KEY = "p1_patch"
 """A line whose ``hydraulic_options`` carry the P1 supplement is on a judged (VBM) plant."""
 STALE_KEY = "stale_seed_release"
 ARTIFACT, SEED_NOT_STALE, NO_SEED = "plant_seed_artifact", "seed_not_stale", "no_seed"
+LOG_TRUNCATED = "seed_log_truncated"
+"""A breach after the last row of a capped ``stale_seed_release`` log: class unknown."""
 STATUS_ORDER = ("pass", "not_judgeable", "setting_defect", "fail")
 """Spec 6.1: fail > setting_defect > not_judgeable > pass."""
 T4H_ARRAYS = ("t_s", "phase", "jp3_t_s", "jp3_class", "jp3_plant_state", "jp3_p_tr_Pa",
@@ -138,11 +141,17 @@ def condition_reads(arrays: dict, t_event_s: float) -> list[ConditionRead]:
 def release_seed_class(stale_record: dict, leg: int, t_read_s: float,
                        t_window_start_s: float) -> str:
     """The seed class of the release before a condition read on an old plant: the last
-    logged seeded release of the leg in ``(t_window_start - 0.1 s, t_read]``."""
+    logged seeded release of the leg in ``(t_window_start - 0.1 s, t_read]``. A read after the
+    last row of a truncated log (``log_truncated``) is :data:`LOG_TRUNCATED`, not
+    :data:`NO_SEED`: its release may have been cut from the log."""
     columns = stale_record.get("log_columns") or []
     rows = [dict(zip(columns, row, strict=True)) for row in stale_record.get("log") or []]
     earlier = [row for row in rows if int(row["leg"]) == leg
                and t_window_start_s - 0.1 - 1e-9 < float(row["t_release_s"]) <= t_read_s + 1e-9]
+    if stale_record.get("log_truncated"):
+        last_logged_s = max((float(row["t_release_s"]) for row in rows), default=-np.inf)
+        if t_read_s > last_logged_s:
+            return LOG_TRUNCATED
     if not earlier:
         return NO_SEED
     return ARTIFACT if bool(earlier[-1]["seed_from_moving_open"]) else SEED_NOT_STALE
@@ -177,7 +186,7 @@ def line_condition(line: dict, arrays: dict | None) -> dict:
                if read.is_breach]
     entry.update(state="record", breach_seed_classes={name: classes.count(name)
                                                       for name in (ARTIFACT, SEED_NOT_STALE,
-                                                                   NO_SEED)})
+                                                                   NO_SEED, LOG_TRUNCATED)})
     return entry
 
 

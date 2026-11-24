@@ -577,6 +577,8 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                     options.line_fill_gate, _check_delay_circuit(self.flow_limiter.params))
                 # edition 7 3.3 record key of the old plant (no command reads it)
                 self.stale_seed_log = []
+                self.stale_seed_counts = [0, 0]
+                """Every seeded release and the stale ones among them (the log is capped)."""
                 self.seed_from_moving = np.zeros(LEG_COUNT, bool)
             self.p1_read_log = (P1ReadLog() if self.line_fill_gate is not None
                                 and is_p1_read_record_on() else None)
@@ -910,19 +912,25 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             """Edition 7 3.3 record of the old plant (``stale_seed_release``): a release that
             starts at a retract opening seed, and whether that seed came from an opening while
             the leg was moving (the stale M2 seed of hydraulics H1). Record only."""
+            is_stale = bool(self.seed_from_moving[leg])
+            self.stale_seed_counts[0] += 1
+            self.stale_seed_counts[1] += int(is_stale)
             if len(self.stale_seed_log) < MAX_LOGGED_LOCK_EVENTS:
-                self.stale_seed_log.append([round(float(self.t), 6), leg,
-                                            bool(self.seed_from_moving[leg]), seed_Pa,
+                self.stale_seed_log.append([round(float(self.t), 6), leg, is_stale, seed_Pa,
                                             locked_pressure_Pa])
             self.seed_from_moving[leg] = False
 
         def stale_seed_release_record(self) -> dict | None:
-            """``stale_seed_release`` of an old P1 plant (None for the others)."""
+            """``stale_seed_release`` of an old P1 plant (None for the others). The counts
+            cover every seeded release; the log keeps the first
+            :data:`MAX_LOGGED_LOCK_EVENTS` rows and ``log_truncated`` says when it lost some
+            (hydraulics review ``hydraulics_p1a_review.md`` 3)."""
             log = getattr(self, "stale_seed_log", None)
             if log is None:
                 return None
-            return {"releases_with_seed": len(log),
-                    "stale_releases": sum(bool(row[2]) for row in log),
+            releases, stale = self.stale_seed_counts
+            return {"releases_with_seed": releases, "stale_releases": stale,
+                    "log_rows": len(log), "log_truncated": releases > len(log),
                     "log": [list(row) for row in log],
                     "log_columns": list(STALE_SEED_COLUMNS)}
 

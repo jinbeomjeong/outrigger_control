@@ -340,6 +340,10 @@ class ProbeResult:
     retract_extra_periods: int | None = None
     retract_target_reached: bool | None = None
     """(i-b): the stroke read at or below the target when the slow part ended."""
+    k1_mid_opened: bool | None = None
+    """Edition 7 Q7-C2 record (witness on): on a retract-first probe, the retract reads up to
+    the K1 mid reading reached ``s_w,D6``; None on an extend-first probe or with the witness
+    off."""
 
 
 @dataclass(frozen=True, eq=False)
@@ -743,6 +747,8 @@ class _LegRecord:
     """Largest commanded retract travel of the stage (``need_ub + depth + margin``)."""
     is_extra_done: bool = False
     is_target_reached: bool | None = None
+    mid_retract_read_count: int | None = None
+    """Retract reads taken up to the K1 mid reading (set when the mid reading is taken)."""
 
 
 @dataclass
@@ -1080,11 +1086,22 @@ class ProbeRound:
         values: dict[str, object] = {}
         if self.d6.witness:
             values["retract_witness_m"] = retract_witness_m(record.retract_reads)
+            values["k1_mid_opened"] = self._k1_mid_opened(record)
         if self._has_position_target(record):
             values.update(retract_extra_m=record.extra_commanded_m,
                           retract_extra_periods=record.extra_periods,
                           retract_target_reached=record.is_target_reached)
         return values
+
+    def _k1_mid_opened(self, record: _LegRecord) -> bool | None:
+        """Q7-C2 record (control review 4, commands unchanged): on a retract-first probe, did
+        the retract reads up to the K1 mid reading open the witness (``retract_witness_m >=
+        s_w,D6``)? None on an extend-first probe or without a mid reading."""
+        assert self.d6 is not None
+        if record.first_sign > 0.0 or record.mid_retract_read_count is None:
+            return None
+        moved_m = retract_witness_m(record.retract_reads[:record.mid_retract_read_count])
+        return bool(moved_m >= self.d6.witness_m)  # NaN (< 3 reads) is not opened
 
     def _has_tail(self, record: _LegRecord) -> bool:
         settings = self.settings
@@ -1110,6 +1127,7 @@ class ProbeRound:
         """K1: reading at half the first move's commanded travel."""
         record.mid_force_N = float(reading.cylinder_force_N[self.leg])
         record.mid_rod_stroke_m = float(reading.rod_stroke_m[self.leg])
+        record.mid_retract_read_count = len(record.retract_reads)  # edition 7 record only
 
     def _exceeds_attitude_limit(self, reading: ProbeReading) -> bool:
         roll, pitch = reading.filtered_attitude_rad

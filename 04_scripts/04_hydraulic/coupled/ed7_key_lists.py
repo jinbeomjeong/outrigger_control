@@ -15,13 +15,16 @@ Files in ``--out-dir`` (an existing file is never overwritten; ``--only`` writes
   per cluster of the stored V0 grid one V0-passing offset not used in edition 6
   (``s30_pool_runs.csv`` ``used_ed6``; the file's sha256 is checked), drawn with numpy
   ``default_rng(seed)`` in sorted cluster order (the stats s50 form); the three clusters whose
-  V0 result differs between offsets are left out (171 lines); the three U832 clusters
-  (``jp3_ed7_rules.U832_CLUSTERS``) run and are marked ``judged: false`` (spec 6.3, user
-  decision). Setting ``VBM``; the V0 pair is the stored grid run (file, key, run id, V0
-  command hash).
+  V0 result differs between offsets and those without an unused V0-passing offset are left
+  out (171 lines). Two flags per line (user decision 2026-11-24, stats review 3 ①):
+  ``counted_for_k`` is false on the three U832 clusters (``jp3_ed7_rules.U832_CLUSTERS``:
+  left out of the V0 pass -> fail allowance k only, 168 lines), ``judged_fault_jp3`` is true
+  on all 171 (FAULT 0 and J-P3 with the ③ rev 7 condition rows). Each count uses its own
+  flag (``k_counted_lines``, ``fault_jp3_judged_lines``, ``expected_j_p3_judged_rows``).
+  Setting ``VBM``; the V0 pair is the stored grid run (file, key, run id, V0 command hash).
 * ``g1_pool_ed7.json`` (always): the pool counts without a draw (clusters, the mixed and the
-  U832 clusters, the 171 eligible clusters and the judged count), so the line count is known
-  before the seed.
+  U832 clusters, the 171 eligible clusters and the two denominators), so the line count is
+  known before the seed.
 
 The ③ rev 7 condition rows (6.3 (다′)) are counted on the run outputs by
 ``jp3_rev7_condition.py`` (a condition is a property of the run, not of the key).
@@ -68,7 +71,14 @@ GRID_FILES = ("grid_r67_main.json", "grid_r67_top.json", "grid_r69_bottom.json",
 GRID_SETTING = "VBM"
 EXPECTED_G1_LINES = 171
 EXPECTED_U832_LINES = 3
+EXPECTED_K_COUNTED_LINES = EXPECTED_G1_LINES - EXPECTED_U832_LINES
 SENS_ROWS_PER_SETTING = 46
+G1_FLAG_MEANINGS = {
+    "counted_for_k": "the line enters the V0 pass -> fail allowance k (false on the three "
+                     "U832 clusters only)",
+    "judged_fault_jp3": "FAULT 0 and J-P3 (③ rev 7 condition rows included) are judged on "
+                        "the line (all 171 lines)"}
+"""G1 line flags (user decision 2026-11-24 on the stats review 3 ①; spec 6.3 U832)."""
 OUTPUTS = ("probe_keys_ed7.json", "sens_keys_ed7.json", "g1_pool_ed7.json",
            "confirm_g1_grid171.json")
 
@@ -191,7 +201,9 @@ def pool_document(rows: list[dict], pool_sha256: str) -> dict:
                                if entry["is_mixed"]],
             "without_candidate": sum(not entry["candidates"] for entry in clusters.values()),
             "eligible_clusters": len(eligible), "u832_clusters": [list(c) for c in u832],
-            "expected_lines": len(eligible), "judged_lines": len(eligible) - len(u832)}
+            "line_flags": G1_FLAG_MEANINGS, "expected_lines": len(eligible),
+            "k_counted_lines": len(eligible) - len(u832),
+            "fault_jp3_judged_lines": len(eligible)}
 
 
 def grid_event_name(event) -> str:
@@ -245,19 +257,34 @@ def g1_document(rows: list[dict], grid_root: Path, seed: int, pool: dict,
                       "v0_pair": {**reference, "file": f"{ed6_key_lists.GRID_FILE_ROOT}/"
                                                         f"{reference['file']}",
                                   "v0_pass": True},
-                      "judged": not _is_u832(cluster),
+                      **g1_line_flags(cluster),
                       "head_only_declared": ed6_key_lists.is_head_only(job)})
-    if len(lines) != pool["expected_lines"]:
-        raise InputError(f"G1: {len(lines)} lines, expected {pool['expected_lines']}")
+    denominators = g1_denominators(lines)
+    if (len(lines), denominators["k_counted_lines"]) != (EXPECTED_G1_LINES,
+                                                         EXPECTED_K_COUNTED_LINES):
+        raise InputError(f"G1: {len(lines)} lines / {denominators['k_counted_lines']} counted "
+                         f"for k, expected {EXPECTED_G1_LINES} / {EXPECTED_K_COUNTED_LINES}")
     return {"rule": pool["rule"], "generation_command": command,
             "code_identity": ed6_key_lists.code_identity(), "seed": seed,
             "extraction": "numpy default_rng(seed), sorted cluster order, uniform among the "
                           "cluster's unused V0-passing offsets (stats s50 form)",
             "pool_csv_sha256": pool["pool_csv_sha256"], "settings": [GRID_SETTING],
-            "expected_lines": len(lines),
-            "judged_lines": sum(line["judged"] for line in lines),
-            "expected_j_p3_judged_rows": sum(not line["head_only_declared"] for line in lines),
+            "line_flags": G1_FLAG_MEANINGS, "expected_lines": len(lines), **denominators,
             "lines": lines}
+
+
+def g1_line_flags(cluster: tuple) -> dict[str, bool]:
+    """The two per-line criteria flags of G1 (user decision 2026-11-24, stats review 3 ①)."""
+    return {"counted_for_k": not _is_u832(cluster), "judged_fault_jp3": True}
+
+
+def g1_denominators(lines: list[dict]) -> dict[str, int]:
+    """Each G1 criterion counted on its own flag, so no count mixes the two denominators."""
+    fault_jp3_lines = [line for line in lines if line["judged_fault_jp3"]]
+    return {"k_counted_lines": sum(line["counted_for_k"] for line in lines),
+            "fault_jp3_judged_lines": len(fault_jp3_lines),
+            "expected_j_p3_judged_rows": sum(not line["head_only_declared"]
+                                             for line in fault_jp3_lines)}
 
 
 # ------------------------------------------------------------------------------ CLI

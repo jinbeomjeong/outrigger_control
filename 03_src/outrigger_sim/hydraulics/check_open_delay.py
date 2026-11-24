@@ -499,6 +499,8 @@ P1_PATCH_MODE = "gate_only_p1_patch"
 P1_PATCH_OUTPUT_EXCEPTIONS = ("rod_fill_truth",)
 """Edition 7 3.3: the gate hands the plant the rod truth rise of a held retract fill (``(a)``)
 instead of the retract M2 seed (``(d)``: no seed path)."""
+ROD_CHECK_CLEAR_COLUMNS = ("t_s", "leg", "cleared_fill_rise_Pa")
+"""``summary()["rod_check_clear_log"]`` row of :class:`CheckOpenGateP1Patch` (review 1-4)."""
 
 
 def fill_line_pressure_Pa(volume_m3: float, tank_Pa: float, rod_start_Pa: float,
@@ -539,9 +541,15 @@ class CheckOpenGateP1Patch(CheckOpenGate):
     * (a) while a locked leg's retract line is held, the fill ``x`` pressurises the rod chamber:
       ``Delta p_fill = (p_B(x) - delta - p_r)+`` (:func:`fill_line_pressure_Pa`, with the void
       filled first), at the opening ``p_rod,open - p_r``. In neutral only the line share
-      drains; the rod share stays trapped and ``Delta p_fill`` is held (:attr:`fill_rise_Pa`)
-      until the plant releases or re-locks the leg (:meth:`clear_fill`). A refill starts from
-      the trapped share.
+      drains; the rod share stays trapped and ``Delta p_fill`` is held (:attr:`fill_rise_Pa`).
+      The void share filled so far (:attr:`void_fill_m`) is trapped as well, also while the
+      fill has not raised the rod pressure yet (hydraulics review ``hydraulics_p1a_review.md``
+      1-1). A refill starts from the trapped share.
+    * ``Delta p_fill`` is gone at whichever comes first: the extend rod check of the locked leg
+      opens by its pilot (``rod_released`` false -> true: the rod chamber equalises with the B
+      line and vents to tank, review 1-4, :attr:`rod_check_clear_log`), the plant releases
+      the leg (a retract release starts from the locked truth plus the held rise) or re-locks
+      it (:meth:`clear_fill`).
     * (d) no retract opening seed: the plant starts the released lag from the locked truth plus
       :attr:`fill_rise_Pa` (``opening_rod_pressure_Pa`` stays NaN).
     * (b) ``k_ext`` = b0: the head yield share uses ``k_h`` alone (the load-constant upper
@@ -565,32 +573,68 @@ class CheckOpenGateP1Patch(CheckOpenGate):
             bulk_modulus_Pa=patch.bulk_modulus_Pa)
         super().__init__(setting, patched_circuit, patched_values)
         self.patch = patch
-        self.fill_rise_Pa = np.zeros(len(self.A_h))
+        leg_count = len(self.A_h)
+        self.fill_rise_Pa = np.zeros(leg_count)
         """``Delta p_fill`` per leg: the rod truth rise of the held / trapped retract fill."""
-        self.fill_rise_peak_Pa = np.zeros(len(self.A_h))
+        self.fill_rise_peak_Pa = np.zeros(leg_count)
+        self.void_fill_m = np.zeros(leg_count)
+        """Void share a locked leg's retract fill has reached (review 1-1): trapped in neutral
+        up to the present void, even before the fill raises the rod pressure."""
+        self.rod_check_clear_log: list[tuple[float, int, float]] = []
+        """Record only (review 1-4): ``(t_s, leg, cleared_Pa)`` per extend rod check opening
+        of a locked leg that cleared a nonzero ``Delta p_fill`` (first
+        :data:`MAX_LOGGED_FILLS` rows; :attr:`rod_check_clear_count` counts them all)."""
+        self.rod_check_clear_count = 0
 
     def clear_fill(self, leg: int) -> None:
-        """The plant released or re-locked ``leg``: the trapped rise is gone."""
+        """The plant released or re-locked ``leg``: the trapped rise and void share are gone."""
         self.fill_rise_Pa[leg] = 0.0
+        self.void_fill_m[leg] = 0.0
 
     def filter(self, inputs: CheckDelayInputs) -> CheckDelayOutput:
         output = super().filter(inputs)
         output.opening_rod_pressure_Pa = np.full(len(output.speed_m_s), np.nan)  # (d)
         return output
 
+    def _extend_step(self, inputs, out, i, d, speed, gate) -> None:
+        was_rod_released = bool(self.rod_released[i])
+        super()._extend_step(inputs, out, i, d, speed, gate)
+        if inputs.locked[i] and not was_rod_released and self.rod_released[i]:
+            self._clear_rise_at_rod_check_opening(float(inputs.t_s), i)
+
+    def _clear_rise_at_rod_check_opening(self, t_s: float, i: int) -> None:
+        """Review 1-4: the pilot-opened rod check joins the rod chamber to the B line, which
+        vents to tank, so the extend release starts without ``Delta p_fill``. The void share is
+        kept: a rod chamber at its floor gains oil from the B line, it does not lose it."""
+        cleared_Pa = float(self.fill_rise_Pa[i])
+        self.fill_rise_Pa[i] = 0.0
+        if cleared_Pa <= 0.0:
+            return
+        self.rod_check_clear_count += 1
+        if len(self.rod_check_clear_log) < MAX_LOGGED_FILLS:
+            self.rod_check_clear_log.append((round(t_s, 6), int(i), cleared_Pa))
+
     def _retract_step(self, inputs, out, i, d, speed, gate, void) -> None:
         is_locked = bool(inputs.locked[i])
         held_Pa = float(self.fill_rise_Pa[i]) if is_locked else 0.0
-        trapped_m = self._trapped_fill_m(inputs, i, held_Pa, void) if held_Pa > 0.0 else 0.0
+        trapped_m = self._trapped_floor_m(inputs, i, held_Pa, void) if is_locked else 0.0
         self.x[i] = max(self.x[i], trapped_m)  # a refill starts on the trapped rod share
         super()._retract_step(inputs, out, i, d, speed, gate, void)
         if not is_locked:
             return
         self.x[i] = max(self.x[i], trapped_m)  # neutral drains the line share only
         if d < 0:
+            self.void_fill_m[i] = max(float(self.void_fill_m[i]), min(float(self.x[i]), void))
             rise_Pa = self._fill_rise_of_x_Pa(inputs, i, void)
             self.fill_rise_Pa[i] = max(held_Pa, rise_Pa)
             self.fill_rise_peak_Pa[i] = max(self.fill_rise_peak_Pa[i], self.fill_rise_Pa[i])
+
+    def _trapped_floor_m(self, inputs: CheckDelayInputs, i: int, held_Pa: float,
+                         void: float) -> float:
+        """What neutral cannot drain from a locked leg's retract line: the rod share of the
+        held rise or the void share filled so far, whichever is larger (review 1-1)."""
+        rise_share_m = self._trapped_fill_m(inputs, i, held_Pa, void) if held_Pa > 0.0 else 0.0
+        return max(rise_share_m, min(float(self.void_fill_m[i]), void))
 
     def _compliances_m3_Pa(self, inputs: CheckDelayInputs, i: int) -> tuple[float, float, float]:
         """(line, rod, head yield) compliances of the (a) volume law at this chunk's stroke."""
@@ -628,7 +672,12 @@ class CheckOpenGateP1Patch(CheckOpenGate):
                 "output_exceptions": list(P1_PATCH_OUTPUT_EXCEPTIONS),
                 "output_exception": "edition 7 P1 supplement: rod fill truth, no M2 seed",
                 "p1_patch": asdict(self.patch),
-                "fill_rise_peak_bar": np.round(self.fill_rise_peak_Pa / 1e5, 3).tolist()}
+                "fill_rise_peak_bar": np.round(self.fill_rise_peak_Pa / 1e5, 3).tolist(),
+                "rod_check_clear_count": self.rod_check_clear_count,
+                "rod_check_clear_log": [list(row) for row in self.rod_check_clear_log],
+                "rod_check_clear_log_columns": list(ROD_CHECK_CLEAR_COLUMNS),
+                "rod_check_clear_log_truncated": (self.rod_check_clear_count
+                                                  > len(self.rod_check_clear_log))}
 
     def meta(self) -> dict[str, Any]:
         return {**super().meta(), "mode": P1_PATCH_MODE,
@@ -637,7 +686,7 @@ class CheckOpenGateP1Patch(CheckOpenGate):
 
 
 __all__ = ["GATE_ONLY_MODE", "GATE_OUTPUT_EXCEPTIONS", "GATE_RETRACT_SEED_EXCEPTION",
-           "P1_PATCH_MODE", "P1_PATCH_OUTPUT_EXCEPTIONS",
+           "P1_PATCH_MODE", "P1_PATCH_OUTPUT_EXCEPTIONS", "ROD_CHECK_CLEAR_COLUMNS",
            "UNIT_STATUS", "CheckDelayCircuit",
            "CheckDelayInputs",
            "CheckDelayOutput", "CheckOpenDelay", "CheckOpenGate", "CheckOpenGateP1Patch",

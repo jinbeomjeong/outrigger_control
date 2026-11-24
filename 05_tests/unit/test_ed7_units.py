@@ -20,10 +20,12 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import subprocess
 import sys
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -54,6 +56,7 @@ from outrigger_sim.control.lock_start_b import (  # noqa: E402
 )
 from outrigger_sim.control.two_pressure import (  # noqa: E402
     D6Witness,
+    RodSensorState,
     TwoPressureMonitor,
 )
 from outrigger_sim.hydraulics import v5_options  # noqa: E402
@@ -133,6 +136,19 @@ def test_blind_triggers_after_25_periods_at_u_hold_plus_one_step() -> None:
     assert outputs[25][0] == pytest.approx(U_HOLD + 2 * STEP)
     assert rule.blind_counts[0].triggers == 1 and rule.blind_counts[0].trigger_periods == [25]
     assert all(out[1:].tolist() == [0.0, 0.0, 0.0] for out in outputs)
+
+
+def test_trigger_records_whether_the_completion_was_evaluated() -> None:
+    """Control review 3: ``completion_known`` per shot, unknown triggers counted per leg."""
+    unknown = _blind()
+    _dead_band_run(unknown, 26)  # no completion flags: condition 3 open
+    known = _blind()
+    _dead_band_run(known, 26, completion=CompletionFlags(False, True, False))
+    unknown_record, known_record = unknown.record()["blind"], known.record()["blind"]
+    assert [shot["completion_known"] for shot in unknown_record["shots"]] == [False]
+    assert unknown_record["legs"]["FL"]["triggers_completion_unknown"] == 1
+    assert [shot["completion_known"] for shot in known_record["shots"]] == [True]
+    assert known_record["legs"]["FL"]["triggers_completion_unknown"] == 0
 
 
 def test_note_ga_raises_a_dead_band_request_that_edition_6_a_i_leaves() -> None:
@@ -281,11 +297,13 @@ def _monitor() -> TwoPressureMonitor:
 
 
 class _Result:
-    def __init__(self, leg: int, witness: float | None) -> None:
-        self.leg_index, self.is_skipped, self.is_reversed = leg, False, False
+    def __init__(self, leg: int, witness: float | None, *, is_reversed: bool = False,
+                 k1_mid_opened: bool | None = None) -> None:
+        self.leg_index, self.is_skipped, self.is_reversed = leg, False, is_reversed
         self.t_first_hold_end_s, self.t_second_hold_end_s = 1.0, 2.0
         self.retract_witness_m = witness
         self.retract_extra_m = self.retract_extra_periods = self.retract_target_reached = None
+        self.k1_mid_opened = k1_mid_opened
 
 
 def _d6_history(monitor: TwoPressureMonitor, rise_Pa: float) -> None:
@@ -311,6 +329,24 @@ def test_d6_witness_not_opened_rounds_neither_count_nor_reset() -> None:
     assert record["not_judgeable_rounds"][0] == 2 and len(record["rounds"]) == 4
 
 
+def test_d6_witness_rows_and_reversed_round_counts() -> None:
+    """Control review 4 (record only): each witness row carries ``is_reversed`` and
+    ``k1_mid_opened``; reversed rounds are counted per leg, substituted legs (fallback, out of
+    D6) apart."""
+    witness = D6Witness(witness_m=0.3e-3, warn_rounds=2)
+    monitor = _monitor()
+    _d6_history(monitor, 40e5)
+    monitor.rod_state[1] = RodSensorState.FALLBACK
+    monitor.probe_round_finished([_Result(0, 0.5e-3, is_reversed=True, k1_mid_opened=False),
+                                  _Result(1, 0.5e-3, is_reversed=True),
+                                  _Result(2, 0.5e-3)], witness)
+    record = monitor.meta()["d6_witness"]
+    assert [(row["leg"], row["is_reversed"], row["k1_mid_opened"]) for row in record["rounds"]
+            ] == [("FL", True, False), ("RL", False, None)]
+    assert record["reversed_rounds"] == {"not_substituted": [1, 0, 0, 0],
+                                         "substituted": [0, 1, 0, 0]}
+
+
 def test_d6_without_the_witness_is_the_edition_6_rule() -> None:
     monitor = _monitor()
     _d6_history(monitor, 0.0)
@@ -320,11 +356,12 @@ def test_d6_without_the_witness_is_the_edition_6_rule() -> None:
     assert "d6_witness" not in monitor.meta()
 
 
-def _toy_probe(d6: ProbeD6Settings | None, dead_m: float) -> tuple[ProbeRound, list]:
+def _toy_probe(d6: ProbeD6Settings | None, dead_m: float,
+               start_m: float = 0.40) -> tuple[ProbeRound, list]:
     """Leg FL of a toy plant: the oil stroke follows the command one period late, a retract
     moves only after ``dead_m`` of commanded oil (a shut check); the other legs are skipped by
     the stroke guard. Returns the finished round and the FL commands."""
-    stroke = np.array([0.40, 0.699, 0.699, 0.699])
+    stroke = np.array([start_m, 0.699, 0.699, 0.699])
     probe = ProbeRound(start=_probe_reading(0.0, stroke), settings=ProbeSettings(),
                        max_speed_m_s=V_MAX, period_s=T, load_sensitivity_diag_N_m=np.full(4, 5e6),
                        attitude_sensitivity_rad_m=np.zeros((4, 2)), stroke_max_m=0.70,
@@ -367,6 +404,22 @@ def test_probe_retract_target_returns_the_leg_and_the_witness_sees_it() -> None:
     witness_only, _ = _toy_probe(ProbeD6Settings(witness=True), dead_m=2.2e-3)
     assert witness_only.results[0].retract_witness_m < 0.3e-3  # 2 mm never opened the line
     assert witness_only.results[0].retract_extra_m is None
+
+
+def test_reversed_probe_records_whether_the_k1_mid_read_opened() -> None:
+    """Q7-C2 (control review 4): a retract-first probe gets no (i-b) target; its result tells
+    whether the retract reads up to the K1 mid read reached ``s_w,D6``."""
+    margin = ProbeSettings().stroke_guard_margin_m
+    near_top = 0.70 - margin - 1.0e-3  # a 2 mm extension would pass the guard: retract first
+    d6 = ProbeD6Settings(witness=True, retract_position_target=True)
+    shut, _ = _toy_probe(d6, dead_m=2.2e-3, start_m=near_top)
+    moving, _ = _toy_probe(d6, dead_m=0.0, start_m=near_top)
+    assert shut.results[0].is_reversed and moving.results[0].is_reversed
+    assert shut.results[0].k1_mid_opened is False  # still in the dead stroke at the mid read
+    assert moving.results[0].k1_mid_opened is True
+    assert shut.results[0].retract_extra_m is None  # (i-b) is not applied when reversed
+    extend_first, _ = _toy_probe(d6, dead_m=0.0)
+    assert extend_first.results[0].k1_mid_opened is None
 
 
 def test_probe_d6_settings_refuse_a_fast_slow_part() -> None:
@@ -422,11 +475,13 @@ def _patched_gate(beta: float, scale: float, c_v: float = 0.02) -> CheckOpenGate
 
 def _gate_inputs(gate, *, u: float, p_h: float = 99.39e5, p_r: float = 5.07e5,
                  band: float = 0.0, s: float = 0.40836, locked: bool = True,
-                 dt: float = 0.1) -> CheckDelayInputs:
+                 dt: float = 0.1, t_s: float = 0.0, void: float = 0.0) -> CheckDelayInputs:
     speed = np.zeros(4)
     speed[0] = u
-    return CheckDelayInputs(0.0, dt, speed, np.full(4, p_h), np.full(4, p_r),
-                            np.array([locked, True, True, True]), np.zeros(4),
+    voids = np.zeros(4)
+    voids[0] = void
+    return CheckDelayInputs(t_s, dt, speed, np.full(4, p_h), np.full(4, p_r),
+                            np.array([locked, True, True, True]), voids,
                             np.full(4, band), np.full(4, s))
 
 
@@ -484,6 +539,97 @@ def test_trapped_rise_survives_neutral_and_a_refill_starts_on_it() -> None:
     assert slow.fill_rise_Pa[0] == 0.0
 
 
+def _extend_until_head_opens(gate, speed: float = 5.0e-3, dt: float = 1.0e-3,
+                             t0_s: float = 10.0) -> dict:
+    """Extend the held leg in ``dt`` chunks (hydraulics probe C); the times and the held rise
+    when the rod check and the head check opened."""
+    seen: dict = {}
+    for k in range(5000):
+        t_s = round(t0_s + k * dt, 6)
+        gate.filter(_gate_inputs(gate, u=speed, dt=dt, t_s=t_s))
+        if gate.rod_released[0] and "rod_open_t_s" not in seen:
+            seen.update(rod_open_t_s=t_s, rise_at_rod_open_Pa=float(gate.fill_rise_Pa[0]),
+                        head_open_at_rod_open=bool(gate.is_open[0]))
+        if gate.is_open[0]:
+            seen.update(head_open_t_s=t_s, rise_at_head_open_Pa=float(gate.fill_rise_Pa[0]))
+            return seen
+    raise AssertionError("the head check never opened")
+
+
+def _release_start(gate, *, setting: str = "VBM", locked_Pa: float = 10.0e5) -> list:
+    """What the harness plant hands the M2 lag and the M2 shift at a release of leg FL (the
+    plant's own ``_start_release`` on a bare instance; lag and shift record their inputs)."""
+    import harness_hydraulics
+    import run_v5
+
+    options = run_v5.options_of(setting)[1]
+    plant_class = harness_hydraulics.make_hydraulics_plant_class(
+        object, options, (np.zeros(4), np.zeros(4)))
+    plant = object.__new__(plant_class)
+    started: list = []
+    plant.__dict__.update(
+        line_fill_gate=gate, rod_pressure_seed_Pa=np.full(4, np.nan), fill_release_log=[],
+        stale_seed_log=None, lock_log=None, t=20.0, A_ann=np.full(4, FRONT_A_ANN),
+        rod_pressure_lag=SimpleNamespace(start=lambda leg, p: started.append(("lag", p))),
+        rod_release=SimpleNamespace(release=lambda leg, s: started.append(("m2", s))))
+    plant._start_release(0, locked_Pa, 500.0)
+    return started
+
+
+def test_rod_check_opening_clears_the_held_rise_probe_c() -> None:
+    """Hydraulics review 1-4 (user decision: 0 when the rod check opens): a held retract fill
+    of the slow corner, then an extension; the rise is 0 from the rod check's pilot opening
+    on, logged once, so the extend release starts at the locked truth and M2 gets the inputs
+    of a leg that never held a fill."""
+    held_gate = _patched_gate(0.69e9, 1.5)
+    _deliver(held_gate, 2.098e-3)
+    held_Pa = float(held_gate.fill_rise_Pa[0])
+    assert held_Pa == pytest.approx(20.48e5, rel=2e-3) and not held_gate.is_open[0]
+    held = _extend_until_head_opens(held_gate)
+    assert held["rise_at_rod_open_Pa"] == 0.0 and not held["head_open_at_rod_open"]
+    assert held["head_open_t_s"] > held["rod_open_t_s"]
+    assert held_gate.rod_check_clear_log == [(held["rod_open_t_s"], 0, held_Pa)]
+    assert held_gate.rod_check_clear_count == 1
+    summary = held_gate.summary()
+    assert summary["rod_check_clear_log_columns"] == ["t_s", "leg", "cleared_fill_rise_Pa"]
+    assert summary["rod_check_clear_log_truncated"] is False
+    fresh_gate = _patched_gate(0.69e9, 1.5)
+    fresh = _extend_until_head_opens(fresh_gate)
+    assert fresh["head_open_t_s"] - fresh["rod_open_t_s"] == pytest.approx(
+        held["head_open_t_s"] - held["rod_open_t_s"])
+    assert fresh_gate.rod_check_clear_log == []  # nothing to clear: no row
+    assert _release_start(held_gate) == _release_start(fresh_gate)
+    assert _release_start(held_gate)[0] == ("lag", 10.0e5)  # base, no fill rise
+
+
+def test_retract_release_still_starts_on_the_held_rise() -> None:
+    """The retract opening path is unchanged: base + Delta p_fill (the old M2 seed)."""
+    gate = _patched_gate(0.69e9, 1.5)
+    _deliver(gate, 2.098e-3)
+    held_Pa = float(gate.fill_rise_Pa[0])
+    started = _release_start(gate)
+    assert started[0] == ("lag", pytest.approx(10.0e5 + held_Pa))
+    assert gate.fill_rise_Pa[0] == 0.0 and gate.void_fill_m[0] == 0.0
+
+
+def test_partial_void_fill_stays_trapped_in_neutral_probe_b() -> None:
+    """Hydraulics review 1-1 (probe B): 0.5 mm into a 1 mm void raises nothing, yet neutral
+    keeps it (up to the present void); a release or a new lock clears it."""
+    gate = _patched_gate(1.0e9, 1.0)
+    for _ in range(25):  # 2 mm/s x 0.25 s = 0.5 mm
+        gate.filter(_gate_inputs(gate, u=-2.0e-3, dt=0.01, void=1.0e-3))
+    assert gate.fill_rise_Pa[0] == 0.0
+    assert gate.void_fill_m[0] == pytest.approx(0.5e-3)
+    for _ in range(300):  # 3 s neutral
+        gate.filter(_gate_inputs(gate, u=0.0, dt=0.01, void=1.0e-3))
+    assert gate.x[0] == pytest.approx(0.5e-3)
+    for _ in range(300):  # the void shrank: the floor follows it
+        gate.filter(_gate_inputs(gate, u=0.0, dt=0.01, void=0.3e-3))
+    assert gate.x[0] == pytest.approx(0.3e-3)
+    gate.clear_fill(0)
+    assert gate.void_fill_m[0] == 0.0
+
+
 def test_fill_line_pressure_is_the_inverse_of_the_volume_law() -> None:
     c_l, c_r, c_h = 1e-12, 2e-12, 4e-12
     for volume in (0.0, 1e-7, 5e-6, 3e-5):
@@ -495,10 +641,13 @@ def test_fill_line_pressure_is_the_inverse_of_the_volume_law() -> None:
 
 
 def test_p1_patch_options_refusals_and_names() -> None:
-    plant = {"rod_release_force": True, "line_fill_gate": {"kind": "VN", "volume_scale": 1.0,
-                                                           "c_v": 0.02}}
+    plant = {"rod_release_force": True, "rod_reading_truth": True,
+             "line_fill_gate": {"kind": "VN", "volume_scale": 1.0, "c_v": 0.02}}
     options = v5_options.HydraulicOptions.from_dict({**plant, "p1_patch": {}})
     assert options.to_dict()["p1_patch"]["k_ext_form"] == "b0"
+    with pytest.raises(ValueError, match="needs P4"):  # hydraulics review 2 guard
+        v5_options.HydraulicOptions.from_dict({**plant, "rod_reading_truth": False,
+                                               "p1_patch": {}})
     with pytest.raises(ValueError, match="volume_scale must be 1"):
         v5_options.HydraulicOptions.from_dict({**plant, "line_fill_gate": {
             "kind": "VN", "volume_scale": 1.5, "c_v": 0.02}, "p1_patch": {}})
@@ -592,6 +741,32 @@ def test_rev7_condition_reads_and_classes() -> None:
     assert condition.summarize([no_condition])["status"] == "not_judgeable"
     missing = condition.line_condition(judged, None)
     assert condition.summarize([missing])["status"] == "setting_defect"
+
+
+def test_stale_seed_record_shows_a_truncated_log(monkeypatch) -> None:
+    """Hydraulics review 3: the counts cover every seeded release, ``log_truncated`` says when
+    the capped log lost rows, and the condition tool does not call such a release no_seed."""
+    import harness_hydraulics
+    import jp3_rev7_condition as condition
+    import run_v5
+
+    monkeypatch.setattr(harness_hydraulics, "MAX_LOGGED_LOCK_EVENTS", 3)
+    plant_class = harness_hydraulics.make_hydraulics_plant_class(
+        object, run_v5.options_of("VBL")[1], (np.zeros(4), np.zeros(4)))
+    plant = object.__new__(plant_class)
+    plant.__dict__.update(stale_seed_log=[], stale_seed_counts=[0, 0],
+                          seed_from_moving=np.ones(4, bool), t=0.0)
+    for k in range(5):
+        plant.t = 1.0 + k
+        plant._log_stale_seed(1, 10e5, 30e5)
+    record = plant.stale_seed_release_record()
+    assert (record["releases_with_seed"], record["stale_releases"]) == (5, 1)
+    assert record["log_rows"] == 3 and record["log_truncated"] is True
+    assert condition.release_seed_class(record, 1, 1.0, 0.9) == condition.ARTIFACT
+    assert condition.release_seed_class(record, 1, 3.0, 2.9) == condition.SEED_NOT_STALE
+    assert condition.release_seed_class(record, 1, 5.0, 4.9) == condition.LOG_TRUNCATED
+    complete = {**record, "log_truncated": False}
+    assert condition.release_seed_class(complete, 1, 5.0, 4.9) == condition.NO_SEED
 
 
 # ------------------------------------------------------------------------------ Y7-5 rules
@@ -719,6 +894,132 @@ def test_12b_edition_7_scans_the_required_roots_in_every_kind(tmp_path) -> None:
     with pytest.raises(plan.NotUsable, match="edition 7 option"):
         plan.select(noise, scan, tmp_path / "p3", noise_sha256=noise_sha, edition=6,
                     required_roots=(required,))
+
+
+def _pool_rows() -> list[dict]:
+    """A synthetic stats s30 pool: the three U832 clusters, 168 other eligible clusters, one
+    V0-mixed cluster and one without an unused V0-passing offset."""
+    def rows(level, fs, timing, leg, event, passes=("True", "True"), used=("True", "False")):
+        return [{"level": level, "fs_kN": str(fs), "timing": timing, "leg": leg,
+                 "event": event, "offset_s": str(0.025 * k), "v0_pass": passes[k],
+                 "used_ed6": used[k], "v0_sha": f"h{level}{fs}{leg}{event}{k}"}
+                for k in range(2)]
+
+    pool = []
+    for leg, fs in (("FL", 2.0), ("FR", 2.0), ("FR", 4.0)):
+        pool += rows("bottom", fs, "ready", leg, "RE1bF")
+    for index in range(168):
+        pool += rows("top", float(index), "level", "RR", "G4")
+    pool += rows("top", 999.0, "level", "RL", "G4", passes=("True", "False"))
+    pool += rows("top", 998.0, "level", "RL", "G4", used=("True", "True"))
+    return pool
+
+
+def test_g1_flags_keep_the_k_and_fault_jp3_denominators_apart() -> None:
+    """Stats review 3 ① (user decision): U832 lines leave only the k count (168); FAULT 0 and
+    J-P3 are judged on all 171 lines, and each count uses its own flag."""
+    import ed7_key_lists as keys
+
+    pool = keys.pool_document(_pool_rows(), "sha")
+    assert (pool["expected_lines"], pool["k_counted_lines"],
+            pool["fault_jp3_judged_lines"]) == (171, 168, 171)
+    assert "judged_lines" not in pool and set(pool["line_flags"]) == {"counted_for_k",
+                                                                      "judged_fault_jp3"}
+    clusters = keys.pool_clusters(_pool_rows())
+    lines = [{**keys.g1_line_flags(cluster), "head_only_declared": index % 10 == 0}
+             for index, (cluster, entry) in enumerate(clusters.items())
+             if entry["candidates"] and not entry["is_mixed"]]
+    assert sum(not line["counted_for_k"] for line in lines) == 3
+    assert all(line["judged_fault_jp3"] for line in lines)
+    counts = keys.g1_denominators(lines)
+    head_only = sum(line["head_only_declared"] for line in lines)
+    assert counts == {"k_counted_lines": 168, "fault_jp3_judged_lines": 171,
+                      "expected_j_p3_judged_rows": 171 - head_only}
+
+
+def _blind_tree(root: Path) -> tuple[Path, Path]:
+    """``<root>/06_analysis`` with the edition 7 blind folder layout: blind entries hold a
+    colliding key (``s50``), a sibling outside the blind prefixes holds nothing."""
+    run = root / "06_analysis" / "02_control" / "j_p3_cause" / "j9_runs" / "606f8713"
+    dry = run / "cdry_a1"
+    key_text = json.dumps({"key": "L2|s50|g6|0|x0|top|Fs0"})
+    for blind in (dry / "VBK_c92_b1", dry / "logs"):
+        blind.mkdir(parents=True)
+        (blind / "run.json").write_text(key_text, encoding="utf-8")
+    (dry / "VBK_c93.jsonl").write_text(key_text + "\n", encoding="utf-8")
+    (dry / "VBK0_c92").mkdir()  # not blind: VBK0, not VBK_c92
+    (dry / "VBK0_c92" / "run.json").write_text("{}", encoding="utf-8")
+    return root / "06_analysis", run
+
+
+def _guard_blind(monkeypatch) -> None:
+    """Make every file-system touch of a blind path fail the test."""
+    import jp3_12b_plan as plan
+
+    def is_blind_text(path) -> bool:
+        return plan.is_blind(Path(os.fspath(path)), plan.ED7_BLIND_PREFIXES)
+
+    real_scandir, real_stat = os.scandir, os.stat
+
+    def scandir(path="."):
+        assert not is_blind_text(path), f"scandir of a blind path {path}"
+        return real_scandir(path)
+
+    def stat(path, *args, **kwargs):
+        assert isinstance(path, int) or not is_blind_text(path), f"stat of a blind path {path}"
+        return real_stat(path, *args, **kwargs)
+
+    real_read_bytes = Path.read_bytes
+
+    def read_bytes(self):
+        assert not is_blind_text(self), f"read of a blind path {self}"
+        return real_read_bytes(self)
+
+    monkeypatch.setattr(os, "scandir", scandir)
+    monkeypatch.setattr(os, "stat", stat)
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+
+
+def test_12b_edition_7_never_touches_or_names_the_blind_paths(tmp_path, monkeypatch) -> None:
+    import jp3_12b_plan as plan
+    from test_jp3_12b_tools import write_noise
+
+    noise = tmp_path / "noise.json"
+    noise_sha = write_noise(noise)
+    scan_root, run = _blind_tree(tmp_path / "repo")
+    extra = tmp_path / "tests"
+    extra.mkdir()
+    _guard_blind(monkeypatch)
+    document = plan.select(noise, scan_root, tmp_path / "plans", noise_sha256=noise_sha,
+                           edition=7, extra_roots=(extra,), required_roots=(run,),
+                           excludes=("*VBK_c9*",))  # would list blind files if walked
+    # the s50 keys of the blind files were never read: no seed step
+    assert [document["blocks"][f"b{j}"]["seed_index"] for j in range(1, 5)] == [50, 51, 52, 53]
+    assert document["inputs"]["blind_prefixes_applied"] == len(plan.ED7_BLIND_PREFIXES) == 3
+    for path in (tmp_path / "plans").iterdir():
+        text = path.read_text(encoding="utf-8")
+        for name in ("VBK_c92", "VBK_c93", "logs", "cdry_a1/logs"):
+            assert name not in text, (path.name, name)
+    assert document["inputs"]["scan_excluded_files"] == []
+    with pytest.raises(plan.NotUsable, match="blind prefix"):
+        plan.select(noise, scan_root, tmp_path / "p2", noise_sha256=noise_sha, edition=7,
+                    required_roots=(run / "cdry_a1" / "logs",))
+
+
+def test_12b_blind_prefixes_leave_edition_6_as_it_was(tmp_path) -> None:
+    """Edition 6 keeps its ``rglob`` scan: the blind folder's ``s50`` key is still read."""
+    import jp3_12b_plan as plan
+    from test_jp3_12b_tools import write_noise
+
+    noise = tmp_path / "noise.json"
+    noise_sha = write_noise(noise)
+    scan_root, _ = _blind_tree(tmp_path / "repo")
+    extra = tmp_path / "tests"
+    extra.mkdir()
+    document = plan.select(noise, scan_root, tmp_path / "plans", noise_sha256=noise_sha,
+                           edition=6, extra_roots=(extra,))
+    assert document["blocks"]["b1"]["seed_index"] == 60
+    assert "blind_prefixes_applied" not in document["inputs"]
 
 
 def test_key_lists_g1_needs_the_seed(tmp_path, capsys) -> None:

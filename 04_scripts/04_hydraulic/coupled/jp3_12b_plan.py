@@ -52,7 +52,12 @@ scan widened by ``--scan-required <root>`` (repeatable, at least one: the editio
 outputs, records B / C / D and the edition 7 outputs with the probe): every file kind of
 :data:`ED7_SCAN_SUFFIXES` under the root, ``.npz`` string arrays included, with the ``"key"``,
 string-literal and plain-line patterns; a required root without a file stops (exit 2). The
-plans carry the arms VBKM0 / VBKM.
+plans carry the arms VBKM0 / VBKM. Every edition 7 walk (``--scan-root``, ``--scan-extra``,
+``--scan-required``, the ``--scan-exclude`` listing) drops the blind prefixes of
+:data:`ED7_BLIND_PREFIXES` by name before it lists, stats or opens anything (user decision
+2026-11-24); a root or key file inside one stops (exit 2). No output names a blind path or
+counts its files: ``selection.json`` records only ``blind_prefixes_applied`` (the number of
+prefixes). Editions 5 and 6 keep their ``rglob`` scan unchanged.
 
 Usage (python-dev or Chrono-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_plan.py --noise <h8_noise_VB.json>
@@ -78,6 +83,7 @@ import argparse
 import fnmatch
 import hashlib
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass
@@ -178,15 +184,76 @@ def is_excluded(relative: str, excludes: tuple[str, ...]) -> bool:
     return any(fnmatch.fnmatchcase(relative, pattern) for pattern in excludes)
 
 
-def scan_r79_keys(scan_root: Path, excludes: tuple[str, ...] = ()) -> KeyScan:
+ED7_BLIND_PREFIXES = (
+    "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/cdry_a1/VBK_c92*",
+    "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/cdry_a1/VBK_c93*",
+    "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/cdry_a1/logs",
+)
+"""Edition 7 blind paths (user decision 2026-11-24): path-component patterns (``fnmatch``,
+case-insensitive) matched anywhere in a path's absolute components. A matching entry is never
+opened, listed or stat-ed, nothing below it is walked, and no output names it or counts it
+(``selection.json`` says only how many prefixes were applied)."""
+
+
+def is_blind(path: Path, prefixes: tuple[str, ...]) -> bool:
+    """``path`` (or one of its ancestors) matches a blind prefix; string work only, the file
+    system is not touched (``os.path.abspath`` does not resolve links)."""
+    parts = [part.casefold() for part in Path(os.path.abspath(path)).parts]
+    for prefix in prefixes:
+        pattern = prefix.casefold().split("/")
+        for start in range(len(parts) - len(pattern) + 1):
+            window = parts[start:start + len(pattern)]
+            if all(fnmatch.fnmatchcase(part, item)
+                   for part, item in zip(window, pattern, strict=True)):
+                return True
+    return False
+
+
+def _unblinded_files(root: Path, suffixes: tuple[str, ...],
+                     blind: tuple[str, ...]) -> list[Path]:
+    """The files of ``suffixes`` under ``root`` in sorted order, walked with ``os.scandir`` so
+    that a blind entry is dropped by its name before anything else touches it (the
+    ``rglob`` of editions 5 / 6 would list and stat inside it).
+
+    Raises:
+        NotUsable: ``root`` itself lies in a blind prefix (nothing is opened).
+    """
+    if is_blind(root, blind):
+        raise NotUsable("a scan root lies inside an edition 7 blind prefix (not scanned)")
+    files: list[Path] = []
+    pending = [root]
+    while pending:
+        folder = pending.pop()
+        with os.scandir(folder) as entries:
+            children = [folder / entry.name for entry in entries
+                        if not is_blind(folder / entry.name, blind)]
+        for child in children:
+            if child.is_dir() and not child.is_symlink():
+                pending.append(child)
+            elif child.suffix in suffixes and child.is_file():
+                files.append(child)
+    return sorted(files)
+
+
+def _scan_files(root: Path, suffixes: tuple[str, ...],
+                blind: tuple[str, ...] = ()) -> list[Path]:
+    """The scanned files of one root: the edition 5 / 6 ``rglob`` unchanged without blind
+    prefixes, the pruned walk with them (edition 7)."""
+    if not blind:
+        return sorted(p for p in root.rglob("*") if p.suffix in suffixes and p.is_file())
+    return _unblinded_files(root, suffixes, blind)
+
+
+def scan_r79_keys(scan_root: Path, excludes: tuple[str, ...] = (),
+                  blind: tuple[str, ...] = ()) -> KeyScan:
     """Every r79 key of every ``.json`` / ``.jsonl`` under ``scan_root`` (raw bytes, only the
     ``"key"`` values are taken; nothing left out, 6.3.1: ``j9_runs`` and the dry outputs
-    included), but the files ``excludes`` names, which are not opened."""
+    included), but the files ``excludes`` names, which are not opened, and (edition 7) the
+    ``blind`` prefixes, which are not even walked."""
     keys: set[str] = set()
     files = []
     seed_max = None
-    for path in sorted(p for p in scan_root.rglob("*") if p.suffix in SCAN_SUFFIXES
-                       and p.is_file()):
+    for path in _scan_files(scan_root, SCAN_SUFFIXES, blind):
         if is_excluded(path.relative_to(scan_root).as_posix(), excludes):
             continue
         data = path.read_bytes()
@@ -199,15 +266,14 @@ def scan_r79_keys(scan_root: Path, excludes: tuple[str, ...] = ()) -> KeyScan:
     return KeyScan(frozenset(keys), tuple(files), seed_max)
 
 
-def scan_source_keys(root: Path) -> KeyScan:
+def scan_source_keys(root: Path, blind: tuple[str, ...] = ()) -> KeyScan:
     """Every r79 key string literal of the test and probe sources under ``root``
     (:data:`SOURCE_SUFFIXES`; the erratum 1 audit E-1: test keys run a seed too). File paths
     are relative to ``root``'s parent (``05_tests/...``)."""
     keys: set[str] = set()
     files = []
     seed_max = None
-    for path in sorted(p for p in root.rglob("*") if p.suffix in SOURCE_SUFFIXES
-                       and p.is_file()):
+    for path in _scan_files(root, SOURCE_SUFFIXES, blind):
         data = path.read_bytes()
         found = SOURCE_KEY_PATTERN.findall(data)
         for key, seed in found:
@@ -218,8 +284,14 @@ def scan_source_keys(root: Path) -> KeyScan:
     return KeyScan(frozenset(keys), tuple(files), seed_max)
 
 
-def excluded_files(scan_root: Path, excludes: tuple[str, ...]) -> list[str]:
-    """The scan files ``excludes`` leaves out (paths only; the files are not opened)."""
+def excluded_files(scan_root: Path, excludes: tuple[str, ...],
+                   blind: tuple[str, ...] = ()) -> list[str]:
+    """The scan files ``excludes`` leaves out (paths only; the files are not opened). Blind
+    files (edition 7) are never listed here: they are not walked at all."""
+    if blind:
+        return [path.relative_to(scan_root).as_posix()
+                for path in _scan_files(scan_root, SCAN_SUFFIXES, blind)
+                if is_excluded(path.relative_to(scan_root).as_posix(), excludes)]
     return [path.relative_to(scan_root).as_posix() for path in sorted(scan_root.rglob("*"))
             if path.suffix in SCAN_SUFFIXES and path.is_file()
             and is_excluded(path.relative_to(scan_root).as_posix(), excludes)]
@@ -243,11 +315,12 @@ def scan_key_lists(paths: tuple[Path, ...]) -> KeyScan:
 
 
 def merged_scan(scan_root: Path, extra_roots: tuple[Path, ...],
-                excludes: tuple[str, ...] = (), key_lists: tuple[Path, ...] = ()) -> KeyScan:
+                excludes: tuple[str, ...] = (), key_lists: tuple[Path, ...] = (),
+                blind: tuple[str, ...] = ()) -> KeyScan:
     """The ``--scan-root`` scan (less ``excludes``), every ``--scan-extra`` source scan and the
-    ``--scan-keys-file`` lists together."""
-    scans = [scan_r79_keys(scan_root, excludes),
-             *(scan_source_keys(root) for root in extra_roots)]
+    ``--scan-keys-file`` lists together (edition 7: every walk skips the ``blind`` prefixes)."""
+    scans = [scan_r79_keys(scan_root, excludes, blind),
+             *(scan_source_keys(root, blind) for root in extra_roots)]
     if key_lists:
         scans.append(scan_key_lists(key_lists))
     seeds = [scan.seed_max for scan in scans if scan.seed_max is not None]
@@ -285,16 +358,16 @@ def _npz_texts(path: Path) -> list[bytes]:
     return texts
 
 
-def scan_required_root(root: Path, scan_root: Path,
-                       excludes: tuple[str, ...] = ()) -> KeyScan:
+def scan_required_root(root: Path, scan_root: Path, excludes: tuple[str, ...] = (),
+                       blind: tuple[str, ...] = ED7_BLIND_PREFIXES) -> KeyScan:
     """Edition 7: every r79 key of every :data:`ED7_SCAN_SUFFIXES` file under ``root`` (the
     edition 6 run outputs, records B / C / D, the edition 7 outputs and probe); a file the
-    ``excludes`` name (relative to ``scan_root`` when ``root`` lies in it) is not opened."""
+    ``excludes`` name (relative to ``scan_root`` when ``root`` lies in it) is not opened, and
+    nothing in a ``blind`` prefix is walked."""
     keys: set[str] = set()
     files = []
     seed_max = None
-    for path in sorted(p for p in root.rglob("*") if p.suffix in ED7_SCAN_SUFFIXES
-                       and p.is_file()):
+    for path in _scan_files(root, ED7_SCAN_SUFFIXES, blind):
         if path.is_relative_to(scan_root) and is_excluded(
                 path.relative_to(scan_root).as_posix(), excludes):
             continue
@@ -459,14 +532,20 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     cases = l2_cases(json.loads(noise_path.read_text(encoding="utf-8")))
     if len(cases) != CASE_COUNT:
         raise NotUsable(f"{len(cases)} L2 cases in the case source, {CASE_COUNT} expected")
+    blind = ED7_BLIND_PREFIXES if edition == 7 else ()
+    if any(is_blind(root, blind) for root in (scan_root, *extra_roots)):
+        raise NotUsable("--scan-root / --scan-extra lies inside an edition 7 blind prefix")
     for root in extra_roots:
         if not root.is_dir():
             raise NotUsable(f"--scan-extra {root} is not a folder")
     for path in key_lists:
+        if is_blind(path, blind):
+            raise NotUsable("a --scan-keys-file lies inside an edition 7 blind prefix")
         if not path.is_file():
             raise NotUsable(f"--scan-keys-file {path} not found")
-    scan = merged_scan(scan_root, tuple(extra_roots), tuple(excludes), tuple(key_lists))
-    required_scans = [scan_required_root(root, scan_root, tuple(excludes))
+    scan = merged_scan(scan_root, tuple(extra_roots), tuple(excludes), tuple(key_lists),
+                       blind)
+    required_scans = [scan_required_root(root, scan_root, tuple(excludes), blind)
                       for root in required_roots]
     empty = [str(root) for root, found in zip(required_roots, required_scans, strict=True)
              if not found.files]
@@ -502,8 +581,11 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         "inputs": {"noise": {"path": str(noise_path), "sha256": noise_sha256},
                    "scan_root": str(scan_root),
                    "scan_extra": [str(root) for root in extra_roots],
-                   **_edition_6_inputs(edition, scan_root, excludes, key_lists),
-                   **({"scan_required": [str(root) for root in required_roots]}
+                   **_edition_6_inputs(edition, scan_root, excludes, key_lists, blind),
+                   **({"scan_required": [str(root) for root in required_roots],
+                       "blind_prefixes_applied": len(blind),
+                       "blind_note": f"excluded prefixes applied: {len(blind)} (never walked; "
+                                     "no path or count of them is written)"}
                       if edition == 7 else {})},
         **({"edition": edition, "reserved_seeds": list(ED6_RESERVED_SEEDS)}
            if edition in (6, 7) else {}),
@@ -549,6 +631,8 @@ def _check_edition_inputs(edition: int, excludes: tuple[str, ...],
     if edition == 7 and not required_roots:
         raise NotUsable("edition 7 needs --scan-required (the edition 6 run outputs, records "
                         "B / C / D and the edition 7 outputs, spec v7 6.4)")
+    if edition == 7 and any(is_blind(root, ED7_BLIND_PREFIXES) for root in required_roots):
+        raise NotUsable("a --scan-required root lies inside an edition 7 blind prefix")
     for root in required_roots:
         if not root.is_dir():
             raise NotUsable(f"--scan-required {root} is not a folder")
@@ -565,13 +649,13 @@ def _with_required(scan: KeyScan, required: list[KeyScan]) -> KeyScan:
 
 
 def _edition_6_inputs(edition: int, scan_root: Path, excludes: tuple[str, ...],
-                      key_lists: tuple[Path, ...]) -> dict:
+                      key_lists: tuple[Path, ...], blind: tuple[str, ...] = ()) -> dict:
     """The edition 6 / 7 scan inputs of ``selection.json`` (an edition 5 document keeps its
     former keys)."""
     if edition not in (6, 7):
         return {}
     return {"scan_exclude": list(excludes),
-            "scan_excluded_files": excluded_files(scan_root, tuple(excludes)),
+            "scan_excluded_files": excluded_files(scan_root, tuple(excludes), blind),
             "scan_keys_files": [str(path) for path in key_lists]}
 
 

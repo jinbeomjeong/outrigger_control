@@ -1774,7 +1774,10 @@ class TwoPressureMonitor:
             return
         for result in results:
             leg = result.leg_index
-            if result.is_skipped or self.rod_state[leg] is RodSensorState.FALLBACK:
+            is_substituted = self.rod_state[leg] is RodSensorState.FALLBACK
+            if witness is not None and result.is_reversed and not result.is_skipped:
+                self._count_reversed_round(leg, is_substituted)
+            if result.is_skipped or is_substituted:
                 continue
             extend_s, retract_s = result.t_first_hold_end_s, result.t_second_hold_end_s
             if result.is_reversed:
@@ -1802,6 +1805,8 @@ class TwoPressureMonitor:
         log = self._d6_witness_log()
         log["rounds"].append({"leg": LEG_ORDER[leg], "t_s": result.t_second_hold_end_s,
                               "retract_witness_m": moved_m, "is_opened": is_opened,
+                              "is_reversed": result.is_reversed,
+                              "k1_mid_opened": result.k1_mid_opened,
                               "rise_Pa": float(rise_Pa), "required_Pa": float(required_Pa),
                               "retract_extra_m": result.retract_extra_m,
                               "retract_extra_periods": result.retract_extra_periods,
@@ -1823,9 +1828,18 @@ class TwoPressureMonitor:
         log = getattr(self, "_d6_witness", None)
         if log is None:
             log = {"rounds": [], "not_opened_streak": [0] * LEG_COUNT,
-                   "not_judgeable_rounds": [0] * LEG_COUNT}
+                   "not_judgeable_rounds": [0] * LEG_COUNT,
+                   "reversed_rounds": {"not_substituted": [0] * LEG_COUNT,
+                                       "substituted": [0] * LEG_COUNT}}
             self._d6_witness = log
         return log
+
+    def _count_reversed_round(self, leg: int, is_substituted: bool) -> None:
+        """Q7-C2 record (control review 4): a retract-first probe round of ``leg``, split by
+        the leg's rod reading being substituted (fallback, always retract first and out of
+        D6) or not (the stroke guard band). The rod state is the one at the round end."""
+        kind = "substituted" if is_substituted else "not_substituted"
+        self._d6_witness_log()["reversed_rounds"][kind][leg] += 1
 
     def leg_seal_bands_N(self, seal_band_N: float) -> NDArray[np.float64]:
         """U65: per-leg friction band; a fallback leg takes at least ``fallback_min_band_N``."""

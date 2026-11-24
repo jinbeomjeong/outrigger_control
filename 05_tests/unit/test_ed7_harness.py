@@ -123,7 +123,9 @@ def test_p7_0_edition_6_settings_keep_the_run_hashes(harness) -> None:
         assert "probe_d6_settings" not in report["t4h"]["meta_keys"], name
         stale = report["stale_seed_release"]  # the record key of the old P1 plant
         assert stale is not None and set(stale) == {"releases_with_seed", "stale_releases",
-                                                   "log", "log_columns"}, name
+                                                   "log_rows", "log_truncated", "log",
+                                                   "log_columns"}, name
+        assert stale["releases_with_seed"] == stale["log_rows"], name  # nothing truncated
         assert "stale_seed_release" in report["t4h"]["meta_keys"], name
         assert report["foreign_modules"] == [], name
 
