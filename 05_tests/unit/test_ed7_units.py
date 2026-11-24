@@ -743,6 +743,80 @@ def test_rev7_condition_reads_and_classes() -> None:
     assert condition.summarize([missing])["status"] == "setting_defect"
 
 
+_VBM_LINE = {"job": {"setting": "VBM"}, "hydraulic_options": {"p1_patch": {"line_scale": 1.0}}}
+_VBL_LINE = {"job": {"setting": "VBL"}, "hydraulic_options": {}}
+
+
+def test_rev7_condition_head_only_lines_are_not_applicable() -> None:
+    """A declared head-only (steady) line has no ③ trace and no event: ``head_only`` on any
+    plant, outside the judged count; undeclared it stays a setting defect; declared but with a
+    trace or an event it contradicts itself (judged plant: defect, old plant: not judgeable)."""
+    import jp3_rev7_condition as condition
+
+    steady = {**_VBM_LINE, "t_event_s": None, "t4h_file": "S5.npz"}
+    names = frozenset({"t_s", "phase", "meta_json"})
+    declared = condition.line_condition(steady, None, {"head_only_declared": True}, names)
+    assert declared["state"] == "head_only" and declared["head_only_declared"] is True
+    by_line_field = condition.line_condition({**steady, "head_only_declared": True}, None)
+    assert by_line_field["state"] == "head_only"
+    meta_wins = condition.line_condition({**steady, "head_only_declared": True}, None,
+                                         {"head_only_declared": False}, names)
+    assert meta_wins["state"] == "setting_defect"  # 4a-7 1.1: the T4h meta first
+    undeclared = condition.line_condition(steady, None, {}, names)
+    assert undeclared["state"] == "setting_defect"
+    with_trace = condition.line_condition(steady, None, {"head_only_declared": True},
+                                          names | {"jp3_t_s"})
+    assert with_trace["state"] == "setting_defect"
+    assert with_trace["head_only_contradictions"] == ["jp3_t_s"]
+    with_event = condition.line_condition({**_VBL_LINE, "t_event_s": 1.0}, None,
+                                          {"head_only_declared": True}, names)
+    assert with_event["state"] == "not_judgeable"
+    assert with_event["head_only_contradictions"] == ["t_event_s"]
+    event_line = condition.line_condition({**_VBM_LINE, "t_event_s": 1.0, "t4h_file": "x.npz"},
+                                          _no_breach_arrays(), {"head_only_declared": False})
+    summary = condition.summarize([declared, event_line])
+    assert summary["status"] == "pass" and summary["judged_lines"] == 1
+    assert summary["head_only_lines"] == {"judged_plant": 1, "record_plant": 0}
+    assert summary["states"] == {"head_only": 1, "judged": 1}
+    assert condition.summarize([declared])["status"] == "not_judgeable"  # never a pass
+
+
+def _no_breach_arrays() -> dict:
+    arrays = _condition_arrays()
+    arrays["jp3_p_tr_Pa"] = np.full((10, 4), 10e5)
+    return arrays
+
+
+def _save_t4h(path: Path, arrays: dict, meta: dict) -> None:
+    np.savez(path, meta_json=np.array(json.dumps(meta)), **arrays)
+
+
+def test_rev7_condition_main_on_producer_rows_from_another_folder(tmp_path, monkeypatch) -> None:
+    """Producer form (``t4h_file`` = a bare name, T4h folder ``<rows stem>_t4h``) and the CWD
+    elsewhere: an event line judged, a steady head-only line ``head_only``, exit 0."""
+    import jp3_rev7_condition as condition
+
+    run = tmp_path / "run"
+    t4h = run / "rows_t4h"
+    t4h.mkdir(parents=True)
+    _save_t4h(t4h / "R12.npz", _no_breach_arrays(), {"head_only_declared": False})
+    steady_arrays = {"t_s": np.arange(3) * 0.1, "phase": np.array(["level"] * 3)}
+    _save_t4h(t4h / "S5.npz", steady_arrays, {"head_only_declared": True})
+    rows = [{**_VBM_LINE, "t_event_s": 1.0, "t4h_file": "R12.npz", "head_only_declared": False},
+            {**_VBM_LINE, "t_event_s": None, "t4h_file": "S5.npz", "head_only_declared": True},
+            {"error": "a failed job", "job": {"setting": "VBM"}}]
+    (run / "rows.jsonl").write_text("".join(json.dumps(row) + "\n" for row in rows),
+                                    encoding="utf-8")
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    code = condition.main(["--rows", str(run / "rows.jsonl"), "--out", str(tmp_path / "c.json")])
+    report = json.loads((tmp_path / "c.json").read_text(encoding="utf-8"))
+    assert code == condition.EXIT_PASS and report["summary"]["status"] == "pass"
+    assert report["summary"]["states"] == {"head_only": 1, "judged": 1}
+    assert [entry["state"] for entry in report["lines"]] == ["judged", "head_only"]
+
+
 def test_stale_seed_record_shows_a_truncated_log(monkeypatch) -> None:
     """Hydraulics review 3: the counts cover every seeded release, ``log_truncated`` says when
     the capped log lost rows, and the condition tool does not call such a release no_seed."""
