@@ -203,7 +203,8 @@ def test_edition_6_settings_are_spec_3_4(run_v5) -> None:
         plant = run_v5.ED6_SETTINGS[name][1]
         assert plant == {**vbj[1], "line_fill_gate": {"kind": "VN", "volume_scale": scale,
                                                       "c_v": c_v}, "lsb_components": lsb}
-    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0", "VBKL", "VBKL0")
+    # edition 7 (jp3_remedy_spec_v7.md 3.6) appends VBKM / VBKM0 after the edition 6 names
+    assert run_v5.ROD_FAULT_SETTINGS[:4] == ("VBK", "VBK0", "VBKL", "VBKL0")
     assert set(run_v5.ED6_SETTINGS) <= set(run_v5.T4H_SETTINGS)
     assert not set(run_v5.ED6_SETTINGS) & (set(run_v5.SETTINGS) | set(run_v5.JP3_SETTINGS))
 

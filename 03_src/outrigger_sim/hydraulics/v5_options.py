@@ -84,9 +84,22 @@ EXTEND_WITNESS_TAGS = (EXTEND_WITNESS_CONTROLLER_TAG,
                        + ORDER_GATE_TAG_SUFFIX)
 """The four tag forms of ③ revision 6 (a list only, the tag audit list of 4.6: judge with
 :func:`extend_start_revision_of_tag`)."""
+EXTEND_REV7_CONTROLLER_TAG = "final_C4G2_P3X"
+"""436.9 edition 7 (``jp3_remedy_spec_v7.md`` 3.5, 3.6, Q7-C3): controller tag of a run with
+``extend_start_rev7`` (③ rev 7: the bound of revision 6, the edition 7 judged set and
+identity). Its switch suffixes follow in the usual order (``final_C4G2_P3X_LAS_K1_LSB``); no
+other tag base or token is ``P3X`` (Q7-C3 check 2026-11-24)."""
+EXTEND_REV7_TAGS = (EXTEND_REV7_CONTROLLER_TAG,
+                    EXTEND_REV7_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX,
+                    EXTEND_REV7_CONTROLLER_TAG + ORDER_GATE_TAG_SUFFIX,
+                    EXTEND_REV7_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
+                    + ORDER_GATE_TAG_SUFFIX)
+"""The four tag forms of ③ rev 7 (a list only: judge with
+:func:`extend_start_revision_of_tag`)."""
 EXTEND_START_REVISION_OF_BASE_TAG = {EXTEND_START_CONTROLLER_TAG: 4,
                                      EXTEND_HOLD_CONTROLLER_TAG: 5,
-                                     EXTEND_WITNESS_CONTROLLER_TAG: 6}
+                                     EXTEND_WITNESS_CONTROLLER_TAG: 6,
+                                     EXTEND_REV7_CONTROLLER_TAG: 7}
 """③ bound revision per base tag (:func:`switch_base_tag`)."""
 ALLOW_GATE_WITH_REV4_FOR_TEST = False
 """Test-only switch (``jp3_remedy_spec.md`` 4.2, case replay C): with True the P1 line-fill gate
@@ -164,12 +177,57 @@ class LockClosureSetting:
         return self.overlap_ratio * max_speed_m_s
 
 
+P1_PATCH_K_EXT_FORMS = ("b0",)
+"""Edition 7 3.3 (b): ``b0`` = the load-constant upper bound (``r`` = 1, the leg load
+unchanged); ``b1`` (kernel coupling) is not implemented (user decision: b0)."""
+
+
+@dataclass(frozen=True)
+class P1PatchSetting:
+    """Edition 7 P1 supplement (``jp3_remedy_spec_v7.md`` 3.3, hydraulics review
+    ``h7_review_report.md`` 2): (a) rod truth pressurised by a held retract fill and trapped in
+    neutral, (c) split volumes, (d) the retract opening seed only for the leg locked in that
+    stage. All values are ASSUMPTIONS (hydraulics 7).
+
+    Attributes:
+        line_scale: ``s_L`` on the B line volume ``V_line`` (and the extension line).
+        dead_scale: ``s_D`` on the dead lengths ``L0r``, ``L0h`` (stroke geometry unscaled).
+        bulk_modulus_Pa: ``beta`` of the P1 volumes only (need and opening values); the kernel
+            ``k_oil`` and the locked ``k_r`` keep the plant value (spec 9 limit).
+        k_ext_form: :data:`P1_PATCH_K_EXT_FORMS`.
+    """
+
+    line_scale: float = 1.0
+    dead_scale: float = 1.0
+    bulk_modulus_Pa: float = 1.0e9
+    k_ext_form: str = "b0"
+
+    def __post_init__(self) -> None:
+        for name in ("line_scale", "dead_scale", "bulk_modulus_Pa"):
+            value = getattr(self, name)
+            if not (math.isfinite(value) and value > 0.0):
+                raise ValueError(f"p1_patch {name} must be > 0: {value!r}")
+        if self.k_ext_form not in P1_PATCH_K_EXT_FORMS:
+            raise ValueError(f"p1_patch k_ext_form {self.k_ext_form!r}: one of "
+                             f"{P1_PATCH_K_EXT_FORMS}")
+
+    @classmethod
+    def from_dict(cls, values: dict[str, Any]) -> P1PatchSetting:
+        unknown = sorted(set(values) - {item for item in cls.__dataclass_fields__})
+        if unknown:
+            raise ValueError(f"p1_patch has no {unknown}")
+        return cls(**values)
+
+
 OPTIONAL_FIELDS = ("extend_start_tracked", "extend_start_hold", "extend_start_witness",
                    "line_fill_gate", "lock_anchor_continuous", "rod_flow_cap_all",
-                   "rod_reading_truth", "lsb_components", "lsb_parameters")
+                   "rod_reading_truth", "lsb_components", "lsb_parameters",
+                   "extend_start_rev7", "p1_patch", "probe_d6_settings")
 """Fields :meth:`HydraulicOptions.to_dict` leaves out while off (stored digests unchanged)."""
 LSB_FIELDS = ("lsb_components", "lsb_parameters")
 """Edition 6 controller fields (``jp3_remedy_spec_v6.md`` 3.4): empty = off."""
+EMPTY_WHEN_OFF_FIELDS = (*LSB_FIELDS, "probe_d6_settings")
+"""Tuple fields whose empty value is "off" (left out of :meth:`HydraulicOptions.to_dict`)."""
 M2_PLANT_FIELDS = ("lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
 """P2, P3 and P4: defined on the M2 rod pressure only."""
 
@@ -205,6 +263,13 @@ class HydraulicOptions:
             :data:`LOCK_START_B_TAG_SUFFIX`. Harness only.
         lsb_parameters: ``(name, value)`` pairs of the other ``LockStartBSettings`` fields of
             the run (the spec 3 placeholders); empty = the defaults. Needs ``lsb_components``.
+        extend_start_rev7: ③ rev 7 (``ExtendStartBound(revision=7)``: the bound of revision 6,
+            the edition 7 judged set and identity, ``jp3_remedy_spec_v7.md`` 3.5); needs
+            ``extend_start_witness``. Tag :data:`EXTEND_REV7_CONTROLLER_TAG`.
+        p1_patch: Edition 7 P1 supplement (:class:`P1PatchSetting`, spec 3.3); needs P1
+            ``line_fill_gate`` with ``volume_scale`` 1 (the split scales replace it). Harness only.
+        probe_d6_settings: ``(name, value)`` pairs of ``ground_contact.ProbeD6Settings`` (the
+            edition 7 D6 witness and the probe retract position target, spec 3.2); empty = off.
     """
 
     flow: FlowLimitSetting | None = None
@@ -222,11 +287,16 @@ class HydraulicOptions:
     extend_start_witness: bool = False
     lsb_components: tuple[str, ...] = ()
     lsb_parameters: tuple[tuple[str, Any], ...] = ()
+    extend_start_rev7: bool = False
+    p1_patch: P1PatchSetting | None = None
+    probe_d6_settings: tuple[tuple[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
         components, parameters = _checked_lsb_fields(self.lsb_components, self.lsb_parameters)
         object.__setattr__(self, "lsb_components", components)
         object.__setattr__(self, "lsb_parameters", parameters)
+        object.__setattr__(self, "probe_d6_settings",
+                           _checked_probe_d6_fields(self.probe_d6_settings))
         if self.lock_window_follows_plant and self.lock_closure is None:
             raise SystemExit("the controller lock window needs the plant lock rule "
                              "(spec 2.6: controller alone is refused)")
@@ -234,7 +304,10 @@ class HydraulicOptions:
             raise ValueError("extend_start_hold (③ revision 5) needs extend_start_tracked")
         if self.extend_start_witness and not self.extend_start_hold:
             raise ValueError("extend_start_witness (③ revision 6) needs extend_start_hold")
+        if self.extend_start_rev7 and not self.extend_start_witness:
+            raise ValueError("extend_start_rev7 (③ rev 7) needs extend_start_witness")
         _check_jp3_plant_options(self)
+        _check_p1_patch(self)
         if self.extend_start_tracked:
             check_extend_start(self, EXTEND_START_TRACKED_RULE, self.extend_start_revision)
 
@@ -244,10 +317,13 @@ class HydraulicOptions:
 
     @property
     def extend_start_revision(self) -> int | None:
-        """③ bound revision of these options (6 with ``extend_start_witness``, 5 with
-        ``extend_start_hold``, 4 with the bound alone, None without it)."""
+        """③ bound revision of these options (7 with ``extend_start_rev7``, 6 with
+        ``extend_start_witness``, 5 with ``extend_start_hold``, 4 with the bound alone, None
+        without it)."""
         if not self.extend_start_tracked:
             return None
+        if self.extend_start_rev7:
+            return 7
         if self.extend_start_witness:
             return 6
         return 5 if self.extend_start_hold else 4
@@ -268,8 +344,11 @@ class HydraulicOptions:
         values = asdict(self)
         values["lsb_components"] = list(self.lsb_components)  # JSON form (a stored line)
         values["lsb_parameters"] = dict(self.lsb_parameters)
+        values["probe_d6_settings"] = dict(self.probe_d6_settings)
         for name in OPTIONAL_FIELDS:
-            if values[name] in (False, None) or (name in LSB_FIELDS and not values[name]):
+            is_empty = name in EMPTY_WHEN_OFF_FIELDS and not values[name]
+            if is_empty or (not isinstance(values[name], (dict, list))
+                            and values[name] in (False, None)):
                 del values[name]
         if self.rod_release_force:
             values["m2_law"] = self.m2_law
@@ -333,11 +412,19 @@ class HydraulicOptions:
             rod_reading_truth=bool(values.get("rod_reading_truth", False)),
             extend_start_witness=bool(values.get("extend_start_witness", False)),
             lsb_components=tuple(values.get("lsb_components", ())),
-            lsb_parameters=tuple(dict(values.get("lsb_parameters", {})).items()))
+            lsb_parameters=tuple(dict(values.get("lsb_parameters", {})).items()),
+            extend_start_rev7=bool(values.get("extend_start_rev7", False)),
+            p1_patch=(None if values.get("p1_patch") is None
+                      else P1PatchSetting.from_dict(values["p1_patch"])),
+            probe_d6_settings=tuple(dict(values.get("probe_d6_settings", {})).items()))
 
     @property
     def lsb_parameter_dict(self) -> dict[str, Any]:
         return dict(self.lsb_parameters)
+
+    @property
+    def probe_d6_dict(self) -> dict[str, Any]:
+        return dict(self.probe_d6_settings)
 
     def without_flow(self) -> HydraulicOptions:
         """The plant options alone (the runners keep the flow limit on their own path)."""
@@ -491,6 +578,9 @@ def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harne
                          "(jp3_remedy_spec.md 3, user decision 146)")
     if engine != "harness" and options.lsb_components:
         raise SystemExit("the edition 6 components are harness only (jp3_remedy_spec_v6.md 9)")
+    if engine != "harness" and (options.p1_patch is not None or options.probe_d6_settings):
+        raise SystemExit("the edition 7 P1 supplement and D6 settings are harness only "
+                         "(jp3_remedy_spec_v7.md 3.2, 3.3)")
     closure = options.lock_closure
     if closure is not None and not options.lock_window_follows_plant \
             and closure.closing_delay_s > period_s:
@@ -558,6 +648,70 @@ def _checked_lsb_fields(
     return settings.components, parameters
 
 
+def _checked_probe_d6_fields(values: Any) -> tuple[tuple[str, Any], ...]:
+    """The edition 7 D6 fields sorted by name, checked by building ``ProbeD6Settings``.
+
+    Raises:
+        ValueError: An unknown field, a value the settings refuse, or fields that switch
+            nothing on (an empty-effect entry would hide in the digests).
+    """
+    pairs = tuple(sorted((str(name), value) for name, value in values))
+    if not pairs:
+        return ()
+    # Imported here: the control package imports this module (as _checked_lsb_fields).
+    from outrigger_sim.control.ground_contact import ProbeD6Settings
+
+    known = set(ProbeD6Settings.__dataclass_fields__)
+    unknown = sorted(name for name, _ in pairs if name not in known)
+    if unknown:
+        raise ValueError(f"unknown probe_d6_settings {unknown}")
+    if not ProbeD6Settings(**dict(pairs)).is_enabled:
+        raise ValueError("probe_d6_settings switch nothing on (witness / "
+                         "retract_position_target)")
+    return pairs
+
+
+def _check_p1_patch(options: HydraulicOptions) -> None:
+    """Edition 7 3.3: the supplement sits on the P1 gate, whose uniform ``volume_scale`` it
+    replaces by the split scales (so the gate's scale must be 1), and needs M2 (the rod truth).
+
+    Raises:
+        ValueError: ``p1_patch`` without P1, with a P1 ``volume_scale`` other than 1, or
+            without M2.
+    """
+    if options.p1_patch is None:
+        return
+    gate = options.line_fill_gate
+    if gate is None:
+        raise ValueError("p1_patch needs the P1 line_fill_gate (jp3_remedy_spec_v7.md 3.3)")
+    if gate.volume_scale != DEFAULT_VOLUME_SCALE:
+        raise ValueError("p1_patch replaces the P1 volume_scale by line_scale / dead_scale: "
+                         f"the gate's volume_scale must be 1, got {gate.volume_scale}")
+    if not options.rod_release_force:
+        raise ValueError("p1_patch needs M2 (rod_release_force): it shapes the M2 rod truth")
+
+
+def check_probe_d6_config(config: Any | None, options: HydraulicOptions) -> None:
+    """Edition 7 identity guard (spec 6.1 ``probe_d6_settings``): the C2 configuration a run
+    built carries exactly the D6 settings of its options (the defaults with the options off).
+
+    Raises:
+        RuntimeError: No configuration with the settings on, or other values.
+    """
+    settings = getattr(config, "probe_d6", None)
+    is_on = bool(getattr(settings, "is_enabled", False))
+    if not options.probe_d6_settings:
+        if is_on:
+            raise RuntimeError(f"probe_d6 {settings.to_meta()} is on, the options have none")
+        return
+    if settings is None:
+        raise RuntimeError("no C2 configuration with probe_d6 was built for the edition 7 options")
+    expected = type(settings)(**options.probe_d6_dict)
+    if settings != expected:
+        raise RuntimeError(f"probe_d6 {settings.to_meta()} differs from the options "
+                           f"{expected.to_meta()}")
+
+
 def _check_jp3_plant_options(options: HydraulicOptions) -> None:
     """436.9 plant options P1 .. P4 (``jp3_remedy_spec.md`` 3 refusal column).
 
@@ -611,12 +765,14 @@ def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: 
         config = _with_extend_start_bound(config, options)
     if options.lsb_components:
         config = config.with_lock_start_b(options.lsb_components, options.lsb_parameter_dict)
+    if options.probe_d6_settings:
+        config = config.with_probe_d6(options.probe_d6_dict)
     return config
 
 
 def _with_extend_start_bound(config: Any, options: HydraulicOptions) -> Any:
     changes: dict[str, Any] = {"extend_start_rule": EXTEND_START_TRACKED_RULE}
-    if options.extend_start_hold:  # ③ revision 5 / 6 (436.9); revision 4 keeps the default
+    if options.extend_start_hold:  # ③ revision 5 / 6 / 7 (436.9); revision 4: the default
         from outrigger_sim.control.extend_start_bound import ExtendStartBound
 
         changes["extend_start_bound"] = ExtendStartBound(revision=options.extend_start_revision)
@@ -821,7 +977,9 @@ def controller_tag(options: HydraulicOptions | None, config: Any | None = None) 
     ``config`` the tag is the one before the LAS-b switch (callers that know the controller
     pass it)."""
     tag = None
-    if options is not None and options.extend_start_witness:
+    if options is not None and options.extend_start_rev7:
+        tag = EXTEND_REV7_CONTROLLER_TAG
+    elif options is not None and options.extend_start_witness:
         tag = EXTEND_WITNESS_CONTROLLER_TAG
     elif options is not None and options.extend_start_hold:
         tag = EXTEND_HOLD_CONTROLLER_TAG
@@ -874,6 +1032,11 @@ def check_lock_start_b_config(config: Any | None, options: HydraulicOptions) -> 
 
 __all__ = [
     "ALLOW_GATE_WITH_REV4_FOR_TEST",
+    "EXTEND_REV7_CONTROLLER_TAG",
+    "EXTEND_REV7_TAGS",
+    "P1PatchSetting",
+    "P1_PATCH_K_EXT_FORMS",
+    "check_probe_d6_config",
     "LOCK_START_B_TAG_SUFFIX",
     "check_lock_start_b_config",
     "is_lock_start_b_on",

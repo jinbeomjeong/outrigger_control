@@ -133,6 +133,22 @@ from outrigger_sim.signals import LEG_COUNT
 
 BAR_PA = 1e5
 
+D6_NOT_OPENED_EVENT = "INFO_D6_NOT_OPENED"
+"""Edition 7 3.2: a probe round whose retract did not move (``:<leg>``, every such round)."""
+PROBE_RETRACT_NOT_OPENED_EVENT = "WARN_PROBE_RETRACT_NOT_OPENED"
+"""Edition 7 3.2: ``D6Witness.warn_rounds`` not-opened rounds of a leg in a row (a warning, no
+fallback)."""
+
+
+@dataclass(frozen=True)
+class D6Witness:
+    """Edition 7 3.2 D6 opening witness (the controller builds it from its
+    ``ProbeD6Settings``)."""
+
+    witness_m: float
+    warn_rounds: int
+
+
 # R8 (10 Hz) diagnosis constants, spec rev. 29 126 #3 (ASSUMPTION where the spec says so)
 R8_LOAD_REFERENCE_SETTLE_S = 0.5
 R8_LOAD_REFERENCE_MEAN_S = 1.5
@@ -1447,6 +1463,8 @@ class TwoPressureMonitor:
         self._load_sum_log: list[dict[str, Any]] = []
         self._reported: set[str] = set()
         self._events: list[tuple[str, bool]] = []
+        self._d6_witness: dict[str, Any] | None = None
+        """Edition 7 D6 witness record; created by the first witnessed probe round."""
         self.zero_offsets_N = np.zeros(LEG_COUNT)
         """E-3: ``c_i`` removed from every force reading (CHECK zero calibration)."""
         self.offset_allowance_N = np.zeros(LEG_COUNT)
@@ -1739,9 +1757,19 @@ class TwoPressureMonitor:
             return None
         return np.asarray(loads_N, dtype=float) - self._baseline.loads_N
 
-    def probe_round_finished(self, results) -> None:
+    def probe_round_finished(self, results, witness: D6Witness | None = None) -> None:
         """D6 (off by default): the rod side must rise from the extend hold to the retract
-        hold of a probe (31-37 bar trapped after a retraction, 53.3)."""
+        hold of a probe (31-37 bar trapped after a retraction, 53.3).
+
+        Args:
+            results: The round's ``ProbeResult`` per leg.
+            witness: Edition 7 3.2 opening witness (None = the D6 of edition 6, unchanged): a
+                round whose retract moved less than ``witness.witness_m`` (E3,
+                ``ProbeResult.retract_witness_m``) is not judgeable - it neither counts a miss
+                nor resets the count (``INFO_D6_NOT_OPENED:<leg>``); ``witness.warn_rounds``
+                such rounds in a row raise ``WARN_PROBE_RETRACT_NOT_OPENED:<leg>`` (no
+                fallback).
+        """
         if not (self.settings.diagnostics and self.settings.probe_consistency_check):
             return
         for result in results:
@@ -1757,10 +1785,47 @@ class TwoPressureMonitor:
             rise = at_retract[0][leg] - at_extend[0][leg]
             required = max(self.settings.probe_rise_min_Pa,
                            self.settings.probe_rise_head_ratio * at_retract[1][leg])
+            if witness is not None and not self._d6_witness_round(result, witness, rise,
+                                                                  required):
+                continue
             watch = self._legs[leg]
             watch.probe_misses = watch.probe_misses + 1 if rise < required else 0
             if watch.probe_misses >= self.settings.probe_misses:
                 self._fall_back(leg, "D6")
+
+    def _d6_witness_round(self, result, witness: D6Witness, rise_Pa: float,
+                          required_Pa: float) -> bool:
+        """Edition 7 3.2: record the round; True = judgeable (the retract moved)."""
+        leg = result.leg_index
+        moved_m = result.retract_witness_m
+        is_opened = moved_m is not None and math.isfinite(moved_m) and moved_m >= witness.witness_m
+        log = self._d6_witness_log()
+        log["rounds"].append({"leg": LEG_ORDER[leg], "t_s": result.t_second_hold_end_s,
+                              "retract_witness_m": moved_m, "is_opened": is_opened,
+                              "rise_Pa": float(rise_Pa), "required_Pa": float(required_Pa),
+                              "retract_extra_m": result.retract_extra_m,
+                              "retract_extra_periods": result.retract_extra_periods,
+                              "retract_target_reached": result.retract_target_reached})
+        streak = log["not_opened_streak"]
+        if is_opened:
+            streak[leg] = 0
+            return True
+        streak[leg] += 1
+        log["not_judgeable_rounds"][leg] += 1
+        self._events.append((f"{D6_NOT_OPENED_EVENT}:{LEG_ORDER[leg]}", False))
+        if streak[leg] >= witness.warn_rounds:
+            self._event_once(f"{PROBE_RETRACT_NOT_OPENED_EVENT}:{LEG_ORDER[leg]}")
+        return False
+
+    def _d6_witness_log(self) -> dict[str, Any]:
+        """The edition 7 D6 witness record (created on first use: a monitor without the witness
+        has no such key in its meta)."""
+        log = getattr(self, "_d6_witness", None)
+        if log is None:
+            log = {"rounds": [], "not_opened_streak": [0] * LEG_COUNT,
+                   "not_judgeable_rounds": [0] * LEG_COUNT}
+            self._d6_witness = log
+        return log
 
     def leg_seal_bands_N(self, seal_band_N: float) -> NDArray[np.float64]:
         """U65: per-leg friction band; a fallback leg takes at least ``fallback_min_band_N``."""
@@ -1801,6 +1866,8 @@ class TwoPressureMonitor:
         if self._uses_cb_lag_bound:
             optional["counterbalance_lag_tau_s_used"] = self._cb_lag_tau_s
         optional.update(self._extend_start_meta())
+        if getattr(self, "_d6_witness", None) is not None:  # edition 7 witness rounds only
+            optional["d6_witness"] = self._d6_witness
         optional["review_record"] = self._review_record_meta()  # record only, every run
         if self._is_tracking_online_ratio:
             optional["r5_online_ratio"] = [

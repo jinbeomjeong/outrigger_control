@@ -24,7 +24,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-HOLD_REVISIONS = (5, 6)
+HOLD_REVISIONS = (5, 6, 7)
 """``extend_start_bound.HOLD_REVISIONS`` (the ③ revisions with hold stretches); kept here so
 this module stays without project imports (a unit test checks that the two agree)."""
 

@@ -223,6 +223,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
             write_t4h_record(t4h["path"], plant, controller, period,
                              {**_meta_with_controller_tag(t4h["meta"], _LAST_FINISHED_CONFIG[0]),
                               **lock_start_b_meta(controller),
+                              **probe_d6_meta(controller),
                               "commands_sha256": _command_digest(period["command"])},
                              extra_arrays=_t4h_extra_arrays(plant, period["t"], controller))
     thresholds = controller.config.thresholds
@@ -246,6 +247,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
 
     result[resume_k1_record.RECORD_KEY] = resume_k1_record.controller_record(controller)
     result.update(lock_start_b_meta(controller, with_record=True))
+    result.update(probe_d6_meta(controller))
     stop_values = _soil_stop_values(plant, limiter, events)
     if stop_values is not None:  # v5 X-12, criteria 6: runs with a soil-guard stop only
         result["soil_stop_crawler"] = stop_values
@@ -296,6 +298,24 @@ def lock_start_b_meta(controller, *, with_record: bool = False) -> dict:
     if with_record:
         meta[LSB_RECORD_KEY] = meta_for_json(controller.lock_start_b_record())
     return meta
+
+
+PROBE_D6_SETTINGS_KEY = "probe_d6_settings"
+PROBE_D6_RECORD_KEY = "probe_d6_record"
+"""Edition 7 record keys (``jp3_remedy_spec_v7.md`` 3.2, 3.6): a line and a T4h meta carry them
+only with the D6 witness or the probe retract target on."""
+
+
+def probe_d6_meta(controller) -> dict:
+    """``probe_d6_settings`` and the D6 witness rounds (``probe_d6_record``) of a controller
+    with the edition 7 probe settings on; empty otherwise, so other lines keep their keys."""
+    config = getattr(controller, "config", None)
+    settings = getattr(config, "probe_d6", None)
+    if not getattr(settings, "is_enabled", False):
+        return {}
+    monitor = controller.meta()["two_pressure"]
+    return {PROBE_D6_SETTINGS_KEY: meta_for_json(settings.to_meta()),
+            PROBE_D6_RECORD_KEY: meta_for_json(monitor.get("d6_witness"))}
 
 
 def lock_start_b_arrays(controller, t_s: np.ndarray) -> dict:
@@ -398,6 +418,10 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict,
                      else plant.extend_bound_check.record()),
                  "true_force_rule": "limiter oil_force at the 1 ms row t == t_k (NaN without "
                                     "one) and its minimum over (t_k-1, t_k]; not true_force_*"}
+    stale_record = getattr(plant, "stale_seed_release_record", None)
+    if stale_record is not None and stale_record() is not None:
+        # edition 7 3.5: the old P1 plant's seed sources (plant_seed_artifact), record only
+        full_meta["stale_seed_release"] = stale_record()
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
@@ -724,6 +748,8 @@ def plant_options_record(hydraulics=None, t_lift_s: float | None = None, *,
     harness_hydraulics.check_last_extend_start(hydraulics)
     if hydraulics.lsb_components:  # edition 6 identity guard (spec 3.4)
         harness_hydraulics.check_last_lock_start_b(hydraulics, config)
+    if hydraulics.probe_d6_settings:  # edition 7 identity guard (spec 6.1)
+        harness_hydraulics.check_last_probe_d6(hydraulics, config)
     record = {"hydraulic_options": hydraulics.to_dict(),
               "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
     tag = controller_tag(hydraulics, config)

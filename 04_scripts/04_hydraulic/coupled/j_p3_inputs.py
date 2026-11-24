@@ -36,18 +36,19 @@ P3_CONTROLLER_TAGS = EXTEND_START_TAGS
 list for records; :func:`is_p3_expected` judges by the base tag instead."""
 P3_RULE = "tracked_bound"
 P3_SETTING_PREFIXES = ("VB", "LS")
-P3_OFF_SETTINGS = ("VBJ0", "VBK0", "VBL0", "VBKL0")
+P3_OFF_SETTINGS = ("VBJ0", "VBK0", "VBL0", "VBKL0", "VBM0", "VBKM0")
 """436.9 VBJ0: the VBJ plant with ③ off by definition (T8 / H-7 pair), never a J-P3 row;
 edition 5 VBK0 (VBJ0 with a rod fault plan) likewise; edition 6 VBL0 / VBKL0 (the same with
-the lock-start components, ``jp3_remedy_spec_v6.md`` 3.4)."""
+the lock-start components, ``jp3_remedy_spec_v6.md`` 3.4); edition 7 VBM0 / VBKM0
+(``jp3_remedy_spec_v7.md`` 3.6)."""
 RULE_KEY = "run_extend_start_rule"
 REVISION_KEY = "run_extend_start_revision"
 """Row key of a ③ revision 5 or 6 record (present only then: revision 4 rows keep their
 keys)."""
 HOLD_REVISION = 5
-HOLD_REVISIONS = (5, 6)
-"""The hold revisions (``extend_start_bound.HOLD_REVISIONS``): edition 4a revision 5 and
-edition 5 revision 6, each judged apart (edition 5 4.6, 6.1)."""
+HOLD_REVISIONS = (5, 6, 7)
+"""The hold revisions (``extend_start_bound.HOLD_REVISIONS``): edition 4a revision 5,
+edition 5 revision 6 and edition 7 revision 7, each judged apart (edition 5 4.6, 6.1)."""
 TEST_ONLY_SETTINGS = ("VBG4", "VBG5", "VBG6")
 """Case replay settings under a test constant (``jp3_case_replay.py``: C and D; D is VBG6 from
 edition 5, VBG5 the edition 4a records)."""
@@ -58,7 +59,13 @@ ED6_JUDGED_SETTINGS = ("VBL", "LSL1", "LSL2", "LSL3", "LSL4", "VBKL", "VBLc005",
 """Edition 6 (``jp3_remedy_spec_v6.md`` 6.1 / 6.2 / 6.4 / 11): the ③-on rows J-P3 judges
 (j9_main VBL / LSL, the 12b VBKL arm, the four sensitivity settings; the grid rows run as
 VBL)."""
-REV5_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4", "VBK", *ED6_JUDGED_SETTINGS)
+ED7_JUDGED_SETTINGS = ("VBM", "LSM1", "LSM2", "LSM3", "LSM4", "VBKM", "VBMslow", "VBMfast",
+                       "VBMc005", "VBMc04")
+"""Edition 7 (``jp3_remedy_spec_v7.md`` 3.6, 6.2): j9_main VBM / LSM, the 12b VBKM arm and the
+four representative sensitivity settings; the six record sensitivity settings and the probe
+settings are recorded apart (their failures are public, never judged)."""
+REV5_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4", "VBK", *ED6_JUDGED_SETTINGS,
+                        *ED7_JUDGED_SETTINGS)
 """436.9 spec 6.1 / 13.2, addendum 4a-2 R6: the hold revision rows J-P3 judges (edition 5
 6.3.7 (4): the VBK lines too; edition 6: :data:`ED6_JUDGED_SETTINGS`); the other hold revision
 rows (VBH, LSH1 .. 4, a row without a setting) are recorded apart."""

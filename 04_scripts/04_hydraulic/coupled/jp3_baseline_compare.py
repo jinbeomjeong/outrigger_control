@@ -105,9 +105,9 @@ DEFAULT_IDENTITY = {"spec_edition": SPEC_EDITION, "carry_end_rule": "inherit_whe
                     "retract_start_rule": "with_tracker"}
 SPEC_EDITION_V5 = "fe6f5844"
 """Edition 5 (``jp3_remedy_spec_v5.md``): the ``spec_edition`` of a ③ revision 6 record."""
-HOLD_REVISIONS = (5, 6)
+HOLD_REVISIONS = (5, 6, 7)
 """③ hold revisions (``extend_start_bound.HOLD_REVISIONS``); a revision 6 row is never read
-as a revision 4 or 5 row (edition 5 4.6)."""
+as a revision 4 or 5 row (edition 5 4.6); edition 7 adds revision 7."""
 IDENTITY_OF_REVISION = {5: DEFAULT_IDENTITY,
                         6: {**DEFAULT_IDENTITY, "spec_edition": SPEC_EDITION_V5}}
 """The sealed identity of each hold revision's record (13.6, edition 5 4.6)."""

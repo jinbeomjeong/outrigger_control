@@ -165,9 +165,18 @@ EXTEND_WITNESS_REVISION = 6
 """436.9 edition 5 (``jp3_remedy_spec_v5.md`` 4): revision 5 plus the release witness R5-8,
 the retract relief bound R5-9 after release evidence, the retract hold candidate R5-10 and
 the re-lock start ``M_j`` of each window sample (module docstring, revision 6)."""
-SUPPORTED_REVISIONS = (EXTEND_START_REVISION, EXTEND_HOLD_REVISION, EXTEND_WITNESS_REVISION)
-HOLD_REVISIONS = (EXTEND_HOLD_REVISION, EXTEND_WITNESS_REVISION)
-"""Revisions with the period classes of revision 5 (revision 6 builds on them)."""
+EXTEND_SEED_FIX_REVISION = 7
+"""436.9 edition 7 (``jp3_remedy_spec_v7.md`` 3.5, ③ rev 7): the bound of revision 6 unchanged
+(no new bound term, so the commands are those of revision 6, P7-1); the revision changes the
+judged set (the ``carry_ext`` reads of the first PROBE after the event on a leg that went
+``locked_ext`` -> ``moving_ext``) and the identity (``rule_revision`` 7, base tag
+``final_C4G2_P3X``)."""
+SUPPORTED_REVISIONS = (EXTEND_START_REVISION, EXTEND_HOLD_REVISION, EXTEND_WITNESS_REVISION,
+                       EXTEND_SEED_FIX_REVISION)
+HOLD_REVISIONS = (EXTEND_HOLD_REVISION, EXTEND_WITNESS_REVISION, EXTEND_SEED_FIX_REVISION)
+"""Revisions with the period classes of revision 5 (revisions 6 and 7 build on them)."""
+WITNESS_REVISIONS = (EXTEND_WITNESS_REVISION, EXTEND_SEED_FIX_REVISION)
+"""Revisions with R5-8 .. R5-10 (revision 7 runs the bound of revision 6)."""
 HOLD_SPEED_RATIO = 0.01
 """``u_hold / v_max`` (user decision 146: the ratio, 0.20924 mm/s at the YAML ``v_max``)."""
 HOLD_SPEED_RATIO_MAX = 0.012
@@ -185,8 +194,14 @@ JP3_SPEC_EDITION = "8be9de22"
 JP3_SPEC_EDITION_V5 = "fe6f5844"
 """First 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec_v5.md`` (edition 5): the
 ``spec_edition`` of every revision 6 record."""
+JP3_SPEC_EDITION_V7 = "85ce6e2a"
+"""Edition 7: the first 8 hex digits of the sha256 of ``jp3_remedy_spec_v7.md``. PROVISIONAL:
+the draft revision 2 (85ce6e2a...) the implementation was written against; the seal replaces
+it by the sealed file's digits (spec 3.5 ``spec_edition``: "채울 곳: 봉인 뒤"), which changes
+no command (an identity value)."""
 JP3_SPEC_EDITION_OF_REVISION = {EXTEND_HOLD_REVISION: JP3_SPEC_EDITION,
-                                EXTEND_WITNESS_REVISION: JP3_SPEC_EDITION_V5}
+                                EXTEND_WITNESS_REVISION: JP3_SPEC_EDITION_V5,
+                                EXTEND_SEED_FIX_REVISION: JP3_SPEC_EDITION_V7}
 """The sealed edition each hold revision's record must carry (13.6 / edition 5 4.6)."""
 CARRY_END_INHERIT = "inherit_when_gate_shut"
 """R5-6 (spec 2.9, user decision 152): a carry run that ends in a lock or hold period before
@@ -492,8 +507,9 @@ class ExtendStartBound:
 
     @property
     def is_witness_revision(self) -> bool:
-        """Revision 6 (edition 5): R5-8 witness, R5-9 retract relief, R5-10 hold candidate."""
-        return self.revision == EXTEND_WITNESS_REVISION
+        """Revision 6 (edition 5): R5-8 witness, R5-9 retract relief, R5-10 hold candidate;
+        revision 7 runs the same bound (edition 7 3.5)."""
+        return self.revision in WITNESS_REVISIONS
 
     def hold_speed_m_s(self, max_speed_m_s: float) -> float:
         """``u_hold`` of revision 5."""
@@ -579,6 +595,26 @@ def period_class_of(command_m_s: float, hold_speed_m_s: float, follows_lock: boo
     if follows_lock and not is_gate_open:
         return PeriodClass.CARRY_EXT if is_extending else PeriodClass.CARRY_RET
     return PeriodClass.EXT if is_extending else PeriodClass.RET
+
+
+def retract_need_upper_bound(params: LineFillGateParams, head_ub_Pa: float, stroke_m: float,
+                             head_area_m2: float, annulus_area_m2: float,
+                             stroke_max_m: float) -> tuple[float, float]:
+    """``(need_ub, p_open)`` of a retraction (:meth:`LineFillGateBound.retract_need_m`): the
+    M1c ``retract_dead`` need at the conservative inputs of ``params`` (``p_r`` = floor,
+    ``F_band``, void 0, ``beta``, ``L0r``, ``L0h``); a NaN stroke takes stroke 0 (the need
+    falls with the stroke). Edition 7 3.2 caps the probe retract with the same function."""
+    retract_config = RetractConfig(
+        rod_forward=True, volume_scale=1.0, v_line_m3=params.line_volume_m3,
+        beta_hose_Pa=params.hose_bulk_modulus_Pa, psi=params.pilot_ratio,
+        p_crack_Pa=params.crack_pressure_Pa)
+    stroke = stroke_m if math.isfinite(stroke_m) else 0.0
+    result = retract_dead(
+        retract_config, head_ub_Pa, params.rod_floor_Pa, params.retract_friction_band_N,
+        stroke, 0.0, head_area_m2, annulus_area_m2, stroke_max_m,
+        params.retract_rod_dead_length_m, params.retract_head_dead_length_m,
+        params.retract_bulk_modulus_Pa, params.tank_pressure_Pa)
+    return result["need"], result["p_open"]
 
 
 class LineFillGateBound:
@@ -717,15 +753,9 @@ class LineFillGateBound:
         cached = self._need_cache.get(key)
         if cached is not None:
             return cached
-        params = self.params
-        stroke = stroke_m if math.isfinite(stroke_m) else 0.0
-        result = retract_dead(
-            self._retract_config, head_ub_Pa, params.rod_floor_Pa,
-            params.retract_friction_band_N, stroke, 0.0, float(self.head_area_m2[leg]),
-            float(self.annulus_area_m2[leg]), self.stroke_max_m,
-            params.retract_rod_dead_length_m, params.retract_head_dead_length_m,
-            params.retract_bulk_modulus_Pa, params.tank_pressure_Pa)
-        best_need_m, best_open_Pa = result["need"], result["p_open"]
+        best_need_m, best_open_Pa = retract_need_upper_bound(
+            self.params, head_ub_Pa, stroke_m, float(self.head_area_m2[leg]),
+            float(self.annulus_area_m2[leg]), self.stroke_max_m)
         if len(self._need_cache) > NEED_CACHE_SIZE:
             self._need_cache.clear()
         self._need_cache[key] = (best_need_m, best_open_Pa)
@@ -2355,8 +2385,9 @@ def initial_pressure_Pa(retract_floor_Pa: ArrayLike) -> NDArray[np.float64]:
     return np.array(retract_floor_Pa, dtype=float).reshape(LEG_COUNT)
 
 
-__all__ = ["EXTEND_HOLD_REVISION", "EXTEND_START_REVISION", "EXTEND_WITNESS_REVISION",
-           "HOLD_REVISIONS", "SUPPORTED_REVISIONS",
+__all__ = ["EXTEND_HOLD_REVISION", "EXTEND_SEED_FIX_REVISION", "EXTEND_START_REVISION",
+           "EXTEND_WITNESS_REVISION", "HOLD_REVISIONS", "SUPPORTED_REVISIONS",
+           "WITNESS_REVISIONS", "JP3_SPEC_EDITION_V7", "retract_need_upper_bound",
            "BoundGeometry", "ExtendBoundCheck", "ExtendBoundCheckRev5", "ExtendBoundState",
            "ExtendBoundTrace", "ExtendStartBound", "ExtendStartTracker", "LineFillGateBound",
            "LineFillGateParams", "PeriodClass", "PremiseRecord", "ReleaseReliefParams",

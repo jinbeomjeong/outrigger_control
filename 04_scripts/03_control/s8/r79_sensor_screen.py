@@ -1212,6 +1212,7 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant, rod_fault=None) -> s
     # component on (as run_v5 writes them; the record too, the r79 row has none); a run
     # with every component off keeps its former record.
     meta.update(verdict_runs.lock_start_b_meta(ctrl, with_record=True))
+    meta.update(verdict_runs.probe_d6_meta(ctrl))  # edition 7 (empty with it off)
     extra_arrays.update(verdict_runs.lock_start_b_arrays(ctrl, period["t"]))
     if rod_fault is not None:
         meta[ROD_FAULT_KEY] = rod_fault.record(ctrl)

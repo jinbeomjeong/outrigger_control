@@ -221,10 +221,70 @@ VBK / VBK0 with them (rod fault plan, T-JR-12b). Every other setting keeps the c
 off (P6-0)."""
 ED6_JUDGED_SETTINGS = ("VBL", "LSL1", "LSL2", "LSL3", "LSL4")
 ED6_SENSITIVITY_SETTINGS = tuple(f"VBL{key}" for key in ED6_P1_SENSITIVITY)
-ROD_FAULT_SETTINGS = ("VBK", "VBK0", "VBKL", "VBKL0")
+
+LSB_COMPONENTS_ED7 = ("A_i", "A_ib", "A_ii", "B3")
+"""Edition 7 judged components (``jp3_remedy_spec_v7.md`` 3.6): the edition 6 sealed range plus
+A(i)-b (condition 3 (다), latch and protection at their ``LockStartBSettings`` defaults)."""
+PROBE_D6_ED7 = {"witness": True, "retract_position_target": True}
+"""Edition 7 3.2 (meta ``probe_d6_settings``): the D6 E3 witness 0.3 mm and the (i-b) retract
+position target at their ``ProbeD6Settings`` defaults."""
+_LSB7 = {"lsb_components": list(LSB_COMPONENTS_ED7)}
+_D67 = {"probe_d6_settings": dict(PROBE_D6_ED7)}
+_P3X = {**_P3W, "extend_start_rev7": True}
+"""③ rev 7 (base tag ``final_C4G2_P3X``)."""
+ED7_P1_PATCH_NOMINAL = {"line_scale": 1.0, "dead_scale": 1.0, "bulk_modulus_Pa": 1.0e9,
+                        "k_ext_form": "b0"}
+ED7_SENSITIVITY: dict[str, tuple[dict, float]] = {
+    "slow": ({"bulk_modulus_Pa": 0.69e9, "line_scale": 1.5, "dead_scale": 1.5}, 0.02),
+    "fast": ({"bulk_modulus_Pa": 1.6e9, "line_scale": 0.5, "dead_scale": 0.5}, 0.02),
+    "c005": ({}, 0.005),
+    "c04": ({}, 0.04),
+    "b069": ({"bulk_modulus_Pa": 0.69e9}, 0.02),
+    "b16": ({"bulk_modulus_Pa": 1.6e9}, 0.02),
+    "h05": ({"line_scale": 0.5}, 0.02),
+    "h15": ({"line_scale": 1.5}, 0.02),
+    "d05": ({"dead_scale": 0.5}, 0.02),
+    "d15": ({"dead_scale": 1.5}, 0.02),
+}
+"""Spec 3.3 sensitivity (hydraulics H4, user decision): key -> (P1 supplement changes, P1
+``c_v``); names ``VBM<key>``. Judged: slow, fast, c005, c04; recorded: the other six."""
+ED7_SENSITIVITY_JUDGED = ("slow", "fast", "c005", "c04")
+
+
+def ed7_plant(sensitivity: str | None = None) -> dict:
+    """The VBJ plant (P1 .. P4 + LC) with the edition 7 P1 supplement (a)(c)(d), ``k_ext``
+    b0; ``sensitivity`` = an :data:`ED7_SENSITIVITY` key (None = nominal)."""
+    changes, c_v = ({}, 0.02) if sensitivity is None else ED7_SENSITIVITY[sensitivity]
+    return {**_VB_PLANT_J, "line_fill_gate": _gate(1.0, c_v),
+            "p1_patch": {**ED7_P1_PATCH_NOMINAL, **changes}}
+
+
+_ED7_CONTROLLER = {**_P3X, **_LSB7, **_D67}
+_ED7_CONTROLLER_P3_OFF = {**_LSB7, **_D67}
+ED7_SETTINGS: dict[str, tuple[bool, dict]] = {
+    "VBM": (True, {**ed7_plant(), **_ED7_CONTROLLER}),
+    **{f"LSM{n}": (True, {**ed7_plant(), "lock_closure": _lc(*closure), **_ED7_CONTROLLER})
+       for n, closure in LS_CLOSURES.items()},
+    "VBM0": (True, {**ed7_plant(), **_ED7_CONTROLLER_P3_OFF}),
+    **{f"VBM{key}": (True, {**ed7_plant(key), **_ED7_CONTROLLER}) for key in ED7_SENSITIVITY},
+    "VBKM": (True, {**ed7_plant(), **_ED7_CONTROLLER}),
+    "VBKM0": (True, {**ed7_plant(), **_ED7_CONTROLLER_P3_OFF}),
+}
+"""Edition 7 settings (spec 3.6, names Q7-C3): VBM / LSM1 .. LSM4 judged (VBJ / LSJ plant + P1
+supplement, ③ rev 7, A_i + A_ib + A_ii + B3, D6 witness and probe retract target), VBM0 the
+same with ③ off (T8, 12a reference arm), ``VBM<key>`` the ten sensitivity settings, VBKM /
+VBKM0 = VBM / VBM0 with the rod fault plan (T-JR-12b). Every older setting keeps its options
+(+ the record key ``stale_seed_release`` on the P1 plant; P7-0)."""
+ED7_JUDGED_SETTINGS = ("VBM", "LSM1", "LSM2", "LSM3", "LSM4")
+ED7_SENSITIVITY_SETTINGS = tuple(f"VBM{key}" for key in ED7_SENSITIVITY_JUDGED)
+ED7_SENSITIVITY_RECORD_SETTINGS = tuple(f"VBM{key}" for key in ED7_SENSITIVITY
+                                        if key not in ED7_SENSITIVITY_JUDGED)
+ROD_FAULT_SETTINGS = ("VBK", "VBK0", "VBKL", "VBKL0", "VBKM", "VBKM0")
 """Edition 5 6.3.1: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
-one without the other by this list, audit W15); edition 6 adds VBKL / VBKL0 (spec 3.4)."""
-ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS, **ED6_SETTINGS}
+one without the other by this list, audit W15); edition 6 adds VBKL / VBKL0 (spec 3.4),
+edition 7 VBKM / VBKM0 (spec v7 3.6)."""
+ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS, **ED6_SETTINGS,
+                                              **ED7_SETTINGS}
 JP3_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JP3_DIAG_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4", "VBJ0")
 
@@ -310,7 +370,71 @@ def batch_jobs(name: str) -> list[dict]:
         return ed6_t8_jobs(P3_HASH_SOURCE_OVERRIDE[0])
     if name == ED6_CASES_BATCH:
         return ed6_case_jobs()
+    if name in ED7_BATCHES:
+        return ed7_batch_jobs(name)
     raise ValueError(f"unknown batch {name!r}")
+
+
+ED7_J9_MAIN_BATCH = "ed7_j9_main"
+"""Edition 7 j9_main (``jp3_remedy_spec_v7.md`` 6.2): the ``j9_main`` layout with VBM /
+LSM1 .. LSM4 (VBM 100 + LSM 4 x 72 = 388 lines)."""
+ED7_T8_BATCH = "ed7_t8"
+"""Edition 7 T8 = P7-1: the 22 jobs of :func:`p3_hash_jobs` x VBM, VBM0 = 44 runs
+(``--p3-hash-source`` = the stored ``main.jsonl``)."""
+ED7_CASES_BATCH = "ed7_cases"
+"""Edition 7 P7-2 case replay E and F (the ed6_cases rows) x VBM, LSM1 .. LSM4 = 10 runs."""
+ED7_KEYS_BATCH = "ed7_keys"
+"""Edition 7 key-file rows (``--jobs-file``, sealed edition 7 key files of
+:data:`ED7_KEY_FILE_SHA256`; refused until the seal fills it)."""
+ED7_BATCHES = (ED7_J9_MAIN_BATCH, ED7_T8_BATCH, ED7_CASES_BATCH, ED7_KEYS_BATCH)
+ED7_KEY_FILE_SHA256: dict[str, str] = {}
+"""Edition 7 sealed key files (name -> sha256). Empty until the seal (spec 4 step 3: the
+confirmation keys and the G1 extraction seed are fixed at the seal); ``ed7_keys`` refuses
+every file before that."""
+ED7_KEYS_FILE: list[Path | None] = [None]
+
+
+def ed7_batch_jobs(name: str) -> list[dict]:
+    """The jobs of an edition 7 batch (:data:`ED7_BATCHES`)."""
+    if name == ED7_J9_MAIN_BATCH:
+        jobs = [{**row, "setting": s} for s in ED7_JUDGED_SETTINGS for row in required_rows()]
+        return jobs + [{**row, "setting": "VBM"} for row in regression_rows()]
+    if name == ED7_T8_BATCH:
+        source = P3_HASH_SOURCE_OVERRIDE[0]
+        jobs = p3_hash_jobs() if source is None else p3_hash_jobs(source)
+        return [{**job, "setting": setting} for setting in ("VBM", "VBM0") for _, job in jobs]
+    if name == ED7_CASES_BATCH:
+        return [{**job, "setting": setting} for job in _case_rows_e_f()
+                for setting in ED7_JUDGED_SETTINGS]
+    return sealed_key_jobs(ED7_KEYS_FILE[0], ED7_KEY_FILE_SHA256, ED7_KEYS_BATCH)
+
+
+def _case_rows_e_f() -> list[dict]:
+    case_e = {"case": "R12", "eps": 0.0, "offset_s": 0.0, "twin": dict(J9_CASE_TWIN)}
+    case_f = {"case": "R12", "eps": 0.0, "offset_s": J9_CASE_F_OFFSET_S,
+              "twin": dict(J9_CASE_F_TWIN)}
+    return [case_e, case_f]
+
+
+def sealed_key_jobs(path: Path | None, sealed: dict[str, str], batch: str) -> list[dict]:
+    """The jobs of a sealed key file (``{"expected_lines": n, "lines": [{"job": ...}]}``).
+
+    Raises:
+        SystemExit: No file, a file whose name and sha256 are not in ``sealed``, an unknown
+            setting, or another line count.
+    """
+    if path is None:
+        raise SystemExit(f"{batch} needs --jobs-file")
+    data = Path(path).read_bytes()
+    expected = sealed.get(Path(path).name)
+    if expected is None or hashlib.sha256(data).hexdigest() != expected:
+        raise SystemExit(f"--jobs-file {path} is not a sealed {batch} key file")
+    document = json.loads(data)
+    jobs = [dict(line["job"]) for line in document["lines"]]
+    unknown = sorted({job["setting"] for job in jobs} - set(ALL_SETTINGS))
+    if unknown or len(jobs) != document["expected_lines"]:
+        raise SystemExit(f"--jobs-file {path}: settings {unknown} / line count")
+    return jobs
 
 
 J9_MAIN_BATCH = "j9_main"
@@ -527,9 +651,10 @@ FS24 / G4 / RE1bF rows of one (level, leg, F_s, offset) do not share a file."""
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
 """Job entries ``main`` adds for the worker only (not part of the job identity)."""
 T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", *JP3_JUDGED_SETTINGS, *JP3_DIAG_SETTINGS,
-                *ED6_SETTINGS)
+                *ED6_SETTINGS, *ED7_SETTINGS)
 """Criteria 9 T4h (control-expert B): the runs that write a T4h record (436.9: the VBJ, LSJ,
-VBJ0, VBH and LSH settings too, spec 6.3; edition 6: every :data:`ED6_SETTINGS` run)."""
+VBJ0, VBH and LSH settings too, spec 6.3; edition 6: every :data:`ED6_SETTINGS` run; edition 7:
+every :data:`ED7_SETTINGS` run)."""
 
 
 def job_key(job: dict) -> str:
@@ -730,7 +855,8 @@ def run_one(job: dict) -> dict:
                                                 "lock_window_alignment", "controller_tag",
                                                 "head_only_declared", "d1", RESUME_K1_KEY,
                                                 HARNESS_HASH_KEY, "lsb_components",
-                                                "lsb_settings", "lsb_record")
+                                                "lsb_settings", "lsb_record",
+                                                "probe_d6_settings", "probe_d6_record")
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
@@ -818,13 +944,14 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help=f"{J9_V0_SAMPLE_BATCH}: the fixed V0 sample key file (erratum 2 "
                              f"2-7.1); {ED6_KEYS_BATCH}: a sealed edition 6 key file")
     args = parser.parse_args(argv)
-    jobs_file_batches = (J9_V0_SAMPLE_BATCH, ED6_KEYS_BATCH)
+    jobs_file_batches = (J9_V0_SAMPLE_BATCH, ED6_KEYS_BATCH, ED7_KEYS_BATCH)
     if (args.jobs_file is not None) != (args.batch in jobs_file_batches):
         parser.error(f"--jobs-file belongs to the {jobs_file_batches} batches (and they need it)")
     J9_V0_SAMPLE_FILE[0] = args.jobs_file
+    ED7_KEYS_FILE[0] = args.jobs_file
     if args.p3_hash_source is not None:
-        if args.batch not in (J9_T8_BATCH, ED6_T8_BATCH):
-            parser.error("--p3-hash-source belongs to the j9_t8 / ed6_t8 batches")
+        if args.batch not in (J9_T8_BATCH, ED6_T8_BATCH, ED7_T8_BATCH):
+            parser.error("--p3-hash-source belongs to the j9_t8 / ed6_t8 / ed7_t8 batches")
         import jp3_fixed_inputs
 
         problem = jp3_fixed_inputs.sha_problem(args.p3_hash_source,

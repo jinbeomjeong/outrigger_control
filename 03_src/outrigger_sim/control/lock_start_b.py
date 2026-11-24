@@ -39,6 +39,15 @@ Stall witness of A(i) (stats E3): the mean of the last three stroke reads minus 
 the first three reads of the stretch. The A(ii) motion witnesses use single reads (spec 3.2,
 hydraulics 3).
 
+Edition 7 (``jp3_remedy_spec_v7.md`` 3.1) adds ``A_ib``, the second trigger path of A(i): a
+LEVEL leg whose acting command stays inside the dead band (``0 < |u| <= u_hold``, one sign,
+``N_blind`` periods) without moving (E3 from read ``k_s + 2`` less than ``s_still``), while the
+completion condition 3 is open, gets a floor ``u_hold + Delta u_step`` rising by
+``Delta u_step`` per period to ``u_cap`` (A(i) values), whatever ``|u|`` is; a predictive load
+protection holds a shot back and a reversal latch switches the leg off. Its fields (``ib_*``)
+stay at their defaults and out of the meta while ``A_ib`` is off, so an edition 6 run is
+unchanged (P7-0).
+
 Every threshold is a field of :class:`LockStartBSettings` (defaults: the adopted review
 values). Off (``components`` empty), no line of this module runs in the controller (P6-0).
 
@@ -76,10 +85,14 @@ TRACE_ARRAY_PREFIX = "lsb_"
 
 
 class LsbComponent(StrEnum):
-    """The edition 6 components (spec 3, names of the ``lsb_components`` meta)."""
+    """The edition 6 components (spec 3, names of the ``lsb_components`` meta) and the
+    edition 7 blind-band fill ``A_ib``."""
 
     DEADBAND = "A_i"
     """3.1 adaptive LEVEL dead-band compensation."""
+    BLIND_FILL = "A_ib"
+    """Edition 7 (``jp3_remedy_spec_v7.md`` 3.1): the second trigger path of A(i) for a leg
+    commanded inside the dead band (``0 < |u| <= u_hold``) that does not move."""
     FILL_FLOOR = "A_ii"
     """3.2 lock-start fill (dead-beat command)."""
     EVENT_BLOCK = "B1"
@@ -95,7 +108,51 @@ EVENT_ALIAS = "B"
 
 
 COMPONENT_ORDER = tuple(LsbComponent)
-"""Canonical order of :attr:`LockStartBSettings.components` (A_i, A_ii, B)."""
+"""Canonical order of :attr:`LockStartBSettings.components` (A_i, A_ib, A_ii, B1, B3)."""
+
+BLIND_LATCH_EVENT = "INFO_LSB_BLIND_LATCH"
+"""Edition 7 3.1: more than ``ib_latch_reversals`` opposite-sign A(i)-b triggers of one leg in
+one LEVEL stretch switch A(i)-b off for that leg (``INFO_LSB_BLIND_LATCH:<leg>``)."""
+BLIND_PROTECT_EVENT = "INFO_LSB_BLIND_PROTECT"
+"""Edition 7 3.1: the predictive load protection held a trigger back (once per stretch)."""
+
+
+class BlindCondition(StrEnum):
+    """Edition 7 3.1 condition 3 of the A(i)-b trigger (probe arms 2 .. 4)."""
+
+    WITH_TWIST = "with_twist"
+    """(다), the sealed draft: attitude or clearance condition open, or ``|D|`` above the
+    relax limit."""
+    ATTITUDE_CLEARANCE = "attitude_clearance"
+    """(나): attitude or clearance condition open."""
+    LEVEL_INCOMPLETE = "level_incomplete"
+    """First draft: the period's LEVEL completion test (twist included) failed."""
+
+
+class BlindEnd(StrEnum):
+    """Why an A(i)-b floor ended (edition 7 3.1 record values)."""
+
+    MOVED = "moved"
+    SIGN = "sign"
+    ZERO = "zero"
+    PHASE = "phase"
+    CAP = "cap"
+
+
+ED7_FIELD_PREFIX = "ib_"
+"""Fields of the edition 7 A(i)-b; a run without ``A_ib`` keeps them at their defaults and
+leaves them out of :meth:`LockStartBSettings.to_meta` (edition 6 metas unchanged, P7-0)."""
+
+
+@dataclass(frozen=True)
+class CompletionFlags:
+    """The LEVEL completion tests of one period (``C2Controller._update_completion``), the
+    inputs of condition 3 of A(i)-b."""
+
+    is_on_target: bool
+    is_clearance_done: bool
+    is_complete: bool
+    """The period's completion test with its twist condition (before the hold time)."""
 
 
 class A1End(StrEnum):
@@ -249,6 +306,30 @@ class LockStartBSettings:
     b3_predictive_margin_N: float = 5.0e3
     b3_twist_stiffness_N_m: float = 21.7e6
     """``k_tw`` of the predictive protection (dynamics review, harness value)."""
+    # --- A(i)-b, edition 7 spec 3.1 (ramp values shared with A(i): a1_step / cap / witness) ---
+    ib_blind_periods: int = 25
+    """``N_blind``: periods of one acting sign with ``0 < |u| <= u_hold`` before a trigger."""
+    ib_still_m: float = 0.1e-3
+    """``s_still``: the stretch moved (E3, along its sign) less than this."""
+    ib_reference_skip_reads: int = 2
+    """The still reference is the mean of reads ``k_s + skip`` .. ``k_s + skip + 2`` (stats
+    S1-2: the ``d`` = 1 tail of the command before stays out of the reference)."""
+    ib_condition: str = BlindCondition.WITH_TWIST.value
+    """Condition 3 (:class:`BlindCondition`; probe arms 3 and 4 take the other two)."""
+    ib_twist_limit_N: float | None = None
+    """``|D|`` limit of condition (다); None = the controller's relax ``max_twist_N``."""
+    ib_latch_reversals: int = 2
+    """More opposite-sign triggers than this in one LEVEL stretch latch the leg off."""
+    ib_protect: bool = True
+    """Predictive load protection (dynamics d7 2.5-5)."""
+    ib_protect_travel_m: float = 0.85e-3
+    """``Delta e_max``: the largest single shot."""
+    ib_protect_stiffness_N_m: float = 41.0e6
+    """``k_1`` (covers beta 1.6)."""
+    ib_protect_margin_N: float = 5.0e3
+    """A shot needs ``min_j(F_lo,j + k_1 n_i n_j sigma Delta e_max) >= F_min`` plus this."""
+    ib_record_after_s: float = 1.0
+    """Record only: ``Delta D`` / ``Delta F`` of a shot are taken this long after its end."""
 
     def __post_init__(self) -> None:
         names: list[str] = []
@@ -286,9 +367,35 @@ class LockStartBSettings:
         if self.a2_hold_after_fill_s is not None and not self.a2_hold_after_fill_s > 0.0:
             raise ValueError("a2_hold_after_fill_s must be > 0 or None")
         for name in ("a2_extend", "a2_void_estimate", "a2_on_fallback_legs",
-                     "b3_protect_predictive"):
+                     "b3_protect_predictive", "ib_protect"):
             if not isinstance(getattr(self, name), bool):
                 raise ValueError(f"{name} must be a bool")
+        self._check_blind_fields()
+
+    def _check_blind_fields(self) -> None:
+        """Edition 7 fields: valid values, and none changed while ``A_ib`` is off."""
+        object.__setattr__(self, "ib_condition", BlindCondition(self.ib_condition).value)
+        _check_positive_ints(self, ("ib_latch_reversals",))
+        minimum_periods = self.ib_reference_skip_reads + WITNESS_READS
+        if (isinstance(self.ib_blind_periods, bool) or not isinstance(self.ib_blind_periods, int)
+                or self.ib_blind_periods < minimum_periods):
+            raise ValueError(f"ib_blind_periods must be an int >= {minimum_periods}")
+        if (isinstance(self.ib_reference_skip_reads, bool)
+                or not isinstance(self.ib_reference_skip_reads, int)
+                or self.ib_reference_skip_reads < 0):
+            raise ValueError("ib_reference_skip_reads must be an int >= 0")
+        _check_positive(self, ("ib_still_m", "ib_protect_travel_m", "ib_protect_stiffness_N_m",
+                               "ib_record_after_s"))
+        _check_non_negative(self, ("ib_protect_margin_N",))
+        if self.ib_twist_limit_N is not None and not self.ib_twist_limit_N > 0.0:
+            raise ValueError("ib_twist_limit_N must be > 0 or None")
+        if self.has(LsbComponent.BLIND_FILL):
+            return
+        defaults = LockStartBSettings.__dataclass_fields__
+        changed = [name for name in blind_field_names()
+                   if getattr(self, name) != defaults[name].default]
+        if changed:
+            raise ValueError(f"{changed} are A(i)-b fields: they need the A_ib component")
 
     @property
     def is_enabled(self) -> bool:
@@ -303,10 +410,21 @@ class LockStartBSettings:
         return any(self.has(component) for component in EVENT_COMPONENTS)
 
     def to_meta(self) -> dict[str, Any]:
+        """The fields; without ``A_ib`` the edition 7 fields are left out, so an edition 6
+        meta (and its identity check) stays as it was (P7-0)."""
         values = asdict(self)
         values["components"] = list(self.components)
         values["a2_friction_band_N"] = list(self.a2_friction_band_N)
+        if not self.has(LsbComponent.BLIND_FILL):
+            for name in blind_field_names():
+                del values[name]
         return values
+
+
+def blind_field_names() -> tuple[str, ...]:
+    """The edition 7 A(i)-b fields (:data:`ED7_FIELD_PREFIX`)."""
+    return tuple(item.name for item in fields(LockStartBSettings)
+                 if item.name.startswith(ED7_FIELD_PREFIX))
 
 
 def parameter_names() -> tuple[str, ...]:
@@ -574,6 +692,88 @@ class FloorInputs:
     protected: NDArray[np.bool_]
     """Legs whose command the rules must not raise in this period (priority rules)."""
     fallback_legs: frozenset[int]
+    # Edition 7 A(i)-b inputs (read only when ``A_ib`` is on; the defaults keep every caller
+    # of edition 6 valid).
+    completion: CompletionFlags | None = None
+    """This period's LEVEL completion tests; None = not evaluated (condition 3 open)."""
+    twist_load_N: float = math.nan
+    """``D = n^T F`` of the completion test (raw reading)."""
+    twist_limit_N: float = math.nan
+    """The relax ``max_twist_N`` of the controller (condition (다) limit by default)."""
+    lower_load_N: NDArray[np.float64] | None = None
+    """``F_lo``: the lower load estimate B3 protection uses (``_load_estimate_N``)."""
+    force_N: NDArray[np.float64] | None = None
+    """The cylinder force reading (record of the shot's ``Delta F`` only)."""
+    F_min_N: float = math.nan
+    twist_vector: NDArray[np.float64] | None = None
+
+
+@dataclass
+class _BlindLeg:
+    """Edition 7 A(i)-b state of one leg: the dead-band stretch, the floor and the latch."""
+
+    stretch_sign: int = 0
+    stretch_periods: int = 0
+    stretch_reads: list[float] = field(default_factory=list)
+    """Stroke reads from the stretch's first period on (index 0 = ``k_s``)."""
+    is_protect_noted: bool = False
+    """The protection event of this stretch is out already."""
+    is_floor_on: bool = False
+    floor_sign: int = 0
+    floor_m_s: float = 0.0
+    floor_reads: list[float] = field(default_factory=list)
+    cap_periods: int = 0
+    last_trigger_sign: int = 0
+    reversals: int = 0
+    is_latched: bool = False
+
+
+@dataclass
+class _BlindShot:
+    """Record of one A(i)-b shot: ``Delta D`` and ``Delta F`` from the period before the
+    trigger to ``ib_record_after_s`` after its end."""
+
+    leg: int
+    sign: int
+    start_t_s: float
+    twist_before_N: float
+    force_before_N: list[float]
+    end_t_s: float | None = None
+    end: str | None = None
+    twist_after_N: float | None = None
+    force_after_N: list[float] | None = None
+
+    def to_meta(self) -> dict[str, Any]:
+        delta_D = (None if self.twist_after_N is None or not math.isfinite(self.twist_before_N)
+                   else self.twist_after_N - self.twist_before_N)
+        delta_F = (None if self.force_after_N is None
+                   else [after - before for after, before
+                         in zip(self.force_after_N, self.force_before_N, strict=True)])
+        grew = (None if delta_D is None
+                else abs(self.twist_after_N) > abs(self.twist_before_N))
+        return {"leg": LEG_ORDER[self.leg], "sign": self.sign, "start_t_s": self.start_t_s,
+                "end_t_s": self.end_t_s, "end": self.end,
+                "twist_before_N": self.twist_before_N, "twist_after_N": self.twist_after_N,
+                "delta_D_N": delta_D, "delta_F_N": delta_F, "twist_grew": grew}
+
+
+@dataclass
+class _BlindCounts:
+    """Edition 7 record counters of one leg (spec 3.1 "기록")."""
+
+    triggers: int = 0
+    trigger_periods: list[int] = field(default_factory=list)
+    end: Counter = field(default_factory=Counter)
+    latches: int = 0
+    reversals: int = 0
+    protect_blocked_periods: int = 0
+    raised_periods: int = 0
+
+    def to_meta(self) -> dict[str, Any]:
+        return {"triggers": self.triggers, "trigger_periods": list(self.trigger_periods),
+                "end": dict(self.end), "latches": self.latches, "n_rev": self.reversals,
+                "protect_blocked_periods": self.protect_blocked_periods,
+                "raised_periods": self.raised_periods}
 
 
 class LockStartB:
@@ -612,6 +812,14 @@ class LockStartB:
         self._trace_t_s: list[float] = []
         self._trace_rows: list[dict[str, NDArray[Any]]] = []
         self._pending_b1_blocked = np.zeros(LEG_COUNT, bool)
+        # edition 7 A(i)-b (inert without the component)
+        self._blind = [_BlindLeg() for _ in range(LEG_COUNT)]
+        self.blind_counts = [_BlindCounts() for _ in range(LEG_COUNT)]
+        self.blind_shots: list[_BlindShot] = []
+        self.blind_four_leg_triggers = 0
+        """Periods in which all four legs triggered with the twist sign pattern (``+-sign n``)."""
+        self._last_twist_N = math.nan
+        self._last_force_N: list[float] = [math.nan] * LEG_COUNT
 
     # --------------------------------------------------------------- output-stage rules
     def apply_floors(self, inputs: FloorInputs) -> NDArray[np.float64]:
@@ -628,6 +836,8 @@ class LockStartB:
         is_raised = ((floors > np.abs(requested)) & (np.abs(requested) > self.hold_m_s)
                      & ~inputs.protected)
         output[is_raised] = np.sign(requested[is_raised]) * floors[is_raised]
+        if self.settings.has(LsbComponent.BLIND_FILL):
+            is_raised = is_raised | self._apply_blind_floors(inputs, requested, output)
         self._count_raised(is_raised)
         self.last_raised = is_raised.copy()
         self.last_input_m_s = requested.copy()
@@ -679,6 +889,8 @@ class LockStartB:
                 self.counts[leg].a1_raised_periods += 1
             if self._fill[leg].is_on:
                 self.counts[leg].a2_raised_periods += 1
+            if self._blind[leg].is_floor_on:
+                self.blind_counts[leg].raised_periods += 1
 
     # A(i) ---------------------------------------------------------------------------
     def _deadband_floors(self, inputs: FloorInputs,
@@ -687,6 +899,10 @@ class LockStartB:
         for leg, state in enumerate(self._deadband):
             if not inputs.is_level:
                 self._end_deadband(leg, A1End.PHASE)
+                self._reset_stretch(state)
+                continue
+            if self._blind[leg].is_floor_on:
+                # Edition 7 3.1: one leg never builds both stretches at once.
                 self._reset_stretch(state)
                 continue
             self._update_stretch(state, leg, inputs)
@@ -784,6 +1000,237 @@ class LockStartB:
         self.counts[leg].a1_end[str(reason)] += 1
         # A new stretch must build up again before the next trigger.
         self._reset_stretch(state)
+
+    # A(i)-b, edition 7 ------------------------------------------------------------------
+    def _apply_blind_floors(self, inputs: FloorInputs, requested: NDArray[np.float64],
+                            output: NDArray[np.float64]) -> NDArray[np.bool_]:
+        """Edition 7 3.1 on ``output`` in place; the legs it raised. The floor is applied
+        whatever ``|requested|`` is (implementation note (가): the request is inside the dead
+        band), never on a protected leg."""
+        floors, signs = self._blind_floors(inputs, requested)
+        is_raised = (floors > np.abs(output)) & ~inputs.protected
+        output[is_raised] = signs[is_raised] * floors[is_raised]
+        self._note_shot_after(inputs)
+        return is_raised
+
+    def _blind_floors(self, inputs: FloorInputs, requested: NDArray[np.float64]
+                      ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+        floors, signs = np.zeros(LEG_COUNT), np.zeros(LEG_COUNT)
+        if not inputs.is_level:
+            for leg in range(LEG_COUNT):
+                self._end_blind(leg, BlindEnd.PHASE, inputs.t_s)
+                self._blind[leg] = _BlindLeg()  # the latch and the reversals end with LEVEL
+            return floors, signs
+        triggered = []
+        for leg, state in enumerate(self._blind):
+            if state.is_floor_on:
+                floors[leg] = self._next_blind_floor(state, leg, inputs, float(requested[leg]))
+                signs[leg] = state.floor_sign
+                continue
+            self._update_blind_stretch(state, inputs, leg)
+            if not self._is_blind_trigger(state, leg, inputs):
+                continue
+            if not self._is_shot_safe(leg, state.stretch_sign, inputs):
+                self._note_protect(state, leg, inputs.t_s)
+                continue
+            if self._latches_on_trigger(state, leg, inputs.t_s):
+                continue
+            self._start_blind(state, leg, inputs)
+            triggered.append((leg, state.floor_sign))
+            floors[leg], signs[leg] = state.floor_m_s, state.floor_sign
+        self._count_four_leg_trigger(triggered, inputs)
+        return floors, signs
+
+    def _update_blind_stretch(self, state: _BlindLeg, inputs: FloorInputs, leg: int) -> None:
+        """Condition 1: one sign of the acting command with ``0 < |u| <= u_hold``; a zero, a
+        sign change or ``|u| > u_hold`` clears it."""
+        acting = float(inputs.acting_m_s[leg])
+        if acting == 0.0 or abs(acting) > self.hold_m_s or state.is_latched:
+            self._reset_blind_stretch(state)
+            return
+        sign = int(np.sign(acting))
+        if sign != state.stretch_sign:
+            self._reset_blind_stretch(state)
+            state.stretch_sign = sign
+        state.stretch_periods += 1
+        state.stretch_reads.append(float(inputs.stroke_m[leg]))
+
+    @staticmethod
+    def _reset_blind_stretch(state: _BlindLeg) -> None:
+        state.stretch_sign = 0
+        state.stretch_periods = 0
+        state.stretch_reads = []
+        state.is_protect_noted = False
+
+    def _is_blind_trigger(self, state: _BlindLeg, leg: int, inputs: FloorInputs) -> bool:
+        """Conditions 1 .. 3 of spec 3.1 (an A(i) floor on the leg or a protected leg waits)."""
+        settings = self.settings
+        if state.stretch_sign == 0 or state.stretch_periods < settings.ib_blind_periods:
+            return False
+        if self._deadband[leg].is_floor_on or bool(inputs.protected[leg]):
+            return False
+        return (self._blind_still_m(state) < settings.ib_still_m
+                and self._is_completion_open(inputs))
+
+    def _blind_still_m(self, state: _BlindLeg) -> float:
+        """Condition 2: ``Delta s`` along the stretch sign, the mean of the last three reads
+        minus the mean of reads ``k_s + skip`` .. ``k_s + skip + 2`` (no sliding window)."""
+        skip = self.settings.ib_reference_skip_reads
+        reads = state.stretch_reads
+        reference = sum(reads[skip:skip + WITNESS_READS]) / WITNESS_READS
+        latest = sum(reads[-WITNESS_READS:]) / WITNESS_READS
+        return state.stretch_sign * (latest - reference)
+
+    def _is_completion_open(self, inputs: FloorInputs) -> bool:
+        """Condition 3 (:class:`BlindCondition`); a period without completion flags counts as
+        open (its LEVEL completion was not evaluated)."""
+        flags = inputs.completion
+        if flags is None:
+            return True
+        condition = BlindCondition(self.settings.ib_condition)
+        if condition is BlindCondition.LEVEL_INCOMPLETE:
+            return not flags.is_complete
+        is_attitude_clearance_open = not (flags.is_on_target and flags.is_clearance_done)
+        if condition is BlindCondition.ATTITUDE_CLEARANCE:
+            return is_attitude_clearance_open
+        limit_N = self.settings.ib_twist_limit_N
+        if limit_N is None:
+            limit_N = inputs.twist_limit_N
+        is_twist_open = math.isfinite(inputs.twist_load_N) and abs(inputs.twist_load_N) > limit_N
+        return is_attitude_clearance_open or is_twist_open
+
+    def _is_shot_safe(self, leg: int, sign: int, inputs: FloorInputs) -> bool:
+        """Predictive protection: ``min_j(F_lo,j + k_1 n_i n_j sigma Delta e_max) >= F_min +
+        margin``; missing or non-finite inputs hold the shot back."""
+        settings = self.settings
+        if not settings.ib_protect:
+            return True
+        loads, twist = inputs.lower_load_N, inputs.twist_vector
+        if loads is None or twist is None or not math.isfinite(inputs.F_min_N):
+            return False
+        loads = np.asarray(loads, float)
+        twist = np.asarray(twist, float)
+        if not np.all(np.isfinite(loads)):
+            return False
+        step_N = (settings.ib_protect_stiffness_N_m * twist[leg] * twist * sign
+                  * settings.ib_protect_travel_m)
+        predicted_N = loads + step_N
+        return bool(np.min(predicted_N) >= inputs.F_min_N + settings.ib_protect_margin_N)
+
+    def _note_protect(self, state: _BlindLeg, leg: int, t_s: float) -> None:
+        self.blind_counts[leg].protect_blocked_periods += 1
+        if not state.is_protect_noted:
+            state.is_protect_noted = True
+            self.events.append((t_s, f"{BLIND_PROTECT_EVENT}:{LEG_ORDER[leg]}"))
+
+    def _latches_on_trigger(self, state: _BlindLeg, leg: int, t_s: float) -> bool:
+        """Count an opposite-sign trigger; more than ``ib_latch_reversals`` of them latch the
+        leg off for the rest of the LEVEL stretch (that trigger does not fire)."""
+        sign = state.stretch_sign
+        if state.last_trigger_sign not in (0, sign):
+            state.reversals += 1
+            self.blind_counts[leg].reversals += 1
+        state.last_trigger_sign = sign
+        if state.reversals <= self.settings.ib_latch_reversals:
+            return False
+        state.is_latched = True
+        self.blind_counts[leg].latches += 1
+        self.events.append((t_s, f"{BLIND_LATCH_EVENT}:{LEG_ORDER[leg]}"))
+        self._reset_blind_stretch(state)
+        return True
+
+    def _start_blind(self, state: _BlindLeg, leg: int, inputs: FloorInputs) -> None:
+        """Implementation note (다): the trigger period commands ``u_hold + Delta u_step``."""
+        settings = self.settings
+        counts = self.blind_counts[leg]
+        counts.triggers += 1
+        counts.trigger_periods.append(state.stretch_periods)
+        state.is_floor_on = True
+        state.floor_sign = state.stretch_sign
+        state.floor_m_s = min(self.hold_m_s + settings.a1_step_m_s, settings.a1_cap_m_s)
+        state.floor_reads = [float(inputs.stroke_m[leg])]
+        state.cap_periods = 0
+        self.blind_shots.append(_BlindShot(leg=leg, sign=state.floor_sign,
+                                           start_t_s=float(inputs.t_s),
+                                           twist_before_N=self._last_twist_N,
+                                           force_before_N=list(self._last_force_N)))
+        self._reset_blind_stretch(state)
+
+    def _next_blind_floor(self, state: _BlindLeg, leg: int, inputs: FloorInputs,
+                          requested_m_s: float) -> float:
+        state.floor_reads.append(float(inputs.stroke_m[leg]))
+        end = self._blind_end_reason(state, leg, inputs, requested_m_s)
+        if end is not None:
+            self._end_blind(leg, end, inputs.t_s)
+            return 0.0
+        settings = self.settings
+        state.floor_m_s = min(state.floor_m_s + settings.a1_step_m_s, settings.a1_cap_m_s)
+        if state.floor_m_s >= settings.a1_cap_m_s:
+            state.cap_periods += 1
+        return state.floor_m_s
+
+    def _blind_end_reason(self, state: _BlindLeg, leg: int, inputs: FloorInputs,
+                          requested_m_s: float) -> BlindEnd | None:
+        """Spec 3.1 end: motion witness, sign change, a zero request, the cap time (implementation
+        note (나): no ``u_hold`` end)."""
+        if _e3_displacement(state.floor_reads, state.floor_sign) >= self.settings.a1_witness_m:
+            return BlindEnd.MOVED
+        if requested_m_s == 0.0:
+            return BlindEnd.ZERO
+        if int(np.sign(requested_m_s)) != state.floor_sign:
+            return BlindEnd.SIGN
+        if state.cap_periods >= self.settings.a1_cap_periods:
+            self.events.append((inputs.t_s, f"{CAP_EVENT}:{LEG_ORDER[leg]}"))
+            return BlindEnd.CAP
+        return None
+
+    def _end_blind(self, leg: int, reason: BlindEnd, t_s: float) -> None:
+        state = self._blind[leg]
+        if not state.is_floor_on:
+            return
+        state.is_floor_on = False
+        state.floor_m_s = 0.0
+        state.cap_periods = 0
+        state.floor_reads = []
+        self.blind_counts[leg].end[str(reason)] += 1
+        for shot in reversed(self.blind_shots):
+            if shot.leg == leg and shot.end_t_s is None:
+                shot.end_t_s, shot.end = float(t_s), str(reason)
+                break
+        self._reset_blind_stretch(state)
+
+    def _count_four_leg_trigger(self, triggered: list[tuple[int, int]],
+                                inputs: FloorInputs) -> None:
+        if len(triggered) != LEG_COUNT or inputs.twist_vector is None:
+            return
+        pattern = np.array([sign for _, sign in sorted(triggered)])
+        twist_signs = np.sign(np.asarray(inputs.twist_vector, float))
+        if np.array_equal(pattern, twist_signs) or np.array_equal(pattern, -twist_signs):
+            self.blind_four_leg_triggers += 1
+
+    def _note_shot_after(self, inputs: FloorInputs) -> None:
+        """Record only: the twist and forces of this period (the "before" of a later trigger)
+        and the "after" of the shots that ended ``ib_record_after_s`` ago."""
+        force = (None if inputs.force_N is None
+                 else [float(value) for value in np.asarray(inputs.force_N, float)])
+        delay_s = self.settings.ib_record_after_s
+        for shot in self.blind_shots:
+            if shot.end_t_s is None or shot.twist_after_N is not None:
+                continue
+            if inputs.t_s >= shot.end_t_s + delay_s - TIME_MATCH_TOLERANCE_S:
+                shot.twist_after_N = float(inputs.twist_load_N)
+                shot.force_after_N = force
+        self._last_twist_N = float(inputs.twist_load_N)
+        self._last_force_N = force if force is not None else [math.nan] * LEG_COUNT
+
+    def blind_record(self) -> dict[str, Any]:
+        """The ``blind`` block of the ``lsb_record`` (edition 7 3.1 "기록"; record only)."""
+        shots = [shot.to_meta() for shot in self.blind_shots]
+        return {"legs": {LEG_ORDER[leg]: counts.to_meta()
+                         for leg, counts in enumerate(self.blind_counts)},
+                "shots": shots,
+                "shots_twist_grew": sum(bool(shot["twist_grew"]) for shot in shots),
+                "four_leg_twist_triggers": self.blind_four_leg_triggers}
 
     # A(ii) --------------------------------------------------------------------------
     def _fill_speeds(self, inputs: FloorInputs,
@@ -1047,6 +1494,13 @@ class LockStartB:
             "pre_twist_leg": np.array(
                 NO_LEG if self.pre_twist_leg is None else self.pre_twist_leg, np.int8),
             "g2_split": np.array(False)})
+        if self.settings.has(LsbComponent.BLIND_FILL):
+            self._trace_rows[-1].update({
+                "ib_floor_m_s": np.array([state.floor_m_s if state.is_floor_on else np.nan
+                                          for state in self._blind]),
+                "ib_on": np.array([state.is_floor_on for state in self._blind]),
+                "ib_stretch_periods": np.array([state.stretch_periods for state in self._blind],
+                                               np.int32)})
         self._pending_b1_blocked = np.zeros(LEG_COUNT, bool)
 
     def trace_arrays_at(self, t_s: NDArray[np.float64]) -> dict[str, NDArray[Any]]:
@@ -1060,6 +1514,10 @@ class LockStartB:
         arrays["event_leg"] = np.full(len(t_s), NO_LEG, np.int8)
         arrays["pre_twist_leg"] = np.full(len(t_s), NO_LEG, np.int8)
         arrays.update({name: np.zeros(len(t_s), bool) for name in TRACE_PERIOD_FLAGS})
+        if self.settings.has(LsbComponent.BLIND_FILL):  # edition 7 arrays only with A_ib
+            arrays["ib_floor_m_s"] = np.full(shape, np.nan)
+            arrays["ib_on"] = np.zeros(shape, bool)
+            arrays["ib_stretch_periods"] = np.zeros(shape, np.int32)
         found = np.zeros(len(t_s), bool)
         logged_t = np.asarray(self._trace_t_s, float)
         for k, read_t in enumerate(t_s):
@@ -1074,7 +1532,14 @@ class LockStartB:
         return out
 
     def record(self) -> dict[str, Any]:
-        """The ``lsb_record`` of the run (spec 3.1 .. 3.3 "기록"; record only)."""
+        """The ``lsb_record`` of the run (spec 3.1 .. 3.3 "기록"; record only); with ``A_ib``
+        also its ``blind`` block (edition 7 3.1)."""
+        record = self._edition_6_record()
+        if self.settings.has(LsbComponent.BLIND_FILL):
+            record["blind"] = self.blind_record()
+        return record
+
+    def _edition_6_record(self) -> dict[str, Any]:
         return {"components": list(self.settings.components),
                 "settings": self.settings.to_meta(),
                 "legs": {LEG_ORDER[leg]: counts.to_meta()
@@ -1089,6 +1554,8 @@ class LockStartB:
 
 
 __all__ = [
+    "BLIND_LATCH_EVENT",
+    "BLIND_PROTECT_EVENT",
     "CAP_EVENT",
     "COMPONENT_ORDER",
     "TRACE_ARRAY_PREFIX",
@@ -1096,6 +1563,10 @@ __all__ = [
     "A2End",
     "B3End",
     "BEnd",
+    "BlindCondition",
+    "BlindEnd",
+    "CompletionFlags",
+    "blind_field_names",
     "EVENT_COMPONENTS",
     "CylinderGeometry",
     "FloorInputs",

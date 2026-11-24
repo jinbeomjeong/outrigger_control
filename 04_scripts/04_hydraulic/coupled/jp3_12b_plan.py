@@ -46,10 +46,19 @@ edition 6). ``--scan-exclude <glob>`` leaves files out of the scan without openi
 ``--scan-keys-file <txt>`` adds plain key lists (one key per line; the c dry key files that list
 exactly the excluded runs' keys). ``selection.json`` names the excluded files and the key files.
 
+Edition 7 (``--edition 7``, ``jp3_remedy_spec_v7.md`` 6.4, Y7-7, stats question 9): the
+edition 6 seeds 50 .. 53, reserved seeds and +10 rule unchanged (they were never run), the
+scan widened by ``--scan-required <root>`` (repeatable, at least one: the edition 6 run
+outputs, records B / C / D and the edition 7 outputs with the probe): every file kind of
+:data:`ED7_SCAN_SUFFIXES` under the root, ``.npz`` string arrays included, with the ``"key"``,
+string-literal and plain-line patterns; a required root without a file stops (exit 2). The
+plans carry the arms VBKM0 / VBKM.
+
 Usage (python-dev or Chrono-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_plan.py --noise <h8_noise_VB.json>
       --scan-root <repo>/06_analysis --scan-extra <run worktree>/05_tests --out-dir <folder>
-      [--edition 6] [--scan-exclude <glob> ...] [--scan-keys-file <txt> ...]
+      [--edition 6|7] [--scan-exclude <glob> ...] [--scan-keys-file <txt> ...]
+      [--scan-required <root> ...]
 
 Exit codes (the stdout's last line is JSON with ``status`` and the output folder):
 
@@ -247,6 +256,62 @@ def merged_scan(scan_root: Path, extra_roots: tuple[Path, ...],
                    max(seeds) if seeds else None)
 
 
+ED7_SCAN_SUFFIXES = (".json", ".jsonl", ".txt", ".csv", ".ps1", ".py", ".npz")
+"""Edition 7 (spec v7 6.4, stats question 9): every file kind of a ``--scan-required`` root;
+an ``.npz`` is read member by member (its string arrays, e.g. a T4h ``meta_json``)."""
+
+
+def _keys_in_bytes(data: bytes) -> list[tuple[str, int]]:
+    """Every r79 key of one text: ``"key"`` values, string literals and plain key lines."""
+    found = [(key.decode("utf-8"), int(seed)) for key, seed in R79_KEY_PATTERN.findall(data)]
+    found += [(key.decode("utf-8"), int(seed)) for key, seed in SOURCE_KEY_PATTERN.findall(data)]
+    for line in data.decode("utf-8", "replace").splitlines():
+        match = PLAIN_KEY_LINE.match(line.strip())
+        if match:
+            found.append((match.group(1), int(match.group(2))))
+    return [(plain_key(key), seed) for key, seed in found]
+
+
+def _npz_texts(path: Path) -> list[bytes]:
+    """The string arrays of an ``.npz`` as UTF-8 texts (numeric arrays hold no key)."""
+    import numpy as np
+
+    texts = []
+    with np.load(path, allow_pickle=False) as data:
+        for name in data.files:
+            array = data[name]
+            if array.dtype.kind in ("U", "S"):
+                texts.append("\n".join(str(item) for item in array.ravel()).encode("utf-8"))
+    return texts
+
+
+def scan_required_root(root: Path, scan_root: Path,
+                       excludes: tuple[str, ...] = ()) -> KeyScan:
+    """Edition 7: every r79 key of every :data:`ED7_SCAN_SUFFIXES` file under ``root`` (the
+    edition 6 run outputs, records B / C / D, the edition 7 outputs and probe); a file the
+    ``excludes`` name (relative to ``scan_root`` when ``root`` lies in it) is not opened."""
+    keys: set[str] = set()
+    files = []
+    seed_max = None
+    for path in sorted(p for p in root.rglob("*") if p.suffix in ED7_SCAN_SUFFIXES
+                       and p.is_file()):
+        if path.is_relative_to(scan_root) and is_excluded(
+                path.relative_to(scan_root).as_posix(), excludes):
+            continue
+        data = path.read_bytes()
+        texts = _npz_texts(path) if path.suffix == ".npz" else [data]
+        found = [item for text in texts for item in _keys_in_bytes(text)]
+        for key, seed in found:
+            keys.add(key)
+            seed_max = seed if seed_max is None else max(seed_max, seed)
+        files.append((str(path), _sha256_hex(data), len(found)))
+    return KeyScan(frozenset(keys), tuple(files), seed_max)
+
+
+def _sha256_hex(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
 def block_seeds(cases: list[str], scanned: frozenset[str],
                 base: tuple[int, ...] = BLOCK_SEEDS,
                 reserved: tuple[int, ...] = ()) -> tuple[tuple[int, ...], int]:
@@ -368,7 +433,8 @@ def _keys_text(keys: list[str]) -> str:
 def select(noise_path: Path, scan_root: Path, out_dir: Path,
            noise_sha256: str = fixed.NOISE_VB_SHA256, *,
            extra_roots: tuple[Path, ...] = (), edition: int = 5,
-           excludes: tuple[str, ...] = (), key_lists: tuple[Path, ...] = ()) -> dict:
+           excludes: tuple[str, ...] = (), key_lists: tuple[Path, ...] = (),
+           required_roots: tuple[Path, ...] = ()) -> dict:
     """Selection and plans (module docstring); returns the ``selection.json`` document.
 
     Args:
@@ -377,12 +443,14 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         out_dir: New or empty output folder.
         noise_sha256: The case source's fixed sha256 (tests give their own file's).
         extra_roots: Test and probe source roots (``--scan-extra``, :func:`scan_source_keys`).
-        edition: 5 (seeds 40 + j and the c dry plans) or 6 (module docstring).
+        edition: 5 (seeds 40 + j and the c dry plans), 6 or 7 (module docstring).
         excludes: ``--scan-exclude`` globs; key_lists: ``--scan-keys-file`` paths.
+        required_roots: Edition 7 ``--scan-required`` roots (:func:`scan_required_root`).
 
     Raises:
         NotUsable: Module docstring exit 2.
     """
+    _check_edition_inputs(edition, excludes, key_lists, required_roots)
     problem = fixed.sha_problem(noise_path, noise_sha256, "--noise")
     if problem is not None:
         raise NotUsable(problem)
@@ -394,21 +462,24 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     for root in extra_roots:
         if not root.is_dir():
             raise NotUsable(f"--scan-extra {root} is not a folder")
-    if edition not in (5, 6):
-        raise NotUsable(f"edition {edition}: 5 or 6")
-    if edition == 5 and (excludes or key_lists):
-        raise NotUsable("--scan-exclude / --scan-keys-file are edition 6 options")
     for path in key_lists:
         if not path.is_file():
             raise NotUsable(f"--scan-keys-file {path} not found")
     scan = merged_scan(scan_root, tuple(extra_roots), tuple(excludes), tuple(key_lists))
-    if edition == 6:
+    required_scans = [scan_required_root(root, scan_root, tuple(excludes))
+                      for root in required_roots]
+    empty = [str(root) for root, found in zip(required_roots, required_scans, strict=True)
+             if not found.files]
+    if empty:
+        raise NotUsable(f"--scan-required roots without a file: {empty}")
+    scan = _with_required(scan, required_scans)
+    if edition in (6, 7):
         seeds, repeats = block_seeds(cases, scan.keys, ED6_BLOCK_SEEDS, ED6_RESERVED_SEEDS)
     else:
         seeds, repeats = block_seeds(cases, scan.keys)
     table = cell_table(cases)
-    dry, dry_keys = ({}, {}) if edition == 6 else dry_plans(table, scan.keys)
-    union_check = None if edition == 6 else dry_union_check(dry)
+    dry, dry_keys = ({}, {}) if edition in (6, 7) else dry_plans(table, scan.keys)
+    union_check = None if edition in (6, 7) else dry_union_check(dry)
     out_dir.mkdir(parents=True, exist_ok=True)
     outputs = {}
     for block, (seed, phase_rule) in enumerate(zip(seeds, BLOCK_PHASES, strict=True), start=1):
@@ -427,13 +498,15 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         outputs[f"{run}_keys.txt"] = _write_new(out_dir / f"{run}_keys.txt",
                                                 _keys_text(dry_keys[seed]))
     document = {
-        "rule": ("jp3_remedy_spec_v6.md 6.4 revision 9 (G-1)" if edition == 6
-                 else "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)"),
+        "rule": RULE_OF_EDITION[edition],
         "inputs": {"noise": {"path": str(noise_path), "sha256": noise_sha256},
                    "scan_root": str(scan_root),
                    "scan_extra": [str(root) for root in extra_roots],
-                   **_edition_6_inputs(edition, scan_root, excludes, key_lists)},
-        **({"edition": 6, "reserved_seeds": list(ED6_RESERVED_SEEDS)} if edition == 6 else {}),
+                   **_edition_6_inputs(edition, scan_root, excludes, key_lists),
+                   **({"scan_required": [str(root) for root in required_roots]}
+                      if edition == 7 else {})},
+        **({"edition": edition, "reserved_seeds": list(ED6_RESERVED_SEEDS)}
+           if edition in (6, 7) else {}),
         "scan": {"files_scanned": len(scan.files), "r79_keys": len(scan.keys),
                  "seed_max": scan.seed_max,
                  "files": [{"path": path, "sha256": sha, "r79_keys": count}
@@ -448,17 +521,54 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
         "dry": {"seeds": list(dry), "pairs": sum(len(keys) for keys in dry_keys.values()),
                 "runs": dry_runs, "union_check": union_check},
         "cell_table": table, "outputs": outputs,
-        "run_commands": _run_commands(seeds, ("VBKL0", "VBKL") if edition == 6
-                                      else ("VBK0", "VBK"))}
+        "run_commands": _run_commands(seeds, ARMS_OF_EDITION[edition])}
     _write_new(out_dir / "selection.json", _json_text(document))
     return document
 
 
+RULE_OF_EDITION = {5: "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)",
+                   6: "jp3_remedy_spec_v6.md 6.4 revision 9 (G-1)",
+                   7: "jp3_remedy_spec_v7.md 6.4 (Y7-7: the edition 6 seeds, scan widened)"}
+ARMS_OF_EDITION = {5: ("VBK0", "VBK"), 6: ("VBKL0", "VBKL"), 7: ("VBKM0", "VBKM")}
+
+
+def _check_edition_inputs(edition: int, excludes: tuple[str, ...],
+                          key_lists: tuple[Path, ...],
+                          required_roots: tuple[Path, ...]) -> None:
+    """Which options an edition takes (edition 7 needs at least one ``--scan-required``).
+
+    Raises:
+        NotUsable: An unknown edition, an option of another edition, a missing required root.
+    """
+    if edition not in RULE_OF_EDITION:
+        raise NotUsable(f"edition {edition}: one of {sorted(RULE_OF_EDITION)}")
+    if edition == 5 and (excludes or key_lists):
+        raise NotUsable("--scan-exclude / --scan-keys-file are edition 6 options (and 7)")
+    if edition != 7 and required_roots:
+        raise NotUsable("--scan-required is an edition 7 option")
+    if edition == 7 and not required_roots:
+        raise NotUsable("edition 7 needs --scan-required (the edition 6 run outputs, records "
+                        "B / C / D and the edition 7 outputs, spec v7 6.4)")
+    for root in required_roots:
+        if not root.is_dir():
+            raise NotUsable(f"--scan-required {root} is not a folder")
+
+
+def _with_required(scan: KeyScan, required: list[KeyScan]) -> KeyScan:
+    if not required:
+        return scan
+    scans = [scan, *required]
+    seeds = [item.seed_max for item in scans if item.seed_max is not None]
+    return KeyScan(frozenset().union(*(item.keys for item in scans)),
+                   tuple(entry for item in scans for entry in item.files),
+                   max(seeds) if seeds else None)
+
+
 def _edition_6_inputs(edition: int, scan_root: Path, excludes: tuple[str, ...],
                       key_lists: tuple[Path, ...]) -> dict:
-    """The edition 6 scan inputs of ``selection.json`` (an edition 5 document keeps its
+    """The edition 6 / 7 scan inputs of ``selection.json`` (an edition 5 document keeps its
     former keys)."""
-    if edition != 6:
+    if edition not in (6, 7):
         return {}
     return {"scan_exclude": list(excludes),
             "scan_excluded_files": excluded_files(scan_root, tuple(excludes)),
@@ -487,17 +597,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scan-extra", type=Path, action="append", required=True,
                         help="a test or probe source root (repeatable; at least the run "
                              "worktree's 05_tests, erratum 1 audit E-1)")
-    parser.add_argument("--edition", type=int, default=5, choices=(5, 6))
+    parser.add_argument("--edition", type=int, default=5, choices=(5, 6, 7))
     parser.add_argument("--scan-exclude", action="append", default=[],
                         help="glob relative to --scan-root: files left out, never opened")
     parser.add_argument("--scan-keys-file", type=Path, action="append", default=[],
                         help="a plain key list added to the scan (one key per line)")
+    parser.add_argument("--scan-required", type=Path, action="append", default=[],
+                        help="edition 7: a root scanned in every file kind, .npz included "
+                             "(the edition 6 run outputs, records B / C / D, the edition 7 "
+                             "outputs and probe; repeatable, at least one)")
     args = parser.parse_args(argv)
     try:
         document = select(args.noise, args.scan_root, args.out_dir,
                           extra_roots=tuple(args.scan_extra), edition=args.edition,
                           excludes=tuple(args.scan_exclude),
-                          key_lists=tuple(args.scan_keys_file))
+                          key_lists=tuple(args.scan_keys_file),
+                          required_roots=tuple(args.scan_required))
     except NotUsable as exc:
         print(f"not usable: {exc}", file=sys.stderr)
         print(json.dumps({"status": "not_usable", "out_dir": str(args.out_dir)}))

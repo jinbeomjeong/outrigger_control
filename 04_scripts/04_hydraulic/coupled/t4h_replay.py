@@ -156,7 +156,7 @@ def run_config(meta: dict, extend_start: str | None = None,
         if extend_start == EXTEND_START_TRACKED_RULE and revision is not None:
             from outrigger_sim.control.extend_start_bound import ExtendStartBound
 
-            rule = RETRACT_START_OVERRIDE[0] if int(revision) in (5, 6) else None
+            rule = RETRACT_START_OVERRIDE[0] if int(revision) in (5, 6, 7) else None
             changes["extend_start_bound"] = ExtendStartBound(
                 revision=int(revision), **({} if rule is None else {"retract_start_rule": rule}))
         config = replace(config, two_pressure=replace(config.two_pressure, **changes))
@@ -370,10 +370,10 @@ def replay_values(path: Path, extend_start: str | None = None,
 
 
 def _run_hold_revision(stored: dict) -> dict:
-    """``run_extend_start_revision`` of a stored hold revision bound (5 or 6, edition 5 4.6);
-    empty for the other runs (revision 4 rows keep their keys)."""
+    """``run_extend_start_revision`` of a stored hold revision bound (5, 6 or 7, edition 5
+    4.6, edition 7 3.5); empty for the other runs (revision 4 rows keep their keys)."""
     revision = (stored.get("extend_start_bound") or {}).get("revision")
-    return {"run_extend_start_revision": revision} if revision in (5, 6) else {}
+    return {"run_extend_start_revision": revision} if revision in (5, 6, 7) else {}
 
 
 def _by_leg(counts) -> dict[str, int]:

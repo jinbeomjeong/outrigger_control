@@ -289,6 +289,10 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 from outrigger_sim.control import fault_reground
+from outrigger_sim.control.extend_start_bound import (
+    LineFillGateParams,
+    retract_need_upper_bound,
+)
 from outrigger_sim.control.fault_reground import (
     ContactRule,
     FaultRegroundRun,
@@ -302,6 +306,7 @@ from outrigger_sim.control.fault_reground import (
 )
 from outrigger_sim.control.ground_contact import (
     LoadBand,
+    ProbeD6Settings,
     ProbeReading,
     ProbeResult,
     ProbeRound,
@@ -316,6 +321,7 @@ from outrigger_sim.control.ground_contact import (
 from outrigger_sim.control.lock_start_b import (
     B3End,
     BEnd,
+    CompletionFlags,
     CylinderGeometry,
     FloorInputs,
     LockStartB,
@@ -349,6 +355,7 @@ from outrigger_sim.control.target import (
 from outrigger_sim.control.two_pressure import (
     BODY_MASS_WITHOUT_YAML_KG,
     NOMINAL_DEAD_LENGTH_M,
+    D6Witness,
     ExtendStartRule,
     FallbackRatioChoice,
     FallbackRatioSource,
@@ -2605,6 +2612,10 @@ class C2Config:
     """Edition 6 A(i) / A(ii) / B (``lock_start_b.py``); off by default and in
     :meth:`with_10hz_d1`, on through :meth:`with_lock_start_b`. A plain class-level default as
     ``soil``."""
+    probe_d6: ProbeD6Settings = ProbeD6Settings()
+    """Edition 7 D6 opening witness and probe retract position target
+    (``jp3_remedy_spec_v7.md`` 3.2); off by default and in :meth:`with_10hz_d1`, on through
+    :meth:`with_probe_d6`. A plain class-level default as ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -2693,6 +2704,17 @@ class C2Config:
             raise ValueError("with_lock_start_b needs at least one component")
         settings = LockStartBSettings(components=tuple(components), **(parameters or {}))
         return replace(self, lock_start_b=settings)
+
+    def with_probe_d6(self, values: dict[str, Any]) -> C2Config:
+        """Copy with the edition 7 D6 witness / probe retract target (``ProbeD6Settings``).
+
+        Raises:
+            ValueError: Values that switch nothing on, or a value the settings refuse.
+        """
+        settings = ProbeD6Settings(**values)
+        if not settings.is_enabled:
+            raise ValueError("with_probe_d6 needs the witness or the retract position target")
+        return replace(self, probe_d6=settings)
 
     def with_fallback_ratio_source(
         self, source: str, plant_ratio: tuple[float, ...] | None = None
@@ -4590,6 +4612,10 @@ class _RunState:
     # Edition 6 (immutable default: class attribute for run states pickled before it)
     lock_start_b: LockStartB | None = None
     """A(i) / A(ii) / B state and record; created by the first update with a component on."""
+    # Edition 7 (immutable default, as above)
+    completion_flags: CompletionFlags | None = None
+    """The LEVEL completion tests of this period (condition 3 of A(i)-b); None outside a
+    LEVEL step."""
 
 
 @dataclass(frozen=True)
@@ -4778,6 +4804,7 @@ class C2Controller:
         self._watch_oil_temperature(measurements)
         state.last_reading = reading
         state.guard_m_s = None
+        state.completion_flags = None
         state.command_components = None
         state.output_limit_flags = _no_output_limits()
         phase_before = state.phase
@@ -4951,6 +4978,8 @@ class C2Controller:
         }
         if self.config.lock_start_b.is_enabled:  # edition 6: the key only with it on (P6-0)
             meta["lock_start_b"] = self._lock_start_b_meta()
+        if self.config.probe_d6.is_enabled:  # edition 7: the key only with it on (P7-0)
+            meta["probe_d6_settings"] = self.config.probe_d6.to_meta()
         return meta
 
     def _twist_gain_stiffness_meta(self) -> dict[str, Any]:
@@ -7787,8 +7816,9 @@ class C2Controller:
             self._is_reference_on_target()
             and self._completion_deviation_rad() < thresholds.done_attitude_rad
         )
+        # A pure test (no state change): computed once for both branches and the record.
+        is_clearance_done = self._is_clearance_done(filtered_clearance_m)
         if self.config.twist_completion_relax.enable and state.phase is C2Phase.LEVEL:
-            is_clearance_done = self._is_clearance_done(filtered_clearance_m)
             is_twist_ok = self._is_twist_condition_met(
                 reading, twist_load, is_on_target, is_clearance_done
             )
@@ -7796,9 +7826,14 @@ class C2Controller:
         else:
             is_complete_now = (
                 is_on_target
-                and self._is_clearance_done(filtered_clearance_m)
+                and is_clearance_done
                 and abs(twist_load) < thresholds.done_twist_N
             )
+        state.completion_flags = CompletionFlags(
+            is_on_target=bool(is_on_target),
+            is_clearance_done=bool(is_clearance_done),
+            is_complete=bool(is_complete_now),
+        )
         if not is_complete_now:
             state.complete_since_s = None
             return False
@@ -9693,6 +9728,9 @@ class C2Controller:
 
     def _probe_reading(self, reading: _Reading) -> ProbeReading:
         state = self._state
+        head_Pa = None
+        if self.config.probe_d6.retract_position_target:  # edition 7 (i-b) need_ub only
+            head_Pa = reading.head_only_force_N / self.geometry.head_area_m2
         return ProbeReading(
             t_s=reading.t_s,
             cylinder_force_N=reading.cylinder_force_lower_N,
@@ -9700,7 +9738,25 @@ class C2Controller:
             motor_stroke_m=reading.motor_stroke_m,
             rate_attitude_rad=state.rate_attitude_rad,
             filtered_attitude_rad=(state.roll_rad, state.pitch_rad),
+            head_pressure_Pa=head_Pa,
         )
+
+    def _probe_d6_round_arguments(self) -> dict[str, Any]:
+        """Edition 7 ``ProbeRound`` arguments (empty with ``probe_d6`` off: the round of
+        edition 6). ``need_ub`` is the ③ tracker's retract need (spec 3.2)."""
+        settings = self.config.probe_d6
+        if not settings.is_enabled:
+            return {}
+        geometry = self.geometry
+        gate = LineFillGateParams()
+
+        def need_ub_m(leg: int, head_ub_Pa: float, stroke_m: float) -> float:
+            need_m, _ = retract_need_upper_bound(
+                gate, head_ub_Pa, stroke_m, float(geometry.head_area_m2[leg]),
+                float(geometry.annulus_area_m2[leg]), float(geometry.stroke_max_m))
+            return need_m
+
+        return {"d6": settings, "retract_need_ub_m": need_ub_m}
 
     def _probe_step(self, reading: _Reading) -> NDArray[np.float64]:
         """One period of the probe (``ground_contact.ProbeRound``): legs in LEG_ORDER."""
@@ -9726,6 +9782,7 @@ class C2Controller:
                 start_load_bands=(
                     self.load_bands if self.config.r8.confirmation.is_active else None
                 ),
+                **self._probe_d6_round_arguments(),
             )
             state.probe_round_count += 1
         probe_round = state.probe_round
@@ -9741,7 +9798,12 @@ class C2Controller:
         """Set F_band, then re-ground a weak leg or go on (READY, or REANCHOR first: H5a)."""
         state = self._state
         settings = self.config.probe
-        self._pressures.probe_round_finished(probe_round.results)
+        d6 = self.config.probe_d6
+        if d6.witness:  # edition 7 3.2
+            witness = D6Witness(witness_m=d6.witness_m, warn_rounds=d6.not_opened_warn_rounds)
+            self._pressures.probe_round_finished(probe_round.results, witness)
+        else:
+            self._pressures.probe_round_finished(probe_round.results)
         results = self._fallback_probe_results(tuple(probe_round.results), reading)
         state.probe_history.append(results)
         state.probe_round = None
@@ -10166,7 +10228,27 @@ class C2Controller:
             rod_Pa=None if rod_Pa is None else np.array(rod_Pa, dtype=float),
             protected=protected,
             fallback_legs=frozenset(int(leg) for leg in self._pressures.fallback_legs),
+            **self._blind_fill_inputs(reading),
         )
+
+    def _blind_fill_inputs(self, reading: _Reading) -> dict[str, Any]:
+        """Edition 7 A(i)-b inputs (empty without ``A_ib``: the edition 6 inputs unchanged).
+
+        Condition 3 reads the same completion tests and relax limit as ``_update_completion``
+        (Q7-C1); the protection reads the lower load estimate B3 uses (``_load_estimate_N``).
+        """
+        if not self.config.lock_start_b.has(LsbComponent.BLIND_FILL):
+            return {}
+        geometry = self.geometry
+        return {
+            "completion": self._state.completion_flags,
+            "twist_load_N": float(geometry.twist_vector @ reading.cylinder_force_N),
+            "twist_limit_N": float(self.config.twist_completion_relax.max_twist_N),
+            "lower_load_N": self._load_estimate_N(reading.cylinder_force_lower_N),
+            "force_N": np.array(reading.cylinder_force_N, dtype=float),
+            "F_min_N": float(geometry.F_min_N),
+            "twist_vector": np.array(geometry.twist_vector, dtype=float),
+        }
 
     def _floor_protected_legs(
         self, reading: _Reading, leg_speeds: NDArray[np.float64], is_guard_period: bool

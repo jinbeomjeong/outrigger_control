@@ -69,6 +69,7 @@ from outrigger_sim.hydraulics.check_open_delay import (  # noqa: E402
     CheckDelayInputs,
     CheckOpenDelay,
     CheckOpenGate,
+    CheckOpenGateP1Patch,
 )
 from outrigger_sim.hydraulics.rod_chamber import (  # noqa: E402
     RodChamberLegParams,
@@ -87,6 +88,7 @@ from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     apply_controller_options,
     check_lock_start_b_config,
     check_lock_window_meta,
+    check_probe_d6_config,
     validate,
 )
 from outrigger_sim.sensors.rod_side import LegMode, RodSideParams, RodSideSynth  # noqa: E402
@@ -257,6 +259,17 @@ SEED_LOG_COLUMNS = ("t_s", "leg", "p_h_Pa", "p_r_locked_Pa", "seed_Pa", "step_Pa
   room (the row cannot split the seed share: not judgeable).
 
 Every value is read from the plant after it computed it; no plant arithmetic changes."""
+
+
+STALE_SEED_COLUMNS = ("t_release_s", "leg", "seed_from_moving_open", "seed_Pa",
+                      "p_r_locked_Pa")
+"""Edition 7 3.3 / 3.5 ``stale_seed_release`` log row of an old P1 plant: one per release that
+started at a retract opening seed; ``seed_from_moving_open`` = the seed came from a retract
+opening while the leg was not locked (the stale M2 seed: such a release is a
+``plant_seed_artifact`` of ③ rev 7). Record only."""
+FILL_RELEASE_COLUMNS = ("t_release_s", "leg", "p_r_locked_Pa", "fill_rise_Pa")
+"""Edition 7 (a) ``p1_fill_release_log`` row: a release that started at the locked truth plus
+its held retract fill rise."""
 
 
 @dataclass(frozen=True)
@@ -553,9 +566,18 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 self.check_delay = CheckOpenDelay(options.check_delay,
                                                   _check_delay_circuit(self.flow_limiter.params))
             self.line_fill_gate = None
-            if options.line_fill_gate is not None:  # P1
+            self.stale_seed_log = None
+            if options.p1_patch is not None:  # edition 7 P1 supplement (a)(c)(d)
+                self.line_fill_gate = CheckOpenGateP1Patch(
+                    options.line_fill_gate, _check_delay_circuit(self.flow_limiter.params),
+                    options.p1_patch)
+                self.fill_release_log = []
+            elif options.line_fill_gate is not None:  # P1
                 self.line_fill_gate = CheckOpenGate(
                     options.line_fill_gate, _check_delay_circuit(self.flow_limiter.params))
+                # edition 7 3.3 record key of the old plant (no command reads it)
+                self.stale_seed_log = []
+                self.seed_from_moving = np.zeros(LEG_COUNT, bool)
             self.p1_read_log = (P1ReadLog() if self.line_fill_gate is not None
                                 and is_p1_read_record_on() else None)
             self.lock_log = _LockLog() if records_jp3 else None
@@ -598,6 +620,8 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                     self.p1_read_log.note_chunk(is_held, speed_m_s)
             for i in np.flatnonzero(np.isfinite(output.opening_rod_pressure_Pa)):
                 self._seed_rod_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
+                if self.stale_seed_log is not None:  # record only: the seed's source
+                    self.seed_from_moving[i] = not bool(np.asarray(self.locked, bool)[i])
             return super().step(output.speed_m_s, nsteps)
 
         def note_p1_read(self, t_s: float) -> None:
@@ -632,8 +656,13 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 return None
             locked_Pa = (np.asarray(self.p_r0, float)
                          - np.asarray(self.Gr, float) / np.asarray(self.A_ann, float))
+            if self._has_p1_patch():  # edition 7 (a): the held / trapped retract fill rise
+                locked_Pa = locked_Pa + np.asarray(self.line_fill_gate.fill_rise_Pa, float)
             return np.where(np.asarray(self.locked, bool), locked_Pa,
                             self.rod_pressure_lag.pressure_Pa)
+
+        def _has_p1_patch(self) -> bool:
+            return isinstance(getattr(self, "line_fill_gate", None), CheckOpenGateP1Patch)
 
         def check_extend_bound(self, t_s: float, bound_Pa: np.ndarray,
                                locked_model_bound_Pa: np.ndarray | None = None,
@@ -723,6 +752,9 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 self._shift_reference_for_rod_pressure(rod_force_N, was_locked, kernel_speed_m_s)
             if tracked_before_Pa is not None:
                 self._log_locks(was_locked, tracked_before_Pa)
+            if self._has_p1_patch():  # edition 7 (a): a new lock starts without a fill rise
+                for i in np.flatnonzero(self.locked & ~was_locked):
+                    self.line_fill_gate.clear_fill(int(i))
             return rod_force_N
 
         def _log_releases(self, was_locked, rod_force_N) -> None:
@@ -846,6 +878,10 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             """The lag starts at the locked pressure or the M1c seed; ``Delta = Gr(t_rel) /
             A_ann`` (= ``p_r0 - p_r,rel``; ``Gr`` is ``r0`` in the release step)."""
             seed_Pa = self.rod_pressure_seed_Pa[leg]
+            if self._has_p1_patch():  # edition 7 (a)(d): the truth with its fill rise, no seed
+                seed_Pa = self._fill_release_start_Pa(leg, locked_pressure_Pa)
+            elif self.stale_seed_log is not None and not np.isnan(seed_Pa):
+                self._log_stale_seed(leg, locked_pressure_Pa, float(seed_Pa))
             start_Pa = locked_pressure_Pa if np.isnan(seed_Pa) else float(seed_Pa)
             drop_Pa = release_force_N / float(self.A_ann[leg])
             if self.lock_log is not None and not np.isnan(seed_Pa):
@@ -855,6 +891,40 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             self.rod_pressure_seed_Pa[leg] = np.nan
             self.rod_pressure_lag.start(leg, start_Pa)
             self.rod_release.release(leg, ReleaseStart(start_Pa, drop_Pa))
+
+        def _fill_release_start_Pa(self, leg: int, locked_pressure_Pa: float) -> float:
+            """Edition 7 (a): the release starts at the locked truth plus the held fill rise
+            (NaN without a rise: the plain locked start); the rise is then gone."""
+            gate = self.line_fill_gate
+            rise_Pa = float(gate.fill_rise_Pa[leg])
+            gate.clear_fill(leg)
+            self.rod_pressure_seed_Pa[leg] = np.nan  # (d): never a seed path
+            if not rise_Pa > 0.0:
+                return math.nan
+            if len(self.fill_release_log) < MAX_LOGGED_LOCK_EVENTS:
+                self.fill_release_log.append([round(float(self.t), 6), leg,
+                                              locked_pressure_Pa, rise_Pa])
+            return locked_pressure_Pa + rise_Pa
+
+        def _log_stale_seed(self, leg: int, locked_pressure_Pa: float, seed_Pa: float) -> None:
+            """Edition 7 3.3 record of the old plant (``stale_seed_release``): a release that
+            starts at a retract opening seed, and whether that seed came from an opening while
+            the leg was moving (the stale M2 seed of hydraulics H1). Record only."""
+            if len(self.stale_seed_log) < MAX_LOGGED_LOCK_EVENTS:
+                self.stale_seed_log.append([round(float(self.t), 6), leg,
+                                            bool(self.seed_from_moving[leg]), seed_Pa,
+                                            locked_pressure_Pa])
+            self.seed_from_moving[leg] = False
+
+        def stale_seed_release_record(self) -> dict | None:
+            """``stale_seed_release`` of an old P1 plant (None for the others)."""
+            log = getattr(self, "stale_seed_log", None)
+            if log is None:
+                return None
+            return {"releases_with_seed": len(log),
+                    "stale_releases": sum(bool(row[2]) for row in log),
+                    "log": [list(row) for row in log],
+                    "log_columns": list(STALE_SEED_COLUMNS)}
 
         def _seed_row(self, leg: int, locked_pressure_Pa: float, seed_Pa: float,
                       drop_Pa: float, net_force_N: float) -> dict:
@@ -952,6 +1022,12 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
     if getattr(plant, "line_fill_gate", None) is not None:
         record["line_fill_gate"] = plant.line_fill_gate.summary()
         record["p1_output_exceptions"] = list(plant.line_fill_gate.summary()["output_exceptions"])
+    stale_record = getattr(plant, "stale_seed_release_record", None)
+    if stale_record is not None and stale_record() is not None:  # edition 7 3.3, old P1 plant
+        record["stale_seed_release"] = stale_record()
+    if getattr(plant, "fill_release_log", None) is not None:  # edition 7 P1 supplement
+        record["p1_fill_release_log"] = [list(row) for row in plant.fill_release_log]
+        record["p1_fill_release_log_columns"] = list(FILL_RELEASE_COLUMNS)
     if getattr(plant, "p1_read_log", None) is not None:  # D0 record only
         record["p1_read_record"] = {"reads": len(plant.p1_read_log.t_s),
                                     "t4h_prefix": P1_READ_ARRAY_PREFIX}
@@ -1068,7 +1144,8 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
     def make_class(base, setting):
         return make_hydraulics_plant_class(make_flow_plant_class(base, setting), options, damping)
 
-    if options.lock_window_follows_plant or options.extend_start_tracked or options.lsb_components:
+    if (options.lock_window_follows_plant or options.extend_start_tracked
+            or options.lsb_components or options.probe_d6_settings):
         install_lock_window(options, load_params().v_max)
     install_extend_bound_check()
     if options.rod_reading_truth:
@@ -1165,6 +1242,20 @@ def check_last_lock_start_b(options: HydraulicOptions, run_config=None) -> None:
     check_lock_start_b_config(_LAST_PRESET[0], options)
     if run_config is not None:
         check_lock_start_b_config(run_config, options)
+
+
+def check_last_probe_d6(options: HydraulicOptions, run_config=None) -> None:
+    """Edition 7 identity guard (``jp3_remedy_spec_v7.md`` 6.1 ``probe_d6_settings``): the
+    preset this process built and the run's own config carry the D6 settings of ``options``.
+
+    Raises:
+        RuntimeError: No preset was built, or a config differs from the options.
+    """
+    if _LAST_PRESET[0] is None:
+        raise RuntimeError("no C2 preset was built with the edition 7 options installed")
+    check_probe_d6_config(_LAST_PRESET[0], options)
+    if run_config is not None:
+        check_probe_d6_config(run_config, options)
 
 
 def check_last_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:

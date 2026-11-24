@@ -51,7 +51,7 @@ from __future__ import annotations
 
 import math
 from collections import deque
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field, replace
 from enum import Enum, StrEnum
 
@@ -230,6 +230,58 @@ class ProbeSettings:
 
 
 @dataclass(frozen=True)
+class ProbeD6Settings:
+    """Edition 7 (``jp3_remedy_spec_v7.md`` 3.2): the D6 opening witness and the retract
+    position target of the probe. Off by default (both switches False): a run without them
+    probes and diagnoses exactly as before (P7-0); the controller meta key
+    ``probe_d6_settings`` appears only when one is on.
+
+    Attributes:
+        witness: D6 judges a round only when its retract moved: the largest E3 displacement
+            along the retraction (mean of three reads against the mean of the first three
+            reads of the retract stage, oil coordinate ``stroke_m``) reaches ``witness_m``.
+        witness_m: ``s_w,D6`` (0.3 mm, stats S2).
+        not_opened_warn_rounds: Consecutive not-judgeable rounds of a leg that raise
+            ``WARN_PROBE_RETRACT_NOT_OPENED:<leg>``.
+        retract_position_target: (i-b) after the 2 mm retract, a probe probed extend first
+            goes on retracting slowly to the stroke read before its extension.
+        retract_slow_speed_m_s: Speed of that slow part (<= 1 mm/s).
+        retract_extra_margin_m: The commanded retract travel stays at or below ``need_ub +
+            depth + this`` (``need_ub``: the ③ tracker's retract need at ``p_h + e_h``).
+        head_reading_margin_Pa: ``e_h`` of ``need_ub`` (the tracker's 9 bar).
+    """
+
+    witness: bool = False
+    witness_m: float = 0.3e-3
+    not_opened_warn_rounds: int = 2
+    retract_position_target: bool = False
+    retract_slow_speed_m_s: float = 1.0e-3
+    retract_extra_margin_m: float = 0.2e-3
+    head_reading_margin_Pa: float = 9.0e5
+
+    def __post_init__(self) -> None:
+        for name in ("witness", "retract_position_target"):
+            if not isinstance(getattr(self, name), bool):
+                raise ValueError(f"{name} must be a bool")
+        if not (self.witness_m > 0.0 and self.retract_slow_speed_m_s > 0.0):
+            raise ValueError("witness_m and retract_slow_speed_m_s must be > 0")
+        if self.retract_slow_speed_m_s > 1.0e-3 + 1e-12:
+            raise ValueError("retract_slow_speed_m_s above 1 mm/s (spec 3.2: <= 1 mm/s)")
+        if self.retract_extra_margin_m < 0.0 or self.head_reading_margin_Pa < 0.0:
+            raise ValueError("retract_extra_margin_m and head_reading_margin_Pa must be >= 0")
+        count = self.not_opened_warn_rounds
+        if isinstance(count, bool) or not isinstance(count, int) or count < 1:
+            raise ValueError("not_opened_warn_rounds must be an int >= 1")
+
+    @property
+    def is_enabled(self) -> bool:
+        return self.witness or self.retract_position_target
+
+    def to_meta(self) -> dict[str, object]:
+        return {item: getattr(self, item) for item in self.__dataclass_fields__}
+
+
+@dataclass(frozen=True)
 class ProbeResult:
     """Outcome of probing one leg (+depth, hold, -depth, hold).
 
@@ -280,6 +332,14 @@ class ProbeResult:
     """J-0: time of the reading at the end of the hold after the first move."""
     t_second_hold_end_s: float = math.nan
     """J-0: time of the reading at the end of the hold after the second move."""
+    retract_witness_m: float | None = None
+    """Edition 7 3.2 (record and D6 input, None with the witness off): the largest E3
+    displacement along the retraction of the retract stage (oil coordinate)."""
+    retract_extra_m: float | None = None
+    """Edition 7 (i-b): commanded retract travel beyond the 2 mm move (None = target off)."""
+    retract_extra_periods: int | None = None
+    retract_target_reached: bool | None = None
+    """(i-b): the stroke read at or below the target when the slow part ended."""
 
 
 @dataclass(frozen=True, eq=False)
@@ -302,6 +362,8 @@ class ProbeReading:
     motor_stroke_m: NDArray[np.float64]
     rate_attitude_rad: tuple[float, float]
     filtered_attitude_rad: tuple[float, float]
+    head_pressure_Pa: NDArray[np.float64] | None = None
+    """Head reading (4,): the (i-b) ``need_ub`` only; None = not given."""
 
 
 @dataclass(frozen=True)
@@ -668,6 +730,19 @@ class _LegRecord:
     last_command_t_s: float | None = None
     pending_result: ProbeResult | None = None
     """U62: the result taken at the R reading, stored while the tail runs."""
+    # edition 7 3.2 (empty / unused while ``ProbeD6Settings`` is off)
+    start_motor_stroke_m: float = math.nan
+    """``stroke_m`` of the leg's first probe period (the (i-b) position target)."""
+    retract_reads: list[float] = field(default_factory=list)
+    """``stroke_m`` reads of the retract stage (the D6 witness)."""
+    retract_commanded_m: float = 0.0
+    """Commanded retract travel of the stage so far (the 2 mm move and the slow part)."""
+    extra_commanded_m: float = 0.0
+    extra_periods: int = 0
+    extra_cap_m: float = math.nan
+    """Largest commanded retract travel of the stage (``need_ub + depth + margin``)."""
+    is_extra_done: bool = False
+    is_target_reached: bool | None = None
 
 
 @dataclass
@@ -750,8 +825,14 @@ class ProbeRound:
         retract_first_legs: Iterable[int] = (),
         correction_sensitivity_N_m: ArrayLike | None = None,
         start_load_bands: Sequence[LoadBand] | None = None,
+        d6: ProbeD6Settings | None = None,
+        retract_need_ub_m: Callable[[int, float, float], float] | None = None,
     ) -> None:
         self.settings = settings
+        self.d6 = d6 if d6 is not None and d6.is_enabled else None
+        """Edition 7 3.2 (None = off: no line of it runs)."""
+        self._retract_need_ub_m = retract_need_ub_m
+        """``(leg, head_ub_Pa, stroke_m) -> need_ub``: the ③ tracker's retract need."""
         self._retract_first_legs = frozenset(int(leg) for leg in retract_first_legs)
         self._correction_sensitivity = (
             None
@@ -814,9 +895,12 @@ class ProbeRound:
             self._record = _LegRecord(self._window.mean(), self.nominal_move_s, first_sign)
             self._record.window_before_rad = tuple(self._window.samples)
             self._record.start_t_s = reading.t_s
+            self._record.start_motor_stroke_m = float(reading.motor_stroke_m[self.leg])
             if self.is_trapezoid:
                 self._record.planned_speeds = self._trapezoid.tolist()
         self._window.add(reading.rate_attitude_rad)
+        if self.d6 is not None and self._is_retract_stage(self._record):
+            self._note_retract_read(self._record, reading)
         if self.is_trapezoid:
             return self._step_trapezoid(self._record, reading, leg_speeds)
         return self._step_rect(self._record, reading, leg_speeds)
@@ -908,6 +992,14 @@ class ProbeRound:
                 sign = record.first_sign if is_first_move else -record.first_sign
                 leg_speeds[self.leg] = sign * speed
                 record.last_command_t_s = reading.t_s
+                if sign < 0.0:
+                    record.retract_commanded_m += speed * self.period_s
+                return leg_speeds
+        if self._is_position_target_due(record):
+            extra_speed = self._extra_retract_speed(record, reading)
+            if extra_speed > 0.0:
+                leg_speeds[self.leg] = -extra_speed
+                record.last_command_t_s = reading.t_s
                 return leg_speeds
         last_command_s = record.last_command_t_s
         if last_command_s is None:
@@ -927,6 +1019,72 @@ class ProbeRound:
             return leg_speeds
         self._end_stage(record, reading)
         return leg_speeds
+
+    # --- edition 7 3.2: D6 witness reads and the (i-b) retract position target ---
+
+    def _is_retract_stage(self, record: _LegRecord) -> bool:
+        """The move that retracts the leg (the second one; the first when retract first)."""
+        if record.first_sign > 0.0:
+            return self._stage is _Stage.SECOND_MOVE
+        return self._stage is _Stage.FIRST_MOVE
+
+    def _note_retract_read(self, record: _LegRecord, reading: ProbeReading) -> None:
+        record.retract_reads.append(float(reading.motor_stroke_m[self.leg]))
+        if len(record.retract_reads) == 1 and self._has_position_target(record):
+            record.extra_cap_m = self._retract_cap_m(reading)
+
+    def _has_position_target(self, record: _LegRecord) -> bool:
+        """(i-b) applies to a trapezoid probe probed extend first."""
+        return (self.d6 is not None and self.d6.retract_position_target and self.is_trapezoid
+                and record.first_sign > 0.0)
+
+    def _retract_cap_m(self, reading: ProbeReading) -> float:
+        """``need_ub(p_h + e_h, s) + depth + margin`` at the retract start; ``depth`` alone
+        (no slow part) without a head reading or a need function."""
+        assert self.d6 is not None
+        depth_m = self.settings.depth_m
+        heads = reading.head_pressure_Pa
+        head_Pa = math.nan if heads is None else float(heads[self.leg])
+        if self._retract_need_ub_m is None or not math.isfinite(head_Pa):
+            return depth_m
+        need_m = self._retract_need_ub_m(self.leg, head_Pa + self.d6.head_reading_margin_Pa,
+                                         float(reading.motor_stroke_m[self.leg]))
+        return need_m + depth_m + self.d6.retract_extra_margin_m
+
+    def _is_position_target_due(self, record: _LegRecord) -> bool:
+        return (self._has_position_target(record) and self._stage is _Stage.SECOND_MOVE
+                and not record.is_extra_done)
+
+    def _extra_retract_speed(self, record: _LegRecord, reading: ProbeReading) -> float:
+        """The slow retract speed of this period toward the stroke read before the extension;
+        0 (and the slow part ends) at the target or at the commanded-travel cap."""
+        assert self.d6 is not None
+        stroke_m = float(reading.motor_stroke_m[self.leg])
+        target_m = record.start_motor_stroke_m
+        remaining_m = record.extra_cap_m - record.retract_commanded_m
+        is_known = math.isfinite(stroke_m) and math.isfinite(target_m)
+        if not is_known or stroke_m <= target_m or not remaining_m > PLAN_TOLERANCE_M:
+            record.is_extra_done = True
+            record.is_target_reached = is_known and stroke_m <= target_m
+            return 0.0
+        speed = min(self.d6.retract_slow_speed_m_s, remaining_m / self.period_s)
+        travel_m = speed * self.period_s
+        record.retract_commanded_m += travel_m
+        record.extra_commanded_m += travel_m
+        record.extra_periods += 1
+        return speed
+
+    def _d6_fields(self, record: _LegRecord) -> dict[str, object]:
+        """The edition 7 :class:`ProbeResult` fields of the leg (empty with the switches off)."""
+        assert self.d6 is not None
+        values: dict[str, object] = {}
+        if self.d6.witness:
+            values["retract_witness_m"] = retract_witness_m(record.retract_reads)
+        if self._has_position_target(record):
+            values.update(retract_extra_m=record.extra_commanded_m,
+                          retract_extra_periods=record.extra_periods,
+                          retract_target_reached=record.is_target_reached)
+        return values
 
     def _has_tail(self, record: _LegRecord) -> bool:
         settings = self.settings
@@ -1044,9 +1202,31 @@ class ProbeRound:
         )
         # J-0: the probe timing per leg, so that the S6 judge can take the truth of this leg's
         # own probe interval (spec 55.1); the verdict and the commands do not use it.
-        return replace(
+        result = replace(
             result,
             t_move_start_s=float(record.start_t_s),
             t_first_hold_end_s=float(record.first_end_t_s),
             t_second_hold_end_s=float(reading.t_s),
         )
+        if self.d6 is not None:
+            result = replace(result, **self._d6_fields(record))
+        return result
+
+
+PLAN_TOLERANCE_M = 1e-12
+D6_WITNESS_READS = 3
+"""E3 of the D6 witness: reads averaged at each end."""
+
+
+def retract_witness_m(reads: Sequence[float]) -> float:
+    """Edition 7 3.2: the largest E3 displacement along a retraction, ``-(mean(reads[k-2..k]) -
+    mean(reads[0..2]))`` over ``k >= 2`` (NaN with fewer than three finite reads; a NaN read
+    gives NaN averages, which never count as movement)."""
+    values = np.asarray(reads, dtype=float)
+    if len(values) < D6_WITNESS_READS:
+        return math.nan
+    window = np.ones(D6_WITNESS_READS) / D6_WITNESS_READS
+    means = np.convolve(values, window, mode="valid")
+    moved = -(means - means[0])
+    finite = moved[np.isfinite(moved)]
+    return float(finite.max()) if finite.size else math.nan

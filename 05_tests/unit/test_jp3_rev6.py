@@ -216,8 +216,9 @@ def test_guard_list_and_prefix_agree() -> None:
     import r79_sensor_screen as screen
     import run_v5
 
-    # edition 6 (jp3_remedy_spec_v6.md 3.4) adds VBKL / VBKL0 with the same prefix
-    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0", "VBKL", "VBKL0")
+    # edition 6 (jp3_remedy_spec_v6.md 3.4) adds VBKL / VBKL0 with the same prefix, edition 7
+    # (jp3_remedy_spec_v7.md 3.6) VBKM / VBKM0
+    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0", "VBKL", "VBKL0", "VBKM", "VBKM0")
     for name in run_v5.ALL_SETTINGS:
         assert screen.is_rod_fault_setting(name) == name.startswith(
             screen.ROD_FAULT_SETTING_PREFIX), name
@@ -716,7 +717,8 @@ def test_t8_line_and_identity_checks_take_rev6() -> None:
     assert tj.t8_line_problems("VBH", record, False) != []
     assert compare.identity_problems(record) != []
     record["hydraulics_record"]["extend_bound_check"] = {"rule_revision": 4}
-    assert "not one of (5, 6)" in tj.t8_line_problems("VBH", record, False)[0]
+    # edition 7 adds the hold revision 7 (jp3_remedy_spec_v7.md 3.5)
+    assert "not one of (5, 6, 7)" in tj.t8_line_problems("VBH", record, False)[0]
     assert tj._dg3_identity({"hydraulics_record": {"extend_bound_check": _record(6)}}) == []
 
 

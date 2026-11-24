@@ -28,7 +28,7 @@ change resets ``fill_start_t``, so the ``start`` of the next fill is its own.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from typing import Any
 
 import numpy as np
@@ -494,8 +494,151 @@ class CheckOpenGate(CheckOpenDelay):
                 "output_exception": GATE_RETRACT_SEED_EXCEPTION}
 
 
+P1_PATCH_MODE = "gate_only_p1_patch"
+"""``summary()["mode"]`` of :class:`CheckOpenGateP1Patch`."""
+P1_PATCH_OUTPUT_EXCEPTIONS = ("rod_fill_truth",)
+"""Edition 7 3.3: the gate hands the plant the rod truth rise of a held retract fill (``(a)``)
+instead of the retract M2 seed (``(d)``: no seed path)."""
+
+
+def fill_line_pressure_Pa(volume_m3: float, tank_Pa: float, rod_start_Pa: float,
+                          yield_start_Pa: float, line_compliance_m3_Pa: float,
+                          rod_compliance_m3_Pa: float, head_compliance_m3_Pa: float) -> float:
+    """``p_B`` of a retract fill of ``volume_m3``: the inverse of the hydraulics review 2 (a)
+    volume law (piecewise linear and increasing in ``p_B``)::
+
+        V(p_B) = c_l (p_B - p_T)+ + c_r (p_B - p_rs)+ + c_h (p_B - p_ys)+
+
+    with ``p_rs`` = ``rod_start_Pa`` = ``delta + p_r`` and ``p_ys`` = ``yield_start_Pa`` =
+    ``delta + p_r + F_band / A_ann``. ``V`` is 0 at ``min(p_T, delta + p_r)``, where an empty
+    fill starts.
+    """
+    terms = ((tank_Pa, line_compliance_m3_Pa), (rod_start_Pa, rod_compliance_m3_Pa),
+             (yield_start_Pa, head_compliance_m3_Pa))
+    pressure_Pa = min(tank_Pa, rod_start_Pa)
+    remaining_m3 = max(float(volume_m3), 0.0)
+    for limit_Pa in sorted({start for start, _ in terms if start > pressure_Pa} | {math.inf}):
+        slope = sum(compliance for start, compliance in terms if start <= pressure_Pa)
+        if slope <= 0.0:
+            pressure_Pa = limit_Pa
+            continue
+        segment_m3 = slope * (limit_Pa - pressure_Pa)
+        if remaining_m3 <= segment_m3:
+            return pressure_Pa + remaining_m3 / slope
+        remaining_m3 -= segment_m3
+        pressure_Pa = limit_Pa
+    return pressure_Pa
+
+
+class CheckOpenGateP1Patch(CheckOpenGate):
+    """Edition 7 P1 supplement (``jp3_remedy_spec_v7.md`` 3.3, ``h7_review_report.md`` 2).
+
+    * (c) the volumes are split: the line ``s_L V_line``, the dead lengths ``s_D L0r`` /
+      ``s_D L0h``, ``beta`` of the P1 volumes only (the gate's circuit and values; the plant
+      kernel keeps its own). The gate's ``volume_scale`` is 1 (``v5_options._check_p1_patch``).
+    * (a) while a locked leg's retract line is held, the fill ``x`` pressurises the rod chamber:
+      ``Delta p_fill = (p_B(x) - delta - p_r)+`` (:func:`fill_line_pressure_Pa`, with the void
+      filled first), at the opening ``p_rod,open - p_r``. In neutral only the line share
+      drains; the rod share stays trapped and ``Delta p_fill`` is held (:attr:`fill_rise_Pa`)
+      until the plant releases or re-locks the leg (:meth:`clear_fill`). A refill starts from
+      the trapped share.
+    * (d) no retract opening seed: the plant starts the released lag from the locked truth plus
+      :attr:`fill_rise_Pa` (``opening_rod_pressure_Pa`` stays NaN).
+    * (b) ``k_ext`` = b0: the head yield share uses ``k_h`` alone (the load-constant upper
+      bound); the leg load is not changed here.
+
+    Args:
+        setting: The P1 gate setting (``volume_scale`` 1).
+        circuit: The plant's circuit (unscaled).
+        patch: ``v5_options.P1PatchSetting``.
+        values: Line and check values (unscaled).
+    """
+
+    def __init__(self, setting: CheckDelaySetting, circuit: CheckDelayCircuit, patch: Any,
+                 values: CheckValveValues | None = None) -> None:
+        base_values = CheckValveValues() if values is None else values
+        patched_values = replace(base_values,
+                                 v_line_m3=base_values.v_line_m3 * patch.line_scale)
+        patched_circuit = replace(
+            circuit, rod_dead_length_m=circuit.rod_dead_length_m * patch.dead_scale,
+            head_dead_length_m=circuit.head_dead_length_m * patch.dead_scale,
+            bulk_modulus_Pa=patch.bulk_modulus_Pa)
+        super().__init__(setting, patched_circuit, patched_values)
+        self.patch = patch
+        self.fill_rise_Pa = np.zeros(len(self.A_h))
+        """``Delta p_fill`` per leg: the rod truth rise of the held / trapped retract fill."""
+        self.fill_rise_peak_Pa = np.zeros(len(self.A_h))
+
+    def clear_fill(self, leg: int) -> None:
+        """The plant released or re-locked ``leg``: the trapped rise is gone."""
+        self.fill_rise_Pa[leg] = 0.0
+
+    def filter(self, inputs: CheckDelayInputs) -> CheckDelayOutput:
+        output = super().filter(inputs)
+        output.opening_rod_pressure_Pa = np.full(len(output.speed_m_s), np.nan)  # (d)
+        return output
+
+    def _retract_step(self, inputs, out, i, d, speed, gate, void) -> None:
+        is_locked = bool(inputs.locked[i])
+        held_Pa = float(self.fill_rise_Pa[i]) if is_locked else 0.0
+        trapped_m = self._trapped_fill_m(inputs, i, held_Pa, void) if held_Pa > 0.0 else 0.0
+        self.x[i] = max(self.x[i], trapped_m)  # a refill starts on the trapped rod share
+        super()._retract_step(inputs, out, i, d, speed, gate, void)
+        if not is_locked:
+            return
+        self.x[i] = max(self.x[i], trapped_m)  # neutral drains the line share only
+        if d < 0:
+            rise_Pa = self._fill_rise_of_x_Pa(inputs, i, void)
+            self.fill_rise_Pa[i] = max(held_Pa, rise_Pa)
+            self.fill_rise_peak_Pa[i] = max(self.fill_rise_peak_Pa[i], self.fill_rise_Pa[i])
+
+    def _compliances_m3_Pa(self, inputs: CheckDelayInputs, i: int) -> tuple[float, float, float]:
+        """(line, rod, head yield) compliances of the (a) volume law at this chunk's stroke."""
+        stroke_m = float(inputs.s_ref_m[i])
+        line = self.values.v_line_m3 / self.values.beta_hose_Pa
+        rod = self.A_ann[i] * (self.L0r + self.s_max - stroke_m) / self.beta
+        head_stiffness_N_m = self.beta * self.A_h[i] / (self.L0h + stroke_m)
+        return line, rod, self.A_ann[i] ** 2 / head_stiffness_N_m
+
+    def _rod_start_Pa(self, inputs: CheckDelayInputs, i: int) -> tuple[float, float]:
+        delta_Pa = self.retract_cfg.p_crack_Pa if self.retract_cfg.rod_forward else 0.0
+        rod_start_Pa = delta_Pa + float(inputs.p_r[i])
+        return rod_start_Pa, rod_start_Pa + float(inputs.band_N[i]) / self.A_ann[i]
+
+    def _fill_rise_of_x_Pa(self, inputs: CheckDelayInputs, i: int, void: float) -> float:
+        """``Delta p_fill`` of the present fill ``x`` (the void fills first)."""
+        rod_start_Pa, yield_start_Pa = self._rod_start_Pa(inputs, i)
+        volume_m3 = max(float(self.x[i]) - void, 0.0) * self.A_ann[i]
+        line_pressure_Pa = fill_line_pressure_Pa(volume_m3, self.p_T, rod_start_Pa,
+                                                 yield_start_Pa,
+                                                 *self._compliances_m3_Pa(inputs, i))
+        return max(line_pressure_Pa - rod_start_Pa, 0.0)
+
+    def _trapped_fill_m(self, inputs: CheckDelayInputs, i: int, rise_Pa: float,
+                        void: float) -> float:
+        """The rod share of a fill at the rise ``rise_Pa`` (void, rod column, head yield), in
+        ``A_ann`` stroke units: what neutral cannot drain."""
+        _, rod, head = self._compliances_m3_Pa(inputs, i)
+        band_Pa = float(inputs.band_N[i]) / self.A_ann[i]
+        volume_m3 = rod * rise_Pa + head * max(rise_Pa - band_Pa, 0.0)
+        return void + volume_m3 / self.A_ann[i]
+
+    def summary(self) -> dict[str, Any]:
+        return {**super().summary(), "mode": P1_PATCH_MODE,
+                "output_exceptions": list(P1_PATCH_OUTPUT_EXCEPTIONS),
+                "output_exception": "edition 7 P1 supplement: rod fill truth, no M2 seed",
+                "p1_patch": asdict(self.patch),
+                "fill_rise_peak_bar": np.round(self.fill_rise_peak_Pa / 1e5, 3).tolist()}
+
+    def meta(self) -> dict[str, Any]:
+        return {**super().meta(), "mode": P1_PATCH_MODE,
+                "output_exceptions": list(P1_PATCH_OUTPUT_EXCEPTIONS),
+                "p1_patch": asdict(self.patch)}
+
+
 __all__ = ["GATE_ONLY_MODE", "GATE_OUTPUT_EXCEPTIONS", "GATE_RETRACT_SEED_EXCEPTION",
+           "P1_PATCH_MODE", "P1_PATCH_OUTPUT_EXCEPTIONS",
            "UNIT_STATUS", "CheckDelayCircuit",
            "CheckDelayInputs",
-           "CheckDelayOutput", "CheckOpenDelay", "CheckOpenGate", "CheckValveValues",
-           "RetractConfig", "retract_dead"]
+           "CheckDelayOutput", "CheckOpenDelay", "CheckOpenGate", "CheckOpenGateP1Patch",
+           "CheckValveValues", "RetractConfig", "fill_line_pressure_Pa", "retract_dead"]
