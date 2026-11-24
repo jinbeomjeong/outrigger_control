@@ -141,10 +141,16 @@ def test_vbm_lines_carry_the_edition_7_identity_and_records(harness) -> None:
         assert report["hydraulic_options"]["p1_patch"]["k_ext_form"] == "b0", name
         assert report["stale_seed_release"] is None, name  # (d): no seed path
         assert "p1_fill_release_log" in report["hydraulics_record_keys"], name
-        assert {"lsb_ib_floor_m_s", "lsb_ib_on"} <= set(report["t4h"]["arrays"]), name
+        assert {"lsb_ib_floor_m_s", "lsb_ib_on", "lsb_ib_twist_load_N"} <= set(
+            report["t4h"]["arrays"]), name
         assert {"probe_d6_settings", "probe_d6_record"} <= set(report["t4h"]["meta_keys"])
         assert report["foreign_modules"] == [], name
+        blind = report["lsb_record"]["blind"]  # records of the user decision 2026-11-24
+        assert {entry["path"] for entry in blind["level_done"]} <= {"strict", "relax"}, name
+        over = blind["twist_over_limit"]
+        assert over["entries"] == len(over["episodes"]) and over["limit_N"] == 15.0e3, name
     reports = harness["reports"]
+    assert len(reports["VBM_R12"]["lsb_record"]["blind"]["level_done"]) >= 1  # R12 ends DONE
     assert reports["VBM_R12"]["controller_tag"] == ED7_TAG
     assert reports["VBMslow_S5"]["controller_tag"] == ED7_TAG
     assert reports["VBM0_R12"]["controller_tag"] == "final_C4G2_LAS_K1_LSB"

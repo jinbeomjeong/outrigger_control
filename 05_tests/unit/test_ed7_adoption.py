@@ -22,9 +22,10 @@ for _path in (COUPLED_DIR, ROOT / "03_src"):
         sys.path.insert(0, str(_path))
 
 import ed7_condition3_adoption as adoption  # noqa: E402
+import jp3_ed7_rules as rules  # noqa: E402
 
 ALL_PLANTS = (*adoption.VBM_PLANTS, adoption.CONTROL_PLANT)
-STIFF = adoption.STIFFNESS_WARNING
+STIFF = rules.STIFFNESS_WARNING
 
 
 # ------------------------------------------------------------------------------ helpers
@@ -149,25 +150,41 @@ def test_j7_ed7_items_replace_the_period_comparison() -> None:
 
 
 # ------------------------------------------------------------------------------ rule
-def _decision(fails_by_arm, grew_by_arm=None, **group_options) -> dict:
-    return adoption.adoption(_evidence(fails_by_arm, grew_by_arm, **group_options))
+def _decision(fails_by_arm, grew_by_arm=None, *, with_grid=False, **group_options) -> dict:
+    return adoption.adoption(_evidence(fails_by_arm, grew_by_arm, **group_options),
+                             with_grid=with_grid)
+
+
+def test_the_fixed_reading_is_the_user_decision() -> None:
+    assert adoption.FIXED_READING == adoption.Reading(
+        j7="ed7_new", stiffness="sens_exempt", plants="vbm5", ratio="known_shots", n_rev="sum")
+    assert adoption.FIXED_READING in adoption.all_readings()
+    assert len(adoption.all_readings()) == 32
 
 
 def test_arm_3_adopted_when_all_three_criteria_hold() -> None:
     decision = _decision({"a2": A2_FAILS, "a3": {"M": {"S7_k": [("J3", "t_ready")]}},
-                          "a4": A2_FAILS})
+                          "a4": A2_FAILS}, with_grid=True)
     assert decision["status"] == "decided" and decision["conclusion"] == "a3"
-    assert decision["outcomes"] == {"a3": 32}
-    comparison = decision["readings"][0]["comparisons"]["a3"]
+    fixed = decision["fixed_reading"]
+    assert fixed["outcome"] == "a3" and fixed["reading"] == adoption.FIXED_READING_VALUES
+    comparison = fixed["comparisons"]["a3"]
     assert comparison["criteria"] == {"fewer_failed_units": True, "no_new_failed_units": True,
                                       "twist_not_worse": True}
-    assert decision["readings"][0]["comparisons"]["a4"]["criteria"]["fewer_failed_units"] is False
+    assert fixed["comparisons"]["a4"]["criteria"]["fewer_failed_units"] is False
+    assert decision["interp_grid"]["outcomes"] == {"a3": 32}
+    assert decision["interp_grid"]["record_only"] is True
+
+
+def test_without_the_grid_flag_no_grid_is_recorded() -> None:
+    decision = _decision({"a2": A2_FAILS, "a3": A2_FAILS, "a4": A2_FAILS})
+    assert "interp_grid" not in decision and decision["conclusion"] == "a2"
 
 
 def test_a_new_failed_unit_keeps_arm_2_even_with_fewer_failures() -> None:
     decision = _decision({"a2": A2_FAILS, "a3": {"Mfast": {"new": [("J4", "final")]}},
                           "a4": A2_FAILS})
-    comparison = decision["readings"][0]["comparisons"]["a3"]
+    comparison = decision["fixed_reading"]["comparisons"]["a3"]
     assert comparison["criteria"]["fewer_failed_units"] is True
     assert comparison["new_failed_units"] == [["Mfast", "new"]]
     assert decision["status"] == "decided" and decision["conclusion"] == "a2"
@@ -183,35 +200,50 @@ def test_a_worse_twist_indicator_keeps_arm_2(indicator, worse) -> None:
     evidence = _evidence({"a2": A2_FAILS, "a3": {}, "a4": A2_FAILS})
     evidence["a3"].twist["M"] = [adoption.twist_record(worse)]
     decision = adoption.adoption(evidence)
-    comparison = decision["readings"][0]["comparisons"]["a3"]
+    comparison = decision["fixed_reading"]["comparisons"]["a3"]
     assert comparison["twist_by_indicator"][indicator] is False
     assert comparison["criteria"]["twist_not_worse"] is False
     assert decision["conclusion"] == "a2" and decision["status"] == "decided"
 
 
 def test_both_candidates_qualifying_is_not_decided() -> None:
+    """Spec revision 5 (control-expert) decides; until then ``undecided``."""
     decision = _decision({"a2": A2_FAILS, "a3": {}, "a4": {}})
-    assert decision["outcomes"] == {"both_qualify": 32}
+    assert decision["fixed_reading"]["outcome"] == "both_qualify"
     assert decision["status"] == "undecided" and decision["conclusion"] is None
 
 
-def test_a_reading_dependent_outcome_is_not_decided() -> None:
-    """The only difference is on the control plant L: vbm5 keeps arm 2, all6 adopts arm 3."""
+def test_the_grid_is_a_record_and_never_the_status() -> None:
+    """A difference on the control plant L only: the fixed reading (vbm5) keeps arm 2 and
+    is decided; the grid's all6 readings would adopt arm 3 (record)."""
     l_fail = {"L": {"k": [("J1", "gate end_att")]}}
-    decision = _decision({"a2": l_fail, "a3": {}, "a4": l_fail})
-    assert decision["outcomes"] == {"a2": 16, "a3": 16}
-    assert decision["status"] == "undecided" and decision["conclusion"] is None
-    by_plants = {result["reading"]["plants"] for result in decision["readings"]
+    decision = _decision({"a2": l_fail, "a3": {}, "a4": l_fail}, with_grid=True)
+    assert decision["status"] == "decided" and decision["conclusion"] == "a2"
+    assert decision["interp_grid"]["outcomes"] == {"a2": 16, "a3": 16}
+    by_plants = {result["reading"]["plants"] for result in decision["interp_grid"]["readings"]
                  if result["outcome"] == "a3"}
     assert by_plants == {"all6"}
+
+
+def test_the_fixed_reading_exempts_the_stiffness_warning_only_on_sensitivity_plants() -> None:
+    """J7 stiffness-only units on Mslow do not count; on M they do; a retract-not-opened
+    WARN counts everywhere (Q7-C4)."""
+    retract = f"{adoption.WARN_EVENT}:RL"
+    a2 = {"Mslow": {"k": [("J7", STIFF)]}, "M": {"k": [("J7", STIFF)]},
+          "Mc04": {"r": [("J7", retract)]}}
+    a3 = {"M": {"k": [("J7", STIFF)]}, "Mc04": {"r": [("J7", retract)]}}
+    fixed = _decision({"a2": a2, "a3": a3, "a4": a2})["fixed_reading"]
+    assert fixed["indicators"]["a2"]["failed_unit_list"] == [["M", "k"], ["Mc04", "r"]]
+    assert fixed["comparisons"]["a3"]["criteria"]["fewer_failed_units"] is False
+    assert fixed["outcome"] == "a2"
 
 
 @pytest.mark.parametrize("options", [{"no_reference": [("k", 0.0)]}, {"not_judgeable": True}])
 def test_an_unpaired_or_unjudgeable_group_is_not_judgeable(options) -> None:
     decision = _decision({"a2": A2_FAILS}, **options)
-    assert decision["outcomes"] == {"not_judgeable": 32}
+    assert decision["fixed_reading"]["outcome"] == "not_judgeable"
     assert decision["status"] == "not_judgeable" and decision["conclusion"] is None
-    assert decision["readings"][0]["problems"]
+    assert decision["fixed_reading"]["problems"]
 
 
 def test_a_line_without_its_blind_record_is_not_judgeable() -> None:
@@ -219,7 +251,8 @@ def test_a_line_without_its_blind_record_is_not_judgeable() -> None:
     evidence["a4"].twist["Mc005"] = []
     decision = adoption.adoption(evidence)
     assert decision["status"] == "not_judgeable"
-    assert any("blind record" in problem for problem in decision["readings"][0]["problems"])
+    assert any("blind record" in problem
+               for problem in decision["fixed_reading"]["problems"])
 
 
 def test_two_missing_ratios_compare_equal_one_missing_is_not_judgeable() -> None:
@@ -228,7 +261,8 @@ def test_two_missing_ratios_compare_equal_one_missing_is_not_judgeable() -> None
     assert decision["conclusion"] == "a3"
     decision = _decision({"a2": A2_FAILS, "a3": {}, "a4": A2_FAILS}, {"a3": ()})
     assert decision["status"] == "not_judgeable"
-    assert decision["readings"][0]["comparisons"]["a3"]["criteria"]["twist_not_worse"] is None
+    comparison = decision["fixed_reading"]["comparisons"]["a3"]
+    assert comparison["criteria"]["twist_not_worse"] is None
 
 
 # ------------------------------------------------------------------------------ Q7-C4
@@ -424,7 +458,8 @@ def test_main_on_producer_rows_from_another_folder(tmp_path, monkeypatch, capsys
     report = json.loads(out.read_text(encoding="utf-8"))
     assert code == adoption.EXIT_DECIDED and report["status"] == "decided"
     assert report["decision"]["conclusion"] == "a3"
-    assert report["decision"]["outcomes"] == {"a3": 32}
+    assert report["decision"]["fixed_reading"]["outcome"] == "a3"
+    assert "interp_grid" not in report["decision"]
     assert all(not value for value in report["checks"].values()), report["checks"]
     q7c4 = report["q7c4"]
     assert q7c4["totals"]["lines"] == 19 and q7c4["totals"]["warn_lines"] == 1
@@ -432,7 +467,15 @@ def test_main_on_producer_rows_from_another_folder(tmp_path, monkeypatch, capsys
     assert q7c4["warn_j7_effects"] == {"no_v0_reference": 1}
     last = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
     assert last["status"] == "decided" and last["probe_lines"] == 19
-    assert "conclusion" not in last
+    assert "conclusion" not in last and last["grid_readings"] is None
+
+
+def test_main_with_the_interp_grid_records_it(tmp_path, monkeypatch) -> None:
+    rows, keys = _producer_run(tmp_path, monkeypatch)
+    out = tmp_path / "adoption.json"
+    assert _main(rows, keys, out, "--interp-grid") == adoption.EXIT_DECIDED
+    decision = json.loads(out.read_text(encoding="utf-8"))["decision"]
+    assert decision["conclusion"] == "a3" and len(decision["interp_grid"]["readings"]) == 32
 
 
 def test_main_missing_job_is_incomplete(tmp_path, monkeypatch) -> None:

@@ -10,6 +10,9 @@ spec 4 step 4); the edition 6 / 436.8 functions stay as they are for the replays
   The other J7 items (a WARN / FAULT name new against V0) are those of
   ``judge_stage1_4368.j7_items`` unchanged. ``judge_stage1_4368.j7_items`` (the period
   comparison) stays for the 436.8 / edition 5 / edition 6 replays.
+* :func:`is_j7_stiffness_exempt` - the spec 6.2 sensitivity J7 stiffness exception (single
+  condition, :data:`J7_EXEMPT_WARNINGS`); Q7-C4: ``WARN_PROBE_RETRACT_NOT_OPENED`` is never
+  exempt.
 * :func:`is_stall_signature_ed7` - the LEVEL deadlock signature of erratum 8 8-3 with condition
   1 fixed (spec 6.2): an event line "ends without READY after the event", a line without an
   event "never went through READY"; conditions 2 .. 4 unchanged (no fault phase, the last
@@ -33,6 +36,12 @@ import numpy as np
 FALLBACK_EVENT = "WARN_ROD_PRESSURE_FALLBACK"
 REASON_EVENT = "INFO_ROD_PRESSURE_FAULT_REASON"
 UNKNOWN_REASON = "unknown"
+STIFFNESS_WARNING = "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+J7_EXEMPT_WARNINGS = frozenset({STIFFNESS_WARNING})
+"""Spec 6.2 sensitivity J7 exception (single condition): a unit whose new J7 names are exactly
+these does not fail J7. Q7-C4 (user decision 2026-11-24): ``WARN_PROBE_RETRACT_NOT_OPENED`` is
+not exempt - new against V0 it is a J7 failure, on every setting."""
+RETRACT_NOT_OPENED_WARNING = "WARN_PROBE_RETRACT_NOT_OPENED"
 CONTROL_PERIOD_S = 0.1
 SENSITIVITY_JUDGED = ("VBMslow", "VBMfast", "VBMc005", "VBMc04")
 SENSITIVITY_RECORD = ("VBMb069", "VBMb16", "VBMh05", "VBMh15", "VBMd05", "VBMd15")
@@ -98,6 +107,18 @@ def j7_items_ed7(base: Mapping, on: Mapping, base_all: Sequence[Mapping]) -> lis
         if periods:
             items.append(_item("record", f"{label}: {periods:+d} periods against V0"))
     return items
+
+
+def j7_event_name(detail: str) -> str:
+    """The event name of a J7 item detail (first ``:`` token, without ``at period``)."""
+    return str(detail).split(":", 1)[0].split(" at period ", 1)[0]
+
+
+def is_j7_stiffness_exempt(j7_fail_details: Iterable[str]) -> bool:
+    """Spec 6.2 single condition: the unit's J7 fail names are exactly
+    :data:`J7_EXEMPT_WARNINGS` (an empty set is no exception)."""
+    names = {j7_event_name(detail) for detail in j7_fail_details}
+    return bool(names) and names <= J7_EXEMPT_WARNINGS
 
 
 # ------------------------------------------------------------------------------ deadlock

@@ -51,6 +51,7 @@ from outrigger_sim.control.lock_start_b import (  # noqa: E402
     CompletionFlags,
     CylinderGeometry,
     FloorInputs,
+    LevelDonePath,
     LockStartB,
     LockStartBSettings,
 )
@@ -282,6 +283,50 @@ def test_p7_6_without_a_trigger_the_commands_are_those_of_a_ib_off() -> None:
 
     with_a_ib, without = run(("A_i", "A_ib")), run(("A_i",))
     assert all(np.array_equal(a, b) for a, b in zip(with_a_ib, without, strict=True))
+
+
+def test_twist_over_limit_episodes_count_level_entries_above_the_relax_limit() -> None:
+    """User decision 2026-11-24 record: LEVEL stretches with |D| above the condition 3 limit
+    (15 kN here); a non-LEVEL period ends an episode; D of every update in the T4h trace."""
+    rule = _blind()
+    zero, stroke = np.zeros(4), np.full(4, 0.4)
+    twists = (0.0, 16.0e3, -17.0e3, 15.0e3, 20.0e3)
+    for k, twist in enumerate(twists):
+        rule.apply_floors(_inputs(k * T, zero, zero, stroke, twist_N=twist))
+    rule.apply_floors(_inputs(5 * T, zero, zero, stroke, twist_N=20.0e3, is_level=False))
+    over = rule.record()["blind"]["twist_over_limit"]
+    assert (over["limit_N"], over["entries"], over["periods"]) == (15.0e3, 2, 3)
+    first, second = over["episodes"]
+    assert (first["start_t_s"], first["end_t_s"], first["periods"]) == (
+        pytest.approx(0.1), pytest.approx(0.3), 2)
+    assert first["max_abs_twist_N"] == 17.0e3
+    assert (second["start_t_s"], second["end_t_s"], second["periods"]) == (
+        pytest.approx(0.4), pytest.approx(0.5), 1)
+    arrays = rule.trace_arrays_at(np.arange(6) * T)
+    assert arrays["lsb_ib_twist_load_N"].tolist() == [*twists, 20.0e3]
+
+
+def test_an_open_twist_episode_has_no_end() -> None:
+    rule = _blind()
+    rule.apply_floors(_inputs(0.0, np.zeros(4), np.zeros(4), np.full(4, 0.4), twist_N=16.0e3))
+    episode = rule.record()["blind"]["twist_over_limit"]["episodes"][0]
+    assert episode["end_t_s"] is None and episode["periods"] == 1
+
+
+def test_level_done_path_record() -> None:
+    rule = _blind()
+    rule.note_level_done(12.0, LevelDonePath.RELAX, -14.0e3)
+    rule.note_level_done(30.0, LevelDonePath.STRICT, 1.0e3)
+    assert rule.record()["blind"]["level_done"] == [
+        {"t_s": 12.0, "path": "relax", "twist_load_N": -14.0e3},
+        {"t_s": 30.0, "path": "strict", "twist_load_N": 1.0e3}]
+
+
+def test_edition_6_record_and_trace_have_no_edition_7_twist_keys() -> None:
+    rule = LockStartB(LockStartBSettings(components=("A_i", "A_ii", "B3")), GEOMETRY)
+    rule.apply_floors(_inputs(0.0, np.zeros(4), np.zeros(4), np.full(4, 0.4), twist_N=16.0e3))
+    assert "blind" not in rule.record()
+    assert not any(name.startswith("lsb_ib_") for name in rule.trace_arrays_at(np.zeros(1)))
 
 
 # ------------------------------------------------------------------------------ Y7-2 D6
@@ -867,6 +912,23 @@ def test_j7_ed7_compares_name_leg_reason_and_records_the_period_shift() -> None:
     assert rules.j7_items_ed7(_metric([]), warn, [])[0]["kind"] == "fail"  # Q7-C4: as now
     capped = {**base, "events_capped": True}
     assert rules.j7_items_ed7(capped, base, [])[0]["kind"] == "not_judgeable"
+
+
+def test_q7c4_retract_not_opened_is_never_j7_exempt() -> None:
+    """User decision 2026-11-24 (Q7-C4): only the stiffness warning is exempt (spec 6.2,
+    single condition); a new WARN_PROBE_RETRACT_NOT_OPENED against V0 is a J7 failure."""
+    import jp3_ed7_rules as rules
+
+    retract, stiff = rules.RETRACT_NOT_OPENED_WARNING, rules.STIFFNESS_WARNING
+    assert retract == "WARN_PROBE_RETRACT_NOT_OPENED"
+    assert rules.J7_EXEMPT_WARNINGS == frozenset({stiff})
+    assert retract not in rules.J7_EXEMPT_WARNINGS
+    assert rules.is_j7_stiffness_exempt([stiff, f"{stiff}:0.412"])
+    assert not rules.is_j7_stiffness_exempt([f"{retract}:FL"])
+    assert not rules.is_j7_stiffness_exempt([stiff, f"{retract}:RL"])
+    assert not rules.is_j7_stiffness_exempt([])
+    items = rules.j7_items_ed7(_metric([]), _metric([], [f"{retract}:FL"]), [])
+    assert [(item["kind"], item["detail"]) for item in items] == [("fail", f"{retract}:FL")]
 
 
 def test_stall_signature_condition_1_by_event() -> None:

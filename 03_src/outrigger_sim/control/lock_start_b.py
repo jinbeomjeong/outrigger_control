@@ -139,6 +139,16 @@ class BlindEnd(StrEnum):
     CAP = "cap"
 
 
+class LevelDonePath(StrEnum):
+    """How the LEVEL completion that started DONE met its twist condition (edition 7 3.1
+    record "LEVEL 완료 경로", read in the DONE period)."""
+
+    STRICT = "strict"
+    """``|D| < done_twist_N`` (or the relaxation off)."""
+    RELAX = "relax"
+    """The P-S8-29 relaxed twist condition (``INFO_TWIST_UNSETTLED`` in that period)."""
+
+
 ED7_FIELD_PREFIX = "ib_"
 """Fields of the edition 7 A(i)-b; a run without ``A_ib`` keeps them at their defaults and
 leaves them out of :meth:`LockStartBSettings.to_meta` (edition 6 metas unchanged, P7-0)."""
@@ -830,6 +840,15 @@ class LockStartB:
         """Periods in which all four legs triggered with the twist sign pattern (``+-sign n``)."""
         self._last_twist_N = math.nan
         self._last_force_N: list[float] = [math.nan] * LEG_COUNT
+        # edition 7 3.1 records of the LEVEL twist (record only, user decision 2026-11-24)
+        self.level_done: list[dict[str, Any]] = []
+        """One entry per LEVEL -> DONE: ``t_s``, ``path`` (:class:`LevelDonePath`),
+        ``twist_load_N``."""
+        self.twist_over_limit_episodes: list[dict[str, Any]] = []
+        """LEVEL stretches with ``|D|`` above the condition 3 relax limit."""
+        self.twist_over_limit_periods = 0
+        self._twist_episode: dict[str, Any] | None = None
+        self._twist_limit_seen_N = math.nan
 
     # --------------------------------------------------------------- output-stage rules
     def apply_floors(self, inputs: FloorInputs) -> NDArray[np.float64]:
@@ -1021,6 +1040,7 @@ class LockStartB:
         is_raised = (floors > np.abs(output)) & ~inputs.protected
         output[is_raised] = signs[is_raised] * floors[is_raised]
         self._note_shot_after(inputs)
+        self._note_twist_over_limit(inputs)
         return is_raised
 
     def _blind_floors(self, inputs: FloorInputs, requested: NDArray[np.float64]
@@ -1103,11 +1123,17 @@ class LockStartB:
         is_attitude_clearance_open = not (flags.is_on_target and flags.is_clearance_done)
         if condition is BlindCondition.ATTITUDE_CLEARANCE:
             return is_attitude_clearance_open
+        return is_attitude_clearance_open or self._is_twist_over_limit(inputs)
+
+    def _twist_limit_N(self, inputs: FloorInputs) -> float:
+        """The ``|D|`` limit of condition (다): the setting, else the controller's relax
+        ``max_twist_N``."""
         limit_N = self.settings.ib_twist_limit_N
-        if limit_N is None:
-            limit_N = inputs.twist_limit_N
-        is_twist_open = math.isfinite(inputs.twist_load_N) and abs(inputs.twist_load_N) > limit_N
-        return is_attitude_clearance_open or is_twist_open
+        return inputs.twist_limit_N if limit_N is None else limit_N
+
+    def _is_twist_over_limit(self, inputs: FloorInputs) -> bool:
+        twist_N = inputs.twist_load_N
+        return math.isfinite(twist_N) and abs(twist_N) > self._twist_limit_N(inputs)
 
     def _is_shot_safe(self, leg: int, sign: int, inputs: FloorInputs) -> bool:
         """Predictive protection: ``min_j(F_lo,j + k_1 n_i n_j sigma Delta e_max) >= F_min +
@@ -1236,14 +1262,49 @@ class LockStartB:
         self._last_twist_N = float(inputs.twist_load_N)
         self._last_force_N = force if force is not None else [math.nan] * LEG_COUNT
 
+    def _note_twist_over_limit(self, inputs: FloorInputs) -> None:
+        """Record only: a LEVEL stretch of periods with ``|D|`` above the condition 3 limit is
+        one episode (``end_t_s`` = the first period not above, or of another phase)."""
+        limit_N = self._twist_limit_N(inputs)
+        if math.isfinite(limit_N):
+            self._twist_limit_seen_N = float(limit_N)
+        episode = self._twist_episode
+        if not (inputs.is_level and self._is_twist_over_limit(inputs)):
+            if episode is not None:
+                episode["end_t_s"] = float(inputs.t_s)
+                self._twist_episode = None
+            return
+        self.twist_over_limit_periods += 1
+        if episode is None:
+            episode = {"start_t_s": float(inputs.t_s), "end_t_s": None, "periods": 0,
+                       "max_abs_twist_N": 0.0}
+            self.twist_over_limit_episodes.append(episode)
+            self._twist_episode = episode
+        episode["periods"] += 1
+        episode["max_abs_twist_N"] = max(episode["max_abs_twist_N"],
+                                         abs(float(inputs.twist_load_N)))
+
+    def note_level_done(self, t_s: float, path: LevelDonePath, twist_load_N: float) -> None:
+        """Record only: the controller ended LEVEL with DONE in this period (edition 7 3.1
+        "LEVEL 완료 경로")."""
+        self.level_done.append({"t_s": float(t_s), "path": str(path),
+                                "twist_load_N": float(twist_load_N)})
+
     def blind_record(self) -> dict[str, Any]:
         """The ``blind`` block of the ``lsb_record`` (edition 7 3.1 "기록"; record only)."""
         shots = [shot.to_meta() for shot in self.blind_shots]
+        limit_N = self._twist_limit_seen_N
         return {"legs": {LEG_ORDER[leg]: counts.to_meta()
                          for leg, counts in enumerate(self.blind_counts)},
                 "shots": shots,
                 "shots_twist_grew": sum(bool(shot["twist_grew"]) for shot in shots),
-                "four_leg_twist_triggers": self.blind_four_leg_triggers}
+                "four_leg_twist_triggers": self.blind_four_leg_triggers,
+                "level_done": [dict(entry) for entry in self.level_done],
+                "twist_over_limit": {
+                    "limit_N": limit_N if math.isfinite(limit_N) else None,
+                    "entries": len(self.twist_over_limit_episodes),
+                    "periods": self.twist_over_limit_periods,
+                    "episodes": [dict(entry) for entry in self.twist_over_limit_episodes]}}
 
     # A(ii) --------------------------------------------------------------------------
     def _fill_speeds(self, inputs: FloorInputs,
@@ -1513,7 +1574,8 @@ class LockStartB:
                                           for state in self._blind]),
                 "ib_on": np.array([state.is_floor_on for state in self._blind]),
                 "ib_stretch_periods": np.array([state.stretch_periods for state in self._blind],
-                                               np.int32)})
+                                               np.int32),
+                "ib_twist_load_N": np.array(float(inputs.twist_load_N))})
         self._pending_b1_blocked = np.zeros(LEG_COUNT, bool)
 
     def trace_arrays_at(self, t_s: NDArray[np.float64]) -> dict[str, NDArray[Any]]:
@@ -1531,6 +1593,7 @@ class LockStartB:
             arrays["ib_floor_m_s"] = np.full(shape, np.nan)
             arrays["ib_on"] = np.zeros(shape, bool)
             arrays["ib_stretch_periods"] = np.zeros(shape, np.int32)
+            arrays["ib_twist_load_N"] = np.full(len(t_s), np.nan)  # D of each update, 10 Hz
         found = np.zeros(len(t_s), bool)
         logged_t = np.asarray(self._trace_t_s, float)
         for k, read_t in enumerate(t_s):
@@ -1583,6 +1646,7 @@ __all__ = [
     "EVENT_COMPONENTS",
     "CylinderGeometry",
     "FloorInputs",
+    "LevelDonePath",
     "LockAnchor",
     "LockStartB",
     "LockStartBSettings",

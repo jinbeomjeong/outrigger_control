@@ -9,34 +9,36 @@ The rule (stats S3, fixed before the seal): arm 3 (condition 3 = first draft) or
 3. ``twist_not_worse``: every twist indicator at most arm 2's - the ratio of A(i)-b shots that
    grew ``|D|``, the four-leg twist triggers, ``n_rev``, the latches.
 
-A unit is one (plant, key) of the main part. Its failure against V0 is the edition 6 probe
-share reading (``ed6_probe_share.group_judgement``): a J1 .. J11 ``fail`` item of the
-``jp3_j9main_judge._full_items`` table against the stored V0 line of the same row and phase
-(an item fails only where V0 passes it), and an R15 worsening fails both R15 keys. A group
-with ``no_reference`` or a not-judgeable item makes the comparison not judgeable.
+A unit is one (plant, key) of the main part. Its failure against V0: a J1 .. J11 ``fail``
+item of the ``jp3_j9main_judge._full_items`` table against the stored V0 line of the same row
+and phase (an item fails only where V0 passes it; the edition 6 probe share reading,
+``ed6_probe_share.group_judgement``), and an R15 worsening fails both R15 keys. A group with
+``no_reference`` or a not-judgeable item makes the comparison not judgeable.
 
-The spec leaves five readings open; the tool does not pick one (spec rule: an unstated
-reading goes to 확인 필요). It evaluates the rule under every combination (32) and reports
-whether the outcome depends on the reading:
+The readings the spec left open are fixed by the user decision of 2026-11-24
+(:data:`FIXED_READING`, the judged outcome):
 
 =================  ==========================================================================
-reading            values
+reading            fixed value (other value, ``--interp-grid`` record only)
 =================  ==========================================================================
-``j7``             ``ed6_share`` (the 436.8 J7 period comparison, as the edition 6 probe share)
-                   / ``ed7_new`` (J7 by ``(name, leg, reason)``, ``jp3_ed7_rules.j7_items_ed7``)
-``stiffness``      ``none`` (as the edition 6 probe share) / ``sens_exempt`` (the spec 6.2
-                   sensitivity J7 stiffness exception on the plants Mslow, Mfast, Mc005, Mc04:
+``j7``             ``ed7_new``: J7 by ``(name, leg, reason)``, ``jp3_ed7_rules.j7_items_ed7``
+                   (``ed6_share``: the 436.8 J7 period comparison of the edition 6 probe share)
+``stiffness``      ``sens_exempt``: the spec 6.2 sensitivity J7 stiffness exception on the
+                   plants Mslow, Mfast, Mc005, Mc04 (``jp3_ed7_rules.is_j7_stiffness_exempt``:
                    a unit whose J7 fail names are exactly ``WARN_PROBE_STIFFNESS_OUT_OF_RANGE``
-                   does not fail on them)
-``plants``         ``vbm5`` (M, Mslow, Mfast, Mc005, Mc04) / ``all6`` (also the edition 6
+                   does not fail on them; Q7-C4: ``WARN_PROBE_RETRACT_NOT_OPENED`` is never
+                   exempt) (``none``)
+``plants``         ``vbm5``: M, Mslow, Mfast, Mc005, Mc04 (``all6``: also the edition 6
                    control plant L)
-``ratio``          ``known_shots`` (shots with a ``twist_grew`` value) / ``all_shots``
-``n_rev``          ``sum`` (all legs, all lines) / ``line_max`` (the largest per-line sum)
+``ratio``          ``known_shots``: the denominator is the shots with a ``twist_grew`` value
+                   (``all_shots``)
+``n_rev``          ``sum``: all legs, all lines (``line_max``: the largest per-line sum)
 =================  ==========================================================================
 
-Per reading the outcome is ``a2``, ``a3``, ``a4``, ``both_qualify`` (the spec does not say
-which one then) or ``not_judgeable``. The ``conclusion`` is an arm only when every reading
-gives that same arm.
+The outcome is ``a2``, ``a3``, ``a4``, ``both_qualify`` (arms 3 and 4 both qualify: the spec
+revision 5 decides; ``undecided`` until then) or ``not_judgeable``. With ``--interp-grid`` the
+report also carries the 32 reading combinations (``interp_grid``, a record that never changes
+the status).
 
 The report also carries the Q7-C4 facts of every probe line (both parts, every arm): the
 ``WARN_PROBE_RETRACT_NOT_OPENED`` lines and legs, whether the rounds that raised it were
@@ -46,16 +48,15 @@ D6 witness round, not-judgeable round and reversed round counts.
 ======  =====================  ==========================================================
 exit    status                 meaning
 ======  =====================  ==========================================================
-0       ``decided``            report written, checks clean, every reading the same arm
+0       ``decided``            report written, checks clean, the fixed reading gives one arm
 2       ``setting_defect``     report written; a compared line's tag, components, condition,
                                options, probe block or blind record, a line's D6 witness
                                record, the run identity (or with ``--require-clean`` this
                                checkout) differs (``checks``)
 2       ``incomplete``         report written; a planned job missing, repeated, unplanned or
                                an error line
-2       ``not_judgeable``      report written; no reading could be judged
-2       ``undecided``          report written; the readings differ, or arms 3 and 4 both
-                               qualify
+2       ``not_judgeable``      report written; the fixed reading could not be judged
+2       ``undecided``          report written; arms 3 and 4 both qualify
 2       ``input_error``        no report: missing input, another sha256, an existing ``--out``
 3       ``tool_error``         an unexpected failure
 ======  =====================  ==========================================================
@@ -65,6 +66,7 @@ Usage (dynamics-dev, checkout root):
   python -I -B 04_scripts/04_hydraulic/coupled/ed7_condition3_adoption.py
       --rows <ed7_probe.jsonl> --keys <probe_keys_ed7.json> [--keys-sha256 <sha>]
       --v0 <stored v5/main.jsonl> --v0-sha256 <sha> --out <report.json> [--require-clean]
+      [--interp-grid]
 The T4h records are read from ``<rows stem>_t4h/``, the run identity from
 ``<rows stem>.identity.json``. The stdout's last line is JSON with ``status``, the counts and
 the report path (no indicator value).
@@ -108,8 +110,10 @@ READINGS: dict[str, tuple[str, ...]] = {"j7": ("ed6_share", "ed7_new"),
                                         "plants": ("vbm5", "all6"),
                                         "ratio": ("known_shots", "all_shots"),
                                         "n_rev": ("sum", "line_max")}
+FIXED_READING_VALUES = {"j7": "ed7_new", "stiffness": "sens_exempt", "plants": "vbm5",
+                        "ratio": "known_shots", "n_rev": "sum"}
+"""User decision 2026-11-24: the one reading the outcome is judged on."""
 PLANT_SETS = {"vbm5": VBM_PLANTS, "all6": (*VBM_PLANTS, CONTROL_PLANT)}
-STIFFNESS_WARNING = "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
 SENSITIVITY_PLANTS = tuple(name.removeprefix("VB") for name in rules.SENSITIVITY_JUDGED)
 """The probe plants of the four judged sensitivity settings (VBMslow -> Mslow, ...): the
 plants of the spec 6.2 J7 stiffness exception reading."""
@@ -119,7 +123,7 @@ V0_SETTING = "V0"
 JUDGED_LABEL = "VB"
 """The 436.8 table label a probe group takes (``ed6_probe_share.group_judgement``)."""
 RUNTIME_JOB_FIELDS = ("mask", "t4h_dir")
-WARN_EVENT = "WARN_PROBE_RETRACT_NOT_OPENED"
+WARN_EVENT = rules.RETRACT_NOT_OPENED_WARNING
 """Spec 3.2: raised after ``probe_d6_settings.not_opened_warn_rounds`` not-judgeable D6
 rounds of a leg in a row."""
 D6_BLOCK_KEYS = ("rounds", "not_judgeable_rounds", "reversed_rounds")
@@ -325,22 +329,17 @@ def group_judgement(metrics_by_key: Mapping[str, dict], v0_rows: list[dict]) -> 
     return out
 
 
-def _first_token(name: str) -> str:
-    """The event name of a J7 detail (``jp3_ed6_judge._first_token``)."""
-    return name.split(":", 1)[0].split(" at period ", 1)[0]
-
-
 def failed_keys(group: Mapping, j7: str, exempt_stiffness: bool) -> set[str]:
     """The failed keys of a group under a J7 reading; with ``exempt_stiffness`` a key whose
-    J7 fail items name exactly :data:`STIFFNESS_WARNING` (single condition, spec 6.2) does
-    not fail on them."""
+    J7 fail names are exactly the exempt stiffness warning (spec 6.2 single condition,
+    ``jp3_ed7_rules.is_j7_stiffness_exempt``) does not fail on them."""
     items_by_key: dict[str, list[dict]] = defaultdict(list)
     for item in group["fail_items"][j7]:
         items_by_key[item["key"]].append(item)
     failed = set(group["r15_failed_keys"])
     for key, items in items_by_key.items():
-        j7_names = {_first_token(item["detail"]) for item in items if item["item"] == "J7"}
-        if exempt_stiffness and j7_names == {STIFFNESS_WARNING}:
+        j7_details = [item["detail"] for item in items if item["item"] == "J7"]
+        if exempt_stiffness and rules.is_j7_stiffness_exempt(j7_details):
             items = [item for item in items if item["item"] != "J7"]
         if items:
             failed.add(key)
@@ -350,7 +349,7 @@ def failed_keys(group: Mapping, j7: str, exempt_stiffness: bool) -> set[str]:
 # ------------------------------------------------------------------------------ rule
 @dataclass(frozen=True)
 class Reading:
-    """One combination of the four open readings (module docstring)."""
+    """One combination of the five readings (module docstring)."""
 
     j7: str
     stiffness: str
@@ -365,6 +364,9 @@ class Reading:
 
 def all_readings() -> list[Reading]:
     return [Reading(*values) for values in itertools.product(*READINGS.values())]
+
+
+FIXED_READING = Reading(**FIXED_READING_VALUES)
 
 
 @dataclass
@@ -445,20 +447,26 @@ def reading_outcome(evidence: Mapping[str, ArmEvidence], reading: Reading) -> di
             "comparisons": comparisons}
 
 
-def adoption(evidence: Mapping[str, ArmEvidence]) -> dict:
-    """Every reading and the conclusion (an arm only when all readings give it)."""
-    results = [dict(reading_outcome(evidence, reading), name=reading.name)
-               for reading in all_readings()]
-    outcomes = Counter(result["outcome"] for result in results)
-    single = next(iter(outcomes)) if len(outcomes) == 1 else None
-    if single in COMPARED_ARMS:
-        status, conclusion = "decided", single
-    elif set(outcomes) == {"not_judgeable"}:
+def adoption(evidence: Mapping[str, ArmEvidence], with_grid: bool = False) -> dict:
+    """The outcome of :data:`FIXED_READING` and, with ``with_grid``, every reading as a record
+    (``interp_grid``; it never changes the status)."""
+    fixed = dict(reading_outcome(evidence, FIXED_READING), name=FIXED_READING.name)
+    outcome = fixed["outcome"]
+    if outcome in COMPARED_ARMS:
+        status, conclusion = "decided", outcome
+    elif outcome == "not_judgeable":
         status, conclusion = "not_judgeable", None
-    else:
+    else:  # both_qualify: the spec revision 5 decides
         status, conclusion = "undecided", None
-    return {"status": status, "conclusion": conclusion, "outcomes": dict(outcomes),
+    decision = {"status": status, "conclusion": conclusion, "fixed_reading": fixed}
+    if with_grid:
+        results = [dict(reading_outcome(evidence, reading), name=reading.name)
+                   for reading in all_readings()]
+        decision["interp_grid"] = {
+            "record_only": True,
+            "outcomes": dict(Counter(result["outcome"] for result in results)),
             "readings": results}
+    return decision
 
 
 # ------------------------------------------------------------------------------ Q7-C4
@@ -746,9 +754,10 @@ def build_report(args: argparse.Namespace) -> dict:
     code = code_identity()
     if args.require_clean and code.get("is_clean") is not True:
         checks["code_problems"] = [f"checkout not clean or git failed: {code}"]
-    decision = adoption(evidence)
+    decision = adoption(evidence, with_grid=args.interp_grid)
     return {"status": status_of(checks, decision),
-            "rule": "jp3_remedy_spec_v7.md 4 step 2 조건 3 채택 규칙 (revision 4)",
+            "rule": ("jp3_remedy_spec_v7.md 4 step 2 조건 3 채택 규칙 (revision 4); readings "
+                     "fixed by the user decision of 2026-11-24"),
             "inputs": _inputs(rows_path, args, keys, run_identity), "code_identity": code,
             "checks": checks, "decision": decision,
             "groups": {f"{plant} {arm} {part}": group
@@ -777,6 +786,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--out", type=Path, required=True, help="report json (new file)")
     parser.add_argument("--require-clean", action="store_true",
                         help="this checkout must be a clean commit (setting_defect else)")
+    parser.add_argument("--interp-grid", action="store_true",
+                        help="also record the 32 reading combinations (never the status)")
     return parser
 
 
@@ -797,8 +808,9 @@ def main(argv: list[str] | None = None) -> int:
     with args.out.open("x", encoding="utf-8") as handle:
         json.dump(report, handle, indent=1, default=str)
     decision, q7c4 = report["decision"], report["q7c4"]["totals"]
-    print(json.dumps({"status": report["status"], "readings": len(decision["readings"]),
-                      "outcome_kinds": len(decision["outcomes"]),
+    grid = decision.get("interp_grid")
+    print(json.dumps({"status": report["status"],
+                      "grid_readings": None if grid is None else len(grid["readings"]),
                       "line_problems": len(report["checks"]["line_problems"]),
                       "missing_jobs": len(report["checks"]["missing_jobs"]),
                       "probe_lines": q7c4.get("lines", 0), "out": str(args.out)}), flush=True)

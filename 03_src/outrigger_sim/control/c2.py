@@ -324,6 +324,7 @@ from outrigger_sim.control.lock_start_b import (
     CompletionFlags,
     CylinderGeometry,
     FloorInputs,
+    LevelDonePath,
     LockStartB,
     LockStartBSettings,
     LsbComponent,
@@ -7555,8 +7556,18 @@ class C2Controller:
         self._note_output_limit(OutputLimit.STROKE_END, leg_speeds, clipped_speeds)
         leg_speeds = clipped_speeds
         if is_complete:
+            self._note_level_done(reading, relaxed_twist_load_N)
             self._state.phase = C2Phase.DONE
         return leg_speeds
+
+    def _note_level_done(self, reading: _Reading, relaxed_twist_load_N: float | None) -> None:
+        """Edition 7 3.1 record "LEVEL 완료 경로" (``A_ib`` runs only; record only): the
+        completion of this DONE period met its twist condition strictly or by the relaxation."""
+        if not self.config.lock_start_b.has(LsbComponent.BLIND_FILL):
+            return
+        path = LevelDonePath.STRICT if relaxed_twist_load_N is None else LevelDonePath.RELAX
+        twist_load_N = float(self.geometry.twist_vector @ reading.cylinder_force_N)
+        self._lock_start_b_state().note_level_done(float(reading.t_s), path, twist_load_N)
 
     def _record_command_components(
         self,
