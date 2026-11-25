@@ -1,0 +1,75 @@
+{
+ "rule": "jp3_remedy_spec_v7.md revision 6 (sha256 10902ffd...) 5.1 + erratum 1 (sha256 74c49bda...): the run commit C and its locked run worktree (from run_steps_ed7\\ed7_run_config.template.json of C; prepared 2026-11-26, before any edition 7 run step). common_ed7.ps1 reads run_commit and worktree only; everything under record is a launch sheet for the main session and the audit, not read by the run steps.",
+ "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+ "record": {
+  "spec": {
+   "edition": 7,
+   "revision": 6,
+   "path": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+   "sha256": "10902ffdb763aa092588b1be0dd13f55874826b489f9aa9f1351dd7f48c1da45",
+   "seal_commit": "e241638d",
+   "erratum1_path": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7_erratum1.md",
+   "erratum1_sha256": "74c49bdaddf3fa63feeb70dd24b04823d517df2dbdc7b72c7592e70b1ef81a5b",
+   "erratum1_commit": "265dc641"
+  },
+  "run_commit_parent": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "controller_tree_03_src": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+  "run_steps_dir": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7",
+  "runs_root": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce",
+  "judge_commit": "60ebb4a412c0b9eb20323efa536a35a0caa8c30b",
+  "judge_worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+  "judge_out_root": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\judge_60ebb4a4",
+  "judge_out_rule": "erratum 1 1-18: outside the T' worktree and outside every step folder; one new subfolder per judge call (subcommand name + _aN, e.g. l1ref_a1), never inside a step attempt folder (STEP_aN)",
+  "main_checks_root": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\main_checks",
+  "main_checks_rule": "records of the main session (erratum 1 1-2 condition 1 before 12b_plan, 1-10 SUMS check before each judge); outside every step folder, never overwritten",
+  "inputs_sha256": {
+   "spec_v7": "10902ffdb763aa092588b1be0dd13f55874826b489f9aa9f1351dd7f48c1da45",
+   "g1_keys ed7_design/keys_seal_b46bdf8f/confirm_g1_grid171.json": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
+   "sens_keys ed7_design/keys_seal_b46bdf8f/sens_keys_ed7.json": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+   "l1_keys_12b prelaunch_j9/ed5_inputs/l1_keys_12b.txt": "9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5",
+   "l1_keys_12a prelaunch_j9/l1_keys_d3c6c57e.json": "eea8ed0d5f3aa79ecb5cf1cb892fa82f7d4bac780f8b3b17dbd069200765c6af",
+   "c92_keys prelaunch_j9/ed5_inputs/x11/c92_keys.txt (erratum 1 1-2 condition 1, checked by the main session right before 12b_plan)": "fa5385126b24baff0b46d12985a63b8c6f1fc9b7ba9fd6f797f873d88fb61ef6",
+   "c93_keys prelaunch_j9/ed5_inputs/x11/c93_keys.txt (erratum 1 1-2 condition 1, checked by the main session right before 12b_plan)": "e5d1d52e0778140a53b3913e0f1cfed25643820167a264a8e8faca5123b91827"
+  },
+  "step_order": ["impl_scope", "l1ref", "impl_t8", "impl_cases", "impl_probe", "confirm", "j9main", "sens", "dg3", "12b_plan", "12b_vbkm0 (base)", "12b_vbkm0_b4 / 12b_vbkm (only after the T' decide)"],
+  "placement": {
+   "note": "the run steps take -MaskHex / -Workers on the command line (step5_impl_ed7.ps1 t8 / cases / probe, step6, step7, step8); these slots are filled from the compute-scheduler-expert plan and copied into the launch commands below. l1ref, dg3 and 12b masks are fixed in C and cannot be changed without a new run commit.",
+   "impl_t8": {"mask": "0x0FFFFFFF", "workers": 20},
+   "impl_cases": {"mask": "0x0FFFFFFF", "workers": 20, "note": "the step uses min(10, workers)"},
+   "impl_probe": {"mask": "0x0FFFFFFF", "workers": 20},
+   "confirm": {"mask": "0x0FFFFFFF", "workers": 20, "note": "G1 uses workers, D uses min(24, workers)"},
+   "j9main": {"mask": "0x0FFFFFFF", "workers": 20},
+   "sens": {"mask": "0x0FFFFFFF", "workers": 20},
+   "fixed_in_C": {
+    "l1ref": "L1_VBM0 0x000F, L1_VBM 0x00F0, L1a_VBM0 0x0F00, L1a_VBM 0xF000; 4 workers each",
+    "dg3": "VBM 0x00FF, VBM0 0xFF00; 4 workers each",
+    "12b_vbkm0 base": "b1 0x000F, b2 0x00F0; 4 workers each",
+    "12b_vbkm0_b4": "b4 0x000F; 4 workers",
+    "12b_vbkm": "decided blocks on 0x000F, 0x00F0, 0x0F00; 4 workers each"
+   }
+  },
+  "launch_commands": {
+   "shell": "pwsh -NoProfile -File (never -NoExit; one step at a time, each after the .done of the one before)",
+   "impl_scope": "step5_impl_ed7.ps1 -Part scope",
+   "l1ref": "step_l1ref_ed7.ps1",
+   "impl_t8": "step5_impl_ed7.ps1 -Part t8 -MaskHex 0x0FFFFFFF -Workers 20",
+   "impl_cases": "step5_impl_ed7.ps1 -Part cases -MaskHex 0x0FFFFFFF -Workers 20",
+   "impl_probe": "step5_impl_ed7.ps1 -Part probe -MaskHex 0x0FFFFFFF -Workers 20",
+   "confirm": "step6_confirm_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20",
+   "j9main": "step7_j9main_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20",
+   "sens": "step8_sens_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20",
+   "dg3": "step9_dg3_ed7.ps1",
+   "before_12b_plan": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed7-run\\pre10a_c92c93_check.ps1 -Out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\main_checks\\pre10a_c92c93_a1.json",
+   "12b_plan": "step10a_plan_ed7.ps1",
+   "12b_vbkm0_base": "step10b_vbkm0_ed7.ps1 -Phase base"
+  },
+  "blind_paths": [
+   "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/cdry_a1/VBK_c92*",
+   "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/cdry_a1/VBK_c93*",
+   "06_analysis/02_control/j_p3_cause/j9_runs/606f8713/cdry_a1/logs/",
+   "06_analysis/02_control/j_p3_cause/prelaunch_j9/ed6_inputs/x11/selection.json",
+   "the same paths inside every worktree under .claude/worktrees/"
+  ]
+ }
+}

@@ -1,0 +1,102 @@
+{
+  "purpose": "edition 7 erratum 1 1-7: P5-1-type 33 lines on C, a record (decision 16), not a gate",
+  "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs",
+  "exit_code": 0,
+  "started": "2026-11-26 01:04:44 +09:00",
+  "ended": "2026-11-26 01:10:01 +09:00",
+  "run_steps_started_before": false,
+  "after_run_start_override": false,
+  "lines_written": 33,
+  "lines_expected": 33,
+  "codes": {
+    "identity_start": {
+      "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+      "is_clean": true,
+      "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+      "time": "2026-11-26 01:04:44 +09:00"
+    },
+    "identity_end": {
+      "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+      "is_clean": true,
+      "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+      "time": "2026-11-26 01:10:00 +09:00"
+    },
+    "runs": {
+      "j9_cases": 0,
+      "j9_case_f": 0,
+      "case_cd": 0,
+      "x11_both": 0
+    },
+    "worktree_fingerprint_start": {
+      "count": 380,
+      "sha256": "0dd40a41dc7244d2f2e37087d28daad64f9d649e282c5f3df8142cd9c23acdac",
+      "git_ok": true
+    },
+    "worktree_fingerprint_end": {
+      "count": 380,
+      "sha256": "0dd40a41dc7244d2f2e37087d28daad64f9d649e282c5f3df8142cd9c23acdac",
+      "git_ok": true
+    },
+    "identity_check": 0
+  },
+  "identity_report": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\identity_check.md",
+  "fixed_inputs": {
+    "H10_SHA256": "ce526b1f71e635e6b80d538f36841ece01710af46f02acb4b3fa1355a5a4dcb3",
+    "MAIN_JSONL_SHA256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+    "H6_SHA256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89",
+    "NOISE_VB_SHA256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43",
+    "BASELINE_SUMS_SHA256": "197ac14e96822130ba4eee98486be6ba9646c207ed1a27936c275077b3a60361",
+    "GRID_SHA256": "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827",
+    "DRY_KEYS_FILE_SHA256": "1a79e02fc33ae8844d0cd5672e9e5e745215c354e58e9a8095376939c4335e74",
+    "STORED_H6_R79_JUDGE_SHA256": "d95627ac83a0bfc165df763e898956fbdcbf7c299fb2d9face8915ef478ed57b",
+    "STORED_H6_JUDGE_SHA256": "f8352c5d12d31aebcffe2a4bc5bdfa7919e605a3f3261da8455640df3bad0d0b",
+    "STORED_H6_L1_REFERENCE_SHA256": "a591c3a8c5b3ad5822877e7f69ce2acf75e4cc96fff139a52fef7b6439d56ce7",
+    "H10_T4H_SUMS_SHA256": "3d0ed49a5044c7dd223940e782b6d280a833ffaeb9916347f8cc0622000cc3ac",
+    "H6_T4H_SUMS_SHA256": "c426f5185adc04102dca229b9a4257db71e2cc8c5933f392a083086e186ce655"
+  },
+  "cleared_variables": [],
+  "numba_cache_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\numba_cache",
+  "thread_environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB"
+  },
+  "commands": [
+    {
+      "label": "j9_cases",
+      "mask": "0x0FFFFFFF",
+      "core": "mixed",
+      "workers": 5,
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_cases --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs\\j9_cases.jsonl --workers 5 --mask 0x0FFFFFFF",
+      "pid": 6908
+    },
+    {
+      "label": "j9_case_f",
+      "mask": "0x0FFFFFFF",
+      "core": "mixed",
+      "workers": 8,
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py j9_case_f --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs\\j9_case_f.jsonl --workers 8 --mask 0x0FFFFFFF",
+      "pid": 99104
+    },
+    {
+      "label": "case_cd",
+      "mask": "0x0FFFFFFF",
+      "core": "mixed",
+      "workers": 2,
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs\\cd.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_case_replay.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs\\cd.jsonl --settings VBG4,VBG6 --workers 2 --mask 0x0FFFFFFF",
+      "pid": 110448
+    },
+    {
+      "label": "x11_both",
+      "mask": "0x0FFFFFFF",
+      "core": "mixed",
+      "workers": 1,
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs\\lsj4_x11.jsonl -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_x11_replay.py --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\p51_record_8a2a52ce\\runs\\lsj4_x11.jsonl --arm both --mask 0x0FFFFFFF",
+      "pid": 108128
+    }
+  ]
+}
