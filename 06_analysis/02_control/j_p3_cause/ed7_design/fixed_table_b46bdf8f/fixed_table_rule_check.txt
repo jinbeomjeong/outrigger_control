@@ -1,0 +1,10 @@
+ok  two phases one row -> fail
+ok  five singles over settings -> fail
+ok  four singles -> not_failed
+ok  missing that could fail -> undetermined
+ok  D four VBM fails -> fail
+ok  D three VBM fails -> not_failed
+ok  D VBMslow fails not counted
+ok  D breach -> fail
+ok  D fault -> fail
+ok  D breach missing -> undetermined

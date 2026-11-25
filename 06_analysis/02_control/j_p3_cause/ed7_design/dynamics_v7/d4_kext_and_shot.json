@@ -1,0 +1,1005 @@
+{
+ "n": [
+  0.476072024082169,
+  -0.476072024082169,
+  -0.5228340347436333,
+  0.5228340347436332
+ ],
+ "k_ext_MN_m": {
+  "others_locked (L1-R LOCK, beta 1.0)": [
+   7.941,
+   7.941,
+   10.869,
+   10.869
+  ],
+  "load-gaining legs at rod floor (mixed)": [
+   6.574,
+   6.574,
+   8.794,
+   8.793
+  ],
+  "others moving (oil only)": [
+   5.926,
+   5.925,
+   8.223,
+   8.221
+  ],
+  "others_locked, beta 0.69": [
+   5.778,
+   5.778,
+   7.967,
+   7.966
+  ],
+  "others_locked, beta 1.6": [
+   11.551,
+   11.55,
+   15.618,
+   15.617
+  ],
+  "others_locked, deck torsion k_d 1e8": [
+   5.881,
+   5.881,
+   7.777,
+   7.777
+  ],
+  "others_locked, deck torsion k_d 5e7": [
+   4.669,
+   4.669,
+   6.054,
+   6.054
+  ],
+  "others_locked, SCM J1 elastic pad": [
+   2.473,
+   2.473,
+   3.097,
+   3.097
+  ],
+  "others_locked, SCM G1 elastic pad": [
+   3.582,
+   3.582,
+   4.565,
+   4.564
+  ]
+ },
+ "k_h_head_column_MN_m": [
+  28.941,
+  28.964,
+  21.297,
+  21.308
+ ],
+ "k_st_MN_m": [
+  216.648,
+  216.648,
+  205.103,
+  205.103
+ ],
+ "misuse": {
+  "k_tw_all_moving_MN_m": 21.702,
+  "k_tw_n_i^2_MN_m": [
+   4.919,
+   4.919,
+   5.932,
+   5.932
+  ]
+ },
+ "need_FL_R12_Fs0": [
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 0.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 1.489,
+   "head_mm": 0.292,
+   "yield_mm": 0.292,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 1.409
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 0.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 1.457,
+   "head_mm": 0.267,
+   "yield_mm": 0.267,
+   "dF_leg_kN": -0.66,
+   "delivered_over_need": 1.44
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 0.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 1.414,
+   "head_mm": 0.234,
+   "yield_mm": 0.234,
+   "dF_leg_kN": -1.54,
+   "delivered_over_need": 1.484
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 0.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 1.402,
+   "head_mm": 0.225,
+   "yield_mm": 0.225,
+   "dF_leg_kN": -1.79,
+   "delivered_over_need": 1.497
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 0.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.318,
+   "head_mm": 0.161,
+   "yield_mm": 0.161,
+   "dF_leg_kN": -3.49,
+   "delivered_over_need": 1.592
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 4.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 1.293,
+   "head_mm": 0.142,
+   "yield_mm": 0.142,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 1.623
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 4.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 1.277,
+   "head_mm": 0.13,
+   "yield_mm": 0.13,
+   "dF_leg_kN": -0.32,
+   "delivered_over_need": 1.643
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 4.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 1.256,
+   "head_mm": 0.114,
+   "yield_mm": 0.114,
+   "dF_leg_kN": -0.75,
+   "delivered_over_need": 1.67
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 4.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 1.25,
+   "head_mm": 0.109,
+   "yield_mm": 0.109,
+   "dF_leg_kN": -0.87,
+   "delivered_over_need": 1.678
+  },
+  {
+   "case": "harness volume_scale 1.0",
+   "band_kN": 4.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.21,
+   "head_mm": 0.078,
+   "yield_mm": 0.078,
+   "dF_leg_kN": -1.69,
+   "delivered_over_need": 1.734
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 0.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 2.234,
+   "head_mm": 0.438,
+   "yield_mm": 0.292,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 0.939
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 0.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 2.185,
+   "head_mm": 0.401,
+   "yield_mm": 0.267,
+   "dF_leg_kN": -0.66,
+   "delivered_over_need": 0.96
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 0.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 2.121,
+   "head_mm": 0.351,
+   "yield_mm": 0.234,
+   "dF_leg_kN": -1.54,
+   "delivered_over_need": 0.989
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 0.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 2.103,
+   "head_mm": 0.337,
+   "yield_mm": 0.225,
+   "dF_leg_kN": -1.79,
+   "delivered_over_need": 0.998
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 0.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.977,
+   "head_mm": 0.241,
+   "yield_mm": 0.161,
+   "dF_leg_kN": -3.49,
+   "delivered_over_need": 1.061
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 4.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 1.939,
+   "head_mm": 0.213,
+   "yield_mm": 0.142,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 1.082
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 4.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 1.916,
+   "head_mm": 0.195,
+   "yield_mm": 0.13,
+   "dF_leg_kN": -0.32,
+   "delivered_over_need": 1.095
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 4.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 1.884,
+   "head_mm": 0.17,
+   "yield_mm": 0.114,
+   "dF_leg_kN": -0.75,
+   "delivered_over_need": 1.113
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 4.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 1.875,
+   "head_mm": 0.164,
+   "yield_mm": 0.109,
+   "dF_leg_kN": -0.87,
+   "delivered_over_need": 1.119
+  },
+  {
+   "case": "harness volume_scale 1.5 (VBLv15)",
+   "band_kN": 4.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.815,
+   "head_mm": 0.117,
+   "yield_mm": 0.078,
+   "dF_leg_kN": -1.69,
+   "delivered_over_need": 1.156
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 0.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 1.777,
+   "head_mm": 0.308,
+   "yield_mm": 0.308,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 1.181
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 0.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 1.74,
+   "head_mm": 0.28,
+   "yield_mm": 0.28,
+   "dF_leg_kN": -0.69,
+   "delivered_over_need": 1.206
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 0.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 1.691,
+   "head_mm": 0.244,
+   "yield_mm": 0.244,
+   "dF_leg_kN": -1.61,
+   "delivered_over_need": 1.241
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 0.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 1.677,
+   "head_mm": 0.234,
+   "yield_mm": 0.234,
+   "dF_leg_kN": -1.86,
+   "delivered_over_need": 1.251
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 0.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.585,
+   "head_mm": 0.166,
+   "yield_mm": 0.166,
+   "dF_leg_kN": -3.59,
+   "delivered_over_need": 1.324
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 4.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 1.563,
+   "head_mm": 0.149,
+   "yield_mm": 0.149,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 1.342
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 4.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 1.545,
+   "head_mm": 0.136,
+   "yield_mm": 0.136,
+   "dF_leg_kN": -0.34,
+   "delivered_over_need": 1.358
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 4.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 1.521,
+   "head_mm": 0.119,
+   "yield_mm": 0.119,
+   "dF_leg_kN": -0.78,
+   "delivered_over_need": 1.379
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 4.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 1.514,
+   "head_mm": 0.114,
+   "yield_mm": 0.114,
+   "dF_leg_kN": -0.9,
+   "delivered_over_need": 1.385
+  },
+  {
+   "case": "(c) dead volumes x1.5 (hose, L0r, L0h)",
+   "band_kN": 4.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.469,
+   "head_mm": 0.08,
+   "yield_mm": 0.08,
+   "dF_leg_kN": -1.74,
+   "delivered_over_need": 1.428
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 0.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 2.396,
+   "head_mm": 0.423,
+   "yield_mm": 0.423,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 0.876
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 0.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 2.328,
+   "head_mm": 0.373,
+   "yield_mm": 0.373,
+   "dF_leg_kN": -0.92,
+   "delivered_over_need": 0.901
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 0.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 2.246,
+   "head_mm": 0.312,
+   "yield_mm": 0.312,
+   "dF_leg_kN": -2.05,
+   "delivered_over_need": 0.934
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 0.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 2.224,
+   "head_mm": 0.295,
+   "yield_mm": 0.295,
+   "dF_leg_kN": -2.35,
+   "delivered_over_need": 0.943
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 0.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 2.088,
+   "head_mm": 0.194,
+   "yield_mm": 0.194,
+   "dF_leg_kN": -4.21,
+   "delivered_over_need": 1.005
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 4.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 2.103,
+   "head_mm": 0.205,
+   "yield_mm": 0.205,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 0.997
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 4.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 2.071,
+   "head_mm": 0.181,
+   "yield_mm": 0.181,
+   "dF_leg_kN": -0.45,
+   "delivered_over_need": 1.013
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 4.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 2.031,
+   "head_mm": 0.151,
+   "yield_mm": 0.151,
+   "dF_leg_kN": -0.99,
+   "delivered_over_need": 1.033
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 4.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 2.02,
+   "head_mm": 0.143,
+   "yield_mm": 0.143,
+   "dF_leg_kN": -1.14,
+   "delivered_over_need": 1.039
+  },
+  {
+   "case": "beta 0.69 + hose x2",
+   "band_kN": 4.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 1.954,
+   "head_mm": 0.094,
+   "yield_mm": 0.094,
+   "dF_leg_kN": -2.04,
+   "delivered_over_need": 1.074
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 0.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 2.586,
+   "head_mm": 0.451,
+   "yield_mm": 0.451,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 0.811
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 0.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 2.51,
+   "head_mm": 0.394,
+   "yield_mm": 0.394,
+   "dF_leg_kN": -0.98,
+   "delivered_over_need": 0.836
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 0.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 2.418,
+   "head_mm": 0.326,
+   "yield_mm": 0.326,
+   "dF_leg_kN": -2.15,
+   "delivered_over_need": 0.868
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 0.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 2.394,
+   "head_mm": 0.309,
+   "yield_mm": 0.309,
+   "dF_leg_kN": -2.45,
+   "delivered_over_need": 0.876
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 0.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 2.247,
+   "head_mm": 0.2,
+   "yield_mm": 0.2,
+   "dF_leg_kN": -4.33,
+   "delivered_over_need": 0.934
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 4.0,
+   "k_ext": "0",
+   "k_ext_MN_m": 0.0,
+   "need_mm": 2.273,
+   "head_mm": 0.219,
+   "yield_mm": 0.219,
+   "dF_leg_kN": -0.0,
+   "delivered_over_need": 0.923
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 4.0,
+   "k_ext": "SCM_J1_locked",
+   "k_ext_MN_m": 2.473,
+   "need_mm": 2.235,
+   "head_mm": 0.191,
+   "yield_mm": 0.191,
+   "dF_leg_kN": -0.47,
+   "delivered_over_need": 0.939
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 4.0,
+   "k_ext": "mixed",
+   "k_ext_MN_m": 6.574,
+   "need_mm": 2.191,
+   "head_mm": 0.158,
+   "yield_mm": 0.158,
+   "dF_leg_kN": -1.04,
+   "delivered_over_need": 0.958
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 4.0,
+   "k_ext": "locked",
+   "k_ext_MN_m": 7.941,
+   "need_mm": 2.179,
+   "head_mm": 0.15,
+   "yield_mm": 0.15,
+   "dF_leg_kN": -1.19,
+   "delivered_over_need": 0.963
+  },
+  {
+   "case": "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08",
+   "band_kN": 4.0,
+   "k_ext": "ed6_hyd_21.7",
+   "k_ext_MN_m": 21.7,
+   "need_mm": 2.108,
+   "head_mm": 0.097,
+   "yield_mm": 0.097,
+   "dF_leg_kN": -2.1,
+   "delivered_over_need": 0.995
+  }
+ ],
+ "r1_check_hand_vs_harness_mm": {
+  "harness volume_scale 1.0 band 0": [
+   1.489422,
+   1.489422
+  ],
+  "harness volume_scale 1.0 band 4": [
+   1.29291,
+   1.29291
+  ],
+  "harness volume_scale 1.5 (VBLv15) band 0": [
+   2.234133,
+   2.234133
+  ],
+  "harness volume_scale 1.5 (VBLv15) band 4": [
+   1.939365,
+   1.939365
+  ],
+  "(c) dead volumes x1.5 (hose, L0r, L0h) band 0": [
+   1.776915,
+   1.776915
+  ],
+  "(c) dead volumes x1.5 (hose, L0r, L0h) band 4": [
+   1.562777,
+   1.562777
+  ],
+  "beta 0.69 + hose x2 band 0": [
+   2.395924,
+   2.395924
+  ],
+  "beta 0.69 + hose x2 band 4": [
+   2.103321,
+   2.103321
+  ],
+  "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08 band 0": [
+   2.586187,
+   2.586187
+  ],
+  "beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08 band 4": [
+   2.272534,
+   2.272534
+  ]
+ },
+ "shots": {
+  "FL 0.4 mm": {
+   "heave_mm": 0.1007,
+   "roll_deg": 0.00495,
+   "pitch_deg": -0.00218,
+   "dD_kN": 5.24,
+   "dF_kN": [
+    2.49,
+    -2.49,
+    -2.74,
+    2.74
+   ]
+  },
+  "FR 0.4 mm": {
+   "heave_mm": 0.0976,
+   "roll_deg": -0.00495,
+   "pitch_deg": -0.00226,
+   "dD_kN": -5.24,
+   "dF_kN": [
+    -2.49,
+    2.49,
+    2.74,
+    -2.74
+   ]
+  },
+  "RL 0.4 mm": {
+   "heave_mm": 0.0862,
+   "roll_deg": 0.00336,
+   "pitch_deg": 0.00215,
+   "dD_kN": -5.51,
+   "dF_kN": [
+    -2.62,
+    2.62,
+    2.88,
+    -2.88
+   ]
+  },
+  "RR 0.4 mm": {
+   "heave_mm": 0.0842,
+   "roll_deg": -0.00336,
+   "pitch_deg": 0.0021,
+   "dD_kN": 5.51,
+   "dF_kN": [
+    2.62,
+    -2.62,
+    -2.88,
+    2.88
+   ]
+  },
+  "front pair FL+FR 0.4 mm": {
+   "heave_mm": 0.2108,
+   "roll_deg": 0.0,
+   "pitch_deg": -0.00473,
+   "dD_kN": 0.0,
+   "dF_kN": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "left pair FL+RL 0.4 mm": {
+   "heave_mm": 0.2025,
+   "roll_deg": 0.00899,
+   "pitch_deg": 4e-05,
+   "dD_kN": -0.47,
+   "dF_kN": [
+    -0.22,
+    0.22,
+    0.24,
+    -0.24
+   ]
+  },
+  "pitch round -,-,+,+ 0.4 mm": {
+   "heave_mm": -0.0216,
+   "roll_deg": -0.0,
+   "pitch_deg": 0.00945,
+   "dD_kN": 0.0,
+   "dF_kN": [
+    0.0,
+    0.0,
+    0.0,
+    -0.0
+   ]
+  },
+  "roll round +,-,+,- 0.4 mm": {
+   "heave_mm": 0.0056,
+   "roll_deg": 0.01797,
+   "pitch_deg": 0.00014,
+   "dD_kN": -0.81,
+   "dF_kN": [
+    -0.39,
+    0.39,
+    0.42,
+    -0.42
+   ]
+  },
+  "twist round +n 0.4 mm": {
+   "heave_mm": 0.001,
+   "roll_deg": 0.00332,
+   "pitch_deg": 3e-05,
+   "dD_kN": 17.34,
+   "dF_kN": [
+    8.26,
+    -8.26,
+    -9.07,
+    9.07
+   ]
+  },
+  "FL 0.62 mm": {
+   "heave_mm": 0.156,
+   "roll_deg": 0.00767,
+   "pitch_deg": -0.00338,
+   "dD_kN": 8.12,
+   "dF_kN": [
+    3.86,
+    -3.86,
+    -4.24,
+    4.24
+   ]
+  },
+  "FR 0.62 mm": {
+   "heave_mm": 0.1513,
+   "roll_deg": -0.00767,
+   "pitch_deg": -0.0035,
+   "dD_kN": -8.12,
+   "dF_kN": [
+    -3.86,
+    3.86,
+    4.24,
+    -4.24
+   ]
+  },
+  "RL 0.62 mm": {
+   "heave_mm": 0.1337,
+   "roll_deg": 0.00521,
+   "pitch_deg": 0.00334,
+   "dD_kN": -8.53,
+   "dF_kN": [
+    -4.06,
+    4.06,
+    4.46,
+    -4.46
+   ]
+  },
+  "RR 0.62 mm": {
+   "heave_mm": 0.1304,
+   "roll_deg": -0.00521,
+   "pitch_deg": 0.00326,
+   "dD_kN": 8.53,
+   "dF_kN": [
+    4.06,
+    -4.06,
+    -4.46,
+    4.46
+   ]
+  },
+  "front pair FL+FR 0.62 mm": {
+   "heave_mm": 0.3268,
+   "roll_deg": 0.0,
+   "pitch_deg": -0.00732,
+   "dD_kN": -0.0,
+   "dF_kN": [
+    0.0,
+    0.0,
+    -0.0,
+    -0.0
+   ]
+  },
+  "left pair FL+RL 0.62 mm": {
+   "heave_mm": 0.3139,
+   "roll_deg": 0.01393,
+   "pitch_deg": 6e-05,
+   "dD_kN": -0.72,
+   "dF_kN": [
+    -0.34,
+    0.34,
+    0.38,
+    -0.38
+   ]
+  },
+  "pitch round -,-,+,+ 0.62 mm": {
+   "heave_mm": -0.0335,
+   "roll_deg": -0.0,
+   "pitch_deg": 0.01465,
+   "dD_kN": 0.0,
+   "dF_kN": [
+    0.0,
+    -0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "roll round +,-,+,- 0.62 mm": {
+   "heave_mm": 0.0086,
+   "roll_deg": 0.02785,
+   "pitch_deg": 0.00022,
+   "dD_kN": -1.26,
+   "dF_kN": [
+    -0.6,
+    0.6,
+    0.66,
+    -0.66
+   ]
+  },
+  "twist round +n 0.62 mm": {
+   "heave_mm": 0.0016,
+   "roll_deg": 0.00515,
+   "pitch_deg": 4e-05,
+   "dD_kN": 26.88,
+   "dF_kN": [
+    12.8,
+    -12.8,
+    -14.05,
+    14.05
+   ]
+  },
+  "FL 0.85 mm": {
+   "heave_mm": 0.2139,
+   "roll_deg": 0.01051,
+   "pitch_deg": -0.00464,
+   "dD_kN": 11.13,
+   "dF_kN": [
+    5.3,
+    -5.3,
+    -5.82,
+    5.82
+   ]
+  },
+  "FR 0.85 mm": {
+   "heave_mm": 0.2074,
+   "roll_deg": -0.01051,
+   "pitch_deg": -0.0048,
+   "dD_kN": -11.13,
+   "dF_kN": [
+    -5.3,
+    5.3,
+    5.82,
+    -5.82
+   ]
+  },
+  "RL 0.85 mm": {
+   "heave_mm": 0.1832,
+   "roll_deg": 0.00714,
+   "pitch_deg": 0.00458,
+   "dD_kN": -11.7,
+   "dF_kN": [
+    -5.57,
+    5.57,
+    6.12,
+    -6.12
+   ]
+  },
+  "RR 0.85 mm": {
+   "heave_mm": 0.1788,
+   "roll_deg": -0.00714,
+   "pitch_deg": 0.00447,
+   "dD_kN": 11.7,
+   "dF_kN": [
+    5.57,
+    -5.57,
+    -6.12,
+    6.12
+   ]
+  },
+  "front pair FL+FR 0.85 mm": {
+   "heave_mm": 0.448,
+   "roll_deg": -0.0,
+   "pitch_deg": -0.01004,
+   "dD_kN": 0.0,
+   "dF_kN": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "left pair FL+RL 0.85 mm": {
+   "heave_mm": 0.4304,
+   "roll_deg": 0.0191,
+   "pitch_deg": 8e-05,
+   "dD_kN": -0.99,
+   "dF_kN": [
+    -0.47,
+    0.47,
+    0.52,
+    -0.52
+   ]
+  },
+  "pitch round -,-,+,+ 0.85 mm": {
+   "heave_mm": -0.046,
+   "roll_deg": 0.0,
+   "pitch_deg": 0.02008,
+   "dD_kN": 0.0,
+   "dF_kN": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "roll round +,-,+,- 0.85 mm": {
+   "heave_mm": 0.0118,
+   "roll_deg": 0.03818,
+   "pitch_deg": 0.00029,
+   "dD_kN": -1.73,
+   "dF_kN": [
+    -0.82,
+    0.82,
+    0.9,
+    -0.9
+   ]
+  },
+  "twist round +n 0.85 mm": {
+   "heave_mm": 0.0022,
+   "roll_deg": 0.00706,
+   "pitch_deg": 6e-05,
+   "dD_kN": 36.85,
+   "dF_kN": [
+    17.54,
+    -17.54,
+    -19.27,
+    19.27
+   ]
+  }
+ }
+}

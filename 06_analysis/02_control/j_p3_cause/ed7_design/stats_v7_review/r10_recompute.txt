@@ -1,0 +1,109 @@
+self_check_ok True
+{"f1|p00.0": {"mc": 0.0001, "exact": 2.039376678702597e-05, "ok": true}, "f3|p00.0": {"mc": 0.0015, "exact": 0.0014750450792426534, "ok": true}, "f1|p00.005": {"mc": 0.0246, "exact": 0.023903500174483852, "ok": true}, "f3|p00.005": {"mc": 0.06585, "exact": 0.06543024532956611, "ok": true}, "f1|p00.017": {"mc": 0.38395, "exact": 0.38547509302017285, "ok": true}, "f3|p00.017": {"mc": 0.4971, "exact": 0.49228313422442493, "ok": true}, "sens_c2.8": {"design_json": 0.02485, "rerun": 0.02245, "ok": true}, "sens_c3.0": {"design_json": 0.01025, "rerun": 0.0107, "ok": true}}
+== G1 (exact Poisson-binomial) ==
+n171                                 171
+n168                                 168
+171|null|f1|p00.0                    k2 0.09 k3 0.00 k4 0.00 E 23.77
+168|null|f1|p00.0                    k2 0.09 k3 0.00 k4 0.00 E 23.76
+168+FL4|null|f1|p00.0|qu0.33         k2 0.70 k3 0.03 k4 0.00
+168+FL4|null|f1|p00.0|qu0.75         k2 1.47 k3 0.06 k4 0.00
+168+FL4|null|f1|p00.0|qu1.00         k2 1.94 k3 0.08 k4 0.00
+171|null|f1|p00.002                  k2 1.94 k3 0.24 k4 0.02 E 57.97
+168|null|f1|p00.002                  k2 1.88 k3 0.23 k4 0.02 E 57.36
+168+FL4|null|f1|p00.002|qu0.33       k2 4.91 k3 0.77 k4 0.09
+168+FL4|null|f1|p00.002|qu0.75       k2 8.74 k3 1.45 k4 0.18
+168+FL4|null|f1|p00.002|qu1.00       k2 11.03 k3 1.86 k4 0.23
+171|null|f1|p00.005                  k2 9.63 k3 2.39 k4 0.48 E 109.27
+168|null|f1|p00.005                  k2 9.33 k3 2.28 k4 0.45 E 107.76
+168+FL4|null|f1|p00.005|qu0.33       k2 15.84 k3 4.57 k4 1.04
+168+FL4|null|f1|p00.005|qu0.75       k2 24.12 k3 7.48 k4 1.79
+168+FL4|null|f1|p00.005|qu1.00       k2 29.09 k3 9.22 k4 2.24
+171|null|f1|p00.01                   k2 30.90 k3 13.18 k4 4.64 E 194.77
+168|null|f1|p00.01                   k2 30.08 k3 12.65 k4 4.39 E 191.76
+168+FL4|null|f1|p00.01|qu0.33        k2 38.88 k3 18.24 k4 7.03
+168+FL4|null|f1|p00.01|qu0.75        k2 50.25 k3 25.46 k4 10.43
+168+FL4|null|f1|p00.01|qu1.00        k2 57.06 k3 29.79 k4 12.47
+171|null|f1|p00.017                  k2 61.12 k3 38.55 k4 20.78 E 314.47
+168|null|f1|p00.017                  k2 60.02 k3 37.39 k4 19.89 E 309.36
+168+FL4|null|f1|p00.017|qu0.33       k2 66.93 k3 44.54 k4 25.38
+168+FL4|null|f1|p00.017|qu0.75       k2 76.06 k3 53.97 k4 32.64
+168+FL4|null|f1|p00.017|qu1.00       k2 81.53 k3 59.63 k4 37.00
+171|null|f3|p00.0                    k2 2.01 k3 0.15 k4 0.01 E 71.30
+168|null|f3|p00.0                    k2 2.00 k3 0.15 k4 0.01 E 71.29
+168+FL4|null|f3|p00.0|qu0.33         k2 6.19 k3 0.76 k4 0.05
+168+FL4|null|f3|p00.0|qu0.75         k2 11.45 k3 1.52 k4 0.11
+168+FL4|null|f3|p00.0|qu1.00         k2 14.60 k3 1.98 k4 0.14
+171|null|f3|p00.002                  k2 7.73 k3 1.48 k4 0.21 E 105.50
+168|null|f3|p00.002                  k2 7.61 k3 1.44 k4 0.20 E 104.89
+168+FL4|null|f3|p00.002|qu0.33       k2 14.33 k3 3.46 k4 0.61
+168+FL4|null|f3|p00.002|qu0.75       k2 22.84 k3 6.00 k4 1.11
+168+FL4|null|f3|p00.002|qu1.00       k2 27.94 k3 7.53 k4 1.42
+171|null|f3|p00.005                  k2 20.17 k3 6.54 k4 1.68 E 156.80
+168|null|f3|p00.005                  k2 19.76 k3 6.34 k4 1.60 E 155.29
+168+FL4|null|f3|p00.005|qu0.33       k2 28.55 k3 10.69 k4 3.13
+168+FL4|null|f3|p00.005|qu0.75       k2 39.76 k3 16.25 k4 5.08
+168+FL4|null|f3|p00.005|qu1.00       k2 46.49 k3 19.58 k4 6.25
+171|null|f3|p00.01                   k2 43.92 k3 22.11 k4 9.18 E 242.30
+168|null|f3|p00.01                   k2 43.11 k3 21.46 k4 8.80 E 239.29
+168+FL4|null|f3|p00.01|qu0.33        k2 51.79 k3 28.40 k4 12.84
+168+FL4|null|f3|p00.01|qu0.75        k2 63.04 k3 37.39 k4 18.07
+168+FL4|null|f3|p00.01|qu1.00        k2 69.79 k3 42.79 k4 21.21
+171|null|f3|p00.017                  k2 70.88 k3 49.23 k4 29.47 E 362.00
+168|null|f3|p00.017                  k2 69.97 k3 48.12 k4 28.47 E 356.89
+168+FL4|null|f3|p00.017|qu0.33       k2 75.66 k3 55.01 k4 34.63
+168+FL4|null|f3|p00.017|qu0.75       k2 83.19 k3 64.15 k4 42.80
+168+FL4|null|f3|p00.017|qu1.00       k2 87.70 k3 69.64 k4 47.70
+171|harm|pi0.01|q0.3                 k2 21.63 k3 7.74 k4 2.26
+168|harm|pi0.01|q0.3                 k2 21.00 k3 7.41 k4 2.14
+171|harm|pi0.01|q0.6                 k2 35.39 k3 16.20 k4 6.15
+168|harm|pi0.01|q0.6                 k2 34.49 k3 15.58 k4 5.83
+171|harm|pi0.01|q1.0                 k2 53.06 k3 30.57 k4 14.90
+168|harm|pi0.01|q1.0                 k2 51.97 k3 29.56 k4 14.21
+171|harm|pi0.02|q0.3                 k2 35.39 k3 16.20 k4 6.15
+168|harm|pi0.02|q0.3                 k2 34.49 k3 15.58 k4 5.83
+171|harm|pi0.02|q0.6                 k2 60.84 k3 38.25 k4 20.55
+168|harm|pi0.02|q0.6                 k2 59.73 k3 37.10 k4 19.66
+171|harm|pi0.02|q1.0                 k2 82.95 k3 65.99 k4 46.75
+168|harm|pi0.02|q1.0                 k2 82.10 k3 64.70 k4 45.31
+171|harm|pi0.05|q0.3                 k2 70.81 k3 49.52 k4 30.06
+168|harm|pi0.05|q0.3                 k2 69.75 k3 48.24 k4 28.90
+171|harm|pi0.05|q0.6                 k2 94.91 k3 87.00 k4 74.49
+168|harm|pi0.05|q0.6                 k2 94.50 k3 86.14 k4 73.15
+171|harm|pi0.05|q1.0                 k2 99.68 k3 98.79 k4 96.58
+168|harm|pi0.05|q1.0                 k2 99.63 k3 98.63 k4 96.19
+mde80|171|q0.6|k3                    0.04295364040990535
+mde80|168|q0.6|k3                    0.04386451661275714
+mde80|171|q1.0|k3                    0.025772184246307006
+mde80|168|q1.0|k3                    0.026318709967654286
+p0_upper95_0of163                    0.01821086674421757
+p0_upper95_3of174                    None
+== sensitivity (s31 model) ==
+design_frame_unseen                      38
+actual_frame_unseen                      36
+design|S4|null|c2.5                      unseen 152 E 0.936 cl3 8.26 cl4 7.60 cl5 7.54 | xr3 9.51 xr4 9.09
+design|S4|null|c2.8                      unseen 152 E 0.384 cl3 2.28 cl4 2.25 cl5 2.24 | xr3 2.56 xr4 2.55
+design|S4|null|c3.0                      unseen 152 E 0.207 cl3 1.07 cl4 1.07 cl5 1.07 | xr3 1.14 xr4 1.14
+design|S4|null|c3.5                      unseen 152 E 0.035 cl3 0.07 cl4 0.07 cl5 0.07 | xr3 0.08 xr4 0.08
+design|S4|harm|one_setting|q0.5          unseen 152 E 1.696 cl3 50.24 cl4 50.22 cl5 50.22 | xr3 50.63 xr4 50.62
+design|S4|harm|one_setting|q1.0          unseen 152 E 3.201 cl3 100.00 cl4 100.00 cl5 100.00 | xr3 100.00 xr4 100.00
+design|S4|harm|all_settings|q0.25        unseen 152 E 3.212 cl3 56.02 cl4 51.18 cl5 50.58 | xr3 84.90 xr4 84.90
+design|S4|harm|all_settings|q0.5         unseen 152 E 6.201 cl3 96.06 cl4 94.00 cl5 93.67 | xr3 99.74 xr4 99.74
+actual|S4|null|c2.5                      unseen 144 E 0.888 cl3 7.26 cl4 6.77 cl5 6.70 | xr3 8.46 xr4 8.14
+actual|S4|null|c2.8                      unseen 144 E 0.369 cl3 2.27 cl4 2.23 cl5 2.23 | xr3 2.54 xr4 2.53
+actual|S4|null|c3.0                      unseen 144 E 0.192 cl3 0.95 cl4 0.95 cl5 0.95 | xr3 1.01 xr4 1.01
+actual|S4|null|c3.5                      unseen 144 E 0.034 cl3 0.11 cl4 0.11 cl5 0.11 | xr3 0.12 xr4 0.12
+actual|S4|harm|one_setting|q0.5          unseen 144 E 1.695 cl3 51.06 cl4 51.00 cl5 51.00 | xr3 51.47 xr4 51.43
+actual|S4|harm|one_setting|q1.0          unseen 144 E 3.194 cl3 100.00 cl4 100.00 cl5 100.00 | xr3 100.00 xr4 100.00
+actual|S4|harm|all_settings|q0.25        unseen 144 E 3.176 cl3 54.65 cl4 50.15 cl5 49.55 | xr3 83.68 xr4 83.68
+actual|S4|harm|all_settings|q0.5         unseen 144 E 6.182 cl3 96.29 cl4 94.16 cl5 93.91 | xr3 99.71 xr4 99.71
+== D6 E3 false witness, not opened ==
+reads13|sw0.3        0.075 % (se 0.006)
+reads13|sw0.4        0.000 % (se 0.000)
+reads15|sw0.3        0.092 % (se 0.007)
+reads15|sw0.4        0.000 % (se 0.000)
+reads20|sw0.3        0.133 % (se 0.008)
+reads20|sw0.4        0.001 % (se 0.001)
+reads30|sw0.3        0.198 % (se 0.010)
+reads30|sw0.4        0.001 % (se 0.000)
+reads40|sw0.3        0.277 % (se 0.012)
+reads40|sw0.4        0.001 % (se 0.000)

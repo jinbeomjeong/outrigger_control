@@ -1,0 +1,61 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 6.3 G1 (one unused V0-passing offset per cluster; V0-mixed clusters out; U832 run and recorded)",
+ "pool_csv_sha256": "8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0",
+ "clusters": 192,
+ "mixed_clusters": [
+  [
+   "top",
+   0.0,
+   "ready",
+   "FL",
+   "FS24"
+  ],
+  [
+   "top",
+   0.0,
+   "ready",
+   "FR",
+   "FS24"
+  ],
+  [
+   "top",
+   2.0,
+   "level",
+   "FL",
+   "FS24"
+  ]
+ ],
+ "without_candidate": 19,
+ "eligible_clusters": 171,
+ "u832_clusters": [
+  [
+   "bottom",
+   2.0,
+   "ready",
+   "FL",
+   "RE1bF"
+  ],
+  [
+   "bottom",
+   2.0,
+   "ready",
+   "FR",
+   "RE1bF"
+  ],
+  [
+   "bottom",
+   4.0,
+   "ready",
+   "FR",
+   "RE1bF"
+  ]
+ ],
+ "line_flags": {
+  "counted_for_k": "the line enters the V0 pass -> fail allowance k (false on the three U832 clusters only)",
+  "judged_fault_jp3": "FAULT 0 and J-P3 (\u2462 rev 7 condition rows included) are judged on the line (all 171 lines)"
+ },
+ "expected_lines": 171,
+ "k_counted_lines": 168,
+ "fault_jp3_judged_lines": 171,
+ "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --pool-csv-sha256 8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0 --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only probe_keys_ed7.json,sens_keys_ed7.json,g1_pool_ed7.json"
+}

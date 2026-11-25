@@ -1,0 +1,4471 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 6.3 G1 (one unused V0-passing offset per cluster; V0-mixed clusters out; U832 run and recorded)",
+ "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --pool-csv-sha256 8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0 --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only confirm_g1_grid171.json,g1_pool_ed7.json --g1-seed 20261126",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true
+ },
+ "seed": 20261126,
+ "extraction": "numpy default_rng(seed), sorted cluster order, uniform among the cluster's unused V0-passing offsets (stats s50 form)",
+ "pool_csv_sha256": "8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0",
+ "settings": [
+  "VBM"
+ ],
+ "line_flags": {
+  "counted_for_k": "the line enters the V0 pass -> fail allowance k (false on the three U832 clusters only)",
+  "judged_fault_jp3": "FAULT 0 and J-P3 (\u2462 rev 7 condition rows included) are judged on the line (all 171 lines)"
+ },
+ "expected_lines": 171,
+ "k_counted_lines": 168,
+ "fault_jp3_judged_lines": 171,
+ "expected_j_p3_judged_rows": 171,
+ "lines": [
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FL",
+    "run_id": "4",
+    "v0_commands_sha256": "285601694d4f40a69520641a8bd6e69797cbdd8673ccee078337d1d0be51d72b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FL",
+    "run_id": "1",
+    "v0_commands_sha256": "03b58c0a47d2da8111e918da6d01ec53b6a8557b09258dcf62cc3838def1f295",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FL",
+    "run_id": "2",
+    "v0_commands_sha256": "d4f98c0ce6f29c041300b2f94b93fe1bde4dbf71afcb6577c46e369da5101bfa",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FR",
+    "run_id": "5",
+    "v0_commands_sha256": "074cc0c48737e1999bb2cf9b2c6fb229ecf4ab947b4787fce26999f551eb0cdd",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FR",
+    "run_id": "0",
+    "v0_commands_sha256": "cabaef8eec716bcdf4c77987042525775c513879d3df5ac3709a433d5e2f4443",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.05-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|FR",
+    "run_id": "3",
+    "v0_commands_sha256": "d32469cd395e11fdede56487ff4076c656b3cb327e643575c6713742f3ac4614",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RL",
+    "run_id": "4",
+    "v0_commands_sha256": "d128800a36687e94d8558f0dabe0e75f7232910d8d806adcf28387f566505cb3",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RL",
+    "run_id": "1",
+    "v0_commands_sha256": "715b58247f98107bd735d145a64ba91ef1ebd0e37880e8e53b9829982f54fded",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.05-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RL",
+    "run_id": "3",
+    "v0_commands_sha256": "2d60a99124534c147dc7c253540b689245628f080d083c171fa9a084376cca90",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RR",
+    "run_id": "4",
+    "v0_commands_sha256": "7810d446d60dbb873668c22d69fecdc719a482663170d7a1175f053d7c383f06",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "22a0b59c1af56d59806557f3cab46b8e3bb32b8ab36109f419dcc7620195bab3",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|level|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "dc23578ae744371f5778b21e91afc816b9e450d5c512fe1f82347b43553cb0b5",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FL",
+    "run_id": "4",
+    "v0_commands_sha256": "f3699b99bce068ee6a8b18c793a9b6f1509376f4e85038044b8093e55cab641a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.0-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FL",
+    "run_id": "0",
+    "v0_commands_sha256": "650a80e9f265e640e388f1660926b77426a3ad552a2a4538dd79fc5dd3143d6b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs0-o0.05-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FL",
+    "run_id": "3",
+    "v0_commands_sha256": "6ede9d0690a83f3791b950daa815647e8bb88aa8d5127ec8e34bdd25f744cd09",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FR",
+    "run_id": "5",
+    "v0_commands_sha256": "8ab7548d2822f2f77d162c3e3080c0ecf91eeb20b1d782e8e5de50c5770d9b42",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FR",
+    "run_id": "1",
+    "v0_commands_sha256": "d539ac6590a38301be3d1e59f5f14814a28ce1da920d5f9896549de5558eb109",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs0-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "289ce8ebf51542c8ac106148253330584c7e8a2dbf31f7e91c592ae490c2ca19",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "c2fbe5f6f6075e5337ab36371e4426cfba3c56b72b697cab23c3d62e944c5dbd",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RL",
+    "run_id": "1",
+    "v0_commands_sha256": "32848d3ce09153822d3bc641ae8d0021f701a10b30f8ea2e932ca456f4f56175",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs0-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "0608f6f99ec96eacb91052d9d4ff21a485e038a546d8729b2bde53d9f4ebc9e2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RR",
+    "run_id": "4",
+    "v0_commands_sha256": "b73d6e187ea978279f55e2ad845891b2a7dc40c2d7b854fded64351f650dbcf1",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.0-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "3fed85da5fab576d44cfee6f03ff42342a3e92e65b3cbc48aed656d740aa72d2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs0-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|0.0|ready|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "1e3779c3b901c12cafe41ac7ed6279f07087e65deaa81226eacd37b16b071fd2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FL",
+    "run_id": "8",
+    "v0_commands_sha256": "9ec8dd5f584c97fd5a69c10cb60a399eebbf68b3b38f17b3a12b61c9e18187fa",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FL",
+    "run_id": "3",
+    "v0_commands_sha256": "df2339bf53408bcd600ce6b17a683136bf9489ee90192a71cbcca55595807f26",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FL",
+    "run_id": "4",
+    "v0_commands_sha256": "1d056ec52f8abb38823095235d2e93faef9d52cae37a10f850f03050c8f96c43",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FR",
+    "run_id": "8",
+    "v0_commands_sha256": "d9b32cdadf4b621550c9ad0f18d9b70c541e4bac68216f275962b38aff479580",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "0d441707f0fb80477271563b92b1e04861dfa3fe4931abe9396c6dfe57f53767",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|FR",
+    "run_id": "5",
+    "v0_commands_sha256": "b7b8580b784168414c192c9039f76d95e05e5b1cd17aef9407fd7caa7ccc36c5",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RL",
+    "run_id": "8",
+    "v0_commands_sha256": "cc2e76ac2ac1031e2732d18ea993b696a2478697c66b2ade6f02554e84b25e0e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RL",
+    "run_id": "0",
+    "v0_commands_sha256": "826252bdf66f21902242515c20a25b1d6583fb4cc9bf6743ef535315a32166a6",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "ee75c7d242c9074da38831484979c0531546c7cb4751d746b6a6bd902633f0af",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.025-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RR",
+    "run_id": "9",
+    "v0_commands_sha256": "1b47a41f587cbfaefed9ec4d484481986f3578018253706ed7a0913512703eaf",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "4470ac69b6e43e6bf1b183abd1dc3b1c13be40dedd91fd6b2028bb996547b175",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.05-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|level|RR",
+    "run_id": "6",
+    "v0_commands_sha256": "5cda859defef51529af40aec03a0876c51aa657ead86ec4c0f7b236680a21068",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FL",
+    "run_id": "10",
+    "v0_commands_sha256": "153eb68665699d4b2621cc5130d24f351dc704d3d22cd546aabd87df9de65111",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FL",
+    "run_id": "1",
+    "v0_commands_sha256": "263124d8312f5d1a9cfe3b1a0a587323cf5aa58fde8c545cefd82d009e370a1a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs2-o0.025-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FL",
+    "run_id": "5",
+    "v0_commands_sha256": "12786af4c65bd29c14e58ab320cc3e6221fb05efa5a0d93e06a3570ca653c5d8",
+    "v0_pass": true
+   },
+   "counted_for_k": false,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FR",
+    "run_id": "10",
+    "v0_commands_sha256": "55356246dc3851c0f8b49c0019c4a560e6ba04301a1b9c8ec94495fc0134862e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "b705afaab305519d98be94353d85be8d55f3b8920a5e77d1a81578ad64b34a33",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs2-o0.075-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|FR",
+    "run_id": "7",
+    "v0_commands_sha256": "7d73cf76bb836aeaefd9caba520327df6f77e804e21d9e4e3195eccfe0cd19e2",
+    "v0_pass": true
+   },
+   "counted_for_k": false,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.075-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RL",
+    "run_id": "11",
+    "v0_commands_sha256": "af90ead8762058cf23a51d6de2065fecbb75812d05eb4dd6c5e151e9f8c4ec35",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "837b362db37bc93cf5d7b4ed6dd1c09cad8590146eb643d1ea592052e3c10b8d",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs2-o0.025-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "92a6d9a886b086603ea32642d2a7b2aa23f3a96c64927d997bbdbdc5180f4231",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.075-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RR",
+    "run_id": "11",
+    "v0_commands_sha256": "1ea443a1c67c2b23a57a480463765d7114217ce32d8762d471297fbbbd695b85",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "2aff6d62572d2ffd95674dd535e656815268dac09655b949fb49f78c1b80bb89",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs2-o0.05-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|2.0|ready|RR",
+    "run_id": "6",
+    "v0_commands_sha256": "247738f0f750743373d855abb07c749f44ea174c423e3b32c9c12400a2c13b40",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.075-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FL",
+    "run_id": "11",
+    "v0_commands_sha256": "e40ce793d0df497028695e5bca538cc638b44a3398ff12127ccc3f1ced8fa38a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FL",
+    "run_id": "2",
+    "v0_commands_sha256": "32e5dff9b99a080c2688440f037a1c60289758fc6e9b7efcf2ad97aa10e8a8cb",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.075-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FL",
+    "run_id": "7",
+    "v0_commands_sha256": "b3b340303897317858db56d3af619a6c4fb7cde7f72bfdf22daa9e7bd6fa3e8e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FR",
+    "run_id": "10",
+    "v0_commands_sha256": "bd14d44c5764b16249e38a8e115d3cf8343adfcf75f1f8472675ce0ccffee23a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "4693aa265679faff396872e944ee92746f0f1397f2c29c7fafd4b862a8c8b1ab",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|FR",
+    "run_id": "5",
+    "v0_commands_sha256": "dd0d7516c47bf1d5d6a9b0f33e43d759c623c07882ec6ad7e3cb1f8139444715",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RL",
+    "run_id": "10",
+    "v0_commands_sha256": "0f2d6f78875398f4e15eea02eb99d14eeb52c78bee537236572aac5e723062d8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "19596e97fdc3bc74ca9ef9619ee5d2ab5e2032e83077539b49fd46f6b956c870",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.075-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RL",
+    "run_id": "7",
+    "v0_commands_sha256": "85f1396db822656cd0f7d0dbab7a7588d368244731fc8de654bbb3fbe08ebb01",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RR",
+    "run_id": "10",
+    "v0_commands_sha256": "c07b044fdd9d03cda3305965a7bcefd963ac4ba81bf325c300c5410865561125",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.025-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RR",
+    "run_id": "1",
+    "v0_commands_sha256": "44470d34de052549582a90c89679dba0d0727af75c950602a7363baa33c46f71",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|level|RR",
+    "run_id": "5",
+    "v0_commands_sha256": "cb400e5be5ed08d8452245e160bc3bcd197f9e0971c156673a51156f140bc5e2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FL",
+    "run_id": "10",
+    "v0_commands_sha256": "5647472c7b397c7cf1f19ca58138f8531b7baad652fd3e8280912446739123fc",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FL",
+    "run_id": "1",
+    "v0_commands_sha256": "261848634c9e6165fa67c842cd0dc5c5a9aa3264fd3d5ac2b699e5f3a6406782",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs4-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FL",
+    "run_id": "4",
+    "v0_commands_sha256": "6281699219b0b1ea0cbf41f10f4ff060876ed1c076ead54e4d859508f1f94285",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FR",
+    "run_id": "9",
+    "v0_commands_sha256": "4b3745272913a8d6861167334d15c3d23229280b7a66541ca7a9712129b6075e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.075-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FR",
+    "run_id": "3",
+    "v0_commands_sha256": "38f313108282fda6ef7025fb656f8b83c11190fe1ec2714c52272963677dfda6",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs4-o0.075-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|FR",
+    "run_id": "7",
+    "v0_commands_sha256": "4f72962abb6d203dc08d5cf01dfe02676fdba2cf3fbe438f0853d35f8384a6aa",
+    "v0_pass": true
+   },
+   "counted_for_k": false,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RL",
+    "run_id": "8",
+    "v0_commands_sha256": "74e25e2b500b9016f55b4c0c73949a180f2822769881ca73bacdf1730c7c9530",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RL",
+    "run_id": "1",
+    "v0_commands_sha256": "0fe84bb19a3ae1cd80e7f3c238b5fb89fa4bdd29c9daaab3132ff99e84fb59ae",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs4-o0.075-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RL",
+    "run_id": "7",
+    "v0_commands_sha256": "06875c7ab0a26c4483256d59a75bfc445ec1e6dbea755ee2b72ad021e9fd8f7b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RR",
+    "run_id": "8",
+    "v0_commands_sha256": "54a914a1970d7a290bef6e74279c7461bbc0ac74d4e1efef27a36bc9790221c2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.0-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "8d8c051bd06e9e40585780da15187ff1ef8cfa27826e671cbdc6fd7228d01805",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs4-o0.025-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+    "key": "screen|bottom|4.0|ready|RR",
+    "run_id": "5",
+    "v0_commands_sha256": "801617d6bb9621482a530f2f08330ba95c4dcfba444de97bd559f215756a5fbc",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FL",
+    "run_id": "4",
+    "v0_commands_sha256": "1895094da17194ce8fcfa9fa38d90c8c4201c409392178f644c7dd2f5d489685",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FL",
+    "run_id": "1",
+    "v0_commands_sha256": "ebd046c462d8c4c7ac97c9ae2b117cb4a88a24cca4e66e9dd1573fd0a856eabf",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FL",
+    "run_id": "2",
+    "v0_commands_sha256": "70075468ae67b1bc2836f73f2db1d75cf9c639ccc5d8e9864fde69f01539baff",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FR",
+    "run_id": "5",
+    "v0_commands_sha256": "6a68260e5e86cb751890693975c6e4f8130982bb2bf1da552829b700e3ffa0da",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FR",
+    "run_id": "1",
+    "v0_commands_sha256": "1f4e7447279d1acb40dc8dd5431aa0eefdcd00a9d36b01b0892306334b5f35fa",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "4e6bb3035d15f11d3e0958f8bba93ce412583ff97efa6c0dc22df859948e50d8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RL",
+    "run_id": "4",
+    "v0_commands_sha256": "590d5b0385db0e29431a666166397aebaf095f7bf8f4e0d461b6a527ecc6ab8a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RL",
+    "run_id": "0",
+    "v0_commands_sha256": "8751740cdd5e13633ac7fd5326bea6e5b9fe2e94b48ae2e2230f30ed469b4a7f",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.05-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RL",
+    "run_id": "3",
+    "v0_commands_sha256": "722c7c74554c32e4002ad8ed44ab109163c1cfe35c51cc5679bdf8d11cd736d8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RR",
+    "run_id": "4",
+    "v0_commands_sha256": "93e72e2e4f40e95af89717f0d1f9724b2f7f60dd102e21ef1737387e9f88beda",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RR",
+    "run_id": "1",
+    "v0_commands_sha256": "7ce4b6ae66a5c850a3c99949e301c524207699601612d494d3afc02b195e983d",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|level|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "2a1b8432dd00c9e9305a32ad39b10c264d3846a331b1e113ca4d9686d773a938",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FL",
+    "run_id": "5",
+    "v0_commands_sha256": "9ab603fa0aebf25da147ef09750c11e6ddb3bef9959a43b91254636921c7223b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.0-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FL",
+    "run_id": "0",
+    "v0_commands_sha256": "9b1975e0255912392e4dc981b648a659be78c8b2b8804e2d486d319b74cfbba2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FL-Fs8-o0.05-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FL",
+    "run_id": "3",
+    "v0_commands_sha256": "47b959e6969d4ed457ade7b011fdf930f96f734006f30ecfcf0e965d74ebd10e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FR",
+    "run_id": "4",
+    "v0_commands_sha256": "14c96618180ed802fd065528a7e54b6c95cc8111cea79ff09c5f1cfbffa09194",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FR",
+    "run_id": "1",
+    "v0_commands_sha256": "0d4457b4858a316fc4c709c0d08c1f8a847d2c783e0892a4cd2766c9e2abf69b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-FR-Fs8-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "90a89c55b833571cd9e9fbf3f3c1699a1caf4d7977e681240372af3f01467e6c",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "ee43c78ec895388ef2cba09dfe4e72cf1881a458535350a91a2da8d41bcaa48a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RL",
+    "run_id": "1",
+    "v0_commands_sha256": "55871883eeba5a0d19b7b93af17bec310fe3fb024fa899c875eef536700ea19a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RL-Fs8-o0.05-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RL",
+    "run_id": "3",
+    "v0_commands_sha256": "96ef80498e99afe78aac056ef64efa40f370af5827fdfde53ea81862ddab4af1",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RR",
+    "run_id": "5",
+    "v0_commands_sha256": "d4b331b1b694edbae85b1fb55435b40ea8aac540f6f761a6e696ab4a9b195822",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.0-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "3f37c501fb41bb289744b29bd9be6559355ae359ff40da4c795ca44137f2ed2f",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_bottom-RR-Fs8-o0.05-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+    "key": "screen|bottom|8.0|ready|RR",
+    "run_id": "3",
+    "v0_commands_sha256": "3ba261e48858852589efbdf2543445a0d50f06de2389b921561707ad8e621c12",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FL",
+    "run_id": "0",
+    "v0_commands_sha256": "5a5df2de993304675784abfc0e0baac303fe45532d437312b375112a7c43a762",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "323f553386a73f2c85f3fd33dfb3e84f75856102cbb286590a330c31739e6678",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RL",
+    "run_id": "8",
+    "v0_commands_sha256": "6df15452761660323b14a674f0aa633262281ee16d25be0f3ced1bf275f3e4e8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RL",
+    "run_id": "3",
+    "v0_commands_sha256": "f2464954043fc07ca514b5d7a0d3c8890cac6a74d6045b8ec103cddc9245c333",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "e53cafdb6a5a824c64df4128a41c3db2d3b0d69e84c7cc7f06f9cf65d238b8b7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.025-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RR",
+    "run_id": "9",
+    "v0_commands_sha256": "f6d8677d62592504f97d687a2360608defe74a1b8d24cc80c0b695500aa5b69a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "a45134260a6cae9d8c5c076d1d5df9df3fb88882a03a642374ffa5b99459060d",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.05-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|level|RR",
+    "run_id": "6",
+    "v0_commands_sha256": "36f0046f10442c73c754ada5066fcdef4cf63c6adfa65aab874b61481efc1da7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs0-o0.075-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FL",
+    "run_id": "3",
+    "v0_commands_sha256": "2d56a6f61d357bcb499d08a4732b1826dbe0a316dabb21b81378bac613073907",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs0-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|FR",
+    "run_id": "2",
+    "v0_commands_sha256": "bea2db0ad7f9c47616016c150cfc22444a74103cc727a446745515864d1b8f65",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.075-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RL",
+    "run_id": "11",
+    "v0_commands_sha256": "7e5ac3e3990621350b1030e980c1a4bcedf60ba63f087f1ad04b7e50b60acca7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "e4058a8f9cd7c4b7572e3cfb059e0afc1faf42b0ecdb0b41d7884cb1914575ff",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs0-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RL",
+    "run_id": "4",
+    "v0_commands_sha256": "035f531e8cf586be944f82f7ad9c5595990585ea8cb90ffa4ba00531f45d423b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.075-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RR",
+    "run_id": "11",
+    "v0_commands_sha256": "be2fa281a95239348a79545dfb7f3cd50093cfe41c51d7b8c2c8f019b77f4635",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.0-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "8b13440d3c733f8d78bdc959c3fd626d78892c36b726b69fa9e3fd3d7c68018c",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 0.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs0-o0.05-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|0.0|ready|RR",
+    "run_id": "6",
+    "v0_commands_sha256": "a8a63fee24513bd1a59045ff4b6085de4363ee5515a56eacc1ddc0f3ea2f52f2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FL",
+    "run_id": "2",
+    "v0_commands_sha256": "ecb9857dcf924d52eeadea69ac06562975ffac39824ba561100dbbd2607eebe7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.075-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FR",
+    "run_id": "11",
+    "v0_commands_sha256": "d4eba7f33297e685c85f2157cb3c0552198802c04558c08ddb359333f0b2cb2b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|FR",
+    "run_id": "3",
+    "v0_commands_sha256": "6ddac5a21d58603028339eeaa8acf9ee207a695d9c09eba264ddc5f1a4f8abc2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.0-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RL",
+    "run_id": "8",
+    "v0_commands_sha256": "1156875ae9f08e95517d32dbd2c448721e513576d2ebe426bbb40252a49581b8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RL",
+    "run_id": "3",
+    "v0_commands_sha256": "adddff906d7b7cbf809c0ec231225a3734639f0b3f8c01d3adc9e9582b01e2af",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RL",
+    "run_id": "4",
+    "v0_commands_sha256": "e9196a2f1d3ad1b5982f2f150ad531436a3ad39614c7fc130adf469b02f8247b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.025-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RR",
+    "run_id": "9",
+    "v0_commands_sha256": "265f72f34b600d6d428ea26f9675803706bd41095e195ace6caaec3691bfbfff",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "a4add66af2295fce4b7c507f81e5b17bdb75e46c6ce54b098623e9d06dd88030",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|level|RR",
+    "run_id": "5",
+    "v0_commands_sha256": "60037e773fdb7a22db13ac20df7d1ee72c6acd70ef6c1a759466fd96d7d16ac9",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FL",
+    "run_id": "9",
+    "v0_commands_sha256": "56ae0d28cf95232be3a35955ba09c6834c0435956207c8479994ed45f44a286a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs2-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FL",
+    "run_id": "1",
+    "v0_commands_sha256": "3eae4201c7300413c12bac0456d3961cef034458deac89753defe871dba9ddf7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FR",
+    "run_id": "8",
+    "v0_commands_sha256": "514223c42bb04a884c9523bcd85275d3b88204a60a6c444b66513204d7bbc4dd",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs2-o0.075-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|FR",
+    "run_id": "3",
+    "v0_commands_sha256": "ac2bea037fb63033335670b3826afcb2f7391e2e6b1158c14d3fb92401aa9763",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RL",
+    "run_id": "9",
+    "v0_commands_sha256": "16ed5ca75bc4a702c0c8cb2bfd495535a9fea36ce40f23d94a0365596552d029",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RL",
+    "run_id": "1",
+    "v0_commands_sha256": "9dff821419843e4623846ffb176f79f550c5b858b7d82084352eb52fde5187b4",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs2-o0.025-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "90d4d6c78fd5e9970d43960a8aefec27f1b75a4a7f04218574e635f5ede38431",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.0-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RR",
+    "run_id": "8",
+    "v0_commands_sha256": "c450abd948de37bfac34b1529474232b1bc89059dc45ad3a551e5bb8ea974ff4",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.075-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RR",
+    "run_id": "3",
+    "v0_commands_sha256": "05a434fd72c41dc2ac31de70a234e2a91c67e37a712db7a4252aae81d0fb69e9",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 2.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs2-o0.025-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|2.0|ready|RR",
+    "run_id": "5",
+    "v0_commands_sha256": "06c47c1100f712977dbb2b825e670ba6651c875e4524a5ac1b9b66c65a88f362",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FL",
+    "run_id": "10",
+    "v0_commands_sha256": "9a622f2c0cf8dfb66b7802afe260b0fa6c3117496e5e11cfc55e45dbe92ef659",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FL",
+    "run_id": "3",
+    "v0_commands_sha256": "5766d672ccbaecb4ba585eb44c9a362874a5dfb8b28923b1414a16f267ae975e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.075-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FR",
+    "run_id": "11",
+    "v0_commands_sha256": "9c015896450ba4dab1400fbb694b984feca2645a16192974ecaa986f31755e53",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.025-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|FR",
+    "run_id": "1",
+    "v0_commands_sha256": "727c47fd6316ed52003a47e0c91b23858b1f48398314280c88be052048fad8aa",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RL",
+    "run_id": "10",
+    "v0_commands_sha256": "9d893bb49ded32768e1e1ef74ae47ea4e57a86b73befd48ca2bfc62ff8a2f85a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.025-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RL",
+    "run_id": "1",
+    "v0_commands_sha256": "cef4369b6beb08f99e28c622ff8f10cacb3c6952eb3537b98dda02892b6408a6",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RL",
+    "run_id": "4",
+    "v0_commands_sha256": "1023b1956f142f3db1c803c5684c8e072ce3ea11c0a9ae928356221ee3deaded",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.075-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RR",
+    "run_id": "11",
+    "v0_commands_sha256": "3795d2e448d3c38b780519af6138444b0145470b8377e3bc8ae9e3f667727974",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RR",
+    "run_id": "2",
+    "v0_commands_sha256": "d15aebbe81fb9f8485814e0abe5f93905049ef9be795a56923d79600b07f189d",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.025-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|level|RR",
+    "run_id": "5",
+    "v0_commands_sha256": "fbe30805d7e182ae3bef09ad631d1529cba8db213017bb659e59a55716a1c7db",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FL",
+    "run_id": "9",
+    "v0_commands_sha256": "5df34fd2a9d4f6026a88803af9e70a6d4417a2cf8fe64ef2da09719234f8a41b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs4-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FL",
+    "run_id": "1",
+    "v0_commands_sha256": "3f8f1ab15617f85e2da96359b091842d972525670947ffb39d548a2eb89858b2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FR",
+    "run_id": "9",
+    "v0_commands_sha256": "4cf45c0b1b5a98d9096e19c6894649e0f391bb8d6740fcf2506b426d45d8076b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs4-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|FR",
+    "run_id": "1",
+    "v0_commands_sha256": "f665147d5e6607ce937c3e237de4423c04017be604e3361427fbcadc2024bdf9",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RL",
+    "run_id": "10",
+    "v0_commands_sha256": "c8d7d3d86483d6cf0ff3088897f1c626b296b64d224f665ec99c3ccc48e08bf7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "a6560660864d8d7b7f0e9c3c2c3e6be3242d61b5c2ab55a6c6791ac537e7628b",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs4-o0.025-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RL",
+    "run_id": "5",
+    "v0_commands_sha256": "d37d9c38086a0d57229e38c61a62d2df53eb722df45952dd27701c56bb0fc21c",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.05-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RR",
+    "run_id": "10",
+    "v0_commands_sha256": "511e1f95af7eca035c922dee32e680de125acc090fcf6cfbc127e6f47e866da9",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RR",
+    "run_id": "1",
+    "v0_commands_sha256": "481a87b3b54f40e1690f162eaaee22413ccc585db96a888cc9b036471a11f263",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs4-o0.075-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+    "key": "screen|top|4.0|ready|RR",
+    "run_id": "7",
+    "v0_commands_sha256": "65131b501304dcb5264655e18b376d49a79b18ceeae51b9e35b6cd2033cf75c8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.025-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FL",
+    "run_id": "9",
+    "v0_commands_sha256": "5dfc34461f0272f211f50fa84468e3d316577ea139812f992646cf650f0e534c",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FL",
+    "run_id": "3",
+    "v0_commands_sha256": "0778a7de7a786926dccdb7b9865316db9a1c619a3839d4cdf8cbf751efba7df7",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.05-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FR",
+    "run_id": "10",
+    "v0_commands_sha256": "aeaa2bb3f8230a2dbaee52defc5c0836b5088dba3586b2ad5f892c0ee8851504",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.075-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|FR",
+    "run_id": "3",
+    "v0_commands_sha256": "ebc70cb9ab8a8643d21ea0ed5b1304bef05f109f8fa4c7d459e97adfa421db99",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.075-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RL",
+    "run_id": "11",
+    "v0_commands_sha256": "10bd1b964331ab3fb9a965ab240e276222e37ab1bc600c5040f4f640504fc8d8",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.05-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "e37efcf4ad9364e6fc1b37849ca4432a77dfe47c445d95828c2915604f1957d6",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.075-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RL",
+    "run_id": "7",
+    "v0_commands_sha256": "b0cd3a590a931a4593f74868b054000ed39ad63b9678877d1848cb3a9ee0d58e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.075-FS24-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RR",
+    "run_id": "11",
+    "v0_commands_sha256": "23fbef4500aeb8606d316afe39eb6f21f40c899b2174bc286a6cbb683fee3d3d",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.0-G4-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RR",
+    "run_id": "0",
+    "v0_commands_sha256": "81993a2cb48116f7937050e87e4b80122f6277369cf9a71c3ab7708cc4add390",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "level"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.0-RE1bF-level_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|level|RR",
+    "run_id": "4",
+    "v0_commands_sha256": "d5899a73f827e426dcc6648e16c6870f23b755489e03f32857489a1e7c9eb84e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.075-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FL",
+    "run_id": "11",
+    "v0_commands_sha256": "1f4ee0a892586285fdd4e8c193bdbfe796e8c3261b10b2e95d198e1494539f13",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FL-Fs8-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FL",
+    "run_id": "2",
+    "v0_commands_sha256": "06403430868afe092cef8132a06b4176a91ed8076937159018914c711c32195e",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FR",
+    "run_id": "9",
+    "v0_commands_sha256": "34425e354845c36c57fc972bc111e5b765f3f5c609a61292030a5421780c6b2c",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-FR-Fs8-o0.025-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|FR",
+    "run_id": "1",
+    "v0_commands_sha256": "5255dbd274d97a2bdc663c4793d786c050e63c6fd46d37c0df675401a2bc5d0a",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.075-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RL",
+    "run_id": "11",
+    "v0_commands_sha256": "7dc02b41b9ab44ae9a0c65a61a1d3ceae7db80d8b82f16049ac82d42b9d51ed2",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.05-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RL",
+    "run_id": "2",
+    "v0_commands_sha256": "c726302fc36a16430682899375f8e529605878e84104f984a0550c1f90dbd6d3",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RL-Fs8-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RL",
+    "run_id": "4",
+    "v0_commands_sha256": "6b1408e389169c87689d328ab52549ef51bbe3fdf470a2673fe902be3484c3bf",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "FS24",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.025-FS24-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RR",
+    "run_id": "9",
+    "v0_commands_sha256": "3df34208c918119d508d3eb655fa78488f981798a79906fec7b8e2fb0d14bc37",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "G4",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.075-G4-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RR",
+    "run_id": "3",
+    "v0_commands_sha256": "628fb2b97224705a196df4e66a2ec739a27f80d326e54eb3968fa091c55f9e72",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 8.0,
+     "event": "RE1bF",
+     "timing": "ready"
+    },
+    "setting": "VBM"
+   },
+   "t4h_file": "R12_top-RR-Fs8-o0.0-RE1bF-ready_VBM.npz",
+   "v0_pair": {
+    "file": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+    "key": "screen|top|8.0|ready|RR",
+    "run_id": "4",
+    "v0_commands_sha256": "da0bc2da8b3e1ce529a3ad2020ddbae27c522fa04913c50f0800ab8fbf0f4970",
+    "v0_pass": true
+   },
+   "counted_for_k": true,
+   "judged_fault_jp3": true,
+   "head_only_declared": false
+  }
+ ]
+}

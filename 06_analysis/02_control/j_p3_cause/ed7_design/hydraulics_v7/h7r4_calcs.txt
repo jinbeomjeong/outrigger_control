@@ -1,0 +1,131 @@
+# units: bar gauge, mm, mm/s, kN unless noted
+areas: front A_h 132.73 cm2 A_ann 37.70 cm2; rear A_h 95.03 A_ann 31.42
+
+## X. hand need vs run-commit retract_dead (r = 1)
+  scale 0.5 band 0 kN: code 0.7447 mm, hand 0.7447 mm
+  scale 0.5 band 4 kN: code 0.6465 mm, hand 0.6465 mm
+  scale 1.0 band 0 kN: code 1.4894 mm, hand 1.4894 mm
+  scale 1.0 band 4 kN: code 1.2929 mm, hand 1.2929 mm
+  scale 1.5 band 0 kN: code 2.2341 mm, hand 2.2341 mm
+  scale 1.5 band 4 kN: code 1.9394 mm, hand 1.9394 mm
+
+## H4. FL state of ed6 v15 Fs0 (p_h 99.39, p_r 5.07, s 408.36 mm), delivered 2.098 mm
+  corner | k_ext | need | ratio | opened | rod rise (trapped at VN) | p_b
+  nominal                  | 0    | 1.489 | 1.41 | Y | 22.43 | 30.50
+  nominal                  | dyn  | 1.402 | 1.50 | Y | 22.01 | 30.08
+  nominal                  | mixed | 1.414 | 1.48 | Y | 22.07 | 30.14
+  nominal                  | b3*  | 1.318 | 1.59 | Y | 21.62 | 29.69
+  old v15 (uniform 1.5)    | 0    | 2.234 | 0.94 | n | 20.98 | 30.50
+  old v15 (uniform 1.5)    | dyn  | 2.057 | 1.02 | Y | 21.87 | 29.94
+  old v15 (uniform 1.5)    | mixed | 2.079 | 1.01 | Y | 21.94 | 30.01
+  old v15 (uniform 1.5)    | b3*  | 1.919 | 1.09 | Y | 21.43 | 29.50
+  beta 0.69                | 0    | 1.965 | 1.07 | Y | 22.43 | 30.50
+  beta 0.69                | dyn  | 1.835 | 1.14 | Y | 22.00 | 30.07
+  beta 0.69                | mixed | 1.822 | 1.15 | Y | 21.95 | 30.02
+  beta 0.69                | b3*  | 1.672 | 1.25 | Y | 21.45 | 29.52
+  beta 1.6                 | 0    | 1.092 | 1.92 | Y | 22.43 | 30.50
+  beta 1.6                 | dyn  | 1.039 | 2.02 | Y | 22.04 | 30.11
+  beta 1.6                 | mixed | 1.059 | 1.98 | Y | 22.19 | 30.26
+  beta 1.6                 | b3*  | 1.008 | 2.08 | Y | 21.82 | 29.89
+  line x1.5                | 0    | 1.705 | 1.23 | Y | 22.43 | 30.50
+  line x1.5                | dyn  | 1.614 | 1.30 | Y | 22.01 | 30.08
+  line x1.5                | mixed | 1.627 | 1.29 | Y | 22.07 | 30.14
+  line x1.5                | b3*  | 1.527 | 1.37 | Y | 21.62 | 29.69
+  line x0.5                | 0    | 1.274 | 1.65 | Y | 22.43 | 30.50
+  line x0.5                | dyn  | 1.189 | 1.76 | Y | 22.01 | 30.08
+  line x0.5                | mixed | 1.201 | 1.75 | Y | 22.07 | 30.14
+  line x0.5                | b3*  | 1.109 | 1.89 | Y | 21.62 | 29.69
+  dead x1.5                | 0    | 1.561 | 1.34 | Y | 22.43 | 30.50
+  dead x1.5                | dyn  | 1.465 | 1.43 | Y | 22.00 | 30.07
+  dead x1.5                | mixed | 1.478 | 1.42 | Y | 22.06 | 30.13
+  dead x1.5                | b3*  | 1.375 | 1.53 | Y | 21.59 | 29.66
+  dead x0.5                | 0    | 1.417 | 1.48 | Y | 22.43 | 30.50
+  dead x0.5                | dyn  | 1.338 | 1.57 | Y | 22.03 | 30.10
+  dead x0.5                | mixed | 1.349 | 1.56 | Y | 22.09 | 30.16
+  dead x0.5                | b3*  | 1.260 | 1.66 | Y | 21.64 | 29.71
+  slow (b0.69 L1.5 D1.5)   | 0    | 2.285 | 0.92 | n | 20.48 | 30.50
+  slow (b0.69 L1.5 D1.5)   | dyn  | 2.139 | 0.98 | n | 21.53 | 30.05
+  slow (b0.69 L1.5 D1.5)   | mixed | 2.125 | 0.99 | n | 21.64 | 30.00
+  slow (b0.69 L1.5 D1.5)   | b3*  | 1.961 | 1.07 | Y | 21.42 | 29.49
+  fast (b1.6 L0.5 D0.5)    | 0    | 0.832 | 2.52 | Y | 22.43 | 30.50
+  fast (b1.6 L0.5 D0.5)    | dyn  | 0.787 | 2.67 | Y | 22.06 | 30.13
+  fast (b1.6 L0.5 D0.5)    | mixed | 0.804 | 2.61 | Y | 22.20 | 30.27
+  fast (b1.6 L0.5 D0.5)    | b3*  | 0.760 | 2.76 | Y | 21.84 | 29.91
+
+## H3. retract need [mm] over probe states (p_r 5 bar, F_band 0), worst corner
+  front nominal                  k_ext 0    max over p_h<=140 bar at s 100:3.06 250:2.68 400:2.30 550:1.92 680:1.60
+  front nominal                  k_ext dyn  max over p_h<=140 bar at s 100:3.02 250:2.60 400:2.17 550:1.73 680:1.34
+  front slow (b0.69 L1.5 D1.5)   k_ext 0    max over p_h<=140 bar at s 100:4.62 250:4.08 400:3.53 550:2.98 680:2.51
+  front slow (b0.69 L1.5 D1.5)   k_ext dyn  max over p_h<=140 bar at s 100:4.56 250:3.94 400:3.31 550:2.66 680:2.10
+  rear  nominal                  k_ext 0    max over p_h<=140 bar at s 100:3.25 250:2.89 400:2.53 550:2.18 680:1.87
+  rear  nominal                  k_ext dyn  max over p_h<=140 bar at s 100:3.18 250:2.73 400:2.28 550:1.82 680:1.41
+  rear  slow (b0.69 L1.5 D1.5)   k_ext 0    max over p_h<=140 bar at s 100:4.92 250:4.40 400:3.88 550:3.36 680:2.91
+  rear  slow (b0.69 L1.5 D1.5)   k_ext dyn  max over p_h<=140 bar at s 100:4.78 250:4.13 400:3.46 550:2.78 680:2.20
+  conservative tracker need_ub (LineFillGateParams: beta 0.69, L0r 0.10, L0h 0.08, p_r floor, F_band 0) for comparison:
+  front need_ub max over p_h<=140 (+e_h 9) at s 100:5.50 250:4.81 400:4.12 550:3.43 680:2.83
+  rear  need_ub max over p_h<=140 (+e_h 9) at s 100:5.77 250:5.12 400:4.46 550:3.81 680:3.24
+  head pressure above which a 2.098 mm probe retract does not open (p_r 5 bar, F_band 0, k_ext 0):
+    front nominal                  250: 114.7 bar, 400: 129.6 bar, 550: 150.8 bar
+    front slow (b0.69 L1.5 D1.5)   250: 83.3 bar, 400: 92.3 bar, 550: 104.9 bar
+    rear  nominal                  250: 107.8 bar, 400: 119.7 bar, 550: 135.7 bar
+    rear  slow (b0.69 L1.5 D1.5)   250: 78.6 bar, 400: 85.8 bar, 550: 95.3 bar
+
+## H1/H4(a). trapped fill pressure p_rod,open vs R5-2 candidate p*_ret(F) (psi 3.5)
+  leg p_h | p_rod,open(F_band 0, r 1) | p*_ret(F) | margin
+  front    20 |   5.00 |  12.93 |   7.93
+  front    40 |   9.04 |  19.15 |  10.11
+  front    60 |  15.26 |  25.37 |  10.11
+  front    80 |  21.48 |  31.59 |  10.11
+  front   100 |  27.70 |  37.80 |  10.11
+  front   140 |  40.14 |  50.24 |  10.11
+  front   200 |  58.79 |  68.90 |  10.11
+  rear     20 |   5.00 |  13.05 |   8.05
+  rear     40 |   9.10 |  19.36 |  10.25
+  rear     60 |  15.41 |  25.67 |  10.25
+  rear     80 |  21.72 |  31.98 |  10.25
+  rear    100 |  28.03 |  38.29 |  10.25
+  rear    140 |  40.65 |  50.91 |  10.25
+  rear    200 |  59.58 |  69.84 |  10.25
+  smallest margin 7.93 bar
+
+## H2. D6: lower-bound rise and requirement (p_r,ext 5 bar read)
+  dp_lb = p_b,lb - delta_ub - (p_r,ext + e_r); p_b,lb: psi_ub, p_cr,lb 1 bar, p_h - e_h (4 bar), F_band_ub (16 / 13.3 kN)
+  leg p_h | old p_h/12 | dp_lb(psi 6, d 3) | dp_lb(psi 6, d 5) | req 0.5 dp_lb | physical rise psi 3.5 (band 0 / F_s 8k) | psi 4.5 | psi 6
+  front   40 |  3.33 |  -6.17 |  -8.17 | -3.08 |  4.04 /  3.71 |  1.19 |  0.00
+  front   60 |  5.00 |  -2.83 |  -4.83 | -1.42 | 10.26 /  9.43 |  5.93 |  2.27
+  front   80 |  6.67 |   0.50 |  -1.50 |  0.25 | 16.48 / 15.14 | 10.67 |  5.77
+  front  100 |  8.33 |   3.83 |   1.83 |  1.92 | 22.70 / 20.86 | 15.42 |  9.27
+  front  120 | 10.00 |   7.17 |   5.17 |  3.58 | 28.92 / 27.04 | 20.16 | 12.77
+  front  140 | 11.67 |  10.50 |   8.50 |  5.25 | 35.14 / 33.26 | 24.91 | 16.27
+  rear    40 |  3.33 |  -6.17 |  -8.17 | -3.08 |  4.10 /  3.71 |  1.20 |  0.00
+  rear    60 |  5.00 |  -2.83 |  -4.83 | -1.42 | 10.41 /  9.43 |  6.00 |  2.29
+  rear    80 |  6.67 |   0.50 |  -1.50 |  0.25 | 16.72 / 15.14 | 10.79 |  5.82
+  rear   100 |  8.33 |   3.83 |   1.83 |  1.92 | 23.03 / 20.86 | 15.59 |  9.35
+  rear   120 | 10.00 |   7.17 |   5.17 |  3.58 | 29.34 / 27.13 | 20.39 | 12.88
+  rear   140 | 11.67 |  10.50 |   8.50 |  5.25 | 35.65 / 33.44 | 25.18 | 16.40
+
+## H5. P1 VN steady release threshold u_thr [mm/s] (u_hold = 0.2092 mm/s)
+  c_v 0.005: c_v v_max 0.105; p_h 20: ext 0.098 ret 0.100; p_h 60: ext 0.101 ret 0.102; p_h 100: ext 0.101 ret 0.103; p_h 140: ext 0.102 ret 0.103
+  c_v 0.0115: c_v v_max 0.241; p_h 20: ext 0.208 ret 0.218; p_h 60: ext 0.220 ret 0.229; p_h 100: ext 0.224 ret 0.232; p_h 140: ext 0.227 ret 0.233
+  c_v 0.02: c_v v_max 0.418; p_h 20: ext 0.328 ret 0.355; p_h 60: ext 0.360 ret 0.384; p_h 100: ext 0.372 ret 0.392; p_h 140: ext 0.378 ret 0.396
+  c_v 0.04: c_v v_max 0.837; p_h 20: ext 0.539 ret 0.616; p_h 60: ext 0.632 ret 0.710; p_h 100: ext 0.669 ret 0.738; p_h 140: ext 0.690 ret 0.753
+  extension line fill to p_h + p_cr at u_hold with no drain (c_v v_max < u_hold):
+    front p_h 20: x 0.090 mm, time at u_hold 0.43 s
+    front p_h 60: x 0.262 mm, time at u_hold 1.25 s
+    front p_h 100: x 0.434 mm, time at u_hold 2.07 s
+    front p_h 140: x 0.606 mm, time at u_hold 2.89 s
+  E3 (3-read means) difference sigma for read sigma 0.1 mm: 0.0816 mm
+   s_still 0.10 mm: truly still stretch fails the test 0.110 per evaluation
+     leg moving at 0.100 mm/s (E3 span 1.7 s, 0.170 mm): called still 0.1956
+     leg moving at 0.150 mm/s (E3 span 1.7 s, 0.255 mm): called still 0.0288
+     leg moving at 0.209 mm/s (E3 span 1.7 s, 0.356 mm): called still 0.0009
+   s_still 0.15 mm: truly still stretch fails the test 0.033 per evaluation
+     leg moving at 0.100 mm/s (E3 span 1.7 s, 0.170 mm): called still 0.4032
+     leg moving at 0.150 mm/s (E3 span 1.7 s, 0.255 mm): called still 0.0992
+     leg moving at 0.209 mm/s (E3 span 1.7 s, 0.356 mm): called still 0.0059
+  piston coordinate: head column motion (L0h + s) dp_h / beta = 0.0450 mm per bar (front, s 0.40 m, beta 1 GPa)
+  single-read witness (D6): read-difference sigma 0.1414 mm; P(any of n reads > T) ~ n Q(T / sigma_d)
+   T 0.3 mm: Q 1.69e-02, n = 12 reads ~ 0.203
+   T 0.5 mm: Q 2.03e-04, n = 12 reads ~ 0.002
+   T 0.6 mm: Q 1.10e-05, n = 12 reads ~ 0.000
+   T 1.0 mm: Q 7.69e-13, n = 12 reads ~ 0.000

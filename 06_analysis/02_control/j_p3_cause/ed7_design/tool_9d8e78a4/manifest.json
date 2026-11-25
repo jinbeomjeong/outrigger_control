@@ -1,0 +1,23 @@
+{
+ "purpose": "436.9 edition 7 probe analysis 2: the condition 3 adoption rule of jp3_remedy_spec_v7.md (revision 4, sha256 eae2b90b..., not sealed) 4 step 2, run on the 6bfb2560 probe output; user approval 2026-11-24",
+ "commit": "9d8e78a4cff88e14d5fb8af9a52f4cfc21820e18 (branch ed7-impl, worktree .claude/worktrees/ed7-impl, parent ad7a716e); adds 04_scripts/04_hydraulic/coupled/ed7_condition3_adoption.py and 05_tests/unit/test_ed7_adoption.py only",
+ "adoption_run": {
+  "command": "cd <worktree>; MKL_THREADING_LAYER=TBB; C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/ed7_condition3_adoption.py --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json --keys-sha256 189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\adoption_9d8e78a4.json --require-clean",
+  "exit": 0,
+  "stdout_last_line": "{\"status\": \"decided\", \"readings\": 32, \"outcome_kinds\": 1, \"line_problems\": 0, \"missing_jobs\": 0, \"probe_lines\": 654, \"out\": \"...\\\\adoption_9d8e78a4.json\"}",
+  "output_sha256": "70675fdc6951c0ee4433426f88cce5d95419bf044cb288e75e1679b340f2dcd2",
+  "inputs_sha256": {
+   "ed7_probe.jsonl": "1107b30962a038ec9ebccdd19543338f7df771261aa208ef458de6b814817ce9",
+   "probe_keys_ed7.json": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da",
+   "v5/main.jsonl (V0, jp3_fixed_inputs.MAIN_JSONL_SHA256)": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  },
+  "code_identity_in_report": "head 9d8e78a4, is_clean true; probe run identity head 6bfb2560 clean at start and end",
+  "existing_files": "condition.json and condition_ad7a716e.json in the same folder left unchanged"
+ },
+ "files": {
+  "tests/ed7_adoption_tests_junit.xml": "Chrono-dev pytest of test_ed7_adoption.py (29) + test_ed7_units.py (56) at the commit content, clean tree: 85 passed, 0 skipped, 0 xfail",
+  "tests/ed7_adoption_tests.log": "its log",
+  "checks/crosscheck_ed6_share.py": "independent check: ed6_probe_share.group_judgement (the edition 6 probe share tool, unchanged) on the 18 compared main-part groups (plants M, Mslow, Mfast, Mc005, Mc04, L x arms a2, a3, a4) against the adoption report's failed keys of the j7=ed6_share reading",
+  "checks/crosscheck_ed6_share.json": "result: 18 groups, 18 the same"
+ }
+}

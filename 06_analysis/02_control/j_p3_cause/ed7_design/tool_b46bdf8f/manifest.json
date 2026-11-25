@@ -1,0 +1,29 @@
+{
+ "purpose": "436.9 edition 7, user decision 2026-11-24 (before the seal): (1) record keys LEVEL done path and |D| over the relax limit (commands unchanged), (2) the condition 3 adoption tool judged on one fixed reading, (3) Q7-C4 WARN_PROBE_RETRACT_NOT_OPENED never J7-exempt; the adoption rerun on the 6bfb2560 probe output",
+ "commit": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 (branch ed7-impl, worktree .claude/worktrees/ed7-impl, parent 9d8e78a4); files: 03_src/outrigger_sim/control/{c2,lock_start_b}.py, 04_scripts/04_hydraulic/coupled/{ed7_condition3_adoption,jp3_ed7_rules}.py, 05_tests/unit/test_ed7_{units,adoption,harness}.py",
+ "record_keys": {
+  "lsb_record.blind.level_done": "list, one entry per LEVEL -> DONE: t_s, path ('strict' | 'relax'), twist_load_N",
+  "lsb_record.blind.twist_over_limit": "limit_N, entries, periods, episodes[start_t_s, end_t_s (None while open), periods, max_abs_twist_N]; LEVEL periods with |D| > the condition 3 limit",
+  "T4h lsb_ib_twist_load_N": "D of every controller update (10 Hz), NaN off a row",
+  "scope": "A_ib runs only, as every edition 7 lsb key (edition 6 settings unchanged, P7-0)"
+ },
+ "fixed_reading": "j7 ed7_new, stiffness sens_exempt (Mslow, Mfast, Mc005, Mc04), plants vbm5, ratio known_shots, n_rev sum; --interp-grid = 32 combinations as a record only",
+ "adoption_run": {
+  "command": "cd <worktree>; MKL_THREADING_LAYER=TBB; C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/ed7_condition3_adoption.py --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl --keys C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json --keys-sha256 189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da --v0 C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --v0-sha256 9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\adoption_b46bdf8f.json --require-clean --interp-grid",
+  "exit": 0,
+  "stdout_last_line": "{\"status\": \"decided\", \"grid_readings\": 32, \"line_problems\": 0, \"missing_jobs\": 0, \"probe_lines\": 654, \"out\": \"...\\\\adoption_b46bdf8f.json\"}",
+  "output_sha256": "186d703ce1e6faba5b9ae0b229191c77e3be490673143f5f780204dab2f22000",
+  "code_identity_in_report": "head b46bdf8f, is_clean true",
+  "existing_files": "condition.json, condition_ad7a716e.json, adoption_9d8e78a4.json in the same folder left unchanged"
+ },
+ "files": {
+  "tests/ed7_tests_junit.xml": "Chrono-dev pytest at the commit, clean tree: test_ed7_units + test_ed7_adoption + test_ed7_harness (harness in dynamics-dev: P7-0 seven old-plant lines = the 79495405 command hashes, P7-1 VBM R12 = VBM0 R12, VBM lines carry the new keys): 101 passed, 0 skipped, 0 xfail",
+  "tests/ed7_tests.log": "its log",
+  "tests/related_subset_junit.xml": "Chrono-dev pytest -n 8 of 17 related files (c2, lock_start_b, ed6, jp3_rev6, ground_contact, two_pressure, v5 settings / tags) on the committed content, OUTRIGGER_RECORDS_ROOT = main checkout: 780 passed, 13 skipped (all stored 07_results/S8 data of the two two_pressure files)",
+  "tests/related_subset.log": "its log",
+  "tests/worktree_tests_report.md": "tools/verif/worktree_tests.py rerun of those two files at b46bdf8f with the main checkout data: 73 passed, skip 0, probe modules from the worktree, originals unchanged (exit 1 = 5 data_literal_not_rebased warnings, as before)",
+  "tests/worktree_tests_junit.xml": "its JUnit",
+  "checks/probe_repro_compare.py": "probe reproducibility: ed7_probe.py at b46bdf8f for plants M, Mc04 x arms a2, a3 x keys R12_top-FR-Fs0-o0.05, R12_top-FL-Fs8-o0.0 (8 jobs) against the stored 6bfb2560 probe lines by job",
+  "checks/probe_repro_compare.json": "8 / 8 the same commands_sha256, 8 / 8 with level_done, twist_over_limit and lsb_ib_twist_load_N, 0 error lines"
+ }
+}

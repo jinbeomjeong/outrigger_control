@@ -1,0 +1,28 @@
+bringing up nodes...
+bringing up nodes...
+
+........................................................................ [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 27%]
+........................................................................ [ 36%]
+........................................................................ [ 45%]
+........................................................................ [ 54%]
+........................................................................ [ 63%]
+........................................................................ [ 72%]
+...............s.sssssss...........sssss................................ [ 81%]
+........................................................................ [ 90%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:371: 07_results/S8 ML pilot bases not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\07_results\S8\ml_pilot_20261025_002044\episodes\missing\ML00_ep5 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\07_results\S8\ml_pilot_20261025_002044\episodes\ML17_ep4 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\07_results\S8\p1r_20261024_222013\K0V_top_fdown3.5_Fs0 not present
+SKIPPED [2] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\07_results\S8\cb_20261025_000840\CB_H4V_fdown3.5_Fs0 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\07_results\S8\p1r_20261024_222013\E_G4_Fs8 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\07_results\S8\p1r_20261024_222013\K0_top_rpBop_Fs0 not present
+SKIPPED [2] 05_tests\unit\test_two_pressure_lock_valve.py:286: 07_results/S8 CB batch not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_valve.py:293: 07_results/S8 p1r batch not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_valve.py:304: 07_results/S8 p1r batch not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_valve.py:315: 07_results/S8 ML pilot bases not present
+780 passed, 13 skipped in 217.95s (0:03:37)

@@ -1,0 +1,46 @@
+{
+ "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\confirm_g1_grid171.json",
+ "seed": 20261126,
+ "lines": 171,
+ "expected_lines": 171,
+ "k_counted_lines": 168,
+ "fault_jp3_judged_lines": 171,
+ "expected_j_p3_judged_rows": 171,
+ "counted_for_k_true": 168,
+ "judged_fault_jp3_true": 171,
+ "head_only_declared_true": 0,
+ "not_counted_lines": [
+  "bottom-FL-Fs2-RE1bF-ready o0.025",
+  "bottom-FR-Fs2-RE1bF-ready o0.075",
+  "bottom-FR-Fs4-RE1bF-ready o0.075"
+ ],
+ "not_counted_are_u832": true,
+ "distinct_clusters": 171,
+ "settings": {
+  "VBM": 171
+ },
+ "unique_t4h_files": 171,
+ "overlap_with_d12_keys": 0,
+ "overlap_with_ed6_grid192": 0,
+ "overlap_with_probe_keys": 0,
+ "d12_keys_in_ed6_grid192": 12,
+ "v0_pair_hash_problems": [],
+ "v0_pair_stored_pass_problems": [],
+ "v0_pass_flags_true": 171,
+ "run_id_types": {
+  "str": 171
+ },
+ "fl_fs4_ready_lines": [
+  {
+   "t4h_file": "R12_bottom-FL-Fs4-o0.0-RE1bF-ready_VBM.npz",
+   "offset_s": 0.0,
+   "counted_for_k": true
+  }
+ ],
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true
+ },
+ "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --pool-csv-sha256 8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0 --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only confirm_g1_grid171.json,g1_pool_ed7.json --g1-seed 20261126"
+}

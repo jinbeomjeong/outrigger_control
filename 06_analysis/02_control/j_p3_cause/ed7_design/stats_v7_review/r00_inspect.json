@@ -1,0 +1,434 @@
+{
+ "sens_top": {
+  "rule": "jp3_remedy_spec_v7.md 6.2 (judged four, recorded six; the edition 6 subset rows)",
+  "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\keys --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --pool-csv-sha256 8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0 --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only probe_keys_ed7.json,sens_keys_ed7.json,g1_pool_ed7.json",
+  "code_identity": {
+   "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+   "head": "a6fc3dd5c353cd90e868549f4ff844ebb2515870",
+   "is_clean": true
+  },
+  "settings_judged": [
+   "VBMslow",
+   "VBMfast",
+   "VBMc005",
+   "VBMc04"
+  ],
+  "settings_record": [
+   "VBMb069",
+   "VBMb16",
+   "VBMh05",
+   "VBMh15",
+   "VBMd05",
+   "VBMd15"
+  ],
+  "expected_lines": 460,
+  "judged_lines": 184,
+  "expected_j_p3_judged_rows": 104,
+  "probe_seen_units": 100
+ },
+ "probe_keys": [
+  "R12_top-FR-Fs0-o0.0",
+  "R12_top-FR-Fs0-o0.05",
+  "R12_top-RL-Fs0-o0.0",
+  "S7_e0.001",
+  "R2_e0.001",
+  "R2_e0.003",
+  "S4_e0.002",
+  "R12_o0.0",
+  "R12_top-FL-Fs8-o0.0",
+  "R12_bottom-FL-Fs4-o0.0",
+  "R12_top-FR-Fs4-o0.0",
+  "R15_o0.0",
+  "R15_o0.05",
+  "S5_e0.0",
+  "S1_e0.003"
+ ],
+ "probe_plants": [
+  "M",
+  "Mslow",
+  "Mfast",
+  "Mc005",
+  "Mc04",
+  "L"
+ ],
+ "sens_line_fields": [
+  "head_only_declared",
+  "job",
+  "judged",
+  "key",
+  "probe_seen",
+  "v0_pair"
+ ],
+ "sens_job_fields": [
+  "case",
+  "eps",
+  "offset_s",
+  "setting"
+ ],
+ "sens_key_examples": [
+  "R12_o0.0",
+  "R12_o0.025",
+  "R12_o0.05",
+  "R12_o0.075",
+  "R12_top-FL-Fs0-o0.0"
+ ],
+ "sens_per_setting": {
+  "VBMslow": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 46
+  },
+  "VBMfast": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 46
+  },
+  "VBMc005": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 46
+  },
+  "VBMc04": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 46
+  },
+  "VBMb069": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 0
+  },
+  "VBMb16": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 0
+  },
+  "VBMh05": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 0
+  },
+  "VBMh15": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 0
+  },
+  "VBMd05": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 0
+  },
+  "VBMd15": {
+   "lines": 46,
+   "seen": 10,
+   "judged": 0
+  }
+ },
+ "sens_rows_VBMslow": {
+  "R12": {
+   "phases": 4,
+   "seen": 1
+  },
+  "R12 top-FL-Fs0": {
+   "phases": 2,
+   "seen": 0
+  },
+  "R12 top-FL-Fs8": {
+   "phases": 2,
+   "seen": 1
+  },
+  "R12 top-FR-Fs4": {
+   "phases": 2,
+   "seen": 1
+  },
+  "R12 top-RL-Fs4": {
+   "phases": 2,
+   "seen": 0
+  },
+  "R12 top-RR-Fs4": {
+   "phases": 2,
+   "seen": 0
+  },
+  "R12 bottom-FL-Fs4": {
+   "phases": 2,
+   "seen": 1
+  },
+  "R12 bottom-RR-Fs4": {
+   "phases": 2,
+   "seen": 0
+  },
+  "R14": {
+   "phases": 2,
+   "seen": 0
+  },
+  "R15": {
+   "phases": 2,
+   "seen": 2
+  },
+  "R16": {
+   "phases": 4,
+   "seen": 0
+  },
+  "S1": {
+   "phases": 4,
+   "seen": 1
+  },
+  "S4": {
+   "phases": 4,
+   "seen": 1
+  },
+  "S5": {
+   "phases": 4,
+   "seen": 1
+  },
+  "S7": {
+   "phases": 4,
+   "seen": 1
+  },
+  "R2ra": {
+   "phases": 4,
+   "seen": 0
+  }
+ },
+ "sens_rows_VBMslow_keys": {
+  "R12": [
+   "R12_o0.0",
+   "R12_o0.025",
+   "R12_o0.05",
+   "R12_o0.075"
+  ],
+  "R12 top-FL-Fs0": [
+   "R12_top-FL-Fs0-o0.0",
+   "R12_top-FL-Fs0-o0.05"
+  ],
+  "R12 top-FL-Fs8": [
+   "R12_top-FL-Fs8-o0.0",
+   "R12_top-FL-Fs8-o0.05"
+  ],
+  "R12 top-FR-Fs4": [
+   "R12_top-FR-Fs4-o0.0",
+   "R12_top-FR-Fs4-o0.05"
+  ],
+  "R12 top-RL-Fs4": [
+   "R12_top-RL-Fs4-o0.0",
+   "R12_top-RL-Fs4-o0.05"
+  ],
+  "R12 top-RR-Fs4": [
+   "R12_top-RR-Fs4-o0.0",
+   "R12_top-RR-Fs4-o0.05"
+  ],
+  "R12 bottom-FL-Fs4": [
+   "R12_bottom-FL-Fs4-o0.0",
+   "R12_bottom-FL-Fs4-o0.05"
+  ],
+  "R12 bottom-RR-Fs4": [
+   "R12_bottom-RR-Fs4-o0.0",
+   "R12_bottom-RR-Fs4-o0.05"
+  ],
+  "R14": [
+   "R14_o0.0",
+   "R14_o0.05"
+  ],
+  "R15": [
+   "R15_o0.05",
+   "R15_o0.0"
+  ],
+  "R16": [
+   "R16_o0.05",
+   "R16_o0.0",
+   "R16_o0.025",
+   "R16_o0.075"
+  ],
+  "S1": [
+   "S1_e0.0",
+   "S1_e0.001",
+   "S1_e0.002",
+   "S1_e0.003"
+  ],
+  "S4": [
+   "S4_e0.0",
+   "S4_e0.001",
+   "S4_e0.002",
+   "S4_e0.003"
+  ],
+  "S5": [
+   "S5_e0.0",
+   "S5_e0.001",
+   "S5_e0.002",
+   "S5_e0.003"
+  ],
+  "S7": [
+   "S7_e0.0",
+   "S7_e0.001",
+   "S7_e0.002",
+   "S7_e0.003"
+  ],
+  "R2ra": [
+   "R2ra_e0.0",
+   "R2ra_e0.001",
+   "R2ra_e0.002",
+   "R2ra_e0.003"
+  ]
+ },
+ "sens_frame_VBMslow": [
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   0
+  ]
+ ],
+ "probe_keys_in_sens": [
+  "R12_bottom-FL-Fs4-o0.0",
+  "R12_o0.0",
+  "R12_top-FL-Fs8-o0.0",
+  "R12_top-FR-Fs4-o0.0",
+  "R15_o0.0",
+  "R15_o0.05",
+  "S1_e0.003",
+  "S4_e0.002",
+  "S5_e0.0",
+  "S7_e0.001"
+ ],
+ "g1": {
+  "clusters": 192,
+  "mixed": 3,
+  "nocand": 19,
+  "mixed_and_nocand": [
+   [
+    "top",
+    2.0,
+    "level",
+    "FL",
+    "FS24"
+   ]
+  ],
+  "all_v0_fail": 18,
+  "nocand_not_allfail": [
+   [
+    "top",
+    2.0,
+    "level",
+    "FL",
+    "FS24"
+   ]
+  ],
+  "eligible": 171
+ },
+ "opp_fields": [
+  "level",
+  "fs_kN",
+  "timing",
+  "leg",
+  "event",
+  "offset_s",
+  "p_np",
+  "p_margin"
+ ],
+ "s31_clusters": 171,
+ "s31_vs_impl_cluster_sets_equal": true,
+ "s31_minus_impl": [],
+ "impl_minus_s31": [],
+ "u832_pmargin": {
+  "bottom|2.0|ready|FL|RE1bF": [
+   1.5707435352396715e-12,
+   2.233768725545815e-13,
+   1.6422244765723626e-05
+  ],
+  "bottom|2.0|ready|FR|RE1bF": [
+   3.1469271633000062e-12,
+   4.072298054325074e-13,
+   1.1453798510863145e-05
+  ],
+  "bottom|4.0|ready|FR|RE1bF": [
+   1.425748408223626e-12,
+   1.5471931825494778e-05,
+   3.985671632178445e-06
+  ]
+ },
+ "fl4_pmargin": [
+  0.0017855133377445709,
+  9.658940314238862e-13,
+  7.014373834768328e-06
+ ],
+ "fl4_candidates": [
+  "0.0",
+  "0.025",
+  "0.075"
+ ],
+ "u832_candidates": {
+  "bottom|2.0|ready|FL|RE1bF": [
+   "0.025",
+   "0.05",
+   "0.075"
+  ],
+  "bottom|2.0|ready|FR|RE1bF": [
+   "0.025",
+   "0.05",
+   "0.075"
+  ],
+  "bottom|4.0|ready|FR|RE1bF": [
+   "0.025",
+   "0.05",
+   "0.075"
+  ]
+ }
+}

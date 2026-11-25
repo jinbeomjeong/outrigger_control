@@ -1,0 +1,306 @@
+=== c2 (2 mm only) retract line: opened (line dir -1) by plant / front ===
+              n  opened  ratio_sent_min  ratio_sent_med  ratio_fill_min  ratio_fill_med
+plant front                                                                            
+L     False  45      45        1.345355        1.824266        0.525056        0.859457
+      True   46      46        1.347783        1.838696        0.738490        0.880880
+M     False  45      45        1.360739        1.824266        0.524881        0.859457
+      True   46      46        1.347789        1.831140        0.725017        0.893970
+Mc005 False  45      45        1.362934        1.822166        0.538230        0.859628
+      True   46      46        1.351827        1.822211        0.739145        0.892961
+Mc04  False  45      45        1.390744        1.825057        0.525316        0.864910
+      True   46      46        1.336777        1.832227        0.707046        0.888289
+Mfast False  45      45        2.500472        3.273565        0.401438        0.760661
+      True   46      46        2.449128        3.296097        0.533127        0.629472
+Mslow False  44      36        0.918463        1.232603        0.676839        0.930886
+      True   45      34        0.902286        1.183142        0.814018        0.876935
+
+c2 not opened rows
+                 key plant leg  t_start_s  oil_cmd_mm  p1_ret_x_max_mm  p1_ret_need_at_xmax_mm  ratio_sent  ratio_fill  e3_drop_mm  p_h_read_bar  stroke_before_mm  p_tr_rise_bar
+ R12_top-FR-Fs0-o0.0 Mslow  FL       32.1    2.097586         2.001327                2.329509    0.903388    0.859120    0.000000     99.484974        408.357733      20.125199
+ R12_top-FR-Fs0-o0.0 Mslow  RL       38.1    2.094687         2.006004                2.061370    1.003630    0.973141    0.000000     89.166484        395.076844      19.077340
+ R12_top-FR-Fs0-o0.0 Mslow  FL       62.0    2.096911         2.000514                2.322511    0.903467    0.861358    0.000000     99.919544        411.921407      20.353858
+ R12_top-FR-Fs0-o0.0 Mslow  RL       68.0    2.081329         1.993455                2.064817    0.984630    0.965439    0.000000     84.371416        397.360039      17.791789
+R12_top-FR-Fs0-o0.05 Mslow  FL       32.1    2.097586         2.001327                2.329509    0.903388    0.859120    0.000000     99.484974        408.357733      20.125199
+R12_top-FR-Fs0-o0.05 Mslow  RL       38.1    2.094687         2.006004                2.061370    1.003630    0.973141    0.000000     89.166484        395.076844      19.077340
+R12_top-FR-Fs0-o0.05 Mslow  FL       62.1    2.095742         1.999359                2.321820    0.903512    0.861117    0.000000     99.921992        411.935729      20.427301
+R12_top-FR-Fs0-o0.05 Mslow  RL       68.1    2.081542         1.993692                2.067619    0.983928    0.964245    0.000000     84.365821        397.368550      17.775914
+ R12_top-RL-Fs0-o0.0 Mslow  FL       32.1    2.097586         2.001327                2.329509    0.903388    0.859120    0.000000     99.484974        408.357733      20.125199
+ R12_top-RL-Fs0-o0.0 Mslow  RL       38.1    2.094687         2.006004                2.061370    1.003630    0.973141    0.000000     89.166484        395.076844      19.077340
+ R12_top-RL-Fs0-o0.0 Mslow  FL       61.2    2.097866         2.001464                2.313126    0.908472    0.865264    0.000000     99.658361        409.934470      20.416050
+ R12_top-RL-Fs0-o0.0 Mslow  RL       67.2    2.082385         1.994375                2.061820    0.985477    0.967289    0.000000     84.531910        408.508111      17.966331
+            R15_o0.0 Mslow  FL       57.0    2.089023         1.992359                2.318295    0.902286    0.859407    0.000000    100.287619        445.962700      21.797443
+            R15_o0.0 Mslow  FR       60.0    2.059026         1.952370                1.972322    1.035208    0.989884    0.043767     87.753633        415.038185      21.681738
+            R15_o0.0 Mslow  RL       63.0    2.069957         1.982221                2.255729    0.918463    0.878750    0.000000     92.991347        402.827319      19.551600
+           R15_o0.05 Mslow  FL       54.4    2.089299         1.992563                2.311953    0.904722    0.861853    0.000000    100.317192        446.366556      21.767685
+           R15_o0.05 Mslow  FR       57.4    2.057951         1.951268                1.967019    1.036394    0.991992    0.051963     87.831995        415.085597      21.952311
+           R15_o0.05 Mslow  RL       60.4    2.083920         1.998313                2.058053    1.018979    0.970973    0.020697     89.107326        402.680367      19.021437
+           S7_e0.001 Mslow  FL       71.8    1.553571         0.870077                1.063578    1.667667    0.818067    0.000000     90.379714        666.672675            NaN
+
+c2 opened but e3 drop < 0.3 mm:
+                 key plant leg  t_start_s  oil_cmd_mm  ratio_fill  e3_drop_mm  p_h_read_bar
+ R12_top-RL-Fs0-o0.0 Mslow  FR       35.1    2.058574    0.883123    0.084952     88.817276
+ R12_top-RL-Fs0-o0.0 Mslow  FR       64.2    2.053206    0.900534    0.097233     88.414296
+ R12_top-RL-Fs0-o0.0 Mslow  RR       41.1    2.016347    0.890208    0.129928     80.345064
+ R12_top-RL-Fs0-o0.0 Mslow  RR       70.2    2.049261    0.890281    0.096271     81.602616
+R12_top-FR-Fs0-o0.05 Mslow  FR       35.1    2.058574    0.883123    0.084952     88.817276
+R12_top-FR-Fs0-o0.05 Mslow  FR       65.1    2.046993    0.925051    0.117502     87.930527
+R12_top-FR-Fs0-o0.05 Mslow  RR       41.1    2.016347    0.890208    0.129928     80.345064
+R12_top-FR-Fs0-o0.05 Mslow  RR       71.1    2.050842    0.888979    0.091191     81.944242
+ R12_top-FR-Fs0-o0.0 Mslow  FR       35.1    2.058574    0.883123    0.084952     88.817276
+ R12_top-FR-Fs0-o0.0 Mslow  FR       65.0    2.047166    0.923568    0.117238     87.915858
+ R12_top-FR-Fs0-o0.0 Mslow  RR       41.1    2.016347    0.890208    0.129928     80.345064
+ R12_top-FR-Fs0-o0.0 Mslow  RR       71.0    2.051523    0.890925    0.092452     81.906204
+           R2_e0.001 Mslow  RL       52.4    2.000000    0.988064    0.239732     89.070365
+           R2_e0.003 Mslow  RL       52.5    2.000000    0.989871    0.244445     88.938368
+            R15_o0.0 Mslow  RR       66.0    2.001382    0.970326    0.219400     76.112700
+           R15_o0.05 Mslow  RR       63.4    2.047872    0.975776    0.223810     78.889976
+
+witness arms: segments not opened on the retract line: 0
+
+R12 FL state (t 32.1 s, p_h 99.48 bar, s 408.36 mm), keys top-FR/RL-Fs0:
+                 key plant arm  oil_cmd_mm  p1_ret_x_max_mm  p1_ret_need_first_mm  p1_ret_need_at_xmax_mm  ratio_sent  ratio_fill  p1_open_ret  e3_drop_mm  p_tr_rise_bar
+ R12_top-FR-Fs0-o0.0     M  a1    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+R12_top-FR-Fs0-o0.05     M  a1    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-RL-Fs0-o0.0     M  a1    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-FR-Fs0-o0.0     M  a2    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+R12_top-FR-Fs0-o0.05     M  a2    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-RL-Fs0-o0.0     M  a2    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-FR-Fs0-o0.0     M  a3    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+R12_top-FR-Fs0-o0.05     M  a3    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-RL-Fs0-o0.0     M  a3    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-FR-Fs0-o0.0     M  a4    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+R12_top-FR-Fs0-o0.05     M  a4    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-RL-Fs0-o0.0     M  a4    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-FR-Fs0-o0.0     M  a5    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+R12_top-FR-Fs0-o0.05     M  a5    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-RL-Fs0-o0.0     M  a5    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-FR-Fs0-o0.0     M  a6    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+R12_top-FR-Fs0-o0.05     M  a6    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-RL-Fs0-o0.0     M  a6    3.797569         1.310446              1.513364                1.528104    2.509357    0.857564         True    2.312024      32.227450
+ R12_top-FR-Fs0-o0.0     M  c2    2.097569         1.310446              1.513364                1.528104    1.386031    0.857564         True    0.645987      35.603980
+R12_top-FR-Fs0-o0.05     M  c2    2.097569         1.310446              1.513364                1.528104    1.386031    0.857564         True    0.645987      35.603980
+ R12_top-RL-Fs0-o0.0     M  c2    2.097569         1.310446              1.513364                1.528104    1.386031    0.857564         True    0.645987      35.603980
+ R12_top-FR-Fs0-o0.0 Mslow  a1    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+R12_top-FR-Fs0-o0.05 Mslow  a1    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-RL-Fs0-o0.0 Mslow  a1    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-FR-Fs0-o0.0 Mslow  a2    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+R12_top-FR-Fs0-o0.05 Mslow  a2    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-RL-Fs0-o0.0 Mslow  a2    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-FR-Fs0-o0.0 Mslow  a3    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+R12_top-FR-Fs0-o0.05 Mslow  a3    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-RL-Fs0-o0.0 Mslow  a3    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-FR-Fs0-o0.0 Mslow  a4    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+R12_top-FR-Fs0-o0.05 Mslow  a4    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-RL-Fs0-o0.0 Mslow  a4    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-FR-Fs0-o0.0 Mslow  a5    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+R12_top-FR-Fs0-o0.05 Mslow  a5    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-RL-Fs0-o0.0 Mslow  a5    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-FR-Fs0-o0.0 Mslow  a6    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+R12_top-FR-Fs0-o0.05 Mslow  a6    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-RL-Fs0-o0.0 Mslow  a6    4.497586         2.295394              2.321911                2.319337    1.937019    0.989677         True    2.225412      31.877818
+ R12_top-FR-Fs0-o0.0 Mslow  c2    2.097586         2.001327              2.321911                2.329509    0.903388    0.859120        False    0.000000      20.125199
+R12_top-FR-Fs0-o0.05 Mslow  c2    2.097586         2.001327              2.321911                2.329509    0.903388    0.859120        False    0.000000      20.125199
+ R12_top-RL-Fs0-o0.0 Mslow  c2    2.097586         2.001327              2.321911                2.329509    0.903388    0.859120        False    0.000000      20.125199
+
+M c2 opened: p_tr rise by front/rear
+       count       mean       std        min        25%        50%        75%        max
+front                                                                                   
+False   32.0  28.347579  2.539632  24.894543  26.773934  27.223935  30.103516  33.727969
+True    32.0  31.993128  3.453615  26.978427  29.561531  31.701037  35.603980  37.673999
+
+=== item 3: reversed rounds ===
+rows is_reversed: 0 rev_not_sub sum: 0.0 rev_sub sum: 0.0
+k1_mid_opened values on non-reversed rows: True
+lines with d6 record by arm: {'a1': 52, 'a2': 78, 'a3': 54, 'a4': 54, 'a5': 54, 'a6': 54}
+event-path lines by arm / has_d6_record:
+has_d6_record  False  True 
+arm                        
+a1                 2     52
+a2                 0     78
+a3                 0     54
+a4                 0     54
+a5                 0     54
+a6                 0     54
+c2                54      0
+head-only lines with d6 record: 0
+
+=== item 3: A_ib ===
+completion_known False shots: 0 of 334
+     shots  unknown
+arm                
+a2      57        0
+a3      64        0
+a4      57        0
+a5      47        0
+a6      58        0
+c2      51        0
+lines ib_unknown>0:
+Empty DataFrame
+Columns: [key, plant, arm, ib_triggers, ib_unknown]
+Index: []
+latched lines:
+Empty DataFrame
+Columns: [key, plant, arm, ib_triggers, ib_n_rev, ib_latches, n_latch_ev]
+Index: []
+n_rev>0 lines:
+Empty DataFrame
+Columns: [key, plant, arm, ib_triggers, ib_n_rev, ib_latches]
+Index: []
+protect blocked: 0.0 protect events: 0
+ib_on rising edges != triggers notes: none
+event-path a1 lines without d6 record:
+      key plant final_phase  t_event_s                    d6_missing_note
+ R15_o0.0 Mslow       probe      26.70 probe_d6 on, event path, no record
+R15_o0.05 Mslow       level      26.75 probe_d6 on, event path, no record
+fired sign changes (same leg, any LEVEL) over all shots: 0
+shots per (line, leg) max: 2
+A_ib off arms (a1) with blind triggers: 0.0
+shot end reasons by arm:
+end  moved  phase  sign
+arm                    
+a2      37      0    20
+a3      41      2    21
+a4      37      0    20
+a5      30      0    17
+a6      40      0    18
+c2      36      0    15
+
+=== item 4: per key x plant, arm a2 (main part) ===
+                   key plant  min_F_after_liftoff_kN  min_F_after_event_kN  level_after_event_s  ib_triggers  ib_dD_med_kN  ib_dD_max_kN  ib_four_leg  ib_n_rev  ib_latches  d6_not_judgeable  cond_reads_indep  cond_breach_indep final_phase  faults
+R12_bottom-FL-Fs4-o0.0     L                 23.1346                 23.13                 11.9          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+R12_bottom-FL-Fs4-o0.0     M                 23.1346                 23.13                 10.2          0.0           NaN           NaN          0.0       0.0         0.0               0.0              17.0                0.0       ready     NaN
+R12_bottom-FL-Fs4-o0.0 Mc005                 23.0692                 23.07                  9.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+R12_bottom-FL-Fs4-o0.0  Mc04                 23.1496                 23.15                 10.7          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+R12_bottom-FL-Fs4-o0.0 Mfast                 26.8907                 26.89                 20.6          1.0      7.011612      7.011612          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+R12_bottom-FL-Fs4-o0.0 Mslow                 23.4021                 23.40                  9.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R12_o0.0     L                 16.1874                 16.19                 10.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R12_o0.0     M                 16.1874                 16.19                 10.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R12_o0.0 Mc005                 15.8372                 15.84                 10.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R12_o0.0  Mc04                 16.2150                 16.21                 10.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R12_o0.0 Mfast                 17.8282                 17.83                 10.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R12_o0.0 Mslow                 16.1748                 16.17                 10.7          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FL-Fs8-o0.0     L                 17.7491                 17.75                 11.3          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FL-Fs8-o0.0     M                 17.7491                 17.75                 11.3          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FL-Fs8-o0.0 Mc005                 17.6643                 17.66                 11.2          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FL-Fs8-o0.0  Mc04                 17.8277                 17.83                 11.3          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FL-Fs8-o0.0 Mfast                 28.0834                 28.08                 14.2          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FL-Fs8-o0.0 Mslow                 18.4589                 18.46                  9.6          0.0           NaN           NaN          0.0       0.0         0.0               0.0              17.0                0.0       ready     NaN
+   R12_top-FR-Fs0-o0.0     L                 24.7472                 24.75                 21.1          1.0      4.985795      4.985795          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+   R12_top-FR-Fs0-o0.0     M                 24.7479                 24.75                 21.1          1.0      4.985829      4.985829          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+   R12_top-FR-Fs0-o0.0 Mc005                 24.6227                 24.62                 21.1          1.0      5.479362      5.479362          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+   R12_top-FR-Fs0-o0.0  Mc04                 26.1516                 26.15                 21.0          2.0      5.127265      6.839576          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+   R12_top-FR-Fs0-o0.0 Mfast                 29.5355                 29.54                 20.6          1.0      5.637714      5.637714          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+   R12_top-FR-Fs0-o0.0 Mslow                 24.9263                 24.93                 21.5          1.0      4.579492      4.579492          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+  R12_top-FR-Fs0-o0.05     L                 25.1727                 25.17                 20.9          2.0      5.833688      7.457307          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+  R12_top-FR-Fs0-o0.05     M                 25.1733                 25.17                 20.9          2.0      5.833754      7.457367          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+  R12_top-FR-Fs0-o0.05 Mc005                 25.0363                 25.04                 20.9          2.0      5.631825      7.388711          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+  R12_top-FR-Fs0-o0.05  Mc04                 26.5466                 26.55                 40.3          0.0           NaN           NaN          0.0       0.0         0.0               0.0               5.0                0.0       probe     NaN
+  R12_top-FR-Fs0-o0.05 Mfast                 28.1477                 28.15                 39.7          0.0           NaN           NaN          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+  R12_top-FR-Fs0-o0.05 Mslow                 25.1809                 25.18                 22.7          2.0      4.190003      7.557449          0.0       0.0         0.0               0.0               0.0                0.0       ready     NaN
+   R12_top-FR-Fs4-o0.0     L                 24.4792                 24.48                 33.9          1.0      1.392988      1.392988          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+   R12_top-FR-Fs4-o0.0     M                 24.4792                 24.48                 33.9          1.0      1.392988      1.392988          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+   R12_top-FR-Fs4-o0.0 Mc005                 25.1707                 25.17                 18.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+   R12_top-FR-Fs4-o0.0  Mc04                 24.4953                 24.50                 34.3          1.0      0.308586      0.308586          0.0       0.0         0.0               0.0               5.0                0.0       ready     NaN
+   R12_top-FR-Fs4-o0.0 Mfast                 29.2056                 29.21                 14.2          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-FR-Fs4-o0.0 Mslow                 22.9768                 22.98                 11.5          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs0-o0.0     L                 20.4404                 20.44                 15.7          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs0-o0.0     M                 20.4411                 20.44                 15.7          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs0-o0.0 Mc005                 21.0417                 21.04                 15.7          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs0-o0.0  Mc04                 22.1391                 22.14                 14.9          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs0-o0.0 Mfast                 23.6556                 23.66                 14.6          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs0-o0.0 Mslow                 21.7162                 21.72                 14.1          0.0           NaN           NaN          0.0       0.0         0.0               0.0              15.0                0.0       ready     NaN
+              R15_o0.0     L                 -1.0472                 -1.05                 27.7          1.0      7.073538      7.073538          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+              R15_o0.0     M                 -1.0472                 -1.05                 27.7          1.0      7.073687      7.073687          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+              R15_o0.0 Mc005                 -1.0472                 -1.05                 27.7          1.0      7.205837      7.205837          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+              R15_o0.0  Mc04                 -1.0472                 -1.05                 27.9          1.0      7.224764      7.224764          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+              R15_o0.0 Mfast                 -1.0472                 -1.05                 27.3          1.0      7.548569      7.548569          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+              R15_o0.0 Mslow                 -1.0472                 -1.05                 28.5          1.0      7.445967      7.445967          0.0       0.0         0.0               0.0              16.0                0.0       ready     NaN
+             R15_o0.05     L                 -1.0472                 -1.05                 26.5          1.0      7.788148      7.788148          0.0       0.0         0.0               0.0              10.0                0.0       ready     NaN
+             R15_o0.05     M                 -1.0472                 -1.05                 27.7          1.0      7.006677      7.006677          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+             R15_o0.05 Mc005                 -1.0472                 -1.05                 12.2          0.0           NaN           NaN          0.0       0.0         0.0               0.0              17.0                0.0       ready     NaN
+             R15_o0.05  Mc04                 -1.0472                 -1.05                 25.5          1.0      4.153824      4.153824          0.0       0.0         0.0               0.0               0.0                0.0       ready     NaN
+             R15_o0.05 Mfast                 -1.0472                 -1.05                 27.4          1.0      7.149999      7.149999          0.0       0.0         0.0               0.0              11.0                0.0       ready     NaN
+             R15_o0.05 Mslow                 -1.0472                 -1.05                 25.9          1.0      2.014112      2.014112          0.0       0.0         0.0               0.0               6.0                0.0       ready     NaN
+             R2_e0.001     L                 55.1202                   NaN                  NaN          1.0      1.433338      1.433338          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.001     M                 55.1202                   NaN                  NaN          1.0      1.433338      1.433338          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.001 Mc005                 55.0287                   NaN                  NaN          1.0      1.433338      1.433338          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.001  Mc04                 55.2766                   NaN                  NaN          1.0      1.433269      1.433269          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.001 Mfast                 54.1474                   NaN                  NaN          1.0      0.571086      0.571086          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.001 Mslow                 55.9798                   NaN                  NaN          1.0      2.018544      2.018544          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.003     L                 55.2653                   NaN                  NaN          1.0      1.052326      1.052326          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.003     M                 55.2653                   NaN                  NaN          1.0      1.052326      1.052326          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.003 Mc005                 55.1735                   NaN                  NaN          1.0      1.052326      1.052326          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.003  Mc04                 55.4218                   NaN                  NaN          1.0      1.052321      1.052321          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.003 Mfast                 54.1771                   NaN                  NaN          1.0      0.518107      0.518107          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             R2_e0.003 Mslow                 56.1413                   NaN                  NaN          1.0      1.642828      1.642828          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S1_e0.003     L                 68.5925                   NaN                  NaN          1.0      6.862229      6.862229          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S1_e0.003     M                 68.5925                   NaN                  NaN          1.0      6.862229      6.862229          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S1_e0.003 Mc005                 68.5973                   NaN                  NaN          1.0      3.849815      3.849815          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S1_e0.003  Mc04                 68.5907                   NaN                  NaN          1.0      6.918860      6.918860          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S1_e0.003 Mfast                 68.6392                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S1_e0.003 Mslow                 68.7642                   NaN                  NaN          1.0      7.039956      7.039956          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S4_e0.002     L                 75.1971                   NaN                  NaN          1.0      3.742739      3.742739          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S4_e0.002     M                 75.1971                   NaN                  NaN          1.0      3.667980      3.667980          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S4_e0.002 Mc005                 75.1971                   NaN                  NaN          1.0      3.667487      3.667487          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S4_e0.002  Mc04                 75.1972                   NaN                  NaN          1.0      3.662149      3.662149          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S4_e0.002 Mfast                 75.1949                   NaN                  NaN          1.0      3.700310      3.700310          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S4_e0.002 Mslow                 75.1494                   NaN                  NaN          1.0      4.035491      4.035491          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+               S5_e0.0     L                 74.2981                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+               S5_e0.0     M                 74.2981                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+               S5_e0.0 Mc005                 74.2981                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+               S5_e0.0  Mc04                 74.2982                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+               S5_e0.0 Mfast                 74.2988                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+               S5_e0.0 Mslow                 74.2974                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S7_e0.001     L                 63.3095                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S7_e0.001     M                 63.3095                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S7_e0.001 Mc005                 63.3095                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S7_e0.001  Mc04                 63.3096                   NaN                  NaN          0.0           NaN           NaN          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S7_e0.001 Mfast                 63.3007                   NaN                  NaN          1.0      2.988146      2.988146          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+             S7_e0.001 Mslow                 63.3162                   NaN                  NaN          3.0      0.073174      4.089126          0.0       0.0         0.0               NaN               NaN                NaN       ready     NaN
+
+D part (a2) same columns:
+                                key plant  min_F_after_liftoff_kN  min_F_after_event_kN  level_after_event_s  ib_triggers  ib_dD_med_kN  ib_dD_max_kN  ib_four_leg  ib_n_rev  ib_latches  d6_not_judgeable  cond_reads_indep  cond_breach_indep final_phase  faults
+R12_bottom-FL-Fs2-o0.075-FS24-level     M                 -1.0472                 -1.05                 11.6          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+R12_bottom-FL-Fs2-o0.075-FS24-level Mslow                 -1.0472                 -1.05                 11.6          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+  R12_bottom-RL-Fs4-o0.025-G4-level     M                 20.3697                 20.37                 12.3          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+  R12_bottom-RL-Fs4-o0.025-G4-level Mslow                 20.3660                 20.37                 12.4          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+ R12_bottom-RR-Fs0-o0.05-FS24-level     M                 -0.7175                 -0.72                 13.6          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+ R12_bottom-RR-Fs0-o0.05-FS24-level Mslow                 -0.7175                 -0.72                 13.6          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+   R12_bottom-RR-Fs0-o0.05-G4-level     M                 20.8894                 20.89                 13.6          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+   R12_bottom-RR-Fs0-o0.05-G4-level Mslow                 19.6609                 19.66                 13.6          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+R12_bottom-RR-Fs0-o0.05-RE1bF-level     M                 -0.7175                 -0.72                 14.4          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+R12_bottom-RR-Fs0-o0.05-RE1bF-level Mslow                 -0.7175                 -0.72                 14.4          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+    R12_bottom-RR-Fs2-o0.0-G4-level     M                 20.5587                 20.56                 13.1          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+    R12_bottom-RR-Fs2-o0.0-G4-level Mslow                 20.5644                 20.56                 13.1          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+  R12_top-RL-Fs4-o0.025-RE1bF-level     M                 -1.0472                 -1.05                 13.0          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+  R12_top-RL-Fs4-o0.025-RE1bF-level Mslow                 -1.0472                 -1.05                 13.0          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs8-o0.025-FS24-level     M                 -1.0472                 -1.05                 12.1          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+   R12_top-RL-Fs8-o0.025-FS24-level Mslow                 -1.0472                 -1.05                 12.1          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+     R12_top-RR-Fs0-o0.0-FS24-level     M                 -1.0472                 -1.05                 13.2          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+     R12_top-RR-Fs0-o0.0-FS24-level Mslow                 -1.0472                 -1.05                 13.2          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+    R12_top-RR-Fs0-o0.0-RE1bF-level     M                 -1.0472                 -1.05                 13.9          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+    R12_top-RR-Fs0-o0.0-RE1bF-level Mslow                 -1.0472                 -1.05                 13.9          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+     R12_top-RR-Fs0-o0.075-G4-level     M                 22.3348                 22.33                 12.8          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+     R12_top-RR-Fs0-o0.075-G4-level Mslow                 22.3308                 22.33                 12.9          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+  R12_top-RR-Fs4-o0.075-RE1bF-level     M                 -0.8583                 -0.86                 13.1          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+  R12_top-RR-Fs4-o0.075-RE1bF-level Mslow                 -0.8537                 -0.85                 13.1          0.0           NaN           NaN          0.0       0.0         0.0                 0              15.0                0.0       ready     NaN
+
+final_phase != ready:
+                   key plant arm part final_phase                    warns
+  R12_top-FR-Fs0-o0.05     M  a1 main       probe                      NaN
+   R12_top-FR-Fs4-o0.0     M  a6 main       probe                      NaN
+              R15_o0.0 Mslow  a1 main       probe WARN_D1_IMU_GYRO_MISSING
+             R15_o0.05 Mslow  a1 main       level WARN_D1_IMU_GYRO_MISSING
+R12_bottom-FL-Fs4-o0.0 Mslow  a5 main       probe                      NaN
+             S7_e0.001 Mslow  c2 main       probe                      NaN
+   R12_top-FR-Fs0-o0.0 Mfast  a1 main       probe                      NaN
+  R12_top-FR-Fs0-o0.05 Mfast  a6 main       level                      NaN
+  R12_top-FR-Fs0-o0.05 Mc005  a1 main       probe                      NaN
+   R12_top-FR-Fs0-o0.0  Mc04  a1 main       probe                      NaN
+  R12_top-FR-Fs0-o0.05  Mc04  a1 main       probe                      NaN
+  R12_top-FR-Fs0-o0.05  Mc04  a2 main       probe                      NaN
+  R12_top-FR-Fs0-o0.05  Mc04  a4 main       probe                      NaN
+  R12_top-FR-Fs0-o0.05  Mc04  a6 main       level                      NaN
+   R12_top-FR-Fs4-o0.0  Mc04  a6 main       level                      NaN
+  R12_top-FR-Fs0-o0.05     L  a1 main       probe                      NaN
+   R12_top-FR-Fs4-o0.0     L  a6 main       probe                      NaN

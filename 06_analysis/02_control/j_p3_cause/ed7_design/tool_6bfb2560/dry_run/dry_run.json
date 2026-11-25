@@ -1,0 +1,220 @@
+{
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "runs": {
+  "probe_list_all": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/ed7_probe.py",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\p.jsonl",
+    "--list",
+    "--workers",
+    "20",
+    "--mask",
+    "0x0FFFFFFF"
+   ],
+   "exit": 0,
+   "tail": [
+    "P7-Mslow-a2 R12_top-RL-Fs4-o0.025-RE1bF-level",
+    "P7-Mslow-a2 R12_top-RR-Fs4-o0.075-RE1bF-level",
+    "{\"status\": \"listed\", \"planned\": 654, \"out\": \"C:\\\\Users\\\\jinbeom\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\63917d480778c1ba\\\\0d95027e-6012-4053-b99a-1e505935768c\\\\scratchpad\\\\python-ed7fix\\\\dry\\\\dry_outputs\\\\p.jsonl\"}"
+   ],
+   "stdout_lines": 655
+  },
+  "probe_list_d": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/ed7_probe.py",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\p.jsonl",
+    "--list",
+    "--part",
+    "d"
+   ],
+   "exit": 0,
+   "tail": [
+    "P7-Mslow-a2 R12_top-RL-Fs4-o0.025-RE1bF-level",
+    "P7-Mslow-a2 R12_top-RR-Fs4-o0.075-RE1bF-level",
+    "{\"status\": \"listed\", \"planned\": 24, \"out\": \"C:\\\\Users\\\\jinbeom\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\63917d480778c1ba\\\\0d95027e-6012-4053-b99a-1e505935768c\\\\scratchpad\\\\python-ed7fix\\\\dry\\\\dry_outputs\\\\p.jsonl\"}"
+   ],
+   "stdout_lines": 25
+  },
+  "probe_bad_arm": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/ed7_probe.py",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\p.jsonl",
+    "--arms",
+    "a9"
+   ],
+   "exit": 2,
+   "tail": [
+    "{\"status\": \"input_error\", \"reason\": \"--arms takes ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'c2'], got ['a9']\"}"
+   ],
+   "stdout_lines": 1
+  },
+  "j9_main_list": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_j9_main",
+    "--list",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\ed7_j9_main.jsonl"
+   ],
+   "exit": 0,
+   "tail": [
+    "ed7_j9_main: 388 runs, 388 to do"
+   ],
+   "stdout_lines": 1
+  },
+  "cases_list": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_cases",
+    "--list",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\ed7_cases.jsonl"
+   ],
+   "exit": 0,
+   "tail": [
+    "ed7_cases: 10 runs, 10 to do"
+   ],
+   "stdout_lines": 1
+  },
+  "t8_list": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_t8",
+    "--list",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\ed7_t8.jsonl",
+    "--p3-hash-source",
+    "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl"
+   ],
+   "exit": 0,
+   "tail": [
+    "ed7_t8: 44 runs, 44 to do"
+   ],
+   "stdout_lines": 1
+  },
+  "keys_refused": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_keys",
+    "--list",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\ed7_keys.jsonl",
+    "--jobs-file",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\none.json"
+   ],
+   "exit": 1,
+   "tail": [
+    "--jobs-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\none.json is not a sealed ed7_keys key file"
+   ],
+   "stdout_lines": 0
+  },
+  "condition_input_error": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/jp3_rev7_condition.py",
+    "--rows",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\none.jsonl",
+    "--out",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\condition.json"
+   ],
+   "exit": 2,
+   "tail": [
+    "{\"status\": \"input_error\", \"reason\": \"--rows C:\\\\Users\\\\jinbeom\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\63917d480778c1ba\\\\0d95027e-6012-4053-b99a-1e505935768c\\\\scratchpad\\\\python-ed7fix\\\\dry\\\\dry_outputs\\\\none.jsonl not found\"}"
+   ],
+   "stdout_lines": 1
+  },
+  "plan_12b_ed7_synthetic": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/jp3_12b_plan.py",
+    "--noise",
+    "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+    "--scan-root",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\synthetic\\06_analysis",
+    "--scan-extra",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\synthetic\\05_tests",
+    "--scan-required",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\synthetic\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713",
+    "--edition",
+    "7",
+    "--out-dir",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\plans_12b"
+   ],
+   "exit": 0,
+   "tail": [
+    "{\"status\": \"written\", \"out_dir\": \"C:\\\\Users\\\\jinbeom\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\63917d480778c1ba\\\\0d95027e-6012-4053-b99a-1e505935768c\\\\scratchpad\\\\python-ed7fix\\\\dry\\\\dry_outputs\\\\plans_12b\", \"seeds\": [50, 51, 52, 53], \"seed_repeats\": 0}"
+   ],
+   "stdout_lines": 1
+  },
+  "plan_12b_ed7_blind_root_refused": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/jp3_12b_plan.py",
+    "--noise",
+    "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+    "--scan-root",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\synthetic\\06_analysis",
+    "--scan-extra",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\synthetic\\05_tests",
+    "--scan-required",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\synthetic\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\cdry_a1\\logs",
+    "--edition",
+    "7",
+    "--out-dir",
+    "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7fix\\dry\\dry_outputs\\plans_12b_refused"
+   ],
+   "exit": 2,
+   "tail": [
+    "{\"status\": \"not_usable\", \"out_dir\": \"C:\\\\Users\\\\jinbeom\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\63917d480778c1ba\\\\0d95027e-6012-4053-b99a-1e505935768c\\\\scratchpad\\\\python-ed7fix\\\\dry\\\\dry_outputs\\\\plans_12b_refused\"}",
+    "not usable: a --scan-required root lies inside an edition 7 blind prefix"
+   ],
+   "stdout_lines": 1
+  }
+ },
+ "plan_12b_check": {
+  "seeds": [
+   50,
+   51,
+   52,
+   53
+  ],
+  "blind_prefixes_applied": 3,
+  "blind_names_in_outputs": []
+ },
+ "files_in_scratch_after": [
+  "none.json",
+  "plans_12b",
+  "synthetic"
+ ]
+}

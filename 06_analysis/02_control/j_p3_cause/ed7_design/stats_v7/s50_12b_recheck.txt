@@ -1,0 +1,17 @@
+alpha 0.1
+T0|spec            k q05/50/95 [4, 9, 13] | FPR 2.94% (cond p95 20.0%) | power d2 58.4% d3 83.3%
+T0|b124B           k q05/50/95 [7, 11, 20] | FPR 1.88% (cond p95 10.3%) | power d2 70.2% d3 90.2%
+Tlow|spec          k q05/50/95 [4, 6, 9] | FPR 0.72% (cond p95 2.0%) | power d2 67.7% d3 90.5%
+Tlow|b124B         k q05/50/95 [5, 8, 12] | FPR 0.20% (cond p95 1.1%) | power d2 75.6% d3 95.6%
+Tzero|spec         k q05/50/95 [4, 5, 9] | FPR 0.38% (cond p95 0.9%) | power d2 68.7% d3 91.8%
+Tzero|b124B        k q05/50/95 [5, 8, 13] | FPR 0.19% (cond p95 0.7%) | power d2 77.5% d3 96.0%
+Tx2|spec           k q05/50/95 [6, 11, 17] | FPR 6.00% (cond p95 31.7%) | power d2 56.3% d3 79.8%
+Tx2|b124B          k q05/50/95 [8, 15, 21] | FPR 3.49% (cond p95 13.0%) | power d2 65.8% d3 89.8%
+Tr2x5|spec         k q05/50/95 [8, 14, 20] | FPR 5.83% (cond p95 29.8%) | power d2 45.8% d3 68.7%
+Tr2x5|b124B        k q05/50/95 [12, 19, 26] | FPR 4.74% (cond p95 19.9%) | power d2 53.6% d3 79.6%
+Tlow_r2x5|spec     k q05/50/95 [7, 12, 16] | FPR 2.92% (cond p95 15.0%) | power d2 44.9% d3 71.8%
+Tlow_r2x5|b124B    k q05/50/95 [8, 16, 23] | FPR 5.70% (cond p95 37.3%) | power d2 57.7% d3 83.6%
+Trho0|spec         k q05/50/95 [10, 14, 20] | FPR 3.07% (cond p95 11.1%) | power d2 41.1% d3 66.5%
+Trho0|b124B        k q05/50/95 [11, 17, 23] | FPR 3.71% (cond p95 22.8%) | power d2 58.1% d3 84.1%
+Trho09|spec        k q05/50/95 [2, 6, 9] | FPR 1.78% (cond p95 10.2%) | power d2 69.8% d3 91.3%
+Trho09|b124B       k q05/50/95 [3, 8, 13] | FPR 3.00% (cond p95 18.4%) | power d2 81.6% d3 96.5%

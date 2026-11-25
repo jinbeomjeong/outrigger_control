@@ -1,0 +1,6892 @@
+{
+ "status": "decided",
+ "rule": "jp3_remedy_spec_v7.md 4 step 2 \uc870\uac74 3 \ucc44\ud0dd \uaddc\uce59 (revision 4); readings fixed by the user decision of 2026-11-24",
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl",
+   "sha256": "1107b30962a038ec9ebccdd19543338f7df771261aa208ef458de6b814817ce9"
+  },
+  "keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json",
+   "sha256": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da",
+   "lines": 654
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  },
+  "run_heads": [
+   "6bfb2560d59a99e5523ce362fa305a2b3832e9e2"
+  ]
+ },
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true
+ },
+ "checks": {
+  "missing_jobs": [],
+  "repeated_jobs": [],
+  "unplanned_jobs": [],
+  "error_lines": [],
+  "line_problems": {},
+  "witness_record_incomplete": [],
+  "run_identity_problems": []
+ },
+ "decision": {
+  "status": "decided",
+  "conclusion": "a2",
+  "fixed_reading": {
+   "reading": {
+    "j7": "ed7_new",
+    "stiffness": "sens_exempt",
+    "plants": "vbm5",
+    "ratio": "known_shots",
+    "n_rev": "sum"
+   },
+   "outcome": "a2",
+   "indicators": {
+    "a2": {
+     "failed_units": 3,
+     "failed_unit_list": [
+      [
+       "M",
+       "R12_top-FL-Fs8-o0.0"
+      ],
+      [
+       "Mc04",
+       "R12_top-FR-Fs0-o0.05"
+      ],
+      [
+       "Mslow",
+       "S7_e0.001"
+      ]
+     ],
+     "twist_grew_ratio": 0.5106382978723404,
+     "four_leg_twist_triggers": 0,
+     "n_rev": 0,
+     "latches": 0,
+     "shots": 47,
+     "shots_grew": 24,
+     "ratio_denominator": 47
+    },
+    "a3": {
+     "failed_units": 2,
+     "failed_unit_list": [
+      [
+       "M",
+       "R12_top-FL-Fs8-o0.0"
+      ],
+      [
+       "Mslow",
+       "S7_e0.001"
+      ]
+     ],
+     "twist_grew_ratio": 0.5283018867924528,
+     "four_leg_twist_triggers": 0,
+     "n_rev": 0,
+     "latches": 0,
+     "shots": 53,
+     "shots_grew": 28,
+     "ratio_denominator": 53
+    },
+    "a4": {
+     "failed_units": 3,
+     "failed_unit_list": [
+      [
+       "M",
+       "R12_top-FL-Fs8-o0.0"
+      ],
+      [
+       "Mc04",
+       "R12_top-FR-Fs0-o0.05"
+      ],
+      [
+       "Mslow",
+       "S7_e0.001"
+      ]
+     ],
+     "twist_grew_ratio": 0.5106382978723404,
+     "four_leg_twist_triggers": 0,
+     "n_rev": 0,
+     "latches": 0,
+     "shots": 47,
+     "shots_grew": 24,
+     "ratio_denominator": 47
+    }
+   },
+   "comparisons": {
+    "a3": {
+     "criteria": {
+      "fewer_failed_units": true,
+      "no_new_failed_units": true,
+      "twist_not_worse": false
+     },
+     "twist_by_indicator": {
+      "twist_grew_ratio": false,
+      "four_leg_twist_triggers": true,
+      "n_rev": true,
+      "latches": true
+     },
+     "new_failed_units": [],
+     "adopted": false
+    },
+    "a4": {
+     "criteria": {
+      "fewer_failed_units": false,
+      "no_new_failed_units": true,
+      "twist_not_worse": true
+     },
+     "twist_by_indicator": {
+      "twist_grew_ratio": true,
+      "four_leg_twist_triggers": true,
+      "n_rev": true,
+      "latches": true
+     },
+     "new_failed_units": [],
+     "adopted": false
+    }
+   },
+   "name": "j7=ed7_new stiffness=sens_exempt plants=vbm5 ratio=known_shots n_rev=sum"
+  },
+  "interp_grid": {
+   "record_only": true,
+   "outcomes": {
+    "a2": 32
+   },
+   "readings": [
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=vbm5 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=vbm5 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=vbm5 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=vbm5 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=all6 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=all6 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=all6 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=none plants=all6 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=vbm5 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=vbm5 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=vbm5 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=vbm5 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=all6 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=all6 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=all6 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed6_share",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed6_share stiffness=sens_exempt plants=all6 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=vbm5 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=vbm5 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=vbm5 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 10,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=vbm5 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=all6 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=all6 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=all6 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "none",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 11,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 12,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc005",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "R12_bottom-FL-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "R12_top-FR-Fs4-o0.0"
+        ],
+        [
+         "Mslow",
+         "R2_e0.001"
+        ],
+        [
+         "Mslow",
+         "R2_e0.003"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=none plants=all6 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=vbm5 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=vbm5 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=vbm5 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "vbm5",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      },
+      "a3": {
+       "failed_units": 2,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5283018867924528,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 53,
+       "shots_grew": 28,
+       "ratio_denominator": 53
+      },
+      "a4": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5106382978723404,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 47,
+       "shots_grew": 24,
+       "ratio_denominator": 47
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=vbm5 ratio=all_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=all6 ratio=known_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "known_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=all6 ratio=known_shots n_rev=line_max"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "sum"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=all6 ratio=all_shots n_rev=sum"
+    },
+    {
+     "reading": {
+      "j7": "ed7_new",
+      "stiffness": "sens_exempt",
+      "plants": "all6",
+      "ratio": "all_shots",
+      "n_rev": "line_max"
+     },
+     "outcome": "a2",
+     "indicators": {
+      "a2": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      },
+      "a3": {
+       "failed_units": 3,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.53125,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 64,
+       "shots_grew": 34,
+       "ratio_denominator": 64
+      },
+      "a4": {
+       "failed_units": 4,
+       "failed_unit_list": [
+        [
+         "L",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "M",
+         "R12_top-FL-Fs8-o0.0"
+        ],
+        [
+         "Mc04",
+         "R12_top-FR-Fs0-o0.05"
+        ],
+        [
+         "Mslow",
+         "S7_e0.001"
+        ]
+       ],
+       "twist_grew_ratio": 0.5087719298245614,
+       "four_leg_twist_triggers": 0,
+       "n_rev": 0,
+       "latches": 0,
+       "shots": 57,
+       "shots_grew": 29,
+       "ratio_denominator": 57
+      }
+     },
+     "comparisons": {
+      "a3": {
+       "criteria": {
+        "fewer_failed_units": true,
+        "no_new_failed_units": true,
+        "twist_not_worse": false
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": false,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      },
+      "a4": {
+       "criteria": {
+        "fewer_failed_units": false,
+        "no_new_failed_units": true,
+        "twist_not_worse": true
+       },
+       "twist_by_indicator": {
+        "twist_grew_ratio": true,
+        "four_leg_twist_triggers": true,
+        "n_rev": true,
+        "latches": true
+       },
+       "new_failed_units": [],
+       "adopted": false
+      }
+     },
+     "name": "j7=ed7_new stiffness=sens_exempt plants=all6 ratio=all_shots n_rev=line_max"
+    }
+   ]
+  }
+ },
+ "groups": {
+  "M a2 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "M a3 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "M a4 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mslow a2 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_bottom-FL-Fs4-o0.0",
+     "R12_o0.0",
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs4-o0.0",
+     "R2_e0.001",
+     "R2_e0.003",
+     "S7_e0.001"
+    ],
+    "ed7_new": [
+     "R12_bottom-FL-Fs4-o0.0",
+     "R12_o0.0",
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs4-o0.0",
+     "R2_e0.001",
+     "R2_e0.003",
+     "S7_e0.001"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R2",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.003",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.003"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J3",
+      "kind": "fail",
+      "detail": "t_ready 77.1 -> 102.9",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R12",
+      "phase": "offset 0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs4-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "bottom|FL|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_bottom-FL-Fs4-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J3",
+      "kind": "fail",
+      "detail": "t_ready 77.1 -> 102.9",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.003",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.003"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R12",
+      "phase": "offset 0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs4-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "bottom|FL|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_bottom-FL-Fs4-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mslow a3 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_bottom-FL-Fs4-o0.0",
+     "R12_o0.0",
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs4-o0.0",
+     "R2_e0.001",
+     "R2_e0.003",
+     "S7_e0.001"
+    ],
+    "ed7_new": [
+     "R12_bottom-FL-Fs4-o0.0",
+     "R12_o0.0",
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs4-o0.0",
+     "R2_e0.001",
+     "R2_e0.003",
+     "S7_e0.001"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R2",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.003",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.003"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J3",
+      "kind": "fail",
+      "detail": "t_ready 77.1 -> 102.9",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R12",
+      "phase": "offset 0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "bottom|FL|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_bottom-FL-Fs4-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs4-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J3",
+      "kind": "fail",
+      "detail": "t_ready 77.1 -> 102.9",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.003",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.003"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R12",
+      "phase": "offset 0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "bottom|FL|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_bottom-FL-Fs4-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs4-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mslow a4 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_bottom-FL-Fs4-o0.0",
+     "R12_o0.0",
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs4-o0.0",
+     "R2_e0.001",
+     "R2_e0.003",
+     "S7_e0.001"
+    ],
+    "ed7_new": [
+     "R12_bottom-FL-Fs4-o0.0",
+     "R12_o0.0",
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs4-o0.0",
+     "R2_e0.001",
+     "R2_e0.003",
+     "S7_e0.001"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R2",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.003",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.003"
+     },
+     {
+      "row": "R12",
+      "phase": "offset 0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "bottom|FL|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_bottom-FL-Fs4-o0.0"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J3",
+      "kind": "fail",
+      "detail": "t_ready 77.1 -> 102.9",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs4-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J3",
+      "kind": "fail",
+      "detail": "t_ready 77.1 -> 102.9",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.001"
+     },
+     {
+      "row": "R2",
+      "phase": "eps 0.003",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R2_e0.003"
+     },
+     {
+      "row": "R12",
+      "phase": "offset 0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     },
+     {
+      "row": "R12",
+      "phase": "bottom|FL|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_bottom-FL-Fs4-o0.0"
+     },
+     {
+      "row": "S7",
+      "phase": "eps 0.001",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "S7_e0.001"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|4|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs4-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mfast a2 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [],
+    "ed7_new": []
+   },
+   "fail_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mfast a3 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [],
+    "ed7_new": []
+   },
+   "fail_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mfast a4 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [],
+    "ed7_new": []
+   },
+   "fail_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mc005 a2 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mc005 a3 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mc005 a4 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mc04 a2 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs0-o0.05"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J1",
+      "kind": "fail",
+      "detail": "gate end_att",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J5",
+      "kind": "fail",
+      "detail": "t_back 22.55 -> None",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J4",
+      "kind": "fail",
+      "detail": "final ready -> probe",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J1",
+      "kind": "fail",
+      "detail": "gate end_att",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J5",
+      "kind": "fail",
+      "detail": "t_back 22.55 -> None",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J4",
+      "kind": "fail",
+      "detail": "final ready -> probe",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mc04 a3 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "Mc04 a4 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0",
+     "R12_top-FR-Fs0-o0.05"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J1",
+      "kind": "fail",
+      "detail": "gate end_att",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J5",
+      "kind": "fail",
+      "detail": "t_back 22.55 -> None",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J4",
+      "kind": "fail",
+      "detail": "final ready -> probe",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J1",
+      "kind": "fail",
+      "detail": "gate end_att",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J5",
+      "kind": "fail",
+      "detail": "t_back 22.55 -> None",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FR|0|0.05",
+      "item": "J4",
+      "kind": "fail",
+      "detail": "final ready -> probe",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FR-Fs0-o0.05"
+     },
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "L a2 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "L a3 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  },
+  "L a4 main": {
+   "lines": 15,
+   "no_reference": [],
+   "keys_without_reference": [],
+   "r15_worsening": {
+    "pairs": 2,
+    "state": "\uad6c\ubd84\ub428"
+   },
+   "r15_failed_keys": [],
+   "failed_keys": {
+    "ed6_share": [
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    "ed7_new": [
+     "R12_top-FL-Fs8-o0.0"
+    ]
+   },
+   "fail_items": {
+    "ed6_share": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ],
+    "ed7_new": [
+     {
+      "row": "R12",
+      "phase": "top|FL|8|0.0",
+      "item": "J7",
+      "kind": "fail",
+      "detail": "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+      "base_other_phase_has_it": false,
+      "key": "R12_top-FL-Fs8-o0.0"
+     }
+    ]
+   },
+   "not_judgeable_items": {
+    "ed6_share": [],
+    "ed7_new": []
+   }
+  }
+ },
+ "q7c4": {
+  "totals": {
+   "lines": 654,
+   "lines_with_witness_record": 346,
+   "lines_witness_record_incomplete": 0,
+   "rounds": 2336,
+   "is_reversed_rounds": 0,
+   "not_judgeable_rounds": 0,
+   "reversed_not_substituted": 0,
+   "reversed_substituted": 0,
+   "warn_lines": 0,
+   "warn_legs": 0
+  },
+  "by_arm": {
+   "a1": {
+    "lines": 90,
+    "lines_with_witness_record": 52,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 352,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   },
+   "a2": {
+    "lines": 114,
+    "lines_with_witness_record": 78,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 476,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   },
+   "a3": {
+    "lines": 90,
+    "lines_with_witness_record": 54,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 384,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   },
+   "a4": {
+    "lines": 90,
+    "lines_with_witness_record": 54,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 380,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   },
+   "a5": {
+    "lines": 90,
+    "lines_with_witness_record": 54,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 380,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   },
+   "a6": {
+    "lines": 90,
+    "lines_with_witness_record": 54,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 364,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   },
+   "c2": {
+    "lines": 90,
+    "lines_with_witness_record": 0,
+    "lines_witness_record_incomplete": 0,
+    "rounds": 0,
+    "is_reversed_rounds": 0,
+    "not_judgeable_rounds": 0,
+    "reversed_not_substituted": 0,
+    "reversed_substituted": 0,
+    "warn_lines": 0,
+    "warn_legs": 0
+   }
+  },
+  "warn_paths": {},
+  "warn_j7_effects": {},
+  "warn_lines": []
+ }
+}

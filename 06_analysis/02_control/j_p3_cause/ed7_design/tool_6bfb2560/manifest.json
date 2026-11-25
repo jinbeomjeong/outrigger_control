@@ -1,0 +1,26 @@
+{
+ "purpose": "436.9 edition 7: review fixes on a6fc3dd5 (hydraulics_p1a_review.md 1-1 / 1-4 / 2 / 3, stats review 3 (1), control review 3 / 4 / 5, 12b blind walk); user decisions of 2026-11-24; before the seal, no probe or main run",
+ "commit": "6bfb2560 (branch ed7-impl, worktree .claude/worktrees/ed7-impl, parent a6fc3dd5c353cd90e868549f4ff844ebb2515870); spec jp3_remedy_spec_v7.md revision 3 in progress (not read for this work, the decisions followed)",
+ "files": {
+  "keys/probe_keys_ed7.json": "ed7_key_lists.py at 6bfb2560: 654 lines (630 main + 24 D part), lines identical to tool_a6fc3dd5",
+  "keys/sens_keys_ed7.json": "460 lines (judged 4 settings = 184), lines identical to tool_a6fc3dd5",
+  "keys/g1_pool_ed7.json": "G1 pool counts without a draw: 192 clusters, 3 V0-mixed, 19 without a candidate, 171 eligible, 3 U832; k_counted_lines 168, fault_jp3_judged_lines 171 (two flags, stats review 3 (1)); the G1 key file needs the seal seed",
+  "dry_run/dry_run.py": "argparse reach of every new command (--list / refusals) plus the 12b --edition 7 run on a synthetic root with the blind layout",
+  "dry_run/dry_run.json": "its record at 6bfb2560 (dynamics-dev python.exe -I -B from the worktree root): probe 654 / part d 24 / bad arm exit 2, ed7_j9_main 388, ed7_cases 10, ed7_t8 44, ed7_keys refused (not sealed), condition input error exit 2, 12b ed7 synthetic written seeds 50..53 with blind_prefixes_applied 3 and no blind name in any output, 12b with a blind --scan-required root exit 2",
+  "dry_run/plan_12b_ed7_synthetic_selection.json": "selection.json of that synthetic 12b run (paths are scratchpad paths)",
+  "tests/ed7_tests_junit.xml": "test_ed7_units.py + test_ed7_harness.py (Chrono-dev pytest, harness in dynamics-dev): 61 passed, 0 skipped; P7-0 (7 old-plant lines = the 79495405 command hashes) and P7-1 preview (VBM R12 = VBM0 R12) included",
+  "tests/ed7_tests.log": "its log",
+  "tests/related_subset_junit.xml": "Chrono-dev pytest -n 8 of 23 related test files: 905 passed, 18 skipped (stored-data skips; rerun below / setting records; 2 X10_BASE_ROOT skips by design)",
+  "tests/related_subset.log": "its log",
+  "tests/setting_records_junit.xml": "test_v5_setting_records.py with OUTRIGGER_RECORDS_ROOT = the main checkout: 16 passed, 0 skipped",
+  "tests/setting_records.log": "its log",
+  "tests/worktree_tests_report.md": "verif/worktree_tests.py on 6bfb2560 (stored 07_results from the main checkout): the two_pressure stored-data tests, test_ed6_lock_start_b, test_jp3_rev6",
+  "tests/worktree_tests_junit.xml": "its JUnit (--keep)",
+  "checks/vbm_compare.py": "runs 05_tests/unit/ed7_check_runner.py on the a6fc3dd5 tree (git archive of 00_docs 01_cad 02_params 03_src 04_scripts 05_tests and the two 06_analysis inputs the harness reads) and on the working tree",
+  "checks/vbm_compare.json": "VBM R12, VBM0 R12, VBMslow S5, VBMslow R12: command hashes equal before and after the fixes; VBM R12 = VBM0 R12 on both (P7-1 preview relation kept)",
+  "checks/path_counts.py": "the P1 supplement record counts of one preview line (run_v5.run_one in dynamics-dev)",
+  "checks/path_counts_*.json": "rod_check_clear_count 0 on VBM R12, VBMslow R12, VBMslow S5 (the 1-4 path does not fire on these lines)",
+  "checks/ed6_12b_bytes.py": "runs the a6fc3dd5 and the 6bfb2560 jp3_12b_plan on one synthetic tree, editions 5 and 6",
+  "checks/ed6_12b_bytes.json": "every plan and key file byte-identical, selection.json identical but for the noise path (editions 5 and 6 unchanged)"
+ }
+}

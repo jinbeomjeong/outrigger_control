@@ -1,0 +1,1265 @@
+{
+ "status": "decided",
+ "rule_text": {
+  "spec_v7_526": "몫 판단 규칙: 판 6 4절 2와 같다(동률이면 남김, 발동 0일 때만 뺌). 실제로 쓸 도구의 규칙을 문면과 대조해 공개한다.",
+  "spec_v6_4_2": "(a) 발동 수 0, (b) X를 뺀 팔이 전부 켠 팔보다 V0 대비 실패 키가 적음; 동률이면 남김; B3는 2키 이상 적을 때만(발동 0이면 (a))"
+ },
+ "arms": {
+  "full": "a2",
+  "without": {
+   "A_i": "a6",
+   "A_ib": "a1",
+   "A_ii": null,
+   "B3": "a5"
+  }
+ },
+ "reading_fixed": "j7=ed7_new stiffness=sens_exempt plants=vbm5 ratio=known_shots n_rev=sum",
+ "failed_units": {
+  "a1": [
+   [
+    "M",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "M",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mc005",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mfast",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "Mslow",
+    "R15_o0.0"
+   ],
+   [
+    "Mslow",
+    "R15_o0.05"
+   ],
+   [
+    "Mslow",
+    "S4_e0.002"
+   ],
+   [
+    "Mslow",
+    "S7_e0.001"
+   ]
+  ],
+  "a2": [
+   [
+    "M",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mslow",
+    "S7_e0.001"
+   ]
+  ],
+  "a5": [
+   [
+    "M",
+    "R12_bottom-FL-Fs4-o0.0"
+   ],
+   [
+    "M",
+    "R12_o0.0"
+   ],
+   [
+    "M",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "M",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "M",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "M",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "M",
+    "R12_top-RL-Fs0-o0.0"
+   ],
+   [
+    "Mc005",
+    "R12_bottom-FL-Fs4-o0.0"
+   ],
+   [
+    "Mc005",
+    "R12_o0.0"
+   ],
+   [
+    "Mc005",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "Mc005",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "Mc005",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mc005",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "Mc005",
+    "R12_top-RL-Fs0-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_bottom-FL-Fs4-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-RL-Fs0-o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_bottom-FL-Fs4-o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mfast",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_top-RL-Fs0-o0.0"
+   ],
+   [
+    "Mslow",
+    "R12_bottom-FL-Fs4-o0.0"
+   ],
+   [
+    "Mslow",
+    "R12_o0.0"
+   ],
+   [
+    "Mslow",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "Mslow",
+    "R12_top-FR-Fs0-o0.0"
+   ],
+   [
+    "Mslow",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mslow",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "Mslow",
+    "R12_top-RL-Fs0-o0.0"
+   ],
+   [
+    "Mslow",
+    "S7_e0.001"
+   ]
+  ],
+  "a6": [
+   [
+    "M",
+    "R12_top-FL-Fs8-o0.0"
+   ],
+   [
+    "M",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs0-o0.05"
+   ],
+   [
+    "Mc04",
+    "R12_top-FR-Fs4-o0.0"
+   ],
+   [
+    "Mfast",
+    "R12_top-FR-Fs0-o0.05"
+   ]
+  ]
+ },
+ "unit_differences_vs_full": {
+  "a1": {
+   "only_in_a1": [
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R15_o0.0"
+    ],
+    [
+     "Mslow",
+     "R15_o0.05"
+    ],
+    [
+     "Mslow",
+     "S4_e0.002"
+    ]
+   ],
+   "only_in_a2": []
+  },
+  "a5": {
+   "only_in_a5": [
+    [
+     "M",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "M",
+     "R12_o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-RL-Fs0-o0.0"
+    ]
+   ],
+   "only_in_a2": []
+  },
+  "a6": {
+   "only_in_a6": [
+    [
+     "M",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.05"
+    ]
+   ],
+   "only_in_a2": [
+    [
+     "Mslow",
+     "S7_e0.001"
+    ]
+   ]
+  }
+ },
+ "activation": {
+  "A_i": {
+   "key": "a1_raised_periods",
+   "full_arm_vbm5": 269,
+   "full_arm_all6": 321,
+   "arms_with_component_all6": 2429,
+   "arms_with_component": [
+    "a1",
+    "a2",
+    "a3",
+    "a4",
+    "a5",
+    "c2"
+   ],
+   "d_part_a2": 0,
+   "full_arm_vbm5_lines_with_activation": 23,
+   "full_arm_vbm5_lines": 75,
+   "full_arm_vbm5_a1_triggers": 98
+  },
+  "A_ib": {
+   "key": "ib_raised_periods",
+   "full_arm_vbm5": 577,
+   "full_arm_all6": 697,
+   "arms_with_component_all6": 4062,
+   "arms_with_component": [
+    "a2",
+    "a3",
+    "a4",
+    "a5",
+    "a6",
+    "c2"
+   ],
+   "d_part_a2": 0,
+   "full_arm_vbm5_lines_with_activation": 31,
+   "full_arm_vbm5_lines": 75,
+   "full_arm_vbm5_ib_triggers": 47
+  },
+  "A_ii": {
+   "key": "a2_raised_periods",
+   "full_arm_vbm5": 616,
+   "full_arm_all6": 740,
+   "arms_with_component_all6": 5378,
+   "arms_with_component": [
+    "a1",
+    "a2",
+    "a3",
+    "a4",
+    "a5",
+    "a6",
+    "c2"
+   ],
+   "d_part_a2": 176,
+   "full_arm_vbm5_lines_with_activation": 45,
+   "full_arm_vbm5_lines": 75,
+   "full_arm_vbm5_a2_floors": 914
+  },
+  "B3": {
+   "key": "b3_periods",
+   "full_arm_vbm5": 140,
+   "full_arm_all6": 168,
+   "arms_with_component_all6": 1008,
+   "arms_with_component": [
+    "a1",
+    "a2",
+    "a3",
+    "a4",
+    "a6",
+    "c2"
+   ],
+   "d_part_a2": 0,
+   "full_arm_vbm5_lines_with_activation": 35,
+   "full_arm_vbm5_lines": 75
+  }
+ },
+ "decisions": {
+  "failed_units_by_arm": {
+   "a1": 10,
+   "a2": 3,
+   "a5": 36,
+   "a6": 5
+  },
+  "spec_text": {
+   "A_i": {
+    "arm_without": "a6",
+    "failed_units_without": 5,
+    "failed_units_full": 3,
+    "activation": 269,
+    "decision": "keep",
+    "rule": "(b) a6 5 vs a2 3, drop when fewer (tie keeps)"
+   },
+   "A_ib": {
+    "arm_without": "a1",
+    "failed_units_without": 10,
+    "failed_units_full": 3,
+    "activation": 577,
+    "decision": "keep",
+    "rule": "(b) a1 10 vs a2 3, drop when fewer (tie keeps)"
+   },
+   "A_ii": {
+    "arm_without": null,
+    "failed_units_without": null,
+    "failed_units_full": 3,
+    "activation": 616,
+    "decision": "keep",
+    "rule": "(a) activation > 0; (b) not computable (no arm without it)"
+   },
+   "B3": {
+    "arm_without": "a5",
+    "failed_units_without": 36,
+    "failed_units_full": 3,
+    "activation": 140,
+    "decision": "keep",
+    "rule": "B3 exception: a5 36 vs a2 3, drop at >= 2 fewer"
+   }
+  },
+  "edition6_tool_code": {
+   "A_i": {
+    "arm_without": "a6",
+    "failed_units_without": 5,
+    "failed_units_full": 3,
+    "activation": 269,
+    "decision": "keep",
+    "rule": "(b) a6 5 vs a2 3, drop when fewer (tie keeps)",
+    "c04_stall_lines_ed6": {
+     "a2": 0,
+     "a6": 0
+    }
+   },
+   "A_ib": {
+    "arm_without": "a1",
+    "failed_units_without": 10,
+    "failed_units_full": 3,
+    "activation": 577,
+    "decision": "keep",
+    "rule": "(b) a1 10 vs a2 3, drop when fewer (tie keeps)"
+   },
+   "A_ii": {
+    "arm_without": null,
+    "failed_units_without": null,
+    "failed_units_full": 3,
+    "activation": 616,
+    "decision": "keep",
+    "rule": "(a) activation > 0; (b) not computable (no arm without it)"
+   },
+   "B3": {
+    "arm_without": "a5",
+    "failed_units_without": 36,
+    "failed_units_full": 3,
+    "activation": 140,
+    "decision": "keep",
+    "rule": "B3 exception: a5 36 vs a2 3, drop at >= 2 fewer"
+   }
+  }
+ },
+ "record_only_edition6_tool_reading": {
+  "reading": "j7=ed6_share stiffness=none plants=all6 ratio=known_shots n_rev=sum",
+  "problems": [],
+  "failed_units": {
+   "a1": [
+    [
+     "L",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "L",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc005",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc04",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R15_o0.0"
+    ],
+    [
+     "Mslow",
+     "R15_o0.05"
+    ],
+    [
+     "Mslow",
+     "R2_e0.001"
+    ],
+    [
+     "Mslow",
+     "R2_e0.003"
+    ],
+    [
+     "Mslow",
+     "S4_e0.002"
+    ],
+    [
+     "Mslow",
+     "S7_e0.001"
+    ]
+   ],
+   "a2": [
+    [
+     "L",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mslow",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R2_e0.001"
+    ],
+    [
+     "Mslow",
+     "R2_e0.003"
+    ],
+    [
+     "Mslow",
+     "S7_e0.001"
+    ]
+   ],
+   "a5": [
+    [
+     "L",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "L",
+     "R12_o0.0"
+    ],
+    [
+     "L",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "L",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "L",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "L",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "L",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "M",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "M",
+     "R12_o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-RL-Fs0-o0.0"
+    ],
+    [
+     "Mslow",
+     "R2_e0.001"
+    ],
+    [
+     "Mslow",
+     "R2_e0.003"
+    ],
+    [
+     "Mslow",
+     "S7_e0.001"
+    ]
+   ],
+   "a6": [
+    [
+     "L",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "L",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mc005",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.05"
+    ],
+    [
+     "Mslow",
+     "R12_bottom-FL-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FL-Fs8-o0.0"
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs4-o0.0"
+    ],
+    [
+     "Mslow",
+     "R2_e0.001"
+    ],
+    [
+     "Mslow",
+     "R2_e0.003"
+    ]
+   ]
+  },
+  "unit_differences_vs_full": {
+   "a1": {
+    "only_in_a1": [
+     [
+      "L",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "M",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "Mc005",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "Mc04",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "Mslow",
+      "R15_o0.0"
+     ],
+     [
+      "Mslow",
+      "R15_o0.05"
+     ],
+     [
+      "Mslow",
+      "S4_e0.002"
+     ]
+    ],
+    "only_in_a2": []
+   },
+   "a5": {
+    "only_in_a5": [
+     [
+      "L",
+      "R12_bottom-FL-Fs4-o0.0"
+     ],
+     [
+      "L",
+      "R12_o0.0"
+     ],
+     [
+      "L",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "L",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "L",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "L",
+      "R12_top-RL-Fs0-o0.0"
+     ],
+     [
+      "M",
+      "R12_bottom-FL-Fs4-o0.0"
+     ],
+     [
+      "M",
+      "R12_o0.0"
+     ],
+     [
+      "M",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "M",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "M",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "M",
+      "R12_top-RL-Fs0-o0.0"
+     ],
+     [
+      "Mc005",
+      "R12_bottom-FL-Fs4-o0.0"
+     ],
+     [
+      "Mc005",
+      "R12_o0.0"
+     ],
+     [
+      "Mc005",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "Mc005",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "Mc005",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "Mc005",
+      "R12_top-RL-Fs0-o0.0"
+     ],
+     [
+      "Mc04",
+      "R12_bottom-FL-Fs4-o0.0"
+     ],
+     [
+      "Mc04",
+      "R12_o0.0"
+     ],
+     [
+      "Mc04",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "Mc04",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "Mc04",
+      "R12_top-RL-Fs0-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_bottom-FL-Fs4-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_top-FL-Fs8-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "Mfast",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_top-RL-Fs0-o0.0"
+     ],
+     [
+      "Mslow",
+      "R12_top-FR-Fs0-o0.0"
+     ],
+     [
+      "Mslow",
+      "R12_top-FR-Fs0-o0.05"
+     ],
+     [
+      "Mslow",
+      "R12_top-RL-Fs0-o0.0"
+     ]
+    ],
+    "only_in_a2": []
+   },
+   "a6": {
+    "only_in_a6": [
+     [
+      "L",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "M",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "Mc04",
+      "R12_top-FR-Fs4-o0.0"
+     ],
+     [
+      "Mfast",
+      "R12_top-FR-Fs0-o0.05"
+     ]
+    ],
+    "only_in_a2": [
+     [
+      "Mslow",
+      "S7_e0.001"
+     ]
+    ]
+   }
+  },
+  "decisions": {
+   "failed_units_by_arm": {
+    "a1": 20,
+    "a2": 12,
+    "a5": 45,
+    "a6": 15
+   },
+   "spec_text": {
+    "A_i": {
+     "arm_without": "a6",
+     "failed_units_without": 15,
+     "failed_units_full": 12,
+     "activation": 269,
+     "decision": "keep",
+     "rule": "(b) a6 15 vs a2 12, drop when fewer (tie keeps)"
+    },
+    "A_ib": {
+     "arm_without": "a1",
+     "failed_units_without": 20,
+     "failed_units_full": 12,
+     "activation": 577,
+     "decision": "keep",
+     "rule": "(b) a1 20 vs a2 12, drop when fewer (tie keeps)"
+    },
+    "A_ii": {
+     "arm_without": null,
+     "failed_units_without": null,
+     "failed_units_full": 12,
+     "activation": 616,
+     "decision": "keep",
+     "rule": "(a) activation > 0; (b) not computable (no arm without it)"
+    },
+    "B3": {
+     "arm_without": "a5",
+     "failed_units_without": 45,
+     "failed_units_full": 12,
+     "activation": 140,
+     "decision": "keep",
+     "rule": "B3 exception: a5 45 vs a2 12, drop at >= 2 fewer"
+    }
+   },
+   "edition6_tool_code": {
+    "A_i": {
+     "arm_without": "a6",
+     "failed_units_without": 15,
+     "failed_units_full": 12,
+     "activation": 269,
+     "decision": "keep",
+     "rule": "(b) a6 15 vs a2 12, drop when fewer (tie keeps)",
+     "c04_stall_lines_ed6": {
+      "a2": 0,
+      "a6": 0
+     }
+    },
+    "A_ib": {
+     "arm_without": "a1",
+     "failed_units_without": 20,
+     "failed_units_full": 12,
+     "activation": 577,
+     "decision": "keep",
+     "rule": "(b) a1 20 vs a2 12, drop when fewer (tie keeps)"
+    },
+    "A_ii": {
+     "arm_without": null,
+     "failed_units_without": null,
+     "failed_units_full": 12,
+     "activation": 616,
+     "decision": "keep",
+     "rule": "(a) activation > 0; (b) not computable (no arm without it)"
+    },
+    "B3": {
+     "arm_without": "a5",
+     "failed_units_without": 45,
+     "failed_units_full": 12,
+     "activation": 140,
+     "decision": "keep",
+     "rule": "B3 exception: a5 45 vs a2 12, drop at >= 2 fewer"
+    }
+   }
+  }
+ },
+ "checks": {
+  "line_problems": {},
+  "missing_jobs": [],
+  "repeated_jobs": [],
+  "error_lines": [],
+  "unplanned_jobs": [],
+  "activation_missing": [],
+  "comparison_problems": [],
+  "code_problems": []
+ }
+}

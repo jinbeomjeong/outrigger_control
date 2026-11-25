@@ -1,0 +1,628 @@
+self_checks {"noise_free_trigger_at_N": true, "fast_no_trigger": true, "slide_first_look": {"mc": 0.56875, "analytic_approx": 0.5728801971159533, "ok": true}, "ok": true}
+== false trigger (moving leg) ==
+cv0.0|full|u0.06|v0.060|N15|s0.05|anchor      P5s  69.8%  P30s  69.8%
+cv0.0|full|u0.06|v0.060|N15|s0.05|flush       P5s  76.3%  P30s  76.3%
+cv0.0|full|u0.06|v0.060|N15|s0.05|slide       P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N15|s0.1|anchor       P5s  87.6%  P30s  87.6%
+cv0.0|full|u0.06|v0.060|N15|s0.1|flush        P5s  90.6%  P30s  90.6%
+cv0.0|full|u0.06|v0.060|N15|s0.1|slide        P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N15|s0.15|anchor      P5s  97.2%  P30s  97.2%
+cv0.0|full|u0.06|v0.060|N15|s0.15|flush       P5s  98.6%  P30s  98.6%
+cv0.0|full|u0.06|v0.060|N15|s0.15|slide       P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N20|s0.05|anchor      P5s  54.1%  P30s  54.1%
+cv0.0|full|u0.06|v0.060|N20|s0.05|flush       P5s  58.7%  P30s  58.7%
+cv0.0|full|u0.06|v0.060|N20|s0.05|slide       P5s  99.8%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N20|s0.1|anchor       P5s  78.5%  P30s  78.5%
+cv0.0|full|u0.06|v0.060|N20|s0.1|flush        P5s  83.3%  P30s  83.3%
+cv0.0|full|u0.06|v0.060|N20|s0.1|slide        P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N20|s0.15|anchor      P5s  93.3%  P30s  93.3%
+cv0.0|full|u0.06|v0.060|N20|s0.15|flush       P5s  96.0%  P30s  96.0%
+cv0.0|full|u0.06|v0.060|N20|s0.15|slide       P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N25|s0.05|anchor      P5s  34.4%  P30s  34.4%
+cv0.0|full|u0.06|v0.060|N25|s0.05|flush       P5s  42.1%  P30s  42.1%
+cv0.0|full|u0.06|v0.060|N25|s0.05|slide       P5s  94.7%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N25|s0.1|anchor       P5s  62.9%  P30s  62.9%
+cv0.0|full|u0.06|v0.060|N25|s0.1|flush        P5s  70.2%  P30s  70.2%
+cv0.0|full|u0.06|v0.060|N25|s0.1|slide        P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N25|s0.15|anchor      P5s  84.5%  P30s  84.5%
+cv0.0|full|u0.06|v0.060|N25|s0.15|flush       P5s  89.5%  P30s  89.5%
+cv0.0|full|u0.06|v0.060|N25|s0.15|slide       P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N30|s0.05|anchor      P5s  21.1%  P30s  21.2%
+cv0.0|full|u0.06|v0.060|N30|s0.05|flush       P5s  26.2%  P30s  26.2%
+cv0.0|full|u0.06|v0.060|N30|s0.05|slide       P5s  71.4%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N30|s0.1|anchor       P5s  45.4%  P30s  45.4%
+cv0.0|full|u0.06|v0.060|N30|s0.1|flush        P5s  53.4%  P30s  53.4%
+cv0.0|full|u0.06|v0.060|N30|s0.1|slide        P5s  95.2%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N30|s0.15|anchor      P5s  73.8%  P30s  74.0%
+cv0.0|full|u0.06|v0.060|N30|s0.15|flush       P5s  78.8%  P30s  78.8%
+cv0.0|full|u0.06|v0.060|N30|s0.15|slide       P5s  99.8%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N40|s0.05|anchor      P5s   5.4%  P30s   5.6%
+cv0.0|full|u0.06|v0.060|N40|s0.05|flush       P5s   6.2%  P30s   6.5%
+cv0.0|full|u0.06|v0.060|N40|s0.05|slide       P5s  15.2%  P30s  97.3%
+cv0.0|full|u0.06|v0.060|N40|s0.1|anchor       P5s  17.3%  P30s  18.4%
+cv0.0|full|u0.06|v0.060|N40|s0.1|flush        P5s  20.9%  P30s  21.6%
+cv0.0|full|u0.06|v0.060|N40|s0.1|slide        P5s  41.0%  P30s 100.0%
+cv0.0|full|u0.06|v0.060|N40|s0.15|anchor      P5s  40.1%  P30s  41.5%
+cv0.0|full|u0.06|v0.060|N40|s0.15|flush       P5s  47.3%  P30s  48.5%
+cv0.0|full|u0.06|v0.060|N40|s0.15|slide       P5s  78.1%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N15|s0.05|anchor       P5s  31.3%  P30s  31.3%
+cv0.0|full|u0.1|v0.100|N15|s0.05|flush        P5s  46.3%  P30s  46.3%
+cv0.0|full|u0.1|v0.100|N15|s0.05|slide        P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N15|s0.1|anchor        P5s  61.3%  P30s  61.3%
+cv0.0|full|u0.1|v0.100|N15|s0.1|flush         P5s  72.7%  P30s  72.7%
+cv0.0|full|u0.1|v0.100|N15|s0.1|slide         P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N15|s0.15|anchor       P5s  84.2%  P30s  84.2%
+cv0.0|full|u0.1|v0.100|N15|s0.15|flush        P5s  90.6%  P30s  90.6%
+cv0.0|full|u0.1|v0.100|N15|s0.15|slide        P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N20|s0.05|anchor       P5s  12.2%  P30s  12.2%
+cv0.0|full|u0.1|v0.100|N20|s0.05|flush        P5s  20.7%  P30s  20.7%
+cv0.0|full|u0.1|v0.100|N20|s0.05|slide        P5s  80.9%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N20|s0.1|anchor        P5s  34.5%  P30s  34.5%
+cv0.0|full|u0.1|v0.100|N20|s0.1|flush         P5s  45.6%  P30s  45.6%
+cv0.0|full|u0.1|v0.100|N20|s0.1|slide         P5s  99.2%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N20|s0.15|anchor       P5s  62.3%  P30s  62.3%
+cv0.0|full|u0.1|v0.100|N20|s0.15|flush        P5s  73.2%  P30s  73.2%
+cv0.0|full|u0.1|v0.100|N20|s0.15|slide        P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N25|s0.05|anchor       P5s   3.9%  P30s   3.9%
+cv0.0|full|u0.1|v0.100|N25|s0.05|flush        P5s   7.4%  P30s   7.4%
+cv0.0|full|u0.1|v0.100|N25|s0.05|slide        P5s  30.6%  P30s  98.6%
+cv0.0|full|u0.1|v0.100|N25|s0.1|anchor        P5s  13.3%  P30s  13.3%
+cv0.0|full|u0.1|v0.100|N25|s0.1|flush         P5s  21.4%  P30s  21.4%
+cv0.0|full|u0.1|v0.100|N25|s0.1|slide         P5s  73.6%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N25|s0.15|anchor       P5s  32.9%  P30s  32.9%
+cv0.0|full|u0.1|v0.100|N25|s0.15|flush        P5s  43.7%  P30s  43.7%
+cv0.0|full|u0.1|v0.100|N25|s0.15|slide        P5s  97.5%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N30|s0.05|anchor       P5s   0.9%  P30s   0.9%
+cv0.0|full|u0.1|v0.100|N30|s0.05|flush        P5s   1.6%  P30s   1.6%
+cv0.0|full|u0.1|v0.100|N30|s0.05|slide        P5s   6.6%  P30s  54.4%
+cv0.0|full|u0.1|v0.100|N30|s0.1|anchor        P5s   4.0%  P30s   4.0%
+cv0.0|full|u0.1|v0.100|N30|s0.1|flush         P5s   6.2%  P30s   6.2%
+cv0.0|full|u0.1|v0.100|N30|s0.1|slide         P5s  24.7%  P30s  98.5%
+cv0.0|full|u0.1|v0.100|N30|s0.15|anchor       P5s  14.8%  P30s  14.8%
+cv0.0|full|u0.1|v0.100|N30|s0.15|flush        P5s  21.2%  P30s  21.2%
+cv0.0|full|u0.1|v0.100|N30|s0.15|slide        P5s  65.6%  P30s 100.0%
+cv0.0|full|u0.1|v0.100|N40|s0.05|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.1|v0.100|N40|s0.05|flush        P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.1|v0.100|N40|s0.05|slide        P5s   0.0%  P30s   0.9%
+cv0.0|full|u0.1|v0.100|N40|s0.1|anchor        P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.1|v0.100|N40|s0.1|flush         P5s   0.2%  P30s   0.2%
+cv0.0|full|u0.1|v0.100|N40|s0.1|slide         P5s   0.3%  P30s   9.0%
+cv0.0|full|u0.1|v0.100|N40|s0.15|anchor       P5s   0.8%  P30s   0.8%
+cv0.0|full|u0.1|v0.100|N40|s0.15|flush        P5s   2.2%  P30s   2.2%
+cv0.0|full|u0.1|v0.100|N40|s0.15|slide        P5s   3.5%  P30s  52.5%
+cv0.0|full|u0.15|v0.150|N15|s0.05|anchor      P5s   8.2%  P30s   8.2%
+cv0.0|full|u0.15|v0.150|N15|s0.05|flush       P5s  18.3%  P30s  18.3%
+cv0.0|full|u0.15|v0.150|N15|s0.05|slide       P5s  79.7%  P30s 100.0%
+cv0.0|full|u0.15|v0.150|N15|s0.1|anchor       P5s  25.9%  P30s  25.9%
+cv0.0|full|u0.15|v0.150|N15|s0.1|flush        P5s  37.8%  P30s  37.8%
+cv0.0|full|u0.15|v0.150|N15|s0.1|slide        P5s  99.2%  P30s 100.0%
+cv0.0|full|u0.15|v0.150|N15|s0.15|anchor      P5s  48.9%  P30s  48.9%
+cv0.0|full|u0.15|v0.150|N15|s0.15|flush       P5s  65.5%  P30s  65.5%
+cv0.0|full|u0.15|v0.150|N15|s0.15|slide       P5s 100.0%  P30s 100.0%
+cv0.0|full|u0.15|v0.150|N20|s0.05|anchor      P5s   0.8%  P30s   0.8%
+cv0.0|full|u0.15|v0.150|N20|s0.05|flush       P5s   3.0%  P30s   3.0%
+cv0.0|full|u0.15|v0.150|N20|s0.05|slide       P5s  14.9%  P30s  74.2%
+cv0.0|full|u0.15|v0.150|N20|s0.1|anchor       P5s   5.0%  P30s   5.0%
+cv0.0|full|u0.15|v0.150|N20|s0.1|flush        P5s  10.2%  P30s  10.2%
+cv0.0|full|u0.15|v0.150|N20|s0.1|slide        P5s  49.6%  P30s  99.7%
+cv0.0|full|u0.15|v0.150|N20|s0.15|anchor      P5s  15.6%  P30s  15.6%
+cv0.0|full|u0.15|v0.150|N20|s0.15|flush       P5s  27.9%  P30s  27.9%
+cv0.0|full|u0.15|v0.150|N20|s0.15|slide       P5s  89.3%  P30s 100.0%
+cv0.0|full|u0.15|v0.150|N25|s0.05|anchor      P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.15|v0.150|N25|s0.05|flush       P5s   0.2%  P30s   0.2%
+cv0.0|full|u0.15|v0.150|N25|s0.05|slide       P5s   0.4%  P30s   7.0%
+cv0.0|full|u0.15|v0.150|N25|s0.1|anchor       P5s   0.4%  P30s   0.4%
+cv0.0|full|u0.15|v0.150|N25|s0.1|flush        P5s   1.2%  P30s   1.2%
+cv0.0|full|u0.15|v0.150|N25|s0.1|slide        P5s   5.4%  P30s  42.8%
+cv0.0|full|u0.15|v0.150|N25|s0.15|anchor      P5s   2.1%  P30s   2.1%
+cv0.0|full|u0.15|v0.150|N25|s0.15|flush       P5s   4.5%  P30s   4.5%
+cv0.0|full|u0.15|v0.150|N25|s0.15|slide       P5s  25.1%  P30s  95.9%
+cv0.0|full|u0.15|v0.150|N30|s0.05|anchor      P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N30|s0.05|flush       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N30|s0.05|slide       P5s   0.1%  P30s   0.2%
+cv0.0|full|u0.15|v0.150|N30|s0.1|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N30|s0.1|flush        P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.15|v0.150|N30|s0.1|slide        P5s   0.1%  P30s   2.8%
+cv0.0|full|u0.15|v0.150|N30|s0.15|anchor      P5s   0.2%  P30s   0.2%
+cv0.0|full|u0.15|v0.150|N30|s0.15|flush       P5s   0.3%  P30s   0.3%
+cv0.0|full|u0.15|v0.150|N30|s0.15|slide       P5s   1.8%  P30s  18.3%
+cv0.0|full|u0.15|v0.150|N40|s0.05|anchor      P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.05|flush       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.05|slide       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.1|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.1|flush        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.1|slide        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.15|anchor      P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.15|flush       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.15|v0.150|N40|s0.15|slide       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N15|s0.05|anchor       P5s   1.3%  P30s   1.3%
+cv0.0|full|u0.2|v0.200|N15|s0.05|flush        P5s   4.9%  P30s   4.9%
+cv0.0|full|u0.2|v0.200|N15|s0.05|slide        P5s  24.2%  P30s  89.2%
+cv0.0|full|u0.2|v0.200|N15|s0.1|anchor        P5s   6.9%  P30s   6.9%
+cv0.0|full|u0.2|v0.200|N15|s0.1|flush         P5s  16.0%  P30s  16.0%
+cv0.0|full|u0.2|v0.200|N15|s0.1|slide         P5s  68.6%  P30s 100.0%
+cv0.0|full|u0.2|v0.200|N15|s0.15|anchor       P5s  20.5%  P30s  20.5%
+cv0.0|full|u0.2|v0.200|N15|s0.15|flush        P5s  35.4%  P30s  35.4%
+cv0.0|full|u0.2|v0.200|N15|s0.15|slide        P5s  98.4%  P30s 100.0%
+cv0.0|full|u0.2|v0.200|N20|s0.05|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N20|s0.05|flush        P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.2|v0.200|N20|s0.05|slide        P5s   0.4%  P30s   4.3%
+cv0.0|full|u0.2|v0.200|N20|s0.1|anchor        P5s   0.4%  P30s   0.4%
+cv0.0|full|u0.2|v0.200|N20|s0.1|flush         P5s   1.2%  P30s   1.2%
+cv0.0|full|u0.2|v0.200|N20|s0.1|slide         P5s   4.3%  P30s  32.3%
+cv0.0|full|u0.2|v0.200|N20|s0.15|anchor       P5s   1.5%  P30s   1.5%
+cv0.0|full|u0.2|v0.200|N20|s0.15|flush        P5s   5.2%  P30s   5.2%
+cv0.0|full|u0.2|v0.200|N20|s0.15|slide        P5s  20.8%  P30s  87.9%
+cv0.0|full|u0.2|v0.200|N25|s0.05|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N25|s0.05|flush        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N25|s0.05|slide        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N25|s0.1|anchor        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N25|s0.1|flush         P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N25|s0.1|slide         P5s   0.1%  P30s   0.2%
+cv0.0|full|u0.2|v0.200|N25|s0.15|anchor       P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.2|v0.200|N25|s0.15|flush        P5s   0.1%  P30s   0.1%
+cv0.0|full|u0.2|v0.200|N25|s0.15|slide        P5s   0.3%  P30s   5.0%
+cv0.0|full|u0.2|v0.200|N30|s0.05|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.05|flush        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.05|slide        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.1|anchor        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.1|flush         P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.1|slide         P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.15|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.15|flush        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N30|s0.15|slide        P5s   0.0%  P30s   0.1%
+cv0.0|full|u0.2|v0.200|N40|s0.05|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.05|flush        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.05|slide        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.1|anchor        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.1|flush         P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.1|slide         P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.15|anchor       P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.15|flush        P5s   0.0%  P30s   0.0%
+cv0.0|full|u0.2|v0.200|N40|s0.15|slide        P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N15|s0.05|anchor    P5s   8.2%  P30s   8.2%
+cv0.005|full|u0.15|v0.150|N15|s0.05|flush     P5s  16.7%  P30s  16.7%
+cv0.005|full|u0.15|v0.150|N15|s0.05|slide     P5s  80.8%  P30s 100.0%
+cv0.005|full|u0.15|v0.150|N15|s0.1|anchor     P5s  25.0%  P30s  25.0%
+cv0.005|full|u0.15|v0.150|N15|s0.1|flush      P5s  40.4%  P30s  40.4%
+cv0.005|full|u0.15|v0.150|N15|s0.1|slide      P5s  98.9%  P30s 100.0%
+cv0.005|full|u0.15|v0.150|N15|s0.15|anchor    P5s  49.6%  P30s  49.6%
+cv0.005|full|u0.15|v0.150|N15|s0.15|flush     P5s  68.0%  P30s  68.0%
+cv0.005|full|u0.15|v0.150|N15|s0.15|slide     P5s 100.0%  P30s 100.0%
+cv0.005|full|u0.15|v0.150|N20|s0.05|anchor    P5s   0.9%  P30s   0.9%
+cv0.005|full|u0.15|v0.150|N20|s0.05|flush     P5s   2.6%  P30s   2.6%
+cv0.005|full|u0.15|v0.150|N20|s0.05|slide     P5s  14.9%  P30s  73.9%
+cv0.005|full|u0.15|v0.150|N20|s0.1|anchor     P5s   4.0%  P30s   4.0%
+cv0.005|full|u0.15|v0.150|N20|s0.1|flush      P5s  10.8%  P30s  10.8%
+cv0.005|full|u0.15|v0.150|N20|s0.1|slide      P5s  50.6%  P30s  99.8%
+cv0.005|full|u0.15|v0.150|N20|s0.15|anchor    P5s  15.6%  P30s  15.6%
+cv0.005|full|u0.15|v0.150|N20|s0.15|flush     P5s  27.4%  P30s  27.4%
+cv0.005|full|u0.15|v0.150|N20|s0.15|slide     P5s  90.6%  P30s 100.0%
+cv0.005|full|u0.15|v0.150|N25|s0.05|anchor    P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N25|s0.05|flush     P5s   0.1%  P30s   0.1%
+cv0.005|full|u0.15|v0.150|N25|s0.05|slide     P5s   0.7%  P30s   6.4%
+cv0.005|full|u0.15|v0.150|N25|s0.1|anchor     P5s   0.2%  P30s   0.2%
+cv0.005|full|u0.15|v0.150|N25|s0.1|flush      P5s   1.1%  P30s   1.1%
+cv0.005|full|u0.15|v0.150|N25|s0.1|slide      P5s   5.8%  P30s  42.3%
+cv0.005|full|u0.15|v0.150|N25|s0.15|anchor    P5s   1.9%  P30s   1.9%
+cv0.005|full|u0.15|v0.150|N25|s0.15|flush     P5s   5.8%  P30s   5.8%
+cv0.005|full|u0.15|v0.150|N25|s0.15|slide     P5s  24.6%  P30s  94.5%
+cv0.005|full|u0.15|v0.150|N30|s0.05|anchor    P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N30|s0.05|flush     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N30|s0.05|slide     P5s   0.0%  P30s   0.1%
+cv0.005|full|u0.15|v0.150|N30|s0.1|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N30|s0.1|flush      P5s   0.1%  P30s   0.1%
+cv0.005|full|u0.15|v0.150|N30|s0.1|slide      P5s   0.0%  P30s   2.4%
+cv0.005|full|u0.15|v0.150|N30|s0.15|anchor    P5s   0.3%  P30s   0.3%
+cv0.005|full|u0.15|v0.150|N30|s0.15|flush     P5s   0.4%  P30s   0.4%
+cv0.005|full|u0.15|v0.150|N30|s0.15|slide     P5s   2.0%  P30s  19.4%
+cv0.005|full|u0.15|v0.150|N40|s0.05|anchor    P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.05|flush     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.05|slide     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.1|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.1|flush      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.1|slide      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.15|anchor    P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.15|flush     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.15|v0.150|N40|s0.15|slide     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N15|s0.05|anchor     P5s   2.0%  P30s   2.0%
+cv0.005|full|u0.2|v0.200|N15|s0.05|flush      P5s   4.5%  P30s   4.5%
+cv0.005|full|u0.2|v0.200|N15|s0.05|slide      P5s  24.7%  P30s  89.8%
+cv0.005|full|u0.2|v0.200|N15|s0.1|anchor      P5s   5.5%  P30s   5.5%
+cv0.005|full|u0.2|v0.200|N15|s0.1|flush       P5s  15.0%  P30s  15.0%
+cv0.005|full|u0.2|v0.200|N15|s0.1|slide       P5s  70.5%  P30s 100.0%
+cv0.005|full|u0.2|v0.200|N15|s0.15|anchor     P5s  19.6%  P30s  19.6%
+cv0.005|full|u0.2|v0.200|N15|s0.15|flush      P5s  35.8%  P30s  35.8%
+cv0.005|full|u0.2|v0.200|N15|s0.15|slide      P5s  97.5%  P30s 100.0%
+cv0.005|full|u0.2|v0.200|N20|s0.05|anchor     P5s   0.1%  P30s   0.1%
+cv0.005|full|u0.2|v0.200|N20|s0.05|flush      P5s   0.2%  P30s   0.2%
+cv0.005|full|u0.2|v0.200|N20|s0.05|slide      P5s   0.9%  P30s   4.8%
+cv0.005|full|u0.2|v0.200|N20|s0.1|anchor      P5s   0.2%  P30s   0.2%
+cv0.005|full|u0.2|v0.200|N20|s0.1|flush       P5s   1.0%  P30s   1.0%
+cv0.005|full|u0.2|v0.200|N20|s0.1|slide       P5s   3.9%  P30s  31.3%
+cv0.005|full|u0.2|v0.200|N20|s0.15|anchor     P5s   1.5%  P30s   1.5%
+cv0.005|full|u0.2|v0.200|N20|s0.15|flush      P5s   4.2%  P30s   4.2%
+cv0.005|full|u0.2|v0.200|N20|s0.15|slide      P5s  21.6%  P30s  89.1%
+cv0.005|full|u0.2|v0.200|N25|s0.05|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N25|s0.05|flush      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N25|s0.05|slide      P5s   0.0%  P30s   0.1%
+cv0.005|full|u0.2|v0.200|N25|s0.1|anchor      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N25|s0.1|flush       P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N25|s0.1|slide       P5s   0.0%  P30s   0.4%
+cv0.005|full|u0.2|v0.200|N25|s0.15|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N25|s0.15|flush      P5s   0.2%  P30s   0.2%
+cv0.005|full|u0.2|v0.200|N25|s0.15|slide      P5s   0.9%  P30s   5.1%
+cv0.005|full|u0.2|v0.200|N30|s0.05|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.05|flush      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.05|slide      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.1|anchor      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.1|flush       P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.1|slide       P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.15|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.15|flush      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N30|s0.15|slide      P5s   0.0%  P30s   0.1%
+cv0.005|full|u0.2|v0.200|N40|s0.05|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.05|flush      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.05|slide      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.1|anchor      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.1|flush       P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.1|slide       P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.15|anchor     P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.15|flush      P5s   0.0%  P30s   0.0%
+cv0.005|full|u0.2|v0.200|N40|s0.15|slide      P5s   0.0%  P30s   0.0%
+cv0.005|sub|u0.15|v0.045|N15|s0.05|anchor     P5s  81.2%  P30s  81.2%
+cv0.005|sub|u0.15|v0.045|N15|s0.05|flush      P5s  86.2%  P30s  86.2%
+cv0.005|sub|u0.15|v0.045|N15|s0.05|slide      P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N15|s0.1|anchor      P5s  95.0%  P30s  95.0%
+cv0.005|sub|u0.15|v0.045|N15|s0.1|flush       P5s  95.2%  P30s  95.2%
+cv0.005|sub|u0.15|v0.045|N15|s0.1|slide       P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N15|s0.15|anchor     P5s  99.2%  P30s  99.2%
+cv0.005|sub|u0.15|v0.045|N15|s0.15|flush      P5s  99.1%  P30s  99.1%
+cv0.005|sub|u0.15|v0.045|N15|s0.15|slide      P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N20|s0.05|anchor     P5s  72.4%  P30s  72.5%
+cv0.005|sub|u0.15|v0.045|N20|s0.05|flush      P5s  75.0%  P30s  75.0%
+cv0.005|sub|u0.15|v0.045|N20|s0.05|slide      P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N20|s0.1|anchor      P5s  89.8%  P30s  89.8%
+cv0.005|sub|u0.15|v0.045|N20|s0.1|flush       P5s  91.3%  P30s  91.3%
+cv0.005|sub|u0.15|v0.045|N20|s0.1|slide       P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N20|s0.15|anchor     P5s  98.4%  P30s  98.4%
+cv0.005|sub|u0.15|v0.045|N20|s0.15|flush      P5s  98.4%  P30s  98.4%
+cv0.005|sub|u0.15|v0.045|N20|s0.15|slide      P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N25|s0.05|anchor     P5s  59.2%  P30s  59.3%
+cv0.005|sub|u0.15|v0.045|N25|s0.05|flush      P5s  62.1%  P30s  62.2%
+cv0.005|sub|u0.15|v0.045|N25|s0.05|slide      P5s  99.7%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N25|s0.1|anchor      P5s  83.4%  P30s  83.5%
+cv0.005|sub|u0.15|v0.045|N25|s0.1|flush       P5s  86.9%  P30s  87.0%
+cv0.005|sub|u0.15|v0.045|N25|s0.1|slide       P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N25|s0.15|anchor     P5s  95.4%  P30s  95.5%
+cv0.005|sub|u0.15|v0.045|N25|s0.15|flush      P5s  97.4%  P30s  97.5%
+cv0.005|sub|u0.15|v0.045|N25|s0.15|slide      P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N30|s0.05|anchor     P5s  45.9%  P30s  46.4%
+cv0.005|sub|u0.15|v0.045|N30|s0.05|flush      P5s  50.1%  P30s  50.6%
+cv0.005|sub|u0.15|v0.045|N30|s0.05|slide      P5s  93.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N30|s0.1|anchor      P5s  71.5%  P30s  71.7%
+cv0.005|sub|u0.15|v0.045|N30|s0.1|flush       P5s  77.2%  P30s  77.5%
+cv0.005|sub|u0.15|v0.045|N30|s0.1|slide       P5s  99.8%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N30|s0.15|anchor     P5s  89.9%  P30s  90.0%
+cv0.005|sub|u0.15|v0.045|N30|s0.15|flush      P5s  93.1%  P30s  93.4%
+cv0.005|sub|u0.15|v0.045|N30|s0.15|slide      P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N40|s0.05|anchor     P5s  21.7%  P30s  23.4%
+cv0.005|sub|u0.15|v0.045|N40|s0.05|flush      P5s  24.6%  P30s  26.4%
+cv0.005|sub|u0.15|v0.045|N40|s0.05|slide      P5s  45.5%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N40|s0.1|anchor      P5s  45.6%  P30s  48.4%
+cv0.005|sub|u0.15|v0.045|N40|s0.1|flush       P5s  52.4%  P30s  55.2%
+cv0.005|sub|u0.15|v0.045|N40|s0.1|slide       P5s  78.8%  P30s 100.0%
+cv0.005|sub|u0.15|v0.045|N40|s0.15|anchor     P5s  74.5%  P30s  77.0%
+cv0.005|sub|u0.15|v0.045|N40|s0.15|flush      P5s  76.6%  P30s  79.2%
+cv0.005|sub|u0.15|v0.045|N40|s0.15|slide      P5s  97.2%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N15|s0.05|anchor      P5s  39.0%  P30s  39.0%
+cv0.005|sub|u0.2|v0.095|N15|s0.05|flush       P5s  47.0%  P30s  47.0%
+cv0.005|sub|u0.2|v0.095|N15|s0.05|slide       P5s  99.8%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N15|s0.1|anchor       P5s  63.4%  P30s  63.4%
+cv0.005|sub|u0.2|v0.095|N15|s0.1|flush        P5s  74.2%  P30s  74.2%
+cv0.005|sub|u0.2|v0.095|N15|s0.1|slide        P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N15|s0.15|anchor      P5s  87.5%  P30s  87.5%
+cv0.005|sub|u0.2|v0.095|N15|s0.15|flush       P5s  92.0%  P30s  92.0%
+cv0.005|sub|u0.2|v0.095|N15|s0.15|slide       P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N20|s0.05|anchor      P5s  15.9%  P30s  15.9%
+cv0.005|sub|u0.2|v0.095|N20|s0.05|flush       P5s  22.8%  P30s  22.8%
+cv0.005|sub|u0.2|v0.095|N20|s0.05|slide       P5s  85.4%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N20|s0.1|anchor       P5s  39.9%  P30s  39.9%
+cv0.005|sub|u0.2|v0.095|N20|s0.1|flush        P5s  50.1%  P30s  50.1%
+cv0.005|sub|u0.2|v0.095|N20|s0.1|slide        P5s  99.2%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N20|s0.15|anchor      P5s  67.2%  P30s  67.2%
+cv0.005|sub|u0.2|v0.095|N20|s0.15|flush       P5s  73.9%  P30s  73.9%
+cv0.005|sub|u0.2|v0.095|N20|s0.15|slide       P5s 100.0%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N25|s0.05|anchor      P5s   5.6%  P30s   5.6%
+cv0.005|sub|u0.2|v0.095|N25|s0.05|flush       P5s   9.3%  P30s   9.3%
+cv0.005|sub|u0.2|v0.095|N25|s0.05|slide       P5s  39.5%  P30s  99.9%
+cv0.005|sub|u0.2|v0.095|N25|s0.1|anchor       P5s  17.3%  P30s  17.3%
+cv0.005|sub|u0.2|v0.095|N25|s0.1|flush        P5s  24.9%  P30s  24.9%
+cv0.005|sub|u0.2|v0.095|N25|s0.1|slide        P5s  80.2%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N25|s0.15|anchor      P5s  41.5%  P30s  41.5%
+cv0.005|sub|u0.2|v0.095|N25|s0.15|flush       P5s  51.5%  P30s  51.5%
+cv0.005|sub|u0.2|v0.095|N25|s0.15|slide       P5s  99.1%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N30|s0.05|anchor      P5s   1.2%  P30s   1.2%
+cv0.005|sub|u0.2|v0.095|N30|s0.05|flush       P5s   2.4%  P30s   2.4%
+cv0.005|sub|u0.2|v0.095|N30|s0.05|slide       P5s   8.7%  P30s  70.4%
+cv0.005|sub|u0.2|v0.095|N30|s0.1|anchor       P5s   5.6%  P30s   5.6%
+cv0.005|sub|u0.2|v0.095|N30|s0.1|flush        P5s   8.4%  P30s   8.4%
+cv0.005|sub|u0.2|v0.095|N30|s0.1|slide        P5s  34.5%  P30s  99.8%
+cv0.005|sub|u0.2|v0.095|N30|s0.15|anchor      P5s  17.9%  P30s  17.9%
+cv0.005|sub|u0.2|v0.095|N30|s0.15|flush       P5s  27.5%  P30s  27.5%
+cv0.005|sub|u0.2|v0.095|N30|s0.15|slide       P5s  77.0%  P30s 100.0%
+cv0.005|sub|u0.2|v0.095|N40|s0.05|anchor      P5s   0.0%  P30s   0.0%
+cv0.005|sub|u0.2|v0.095|N40|s0.05|flush       P5s   0.1%  P30s   0.1%
+cv0.005|sub|u0.2|v0.095|N40|s0.05|slide       P5s   0.1%  P30s   2.8%
+cv0.005|sub|u0.2|v0.095|N40|s0.1|anchor       P5s   0.1%  P30s   0.1%
+cv0.005|sub|u0.2|v0.095|N40|s0.1|flush        P5s   0.5%  P30s   0.5%
+cv0.005|sub|u0.2|v0.095|N40|s0.1|slide        P5s   1.0%  P30s  20.3%
+cv0.005|sub|u0.2|v0.095|N40|s0.15|anchor      P5s   1.4%  P30s   1.4%
+cv0.005|sub|u0.2|v0.095|N40|s0.15|flush       P5s   2.7%  P30s   2.7%
+cv0.005|sub|u0.2|v0.095|N40|s0.15|slide       P5s   7.0%  P30s  73.7%
+== detection (locked leg, u_b 0.10, s_still 0.1) ==
+cv0.005|sub|need0.2|pre0.0|N20|anchor  P10s 1.000 trig [1.9, 2.1] move [2.5, 2.7] end [2.9, 3.2] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre0.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [2.5, 2.7] end [2.9, 3.2] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre0.0|N25|anchor  P10s 1.000 trig [2.4, 2.6] move [3.0, 3.2] end [3.4, 3.7] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre0.0|N25|flush   P10s 1.000 trig [2.4, 2.605] move [3.0, 3.205] end [3.4, 3.7] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre0.0|N30|anchor  P10s 1.000 trig [2.9, 3.1] move [3.5, 3.7] end [3.9, 4.2] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre0.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [3.5, 3.7] end [3.9, 4.2] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre1.05|N20|anchor P10s 0.999 trig [1.9, 2.305] move [2.5, 2.905] end [2.9, 3.3] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre1.05|N20|flush  P10s 1.000 trig [1.9, 2.1] move [2.5, 2.7] end [2.9, 3.2] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre1.05|N25|anchor P10s 0.998 trig [2.4, 2.9] move [3.0, 3.5] end [3.4, 3.9] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre1.05|N25|flush  P10s 1.000 trig [2.4, 2.7] move [3.0, 3.3] end [3.4, 3.7] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre1.05|N30|anchor P10s 1.000 trig [2.9, 3.4] move [3.5, 4.0] end [3.9, 4.4] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre1.05|N30|flush  P10s 1.000 trig [2.9, 3.1] move [3.5, 3.7] end [3.9, 4.105] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre3.0|N20|anchor  P10s 0.988 trig [2.0, 4.3] move [2.6, 4.9] end [3.0, 5.3] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre3.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [2.5, 2.7] end [2.9, 3.1] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need0.2|pre3.0|N25|anchor  P10s 0.972 trig [2.5, 4.9] move [3.1, 5.5] end [3.5, 5.8] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre3.0|N25|flush   P10s 0.999 trig [2.4, 2.6] move [3.0, 3.2] end [3.4, 3.605] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre3.0|N30|anchor  P10s 0.979 trig [3.0, 5.435] move [3.6, 6.0] end [4.0, 6.3] cap 0.000 pulse [0.612, 0.707]
+cv0.005|sub|need0.2|pre3.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [3.5, 3.7] end [3.9, 4.2] cap 0.000 pulse [0.612, 0.802]
+cv0.005|sub|need1.5|pre0.0|N20|anchor  P10s 1.000 trig [1.9, 2.2] move [3.8, 4.1] end [4.3, 4.6] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre0.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [3.8, 4.0] end [4.3, 4.6] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre0.0|N25|anchor  P10s 1.000 trig [2.4, 2.6] move [4.3, 4.5] end [4.8, 5.0] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre0.0|N25|flush   P10s 1.000 trig [2.4, 2.6] move [4.3, 4.5] end [4.8, 5.005] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre0.0|N30|anchor  P10s 0.999 trig [2.9, 3.1] move [4.8, 5.0] end [5.3, 5.5] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre0.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [4.8, 5.0] end [5.3, 5.505] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre1.05|N20|anchor P10s 0.999 trig [1.9, 2.4] move [3.8, 4.3] end [4.3, 4.8] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre1.05|N20|flush  P10s 1.000 trig [1.9, 2.1] move [3.8, 4.0] end [4.3, 4.5] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre1.05|N25|anchor P10s 1.000 trig [2.4, 2.9] move [4.3, 4.8] end [4.8, 5.2] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre1.05|N25|flush  P10s 1.000 trig [2.4, 2.6] move [4.3, 4.5] end [4.8, 5.005] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre1.05|N30|anchor P10s 1.000 trig [2.9, 3.305] move [4.8, 5.205] end [5.3, 5.7] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre1.05|N30|flush  P10s 1.000 trig [2.9, 3.1] move [4.8, 5.0] end [5.3, 5.5] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre3.0|N20|anchor  P10s 0.982 trig [2.0, 4.4] move [3.9, 6.3] end [4.4, 6.7] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre3.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [3.8, 4.0] end [4.3, 4.5] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre3.0|N25|anchor  P10s 0.980 trig [2.5, 4.9] move [4.4, 6.8] end [4.9, 7.16] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre3.0|N25|flush   P10s 1.000 trig [2.4, 2.6] move [4.3, 4.5] end [4.8, 5.0] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre3.0|N30|anchor  P10s 0.977 trig [2.9, 5.74] move [4.8, 7.64] end [5.4, 8.04] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need1.5|pre3.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [4.8, 5.0] end [5.3, 5.5] cap 0.000 pulse [0.633, 0.728]
+cv0.005|sub|need3.1|pre0.0|N20|anchor  P10s 1.000 trig [1.9, 2.1] move [5.5, 5.7] end [6.0, 6.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre0.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [5.5, 5.7] end [6.0, 6.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre0.0|N25|anchor  P10s 1.000 trig [2.4, 2.6] move [6.0, 6.2] end [6.5, 6.7] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre0.0|N25|flush   P10s 1.000 trig [2.4, 2.6] move [6.0, 6.2] end [6.5, 6.7] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre0.0|N30|anchor  P10s 1.000 trig [2.9, 3.1] move [6.5, 6.7] end [7.0, 7.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre0.0|N30|flush   P10s 0.999 trig [2.9, 3.1] move [6.5, 6.7] end [7.0, 7.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre1.05|N20|anchor P10s 0.999 trig [1.9, 2.3] move [5.5, 5.9] end [6.0, 6.4] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre1.05|N20|flush  P10s 1.000 trig [1.9, 2.1] move [5.5, 5.7] end [6.0, 6.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre1.05|N25|anchor P10s 0.997 trig [2.4, 3.0] move [6.0, 6.6] end [6.5, 7.0] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre1.05|N25|flush  P10s 1.000 trig [2.4, 2.6] move [6.0, 6.2] end [6.5, 6.7] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre1.05|N30|anchor P10s 0.999 trig [2.9, 3.4] move [6.5, 7.0] end [7.0, 7.4] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre1.05|N30|flush  P10s 1.000 trig [2.9, 3.1] move [6.5, 6.7] end [7.0, 7.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre3.0|N20|anchor  P10s 0.986 trig [2.0, 4.9] move [5.6, 8.4] end [6.1, 8.8] cap 0.000 pulse [0.548, 0.737]
+cv0.005|sub|need3.1|pre3.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [5.5, 5.7] end [6.0, 6.2] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre3.0|N25|anchor  P10s 0.984 trig [2.4, 4.64] move [6.0, 8.16] end [6.6, 8.56] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre3.0|N25|flush   P10s 1.000 trig [2.4, 2.605] move [6.0, 6.205] end [6.5, 6.7] cap 0.000 pulse [0.643, 0.737]
+cv0.005|sub|need3.1|pre3.0|N30|anchor  P10s 0.979 trig [3.0, 5.8] move [6.6, 9.26] end [7.1, 9.66] cap 0.000 pulse [0.548, 0.737]
+cv0.005|sub|need3.1|pre3.0|N30|flush   P10s 1.000 trig [2.9, 3.2] move [6.5, 6.8] end [7.0, 7.3] cap 0.000 pulse [0.643, 0.737]
+cv0.02|sub|need0.2|pre0.0|N20|anchor   P10s 1.000 trig [1.9, 2.2] move [2.7, 3.0] end [3.3, 3.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre0.0|N20|flush    P10s 1.000 trig [1.9, 2.105] move [2.7, 2.905] end [3.3, 3.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre0.0|N25|anchor   P10s 0.999 trig [2.4, 2.6] move [3.2, 3.4] end [3.8, 4.1] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre0.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move [3.2, 3.4] end [3.8, 4.1] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre0.0|N30|anchor   P10s 0.999 trig [2.9, 3.1] move [3.7, 3.9] end [4.3, 4.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre0.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move [3.7, 3.9] end [4.3, 4.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre1.05|N20|anchor  P10s 1.000 trig [1.9, 2.3] move [2.7, 3.1] end [3.3, 3.7] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre1.05|N20|flush   P10s 1.000 trig [1.9, 2.2] move [2.7, 3.0] end [3.3, 3.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre1.05|N25|anchor  P10s 1.000 trig [2.4, 2.7] move [3.2, 3.5] end [3.8, 4.2] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre1.05|N25|flush   P10s 1.000 trig [2.4, 2.6] move [3.2, 3.4] end [3.8, 4.1] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre1.05|N30|anchor  P10s 1.000 trig [2.9, 3.2] move [3.7, 4.0] end [4.3, 4.7] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre1.05|N30|flush   P10s 1.000 trig [2.9, 3.1] move [3.7, 3.9] end [4.3, 4.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre3.0|N20|anchor   P10s 0.986 trig [1.9, 3.9] move [2.7, 4.7] end [3.4, 5.3] cap 0.000 pulse [0.486, 0.676]
+cv0.02|sub|need0.2|pre3.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [2.7, 2.9] end [3.3, 3.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre3.0|N25|anchor   P10s 0.994 trig [2.4, 4.415] move [3.2, 5.215] end [3.9, 5.715] cap 0.000 pulse [0.486, 0.613]
+cv0.02|sub|need0.2|pre3.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move [3.2, 3.4] end [3.8, 4.1] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need0.2|pre3.0|N30|anchor   P10s 0.983 trig [2.9, 5.2] move [3.7, 6.0] end [4.4, 6.33] cap 0.000 pulse [0.486, 0.613]
+cv0.02|sub|need0.2|pre3.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move [3.7, 3.9] end [4.3, 4.6] cap 0.000 pulse [0.549, 0.676]
+cv0.02|sub|need1.5|pre0.0|N20|anchor   P10s 1.000 trig [1.9, 2.2] move [4.7, 5.0] end [5.4, 5.7] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre0.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [4.7, 4.9] end [5.4, 5.6] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre0.0|N25|anchor   P10s 1.000 trig [2.4, 2.6] move [5.2, 5.4] end [5.9, 6.1] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre0.0|N25|flush    P10s 1.000 trig [2.4, 2.605] move [5.2, 5.405] end [5.9, 6.105] cap 0.000 pulse [0.581, 0.644]
+cv0.02|sub|need1.5|pre0.0|N30|anchor   P10s 1.000 trig [2.9, 3.1] move [5.7, 5.9] end [6.4, 6.6] cap 0.000 pulse [0.581, 0.707]
+cv0.02|sub|need1.5|pre0.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move [5.7, 5.9] end [6.4, 6.6] cap 0.000 pulse [0.581, 0.644]
+cv0.02|sub|need1.5|pre1.05|N20|anchor  P10s 1.000 trig [1.9, 2.2] move [4.7, 5.0] end [5.4, 5.7] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre1.05|N20|flush   P10s 1.000 trig [1.9, 2.1] move [4.7, 4.9] end [5.4, 5.6] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre1.05|N25|anchor  P10s 1.000 trig [2.4, 2.7] move [5.2, 5.5] end [5.9, 6.2] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre1.05|N25|flush   P10s 1.000 trig [2.4, 2.6] move [5.2, 5.4] end [5.9, 6.2] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre1.05|N30|anchor  P10s 1.000 trig [2.9, 3.3] move [5.7, 6.1] end [6.4, 6.705] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre1.05|N30|flush   P10s 1.000 trig [2.9, 3.0] move [5.7, 5.8] end [6.4, 6.6] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre3.0|N20|anchor   P10s 0.981 trig [1.9, 3.835] move [4.7, 6.6] end [5.4, 7.1] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre3.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [4.7, 4.9] end [5.4, 5.7] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre3.0|N25|anchor   P10s 0.992 trig [2.4, 4.3] move [5.2, 6.96] end [5.9, 7.53] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre3.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move [5.2, 5.4] end [5.9, 6.1] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre3.0|N30|anchor   P10s 0.985 trig [2.9, 4.9] move [5.7, 7.635] end [6.4, 8.2] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need1.5|pre3.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move [5.7, 5.9] end [6.4, 6.6] cap 0.000 pulse [0.518, 0.644]
+cv0.02|sub|need3.1|pre0.0|N20|anchor   P10s 0.999 trig [1.9, 2.1] move [7.2, 7.4] end [7.3, 7.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre0.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [7.2, 7.4] end [7.3, 7.5] cap 0.999 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre0.0|N25|anchor   P10s 1.000 trig [2.4, 2.6] move [7.7, 7.9] end [7.8, 8.0] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre0.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move [7.7, 7.9] end [7.8, 8.0] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre0.0|N30|anchor   P10s 1.000 trig [2.9, 3.1] move [8.2, 8.4] end [8.3, 8.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre0.0|N30|flush    P10s 0.999 trig [2.9, 3.1] move [8.2, 8.4] end [8.3, 8.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre1.05|N20|anchor  P10s 1.000 trig [1.9, 2.3] move [7.2, 7.6] end [7.3, 7.7] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre1.05|N20|flush   P10s 1.000 trig [1.9, 2.1] move [7.2, 7.4] end [7.3, 7.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre1.05|N25|anchor  P10s 1.000 trig [2.4, 2.8] move [7.7, 8.1] end [7.8, 8.2] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre1.05|N25|flush   P10s 1.000 trig [2.4, 2.6] move [7.7, 7.9] end [7.8, 8.0] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre1.05|N30|anchor  P10s 1.000 trig [2.9, 3.3] move [8.2, 8.6] end [8.3, 8.7] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre1.05|N30|flush   P10s 1.000 trig [2.9, 3.1] move [8.2, 8.4] end [8.3, 8.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre3.0|N20|anchor   P10s 0.991 trig [1.9, 3.4] move [7.2, 8.64] end [7.3, 8.74] cap 0.993 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre3.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [7.2, 7.4] end [7.3, 7.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre3.0|N25|anchor   P10s 0.982 trig [2.4, 4.3] move [7.7, 9.5] end [7.8, 9.6] cap 0.988 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre3.0|N25|flush    P10s 0.999 trig [2.4, 2.6] move [7.7, 7.9] end [7.8, 8.0] cap 0.999 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre3.0|N30|anchor   P10s 0.984 trig [2.9, 4.9] move [8.2, 10.0] end [8.3, 10.1] cap 0.992 pulse [0.177, 0.177]
+cv0.02|sub|need3.1|pre3.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move [8.2, 8.4] end [8.3, 8.5] cap 1.000 pulse [0.177, 0.177]
+cv0.02|full|need0.2|pre0.0|N20|anchor  P10s 1.000 trig [1.9, 2.1] move [2.4, 2.6] end [2.9, 3.1] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre0.0|N20|flush   P10s 0.999 trig [1.9, 2.1] move [2.4, 2.6] end [2.9, 3.1] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre0.0|N25|anchor  P10s 1.000 trig [2.4, 2.5] move [2.9, 3.0] end [3.4, 3.6] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre0.0|N25|flush   P10s 1.000 trig [2.4, 2.6] move [2.9, 3.1] end [3.4, 3.6] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre0.0|N30|anchor  P10s 1.000 trig [2.9, 3.1] move [3.4, 3.6] end [3.9, 4.1] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre0.0|N30|flush   P10s 1.000 trig [2.9, 3.2] move [3.4, 3.7] end [3.9, 4.2] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre1.05|N20|anchor P10s 1.000 trig [1.9, 2.305] move [2.4, 2.805] end [2.9, 3.3] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre1.05|N20|flush  P10s 0.999 trig [1.9, 2.1] move [2.4, 2.6] end [2.9, 3.1] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre1.05|N25|anchor P10s 0.998 trig [2.4, 2.9] move [2.9, 3.4] end [3.4, 3.8] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre1.05|N25|flush  P10s 1.000 trig [2.4, 2.6] move [2.9, 3.1] end [3.4, 3.6] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre1.05|N30|anchor P10s 0.999 trig [2.9, 3.4] move [3.4, 3.9] end [3.9, 4.4] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre1.05|N30|flush  P10s 1.000 trig [2.9, 3.1] move [3.4, 3.6] end [3.9, 4.1] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre3.0|N20|anchor  P10s 0.970 trig [2.0, 5.4] move [2.5, 5.9] end [3.0, 6.255] cap 0.000 pulse [0.575, 0.785]
+cv0.02|full|need0.2|pre3.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [2.4, 2.6] end [2.9, 3.1] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre3.0|N25|anchor  P10s 0.976 trig [2.4, 5.535] move [2.9, 6.035] end [3.4, 6.34] cap 0.000 pulse [0.575, 0.68]
+cv0.02|full|need0.2|pre3.0|N25|flush   P10s 1.000 trig [2.4, 2.6] move [2.9, 3.1] end [3.4, 3.6] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need0.2|pre3.0|N30|anchor  P10s 0.973 trig [3.0, 6.0] move [3.5, 6.5] end [4.0, 6.955] cap 0.000 pulse [0.575, 0.68]
+cv0.02|full|need0.2|pre3.0|N30|flush   P10s 1.000 trig [2.9, 3.2] move [3.4, 3.7] end [3.9, 4.105] cap 0.000 pulse [0.68, 0.785]
+cv0.02|full|need1.5|pre0.0|N20|anchor  P10s 1.000 trig [1.9, 2.1] move [3.7, 3.9] end [4.1, 4.3] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre0.0|N20|flush   P10s 0.999 trig [1.9, 2.1] move [3.7, 3.9] end [4.1, 4.4] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre0.0|N25|anchor  P10s 1.000 trig [2.4, 2.6] move [4.2, 4.4] end [4.6, 4.9] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre0.0|N25|flush   P10s 0.999 trig [2.4, 2.6] move [4.2, 4.4] end [4.6, 4.8] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre0.0|N30|anchor  P10s 1.000 trig [2.9, 3.1] move [4.7, 4.9] end [5.1, 5.4] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre0.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [4.7, 4.9] end [5.1, 5.4] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre1.05|N20|anchor P10s 0.998 trig [1.9, 2.4] move [3.7, 4.2] end [4.1, 4.6] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre1.05|N20|flush  P10s 1.000 trig [1.9, 2.1] move [3.7, 3.9] end [4.1, 4.3] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre1.05|N25|anchor P10s 1.000 trig [2.4, 2.8] move [4.2, 4.6] end [4.6, 5.0] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre1.05|N25|flush  P10s 1.000 trig [2.4, 2.605] move [4.2, 4.405] end [4.6, 4.9] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre1.05|N30|anchor P10s 0.999 trig [2.9, 3.4] move [4.7, 5.2] end [5.1, 5.6] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre1.05|N30|flush  P10s 1.000 trig [2.9, 3.2] move [4.7, 5.0] end [5.1, 5.4] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre3.0|N20|anchor  P10s 0.978 trig [2.0, 5.3] move [3.8, 7.05] end [4.2, 7.355] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre3.0|N20|flush   P10s 1.000 trig [1.9, 2.2] move [3.7, 4.0] end [4.1, 4.4] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre3.0|N25|anchor  P10s 0.982 trig [2.5, 4.85] move [4.3, 6.65] end [4.7, 7.0] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre3.0|N25|flush   P10s 1.000 trig [2.4, 2.6] move [4.2, 4.4] end [4.6, 4.9] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre3.0|N30|anchor  P10s 0.974 trig [3.0, 6.0] move [4.8, 7.8] end [5.2, 8.1] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need1.5|pre3.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [4.7, 4.9] end [5.1, 5.3] cap 0.000 pulse [0.64, 0.745]
+cv0.02|full|need3.1|pre0.0|N20|anchor  P10s 1.000 trig [1.9, 2.1] move [5.2, 5.4] end [5.7, 5.9] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre0.0|N20|flush   P10s 1.000 trig [1.9, 2.2] move [5.2, 5.5] end [5.7, 5.9] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre0.0|N25|anchor  P10s 0.999 trig [2.4, 2.6] move [5.7, 5.9] end [6.2, 6.4] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre0.0|N25|flush   P10s 1.000 trig [2.4, 2.7] move [5.7, 6.0] end [6.2, 6.4] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre0.0|N30|anchor  P10s 1.000 trig [2.9, 3.1] move [6.2, 6.4] end [6.7, 6.9] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre0.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [6.2, 6.4] end [6.7, 6.8] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre1.05|N20|anchor P10s 1.000 trig [1.9, 2.4] move [5.2, 5.7] end [5.7, 6.1] cap 0.000 pulse [0.609, 0.714]
+cv0.02|full|need3.1|pre1.05|N20|flush  P10s 1.000 trig [1.9, 2.2] move [5.2, 5.5] end [5.7, 5.9] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre1.05|N25|anchor P10s 1.000 trig [2.4, 2.9] move [5.7, 6.2] end [6.2, 6.6] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre1.05|N25|flush  P10s 1.000 trig [2.4, 2.6] move [5.7, 5.9] end [6.2, 6.4] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre1.05|N30|anchor P10s 1.000 trig [2.9, 3.4] move [6.2, 6.7] end [6.7, 7.1] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre1.05|N30|flush  P10s 1.000 trig [2.9, 3.1] move [6.2, 6.4] end [6.7, 6.8] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre3.0|N20|anchor  P10s 0.982 trig [2.0, 4.835] move [5.3, 7.9] end [5.7, 8.16] cap 0.000 pulse [0.609, 0.714]
+cv0.02|full|need3.1|pre3.0|N20|flush   P10s 1.000 trig [1.9, 2.1] move [5.2, 5.4] end [5.7, 5.9] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre3.0|N25|anchor  P10s 0.984 trig [2.5, 5.35] move [5.8, 8.65] end [6.2, 9.0] cap 0.000 pulse [0.609, 0.714]
+cv0.02|full|need3.1|pre3.0|N25|flush   P10s 1.000 trig [2.4, 2.7] move [5.7, 6.0] end [6.2, 6.4] cap 0.000 pulse [0.609, 0.819]
+cv0.02|full|need3.1|pre3.0|N30|anchor  P10s 0.975 trig [3.0, 5.96] move [6.3, 9.07] end [6.7, 9.4] cap 0.000 pulse [0.609, 0.714]
+cv0.02|full|need3.1|pre3.0|N30|flush   P10s 1.000 trig [2.9, 3.1] move [6.2, 6.4] end [6.7, 6.9] cap 0.000 pulse [0.609, 0.819]
+cv0.04|sub|need0.2|pre0.0|N20|anchor   P10s 1.000 trig [1.9, 2.1] move [3.5, 3.7] end [5.2, 5.8] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre0.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [3.5, 3.7] end [5.2, 5.705] cap 0.000 pulse [0.437, 0.543]
+cv0.04|sub|need0.2|pre0.0|N25|anchor   P10s 1.000 trig [2.4, 2.6] move [4.0, 4.2] end [5.7, 6.205] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre0.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move [4.0, 4.2] end [5.7, 6.2] cap 0.000 pulse [0.437, 0.543]
+cv0.04|sub|need0.2|pre0.0|N30|anchor   P10s 1.000 trig [2.9, 3.1] move [4.5, 4.7] end [6.2, 6.7] cap 0.000 pulse [0.437, 0.543]
+cv0.04|sub|need0.2|pre0.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move [4.5, 4.7] end [6.2, 6.7] cap 0.000 pulse [0.437, 0.523]
+cv0.04|sub|need0.2|pre1.05|N20|anchor  P10s 1.000 trig [1.9, 2.2] move [3.5, 3.8] end [5.2, 5.8] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre1.05|N20|flush   P10s 1.000 trig [1.9, 2.1] move [3.5, 3.7] end [5.2, 5.7] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre1.05|N25|anchor  P10s 1.000 trig [2.4, 2.605] move [4.0, 4.205] end [5.7, 6.3] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre1.05|N25|flush   P10s 1.000 trig [2.4, 2.6] move [4.0, 4.2] end [5.7, 6.2] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre1.05|N30|anchor  P10s 1.000 trig [2.9, 3.1] move [4.5, 4.7] end [6.1, 6.7] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre1.05|N30|flush   P10s 0.999 trig [2.9, 3.1] move [4.5, 4.7] end [6.2, 6.8] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre3.0|N20|anchor   P10s 0.993 trig [1.9, 3.1] move [3.5, 4.7] end [5.2, 6.2] cap 0.000 pulse [0.394, 0.501]
+cv0.04|sub|need0.2|pre3.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move [3.5, 3.7] end [5.1, 5.7] cap 0.000 pulse [0.415, 0.543]
+cv0.04|sub|need0.2|pre3.0|N25|anchor   P10s 0.991 trig [2.4, 3.5] move [4.0, 5.1] end [5.7, 6.6] cap 0.000 pulse [0.394, 0.501]
+cv0.04|sub|need0.2|pre3.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move [4.0, 4.2] end [5.7, 6.3] cap 0.000 pulse [0.437, 0.543]
+cv0.04|sub|need0.2|pre3.0|N30|anchor   P10s 0.994 trig [2.9, 4.2] move [4.5, 5.8] end [6.2, 7.12] cap 0.000 pulse [0.394, 0.501]
+cv0.04|sub|need0.2|pre3.0|N30|flush    P10s 0.999 trig [2.9, 3.1] move [4.5, 4.7] end [6.2, 6.7] cap 0.000 pulse [0.437, 0.522]
+cv0.04|sub|need1.5|pre0.0|N20|anchor   P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre0.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre0.0|N25|anchor   P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre0.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre0.0|N30|anchor   P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre0.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre1.05|N20|anchor  P10s 1.000 trig [1.9, 2.2] move None end [7.3, 7.6] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre1.05|N20|flush   P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre1.05|N25|anchor  P10s 1.000 trig [2.4, 2.7] move None end [7.8, 8.1] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre1.05|N25|flush   P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 0.999 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre1.05|N30|anchor  P10s 1.000 trig [2.9, 3.2] move None end [8.3, 8.6] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre1.05|N30|flush   P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre3.0|N20|anchor   P10s 0.996 trig [1.9, 3.2] move None end [7.3, 8.5] cap 0.996 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre3.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre3.0|N25|anchor   P10s 0.995 trig [2.4, 3.4] move None end [7.8, 8.8] cap 0.995 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre3.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre3.0|N30|anchor   P10s 0.998 trig [2.9, 4.1] move None end [8.3, 9.5] cap 0.999 pulse [0.0, 0.0]
+cv0.04|sub|need1.5|pre3.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 0.999 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre0.0|N20|anchor   P10s 1.000 trig [1.9, 2.2] move None end [7.3, 7.6] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre0.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre0.0|N25|anchor   P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre0.0|N25|flush    P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre0.0|N30|anchor   P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre0.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre1.05|N20|anchor  P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre1.05|N20|flush   P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre1.05|N25|anchor  P10s 1.000 trig [2.4, 2.7] move None end [7.8, 8.1] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre1.05|N25|flush   P10s 1.000 trig [2.4, 2.6] move None end [7.8, 8.0] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre1.05|N30|anchor  P10s 1.000 trig [2.9, 3.2] move None end [8.3, 8.6] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre1.05|N30|flush   P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre3.0|N20|anchor   P10s 0.995 trig [1.9, 3.3] move None end [7.3, 8.7] cap 0.998 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre3.0|N20|flush    P10s 1.000 trig [1.9, 2.1] move None end [7.3, 7.5] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre3.0|N25|anchor   P10s 0.991 trig [2.4, 3.8] move None end [7.8, 9.1] cap 0.995 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre3.0|N25|flush    P10s 1.000 trig [2.4, 2.7] move None end [7.8, 8.1] cap 1.000 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre3.0|N30|anchor   P10s 0.990 trig [2.9, 4.1] move None end [8.3, 9.4] cap 0.996 pulse [0.0, 0.0]
+cv0.04|sub|need3.1|pre3.0|N30|flush    P10s 1.000 trig [2.9, 3.1] move None end [8.3, 8.5] cap 1.000 pulse [0.0, 0.0]
+== cadence (flush witness) ==
+cv0.02|sub|need0.2|u0.05|N20       pulses 9 mean speed 0.161 ratio 3.21
+cv0.02|sub|need0.2|u0.05|N25       pulses 8 mean speed 0.135 ratio 2.69
+cv0.02|sub|need0.2|u0.05|N30       pulses 7 mean speed 0.120 ratio 2.41
+cv0.02|sub|need0.2|u0.05|N40       pulses 5 mean speed 0.092 ratio 1.83
+cv0.02|sub|need0.2|u0.1|N20        pulses 9 mean speed 0.161 ratio 1.61
+cv0.02|sub|need0.2|u0.1|N25        pulses 8 mean speed 0.134 ratio 1.34
+cv0.02|sub|need0.2|u0.1|N30        pulses 7 mean speed 0.122 ratio 1.22
+cv0.02|sub|need0.2|u0.1|N40        pulses 5 mean speed 0.092 ratio 0.92
+cv0.02|sub|need0.2|u0.2|N20        pulses 9 mean speed 0.161 ratio 0.80
+cv0.02|sub|need0.2|u0.2|N25        pulses 8 mean speed 0.134 ratio 0.67
+cv0.02|sub|need0.2|u0.2|N30        pulses 7 mean speed 0.120 ratio 0.60
+cv0.02|sub|need0.2|u0.2|N40        pulses 5 mean speed 0.092 ratio 0.46
+cv0.02|sub|need1.5|u0.05|N20       pulses 6 mean speed 0.091 ratio 1.81
+cv0.02|sub|need1.5|u0.05|N25       pulses 5 mean speed 0.091 ratio 1.81
+cv0.02|sub|need1.5|u0.05|N30       pulses 5 mean speed 0.073 ratio 1.47
+cv0.02|sub|need1.5|u0.05|N40       pulses 4 mean speed 0.073 ratio 1.47
+cv0.02|sub|need1.5|u0.1|N20        pulses 6 mean speed 0.091 ratio 0.91
+cv0.02|sub|need1.5|u0.1|N25        pulses 5 mean speed 0.092 ratio 0.92
+cv0.02|sub|need1.5|u0.1|N30        pulses 5 mean speed 0.073 ratio 0.73
+cv0.02|sub|need1.5|u0.1|N40        pulses 4 mean speed 0.073 ratio 0.73
+cv0.02|sub|need1.5|u0.2|N20        pulses 6 mean speed 0.091 ratio 0.45
+cv0.02|sub|need1.5|u0.2|N25        pulses 5 mean speed 0.091 ratio 0.45
+cv0.02|sub|need1.5|u0.2|N30        pulses 5 mean speed 0.073 ratio 0.37
+cv0.02|sub|need1.5|u0.2|N40        pulses 4 mean speed 0.071 ratio 0.36
+cv0.04|sub|need0.2|u0.05|N20       pulses 6 mean speed 0.078 ratio 1.56
+cv0.04|sub|need0.2|u0.05|N25       pulses 5 mean speed 0.071 ratio 1.41
+cv0.04|sub|need0.2|u0.05|N30       pulses 5 mean speed 0.065 ratio 1.29
+cv0.04|sub|need0.2|u0.05|N40       pulses 4 mean speed 0.056 ratio 1.12
+cv0.04|sub|need0.2|u0.1|N20        pulses 6 mean speed 0.077 ratio 0.77
+cv0.04|sub|need0.2|u0.1|N25        pulses 5 mean speed 0.071 ratio 0.71
+cv0.04|sub|need0.2|u0.1|N30        pulses 5 mean speed 0.065 ratio 0.65
+cv0.04|sub|need0.2|u0.1|N40        pulses 4 mean speed 0.057 ratio 0.57
+cv0.04|sub|need0.2|u0.2|N20        pulses 6 mean speed 0.077 ratio 0.39
+cv0.04|sub|need0.2|u0.2|N25        pulses 5 mean speed 0.071 ratio 0.35
+cv0.04|sub|need0.2|u0.2|N30        pulses 5 mean speed 0.065 ratio 0.32
+cv0.04|sub|need0.2|u0.2|N40        pulses 4 mean speed 0.056 ratio 0.28
+cv0.005|sub|need0.2|u0.05|N20      pulses 10 mean speed 0.207 ratio 4.15
+cv0.005|sub|need0.2|u0.05|N25      pulses 8 mean speed 0.166 ratio 3.33
+cv0.005|sub|need0.2|u0.05|N30      pulses 7 mean speed 0.146 ratio 2.92
+cv0.005|sub|need0.2|u0.05|N40      pulses 6 mean speed 0.126 ratio 2.51
+cv0.005|sub|need0.2|u0.1|N20       pulses 10 mean speed 0.207 ratio 2.07
+cv0.005|sub|need0.2|u0.1|N25       pulses 8 mean speed 0.166 ratio 1.66
+cv0.005|sub|need0.2|u0.1|N30       pulses 7 mean speed 0.146 ratio 1.46
+cv0.005|sub|need0.2|u0.1|N40       pulses 6 mean speed 0.122 ratio 1.22
+cv0.005|sub|need0.2|u0.2|N20       pulses 2 mean speed 0.119 ratio 0.59
+cv0.005|sub|need0.2|u0.2|N25       pulses 1 mean speed 0.107 ratio 0.53
+cv0.005|sub|need0.2|u0.2|N30       pulses 1 mean speed 0.107 ratio 0.53
+cv0.005|sub|need0.2|u0.2|N40       pulses 0 mean speed 0.088 ratio 0.44

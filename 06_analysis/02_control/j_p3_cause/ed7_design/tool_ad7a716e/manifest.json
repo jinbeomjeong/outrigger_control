@@ -1,0 +1,17 @@
+{
+ "purpose": "436.9 edition 7: the rev 7 condition tool treats declared head-only (steady path) lines as not applicable (state head_only); user decision 2026-11-24 after the 6bfb2560 probe ended the tool with setting_defect (252 steady lines without a ③ trace or event time by construction)",
+ "commit": "ad7a716e (branch ed7-impl, worktree .claude/worktrees/ed7-impl, parent 6bfb2560); only jp3_rev7_condition.py and test_ed7_units.py changed",
+ "condition_rerun": {
+  "command": "cd <worktree>; MKL_THREADING_LAYER=TBB; C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_rev7_condition.py --rows C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\condition_ad7a716e.json",
+  "exit": 0,
+  "stdout_last_line": "{\"status\": \"pass\", \"judged_lines\": 339, \"judged_condition_reads\": 4079, \"record_lines\": 63, \"head_only_lines\": {\"judged_plant\": 210, \"record_plant\": 42}, \"states\": {\"head_only\": 252, \"judged\": 339, \"record\": 63}, \"out\": \"...\\\\condition_ad7a716e.json\"}",
+  "output_sha256": "9bd2dba805a944d7652fe58a53f5d8ddb0e4914e49f2735616ebeb73844f0277",
+  "kept_runner_output": "condition.json (6bfb2560 tool, status setting_defect) left unchanged, sha256 88c01e5fb9ef4ba0e79df90cf45c188a6719d40a289ac0dabe074901c8473eaa"
+ },
+ "files": {
+  "tests/ed7_tests_junit.xml": "test_ed7_units.py + test_ed7_harness.py (Chrono-dev pytest, harness in dynamics-dev) at the commit content: 63 passed, 0 skipped (P7-0: 7 old-plant lines = the 79495405 command hashes; P7-1 preview VBM R12 = VBM0 R12)",
+  "tests/ed7_tests.log": "its log",
+  "tests/related_subset_junit.xml": "Chrono-dev pytest -n 8 of 22 related files: 851 passed, 18 skipped (the stored-data skips of tool_6bfb2560, those files do not import the changed tool; their worktree_tests rerun at 6bfb2560 had 0 skips; 2 X10_BASE_ROOT skips by design)",
+  "tests/related_subset.log": "its log"
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "purpose": "jp3_remedy_spec_v7.md revision 6 5.1 step 1: edition 7 key files generated on b46bdf8f (clean) before the seal; G1 seed 20261126 (6.3)",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true
+ },
+ "commands": [
+  "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\04_scripts\\04_hydraulic\\coupled\\ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only confirm_g1_grid171.json,g1_pool_ed7.json --g1-seed 20261126  (run twice: run 1 moved aside, run 2 kept; bytes equal)",
+  "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\04_scripts\\04_hydraulic\\coupled\\ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only sens_keys_ed7.json  (run twice the same way; bytes equal)",
+  "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\verify_g1.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\confirm_g1_grid171.json C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\verify_g1.json  (python-dev in the run; keys only)"
+ ],
+ "d_key_blob": {
+  "object": "3ecf61f1:06_analysis/02_control/j_p3_cause/prelaunch_j9/run_records_ed6/d_grid_keys12.json",
+  "git_blob": "58268f22d148e262bd3bdb992f514a7468580485"
+ },
+ "inputs": {
+  "s30_pool_runs.csv": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv",
+   "sha256": "8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0"
+  },
+  "confirm_b_grid192.json (edition 6, overlap check)": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json",
+   "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b"
+  },
+  "probe_keys_ed7.json (probe 6bfb2560 run, overlap check)": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json",
+   "sha256": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da"
+  },
+  "sens_keys_ed7.json (6bfb2560 generation, compared)": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\sens_keys_ed7.json",
+   "sha256": "3b622bbde052e17a11b38804915a350c6be5f706233695b23a76b3ef64238a49"
+  },
+  "g1_pool_ed7.json (6bfb2560 generation, compared)": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\g1_pool_ed7.json",
+   "sha256": "528d095178e0157f92c8d06df173f62bf93c673a12bc1de2c51e4da65ba0d443"
+  },
+  "spec jp3_remedy_spec_v7.md (revision 6)": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v7.md",
+   "sha256": "305bbb9173c0778a7f51174d00438a2b1e8013328bc81b1c486dcfec0ba8d1cf"
+  },
+  "stored V0 grid grid_r67_main.json": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r67_main.json",
+   "sha256": "a2e74481760a27695ac63800a650e0be1b9b3980fcfaef1f1b64d4e98628316d"
+  },
+  "stored V0 grid grid_r67_top.json": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r67_top.json",
+   "sha256": "1d07e49fdbcaf375c4266866ff6955569c967d6d4eb9d4babc07558a64e92559"
+  },
+  "stored V0 grid grid_r69_bottom.json": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_bottom.json",
+   "sha256": "91026c460489463aa34e0377236854c892e46257d55133bda9c777584b548a89"
+  },
+  "stored V0 grid grid_r69_bottom_off.json": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_bottom_off.json",
+   "sha256": "fda704ccb49c4951e989dedd0cd4902ae90b6944fc1cfdd15ccf01ca063aa38b"
+  },
+  "stored V0 grid grid_r69_top.json": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_top.json",
+   "sha256": "87e8d72a25a5d40cccedce1c632a7e4f168f126aed38ada8a3b6760794d02390"
+  },
+  "stored V0 grid grid_r69_top_off.json": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_top_off.json",
+   "sha256": "4ddb14cdf6ce513d941550ed5c6d9326cd6c32e3c2cdc0cf0ba95e9c4cac3ec7"
+  }
+ },
+ "outputs": {
+  "confirm_g1_grid171.json": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
+  "g1_pool_ed7.json": "07dd13743f2aa2a529ff6be002d779e16fff9e92f46979828bb0429036043c65",
+  "sens_keys_ed7.json": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+  "verify_g1.json": "92bf0e2671c581afb51a2b26f6b0663ba65a4b6365b946672a53aa4679ef1485"
+ },
+ "determinism": {
+  "confirm_g1_grid171.json": "two runs, same bytes",
+  "g1_pool_ed7.json": "two runs, same bytes",
+  "sens_keys_ed7.json": "two runs, same bytes"
+ },
+ "notes": [
+  "probe_keys_ed7.json and sens_keys_ed7.json regenerated on b46bdf8f have the same 'lines' as the 6bfb2560 files; only code_identity and generation_command differ.",
+  "The 'generation_command' field holds --out-dir, so the file sha256 depends on the output folder path."
+ ]
+}

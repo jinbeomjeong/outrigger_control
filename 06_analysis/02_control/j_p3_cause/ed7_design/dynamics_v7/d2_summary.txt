@@ -1,0 +1,36 @@
+lines: {'B_j9_main': 388, 'B_sens': 184, 'C_cf': 60}
+shot assumed 0.75 mm per in-band leg
+[B_j9_main] blind dwells >= 20: 230 in 90 lines; first LEVEL 90, later 140
+   Fmin at trigger kN: min 51.40 p05 62.69 median 65.26
+   Fmin after one-leg shot kN: min 55.95; after all in-band legs: min 55.95; count < F_min+5 kN: one 0, all 0; < F_min: all 0
+   D at trigger kN: p05 -9.62 median -2.88 p95 7.64; |D|<3 83, 3<=|D|<15 147, |D|>=15 0
+   |dD| one-leg shot kN: median 10.32; all in-band: median 10.32 max 18.78
+   legs in band: {1: 115, 2: 60, 3: 12, 4: 43}
+   leg/sign: {'RL-': 27, 'RR-': 27, 'FR-': 35, 'RR+': 31, 'FL-': 22, 'RL+': 69, 'FR+': 9, 'FL+': 10}
+   >=3 legs in band, sign patterns (FL FR RL RR; n = + - - +): {'---0': 1, '--0-': 4, '--++': 40, '+-+0': 2, '+0++': 5, '+-++': 3}; twist pattern 0
+   one-leg shot: |D_after| < 3 kN 23, D crosses to the other side beyond 2 kN 138, |D_after| > |D| 184
+[B_sens] blind dwells >= 20: 115 in 50 lines; first LEVEL 50, later 65
+   Fmin at trigger kN: min 61.62 p05 62.78 median 66.97
+   Fmin after one-leg shot kN: min 56.22; after all in-band legs: min 56.22; count < F_min+5 kN: one 0, all 0; < F_min: all 0
+   D at trigger kN: p05 -8.29 median -3.37 p95 4.45; |D|<3 43, 3<=|D|<15 72, |D|>=15 0
+   |dD| one-leg shot kN: median 10.32; all in-band: median 10.32 max 18.78
+   legs in band: {1: 70, 2: 28, 3: 2, 4: 15}
+   leg/sign: {'FL-': 8, 'FR-': 16, 'RL-': 17, 'RR+': 19, 'FR+': 10, 'RR-': 14, 'RL+': 27, 'FL+': 4}
+   >=3 legs in band, sign patterns (FL FR RL RR; n = + - - +): {'---0': 1, '--++': 14, '-+0+': 1, '-+++': 1}; twist pattern 0
+   one-leg shot: |D_after| < 3 kN 3, D crosses to the other side beyond 2 kN 77, |D_after| > |D| 98
+[C_cf] blind dwells >= 20: 97 in 30 lines; first LEVEL 0, later 97
+   Fmin at trigger kN: min 63.89 p05 64.70 median 68.38
+   Fmin after one-leg shot kN: min 58.49; after all in-band legs: min 58.49; count < F_min+5 kN: one 0, all 0; < F_min: all 0
+   D at trigger kN: p05 -0.18 median 6.87 p95 14.49; |D|<3 23, 3<=|D|<15 72, |D|>=15 2
+   |dD| one-leg shot kN: median 10.32; all in-band: median 10.32 max 25.99
+   legs in band: {1: 31, 2: 52, 3: 12, 4: 2}
+   leg/sign: {'RL-': 22, 'RR-': 33, 'FL-': 15, 'RL+': 9, 'FR-': 7, 'FR+': 11}
+   >=3 legs in band, sign patterns (FL FR RL RR; n = + - - +): {'0++-': 7, '--0-': 5, '----': 2}; twist pattern 0
+   one-leg shot: |D_after| < 3 kN 25, D crosses to the other side beyond 2 kN 46, |D_after| > |D| 57
+late ed.6 A(i) episodes (all F >= 40 kN at start): 352
+   |travel| mm to end+1: p10 0.376 median 0.617 p90 0.854 max 2.057
+   |dD| kN: p10 0.47 median 3.93 p90 6.33 max 23.11
+   FL: dD/travel kN/mm median 6.80 (n=47); rank-1 one-leg 13.09
+   FR: dD/travel kN/mm median 0.77 (n=131); rank-1 one-leg -13.09
+   RL: dD/travel kN/mm median 0.90 (n=102); rank-1 one-leg -13.76
+   RR: dD/travel kN/mm median 2.25 (n=61); rank-1 one-leg 13.77

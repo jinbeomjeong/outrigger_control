@@ -1,0 +1,10769 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 6.2 (judged four, recorded six; the edition 6 subset rows)",
+ "generation_command": "python -I -B 04_scripts/04_hydraulic/coupled/ed7_key_lists.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\keys --pool-csv C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\stats_v7\\s30_pool_runs.csv --pool-csv-sha256 8d2626afa5b43a54554e92a828407d19e46ba2063a44daaf40a157efcf269db0 --grid-root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid --repo C:\\workspace\\outrigger_control --only probe_keys_ed7.json,sens_keys_ed7.json,g1_pool_ed7.json",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "a6fc3dd5c353cd90e868549f4ff844ebb2515870",
+  "is_clean": true
+ },
+ "settings_judged": [
+  "VBMslow",
+  "VBMfast",
+  "VBMc005",
+  "VBMc04"
+ ],
+ "settings_record": [
+  "VBMb069",
+  "VBMb16",
+  "VBMh05",
+  "VBMh15",
+  "VBMd05",
+  "VBMd15"
+ ],
+ "expected_lines": 460,
+ "judged_lines": 184,
+ "expected_j_p3_judged_rows": 104,
+ "probe_seen_units": 100,
+ "lines": [
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMslow"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMslow"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMslow"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMslow"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMslow"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMslow"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMslow"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMslow"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMslow"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMslow"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMslow"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMslow"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMslow"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMslow"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMslow"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMslow"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMslow"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMslow"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMslow"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMslow"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMslow"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMslow"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMslow"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMslow"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMslow"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMfast"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMfast"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMfast"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMfast"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMfast"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMfast"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMfast"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMfast"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMfast"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMfast"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMfast"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMfast"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMfast"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMfast"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMfast"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMfast"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMfast"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMfast"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMfast"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMfast"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMfast"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMfast"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMfast"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMfast"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMfast"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMc005"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc005"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMc005"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc005"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc005"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc005"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc005"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMc005"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMc005"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMc005"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMc005"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMc005"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMc005"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMc005"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMc005"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMc005"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMc005"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMc005"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMc005"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMc005"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMc005"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMc005"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMc005"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMc005"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMc005"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMc04"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc04"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMc04"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMc04"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc04"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc04"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMc04"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMc04"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMc04"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMc04"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMc04"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMc04"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMc04"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMc04"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMc04"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMc04"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMc04"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMc04"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMc04"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMc04"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMc04"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMc04"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMc04"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMc04"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMc04"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": true
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMb069"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb069"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMb069"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb069"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb069"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb069"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb069"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMb069"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMb069"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMb069"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMb069"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMb069"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMb069"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMb069"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMb069"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMb069"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMb069"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMb069"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMb069"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMb069"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMb069"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMb069"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMb069"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMb069"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMb069"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMb16"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb16"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMb16"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMb16"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb16"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb16"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMb16"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMb16"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMb16"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMb16"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMb16"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMb16"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMb16"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMb16"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMb16"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMb16"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMb16"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMb16"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMb16"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMb16"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMb16"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMb16"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMb16"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMb16"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMb16"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMh05"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh05"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMh05"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh05"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh05"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh05"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh05"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMh05"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMh05"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMh05"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMh05"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMh05"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMh05"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMh05"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMh05"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMh05"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMh05"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMh05"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMh05"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMh05"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMh05"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMh05"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMh05"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMh05"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMh05"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMh15"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh15"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMh15"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMh15"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh15"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh15"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMh15"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMh15"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMh15"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMh15"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMh15"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMh15"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMh15"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMh15"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMh15"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMh15"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMh15"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMh15"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMh15"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMh15"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMh15"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMh15"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMh15"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMh15"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMh15"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMd05"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd05"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMd05"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd05"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd05"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd05"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd05"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMd05"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMd05"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMd05"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMd05"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMd05"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMd05"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMd05"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMd05"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMd05"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMd05"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMd05"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMd05"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMd05"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMd05"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMd05"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMd05"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMd05"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMd05"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "R12_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMd15"
+   },
+   "key": "R12_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd15"
+   },
+   "key": "R12_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMd15"
+   },
+   "key": "R12_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-FL-Fs0-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-FL-Fs0-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-FL-Fs8-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 8.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-FL-Fs8-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-FR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-FR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-RL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-RL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_top-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_bottom-FL-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "bottom",
+     "leg": "RR",
+     "fs_kN": 4.0
+    },
+    "setting": "VBMd15"
+   },
+   "key": "R12_bottom-RR-Fs4-o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0
+     },
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "R14_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R14",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd15"
+   },
+   "key": "R14_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R14",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd15"
+   },
+   "key": "R15_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R15",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "R15_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R15",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "VBMd15"
+   },
+   "key": "R16_o0.05",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "R16_o0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.025,
+    "setting": "VBMd15"
+   },
+   "key": "R16_o0.025",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R16",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "setting": "VBMd15"
+   },
+   "key": "R16_o0.075",
+   "v0_pair": {
+    "job": {
+     "case": "R16",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": false,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "S1_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.001,
+    "setting": "VBMd15"
+   },
+   "key": "S1_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.002,
+    "setting": "VBMd15"
+   },
+   "key": "S1_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S1",
+    "eps": 0.003,
+    "setting": "VBMd15"
+   },
+   "key": "S1_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S1",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "S4_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.001,
+    "setting": "VBMd15"
+   },
+   "key": "S4_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.002,
+    "setting": "VBMd15"
+   },
+   "key": "S4_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S4",
+    "eps": 0.003,
+    "setting": "VBMd15"
+   },
+   "key": "S4_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S4",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "S5_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.001,
+    "setting": "VBMd15"
+   },
+   "key": "S5_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.002,
+    "setting": "VBMd15"
+   },
+   "key": "S5_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S5",
+    "eps": 0.003,
+    "setting": "VBMd15"
+   },
+   "key": "S5_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S5",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "S7_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.001,
+    "setting": "VBMd15"
+   },
+   "key": "S7_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": true,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "VBMd15"
+   },
+   "key": "S7_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "VBMd15"
+   },
+   "key": "S7_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "S7",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.0,
+    "setting": "VBMd15"
+   },
+   "key": "R2ra_e0.0",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.0,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.001,
+    "setting": "VBMd15"
+   },
+   "key": "R2ra_e0.001",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.001,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.002,
+    "setting": "VBMd15"
+   },
+   "key": "R2ra_e0.002",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.002,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  },
+  {
+   "job": {
+    "case": "R2",
+    "decision": "reanchor_on",
+    "eps": 0.003,
+    "setting": "VBMd15"
+   },
+   "key": "R2ra_e0.003",
+   "v0_pair": {
+    "job": {
+     "case": "R2",
+     "decision": "reanchor_on",
+     "eps": 0.003,
+     "setting": "V0"
+    },
+    "source": "v5/main.jsonl V0"
+   },
+   "head_only_declared": true,
+   "probe_seen": false,
+   "judged": false
+  }
+ ]
+}

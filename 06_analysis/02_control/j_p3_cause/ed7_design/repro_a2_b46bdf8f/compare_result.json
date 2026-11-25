@@ -1,0 +1,47 @@
+{
+ "status": "match",
+ "lines": {
+  "original_a2_lines": 114,
+  "repro_a2_lines": 114,
+  "only_in_original": [],
+  "only_in_repro": [],
+  "error_lines_repro": [],
+  "commands_sha256_equal": 114,
+  "commands_sha256_compared": 114,
+  "commands_sha256_mismatch": [],
+  "t4h_file_name_mismatch": [],
+  "repro_new_keys_missing": {},
+  "original_lines_with_level_done": 0,
+  "original_lines_with_twist_over_limit": 0
+ },
+ "repro_identity": {
+  "problems": [],
+  "run_identity_problems_tool": []
+ },
+ "fixed_table": {
+  "rows_compared": 64,
+  "control_differences": [],
+  "repro_differences": [],
+  "repro_rule_6_2": "not_failed",
+  "repro_rule_6_3": "not_failed"
+ },
+ "condition_repro_summary": {
+  "status": "pass",
+  "judged_lines": 69,
+  "judged_lines_with_condition": 67,
+  "judged_condition_reads": 884,
+  "judged_breach_reads": 0,
+  "record_lines": 9,
+  "head_only_lines": {
+   "judged_plant": 30,
+   "record_plant": 6
+  },
+  "states": {
+   "head_only": 36,
+   "judged": 69,
+   "record": 9
+  },
+  "record_artifact_reads": 0
+ },
+ "worktree_unchanged": true
+}

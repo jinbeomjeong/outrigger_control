@@ -1,0 +1,59 @@
+{
+ "script": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\fixed_table_b46bdf8f\\fixed_table.py",
+  "sha256": "61341a6628c7e4bb93c8e6afa1cf805aae207acfa50a6838fb9fe8b30b24a0f1"
+ },
+ "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\fixed_table_b46bdf8f\\fixed_table.py --out-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\fixed_table_b46bdf8f",
+ "python": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true
+ },
+ "inputs": {
+  "spec": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v7.md",
+   "sha256": "ebb79469875863e8fae3eb0f7acfbdb99c1abbdb66e2c361452a5d88fbe0a36a",
+   "pinned": true
+  },
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl",
+   "sha256": "1107b30962a038ec9ebccdd19543338f7df771261aa208ef458de6b814817ce9",
+   "pinned": true
+  },
+  "probe_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json",
+   "sha256": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da",
+   "pinned": true
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+   "pinned": true
+  },
+  "grid_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json",
+   "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+   "pinned": true
+  },
+  "sens_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\sens_keys_ed7.json",
+   "sha256": "3b622bbde052e17a11b38804915a350c6be5f706233695b23a76b3ef64238a49",
+   "pinned": false
+  },
+  "condition": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\condition_ad7a716e.json",
+   "sha256": "9bd2dba805a944d7652fe58a53f5d8ddb0e4914e49f2735616ebeb73844f0277",
+   "pinned": false
+  },
+  "run_identity": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.identity.json",
+   "sha256": "16116fa2192f24d4be019c8e6f67e0edae6894e9fbf97c4687cd3e3ff34ae063",
+   "pinned": false
+  }
+ },
+ "outputs": {
+  "fixed_table_a2.json": "f7754a693c75da218a0ccc0eeb42c598cd4843034f874b70e47a709eaf4554d8",
+  "fixed_table_a2.csv": "89190eec369bb5b99892c300b85dc776f22f446d6e3f13be1f1510169b465caf"
+ }
+}

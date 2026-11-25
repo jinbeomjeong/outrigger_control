@@ -1,0 +1,56 @@
+self_check_ok True
+{"c2.8": {"J": 0.02185, "r10": 0.0223, "ok": true}, "c3.0": {"J": 0.009575, "r10": 0.0095, "ok": true}, "A_rho0": {"mc": 0.0978, "analytic": 0.09727382421671527, "ok": true}, "B_contains_J": {"ok": true}}
+== S: seen 40 unseen 144 (null n 40000, harm n 20000) ==
+null  c2.5                     J   6.65 | A  21.83 | A|J  26.56 | C1|J   9.11 | B   9.97 | E_seen 0.249 E_unseen 0.885
+null  c2.8                     J   2.19 | A   9.86 | A|J  11.66 | C1|J   2.77 | B   3.25 | E_seen 0.105 E_unseen 0.375
+null  c3.0                     J   0.96 | A   5.32 | A|J   6.16 | C1|J   1.11 | B   1.44 | E_seen 0.055 E_unseen 0.198
+null  c3.5                     J   0.10 | A   0.92 | A|J   1.01 | C1|J   0.10 | B   0.13 | E_seen 0.009 E_unseen 0.035
+harm  R12_one_q0.5             J  50.59 | A  53.01 | A|J  77.07 | C1|J  51.95 | B  69.73 | E_seen 0.558 E_unseen 1.692
+harm  R12_one_q1.0             J 100.00 | A 100.00 | A|J 100.00 | C1|J 100.00 | B 100.00 | E_seen 1.054 E_unseen 3.189
+harm  R12_all_q0.25            J  50.99 | A  69.93 | A|J  85.27 | C1|J  65.10 | B  72.12 | E_seen 1.055 E_unseen 3.202
+harm  R12_all_q0.5             J  94.44 | A  94.00 | A|J  99.68 | C1|J  98.38 | B  99.20 | E_seen 2.054 E_unseen 6.179
+harm  R15_one_q0.5             J   1.09 | A  75.93 | A|J  76.17 | C1|J  28.26 | B  25.97 | E_seen 1.048 E_unseen 0.200
+harm  R15_one_q1.0             J   0.84 | A 100.00 | A|J 100.00 | C1|J 100.00 | B 100.00 | E_seen 2.054 E_unseen 0.195
+harm  S4_one_q0.5              J  50.33 | A  52.73 | A|J  76.58 | C1|J  51.55 | B  69.12 | E_seen 0.554 E_unseen 1.682
+harm  dwell_rows_all_q0.25     J  97.60 | A  97.15 | A|J  99.92 | C1|J  99.59 | B  99.78 | E_seen 3.060 E_unseen 9.154
+harm  spread_pi0.02_q0.5       J  34.56 | A  35.41 | A|J  53.24 | C1|J  38.30 | B  44.32 | E_seen 0.454 E_unseen 1.638
+harm  spread_pi0.02_q1.0       J  62.20 | A  53.71 | A|J  73.94 | C1|J  66.04 | B  72.69 | E_seen 0.836 E_unseen 3.048
+harm  spread_pi0.05_q0.5       J  65.19 | A  63.61 | A|J  83.50 | C1|J  71.84 | B  76.68 | E_seen 1.046 E_unseen 3.779
+harm  spread_pi0.05_q1.0       J  91.66 | A  84.81 | A|J  96.50 | C1|J  94.34 | B  96.35 | E_seen 2.042 E_unseen 7.401
+harm  spread_pi0.1_q0.5        J  89.56 | A  86.42 | A|J  97.44 | C1|J  94.05 | B  95.30 | E_seen 2.054 E_unseen 7.395
+harm  spread_pi0.1_q1.0        J  99.48 | A  97.97 | A|J  99.88 | C1|J  99.78 | B  99.88 | E_seen 4.050 E_unseen 14.614
+harm  spread_pi0.2_q0.5        J  99.53 | A  98.31 | A|J  99.95 | C1|J  99.85 | B  99.90 | E_seen 4.041 E_unseen 14.550
+harm  spread_pi0.2_q1.0        J 100.00 | A  99.95 | A|J 100.00 | C1|J 100.00 | B 100.00 | E_seen 8.074 E_unseen 29.071
+== D: opportunity lines 12 ==
+  {"key": "top|0.0|level|RR|FS24|0.0", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 1.952580652238763e-06}
+  {"key": "bottom|0.0|level|RR|FS24|0.05", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "top|8.0|level|RL|FS24|0.025", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "bottom|2.0|level|FL|FS24|0.075", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "top|0.0|level|RR|G4|0.075", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "bottom|0.0|level|RR|G4|0.05", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "bottom|4.0|level|RL|G4|0.025", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "bottom|2.0|level|RR|G4|0.0", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 0.0}
+  {"key": "top|0.0|level|RR|RE1bF|0.0", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 1.1756669711833942e-11}
+  {"key": "bottom|0.0|level|RR|RE1bF|0.05", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 2.4424906541753444e-15}
+  {"key": "top|4.0|level|RL|RE1bF|0.025", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 7.401486830834377e-17}
+  {"key": "top|4.0|level|RR|RE1bF|0.075", "in_runs": true, "v0_pass": true, "used_ed6": true, "cluster_in_g1": true, "cluster_mean_p_margin": 8.900565469834494e-11}
+null  f1|p00.0|rho0.0        JG   0.00 | AD   0.00 | BD   0.00 | anyD   0.00
+null  f1|p00.0|rho0.9        JG   0.00 | AD   0.00 | BD   0.00 | anyD   0.00
+null  f1|p00.005|rho0.0      JG   2.25 | AD   7.99 | BD   2.71 | anyD   5.90
+null  f1|p00.005|rho0.9      JG   2.32 | AD   7.85 | BD   3.18 | anyD   5.87
+null  f1|p00.01|rho0.0       JG  12.62 | AD  22.43 | BD  14.78 | anyD  11.25
+null  f1|p00.01|rho0.9       JG  12.70 | AD  21.80 | BD  15.50 | anyD  11.53
+null  f1|p00.017|rho0.0      JG  36.93 | AD  48.61 | BD  41.62 | anyD  18.55
+null  f1|p00.017|rho0.9      JG  37.44 | AD  46.91 | BD  41.77 | anyD  18.37
+null  f3|p00.0|rho0.0        JG   0.13 | AD   0.14 | BD   0.13 | anyD   0.00
+null  f3|p00.0|rho0.9        JG   0.14 | AD   0.14 | BD   0.14 | anyD   0.00
+null  f3|p00.005|rho0.0      JG   6.48 | AD  11.96 | BD   7.32 | anyD   5.87
+null  f3|p00.005|rho0.9      JG   6.41 | AD  11.49 | BD   7.67 | anyD   5.83
+null  f3|p00.01|rho0.0       JG  21.50 | AD  30.50 | BD  24.18 | anyD  11.41
+null  f3|p00.01|rho0.9       JG  21.59 | AD  29.17 | BD  24.44 | anyD  11.30
+null  f3|p00.017|rho0.0      JG  47.88 | AD  57.69 | BD  52.35 | anyD  18.86
+null  f3|p00.017|rho0.9      JG  48.19 | AD  55.72 | BD  52.08 | anyD  18.65
+harm  pi0.02|q0.6            JG  36.89 | AD  47.21 | BD  41.40 | anyD  18.84
+harm  pi0.02|q1.0            JG  65.12 | AD  70.76 | BD  68.59 | anyD  26.26
+harm  pi0.05|q0.6            JG  86.26 | AD  89.85 | BD  88.65 | anyD  34.47
+harm  pi0.05|q1.0            JG  98.73 | AD  98.94 | BD  98.90 | anyD  48.16

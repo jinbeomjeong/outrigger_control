@@ -1,0 +1,157 @@
+{
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "runs": {
+  "probe_list_all": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/ed7_probe.py",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\p.jsonl",
+    "--list",
+    "--workers",
+    "20",
+    "--mask",
+    "0x0FFFFFFF"
+   ],
+   "exit": 0,
+   "tail": [
+    "P7-Mslow-a2 R12_top-RL-Fs4-o0.025-RE1bF-level",
+    "P7-Mslow-a2 R12_top-RR-Fs4-o0.075-RE1bF-level",
+    "{\"status\": \"listed\", \"planned\": 654, \"out\": \"C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\j_p3_cause\\\\ed7_design\\\\tool_a6fc3dd5\\\\dry_run\\\\dry_outputs\\\\p.jsonl\"}"
+   ],
+   "stdout_lines": 655
+  },
+  "probe_list_d": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/ed7_probe.py",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\p.jsonl",
+    "--list",
+    "--part",
+    "d"
+   ],
+   "exit": 0,
+   "tail": [
+    "P7-Mslow-a2 R12_top-RL-Fs4-o0.025-RE1bF-level",
+    "P7-Mslow-a2 R12_top-RR-Fs4-o0.075-RE1bF-level",
+    "{\"status\": \"listed\", \"planned\": 24, \"out\": \"C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\j_p3_cause\\\\ed7_design\\\\tool_a6fc3dd5\\\\dry_run\\\\dry_outputs\\\\p.jsonl\"}"
+   ],
+   "stdout_lines": 25
+  },
+  "probe_bad_arm": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/ed7_probe.py",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\p.jsonl",
+    "--arms",
+    "a9"
+   ],
+   "exit": 2,
+   "tail": [
+    "{\"status\": \"input_error\", \"reason\": \"--arms takes ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'c2'], got ['a9']\"}"
+   ],
+   "stdout_lines": 1
+  },
+  "j9_main_list": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_j9_main",
+    "--list",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\ed7_j9_main.jsonl"
+   ],
+   "exit": 0,
+   "tail": [
+    "ed7_j9_main: 388 runs, 388 to do"
+   ],
+   "stdout_lines": 1
+  },
+  "cases_list": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_cases",
+    "--list",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\ed7_cases.jsonl"
+   ],
+   "exit": 0,
+   "tail": [
+    "ed7_cases: 10 runs, 10 to do"
+   ],
+   "stdout_lines": 1
+  },
+  "t8_list": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_t8",
+    "--list",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\ed7_t8.jsonl",
+    "--p3-hash-source",
+    "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl"
+   ],
+   "exit": 0,
+   "tail": [
+    "ed7_t8: 44 runs, 44 to do"
+   ],
+   "stdout_lines": 1
+  },
+  "keys_refused": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/run_v5.py",
+    "ed7_keys",
+    "--list",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\ed7_keys.jsonl",
+    "--jobs-file",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\none.json"
+   ],
+   "exit": 1,
+   "tail": [
+    "--jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\none.json is not a sealed ed7_keys key file"
+   ],
+   "stdout_lines": 0
+  },
+  "condition_input_error": {
+   "argv": [
+    "python",
+    "-I",
+    "-B",
+    "04_scripts/04_hydraulic/coupled/jp3_rev7_condition.py",
+    "--rows",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\none.jsonl",
+    "--out",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_a6fc3dd5\\dry_run\\dry_outputs\\condition.json"
+   ],
+   "exit": 2,
+   "tail": [
+    "{\"status\": \"input_error\", \"reason\": \"--rows C:\\\\workspace\\\\outrigger_control\\\\06_analysis\\\\02_control\\\\j_p3_cause\\\\ed7_design\\\\tool_a6fc3dd5\\\\dry_run\\\\dry_outputs\\\\none.jsonl not found\"}"
+   ],
+   "stdout_lines": 1
+  }
+ },
+ "files_in_scratch_after": [
+  "none.json"
+ ]
+}

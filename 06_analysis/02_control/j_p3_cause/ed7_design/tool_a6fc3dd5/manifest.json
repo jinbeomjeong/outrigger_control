@@ -1,0 +1,19 @@
+{
+ "purpose": "436.9 edition 7 implementation evidence (jp3_remedy_spec_v7.md revision 2, sha256 85ce6e2ad4ea3bc222c047d78fe5221e09efb5fac8232b7dfc79a0834a4f3651, spec 8 Y7-1 .. Y7-7); before the seal, no probe run",
+ "commit": "a6fc3dd5 (branch ed7-impl, worktree .claude/worktrees/ed7-impl, parent 7949540527baea680f144ef4e00a970cb10b9830)",
+ "files": {
+  "keys/probe_keys_ed7.json": "ed7_key_lists.py at a6fc3dd5 (clean): probe main part 15 keys x 6 plants x 7 arms = 630 + D part 12 keys x M/Mslow x a2 = 24 (654 lines)",
+  "keys/sens_keys_ed7.json": "10 sensitivity settings x 46 subset rows = 460 lines (judged 4 settings = 184 lines)",
+  "keys/g1_pool_ed7.json": "G1 pool counts without a draw: 192 clusters, 3 V0-mixed, 19 without a candidate, 171 eligible, 3 U832 -> 168 judged; the G1 key file needs the seal seed (--g1-seed)",
+  "dry_run/dry_run.py": "the dry-run script (argparse reach of every new command; --list / refusals only)",
+  "dry_run/dry_run.json": "its record at a6fc3dd5 (dynamics-dev python.exe -I -B from the worktree root)",
+  "dry_run/dry_outputs/none.json": "the dummy --jobs-file of the ed7_keys refusal check",
+  "tests/ed7_tests_junit.xml": "test_ed7_units.py + test_ed7_harness.py at a6fc3dd5: 51 passed, 0 skipped",
+  "tests/ed7_tests.log": "its log",
+  "tests/worktree_tests_report.md": "verif/worktree_tests.py (stored 07_results from the main checkout): 343 passed, 0 skipped (the two_pressure stored-data tests, test_ed6_lock_start_b, test_jp3_rev6); tool exit 1 = 14 warnings on skip-message literals only",
+  "tests/worktree_tests_junit.xml": "its JUnit",
+  "tests/pre_commit_subset.log": "Chrono-dev pytest of 98 related test files on the working tree just before the commit: 2442 passed, 1 failed (test_ed6_lock_start_b ROD_FAULT_SETTINGS tuple, updated in the commit), 49 skipped (all stored-data skips, rerun above with 0 skips)",
+  "tests/pre_commit_subset_junit.xml": "its JUnit",
+  "p7_0_reference_hashes.py": "the script that read the 79495405 command hashes pinned in test_ed7_harness.py (j9_runs/79495405/records_after_stop/B_a1 j9_main.jsonl / sens.jsonl, impl_t8_a1/ed6_t8.jsonl)"
+ }
+}

@@ -1,0 +1,668 @@
+=== row 0 (45646 chars)
+dict(26)
+  job:
+    dict(3)
+      case: 'R2'
+      eps: 0.003
+      setting: 'P7-M-a1'
+  wall_s: 111.6
+  commands_sha256: 'f329c5ef1cae6120b46d775ac3fa415be0b91803e8f388239bc5b513cb23300e'
+  final_phase: 'ready'
+  values:
+    dict(20)
+      times:
+        dict(4)
+          t_touch_end_s: 22.1
+          t_first_done_s: 44.8
+          t_first_ready_s: 60.0
+          t_check_start_s: 0.1
+      forces:
+        dict(4)
+          t_lift_s: 22.991
+          after_liftoff:
+            dict(3)
+              min_kN: 55.2653
+              leg: 'RR'
+              t_s: 50.061
+          first_8s:
+            dict(3)
+              min_kN: 57.899
+              leg: 'RR'
+              t_s: 23.053
+          after_8s:
+            dict(3)
+              min_kN: 55.2653
+              leg: 'RR'
+              t_s: 50.061
+      attitude:
+        dict(5)
+          end_abs_deg:
+            dict(2)
+              roll: 0.00093
+              pitch: 0.012
+          max_abs_last_5s_deg: 0.012
+          max_abs_after_liftoff_deg: 3.58618
+          rocking_amplitude_deg: 0.00869
+          filter_residual_last_5s_deg: 2e-05
+      probe_attitude_change_deg: 0.02368
+      pressure:
+        dict(3)
+          max_moving_bar: 98.769
+          saturation_leg_chunks: 0
+          saturation_rule: "spec 320 item 4 (2) 'saturation stop 0 in a levelling run': number of (row, leg
+      twist:
+        dict(2)
+          peak_abs_after_liftoff_kN: 27.742
+          abs_at_first_done_kN: 0.753
+      events:
+        dict(9)
+          fault_events:
+            list(0) []
+          warn_events:
+            list(0) []
+          info_rule_events:
+            list(0) []
+          soil_mode_started: False
+          t_loc_first_s: 24.1
+          t_loc_last_s: 24.1
+          reapproach_starts_after_liftoff: 0
+          p5_relevels_after_liftoff: 0
+          probe_aborts: 0
+      guard_active_s: 0.0
+      oil_force_max_kN:
+        dict(4)
+          FL: 134.929
+          FR: 133.057
+          RL: 88.651
+          RR: 86.196
+      supply_L_min: 51.17
+      V2_a:
+        dict(8)
+          max_sum_Q_over_supply_minus_1: 0.0
+          chunks: 70000
+          demand_met_chunks: 53799
+          max_abs_v_minus_u_on_demand_met_m_s: 0.0
+          fast_path_chunks: 53799
+          solved_chunks: 16201
+          audit_chunks: 53
+          audit_mismatches: 0
+      E1:
+        dict(6)
+          check:
+            dict(3)
+              duration_s: 1.001
+              short_s: 0.0
+              max_deficit_L_min: 0.0
+          done:
+            dict(3)
+              duration_s: 0.1
+              short_s: 0.0
+              max_deficit_L_min: 0.0
+          level:
+            dict(3)
+              duration_s: 22.7
+              short_s: 0.0
+              max_deficit_L_min: 0.0
+          probe:
+            dict(3)
+              duration_s: 15.1
+              short_s: 0.0
+              max_deficit_L_min: 0.0
+          ready:
+            dict(3)
+              duration_s: 9.999
+              short_s: 0.0
+              max_deficit_L_min: 0.0
+          touch:
+            dict(3)
+              duration_s: 21.1
+              short_s: 16.201
+              max_deficit_L_min: 6.02
+      E2:
+        dict(4)
+          FL:
+            dict(2)
+              min_r_by_phase:
+                dict(2)
+              longest_below_0p93_s: 15.838
+          FR:
+            dict(2)
+              min_r_by_phase:
+                dict(2)
+              longest_below_0p93_s: 15.838
+          RL:
+            dict(2)
+              min_r_by_phase:
+                dict(2)
+              longest_below_0p93_s: 15.937
+          RR:
+            dict(2)
+              min_r_by_phase:
+                dict(2)
+              longest_below_0p93_s: 15.937
+      E3:
+        dict(2)
+          max_abs_integral_mm:
+            dict(4)
+              FL: 35.378
+              FR: 35.378
+              RL: 35.253
+              RR: 35.253
+          max_between_legs_mm: 0.125
+      E4:
+        dict(7)
+          sample_period_s: 0.001
+          tie_width_bar: 0.5
+          group_time_s:
+            dict(2)
+              FL+FR: 0.003
+              FL+FR+RL+RR: 16.198
+          disjoint_swaps: 0
+          max_disjoint_swaps_in_1s: 0
+          saturated_s: 16.201
+          gallery_bar_while_saturated:
+            list(2) [12.581, 15.77]
+      E5:
+        dict(4)
+          integral_limit_rad_s: 0.02
+          max_abs_integral_rad_s: 0.006185
+          abs_integral_at_saturation_end_rad_s: 0.0
+          back_in_band_after_saturation_s: 24.97
+      T4_inputs:
+        dict(4)
+          persist_s: 1.0
+          legs:
+            dict(4)
+              FL:
+                dict(4)
+              FR:
+                dict(4)
+              RL:
+                dict(4)
+              RR:
+                dict(4)
+          sets:
+            dict(1)
+              FL+FR+RL+RR:
+                dict(3)
+          valve_constants:
+            dict(9)
+              X_comp: 6.300667765063818e-07
+              dp_comp_Pa: 1000000.0
+              dp_unload_Pa: 2000000.0
+              width_Pa: 100000.0
+              law: 'priority'
+              A_h_m2:
+                list(4) [0.013273229, 0.013273229, 0.00950331778]
+              A_r_m2:
+                list(4) [0.00376991118, 0.00376991118, 0.00314159265]
+              v_max_m_s: 0.0209243016
+              Q_sup_m3_s: 0.0008528333304999999
+      sa4:
+        dict(4)
+          t_stop_s: None
+          lift_after_stop_ms: None
+          F_min_after_stop_N: None
+          rule: 'kernel pad contact force acc[11:15] (= TRUE_FORCE + Wr, exact round trip; rod-a
+      case_floor_deg:
+        list(2) [0.0, 3.5]
+      case_floor_source: 's9_soil_slope case roll_deg / pitch_deg'
+  t_event_s: None
+  event_output:
+    dict(0)
+  event_names:
+    dict(5)
+      INFO_TOUCH_DIP_HELD: 2
+      floor_estimate_touch: 1
+      crawler_liftoff_confirmed: 1
+      reanchor_skipped: 1
+      ready_heave_tail: 1
+  events:
+    list(0) []
+  command_stats:
+    dict(4)
+      n_rev: 11
+      n_rev_legs:
+        list(4) [2, 2, 4]
+      n_starts:
+        list(4) [3, 4, 4]
+      retract_periods:
+        list(4) [19, 14, 68]
+  harness_class: 'pass'
+  hydraulic_options:
+    dict(18)
+      flow: None
+      valve_tau_s: None
+      rod_release_force: True
+      check_delay: None
+      lock_closure:
+        dict(2)
+          overlap_ratio: 0.02
+          closing_delay_s: 0.05
+      lock_window_follows_plant: True
+      extend_start_tracked: True
+      extend_start_hold: True
+      line_fill_gate:
+        dict(3)
+          kind: 'VN'
+          volume_scale: 1.0
+          c_v: 0.02
+      lock_anchor_continuous: True
+      rod_flow_cap_all: True
+      rod_reading_truth: True
+      extend_start_witness: True
+      lsb_components:
+        list(3) ['A_i', 'A_ii', 'B3']
+      extend_start_rev7: True
+      p1_patch:
+        dict(4)
+          line_scale: 1.0
+          dead_scale: 1.0
+          bulk_modulus_Pa: 1000000000.0
+          k_ext_form: 'b0'
+      probe_d6_settings:
+        dict(2)
+          retract_position_target: True
+          witness: True
+      m2_law: 'flow_limited_r6'
+  hydraulics_record:
+    dict(32)
+      m2_law:
+        dict(8)
+          law: 'flow_limited_r6'
+          rule: 'moving p_r: lag to p* capped by the valve flow; retract meter-in A_ann |u|, ext
+          meter_out_ratio: 1.0
+          spool_reference_drop_Pa: 1000000.0
+          tank_pressure_Pa: 200000.0
+          status: 'ASSUMPTION b_T, dp_c, p_T, p_bA (hydraulics_remedy_review.md 1, 5)'
+          rule_r6: 'r5 branches (a) retract rise and (b) extend relief unchanged; (c) retract relie
+          b_T_ret_equivalent: 'sqrt(dp_c / (p_bA - p_T)) = 1.826 at p_bA 5 bar'
+      m2_shift_total_mm:
+        list(4) [0.23991917533166768, 0.22116313241402158, 0.5131833892863827]
+      m2_clipped_steps:
+        list(4) [1, 1, 1]
+      ext_lock_count:
+        list(4) [3, 4, 4]
+      ext_lock_excess_count:
+        list(4) [3, 4, 4]
+      ext_lock_excess_max_bar:
+        list(4) [3.004922002388852, 3.0048147664714953, 3.002286847408174]
+      ext_lock_risk_count:
+        list(4) [0, 0, 0]
+      ext_lock_knee_max_kN:
+        list(4) [8.306742181612522, 8.306591665352144, 6.437147412405667]
+      ext_lock_log:
+        list(15) [[21.233, 0, 499999.9999999971, 500000.0, 499999.9999999971, 8299.833662420246], [21.233, 1, 499999.9999999971, 500000.0
+      ext_lock_log_columns:
+        list(6) ['t_s', 'leg', 'p_tr_Pa']
+      m2_clipped_steps_pre_lift:
+        list(4) [1, 1, 1]
+      m2_clipped_steps_post_lift:
+        list(4) [0, 0, 0]
+      m2_clip_split_t_lift_s: 22.991
+      lock_events:
+        list(38) [[1.112, 0, False], [1.112, 1, False], [1.114, 2, False]]
+      line_fill_gate:
+        dict(19)
+          unit_status: 'below_criteria_reference_only'
+          setting:
+            dict(3)
+              kind: 'VN'
+              volume_scale: 1.0
+              c_v: 0.02
+          n_fills:
+            list(4) [[3, 1], [4, 1], [4, 2]]
+          hold_s:
+            list(4) [[0.313, 0.515], [0.63, 0.495], [7.176, 1.677]]
+          lost_mm:
+            list(4) [[0.5018, 0.6652], [0.7945, 0.6028], [1.3094, 3.8231]]
+          discharge_mm:
+            list(4) [0.4358, 0.4233, 0.983]
+          creep_mm:
+            list(4) [0.4385, 0.4087, 0.5649]
+          void_peak_mm:
+            list(4) [0.311, 0.3, 1.159]
+          fills:
+            list(21) [[1.1, 1.112, 0, 1, 0.004, 0.57, 2.0, 2.94, 2.0], [1.1, 1.112, 1, 1, 0.004, 0.57, 2.0, 2.94, 2.0], [1.1, 1.114, 2, 1, 0.
+          ext_starts:
+            list(600) [[1.1, 0, 0.57, 2.0, 0.026], [1.1, 1, 0.57, 2.0, 0.026], [1.1, 2, 0.66, 2.0, 0.026]]
+          mode: 'gate_only_p1_patch'
+          output_exceptions:
+            list(1) ['rod_fill_truth']
+          output_exception: 'edition 7 P1 supplement: rod fill truth, no M2 seed'
+          p1_patch:
+            dict(4)
+              line_scale: 1.0
+              dead_scale: 1.0
+              bulk_modulus_Pa: 1000000000.0
+              k_ext_form: 'b0'
+          fill_rise_peak_bar:
+            list(4) [21.725, 20.26, 19.218]
+          rod_check_clear_count: 0
+          rod_check_clear_log:
+            list(0) []
+          rod_check_clear_log_columns:
+            list(3) ['t_s', 'leg', 'cleared_fill_rise_Pa']
+          rod_check_clear_log_truncated: False
+      p1_output_exceptions:
+        list(1) ['rod_fill_truth']
+      p1_fill_release_log:
+        list(6) [[28.765, 3, -91325.0, 1867079.8790503978], [28.785, 2, -91325.0, 1921837.3756084694], [47.035, 0, 512435.0297808179, 21
+      p1_fill_release_log_columns:
+        list(4) ['t_release_s', 'leg', 'p_r_locked_Pa']
+      p1_read_record:
+        dict(2)
+          reads: 700
+          t4h_prefix: 'p1_'
+      lock_log:
+        list(19) [[21.233, 0, 1.0, 499999.9999999971, 499999.9999999971, 0.0, 499999.9999999971, 0.0, 0.0, 22.403, 'gate', 0.102999999999
+      lock_log_columns:
+        list(16) ['t_lock_s', 'leg', 'direction']
+      relock_count: 19
+      relock_step_over_1bar_count: 0
+      max_abs_dp_tr_step_bar: 0.0
+      p1_retract_seed_count: 6
+      p1_retract_seed_step_max_bar: 21.724625811238166
+      p1_retract_seed_log:
+        list(6) [[28.765, 3, 6576031.896417152, -91325.0, 1775754.8790503978, 1867079.8790503978, 617216.4887545253, 0.0, -16.2768290937
+      p1_retract_seed_log_columns:
+        list(12) ['t_s', 'leg', 'p_h_Pa']
+      rod_reading_truth_calls: 0
+      two_pressure_reads: 0
+      tension_truth:
+        dict(9)
+          rule: 'plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged
+          substeps:
+            list(4) [0, 0, 0]
+          substeps_over_margin:
+            list(4) [0, 0, 0]
+          active_substeps:
+            list(4) [0, 0, 0]
+          max_excess_bar:
+            list(4) [0.0, 0.0, 0.0]
+          min_p_tr_minus_p_star_bar:
+            list(4) [None, None, None]
+          first_t_s:
+            list(4) [None, None, None]
+          back_pressure_bar: 5.0
+          margin_bar: 0.5
+      extend_bound_check: None
+  review_record:
+    dict(6)
+      tension_rule: 'zero_corrected_3sigma'
+      tension_substeps:
+        list(4) [0, 0, 0]
+      tension_substeps_uncalibrated:
+        list(4) [0, 0, 0]
+      tension_threshold_N:
+        list(4) [2712.848710039965, 2712.848710039965, 2171.344034630395]
+      tension_read_margin_N:
+        list(4) [827.8931200399651, 827.8931200399651, 600.547709630395]
+      d2_violation_start_ratio:
+        list(4) [[], [], []]
+  lock_window_alignment:
+    dict(2)
+      n_late: None
+      reason: 'no rod reading'
+  controller_tag: 'final_C4G2_P3X_LAS_K1_LSB'
+  head_only_declared: True
+  resume_k1:
+    dict(6)
+      applicable: True
+      k1_order_gate_request: 'preset'
+      k1_order_gate_effective: True
+      liftoff_approach_slow:
+        dict(4)
+          settings:
+            dict(9)
+              enable: True
+              sum_on_fraction_W: 0.6
+              light_leg_fraction_of_F_min: 3.5
+              slow_mean_fraction: 0.16
+              sum_off_fraction_W: 0.85
+              off_periods: 5
+              max_s: 1.5
+              rho_on: 0.18
+              require_soil_response: True
+          start_s: None
+          end_s: None
+          end_reason: None
+      slope_clearance_margin:
+        dict(2)
+          settings:
+            dict(3)
+              enable: True
+              flat_soil_margin_order_gate: True
+              flat_soil_margin_m: 0.03
+          order_gate:
+            dict(2)
+              enabled: True
+              decisions:
+                list(0) []
+      event_counts:
+        dict(3)
+          flat_soil_margin_applied: 0
+          flat_soil_margin_skipped_order: 0
+          soil_mode_start: 0
+  harness_commands_sha256: 'f329c5ef1cae6120b46d775ac3fa415be0b91803e8f388239bc5b513cb23300e'
+  lsb_components:
+    list(3) ['A_i', 'A_ii', 'B3']
+  lsb_settings:
+    dict(42)
+      components:
+        list(3) ['A_i', 'A_ii', 'B3']
+      hold_speed_ratio: 0.01
+      a1_trigger_periods: 10
+      a1_trigger_travel_m: 0.0005
+      a1_motion_ratio: 0.25
+      a1_witness_m: 0.0004
+      a1_step_m_s: 0.0002
+      a1_cap_m_s: 0.00105
+      a1_cap_periods: 50
+      a2_extend: False
+      a2_lock_periods: 2
+      a2_fill_factor: 1.0
+      a2_fill_speed_ratio: 1.0
+      a2_hold_after_fill_s: None
+      a2_psi: 6.0
+      a2_bulk_modulus_Pa: 1600000000.0
+      a2_line_volume_m3: 0.0001425
+      a2_hose_bulk_modulus_Pa: 1000000000.0
+      a2_crack_Pa: 100000.0
+      a2_tank_Pa: 200000.0
+      a2_rod_dead_length_m: 0.02
+      a2_head_dead_length_m: 0.05
+      a2_friction_band_N:
+        list(4) [16000.0, 16000.0, 13328.0]
+      a2_reading_margin_Pa: 400000.0
+      a2_void_estimate: True
+      a2_void_head_bulk_modulus_Pa: 1600000000.0
+      a2_void_rod_bulk_modulus_Pa: 690000000.0
+      a2_retract_witness_m: 0.001
+      a2_rod_witness_min_Pa: 300000.0
+      a2_rod_witness_ratio: 0.5
+      a2_extend_witness_m: 0.001
+      a2_on_fallback_legs: False
+      b1_exit_margin_N: 2000.0
+      b1_exit_samples: 3
+      b2_required_samples: None
+      b3_end_periods: 2
+      b3_travel_cap_fraction: 0.065
+      b3_max_periods: None
+      b3_protect_margin_N: 35000.0
+      b3_protect_predictive: False
+      b3_predictive_margin_N: 5000.0
+      b3_twist_stiffness_N_m: 21700000.0
+  lsb_record:
+    dict(9)
+      components:
+        list(3) ['A_i', 'A_ii', 'B3']
+      settings:
+        dict(42)
+          components:
+            list(3) ['A_i', 'A_ii', 'B3']
+          hold_speed_ratio: 0.01
+          a1_trigger_periods: 10
+          a1_trigger_travel_m: 0.0005
+          a1_motion_ratio: 0.25
+          a1_witness_m: 0.0004
+          a1_step_m_s: 0.0002
+          a1_cap_m_s: 0.00105
+          a1_cap_periods: 50
+          a2_extend: False
+          a2_lock_periods: 2
+          a2_fill_factor: 1.0
+          a2_fill_speed_ratio: 1.0
+          a2_hold_after_fill_s: None
+          a2_psi: 6.0
+          a2_bulk_modulus_Pa: 1600000000.0
+          a2_line_volume_m3: 0.0001425
+          a2_hose_bulk_modulus_Pa: 1000000000.0
+          a2_crack_Pa: 100000.0
+          a2_tank_Pa: 200000.0
+          a2_rod_dead_length_m: 0.02
+          a2_head_dead_length_m: 0.05
+          a2_friction_band_N:
+            list(4) [16000.0, 16000.0, 13328.0]
+          a2_reading_margin_Pa: 400000.0
+          a2_void_estimate: True
+          a2_void_head_bulk_modulus_Pa: 1600000000.0
+          a2_void_rod_bulk_modulus_Pa: 690000000.0
+          a2_retract_witness_m: 0.001
+          a2_rod_witness_min_Pa: 300000.0
+          a2_rod_witness_ratio: 0.5
+          a2_extend_witness_m: 0.001
+          a2_on_fallback_legs: False
+          b1_exit_margin_N: 2000.0
+          b1_exit_samples: 3
+          b2_required_samples: None
+          b3_end_periods: 2
+          b3_travel_cap_fraction: 0.065
+          b3_max_periods: None
+          b3_protect_margin_N: 35000.0
+          b3_protect_predictive: False
+          b3_predictive_margin_N: 5000.0
+          b3_twist_stiffness_N_m: 21700000.0
+      legs:
+        dict(4)
+          FL:
+            dict(14)
+              a1_triggers: 0
+              a1_cap_reached: 0
+              a1_trigger_periods:
+                list(0) []
+              a1_end:
+                dict(0)
+              a1_raised_periods: 0
+              a2_floors: 0
+              a2_start_bounds_m:
+                list(0) []
+              a2_end:
+                dict(0)
+              a2_end_periods:
+                list(0) []
+              a2_raised_periods: 0
+              a2_hold_periods: 0
+              b1_blocked_periods: 0
+              b2_early_starts_s:
+                list(0) []
+              b3_periods: 0
+          FR:
+            dict(14)
+              a1_triggers: 0
+              a1_cap_reached: 0
+              a1_trigger_periods:
+                list(0) []
+              a1_end:
+                dict(0)
+              a1_raised_periods: 0
+              a2_floors: 0
+              a2_start_bounds_m:
+                list(0) []
+              a2_end:
+                dict(0)
+              a2_end_periods:
+                list(0) []
+              a2_raised_periods: 0
+              a2_hold_periods: 0
+              b1_blocked_periods: 0
+              b2_early_starts_s:
+                list(0) []
+              b3_periods: 0
+          RL:
+            dict(14)
+              a1_triggers: 0
+              a1_cap_reached: 0
+              a1_trigger_periods:
+                list(0) []
+              a1_end:
+                dict(0)
+              a1_raised_periods: 0
+              a2_floors: 0
+              a2_start_bounds_m:
+                list(0) []
+              a2_end:
+                dict(0)
+              a2_end_periods:
+                list(0) []
+              a2_raised_periods: 0
+              a2_hold_periods: 0
+              b1_blocked_periods: 0
+              b2_early_starts_s:
+                list(0) []
+              b3_periods: 0
+          RR:
+            dict(14)
+              a1_triggers: 0
+              a1_cap_reached: 0
+              a1_trigger_periods:
+                list(0) []
+              a1_end:
+                dict(0)
+              a1_raised_periods: 0
+              a2_floors: 0
+              a2_start_bounds_m:
+                list(0) []
+              a2_end:
+                dict(0)
+              a2_end_periods:
+                list(0) []
+              a2_raised_periods: 0
+              a2_hold_periods: 0
+              b1_blocked_periods: 0
+              b2_early_starts_s:
+                list(0) []
+              b3_periods: 0
+      b_episodes:
+        list(0) []
+      b_active_leg: None
+      b3_episodes:
+        list(0) []
+      b3_active_leg: None
+      g2_split_periods: 0
+      trace_reads: 700
+  probe_d6_settings:
+    dict(7)
+      witness: True
+      witness_m: 0.0003
+      not_opened_warn_rounds: 2
+      retract_position_target: True
+      retract_slow_speed_m_s: 0.001
+      retract_extra_margin_m: 0.0002
+      head_reading_margin_Pa: 900000.0
+  probe_d6_record: None
+  t4h_file: 'R2_e0.003_P7-M-a1.npz'
+  ed7_probe:
+    dict(8)
+      plant: 'M'
+      arm: 'a1'
+      part: 'main'
+      components:
+        list(3) ['A_i', 'A_ii', 'B3']
+      lsb_parameters:
+        dict(0)
+      probe_d6: True
+      p1_read_record: True
+      foreign_modules:
+        list(0) []
+rows: 654

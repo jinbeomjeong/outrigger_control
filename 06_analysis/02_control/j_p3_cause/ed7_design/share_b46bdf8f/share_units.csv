@@ -1,0 +1,81 @@
+arm,plant,key,failed_unit,fail_items,r15_worsening
+a1,M,R12_top-FL-Fs8-o0.0,True,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,M,R12_top-FR-Fs0-o0.05,True,J1:gate end_att | J5:t_back 22.55 -> None | J4:final ready -> probe,False
+a1,Mslow,R12_bottom-FL-Fs4-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mslow,R12_o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mslow,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mslow,R12_top-FR-Fs4-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mslow,R15_o0.0,True,J1:gate end_att | J5:t_back 37.7 -> None | J4:final ready -> probe,False
+a1,Mslow,R15_o0.05,True,J1:gate end_att | J5:t_back 38.05 -> None | J4:final ready -> level,False
+a1,Mslow,R2_e0.001,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mslow,R2_e0.003,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mslow,S4_e0.002,True,J3:t_ready 76.9 -> 103.8,False
+a1,Mslow,S7_e0.001,True,J3:t_ready 77.1 -> 102.0,False
+a1,Mfast,R12_top-FR-Fs0-o0.0,True,J1:gate end_att | J5:t_back 26.5 -> None | J4:final ready -> probe,False
+a1,Mc005,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mc005,R12_top-FR-Fs0-o0.05,True,J1:gate end_att | J5:t_back 22.55 -> None | J4:final ready -> probe,False
+a1,Mc04,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a1,Mc04,R12_top-FR-Fs0-o0.0,True,J1:gate end_att | J5:t_back 26.5 -> None | J4:final ready -> probe,False
+a1,Mc04,R12_top-FR-Fs0-o0.05,True,J1:gate end_att | J5:t_back 22.55 -> None | J4:final ready -> probe,False
+a2,M,R12_top-FL-Fs8-o0.0,True,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,R12_bottom-FL-Fs4-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,R12_o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,R12_top-FR-Fs4-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,R2_e0.001,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,R2_e0.003,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mslow,S7_e0.001,True,J3:t_ready 77.1 -> 102.9 | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mc005,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mc04,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a2,Mc04,R12_top-FR-Fs0-o0.05,True,J1:gate end_att | J5:t_back 22.55 -> None | J4:final ready -> probe,False
+a5,M,R12_bottom-FL-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 13440.0 N -> 5760.0 N,False
+a5,M,R12_o0.0,True,J1:gate Fmin_after_event | J2:F 13750.0 N -> 60.0 N,False
+a5,M,R12_top-FL-Fs8-o0.0,True,J1:gate Fmin_after_event | J2:F 12280.0 N -> 6030.0 N | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,M,R12_top-FR-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 15990.0 N -> 6690.0 N,False
+a5,M,R12_top-FR-Fs0-o0.05,True,J1:gate Fmin_after_event | J2:F 15280.0 N -> 4690.0 N,False
+a5,M,R12_top-FR-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 12770.0 N -> 3410.0 N,False
+a5,M,R12_top-RL-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 13770.0 N -> 3150.0 N,False
+a5,Mslow,R12_bottom-FL-Fs4-o0.0,True,J1:gate Fmin_after_event | J1:gate end_att | J2:F 13440.0 N -> 5210.0 N | J5:t_back 22.6 -> None | J4:final ready -> probe,False
+a5,Mslow,R12_o0.0,True,J1:gate Fmin_after_event | J1:gate no_lift | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mslow,R12_top-FL-Fs8-o0.0,True,J1:gate Fmin_after_event | J2:F 12280.0 N -> 5270.0 N | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mslow,R12_top-FR-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 15990.0 N -> 5570.0 N,False
+a5,Mslow,R12_top-FR-Fs0-o0.05,True,J1:gate Fmin_after_event | J2:F 15280.0 N -> 3830.0 N,False
+a5,Mslow,R12_top-FR-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 12770.0 N -> 2520.0 N | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mslow,R12_top-RL-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 13770.0 N -> 2090.0 N,False
+a5,Mslow,R2_e0.001,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mslow,R2_e0.003,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mslow,S7_e0.001,True,J3:t_ready 77.1 -> 102.9 | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mfast,R12_bottom-FL-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 13440.0 N -> 6320.0 N,False
+a5,Mfast,R12_o0.0,True,J1:gate Fmin_after_event | J2:F 13750.0 N -> 2100.0 N,False
+a5,Mfast,R12_top-FL-Fs8-o0.0,True,J1:gate Fmin_after_event | J2:F 12280.0 N -> 6910.0 N,False
+a5,Mfast,R12_top-FR-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 15990.0 N -> 7650.0 N,False
+a5,Mfast,R12_top-FR-Fs0-o0.05,True,J1:gate Fmin_after_event | J2:F 15280.0 N -> 5080.0 N,False
+a5,Mfast,R12_top-FR-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 12770.0 N -> 4370.0 N,False
+a5,Mfast,R12_top-RL-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 13770.0 N -> 4080.0 N,False
+a5,Mc005,R12_bottom-FL-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 13440.0 N -> 6620.0 N,False
+a5,Mc005,R12_o0.0,True,J1:gate Fmin_after_event | J2:F 13750.0 N -> 5230.0 N,False
+a5,Mc005,R12_top-FL-Fs8-o0.0,True,J1:gate Fmin_after_event | J2:F 12280.0 N -> 5720.0 N | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mc005,R12_top-FR-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 15990.0 N -> 7200.0 N,False
+a5,Mc005,R12_top-FR-Fs0-o0.05,True,J1:gate Fmin_after_event | J2:F 15280.0 N -> 6380.0 N,False
+a5,Mc005,R12_top-FR-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 12770.0 N -> 3870.0 N,False
+a5,Mc005,R12_top-RL-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 13770.0 N -> 4070.0000000000005 N,False
+a5,Mc04,R12_bottom-FL-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 13440.0 N -> 5630.0 N,False
+a5,Mc04,R12_o0.0,True,J1:gate Fmin_after_event | J2:F 13750.0 N -> 280.0 N,False
+a5,Mc04,R12_top-FL-Fs8-o0.0,True,J1:gate Fmin_after_event | J2:F 12280.0 N -> 6130.0 N | J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a5,Mc04,R12_top-FR-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 15990.0 N -> 7730.0 N,False
+a5,Mc04,R12_top-FR-Fs0-o0.05,True,J1:gate Fmin_after_event | J2:F 15280.0 N -> 5250.0 N,False
+a5,Mc04,R12_top-FR-Fs4-o0.0,True,J1:gate Fmin_after_event | J2:F 12770.0 N -> 3390.0 N,False
+a5,Mc04,R12_top-RL-Fs0-o0.0,True,J1:gate Fmin_after_event | J2:F 13770.0 N -> 4110.0 N,False
+a6,M,R12_top-FL-Fs8-o0.0,True,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,M,R12_top-FR-Fs4-o0.0,True,J1:gate end_att | J5:t_back 22.6 -> None | J4:final ready -> probe,False
+a6,Mslow,R12_bottom-FL-Fs4-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mslow,R12_o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mslow,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mslow,R12_top-FR-Fs4-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mslow,R2_e0.001,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mslow,R2_e0.003,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mfast,R12_top-FR-Fs0-o0.05,True,J1:gate end_att | J5:t_back 22.55 -> None | J4:final ready -> level,False
+a6,Mc005,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mc04,R12_top-FL-Fs8-o0.0,False,J7:WARN_PROBE_STIFFNESS_OUT_OF_RANGE,False
+a6,Mc04,R12_top-FR-Fs0-o0.05,True,J1:gate end_att | J5:t_back 22.55 -> None | J4:final ready -> level,False
+a6,Mc04,R12_top-FR-Fs4-o0.0,True,J1:gate end_att | J5:t_back 22.6 -> None | J4:final ready -> level,False

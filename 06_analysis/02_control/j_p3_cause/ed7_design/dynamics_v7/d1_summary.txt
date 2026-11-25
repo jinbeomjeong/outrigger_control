@@ -1,0 +1,11 @@
+k_tw (leg i moving, others locked) MN/m: FL 27.49, FR 27.50, RL 26.33, RR 26.33
+blind dwells >= 20 periods (post-event LEVEL): 97
+  |twist part| / (|twist|+|rigid|) median 0.35, min 0.00, max 0.98
+  legs in band at the trigger read: {1: 31, 2: 52, 3: 12, 4: 2}
+  D at trigger kN: min -4.42 median 6.87 max 15.31; |D| < 3 kN: 23
+  smallest true leg force at trigger kN: min 63.89 median 68.38
+  leg/sign counts: {'RL-': 22, 'RR-': 33, 'FL-': 15, 'RL+': 9, 'FR-': 7, 'FR+': 11}
+ed.6 A(i) episodes: 99
+  |travel| mm (start-1 .. end+3): min 0.000 median 1.397 max 3.021
+  dD meas/pred (|pred| > 0.5 kN, n=95): median 1.10, p10 0.30, p90 2.89
+  phase at on: {'level': 99}

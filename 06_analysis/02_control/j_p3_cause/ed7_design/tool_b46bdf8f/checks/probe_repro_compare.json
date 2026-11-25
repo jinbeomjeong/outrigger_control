@@ -1,0 +1,203 @@
+{
+ "summary": {
+  "lines": 8,
+  "same": 8,
+  "stored_found": 8,
+  "with_new_keys": 8,
+  "errors": 0
+ },
+ "rows": [
+  {
+   "setting": "P7-Mc04-a3",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "P7-Mc04-a3",
+    "twin": {
+     "fs_kN": 8.0,
+     "leg": "FL",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-M-a3",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "P7-M-a3",
+    "twin": {
+     "fs_kN": 8.0,
+     "leg": "FL",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-Mc04-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "P7-Mc04-a2",
+    "twin": {
+     "fs_kN": 8.0,
+     "leg": "FL",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-M-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "setting": "P7-M-a2",
+    "twin": {
+     "fs_kN": 8.0,
+     "leg": "FL",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-M-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "P7-M-a2",
+    "twin": {
+     "fs_kN": 0.0,
+     "leg": "FR",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-M-a3",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "P7-M-a3",
+    "twin": {
+     "fs_kN": 0.0,
+     "leg": "FR",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-Mc04-a3",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "P7-Mc04-a3",
+    "twin": {
+     "fs_kN": 0.0,
+     "leg": "FR",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  },
+  {
+   "setting": "P7-Mc04-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "setting": "P7-Mc04-a2",
+    "twin": {
+     "fs_kN": 0.0,
+     "leg": "FR",
+     "level": "top"
+    }
+   },
+   "error": false,
+   "same_commands_sha256": true,
+   "stored_found": true,
+   "has_level_done": true,
+   "level_done_paths": [
+    "strict",
+    "strict"
+   ],
+   "has_twist_over_limit": true,
+   "has_lsb_ib_twist_load_N": true
+  }
+ ]
+}

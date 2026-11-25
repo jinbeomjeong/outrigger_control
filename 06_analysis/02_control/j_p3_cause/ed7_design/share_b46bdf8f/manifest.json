@@ -1,0 +1,60 @@
+{
+ "tool": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\share_b46bdf8f\\share_calc.py",
+ "tool_sha256": "880ca08c42edb76c143bc6ca49869ad41433504f733ec920151c26afd0eac7a7",
+ "started_utc": "2026-11-25T01:00:09.759014+00:00",
+ "ended_utc": "2026-11-25T01:00:19.637871+00:00",
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "argv": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\share_b46bdf8f\\share_calc.py",
+  "--checkout",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "--out-dir",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\share_b46bdf8f"
+ ],
+ "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+ "git_before": {
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true,
+  "status_ignored_sha256": "890299abbd979d4ae6261cd8ab457c37556c42c19359ad917c322357116271c9",
+  "status_ignored_lines": 15
+ },
+ "git_after": {
+  "head": "b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9",
+  "is_clean": true,
+  "status_ignored_sha256": "890299abbd979d4ae6261cd8ab457c37556c42c19359ad917c322357116271c9",
+  "status_ignored_lines": 15
+ },
+ "inputs": {
+  "rows": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl",
+   "sha256": "1107b30962a038ec9ebccdd19543338f7df771261aa208ef458de6b814817ce9"
+  },
+  "keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json",
+   "sha256": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da"
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+  },
+  "spec_v7": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v7.md",
+   "sha256": "788f6014f7d005eb8abf44a1e4309b5e6b37696350da224e4d2cfbfc3c7f92d2"
+  },
+  "spec_v6": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v6.md",
+   "sha256": "07a55e1778651ac6644afa5ac9f4ab6b234108e9d64afb3f49060cca4863960e"
+  },
+  "imported_modules": {
+   "ed7_condition3_adoption": {
+    "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\04_scripts\\04_hydraulic\\coupled\\ed7_condition3_adoption.py",
+    "sha256": "79d1eb1400d4ba47aca7c29b7556c2a8074057cbee3d09cb7757fb877884db98"
+   },
+   "ed6_probe_share": {
+    "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\04_scripts\\04_hydraulic\\coupled\\ed6_probe_share.py",
+    "sha256": "4902c294641061df411f5178c5e4aa7d23cf991f82615e9f9a989bb732aa3c1b"
+   }
+  }
+ },
+ "status": "decided"
+}

@@ -1,0 +1,54 @@
+{
+ "rule": "jp3_remedy_spec_v6_erratum2.md 2-2",
+ "core_patterns": [
+  "test_jp3_*",
+  "test_ed6_*",
+  "test_run_v5*",
+  "test_lock_start_b*",
+  "test_c2*",
+  "test_extend_start_bound*"
+ ],
+ "inputs": {
+  "junit": {
+   "path": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed7-suite\\run\\junit.xml",
+   "sha256": "c88e589804dca459c1dec94e09bb5fbd97e6f44cc77c848c045a2d915f4a6b56"
+  },
+  "baseline_list": {
+   "path": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed7-suite\\base\\existing_failures.txt",
+   "sha256": "571f42a1074b7d506be885d9c3a68f22b2661821e011e83d751bc6ac06ecabeb"
+  }
+ },
+ "tests": 8688,
+ "counts": {
+  "passed": 8671,
+  "failed": 2,
+  "error": 0,
+  "skipped": 15,
+  "xfailed": 0
+ },
+ "findings": {
+  "new_failure": [],
+  "core_not_passing": [],
+  "new_skip_or_xfail": []
+ },
+ "existing_failures_record": [
+  "skipped\t05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext (list: skipped)",
+  "failed\t05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash (list: failed)",
+  "skipped\t05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows (list: skipped)",
+  "skipped\t05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision (list: skipped)",
+  "skipped\t05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch (list: skipped)",
+  "skipped\t05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript (list: skipped)",
+  "skipped\t05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster (list: skipped)",
+  "skipped\t05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end (list: skipped)",
+  "skipped\t05_tests.unit.test_params_l2b::test_l1_default_is_unchanged (list: skipped)",
+  "failed\t05_tests.unit.test_record::test_default_snapshot_directory_is_results_states (list: failed)",
+  "skipped\t05_tests.unit.test_rod_chamber::test_h6_gas_separation (list: skipped)",
+  "skipped\t05_tests.unit.test_s8_soil_restore::test_soil_restore_check_reads_the_plan_of_this_tree (list: skipped)",
+  "skipped\t05_tests.unit.test_s9_final::test_final_r_s6_rows_match_their_former_batch (list: skipped)",
+  "skipped\t05_tests.unit.test_s9_final::test_final_rep_x_check_sources (list: skipped)",
+  "skipped\t05_tests.unit.test_s9_final::test_source_args_check_on_the_former_runs (list: skipped)",
+  "skipped\t05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ0-VBJ0] (list: skipped)",
+  "skipped\t05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ5-VBJ] (list: skipped)"
+ ],
+ "status": "pass"
+}

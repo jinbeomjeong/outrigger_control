@@ -1,0 +1,92 @@
+k_ext MN/m (FL, FR, RL, RR):
+  others_locked (L1-R LOCK, beta 1.0)           [np.float64(7.941), np.float64(7.941), np.float64(10.869), np.float64(10.869)]
+  load-gaining legs at rod floor (mixed)        [np.float64(6.574), np.float64(6.574), np.float64(8.794), np.float64(8.793)]
+  others moving (oil only)                      [np.float64(5.926), np.float64(5.925), np.float64(8.223), np.float64(8.221)]
+  others_locked, beta 0.69                      [np.float64(5.778), np.float64(5.778), np.float64(7.967), np.float64(7.966)]
+  others_locked, beta 1.6                       [np.float64(11.551), np.float64(11.55), np.float64(15.618), np.float64(15.617)]
+  others_locked, deck torsion k_d 1e8           [np.float64(5.881), np.float64(5.881), np.float64(7.777), np.float64(7.777)]
+  others_locked, deck torsion k_d 5e7           [np.float64(4.669), np.float64(4.669), np.float64(6.054), np.float64(6.054)]
+  others_locked, SCM J1 elastic pad             [np.float64(2.473), np.float64(2.473), np.float64(3.097), np.float64(3.097)]
+  others_locked, SCM G1 elastic pad             [np.float64(3.582), np.float64(3.582), np.float64(4.565), np.float64(4.564)]
+k_h head column MN/m: [28.941, 28.964, 21.297, 21.308]  k_st: [216.648, 216.648, 205.103, 205.103]
+misuse: k_tw all moving {'k_tw_all_moving_MN_m': 21.702, 'k_tw_n_i^2_MN_m': [4.919, 4.919, 5.932, 5.932]}
+r=1 hand vs harness need mm: {'harness volume_scale 1.0 band 0': (1.489422, 1.489422), 'harness volume_scale 1.0 band 4': (1.29291, 1.29291), 'harness volume_scale 1.5 (VBLv15) band 0': (2.234133, 2.234133), 'harness volume_scale 1.5 (VBLv15) band 4': (1.939365, 1.939365), '(c) dead volumes x1.5 (hose, L0r, L0h) band 0': (1.776915, 1.776915), '(c) dead volumes x1.5 (hose, L0r, L0h) band 4': (1.562777, 1.562777), 'beta 0.69 + hose x2 band 0': (2.395924, 2.395924), 'beta 0.69 + hose x2 band 4': (2.103321, 2.103321), 'beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08 band 0': (2.586187, 2.586187), 'beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08 band 4': (2.272534, 2.272534)}
+need FL (deliv 2.098 mm):
+  harness volume_scale 1.0                     band   0 k_ext 0                0.000  need 1.489 head 0.292 yield 0.292 dF  -0.00 ratio 1.409
+  harness volume_scale 1.0                     band   0 k_ext SCM_J1_locked    2.473  need 1.457 head 0.267 yield 0.267 dF  -0.66 ratio 1.440
+  harness volume_scale 1.0                     band   0 k_ext mixed            6.574  need 1.414 head 0.234 yield 0.234 dF  -1.54 ratio 1.484
+  harness volume_scale 1.0                     band   0 k_ext locked           7.941  need 1.402 head 0.225 yield 0.225 dF  -1.79 ratio 1.497
+  harness volume_scale 1.0                     band   0 k_ext ed6_hyd_21.7    21.700  need 1.318 head 0.161 yield 0.161 dF  -3.49 ratio 1.592
+  harness volume_scale 1.0                     band   4 k_ext 0                0.000  need 1.293 head 0.142 yield 0.142 dF  -0.00 ratio 1.623
+  harness volume_scale 1.0                     band   4 k_ext SCM_J1_locked    2.473  need 1.277 head 0.130 yield 0.130 dF  -0.32 ratio 1.643
+  harness volume_scale 1.0                     band   4 k_ext mixed            6.574  need 1.256 head 0.114 yield 0.114 dF  -0.75 ratio 1.670
+  harness volume_scale 1.0                     band   4 k_ext locked           7.941  need 1.250 head 0.109 yield 0.109 dF  -0.87 ratio 1.678
+  harness volume_scale 1.0                     band   4 k_ext ed6_hyd_21.7    21.700  need 1.210 head 0.078 yield 0.078 dF  -1.69 ratio 1.734
+  harness volume_scale 1.5 (VBLv15)            band   0 k_ext 0                0.000  need 2.234 head 0.438 yield 0.292 dF  -0.00 ratio 0.939
+  harness volume_scale 1.5 (VBLv15)            band   0 k_ext SCM_J1_locked    2.473  need 2.185 head 0.401 yield 0.267 dF  -0.66 ratio 0.960
+  harness volume_scale 1.5 (VBLv15)            band   0 k_ext mixed            6.574  need 2.121 head 0.351 yield 0.234 dF  -1.54 ratio 0.989
+  harness volume_scale 1.5 (VBLv15)            band   0 k_ext locked           7.941  need 2.103 head 0.337 yield 0.225 dF  -1.79 ratio 0.998
+  harness volume_scale 1.5 (VBLv15)            band   0 k_ext ed6_hyd_21.7    21.700  need 1.977 head 0.241 yield 0.161 dF  -3.49 ratio 1.061
+  harness volume_scale 1.5 (VBLv15)            band   4 k_ext 0                0.000  need 1.939 head 0.213 yield 0.142 dF  -0.00 ratio 1.082
+  harness volume_scale 1.5 (VBLv15)            band   4 k_ext SCM_J1_locked    2.473  need 1.916 head 0.195 yield 0.130 dF  -0.32 ratio 1.095
+  harness volume_scale 1.5 (VBLv15)            band   4 k_ext mixed            6.574  need 1.884 head 0.170 yield 0.114 dF  -0.75 ratio 1.113
+  harness volume_scale 1.5 (VBLv15)            band   4 k_ext locked           7.941  need 1.875 head 0.164 yield 0.109 dF  -0.87 ratio 1.119
+  harness volume_scale 1.5 (VBLv15)            band   4 k_ext ed6_hyd_21.7    21.700  need 1.815 head 0.117 yield 0.078 dF  -1.69 ratio 1.156
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   0 k_ext 0                0.000  need 1.777 head 0.308 yield 0.308 dF  -0.00 ratio 1.181
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   0 k_ext SCM_J1_locked    2.473  need 1.740 head 0.280 yield 0.280 dF  -0.69 ratio 1.206
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   0 k_ext mixed            6.574  need 1.691 head 0.244 yield 0.244 dF  -1.61 ratio 1.241
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   0 k_ext locked           7.941  need 1.677 head 0.234 yield 0.234 dF  -1.86 ratio 1.251
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   0 k_ext ed6_hyd_21.7    21.700  need 1.585 head 0.166 yield 0.166 dF  -3.59 ratio 1.324
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   4 k_ext 0                0.000  need 1.563 head 0.149 yield 0.149 dF  -0.00 ratio 1.342
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   4 k_ext SCM_J1_locked    2.473  need 1.545 head 0.136 yield 0.136 dF  -0.34 ratio 1.358
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   4 k_ext mixed            6.574  need 1.521 head 0.119 yield 0.119 dF  -0.78 ratio 1.379
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   4 k_ext locked           7.941  need 1.514 head 0.114 yield 0.114 dF  -0.90 ratio 1.385
+  (c) dead volumes x1.5 (hose, L0r, L0h)       band   4 k_ext ed6_hyd_21.7    21.700  need 1.469 head 0.080 yield 0.080 dF  -1.74 ratio 1.428
+  beta 0.69 + hose x2                          band   0 k_ext 0                0.000  need 2.396 head 0.423 yield 0.423 dF  -0.00 ratio 0.876
+  beta 0.69 + hose x2                          band   0 k_ext SCM_J1_locked    2.473  need 2.328 head 0.373 yield 0.373 dF  -0.92 ratio 0.901
+  beta 0.69 + hose x2                          band   0 k_ext mixed            6.574  need 2.246 head 0.312 yield 0.312 dF  -2.05 ratio 0.934
+  beta 0.69 + hose x2                          band   0 k_ext locked           7.941  need 2.224 head 0.295 yield 0.295 dF  -2.35 ratio 0.943
+  beta 0.69 + hose x2                          band   0 k_ext ed6_hyd_21.7    21.700  need 2.088 head 0.194 yield 0.194 dF  -4.21 ratio 1.005
+  beta 0.69 + hose x2                          band   4 k_ext 0                0.000  need 2.103 head 0.205 yield 0.205 dF  -0.00 ratio 0.997
+  beta 0.69 + hose x2                          band   4 k_ext SCM_J1_locked    2.473  need 2.071 head 0.181 yield 0.181 dF  -0.45 ratio 1.013
+  beta 0.69 + hose x2                          band   4 k_ext mixed            6.574  need 2.031 head 0.151 yield 0.151 dF  -0.99 ratio 1.033
+  beta 0.69 + hose x2                          band   4 k_ext locked           7.941  need 2.020 head 0.143 yield 0.143 dF  -1.14 ratio 1.039
+  beta 0.69 + hose x2                          band   4 k_ext ed6_hyd_21.7    21.700  need 1.954 head 0.094 yield 0.094 dF  -2.04 ratio 1.074
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   0 k_ext 0                0.000  need 2.586 head 0.451 yield 0.451 dF  -0.00 ratio 0.811
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   0 k_ext SCM_J1_locked    2.473  need 2.510 head 0.394 yield 0.394 dF  -0.98 ratio 0.836
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   0 k_ext mixed            6.574  need 2.418 head 0.326 yield 0.326 dF  -2.15 ratio 0.868
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   0 k_ext locked           7.941  need 2.394 head 0.309 yield 0.309 dF  -2.45 ratio 0.876
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   0 k_ext ed6_hyd_21.7    21.700  need 2.247 head 0.200 yield 0.200 dF  -4.33 ratio 0.934
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   4 k_ext 0                0.000  need 2.273 head 0.219 yield 0.219 dF  -0.00 ratio 0.923
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   4 k_ext SCM_J1_locked    2.473  need 2.235 head 0.191 yield 0.191 dF  -0.47 ratio 0.939
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   4 k_ext mixed            6.574  need 2.191 head 0.158 yield 0.158 dF  -1.04 ratio 0.958
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   4 k_ext locked           7.941  need 2.179 head 0.150 yield 0.150 dF  -1.19 ratio 0.963
+  beta 0.69 + hose x2 + L0r 0.1 + L0h 0.08     band   4 k_ext ed6_hyd_21.7    21.700  need 2.108 head 0.097 yield 0.097 dF  -2.10 ratio 0.995
+shots:
+  FL 0.4 mm                        heave   0.1007 roll   0.00495 pitch  -0.00218 dD    5.24 dF [2.49, -2.49, -2.74, 2.74]
+  FR 0.4 mm                        heave   0.0976 roll  -0.00495 pitch  -0.00226 dD   -5.24 dF [-2.49, 2.49, 2.74, -2.74]
+  RL 0.4 mm                        heave   0.0862 roll   0.00336 pitch   0.00215 dD   -5.51 dF [-2.62, 2.62, 2.88, -2.88]
+  RR 0.4 mm                        heave   0.0842 roll  -0.00336 pitch   0.00210 dD    5.51 dF [2.62, -2.62, -2.88, 2.88]
+  front pair FL+FR 0.4 mm          heave   0.2108 roll   0.00000 pitch  -0.00473 dD    0.00 dF [0.0, 0.0, 0.0, 0.0]
+  left pair FL+RL 0.4 mm           heave   0.2025 roll   0.00899 pitch   0.00004 dD   -0.47 dF [-0.22, 0.22, 0.24, -0.24]
+  pitch round -,-,+,+ 0.4 mm       heave  -0.0216 roll  -0.00000 pitch   0.00945 dD    0.00 dF [0.0, 0.0, 0.0, -0.0]
+  roll round +,-,+,- 0.4 mm        heave   0.0056 roll   0.01797 pitch   0.00014 dD   -0.81 dF [-0.39, 0.39, 0.42, -0.42]
+  twist round +n 0.4 mm            heave   0.0010 roll   0.00332 pitch   0.00003 dD   17.34 dF [8.26, -8.26, -9.07, 9.07]
+  FL 0.62 mm                       heave   0.1560 roll   0.00767 pitch  -0.00338 dD    8.12 dF [3.86, -3.86, -4.24, 4.24]
+  FR 0.62 mm                       heave   0.1513 roll  -0.00767 pitch  -0.00350 dD   -8.12 dF [-3.86, 3.86, 4.24, -4.24]
+  RL 0.62 mm                       heave   0.1337 roll   0.00521 pitch   0.00334 dD   -8.53 dF [-4.06, 4.06, 4.46, -4.46]
+  RR 0.62 mm                       heave   0.1304 roll  -0.00521 pitch   0.00326 dD    8.53 dF [4.06, -4.06, -4.46, 4.46]
+  front pair FL+FR 0.62 mm         heave   0.3268 roll   0.00000 pitch  -0.00732 dD   -0.00 dF [0.0, 0.0, -0.0, -0.0]
+  left pair FL+RL 0.62 mm          heave   0.3139 roll   0.01393 pitch   0.00006 dD   -0.72 dF [-0.34, 0.34, 0.38, -0.38]
+  pitch round -,-,+,+ 0.62 mm      heave  -0.0335 roll  -0.00000 pitch   0.01465 dD    0.00 dF [0.0, -0.0, 0.0, 0.0]
+  roll round +,-,+,- 0.62 mm       heave   0.0086 roll   0.02785 pitch   0.00022 dD   -1.26 dF [-0.6, 0.6, 0.66, -0.66]
+  twist round +n 0.62 mm           heave   0.0016 roll   0.00515 pitch   0.00004 dD   26.88 dF [12.8, -12.8, -14.05, 14.05]
+  FL 0.85 mm                       heave   0.2139 roll   0.01051 pitch  -0.00464 dD   11.13 dF [5.3, -5.3, -5.82, 5.82]
+  FR 0.85 mm                       heave   0.2074 roll  -0.01051 pitch  -0.00480 dD  -11.13 dF [-5.3, 5.3, 5.82, -5.82]
+  RL 0.85 mm                       heave   0.1832 roll   0.00714 pitch   0.00458 dD  -11.70 dF [-5.57, 5.57, 6.12, -6.12]
+  RR 0.85 mm                       heave   0.1788 roll  -0.00714 pitch   0.00447 dD   11.70 dF [5.57, -5.57, -6.12, 6.12]
+  front pair FL+FR 0.85 mm         heave   0.4480 roll  -0.00000 pitch  -0.01004 dD    0.00 dF [0.0, 0.0, 0.0, 0.0]
+  left pair FL+RL 0.85 mm          heave   0.4304 roll   0.01910 pitch   0.00008 dD   -0.99 dF [-0.47, 0.47, 0.52, -0.52]
+  pitch round -,-,+,+ 0.85 mm      heave  -0.0460 roll   0.00000 pitch   0.02008 dD    0.00 dF [0.0, 0.0, 0.0, 0.0]
+  roll round +,-,+,- 0.85 mm       heave   0.0118 roll   0.03818 pitch   0.00029 dD   -1.73 dF [-0.82, 0.82, 0.9, -0.9]
+  twist round +n 0.85 mm           heave   0.0022 roll   0.00706 pitch   0.00006 dD   36.85 dF [17.54, -17.54, -19.27, 19.27]

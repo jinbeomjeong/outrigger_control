@@ -1,0 +1,585 @@
+{
+ "settings_judged": [
+  "VBMslow",
+  "VBMfast",
+  "VBMc005",
+  "VBMc04"
+ ],
+ "settings_record": [
+  "VBMb069",
+  "VBMb16",
+  "VBMh05",
+  "VBMh15",
+  "VBMd05",
+  "VBMd15"
+ ],
+ "per_setting": {
+  "VBMslow": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 46
+  },
+  "VBMfast": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 46
+  },
+  "VBMc005": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 46
+  },
+  "VBMc04": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 46
+  },
+  "VBMb069": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 0
+  },
+  "VBMb16": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 0
+  },
+  "VBMh05": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 0
+  },
+  "VBMh15": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 0
+  },
+  "VBMd05": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 0
+  },
+  "VBMd15": {
+   "lines": 46,
+   "probe_seen": 10,
+   "judged": 0
+  }
+ },
+ "frame_VBMslow": {
+  "R12": [
+   [
+    "R12_o0.0",
+    0.0,
+    0.0,
+    true,
+    true,
+    false
+   ],
+   [
+    "R12_o0.025",
+    0.0,
+    0.025,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_o0.075",
+    0.0,
+    0.075,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-FL-Fs0-o0.0",
+    0.0,
+    0.0,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-FL-Fs0-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-FL-Fs8-o0.0",
+    0.0,
+    0.0,
+    true,
+    true,
+    false
+   ],
+   [
+    "R12_top-FL-Fs8-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-FR-Fs4-o0.0",
+    0.0,
+    0.0,
+    true,
+    true,
+    false
+   ],
+   [
+    "R12_top-FR-Fs4-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-RL-Fs4-o0.0",
+    0.0,
+    0.0,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-RL-Fs4-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-RR-Fs4-o0.0",
+    0.0,
+    0.0,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_top-RR-Fs4-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_bottom-FL-Fs4-o0.0",
+    0.0,
+    0.0,
+    true,
+    true,
+    false
+   ],
+   [
+    "R12_bottom-FL-Fs4-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_bottom-RR-Fs4-o0.0",
+    0.0,
+    0.0,
+    false,
+    true,
+    false
+   ],
+   [
+    "R12_bottom-RR-Fs4-o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ]
+  ],
+  "R14": [
+   [
+    "R14_o0.0",
+    0.0,
+    0.0,
+    false,
+    true,
+    false
+   ],
+   [
+    "R14_o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ]
+  ],
+  "R15": [
+   [
+    "R15_o0.05",
+    0.0,
+    0.05,
+    true,
+    true,
+    false
+   ],
+   [
+    "R15_o0.0",
+    0.0,
+    0.0,
+    true,
+    true,
+    false
+   ]
+  ],
+  "R16": [
+   [
+    "R16_o0.05",
+    0.0,
+    0.05,
+    false,
+    true,
+    false
+   ],
+   [
+    "R16_o0.0",
+    0.0,
+    0.0,
+    false,
+    true,
+    false
+   ],
+   [
+    "R16_o0.025",
+    0.0,
+    0.025,
+    false,
+    true,
+    false
+   ],
+   [
+    "R16_o0.075",
+    0.0,
+    0.075,
+    false,
+    true,
+    false
+   ]
+  ],
+  "S1": [
+   [
+    "S1_e0.0",
+    0.0,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S1_e0.001",
+    0.001,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S1_e0.002",
+    0.002,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S1_e0.003",
+    0.003,
+    null,
+    true,
+    true,
+    true
+   ]
+  ],
+  "S4": [
+   [
+    "S4_e0.0",
+    0.0,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S4_e0.001",
+    0.001,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S4_e0.002",
+    0.002,
+    null,
+    true,
+    true,
+    true
+   ],
+   [
+    "S4_e0.003",
+    0.003,
+    null,
+    false,
+    true,
+    true
+   ]
+  ],
+  "S5": [
+   [
+    "S5_e0.0",
+    0.0,
+    null,
+    true,
+    true,
+    true
+   ],
+   [
+    "S5_e0.001",
+    0.001,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S5_e0.002",
+    0.002,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S5_e0.003",
+    0.003,
+    null,
+    false,
+    true,
+    true
+   ]
+  ],
+  "S7": [
+   [
+    "S7_e0.0",
+    0.0,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S7_e0.001",
+    0.001,
+    null,
+    true,
+    true,
+    true
+   ],
+   [
+    "S7_e0.002",
+    0.002,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "S7_e0.003",
+    0.003,
+    null,
+    false,
+    true,
+    true
+   ]
+  ],
+  "R2": [
+   [
+    "R2ra_e0.0",
+    0.0,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "R2ra_e0.001",
+    0.001,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "R2ra_e0.002",
+    0.002,
+    null,
+    false,
+    true,
+    true
+   ],
+   [
+    "R2ra_e0.003",
+    0.003,
+    null,
+    false,
+    true,
+    true
+   ]
+  ]
+ },
+ "v0_pair_example": {
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "V0"
+  },
+  "source": "v5/main.jsonl V0"
+ },
+ "probe_top_keys": [
+  "rule",
+  "generation_command",
+  "code_identity",
+  "keys",
+  "plants",
+  "arms",
+  "arm_parameters",
+  "arms_without_d6",
+  "d_key_file",
+  "expected_lines",
+  "main_part_lines",
+  "d_part_lines"
+ ],
+ "probe_keys": [
+  "R12_top-FR-Fs0-o0.0",
+  "R12_top-FR-Fs0-o0.05",
+  "R12_top-RL-Fs0-o0.0",
+  "S7_e0.001",
+  "R2_e0.001",
+  "R2_e0.003",
+  "S4_e0.002",
+  "R12_o0.0",
+  "R12_top-FL-Fs8-o0.0",
+  "R12_bottom-FL-Fs4-o0.0",
+  "R12_top-FR-Fs4-o0.0",
+  "R15_o0.0",
+  "R15_o0.05",
+  "S5_e0.0",
+  "S1_e0.003"
+ ],
+ "probe_plants": [
+  "M",
+  "Mslow",
+  "Mfast",
+  "Mc005",
+  "Mc04",
+  "L"
+ ],
+ "probe_arms": {
+  "a1": [
+   "A_i",
+   "A_ii",
+   "B3"
+  ],
+  "a2": [
+   "A_i",
+   "A_ib",
+   "A_ii",
+   "B3"
+  ],
+  "a3": [
+   "A_i",
+   "A_ib",
+   "A_ii",
+   "B3"
+  ],
+  "a4": [
+   "A_i",
+   "A_ib",
+   "A_ii",
+   "B3"
+  ],
+  "a5": [
+   "A_i",
+   "A_ib",
+   "A_ii"
+  ],
+  "a6": [
+   "A_ib",
+   "A_ii",
+   "B3"
+  ],
+  "c2": [
+   "A_i",
+   "A_ib",
+   "A_ii",
+   "B3"
+  ]
+ },
+ "probe_rule": "jp3_remedy_spec_v7.md 4.2 (keys >= 14, plants, arms; P7-8 D part)",
+ "probe_code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "a6fc3dd5c353cd90e868549f4ff844ebb2515870",
+  "is_clean": true
+ },
+ "probe_arm_parameters": {
+  "a3": {
+   "ib_condition": "level_incomplete"
+  },
+  "a4": {
+   "ib_condition": "attitude_clearance"
+  }
+ },
+ "probe_arms_without_d6": [
+  "c2"
+ ],
+ "probe_d_key_file": {
+  "blob": "3ecf61f1:06_analysis/02_control/j_p3_cause/prelaunch_j9/run_records_ed6/d_grid_keys12.json",
+  "sha256": "a995abff9d73816f58a0e3d67a59f18b3e60fb006fe48d824012b79b57d87981"
+ },
+ "probe_expected_lines": 654,
+ "probe_main_part_lines": 630,
+ "probe_d_part_lines": 24,
+ "probe_line0": {
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 0.0
+   },
+   "setting": "P7-M-a1"
+  },
+  "key": "R12_top-FR-Fs0-o0.0",
+  "part": "main"
+ },
+ "probe_nlines": 654
+}
