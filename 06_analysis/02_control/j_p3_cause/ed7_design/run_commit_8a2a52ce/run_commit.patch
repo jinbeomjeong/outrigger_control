@@ -1,0 +1,1103 @@
+From 8a2a52ce2c07d2af11a6212a2932d2061261f156 Mon Sep 17 00:00:00 2001
+From: jinbeom <jinbeom1130@gmail.com>
+Date: Wed, 25 Nov 2026 16:33:24 +0900
+Subject: [PATCH] 436.9 ed7 run commit C: sealed constants and edition 7 run
+ steps (spec v7 rev 6, 5.1)
+
+- (i) extend_start_bound.JP3_SPEC_EDITION_V7 = "10902ffd" (sealed jp3_remedy_spec_v7.md
+  revision 6, sha256 10902ffd..., master e241638d) with its docstring (lines 197-201 only).
+- (ii) run_v5.ED7_KEY_FILE_SHA256 = the 5.1 table: sens_keys_ed7.json be930b75...,
+  confirm_g1_grid171.json 684054ab... (ed7_design/keys_seal_b46bdf8f).
+- (iii) 05_tests/unit/test_ed7_run_commit.py asserts both values (and the ed7_keys refusal /
+  acceptance paths).
+- (iv) prelaunch_j9/run_steps_ed7/: run-only steps of spec 4 steps 5-10 (scope evidence, L1
+  references, T8 44, cases 10, probe a2 114, confirmation G1 171 + D 24, j9_main 388, sensitivity
+  460, T-JR-12a VBM/VBM0, 12b plan --edition 7, VBKM0 / VBKM with T's P-pred decision file), new
+  output path per step (existing attempt folder or output refused, M-7), start/end identity
+  (HEAD, is_clean, 03_src tree), P7-10 scope asserted at every step start, no judge (T, 5.2),
+  config template, dry run, P7-4 suite runner; Get-CoreKind records P / E / mixed
+  (core_kind_ed7.ps1; edition 6 files unchanged).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01HrRftsyRhHD9o9vHBAp68j
+---
+ .../control/extend_start_bound.py             |  10 +-
+ 04_scripts/04_hydraulic/coupled/run_v5.py     |  11 +-
+ 05_tests/unit/test_ed7_run_commit.py          |  92 ++++++
+ .../prelaunch_j9/run_steps_ed7/check_ed7.ps1  |  24 ++
+ .../prelaunch_j9/run_steps_ed7/common_ed7.ps1 | 301 ++++++++++++++++++
+ .../run_steps_ed7/core_kind_ed7.ps1           |  34 ++
+ .../run_steps_ed7/dry_run_ed7.ps1             |  67 ++++
+ .../ed7_run_config.template.json              |   5 +
+ .../run_steps_ed7/full_suite_ed7.ps1          |  59 ++++
+ .../run_steps_ed7/step10a_plan_ed7.ps1        |  27 ++
+ .../run_steps_ed7/step10b_vbkm0_ed7.ps1       |  46 +++
+ .../run_steps_ed7/step10c_vbkm_ed7.ps1        |  43 +++
+ .../run_steps_ed7/step5_impl_ed7.ps1          |  74 +++++
+ .../run_steps_ed7/step6_confirm_ed7.ps1       |  30 ++
+ .../run_steps_ed7/step7_j9main_ed7.ps1        |  17 +
+ .../run_steps_ed7/step8_sens_ed7.ps1          |  19 ++
+ .../run_steps_ed7/step9_dg3_ed7.ps1           |  27 ++
+ .../run_steps_ed7/step_l1ref_ed7.ps1          |  37 +++
+ 18 files changed, 914 insertions(+), 9 deletions(-)
+ create mode 100644 05_tests/unit/test_ed7_run_commit.py
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/check_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/common_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/core_kind_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/dry_run_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/ed7_run_config.template.json
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/full_suite_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10a_plan_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10b_vbkm0_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10c_vbkm_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step5_impl_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step6_confirm_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step7_j9main_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step8_sens_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step9_dg3_ed7.ps1
+ create mode 100644 06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step_l1ref_ed7.ps1
+
+diff --git a/03_src/outrigger_sim/control/extend_start_bound.py b/03_src/outrigger_sim/control/extend_start_bound.py
+index 69ac16d7..e86d6f85 100644
+--- a/03_src/outrigger_sim/control/extend_start_bound.py
++++ b/03_src/outrigger_sim/control/extend_start_bound.py
+@@ -194,11 +194,11 @@ JP3_SPEC_EDITION = "8be9de22"
+ JP3_SPEC_EDITION_V5 = "fe6f5844"
+ """First 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec_v5.md`` (edition 5): the
+ ``spec_edition`` of every revision 6 record."""
+-JP3_SPEC_EDITION_V7 = "85ce6e2a"
+-"""Edition 7: the first 8 hex digits of the sha256 of ``jp3_remedy_spec_v7.md``. PROVISIONAL:
+-the draft revision 2 (85ce6e2a...) the implementation was written against; the seal replaces
+-it by the sealed file's digits (spec 3.5 ``spec_edition``: "채울 곳: 봉인 뒤"), which changes
+-no command (an identity value)."""
++JP3_SPEC_EDITION_V7 = "10902ffd"
++"""Edition 7: the first 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec_v7.md``
++(revision 6, 10902ffd..., master e241638d; spec 5.1): the ``spec_edition`` of every revision 7
++record. The draft value 85ce6e2a (revision 2) of the probe lines is replaced at the run commit;
++an identity value, no command changes."""
+ JP3_SPEC_EDITION_OF_REVISION = {EXTEND_HOLD_REVISION: JP3_SPEC_EDITION,
+                                 EXTEND_WITNESS_REVISION: JP3_SPEC_EDITION_V5,
+                                 EXTEND_SEED_FIX_REVISION: JP3_SPEC_EDITION_V7}
+diff --git a/04_scripts/04_hydraulic/coupled/run_v5.py b/04_scripts/04_hydraulic/coupled/run_v5.py
+index 8e03b82c..aea702f5 100644
+--- a/04_scripts/04_hydraulic/coupled/run_v5.py
++++ b/04_scripts/04_hydraulic/coupled/run_v5.py
+@@ -387,10 +387,13 @@ ED7_KEYS_BATCH = "ed7_keys"
+ """Edition 7 key-file rows (``--jobs-file``, sealed edition 7 key files of
+ :data:`ED7_KEY_FILE_SHA256`; refused until the seal fills it)."""
+ ED7_BATCHES = (ED7_J9_MAIN_BATCH, ED7_T8_BATCH, ED7_CASES_BATCH, ED7_KEYS_BATCH)
+-ED7_KEY_FILE_SHA256: dict[str, str] = {}
+-"""Edition 7 sealed key files (name -> sha256). Empty until the seal (spec 4 step 3: the
+-confirmation keys and the G1 extraction seed are fixed at the seal); ``ed7_keys`` refuses
+-every file before that."""
++ED7_KEY_FILE_SHA256: dict[str, str] = {
++    "sens_keys_ed7.json": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
++    "confirm_g1_grid171.json": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
++}
++"""Edition 7 sealed key files (name -> sha256; spec v7 5.1, revision 6: the files of
++``ed7_design/keys_seal_b46bdf8f/``, made at b46bdf8f clean). ``ed7_keys`` refuses any other
++file."""
+ ED7_KEYS_FILE: list[Path | None] = [None]
+ 
+ 
+diff --git a/05_tests/unit/test_ed7_run_commit.py b/05_tests/unit/test_ed7_run_commit.py
+new file mode 100644
+index 00000000..03c8cfaa
+--- /dev/null
++++ b/05_tests/unit/test_ed7_run_commit.py
+@@ -0,0 +1,92 @@
++"""436.9 edition 7 run commit C (``jp3_remedy_spec_v7.md`` 5.1 (iii), P7-10): the two sealed
++constants carry the values of the sealed spec, revision 6 (sha256 10902ffd...).
++
++* ``JP3_SPEC_EDITION_V7`` = the first 8 hex digits of the sealed spec (the ``spec_edition`` of
++  every revision 7 record);
++* ``run_v5.ED7_KEY_FILE_SHA256`` = the two sealed key files of ``ed7_design/keys_seal_b46bdf8f/``
++  (the ``ed7_keys`` batch refuses any other file).
++
++The expected values are written out here (the sealed spec file is not part of the run commit),
++so a later change of either constant fails this test.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++from pathlib import Path
++
++import pytest
++
++ROOT = Path(__file__).resolve().parents[2]
++COUPLED_DIR = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
++for _path in (COUPLED_DIR, ROOT / "03_src"):
++    if str(_path) not in sys.path:
++        sys.path.insert(0, str(_path))
++
++from outrigger_sim.control import extend_start_bound as esb  # noqa: E402
++
++SEALED_SPEC_SHA256 = "10902ffdb763aa092588b1be0dd13f55874826b489f9aa9f1351dd7f48c1da45"
++"""sha256 of the sealed ``jp3_remedy_spec_v7.md`` revision 6 (its ``.sha256``, master e241638d)."""
++SEALED_KEY_FILE_SHA256 = {
++    "sens_keys_ed7.json": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
++    "confirm_g1_grid171.json": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
++}
++"""Spec v7 5.1 table, ``ED7_KEY_FILE_SHA256`` "고정할 값" (revision 6)."""
++
++
++def test_spec_edition_v7_is_the_sealed_spec_prefix() -> None:
++    assert esb.JP3_SPEC_EDITION_V7 == SEALED_SPEC_SHA256[:8] == "10902ffd"
++    assert esb.JP3_SPEC_EDITION_OF_REVISION[esb.EXTEND_SEED_FIX_REVISION] == "10902ffd"
++    assert esb.ExtendStartBound(revision=7).identity()["spec_edition"] == "10902ffd"
++
++
++def test_earlier_revisions_keep_their_sealed_editions() -> None:
++    assert esb.ExtendStartBound(revision=5).identity()["spec_edition"] == "8be9de22"
++    assert esb.ExtendStartBound(revision=6).identity()["spec_edition"] == "fe6f5844"
++
++
++def test_ed7_key_file_sha256_is_the_sealed_table() -> None:
++    import run_v5
++
++    assert run_v5.ED7_KEY_FILE_SHA256 == SEALED_KEY_FILE_SHA256
++
++
++def _write_key_file(folder: Path, name: str) -> Path:
++    path = folder / name
++    document = {
++        "expected_lines": 1,
++        "lines": [{"job": {"case": "R12", "eps": 0.0, "setting": "VBM"}}],
++    }
++    path.write_text(json.dumps(document), encoding="utf-8")
++    return path
++
++
++@pytest.mark.parametrize("name", [*SEALED_KEY_FILE_SHA256, "other_keys.json"])
++def test_ed7_keys_refuses_a_file_other_than_the_sealed_bytes(tmp_path: Path, name: str) -> None:
++    import run_v5
++
++    path = _write_key_file(tmp_path, name)
++    assert hashlib.sha256(path.read_bytes()).hexdigest() not in SEALED_KEY_FILE_SHA256.values()
++    run_v5.ED7_KEYS_FILE[0] = path
++    try:
++        with pytest.raises(SystemExit, match="is not a sealed ed7_keys key file"):
++            run_v5.batch_jobs(run_v5.ED7_KEYS_BATCH)
++    finally:
++        run_v5.ED7_KEYS_FILE[0] = None
++
++
++def test_ed7_keys_accepts_a_file_whose_name_and_sha256_are_sealed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """The acceptance path of ``sealed_key_jobs`` with a stand-in table entry (the sealed key
++    files are not in a worktree)."""
++    import run_v5
++
++    path = _write_key_file(tmp_path, "sens_keys_ed7.json")
++    stand_in = {"sens_keys_ed7.json": hashlib.sha256(path.read_bytes()).hexdigest()}
++    monkeypatch.setattr(run_v5, "ED7_KEY_FILE_SHA256", stand_in)
++    assert run_v5.sealed_key_jobs(path, run_v5.ED7_KEY_FILE_SHA256, run_v5.ED7_KEYS_BATCH) == [
++        {"case": "R12", "eps": 0.0, "setting": "VBM"}
++    ]
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/check_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/check_ed7.ps1
+new file mode 100644
+index 00000000..e4e28bf0
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/check_ed7.ps1
+@@ -0,0 +1,24 @@
++#Requires -Version 7
++# The start checks of the edition 7 run steps without a step (writes nothing): the config file,
++# the run commit as HEAD of a clean run worktree, its parent b46bdf8f and the P7-10 scope, the
++# 03_src tree, the common.ps1 fixed inputs and every edition 7 input with its sha256.
++# Exit 0 (all hold) or the stop code of the first miss (3).
++. "$PSScriptRoot\common_ed7.ps1"
++
++Set-Location -LiteralPath $Worktree
++$Identity = Get-RunIdentity
++$Problem = Get-IdentityProblem $Identity
++if ($Problem) { Exit-Ed7 3 $Problem }
++$Problem = Get-ScopeProblem
++if ($Problem) { Exit-Ed7 3 $Problem }
++foreach ($Name in $FixedInputs.Keys) {
++    $Path, $Expected = $FixedInputs[$Name]
++    if (-not (Test-Path -LiteralPath $Path)) { Exit-Ed7 3 "fixed input $Name missing" }
++    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLower() -ne $Expected) { Exit-Ed7 3 "fixed input $Name differs" }
++}
++foreach ($Name in $Ed7Inputs.Keys) {
++    $Problem = Get-InputProblem $Name
++    if ($Problem) { Exit-Ed7 3 $Problem }
++}
++Write-Host "CHECK ok: $RunCommit ($Worktree), parent $ImplCommit, 03_src $ControllerTree"
++exit 0
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/common_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/common_ed7.ps1
+new file mode 100644
+index 00000000..333b5f4c
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/common_ed7.ps1
+@@ -0,0 +1,301 @@
++#Requires -Version 7
++# 436.9 J-P3 edition 7: shared settings of the edition 7 run steps (jp3_remedy_spec_v7.md
++# revision 6, sha256 10902ffd...: 4 steps 5 .. 10, 5.1 (iv), 5.2). The edition 4a helpers come
++# from ..\run_steps\common.ps1 and ..\run_steps\record_helper.ps1 (unchanged); core_kind_ed7.ps1
++# replaces their Get-CoreKind (P / E / mixed). This file sets the edition 7 run commit, folders,
++# inputs and the start checks.
++#
++# Run only (spec 4 step 5a, 5.2): the run commit C holds no judge. The steps run the lines and
++# record them; every judgement (P7-1 / P7-2 / P7-3 / P7-9 and steps 6 .. 10, J7 and ③ rev 7
++# included) is made later at the judge commit T (the child of C) and is not judgeable before T
++# and its audit. P7-10 (scope) and P7-4 (unit suite) are the checks of C itself: every step
++# asserts the scope at its start (Get-ScopeProblem), step5_impl_ed7.ps1 -Part scope keeps the
++# evidence, full_suite_ed7.ps1 runs the suite. The run order is kept by the .done markers; when
++# to wait for a judgement of T before the next step is the main session's decision (spec 4
++# steps 6 .. 10: "순서와 멈춤은 판 6 4절과 같다").
++#
++# The run commit and the run worktree are read from prelaunch_j9\ed7_run_config.json of the main
++# checkout (the main session writes it from ed7_run_config.template.json after the run commit:
++# it cannot name its own commit). A placeholder left, a missing file or another HEAD stops 3.
++#
++# Run order (the main session launches every step; each needs the .done of the ones before):
++#   1. step5_impl_ed7.ps1 -Part scope   P7-10 evidence (diff of C against b46bdf8f), no run
++#   2. step_l1ref_ed7.ps1               the four L1 reference runs (12b L1_VBM0 / L1_VBM on
++#                                       l1_keys_12b.txt, 12a L1a_VBM0 / L1a_VBM on
++#                                       l1_keys_d3c6c57e.json), before any 12a / 12b output
++#   3. step5_impl_ed7.ps1 -Part t8 | cases | probe   P7-1 T8 (44), P7-2 cases E / F (10),
++#                                       P7-3 / P7-9 probe arm a2 (114), in this order
++#   4. step6_confirm_ed7.ps1            G1 171 (ed7_keys confirm_g1_grid171.json) + D 24
++#                                       (ed7_probe.py --part d) = 195 (spec 4 step 6, 6.3)
++#   5. step7_j9main_ed7.ps1             ed7_j9_main 388 (6.2)
++#   6. step8_sens_ed7.ps1               ed7_keys sens_keys_ed7.json 460 (6.2)
++#   7. step9_dg3_ed7.ps1                T-JR-12a VBM / VBM0 on the 135 H-6 keys (6.4)
++#   8. step10a_plan_ed7.ps1             the T-JR-12b plan (jp3_12b_plan.py --edition 7, scan
++#                                       widened to the edition 6 / 7 outputs, Y7-7)
++#   9. step10b_vbkm0_ed7.ps1 -Phase base   VBKM0 b1 / b2; then the P-pred decision of T (not
++#      here); when it says needs_b4: step10b_vbkm0_ed7.ps1 -Phase b4 -Decision ... ; and when it
++#      says decided: step10c_vbkm_ed7.ps1 -Decision ...  (the VBKM blocks of the decision)
++# Every step records its identity at the start and at the end (HEAD, is_clean, 03_src tree id):
++# a start not equal to the run commit stops 3, an end that differs stops 3 and the step's
++# outputs are not used (no .done). Every output path of a step is new: the attempt folder
++# STEP_aN may not exist and every output file is asserted absent before its run (spec 4 step 6,
++# audit M-7: run_v5 / ed7_probe append to an existing file and skip its keys).
++#
++# Dry run (no simulation, no tool, nothing in the main checkout): ED7_DRY_RUN_ROOT=<scratch
++# folder> holds ed7_run_config.json and receives j9_runs\RUN8\ with the step records;
++# Start-Run and Invoke-Tool record their commands only (dry_run_ed7.ps1).
++
++. "$PSScriptRoot\..\run_steps\common.ps1"
++. "$PSScriptRoot\..\run_steps\record_helper.ps1"
++. "$PSScriptRoot\core_kind_ed7.ps1"
++$Ed7StepsDir = $PSScriptRoot
++
++# --- dry run ---------------------------------------------------------------------------------
++$Ed7DryRoot = [string]$env:ED7_DRY_RUN_ROOT
++$IsEd7Dry = [bool]$Ed7DryRoot
++
++# --- the sealed spec and the implementation commit ---------------------------------------------
++$SpecV7 = "$CauseDir\jp3_remedy_spec_v7.md"
++$SpecV7Sha256 = '10902ffdb763aa092588b1be0dd13f55874826b489f9aa9f1351dd7f48c1da45'
++$ImplCommit = 'b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9'
++# spec 5.1: C is the one child of b46bdf8f
++$ControllerTree = '0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f'
++# git rev-parse C:03_src = b46bdf8f's 03_src with the JP3_SPEC_EDITION_V7 lines (P7-10)
++
++# P7-10 / 5.1 (i) .. (iv): the paths C may change against b46bdf8f
++$ScopeFiles = @('03_src/outrigger_sim/control/extend_start_bound.py',
++    '04_scripts/04_hydraulic/coupled/run_v5.py',
++    '05_tests/unit/test_ed7_run_commit.py')
++$ScopePrefix = '06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/'
++$SrcHunk = '@@ -197,5 +197,5 @@'
++$SrcConstantLine = '+JP3_SPEC_EDITION_V7 = "10902ffd"'
++# 5.1 (i), audit M-4: the 03_src diff is the constant line and its docstring (197 .. 201) only
++
++# --- run commit and paths (the main session's config file) -----------------------------------
++$Ed7Placeholder = '^<ED7_'
++$Ed7ConfigFile = if ($IsEd7Dry) { "$Ed7DryRoot\ed7_run_config.json" } else { "$PrelaunchDir\ed7_run_config.json" }
++
++function Exit-Ed7([int]$Code, [string]$Reason) {
++    # a stop before any step folder exists: `exit` in this dot-sourced file (or in a function)
++    # would return to the step script, so the process ends here with the code
++    Write-Host "STOP: $Reason"
++    [Console]::Out.Flush()
++    [Environment]::Exit($Code)
++}
++
++function Get-Ed7ConfigProblem($Config) {
++    # why the config file cannot name the run ($null: it can)
++    if ($null -eq $Config) { return "$Ed7ConfigFile missing (copy ed7_run_config.template.json and fill it in)" }
++    foreach ($Value in @($Config.run_commit, $Config.worktree)) {
++        if ([string]$Value -match $Ed7Placeholder) { return "$Ed7ConfigFile still holds $Value" }
++    }
++    if ([string]$Config.run_commit -notmatch '^[0-9a-f]{40}$') { return 'run commit is not a full sha' }
++    return $null
++}
++$Ed7Config = if (Test-Path -LiteralPath $Ed7ConfigFile) { Get-Content -Raw -LiteralPath $Ed7ConfigFile | ConvertFrom-Json } else { $null }
++$Ed7ConfigProblem = Get-Ed7ConfigProblem $Ed7Config
++if ($Ed7ConfigProblem) { Exit-Ed7 3 $Ed7ConfigProblem }
++$RunCommit = [string]$Ed7Config.run_commit
++$Worktree = [string]$Ed7Config.worktree
++if (-not $Ed7StepsDir.StartsWith("$Worktree\", [StringComparison]::OrdinalIgnoreCase)) {
++    Exit-Ed7 3 "run the steps from the run worktree ($Worktree), not $Ed7StepsDir (the run commit's scripts)"
++}
++
++$RunShort = $RunCommit.Substring(0, 8)
++$RunsParent = if ($IsEd7Dry) { "$Ed7DryRoot\j9_runs" } else { "$CauseDir\j9_runs" }
++$RunsRoot = "$RunsParent\$RunShort"
++$IdentityChecks = "$RunsRoot\_identity_checks"
++
++# --- inputs (main checkout) with their sha256 -------------------------------------------------
++$KeysSealDir = "$CauseDir\ed7_design\keys_seal_b46bdf8f"
++$Ed7Inputs = [ordered]@{
++    spec_v7     = @($SpecV7, $SpecV7Sha256)
++    g1_keys     = @("$KeysSealDir\confirm_g1_grid171.json",
++        '684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec')   # spec 5.1, 6.3
++    sens_keys   = @("$KeysSealDir\sens_keys_ed7.json",
++        'be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b')   # spec 5.1, 6.2
++    l1_keys_12b = @("$PrelaunchDir\ed5_inputs\l1_keys_12b.txt",
++        '9f815533c0deb44925134465fe90e0f508c1819ae2c4c34bf4f3b651b6a63ca5')   # 12b L1 keys (ed6)
++    l1_keys_12a = @("$PrelaunchDir\l1_keys_d3c6c57e.json",
++        'eea8ed0d5f3aa79ecb5cf1cb892fa82f7d4bac780f8b3b17dbd069200765c6af')   # 12a L1 keys (ed6)
++    c92_keys    = @("$PrelaunchDir\ed5_inputs\x11\c92_keys.txt", $null)       # 12b plan scan
++    c93_keys    = @("$PrelaunchDir\ed5_inputs\x11\c93_keys.txt", $null)
++}
++# $null sha: the file must exist (the edition 6 plan read the same two key lists)
++$V0Rows = Get-FixedPath 'MAIN_JSONL_SHA256'      # common.ps1 fixed input (P7-1 --p3-hash-source)
++$H6Keys = Get-FixedPath 'H6_SHA256'              # common.ps1 fixed input (12a keys)
++$NoiseVb = Get-FixedPath 'NOISE_VB_SHA256'       # common.ps1 fixed input (12b plan --noise)
++$L1Labels = [ordered]@{ L1_VBM0 = @('VBM0', 'l1_keys_12b'); L1_VBM = @('VBM', 'l1_keys_12b')
++    L1a_VBM0 = @('VBM0', 'l1_keys_12a'); L1a_VBM = @('VBM', 'l1_keys_12a') }
++# the four L1 reference runs of step_l1ref_ed7.ps1: 12b (L1_*) and T-JR-12a (L1a_*), spec 6.4
++$ScanRequiredRoots = @("$CauseDir\j9_runs\79495405", "$CauseDir\j9_runs\6bfb2560",
++    "$CauseDir\j9_runs\b46bdf8f", $RunsRoot)
++# spec 6.4 / Y7-7: the edition 6 run outputs (records B / C / D in 79495405\records_after_stop),
++# the probe 6bfb2560, the pre-seal reproduction b46bdf8f and the edition 7 outputs of this run
++
++# the edition 7 settings run by r79 with the plant of the rod-truth reading (spec 6.4)
++foreach ($Setting in @('VBM', 'VBM0', 'VBKM', 'VBKM0')) { $R79RodModel[$Setting] = 'plant_truth' }
++
++function Get-InputProblem([string]$Name) {
++    # why an input is not the sealed one ($null: it is); a dry run reads the same files
++    $Path, $Expected = $Ed7Inputs[$Name]
++    if (-not (Test-Path -LiteralPath $Path)) { return "input $Name missing: $Path" }
++    if ($null -eq $Expected) { return $null }
++    $Actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLower()
++    if ($Actual -ne $Expected) { return "input $Name sha256 $Actual is not $Expected" }
++    return $null
++}
++
++function Get-InputPath([string]$Name) { return $Ed7Inputs[$Name][0] }
++
++function Get-RunIdentity {
++    # HEAD, is_clean and the 03_src tree id of the run worktree (a git failure gives $null
++    # fields, never "clean")
++    $Head = (& git -C $Worktree rev-parse HEAD)
++    $HeadOk = $LASTEXITCODE -eq 0
++    $Status = (& git -C $Worktree status --porcelain --untracked-files=no)
++    $StatusOk = $LASTEXITCODE -eq 0
++    $Tree = (& git -C $Worktree rev-parse 'HEAD:03_src')
++    $TreeOk = $LASTEXITCODE -eq 0
++    return [ordered]@{ head = if ($HeadOk) { [string]$Head.Trim() } else { $null }
++        is_clean = if ($StatusOk) { -not $Status } else { $null }
++        src_tree = if ($TreeOk) { [string]$Tree.Trim() } else { $null }
++        time = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') }
++}
++
++function Get-IdentityProblem($Identity) {
++    # why an identity is not the run's ($null: it is)
++    if ($Identity.head -ne $RunCommit) { return "HEAD $($Identity.head) is not $RunCommit" }
++    if ($Identity.is_clean -ne $true) { return 'the run worktree is not clean (or git failed)' }
++    if ($Identity.src_tree -ne $ControllerTree) { return "03_src tree $($Identity.src_tree) is not $ControllerTree" }
++    return $null
++}
++
++function Get-ScopeProblem {
++    # P7-10: C is the child of b46bdf8f and changes the 5.1 (i) .. (iv) paths only; its 03_src
++    # diff is the JP3_SPEC_EDITION_V7 block (one hunk, lines 197 .. 201). $null: in scope.
++    $Parent = (& git -C $Worktree rev-parse "$RunCommit^")
++    if ($LASTEXITCODE -ne 0) { return 'git rev-parse of the run commit parent failed' }
++    if ($Parent.Trim() -ne $ImplCommit) { return "the run commit parent $Parent is not $ImplCommit" }
++    $Names = @(& git -C $Worktree diff --name-only $ImplCommit $RunCommit)
++    if ($LASTEXITCODE -ne 0) { return 'git diff --name-only failed' }
++    $Outside = @($Names | Where-Object { $ScopeFiles -notcontains $_ -and -not $_.StartsWith($ScopePrefix) })
++    if ($Outside.Count) { return "P7-10: $($Outside.Count) changed paths outside 5.1 (i) .. (iv) ($($Outside[0]) ...)" }
++    $SrcDiff = @(& git -C $Worktree diff -U0 $ImplCommit $RunCommit -- 03_src)
++    if ($LASTEXITCODE -ne 0) { return 'git diff of 03_src failed' }
++    $Hunks = @($SrcDiff | Where-Object { $_.StartsWith('@@') } | ForEach-Object { ($_ -split ' @@')[0] + ' @@' })
++    if ($Hunks.Count -ne 1 -or $Hunks[0] -ne $SrcHunk -or $SrcDiff -notcontains $SrcConstantLine) {
++        return "P7-10: the 03_src diff is not the JP3_SPEC_EDITION_V7 block ($($Hunks -join ', '))"
++    }
++    return $null
++}
++
++function Complete-Step {
++    # common.ps1 Complete-Step with the end identity against the start one; a change stops 3
++    # and the step's outputs are not used (no .done marker)
++    $End = Get-RunIdentity
++    $StepState.Codes['identity_end'] = $End
++    $Problem = Get-IdentityProblem $End
++    if ($Problem) { Stop-Step 3 "identity at the end: $Problem (outputs not used)" }
++    $Record = [ordered]@{ step = $StepState.Name; folder = $StepState.Folder; exit_code = 0
++        commit = $RunCommit; started = $StepState.Started
++        done = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz'); codes = $StepState.Codes
++        previous_attempts = $StepState.PreviousStops; cleared_variables = $StepState.ClearedVariables
++        commands = $StepState.Commands }
++    Write-JsonFile "$($StepState.Folder)\step_record.json" $Record
++    Write-JsonFile "$RunsRoot\$($StepState.Name).done" $Record
++    Write-Host "DONE $($StepState.Name) -> $($StepState.Folder)"
++    exit 0
++}
++
++function Initialize-Ed7Step([string]$StepName, [int]$Attempt, [string[]]$Requires, [string[]]$Inputs = @()) {
++    # the edition 4a step start (run commit, clean tree, 4a fixed inputs, environment, a new
++    # attempt folder), then the P7-10 scope, the start identity and the step's inputs
++    $Folder = Initialize-Step $StepName $Attempt $Requires
++    $Scope = Get-ScopeProblem
++    if ($Scope) { Stop-Step 3 $Scope }
++    $StepState.Codes['scope'] = "P7-10: $ImplCommit -> $RunCommit in scope"
++    $Start = Get-RunIdentity
++    $StepState.Codes['identity_start'] = $Start
++    $Problem = Get-IdentityProblem $Start
++    if ($Problem) { Stop-Step 3 "identity at the start: $Problem" }
++    foreach ($Name in @('spec_v7') + $Inputs) {
++        $InputProblem = Get-InputProblem $Name
++        if ($InputProblem) { Stop-Step 3 $InputProblem }
++        $StepState.Codes["input:$Name"] = Get-RepoPath (Get-InputPath $Name)
++    }
++    $StepState.Codes['run_steps'] = "$Ed7StepsDir (run commit $RunCommit)"
++    return $Folder
++}
++
++function Assert-NewOutput([string[]]$Paths) {
++    # spec 4 step 6 (audit M-7): an output file or folder that exists refuses the run
++    foreach ($Path in $Paths) {
++        if (Test-Path -LiteralPath $Path) { Stop-Step 2 "$Path exists (M-7: every output path is new)" }
++    }
++}
++
++function Start-Ed7Run {
++    # Start-Run after the mask check and the new-output check; the core kind (P / E / mixed) of
++    # the mask goes into the step record
++    param([string]$Label, [string]$MaskHex, [string[]]$Arguments, [hashtable]$Environment = @{},
++        [string]$WrapOutput = '', [string]$TaskType, [int]$Workers, [string[]]$Outputs)
++    $MaskProblem = Get-CoreMaskProblem $MaskHex
++    if ($MaskProblem) { Stop-Step 3 $MaskProblem }
++    Assert-NewOutput $Outputs
++    $StepState.Codes["core:$Label"] = Get-CoreKind $MaskHex
++    return Start-Run -Label $Label -MaskHex $MaskHex -Arguments $Arguments -Environment $Environment `
++        -WrapOutput $WrapOutput -TaskType $TaskType -Workers $Workers
++}
++
++function Get-R79Environment([string]$Setting, [string]$T4hDir, [string]$Plan = '') {
++    # the r79 runner environment of 12a / 12b and the L1 runs (a rod fault plan for VBKM / VBKM0)
++    $Environment = @{ R79_V5_SETTING = $Setting; R79_T4H_DIR = $T4hDir; R79_ROD_MODEL = $R79RodModel[$Setting] } + $R79Common
++    if ($Plan) { $Environment['R79_ROD_FAULT_PLAN'] = $Plan }
++    return $Environment
++}
++
++function Get-DoneCode([string]$StepName, [string]$Name) {
++    # a code of a done step's record (its .done marker)
++    $DonePath = "$RunsRoot\$StepName.done"
++    if (-not (Test-Path -LiteralPath $DonePath)) { Stop-Step 3 "step $StepName is not done ($DonePath)" }
++    return [string](Get-Content -Raw -LiteralPath $DonePath | ConvertFrom-Json).codes.$Name
++}
++
++function Read-Decision([string]$Path, [string]$Sha256, [string[]]$Statuses) {
++    # the 12b P-pred decision of the judge commit T (status and blocks; spec 6.4): its sha256 as
++    # given and a status of $Statuses, else not usable (2). A dry run reads the dry file the same way.
++    if (-not (Test-Path -LiteralPath $Path)) { Stop-Step 2 "decision $Path missing" }
++    $Actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLower()
++    if ($Actual -ne $Sha256.ToLower()) { Stop-Step 2 "decision $Path sha256 $Actual is not $Sha256" }
++    $Document = Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json
++    if ($Statuses -notcontains [string]$Document.status) { Stop-Step 2 "decision status $($Document.status) (needs $($Statuses -join ' / '))" }
++    $StepState.Codes['decision_file'] = $Path
++    $StepState.Codes['decision_sha256'] = $Actual
++    $StepState.Codes['decision_status'] = [string]$Document.status
++    return $Document
++}
++
++# --- dry run overrides (no process, no tool; the commands go into the step record) -------------
++if ($IsEd7Dry) {
++    function Start-Run {
++        param([string]$Label, [string]$MaskHex, [string[]]$Arguments, [hashtable]$Environment = @{},
++            [string]$WrapOutput = '', [string]$TaskType, [int]$Workers)
++        $Python = $Arguments
++        if ($WrapOutput) { $Python = @("$Coupled/jp3_run_identity.py", 'wrap', $WrapOutput, '--', $DynamicsPython, '-I', '-B') + $Arguments }
++        $All = $RunPrefix + $Python
++        Assert-PlainArguments $All
++        $StepState.Commands.Add([ordered]@{ label = $Label; mask = $MaskHex; environment = $Environment
++            workers = $Workers; command = "$RunExe $($All -join ' ')"; dry_run = $true })
++        return [pscustomobject]@{ Label = $Label; MaskHex = $MaskHex; TaskType = $TaskType; Workers = $Workers }
++    }
++    function Wait-Runs([object[]]$Runs) { foreach ($Run in $Runs) { $StepState.Codes["run:$($Run.Label)"] = 'dry' } }
++    function Invoke-Tool([string]$Label, [string[]]$Arguments) {
++        $All = $RunPrefix + $Arguments
++        Assert-PlainArguments $All
++        $StepState.Commands.Add([ordered]@{ label = $Label; command = "$RunExe $($All -join ' ')"; dry_run = $true })
++        $StepState.Codes["tool:$Label"] = 'dry'
++        return 0
++    }
++    function Invoke-IdentityCheck { $StepState.Codes['identity_check'] = 'dry' }
++}
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/core_kind_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/core_kind_ed7.ps1
+new file mode 100644
+index 00000000..511c9aaf
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/core_kind_ed7.ps1
+@@ -0,0 +1,34 @@
++#Requires -Version 7
++# 436.9 J-P3 edition 7: the core kind of an affinity mask for the cpu-scheduler run records
++# (record.py --core P | E | mixed). The shared helper Get-CoreKind of ..\run_steps\common.ps1
++# wrote every mask with a P bit as 'P', so a P + E mask was recorded as P (edition 6 separate
++# finding); edition 6 keeps its files, the edition 7 steps dot-source this file after
++# common.ps1 and its Get-CoreKind replaces that one (PowerShell resolves the name at call time).
++# No dependency on the run configuration: a test can dot-source this file alone.
++
++$PCoreMask = 0x0000FFFF    # i7-14700: logical processors 0-15 = 8 P cores x 2 threads
++$ECoreMask = 0x0FFF0000    # logical processors 16-27 = 12 E cores
++$AllCoreMask = $PCoreMask -bor $ECoreMask
++
++function Get-CoreMaskProblem([string]$MaskHex) {
++    # why a mask is not an affinity mask of this machine ($null: it is)
++    $Value = 0L
++    if (-not [long]::TryParse(($MaskHex -replace '^0[xX]', ''), 'HexNumber', $null, [ref]$Value)) {
++        return "mask '$MaskHex' is not a hex number"
++    }
++    if ($Value -le 0) { return "mask '$MaskHex' selects no processor" }
++    if (($Value -band (-bnot [long]$AllCoreMask)) -ne 0) { return "mask '$MaskHex' names a processor above 27" }
++    return $null
++}
++
++function Get-CoreKind([string]$MaskHex) {
++    # 'P' (P cores only), 'E' (E cores only) or 'mixed' (both); a bad mask throws
++    $Problem = Get-CoreMaskProblem $MaskHex
++    if ($Problem) { throw $Problem }
++    $Value = [Convert]::ToInt64($MaskHex, 16)
++    $HasP = ($Value -band $PCoreMask) -ne 0
++    $HasE = ($Value -band $ECoreMask) -ne 0
++    if ($HasP -and $HasE) { return 'mixed' }
++    if ($HasP) { return 'P' }
++    return 'E'
++}
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/dry_run_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/dry_run_ed7.ps1
+new file mode 100644
+index 00000000..ff826580
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/dry_run_ed7.ps1
+@@ -0,0 +1,67 @@
++#Requires -Version 7
++# Dry run of the edition 7 run steps (no simulation, no tool, nothing in the main checkout):
++# every step in the run order with ED7_DRY_RUN_ROOT=DRY_ROOT; Start-Run / Invoke-Tool record
++# their commands, the step records go to DRY_ROOT\j9_runs\RUN8\, and all commands are collected
++# into DRY_ROOT\commands_ed7.json. The two P-pred decisions of the judge commit T are stand-ins
++# written here (needs_b4, then decided with b1 / b2 / b4). Last, the refusals: the confirm step
++# again (done already) must stop 2. Exit 0 when every step ended with exit 0 and the refusal
++# with 2, else the first unexpected code (or 3).
++param([Parameter(Mandatory)][string]$DryRoot, [Parameter(Mandatory)][string]$RunCommit,
++    [Parameter(Mandatory)][string]$Worktree, [string]$MaskHex = '0x0FFFFFFF', [int]$Workers = 20)
++$ErrorActionPreference = 'Stop'
++if (Test-Path -LiteralPath $DryRoot) { Write-Host "STOP: $DryRoot exists"; exit 3 }
++New-Item -ItemType Directory -Path $DryRoot | Out-Null
++[ordered]@{ rule = 'dry run'; run_commit = $RunCommit; worktree = $Worktree } |
++    ConvertTo-Json | Set-Content -LiteralPath "$DryRoot\ed7_run_config.json" -Encoding utf8NoBOM
++
++function Write-DryDecision([string]$Name, [string]$Status, [string[]]$Blocks) {
++    # a stand-in for the decision file of T (status, blocks); returns its path and sha256
++    $Path = "$DryRoot\$Name"
++    [ordered]@{ status = $Status; blocks = $Blocks; dry_run = $true } |
++        ConvertTo-Json | Set-Content -LiteralPath $Path -Encoding utf8NoBOM
++    return @($Path, (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLower())
++}
++$NeedsB4 = Write-DryDecision 'decision_needs_b4.json' 'needs_b4' @()
++$Decided = Write-DryDecision 'decision_decided.json' 'decided' @('b1', 'b2', 'b4')
++$Placement = @('-MaskHex', $MaskHex, '-Workers', "$Workers")
++$Pwsh = (Get-Process -Id $PID).Path
++$Steps = @(
++    @('step5_impl_ed7.ps1', '-Part', 'scope'), @('step_l1ref_ed7.ps1'),
++    (@('step5_impl_ed7.ps1', '-Part', 't8') + $Placement),
++    (@('step5_impl_ed7.ps1', '-Part', 'cases') + $Placement),
++    (@('step5_impl_ed7.ps1', '-Part', 'probe') + $Placement),
++    (@('step6_confirm_ed7.ps1') + $Placement), (@('step7_j9main_ed7.ps1') + $Placement),
++    (@('step8_sens_ed7.ps1') + $Placement), @('step9_dg3_ed7.ps1'), @('step10a_plan_ed7.ps1'),
++    @('step10b_vbkm0_ed7.ps1', '-Phase', 'base'),
++    @('step10b_vbkm0_ed7.ps1', '-Phase', 'b4', '-Decision', $NeedsB4[0], '-DecisionSha256', $NeedsB4[1]),
++    @('step10c_vbkm_ed7.ps1', '-Decision', $Decided[0], '-DecisionSha256', $Decided[1]))
++$Refusals = @(, (@('step6_confirm_ed7.ps1') + $Placement))
++$env:ED7_DRY_RUN_ROOT = $DryRoot
++$Codes = [ordered]@{}
++$Unexpected = @()
++try {
++    foreach ($Step in $Steps) {
++        $Name = ($Step -join ' ')
++        & $Pwsh -NoProfile -File "$PSScriptRoot\$($Step[0])" @($Step | Select-Object -Skip 1) *> "$DryRoot\$($Step[0]).$($Codes.Count).log"
++        $Codes[$Name] = $LASTEXITCODE
++        if ($LASTEXITCODE -ne 0) { $Unexpected += $LASTEXITCODE; break }
++    }
++    if (-not $Unexpected.Count) {
++        foreach ($Step in $Refusals) {
++            $Name = "refusal: $($Step -join ' ')"
++            & $Pwsh -NoProfile -File "$PSScriptRoot\$($Step[0])" @($Step | Select-Object -Skip 1) *> "$DryRoot\refusal.$($Codes.Count).log"
++            $Codes[$Name] = $LASTEXITCODE
++            if ($LASTEXITCODE -ne 2) { $Unexpected += 3 }
++        }
++    }
++} finally { Remove-Item Env:ED7_DRY_RUN_ROOT -ErrorAction SilentlyContinue }
++$Records = foreach ($Record in (Get-ChildItem -LiteralPath $DryRoot -Recurse -Filter 'step_record.json')) {
++    $Value = Get-Content -Raw -LiteralPath $Record.FullName | ConvertFrom-Json
++    [ordered]@{ step = $Value.step; folder = $Value.folder; exit_code = $Value.exit_code; codes = $Value.codes
++        commands = $Value.commands }
++}
++[ordered]@{ run_commit = $RunCommit; worktree = $Worktree; exit_codes = $Codes; steps = @($Records) } |
++    ConvertTo-Json -Depth 8 | Set-Content -LiteralPath "$DryRoot\commands_ed7.json" -Encoding utf8NoBOM
++Write-Host ($Codes | ConvertTo-Json -Compress)
++if ($Unexpected.Count) { exit $Unexpected[0] }
++exit 0
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/ed7_run_config.template.json b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/ed7_run_config.template.json
+new file mode 100644
+index 00000000..cd9d8410
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/ed7_run_config.template.json
+@@ -0,0 +1,5 @@
++{
++ "rule": "jp3_remedy_spec_v7.md revision 6 (sha256 10902ffd...), 5.1: the run commit C (the child of b46bdf8f) and its locked worktree; copy to ..\\ed7_run_config.json in the main checkout and fill both in",
++ "run_commit": "<ED7_RUN_COMMIT>",
++ "worktree": "<ED7_RUN_WORKTREE>"
++}
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/full_suite_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/full_suite_ed7.ps1
+new file mode 100644
+index 00000000..a2d29fb0
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/full_suite_ed7.ps1
+@@ -0,0 +1,59 @@
++#Requires -Version 7
++# P7-4 (spec v7 4 step 5, 5.1): the full unit suite (every 05_tests/unit/test_*.py) of the run
++# worktree at C, judged against the fixed base list - the existing_failures.txt made at base
++# 79495405 (sha256 571f42a1...; the merge-base of ed7-impl and master is not used, 5.1).
++# The edition 6 full_suite_ed6.ps1 command unchanged: tools/verif/worktree_tests.py copies the
++# test files, reads the stored data (07_results) from the main checkout and keeps the run folder;
++# the JUnit lands in OUT_DIR\junit.xml, then
++#   -Side base  jp3_ed6_suite.py baseline -> OUT_DIR\existing_failures.txt (+ .sha256)
++#   -Side run   jp3_ed6_suite.py judge against the base list (its sha256 given)
++# OUT_DIR must not exist and must lie outside the worktree and the main checkout (a runner
++# folder under ~\.claude\runners). No automatic rerun. Exit code: the suite tool's (base: 0 list
++# written; run: 0 pass / 1 failed / 2 not judgeable / 3 error); 3 also when the JUnit is missing.
++param([Parameter(Mandatory)][ValidateSet('base', 'run')][string]$Side,
++    [Parameter(Mandatory)][string]$Worktree, [Parameter(Mandatory)][string]$OutDir,
++    [Parameter(Mandatory)][string]$ExpectCommit,
++    [string]$BaselineList = '', [string]$BaselineSha256 = '', [int]$TimeoutS = 36000,
++    [string]$TestGlob = '05_tests/unit/test_*.py')  # -TestGlob: a smoke check only; both sides use the default
++$ErrorActionPreference = 'Stop'
++$MainRoot = 'C:\workspace\outrigger_control'
++$DevPython = 'C:\ProgramData\miniforge3\envs\python-dev\python.exe'
++$TestPython = 'C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe'
++$VerifTools = 'C:\Users\jinbeom\.claude\tools\verif'
++$Suite = "$PSScriptRoot\..\..\..\..\..\04_scripts\04_hydraulic\coupled\jp3_ed6_suite.py"
++
++function Stop-Suite([int]$Code, [string]$Reason) { Write-Host "STOP: $Reason"; exit $Code }
++
++if (Test-Path -LiteralPath $OutDir) { Stop-Suite 2 "$OutDir exists (never overwritten)" }
++if ($Side -eq 'run' -and (-not $BaselineList -or -not $BaselineSha256)) {
++    Stop-Suite 2 '-Side run needs -BaselineList and -BaselineSha256'
++}
++$Head = (& git -C $Worktree rev-parse HEAD)
++if ($LASTEXITCODE -ne 0 -or $Head.Trim() -ne $ExpectCommit) { Stop-Suite 3 "HEAD of $Worktree is not $ExpectCommit" }
++$Status = (& git -C $Worktree status --porcelain --untracked-files=no)
++if ($LASTEXITCODE -ne 0 -or $Status) { Stop-Suite 3 "$Worktree is not clean (or git failed)" }
++New-Item -ItemType Directory -Path "$OutDir\scratch" | Out-Null
++
++$env:PYTHONDONTWRITEBYTECODE = '1'
++& $DevPython -I -B "$VerifTools\worktree_tests.py" --worktree $Worktree --data-root $MainRoot `
++    --python $TestPython --scratch "$OutDir\scratch" --test $TestGlob `
++    --probe-module outrigger_sim --env "OUTRIGGER_RECORDS_ROOT=$MainRoot" --keep --timeout $TimeoutS `
++    --out "$OutDir\worktree_tests.md" *> "$OutDir\worktree_tests.log"
++# OUTRIGGER_RECORDS_ROOT: the stored records the tests read from the main checkout (without it
++# those tests skip in a worktree)
++$ToolCode = $LASTEXITCODE  # 1 = findings (failures, skips): judged below from the JUnit
++$Junit = @(Get-ChildItem -LiteralPath "$OutDir\scratch" -Recurse -Filter 'junit.xml')
++if ($Junit.Count -ne 1) { Stop-Suite 3 "worktree_tests exit $ToolCode, $($Junit.Count) junit.xml files" }
++Copy-Item -LiteralPath $Junit[0].FullName -Destination "$OutDir\junit.xml"
++[ordered]@{ side = $Side; worktree = $Worktree; head = $ExpectCommit; worktree_tests_exit = $ToolCode
++    junit_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath "$OutDir\junit.xml").Hash.ToLower() } |
++    ConvertTo-Json | Set-Content -LiteralPath "$OutDir\suite_record.json" -Encoding utf8NoBOM
++
++if ($Side -eq 'base') {
++    & $DevPython -I -B $Suite baseline --junit "$OutDir\junit.xml" --merge-base $ExpectCommit `
++        --out "$OutDir\existing_failures.txt"
++} else {
++    & $DevPython -I -B $Suite judge --junit "$OutDir\junit.xml" --baseline-list $BaselineList `
++        --baseline-sha256 $BaselineSha256 --out "$OutDir\suite_judgement.json"
++}
++exit $LASTEXITCODE
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10a_plan_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10a_plan_ed7.ps1
+new file mode 100644
+index 00000000..82061e19
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10a_plan_ed7.ps1
+@@ -0,0 +1,27 @@
++#Requires -Version 7
++# Step 12b_plan (spec v7 6.4, Y7-7): the T-JR-12b selection and plans by jp3_12b_plan.py
++# --edition 7 into the step folder's x11\ (seeds 50 .. 53 with the +10 collision rule, arms
++# VBKM0 / VBKM). The scan is the edition 6 one (06_analysis, the run worktree's and the main
++# checkout's 05_tests, the c92 / c93 key lists) widened by --scan-required: the edition 6 run
++# outputs with records B / C / D, the probe 6bfb2560, the pre-seal reproduction b46bdf8f and this
++# run's edition 7 outputs (that is why the plan comes after step dg3). The tool prunes the
++# edition 7 blind prefixes before it lists anything and names none of them (user decision
++# 2026-11-24). A planning tool, not a judge: exit 0 written, 2 not usable, 3 error (its code).
++param([int]$Attempt = 1)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Folder = Initialize-Ed7Step '12b_plan' $Attempt @('impl_scope', 'l1ref', 'impl_probe', 'confirm', 'j9main', 'sens', 'dg3') `
++    @('c92_keys', 'c93_keys')
++$PlanDir = "$Folder\x11"
++Assert-NewOutput @($PlanDir)
++$Arguments = @("$Coupled/jp3_12b_plan.py", '--noise', $NoiseVb, '--scan-root', $Analysis,
++    '--scan-extra', "$Worktree\05_tests", '--scan-extra', "$MainRoot\05_tests", '--out-dir', $PlanDir,
++    '--edition', '7', '--scan-keys-file', (Get-InputPath 'c92_keys'), '--scan-keys-file', (Get-InputPath 'c93_keys'))
++foreach ($Root in $ScanRequiredRoots) { $Arguments += @('--scan-required', $Root) }
++$Code = Invoke-Tool 'plan' $Arguments
++if ($Code -ne 0) { Stop-Step $Code "jp3_12b_plan.py exit $Code" }
++$Selection = "$PlanDir\selection.json"
++$StepState.Codes['selection_file'] = $Selection
++$StepState.Codes['selection_sha256'] = if ($IsEd7Dry) { 'dry' } else { (Get-FileHash -Algorithm SHA256 -LiteralPath $Selection).Hash.ToLower() }
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10b_vbkm0_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10b_vbkm0_ed7.ps1
+new file mode 100644
+index 00000000..d198dd4b
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10b_vbkm0_ed7.ps1
+@@ -0,0 +1,46 @@
++#Requires -Version 7
++# Step 12b_vbkm0 (spec v7 6.4 = edition 6 6.4): the VBKM0 arm of T-JR-12b with the rod fault
++# plans of the 12b_plan step (its selection.json sha256 as that step recorded it).
++#   -Phase base   b1 and b2 at once (4 workers each on one P quarter)
++#   -Phase b4     only when the P-pred decision of the judge commit T says needs_b4: the b4 VBKM0
++#                 run (-Decision = T's decision file, -DecisionSha256 = its sha256; status
++#                 needs_b4)
++#   (b3 is never run: N_opp < 0.9 N is not judgeable, edition 6 6.4)
++# No VBKM file exists before the decision (the P-pred allowance is set on VBKM0 b1 / b2 only).
++param([int]$Attempt = 1, [Parameter(Mandatory)][ValidateSet('base', 'b4')][string]$Phase,
++    [string]$Decision = '', [string]$DecisionSha256 = '')
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Before = @('impl_scope', 'l1ref', 'impl_probe', 'confirm', 'j9main', 'sens', 'dg3', '12b_plan')
++$Masks = @('0x000F', '0x00F0')
++if ($Phase -eq 'base') {
++    $Folder = Initialize-Ed7Step '12b_vbkm0' $Attempt $Before
++    $Blocks = @('b1', 'b2')
++} else {
++    if (-not $Decision -or -not $DecisionSha256) { Exit-Ed7 3 '-Phase b4 needs -Decision and -DecisionSha256 (the P-pred decision of T)' }
++    $Folder = Initialize-Ed7Step '12b_vbkm0_b4' $Attempt ($Before + @('12b_vbkm0'))
++    Read-Decision $Decision $DecisionSha256 @('needs_b4') | Out-Null
++    $Blocks = @('b4')
++}
++$PlanDir = "$(Get-StepFolder '12b_plan')\x11"
++$SelectionSha = Get-DoneCode '12b_plan' 'selection_sha256'
++if (-not $IsEd7Dry -and (Get-FileHash -Algorithm SHA256 -LiteralPath "$PlanDir\selection.json").Hash.ToLower() -ne $SelectionSha) {
++    Stop-Step 2 "$PlanDir\selection.json is not the file the 12b_plan step wrote"
++}
++$StepState.Codes['selection_sha256'] = $SelectionSha
++$Runs = @()
++for ($Index = 0; $Index -lt $Blocks.Count; $Index++) {
++    $Block = $Blocks[$Index]
++    $Label = "VBKM0_$Block"
++    $Out = "$Folder\$Label.json"
++    $T4h = "$Folder\${Label}_t4h"
++    $RunEstimatesS[$Label] = 3600  # edition 5 VBK0 blocks: 3,550 s at 4 workers
++    $Runs += Start-Ed7Run -Label $Label -MaskHex $Masks[$Index] -WrapOutput $Out -Outputs @($Out, $T4h) `
++        -Environment (Get-R79Environment 'VBKM0' $T4h "$PlanDir\${Block}_plan.json") `
++        -TaskType 'jp3_ed7_12b_vbkm0' -Workers 4 -Arguments @("$Coupled/las_t3_dg3.py", $Worktree, 'run', $Out,
++            '--levels', 'L2', '--keys-file', "$PlanDir\${Block}_keys.txt", '--workers', '4', '--affinity', $Masks[$Index])
++}
++Wait-Runs $Runs
++Invoke-IdentityCheck
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10c_vbkm_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10c_vbkm_ed7.ps1
+new file mode 100644
+index 00000000..546ed6db
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step10c_vbkm_ed7.ps1
+@@ -0,0 +1,43 @@
++#Requires -Version 7
++# Step 12b_vbkm (spec v7 6.4 = edition 6 6.4): the VBKM runs of the decided blocks. The P-pred
++# decision (status decided, its blocks) is the judge commit T's file, given with its sha256
++# (-Decision, -DecisionSha256); a block b4 needs the 12b_vbkm0_b4 step. Then the identity check.
++# No judge (grade-judge and the 12b judge belong to T). One P quarter of 4 workers per block.
++param([int]$Attempt = 1, [Parameter(Mandatory)][string]$Decision, [Parameter(Mandatory)][string]$DecisionSha256)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Requires = @('impl_scope', 'l1ref', 'impl_probe', 'confirm', 'j9main', 'sens', 'dg3', '12b_plan', '12b_vbkm0')
++if (Test-Path -LiteralPath "$RunsRoot\12b_vbkm0_b4.done") { $Requires += @('12b_vbkm0_b4') }
++$Folder = Initialize-Ed7Step '12b_vbkm' $Attempt $Requires
++$Document = Read-Decision $Decision $DecisionSha256 @('decided')
++$Blocks = @($Document.blocks | ForEach-Object { [string]$_ })
++$Allowed = @('b1', 'b2', 'b4')
++if (-not $Blocks.Count -or @($Blocks | Where-Object { $Allowed -notcontains $_ }).Count) {
++    Stop-Step 2 "decision blocks '$($Blocks -join ',')' are not a set of b1 / b2 / b4"
++}
++if ($Blocks -contains 'b4' -and $Requires -notcontains '12b_vbkm0_b4') { Stop-Step 2 'decision names b4 but 12b_vbkm0_b4 is not done' }
++$StepState.Codes['decision_blocks'] = $Blocks -join ','
++$PlanDir = "$(Get-StepFolder '12b_plan')\x11"
++$SelectionSha = Get-DoneCode '12b_plan' 'selection_sha256'
++if (-not $IsEd7Dry -and (Get-FileHash -Algorithm SHA256 -LiteralPath "$PlanDir\selection.json").Hash.ToLower() -ne $SelectionSha) {
++    Stop-Step 2 "$PlanDir\selection.json is not the file the 12b_plan step wrote"
++}
++$StepState.Codes['selection_sha256'] = $SelectionSha
++
++$Masks = @('0x000F', '0x00F0', '0x0F00')
++$Runs = @()
++for ($Index = 0; $Index -lt $Blocks.Count; $Index++) {
++    $Block = $Blocks[$Index]
++    $Label = "VBKM_$Block"
++    $Out = "$Folder\$Label.json"
++    $T4h = "$Folder\${Label}_t4h"
++    $RunEstimatesS[$Label] = 3800  # edition 5 VBK blocks: 3,757 s at 4 workers
++    $Runs += Start-Ed7Run -Label $Label -MaskHex $Masks[$Index] -WrapOutput $Out -Outputs @($Out, $T4h) `
++        -Environment (Get-R79Environment 'VBKM' $T4h "$PlanDir\${Block}_plan.json") `
++        -TaskType 'jp3_ed7_12b_vbkm' -Workers 4 -Arguments @("$Coupled/las_t3_dg3.py", $Worktree, 'run', $Out,
++            '--levels', 'L2', '--keys-file', "$PlanDir\${Block}_keys.txt", '--workers', '4', '--affinity', $Masks[$Index])
++}
++Wait-Runs $Runs
++Invoke-IdentityCheck
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step5_impl_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step5_impl_ed7.ps1
+new file mode 100644
+index 00000000..75346969
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step5_impl_ed7.ps1
+@@ -0,0 +1,74 @@
++#Requires -Version 7
++# Step 5, implementation checks at the run commit C (spec v7 4 step 5, 5.1). Four parts, each its
++# own step with its .done marker; the lines are run here, judged at the judge commit T (4 step
++# 5a: P7-1 / P7-2 / P7-3 / P7-9 are not judgeable before T and its audit):
++#   -Part scope  P7-10 evidence, no run: git diff of b46bdf8f and C (--stat, --name-only, the
++#                03_src and run_v5.py diffs) into the step folder; the check itself is
++#                Get-ScopeProblem at every step start (common_ed7.ps1)
++#   -Part t8     P7-1: run_v5 ed7_t8 (22 jobs x VBM, VBM0 = 44 lines, --p3-hash-source = the
++#                stored v5/main.jsonl)
++#   -Part cases  P7-2: run_v5 ed7_cases (cases E and F x VBM, LSM1 .. LSM4 = 10 lines)
++#   -Part probe  P7-3 / P7-9: ed7_probe.py --arms a2 --part all (15 keys x 6 plants + D 12 keys x
++#                VBM, VBMslow = 114 lines; the fixed table's 40 units and D 24 lines among them)
++# Order: scope, (step_l1ref_ed7.ps1), t8, cases, probe. P7-0 / P7-6 are judged by the unit suite
++# (P7-4, full_suite_ed7.ps1). Placement from compute-scheduler-expert (-MaskHex, -Workers).
++param([int]$Attempt = 1, [Parameter(Mandatory)][ValidateSet('scope', 't8', 'cases', 'probe')][string]$Part,
++    [string]$MaskHex = '', [int]$Workers = 0)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Requires = switch ($Part) {
++    'scope' { @() }
++    't8' { @('impl_scope', 'l1ref') }
++    'cases' { @('impl_scope', 'l1ref', 'impl_t8') }
++    'probe' { @('impl_scope', 'l1ref', 'impl_t8', 'impl_cases') }
++}
++if ($Part -ne 'scope' -and (-not $MaskHex -or $Workers -lt 1)) { Exit-Ed7 3 "-Part $Part needs -MaskHex and -Workers" }
++$Folder = Initialize-Ed7Step "impl_$Part" $Attempt $Requires
++
++function Write-GitText([string]$Name, [string[]]$GitArguments) {
++    # one git output into the step folder (never overwritten)
++    $Path = "$Folder\$Name"
++    Assert-NewOutput @($Path)
++    $Lines = @(& git -C $Worktree @GitArguments)
++    if ($LASTEXITCODE -ne 0) { Stop-Step 3 "git $($GitArguments -join ' ') failed" }
++    [IO.File]::WriteAllText($Path, ($Lines -join "`n") + "`n")
++    $StepState.Codes["evidence:$Name"] = (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLower()
++}
++
++switch ($Part) {
++    'scope' {
++        Write-GitText 'diff_name_only.txt' @('diff', '--name-only', $ImplCommit, $RunCommit)
++        Write-GitText 'diff_stat.txt' @('diff', '--stat', $ImplCommit, $RunCommit)
++        Write-GitText 'diff_03_src.txt' @('diff', $ImplCommit, $RunCommit, '--', '03_src')
++        Write-GitText 'diff_run_v5.txt' @('diff', $ImplCommit, $RunCommit, '--', "$Coupled/run_v5.py")
++    }
++    't8' {
++        $Rows = "$Folder\ed7_t8.jsonl"
++        $RunEstimatesS['ed7_t8'] = [int](44 * 143 / $Workers)
++        $Run = Start-Ed7Run -Label 'ed7_t8' -MaskHex $MaskHex -TaskType 'run_v5_ed7_t8' -Workers $Workers `
++            -Outputs @($Rows) -Arguments @("$Coupled/run_v5.py", 'ed7_t8', '--p3-hash-source', $V0Rows,
++                '--out', $Rows, '--workers', "$Workers", '--mask', $MaskHex)
++        Wait-Runs @($Run)
++    }
++    'cases' {
++        $Rows = "$Folder\ed7_cases.jsonl"
++        $CaseWorkers = [Math]::Min(10, $Workers)
++        $RunEstimatesS['ed7_cases'] = [int](10 * 143 / $CaseWorkers)
++        $Run = Start-Ed7Run -Label 'ed7_cases' -MaskHex $MaskHex -TaskType 'run_v5_ed7_cases' -Workers $CaseWorkers `
++            -Outputs @($Rows) -Arguments @("$Coupled/run_v5.py", 'ed7_cases', '--out', $Rows,
++                '--workers', "$CaseWorkers", '--mask', $MaskHex)
++        Wait-Runs @($Run)
++    }
++    'probe' {
++        $Rows = "$Folder\ed7_probe_a2.jsonl"
++        $RunEstimatesS['probe'] = [int](114 * 143 / $Workers)
++        # ed7_probe.py writes its own identity record and progress file (no -WrapOutput)
++        $Run = Start-Ed7Run -Label 'probe' -MaskHex $MaskHex -TaskType 'jp3_ed7_probe' -Workers $Workers `
++            -Outputs @($Rows) -Arguments @("$Coupled/ed7_probe.py", '--out', $Rows, '--arms', 'a2',
++                '--part', 'all', '--workers', "$Workers", '--mask', $MaskHex)
++        Wait-Runs @($Run)
++    }
++}
++if ($Part -ne 'scope') { Invoke-IdentityCheck }
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step6_confirm_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step6_confirm_ed7.ps1
+new file mode 100644
+index 00000000..efe944d2
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step6_confirm_ed7.ps1
+@@ -0,0 +1,30 @@
++#Requires -Version 7
++# Step confirm (spec v7 4 step 6, 6.3; unseen rows): 195 lines at the run commit
++#   confirm_g1        run_v5 ed7_keys on the sealed confirm_g1_grid171.json (171 lines, VBM;
++#                     sha256 684054ab..., also asserted by run_v5.ED7_KEY_FILE_SHA256)
++#   ed7_probe_d       ed7_probe.py --part d (D 12 keys x VBM, VBMslow x arm a2 = 24 lines, the D
++#                     key file asserted by ed7_probe.D_KEY_FILE_SHA256; user decision 7)
++# then the identity check. No judge: the reproduction of the D 24 lines against the fixed table
++# and the G1 judgement are made at the judge commit T (5.2). Placement from
++# compute-scheduler-expert (-MaskHex, -Workers).
++param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mandatory)][int]$Workers)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Folder = Initialize-Ed7Step 'confirm' $Attempt @('impl_scope', 'l1ref', 'impl_t8', 'impl_cases', 'impl_probe') @('g1_keys')
++$G1Rows = "$Folder\confirm_g1.jsonl"
++$DRows = "$Folder\ed7_probe_d.jsonl"
++$RunEstimatesS['confirm_g1'] = [int](171 * 143 / $Workers)
++$RunEstimatesS['ed7_probe_d'] = [int](24 * 143 / [Math]::Min(24, $Workers))
++# 143 CPU-s per run_v5 line: probe 1bd405c8, 320 lines, 45,649 CPU-s (assumption for these rows)
++$Run = Start-Ed7Run -Label 'confirm_g1' -MaskHex $MaskHex -TaskType 'run_v5_ed7_confirm_g1' -Workers $Workers `
++    -Outputs @($G1Rows, $DRows) -Arguments @("$Coupled/run_v5.py", 'ed7_keys', '--jobs-file', (Get-InputPath 'g1_keys'),
++        '--out', $G1Rows, '--workers', "$Workers", '--mask', $MaskHex)
++Wait-Runs @($Run)
++$DWorkers = [Math]::Min(24, $Workers)
++$Run = Start-Ed7Run -Label 'ed7_probe_d' -MaskHex $MaskHex -TaskType 'jp3_ed7_probe_d' -Workers $DWorkers `
++    -Outputs @($DRows) -Arguments @("$Coupled/ed7_probe.py", '--part', 'd', '--out', $DRows,
++        '--workers', "$DWorkers", '--mask', $MaskHex)
++Wait-Runs @($Run)
++Invoke-IdentityCheck
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step7_j9main_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step7_j9main_ed7.ps1
+new file mode 100644
+index 00000000..d2116394
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step7_j9main_ed7.ps1
+@@ -0,0 +1,17 @@
++#Requires -Version 7
++# Step j9main (spec v7 4 step 7, 6.2): run_v5 batch ed7_j9_main (VBM 100 + LSM1 .. LSM4 x 72 =
++# 388 lines), then the identity check. No judge (j9main --edition 7 of the judge commit T,
++# 5.2 item 11). Needs the confirm step. Placement from compute-scheduler-expert.
++param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mandatory)][int]$Workers)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Folder = Initialize-Ed7Step 'j9main' $Attempt @('impl_scope', 'l1ref', 'impl_probe', 'confirm')
++$Rows = "$Folder\j9_main.jsonl"
++$RunEstimatesS['j9_main'] = [int](388 * 143 / $Workers)
++$Run = Start-Ed7Run -Label 'j9_main' -MaskHex $MaskHex -TaskType 'run_v5_ed7_j9_main' -Workers $Workers `
++    -Outputs @($Rows) -Arguments @("$Coupled/run_v5.py", 'ed7_j9_main', '--out', $Rows,
++        '--workers', "$Workers", '--mask', $MaskHex)
++Wait-Runs @($Run)
++Invoke-IdentityCheck
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step8_sens_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step8_sens_ed7.ps1
+new file mode 100644
+index 00000000..bb36d516
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step8_sens_ed7.ps1
+@@ -0,0 +1,19 @@
++#Requires -Version 7
++# Step sens (spec v7 4 step 8, 6.2): run_v5 batch ed7_keys on the sealed sens_keys_ed7.json
++# (460 lines: the four judged settings VBMslow / VBMfast / VBMc005 / VBMc04 and the six record
++# settings; sha256 be930b75..., also asserted by run_v5.ED7_KEY_FILE_SHA256), then the identity
++# check. No judge (the sensitivity judge of the judge commit T, 5.2). Needs the j9main step.
++# Placement from compute-scheduler-expert.
++param([int]$Attempt = 1, [Parameter(Mandatory)][string]$MaskHex, [Parameter(Mandatory)][int]$Workers)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Folder = Initialize-Ed7Step 'sens' $Attempt @('impl_scope', 'l1ref', 'impl_probe', 'confirm', 'j9main') @('sens_keys')
++$Rows = "$Folder\sens.jsonl"
++$RunEstimatesS['sens'] = [int](460 * 143 / $Workers)
++$Run = Start-Ed7Run -Label 'sens' -MaskHex $MaskHex -TaskType 'run_v5_ed7_sens' -Workers $Workers `
++    -Outputs @($Rows) -Arguments @("$Coupled/run_v5.py", 'ed7_keys', '--jobs-file', (Get-InputPath 'sens_keys'),
++        '--out', $Rows, '--workers', "$Workers", '--mask', $MaskHex)
++Wait-Runs @($Run)
++Invoke-IdentityCheck
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step9_dg3_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step9_dg3_ed7.ps1
+new file mode 100644
+index 00000000..63a5f893
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step9_dg3_ed7.ps1
+@@ -0,0 +1,27 @@
++#Requires -Version 7
++# Step dg3 (spec v7 4 step 9, 6.4 = edition 6 6.5): T-JR-12a VBM against VBM0 on the Dg-3 135
++# keys of the stored H-6 (VBM 0x00FF and VBM0 0xFF00, 4 workers each, the edition 6 placement;
++# R79_ROD_MODEL=plant_truth, each run's T4h folder beside it), then the identity check. No judge:
++# dg3-judge / t12 (with the L1a runs of the l1ref step) belong to the judge commit T (5.2).
++# Needs the sens step.
++param([int]$Attempt = 1)
++. "$PSScriptRoot\common_ed7.ps1"
++
++$Folder = Initialize-Ed7Step 'dg3' $Attempt @('impl_scope', 'l1ref', 'impl_probe', 'confirm', 'j9main', 'sens')
++$Placement = [ordered]@{ VBM = @('0x00FF', 4); VBM0 = @('0xFF00', 4) }
++$RunEstimatesS['dg3_VBM'] = 2250; $RunEstimatesS['dg3_VBM0'] = 2250
++# wall [s] of the edition 5 Dg-3 runs at 4 workers (dg3_a1 VBJ 2,205 s)
++$Runs = @()
++foreach ($Setting in $Placement.Keys) {
++    $MaskHex, $RunWorkers = $Placement[$Setting]
++    $Out = "$Folder\dg3_$Setting.json"
++    $T4h = "$Folder\${Setting}_t4h"
++    $Runs += Start-Ed7Run -Label "dg3_$Setting" -MaskHex $MaskHex -WrapOutput $Out -Outputs @($Out, $T4h) `
++        -Environment (Get-R79Environment $Setting $T4h) -TaskType 'jp3_ed7_dg3_r79' -Workers $RunWorkers `
++        -Arguments @("$Coupled/las_t3_dg3.py", $Worktree, 'run', $Out, '--levels', 'L2,L3', '--keys-file', $H6Keys,
++            '--workers', "$RunWorkers", '--affinity', $MaskHex)
++}
++Wait-Runs $Runs
++Invoke-IdentityCheck
++
++Complete-Step
+diff --git a/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step_l1ref_ed7.ps1 b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step_l1ref_ed7.ps1
+new file mode 100644
+index 00000000..12d6771f
+--- /dev/null
++++ b/06_analysis/02_control/j_p3_cause/prelaunch_j9/run_steps_ed7/step_l1ref_ed7.ps1
+@@ -0,0 +1,37 @@
++#Requires -Version 7
++# Step l1ref (spec v7 6.4 = edition 6 6.4 / 6.5 and its erratum 1 1-2 carried over): the four L1
++# reference runs at the run commit, before any 12a / 12b output (never made again afterwards):
++#   L1_VBM0 / L1_VBM    12b grade references, the 167 keys of ed5_inputs\l1_keys_12b.txt
++#   L1a_VBM0 / L1a_VBM  T-JR-12a references, the 102 keys of l1_keys_d3c6c57e.json
++# R79_ROD_MODEL=plant_truth, 4 workers each on one P quarter (the edition 6 placement). No tool:
++# the 12a / 12b judges of the judge commit T read these files. Exit 0 done, 2 a later output
++# exists, 3 a failed run or a broken precondition.
++param([int]$Attempt = 1)
++. "$PSScriptRoot\common_ed7.ps1"
++
++if (Test-Path -LiteralPath $RunsRoot) {
++    $Later = @(Get-ChildItem -LiteralPath $RunsRoot -Directory | Where-Object { $_.Name -like '12b_*' -or $_.Name -like 'dg3_*' })
++    if ($Later.Count) { Exit-Ed7 2 "$($Later[0].FullName) exists (the L1 references are made before any 12a / 12b output)" }
++}
++$Folder = Initialize-Ed7Step 'l1ref' $Attempt @('impl_scope') @('l1_keys_12b', 'l1_keys_12a')
++$Masks = @('0x000F', '0x00F0', '0x0F00', '0xF000')
++$Estimates = @{ L1_VBM0 = 2250; L1_VBM = 2250; L1a_VBM0 = 1450; L1a_VBM = 1450 }
++# wall [s] of the edition 5 L1 runs at 4 workers (l1ref_a1 2,198 / 2,233 s; dg3_a1 l1 1,324 / 1,423 s)
++
++$Runs = @()
++$Index = 0
++foreach ($Label in $L1Labels.Keys) {
++    $Setting, $KeysName = $L1Labels[$Label]
++    $Out = "$Folder\$Label.json"
++    $T4h = "$Folder\${Label}_t4h"
++    $RunEstimatesS[$Label] = $Estimates[$Label]
++    $Runs += Start-Ed7Run -Label $Label -MaskHex $Masks[$Index] -WrapOutput $Out -Outputs @($Out, $T4h) `
++        -Environment (Get-R79Environment $Setting $T4h) -TaskType 'jp3_ed7_l1ref' -Workers 4 `
++        -Arguments @("$Coupled/las_t3_dg3.py", $Worktree, 'run', $Out, '--levels', 'L1', '--keys-file',
++            (Get-InputPath $KeysName), '--workers', '4', '--affinity', $Masks[$Index])
++    $Index++
++}
++Wait-Runs $Runs
++Invoke-IdentityCheck
++
++Complete-Step
+-- 
+2.55.0.windows.5
+

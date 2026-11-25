@@ -1,0 +1,32 @@
+436.9 ed7 judge commit T: edition 7 judge tools on run commit C (spec v7 rev 6 5.2, erratum 1)
+
+Judge tools only (04_scripts) and tests (05_tests); 03_src and every run path module of C
+(05_tests/data/ed7_run_path_modules_8a2a52ce.json, 155 files: run_v5 / ed7_probe / las_t3_dg3 /
+jp3_run_identity / jp3_12b_plan / jp3_ed6_suite with their static import closure, run_steps_ed7
+and the dot-sourced ps1) are byte-identical to C (P7-11). Edition 6 paths unchanged.
+
+- jp3_ed7_judge.py (new): j9main --edition 7 (VBM / LSM -> VB / LS, J7 6.1 in both tables,
+  J-P3 200 rows with rev 7 + ③ rev 7 condition), sens (sens_keys_ed7 460, unit verdicts in the
+  fixed table form, the 40 probe units = judged four AND probe_seen compared both ways with the
+  fixed table before any count -> setting_defect, cluster rule k = 4 over the four with the
+  fixed failures added, record six reported only), confirm (D 24 reproduction first, then G1
+  171 with int(run_id), Q7-C4 retract WARN, D VBM fixed failures added to k = 3, FAULT, J-P3
+  171 + condition, U832 record table), t8 (P7-1 VBM / VBM0), cases (P7-2), hash-match with the
+  rev 7 spec_edition, probe-repro (P7-3 / P7-9: hashes against 6bfb2560 a2, fixed table
+  recomputed both ways). Pinned judge-only inputs and --step-done run step record checks
+  (erratum 1 1-2 condition 2), code identity in every report, records: LEVEL deadlock signature
+  (6.2) and the Q7-D3 twist records per line.
+- jp3_12b_judge_ed7.py (new): VBKM0 / VBKM, edition 7 identity, edition 6 P-pred, decision file
+  form of erratum 1 1-3 (status needs_b4 / decided, blocks subset of b1 / b2 / b4, ed7_record
+  with input sha256, seed 20261125, n_par, n_rep, k_allow, HEAD / is_clean), --spec, --step-done.
+- jp3_tjr_judge_ed7.py (new): T-JR-12a bundle VBM / VBM0 (dg3-judge, t12, l1-hash-record),
+  rev 7 record identity, --step-done.
+- jp3_ed7_rules.py: grid_run_index (user decision 8), fixed table sum, two-way reproduction
+  comparison, G1 count, Q7-D3 twist records.
+- jp3_rev7_condition.py: report code_identity (audit M-6).
+- ed7_condition3_adoption.py: arms 3 and 4 both qualifying resolved by spec 4.2 (item 9).
+- tests: test_ed7_judge.py (new; producer-form end to end on the b46bdf8f reproduction lines from
+  another working folder), test_ed7_adoption.py (both-qualify rule).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01HrRftsyRhHD9o9vHBAp68j

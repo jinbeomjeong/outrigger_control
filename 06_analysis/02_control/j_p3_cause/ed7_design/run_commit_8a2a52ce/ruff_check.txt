@@ -1,0 +1,34 @@
+E501 Line too long (104 > 100)
+   --> 04_scripts\04_hydraulic\coupled\run_v5.py:927:101
+    |
+925 |     parser.add_argument("--list", action="store_true")
+926 |     parser.add_argument("--group", default=None, choices=("H-R-X",),
+927 |                         help="d1 only: the D8x H-R-X rows (d8x_rules.md 3 R-c) instead of the d1 batch")
+    |                                                                                                     ^^^^
+928 |     parser.add_argument("--k1", default=None, choices=("off", "on"),
+929 |                         help="with --group H-R-X: R4c30 order gate of this arm, required")
+    |
+
+E501 Line too long (102 > 100)
+   --> 04_scripts\04_hydraulic\coupled\run_v5.py:932:101
+    |
+930 |     parser.add_argument("--out", type=Path, default=None,
+931 |                         help="output jsonl (default v5/<batch>.jsonl; with --group H-R-X "
+932 |                              "d8x/rc/hrx_<k1>.jsonl); a run identity <stem>.identity.json is written "
+    |                                                                                                     ^^
+933 |                              "next to it at the start and the end, the T4h records go to "
+934 |                              "<stem>_t4h/ (436.8 rules 4.3)")
+    |
+
+E501 Line too long (105 > 100)
+   --> 04_scripts\04_hydraulic\coupled\run_v5.py:936:101
+    |
+934 |                              "<stem>_t4h/ (436.8 rules 4.3)")
+935 |     parser.add_argument("--settings", default=None,
+936 |                         help="comma list: run only the jobs of these settings (e.g. VB,LS1,LS2,LS3,LS4)")
+    |                                                                                                     ^^^^^
+937 |     parser.add_argument("--one-per-setting", action="store_true",
+938 |                         help="G-S dry run (436.8 rules 11.2): the first job of each setting only")
+    |
+
+Found 3 errors.

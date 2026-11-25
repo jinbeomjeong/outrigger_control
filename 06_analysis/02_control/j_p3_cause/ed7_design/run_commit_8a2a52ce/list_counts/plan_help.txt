@@ -1,0 +1,28 @@
+usage: jp3_12b_plan.py [-h] --noise NOISE --scan-root SCAN_ROOT --out-dir
+                       OUT_DIR --scan-extra SCAN_EXTRA [--edition {5,6,7}]
+                       [--scan-exclude SCAN_EXCLUDE]
+                       [--scan-keys-file SCAN_KEYS_FILE]
+                       [--scan-required SCAN_REQUIRED]
+
+436.9 edition 5 X-11 (``jp3_remedy_spec_v5.md`` 6.3.1, 6.3.10): T-JR-12b
+selection and plans.
+
+options:
+  -h, --help            show this help message and exit
+  --noise NOISE
+  --scan-root SCAN_ROOT
+  --out-dir OUT_DIR
+  --scan-extra SCAN_EXTRA
+                        a test or probe source root (repeatable; at least the
+                        run worktree's 05_tests, erratum 1 audit E-1)
+  --edition {5,6,7}
+  --scan-exclude SCAN_EXCLUDE
+                        glob relative to --scan-root: files left out, never
+                        opened
+  --scan-keys-file SCAN_KEYS_FILE
+                        a plain key list added to the scan (one key per line)
+  --scan-required SCAN_REQUIRED
+                        edition 7: a root scanned in every file kind, .npz
+                        included (the edition 6 run outputs, records B / C /
+                        D, the edition 7 outputs and probe; repeatable, at
+                        least one)

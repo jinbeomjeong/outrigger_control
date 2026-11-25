@@ -1,0 +1,21 @@
+diff --git a/03_src/outrigger_sim/control/extend_start_bound.py b/03_src/outrigger_sim/control/extend_start_bound.py
+index 69ac16d7..e86d6f85 100644
+--- a/03_src/outrigger_sim/control/extend_start_bound.py
++++ b/03_src/outrigger_sim/control/extend_start_bound.py
+@@ -194,11 +194,11 @@ JP3_SPEC_EDITION = "8be9de22"
+ JP3_SPEC_EDITION_V5 = "fe6f5844"
+ """First 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec_v5.md`` (edition 5): the
+ ``spec_edition`` of every revision 6 record."""
+-JP3_SPEC_EDITION_V7 = "85ce6e2a"
+-"""Edition 7: the first 8 hex digits of the sha256 of ``jp3_remedy_spec_v7.md``. PROVISIONAL:
+-the draft revision 2 (85ce6e2a...) the implementation was written against; the seal replaces
+-it by the sealed file's digits (spec 3.5 ``spec_edition``: "채울 곳: 봉인 뒤"), which changes
+-no command (an identity value)."""
++JP3_SPEC_EDITION_V7 = "10902ffd"
++"""Edition 7: the first 8 hex digits of the sha256 of the sealed ``jp3_remedy_spec_v7.md``
++(revision 6, 10902ffd..., master e241638d; spec 5.1): the ``spec_edition`` of every revision 7
++record. The draft value 85ce6e2a (revision 2) of the probe lines is replaced at the run commit;
++an identity value, no command changes."""
+ JP3_SPEC_EDITION_OF_REVISION = {EXTEND_HOLD_REVISION: JP3_SPEC_EDITION,
+                                 EXTEND_WITNESS_REVISION: JP3_SPEC_EDITION_V5,
+                                 EXTEND_SEED_FIX_REVISION: JP3_SPEC_EDITION_V7}

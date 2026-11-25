@@ -1,0 +1,60 @@
+episodes 194, lines with entries 78/114
+periods: count    194.00 | mean      17.43 | std       23.96 | min        1.00 | 25%        3.00 | 50%        8.00 | 75%       16.75 | max       85.00
+dur_s: count    194.00 | mean       1.74 | std        2.40 | min        0.10 | 25%        0.30 | 50%        0.80 | 75%        1.67 | max        8.50
+max_abs_twist_kN: count    194.00 | mean      78.77 | std       58.29 | min       15.07 | 25%       26.45 | 50%       68.82 | 75%       98.77 | max      192.51
+t_since_event_s: count    194.00 | mean       2.23 | std        1.98 | min        0.02 | 25%        0.73 | 50%        1.45 | 75%        3.35 | max        6.60
+prev_phase counts: prev_phase | level    152 | ready     42
+end_phase counts: end_phase | level    194
+open episodes (end None): 0
+episodes starting before event (t_since_event<0): 0; after event: 194; no event: 0
+t_since_event bins: t_since_event_s | (-1000000000.0, 0.0]     0 | (0.0, 1.0]              90 | (1.0, 3.0]              50 | (3.0, 10.0]             54 | (10.0, 30.0]             0 | (30.0, 1000000000.0]     0
+per plant entries: plant | L        27 | M        45 | Mc005    27 | Mc04     27 | Mfast    25 | Mslow    43
+per plant lines with entries: plant | L         9 | M        21 | Mc005     9 | Mc04      9 | Mfast     9 | Mslow    21
+level_done inside a |D|>15 episode: 0
+relax done rows:
+        key  plant   t_s   path  twist_load_kN
+49  S5_e0.0  Mslow  76.7  relax       4.785721
+non-ready lines:
+                     key plant final_phase  tol_entries  shots                                            level_seg_ends
+66  R12_top-FR-Fs0-o0.05  Mc04       probe            1      0  [[30.3, 0.04, 0.04, "done"], [94.3, 0.11, 0.11, "done"]]
+top 12 episodes by max|D|:
+                                     key  plant  start_t_s  end_t_s  periods  max_abs_twist_kN  t_since_event_s prev_phase end_phase  D_true_at_start_kN
+47                             R15_o0.05  Mslow       26.8     28.1       13        192.508700            0.050      level     level          -88.530465
+125                            R15_o0.05   Mc04       26.8     28.1       13        192.493675            0.050      level     level          -88.524211
+85                             R15_o0.05  Mc005       26.8     28.1       13        192.492489            0.050      level     level          -88.522601
+153                            R15_o0.05      L       26.8     28.1       13        192.492489            0.050      level     level          -88.522601
+2                              R15_o0.05      M       26.8     28.1       13        192.492489            0.050      level     level          -88.522601
+72                             R15_o0.05  Mfast       26.8     28.1       13        192.470403            0.050      level     level          -88.506545
+163       R12_top-RR-Fs0-o0.0-FS24-level      M       26.8     28.2       14        189.712988            0.100      level     level          -52.625206
+176       R12_top-RR-Fs0-o0.0-FS24-level  Mslow       26.8     28.2       14        189.710980            0.100      level     level          -52.633888
+168      R12_top-RR-Fs0-o0.0-RE1bF-level      M       26.8     28.5       17        188.374904            0.100      level     level          -99.589231
+188      R12_top-RR-Fs0-o0.0-RE1bF-level  Mslow       26.8     28.5       17        188.371267            0.100      level     level          -99.585546
+181  R12_bottom-FL-Fs2-o0.075-FS24-level  Mslow       27.1     28.5       14        187.673331            0.125      level     level          -95.147653
+159  R12_bottom-FL-Fs2-o0.075-FS24-level      M       27.1     28.5       14        187.670758            0.125      level     level          -95.147472
+longest 12 episodes:
+                      key  plant  start_t_s  end_t_s  periods  max_abs_twist_kN  t_since_event_s prev_phase end_phase
+23    R12_top-RL-Fs0-o0.0      M       54.2     62.7       85         99.719403             0.90      ready     level
+131   R12_top-RL-Fs0-o0.0      L       54.2     62.7       85         99.720726             0.90      ready     level
+79    R12_top-RL-Fs0-o0.0  Mc005       54.2     62.6       84         98.871667             0.90      ready     level
+24    R12_top-RL-Fs0-o0.0  Mslow       55.9     64.2       83         96.397441             0.90      ready     level
+105   R12_top-RL-Fs0-o0.0   Mc04       54.0     62.2       82         96.182972             0.90      ready     level
+52    R12_top-RL-Fs0-o0.0  Mfast       51.8     59.6       78         93.676915             0.90      ready     level
+77    R12_top-FR-Fs0-o0.0  Mc005       54.2     61.8       76         88.272250             0.90      ready     level
+26    R12_top-FR-Fs0-o0.0      M       54.2     61.8       76         88.066907             0.90      ready     level
+132   R12_top-FR-Fs0-o0.0      L       54.2     61.8       76         88.068181             0.90      ready     level
+27    R12_top-FR-Fs0-o0.0  Mslow       55.9     63.4       75         88.749227             0.90      ready     level
+133  R12_top-FR-Fs0-o0.05      L       54.3     61.8       75         87.910204             0.95      ready     level
+78   R12_top-FR-Fs0-o0.05  Mc005       54.3     61.8       75         88.108620             0.95      ready     level
+shots per plant: plant | L        10 | M        10 | Mc005     8 | Mc04      9 | Mfast     8 | Mslow    12
+grew per plant:        sum  count | plant             | L        5     10 | M        5     10 | Mc005    4      8 | Mc04     4      9 | Mfast    3      8 | Mslow    8     12
+VBM5 shots 47, grew 24 -> 0.511
+shot sign reduces D by geometry (rank-1 sign): shot_reduces_D_by_sign | True     55 | False     2
+consistency twist_grew vs (not reduces): 30/57
+dD_rec / rank1 pred: count    57.000 | mean        NaN | std         NaN | min        -inf | 25%      -0.034 | 50%       0.307 | 75%       0.640 | max         inf
+|D_before| kN: count    57.00 | mean      2.81 | std       2.01 | min       0.13 | 25%       0.47 | 50%       3.12 | 75%       3.98 | max       7.57
+|D_after| kN: count    57.00 | mean      2.05 | std       1.70 | min       0.06 | 25%       0.59 | 50%       1.45 | 75%       3.15 | max       7.42
+grew shots |D_after| kN: count    29.00 | mean      2.67 | std       1.86 | min       0.39 | 25%       0.96 | 50%       2.45 | 75%       4.10 | max       7.42
+stroke change mm: count    57.000 | mean     -0.789 | std       0.900 | min      -2.819 | 25%      -1.009 | 50%      -0.818 | 75%      -0.633 | max       1.052
+end reasons: end | moved    37 | sign     20
+t_since_event of shots: count    30.00 | mean     19.97 | std       2.17 | min      17.95 | 25%      18.15 | 50%      19.03 | 75%      23.05 | max      23.10
+minF before/win kN min: 62.63 / 57.89; max drop 5.27

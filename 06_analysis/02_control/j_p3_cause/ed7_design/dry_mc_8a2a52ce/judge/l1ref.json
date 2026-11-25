@@ -1,0 +1,439 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 6.1; erratum 1 1-9 conditions 1 .. 3 (l1ref)",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\judge\\stand_in_runs.done",
+   "step_done_sha256": "7e5067be34488a6a06592e5299df3adf936ed5bb87dd690b0497d63129bee7fc",
+   "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM.json",
+     "sha256": "a17753e132a72a0ce1cbc0cee6ea2d2f32addebf3b58c7711917e608d1576165"
+    },
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM0.json",
+     "sha256": "7733c13f274f9aa991b77de1e43c9fe8218c607ac90f6962726889ab5707f72f"
+    }
+   ]
+  }
+ },
+ "runs": {
+  "L1_VBM": {
+   "setting": "VBM",
+   "lines": 1,
+   "identity_problems": [],
+   "controller_tags": {
+    "final_C4G2_P3X_LAS_K1_LSB": 1
+   },
+   "identity_sources": {
+    "controller_tag": {
+     "row": {
+      "8bca37a17f32ec5e": {
+       "count": 1,
+       "value": "final_C4G2_P3X_LAS_K1_LSB"
+      }
+     },
+     "meta": {
+      "8bca37a17f32ec5e": {
+       "count": 1,
+       "value": "final_C4G2_P3X_LAS_K1_LSB"
+      }
+     }
+    },
+    "hydraulic_options.p1_patch": {
+     "row": {
+      "9a06cbde1af7eb6f": {
+       "count": 1,
+       "value": {
+        "line_scale": 1.0,
+        "dead_scale": 1.0,
+        "bulk_modulus_Pa": 1000000000.0,
+        "k_ext_form": "b0"
+       }
+      }
+     },
+     "meta": {
+      "9a06cbde1af7eb6f": {
+       "count": 1,
+       "value": {
+        "line_scale": 1.0,
+        "dead_scale": 1.0,
+        "bulk_modulus_Pa": 1000000000.0,
+        "k_ext_form": "b0"
+       }
+      }
+     }
+    },
+    "lsb_components": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "c58c148a9231e603": {
+       "count": 1,
+       "value": [
+        "A_i",
+        "A_ib",
+        "A_ii",
+        "B3"
+       ]
+      }
+     }
+    },
+    "lsb_settings": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "fe4b4a0711f329e5": {
+       "count": 1,
+       "value": {
+        "components": [
+         "A_i",
+         "A_ib",
+         "A_ii",
+         "B3"
+        ],
+        "hold_speed_ratio": 0.01,
+        "a1_trigger_periods": 10,
+        "a1_trigger_travel_m": 0.0005,
+        "a1_motion_ratio": 0.25,
+        "a1_witness_m": 0.0004,
+        "a1_step_m_s": 0.0002,
+        "a1_cap_m_s": 0.00105,
+        "a1_cap_periods": 50,
+        "a2_extend": false,
+        "a2_lock_periods": 2,
+        "a2_fill_factor": 1.0,
+        "a2_fill_speed_ratio": 1.0,
+        "a2_hold_after_fill_s": null,
+        "a2_psi": 6.0,
+        "a2_bulk_modulus_Pa": 1600000000.0,
+        "a2_line_volume_m3": 0.0001425,
+        "a2_hose_bulk_modulus_Pa": 1000000000.0,
+        "a2_crack_Pa": 100000.0,
+        "a2_tank_Pa": 200000.0,
+        "a2_rod_dead_length_m": 0.02,
+        "a2_head_dead_length_m": 0.05,
+        "a2_friction_band_N": [
+         16000.0,
+         16000.0,
+         13328.0,
+         13328.0
+        ],
+        "a2_reading_margin_Pa": 400000.0,
+        "a2_void_estimate": true,
+        "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+        "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+        "a2_retract_witness_m": 0.001,
+        "a2_rod_witness_min_Pa": 300000.0,
+        "a2_rod_witness_ratio": 0.5,
+        "a2_extend_witness_m": 0.001,
+        "a2_on_fallback_legs": false,
+        "b1_exit_margin_N": 2000.0,
+        "b1_exit_samples": 3,
+        "b2_required_samples": null,
+        "b3_end_periods": 2,
+        "b3_travel_cap_fraction": 0.065,
+        "b3_max_periods": null,
+        "b3_protect_margin_N": 35000.0,
+        "b3_protect_predictive": false,
+        "b3_predictive_margin_N": 5000.0,
+        "b3_twist_stiffness_N_m": 21700000.0,
+        "ib_blind_periods": 25,
+        "ib_still_m": 0.0001,
+        "ib_reference_skip_reads": 2,
+        "ib_condition": "with_twist",
+        "ib_twist_limit_N": null,
+        "ib_latch_reversals": 2,
+        "ib_protect": true,
+        "ib_protect_travel_m": 0.00085,
+        "ib_protect_stiffness_N_m": 41000000.0,
+        "ib_protect_margin_N": 5000.0,
+        "ib_record_after_s": 1.0
+       }
+      }
+     }
+    },
+    "probe_d6_settings": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "35a2cf8aeaad2d49": {
+       "count": 1,
+       "value": {
+        "witness": true,
+        "witness_m": 0.0003,
+        "not_opened_warn_rounds": 2,
+        "retract_position_target": true,
+        "retract_slow_speed_m_s": 0.001,
+        "retract_extra_margin_m": 0.0002,
+        "head_reading_margin_Pa": 900000.0
+       }
+      }
+     }
+    },
+    "extend_bound_check": {
+     "row": {
+      "90936802dc11a2cc": {
+       "count": 1,
+       "value": {
+        "rule_revision": 7,
+        "spec_edition": "10902ffd",
+        "carry_end_rule": "inherit_when_gate_shut",
+        "retract_start_rule": "with_tracker",
+        "identity_consistent": true
+       }
+      }
+     },
+     "meta": {
+      "90936802dc11a2cc": {
+       "count": 1,
+       "value": {
+        "rule_revision": 7,
+        "spec_edition": "10902ffd",
+        "carry_end_rule": "inherit_when_gate_shut",
+        "retract_start_rule": "with_tracker",
+        "identity_consistent": true
+       }
+      }
+     }
+    },
+    "run_extend_start_revision": {
+     "row": {
+      "7902699be42c8a8e": {
+       "count": 1,
+       "value": 7
+      }
+     },
+     "meta": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     }
+    }
+   }
+  },
+  "L1_VBM0": {
+   "setting": "VBM0",
+   "lines": 1,
+   "identity_problems": [],
+   "controller_tags": {
+    "final_C4G2_LAS_K1_LSB": 1
+   },
+   "identity_sources": {
+    "controller_tag": {
+     "row": {
+      "6d13b4aeb6ee7ae3": {
+       "count": 1,
+       "value": "final_C4G2_LAS_K1_LSB"
+      }
+     },
+     "meta": {
+      "6d13b4aeb6ee7ae3": {
+       "count": 1,
+       "value": "final_C4G2_LAS_K1_LSB"
+      }
+     }
+    },
+    "hydraulic_options.p1_patch": {
+     "row": {
+      "9a06cbde1af7eb6f": {
+       "count": 1,
+       "value": {
+        "line_scale": 1.0,
+        "dead_scale": 1.0,
+        "bulk_modulus_Pa": 1000000000.0,
+        "k_ext_form": "b0"
+       }
+      }
+     },
+     "meta": {
+      "9a06cbde1af7eb6f": {
+       "count": 1,
+       "value": {
+        "line_scale": 1.0,
+        "dead_scale": 1.0,
+        "bulk_modulus_Pa": 1000000000.0,
+        "k_ext_form": "b0"
+       }
+      }
+     }
+    },
+    "lsb_components": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "c58c148a9231e603": {
+       "count": 1,
+       "value": [
+        "A_i",
+        "A_ib",
+        "A_ii",
+        "B3"
+       ]
+      }
+     }
+    },
+    "lsb_settings": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "fe4b4a0711f329e5": {
+       "count": 1,
+       "value": {
+        "components": [
+         "A_i",
+         "A_ib",
+         "A_ii",
+         "B3"
+        ],
+        "hold_speed_ratio": 0.01,
+        "a1_trigger_periods": 10,
+        "a1_trigger_travel_m": 0.0005,
+        "a1_motion_ratio": 0.25,
+        "a1_witness_m": 0.0004,
+        "a1_step_m_s": 0.0002,
+        "a1_cap_m_s": 0.00105,
+        "a1_cap_periods": 50,
+        "a2_extend": false,
+        "a2_lock_periods": 2,
+        "a2_fill_factor": 1.0,
+        "a2_fill_speed_ratio": 1.0,
+        "a2_hold_after_fill_s": null,
+        "a2_psi": 6.0,
+        "a2_bulk_modulus_Pa": 1600000000.0,
+        "a2_line_volume_m3": 0.0001425,
+        "a2_hose_bulk_modulus_Pa": 1000000000.0,
+        "a2_crack_Pa": 100000.0,
+        "a2_tank_Pa": 200000.0,
+        "a2_rod_dead_length_m": 0.02,
+        "a2_head_dead_length_m": 0.05,
+        "a2_friction_band_N": [
+         16000.0,
+         16000.0,
+         13328.0,
+         13328.0
+        ],
+        "a2_reading_margin_Pa": 400000.0,
+        "a2_void_estimate": true,
+        "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+        "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+        "a2_retract_witness_m": 0.001,
+        "a2_rod_witness_min_Pa": 300000.0,
+        "a2_rod_witness_ratio": 0.5,
+        "a2_extend_witness_m": 0.001,
+        "a2_on_fallback_legs": false,
+        "b1_exit_margin_N": 2000.0,
+        "b1_exit_samples": 3,
+        "b2_required_samples": null,
+        "b3_end_periods": 2,
+        "b3_travel_cap_fraction": 0.065,
+        "b3_max_periods": null,
+        "b3_protect_margin_N": 35000.0,
+        "b3_protect_predictive": false,
+        "b3_predictive_margin_N": 5000.0,
+        "b3_twist_stiffness_N_m": 21700000.0,
+        "ib_blind_periods": 25,
+        "ib_still_m": 0.0001,
+        "ib_reference_skip_reads": 2,
+        "ib_condition": "with_twist",
+        "ib_twist_limit_N": null,
+        "ib_latch_reversals": 2,
+        "ib_protect": true,
+        "ib_protect_travel_m": 0.00085,
+        "ib_protect_stiffness_N_m": 41000000.0,
+        "ib_protect_margin_N": 5000.0,
+        "ib_record_after_s": 1.0
+       }
+      }
+     }
+    },
+    "probe_d6_settings": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "35a2cf8aeaad2d49": {
+       "count": 1,
+       "value": {
+        "witness": true,
+        "witness_m": 0.0003,
+        "not_opened_warn_rounds": 2,
+        "retract_position_target": true,
+        "retract_slow_speed_m_s": 0.001,
+        "retract_extra_margin_m": 0.0002,
+        "head_reading_margin_Pa": 900000.0
+       }
+      }
+     }
+    },
+    "extend_bound_check": {
+     "row": {
+      "74234e98afe7498f": {
+       "count": 1,
+       "value": null
+      }
+     },
+     "meta": {
+      "74234e98afe7498f": {
+       "count": 1,
+       "value": null
+      }
+     }
+    },
+    "run_extend_start_revision": {
+     "row": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     },
+     "meta": {
+      "43d9bcb84acb9bbb": {
+       "count": 1,
+       "value": "<absent>"
+      }
+     }
+    }
+   }
+  }
+ },
+ "status_basis": {
+  "failures": [],
+  "not_judgeable": [
+   "L1 run L1a_VBM0 not given",
+   "L1 run L1a_VBM not given"
+  ],
+  "setting_defects": []
+ },
+ "status": "not_judgeable",
+ "command": "l1ref",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+  "head": "60ebb4a412c0b9eb20323efa536a35a0caa8c30b",
+  "is_clean": true
+ }
+}

@@ -1,0 +1,14 @@
+0x000F       P      expected P      ok
+0xFFFF       P      expected P      ok
+0x00FF       P      expected P      ok
+0x0FFF0000   E      expected E      ok
+0x00010000   E      expected E      ok
+0x0FFFFFFF   mixed  expected mixed  ok
+0x0001FFFF   mixed  expected mixed  ok
+0x00018000   mixed  expected mixed  ok
+FFFF         P      expected P      ok
+bad 0x0          problem='mask '0x0' selects no processor' threw=True ok
+bad 0x10000000   problem='mask '0x10000000' names a processor above 27' threw=True ok
+bad zz           problem='mask 'zz' is not a hex number' threw=True ok
+bad              problem='mask '' is not a hex number' threw=True ok
+edition 6 helper on 0x0FFFFFFF: P (edition 7: mixed)

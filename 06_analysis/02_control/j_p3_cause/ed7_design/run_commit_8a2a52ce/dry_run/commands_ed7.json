@@ -1,0 +1,664 @@
+{
+  "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "exit_codes": {
+    "step5_impl_ed7.ps1 -Part scope": 0,
+    "step_l1ref_ed7.ps1": 0,
+    "step5_impl_ed7.ps1 -Part t8 -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step5_impl_ed7.ps1 -Part cases -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step5_impl_ed7.ps1 -Part probe -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step6_confirm_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step7_j9main_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step8_sens_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20": 0,
+    "step9_dg3_ed7.ps1": 0,
+    "step10a_plan_ed7.ps1": 0,
+    "step10b_vbkm0_ed7.ps1 -Phase base": 0,
+    "step10b_vbkm0_ed7.ps1 -Phase b4 -Decision C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\decision_needs_b4.json -DecisionSha256 a67d2fe0287633ea14b5ebecee16865a476cabd0a511c715c67054a0fd3fe9ea": 0,
+    "step10c_vbkm_ed7.ps1 -Decision C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\decision_decided.json -DecisionSha256 5978e4ba4fd3482ba0bb05f695dc3ee20c5444c623a46456cfc66bc9308390bf": 0,
+    "refusal: step6_confirm_ed7.ps1 -MaskHex 0x0FFFFFFF -Workers 20": 2
+  },
+  "steps": [
+    {
+      "step": "12b_plan",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:08 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "input:c92_keys": "06_analysis/02_control/j_p3_cause/prelaunch_j9/ed5_inputs/x11/c92_keys.txt",
+        "input:c93_keys": "06_analysis/02_control/j_p3_cause/prelaunch_j9/ed5_inputs/x11/c93_keys.txt",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "tool:plan": "dry",
+        "selection_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\selection.json",
+        "selection_sha256": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:08 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "plan",
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_plan.py --noise C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json --scan-root C:\\workspace\\outrigger_control\\06_analysis --scan-extra C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\05_tests --scan-extra C:\\workspace\\outrigger_control\\05_tests --out-dir C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11 --edition 7 --scan-keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c92_keys.txt --scan-keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\x11\\c93_keys.txt --scan-required C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405 --scan-required C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560 --scan-required C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b46bdf8f --scan-required C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_vbkm0",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:09 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "selection_sha256": "dry",
+        "core:VBKM0_b1": "P",
+        "core:VBKM0_b2": "P",
+        "run:VBKM0_b1": "dry",
+        "run:VBKM0_b2": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:09 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "VBKM0_b1",
+          "mask": "0x000F",
+          "environment": {
+            "LAS_T3_DG3_LAS": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1\\VBKM0_b1_t4h",
+            "R72_PATH": "per_leg",
+            "LAS_T3_DG3_K1": "on",
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_V5_SETTING": "VBKM0",
+            "LAS_T3_DG3_P3": "on",
+            "R79_ROD_FAULT_PLAN": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b1_plan.json"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1\\VBKM0_b1.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1\\VBKM0_b1.json --levels L2 --keys-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b1_keys.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        },
+        {
+          "label": "VBKM0_b2",
+          "mask": "0x00F0",
+          "environment": {
+            "LAS_T3_DG3_LAS": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1\\VBKM0_b2_t4h",
+            "R72_PATH": "per_leg",
+            "LAS_T3_DG3_K1": "on",
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_V5_SETTING": "VBKM0",
+            "LAS_T3_DG3_P3": "on",
+            "R79_ROD_FAULT_PLAN": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b2_plan.json"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1\\VBKM0_b2.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_a1\\VBKM0_b2.json --levels L2 --keys-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b2_keys.txt --workers 4 --affinity 0x00F0",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_vbkm0_b4",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_b4_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:11 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "decision_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\decision_needs_b4.json",
+        "decision_sha256": "a67d2fe0287633ea14b5ebecee16865a476cabd0a511c715c67054a0fd3fe9ea",
+        "decision_status": "needs_b4",
+        "selection_sha256": "dry",
+        "core:VBKM0_b4": "P",
+        "run:VBKM0_b4": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:11 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "VBKM0_b4",
+          "mask": "0x000F",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_b4_a1\\VBKM0_b4_t4h",
+            "LAS_T3_DG3_K1": "on",
+            "R79_V5_SETTING": "VBKM0",
+            "LAS_T3_DG3_LAS": "on",
+            "R79_ROD_FAULT_PLAN": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b4_plan.json",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_b4_a1\\VBKM0_b4.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm0_b4_a1\\VBKM0_b4.json --levels L2 --keys-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b4_keys.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "12b_vbkm",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:12 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "decision_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\decision_decided.json",
+        "decision_sha256": "5978e4ba4fd3482ba0bb05f695dc3ee20c5444c623a46456cfc66bc9308390bf",
+        "decision_status": "decided",
+        "decision_blocks": "b1,b2,b4",
+        "selection_sha256": "dry",
+        "core:VBKM_b1": "P",
+        "core:VBKM_b2": "P",
+        "core:VBKM_b4": "P",
+        "run:VBKM_b1": "dry",
+        "run:VBKM_b2": "dry",
+        "run:VBKM_b4": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:12 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "VBKM_b1",
+          "mask": "0x000F",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBKM",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b1_t4h",
+            "R79_ROD_FAULT_PLAN": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b1_plan.json",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b1.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b1.json --levels L2 --keys-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b1_keys.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        },
+        {
+          "label": "VBKM_b2",
+          "mask": "0x00F0",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBKM",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b2_t4h",
+            "R79_ROD_FAULT_PLAN": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b2_plan.json",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b2.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b2.json --levels L2 --keys-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b2_keys.txt --workers 4 --affinity 0x00F0",
+          "dry_run": true
+        },
+        {
+          "label": "VBKM_b4",
+          "mask": "0x0F00",
+          "environment": {
+            "LAS_T3_DG3_P3": "on",
+            "R79_V5_SETTING": "VBKM",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_K1": "on",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b4_t4h",
+            "R79_ROD_FAULT_PLAN": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b4_plan.json",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b4.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_vbkm_a1\\VBKM_b4.json --levels L2 --keys-file C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\12b_plan_a1\\x11\\b4_keys.txt --workers 4 --affinity 0x0F00",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "confirm",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\confirm_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:02 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "input:g1_keys": "06_analysis/02_control/j_p3_cause/ed7_design/keys_seal_b46bdf8f/confirm_g1_grid171.json",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:confirm_g1": "mixed",
+        "run:confirm_g1": "dry",
+        "core:ed7_probe_d": "mixed",
+        "run:ed7_probe_d": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:03 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "confirm_g1",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\confirm_g1_grid171.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\confirm_a1\\confirm_g1.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        },
+        {
+          "label": "ed7_probe_d",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/ed7_probe.py --part d --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\confirm_a1\\ed7_probe_d.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "dg3",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:06 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:dg3_VBM": "P",
+        "core:dg3_VBM0": "P",
+        "run:dg3_VBM": "dry",
+        "run:dg3_VBM0": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:07 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "dg3_VBM",
+          "mask": "0x00FF",
+          "environment": {
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1\\VBM_t4h",
+            "R79_V5_SETTING": "VBM",
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_LAS": "on",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_K1": "on",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1\\dg3_VBM.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1\\dg3_VBM.json --levels L2,L3 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --workers 4 --affinity 0x00FF",
+          "dry_run": true
+        },
+        {
+          "label": "dg3_VBM0",
+          "mask": "0xFF00",
+          "environment": {
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1\\VBM0_t4h",
+            "R79_V5_SETTING": "VBM0",
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_LAS": "on",
+            "R79_ROD_MODEL": "plant_truth",
+            "LAS_T3_DG3_K1": "on",
+            "R72_PATH": "per_leg"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1\\dg3_VBM0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\dg3_a1\\dg3_VBM0.json --levels L2,L3 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json --workers 4 --affinity 0xFF00",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "impl_cases",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_cases_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:00 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:ed7_cases": "mixed",
+        "run:ed7_cases": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:00 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "ed7_cases",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 10,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_cases --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_cases_a1\\ed7_cases.jsonl --workers 10 --mask 0x0FFFFFFF",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "impl_probe",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_probe_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:01 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:probe": "mixed",
+        "run:probe": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:01 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "probe",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/ed7_probe.py --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_probe_a1\\ed7_probe_a2.jsonl --arms a2 --part all --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "impl_scope",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_scope_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:33:55 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "evidence:diff_name_only.txt": "56a367dc16243094613c10ce497718e8471fd71d89748d3032527dbcb235633b",
+        "evidence:diff_stat.txt": "2d6fee493027c766ba96edddf94cfff3645f4982bf09ce8c4df52d3f2351ab08",
+        "evidence:diff_03_src.txt": "4136eae6a38d4c5be67e24d5344111809aa0d74be65a9ae27ccb5ab5044a14c1",
+        "evidence:diff_run_v5.txt": "5a5ec4a587e45400edf30f50f7f972f5ba4265a296f42c26ee0c96ca440a339b",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:33:56 +09:00"
+        }
+      },
+      "commands": []
+    },
+    {
+      "step": "impl_t8",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_t8_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:33:58 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:ed7_t8": "mixed",
+        "run:ed7_t8": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:33:58 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "ed7_t8",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_t8 --p3-hash-source C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\impl_t8_a1\\ed7_t8.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "j9main",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\j9main_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:04 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:j9_main": "mixed",
+        "run:j9_main": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:04 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "j9_main",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_j9_main --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\j9main_a1\\j9_main.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "l1ref",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:33:57 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "input:l1_keys_12b": "06_analysis/02_control/j_p3_cause/prelaunch_j9/ed5_inputs/l1_keys_12b.txt",
+        "input:l1_keys_12a": "06_analysis/02_control/j_p3_cause/prelaunch_j9/l1_keys_d3c6c57e.json",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:L1_VBM0": "P",
+        "core:L1_VBM": "P",
+        "core:L1a_VBM0": "P",
+        "core:L1a_VBM": "P",
+        "run:L1_VBM0": "dry",
+        "run:L1_VBM": "dry",
+        "run:L1a_VBM0": "dry",
+        "run:L1a_VBM": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:33:57 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "L1_VBM0",
+          "mask": "0x000F",
+          "environment": {
+            "LAS_T3_DG3_K1": "on",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1_VBM0_t4h",
+            "R79_V5_SETTING": "VBM0",
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1_VBM0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1_VBM0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\l1_keys_12b.txt --workers 4 --affinity 0x000F",
+          "dry_run": true
+        },
+        {
+          "label": "L1_VBM",
+          "mask": "0x00F0",
+          "environment": {
+            "LAS_T3_DG3_K1": "on",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1_VBM_t4h",
+            "R79_V5_SETTING": "VBM",
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1_VBM.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1_VBM.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\ed5_inputs\\l1_keys_12b.txt --workers 4 --affinity 0x00F0",
+          "dry_run": true
+        },
+        {
+          "label": "L1a_VBM0",
+          "mask": "0x0F00",
+          "environment": {
+            "LAS_T3_DG3_K1": "on",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1a_VBM0_t4h",
+            "R79_V5_SETTING": "VBM0",
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1a_VBM0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1a_VBM0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --workers 4 --affinity 0x0F00",
+          "dry_run": true
+        },
+        {
+          "label": "L1a_VBM",
+          "mask": "0xF000",
+          "environment": {
+            "LAS_T3_DG3_K1": "on",
+            "R72_PATH": "per_leg",
+            "R79_ROD_MODEL": "plant_truth",
+            "R79_T4H_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1a_VBM_t4h",
+            "R79_V5_SETTING": "VBM",
+            "LAS_T3_DG3_P3": "on",
+            "LAS_T3_DG3_LAS": "on"
+          },
+          "workers": 4,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1a_VBM.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\l1ref_a1\\L1a_VBM.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\l1_keys_d3c6c57e.json --workers 4 --affinity 0xF000",
+          "dry_run": true
+        }
+      ]
+    },
+    {
+      "step": "sens",
+      "folder": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\sens_a1",
+      "exit_code": 0,
+      "codes": {
+        "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+        "identity_start": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:05 +09:00"
+        },
+        "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+        "input:sens_keys": "06_analysis/02_control/j_p3_cause/ed7_design/keys_seal_b46bdf8f/sens_keys_ed7.json",
+        "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+        "core:sens": "mixed",
+        "run:sens": "dry",
+        "identity_check": "dry",
+        "identity_end": {
+          "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "is_clean": true,
+          "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+          "time": "2026-11-25 16:34:05 +09:00"
+        }
+      },
+      "commands": [
+        {
+          "label": "sens",
+          "mask": "0x0FFFFFFF",
+          "environment": {},
+          "workers": 20,
+          "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_keys --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\sens_keys_ed7.json --out C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7runC\\dry1\\j9_runs\\8a2a52ce\\sens_a1\\sens.jsonl --workers 20 --mask 0x0FFFFFFF",
+          "dry_run": true
+        }
+      ]
+    }
+  ]
+}

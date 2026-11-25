@@ -1,0 +1,29 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 5.2 / P7-11 (T scope)",
+ "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+ "judge_commit": "c91065b7236fac16b8649be571e6379807609317",
+ "commits_after_run_commit": [
+  "c91065b7236fac16b8649be571e6379807609317"
+ ],
+ "is_descendant": true,
+ "changed_paths": [
+  "04_scripts/04_hydraulic/coupled/ed7_condition3_adoption.py",
+  "04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed7.py",
+  "04_scripts/04_hydraulic/coupled/jp3_ed7_judge.py",
+  "04_scripts/04_hydraulic/coupled/jp3_ed7_rules.py",
+  "04_scripts/04_hydraulic/coupled/jp3_rev7_condition.py",
+  "04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed7.py",
+  "05_tests/data/ed7_run_path_modules_8a2a52ce.json",
+  "05_tests/unit/test_ed7_adoption.py",
+  "05_tests/unit/test_ed7_judge.py"
+ ],
+ "outside_allowed_prefixes": [],
+ "src_tree_same": true,
+ "run_path_files": 155,
+ "run_path_files_changed": [],
+ "checkout": {
+  "head": "c91065b7236fac16b8649be571e6379807609317",
+  "is_clean": true
+ },
+ "status": "in_scope"
+}

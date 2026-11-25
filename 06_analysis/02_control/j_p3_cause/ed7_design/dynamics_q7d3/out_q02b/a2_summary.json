@@ -1,0 +1,38 @@
+{
+  "lines": 114,
+  "shots": 57,
+  "shots_grew": 29,
+  "shots_by_branch": {
+    "twist_gt_15_possible": 0,
+    "attitude_or_clearance": 57
+  },
+  "shots_crossed_15": 0,
+  "shots_absD_after_gt15": 0,
+  "dD_abs_kN": {
+    "median": 4.035491103792825,
+    "max": 7.788147730026846
+  },
+  "absD_before_kN": {
+    "median": 3.123328997166682,
+    "max": 7.573531014808505
+  },
+  "absD_after_kN_max": 7.42344953010614,
+  "minF_win_kN_min": 57.89168205102678,
+  "minF_drop_kN_max": 5.272202495166383,
+  "four_leg_total": 0,
+  "tol_entries_total": 194,
+  "tol_lines": 78,
+  "tol_periods_total": 3382,
+  "level_done": {
+    "strict": 161,
+    "relax": 1
+  },
+  "level_done_relax_absD_kN_max": 4.78572077587375,
+  "level_done_absD_kN_max": 4.78572077587375,
+  "final_phase_counts": {
+    "ready": 113,
+    "probe": 1
+  },
+  "episodes": 194,
+  "episodes_with_near_shot": 0
+}

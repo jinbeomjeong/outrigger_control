@@ -1,0 +1,180 @@
+{
+  "tool": "key_presence",
+  "keys_required": [
+    "controller_tag",
+    "hydraulic_options.p1_patch",
+    "hydraulics_record.extend_bound_check",
+    "run_extend_start_revision",
+    "head_only_declared",
+    "t4h_file"
+  ],
+  "where": [
+    "job.setting=VBM0"
+  ],
+  "list_key": null,
+  "allow_null": false,
+  "keys": [
+    {
+      "key": "controller_tag",
+      "present": 1,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulic_options.p1_patch",
+      "present": 1,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulics_record.extend_bound_check",
+      "present": 0,
+      "absent": 0,
+      "null": 1,
+      "missing": 1,
+      "first_missing": [
+        "ed7_t8.jsonl 줄 1"
+      ]
+    },
+    {
+      "key": "run_extend_start_revision",
+      "present": 0,
+      "absent": 1,
+      "null": 0,
+      "missing": 1,
+      "first_missing": [
+        "ed7_t8.jsonl 줄 1"
+      ]
+    },
+    {
+      "key": "head_only_declared",
+      "present": 1,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "t4h_file",
+      "present": 1,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    }
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\ed7_t8.jsonl",
+      "container_key": null,
+      "rows": 2,
+      "selected": 1,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "controller_tag",
+          "present": 1,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.p1_patch",
+          "present": 1,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulics_record.extend_bound_check",
+          "present": 0,
+          "absent": 0,
+          "null": 1,
+          "missing": 1,
+          "first_missing": [
+            "줄 1"
+          ]
+        },
+        {
+          "key": "run_extend_start_revision",
+          "present": 0,
+          "absent": 1,
+          "null": 0,
+          "missing": 1,
+          "first_missing": [
+            "줄 1"
+          ]
+        },
+        {
+          "key": "head_only_declared",
+          "present": 1,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 1,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    }
+  ],
+  "npz": {
+    "glob": "*.npz",
+    "dirs": [],
+    "arrays_required": [],
+    "arrays": [],
+    "files": []
+  },
+  "summary": {
+    "tool": "key_presence",
+    "command": "scan",
+    "files": 1,
+    "rows": 2,
+    "selected": 1,
+    "keys": 6,
+    "keys_complete": 4,
+    "keys_incomplete": 2,
+    "npz_files": 0,
+    "arrays": 0,
+    "arrays_incomplete": 0,
+    "error": 2,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "key_absent": 1,
+      "key_null": 1
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "key_null",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\ed7_t8.jsonl",
+      "line": 0,
+      "message": "`hydraulics_record.extend_bound_check` 값이 null 1/1줄 (null을 있음으로 보려면 --allow-null)",
+      "target": "hydraulics_record.extend_bound_check"
+    },
+    {
+      "severity": "error",
+      "category": "key_absent",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\ed7_t8.jsonl",
+      "line": 0,
+      "message": "`run_extend_start_revision` 없음 1/1줄 (처음: 줄 1)",
+      "target": "run_extend_start_revision"
+    }
+  ]
+}

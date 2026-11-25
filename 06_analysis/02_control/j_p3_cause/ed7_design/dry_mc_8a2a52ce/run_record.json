@@ -1,0 +1,69 @@
+{
+  "purpose": "edition 7 M-c dry check (record only, never a judged input)",
+  "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs",
+  "dry_key": "L1|s0|g8|38|main|flat|top|4.0|FR|raised|200.0",
+  "exit_code": 0,
+  "commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "codes": {
+    "identity_start": {
+      "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+      "is_clean": true,
+      "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+      "time": "2026-11-26 00:09:11 +09:00"
+    },
+    "identity_end": {
+      "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+      "is_clean": true,
+      "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+      "time": "2026-11-26 00:10:46 +09:00"
+    },
+    "runs": {
+      "L1_VBM": 0,
+      "L1_VBM0": 0,
+      "ed7_t8": 0
+    }
+  },
+  "cleared_variables": [],
+  "numba_cache_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\numba_cache",
+  "commands": [
+    {
+      "label": "L1_VBM",
+      "mask": "0x0001",
+      "environment": {
+        "R79_V5_SETTING": "VBM",
+        "LAS_T3_DG3_P3": "on",
+        "R79_ROD_MODEL": "plant_truth",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_LAS": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM_t4h",
+        "R72_PATH": "per_leg"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\l1_keys_dry.txt --workers 1 --affinity 0x0001",
+      "pid": 124112
+    },
+    {
+      "label": "L1_VBM0",
+      "mask": "0x0004",
+      "environment": {
+        "R79_V5_SETTING": "VBM0",
+        "LAS_T3_DG3_P3": "on",
+        "R79_ROD_MODEL": "plant_truth",
+        "LAS_T3_DG3_K1": "on",
+        "LAS_T3_DG3_LAS": "on",
+        "R79_T4H_DIR": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM0_t4h",
+        "R72_PATH": "per_leg"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/jp3_run_identity.py wrap C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM0.json -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/las_t3_dg3.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\L1_VBM0.json --levels L1 --keys-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\l1_keys_dry.txt --workers 1 --affinity 0x0004",
+      "pid": 124204
+    },
+    {
+      "label": "ed7_t8",
+      "mask": "0x0050",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_t8 --p3-hash-source C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl --one-per-setting --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\runs\\ed7_t8.jsonl --workers 2 --mask 0x0050",
+      "pid": 44236
+    }
+  ]
+}

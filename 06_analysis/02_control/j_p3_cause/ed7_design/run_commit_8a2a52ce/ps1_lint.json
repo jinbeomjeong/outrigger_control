@@ -1,0 +1,168 @@
+{
+  "tool": "ps1_lint",
+  "placeholder_patterns": [
+    "(?<![$\\w])[A-Z][A-Z0-9_]*_FULL_HASH(?!\\w)",
+    "(?<![$\\w])\\{[A-Z][A-Z0-9_]*\\}",
+    "<[A-Z][A-Z0-9_]*>",
+    "(?<!\\w)(?:PLACEHOLDER|FILL_?ME|TO_?BE_?FILLED)(?!\\w)"
+  ],
+  "allow": [
+    "ED7_RUN_COMMIT",
+    "ED7_RUN_WORKTREE"
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\check_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 31,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\common_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 369,
+      "functions": 18,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\core_kind_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 33,
+      "functions": 2,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\dry_run_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 99,
+      "functions": 1,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\full_suite_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 77,
+      "functions": 1,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step10a_plan_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 30,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step10b_vbkm0_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 64,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step10c_vbkm_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 71,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step5_impl_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 84,
+      "functions": 1,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step6_confirm_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 35,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step7_j9main_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 19,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step8_sens_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 19,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step9_dg3_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 36,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7\\step_l1ref_ed7.ps1",
+      "parser": "ast",
+      "parse_errors": 0,
+      "variables": 48,
+      "functions": 0,
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    }
+  ],
+  "summary": {
+    "tool": "ps1_lint",
+    "command": "lint",
+    "files": 14,
+    "parsers": [
+      "ast"
+    ],
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}

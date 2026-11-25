@@ -1,0 +1,115 @@
+{
+ "rule": "audit_prerun_Tprime_erratum1_20261125.md M-c (dry check, record only)",
+ "status": "pass",
+ "findings": [],
+ "run_record_exit_code": 0,
+ "key_presence": {
+  "r79_VBM": {
+   "codes": {
+    "keys": 0,
+    "npz": 0
+   },
+   "absent": [],
+   "unexpected_absent": [],
+   "empty_reports": [],
+   "counts": {
+    "kp_r79_VBM_keys.json": {
+     "rows": 1
+    },
+    "kp_r79_VBM_npz.json": {
+     "npz_files": 1
+    }
+   }
+  },
+  "r79_VBM0": {
+   "codes": {
+    "keys": 1,
+    "npz": 1
+   },
+   "absent": [
+    "hydraulics_record.extend_bound_check",
+    "jp3_class",
+    "jp3_p_tr_Pa",
+    "jp3_plant_state",
+    "jp3_t_s",
+    "jp3_used_bound_Pa",
+    "run_extend_start_revision"
+   ],
+   "unexpected_absent": [],
+   "empty_reports": [],
+   "counts": {
+    "kp_r79_VBM0_keys.json": {
+     "rows": 1
+    },
+    "kp_r79_VBM0_npz.json": {
+     "npz_files": 1
+    }
+   }
+  },
+  "t8_VBM": {
+   "codes": {
+    "keys": 1,
+    "npz": 0
+   },
+   "absent": [
+    "run_extend_start_revision"
+   ],
+   "unexpected_absent": [],
+   "empty_reports": [],
+   "counts": {
+    "kp_t8_VBM_keys.json": {
+     "rows": 1
+    },
+    "kp_t8_VBM_npz.json": {
+     "npz_files": 1
+    }
+   }
+  },
+  "t8_VBM0": {
+   "codes": {
+    "keys": 1,
+    "npz": 1
+   },
+   "absent": [
+    "hydraulics_record.extend_bound_check",
+    "jp3_class",
+    "jp3_p_tr_Pa",
+    "jp3_plant_state",
+    "jp3_t_s",
+    "jp3_used_bound_Pa",
+    "run_extend_start_revision"
+   ],
+   "unexpected_absent": [],
+   "empty_reports": [],
+   "counts": {
+    "kp_t8_VBM0_keys.json": {
+     "rows": 1
+    },
+    "kp_t8_VBM0_npz.json": {
+     "npz_files": 1
+    }
+   }
+  }
+ },
+ "judge": {
+  "codes": {
+   "l1ref": 2,
+   "t8": 2
+  },
+  "l1ref_status": "not_judgeable",
+  "l1ref_runs": [
+   "L1_VBM",
+   "L1_VBM0"
+  ],
+  "l1ref_identity_problems": {
+   "L1_VBM": 0,
+   "L1_VBM0": 0
+  },
+  "t8_status": "not_judgeable",
+  "t8_identity_defects": 0,
+  "t8_judged_pairs": 1,
+  "t8_fallback_pairs_record": 0,
+  "t8_reason": null
+ },
+ "stand_in_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\dry_mc_8a2a52ce\\judge\\stand_in_runs.done"
+}

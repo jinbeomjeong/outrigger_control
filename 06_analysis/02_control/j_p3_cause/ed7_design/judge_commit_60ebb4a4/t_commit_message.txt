@@ -1,0 +1,23 @@
+436.9 ed7 judge commit T': audit B-1 .. B-3, M-1, R-10, R-11 (user decisions 13 .. 15)
+
+Child of T c91065b7 (descendant of run commit C 8a2a52ce); judge tools of 04_scripts and
+05_tests only, 03_src and the 155 run path modules of C byte-identical (P7-11).
+
+- B-1 (decision 13): sens J-P3 = the key file's judged lines (the four judged settings; the
+  sealed expected 104); the six record settings' J-P3 and condition are records
+  (J-P3_record_settings). A judged flag that is not the line's setting is a setting defect.
+- B-2 (decision 14): T-JR-12a t12 --bundle VBM (new side) and 12b judge (VBKM 6.3.7 (4) lines)
+  add the ③ rev 7 condition of their judged-grade lines: a breach fails, a missing T4h condition
+  array is a setting defect, no condition read (r79 lines carry no event time) is "해당 없음",
+  a record, the rev 6 J-P3 judged as before (12a / 12b only).
+- B-3 (erratum 1 1-8 / 1-9): t8 checks the 6.1 identity of every VBM / VBM0 line and records the
+  tags found; new sub-command l1ref checks the four L1 reference runs line by line from the line
+  or its T4h meta (an item absent from both is a setting defect) and records the values per
+  source.
+- R-10: a ③-on line without a ③ record (not declared head-only) is an identity problem.
+- M-1 (decision 15): probe-repro P7-3 hash and P7-9 row differences are setting defects.
+- R-11: the 12a / 12b step record check covers the T4h folders.
+- M-5: --out help / docstrings: outside the judge worktree and the run step folders.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01HrRftsyRhHD9o9vHBAp68j

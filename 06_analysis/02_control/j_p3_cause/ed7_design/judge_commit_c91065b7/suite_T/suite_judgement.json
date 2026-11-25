@@ -1,0 +1,36 @@
+{
+ "rule": "jp3_remedy_spec_v6_erratum2.md 2-2",
+ "core_patterns": [
+  "test_jp3_*",
+  "test_ed6_*",
+  "test_run_v5*",
+  "test_lock_start_b*",
+  "test_c2*",
+  "test_extend_start_bound*"
+ ],
+ "inputs": {
+  "junit": {
+   "path": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\python-ed7T\\suite_T\\junit.xml",
+   "sha256": "220b9da895881eda19358bde82f30f4920d348f04da9c1fa3023b9b7a1af32c7"
+  },
+  "baseline_list": {
+   "path": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed7-suite\\base\\existing_failures.txt",
+   "sha256": "571f42a1074b7d506be885d9c3a68f22b2661821e011e83d751bc6ac06ecabeb"
+  }
+ },
+ "tests": 2650,
+ "counts": {
+  "passed": 2650,
+  "failed": 0,
+  "error": 0,
+  "skipped": 0,
+  "xfailed": 0
+ },
+ "findings": {
+  "new_failure": [],
+  "core_not_passing": [],
+  "new_skip_or_xfail": []
+ },
+ "existing_failures_record": [],
+ "status": "pass"
+}

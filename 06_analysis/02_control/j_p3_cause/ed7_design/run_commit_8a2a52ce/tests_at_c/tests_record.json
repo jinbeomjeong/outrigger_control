@@ -1,0 +1,30 @@
+{
+  "interpreter": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+  "start": {
+    "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+    "is_clean": true,
+    "time": "2026-11-25 16:35:56 +09:00"
+  },
+  "runs": {
+    "units": {
+      "files": [
+        "05_tests/unit/test_ed7_run_commit.py",
+        "05_tests/unit/test_ed7_units.py"
+      ],
+      "exit_code": 0,
+      "summary": "68 passed in 1.10s"
+    },
+    "harness": {
+      "files": [
+        "05_tests/unit/test_ed7_harness.py"
+      ],
+      "exit_code": 0,
+      "summary": "7 passed in 140.03s (0:02:20)"
+    }
+  },
+  "end": {
+    "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+    "is_clean": true,
+    "time": "2026-11-25 16:38:18 +09:00"
+  }
+}

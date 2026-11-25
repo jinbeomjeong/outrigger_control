@@ -1,0 +1,21 @@
+lines 78; stretch>=20: 5, >=14: 24
+top rows:
+                                line   t_s  t_since_event_s leg  stretch   D_kN  u_mm_s  u_over_hold  reduces_absD  legs_stretch_ge10  all4_twist_sign_pattern                        u_all_mm_s
+38   R12_top-FR-Fs0-o0.05_P7-Mc04-a2  61.2             8.05  RL       22  15.52  0.2165        1.035          True                  1                    False  [0.5378, 1.3246, 0.2165, 0.5177]
+27   R12_top-FR-Fs0-o0.0_P7-Mc005-a2  61.2             7.90  RL       21  18.06  0.2173        1.038          True                  1                    False  [0.5407, 1.3689, 0.2173, 0.4986]
+36    R12_top-FR-Fs0-o0.0_P7-Mc04-a2  61.1             8.00  RL       21  15.85  0.2149        1.027          True                  1                    False  [0.5411, 1.3393, 0.2149, 0.5169]
+11  R12_top-FR-Fs0-o0.05_P7-Mslow-a2  62.7             7.65  RL       20  20.59  0.2183        1.043          True                  1                    False  [0.4903, 1.4643, 0.2183, 0.4715]
+9    R12_top-FR-Fs0-o0.0_P7-Mslow-a2  62.7             7.70  RL       20  20.02  0.2195        1.049          True                  1                    False  [0.4938, 1.4467, 0.2195, 0.4712]
+5        R12_top-RL-Fs0-o0.0_P7-M-a2  62.6             9.30  FR       19  15.08  0.0929        0.444          True                  1                    False  [0.3677, 0.0929, 0.9928, 0.3579]
+45       R12_top-RL-Fs0-o0.0_P7-L-a2  62.6             9.30  FR       19  15.08  0.0929        0.444          True                  1                    False  [0.3677, 0.0929, 0.9928, 0.3579]
+8        R12_top-FR-Fs0-o0.0_P7-M-a2  60.9             7.60  RL       18  20.38  0.2091        0.999          True                  1                    False  [0.5421, 1.4547, 0.2091, 0.4963]
+46       R12_top-FR-Fs0-o0.0_P7-L-a2  60.9             7.60  RL       18  20.38  0.2091        0.999          True                  1                    False  [0.5421, 1.4547, 0.2091, 0.4963]
+29   R12_top-RL-Fs0-o0.0_P7-Mc005-a2  62.5             9.20  FR       18  15.45  0.0947        0.453          True                  1                    False  [0.3714, 0.0947, 1.0058, 0.3588]
+28  R12_top-FR-Fs0-o0.05_P7-Mc005-a2  60.9             7.55  RL       17  21.05  0.2119        1.013          True                  1                    False  [0.5417, 1.4754, 0.2119, 0.4993]
+22  R12_top-FR-Fs0-o0.05_P7-Mfast-a2  58.7             7.75  RL       17  15.01  0.2022        0.966          True                  1                    False   [0.5905, 1.4332, 0.2022, 0.585]
+7       R12_top-FR-Fs0-o0.05_P7-M-a2  60.9             7.55  RL       17  21.06  0.2125        1.015          True                  1                    False  [0.5409, 1.4767, 0.2125, 0.5017]
+47      R12_top-FR-Fs0-o0.05_P7-L-a2  60.9             7.55  RL       17  21.06  0.2125        1.015          True                  1                    False  [0.5409, 1.4767, 0.2125, 0.5017]
+6    R12_top-RL-Fs0-o0.0_P7-Mslow-a2  64.1             9.10  FR       16  15.09  0.0880        0.421          True                  1                    False    [0.347, 0.088, 1.0168, 0.3322]
+reduces_absD among stretch>=14: reduces_absD | True    24
+all4 twist pattern among stretch>=14: all4_twist_sign_pattern | False    24
+t_since_event among stretch>=14: count    24.00 | mean      7.88 | std       0.72 | min       7.10 | 25%       7.48 | 50%       7.60 | 75%       8.01 | max       9.30
