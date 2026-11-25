@@ -387,10 +387,13 @@ ED7_KEYS_BATCH = "ed7_keys"
 """Edition 7 key-file rows (``--jobs-file``, sealed edition 7 key files of
 :data:`ED7_KEY_FILE_SHA256`; refused until the seal fills it)."""
 ED7_BATCHES = (ED7_J9_MAIN_BATCH, ED7_T8_BATCH, ED7_CASES_BATCH, ED7_KEYS_BATCH)
-ED7_KEY_FILE_SHA256: dict[str, str] = {}
-"""Edition 7 sealed key files (name -> sha256). Empty until the seal (spec 4 step 3: the
-confirmation keys and the G1 extraction seed are fixed at the seal); ``ed7_keys`` refuses
-every file before that."""
+ED7_KEY_FILE_SHA256: dict[str, str] = {
+    "sens_keys_ed7.json": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+    "confirm_g1_grid171.json": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
+}
+"""Edition 7 sealed key files (name -> sha256; spec v7 5.1, revision 6: the files of
+``ed7_design/keys_seal_b46bdf8f/``, made at b46bdf8f clean). ``ed7_keys`` refuses any other
+file."""
 ED7_KEYS_FILE: list[Path | None] = [None]
 
 
