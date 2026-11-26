@@ -1,0 +1,24 @@
+scan | src | setting | lines | any_start | diag_handover (H-1/H-2) | short_gap<=0.5s (H-3 lower bound)
+ed6 | ed6_confa | VBLc005 | 54 | 12 | 0 | 0
+ed6 | ed6_confa | VBLc04 | 54 | 13 | 0 | 0
+ed6 | ed6_confa | VBLv05 | 54 | 0 | 0 | 0
+ed6 | ed6_confa | VBLv15 | 54 | 14 | 0 | 0
+ed6 | ed6_grid | VBL | 192 | 183 | 63 | 59
+ed7 | g1 | VBM | 171 | 149 | 42 | 37
+ed7 | j9main | LSM1 | 72 | 27 | 6 | 6
+ed7 | j9main | LSM2 | 72 | 27 | 6 | 6
+ed7 | j9main | LSM3 | 72 | 26 | 6 | 6
+ed7 | j9main | LSM4 | 72 | 26 | 6 | 6
+ed7 | j9main | VBM | 100 | 27 | 6 | 6
+ed7 | probe_d | P7-M-a2 | 12 | 12 | 1 | 0
+ed7 | probe_d | P7-Mslow-a2 | 12 | 12 | 1 | 0
+ed7 | sens | VBMb069 | 46 | 23 | 6 | 6
+ed7 | sens | VBMb16 | 46 | 17 | 6 | 6
+ed7 | sens | VBMc005 | 46 | 19 | 6 | 6
+ed7 | sens | VBMc04 | 46 | 18 | 6 | 6
+ed7 | sens | VBMd05 | 46 | 19 | 6 | 6
+ed7 | sens | VBMd15 | 46 | 20 | 6 | 6
+ed7 | sens | VBMfast | 46 | 14 | 6 | 6
+ed7 | sens | VBMh05 | 46 | 20 | 6 | 6
+ed7 | sens | VBMh15 | 46 | 21 | 6 | 6
+ed7 | sens | VBMslow | 46 | 20 | 6 | 6

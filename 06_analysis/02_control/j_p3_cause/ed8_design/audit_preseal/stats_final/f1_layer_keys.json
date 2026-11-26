@@ -1,0 +1,113 @@
+{
+ "grid": {
+  "runs": 768,
+  "job_keys": {
+   "key": 80,
+   "level": 80,
+   "fs_kN": 80,
+   "timing": 80,
+   "leg": 80,
+   "base": 80,
+   "runs": 80,
+   "prefix_commands_sha256": 80,
+   "branch_t_s": 80,
+   "branch_phase": 80,
+   "wall_s": 80,
+   "candidate": 80
+  },
+  "run_keys": {
+   "run_after_s": 768,
+   "lifts": 768,
+   "pair": 768,
+   "pair_union_s": 768,
+   "pair_last_touch_s": 768,
+   "W_end_s": 768,
+   "adj_lift_sum_W_s": 768,
+   "adj_max_gap_W_mm": 768,
+   "adj_lift_outside_W_s": 768,
+   "adj_min_F_in_W_kN": 768,
+   "min_F_after_W_kN": 768,
+   "min_F_after_event_kN": 768,
+   "fault_periods": 768,
+   "fault_events": 768,
+   "final_phase": 768,
+   "t_ready_back_s": 768,
+   "att_end_deg": 768,
+   "max_att_change_deg": 768,
+   "crawler_contact_after_event_ms": 768,
+   "reapproach_starts": 768,
+   "n_late_starts": 768,
+   "sign_changes": 768,
+   "twist": 768,
+   "warnings": 768,
+   "gates": 768,
+   "pass": 768,
+   "margins": 768,
+   "event": 768,
+   "offset_s": 768,
+   "phase_at_event": 768,
+   "t_ev_s": 768,
+   "fast": 768,
+   "commands_sha256": 768
+  },
+  "fast_by_event": {
+   "G4": {
+    "False": 256
+   },
+   "RE1bF": {
+    "True": 256
+   },
+   "FS24": {
+    "True": 256
+   }
+  }
+ },
+ "main": {
+  "by_setting": {
+   "?": {
+    "lines": 1200,
+    "event_output_nonempty": 603,
+    "fast_present": 0,
+    "reapproach_starts_present": 603,
+    "event_output_empty": 597
+   }
+  },
+  "event_output_keys": {
+   "run_after_s": 603,
+   "lifts": 603,
+   "pair": 603,
+   "pair_union_s": 603,
+   "pair_last_touch_s": 603,
+   "W_end_s": 603,
+   "adj_lift_sum_W_s": 603,
+   "adj_max_gap_W_mm": 603,
+   "adj_lift_outside_W_s": 603,
+   "adj_min_F_in_W_kN": 603,
+   "min_F_after_W_kN": 603,
+   "min_F_after_event_kN": 603,
+   "fault_periods": 603,
+   "fault_events": 603,
+   "final_phase": 603,
+   "t_ready_back_s": 603,
+   "att_end_deg": 603,
+   "max_att_change_deg": 603,
+   "crawler_contact_after_event_ms": 603,
+   "reapproach_starts": 603,
+   "n_late_starts": 603,
+   "sign_changes": 603,
+   "warnings": 603,
+   "gates": 603,
+   "pass": 603,
+   "margins": 603,
+   "pressure": 603,
+   "after_window_force": 603,
+   "lower_bound_miss": 603,
+   "ref_10hz_episodes": 603
+  },
+  "fast_by_event": {
+   "?": {
+    "'ABSENT'": 603
+   }
+  }
+ }
+}

@@ -1,0 +1,288 @@
+{
+ "rule": "spec v8 draft rev 1 12 P8-9 (applied as written)",
+ "selection": {
+  "H3": {
+   "cond1_U832_by_key": {
+    "bottom-FR-Fs0-RE1bF-ready-o0.0": true,
+    "bottom-FL-Fs4-RE1bF-ready-o0.0": true,
+    "bottom-FL-Fs2-RE1bF-ready-o0.0": true,
+    "bottom-FR-Fs2-RE1bF-ready-o0.0": true,
+    "bottom-FR-Fs4-RE1bF-ready-o0.0": true
+   },
+   "cond1": true,
+   "cond2_FS24_pass": true,
+   "cond2": true,
+   "cond3_by_key": {
+    "bottom-FL-Fs2-RE1bF-ready-o0.025": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "bottom-FR-Fs2-RE1bF-ready-o0.075": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "bottom-FR-Fs4-RE1bF-ready-o0.075": {
+     "new_failed_gates": [
+      "end_att"
+     ],
+     "new_j7": [],
+     "ready_lost": true,
+     "capped": false
+    },
+    "R15-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R15-o0.05": {
+     "new_failed_gates": [
+      "recurrence"
+     ],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.025": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.05": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.075": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "LSM4-top-FR-Fs0-o0.05": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "VBMslow-top-FL-Fs0-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "S7-e0.002": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "top-FR-Fs8-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "top-FL-Fs8-RE1bF-level-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    }
+   },
+   "cond3": false,
+   "eligible": false,
+   "n_keys_commands_differ_from_A": 17
+  },
+  "H1": {
+   "cond1_U832_by_key": {
+    "bottom-FR-Fs0-RE1bF-ready-o0.0": false,
+    "bottom-FL-Fs4-RE1bF-ready-o0.0": false,
+    "bottom-FL-Fs2-RE1bF-ready-o0.0": false,
+    "bottom-FR-Fs2-RE1bF-ready-o0.0": false,
+    "bottom-FR-Fs4-RE1bF-ready-o0.0": false
+   },
+   "cond1": false,
+   "cond2_FS24_pass": true,
+   "cond2": true,
+   "cond3_by_key": {
+    "bottom-FL-Fs2-RE1bF-ready-o0.025": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "bottom-FR-Fs2-RE1bF-ready-o0.075": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "bottom-FR-Fs4-RE1bF-ready-o0.075": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R15-o0.0": {
+     "new_failed_gates": [
+      "end_att"
+     ],
+     "new_j7": [],
+     "ready_lost": true,
+     "capped": false
+    },
+    "R15-o0.05": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.025": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.05": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "R16-o0.075": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "LSM4-top-FR-Fs0-o0.05": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "VBMslow-top-FL-Fs0-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "S7-e0.002": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "top-FR-Fs8-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    },
+    "top-FL-Fs8-RE1bF-level-o0.0": {
+     "new_failed_gates": [],
+     "new_j7": [],
+     "ready_lost": false,
+     "capped": false
+    }
+   },
+   "cond3": false,
+   "eligible": false,
+   "n_keys_commands_differ_from_A": 16
+  }
+ },
+ "choice": null,
+ "A_reproduction": [
+  {
+   "key": "bottom-FR-Fs0-RE1bF-ready-o0.0",
+   "source": "U8-A",
+   "stored": "a799807b8a99",
+   "now": "a799807b8a99",
+   "equal": true
+  },
+  {
+   "key": "bottom-FL-Fs4-RE1bF-ready-o0.0",
+   "source": "U8-A",
+   "stored": "b716498d8eb2",
+   "now": "b716498d8eb2",
+   "equal": true
+  },
+  {
+   "key": "bottom-FL-Fs2-RE1bF-ready-o0.0",
+   "source": "U8-A",
+   "stored": "52cc9ef41d8e",
+   "now": "52cc9ef41d8e",
+   "equal": true
+  },
+  {
+   "key": "bottom-FR-Fs2-RE1bF-ready-o0.0",
+   "source": "U8-A",
+   "stored": "08a2083e52e5",
+   "now": "08a2083e52e5",
+   "equal": true
+  },
+  {
+   "key": "bottom-FR-Fs4-RE1bF-ready-o0.0",
+   "source": "U8-A",
+   "stored": "e83e0a41ea73",
+   "now": "e83e0a41ea73",
+   "equal": true
+  },
+  {
+   "key": "bottom-FR-Fs8-FS24-ready-o0.0",
+   "source": "U8-A",
+   "stored": "808bb99736bc",
+   "now": "808bb99736bc",
+   "equal": true
+  },
+  {
+   "key": "LSM4-top-FR-Fs0-o0.05",
+   "source": "D8",
+   "stored": "bfe0c5e5d2ed",
+   "now": "bfe0c5e5d2ed",
+   "equal": true
+  },
+  {
+   "key": "VBMslow-top-FL-Fs0-o0.0",
+   "source": "D8",
+   "stored": "4109dda738a7",
+   "now": "4109dda738a7",
+   "equal": true
+  },
+  {
+   "key": "S7-e0.002",
+   "source": "D8",
+   "stored": "1c325428ab5c",
+   "now": "1c325428ab5c",
+   "equal": true
+  },
+  {
+   "key": "top-FR-Fs8-o0.0",
+   "source": "D8",
+   "stored": "458d933a842d",
+   "now": "458d933a842d",
+   "equal": true
+  }
+ ],
+ "notes": [],
+ "n_lines": 60
+}

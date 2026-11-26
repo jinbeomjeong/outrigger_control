@@ -1,0 +1,132 @@
+{
+ "inputs_sha256": {
+  "main.jsonl": {
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+   "match": true
+  },
+  "j9_main.jsonl": {
+   "sha256": "c89ec827ce541a53127a0115b8e1185b35e50df9cea2612d4a74b40cc618c122",
+   "match": true
+  },
+  "sens_keys_ed7.json": {
+   "sha256": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+   "match": true
+  },
+  "d_grid_keys12.json (git blob)": {
+   "sha256": "a995abff9d73816f58a0e3d67a59f18b3e60fb006fe48d824012b79b57d87981",
+   "match": true
+  },
+  "confirm_g1_grid171.json": {
+   "sha256": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
+   "match": true
+  },
+  "confirm_b_grid192.json": {
+   "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+   "match": true
+  }
+ },
+ "source_facts": {
+  "event_twin_fields": [
+   "stored_key",
+   "stored_file",
+   "event",
+   "leg",
+   "timing",
+   "offset_s",
+   "fs_kN",
+   "level",
+   "event_time_s"
+  ],
+  "event_cases": [
+   "R12",
+   "R13",
+   "R14",
+   "R15",
+   "R16"
+  ],
+  "cases_without_twin_before_decision": [],
+  "events_key_count": 3,
+  "legs_count": 4,
+  "default_event_in_EVENTS": {
+   "R12": true,
+   "R13": false,
+   "R14": true,
+   "R15": true,
+   "R16": true
+  },
+  "source_sha256": {
+   "04_scripts/04_hydraulic/coupled/verdict_cases.py": "ae874bc9173c7db6b9b64d5df987a4d2aaa61a155a623191c76ebc8700d0cf0f",
+   "04_scripts/03_control/s8/r67_g1_screen.py": "1aad3a5f9e90c404522b30769d87d64cc87a931c28e751a9b6a72122ee1c0d62"
+  }
+ },
+ "stages": {
+  "C-J": {
+   "rows": 388,
+   "unit_job": "j9_main.jsonl line job",
+   "counts": {
+    "event_from:default": 200,
+    "event_rows": 200,
+    "leg_from:default": 60,
+    "leg_from:twin": 140,
+    "pair_record_event:absent": 200,
+    "pair_record_event_names_type:dict": 200,
+    "pair_record_leg:absent": 200,
+    "steady_rows": 188,
+    "twin_key_set:(no twin)": 60,
+    "twin_key_set:fs_kN,leg,level": 140
+   },
+   "rows_match_expected": true,
+   "all_event_rows_resolved": true
+  },
+  "C-S": {
+   "rows": 460,
+   "unit_job": "sens_keys_ed7.json line job",
+   "counts": {
+    "event_from:default": 260,
+    "event_rows": 260,
+    "leg_from:default": 120,
+    "leg_from:twin": 140,
+    "pair_record_event:absent": 260,
+    "pair_record_event_names_type:dict": 260,
+    "pair_record_leg:absent": 260,
+    "steady_rows": 200,
+    "twin_key_set:(no twin)": 120,
+    "twin_key_set:fs_kN,leg,level": 140,
+    "unit_twin_equals_v0_pair_twin:True": 260
+   },
+   "rows_match_expected": true,
+   "all_event_rows_resolved": true
+  },
+  "C-D": {
+   "rows": 12,
+   "census_rows": 24,
+   "census_rows_note": "12 D keys x {VBN, VBNslow}; both settings share one unit job",
+   "unit_job": "d_grid_keys12.json jobs[*].job (key file side)",
+   "counts": {
+    "event_from:twin": 12,
+    "event_rows": 12,
+    "grid192_pair_found": 12,
+    "leg_from:twin": 12,
+    "pair_record_event:equal": 12,
+    "pair_record_leg:absent": 12,
+    "twin_key_set:event,fs_kN,leg,level,timing": 12
+   },
+   "rows_match_expected": true,
+   "all_event_rows_resolved": true
+  },
+  "C-G": {
+   "rows": 171,
+   "unit_job": "confirm_g1_grid171.json line job (key file side)",
+   "counts": {
+    "event_from:twin": 171,
+    "event_rows": 171,
+    "leg_from:twin": 171,
+    "pair_record_event:equal": 171,
+    "pair_record_leg:absent": 171,
+    "twin_key_set:event,fs_kN,leg,level,timing": 171
+   },
+   "rows_match_expected": true,
+   "all_event_rows_resolved": true
+  }
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "main_jsonl": {
+  "v0_event_lines_event_output_key_sets": {
+   "W_end_s,adj_lift_outside_W_s,adj_lift_sum_W_s,adj_max_gap_W_mm,adj_min_F_in_W_kN,after_window_force,att_end_deg,crawler_contact_after_event_ms,fault_events,fault_periods,final_phase,gates,lifts,lower_bound_miss,margins,max_att_change_deg,min_F_after_W_kN,min_F_after_event_kN,n_late_starts,pair,pair_last_touch_s,pair_union_s,pass,pressure,reapproach_starts,ref_10hz_episodes,run_after_s,sign_changes,t_ready_back_s,warnings": 40
+  },
+  "v0_event_lines_fast_paths": {},
+  "v0_event_lines_job_twin_field_sets": {
+   "fs_kN,leg,level": 28,
+   "": 12
+  }
+ },
+ "grid_files": {
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json": {
+   "top_level_keys": [
+    "meta",
+    "results"
+   ],
+   "run_key_sets": {
+    "W_end_s,adj_lift_outside_W_s,adj_lift_sum_W_s,adj_max_gap_W_mm,adj_min_F_in_W_kN,att_end_deg,commands_sha256,crawler_contact_after_event_ms,event,fast,fault_events,fault_periods,final_phase,gates,lifts,margins,max_att_change_deg,min_F_after_W_kN,min_F_after_event_kN,n_late_starts,offset_s,pair,pair_last_touch_s,pair_union_s,pass,phase_at_event,reapproach_starts,run_after_s,sign_changes,t_ev_s,t_ready_back_s,twist,warnings": 192
+   },
+   "run_fast_paths": {
+    "fast": 192
+   }
+  },
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json": {
+   "top_level_keys": [
+    "meta",
+    "results"
+   ],
+   "run_key_sets": {
+    "W_end_s,adj_lift_outside_W_s,adj_lift_sum_W_s,adj_max_gap_W_mm,adj_min_F_in_W_kN,att_end_deg,commands_sha256,crawler_contact_after_event_ms,event,fast,fault_events,fault_periods,final_phase,gates,lifts,margins,max_att_change_deg,min_F_after_W_kN,min_F_after_event_kN,n_late_starts,offset_s,pair,pair_last_touch_s,pair_union_s,pass,phase_at_event,reapproach_starts,run_after_s,sign_changes,t_ev_s,t_ready_back_s,twist,warnings": 192
+   },
+   "run_fast_paths": {
+    "fast": 192
+   }
+  },
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json": {
+   "top_level_keys": [
+    "meta",
+    "results"
+   ],
+   "run_key_sets": {
+    "W_end_s,adj_lift_outside_W_s,adj_lift_sum_W_s,adj_max_gap_W_mm,adj_min_F_in_W_kN,att_end_deg,commands_sha256,crawler_contact_after_event_ms,event,fast,fault_events,fault_periods,final_phase,gates,lifts,margins,max_att_change_deg,min_F_after_W_kN,min_F_after_event_kN,n_late_starts,offset_s,pair,pair_last_touch_s,pair_union_s,pass,phase_at_event,reapproach_starts,run_after_s,sign_changes,t_ev_s,t_ready_back_s,twist,warnings": 192
+   },
+   "run_fast_paths": {
+    "fast": 192
+   }
+  },
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json": {
+   "top_level_keys": [
+    "meta",
+    "results"
+   ],
+   "run_key_sets": {
+    "W_end_s,adj_lift_outside_W_s,adj_lift_sum_W_s,adj_max_gap_W_mm,adj_min_F_in_W_kN,att_end_deg,commands_sha256,crawler_contact_after_event_ms,event,fast,fault_events,fault_periods,final_phase,gates,lifts,margins,max_att_change_deg,min_F_after_W_kN,min_F_after_event_kN,n_late_starts,offset_s,pair,pair_last_touch_s,pair_union_s,pass,phase_at_event,reapproach_starts,run_after_s,sign_changes,t_ev_s,t_ready_back_s,twist,warnings": 192
+   },
+   "run_fast_paths": {
+    "fast": 192
+   }
+  }
+ }
+}

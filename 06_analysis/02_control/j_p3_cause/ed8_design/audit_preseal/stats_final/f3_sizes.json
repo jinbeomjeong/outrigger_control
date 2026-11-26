@@ -1,0 +1,138 @@
+{
+ "assumptions": "Ed. 8 S8-R final review, part 3: expected G' stratum-E size under the two readings of spec 6.3.\n\nReading I (stated intent, user decision 4): E-eligible events = RE1bF (incl. Y8-9 depth/ramp variants); FS24 -> N.\nReading F (literal `fast`): `fast` = depth/ramp > v_max (r67_g1_screen.py:120-121) is True for RE1bF AND FS24\n          (stored grid: fast True 256/256 FS24 runs), so FS24 units with an early diagonal start are E.\nModel and phase probabilities are those of stats_s8r/s8r_sizes.py (same assumptions, seed 20261114):\n  RE1bF E prob by phase: new {0.0125: 0.5, 0.0375: 0, 0.0625: 1, 0.0875: 1}, old {0: 15/16, 0.025: 0, 0.05: 4/16, 0.075: 1}\n  FS24 (reading F only): old o0.05 -> 1 (stored V0 16/16), other old 0, new phases q_fs in {0, 0.125, 0.25}\n  depth / F_s conditions shift the window: E probability x m_shift in {1.0, 0.7, 0.5}\nSlots: (a) 4 clusters per E-candidate family (one new phase each), (b) RE1bF E families 4 clusters x one of\n8 phases, (c) 3 new F_s per E-candidate family x one of 8 phases. E-candidate families: bottom-front\n{level, ready} x {FL, FR} x {RE1bF, FS24}.\nAlso: census G1 V0-pass E count under each reading (from stats_s8r/s8r_frame.txt 100-118: 18 units, 8 FS24).\nUsage: python -I -B f3_sizes.py <out_folder>\n",
+ "seed": 20261114,
+ "reps": 20000,
+ "cases": [
+  {
+   "reading": "I",
+   "q_fs": 0.0,
+   "m_shift": 1.0,
+   "nE_mean": 26.41255,
+   "nE_p05": 21,
+   "nE_p95": 32,
+   "P_nE_lt_16": 0.0006,
+   "mcse": 0.00017315311143609288
+  },
+  {
+   "reading": "I",
+   "q_fs": 0.0,
+   "m_shift": 0.7,
+   "nE_mean": 21.41165,
+   "nE_p05": 16,
+   "nE_p95": 27,
+   "P_nE_lt_16": 0.034,
+   "mcse": 0.0012814835153056009
+  },
+  {
+   "reading": "I",
+   "q_fs": 0.0,
+   "m_shift": 0.5,
+   "nE_mean": 18.1844,
+   "nE_p05": 13,
+   "nE_p95": 23,
+   "P_nE_lt_16": 0.19395,
+   "mcse": 0.0027958308022840005
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.0,
+   "m_shift": 1.0,
+   "nE_mean": 27.89045,
+   "nE_p05": 22,
+   "nE_p95": 34,
+   "P_nE_lt_16": 0.0002,
+   "mcse": 9.998999949994999e-05
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.0,
+   "m_shift": 0.7,
+   "nE_mean": 22.55285,
+   "nE_p05": 17,
+   "nE_p95": 28,
+   "P_nE_lt_16": 0.0166,
+   "mcse": 0.0009034500539598191
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.0,
+   "m_shift": 0.5,
+   "nE_mean": 18.9371,
+   "nE_p05": 14,
+   "nE_p95": 24,
+   "P_nE_lt_16": 0.14095,
+   "mcse": 0.0024605192287401453
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.125,
+   "m_shift": 1.0,
+   "nE_mean": 30.61515,
+   "nE_p05": 24,
+   "nE_p95": 37,
+   "P_nE_lt_16": 0.0,
+   "mcse": 0.0
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.125,
+   "m_shift": 0.7,
+   "nE_mean": 25.0435,
+   "nE_p05": 19,
+   "nE_p95": 31,
+   "P_nE_lt_16": 0.0042,
+   "mcse": 0.0004572942160141543
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.125,
+   "m_shift": 0.5,
+   "nE_mean": 21.3314,
+   "nE_p05": 16,
+   "nE_p95": 27,
+   "P_nE_lt_16": 0.04575,
+   "mcse": 0.00147744606500542
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.25,
+   "m_shift": 1.0,
+   "nE_mean": 33.3724,
+   "nE_p05": 27,
+   "nE_p95": 40,
+   "P_nE_lt_16": 0.0,
+   "mcse": 0.0
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.25,
+   "m_shift": 0.7,
+   "nE_mean": 27.6238,
+   "nE_p05": 21,
+   "nE_p95": 34,
+   "P_nE_lt_16": 0.00085,
+   "mcse": 0.00020606764666002277
+  },
+  {
+   "reading": "F",
+   "q_fs": 0.25,
+   "m_shift": 0.5,
+   "nE_mean": 23.71185,
+   "nE_p05": 18,
+   "nE_p95": 30,
+   "P_nE_lt_16": 0.01125,
+   "mcse": 0.0007457693175506753
+  }
+ ],
+ "census_g1": {
+  "I": {
+   "E": 10,
+   "N": 161
+  },
+  "F": {
+   "E": 18,
+   "N": 153
+  },
+  "note": "G1 171 V0-pass units: 18 E under a 0.45 s diagonal rule, 8 of them FS24 (s8r_frame.txt 100-118)"
+ }
+}

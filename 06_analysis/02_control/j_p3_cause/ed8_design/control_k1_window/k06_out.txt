@@ -1,0 +1,9 @@
+L(z) = g K_tw z^-1 ZOH{1/(s(tau_v s+1))} 0.5z/(z-0.5), Ts 0.1 s
+limits g: {'pm45': 4.9417136611063315, 'gm6db': 6.569173269837792, 'ms2': 5.026184411894556, 'stable': 8.0}
+limits r (sigma 1.5): {'pm45': 7.412570491659498, 'gm6db': 9.85375990475669, 'ms2': 7.539276617841834, 'stable': 12.0}
+nominal_r1_sigma1: g=1.0000 GM=13.107 (22.35 dB) @ 4.8374 rad/s, PM=80.02 deg @ 0.4981 rad/s, DM=2.804 s, Ms=1.151, max|z_cl|=0.9393
+pre_probe_r1_sigma1.2: g=0.8333 GM=15.729 (23.93 dB) @ 4.8374 rad/s, PM=81.67 deg @ 0.4156 rad/s, DM=3.430 s, Ms=1.126, max|z_cl|=0.9514
+r2.3_sigma1.5: g=1.5333 GM=8.548 (18.64 dB) @ 4.8374 rad/s, PM=74.79 deg @ 0.7599 rad/s, DM=1.718 s, Ms=1.235, max|z_cl|=0.8876
+r3.0_sigma1.5: g=2.0000 GM=6.554 (16.33 dB) @ 4.8374 rad/s, PM=70.31 deg @ 0.9853 rad/s, DM=1.246 s, Ms=1.313, max|z_cl|=0.8043
+r3.6_sigma1.5: g=2.4000 GM=5.461 (14.75 dB) @ 4.8374 rad/s, PM=66.56 deg @ 1.1750 rad/s, DM=0.989 s, Ms=1.383, max|z_cl|=0.8163
+r0.8_sigma1.0: g=0.8000 GM=16.384 (24.29 dB) @ 4.8374 rad/s, PM=82.00 deg @ 0.3990 rad/s, DM=3.587 s, Ms=1.121, max|z_cl|=0.9537

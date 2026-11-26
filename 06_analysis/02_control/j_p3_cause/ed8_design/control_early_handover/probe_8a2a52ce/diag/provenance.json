@@ -1,0 +1,39 @@
+{
+ "task": "P8-9 follow-up diagnosis of the two H-3 condition (3) failures (user decision (ga) 2026-11-26), seen keys only, record-only patches",
+ "author": "dynamics-expert, 2026-11-26",
+ "code": {"worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl", "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "status_before_and_after": "clean", "imported_read_only": true},
+ "environment": "conda run -n dynamics-dev python -I -B, spawn Pool 6 workers, mask 0xFFFF (reserve.py prune/list 2026-11-26 16:07: 0 reservations), NUMBA_CACHE_DIR scratchpad dynamics-p89diag (removed after)",
+ "jobs": "R12 bottom-FR-Fs4-RE1bF-ready o0.075 x {P89-A-VBM, P89-H3-VBM, V0}; R15 o0.05 x {P89-A-VBM, P89-H3-VBM, V0} (6 jobs, 98 s)",
+ "identity": "P89-A/H3 commands_sha256 equal to probe_8a2a52ce/raw main lines (4/4); V0 R12 bottom-FR-Fs4 o0.075 equal to dynamics_u832_o00 stored V0 line (4f72962a); V0 R15 o0.05 has no stored line read here",
+ "records": {
+  "raw/t4h/*.npz": "run_v5 T4h file (phase, motor_stroke_m, command_m_s, locked, lsb_*, true_force_N ...); P89 settings only (V0 has no T4h)",
+  "raw/logs/*_ctrl.npz, *_plant.npz, *_cue.json": "d00_instrumented_rerun._install_patches (controller state every period, harness plant snapshot every 0.1 s, probe K1 cue)",
+  "raw/logs/*_lsb.json": "LockStartB apply_floors per period (requested, acting, output, raised, stroke, protected, completion flags, twist load and limit, A(i) / A(i)-b stretch and floor flags, latch), A(i)-b trigger predicate parts, shot safety, A(i) / A(i)-b start / end",
+  "raw/logs/*_judge.json, *_rows.npz": "r67 judge_event twist-work dict, phases (relative to the event), 1 ms event-branch rows from event - 0.5 s (t, contact 4, F 4, valve 4, gap 4, att 2)",
+  "raw/logs/*_p89.json": "p89_rerun record wrappers (re-approach starts with retrigger flag, ends, H-3 extensions)"
+ },
+ "scripts": ["diag_rerun.py", "diag_explore.py -> diag_explore_out.txt", "diag_case1.py -> diag_case1_out.txt, diag_case1_windows.csv, diag_case1_trace.csv", "diag_case1_drift.py -> diag_case1_drift_out.txt", "diag_case2.py -> diag_case2_out.txt", "diag_scope_offline.py -> diag_scope_offline_out.txt, diag_scope_offline.csv"],
+ "inputs_read": ["probe_8a2a52ce/raw (main lines and logs)", "dynamics_u832_o00/rerun_raw/runs.jsonl", "dynamics_d1_d3/d00_instrumented_rerun.py, d08_d3_tail_twist.py, report.md 170-240", "worktree: lock_start_b.py 800-1280 and def list, c2.py 1955-1990, 7500-7535, 7815-7950, r67_g1_screen.py 20-44, 268-380, jp3_ed7_rules.py (is_stall_signature_ed7)"],
+ "columns": {
+  "diag_case1_windows.csv": {
+   "w0_rel_s": "window start, s after the event (5 s windows of the post-event LEVEL)",
+   "held": "periods with plant locked (T4h locked) and |u| > 0, per leg",
+   "locked": "periods with T4h locked, per leg",
+   "mean_abs_u_mm_s": "mean |command_m_s| [mm/s] per leg",
+   "subhold_periods": "periods with 0 < |u| <= u_hold (0.01 v_max = 0.209 mm/s) per leg",
+   "mean_vx_mm_s": "plant piston x rate over the window [mm/s] per leg",
+   "D_kN": "T4h lsb_ib_twist_load_N = nu^T F at window start / end [kN], nu = (0.4761, -0.4761, -0.5228, 0.5228)",
+   "roll_mrad / pitch_mrad": "controller filtered roll / pitch range [mrad]",
+   "on_target / clearance_done / complete": "share of periods with the controller completion flags true",
+   "ib_trigger_checks": "A(i)-b trigger predicate outcome counts per leg: TRIGGER, a1_floor_on, protected, moved(still >= ib_still_m 0.1 mm), completion_closed (condition 3 (da): on_target and clearance_done and |D| <= 15 kN)",
+   "ib_on / a1_on": "periods with an A(i)-b / A(i) floor on (T4h, summed over legs)"
+  },
+  "diag_case1_trace.csv": "per 0.1 s period of the post-event LEVEL: commands u, A-rule inputs, locked, true force F, motor stroke, D, roll, pitch, completion flags, stretch counters",
+  "diag_scope_offline.csv": {
+   "A_short_first_runs / A_short_retrig_runs": "(t - t_event [s], leg, retrigger) of A-path contact ends within T_r 0.5 s of the run start",
+   "H3_ext_first / H3_ext_retrig": "(t - t_event, leg, retrigger) of the H-3 extensions on the H3 path",
+   "variant_first_run_only": "= A / = H3 / unknown: the exactly determined result of an H-3 scope limited to first (non re-trigger) runs, without a run"
+  }
+ }
+}

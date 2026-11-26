@@ -1,0 +1,43 @@
+{
+ "runs": [
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-A",
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-a2",
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-A",
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-a2",
+  "R12_top-FR-Fs8-o0.0_D8-L-A",
+  "R12_top-FR-Fs8-o0.0_D8-L-a2",
+  "R12_top-FR-Fs8-o0.0_D8-M-A",
+  "R12_top-FR-Fs8-o0.0_D8-M-a2",
+  "R12_top-FR-Fs8-o0.0_D8-Mh15-A",
+  "R12_top-FR-Fs8-o0.0_D8-Mh15-a2",
+  "R12_top-FR-Fs8-o0.0_D8-Mslow-A",
+  "R12_top-FR-Fs8-o0.0_D8-Mslow-a2",
+  "R7_e0.0_D8-M-A",
+  "R7_e0.0_D8-M-a2",
+  "S7_e0.002_D8-M-A",
+  "S7_e0.002_D8-M-a2",
+  "S7_e0.002_D8-Mslow-A",
+  "S7_e0.002_D8-Mslow-a2",
+  "S7_e0.003_D8-M-A",
+  "S7_e0.003_D8-M-a2",
+  "S7_e0.0_D8-M-a2",
+  "S7_e0.0_D8-Mslow-A",
+  "S7_e0.0_D8-Mslow-a2"
+ ],
+ "leg_rows": 156,
+ "round_rows": 42,
+ "replay_problems": [
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r2 RR: no cue mid reading in the segment",
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r2 RR: no cue mid reading in the segment",
+  "R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r2 FL: K1 replay 8570435.018345268 != cue 8535704.244840262",
+  "R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r2 RR: K1 replay 28081944.61178144 != cue 28081761.722204205",
+  "S7_e0.002_D8-M-A r1 RR: no cue mid reading in the segment",
+  "S7_e0.002_D8-M-a2 r1 RL: no cue mid reading in the segment",
+  "S7_e0.002_D8-Mslow-a2 r1 RL: no cue mid reading in the segment",
+  "S7_e0.003_D8-M-A r1 RR: no cue mid reading in the segment",
+  "S7_e0.003_D8-M-a2 r1 RL: no cue mid reading in the segment",
+  "S7_e0.0_D8-M-a2 r1 RL: no cue mid reading in the segment",
+  "S7_e0.0_D8-Mslow-a2 r1 RL: no cue mid reading in the segment"
+ ],
+ "k1_replay_checked": 138
+}

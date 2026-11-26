@@ -1,0 +1,155 @@
+{
+ "j9_main": {
+  "top_level_field_sets": {
+   "command_stats,commands_sha256,controller_tag,event_names,event_output,events,final_phase,harness_class,harness_commands_sha256,head_only_declared,hydraulic_options,hydraulics_record,job,lock_window_alignment,lsb_components,lsb_record,lsb_settings,probe_d6_record,probe_d6_settings,resume_k1,review_record,t4h_file,t_event_s,values,wall_s": 368,
+   "command_stats,commands_sha256,controller_tag,event_names,event_output,events,final_phase,harness_class,harness_commands_sha256,head_only_declared,hydraulic_options,hydraulics_record,job,lock_window_alignment,lsb_components,lsb_record,lsb_settings,probe_d6_record,probe_d6_settings,resume_k1,review_record,soil_stop_crawler,t4h_file,t_event_s,values,wall_s": 20
+  },
+  "job_field_sets": {
+   "case,eps,offset_s,setting": 60,
+   "case,eps,offset_s,setting,twin": 140,
+   "case,eps,setting": 168,
+   "case,decision,eps,setting": 20
+  },
+  "settings": {
+   "LSM1": 72,
+   "LSM2": 72,
+   "LSM3": 72,
+   "LSM4": 72,
+   "VBM": 100
+  },
+  "cases": {
+   "R1": 2,
+   "R10": 2,
+   "R11": 2,
+   "R12": 160,
+   "R14": 10,
+   "R15": 10,
+   "R16": 20,
+   "R2": 40,
+   "R3": 4,
+   "R4": 4,
+   "R5": 2,
+   "R6": 2,
+   "R7": 20,
+   "R8": 2,
+   "R9": 2,
+   "S1": 20,
+   "S2": 4,
+   "S3": 2,
+   "S4": 20,
+   "S5": 20,
+   "S7": 20,
+   "S8": 20
+  }
+ },
+ "sens_keys_ed7": {
+  "top_level_keys": [
+   "code_identity",
+   "expected_j_p3_judged_rows",
+   "expected_lines",
+   "generation_command",
+   "judged_lines",
+   "lines",
+   "probe_seen_units",
+   "rule",
+   "settings_judged",
+   "settings_record"
+  ],
+  "lines": 460,
+  "line_field_sets": {
+   "head_only_declared,job,judged,key,probe_seen,v0_pair": 460
+  },
+  "v0_pair_field_sets": {
+   "job,source": 460
+  },
+  "job_field_sets": {
+   "case,eps,offset_s,setting": 120,
+   "case,eps,offset_s,setting,twin": 140,
+   "case,eps,setting": 160,
+   "case,decision,eps,setting": 40
+  },
+  "settings": {
+   "VBMb069": 46,
+   "VBMb16": 46,
+   "VBMc005": 46,
+   "VBMc04": 46,
+   "VBMd05": 46,
+   "VBMd15": 46,
+   "VBMfast": 46,
+   "VBMh05": 46,
+   "VBMh15": 46,
+   "VBMslow": 46
+  }
+ },
+ "confirm_g1_grid171": {
+  "top_level_keys": [
+   "code_identity",
+   "expected_j_p3_judged_rows",
+   "expected_lines",
+   "extraction",
+   "fault_jp3_judged_lines",
+   "generation_command",
+   "k_counted_lines",
+   "line_flags",
+   "lines",
+   "pool_csv_sha256",
+   "rule",
+   "seed",
+   "settings"
+  ],
+  "lines": 171,
+  "line_field_sets": {
+   "counted_for_k,head_only_declared,job,judged_fault_jp3,t4h_file,v0_pair": 171
+  },
+  "v0_pair_field_sets": {
+   "file,key,run_id,v0_commands_sha256,v0_pass": 171
+  },
+  "job_field_sets": {
+   "case,eps,offset_s,setting,twin": 171
+  },
+  "settings": {
+   "VBM": 171
+  }
+ },
+ "confirm_b_grid192": {
+  "top_level_keys": [
+   "code_identity",
+   "expected_j_p3_judged_rows",
+   "expected_lines",
+   "extraction",
+   "generation_command",
+   "grid_sample",
+   "head_only_declared_lines",
+   "lines",
+   "rule",
+   "seed",
+   "settings",
+   "v0_pass_lines"
+  ],
+  "lines": 192,
+  "line_field_sets": {
+   "head_only_declared,job,t4h_file,v0_pair": 192
+  },
+  "v0_pair_field_sets": {
+   "file,key,run_id,v0_commands_sha256,v0_pass": 192
+  },
+  "job_field_sets": {
+   "case,eps,offset_s,setting,twin": 192
+  },
+  "settings": {
+   "VBL": 192
+  }
+ },
+ "d_grid_keys12": {
+  "top_level_keys": [
+   "inputs",
+   "jobs",
+   "level_breach_lines",
+   "purpose",
+   "rule"
+  ],
+  "job_entry_field_sets": {
+   "first_breach_leg,job,t4h_file": 12
+  }
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "producer": "control-expert, 2026-11-26, edition 8 LEVEL-completion deadlock fix design (offline first-trigger only)",
+ "inputs": {
+  "diag_case1_trace": "06_analysis/02_control/j_p3_cause/ed8_design/control_early_handover/probe_8a2a52ce/diag/diag_case1_trace.csv (G1 R12 bottom-FR-Fs4-o0.075-RE1bF-ready, VBM, arms A / H3; folder SHA256SUMS present)",
+  "d08_trace": "06_analysis/02_control/j_p3_cause/ed8_design/dynamics_d1_d3/d08_d3_tail_twist_trace.csv (D-3 tails, arms a2 / A)",
+  "code_read": "worktree ed8-impl 7fc83456: c2.py 642-643 (done_twist_N 3000, done_hold_s 1.0), 1593-1599 (R8 relax constants), 1957-1990 (TwistCompletionRelaxSettings), 7840-7960 (completion, _is_twist_condition_met, _is_twist_relax_ok, _has_twist_load_stopped_rising); lock_start_b.py 358-368 (ib settings), 1145-1254 (_blind_floors, _update_blind_stretch, _blind_block_reason, _blind_still_m, _is_completion_open, _is_twist_over_limit)"
+ },
+ "env": "conda run -n dynamics-dev python -I -B (MKL_THREADING_LAYER=TBB)",
+ "scripts": {"l01_first_trigger.py": "-> l01_out.txt"},
+ "columns_l01_out": {
+  "run": "trace run (diag: 'G1 bottom-FR-Fs4-o0.075 <arm>'; d08: run name)",
+  "first_recorded_ib_on_t": "first period with an A_ib floor on (diag ib_on; d08 has per-leg *_ib columns, not read -> null) [s after the event]",
+  "first_complete_flag_t": "first period with the completion flag true (not held) [s after the event]",
+  "L1_first_open_and_shot_ready": "first period with on target, clearance done (d08: taken as met), |D| <= 15 kN, |D|(t) - |D|(t-5 s) > 0.6 kN and a leg with >= 25 periods of one-sign sub-hold command (0 < |u| <= 0.209 mm/s) while plant-locked (proxy of A_ib condition 2); protection and latch not evaluated",
+  "L2_first_waiver": "first period with >= 100 periods of on target and clearance, a full 5 s window, 0.6 < rise <= 2.5 kN, a leg sub-hold and locked for >= 50 periods, |D| + 0.5 <= 15 kN and every reading F >= F_min 9.415 kN (proxy of the lower estimates); t_done_if_held = t + done_hold_s 1.0",
+  "units": "t in s after the event, D in kN (|D|)"
+ },
+ "exactness": "the first action time is exact up to the candidate's first action (recorded commands before it); later behaviour is not replayed. Proxies: plant lock for stroke stillness, readings for lower estimates, clearance taken as met in d08"
+}

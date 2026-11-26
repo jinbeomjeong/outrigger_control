@@ -1,0 +1,14 @@
+G' stratum-E size (assumption model of stats_s8r/s8r_sizes.py), n_min E = 16
+reading I q_fs 0.0 m_shift 1.0: nE mean 26.4 (5-95 % 21-32), P(nE < 16) 0.0006 +- 0.0002
+reading I q_fs 0.0 m_shift 0.7: nE mean 21.4 (5-95 % 16-27), P(nE < 16) 0.0340 +- 0.0013
+reading I q_fs 0.0 m_shift 0.5: nE mean 18.2 (5-95 % 13-23), P(nE < 16) 0.1940 +- 0.0028
+reading F q_fs 0.0 m_shift 1.0: nE mean 27.9 (5-95 % 22-34), P(nE < 16) 0.0002 +- 0.0001
+reading F q_fs 0.0 m_shift 0.7: nE mean 22.6 (5-95 % 17-28), P(nE < 16) 0.0166 +- 0.0009
+reading F q_fs 0.0 m_shift 0.5: nE mean 18.9 (5-95 % 14-24), P(nE < 16) 0.1409 +- 0.0025
+reading F q_fs 0.125 m_shift 1.0: nE mean 30.6 (5-95 % 24-37), P(nE < 16) 0.0000 +- 0.0000
+reading F q_fs 0.125 m_shift 0.7: nE mean 25.0 (5-95 % 19-31), P(nE < 16) 0.0042 +- 0.0005
+reading F q_fs 0.125 m_shift 0.5: nE mean 21.3 (5-95 % 16-27), P(nE < 16) 0.0457 +- 0.0015
+reading F q_fs 0.25 m_shift 1.0: nE mean 33.4 (5-95 % 27-40), P(nE < 16) 0.0000 +- 0.0000
+reading F q_fs 0.25 m_shift 0.7: nE mean 27.6 (5-95 % 21-34), P(nE < 16) 0.0008 +- 0.0002
+reading F q_fs 0.25 m_shift 0.5: nE mean 23.7 (5-95 % 18-30), P(nE < 16) 0.0112 +- 0.0007
+census G1 V0-pass E/N: reading I {'E': 10, 'N': 161}, reading F {'E': 18, 'N': 153}

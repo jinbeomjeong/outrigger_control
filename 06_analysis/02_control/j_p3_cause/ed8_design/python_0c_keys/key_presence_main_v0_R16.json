@@ -1,0 +1,106 @@
+{
+  "tool": "key_presence",
+  "keys_required": [
+    "event_output.reapproach_starts",
+    "event_output.fast"
+  ],
+  "where": [
+    "job.setting=V0",
+    "job.case=R16"
+  ],
+  "list_key": null,
+  "allow_null": false,
+  "keys": [
+    {
+      "key": "event_output.reapproach_starts",
+      "present": 4,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "event_output.fast",
+      "present": 0,
+      "absent": 4,
+      "null": 0,
+      "missing": 4,
+      "first_missing": [
+        "main.jsonl 줄 37",
+        "main.jsonl 줄 38",
+        "main.jsonl 줄 39",
+        "main.jsonl 줄 40"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+      "container_key": null,
+      "rows": 1200,
+      "selected": 4,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "event_output.reapproach_starts",
+          "present": 4,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "event_output.fast",
+          "present": 0,
+          "absent": 4,
+          "null": 0,
+          "missing": 4,
+          "first_missing": [
+            "줄 37",
+            "줄 38",
+            "줄 39",
+            "줄 40"
+          ]
+        }
+      ]
+    }
+  ],
+  "npz": {
+    "glob": "*.npz",
+    "dirs": [],
+    "arrays_required": [],
+    "arrays": [],
+    "files": []
+  },
+  "summary": {
+    "tool": "key_presence",
+    "command": "scan",
+    "files": 1,
+    "rows": 1200,
+    "selected": 4,
+    "keys": 2,
+    "keys_complete": 1,
+    "keys_incomplete": 1,
+    "npz_files": 0,
+    "arrays": 0,
+    "arrays_incomplete": 0,
+    "error": 1,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "key_absent": 1
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "key_absent",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+      "line": 0,
+      "message": "`event_output.fast` 없음 4/4줄 (처음: 줄 37, 줄 38, 줄 39, 줄 40)",
+      "target": "event_output.fast"
+    }
+  ]
+}

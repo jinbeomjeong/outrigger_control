@@ -1,0 +1,114 @@
+== R12 o0.075 {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'} A t_event 47.775 final ready
+   times {'t_touch_end_s': 21.7, 't_first_done_s': 30.7, 't_first_ready_s': 42.7, 't_check_start_s': 0.1}
+   attitude {'end_abs_deg': {'roll': 0.00136, 'pitch': 0.01275}, 'max_abs_last_5s_deg': 0.01376, 'max_abs_after_liftoff_deg': 0.79691, 'rocking_amplitude_deg': 0.49194, 'filter_residual_last_5s_deg': 0.00097}
+   run_after_s: 43.53
+   final_phase: "ready"
+   t_ready_back_s: 40.53
+   att_end_deg: [-0.0014, -0.0128]
+   max_att_change_deg: 0.7929
+   gates: {"U832_pair_union": true, "U832_last_touch": true, "fault0": true, "U57_sum": true, "U57_gap": true, "U57_outside": true, "Fmin_after_W": true, "end_att": true, "recurrence": true}
+   margins: {"pair_union_to_1.8_s": 0.219, "last_touch_to_3.0_s": 1.196, "adj_sum_to_0.5_s": 0.5, "Fmin_after_W_minus_Fmin_kN": 40.69, "Fmin_after_event_minus_Fmin_kN": -10.46}
+   n_late_starts: 0
+   sign_changes: 0
+   warnings: ["WARN_D1_IMU_GYRO_MISSING"]
+   lifts: {"FR": {"sum_s": 0.642, "n": 3, "first_s": 0.015, "last_touch_s": 1.219, "max_gap_mm": 23.23}, "RL": {"sum_s": 1.153, "n": 4, "first_s": 0.091, "last_touch_s": 1.804, "max_gap_mm": 28.74}}
+   min_F_after_W_kN: {"FL": 103.96, "FR": 96.83, "RL": 50.11, "RR": 55.8}
+   min_F_after_event_kN: {"FL": 19.37, "FR": -1.05, "RL": -0.72, "RR": 55.8}
+   after_window_force: {"window_end_s": 2.624, "samples_after": 40902, "min_1ms_kN": 50.1088, "min_1ms_leg": "RL", "min_1ms_t_rel_s": 2.796, "below_f_min_ms_sum": 0, "below_f_min_ms_longest": 0, "min_trailing_0p5s_kN": 56.0027, "lift_ms_after_window": 0, "FLAG_E3_1ms": false}
+   event_names {'floor_estimate_touch': 1, 'crawler_liftoff_confirmed': 1, 'reanchor_skipped': 1, 'ready_heave_tail': 2, 'leg_reapproach_start': 2, 'relevel_predicted': 1, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 2, 'INFO_TWIST_UNSETTLED': 1, 'INFO_FLOOR_NONPLANAR': 1}
+   last WARN/FAULT events [[47.9, 'WARN_D1_IMU_GYRO_MISSING']]
+== R12 o0.075 {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'} H3 t_event 47.775 final level
+   times {'t_touch_end_s': 21.7, 't_first_done_s': 30.7, 't_first_ready_s': 42.7, 't_check_start_s': 0.1}
+   attitude {'end_abs_deg': {'roll': 0.00758, 'pitch': 0.006}, 'max_abs_last_5s_deg': 0.00846, 'max_abs_after_liftoff_deg': 0.79691, 'rocking_amplitude_deg': 0.49146, 'filter_residual_last_5s_deg': 1e-05}
+   run_after_s: 60.03
+   final_phase: "level"
+   t_ready_back_s: null
+   att_end_deg: [-0.0077, -0.006]
+   max_att_change_deg: 0.7929
+   gates: {"U832_pair_union": true, "U832_last_touch": true, "fault0": true, "U57_sum": true, "U57_gap": true, "U57_outside": true, "Fmin_after_W": true, "end_att": false, "recurrence": true}
+   margins: {"pair_union_to_1.8_s": 0.492, "last_touch_to_3.0_s": 1.619, "adj_sum_to_0.5_s": 0.5, "Fmin_after_W_minus_Fmin_kN": 37.04, "Fmin_after_event_minus_Fmin_kN": -10.46}
+   n_late_starts: 0
+   sign_changes: 0
+   warnings: ["WARN_D1_IMU_GYRO_MISSING"]
+   lifts: {"FR": {"sum_s": 0.587, "n": 3, "first_s": 0.015, "last_touch_s": 1.164, "max_gap_mm": 23.23}, "RL": {"sum_s": 0.924, "n": 3, "first_s": 0.091, "last_touch_s": 1.381, "max_gap_mm": 28.74}}
+   min_F_after_W_kN: {"FL": 112.62, "FR": 89.26, "RL": 46.45, "RR": 66.08}
+   min_F_after_event_kN: {"FL": 19.37, "FR": -1.05, "RL": -0.72, "RR": 55.75}
+   after_window_force: {"window_end_s": 2.201, "samples_after": 57825, "min_1ms_kN": 46.4535, "min_1ms_leg": "RL", "min_1ms_t_rel_s": 2.395, "below_f_min_ms_sum": 0, "below_f_min_ms_longest": 0, "min_trailing_0p5s_kN": 55.1628, "lift_ms_after_window": 0, "FLAG_E3_1ms": false}
+   event_names {'floor_estimate_touch': 1, 'crawler_liftoff_confirmed': 1, 'reanchor_skipped': 1, 'ready_heave_tail': 1, 'leg_reapproach_start': 1, 'relevel_predicted': 1, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 1}
+   last WARN/FAULT events [[47.9, 'WARN_D1_IMU_GYRO_MISSING']]
+== R15 o0.05 {} H3 t_event 26.75 final ready
+   times {'t_touch_end_s': 21.6, 't_first_done_s': 52.6, 't_first_ready_s': 64.6, 't_check_start_s': 0.1}
+   attitude {'end_abs_deg': {'roll': 0.0275, 'pitch': 0.02953}, 'max_abs_last_5s_deg': 0.03043, 'max_abs_after_liftoff_deg': 0.79625, 'rocking_amplitude_deg': 0.4311, 'filter_residual_last_5s_deg': 0.00096}
+   run_after_s: 40.85
+   final_phase: "ready"
+   t_ready_back_s: 37.85
+   att_end_deg: [0.0272, -0.0294]
+   max_att_change_deg: 0.795
+   gates: {"U832_pair_union": false, "U832_last_touch": true, "fault0": true, "U57_sum": true, "U57_gap": true, "U57_outside": true, "Fmin_after_W": true, "end_att": true, "recurrence": false}
+   margins: {"pair_union_to_1.8_s": -0.221, "last_touch_to_3.0_s": 0.729, "adj_sum_to_0.5_s": 0.5, "Fmin_after_W_minus_Fmin_kN": 2.31, "Fmin_after_event_minus_Fmin_kN": -10.46}
+   n_late_starts: 3
+   sign_changes: 2
+   warnings: ["WARN_D1_IMU_GYRO_MISSING"]
+   lifts: {"FL": {"sum_s": 0.955, "n": 4, "first_s": 0.016, "last_touch_s": 2.271, "max_gap_mm": 22.88}, "RR": {"sum_s": 1.258, "n": 3, "first_s": 0.139, "last_touch_s": 2.05, "max_gap_mm": 24.35}}
+   min_F_after_W_kN: {"FL": 53.15, "FR": 33.88, "RL": 11.73, "RR": 19.91}
+   min_F_after_event_kN: {"FL": -1.05, "FR": 16.46, "RL": 0.42, "RR": -0.72}
+   after_window_force: {"window_end_s": 3.091, "samples_after": 37759, "min_1ms_kN": 11.7256, "min_1ms_leg": "RL", "min_1ms_t_rel_s": 3.337, "below_f_min_ms_sum": 0, "below_f_min_ms_longest": 0, "min_trailing_0p5s_kN": 48.7713, "lift_ms_after_window": 0, "FLAG_E3_1ms": false}
+   event_names {'floor_estimate_touch': 1, 'INFO_TOUCH_TWIST_HOLD': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 5, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 5, 'leg_reapproach_deferred': 3, 'reanchor_skipped': 1, 'ready_heave_tail': 1, 'INFO_FLOOR_NONPLANAR': 1}
+   last WARN/FAULT events [[27.1, 'WARN_D1_IMU_GYRO_MISSING']]
+== R15 o0.05 {} A t_event 26.75 final ready
+   times {'t_touch_end_s': 21.6, 't_first_done_s': 54.5, 't_first_ready_s': 66.5, 't_check_start_s': 0.1}
+   attitude {'end_abs_deg': {'roll': 0.03119, 'pitch': 0.02687}, 'max_abs_last_5s_deg': 0.0372, 'max_abs_after_liftoff_deg': 0.79625, 'rocking_amplitude_deg': 0.4311, 'filter_residual_last_5s_deg': 0.00287}
+   run_after_s: 42.75
+   final_phase: "ready"
+   t_ready_back_s: 39.75
+   att_end_deg: [0.0296, -0.027]
+   max_att_change_deg: 0.795
+   gates: {"U832_pair_union": false, "U832_last_touch": true, "fault0": true, "U57_sum": true, "U57_gap": true, "U57_outside": true, "Fmin_after_W": false, "end_att": true, "recurrence": true}
+   margins: {"pair_union_to_1.8_s": -0.221, "last_touch_to_3.0_s": 0.729, "adj_sum_to_0.5_s": 0.5, "Fmin_after_W_minus_Fmin_kN": -7.36, "Fmin_after_event_minus_Fmin_kN": -10.46}
+   n_late_starts: 4
+   sign_changes: 1
+   warnings: ["WARN_D1_IMU_GYRO_MISSING"]
+   lifts: {"FL": {"sum_s": 0.955, "n": 4, "first_s": 0.016, "last_touch_s": 2.271, "max_gap_mm": 22.88}, "RR": {"sum_s": 1.258, "n": 3, "first_s": 0.139, "last_touch_s": 2.05, "max_gap_mm": 24.35}}
+   min_F_after_W_kN: {"FL": 57.96, "FR": 18.76, "RL": 2.05, "RR": 27.32}
+   min_F_after_event_kN: {"FL": -1.05, "FR": 16.46, "RL": 2.05, "RR": -0.72}
+   after_window_force: {"window_end_s": 3.091, "samples_after": 39659, "min_1ms_kN": 2.053, "min_1ms_leg": "RL", "min_1ms_t_rel_s": 3.853, "below_f_min_ms_sum": 146, "below_f_min_ms_longest": 100, "min_trailing_0p5s_kN": 42.9746, "lift_ms_after_window": 0, "FLAG_E3_1ms": true}
+   event_names {'floor_estimate_touch': 1, 'INFO_TOUCH_TWIST_HOLD': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 8, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 8, 'leg_reapproach_deferred': 3, 'reanchor_skipped': 1, 'ready_heave_tail': 1}
+   last WARN/FAULT events [[27.1, 'WARN_D1_IMU_GYRO_MISSING']]
+== R15 o0.0 {} A t_event 26.7 final ready
+   times {'t_touch_end_s': 21.6, 't_first_done_s': 54.5, 't_first_ready_s': 66.5, 't_check_start_s': 0.1}
+   attitude {'end_abs_deg': {'roll': 0.03443, 'pitch': 0.02476}, 'max_abs_last_5s_deg': 0.04022, 'max_abs_after_liftoff_deg': 0.80492, 'rocking_amplitude_deg': 0.43489, 'filter_residual_last_5s_deg': 0.00278}
+   run_after_s: 42.8
+   final_phase: "ready"
+   t_ready_back_s: 39.8
+   att_end_deg: [0.0329, -0.0249]
+   max_att_change_deg: 0.8036
+   gates: {"U832_pair_union": false, "U832_last_touch": true, "fault0": true, "U57_sum": true, "U57_gap": true, "U57_outside": true, "Fmin_after_W": false, "end_att": true, "recurrence": true}
+   margins: {"pair_union_to_1.8_s": -0.263, "last_touch_to_3.0_s": 0.711, "adj_sum_to_0.5_s": 0.5, "Fmin_after_W_minus_Fmin_kN": -0.68, "Fmin_after_event_minus_Fmin_kN": -10.46}
+   n_late_starts: 5
+   sign_changes: 1
+   warnings: ["WARN_D1_IMU_GYRO_MISSING"]
+   lifts: {"FL": {"sum_s": 0.985, "n": 4, "first_s": 0.016, "last_touch_s": 2.289, "max_gap_mm": 22.87}, "RR": {"sum_s": 1.27, "n": 3, "first_s": 0.138, "last_touch_s": 2.065, "max_gap_mm": 25.43}}
+   min_F_after_W_kN: {"FL": 46.96, "FR": 23.34, "RL": 8.73, "RR": 19.97}
+   min_F_after_event_kN: {"FL": -1.05, "FR": 9.97, "RL": -0.63, "RR": -0.72}
+   after_window_force: {"window_end_s": 3.109, "samples_after": 39691, "min_1ms_kN": 8.7317, "min_1ms_leg": "RL", "min_1ms_t_rel_s": 3.869, "below_f_min_ms_sum": 29, "below_f_min_ms_longest": 29, "min_trailing_0p5s_kN": 51.8455, "lift_ms_after_window": 0, "FLAG_E3_1ms": true}
+   event_names {'floor_estimate_touch': 1, 'INFO_TOUCH_TWIST_HOLD': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 9, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 9, 'leg_reapproach_deferred': 6, 'reanchor_skipped': 1, 'ready_heave_tail': 1}
+   last WARN/FAULT events [[27.1, 'WARN_D1_IMU_GYRO_MISSING']]
+== R15 o0.0 {} H1 t_event 26.7 final probe
+   times {'t_touch_end_s': 21.6, 't_first_done_s': 82.0, 't_first_ready_s': None, 't_check_start_s': 0.1}
+   attitude {'end_abs_deg': {'roll': 0.00866, 'pitch': 0.03253}, 'max_abs_last_5s_deg': None, 'max_abs_after_liftoff_deg': 0.80492, 'rocking_amplitude_deg': 0.43539, 'filter_residual_last_5s_deg': None}
+   run_after_s: 60.0
+   final_phase: "probe"
+   t_ready_back_s: null
+   att_end_deg: [-0.0058, -0.0315]
+   max_att_change_deg: 0.8036
+   gates: {"U832_pair_union": false, "U832_last_touch": true, "fault0": true, "U57_sum": true, "U57_gap": true, "U57_outside": true, "Fmin_after_W": true, "end_att": false, "recurrence": true}
+   margins: {"pair_union_to_1.8_s": -0.606, "last_touch_to_3.0_s": 0.352, "adj_sum_to_0.5_s": 0.5, "Fmin_after_W_minus_Fmin_kN": 5.09, "Fmin_after_event_minus_Fmin_kN": -10.46}
+   n_late_starts: 4
+   sign_changes: 2
+   warnings: ["WARN_D1_IMU_GYRO_MISSING"]
+   lifts: {"FL": {"sum_s": 1.09, "n": 4, "first_s": 0.016, "last_touch_s": 2.362, "max_gap_mm": 22.87}, "RR": {"sum_s": 1.517, "n": 4, "first_s": 0.138, "last_touch_s": 2.648, "max_gap_mm": 25.43}}
+   min_F_after_W_kN: {"FL": 47.55, "FR": 29.21, "RL": 14.51, "RR": 18.12}
+   min_F_after_event_kN: {"FL": -1.05, "FR": 15.87, "RL": 9.42, "RR": -0.72}
+   after_window_force: {"window_end_s": 3.468, "samples_after": 56532, "min_1ms_kN": 14.5083, "min_1ms_leg": "RL", "min_1ms_t_rel_s": 3.932, "below_f_min_ms_sum": 0, "below_f_min_ms_longest": 0, "min_trailing_0p5s_kN": 52.3034, "lift_ms_after_window": 0, "FLAG_E3_1ms": false}
+   event_names {'floor_estimate_touch': 1, 'INFO_TOUCH_TWIST_HOLD': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 7, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 7, 'leg_reapproach_deferred': 10, 'INFO_TWIST_UNSETTLED': 1}
+   last WARN/FAULT events [[27.1, 'WARN_D1_IMU_GYRO_MISSING']]

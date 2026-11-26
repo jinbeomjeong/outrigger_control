@@ -1,0 +1,56 @@
+C2 t=29.60 s: INFO_LOC_REVOKED:2.2
+C2 t=29.60 s: INFO_LOC_REVOKED:2.2
+C2 t=29.60 s: INFO_LOC_REVOKED:2.2
+C2 t=48.40 s: relevel_predicted:RR
+C2 t=48.40 s: relevel_predicted:RR
+C2 t=48.40 s: relevel_predicted:RR
+C2 t=48.30 s: relevel_predicted:RL
+C2 t=48.30 s: relevel_predicted:RL
+C2 t=50.60 s: leg_reapproach_start:RR
+C2 t=50.60 s: leg_reapproach_start:RR
+C2 t=50.60 s: leg_reapproach_start:RR
+C2 t=49.20 s: leg_reapproach_start:RL
+C2 t=49.20 s: leg_reapproach_start:RL
+C2 t=69.50 s: WARN_PROBE_RETRACT_NOT_OPENED:FL
+C2 t=69.50 s: WARN_PROBE_RETRACT_NOT_OPENED:FR
+C2 t=69.50 s: WARN_PROBE_RETRACT_NOT_OPENED:RL
+C2 t=69.50 s: WARN_PROBE_RETRACT_NOT_OPENED:RR
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:FL
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:FR
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:RL
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:RR
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:FL
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:FR
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:RL
+C2 t=70.10 s: WARN_PROBE_RETRACT_NOT_OPENED:RR
+C2 t=27.00 s: leg_reapproach_start:FL
+C2 t=27.30 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=27.00 s: leg_reapproach_start:FL
+C2 t=27.50 s: leg_reapproach_start:RR
+C2 t=27.30 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=27.40 s: leg_reapproach_start:RR
+C2 t=27.90 s: leg_reapproach_start:FL
+C2 t=28.20 s: leg_reapproach_start:RR
+C2 t=28.60 s: leg_reapproach_start:FL
+C2 t=28.60 s: leg_reapproach_start:FL
+C2 t=28.90 s: leg_reapproach_start:RR
+C2 t=48.30 s: relevel_predicted:RL
+C2 t=49.20 s: leg_reapproach_start:RL
+C2 t=27.00 s: leg_reapproach_start:FL
+C2 t=27.30 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=27.70 s: leg_reapproach_start:FL
+C2 t=28.50 s: leg_reapproach_start:FL
+C2 t=29.10 s: leg_reapproach_start:FL
+todo 12 of 60
+1/12 P89-A-VBM S7 None 0.002 None: 63.9 s
+2/12 P89-H3-VBM S7 None 0.002 None: 63.9 s
+3/12 P89-H1-VBM S7 None 0.002 None: 63.9 s
+4/12 P89-H3-VBMslow R12 0.0 0.0 {'level': 'top', 'leg': 'FL', 'fs_kN': 0.0}: 88.4 s
+5/12 P89-A-VBMslow R12 0.0 0.0 {'level': 'top', 'leg': 'FL', 'fs_kN': 0.0}: 88.7 s
+6/12 P89-H1-VBMslow R12 0.0 0.0 {'level': 'top', 'leg': 'FL', 'fs_kN': 0.0}: 88.7 s
+7/12 P89-H3-VBM R12 0.0 0.0 {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0}: 89.3 s
+8/12 P89-A-VBM R12 0.0 0.0 {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0}: 89.5 s
+9/12 P89-H3-VBM R12 0.0 0.0 {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}: 70.6 s
+10/12 P89-A-VBM R12 0.0 0.0 {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}: 70.9 s
+11/12 P89-H1-VBM R12 0.0 0.0 {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0}: 76.8 s
+12/12 P89-H1-VBM R12 0.0 0.0 {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}: 63.1 s

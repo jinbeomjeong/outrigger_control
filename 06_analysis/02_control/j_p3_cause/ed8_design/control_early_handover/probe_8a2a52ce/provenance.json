@@ -1,0 +1,68 @@
+{
+ "task": "P8-9 early-handover candidate selection rerun (jp3_remedy_spec_v8_rules.md draft rev 1, 3.7 and 12 P8-9; control_early_handover/report.md 2, 7, 8)",
+ "author": "dynamics-expert, 2026-11-26",
+ "code": {
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "status_before_and_after": "clean (git status --short empty)",
+  "imported_read_only": true,
+  "patched_methods": "C2Controller._end_finished_reapproaches (H3, copy of c2.py 6277-6309 with the H-3 count), _start_reapproaches (H1 wrapper: landing sample), _defers_reapproach and _deferred_event_name (H1 wait, event leg_reapproach_deferred:<leg>:handover), _may_start_pre_twist (H1, B3), _end_reapproach and _begin_reapproach (record wrappers on every arm; _end_reapproach also keeps the H1 last end)"
+ },
+ "environment": "conda run -n dynamics-dev python -I -B (MKL_THREADING_LAYER=TBB), NUMBA_CACHE_DIR = scratchpad dynamics-p89\\numba_cache, spawn Pool 5 (check) / 8 (main) workers, maxtasksperchild 1, affinity mask 0xFFFF (P cores; reserve.py prune/list: no reservations at 2026-11-26 15:42)",
+ "commands": [
+  "p89_rerun.py selftest > selftest_out.txt",
+  "p89_rerun.py check raw_check 5 FFFF > console_check.txt (5 jobs, 90.8 s)",
+  "p89_rerun.py main raw 8 FFFF 24 > console_main_1.txt (24 jobs, 290 s)",
+  "p89_rerun.py main raw 8 FFFF 24 > console_main_2.txt (24 jobs, 282 s)",
+  "p89_rerun.py main raw 8 FFFF 24 > console_main_3.txt (12 jobs, 155 s)",
+  "p89_check.py > check_out.json",
+  "p89_analyze.py > p89_selection.json, p89_metrics.csv, p89_analyze_out.txt",
+  "p89_detail.py > p89_detail_out.txt"
+ ],
+ "note_on_script_edits": "p89_rerun.py was edited after the check run only to add the optional chunk limit (argv 5) to run_batch / main; the patch code is unchanged between check and main (the A/H3/H1 hashes of the check key are equal in raw_check and raw).",
+ "arms": {
+  "A": "key's sealed edition 7 setting (VBM / LSM4 / VBMslow of run_v5.ALL_SETTINGS) with probe_d6_settings {witness true, retract_position_target false} (= U8-A / D8-*-A)",
+  "H3": "A + H-3: T_r 0.5 s, N_s 4 (ASSUMPTION, spec 3.7)",
+  "H1": "A + H-1: W_d 0.6 s, same condition on B3 pre-twist start (ASSUMPTION, spec 3.7)",
+  "H3n3": "check only: H-3 code path with N_s 3 (identity with A)",
+  "H1off": "check only: H-1 code path with W_d -1 s (identity with A)"
+ },
+ "inputs_read": [
+  "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v8_rules.md (1-145, 200-369)",
+  "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md (J7 lines via Grep, 655-674)",
+  "ed8_design/control_early_handover/report.md",
+  "ed8_design/dynamics_u832_o00/u10_instrumented_rerun.py, rerun_raw/runs.jsonl (stored U8-A hashes)",
+  "ed8_design/dynamics_d1_d3/d00_instrumented_rerun.py, rerun_raw/runs.jsonl (stored D8-*-A hashes)",
+  "ed7_design/keys_seal_b46bdf8f/confirm_g1_grid171.json, sens_keys_ed7.json (job dict form only)",
+  "worktree code: c2.py 1195-1360, 3985-4014, 6200-6459, 10230-10440; run_v5.py 60-75, 200-480, 650-909; jp3_ed7_rules.py 1-160; judge_stage1_4368.py 150-320"
+ ],
+ "columns": {
+  "p89_metrics.csv": {
+   "group": "U (five RE1bF o0.0 keys), U_FS24, phase (3 G1 lines), regression (11)",
+   "key": "key label (report.md 7)",
+   "arm": "A / H3 / H1",
+   "commands_sha256": "run_one commands_sha256 (harness command series hash)",
+   "final_phase": "controller phase at the end of the run",
+   "t_event_s": "event time of the r67 event branch [s]; empty for S7",
+   "gates_failed": "event_output.gates keys whose value is false (r67 judge_event)",
+   "pass": "event_output.pass (all gates true)",
+   "pair_union_s": "event_output.pair_union_s [s] (U832 gate: <= 1.8 s)",
+   "pair_last_touch_s": "event_output.pair_last_touch_s [s] (U832 gate: <= 3.0 s)",
+   "t_ready_back_s": "event_output.t_ready_back_s [s after event]; empty = READY not reached after the event",
+   "t_first_ready_s": "values.times.t_first_ready_s [s from start]",
+   "ready_reached": "event rows: t_ready_back_s finite; S7: t_first_ready_s present",
+   "reapproach_starts_rel": "(t - t_event [s], leg) of every _begin_reapproach at or after the event (record wrapper)",
+   "reapproach_ends_rel": "(t - t_event [s], leg, outcome) of every _end_reapproach at or after the event",
+   "j7_items": "WARN/FAULT event names without numeric segments (judge_stage1_4368.event_name_436), WARN_ROD_PRESSURE_FALLBACK as (name:leg reason r) as jp3_ed7_rules.j7_items_ed7; set difference against A gives the new J7 items",
+   "events_capped": "event list of the record has >= 200 entries (J7 not judgeable)",
+   "min_F_after_event_kN": "min over legs of event_output.min_F_after_event_kN [kN] (1 ms true cylinder force after the event; negative = rod side tension floor of a lifted leg)",
+   "min_F_after_event_by_leg_kN": "event_output.min_F_after_event_kN per leg [kN]",
+   "lifts": "event_output.lifts per leg (sum_s, n, first_s, last_touch_s, max_gap_mm)",
+   "n_h3_extend / h3_extend_rel": "H-3 periods where the exit count reached exit_samples (3) but the run needed N_s (4) (t - t_event, leg) = the normal rule would have ended there",
+   "n_h1_defer / h1_defer_rel": "H-1 periods where _defers_reapproach returned true because of the H-1 wait (logged every deferred period)",
+   "n_h1_b3_block": "H-1 B3 pre-twist starts refused",
+   "wall_s": "run_one wall time [s]"
+  }
+ },
+ "selection_rule": "spec P8-9 as written: (1) the five U RE1bF keys pass every U832* gate, (2) FS24 key event_output.pass, (3) on phase + regression keys 0 new failed gates, 0 new J7 items, 0 READY lost vs A; both eligible -> fewer keys with commands_sha256 != A, tie H-3; neither -> ask"
+}

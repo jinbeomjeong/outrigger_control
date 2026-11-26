@@ -1,0 +1,41 @@
+{
+ "task": "P8-14 LEVEL completion deadlock fix selection rerun (spec v8 draft 12 P8-14, control_level_deadlock/report.md 2, 6, 7), seen keys only, user approval 2026-11-26",
+ "author": "dynamics-expert, 2026-11-26",
+ "code": {"worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl", "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "status_before_and_after": "clean", "imported_read_only": true},
+ "environment": "conda run -n dynamics-dev python -I -B, spawn Pool 8 workers, maxtasksperchild 1, affinity mask 0xFFFF (reserve.py prune/list 2026-11-26 16:34: 0 reservations), OMP_NUM_THREADS 1, NUMBA_CACHE_DIR scratchpad dynamics-p814 (removed after)",
+ "commands": [
+  "p814_rerun.py raw 8 FFFF 13 > console_1.txt (13 r79 jobs, 199 s; a first start stopped at once because r51 reads the project root from sys.argv[1]: fixed by sys.argv = [script, worktree] in the r79 worker; the empty runs file of that start was removed)",
+  "p814_rerun.py raw 8 FFFF 35 > console_2.txt (35 jobs, 441 s)",
+  "p814_rerun.py raw 8 FFFF 40 > console_3.txt (34 jobs, 326 s)",
+  "p814_analyze.py -> p814_selection.json, p814_metrics.csv, p814_analyze_out.txt",
+  "p814_actions.py -> p814_actions_out.txt"
+ ],
+ "arms": {
+  "B": "key setting (VBM / LSM4 / VBMslow / VBKM0 of run_v5.ALL_SETTINGS) + probe_d6 {witness on, retract target off} + H3' (copy of C2Controller._end_finished_reapproaches, H-3 count 4 within 0.5 s of start, not on re-trigger runs)",
+  "L1": "B + L-1: wrapper of LockStartB._is_completion_open: also open when |D|(t) - |D|(t - 5 s) > 600 N (|D| = |inputs.twist_load_N| of the LEVEL periods, kept on the LockStartB object before each apply_floors, cleared outside LEVEL; (da) with-twist condition only)",
+  "L2": "B + L-2: wrapper of C2Controller._has_twist_load_stopped_rising: true also when a leg has >= window_s / period_s (50) consecutive LEVEL periods with an A(i)-b stretch (same-sign 0 < |u| <= u_hold) and _blind_still_m < ib_still_m (counted after each apply_floors, so one period behind the completion test), window max - window start <= 2.5 kN and |D| + 0.5 kN <= 15 kN",
+  "VBK0 check": "stored edition 5 setting VBK0, record wrappers only, L2|s40|g6|52 (expect 606f8713 commands_sha256 d8ffb27c...: equal)"
+ },
+ "vbk_keys": {
+  "selected": ["cand=current#L2|s40|g6|52|ref|J1|top|Fs0", "cand=current#L2|s40|g6|56|ref|J2|top|Fs0", "cand=current#L2|s40|g6|59|ref|J2|bottom|Fs4", "cand=current#L2|s41|ref|16|J1|B|0,0"],
+  "sources": ["ed5_design/aa_stop_606f8713/aa_stall.json (ready null lines)", "aa_stall_lock.json (all four legs locked, |u| <= u_hold, stroke span < 1 mm in the last 20 s)", "aa_stall_twist.json", "aa_inspect.json (keys with seeds, rod fault entries, stored commands_sha256)", "aa_detail.json (g6|56 fault entry)", "j_p3_cause/ed5_j9fail_606f8713/j9fail_cause_analysis.md lines 71, 143"],
+  "left_out": "L2|g8|30|slope|rpB|top|4.0|RR|raised|140.0: FL not locked (share 0.075) and lower-estimate |D| about 40 kN in the stall window - not the locked sub-hold deadlock form",
+  "run_path": "r79_L3L4_final.run_one with R79_V5_SETTING = P814-<arm>-VBKM0 (added to run_v5.ALL_SETTINGS, T4H_SETTINGS, ROD_FAULT_SETTINGS in the worker), R79_ROD_MODEL plant_truth, R79_ROD_FAULT_PLAN raw/plans/<setting>.json (the four stored fault entries, schema r79_rod_fault_plan/1), R79_T4H_DIR raw/t4h_r79_<setting>, sys.argv[1] = worktree root"
+ },
+ "columns": {
+  "p814_metrics.csv": {
+   "sha": "commands_sha256 of the line",
+   "gates_failed": "run_v5 lines: event_output.gates false; r79 lines: base.gates false (G6-*)",
+   "t_ready": "event lines: event_output.t_ready_back_s [s after event]; S4/R2/S7/S8: values.times.t_first_ready_s [s]; r79 lines: base.t_ready_s [s]",
+   "fault": "final phase fault*, event_output.fault_periods > 0, a FAULT* event or base.fault",
+   "j7": "p89_analyze.j7_set (WARN/FAULT names without numeric segments, fallback triples); empty for r79 lines",
+   "stall": "jp3_ed7_rules.is_stall_signature_ed7 on the T4h phase / t_s / motor_stroke_m (t_event of the line; None for r79 lines) with the last-20 s stroke spans [mm]",
+   "n_rise_open / shots_in_open": "L-1: periods in which the rise clause opened (da) after conditions 1 and 2 had passed (evaluated inside _is_blind_trigger); A(i)-b shots in those periods (t, leg, sign)",
+   "n_waivers / waivers_rel": "L-2: periods in which the waiver made the twist relax 'not rising' test true: (t, |D| kN, window rise kN, legs)",
+   "level_done_rel": "LockStartB.note_level_done records (t, path, D kN); the pre-event DONE of event lines appears twice (base run and event branch log into one list), record only",
+   "acted_dones": "LEVEL -> DONE within done_hold + 0.25 s after a waiver, or after a rise-opened shot in the same LEVEL: (t, path, |D| kN)",
+   "times": "event lines relative to the event [s]; S4/R2/S7/S8 and r79 lines absolute [s]"
+  }
+ }
+}

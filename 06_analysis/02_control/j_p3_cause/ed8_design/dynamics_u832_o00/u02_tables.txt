@@ -1,0 +1,370 @@
+== event rows per src/setting ==
+ed  src       setting    
+6   ed6_grid  VBL            192
+7   g1        VBM            171
+    probe_d   P7-M-a2         12
+              P7-Mslow-a2     12
+dtype: int64
+
+== U832_pair_union failures ==
+     ed       src setting   level leg  fs_kN  event timing  offset_s   pair  pair_union_s  pair_last_touch_s                          failed_gates  t_event_s
+38    6  ed6_grid     VBL  bottom  FL    2.0  RE1bF  ready     0.000  FL+RR         1.830              1.921                       U832_pair_union     47.800
+48    6  ed6_grid     VBL  bottom  FR    2.0  RE1bF  ready     0.000  FR+RL         1.863              1.949                       U832_pair_union     47.800
+70    6  ed6_grid     VBL  bottom  FR    4.0  RE1bF  ready     0.000  FR+RL         1.837              1.937                       U832_pair_union     47.700
+99    6  ed6_grid     VBL     top  FL    0.0  RE1bF  level     0.025  FL+RR         1.909              2.208               U832_pair_union|end_att     26.725
+107   6  ed6_grid     VBL     top  FR    0.0  RE1bF  level     0.025  FR+RL         1.906              2.215               U832_pair_union|end_att     26.725
+108   6  ed6_grid     VBL     top  FR    0.0  RE1bF  ready     0.075  FR+RL         2.018              2.286                       U832_pair_union     47.475
+115   6  ed6_grid     VBL     top  FL    0.0  RE1bF  ready     0.025  FL+RR         1.922              2.028  U832_pair_union|Fmin_after_W|end_att     47.425
+121   6  ed6_grid     VBL     top  FL    2.0  RE1bF  level     0.025  FL+RR         1.927              2.030                       U832_pair_union     26.825
+125   6  ed6_grid     VBL     top  FR    2.0  RE1bF  level     0.075  FR+RL         1.896              2.009                       U832_pair_union     26.875
+132   6  ed6_grid     VBL     top  FL    2.0  RE1bF  ready     0.025  FL+RR         1.931              2.034                       U832_pair_union     47.625
+138   6  ed6_grid     VBL     top  FR    2.0  RE1bF  ready     0.025  FR+RL         1.975              2.256                       U832_pair_union     47.625
+144   6  ed6_grid     VBL     top  FL    4.0  RE1bF  level     0.075  FL+RR         1.929              2.031                       U832_pair_union     26.475
+151   6  ed6_grid     VBL     top  FR    4.0  RE1bF  level     0.000  FR+RL         1.837              1.975                       U832_pair_union     26.400
+157   6  ed6_grid     VBL     top  FL    4.0  RE1bF  ready     0.075  FL+RR         2.015              2.099                       U832_pair_union     46.975
+161   6  ed6_grid     VBL     top  FR    4.0  RE1bF  ready     0.000  FR+RL         1.947              2.047                       U832_pair_union     46.900
+170   6  ed6_grid     VBL     top  FL    8.0  RE1bF  level     0.000  FL+RR         1.916              2.017                       U832_pair_union     26.900
+184   6  ed6_grid     VBL     top  FL    8.0  RE1bF  ready     0.075  FL+RR         2.034              2.107                       U832_pair_union     47.575
+185   6  ed6_grid     VBL     top  FR    8.0  RE1bF  ready     0.025  FR+RL         2.029              2.106                       U832_pair_union     47.525
+424   7        g1     VBM  bottom  FR    0.0  RE1bF  ready     0.000  FR+RL         1.861              2.193                       U832_pair_union     53.900
+472   7        g1     VBM  bottom  FL    4.0  RE1bF  ready     0.000  FL+RR         1.805              1.912                       U832_pair_union     52.300
+
+== all failures by offset (event rows) ==
+offset_s    0.000       0.025       0.050       0.075      
+fail        False True  False True  False True  False True 
+ed src                                                     
+6  ed6_grid    47     9    28     9    48     4    42     5
+7  g1          45     3    36     0    56     0    31     0
+   probe_d      6     0     6     0     6     0     6     0
+
+== U832_pair_union fails / lines by (ed, src, level, event, timing) x offset ==
+                                          lines  u832   pu_mean  pu_max  pu_min
+ed src      level  event timing offset_s                                       
+6  ed6_grid bottom FS24  level  0.000         3     0  0.925000   0.931   0.916
+                                0.025         2     0  0.918000   0.934   0.902
+                                0.050         7     0  0.909714   0.934   0.857
+                                0.075         4     0  0.786750   0.894   0.743
+                         ready  0.000         8     0  1.140750   1.307   1.017
+                                0.025         3     0  1.104000   1.174   1.029
+                                0.050         5     0  1.266400   1.397   0.955
+                   RE1bF level  0.000         5     0  1.210200   1.524   1.101
+                                0.025         1     0  1.237000   1.237   1.237
+                                0.050         7     0  1.189714   1.356   1.069
+                                0.075         3     0  1.408000   1.441   1.380
+                         ready  0.000         8     3  1.758625   1.863   1.613
+                                0.050         5     0  1.550200   1.606   1.502
+                                0.075         3     0  1.517333   1.526   1.511
+            top    FS24  level  0.000         5     0  1.153200   1.420   0.838
+                                0.025         5     0  0.978400   1.446   0.856
+                                0.050         3     0  1.129000   1.300   0.855
+                                0.075         3     0  1.116333   1.356   0.843
+                         ready  0.000         5     0  1.258000   1.400   1.177
+                                0.025         2     0  1.460500   1.663   1.258
+                                0.050         3     0  1.511000   1.643   1.408
+                                0.075         6     0  1.535500   1.648   1.286
+                   RE1bF level  0.000         4     2  1.551750   1.916   1.168
+                                0.025         4     3  1.697250   1.927   1.047
+                                0.050         2     0  1.066500   1.109   1.024
+                                0.075         6     2  1.455833   1.929   0.989
+                         ready  0.000         3     1  1.692333   1.947   1.534
+                                0.025         5     4  1.888200   2.029   1.584
+                                0.050         1     0  1.652000   1.652   1.652
+                                0.075         7     3  1.753857   2.034   1.526
+7  g1       bottom FS24  level  0.000         9     0  0.850000   0.960   0.653
+                                0.025         1     0  0.940000   0.940   0.940
+                                0.050         5     0  0.896400   0.913   0.865
+                                0.075         1     0  0.758000   0.758   0.758
+                         ready  0.000         5     0  1.174200   1.349   0.976
+                                0.025         1     0  1.019000   1.019   1.019
+                                0.050         8     0  1.193750   1.366   0.905
+                                0.075         2     0  1.349500   1.378   1.321
+                   RE1bF level  0.000         6     0  1.384167   1.543   1.167
+                                0.025         4     0  1.159250   1.226   1.077
+                                0.050         4     0  1.126250   1.212   1.081
+                                0.075         2     0  1.247500   1.424   1.071
+                         ready  0.000         5     2  1.672200   1.861   1.489
+                                0.025         3     0  1.526000   1.574   1.477
+                                0.050         5     0  1.571800   1.624   1.504
+                                0.075         3     0  1.544667   1.550   1.535
+            top    FS24  level  0.000         2     0  0.834000   0.835   0.833
+                                0.025         3     0  0.991333   1.256   0.857
+                                0.050         3     0  1.113333   1.306   0.852
+                                0.075         5     0  1.017600   1.303   0.845
+                         ready  0.000         2     0  1.266500   1.345   1.188
+                                0.025         6     0  1.323333   1.408   1.164
+                                0.050         2     0  1.271000   1.348   1.194
+                                0.075         4     0  1.321750   1.404   1.246
+                   RE1bF level  0.000         3     0  1.202667   1.247   1.133
+                                0.025         3     0  1.143333   1.246   1.055
+                                0.050         1     0  1.197000   1.197   1.197
+                                0.075         1     0  1.008000   1.008   1.008
+                         ready  0.000         3     0  1.642333   1.668   1.604
+                                0.025         3     0  1.574667   1.575   1.574
+                                0.050         1     0  1.524000   1.524   1.524
+                                0.075         1     0  1.583000   1.583   1.583
+   probe_d  bottom FS24  level  0.050         2     0  0.932000   0.932   0.932
+                                0.075         2     0  0.755000   0.755   0.755
+                   RE1bF level  0.050         2     0  1.117500   1.118   1.117
+            top    FS24  level  0.000         2     0  0.838000   0.838   0.838
+                                0.025         2     0  0.864000   0.864   0.864
+                   RE1bF level  0.000         2     0  1.286000   1.286   1.286
+                                0.025         2     0  1.047000   1.047   1.047
+                                0.075         2     0  0.989000   0.989   0.989
+
+== failed gate names, offset 0.0 vs other ==
+o0                  False  True 
+ed g                            
+6  Fmin_after_W         2      0
+   U832_pair_union     12      6
+   end_att              8      3
+7  U832_pair_union      0      2
+   end_att              0      1
+
+== pair_union_s, RE1bF ready, by offset ==
+offset_s                     0.000  0.025  0.050  0.075
+ed setting level  leg fs_kN                            
+6  VBL     bottom FL  0.0    1.774    NaN    NaN    NaN
+                      2.0    1.830    NaN    NaN    NaN
+                      4.0      NaN    NaN  1.553    NaN
+                      8.0    1.717    NaN    NaN    NaN
+                  FR  0.0      NaN    NaN  1.585    NaN
+                      2.0    1.863    NaN    NaN    NaN
+                      4.0    1.837    NaN    NaN    NaN
+                      8.0      NaN    NaN  1.606    NaN
+                  RL  0.0      NaN    NaN  1.505    NaN
+                      2.0      NaN    NaN    NaN  1.515
+                      4.0    1.613    NaN    NaN    NaN
+                      8.0    1.720    NaN    NaN    NaN
+                  RR  0.0      NaN    NaN  1.502    NaN
+                      2.0      NaN    NaN    NaN  1.511
+                      4.0      NaN    NaN    NaN  1.526
+                      8.0    1.715    NaN    NaN    NaN
+           top    FL  0.0      NaN  1.922    NaN    NaN
+                      2.0      NaN  1.931    NaN    NaN
+                      4.0      NaN    NaN    NaN  2.015
+                      8.0      NaN    NaN    NaN  2.034
+                  FR  0.0      NaN    NaN    NaN  2.018
+                      2.0      NaN  1.975    NaN    NaN
+                      4.0    1.947    NaN    NaN    NaN
+                      8.0      NaN  2.029    NaN    NaN
+                  RL  0.0      NaN    NaN    NaN  1.554
+                      2.0      NaN    NaN    NaN  1.537
+                      4.0    1.596    NaN    NaN    NaN
+                      8.0      NaN    NaN    NaN  1.593
+                  RR  0.0    1.534    NaN    NaN    NaN
+                      2.0      NaN    NaN    NaN  1.526
+                      4.0      NaN  1.584    NaN    NaN
+                      8.0      NaN    NaN  1.652    NaN
+7  VBM     bottom FL  0.0      NaN    NaN  1.564    NaN
+                      2.0      NaN  1.477    NaN    NaN
+                      4.0    1.805    NaN    NaN    NaN
+                      8.0      NaN    NaN  1.589    NaN
+                  FR  0.0    1.861    NaN    NaN    NaN
+                      2.0      NaN    NaN    NaN  1.549
+                      4.0      NaN    NaN    NaN  1.550
+                      8.0    1.693    NaN    NaN    NaN
+                  RL  0.0    1.489    NaN    NaN    NaN
+                      2.0      NaN  1.527    NaN    NaN
+                      4.0      NaN    NaN    NaN  1.535
+                      8.0      NaN    NaN  1.624    NaN
+                  RR  0.0    1.513    NaN    NaN    NaN
+                      2.0      NaN    NaN  1.504    NaN
+                      4.0      NaN  1.574    NaN    NaN
+                      8.0      NaN    NaN  1.578    NaN
+           top    RL  0.0    1.604    NaN    NaN    NaN
+                      2.0      NaN  1.574    NaN    NaN
+                      4.0      NaN  1.575    NaN    NaN
+                      8.0    1.655    NaN    NaN    NaN
+                  RR  0.0      NaN    NaN  1.524    NaN
+                      2.0      NaN  1.575    NaN    NaN
+                      4.0      NaN    NaN    NaN  1.583
+                      8.0    1.668    NaN    NaN    NaN
+
+== pair_union_s summary by event/timing/level/offset (mean, max) ==
+                                 count      mean    max
+ed event timing level  offset_s                        
+6  FS24  level  bottom 0.000         3  0.925000  0.931
+                       0.025         2  0.918000  0.934
+                       0.050         7  0.909714  0.934
+                       0.075         4  0.786750  0.894
+                top    0.000         5  1.153200  1.420
+                       0.025         5  0.978400  1.446
+                       0.050         3  1.129000  1.300
+                       0.075         3  1.116333  1.356
+         ready  bottom 0.000         8  1.140750  1.307
+                       0.025         3  1.104000  1.174
+                       0.050         5  1.266400  1.397
+                top    0.000         5  1.258000  1.400
+                       0.025         2  1.460500  1.663
+                       0.050         3  1.511000  1.643
+                       0.075         6  1.535500  1.648
+   G4    level  bottom 0.000         8  0.000000  0.000
+                       0.025         3  0.000000  0.000
+                       0.050         4  0.000000  0.000
+                       0.075         1  0.000000  0.000
+                top    0.000         2  0.000000  0.000
+                       0.025         5  0.000000  0.000
+                       0.050         5  0.000000  0.000
+                       0.075         4  0.000000  0.000
+         ready  bottom 0.000         4  0.000000  0.000
+                       0.025         3  0.000000  0.000
+                       0.050         6  0.000000  0.000
+                       0.075         3  0.000000  0.000
+                top    0.000         1  0.000000  0.000
+                       0.025         4  0.000000  0.000
+                       0.050         4  0.000000  0.000
+                       0.075         7  0.000000  0.000
+   RE1bF level  bottom 0.000         5  1.210200  1.524
+                       0.025         1  1.237000  1.237
+                       0.050         7  1.189714  1.356
+                       0.075         3  1.408000  1.441
+                top    0.000         4  1.551750  1.916
+                       0.025         4  1.697250  1.927
+                       0.050         2  1.066500  1.109
+                       0.075         6  1.455833  1.929
+         ready  bottom 0.000         8  1.758625  1.863
+                       0.050         5  1.550200  1.606
+                       0.075         3  1.517333  1.526
+                top    0.000         3  1.692333  1.947
+                       0.025         5  1.888200  2.029
+                       0.050         1  1.652000  1.652
+                       0.075         7  1.753857  2.034
+7  FS24  level  bottom 0.000         9  0.850000  0.960
+                       0.025         1  0.940000  0.940
+                       0.050         7  0.906571  0.932
+                       0.075         3  0.756000  0.758
+                top    0.000         4  0.836000  0.838
+                       0.025         5  0.940400  1.256
+                       0.050         3  1.113333  1.306
+                       0.075         5  1.017600  1.303
+         ready  bottom 0.000         5  1.174200  1.349
+                       0.025         1  1.019000  1.019
+                       0.050         8  1.193750  1.366
+                       0.075         2  1.349500  1.378
+                top    0.000         2  1.266500  1.345
+                       0.025         6  1.323333  1.408
+                       0.050         2  1.271000  1.348
+                       0.075         4  1.321750  1.404
+   G4    level  bottom 0.000         6  0.000000  0.000
+                       0.025         3  0.000000  0.000
+                       0.050        12  0.000000  0.000
+                       0.075         1  0.000000  0.000
+                top    0.000         3  0.000000  0.000
+                       0.025         2  0.000000  0.000
+                       0.050         5  0.000000  0.000
+                       0.075         8  0.000000  0.000
+         ready  bottom 0.000         5  0.000000  0.000
+                       0.025         3  0.000000  0.000
+                       0.050         7  0.000000  0.000
+                       0.075         1  0.000000  0.000
+                top    0.000         1  0.000000  0.000
+                       0.025         6  0.000000  0.000
+                       0.050         5  0.000000  0.000
+                       0.075         4  0.000000  0.000
+   RE1bF level  bottom 0.000         6  1.384167  1.543
+                       0.025         4  1.159250  1.226
+                       0.050         6  1.123333  1.212
+                       0.075         2  1.247500  1.424
+                top    0.000         5  1.236000  1.286
+                       0.025         5  1.104800  1.246
+                       0.050         1  1.197000  1.197
+                       0.075         3  0.995333  1.008
+         ready  bottom 0.000         5  1.672200  1.861
+                       0.025         3  1.526000  1.574
+                       0.050         5  1.571800  1.624
+                       0.075         3  1.544667  1.550
+                top    0.000         3  1.642333  1.668
+                       0.025         3  1.574667  1.575
+                       0.050         1  1.524000  1.524
+                       0.075         1  1.583000  1.583
+
+== event clusters: lines vs unique command hashes ==
+387 lines 387 unique within cluster; 0 clusters with a repeated hash
+
+== identical commands_sha256 on different job identities (bit alias) ==
+      ed        src  setting case   level  leg  fs_kN  event  offset_s    eps                                                   commands_sha256
+523    7         g1      VBM  R12     top   RL    0.0     G4     0.050  0.000  01c9ea21ca69d51b87214484a56a09eac5f23bc427265436f01bf718def075fb
+616    7     j9main      VBM  R12     top   RL    0.0    NaN     0.050  0.000  01c9ea21ca69d51b87214484a56a09eac5f23bc427265436f01bf718def075fb
+573    7         g1      VBM  R12     top   RL    8.0     G4     0.050  0.000  0986d6908d57bc9f97f6a27d3072308f80c981aae2b07fd5ee12ac4cece5ee43
+637    7     j9main      VBM  R12     top   RL    8.0    NaN     0.050  0.000  0986d6908d57bc9f97f6a27d3072308f80c981aae2b07fd5ee12ac4cece5ee43
+194    6  ed6_confa  VBLc005   S8     NaN  NaN    NaN    NaN       NaN  0.000  09d2c9884f85243769c7816516108784430423c7972193540acacb99b9073ff3
+643    7     j9main      VBM   S8     NaN  NaN    NaN    NaN       NaN  0.000  09d2c9884f85243769c7816516108784430423c7972193540acacb99b9073ff3
+1362   7       sens   VBMd05  R12     NaN  NaN    NaN    NaN     0.050  0.000  0fa63e6582da8e40eabc791d3fd04eff0c74baaa4abe89061cf39d589371c1ab
+1372   7       sens   VBMd05  R12     top   RR    4.0    NaN     0.050  0.000  0fa63e6582da8e40eabc791d3fd04eff0c74baaa4abe89061cf39d589371c1ab
+1405   7       sens   VBMd15  R12     NaN  NaN    NaN    NaN     0.000  0.000  0fe479a0eea7210e02fb248c71b53efc4e21d46fdaa3ec8458c8f93febc25258
+1414   7       sens   VBMd15  R12     top   RR    4.0    NaN     0.000  0.000  0fe479a0eea7210e02fb248c71b53efc4e21d46fdaa3ec8458c8f93febc25258
+1131   7       sens   VBMc04  R12     NaN  NaN    NaN    NaN     0.050  0.000  1d8bf6c027d06589ca726b399ea617e5e9fc1cefccdc9293467ea3a9d6115576
+1135   7       sens   VBMc04  R12     top   RR    4.0    NaN     0.050  0.000  1d8bf6c027d06589ca726b399ea617e5e9fc1cefccdc9293467ea3a9d6115576
+559    7         g1      VBM  R12     top   RR    4.0     G4     0.025  0.000  2cf880999c27d76bb5a0beec162253aa08c6bee0322c8d2277684485da49e7ff
+606    7     j9main      VBM  R12     NaN  NaN    NaN    NaN     0.025  0.000  2cf880999c27d76bb5a0beec162253aa08c6bee0322c8d2277684485da49e7ff
+1406   7       sens   VBMd15  R12     NaN  NaN    NaN    NaN     0.050  0.000  2ec27bed385a7f76ca415e2490ca2c53ed73e16b8b3d7593e97bddae641db5b3
+1417   7       sens   VBMd15  R12     top   RR    4.0    NaN     0.050  0.000  2ec27bed385a7f76ca415e2490ca2c53ed73e16b8b3d7593e97bddae641db5b3
+570    7         g1      VBM  R12     top   FL    8.0     G4     0.050  0.000  317e63e5b8d562df7851e61078c0047b9658cf5f9f1ab39d1cc5ed6279c6d8cd
+612    7     j9main      VBM  R12     top   FL    8.0    NaN     0.050  0.000  317e63e5b8d562df7851e61078c0047b9658cf5f9f1ab39d1cc5ed6279c6d8cd
+526    7         g1      VBM  R12     top   RR    0.0     G4     0.000  0.000  33f9e5c26976e657249e02554d08e20555cfb5a6ce7351a46cba88891d83990d
+632    7     j9main      VBM  R12     top   RR    0.0    NaN     0.000  0.000  33f9e5c26976e657249e02554d08e20555cfb5a6ce7351a46cba88891d83990d
+1175   7       sens  VBMb069  R12     NaN  NaN    NaN    NaN     0.000  0.000  351e34a409d2ccf544689cc2b23fef63c53933d033ee66edc50f88a469f38637
+1185   7       sens  VBMb069  R12     top   RR    4.0    NaN     0.000  0.000  351e34a409d2ccf544689cc2b23fef63c53933d033ee66edc50f88a469f38637
+1221   7       sens   VBMb16  R12     NaN  NaN    NaN    NaN     0.000  0.000  3751fdca504a49edb855a1e136b780638afbb2f6dae349eb097358274f1d4bc0
+1233   7       sens   VBMb16  R12     top   RR    4.0    NaN     0.000  0.000  3751fdca504a49edb855a1e136b780638afbb2f6dae349eb097358274f1d4bc0
+648    7     j9main      VBM   S1     NaN  NaN    NaN    NaN       NaN  0.001  3bf1d2e058324ce8a038ac4aaf1b2d95f70c3b2c4d8e0be12c8739e723babd4f
+1110   7       sens  VBMc005   S1     NaN  NaN    NaN    NaN       NaN  0.001  3bf1d2e058324ce8a038ac4aaf1b2d95f70c3b2c4d8e0be12c8739e723babd4f
+991    7       sens  VBMslow  R12     top   RR    4.0    NaN     0.000  0.000  3c783cf839988d22552fb001edd5e06b6a9558216252c81a94d347c0207eb36f
+994    7       sens  VBMslow  R12     NaN  NaN    NaN    NaN     0.000  0.000  3c783cf839988d22552fb001edd5e06b6a9558216252c81a94d347c0207eb36f
+480    7         g1      VBM  R12  bottom   RR    4.0     G4     0.000  0.000  3f4cb4b292d3f7bd652a62207cc4ad356eec1410a7991ca7f6f52c5adee7139d
+638    7     j9main      VBM  R12  bottom   RR    4.0    NaN     0.000  0.000  3f4cb4b292d3f7bd652a62207cc4ad356eec1410a7991ca7f6f52c5adee7139d
+647    7     j9main      VBM   S1     NaN  NaN    NaN    NaN       NaN  0.000  4478701102d1d94b4773edd5520b6f878e1aa7044e249cebf2579debc02c199a
+1107   7       sens  VBMc005   S1     NaN  NaN    NaN    NaN       NaN  0.000  4478701102d1d94b4773edd5520b6f878e1aa7044e249cebf2579debc02c199a
+894    7     j9main     LSM4  R12     NaN  NaN    NaN    NaN     0.050  0.000  47bd3290fbb2de71841cadcdae79fd8d1e461a42bfb807e6373130c162e6ec34
+916    7     j9main     LSM4  R12     top   RR    4.0    NaN     0.050  0.000  47bd3290fbb2de71841cadcdae79fd8d1e461a42bfb807e6373130c162e6ec34
+891    7     j9main     LSM4  R12     NaN  NaN    NaN    NaN     0.000  0.000  4b487b519ab6c56b9126ba12eb8efd9a425d94a5cdb95b87a9cf6f77a2e6bc54
+913    7     j9main     LSM4  R12     top   RR    4.0    NaN     0.000  0.000  4b487b519ab6c56b9126ba12eb8efd9a425d94a5cdb95b87a9cf6f77a2e6bc54
+603    7     j9main      VBM  R12     NaN  NaN    NaN    NaN     0.000  0.000  4f438e3a0928d3883061014e5ba0059cde0d437d0eb1df09c4f0ee87cd683270
+624    7     j9main      VBM  R12     top   RR    4.0    NaN     0.000  0.000  4f438e3a0928d3883061014e5ba0059cde0d437d0eb1df09c4f0ee87cd683270
+1269   7       sens   VBMh05  R12     NaN  NaN    NaN    NaN     0.050  0.000  589b4e72c98a392579c9209ae900036c5c0671ff47286d6efce1190022d41c76
+1277   7       sens   VBMh05  R12     top   RR    4.0    NaN     0.050  0.000  589b4e72c98a392579c9209ae900036c5c0671ff47286d6efce1190022d41c76
+1039   7       sens  VBMfast  R12     NaN  NaN    NaN    NaN     0.050  0.000  60eb24e0f237d1a1e26d22ae8ceafc6903ab725688fbe9fbe3164687af371299
+1050   7       sens  VBMfast  R12     top   RR    4.0    NaN     0.050  0.000  60eb24e0f237d1a1e26d22ae8ceafc6903ab725688fbe9fbe3164687af371299
+563    7         g1      VBM  R12     top   RL    4.0     G4     0.050  0.000  61f7d0e1f659f9dcdfb4f9b8d792341ac06b0dd31315317832a413af3ddbed3a
+610    7     j9main      VBM  R12     top   RL    4.0    NaN     0.050  0.000  61f7d0e1f659f9dcdfb4f9b8d792341ac06b0dd31315317832a413af3ddbed3a
+1315   7       sens   VBMh15  R12     NaN  NaN    NaN    NaN     0.050  0.000  61ff4d3158b5a722513e82809875037b33fb109274dff063baa2a757e46a8f97
+1323   7       sens   VBMh15  R12     top   RR    4.0    NaN     0.050  0.000  61ff4d3158b5a722513e82809875037b33fb109274dff063baa2a757e46a8f97
+822    7     j9main     LSM3  R12     NaN  NaN    NaN    NaN     0.050  0.000  63b24b0e65785548d5394eb8e67c60b8e45ccd304fba22df0324c823270e1203
+844    7     j9main     LSM3  R12     top   RR    4.0    NaN     0.050  0.000  63b24b0e65785548d5394eb8e67c60b8e45ccd304fba22df0324c823270e1203
+1265   7       sens   VBMh05  R12     NaN  NaN    NaN    NaN     0.000  0.000  80462488f9253e6d7d2006306199f97a2a813bb4e71342f2a6af29846de7dd07
+1278   7       sens   VBMh05  R12     top   RR    4.0    NaN     0.000  0.000  80462488f9253e6d7d2006306199f97a2a813bb4e71342f2a6af29846de7dd07
+605    7     j9main      VBM  R12     NaN  NaN    NaN    NaN     0.050  0.000  84f274ae2c07090a724e7f2fb1d38157854343a9a272892cf19bfb89e0b7627e
+627    7     j9main      VBM  R12     top   RR    4.0    NaN     0.050  0.000  84f274ae2c07090a724e7f2fb1d38157854343a9a272892cf19bfb89e0b7627e
+820    7     j9main     LSM3  R12     NaN  NaN    NaN    NaN     0.000  0.000  8848a5c0f6b97b5a9bd82e156f52455a93b58c851a1c83828ddb7af951690612
+843    7     j9main     LSM3  R12     top   RR    4.0    NaN     0.000  0.000  8848a5c0f6b97b5a9bd82e156f52455a93b58c851a1c83828ddb7af951690612
+1082   7       sens  VBMc005  R12     NaN  NaN    NaN    NaN     0.000  0.000  8970f59cac5d9720aae0bdaf4fae9a5320c9e98fd2d98323731a28d9d4dc5dfa
+1091   7       sens  VBMc005  R12     top   RR    4.0    NaN     0.000  0.000  8970f59cac5d9720aae0bdaf4fae9a5320c9e98fd2d98323731a28d9d4dc5dfa
+675    7     j9main     LSM1  R12     NaN  NaN    NaN    NaN     0.000  0.000  8e50edb480632f81f05681f7f5abff14d88ffc787ebd40fc6e4a936b26f115ea
+697    7     j9main     LSM1  R12     top   RR    4.0    NaN     0.000  0.000  8e50edb480632f81f05681f7f5abff14d88ffc787ebd40fc6e4a936b26f115ea
+676    7     j9main     LSM1  R12     NaN  NaN    NaN    NaN     0.050  0.000  9f81fa6317081f5ba26e33b83859708bde9749172be9c3a82a06ff0f894a43e5
+700    7     j9main     LSM1  R12     top   RR    4.0    NaN     0.050  0.000  9f81fa6317081f5ba26e33b83859708bde9749172be9c3a82a06ff0f894a43e5
+747    7     j9main     LSM2  R12     NaN  NaN    NaN    NaN     0.000  0.000  aef04e43163fbbeaa1cd28e8e8b34f8b8467f6b494366059fe0718ab4186faae
+769    7     j9main     LSM2  R12     top   RR    4.0    NaN     0.000  0.000  aef04e43163fbbeaa1cd28e8e8b34f8b8467f6b494366059fe0718ab4186faae
+1313   7       sens   VBMh15  R12     NaN  NaN    NaN    NaN     0.000  0.000  beebd8a54972a8abf4237584d9dd76de97113b6c3734efc56739d6de2d93da35
+1324   7       sens   VBMh15  R12     top   RR    4.0    NaN     0.000  0.000  beebd8a54972a8abf4237584d9dd76de97113b6c3734efc56739d6de2d93da35
+1037   7       sens  VBMfast  R12     NaN  NaN    NaN    NaN     0.000  0.000  c289ba05275dc6bde648c7ddf5e3a4107dfdb8d0cf4b6ac55de3c76d070156e5
+1049   7       sens  VBMfast  R12     top   RR    4.0    NaN     0.000  0.000  c289ba05275dc6bde648c7ddf5e3a4107dfdb8d0cf4b6ac55de3c76d070156e5
+522    7         g1      VBM  R12     top   FR    0.0     G4     0.050  0.000  c3c930178efaccbee1cb3c4108f4d7023964147402f1bdff73ef610ffd6c8191
+619    7     j9main      VBM  R12     top   FR    0.0    NaN     0.050  0.000  c3c930178efaccbee1cb3c4108f4d7023964147402f1bdff73ef610ffd6c8191
+1223   7       sens   VBMb16  R12     NaN  NaN    NaN    NaN     0.050  0.000  d338af538f72bc4a9d00a021e722a7dda2760b8884d78af08f567dcdce6b6f00
+1234   7       sens   VBMb16  R12     top   RR    4.0    NaN     0.050  0.000  d338af538f72bc4a9d00a021e722a7dda2760b8884d78af08f567dcdce6b6f00
+1128   7       sens   VBMc04  R12     NaN  NaN    NaN    NaN     0.000  0.000  db4d612aa9cdb2584461363092662d7c2567fa833a0777891e6cc9d83a64e946
+1137   7       sens   VBMc04  R12     top   RR    4.0    NaN     0.000  0.000  db4d612aa9cdb2584461363092662d7c2567fa833a0777891e6cc9d83a64e946
+993    7       sens  VBMslow  R12     top   RR    4.0    NaN     0.050  0.000  dee410802a67be898732166f401053c0001d95d916f6c9790986f0564feb5313
+995    7       sens  VBMslow  R12     NaN  NaN    NaN    NaN     0.050  0.000  dee410802a67be898732166f401053c0001d95d916f6c9790986f0564feb5313
+1085   7       sens  VBMc005  R12     NaN  NaN    NaN    NaN     0.050  0.000  e06f0a35cf620ee749cfc8c18541df57286a3859d66d72abb429d88c97f604e2
+1093   7       sens  VBMc005  R12     top   RR    4.0    NaN     0.050  0.000  e06f0a35cf620ee749cfc8c18541df57286a3859d66d72abb429d88c97f604e2
+1176   7       sens  VBMb069  R12     NaN  NaN    NaN    NaN     0.050  0.000  f49366b1c5de81e4ef4ae5c67868d2cb5c75d5dfade64a17609ff1c34a026ac2
+1188   7       sens  VBMb069  R12     top   RR    4.0    NaN     0.050  0.000  f49366b1c5de81e4ef4ae5c67868d2cb5c75d5dfade64a17609ff1c34a026ac2
+1359   7       sens   VBMd05  R12     NaN  NaN    NaN    NaN     0.000  0.000  f5fe7209bdcb99a35079cd10efa82c53d8f64f6361385c419870f640a7a91d76
+1371   7       sens   VBMd05  R12     top   RR    4.0    NaN     0.000  0.000  f5fe7209bdcb99a35079cd10efa82c53d8f64f6361385c419870f640a7a91d76
+578    7         g1      VBM  R12     top   RR    8.0  RE1bF     0.000  0.000  f62824356b584631b7db2d6a8ddc3ca96f184c1b391aac333fe0bc87602d5fee
+641    7     j9main      VBM  R14     NaN  NaN    NaN    NaN     0.000  0.000  f62824356b584631b7db2d6a8ddc3ca96f184c1b391aac333fe0bc87602d5fee
+749    7     j9main     LSM2  R12     NaN  NaN    NaN    NaN     0.050  0.000  fe51953a29e3d9c12304c6c8e133cfffe4a57650a72c36f23497ccb91f96cfa7
+776    7     j9main     LSM2  R12     top   RR    4.0    NaN     0.050  0.000  fe51953a29e3d9c12304c6c8e133cfffe4a57650a72c36f23497ccb91f96cfa7
+repeated identical jobs (same identity, same hash): 0 lines in 0 groups; sources {}

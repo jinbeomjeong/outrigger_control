@@ -1,0 +1,248 @@
+{
+  "input": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\control_k1_window\\loops\\loop_nominal_r1_sigma1.json",
+  "dt": 0.1,
+  "feedback_sign": 1,
+  "verdict": "mismatch",
+  "cl_stable": true,
+  "worst_pole": 0.9392620978098631,
+  "spec_ok": true,
+  "specs": [
+    {
+      "name": "PM ≥ [deg]",
+      "limit": 45.0,
+      "value": 80.02085471345754,
+      "ok": true
+    },
+    {
+      "name": "GM ≥ [dB]",
+      "limit": 6.0,
+      "value": 22.350214345547002,
+      "ok": true
+    },
+    {
+      "name": "Ms ≤",
+      "limit": 2.0,
+      "value": 1.1513825395960062,
+      "ok": true
+    }
+  ],
+  "grid_result": {
+    "grid": {
+      "wmin": 3.1415926535897955e-05,
+      "wmax": 31.41592653589793,
+      "npts": 100000,
+      "spacing": "log"
+    },
+    "gm": 13.107223872440647,
+    "gm_db": 22.350214345547002,
+    "wpc": 4.837367003727872,
+    "pm_deg": 80.02085471345754,
+    "wgc": 0.49809695025802164,
+    "dm_s": 2.803926794344723,
+    "wdm": 0.49809695025802164,
+    "dm_samples": 28.03926794344723,
+    "ms": 1.1513825395960062,
+    "wms": 2.1782198879163257,
+    "mt": 0.9999999987169502,
+    "wmt": 3.1415926535897955e-05,
+    "notes": [
+      "Mt peak at a grid end (type-0 loops at low frequency are normal)"
+    ]
+  },
+  "phase_crossovers": [
+    {
+      "w": 4.837367003727872,
+      "gm": 13.107223872440647,
+      "gm_db": 22.350214345547002
+    }
+  ],
+  "gain_crossovers": [
+    {
+      "w": 0.49809695025802164,
+      "pm_deg": 80.02085471345754,
+      "dm_s": 2.803926794344723
+    }
+  ],
+  "python_control": {
+    "gm_all": [
+      13.107223872424356
+    ],
+    "pm_all": [],
+    "wpc_all": [
+      4.837367003724807
+    ],
+    "wgc_all": [],
+    "gm": 13.107223872424356,
+    "pm_deg": "inf",
+    "wpc": 4.837367003724807,
+    "wgc": "nan",
+    "ms_from_sm": 1.1513825395962762,
+    "wms": 2.178219993831146,
+    "cl_poles": {
+      "re": [
+        0.9392620978098621,
+        0.6279591186705495,
+        0.30065822469102954,
+        0.0
+      ],
+      "im": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "ms_hinf": 1.1513815610656024,
+    "mt_hinf": 0.9999999999999841,
+    "warnings": [
+      "stability_margins: Falling back to 'frd' method because of chance of numerical inaccuracy in 'poly' method.",
+      "stability_margins: Falling back to 'frd' method because of chance of numerical inaccuracy in 'poly' method."
+    ]
+  },
+  "cross_check": [
+    {
+      "quantity": "gm",
+      "grid": 13.107223872440647,
+      "ct": 13.107223872424356,
+      "rel_diff": 1.2429000017611064e-12,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "wpc_rad_s",
+      "grid": 4.837367003727872,
+      "ct": 4.837367003724807,
+      "rel_diff": 6.336305936727643e-13,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "pm_deg",
+      "grid": 80.02085471345754,
+      "ct": "inf",
+      "rel_diff": "inf",
+      "class": "margin",
+      "verdict": "mismatch",
+      "note": ""
+    },
+    {
+      "quantity": "wgc_rad_s",
+      "grid": 0.49809695025802164,
+      "ct": "nan",
+      "rel_diff": "inf",
+      "class": "margin",
+      "verdict": "mismatch",
+      "note": ""
+    },
+    {
+      "quantity": "ms (1/sm)",
+      "grid": 1.1513825395960062,
+      "ct": 1.1513825395962762,
+      "rel_diff": 2.3450610922371097e-13,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "ms (H-inf of S)",
+      "grid": 1.1513825395960062,
+      "ct": 1.1513815610656024,
+      "rel_diff": 8.498742773710419e-07,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "mt (H-inf of T)",
+      "grid": 0.9999999987169502,
+      "ct": 0.9999999999999841,
+      "rel_diff": 1.283033901344786e-09,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "cl_poles (manual vs ct)",
+      "grid": null,
+      "ct": null,
+      "rel_diff": 2.7488896413174983e-15,
+      "class": "algebraic",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "phase crossover count",
+      "grid": 1,
+      "ct": 1,
+      "rel_diff": 0.0,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "gain crossover count",
+      "grid": 1,
+      "ct": 0,
+      "rel_diff": "nan",
+      "class": "margin",
+      "verdict": "mismatch",
+      "note": "only ct: []; only grid: [0.49809695025802164]"
+    }
+  ],
+  "notes": [
+    "Mt peak at a grid end (type-0 loops at low frequency are normal)",
+    "stability_margins: Falling back to 'frd' method because of chance of numerical inaccuracy in 'poly' method.",
+    "stability_margins: Falling back to 'frd' method because of chance of numerical inaccuracy in 'poly' method."
+  ],
+  "tolerances": {
+    "margin": [
+      1e-06,
+      0.001
+    ],
+    "algebraic": [
+      1e-09,
+      1e-06
+    ]
+  },
+  "xval": {
+    "schema": "ctrl-xval/1",
+    "source": "python-grid (ctrl_verify margins)",
+    "quantities": {
+      "gm": 13.107223872440647,
+      "gm_db": 22.350214345547002,
+      "pm_deg": 80.02085471345754,
+      "wpc": 4.837367003727872,
+      "wgc": 0.49809695025802164,
+      "dm_s": 2.803926794344723,
+      "ms": 1.1513825395960062,
+      "mt": 0.9999999987169502,
+      "cl_poles": {
+        "re": [
+          0.0,
+          0.9392620978098631,
+          0.6279591186705524,
+          0.30065822469102854
+        ],
+        "im": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "classes": {
+      "gm": "margin",
+      "gm_db": "margin",
+      "pm_deg": "margin",
+      "wpc": "margin",
+      "wgc": "margin",
+      "dm_s": "margin",
+      "ms": "margin",
+      "mt": "margin",
+      "cl_poles": "algebraic"
+    }
+  }
+}

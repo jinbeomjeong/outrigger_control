@@ -1,0 +1,51 @@
+[
+ {
+  "case": "start0.1_high0.2-0.5",
+  "end": 0.5,
+  "expect": 0.5,
+  "ok": true
+ },
+ {
+  "case": "start0.1_high0.2-0.4_low0.5",
+  "end": null,
+  "expect": null,
+  "ok": true
+ },
+ {
+  "case": "start0.1_high0.2-0.4_low0.5_high0.6-0.9",
+  "end": 0.8,
+  "expect": 0.8,
+  "ok": true
+ },
+ {
+  "case": "start0.075_high0.775-0.975",
+  "end": 0.975,
+  "expect": 0.975,
+  "ok": true
+ },
+ {
+  "case": "boundary_start0.1_high0.4-0.6",
+  "end": null,
+  "expect": null,
+  "ok": true
+ },
+ {
+  "case": "boundary_start0.1_high0.4-0.7",
+  "end": 0.7,
+  "expect": 0.7,
+  "ok": true
+ },
+ {
+  "case": "after_Tr_start0.1_high0.5-0.7",
+  "end": 0.7,
+  "expect": 0.7,
+  "ok": true
+ },
+ {
+  "case": "after_Tr_start0.1_high0.7-0.9",
+  "end": 0.9,
+  "expect": 0.9,
+  "ok": true
+ }
+]
+SELFTEST OK

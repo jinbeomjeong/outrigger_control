@@ -1,0 +1,50 @@
+{
+ "producer": "control-expert, 2026-11-26, edition 8 K1 window design (offline replay, record only)",
+ "inputs": {
+  "rerun_raw": "06_analysis/02_control/j_p3_cause/ed8_design/dynamics_d1_d3/rerun_raw/logs/<run>_{ctrl.npz,plant.npz,cue.json} (23 runs, run commit C 8a2a52ce, arms a2 / A)",
+  "code_read": "worktree ed8-impl 7fc83456: 03_src/outrigger_sim/control/ground_contact.py 140-230, 573-623, 956-1027, 1126-1130, 1138-1211; c2.py 1426-1434, 1537-1545, 1627-1664, 1682-1693, 2537, 2561, 3093-3097, 3817-3853, 7714-7734, 9822-9925; sensors/attitude.py 43-77; 04_scripts/04_hydraulic/coupled/harness_hydraulics.py 101"
+ },
+ "env": "conda run -n dynamics-dev python -I -B (MKL_THREADING_LAYER=TBB); Julia 1.13.2 control-julia via julia-mcp (k07)",
+ "scripts": {
+  "k00_inspect.py": "keys of the raw files -> k00_out.txt",
+  "k01_inspect_ctrl.py": "controller log keys, cue rows -> k01_out.txt",
+  "k02_replay.py": "replay of the K1 windows -> k02_legs.csv, k02_rounds.csv, k02_summary.json",
+  "k03_debug_fr.py": "10 Hz trace of FR round 1 (M-a2) -> k03_out.txt",
+  "k04_tables.py": "tables -> k04_out.txt",
+  "k05_summary.py": "candidate summary per arm -> k05_summary.json, k05_out.txt",
+  "k06_twist_margins.py": "discrete twist-loop margins (Python) -> k06_margins.json, k06_out.txt, loops/loop_*.json",
+  "k07_twist_margins.jl": "Julia path (julia-mcp, control-julia) -> loops/jl_*.json; tool compare -> loops/cmp_*.md"
+ },
+ "columns_k02_legs": {
+  "run": "re-run name <row>_D8-<plant>-<arm>",
+  "round": "s.probe_round_count of the leg segment",
+  "leg": "FL FR RL RR",
+  "reversed": "first command < 0 (retract first); no K1 replay",
+  "t_first_cmd_s / t_mid_s / t_ext_s": "readings: first-command decision = mid - 5 periods; mid = reading matching the cue first_move_mid_force_N (|dF| < 1 N); ext = reading matching cue extended_force_N [s]",
+  "s_nom_MN_m": "cue load_sensitivity_N_m (S_ii,nom) / 1e6",
+  "ko_MN_m, Fs_kN, f_mid_kN": "plant ko, Fs, seal force f at the nearest plant snapshot to the mid reading",
+  "stuck_at_mid": "|f_mid| < Fs - 1 N (harness truth)",
+  "moved_by_mid_mm": "piston reading s.last_reading.rod_stroke_m at mid minus at the first-command reading [mm]",
+  "window_travel_mm": "piston reading ext - mid [mm]",
+  "k1_old": "(F_ext - F_mid) / (x_ext - x_mid), F = s.last_reading.cylinder_force_N, x = rod_stroke_m [N/m]; checked against cue stiffness_N_m (rel 1e-6)",
+  "kpad_old": "(dF + df) / dx over the old window, df = plant seal force change [N/m]",
+  "kband_old_ratio": "(k1_old - kpad_old) / S_ii,nom",
+  "a<d>_k1": "candidate (a): mid = max(old mid, first reading with piston moved >= d mm from the first-command reading), strictly before ext; NaN if ext - mid travel < 0.2 mm [N/m]",
+  "a<d>_mid_shift": "periods the mid moved later",
+  "a<d>_kpad, a<d>_kband_ratio, a<d>_stuck_at_mid": "truth over the candidate window",
+  "b_k1": "candidate (b): sum dF / sum dx over the old window intervals with dx > 0 and dF/dx < 0.5 ko; NaN if sum dx < 0.2 mm",
+  "c<d>_k1": "candidate (c): k1_old if moved_by_mid >= d else NaN",
+  "dec<d>_k1": "decoupled (recommended form): a<d>_k1 when k1_old is grounded (> 0.3 S_ii) and a<d>_k1 is finite and > 0.3 S_ii, else NaN; scale only",
+  "<name>_ratio": "<name> / S_ii,nom",
+  "<name>_load_kN / _seal_kN / _grounded": "ground_contact.py 610-622 with the correction = <name> if grounded by stiffness else C1 (5.83e6 / 6.98e6) [kN]"
+ },
+ "columns_k02_rounds": {
+  "<name>_median": "median ratio over the legs with finite <name> > 0.3 S_ii (c2.py 3093-3097, 9906-9916), None under 3 legs",
+  "<name>_count": "legs in the median",
+  "<name>_scale": "median clipped to [1.0, 1.5] (c2.py 9923-9925), None = previous scale kept",
+  "<name>_warn<h>": "median outside (0.8, h)",
+  "<name>_seal_max_kN": "largest seal-friction estimate of the round (F_band source, c2.py 9874-9890) [kN]"
+ },
+ "exactness": "round 1 exact (K1 acts only after the round); later rounds replayed on the old controller's trajectory (approximate)",
+ "known_replay_gaps": "k02_summary.json replay_problems: 9 legs without a cue mid in the segment (cue log gaps), 2 legs (Mh15-a2 r2 FL, RR) K1 replay differs from cue by 0.4 % / 7e-6 (duplicate force match); kept, flagged"
+}

@@ -1,0 +1,54 @@
+x_open formula check (n 4206): pred - recorded med -0.0000 mm, max |.| 0.0001 mm
+== s_L 0.5 (h05, fast): windows 238
+  m in [-0.1, +0.0) mm: n   2 slope_win1 med   8.04 MN/m, warned-round share 0.00, F_s mix {8.0: 2}
+  m in [+0.0, +0.1) mm: n   6 slope_win1 med   9.46 MN/m, warned-round share 0.00, F_s mix {8.0: 6}
+  m in [+0.1, +0.2) mm: n   8 slope_win1 med   5.52 MN/m, warned-round share 0.00, F_s mix {8.0: 8}
+  m in [+0.2, +9.0) mm: n 222 slope_win1 med   4.62 MN/m, warned-round share 0.00, F_s mix {0.0: 28, 4.0: 186, 8.0: 8}
+== s_L 1.0 (VBM j9main, sens b/c/d): windows 919
+  m in [-9.0, -0.2) mm: n   4 slope_win1 med   8.89 MN/m, warned-round share 1.00, F_s mix {8.0: 4}
+  m in [-0.2, -0.1) mm: n  16 slope_win1 med   8.70 MN/m, warned-round share 1.00, F_s mix {8.0: 16}
+  m in [-0.1, +0.0) mm: n  24 slope_win1 med  12.19 MN/m, warned-round share 1.00, F_s mix {8.0: 24}
+  m in [+0.0, +0.1) mm: n  62 slope_win1 med   9.91 MN/m, warned-round share 0.92, F_s mix {4.0: 5, 8.0: 57}
+  m in [+0.1, +0.2) mm: n 284 slope_win1 med   7.96 MN/m, warned-round share 0.07, F_s mix {4.0: 264, 8.0: 20}
+  m in [+0.2, +9.0) mm: n 529 slope_win1 med   5.13 MN/m, warned-round share 0.00, F_s mix {0.0: 138, 4.0: 389, 8.0: 2}
+== s_L 1.5 (h15, slow): windows 232
+  m in [-9.0, -0.2) mm: n   6 slope_win1 med  11.64 MN/m, warned-round share 1.00, F_s mix {8.0: 6}
+  m in [-0.2, -0.1) mm: n  15 slope_win1 med  14.52 MN/m, warned-round share 1.00, F_s mix {4.0: 3, 8.0: 12}
+  m in [-0.1, +0.0) mm: n  63 slope_win1 med  11.68 MN/m, warned-round share 1.00, F_s mix {4.0: 61, 8.0: 2}
+  m in [+0.0, +0.1) mm: n  89 slope_win1 med  10.11 MN/m, warned-round share 0.91, F_s mix {4.0: 85, 8.0: 4}
+  m in [+0.1, +0.2) mm: n   8 slope_win1 med   4.66 MN/m, warned-round share 0.50, F_s mix {0.0: 4, 4.0: 4}
+  m in [+0.2, +9.0) mm: n  51 slope_win1 med   7.17 MN/m, warned-round share 0.25, F_s mix {0.0: 22, 4.0: 29}
+== probe a2 (M, Mslow, Mfast, Mc005, Mc04, L): windows 362
+  m in [-9.0, -0.2) mm: n   3 slope_win1 med  11.53 MN/m, warned-round share 1.00, F_s mix {8.0: 3}
+  m in [-0.2, -0.1) mm: n  10 slope_win1 med  10.64 MN/m, warned-round share 1.00, F_s mix {4.0: 1, 8.0: 9}
+  m in [-0.1, +0.0) mm: n  15 slope_win1 med  11.68 MN/m, warned-round share 0.93, F_s mix {4.0: 8, 8.0: 7}
+  m in [+0.0, +0.1) mm: n  37 slope_win1 med   9.68 MN/m, warned-round share 0.78, F_s mix {2.0: 3, 4.0: 19, 8.0: 15}
+  m in [+0.1, +0.2) mm: n  45 slope_win1 med   8.05 MN/m, warned-round share 0.09, F_s mix {0.0: 5, 2.0: 2, 4.0: 32, 8.0: 6}
+  m in [+0.2, +9.0) mm: n 252 slope_win1 med   4.62 MN/m, warned-round share 0.01, F_s mix {0.0: 163, 2.0: 9, 4.0: 78, 8.0: 2}
+== probe c2 (same plants): windows 269
+  m in [-9.0, -0.2) mm: n   1 slope_win1 med  14.89 MN/m, warned-round share 1.00, F_s mix {8.0: 1}
+  m in [-0.2, -0.1) mm: n   5 slope_win1 med   8.84 MN/m, warned-round share 0.20, F_s mix {8.0: 5}
+  m in [-0.1, +0.0) mm: n   6 slope_win1 med  12.03 MN/m, warned-round share 0.17, F_s mix {4.0: 1, 8.0: 5}
+  m in [+0.0, +0.1) mm: n  18 slope_win1 med   7.53 MN/m, warned-round share 0.00, F_s mix {4.0: 4, 8.0: 14}
+  m in [+0.1, +0.2) mm: n  21 slope_win1 med   5.96 MN/m, warned-round share 0.00, F_s mix {4.0: 19, 8.0: 2}
+  m in [+0.2, +9.0) mm: n 218 slope_win1 med   5.26 MN/m, warned-round share 0.00, F_s mix {0.0: 118, 4.0: 90, 8.0: 10}
+== probe Mslow-a2 only: windows 89
+  m in [-9.0, -0.2) mm: n   2 slope_win1 med  11.55 MN/m, warned-round share 1.00, F_s mix {8.0: 2}
+  m in [-0.2, -0.1) mm: n   6 slope_win1 med  14.85 MN/m, warned-round share 1.00, F_s mix {4.0: 1, 8.0: 5}
+  m in [-0.1, +0.0) mm: n   9 slope_win1 med  11.55 MN/m, warned-round share 1.00, F_s mix {4.0: 8, 8.0: 1}
+  m in [+0.0, +0.1) mm: n  20 slope_win1 med   9.66 MN/m, warned-round share 0.80, F_s mix {2.0: 3, 4.0: 16, 8.0: 1}
+  m in [+0.1, +0.2) mm: n   7 slope_win1 med   5.19 MN/m, warned-round share 0.00, F_s mix {0.0: 5, 2.0: 2}
+  m in [+0.2, +9.0) mm: n  45 slope_win1 med   5.44 MN/m, warned-round share 0.04, F_s mix {0.0: 39, 2.0: 2, 4.0: 4}
+== probe Mslow-c2 only: windows 43
+  m in [-9.0, -0.2) mm: n   1 slope_win1 med  14.89 MN/m, warned-round share 1.00, F_s mix {8.0: 1}
+  m in [-0.2, -0.1) mm: n   1 slope_win1 med  10.54 MN/m, warned-round share 1.00, F_s mix {8.0: 1}
+  m in [-0.1, +0.0) mm: n   3 slope_win1 med   7.18 MN/m, warned-round share 0.33, F_s mix {4.0: 1, 8.0: 2}
+  m in [+0.0, +0.1) mm: n   5 slope_win1 med   8.72 MN/m, warned-round share 0.00, F_s mix {4.0: 4, 8.0: 1}
+  m in [+0.1, +0.2) mm: n   6 slope_win1 med   8.99 MN/m, warned-round share 0.00, F_s mix {4.0: 5, 8.0: 1}
+  m in [+0.2, +9.0) mm: n  27 slope_win1 med   3.24 MN/m, warned-round share 0.00, F_s mix {0.0: 18, 4.0: 9}
+== probe M-c2 only: windows 45
+  m in [-0.2, -0.1) mm: n   1 slope_win1 med   8.84 MN/m, warned-round share 0.00, F_s mix {8.0: 1}
+  m in [-0.1, +0.0) mm: n   1 slope_win1 med  14.57 MN/m, warned-round share 0.00, F_s mix {8.0: 1}
+  m in [+0.0, +0.1) mm: n   3 slope_win1 med   3.84 MN/m, warned-round share 0.00, F_s mix {8.0: 3}
+  m in [+0.1, +0.2) mm: n   3 slope_win1 med   5.76 MN/m, warned-round share 0.00, F_s mix {4.0: 3}
+  m in [+0.2, +9.0) mm: n  37 slope_win1 med   4.90 MN/m, warned-round share 0.00, F_s mix {0.0: 20, 4.0: 16, 8.0: 1}

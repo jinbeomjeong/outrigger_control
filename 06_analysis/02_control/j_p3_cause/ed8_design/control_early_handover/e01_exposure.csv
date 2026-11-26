@@ -1,0 +1,1452 @@
+scan,src,setting,case,level,leg,fs_kN,event,timing,offset_s,eps,pass,failed_gates,n_starts,diag_handovers,early
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,0.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,0.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,0.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,0.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,0.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,0.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,0.0,RE1bF,level,0.0,0.0,True,,2,"[[0.1, ""FR"", 0.4, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,0.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,0.0,RE1bF,level,0.05,0.0,True,,2,"[[0.05, ""FL"", 0.95, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,0.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,0.0,RE1bF,ready,0.0,0.0,True,,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,0.0,G4,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,0.0,RE1bF,ready,0.05,0.0,True,,2,"[[0.05, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,0.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,0.0,FS24,level,0.05,0.0,False,end_att,2,"[[0.15, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,0.0,G4,ready,0.0,0.0,False,end_att,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,0.0,FS24,ready,0.0,0.0,False,end_att,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,0.0,FS24,ready,0.05,0.0,False,end_att,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,2.0,FS24,level,0.075,0.0,True,,2,"[[0.12, ""FR"", 0.93, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,2.0,FS24,level,0.075,0.0,True,,2,"[[0.12, ""FL"", 0.93, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,2.0,RE1bF,level,0.075,0.0,True,,2,"[[0.03, ""FL"", 0.42, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,2.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,2.0,RE1bF,level,0.075,0.0,True,,2,"[[0.03, ""FR"", 0.42, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,2.0,FS24,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,0.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,0.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,2.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,2.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,0.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,0.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,2.0,FS24,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,2.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,2.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,2.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,2.0,FS24,ready,0.0,0.0,True,,2,"[[0.2, ""FL"", 0.5, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,2.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,2.0,RE1bF,ready,0.0,0.0,False,U832_pair_union,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,2.0,FS24,ready,0.0,0.0,False,end_att,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,2.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,4.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,4.0,FS24,level,0.05,0.0,True,,2,"[[0.15, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,4.0,RE1bF,level,0.025,0.0,True,,2,"[[0.07, ""FL"", 0.97, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,4.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,2.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,2.0,FS24,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,4.0,RE1bF,level,0.075,0.0,True,,2,"[[0.03, ""FR"", 0.42, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,2.0,RE1bF,ready,0.0,0.0,False,U832_pair_union,2,"[[0.1, ""FR"", 0.4, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,2.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,2.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,4.0,G4,level,0.025,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,4.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,2.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,2.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,4.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,4.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,4.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,4.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,4.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,4.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,4.0,FS24,ready,0.0,0.0,True,,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,4.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,4.0,RE1bF,ready,0.05,0.0,True,,2,"[[0.05, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,8.0,FS24,level,0.05,0.0,True,,2,"[[0.15, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,8.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,8.0,RE1bF,level,0.05,0.0,True,,2,"[[0.05, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,4.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,4.0,FS24,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,4.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,4.0,RE1bF,ready,0.0,0.0,False,U832_pair_union,2,"[[0.1, ""FR"", 0.4, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,4.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,4.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,4.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,8.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,4.0,FS24,ready,0.025,0.0,False,end_att,2,"[[0.17, ""FL"", 0.47, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,8.0,RE1bF,level,0.05,0.0,True,,2,"[[0.05, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,8.0,G4,level,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,8.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,8.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,8.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,8.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,8.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,8.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,8.0,FS24,ready,0.0,0.0,True,,2,"[[0.2, ""FL"", 0.5, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,8.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FL,8.0,RE1bF,ready,0.0,0.0,True,,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,8.0,G4,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,8.0,G4,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,8.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RL,8.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,8.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,8.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,8.0,RE1bF,ready,0.05,0.0,True,,2,"[[0.05, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,0.0,FS24,level,0.0,0.0,True,,6,"[[0.2, ""FL"", 0.6, ""RR""], [0.6, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.6, ""FL""], [1.6, ""FL"", 2.4, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,RR,8.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,bottom,FR,8.0,FS24,ready,0.05,0.0,True,,2,"[[0.15, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,0.0,G4,level,0.05,0.0,False,end_att,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,0.0,FS24,level,0.025,0.0,False,Fmin_after_W,8,"[[0.17, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 0.97, ""FR""], [0.97, ""FR"", 1.27, ""RL""], [1.27, ""RL"", 1.57, ""FR""], [1.57, ""FR"", 1.88, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,0.0,RE1bF,level,0.025,0.0,False,U832_pair_union|end_att,8,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.27, ""RR""], [1.27, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,0.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,0.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,0.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,0.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,0.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,0.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,0.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,0.0,RE1bF,level,0.025,0.0,False,U832_pair_union|end_att,8,"[[0.07, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 0.97, ""FR""], [0.97, ""FR"", 1.27, ""RL""], [1.27, ""RL"", 1.68, ""FR""], [1.68, ""FR"", 1.98, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,0.0,RE1bF,ready,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FR"", 0.53, ""RL""], [0.53, ""RL"", 1.02, ""FR""], [1.02, ""FR"", 1.32, ""RL""], [1.32, ""RL"", 1.73, ""FR""], [1.73, ""FR"", 2.02, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,0.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,0.0,FS24,ready,0.075,0.0,True,,6,"[[0.12, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.62, ""FL""], [1.62, ""FL"", 1.93, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,0.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,0.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,0.0,FS24,ready,0.025,0.0,True,,6,"[[0.17, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 0.97, ""FR""], [0.97, ""FR"", 1.27, ""RL""], [1.27, ""RL"", 1.68, ""FR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,0.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,0.0,RE1bF,ready,0.025,0.0,False,U832_pair_union|Fmin_after_W|end_att,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.27, ""RR""], [1.27, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,0.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,0.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,0.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,0.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,2.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,2.0,RE1bF,level,0.025,0.0,False,U832_pair_union,5,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,2.0,FS24,level,0.05,0.0,True,,5,"[[0.15, ""FR"", 0.55, ""RL""], [0.55, ""RL"", 0.95, ""FR""], [0.95, ""FR"", 1.25, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,2.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,2.0,FS24,level,0.075,0.0,True,,4,"[[0.12, ""FL"", 0.53, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,2.0,RE1bF,level,0.075,0.0,False,U832_pair_union,7,"[[0.03, ""FR"", 0.53, ""RL""], [0.53, ""RL"", 1.02, ""FR""], [1.02, ""FR"", 1.32, ""RL""], [1.82, ""RL"", 2.23, ""FR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,2.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,2.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,2.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,2.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,2.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,2.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,2.0,RE1bF,ready,0.025,0.0,False,U832_pair_union,5,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,2.0,FS24,ready,0.075,0.0,True,,5,"[[0.12, ""FR"", 0.62, ""RL""], [0.62, ""RL"", 1.02, ""FR""], [1.02, ""FR"", 1.32, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,2.0,FS24,ready,0.05,0.0,True,,5,"[[0.15, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 1.05, ""FL""], [1.05, ""FL"", 1.35, ""RR""], [1.35, ""RR"", 1.65, ""FL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,2.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,2.0,G4,ready,0.05,0.0,False,end_att,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,2.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,2.0,RE1bF,ready,0.025,0.0,False,U832_pair_union,6,"[[0.07, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 0.97, ""FR""], [0.97, ""FR"", 1.38, ""RL""], [1.88, ""RL"", 2.27, ""FR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,2.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,4.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,2.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,4.0,FS24,level,0.0,0.0,True,,5,"[[0.2, ""FL"", 0.6, ""RR""], [0.6, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,2.0,FS24,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,4.0,RE1bF,level,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,2.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,2.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,4.0,FS24,level,0.0,0.0,True,,5,"[[0.2, ""FR"", 0.6, ""RL""], [0.6, ""RL"", 1.0, ""FR""], [1.0, ""FR"", 1.3, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,4.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,4.0,FS24,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,4.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,4.0,RE1bF,level,0.0,0.0,False,U832_pair_union,5,"[[0.1, ""FR"", 0.6, ""RL""], [0.6, ""RL"", 1.0, ""FR""], [1.0, ""FR"", 1.3, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,4.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,4.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,4.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,4.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,4.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,4.0,RE1bF,ready,0.075,0.0,False,U832_pair_union,4,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,4.0,FS24,ready,0.075,0.0,True,,5,"[[0.12, ""FR"", 0.62, ""RL""], [0.62, ""RL"", 1.02, ""FR""], [1.02, ""FR"", 1.32, ""RL""], [1.32, ""RL"", 1.62, ""FR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,4.0,FS24,ready,0.075,0.0,True,,6,"[[0.12, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.62, ""FL""], [1.62, ""FL"", 1.93, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,4.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,4.0,RE1bF,ready,0.0,0.0,False,U832_pair_union,6,"[[0.1, ""FR"", 0.6, ""RL""], [0.6, ""RL"", 1.0, ""FR""], [1.0, ""FR"", 1.4, ""RL""], [1.4, ""RL"", 1.7, ""FR""], [1.7, ""FR"", 2.0, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,4.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,4.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,4.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,4.0,FS24,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,4.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,8.0,FS24,level,0.05,0.0,True,,3,"[[0.15, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,8.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,4.0,RE1bF,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,8.0,RE1bF,level,0.0,0.0,False,U832_pair_union,6,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,8.0,FS24,level,0.075,0.0,True,,3,"[[0.12, ""FR"", 0.62, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,8.0,G4,level,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,8.0,RE1bF,level,0.075,0.0,True,,4,"[[0.03, ""FR"", 0.53, ""RL""], [0.53, ""RL"", 1.02, ""FR""], [1.02, ""FR"", 1.32, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,8.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,8.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,8.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,8.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,8.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,8.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,8.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,8.0,FS24,ready,0.05,0.0,True,,5,"[[0.15, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 1.05, ""FL""], [1.05, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,8.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,8.0,FS24,ready,0.075,0.0,True,,4,"[[0.12, ""FR"", 0.62, ""RL""], [0.62, ""RL"", 1.02, ""FR""], [1.02, ""FR"", 1.32, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FL,8.0,RE1bF,ready,0.075,0.0,False,U832_pair_union,4,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.43, ""RR""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,FR,8.0,RE1bF,ready,0.025,0.0,False,U832_pair_union,6,"[[0.07, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 1.07, ""FR""], [1.07, ""FR"", 1.38, ""RL""], [1.38, ""RL"", 1.77, ""FR""], [1.77, ""FR"", 2.08, ""RL""]]",False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,8.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,8.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RL,8.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,8.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,8.0,G4,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_grid,VBL,R12,top,RR,8.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RL,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RL,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RR,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RR,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,FR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R1,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R1,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R10,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R10,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R5,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R5,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R6,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R9,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R9,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R6,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R11,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R11,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R3,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R3,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R4,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R4,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R4,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,R4,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc005,S2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,FR,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,FR,0.0,,,0.0,0.0,False,end_att,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RL,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RL,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RR,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RR,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R1,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R1,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R5,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R5,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R6,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R6,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R9,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R9,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R10,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R10,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R11,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R11,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R3,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R3,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R4,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R4,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R4,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,R4,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLc04,S2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,FL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,FL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,FR,8.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,FR,8.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,FR,0.0,,,0.05,0.0,False,end_att,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RL,8.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RL,8.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RR,8.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R12,top,RR,8.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R1,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R1,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R5,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R5,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R6,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R6,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R10,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R10,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R11,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R11,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R9,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R9,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R3,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R4,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R3,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R4,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R4,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,R4,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv05,S2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,FR,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,FR,0.0,,,0.05,0.0,False,end_att,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RL,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RL,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RR,0.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RR,0.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R1,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R1,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R10,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R10,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R5,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R6,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R9,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R8,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R5,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R9,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R6,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R8,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R11,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R11,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R3,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R3,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S3,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S3,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R4,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R4,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R4,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,R4,,,,,,,0.003,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S2,,,,,,,0.0,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S2,,,,,,,0.001,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S2,,,,,,,0.002,,,0,[],False
+u01_scan_ed6.csv,ed6_confa,VBLv15,S2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,0.0,RE1bF,level,0.05,0.0,True,,2,"[[0.05, ""FR"", 0.95, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,0.0,FS24,level,0.05,0.0,True,,2,"[[0.15, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,0.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,0.0,RE1bF,level,0.0,0.0,True,,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,0.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,0.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,0.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,0.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,0.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,0.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FL"", 0.5, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,0.0,FS24,ready,0.0,0.0,True,,2,"[[0.2, ""FL"", 0.5, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,0.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,0.0,RE1bF,ready,0.05,0.0,True,,2,"[[0.05, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,0.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,0.0,RE1bF,ready,0.0,0.0,False,U832_pair_union,2,"[[0.1, ""FR"", 0.4, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,0.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,0.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,0.0,G4,ready,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,2.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FL"", 0.5, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,2.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,2.0,RE1bF,level,0.025,0.0,True,,2,"[[0.07, ""FR"", 0.97, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,2.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,2.0,RE1bF,level,0.0,0.0,True,,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,2.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,2.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,0.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,0.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,2.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,2.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,2.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,0.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,2.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,0.0,G4,ready,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,2.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,2.0,FS24,ready,0.05,0.0,True,,2,"[[0.15, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,2.0,RE1bF,ready,0.025,0.0,True,,2,"[[0.07, ""FL"", 0.97, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,2.0,FS24,ready,0.05,0.0,True,,2,"[[0.15, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,2.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,4.0,FS24,level,0.075,0.0,True,,2,"[[0.12, ""FL"", 0.93, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,4.0,FS24,level,0.05,0.0,True,,2,"[[0.15, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,4.0,RE1bF,level,0.025,0.0,True,,2,"[[0.07, ""FR"", 0.97, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,4.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,4.0,RE1bF,level,0.075,0.0,True,,2,"[[0.03, ""FL"", 0.42, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,4.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,2.0,FS24,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,4.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,2.0,RE1bF,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,4.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,2.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,2.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,2.0,RE1bF,ready,0.075,0.0,True,,2,"[[0.03, ""FR"", 0.42, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,2.0,FS24,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,2.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,2.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,4.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,4.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,4.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,4.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,8.0,FS24,level,0.0,0.0,True,,2,"[[0.2, ""FL"", 0.5, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,4.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,4.0,FS24,ready,0.05,0.0,True,,2,"[[0.15, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,8.0,RE1bF,level,0.0,0.0,True,,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,4.0,RE1bF,ready,0.0,0.0,False,U832_pair_union,2,"[[0.1, ""FL"", 0.4, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,4.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,8.0,FS24,level,0.05,0.0,True,,2,"[[0.15, ""FR"", 0.45, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,4.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,8.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,4.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,4.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,4.0,RE1bF,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,4.0,G4,ready,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,4.0,G4,ready,0.075,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,8.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,4.0,RE1bF,ready,0.075,0.0,True,,2,"[[0.03, ""FR"", 0.42, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,8.0,RE1bF,level,0.0,0.0,True,,2,"[[0.1, ""FR"", 0.4, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,4.0,FS24,ready,0.025,0.0,True,,2,"[[0.17, ""FR"", 0.47, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,8.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,8.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,8.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,8.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,8.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,8.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,8.0,FS24,ready,0.05,0.0,True,,2,"[[0.15, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,8.0,G4,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,0.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,0.0,FS24,level,0.0,0.0,True,,2,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,8.0,RE1bF,ready,0.0,0.0,True,,2,"[[0.1, ""FR"", 0.4, ""RL""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FL,8.0,RE1bF,ready,0.05,0.0,True,,2,"[[0.05, ""FL"", 0.45, ""RR""]]",True
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,8.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,8.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,8.0,G4,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,8.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RL,8.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,RR,8.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,8.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,0.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,bottom,FR,8.0,FS24,ready,0.0,0.0,False,end_att,2,"[[0.2, ""FR"", 0.5, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,0.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,0.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,0.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,2.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,2.0,FS24,level,0.075,0.0,True,,4,"[[0.12, ""FR"", 0.53, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,2.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,2.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,2.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,2.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,0.0,FS24,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,2.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,0.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,0.0,FS24,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,0.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,0.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,0.0,G4,ready,0.075,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,0.0,RE1bF,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,0.0,G4,ready,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,2.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,2.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,2.0,FS24,ready,0.025,0.0,True,,5,"[[0.17, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.27, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,2.0,FS24,ready,0.0,0.0,True,,5,"[[0.1, ""FR"", 0.6, ""RL""], [0.6, ""RL"", 1.0, ""FR""], [1.0, ""FR"", 1.3, ""RL""], [1.3, ""RL"", 1.6, ""FR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,2.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,4.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,4.0,FS24,level,0.075,0.0,True,,4,"[[0.12, ""FR"", 0.62, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,4.0,FS24,level,0.05,0.0,True,,5,"[[0.15, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.25, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,4.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,4.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,4.0,FS24,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,4.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,4.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,2.0,FS24,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,2.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,4.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,2.0,RE1bF,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,2.0,G4,ready,0.075,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,2.0,FS24,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,2.0,G4,ready,0.075,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,2.0,RE1bF,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,4.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,4.0,FS24,ready,0.025,0.0,True,,5,"[[0.17, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.27, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,4.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,4.0,FS24,ready,0.025,0.0,True,,5,"[[0.17, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 0.97, ""FR""], [0.97, ""FR"", 1.27, ""RL""], [1.27, ""RL"", 1.57, ""FR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,8.0,FS24,level,0.025,0.0,True,,5,"[[0.17, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.27, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,8.0,FS24,level,0.05,0.0,True,,4,"[[0.15, ""FR"", 0.55, ""RL""], [0.55, ""RL"", 0.95, ""FR""], [0.95, ""FR"", 1.25, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,8.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,8.0,G4,level,0.075,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,8.0,FS24,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,4.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,8.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,4.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,8.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,8.0,FS24,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,4.0,RE1bF,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,4.0,G4,ready,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,8.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,4.0,FS24,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,4.0,RE1bF,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,4.0,G4,ready,0.025,0.0,True,,0,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,8.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,8.0,FS24,ready,0.075,0.0,True,,5,"[[0.12, ""FL"", 0.62, ""RR""], [0.62, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FL,8.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,8.0,FS24,ready,0.025,0.0,True,,5,"[[0.17, ""FR"", 0.57, ""RL""], [0.57, ""RL"", 0.97, ""FR""], [0.97, ""FR"", 1.27, ""RL""]]",False
+u01_scan_ed7.csv,g1,VBM,R12,top,FR,8.0,G4,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,8.0,G4,ready,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,8.0,FS24,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RL,8.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,8.0,G4,ready,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,8.0,FS24,ready,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,g1,VBM,R12,top,RR,8.0,RE1bF,ready,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,top,RL,8.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,top,RL,4.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,bottom,RL,4.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,top,RR,4.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,bottom,FL,2.0,FS24,level,0.075,0.0,True,,2,"[[0.12, ""FL"", 0.93, ""RR""]]",False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,top,RR,0.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,top,RR,0.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,bottom,RR,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,bottom,RR,2.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,top,RR,0.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,bottom,RL,4.0,G4,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,bottom,RR,0.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,top,RR,0.0,G4,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,bottom,RR,0.0,G4,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-M-a2,R12,bottom,RR,0.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,top,RL,8.0,FS24,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,bottom,FL,2.0,FS24,level,0.075,0.0,True,,2,"[[0.12, ""FL"", 0.93, ""RR""]]",False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,top,RR,0.0,FS24,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,bottom,RR,0.0,FS24,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,bottom,RR,2.0,G4,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,top,RR,4.0,RE1bF,level,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,top,RL,4.0,RE1bF,level,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,top,RR,0.0,RE1bF,level,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,probe_d,P7-Mslow-a2,R12,bottom,RR,0.0,RE1bF,level,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,j9main,VBM,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,j9main,VBM,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,j9main,VBM,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,VBM,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,j9main,VBM,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM1,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM1,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM1,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM1,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM1,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM1,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM1,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM1,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R12,bottom,RR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM2,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM2,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM2,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM2,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM2,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM2,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM2,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM2,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,bottom,RR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM3,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM3,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM3,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM3,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM3,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM3,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM3,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM3,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,FR,0.0,,,0.05,0.0,False,end_att,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RR,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RR,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RR,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,top,RR,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM4,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM4,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM4,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM4,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM4,R12,bottom,RR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,j9main,LSM4,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,j9main,LSM4,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S8,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S8,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S8,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S8,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,LSM4,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R6,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R6,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R8,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R8,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R9,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R9,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R10,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R10,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R11,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R11,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R3,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R3,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R3,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R3,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S3,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S3,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,R4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,j9main,VBM,S2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,FR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,FR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,bottom,RR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R12,top,FL,0.0,,,0.0,0.0,False,end_att,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMslow,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMslow,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMslow,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMslow,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMslow,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMslow,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMslow,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,FL,8.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,FL,8.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,bottom,RR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,bottom,FL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMfast,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMfast,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R12,bottom,FL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMfast,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMfast,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMfast,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMfast,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMfast,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMfast,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc005,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc005,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc005,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc005,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc005,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc005,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc04,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,bottom,RR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc04,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc04,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc04,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMc04,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMc04,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,FR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,RL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,FR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,bottom,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb069,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb069,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb069,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb069,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb069,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb069,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb069,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb069,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,bottom,FL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb16,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb16,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb16,R12,bottom,FL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb16,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb16,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMb16,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMb16,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMb16,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh05,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh05,R12,bottom,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh05,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh05,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh05,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh05,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh05,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh05,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,FR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,FR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMh15,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh15,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh15,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh15,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh15,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh15,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMh15,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMh15,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R12,bottom,RR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd05,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd05,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd05,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd05,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd05,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd05,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd05,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd05,R2,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,,,,,,0.025,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,,,,,,0.075,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,FL,0.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,FL,0.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,FL,8.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,FL,8.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,FR,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,RL,4.0,,,0.0,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,FR,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,top,RL,4.0,,,0.05,0.0,True,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,bottom,FL,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,bottom,FL,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,bottom,RR,4.0,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R12,bottom,RR,4.0,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R14,,,,,,0.0,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R16,,,,,,0.05,0.0,False,U832_pair_union,2,"[[0.05, ""FL"", 0.55, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd15,R14,,,,,,0.05,0.0,True,,1,[],False
+u01_scan_ed7.csv,sens,VBMd15,R16,,,,,,0.0,0.0,False,U832_pair_union,7,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd15,R15,,,,,,0.05,0.0,False,U832_pair_union|Fmin_after_W,8,"[[0.05, ""FL"", 0.55, ""RR""], [0.55, ""RR"", 0.95, ""FL""], [0.95, ""FL"", 1.35, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd15,R15,,,,,,0.0,0.0,False,U832_pair_union|Fmin_after_W,9,"[[0.1, ""FL"", 0.5, ""RR""], [0.5, ""RR"", 1.0, ""FL""], [1.0, ""FL"", 1.3, ""RR""], [1.3, ""RR"", 1.7, ""FL""], [1.7, ""FL"", 2.0, ""RR""], [2.0, ""RR"", 2.3, ""FL""], [2.3, ""FL"", 3.1, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd15,R16,,,,,,0.025,0.0,False,U832_pair_union,7,"[[0.07, ""FL"", 0.57, ""RR""], [0.57, ""RR"", 0.97, ""FL""], [0.97, ""FL"", 1.38, ""RR""], [1.38, ""RR"", 1.68, ""FL""], [1.68, ""FL"", 1.98, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd15,R16,,,,,,0.075,0.0,False,U832_pair_union,6,"[[0.03, ""FL"", 0.53, ""RR""], [0.53, ""RR"", 1.02, ""FL""], [1.02, ""FL"", 1.32, ""RR""], [1.32, ""RR"", 1.73, ""FL""], [1.73, ""FL"", 2.02, ""RR""]]",False
+u01_scan_ed7.csv,sens,VBMd15,S1,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S1,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S1,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S1,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S4,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S4,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S4,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S4,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S5,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S5,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S5,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S5,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S7,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R2,,,,,,,0.0,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S7,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S7,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R2,,,,,,,0.001,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,S7,,,,,,,0.003,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R2,,,,,,,0.002,,,0,[],False
+u01_scan_ed7.csv,sens,VBMd15,R2,,,,,,,0.003,,,0,[],False

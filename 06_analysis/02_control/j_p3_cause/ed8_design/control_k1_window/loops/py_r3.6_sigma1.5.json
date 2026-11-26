@@ -1,0 +1,249 @@
+{
+  "input": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\control_k1_window\\loops\\loop_r3.6_sigma1.5.json",
+  "dt": 0.1,
+  "feedback_sign": 1,
+  "verdict": "match",
+  "cl_stable": true,
+  "worst_pole": 0.8163058554606194,
+  "spec_ok": true,
+  "specs": [
+    {
+      "name": "PM ≥ [deg]",
+      "limit": 45.0,
+      "value": 66.55889884790162,
+      "ok": true
+    },
+    {
+      "name": "GM ≥ [dB]",
+      "limit": 6.0,
+      "value": 14.745989511314884,
+      "ok": true
+    },
+    {
+      "name": "Ms ≤",
+      "limit": 2.0,
+      "value": 1.383254641657912,
+      "ok": true
+    }
+  ],
+  "grid_result": {
+    "grid": {
+      "wmin": 3.1415926535897955e-05,
+      "wmax": 31.41592653589793,
+      "npts": 100000,
+      "spacing": "log"
+    },
+    "gm": 5.461343280183603,
+    "gm_db": 14.745989511314884,
+    "wpc": 4.837367003727873,
+    "pm_deg": 66.55889884790162,
+    "wgc": 1.1750412646366664,
+    "dm_s": 0.9886222436255832,
+    "wdm": 1.1750412646366664,
+    "dm_samples": 9.886222436255832,
+    "ms": 1.383254641657912,
+    "wms": 2.797217887343894,
+    "mt": 0.9999999999451684,
+    "wmt": 3.1415926535897955e-05,
+    "notes": [
+      "Mt peak at a grid end (type-0 loops at low frequency are normal)"
+    ]
+  },
+  "phase_crossovers": [
+    {
+      "w": 4.837367003727873,
+      "gm": 5.461343280183603,
+      "gm_db": 14.745989511314884
+    }
+  ],
+  "gain_crossovers": [
+    {
+      "w": 1.1750412646366664,
+      "pm_deg": 66.55889884790162,
+      "dm_s": 0.9886222436255832
+    }
+  ],
+  "python_control": {
+    "gm_all": [
+      7.318112351612515e-16,
+      5.461343280183595
+    ],
+    "pm_all": [
+      66.55889884788837
+    ],
+    "wpc_all": [
+      0.0,
+      4.837367003727865
+    ],
+    "wgc_all": [
+      1.1750412646375592
+    ],
+    "gm": 5.461343280183595,
+    "pm_deg": 66.55889884788837,
+    "wpc": 4.837367003727865,
+    "wgc": 1.1750412646375592,
+    "ms_from_sm": 1.3832546416579117,
+    "wms": 2.7972177880755393,
+    "cl_poles": {
+      "re": [
+        0.8078168652377407,
+        0.8078168652377407,
+        0.25224571069596324,
+        0.0
+      ],
+      "im": [
+        0.11741874593421692,
+        -0.11741874593421692,
+        0.0,
+        0.0
+      ]
+    },
+    "ms_hinf": 1.3832546411651074,
+    "mt_hinf": 1.0000000000000138,
+    "warnings": []
+  },
+  "cross_check": [
+    {
+      "quantity": "gm",
+      "grid": 5.461343280183603,
+      "ct": 5.461343280183595,
+      "rel_diff": 1.463670267039576e-15,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "wpc_rad_s",
+      "grid": 4.837367003727873,
+      "ct": 4.837367003727865,
+      "rel_diff": 1.6524703978715958e-15,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "pm_deg",
+      "grid": 66.55889884790162,
+      "ct": 66.55889884788837,
+      "rel_diff": 1.9898941875276867e-13,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "wgc_rad_s",
+      "grid": 1.1750412646366664,
+      "ct": 1.1750412646375592,
+      "rel_diff": 7.59838299533206e-13,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "ms (1/sm)",
+      "grid": 1.383254641657912,
+      "ct": 1.3832546416579117,
+      "rel_diff": 1.6052330369113948e-16,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "ms (H-inf of S)",
+      "grid": 1.383254641657912,
+      "ct": 1.3832546411651074,
+      "rel_diff": 3.562644570722928e-10,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "mt (H-inf of T)",
+      "grid": 0.9999999999451684,
+      "ct": 1.0000000000000138,
+      "rel_diff": 5.4845350483389365e-11,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "cl_poles (manual vs ct)",
+      "grid": null,
+      "ct": null,
+      "rel_diff": 4.833635684010458e-15,
+      "class": "algebraic",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "phase crossover count",
+      "grid": 1,
+      "ct": 1,
+      "rel_diff": 0.0,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    },
+    {
+      "quantity": "gain crossover count",
+      "grid": 1,
+      "ct": 1,
+      "rel_diff": 0.0,
+      "class": "margin",
+      "verdict": "match",
+      "note": ""
+    }
+  ],
+  "notes": [
+    "Mt peak at a grid end (type-0 loops at low frequency are normal)"
+  ],
+  "tolerances": {
+    "margin": [
+      1e-06,
+      0.001
+    ],
+    "algebraic": [
+      1e-09,
+      1e-06
+    ]
+  },
+  "xval": {
+    "schema": "ctrl-xval/1",
+    "source": "python-grid (ctrl_verify margins)",
+    "quantities": {
+      "gm": 5.461343280183603,
+      "gm_db": 14.745989511314884,
+      "pm_deg": 66.55889884790162,
+      "wpc": 4.837367003727873,
+      "wgc": 1.1750412646366664,
+      "dm_s": 0.9886222436255832,
+      "ms": 1.383254641657912,
+      "mt": 0.9999999999451684,
+      "cl_poles": {
+        "re": [
+          0.0,
+          0.8078168652377398,
+          0.8078168652377398,
+          0.2522457106959628
+        ],
+        "im": [
+          0.0,
+          0.11741874593422084,
+          -0.11741874593422084,
+          0.0
+        ]
+      }
+    },
+    "classes": {
+      "gm": "margin",
+      "gm_db": "margin",
+      "pm_deg": "margin",
+      "wpc": "margin",
+      "wgc": "margin",
+      "dm_s": "margin",
+      "ms": "margin",
+      "mt": "margin",
+      "cl_poles": "algebraic"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+V0|bottom-FR-Fs4-RE1bF-o0.025 reload 0.191 hold_end 0.449 in 0.275;0.375 exit 0.975 diag_start 0.975 diag_lift1_end 0.525 lifts 3 3 pu 1.287
+V0|bottom-FR-Fs4-RE1bF-o0.075 reload 0.186 hold_end 0.447 in 0.225;0.325;0.425 exit 0.425 diag_start 0.425 diag_lift1_end 0.514 lifts 3 4 pu 1.472
+V0|bottom-FR-Fs4-RE1bF-o0.05 reload 0.188 hold_end 0.448 in 0.25;0.35 exit 0.45 diag_start 0.45 diag_lift1_end 0.519 lifts 3 4 pu 1.494
+V0|bottom-FL-Fs2-RE1bF-o0.0 reload 0.186 hold_end 0.445 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.517 lifts 3 4 pu 1.592
+V0|bottom-FR-Fs4-RE1bF-o0.0 reload 0.194 hold_end 0.451 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.53 lifts 3 4 pu 1.579
+V0|bottom-FL-Fs2-RE1bF-o0.025 reload 0.183 hold_end 0.445 in 0.275;0.375 exit 0.975 diag_start 0.975 diag_lift1_end 0.513 lifts 3 3 pu 1.288
+V0|bottom-FL-Fs2-RE1bF-o0.05 reload 0.179 hold_end 0.443 in 0.25;0.35 exit 0.95 diag_start 0.95 diag_lift1_end 0.508 lifts 3 3 pu 1.268
+V0|bottom-FL-Fs2-RE1bF-o0.075 reload 0.177 hold_end 0.442 in 0.225;0.325;0.425 exit 0.425 diag_start 0.425 diag_lift1_end 0.503 lifts 3 4 pu 1.495
+VBM|bottom-FL-Fs4-RE1bF-o0.0 reload 0.189 hold_end 0.448 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.541 lifts 4 4 pu 1.805
+VBM|bottom-FL-Fs2-RE1bF-o0.0 reload 0.189 hold_end 0.446 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.535 lifts 4 4 pu 1.835
+VBM|bottom-FL-Fs2-RE1bF-o0.025 reload 0.189 hold_end 0.449 in 0.275;0.375 exit 0.975 diag_start 0.975 diag_lift1_end 0.526 lifts 3 4 pu 1.477
+VBM|bottom-FR-Fs4-RE1bF-o0.0 reload 0.194 hold_end 0.449 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.541 lifts 4 4 pu 1.785
+VBM|bottom-FR-Fs2-RE1bF-o0.0 reload 0.191 hold_end 0.446 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.531 lifts 4 4 pu 1.805
+VBM|bottom-FR-Fs2-RE1bF-o0.075 reload 0.191 hold_end 0.449 in 0.225;0.325;0.425 exit 0.425 diag_start 0.425 diag_lift1_end 0.515 lifts 3 4 pu 1.549
+VBM|bottom-FR-Fs0-RE1bF-o0.0 reload 0.191 hold_end 0.445 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.527 lifts 4 5 pu 1.861
+U8-A|bottom-FL-Fs4-RE1bF-o0.0 reload 0.186 hold_end 0.446 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.535 lifts 4 4 pu 1.801
+U8-A|bottom-FR-Fs0-RE1bF-o0.0 reload 0.194 hold_end 0.446 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.534 lifts 4 5 pu 2.004
+U8-A|bottom-FL-Fs2-RE1bF-o0.0 reload 0.185 hold_end 0.444 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.529 lifts 4 4 pu 1.831
+U8-A|bottom-FR-Fs2-RE1bF-o0.0 reload 0.195 hold_end 0.448 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.541 lifts 4 4 pu 1.861
+VBM|bottom-FR-Fs4-RE1bF-o0.075 reload 0.194 hold_end 0.451 in 0.225;0.325;0.425 exit 0.425 diag_start 0.425 diag_lift1_end 0.523 lifts 3 4 pu 1.55
+U8-A|bottom-FR-Fs4-RE1bF-o0.0 reload 0.197 hold_end 0.45 in 0.2;0.3;0.4 exit 0.4 diag_start 0.4 diag_lift1_end 0.551 lifts 4 4 pu 1.837
+
+## V0|bottom-FL-Fs2-RE1bF-o0.0
+  t  0.000 ready          load FL  115.41 FR  113.18 RL   68.87 RR   67.35 low 0000 active []
+  t  0.100 ready          load FL   -5.14 FR  257.46 RL  160.65 RR   -3.99 low 0000 active [FL:0]
+  t  0.200 level          load FL   65.79 FR  179.98 RL  125.47 RR   -3.99 low 0000 active [FL:1]
+  t  0.300 level          load FL   210.1 FR   19.81 RL   92.31 RR    -3.7 low 0000 active [FL:2]
+  t  0.400 level          load FL  119.57 FR  119.86 RL  123.08 RR    -3.7 low 0000 active [RR:0:rt]
+  t  0.500 level          load FL    -3.7 FR  265.24 RL  161.12 RR    -3.7 low 0000 active [RR:0:rt]
+  t  0.600 level          load FL    -3.7 FR  153.89 RL   86.07 RR   33.52 low 0000 active [RR:1:rt]
+  t  0.700 level          load FL    -3.7 FR  233.06 RL  162.84 RR    -3.7 low 0000 active [RR:0:rt]
+  t  0.800 level          load FL   114.4 FR   94.51 RL  104.92 RR    -3.7 low 0000 active [RR:0:rt]
+  t  0.900 level          load FL  189.07 FR   92.55 RL  101.12 RR    -3.7 low 0000 active [RR:0:rt]
+  t  1.000 level          load FL   20.88 FR  193.96 RL  157.76 RR    -3.7 low 0000 active [RR:0:rt]
+  t  1.100 level          load FL    -3.7 FR  197.61 RL   97.87 RR   14.97 low 0000 active [RR:1:rt]
+
+## V0|bottom-FL-Fs2-RE1bF-o0.025
+  t -0.025 ready          load FL  115.41 FR  113.18 RL   68.87 RR   67.35 low 0000 active []
+  t  0.075 ready          load FL   -5.14 FR  216.79 RL  127.66 RR   26.93 low 0000 active [FL:0]
+  t  0.175 level          load FL   -5.14 FR  210.84 RL  153.76 RR   -3.98 low 0000 active [FL:0]
+  t  0.275 level          load FL  203.27 FR   42.01 RL   91.57 RR    -3.7 low 0000 active [FL:1]
+  t  0.375 level          load FL  166.14 FR   96.75 RL  109.02 RR    -3.7 low 0000 active [FL:2]
+  t  0.475 level          load FL    -3.7 FR   231.5 RL  161.53 RR    -3.7 low 0000 active [FL:0]
+  t  0.575 level          load FL    -3.7 FR  176.88 RL   93.82 RR   39.23 low 0000 active [FL:0]
+  t  0.675 level          load FL    -3.7 FR  215.38 RL   143.7 RR   20.94 low 0000 active [FL:0]
+  t  0.775 level          load FL  110.57 FR  130.69 RL  121.88 RR    -3.7 low 0000 active [FL:1]
+  t  0.875 level          load FL  206.12 FR   85.15 RL  103.26 RR    -3.7 low 0000 active [FL:2]
+  t  0.975 level          load FL   35.37 FR  169.67 RL  142.54 RR    -3.7 low 0000 active [RR:0:rt]
+  t  1.075 level          load FL    -3.7 FR  196.58 RL   80.09 RR   26.81 low 0000 active [RR:1:rt]
+
+## VBM|bottom-FR-Fs0-RE1bF-o0.0
+  t  0.000 ready          load FL  115.39 FR  115.12 RL   71.27 RR   67.58 low 0000 active []
+  t  0.100 ready          load FL  263.02 FR   -2.85 RL   -2.52 RR  161.64 low 0000 active [FR:0]
+  t  0.200 level          load FL  182.26 FR   47.39 RL   -2.52 RR  127.17 low 0000 active [FR:1]
+  t  0.300 level          load FL   13.46 FR  212.12 RL   -2.52 RR   93.59 low 0000 active [FR:2]
+  t  0.400 level          load FL  124.87 FR  112.68 RL   -2.52 RR  131.58 low 0000 active [RL:0:rt]
+  t  0.500 level          load FL  280.15 FR   -2.85 RL   -2.52 RR  159.47 low 0000 active [RL:0:rt]
+  t  0.600 level          load FL  150.21 FR   -2.85 RL   36.28 RR   93.18 low 0000 active [RL:1:rt]
+  t  0.700 level          load FL  238.65 FR   -2.85 RL    1.14 RR  168.54 low 0000 active [RL:0:rt]
+  t  0.800 level          load FL  163.39 FR  101.81 RL   -2.52 RR  120.37 low 0000 active [RL:0:rt]
+  t  0.900 level          load FL   73.75 FR  200.05 RL   -2.52 RR   99.79 low 0000 active [RL:0:rt]
+  t  1.000 level          load FL  154.27 FR   58.07 RL   -2.52 RR  142.98 low 0000 active [RL:0:rt]
+  t  1.100 level          load FL  245.08 FR   -2.85 RL   31.03 RR   150.7 low 0000 active [RL:1:rt]
+
+## VBM|bottom-FR-Fs2-RE1bF-o0.075
+  t  0.025 ready          load FL  123.56 FR   -4.41 RL   69.99 RR   71.27 low 0000 active [FR:0]
+  t  0.125 level          load FL  268.74 FR   -4.41 RL   -3.45 RR   180.2 low 0000 active [FR:0]
+  t  0.225 level          load FL  154.87 FR  118.22 RL   -3.36 RR  109.08 low 0000 active [FR:1]
+  t  0.325 level          load FL    31.8 FR  210.32 RL   -3.36 RR   91.62 low 0000 active [FR:2]
+  t  0.425 level          load FL  142.15 FR   73.37 RL   -3.36 RR  140.83 low 0000 active [RL:0:rt]
+  t  0.525 level          load FL  268.47 FR   -3.36 RL   20.22 RR  150.35 low 0000 active [RL:1:rt]
+  t  0.625 level          load FL  157.26 FR   -3.36 RL   50.65 RR    79.2 low 0000 active [RL:2:rt]
+  t  0.725 level          load FL  233.53 FR   -3.36 RL   -3.36 RR   164.4 low 0000 active [RL:0:rt]
+  t  0.825 level          load FL   64.87 FR  129.22 RL   -3.36 RR   95.51 low 0000 active [RL:0:rt]
+  t  0.925 level          load FL  107.28 FR   152.1 RL   -3.36 RR   98.06 low 0000 active [RL:0:rt]
+  t  1.025 level          load FL  223.81 FR   -3.36 RL   21.82 RR  176.81 low 0000 active [RL:1:rt]

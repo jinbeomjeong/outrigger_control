@@ -1,0 +1,64 @@
+===== R15_o0.05_V0  sha ecd47c0a61f7  ref None  equal None
+  t_event 24.45 final ready gates_failed ['U832_pair_union', 'U57_outside', 'Fmin_after_W'] PU 2.066 tRb 38.05 sign_changes 1 n_late 6 starts [[0.05, 'FL'], [0.55, 'RR'], [1.75, 'FL'], [2.05, 'RR'], [2.45, 'RR'], [3.05, 'RR'], [3.95, 'RL'], [4.45, 'RL']]
+  twist {'bins_J': [-133.1, -136.6, -169.7, -184.4, -111.5, 11.3, 46.4, 2.6, -73.9, 1.4, 1.2, -4.8, -3.5, -2.3, -1.5, -1.0], 'bundles': [[3.0, 46.4]], 'n_bundles': 1, 'max_judged_bin_J': 46.4, 'D0_kN': 0.7}
+  phases after event (rel s): [(-24.9, 'level'), (1.6, 'done'), (1.7, 'probe'), (13.6, 'ready')]
+  A(i) episodes: []
+  A_ib episodes: []
+  lsb events: []
+  reapp ends: [(0.55, 'FL', 'contact'), (1.75, 'RR', 'contact'), (2.05, 'FL', 'contact'), (2.35, 'RR', 'contact'), (2.85, 'RR', 'contact'), (3.35, 'RR', 'contact'), (4.25, 'RL', 'contact'), (4.75, 'RL', 'contact')]
+  h3: []
+  event_names {'floor_estimate_touch': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 8, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 8, 'leg_reapproach_deferred': 6, 'reanchor_skipped': 1, 'ready_heave_tail': 1, 'INFO_FLOOR_NONPLANAR': 1}
+===== R12_bottom-FR-Fs4-o0.075-RE1bF-ready_V0  sha 4f72962abb6d  ref 4f72962abb6d  equal True
+  t_event 44.875 final ready gates_failed [] PU 1.472 tRb 21.63 sign_changes 0 n_late 0 starts [[0.03, 'FR'], [0.42, 'RL']]
+  twist {'bins_J': [-213.0, -401.4, -349.3, -232.1, -37.6, -1.2, -0.3, -0.2, -0.2, -0.2, -0.1, -0.1, -0.1, -0.1, -0.0, -0.0], 'bundles': [], 'n_bundles': 0, 'max_judged_bin_J': -0.0, 'D0_kN': 0.54}
+  phases after event (rel s): [(-45.35, 'ready'), (-44.85, 'level'), (-35.25, 'done'), (-35.15, 'probe'), (-23.25, 'ready')]
+  A(i) episodes: []
+  A_ib episodes: []
+  lsb events: []
+  reapp ends: [(0.425, 'FR', 'contact'), (2.025, 'RL', 'contact')]
+  h3: []
+  event_names {'floor_estimate_touch': 1, 'crawler_liftoff_confirmed': 1, 'reanchor_skipped': 1, 'ready_heave_tail': 2, 'leg_reapproach_start': 2, 'relevel_predicted': 1, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 2, 'WARN_ROD_PRESSURE_FALLBACK': 4, 'INFO_ROD_PRESSURE_FAULT_REASON': 4, 'INFO_R5_FALLBACK_SLOPE': 9, 'INFO_FLOOR_NONPLANAR': 1}
+===== R15_o0.05_P89-H3-VBM  sha 86b0667cc8f0  ref 86b0667cc8f0  equal True
+  t_event 26.75 final ready gates_failed ['U832_pair_union', 'recurrence'] PU 2.021 tRb 37.85 sign_changes 2 n_late 3 starts [[0.05, 'FL'], [0.65, 'RR'], [1.85, 'RR'], [3.85, 'RL'], [5.25, 'RR']]
+  twist {'bins_J': [-130.8, -142.0, -169.1, -164.3, -104.1, 30.8, -0.3, -5.5, 6.8, -1.5, -16.6, 26.4, -5.1, -8.1, -2.7, -1.8], 'bundles': [[2.5, 30.8], [5.5, 26.4]], 'n_bundles': 2, 'max_judged_bin_J': 30.8, 'D0_kN': -2.6}
+  phases after event (rel s): [(-27.2, 'level'), (-0.9, 'done'), (-0.8, 'probe'), (11.1, 'ready')]
+  t4h keys: ['command_m_s', 'head_pressure_Pa', 'jp3_carry_bound_Pa', 'jp3_class', 'jp3_class_names', 'jp3_ext_bound_Pa', 'jp3_gate_fill_m', 'jp3_gate_open', 'jp3_head_read_Pa', 'jp3_model_bound_Pa', 'jp3_model_bound_age_s', 'jp3_model_bound_head_Pa', 'jp3_model_bound_inherited', 'jp3_model_bound_source', 'jp3_p_star_ret_Pa', 'jp3_p_tr_Pa', 'jp3_plant_state', 'jp3_plant_state_names', 'jp3_r510_candidates', 'jp3_r58_witness', 'jp3_r59_end_guard_substeps', 'jp3_r59_nan_stroke_substeps', 'jp3_r59_substeps', 'jp3_ret_after_gate_s', 'jp3_source_names', 'jp3_t_s', 'jp3_u_m_s', 'jp3_used_bound_Pa', 'lock_events', 'locked', 'lsb_a1_floor_m_s', 'lsb_a1_on', 'lsb_a2_commanded_m', 'lsb_a2_lower_bound_m', 'lsb_a2_on', 'lsb_a2_planned_m_s', 'lsb_b1_blocked', 'lsb_event_leg', 'lsb_g2_split', 'lsb_ib_floor_m_s', 'lsb_ib_on', 'lsb_ib_stretch_periods', 'lsb_ib_twist_load_N', 'lsb_input_m_s', 'lsb_output_m_s', 'lsb_pre_twist_leg', 'lsb_protected', 'lsb_read_found', 'meta_json', 'motor_stroke_m', 'phase', 'rod_pressure_Pa', 'seal_band_N', 't_s', 'true_force_N', 'true_force_min_N']
+  A(i) episodes: []
+  A_ib episodes: [('start', 18.75, 1, -1), ('start', 19.25, 0, -1), ('end', 20.75, 1, 'moved'), ('end', 21.55, 0, 'moved')]
+  lsb events: []
+  reapp ends: [(0.65, 'FL', 'contact'), (1.75, 'RR', 'contact'), (2.85, 'RR', 'contact'), (4.25, 'RL', 'contact'), (5.65, 'RR', 'contact')]
+  h3: [(0.55, 'FL'), (0.95, 'RR'), (2.35, 'RR'), (4.15, 'RL'), (5.55, 'RR')]
+  event_names {'floor_estimate_touch': 1, 'INFO_TOUCH_TWIST_HOLD': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 5, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 5, 'leg_reapproach_deferred': 3, 'reanchor_skipped': 1, 'ready_heave_tail': 1, 'INFO_FLOOR_NONPLANAR': 1}
+===== R15_o0.05_P89-A-VBM  sha e8cc588bc73e  ref e8cc588bc73e  equal True
+  t_event 26.75 final ready gates_failed ['U832_pair_union', 'Fmin_after_W'] PU 2.021 tRb 39.75 sign_changes 1 n_late 4 starts [[0.05, 'FL'], [0.55, 'RR'], [0.95, 'FL'], [1.35, 'RR'], [1.85, 'RR'], [2.45, 'RR'], [3.05, 'RR'], [4.45, 'RL']]
+  twist {'bins_J': [-130.8, -142.0, -169.1, -164.3, -105.4, 9.5, 37.9, 1.3, -18.3, -36.2, 1.5, -0.1, -0.1, 0.0, -0.0, -0.1], 'bundles': [[3.0, 37.9]], 'n_bundles': 1, 'max_judged_bin_J': 37.9, 'D0_kN': -2.6}
+  phases after event (rel s): [(-27.2, 'level'), (1.0, 'done'), (1.1, 'probe'), (13.0, 'ready')]
+  t4h keys: ['command_m_s', 'head_pressure_Pa', 'jp3_carry_bound_Pa', 'jp3_class', 'jp3_class_names', 'jp3_ext_bound_Pa', 'jp3_gate_fill_m', 'jp3_gate_open', 'jp3_head_read_Pa', 'jp3_model_bound_Pa', 'jp3_model_bound_age_s', 'jp3_model_bound_head_Pa', 'jp3_model_bound_inherited', 'jp3_model_bound_source', 'jp3_p_star_ret_Pa', 'jp3_p_tr_Pa', 'jp3_plant_state', 'jp3_plant_state_names', 'jp3_r510_candidates', 'jp3_r58_witness', 'jp3_r59_end_guard_substeps', 'jp3_r59_nan_stroke_substeps', 'jp3_r59_substeps', 'jp3_ret_after_gate_s', 'jp3_source_names', 'jp3_t_s', 'jp3_u_m_s', 'jp3_used_bound_Pa', 'lock_events', 'locked', 'lsb_a1_floor_m_s', 'lsb_a1_on', 'lsb_a2_commanded_m', 'lsb_a2_lower_bound_m', 'lsb_a2_on', 'lsb_a2_planned_m_s', 'lsb_b1_blocked', 'lsb_event_leg', 'lsb_g2_split', 'lsb_ib_floor_m_s', 'lsb_ib_on', 'lsb_ib_stretch_periods', 'lsb_ib_twist_load_N', 'lsb_input_m_s', 'lsb_output_m_s', 'lsb_pre_twist_leg', 'lsb_protected', 'lsb_read_found', 'meta_json', 'motor_stroke_m', 'phase', 'rod_pressure_Pa', 'seal_band_N', 't_s', 'true_force_N', 'true_force_min_N']
+  A(i) episodes: []
+  A_ib episodes: [('start', 23.05, 2, -1), ('end', 25.15, 2, 'moved')]
+  lsb events: []
+  reapp ends: [(0.55, 'FL', 'contact'), (0.95, 'RR', 'contact'), (1.35, 'FL', 'contact'), (1.75, 'RR', 'contact'), (2.35, 'RR', 'contact'), (2.85, 'RR', 'contact'), (3.35, 'RR', 'contact'), (4.75, 'RL', 'contact')]
+  h3: []
+  event_names {'floor_estimate_touch': 1, 'INFO_TOUCH_TWIST_HOLD': 1, 'INFO_LIFT_PAUSED': 1, 'crawler_liftoff_confirmed': 1, 'leg_reapproach_start': 8, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 8, 'leg_reapproach_deferred': 3, 'reanchor_skipped': 1, 'ready_heave_tail': 1}
+===== R12_bottom-FR-Fs4-o0.075-RE1bF-ready_P89-A-VBM  sha d9770fdfbda0  ref d9770fdfbda0  equal True
+  t_event 47.775 final ready gates_failed [] PU 1.581 tRb 40.53 sign_changes 0 n_late 0 starts [[0.03, 'FR'], [0.42, 'RL']]
+  twist {'bins_J': [-199.6, -407.7, -359.4, -288.4, -85.6, -6.8, -4.2, -3.0, -2.0, -1.1, -0.7, -0.5, -0.3, -0.2, -0.2, -0.1], 'bundles': [], 'n_bundles': 0, 'max_judged_bin_J': -0.1, 'D0_kN': 4.63}
+  phases after event (rel s): [(-48.25, 'ready'), (-47.75, 'level'), (-19.25, 'done'), (-19.15, 'probe'), (-7.25, 'ready')]
+  t4h keys: ['command_m_s', 'head_pressure_Pa', 'jp3_carry_bound_Pa', 'jp3_class', 'jp3_class_names', 'jp3_ext_bound_Pa', 'jp3_gate_fill_m', 'jp3_gate_open', 'jp3_head_read_Pa', 'jp3_model_bound_Pa', 'jp3_model_bound_age_s', 'jp3_model_bound_head_Pa', 'jp3_model_bound_inherited', 'jp3_model_bound_source', 'jp3_p_star_ret_Pa', 'jp3_p_tr_Pa', 'jp3_plant_state', 'jp3_plant_state_names', 'jp3_r510_candidates', 'jp3_r58_witness', 'jp3_r59_end_guard_substeps', 'jp3_r59_nan_stroke_substeps', 'jp3_r59_substeps', 'jp3_ret_after_gate_s', 'jp3_source_names', 'jp3_t_s', 'jp3_u_m_s', 'jp3_used_bound_Pa', 'lock_events', 'locked', 'lsb_a1_floor_m_s', 'lsb_a1_on', 'lsb_a2_commanded_m', 'lsb_a2_lower_bound_m', 'lsb_a2_on', 'lsb_a2_planned_m_s', 'lsb_b1_blocked', 'lsb_event_leg', 'lsb_g2_split', 'lsb_ib_floor_m_s', 'lsb_ib_on', 'lsb_ib_stretch_periods', 'lsb_ib_twist_load_N', 'lsb_input_m_s', 'lsb_output_m_s', 'lsb_pre_twist_leg', 'lsb_protected', 'lsb_read_found', 'meta_json', 'motor_stroke_m', 'phase', 'rod_pressure_Pa', 'seal_band_N', 't_s', 'true_force_N', 'true_force_min_N']
+  A(i) episodes: []
+  A_ib episodes: [('start', 14.03, 1, -1), ('end', 15.73, 1, 'moved'), ('start', 16.63, 3, -1), ('end', 18.23, 3, 'moved')]
+  lsb events: []
+  reapp ends: [(0.425, 'FR', 'contact'), (2.125, 'RL', 'contact')]
+  h3: []
+  event_names {'floor_estimate_touch': 1, 'crawler_liftoff_confirmed': 1, 'reanchor_skipped': 1, 'ready_heave_tail': 2, 'leg_reapproach_start': 2, 'relevel_predicted': 1, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 2, 'INFO_TWIST_UNSETTLED': 1, 'INFO_FLOOR_NONPLANAR': 1}
+===== R12_bottom-FR-Fs4-o0.075-RE1bF-ready_P89-H3-VBM  sha 17f5ecd5340a  ref 17f5ecd5340a  equal True
+  t_event 47.775 final level gates_failed ['end_att'] PU 1.308 tRb None sign_changes 0 n_late 0 starts [[0.03, 'FR']]
+  twist {'bins_J': [-199.6, -539.2, -478.2, -60.2, -5.0, -4.5, -3.4, -2.3, -1.6, -0.8, -0.5, -0.3, -0.2, -0.2, -0.1, -0.1], 'bundles': [], 'n_bundles': 0, 'max_judged_bin_J': -0.1, 'D0_kN': 4.63}
+  phases after event (rel s): [(-48.25, 'ready'), (-47.75, 'level')]
+  t4h keys: ['command_m_s', 'head_pressure_Pa', 'jp3_carry_bound_Pa', 'jp3_class', 'jp3_class_names', 'jp3_ext_bound_Pa', 'jp3_gate_fill_m', 'jp3_gate_open', 'jp3_head_read_Pa', 'jp3_model_bound_Pa', 'jp3_model_bound_age_s', 'jp3_model_bound_head_Pa', 'jp3_model_bound_inherited', 'jp3_model_bound_source', 'jp3_p_star_ret_Pa', 'jp3_p_tr_Pa', 'jp3_plant_state', 'jp3_plant_state_names', 'jp3_r510_candidates', 'jp3_r58_witness', 'jp3_r59_end_guard_substeps', 'jp3_r59_nan_stroke_substeps', 'jp3_r59_substeps', 'jp3_ret_after_gate_s', 'jp3_source_names', 'jp3_t_s', 'jp3_u_m_s', 'jp3_used_bound_Pa', 'lock_events', 'locked', 'lsb_a1_floor_m_s', 'lsb_a1_on', 'lsb_a2_commanded_m', 'lsb_a2_lower_bound_m', 'lsb_a2_on', 'lsb_a2_planned_m_s', 'lsb_b1_blocked', 'lsb_event_leg', 'lsb_g2_split', 'lsb_ib_floor_m_s', 'lsb_ib_on', 'lsb_ib_stretch_periods', 'lsb_ib_twist_load_N', 'lsb_input_m_s', 'lsb_output_m_s', 'lsb_pre_twist_leg', 'lsb_protected', 'lsb_read_found', 'meta_json', 'motor_stroke_m', 'phase', 'rod_pressure_Pa', 'seal_band_N', 't_s', 'true_force_N', 'true_force_min_N']
+  A(i) episodes: [('start', 17.63, 3, -1), ('end', 17.73, 3, 'hold')]
+  A_ib episodes: [('start', 15.53, 0, -1), ('end', 17.63, 0, 'moved')]
+  lsb events: []
+  reapp ends: [(1.425, 'FR', 'contact')]
+  h3: [(0.425, 'FR')]
+  event_names {'floor_estimate_touch': 1, 'crawler_liftoff_confirmed': 1, 'reanchor_skipped': 1, 'ready_heave_tail': 1, 'leg_reapproach_start': 1, 'relevel_predicted': 1, 'WARN_D1_IMU_GYRO_MISSING': 1, 'leg_reapproach_contact': 1}

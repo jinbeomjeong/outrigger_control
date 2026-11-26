@@ -1,0 +1,93 @@
+ctrl objects: ['o0', 'o1']
+  o0: n=520 t0=0.10 t1=52.00 dt_med=0.100
+  o1: n=815 t0=0.10 t1=81.50 dt_med=0.100
+  o0|s.does_last_probe_accept_support (520,) float64
+  o0|s.is_seal_band_measured (520,) float64
+  o0|s.lock_start_b._last_twist_N (520,) float64
+  o0|s.lock_start_b._twist_limit_seen_N (520,) float64
+  o0|s.lock_start_b.twist_over_limit_periods (520,) float64
+  o0|s.phase._sort_order_ (520,) float64
+  o0|s.probe_round._correction_sensitivity (520, 4) float64
+  o0|s.probe_round._load_sensitivity (520, 4) float64
+  o0|s.probe_round._stage_start_s (520,) float64
+  o0|s.probe_round._start_attitude (520, 2) float64
+  o0|s.probe_round._start_force (520, 4) float64
+  o0|s.probe_round._start_motor_stroke (520, 4) float64
+  o0|s.probe_round._start_rod_stroke (520, 4) float64
+  o0|s.probe_round.leg (520,) float64
+  o0|s.probe_round.max_speed_m_s (520,) float64
+  o0|s.probe_round.period_s (520,) float64
+  o0|s.probe_round.speed_m_s (520,) float64
+  o0|s.probe_round.stroke_max_m (520,) float64
+  o0|s.probe_round_count (520,) float64
+  o0|s.seal_band_N (520,) float64
+  o0|s.skips_probe_after_reanchor (520,) float64
+  o0|s.touch_twist.is_holding (520,) float64
+  o0|s.touch_twist.twist_load_estimate_N (520,) float64
+  o0|s.twist_relax_done_count (520,) float64
+  o0|s.twist_relax_settled_since_s (520,) float64
+  o0|s.twist_stiffness_leg_count (520,) float64
+  o0|s.twist_stiffness_raw_ratio (520,) float64
+  o0|s.twist_stiffness_scale (520,) float64
+  o0|phase_name (520,) <U5
+  o1|s.does_last_probe_accept_support (815,) float64
+  o1|s.is_seal_band_measured (815,) float64
+  o1|s.lock_start_b._last_twist_N (815,) float64
+  o1|s.lock_start_b._twist_limit_seen_N (815,) float64
+  o1|s.lock_start_b.twist_over_limit_periods (815,) float64
+  o1|s.phase._sort_order_ (815,) float64
+  o1|s.probe_round._correction_sensitivity (815, 4) float64
+  o1|s.probe_round._load_sensitivity (815, 4) float64
+  o1|s.probe_round._stage_start_s (815,) float64
+  o1|s.probe_round._start_attitude (815, 2) float64
+  o1|s.probe_round._start_force (815, 4) float64
+  o1|s.probe_round._start_motor_stroke (815, 4) float64
+  o1|s.probe_round._start_rod_stroke (815, 4) float64
+  o1|s.probe_round.leg (815,) float64
+  o1|s.probe_round.max_speed_m_s (815,) float64
+  o1|s.probe_round.period_s (815,) float64
+  o1|s.probe_round.speed_m_s (815,) float64
+  o1|s.probe_round.stroke_max_m (815,) float64
+  o1|s.probe_round_count (815,) float64
+  o1|s.seal_band_N (815,) float64
+  o1|s.skips_probe_after_reanchor (815,) float64
+  o1|s.touch_twist.is_holding (815,) float64
+  o1|s.touch_twist.twist_load_estimate_N (815,) float64
+  o1|s.twist_relax_done_count (815,) float64
+  o1|s.twist_relax_settled_since_s (815,) float64
+  o1|s.twist_stiffness_leg_count (815,) float64
+  o1|s.twist_stiffness_raw_ratio (815,) float64
+  o1|s.twist_stiffness_scale (815,) float64
+  o1|phase_name (815,) <U5
+plant o0: n=817 t0=65.410 t1=81.500 dt_med=0.1000
+plant o1: n=521 t0=0.001 t1=52.000 dt_med=0.1000
+  plant o0|Fext (817, 4)
+  plant o0|Gr_max (817, 4)
+  plant o0|f (817, 4)
+  plant o0|fcap (817, 4)
+  plant o0|flex (817,)
+  plant o0|fmode (817,)
+  plant o0|frel (817, 4)
+  plant o0|frod (817, 4)
+  plant o0|goff (817, 4)
+  plant o0|p_ext (817, 4)
+  plant o0|p_floor (817,)
+  plant o0|pflag (817, 4)
+  plant o0|sref (817, 4)
+  plant o0|x (817, 4)
+  plant o0|xlk (817, 4)
+cue {"leg_index": 0.0, "is_reversed": false, "first_move_mid_force_N": 130070.6165131606, "first_move_mid_rod_stroke_m": 0.40203439181140777, "extended_force_N": 139642.25486042665, "extended_rod_stroke_m": 0.40316882710953716, "stiffness_N_m": 8437359.41842517, "is_grounded": true}
+cue {"leg_index": 1.0, "is_reversed": false, "first_move_mid_force_N": 122885.19915125621, "first_move_mid_rod_stroke_m": 0.40200075720810713, "extended_force_N": 136278.04063462952, "extended_rod_stroke_m": 0.4030042503261841, "stiffness_N_m": 13346221.55559835, "is_grounded": true}
+cue {"leg_index": 2.0, "is_reversed": false, "first_move_mid_force_N": 79361.25918830004, "first_move_mid_rod_stroke_m": 0.39017344707574836, "extended_force_N": 93337.9124376407, "extended_rod_stroke_m": 0.39100970882297453, "stiffness_N_m": 16713251.916281354, "is_grounded": true}
+cue {"leg_index": 3.0, "is_reversed": false, "first_move_mid_force_N": 75370.62662731775, "first_move_mid_rod_stroke_m": 0.3903373574345467, "extended_force_N": 90916.80132687153, "extended_rod_stroke_m": 0.3910848440513181, "stiffness_N_m": 20797930.49232284, "is_grounded": true}
+cue {"leg_index": 0.0, "is_reversed": false, "first_move_mid_force_N": 130070.6165131606, "first_move_mid_rod_stroke_m": 0.40203439181140777, "extended_force_N": 139642.25486042665, "extended_rod_stroke_m": 0.40316882710953716, "stiffness_N_m": 8437359.41842517, "is_grounded": true}
+cue {"leg_index": 1.0, "is_reversed": false, "first_move_mid_force_N": 122885.19915125621, "first_move_mid_rod_stroke_m": 0.40200075720810713, "extended_force_N": 136278.04063462952, "extended_rod_stroke_m": 0.4030042503261841, "stiffness_N_m": 13346221.55559835, "is_grounded": true}
+cue {"leg_index": 2.0, "is_reversed": false, "first_move_mid_force_N": 79361.25918830004, "first_move_mid_rod_stroke_m": 0.39017344707574836, "extended_force_N": 93337.9124376407, "extended_rod_stroke_m": 0.39100970882297453, "stiffness_N_m": 16713251.916281354, "is_grounded": true}
+cue {"leg_index": 3.0, "is_reversed": false, "first_move_mid_force_N": 75370.62662731775, "first_move_mid_rod_stroke_m": 0.3903373574345467, "extended_force_N": 90916.80132687153, "extended_rod_stroke_m": 0.3910848440513181, "stiffness_N_m": 20797930.49232284, "is_grounded": true}
+cue {"leg_index": 0.0, "is_reversed": false, "first_move_mid_force_N": 129959.83999522515, "first_move_mid_rod_stroke_m": 0.4053519677805723, "extended_force_N": 139395.08618273927, "extended_rod_stroke_m": 0.4064902206450834, "stiffness_N_m": 8289235.618631093, "is_grounded": true}
+cue {"leg_index": 1.0, "is_reversed": false, "first_move_mid_force_N": 122925.5986176578, "first_move_mid_rod_stroke_m": 0.41772636938653074, "extended_force_N": 136373.17098731242, "extended_rod_stroke_m": 0.418728318855146, "stiffness_N_m": 13421407.756460795, "is_grounded": true}
+cue {"leg_index": 2.0, "is_reversed": false, "first_move_mid_force_N": 78653.64849157308, "first_move_mid_rod_stroke_m": 0.39218771977660716, "extended_force_N": 93069.78961401638, "extended_rod_stroke_m": 0.39299357157646003, "stiffness_N_m": 17889320.499222398, "is_grounded": true}
+cue {"leg_index": 3.0, "is_reversed": false, "first_move_mid_force_N": 73811.70282834927, "first_move_mid_rod_stroke_m": 0.39323374588180604, "extended_force_N": 89455.85010115373, "extended_rod_stroke_m": 0.3939757792552401, "stiffness_N_m": 21082808.176679876, "is_grounded": true}
+ratio {"t_s": 47.00000000004239, "legs": [{"leg": 0, "K1_N_m": 8437359.41842517, "k_nom_N_m": 5146005.703874331, "ratio": 1.6395938722090497, "grounded": true, "skipped": false}, {"leg": 1, "K1_N_m": 13346221.55559835, "k_nom_N_m": 5146005.703874331, "ratio": 2.5935108360937553, "grounded": true, "skipped": false}, {"leg": 2, "K1_N_m": 16713251.916281354, "k_nom_N_m": 6206584.071125668, "ratio": 2.69282
+ratio {"t_s": 47.00000000004239, "legs": [{"leg": 0, "K1_N_m": 8437359.41842517, "k_nom_N_m": 5146005.703874331, "ratio": 1.6395938722090497, "grounded": true, "skipped": false}, {"leg": 1, "K1_N_m": 13346221.55559835, "k_nom_N_m": 5146005.703874331, "ratio": 2.5935108360937553, "grounded": true, "skipped": false}, {"leg": 2, "K1_N_m": 16713251.916281354, "k_nom_N_m": 6206584.071125668, "ratio": 2.69282
+ratio {"t_s": 78.5000000001928, "legs": [{"leg": 0, "K1_N_m": 8289235.618631093, "k_nom_N_m": 5146005.703874331, "ratio": 1.61080964453465, "grounded": true, "skipped": false}, {"leg": 1, "K1_N_m": 13421407.756460795, "k_nom_N_m": 5146005.703874331, "ratio": 2.608121430249498, "grounded": true, "skipped": false}, {"leg": 2, "K1_N_m": 17889320.499222398, "k_nom_N_m": 6206584.071125668, "ratio": 2.8823134

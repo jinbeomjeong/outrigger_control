@@ -1,0 +1,223 @@
+t4h keys:
+  t_s (815,) float64
+  head_pressure_Pa (815, 4) float64
+  rod_pressure_Pa (815, 4) float64
+  motor_stroke_m (815, 4) float64
+  command_m_s (815, 4) float64
+  phase (815,) <U5
+  seal_band_N (815, 4) float64
+  true_force_N (815, 4) float64
+  true_force_min_N (815, 4) float64
+  locked (815, 4) bool
+  lock_events (70, 3) float64
+  meta_json () <U332320
+  jp3_t_s (815,) float64
+  jp3_class (815, 4) int8
+  jp3_plant_state (815, 4) int8
+  jp3_gate_open (815, 4) bool
+  jp3_class_names (6,) <U9
+  jp3_plant_state_names (4,) <U10
+  jp3_model_bound_source (815, 4) int8
+  jp3_source_names (5,) <U15
+  jp3_model_bound_inherited (815, 4) bool
+  jp3_u_m_s (815, 4) float64
+  jp3_ext_bound_Pa (815, 4) float64
+  jp3_model_bound_Pa (815, 4) float64
+  jp3_carry_bound_Pa (815, 4) float64
+  jp3_used_bound_Pa (815, 4) float64
+  jp3_p_tr_Pa (815, 4) float64
+  jp3_p_star_ret_Pa (815, 4) float64
+  jp3_head_read_Pa (815, 4) float64
+  jp3_gate_fill_m (815, 4) float64
+  jp3_model_bound_age_s (815, 4) float64
+  jp3_model_bound_head_Pa (815, 4) float64
+  jp3_ret_after_gate_s (815, 4) float64
+  jp3_r58_witness (815, 4) bool
+  jp3_r59_substeps (815, 4) int32
+  jp3_r510_candidates (815, 4) int32
+  jp3_r59_end_guard_substeps (815, 4) int32
+  jp3_r59_nan_stroke_substeps (815, 4) int32
+  lsb_input_m_s (815, 4) float64
+  lsb_output_m_s (815, 4) float64
+  lsb_a1_floor_m_s (815, 4) float64
+  lsb_a2_lower_bound_m (815, 4) float64
+  lsb_a2_planned_m_s (815, 4) float64
+  lsb_a2_commanded_m (815, 4) float64
+  lsb_a1_on (815, 4) bool
+  lsb_a2_on (815, 4) bool
+  lsb_b1_blocked (815, 4) bool
+  lsb_protected (815, 4) bool
+  lsb_event_leg (815,) int8
+  lsb_pre_twist_leg (815,) int8
+  lsb_g2_split (815,) bool
+  lsb_ib_floor_m_s (815, 4) float64
+  lsb_ib_on (815, 4) bool
+  lsb_ib_stretch_periods (815, 4) int32
+  lsb_ib_twist_load_N (815,) float64
+  lsb_read_found (815,) bool
+plant keys (334):
+  o0|A_ann (817, 4) float64
+  o0|Ap (817, 4) float64
+  o0|Fext (817, 4) float64
+  o0|Fret (817, 4) float64
+  o0|Fs (817, 4) float64
+  o0|Gr (817, 4) float64
+  o0|Gr_lock (817, 4) float64
+  o0|Gr_max (817, 4) float64
+  o0|Gr_min (817, 4) float64
+  o0|Wr (817, 4) float64
+  o0|anchor_record.excess_locks (817, 4) float64
+  o0|anchor_record.locks (817, 4) float64
+  o0|anchor_record.max_excess_Pa (817, 4) float64
+  o0|anchor_record.max_knee_N (817, 4) float64
+  o0|anchor_record.risk_locks (817, 4) float64
+  o0|armed (817,) float64
+  o0|beta_Pa (817,) float64
+  o0|body.mass (817,) float64
+  o0|c_lock (817, 4) float64
+  o0|cn (817, 4) float64
+  o0|crawler_k_scale (817,) float64
+  o0|ct (817, 4) float64
+  o0|dt (817,) float64
+  o0|e_op (817, 4) float64
+  o0|eps (817,) float64
+  o0|extend_bound_check.breach_reads (817, 4) float64
+  o0|extend_bound_check.locked_breach_over_tol_reads (817, 4) float64
+  o0|extend_bound_check.locked_breach_reads (817, 4) float64
+  o0|extend_bound_check.locked_min_gap_Pa (817, 4) float64
+  o0|extend_bound_check.locked_min_gap_t_s (817, 4) float64
+  o0|extend_bound_check.locked_reads (817, 4) float64
+  o0|extend_bound_check.locked_tolerance_Pa (817, 4) float64
+  o0|extend_bound_check.locked_unpaired_reads (817, 4) float64
+  o0|extend_bound_check.locked_vs_extend_bound_reads (817, 4) float64
+  o0|extend_bound_check.margin_used_reads (817, 4) float64
+  o0|extend_bound_check.min_gap_Pa (817, 4) float64
+  o0|extend_bound_check.min_gap_t_s (817, 4) float64
+  o0|extend_bound_check.reads (817, 4) float64
+  o0|extend_bound_check.retract_breach_reads (817, 4) float64
+  o0|extend_bound_check.retract_reads (817, 4) float64
+  o0|extend_targets._last_force_N (817, 4) float64
+  o0|extend_targets.annulus_area_m2 (817, 4) float64
+  o0|extend_targets.head_area_m2 (817, 4) float64
+  o0|extend_targets.head_dead_length_m (817,) float64
+  o0|extend_targets.lock_stroke_m (817, 4) float64
+  o0|extend_targets.mode (817, 4) float64
+  o0|extend_targets.period_s (817,) float64
+  o0|extend_targets.rod_oil_mass (817, 4) float64
+  o0|extend_targets.rod_pressure_Pa (817, 4) float64
+  o0|extend_targets.stroke_max_m (817,) float64
+  o0|f (817, 4) float64
+  o0|fcap (817, 4) float64
+  o0|flex (817,) float64
+  o0|flow_limiter._count (817,) float64
+  o0|flow_limiter.audit_chunks (817,) float64
+  o0|flow_limiter.audit_mismatches (817,) float64
+  o0|flow_limiter.fast_path_chunks (817,) float64
+  o0|flow_limiter.max_stroke_reading_m (817,) float64
+  o0|flow_limiter.solved_chunks (817,) float64
+  o0|flow_limiter.supply_m3_s (817,) float64
+  o0|fmode (817,) float64
+  o0|frel (817, 4) float64
+  o0|frod (817, 4) float64
+  o0|g (817,) float64
+  o0|geo.attach_z (817, 4) float64
+  o0|geo.barrel_bottom_z (817, 4) float64
+  o0|geo.crawler_bottom_z (817,) float64
+  o0|geo.g (817,) float64
+  o0|geo.pad_z_retracted (817, 4) float64
+  o0|geo.rod_mass (817, 4) float64
+  o0|geo.stroke (817,) float64
+  o0|geo.v_max (817,) float64
+  o0|goff (817, 4) float64
+  o0|kh (817, 4) float64
+  o0|kn_L1 (817, 4) float64
+  o0|ko (817, 4) float64
+  o0|kr (817, 4) float64
+  o0|krs (817, 4) float64
+  o0|ks (817, 4) float64
+  o0|kt (817, 4) float64
+ctrl keys (334):
+  o0|cmd (520, 4) float64
+  o0|m.head_pressure_Pa (520, 4) float64
+  o0|m.rod_pressure_Pa (520, 4) float64
+  o0|m.stroke_corrected_m (520, 4) float64
+  o0|m.stroke_m (520, 4) float64
+  o0|m.t_s (520,) float64
+  o0|s.above_counts (520, 4) float64
+  o0|s.active_target.pitch_rad (520,) float64
+  o0|s.active_target.roll_rad (520,) float64
+  o0|s.applied_output_m_s (520, 4) float64
+  o0|s.below_counts (520, 4) float64
+  o0|s.check_gyro_times_s (520, 4) float64
+  o0|s.check_start_s (520,) float64
+  o0|s.complete_since_s (520,) float64
+  o0|s.completion_flags.is_clearance_done (520,) float64
+  o0|s.completion_flags.is_complete (520,) float64
+  o0|s.completion_flags.is_on_target (520,) float64
+  o0|s.completion_pitch_rad (520,) float64
+  o0|s.completion_roll_rad (520,) float64
+  o0|s.crawler_attitude_rad (520, 2) float64
+  o0|s.diff_sink.above_periods (520,) float64
+  o0|s.diff_sink.below_periods (520,) float64
+  o0|s.diff_sink.first_loc_s (520,) float64
+  o0|s.diff_sink.hold_periods (520,) float64
+  o0|s.diff_sink.is_gate_open (520,) float64
+  o0|s.diff_sink.is_watch_over (520,) float64
+  o0|s.does_last_probe_accept_support (520,) float64
+  o0|s.floor_estimate_touch.floor_rad (520, 2) float64
+  o0|s.floor_estimate_touch.floor_usage (520,) float64
+  o0|s.floor_estimate_touch.latch_times_s (520, 4) float64
+  o0|s.floor_estimate_touch.residual_m (520,) float64
+  o0|s.free_air_first_moving_sample (520, 4) float64
+  o0|s.free_air_force_N (520, 4) float64
+  o0|s.gyro_bias_estimate.check_duration_s (520,) float64
+  o0|s.gyro_bias_estimate.window_s (520,) float64
+  o0|s.gyro_rate_rad_s (520, 2) float64
+  o0|s.in_crawler_zone (520,) float64
+  o0|s.is_geometry_valid (520,) float64
+  o0|s.is_lift_guard_warned (520,) float64
+  o0|s.is_lifted (520,) float64
+  o0|s.is_load_reference_pending (520,) float64
+  o0|s.is_ready_reference_refreshed (520,) float64
+  o0|s.is_reapproach_armed (520, 4) float64
+  o0|s.is_reference_update_pending (520,) float64
+  o0|s.is_seal_band_measured (520,) float64
+  o0|s.is_vector_ramp_done (520,) float64
+  o0|s.last_cylinder_force_N (520, 4) float64
+  o0|s.last_forces.head_only (520, 4) float64
+  o0|s.last_forces.lower (520, 4) float64
+  o0|s.last_forces.nominal (520, 4) float64
+  o0|s.last_forces.upper (520, 4) float64
+  o0|s.last_nonzero_command_t_s (520,) float64
+  o0|s.last_nonzero_output_m_s (520, 4) float64
+  o0|s.last_reading.cylinder_force_N (520, 4) float64
+  o0|s.last_reading.cylinder_force_lower_N (520, 4) float64
+  o0|s.last_reading.cylinder_force_lowpass_N (520, 4) float64
+  o0|s.last_reading.cylinder_force_upper_N (520, 4) float64
+  o0|s.last_reading.head_only_force_N (520, 4) float64
+  o0|s.last_reading.motor_stroke_m (520, 4) float64
+  o0|s.last_reading.rod_stroke_m (520, 4) float64
+  o0|s.last_reading.t_s (520,) float64
+  o0|s.lift_guard_hold_periods (520,) float64
+  o0|s.lift_guard_longest_hold_s (520,) float64
+  o0|s.lift_guard_shift_periods (520,) float64
+  o0|s.lift_stroke_limited (520,) float64
+  o0|s.liftoff_slow.active_periods (520,) float64
+  o0|s.liftoff_slow.has_level_step_run (520,) float64
+  o0|s.liftoff_slow.has_loc_been_seen (520,) float64
+  o0|s.liftoff_slow.is_active (520,) float64
+  o0|s.liftoff_slow.is_armed (520,) float64
+  o0|s.liftoff_slow.last_scale_factor (520,) float64
+  o0|s.liftoff_slow.previous_rho (520,) float64
+  o0|s.liftoff_slow.ramp_periods_applied (520,) float64
+  o0|s.liftoff_slow.ramp_scaled_periods (520,) float64
+  o0|s.liftoff_slow.ramp_step (520,) float64
+  o0|s.liftoff_slow.scaled_periods (520,) float64
+  o0|s.liftoff_slow.sum_periods (520,) float64
+  o0|s.loc_window_restart_count (520,) float64
+  o0|s.lock_start_b._last_force_N (520, 4) float64
+  o0|s.lock_start_b._last_stroke_m (520, 4) float64
+cue top keys: ['cue', 'ratio']
+  cue: list[12] first keys ['leg_index', 'start_force_N', 'start_rod_stroke_m', 'start_motor_stroke_m', 'extended_force_N', 'extended_rod_stroke_m', 'extended_motor_stroke_m', 'retracted_force_N', 'retracted_rod_stroke_m', 'is_attitude_limited', 'is_reversed', 'retracted_motor_stroke_m', 'first_move_mid_force_N', 'first_move_mid_rod_stroke_m', 'window_spacing_s', 'window_period_s', 'stiffness_N_m', 'is_grounded', 'has_moved', 'load_estimate_N', 'seal_friction_estimate_N', 'load_sensitivity_N_m']
+  ratio: list[3] first keys ['t_s', 'legs', 'raw_ratio', 'scale', 'k_nom_pad_N_m']
+runs.jsonl lines 23, first keys ['command_stats', 'commands_sha256', 'controller_tag', 'd8', 'event_names', 'event_output', 'events', 'final_phase', 'harness_class', 'harness_commands_sha256', 'head_only_declared', 'hydraulic_options', 'hydraulics_record', 'job', 'lock_window_alignment', 'lsb_components', 'lsb_record', 'lsb_settings', 'probe_d6_record', 'probe_d6_settings', 'resume_k1', 'review_record', 't4h_file', 't_event_s', 'values', 'wall_s']

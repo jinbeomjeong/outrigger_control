@@ -1,0 +1,113 @@
+{
+ "inputs_sha256": {
+  "main.jsonl": {
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+   "spec": "9ad74990... (prefix)",
+   "match": true
+  },
+  "j9_main.jsonl": {
+   "sha256": "c89ec827ce541a53127a0115b8e1185b35e50df9cea2612d4a74b40cc618c122",
+   "spec": null,
+   "match": null
+  },
+  "sens_keys_ed7.json": {
+   "sha256": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+   "spec": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+   "match": true
+  },
+  "d_grid_keys12.json (git blob)": {
+   "sha256": "a995abff9d73816f58a0e3d67a59f18b3e60fb006fe48d824012b79b57d87981",
+   "spec": "a995abff9d73816f58a0e3d67a59f18b3e60fb006fe48d824012b79b57d87981",
+   "match": true
+  },
+  "confirm_g1_grid171.json": {
+   "sha256": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
+   "spec": "684054abb1ad05d8f82141f58eafdfa3c096edae1c05c9a4b9e8ae9ffe5b5dec",
+   "match": true
+  },
+  "confirm_b_grid192.json": {
+   "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+   "spec": "4e80e69b... (prefix)",
+   "match": true
+  }
+ },
+ "grid_files_sha256": {
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json": "a2e74481760a27695ac63800a650e0be1b9b3980fcfaef1f1b64d4e98628316d",
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json": "1d07e49fdbcaf375c4266866ff6955569c967d6d4eb9d4babc07558a64e92559",
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json": "91026c460489463aa34e0377236854c892e46257d55133bda9c777584b548a89",
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json": "87e8d72a25a5d40cccedce1c632a7e4f168f126aed38ada8a3b6760794d02390"
+ },
+ "stages": {
+  "C-J": {
+   "rows": 388,
+   "counts": {
+    "event_rows": 200,
+    "fast_absent": 200,
+    "pair:ok": 200,
+    "reapproach_starts_empty_list": 5,
+    "reapproach_starts_present": 200,
+    "setting:LSM1": 72,
+    "setting:LSM2": 72,
+    "setting:LSM3": 72,
+    "setting:LSM4": 72,
+    "setting:VBM": 100,
+    "steady_rows": 188
+   },
+   "distinct_v0_pairs_of_event_rows": 40,
+   "rows_expected": 388,
+   "rows_match_expected": true,
+   "all_event_pairs_have_both_keys": false
+  },
+  "C-S": {
+   "rows": 460,
+   "counts": {
+    "event_rows": 260,
+    "fast_absent": 260,
+    "pair:ok": 260,
+    "pair_source:v5/main.jsonl V0": 460,
+    "reapproach_starts_present": 260,
+    "steady_rows": 200
+   },
+   "distinct_v0_pairs_of_event_rows": 26,
+   "rows_expected": 460,
+   "rows_match_expected": true,
+   "all_event_pairs_have_both_keys": false
+  },
+  "C-D": {
+   "rows": 12,
+   "counts": {
+    "case:R12": 12,
+    "event_rows": 12,
+    "fast_present": 12,
+    "grid192_line_matches:1": 12,
+    "grid_run_has_event_output:False": 12,
+    "pair:ok": 12,
+    "reapproach_starts_present": 12,
+    "run_id_type:int": 12
+   },
+   "census_rows": 24,
+   "census_rows_note": "12 D keys x {VBN, VBNslow}; both settings share one V0 pair",
+   "distinct_v0_pairs": 12,
+   "rows_expected": 12,
+   "rows_match_expected": true,
+   "all_event_pairs_have_both_keys": true
+  },
+  "C-G": {
+   "rows": 171,
+   "counts": {
+    "case:R12": 171,
+    "event_rows": 171,
+    "fast_present": 171,
+    "grid_run_has_event_output:False": 171,
+    "pair:ok": 171,
+    "reapproach_starts_empty_list": 2,
+    "reapproach_starts_present": 171,
+    "run_id_type:str": 171
+   },
+   "distinct_v0_pairs": 171,
+   "rows_expected": 171,
+   "rows_match_expected": true,
+   "all_event_pairs_have_both_keys": true
+  }
+ }
+}

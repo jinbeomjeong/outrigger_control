@@ -1,0 +1,27 @@
+{
+ "producer": "control-expert, 2026-11-26, edition 8 early-handover fix design (record only, offline)",
+ "inputs": {
+  "dynamics_u832_o00": "06_analysis/02_control/j_p3_cause/ed8_design/dynamics_u832_o00/{u01_scan_ed6.csv,u01_scan_ed7.csv,u11_periods.csv,u11_runs.csv,report.md} (folder SHA256SUMS present)",
+  "code_read": "worktree ed8-impl 7fc83456: 03_src/outrigger_sim/control/c2.py 1213-1364 (LiftedReapproachSettings), 6269-6438 (_update_lifted_reapproach, _end_finished_reapproaches, _start_reapproaches, _defers_reapproach, _begin_reapproach, _end_reapproach), 10368-10380 (_may_start_pre_twist)"
+ },
+ "env": "conda run -n dynamics-dev python -I -B (MKL_THREADING_LAYER=TBB)",
+ "scripts": {
+  "e01_handover_exposure.py": "-> e01_out.txt, e01_exposure.csv, e01_rerun_handover.csv",
+  "e02_footprint.py": "-> e02_out.txt"
+ },
+ "columns_e01_exposure": {
+  "scan, src, setting, case, level, leg, fs_kN, event, timing, offset_s, eps, pass, failed_gates": "copied from u01_scan_ed6/ed7.csv",
+  "n_starts": "len(reapproach_starts)",
+  "diag_handovers": "[[t_prev_start_s, prev_leg, t_diag_start_s, diag_leg], ...]: consecutive starts where the later leg is the diagonal of the earlier (FL-RR, FR-RL); t relative to the event for event rows",
+  "early": "event row and a diagonal start <= 0.45 s after the event (dynamics 4.6 (b) criterion)"
+ },
+ "columns_e01_rerun_handover": {
+  "run": "u11 run name <arm>|<key>",
+  "t_handover_s": "first period whose active re-approach changes from leg p to DIAG[p] (t from the event) [s]",
+  "L_diag_at_handover_kN": "lower load estimate of the diagonal at that period (u11 load_<leg>_kN) [kN]",
+  "HC_waits": "L < 0 (candidate H-2 waits)",
+  "HB_defers": "L < start level 1.4 F_min (candidate H-1 defers: no landed sample since the end)",
+  "L_diag_next5_kN_recorded": "next five recorded L of the diagonal on the OLD trajectory (not a prediction)"
+ },
+ "exactness": "the first handover decision is exact (commands identical up to that period); everything after it changes the trajectory and is not replayed"
+}

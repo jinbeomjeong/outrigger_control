@@ -1,0 +1,49 @@
+scan | src | setting | lines | with_diag_handover | with_early_handover | u832_fail | u832_fail_and_early
+ed6 | ed6_confa | VBLc005 | 54 | 0 | 0 | 0 | 0
+ed6 | ed6_confa | VBLc04 | 54 | 0 | 0 | 0 | 0
+ed6 | ed6_confa | VBLv05 | 54 | 0 | 0 | 0 | 0
+ed6 | ed6_confa | VBLv15 | 54 | 0 | 0 | 0 | 0
+ed6 | ed6_grid | VBL | 192 | 63 | 18 | 18 | 3
+ed7 | g1 | VBM | 171 | 42 | 19 | 2 | 2
+ed7 | j9main | LSM1 | 72 | 6 | 0 | 6 | 0
+ed7 | j9main | LSM2 | 72 | 6 | 0 | 6 | 0
+ed7 | j9main | LSM3 | 72 | 6 | 0 | 6 | 0
+ed7 | j9main | LSM4 | 72 | 6 | 0 | 6 | 0
+ed7 | j9main | VBM | 100 | 6 | 0 | 6 | 0
+ed7 | probe_d | P7-M-a2 | 12 | 1 | 0 | 0 | 0
+ed7 | probe_d | P7-Mslow-a2 | 12 | 1 | 0 | 0 | 0
+ed7 | sens | VBMb069 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMb16 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMc005 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMc04 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMd05 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMd15 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMfast | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMh05 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMh15 | 46 | 6 | 0 | 6 | 0
+ed7 | sens | VBMslow | 46 | 6 | 0 | 6 | 0
+
+re-run first diagonal handover: run, t, from->to, L_diag, H-C waits, H-B defers, next recorded L (old trajectory)
+V0|bottom-FR-Fs4-RE1bF-o0.025 t=0.975 FR->RL L=-5.1 HC=True HB=True next=[33.28, 15.35, -5.14, 4.97, 48.26]
+V0|bottom-FR-Fs4-RE1bF-o0.075 t=0.425 FR->RL L=-5.1 HC=True HB=True next=[15.51, 39.04, -5.1, -5.1, -5.1]
+V0|bottom-FR-Fs4-RE1bF-o0.05 t=0.45 FR->RL L=-5.1 HC=True HB=True next=[35.4, 35.62, -5.1, -5.1, -5.1]
+V0|bottom-FL-Fs2-RE1bF-o0.0 t=0.4 FL->RR L=-3.7 HC=True HB=True next=[-3.7, 33.52, -3.7, -3.7, -3.7]
+V0|bottom-FR-Fs4-RE1bF-o0.0 t=0.4 FR->RL L=-5.1 HC=True HB=True next=[-5.1, 32.75, -1.85, -5.1, -5.1]
+V0|bottom-FL-Fs2-RE1bF-o0.025 t=0.975 FL->RR L=-3.7 HC=True HB=True next=[26.81, 5.12, -3.7, 15.49, 52.57]
+V0|bottom-FL-Fs2-RE1bF-o0.05 t=0.95 FL->RR L=-3.7 HC=True HB=True next=[40.45, 29.47, -3.7, -3.7, 52.49]
+V0|bottom-FL-Fs2-RE1bF-o0.075 t=0.425 FL->RR L=-3.7 HC=True HB=True next=[33.34, 46.06, -3.7, -3.7, -3.7]
+VBM|bottom-FL-Fs4-RE1bF-o0.0 t=0.4 FL->RR L=-4.63 HC=True HB=True next=[-4.63, 21.36, -4.63, -4.63, -4.63]
+VBM|bottom-FL-Fs2-RE1bF-o0.0 t=0.4 FL->RR L=-3.36 HC=True HB=True next=[-3.36, 25.86, -3.36, -3.36, -3.36]
+VBM|bottom-FL-Fs2-RE1bF-o0.025 t=0.975 FL->RR L=-3.36 HC=True HB=True next=[44.27, 35.69, -3.36, -3.36, 62.34]
+VBM|bottom-FR-Fs4-RE1bF-o0.0 t=0.4 FR->RL L=-4.63 HC=True HB=True next=[-4.63, 26.32, -3.11, -4.63, -4.63]
+VBM|bottom-FR-Fs2-RE1bF-o0.0 t=0.4 FR->RL L=-3.36 HC=True HB=True next=[-3.36, 31.05, -1.74, -3.36, -3.36]
+VBM|bottom-FR-Fs2-RE1bF-o0.075 t=0.425 FR->RL L=-3.36 HC=True HB=True next=[20.22, 50.65, -3.36, -3.36, -3.36]
+VBM|bottom-FR-Fs0-RE1bF-o0.0 t=0.4 FR->RL L=-2.52 HC=True HB=True next=[-2.52, 36.28, 1.14, -2.52, -2.52]
+VBM|bottom-FR-Fs8-FS24-o0.0 t=0.5 FR->RL L=-7.27 HC=True HB=True next=[15.23, 3.24, -7.27, -7.27, -7.27]
+U8-A|bottom-FL-Fs4-RE1bF-o0.0 t=0.4 FL->RR L=-4.43 HC=True HB=True next=[-4.43, 21.68, -4.43, -4.43, -4.43]
+U8-A|bottom-FR-Fs0-RE1bF-o0.0 t=0.4 FR->RL L=-2.27 HC=True HB=True next=[-2.27, 35.71, 6.23, -2.27, -2.27]
+U8-A|bottom-FR-Fs8-FS24-o0.0 t=0.5 FR->RL L=-6.2 HC=True HB=True next=[14.49, 4.29, -6.2, -6.2, -6.2]
+U8-A|bottom-FL-Fs2-RE1bF-o0.0 t=0.4 FL->RR L=-2.96 HC=True HB=True next=[-2.96, 27.08, -2.96, -2.96, -2.96]
+U8-A|bottom-FR-Fs2-RE1bF-o0.0 t=0.4 FR->RL L=-2.96 HC=True HB=True next=[-2.96, 30.75, 3.58, -2.96, -2.96]
+VBM|bottom-FR-Fs4-RE1bF-o0.075 t=0.425 FR->RL L=-4.63 HC=True HB=True next=[0.92, 41.07, -4.63, -4.63, -4.63]
+U8-A|bottom-FR-Fs4-RE1bF-o0.0 t=0.4 FR->RL L=-4.43 HC=True HB=True next=[-4.43, 26.29, -1.38, -4.43, -4.43]

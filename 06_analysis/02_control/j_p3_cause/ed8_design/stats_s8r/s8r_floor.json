@@ -1,0 +1,39 @@
+{
+ "aa_all_clusters": {
+  "clusters": 192,
+  "ordered_pairs_opp": 1590,
+  "aa_fail": 10,
+  "E_opp": 93,
+  "E_fail": 0
+ },
+ "aa_excl_mixed_or_fail": {
+  "clusters": 171,
+  "ordered_pairs_opp": 1572,
+  "aa_fail": 0,
+  "E_opp": 93,
+  "E_fail": 0
+ },
+ "aa_mixed_only": {
+  "clusters": 3,
+  "ordered_pairs_opp": 18,
+  "aa_fail": 10,
+  "E_opp": 0,
+  "E_fail": 0
+ },
+ "ed6_vbl": {
+  "opp": 174,
+  "fail": 11
+ },
+ "ed6_icc_cluster": {
+  "icc": 1.0,
+  "groups": 174,
+  "groups_with_fail": 11,
+  "n0": 1.0
+ },
+ "ed6_icc_family": {
+  "icc": 0.13022904353961318,
+  "groups": 44,
+  "groups_with_fail": 8,
+  "n0": 3.9542902967121094
+ }
+}

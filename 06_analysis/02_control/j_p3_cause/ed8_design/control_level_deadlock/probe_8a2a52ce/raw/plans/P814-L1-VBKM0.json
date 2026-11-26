@@ -1,0 +1,37 @@
+{
+ "schema": "r79_rod_fault_plan/1",
+ "faults": {
+  "cand=current#L2|s40|g6|52|ref|J1|top|Fs0": {
+   "fault_id": "12b-b1-s40-r044-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s40|g6|56|ref|J2|top|Fs0": {
+   "fault_id": "12b-b1-s40-r048-FL-tau_C",
+   "leg": "FL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s40|g6|59|ref|J2|bottom|Fs4": {
+   "fault_id": "12b-b1-s40-r051-FR-tau_R",
+   "leg": "FR",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "retract_start_after:LEVEL",
+   "delay_reads": 0
+  },
+  "cand=current#L2|s41|ref|16|J1|B|0,0": {
+   "fault_id": "12b-b2-s41-r164-RL-tau_C",
+   "leg": "RL",
+   "kind": "STUCK",
+   "value_bar": -100.0,
+   "anchor": "phase_exit:CHECK",
+   "delay_reads": 0
+  }
+ }
+}

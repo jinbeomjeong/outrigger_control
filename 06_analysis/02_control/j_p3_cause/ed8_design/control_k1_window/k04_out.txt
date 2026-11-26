@@ -1,0 +1,202 @@
+# per round: median ratio (count) [scale]; W = outside (0.8, 2.3)
+run | rnd | k1_old | kpad_old | a0.05_k1 | a0.1_k1 | a0.2_k1 | b_k1 | c0.1_k1
+R12_top-FL-Fs0-o0.0_D8-Mslow-A | 1 | 1.416(4)[1.42] | 1.416(4)[1.42] | 1.416(4)[1.42] | 1.296(4)[1.30] | 1.289(4)[1.29] | -(2)[-] | 1.537(3)[1.50]
+R12_top-FL-Fs0-o0.0_D8-Mslow-A | 2 | 1.389(4)[1.39] | 1.389(4)[1.39] | 1.099(4)[1.10] | 1.099(4)[1.10] | 1.039(4)[1.04] | -(2)[-] | -(2)[-]
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 | 1 | 1.304(4)[1.30] | 1.304(4)[1.30] | 1.205(4)[1.20] | 1.158(4)[1.16] | 1.158(4)[1.16] | -(2)[-] | -(1)[-]
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 | 2 | -(2)[-] | -(2)[-] | -(2)[-] | -(2)[-] | -(2)[-] | -(1)[-] | -(2)[-]
+R12_top-FR-Fs0-o0.05_D8-LSM4-A | 1 | 1.583(4)[1.50] | 1.583(4)[1.50] | 1.583(4)[1.50] | 1.583(4)[1.50] | 1.763(4)[1.50] | 0.527(3)[1.00]W | 1.583(4)[1.50]
+R12_top-FR-Fs0-o0.05_D8-LSM4-A | 2 | 1.703(3)[1.50] | 1.703(3)[1.50] | 1.703(3)[1.50] | 1.703(3)[1.50] | 1.703(3)[1.50] | -(0)[-] | -(2)[-]
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 | 1 | 1.458(4)[1.46] | 1.458(4)[1.46] | 1.458(4)[1.46] | 1.478(4)[1.48] | 1.544(4)[1.50] | 0.903(3)[1.00] | 1.533(3)[1.50]
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 | 2 | 1.646(3)[1.50] | 1.646(3)[1.50] | 1.646(3)[1.50] | 1.646(3)[1.50] | 1.646(3)[1.50] | -(2)[-] | -(2)[-]
+R12_top-FR-Fs8-o0.0_D8-L-A | 1 | 2.083(4)[1.50] | 2.201(4)[1.50] | 2.083(4)[1.50] | 1.819(4)[1.50] | 1.365(4)[1.36] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-L-A | 2 | 2.036(4)[1.50] | 2.117(4)[1.50] | 1.907(4)[1.50] | 1.803(4)[1.50] | 1.455(4)[1.45] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-L-a2 | 1 | 2.643(4)[1.50]W | 2.157(4)[1.50] | 1.546(4)[1.50] | 1.546(4)[1.50] | 1.797(4)[1.50] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-L-a2 | 2 | 2.715(4)[1.50]W | 2.087(4)[1.50] | 1.490(4)[1.49] | 1.490(4)[1.49] | 1.654(4)[1.50] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-M-A | 1 | 2.083(4)[1.50] | 2.201(4)[1.50] | 2.083(4)[1.50] | 1.819(4)[1.50] | 1.365(4)[1.36] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-M-A | 2 | 2.187(4)[1.50] | 2.246(4)[1.50] | 1.924(4)[1.50] | 1.924(4)[1.50] | 1.469(4)[1.47] | -(1)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-M-a2 | 1 | 2.643(4)[1.50]W | 2.157(4)[1.50] | 1.546(4)[1.50] | 1.546(4)[1.50] | 1.797(4)[1.50] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-M-a2 | 2 | 2.745(4)[1.50]W | 2.087(4)[1.50] | 1.485(4)[1.48] | 1.485(4)[1.48] | 1.662(4)[1.50] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mh15-A | 1 | 2.734(4)[1.50]W | 2.454(4)[1.50]W | 1.771(4)[1.50] | 1.515(4)[1.50] | 1.517(4)[1.50] | 0.671(4)[1.00]W | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mh15-A | 2 | 2.866(4)[1.50]W | 2.510(4)[1.50]W | 1.529(4)[1.50] | 1.529(4)[1.50] | 1.506(4)[1.50] | 0.693(4)[1.00]W | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 | 1 | 3.417(4)[1.50]W | 2.055(4)[1.50] | 1.488(4)[1.49] | 1.488(4)[1.49] | 1.629(3)[1.50] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 | 2 | 3.461(4)[1.50]W | 2.026(4)[1.50] | 1.665(3)[1.50] | 1.665(3)[1.50] | 1.665(3)[1.50] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mslow-A | 1 | 2.239(4)[1.50] | 1.925(4)[1.50] | 1.827(4)[1.50] | 1.423(4)[1.42] | 1.423(4)[1.42] | 1.062(3)[1.06] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mslow-A | 2 | 2.468(4)[1.50]W | 1.885(4)[1.50] | 1.836(4)[1.50] | 1.433(4)[1.43] | 1.340(4)[1.34] | 0.922(4)[1.00] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 | 1 | 3.363(4)[1.50]W | 2.096(4)[1.50] | 1.520(4)[1.50] | 1.520(4)[1.50] | 1.447(4)[1.45] | -(2)[-] | -(1)[-]
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 | 2 | 3.472(4)[1.50]W | 2.047(4)[1.50] | 1.573(4)[1.50] | 1.573(4)[1.50] | 1.721(3)[1.50] | 0.965(3)[1.00] | -(1)[-]
+R7_e0.0_D8-M-A | 1 | 2.047(4)[1.50] | 2.238(4)[1.50] | 2.007(4)[1.50] | 1.842(4)[1.50] | 1.550(4)[1.50] | -(1)[-] | -(1)[-]
+R7_e0.0_D8-M-a2 | 1 | 2.856(4)[1.50]W | 2.058(4)[1.50] | 1.460(4)[1.46] | 1.460(4)[1.46] | 1.581(4)[1.50] | -(2)[-] | -(1)[-]
+S7_e0.002_D8-M-A | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.002_D8-M-A | 2 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.002_D8-M-a2 | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.002_D8-M-a2 | 2 | -(1)[-] | -(1)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(1)[-] | -(0)[-]
+S7_e0.002_D8-Mslow-A | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.002_D8-Mslow-a2 | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.002_D8-Mslow-a2 | 2 | -(1)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.003_D8-M-A | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.003_D8-M-A | 2 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.003_D8-M-a2 | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.003_D8-M-a2 | 2 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.0_D8-M-a2 | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.0_D8-M-a2 | 2 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.0_D8-Mslow-A | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.0_D8-Mslow-a2 | 1 | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+S7_e0.0_D8-Mslow-a2 | 2 | 0.589(3)[1.00]W | -(1)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-] | -(0)[-]
+
+# per leg: stuck_at_mid, moved_by_mid_mm, window_travel_mm, ratio old / Kpad / a0.1 / b / a0.1 mid shift, seal est old / a0.1 [kN], load est old / a0.1 [kN]
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r1 FL stuck=False f_mid=-0.00 Fs=0.00 moved=0.4746 win=1.156 | old=1.537 kpad=1.537 a0.1=1.537 (shift 0, kpad 1.537) b=1.288 c0.1=1.537 | seal 0.19/0.19 load 130.66/130.66
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r1 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.1480 win=1.249 | old=1.056 kpad=1.056 a0.1=1.056 (shift 0, kpad 1.056) b=0.141 c0.1=1.056 | seal -0.65/-0.65 load 114.52/114.52
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r1 RL stuck=False f_mid=-0.00 Fs=0.00 moved=0.0730 win=1.090 | old=1.296 kpad=1.296 a0.1=0.905 (shift 1, kpad 0.905) b=0.116 c0.1=- | seal -0.66/-0.62 load 81.23/81.27
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r1 RR stuck=False f_mid=-0.00 Fs=0.00 moved=0.3001 win=0.981 | old=1.901 kpad=1.901 a0.1=1.901 (shift 0, kpad 1.901) b=0.316 c0.1=1.901 | seal 0.43/0.43 load 75.05/75.05
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r2 FL stuck=False f_mid=-0.00 Fs=0.00 moved=0.4818 win=1.190 | old=1.293 kpad=1.293 a0.1=1.293 (shift 0, kpad 1.293) b=1.042 c0.1=1.293 | seal 0.06/0.06 load 128.74/128.74
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r2 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.1245 win=1.277 | old=0.871 kpad=0.871 a0.1=0.871 (shift 0, kpad 0.871) b=-0.061 c0.1=0.871 | seal -0.63/-0.63 load 114.89/114.89
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r2 RL stuck=False f_mid=0.00 Fs=0.00 moved=0.0143 win=0.982 | old=1.570 kpad=1.570 a0.1=0.906 (shift 1, kpad 0.906) b=-0.646 c0.1=- | seal -0.65/-0.58 load 79.41/79.48
+R12_top-FL-Fs0-o0.0_D8-Mslow-A r2 RR stuck=False f_mid=-0.00 Fs=0.00 moved=0.0722 win=1.052 | old=1.484 kpad=1.484 a0.1=1.762 (shift 1, kpad 1.762) b=0.558 c0.1=- | seal -0.46/-0.56 load 73.44/73.35
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r1 FL stuck=False f_mid=-0.00 Fs=0.00 moved=0.4746 win=1.156 | old=1.537 kpad=1.537 a0.1=1.537 (shift 0, kpad 1.537) b=1.288 c0.1=1.537 | seal -0.10/-0.10 load 116.96/116.96
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r1 FR stuck=False f_mid=0.00 Fs=0.00 moved=-0.0018 win=1.165 | old=1.072 kpad=1.072 a0.1=0.533 (shift 1, kpad 0.533) b=-0.594 c0.1=- | seal 0.35/2.20 load 116.44/118.30
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r1 RL stuck=False f_mid=-0.00 Fs=0.00 moved=0.0049 win=1.092 | old=1.343 kpad=1.343 a0.1=1.144 (shift 1, kpad 1.144) b=0.403 c0.1=- | seal 0.72/1.49 load 71.47/72.25
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r1 RR stuck=False f_mid=-0.00 Fs=0.00 moved=0.0111 win=1.101 | old=1.265 kpad=1.265 a0.1=1.172 (shift 1, kpad 1.172) b=0.299 c0.1=- | seal 1.92/2.29 load 70.81/71.18
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r2 FL reversed
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r2 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.2848 win=1.229 | old=1.406 kpad=1.406 a0.1=1.406 (shift 0, kpad 1.406) b=-1.161 c0.1=1.406 | seal 0.99/0.99 load 119.30/119.30
+R12_top-FL-Fs0-o0.0_D8-Mslow-a2 r2 RL stuck=False f_mid=-0.00 Fs=0.00 moved=0.4728 win=0.976 | old=1.909 kpad=1.909 a0.1=1.909 (shift 0, kpad 1.909) b=0.984 c0.1=1.909 | seal 0.02/0.02 load 71.04/71.04
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r1 FL stuck=False f_mid=-0.00 Fs=0.00 moved=0.4730 win=1.155 | old=1.533 kpad=1.533 a0.1=1.533 (shift 0, kpad 1.533) b=1.281 c0.1=1.533 | seal 1.13/1.13 load 125.78/125.78
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r1 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.1990 win=1.263 | old=1.121 kpad=1.121 a0.1=1.121 (shift 0, kpad 1.121) b=-0.853 c0.1=1.121 | seal 1.33/1.33 load 116.69/116.69
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r1 RL stuck=False f_mid=-0.00 Fs=0.00 moved=0.1870 win=1.024 | old=1.633 kpad=1.633 a0.1=1.633 (shift 0, kpad 1.633) b=0.494 c0.1=1.633 | seal 0.85/0.85 load 80.59/80.59
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r1 RR stuck=False f_mid=-0.00 Fs=0.00 moved=0.3404 win=1.002 | old=1.783 kpad=1.783 a0.1=1.783 (shift 0, kpad 1.783) b=0.527 c0.1=1.783 | seal 0.88/0.88 load 73.49/73.49
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r2 FL reversed
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r2 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.6323 win=1.198 | old=1.703 kpad=1.703 a0.1=1.703 (shift 0, kpad 1.703) b=-1.528 c0.1=1.703 | seal 0.28/0.28 load 123.58/123.58
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r2 RL stuck=False f_mid=0.00 Fs=0.00 moved=-0.0525 win=1.042 | old=0.990 kpad=0.990 a0.1=0.490 (shift 2, kpad 0.490) b=-0.678 c0.1=- | seal 1.54/2.47 load 78.83/79.77
+R12_top-FR-Fs0-o0.05_D8-LSM4-A r2 RR stuck=False f_mid=-0.00 Fs=0.00 moved=0.4071 win=0.884 | old=2.585 kpad=2.585 a0.1=2.585 (shift 0, kpad 2.585) b=-1.090 c0.1=2.585 | seal 0.61/0.61 load 75.78/75.78
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r1 FL stuck=False f_mid=-0.00 Fs=0.00 moved=0.4730 win=1.155 | old=1.533 kpad=1.533 a0.1=1.533 (shift 0, kpad 1.533) b=1.281 c0.1=1.533 | seal 1.33/1.33 load 115.98/115.98
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r1 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.0756 win=1.193 | old=1.267 kpad=1.267 a0.1=1.424 (shift 1, kpad 1.424) b=0.903 c0.1=- | seal 1.97/1.43 load 116.91/116.37
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r1 RL stuck=False f_mid=-0.00 Fs=0.00 moved=0.1739 win=1.012 | old=1.686 kpad=1.686 a0.1=1.686 (shift 0, kpad 1.686) b=0.711 c0.1=1.686 | seal 0.75/0.75 load 71.39/71.39
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r1 RR stuck=False f_mid=-0.00 Fs=0.00 moved=0.1122 win=1.068 | old=1.383 kpad=1.383 a0.1=1.383 (shift 0, kpad 1.383) b=0.299 c0.1=1.383 | seal 1.47/1.47 load 72.01/72.01
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r2 FL stuck=False f_mid=-0.00 Fs=0.00 moved=0.6252 win=1.117 | old=1.823 kpad=1.823 a0.1=1.823 (shift 0, kpad 1.823) b=1.118 c0.1=1.823 | seal -1.63/-1.63 load 117.40/117.40
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r2 FR stuck=False f_mid=-0.00 Fs=0.00 moved=0.5529 win=1.170 | old=1.646 kpad=1.646 a0.1=1.646 (shift 0, kpad 1.646) b=1.036 c0.1=1.646 | seal -0.73/-0.73 load 115.48/115.48
+R12_top-FR-Fs0-o0.05_D8-LSM4-a2 r2 RL stuck=False f_mid=-0.00 Fs=0.00 moved=0.0120 win=1.020 | old=1.319 kpad=1.319 a0.1=0.869 (shift 1, kpad 0.869) b=0.058 c0.1=- | seal 1.33/2.99 load 69.20/70.86
+R12_top-FR-Fs8-o0.0_D8-L-A r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4093 win=1.134 | old=1.640 kpad=1.767 a0.1=1.640 (shift 0, kpad 1.767) b=1.640 c0.1=1.640 | seal 10.95/10.95 load 127.17/127.17
+R12_top-FR-Fs8-o0.0_D8-L-A r1 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0275 win=1.138 | old=1.603 kpad=1.681 a0.1=0.934 (shift 1, kpad 1.024) b=-0.135 c0.1=- | seal 11.27/11.65 load 116.97/117.34
+R12_top-FR-Fs8-o0.0_D8-L-A r1 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0568 win=0.857 | old=2.525 kpad=2.635 a0.1=2.049 (shift 1, kpad 2.180) b=- c0.1=- | seal 8.37/8.53 load 81.78/81.94
+R12_top-FR-Fs8-o0.0_D8-L-A r1 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0590 win=0.817 | old=2.757 kpad=2.948 a0.1=1.998 (shift 1, kpad 2.215) b=0.708 c0.1=- | seal 8.76/9.05 load 76.00/76.29
+R12_top-FR-Fs8-o0.0_D8-L-A r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4379 win=1.125 | old=1.691 kpad=1.691 a0.1=1.691 (shift 0, kpad 1.691) b=1.675 c0.1=1.691 | seal 11.07/11.07 load 127.42/127.42
+R12_top-FR-Fs8-o0.0_D8-L-A r2 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0248 win=1.141 | old=1.585 kpad=1.688 a0.1=0.906 (shift 1, kpad 1.026) b=-0.185 c0.1=- | seal 11.36/11.77 load 116.21/116.61
+R12_top-FR-Fs8-o0.0_D8-L-A r2 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0637 win=0.907 | old=2.381 kpad=2.543 a0.1=1.915 (shift 1, kpad 2.112) b=1.040 c0.1=- | seal 8.47/8.62 load 82.02/82.17
+R12_top-FR-Fs8-o0.0_D8-L-A r2 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0413 win=0.801 | old=2.894 kpad=3.048 a0.1=2.124 (shift 1, kpad 2.298) b=0.259 c0.1=- | seal 8.75/9.05 load 75.48/75.78
+R12_top-FR-Fs8-o0.0_D8-L-a2 r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4093 win=1.134 | old=1.640 kpad=1.767 a0.1=1.640 (shift 0, kpad 1.767) b=1.640 c0.1=1.640 | seal 11.80/11.80 load 118.40/118.40
+R12_top-FR-Fs8-o0.0_D8-L-a2 r1 FR stuck=True f_mid=-2.73 Fs=8.00 moved=0.0000 win=1.003 | old=2.594 kpad=1.716 a0.1=0.389 (shift 2, kpad 0.584) b=-0.974 c0.1=- | seal 8.74/13.89 load 115.42/120.57
+R12_top-FR-Fs8-o0.0_D8-L-a2 r1 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0313 win=0.836 | old=2.693 kpad=2.860 a0.1=2.311 (shift 1, kpad 2.513) b=- c0.1=- | seal 10.21/10.90 load 73.36/74.05
+R12_top-FR-Fs8-o0.0_D8-L-a2 r1 RR stuck=True f_mid=-2.49 Fs=6.67 moved=0.0000 win=0.747 | old=3.351 kpad=2.546 a0.1=1.453 (shift 2, kpad 1.580) b=0.425 c0.1=- | seal 8.37/12.43 load 68.20/72.27
+R12_top-FR-Fs8-o0.0_D8-L-a2 r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4730 win=1.138 | old=1.617 kpad=1.617 a0.1=1.617 (shift 0, kpad 1.617) b=1.617 c0.1=1.617 | seal 11.64/11.64 load 119.08/119.08
+R12_top-FR-Fs8-o0.0_D8-L-a2 r2 FR stuck=True f_mid=-2.88 Fs=8.00 moved=0.0000 win=1.005 | old=2.581 kpad=1.728 a0.1=0.405 (shift 2, kpad 0.592) b=-0.961 c0.1=- | seal 8.78/13.93 load 114.52/119.67
+R12_top-FR-Fs8-o0.0_D8-L-a2 r2 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0181 win=0.810 | old=2.850 kpad=2.874 a0.1=2.412 (shift 1, kpad 2.442) b=- c0.1=- | seal 10.61/11.22 load 73.63/74.24
+R12_top-FR-Fs8-o0.0_D8-L-a2 r2 RR stuck=True f_mid=-1.73 Fs=6.67 moved=0.0000 win=0.740 | old=3.423 kpad=2.447 a0.1=1.362 (shift 2, kpad 1.489) b=0.422 c0.1=- | seal 8.61/12.33 load 69.38/73.09
+R12_top-FR-Fs8-o0.0_D8-M-A r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4093 win=1.134 | old=1.640 kpad=1.767 a0.1=1.640 (shift 0, kpad 1.767) b=1.640 c0.1=1.640 | seal 10.95/10.95 load 127.17/127.17
+R12_top-FR-Fs8-o0.0_D8-M-A r1 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0275 win=1.138 | old=1.603 kpad=1.681 a0.1=0.934 (shift 1, kpad 1.024) b=-0.135 c0.1=- | seal 11.27/11.65 load 116.97/117.34
+R12_top-FR-Fs8-o0.0_D8-M-A r1 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0568 win=0.857 | old=2.525 kpad=2.635 a0.1=2.049 (shift 1, kpad 2.180) b=- c0.1=- | seal 8.37/8.53 load 81.78/81.94
+R12_top-FR-Fs8-o0.0_D8-M-A r1 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0590 win=0.817 | old=2.757 kpad=2.948 a0.1=1.998 (shift 1, kpad 2.215) b=0.708 c0.1=- | seal 8.76/9.05 load 76.00/76.29
+R12_top-FR-Fs8-o0.0_D8-M-A r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4379 win=1.125 | old=1.691 kpad=1.691 a0.1=1.691 (shift 0, kpad 1.691) b=1.675 c0.1=1.691 | seal 11.07/11.07 load 127.42/127.42
+R12_top-FR-Fs8-o0.0_D8-M-A r2 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0248 win=1.141 | old=1.585 kpad=1.688 a0.1=0.906 (shift 1, kpad 1.026) b=-0.185 c0.1=- | seal 11.36/11.77 load 116.21/116.61
+R12_top-FR-Fs8-o0.0_D8-M-A r2 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0442 win=0.833 | old=2.682 kpad=2.801 a0.1=2.157 (shift 1, kpad 2.298) b=- c0.1=- | seal 8.39/8.56 load 80.91/81.08
+R12_top-FR-Fs8-o0.0_D8-M-A r2 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0313 win=0.790 | old=2.985 kpad=3.140 a0.1=2.198 (shift 1, kpad 2.372) b=0.260 c0.1=- | seal 8.66/8.95 load 76.36/76.66
+R12_top-FR-Fs8-o0.0_D8-M-a2 r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4093 win=1.134 | old=1.640 kpad=1.767 a0.1=1.640 (shift 0, kpad 1.767) b=1.640 c0.1=1.640 | seal 11.80/11.80 load 118.40/118.40
+R12_top-FR-Fs8-o0.0_D8-M-a2 r1 FR stuck=True f_mid=-2.73 Fs=8.00 moved=0.0000 win=1.003 | old=2.594 kpad=1.716 a0.1=0.389 (shift 2, kpad 0.584) b=-0.974 c0.1=- | seal 8.74/13.89 load 115.42/120.57
+R12_top-FR-Fs8-o0.0_D8-M-a2 r1 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0313 win=0.836 | old=2.693 kpad=2.860 a0.1=2.311 (shift 1, kpad 2.513) b=- c0.1=- | seal 10.21/10.90 load 73.36/74.05
+R12_top-FR-Fs8-o0.0_D8-M-a2 r1 RR stuck=True f_mid=-2.49 Fs=6.67 moved=0.0000 win=0.747 | old=3.351 kpad=2.546 a0.1=1.453 (shift 2, kpad 1.580) b=0.425 c0.1=- | seal 8.37/12.43 load 68.20/72.27
+R12_top-FR-Fs8-o0.0_D8-M-a2 r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4570 win=1.138 | old=1.611 kpad=1.611 a0.1=1.611 (shift 0, kpad 1.611) b=1.603 c0.1=1.611 | seal 11.67/11.67 load 118.24/118.24
+R12_top-FR-Fs8-o0.0_D8-M-a2 r2 FR stuck=True f_mid=-2.72 Fs=8.00 moved=0.0000 win=1.002 | old=2.608 kpad=1.721 a0.1=0.404 (shift 2, kpad 0.588) b=-0.948 c0.1=- | seal 8.71/13.92 load 115.33/120.54
+R12_top-FR-Fs8-o0.0_D8-M-a2 r2 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0154 win=0.806 | old=2.882 kpad=2.898 a0.1=2.430 (shift 1, kpad 2.449) b=- c0.1=- | seal 10.58/11.21 load 74.51/75.13
+R12_top-FR-Fs8-o0.0_D8-M-a2 r2 RR stuck=True f_mid=-1.88 Fs=6.67 moved=0.0000 win=0.742 | old=3.397 kpad=2.454 a0.1=1.359 (shift 2, kpad 1.484) b=0.406 c0.1=- | seal 8.64/12.34 load 68.49/72.19
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4097 win=1.136 | old=1.629 kpad=1.764 a0.1=1.629 (shift 0, kpad 1.764) b=1.629 c0.1=1.629 | seal 9.32/9.32 load 129.45/129.45
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r1 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0079 win=1.068 | old=2.272 kpad=2.280 a0.1=1.401 (shift 1, kpad 1.410) b=0.573 c0.1=- | seal 9.77/10.08 load 117.63/117.94
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r1 RL stuck=True f_mid=-3.10 Fs=6.67 moved=0.0000 win=0.804 | old=3.258 kpad=2.629 a0.1=1.144 (shift 2, kpad 1.259) b=0.526 c0.1=- | seal 7.16/7.49 load 81.79/82.11
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r1 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0233 win=0.790 | old=3.196 kpad=3.245 a0.1=2.379 (shift 1, kpad 2.436) b=0.768 c0.1=- | seal 7.34/7.51 load 77.40/77.58
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4409 win=1.126 | old=1.689 kpad=1.689 a0.1=1.689 (shift 0, kpad 1.689) b=1.672 c0.1=1.689 | seal 9.40/9.40 load 130.00/130.00
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r2 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0069 win=1.070 | old=2.255 kpad=2.283 a0.1=1.369 (shift 1, kpad 1.401) b=0.514 c0.1=- | seal 10.01/10.37 load 116.36/116.71
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r2 RL stuck=True f_mid=-2.61 Fs=6.67 moved=0.0000 win=0.769 | old=3.478 kpad=2.738 a0.1=1.218 (shift 8, kpad 1.360) b=0.558 c0.1=- | seal 7.25/7.65 load 80.00/80.41
+R12_top-FR-Fs8-o0.0_D8-Mh15-A r2 RR stuck=True f_mid=-6.60 Fs=6.67 moved=0.0000 win=0.737 | old=3.713 kpad=3.704 a0.1=1.813 (shift 2, kpad 1.819) b=0.828 c0.1=- | seal 7.23/7.62 load 78.21/78.61
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4097 win=1.136 | old=1.629 kpad=1.764 a0.1=1.629 (shift 0, kpad 1.764) b=1.629 c0.1=1.629 | seal 11.94/11.94 load 118.51/118.51
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r1 FR stuck=True f_mid=2.37 Fs=8.00 moved=0.0000 win=0.924 | old=3.550 kpad=1.540 a0.1=0.318 (shift 2, kpad 0.526) b=-0.310 c0.1=- | seal 6.53/13.48 load 112.89/119.84
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r1 RL stuck=True f_mid=-6.07 Fs=6.67 moved=0.0502 win=0.764 | old=3.283 kpad=3.374 a0.1=2.419 (shift 7, kpad 2.661) b=0.812 c0.1=- | seal 9.82/11.02 load 72.54/73.73
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r1 RR stuck=True f_mid=1.87 Fs=6.67 moved=0.0000 win=0.685 | old=4.250 kpad=2.345 a0.1=1.347 (shift 2, kpad 1.468) b=0.300 c0.1=- | seal 5.99/11.88 load 66.05/71.94
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.3756 win=1.126 | old=1.665 kpad=1.665 a0.1=1.665 (shift 0, kpad 1.665) b=1.665 c0.1=1.665 | seal 12.03/12.03 load 118.26/118.26
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r2 FR stuck=True f_mid=2.18 Fs=8.00 moved=0.0000 win=0.932 | old=3.480 kpad=1.567 a0.1=0.257 (shift 2, kpad 0.512) b=-0.364 c0.1=- | seal 7.18/11.83 load 113.67/118.31
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r2 RL stuck=True f_mid=-6.18 Fs=6.67 moved=0.0656 win=0.708 | old=3.441 kpad=3.558 a0.1=2.733 (shift 7, kpad 2.982) b=0.947 c0.1=- | seal 10.13/10.84 load 74.84/75.54
+R12_top-FR-Fs8-o0.0_D8-Mh15-a2 r2 RR stuck=True f_mid=2.07 Fs=6.67 moved=0.0000 win=0.659 | old=4.525 kpad=2.387 a0.1=0.968 (shift 3, kpad 0.968) b=0.257 c0.1=- | seal 7.47/12.51 load 67.29/72.32
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4096 win=1.136 | old=1.628 kpad=1.764 a0.1=1.628 (shift 0, kpad 1.764) b=1.628 c0.1=1.628 | seal 4.47/4.47 load 135.20/135.20
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r1 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0947 win=1.099 | old=2.027 kpad=2.085 a0.1=1.218 (shift 1, kpad 1.287) b=1.062 c0.1=- | seal 7.51/7.51 load 119.14/119.14
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r1 RL stuck=True f_mid=0.52 Fs=6.67 moved=0.0000 win=0.820 | old=2.947 kpad=1.583 a0.1=0.859 (shift 2, kpad 0.919) b=0.316 c0.1=- | seal 4.15/4.13 load 85.93/85.91
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r1 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0959 win=0.876 | old=2.451 kpad=2.451 a0.1=1.758 (shift 1, kpad 1.758) b=0.025 c0.1=- | seal 5.56/5.56 load 78.21/78.20
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4484 win=1.131 | old=1.658 kpad=1.658 a0.1=1.658 (shift 0, kpad 1.658) b=1.649 c0.1=1.658 | seal 4.55/4.55 load 136.86/136.86
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r2 FR stuck=False f_mid=-8.00 Fs=8.00 moved=0.0963 win=1.100 | old=2.014 kpad=2.083 a0.1=1.208 (shift 1, kpad 1.288) b=1.068 c0.1=- | seal 7.91/7.96 load 116.72/116.77
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r2 RL stuck=True f_mid=0.79 Fs=6.67 moved=0.0000 win=0.785 | old=3.209 kpad=1.687 a0.1=0.850 (shift 2, kpad 0.859) b=0.321 c0.1=- | seal 4.92/4.90 load 82.65/82.63
+R12_top-FR-Fs8-o0.0_D8-Mslow-A r2 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0491 win=0.819 | old=2.921 kpad=2.921 a0.1=2.096 (shift 1, kpad 2.096) b=0.777 c0.1=- | seal 5.01/5.01 load 80.97/80.97
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4096 win=1.136 | old=1.628 kpad=1.764 a0.1=1.628 (shift 0, kpad 1.764) b=1.628 c0.1=1.628 | seal 11.80/11.80 load 118.83/118.83
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r1 FR stuck=True f_mid=1.04 Fs=8.00 moved=0.0000 win=0.942 | old=3.303 kpad=1.646 a0.1=0.327 (shift 2, kpad 0.586) b=-0.267 c0.1=- | seal 6.72/13.26 load 113.60/120.14
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r1 RL stuck=True f_mid=-4.89 Fs=6.67 moved=0.0774 win=0.778 | old=3.423 kpad=3.222 a0.1=2.346 (shift 7, kpad 2.534) b=- c0.1=- | seal 9.06/10.79 load 71.66/73.39
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r1 RR stuck=True f_mid=0.92 Fs=6.67 moved=0.0000 win=0.693 | old=4.071 kpad=2.428 a0.1=1.412 (shift 2, kpad 1.560) b=0.688 c0.1=- | seal 6.77/12.07 load 67.17/72.47
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r2 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4405 win=1.121 | old=1.721 kpad=1.721 a0.1=1.721 (shift 0, kpad 1.721) b=1.699 c0.1=1.721 | seal 11.34/11.34 load 119.82/119.82
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r2 FR stuck=True f_mid=1.36 Fs=8.00 moved=0.0000 win=0.930 | old=3.429 kpad=1.634 a0.1=0.369 (shift 2, kpad 0.567) b=-0.265 c0.1=- | seal 6.90/13.15 load 112.64/118.88
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r2 RL stuck=True f_mid=-5.87 Fs=6.67 moved=0.0573 win=0.706 | old=3.515 kpad=3.582 a0.1=2.671 (shift 7, kpad 2.943) b=0.965 c0.1=- | seal 9.92/10.83 load 72.66/73.57
+R12_top-FR-Fs8-o0.0_D8-Mslow-a2 r2 RR stuck=True f_mid=1.19 Fs=6.67 moved=0.0000 win=0.682 | old=4.195 kpad=2.372 a0.1=1.426 (shift 2, kpad 1.467) b=0.309 c0.1=- | seal 7.31/11.80 load 68.96/73.45
+R7_e0.0_D8-M-A r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4600 win=1.130 | old=1.666 kpad=1.666 a0.1=1.666 (shift 0, kpad 1.666) b=1.653 c0.1=1.666 | seal 11.78/11.78 load 127.64/127.64
+R7_e0.0_D8-M-A r1 FR stuck=True f_mid=-7.41 Fs=8.00 moved=0.0000 win=1.126 | old=1.745 kpad=1.880 a0.1=0.736 (shift 1, kpad 1.001) b=-0.447 c0.1=- | seal 10.77/12.21 load 111.89/113.33
+R7_e0.0_D8-M-A r1 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0554 win=0.881 | old=2.349 kpad=2.596 a0.1=2.018 (shift 1, kpad 2.318) b=- c0.1=- | seal 8.13/8.22 load 78.03/78.12
+R7_e0.0_D8-M-A r1 RR stuck=False f_mid=-6.67 Fs=6.67 moved=0.0143 win=0.772 | old=3.173 kpad=3.267 a0.1=2.394 (shift 1, kpad 2.502) b=0.295 c0.1=- | seal 8.94/9.27 load 77.85/78.17
+R7_e0.0_D8-M-a2 r1 FL stuck=False f_mid=-8.00 Fs=8.00 moved=0.4600 win=1.130 | old=1.666 kpad=1.666 a0.1=1.666 (shift 0, kpad 1.666) b=1.653 c0.1=1.666 | seal 11.34/11.34 load 120.08/120.08
+R7_e0.0_D8-M-a2 r1 FR stuck=True f_mid=-0.93 Fs=8.00 moved=0.0000 win=0.973 | old=2.913 kpad=1.656 a0.1=0.367 (shift 2, kpad 0.566) b=-0.762 c0.1=- | seal 7.98/13.49 load 113.64/119.15
+R7_e0.0_D8-M-a2 r1 RL stuck=False f_mid=-6.67 Fs=6.67 moved=0.0187 win=0.815 | old=2.799 kpad=2.800 a0.1=2.184 (shift 1, kpad 2.185) b=- c0.1=- | seal 10.67/11.51 load 73.19/74.02
+R7_e0.0_D8-M-a2 r1 RR stuck=True f_mid=-1.56 Fs=6.67 moved=0.0000 win=0.743 | old=3.419 kpad=2.450 a0.1=1.255 (shift 2, kpad 1.429) b=0.370 c0.1=- | seal 8.18/12.14 load 69.68/73.63
+S7_e0.002_D8-M-A r1 FL reversed
+S7_e0.002_D8-M-A r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.2565 win=1.480 | old=-0.010 kpad=0.014 a0.1=-0.010 (shift 0, kpad 0.014) b=-0.010 c0.1=-0.010 | seal 1.66/1.66 load 114.96/114.96
+S7_e0.002_D8-M-A r1 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.1936 win=1.670 | old=-0.239 kpad=-0.229 a0.1=-0.239 (shift 0, kpad -0.229) b=-0.239 c0.1=-0.239 | seal -1.36/-1.36 load 67.71/67.71
+S7_e0.002_D8-M-A r2 FL reversed
+S7_e0.002_D8-M-A r2 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.4191 win=1.488 | old=-0.038 kpad=-0.031 a0.1=-0.038 (shift 0, kpad -0.031) b=-0.038 c0.1=-0.038 | seal 1.76/1.76 load 116.06/116.06
+S7_e0.002_D8-M-A r2 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.1926 win=1.570 | old=-0.028 kpad=-0.024 a0.1=-0.028 (shift 0, kpad -0.024) b=-0.028 c0.1=-0.028 | seal 0.85/0.85 load 68.99/68.99
+S7_e0.002_D8-M-A r2 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.3773 win=1.498 | old=-0.029 kpad=-0.029 a0.1=-0.029 (shift 0, kpad -0.029) b=-0.029 c0.1=-0.029 | seal 1.64/1.64 load 66.78/66.78
+S7_e0.002_D8-M-a2 r1 FL reversed
+S7_e0.002_D8-M-a2 r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.2492 win=1.480 | old=-0.010 kpad=0.007 a0.1=-0.010 (shift 0, kpad 0.007) b=-0.010 c0.1=-0.010 | seal -0.65/-0.65 load 111.50/111.50
+S7_e0.002_D8-M-a2 r2 FL stuck=False f_mid=-4.00 Fs=4.00 moved=0.4578 win=1.662 | old=-0.697 kpad=-0.662 a0.1=-0.697 (shift 0, kpad -0.662) b=-0.697 c0.1=-0.697 | seal -1.99/-1.99 load 109.62/109.62
+S7_e0.002_D8-M-a2 r2 FR stuck=True f_mid=-3.91 Fs=4.00 moved=0.0000 win=1.447 | old=0.072 kpad=0.077 a0.1=-0.105 (shift 1, kpad -0.082) b=0.072 c0.1=- | seal 0.73/0.73 load 113.52/113.52
+S7_e0.002_D8-M-a2 r2 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.0213 win=1.347 | old=0.319 kpad=0.329 a0.1=0.149 (shift 1, kpad 0.162) b=0.319 c0.1=- | seal 3.40/0.19 load 72.17/68.96
+S7_e0.002_D8-M-a2 r2 RR stuck=True f_mid=-2.77 Fs=3.33 moved=0.0000 win=1.411 | old=0.159 kpad=0.095 a0.1=-0.029 (shift 1, kpad -0.029) b=0.159 c0.1=- | seal 0.78/0.78 load 64.64/64.64
+S7_e0.002_D8-Mslow-A r1 FL reversed
+S7_e0.002_D8-Mslow-A r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.1628 win=1.502 | old=-0.028 kpad=-0.003 a0.1=-0.028 (shift 0, kpad -0.003) b=-0.028 c0.1=-0.028 | seal 2.74/2.74 load 116.44/116.44
+S7_e0.002_D8-Mslow-A r1 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.0208 win=1.718 | old=-0.089 kpad=-0.084 a0.1=-0.395 (shift 1, kpad -0.389) b=-0.089 c0.1=- | seal -0.48/-0.48 load 69.01/69.01
+S7_e0.002_D8-Mslow-A r1 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.3029 win=1.513 | old=-0.038 kpad=-0.038 a0.1=-0.038 (shift 0, kpad -0.038) b=-0.038 c0.1=-0.038 | seal 2.14/2.14 load 67.89/67.89
+S7_e0.002_D8-Mslow-A r2 FL reversed
+S7_e0.002_D8-Mslow-a2 r1 FL reversed
+S7_e0.002_D8-Mslow-a2 r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.1502 win=1.505 | old=-0.036 kpad=-0.020 a0.1=-0.036 (shift 0, kpad -0.020) b=-0.036 c0.1=-0.036 | seal -0.32/-0.32 load 111.67/111.67
+S7_e0.002_D8-Mslow-a2 r2 FL reversed
+S7_e0.002_D8-Mslow-a2 r2 FR stuck=True f_mid=-0.65 Fs=4.00 moved=0.0000 win=1.384 | old=0.481 kpad=0.025 a0.1=-0.158 (shift 1, kpad -0.141) b=-0.158 c0.1=- | seal 4.19/1.80 load 114.88/112.49
+S7_e0.002_D8-Mslow-a2 r2 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.0673 win=1.598 | old=0.202 kpad=0.202 a0.1=0.024 (shift 1, kpad 0.024) b=0.202 c0.1=- | seal -0.83/-0.83 load 67.69/67.69
+S7_e0.002_D8-Mslow-a2 r2 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.2819 win=1.513 | old=-0.029 kpad=-0.029 a0.1=-0.029 (shift 0, kpad -0.029) b=-0.029 c0.1=-0.029 | seal -0.77/-0.77 load 62.34/62.34
+S7_e0.003_D8-M-A r1 FL reversed
+S7_e0.003_D8-M-A r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.2606 win=1.480 | old=-0.010 kpad=0.014 a0.1=-0.010 (shift 0, kpad 0.014) b=-0.010 c0.1=-0.010 | seal 1.67/1.67 load 114.97/114.97
+S7_e0.003_D8-M-A r1 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.1945 win=1.668 | old=-0.236 kpad=-0.225 a0.1=-0.236 (shift 0, kpad -0.225) b=-0.236 c0.1=-0.236 | seal -1.33/-1.33 load 67.73/67.73
+S7_e0.003_D8-M-A r2 FL reversed
+S7_e0.003_D8-M-A r2 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.4161 win=1.488 | old=-0.037 kpad=-0.030 a0.1=-0.037 (shift 0, kpad -0.030) b=-0.037 c0.1=-0.037 | seal 1.77/1.77 load 116.06/116.06
+S7_e0.003_D8-M-A r2 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.1961 win=1.569 | old=-0.029 kpad=-0.025 a0.1=-0.029 (shift 0, kpad -0.025) b=-0.029 c0.1=-0.029 | seal 0.90/0.90 load 68.98/68.98
+S7_e0.003_D8-M-A r2 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.3772 win=1.498 | old=-0.029 kpad=-0.029 a0.1=-0.029 (shift 0, kpad -0.029) b=-0.029 c0.1=-0.029 | seal 1.64/1.64 load 66.83/66.83
+S7_e0.003_D8-M-a2 r1 FL reversed
+S7_e0.003_D8-M-a2 r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.2533 win=1.480 | old=-0.010 kpad=0.007 a0.1=-0.010 (shift 0, kpad 0.007) b=-0.010 c0.1=-0.010 | seal -0.62/-0.62 load 111.50/111.50
+S7_e0.003_D8-M-a2 r2 FL reversed
+S7_e0.003_D8-M-a2 r2 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.0656 win=1.505 | old=-0.120 kpad=-0.115 a0.1=-0.183 (shift 1, kpad -0.176) b=-0.120 c0.1=- | seal 0.79/0.79 load 112.06/112.06
+S7_e0.003_D8-M-a2 r2 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.2338 win=1.532 | old=0.088 kpad=0.112 a0.1=0.088 (shift 0, kpad 0.112) b=0.088 c0.1=0.088 | seal -1.10/-1.10 load 67.23/67.23
+S7_e0.003_D8-M-a2 r2 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.0469 win=1.488 | old=-0.012 kpad=-0.012 a0.1=-0.032 (shift 1, kpad -0.032) b=-0.012 c0.1=- | seal 0.39/0.39 load 63.32/63.32
+S7_e0.0_D8-M-a2 r1 FL reversed
+S7_e0.0_D8-M-a2 r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.2542 win=1.480 | old=-0.010 kpad=0.007 a0.1=-0.010 (shift 0, kpad 0.007) b=-0.010 c0.1=-0.010 | seal -0.63/-0.63 load 111.50/111.50
+S7_e0.0_D8-M-a2 r2 FL reversed
+S7_e0.0_D8-M-a2 r2 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.0417 win=1.497 | old=-0.093 kpad=-0.086 a0.1=-0.181 (shift 1, kpad -0.173) b=-0.093 c0.1=- | seal 0.78/0.78 load 112.04/112.04
+S7_e0.0_D8-M-a2 r2 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.2441 win=1.539 | old=0.078 kpad=0.101 a0.1=0.078 (shift 0, kpad 0.101) b=0.078 c0.1=0.078 | seal -1.12/-1.12 load 67.24/67.24
+S7_e0.0_D8-M-a2 r2 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.3478 win=1.497 | old=-0.029 kpad=-0.029 a0.1=-0.029 (shift 0, kpad -0.029) b=-0.029 c0.1=-0.029 | seal -0.44/-0.44 load 62.15/62.15
+S7_e0.0_D8-Mslow-A r1 FL reversed
+S7_e0.0_D8-Mslow-A r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.1708 win=1.501 | old=-0.027 kpad=-0.002 a0.1=-0.027 (shift 0, kpad -0.002) b=-0.027 c0.1=-0.027 | seal 2.75/2.75 load 116.44/116.44
+S7_e0.0_D8-Mslow-A r1 RL stuck=False f_mid=-3.33 Fs=3.33 moved=0.0213 win=1.717 | old=-0.088 kpad=-0.083 a0.1=-0.394 (shift 1, kpad -0.388) b=-0.088 c0.1=- | seal -0.46/-0.46 load 69.01/69.01
+S7_e0.0_D8-Mslow-A r1 RR stuck=False f_mid=-3.33 Fs=3.33 moved=0.3054 win=1.512 | old=-0.038 kpad=-0.038 a0.1=-0.038 (shift 0, kpad -0.038) b=-0.038 c0.1=-0.038 | seal 2.15/2.15 load 67.92/67.92
+S7_e0.0_D8-Mslow-A r2 FL reversed
+S7_e0.0_D8-Mslow-a2 r1 FL reversed
+S7_e0.0_D8-Mslow-a2 r1 FR stuck=False f_mid=-4.00 Fs=4.00 moved=0.1582 win=1.504 | old=-0.035 kpad=-0.019 a0.1=-0.035 (shift 0, kpad -0.019) b=-0.035 c0.1=-0.035 | seal -0.31/-0.31 load 111.67/111.67
+S7_e0.0_D8-Mslow-a2 r2 FL stuck=False f_mid=-4.00 Fs=4.00 moved=0.4621 win=1.660 | old=-0.691 kpad=-0.659 a0.1=-0.691 (shift 0, kpad -0.659) b=-0.691 c0.1=-0.691 | seal -1.91/-1.91 load 109.68/109.68
+S7_e0.0_D8-Mslow-a2 r2 FR stuck=True f_mid=0.04 Fs=4.00 moved=0.0000 win=1.337 | old=0.655 kpad=0.069 a0.1=-0.102 (shift 1, kpad -0.101) b=-0.102 c0.1=- | seal 3.54/1.89 load 114.89/113.25
+S7_e0.0_D8-Mslow-a2 r2 RL stuck=True f_mid=-2.23 Fs=3.33 moved=0.0000 win=1.182 | old=0.530 kpad=0.427 a0.1=0.252 (shift 7, kpad 0.305) b=0.252 c0.1=- | seal 2.91/0.95 load 71.62/69.66
+S7_e0.0_D8-Mslow-a2 r2 RR stuck=True f_mid=0.84 Fs=3.33 moved=0.0000 win=1.301 | old=0.589 kpad=0.072 a0.1=-0.030 (shift 1, kpad -0.030) b=-0.030 c0.1=- | seal 3.28/1.19 load 66.52/64.43

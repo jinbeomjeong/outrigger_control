@@ -1,0 +1,96 @@
+records 25 runs 23 errors 0
+REPRO V0 R12 0.025 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.287 None 
+REPRO V0 R12 0.075 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.472 None 
+REPRO V0 R12 0.05 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.494 None 
+REPRO V0 R12 0.0 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.592 None 
+REPRO V0 R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.579 None 
+REPRO V0 R12 0.025 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.288 None 
+REPRO V0 R12 0.05 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.268 None 
+REPRO V0 R12 0.075 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.495 None 
+REPRO VBM R12 0.0 {"level": "bottom", "leg": "FL", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same True pu 1.805 1.805 
+REPRO VBM R12 0.0 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.835 None 
+REPRO VBM R12 0.025 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same True pu 1.477 1.477 
+REPRO VBM R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.785 None 
+REPRO VBM R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.805 None 
+REPRO VBM R12 0.075 {"level": "bottom", "leg": "FR", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same True pu 1.549 1.549 
+REPRO VBM R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 0.0, "event": "RE1bF", "timing": "ready"} same True pu 1.861 1.861 
+REPRO VBM R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 8.0, "event": "FS24", "timing": "ready"} same True pu 0.976 0.976 
+REPRO VBM S7 None null same True pu None None 
+REPRO U8-A R12 0.0 {"level": "bottom", "leg": "FL", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.801 None 
+REPRO U8-A R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 0.0, "event": "RE1bF", "timing": "ready"} same None pu 2.004 None 
+REPRO U8-A R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 8.0, "event": "FS24", "timing": "ready"} same None pu 1.047 None 
+REPRO U8-A R12 0.0 {"level": "bottom", "leg": "FL", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.831 None 
+REPRO U8-A R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 2.0, "event": "RE1bF", "timing": "ready"} same None pu 1.861 None 
+REPRO VBM R12 0.075 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same True pu 1.55 1.55 
+REPRO U8-A R12 0.0 {"level": "bottom", "leg": "FR", "fs_kN": 4.0, "event": "RE1bF", "timing": "ready"} same None pu 1.837 None 
+REPRO VBM S7 None null same True pu None None 
+RUN V0|bottom-FR-Fs4-RE1bF-o0.025 fs1 0.075 pu 1.287 last 1.37 fail  reload 0.191
+    ev [[0.015, 0.191], [0.458, 0.725], [1.02, 1.143]] dg [[0.092, 0.525], [0.698, 0.997], [1.188, 1.37]]
+    starts {"FR": [0.075], "RL": [0.975]} ends {"FR": [0.975], "RL": [1.975]}
+RUN V0|bottom-FR-Fs4-RE1bF-o0.075 fs1 0.025 pu 1.472 last 1.728 fail  reload 0.186
+    ev [[0.015, 0.185], [0.456, 0.718], [1.012, 1.172]] dg [[0.092, 0.514], [0.69, 1.004], [1.185, 1.42], [1.64, 1.728]]
+    starts {"FR": [0.025], "RL": [0.425]} ends {"FR": [0.425], "RL": [2.025]}
+RUN V0|bottom-FR-Fs4-RE1bF-o0.05 fs1 0.05 pu 1.494 last 1.743 fail  reload 0.188
+    ev [[0.015, 0.188], [0.457, 0.723], [1.018, 1.181]] dg [[0.092, 0.519], [0.693, 1.011], [1.192, 1.431], [1.647, 1.743]]
+    starts {"FR": [0.05], "RL": [0.45]} ends {"FR": [0.45], "RL": [2.05]}
+RUN V0|bottom-FL-Fs2-RE1bF-o0.0 fs1 0.1 pu 1.592 last 1.804 fail  reload 0.186
+    ev [[0.015, 0.183], [0.454, 0.723], [1.018, 1.2]] dg [[0.091, 0.517], [0.689, 1.019], [1.2, 1.463], [1.66, 1.804]]
+    starts {"FL": [0.1], "RR": [0.4]} ends {"FL": [0.4], "RR": [2.1]}
+RUN V0|bottom-FR-Fs4-RE1bF-o0.0 fs1 0.1 pu 1.579 last 1.8 fail  reload 0.194
+    ev [[0.015, 0.193], [0.46, 0.738], [1.031, 1.213]] dg [[0.092, 0.53], [0.699, 1.035], [1.213, 1.471], [1.677, 1.8]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.1]}
+RUN V0|bottom-FL-Fs2-RE1bF-o0.025 fs1 0.075 pu 1.288 last 1.366 fail  reload 0.183
+    ev [[0.015, 0.183], [0.453, 0.713], [1.008, 1.137]] dg [[0.091, 0.513], [0.689, 0.985], [1.177, 1.366]]
+    starts {"FL": [0.075], "RR": [0.975, 1.675]} ends {"FL": [0.975], "RR": [1.575, 1.975]}
+RUN V0|bottom-FL-Fs2-RE1bF-o0.05 fs1 0.05 pu 1.268 last 1.353 fail  reload 0.179
+    ev [[0.015, 0.179], [0.452, 0.707], [1.002, 1.124]] dg [[0.091, 0.508], [0.685, 0.977], [1.169, 1.353]]
+    starts {"FL": [0.05], "RR": [0.95]} ends {"FL": [0.95], "RR": [1.95]}
+RUN V0|bottom-FL-Fs2-RE1bF-o0.075 fs1 0.025 pu 1.495 last 1.742 fail  reload 0.177
+    ev [[0.015, 0.177], [0.451, 0.706], [1.0, 1.161]] dg [[0.091, 0.503], [0.681, 0.99], [1.174, 1.414], [1.623, 1.742]]
+    starts {"FL": [0.025], "RR": [0.425]} ends {"FL": [0.425], "RR": [2.025]}
+RUN VBM|bottom-FL-Fs4-RE1bF-o0.0 fs1 0.1 pu 1.805 last 1.912 fail U832_pair_union reload 0.189
+    ev [[0.015, 0.188], [0.458, 0.756], [1.04, 1.255], [1.574, 1.648]] dg [[0.089, 0.541], [0.688, 1.083], [1.224, 1.551], [1.717, 1.912]]
+    starts {"FL": [0.1], "RR": [0.4]} ends {"FL": [0.4], "RR": [2.5]}
+RUN VBM|bottom-FL-Fs2-RE1bF-o0.0 fs1 0.1 pu 1.835 last 1.925 fail U832_pair_union reload 0.189
+    ev [[0.015, 0.187], [0.456, 0.754], [1.039, 1.259], [1.574, 1.671]] dg [[0.09, 0.535], [0.692, 1.076], [1.238, 1.55], [1.722, 1.925]]
+    starts {"FL": [0.1], "RR": [0.4]} ends {"FL": [0.4], "RR": [2.5]}
+RUN VBM|bottom-FL-Fs2-RE1bF-o0.025 fs1 0.075 pu 1.477 last 1.738 fail  reload 0.189
+    ev [[0.015, 0.187], [0.459, 0.731], [1.027, 1.184]] dg [[0.09, 0.526], [0.693, 1.019], [1.204, 1.431], [1.649, 1.738]]
+    starts {"FL": [0.075], "RR": [0.975]} ends {"FL": [0.975], "RR": [1.975]}
+RUN VBM|bottom-FR-Fs4-RE1bF-o0.0 fs1 0.1 pu 1.785 last 1.907 fail  reload 0.194
+    ev [[0.015, 0.192], [0.459, 0.763], [1.046, 1.265], [1.581, 1.651]] dg [[0.091, 0.541], [0.698, 1.085], [1.241, 1.551], [1.728, 1.907]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.5]}
+RUN VBM|bottom-FR-Fs2-RE1bF-o0.0 fs1 0.1 pu 1.805 last 1.911 fail U832_pair_union reload 0.191
+    ev [[0.015, 0.189], [0.456, 0.755], [1.041, 1.263], [1.573, 1.663]] dg [[0.093, 0.531], [0.697, 1.072], [1.246, 1.542], [1.723, 1.911]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.5]}
+RUN VBM|bottom-FR-Fs2-RE1bF-o0.075 fs1 0.025 pu 1.549 last 1.782 fail  reload 0.191
+    ev [[0.015, 0.189], [0.457, 0.727], [1.019, 1.199]] dg [[0.093, 0.515], [0.698, 1.015], [1.204, 1.452], [1.661, 1.782]]
+    starts {"FR": [0.025], "RL": [0.425]} ends {"FR": [0.425], "RL": [2.025]}
+RUN VBM|bottom-FR-Fs0-RE1bF-o0.0 fs1 0.1 pu 1.861 last 2.193 fail U832_pair_union reload 0.191
+    ev [[0.015, 0.188], [0.454, 0.752], [1.039, 1.264], [1.573, 1.679]] dg [[0.093, 0.527], [0.698, 1.066], [1.249, 1.542], [1.729, 1.923], [2.159, 2.193]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.5]}
+RUN VBM|bottom-FR-Fs8-FS24-o0.0 fs1 0.1 pu 0.976 last 1.331 fail end_att reload 0.211
+    ev [[0.195, 0.205], [0.525, 0.73]] dg [[0.166, 0.556], [0.714, 1.004], [1.193, 1.331]]
+    starts {"FR": [0.2], "RL": [0.5]} ends {"FR": [0.5], "RL": [1.6]}
+RUN U8-A|bottom-FL-Fs4-RE1bF-o0.0 fs1 0.1 pu 1.801 last 1.908 fail U832_pair_union reload 0.186
+    ev [[0.015, 0.184], [0.456, 0.752], [1.036, 1.252], [1.571, 1.645]] dg [[0.09, 0.535], [0.685, 1.078], [1.222, 1.547], [1.713, 1.908]]
+    starts {"FL": [0.1], "RR": [0.4]} ends {"FL": [0.4], "RR": [2.5]}
+RUN U8-A|bottom-FR-Fs0-RE1bF-o0.0 fs1 0.1 pu 2.004 last 2.285 fail U832_pair_union reload 0.194
+    ev [[0.015, 0.191], [0.455, 0.764], [1.046, 1.281], [1.591, 1.724]] dg [[0.093, 0.534], [0.702, 1.081], [1.26, 1.57], [1.754, 1.977], [2.192, 2.285]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.6]}
+RUN U8-A|bottom-FR-Fs8-FS24-o0.0 fs1 0.1 pu 1.047 last 1.356 fail  reload 0.211
+    ev [[0.188, 0.206], [0.525, 0.74], [1.053, 1.09]] dg [[0.163, 0.562], [0.716, 1.021], [1.204, 1.356]]
+    starts {"FR": [0.2], "RL": [0.5]} ends {"FR": [0.5], "RL": [1.9]}
+RUN U8-A|bottom-FL-Fs2-RE1bF-o0.0 fs1 0.1 pu 1.831 last 1.921 fail U832_pair_union reload 0.185
+    ev [[0.015, 0.183], [0.454, 0.749], [1.034, 1.256], [1.57, 1.667]] dg [[0.091, 0.529], [0.688, 1.071], [1.235, 1.546], [1.718, 1.921]]
+    starts {"FL": [0.1], "RR": [0.4]} ends {"FL": [0.4], "RR": [2.5]}
+RUN U8-A|bottom-FR-Fs2-RE1bF-o0.0 fs1 0.1 pu 1.861 last 1.948 fail U832_pair_union reload 0.195
+    ev [[0.015, 0.193], [0.458, 0.768], [1.05, 1.282], [1.594, 1.699]] dg [[0.092, 0.541], [0.702, 1.092], [1.259, 1.569], [1.746, 1.948]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.5]}
+RUN VBM|bottom-FR-Fs4-RE1bF-o0.075 fs1 0.025 pu 1.55 last 1.78 fail  reload 0.194
+    ev [[0.015, 0.192], [0.46, 0.733], [1.026, 1.204]] dg [[0.091, 0.523], [0.7, 1.027], [1.208, 1.458], [1.669, 1.78]]
+    starts {"FR": [0.025], "RL": [0.425]} ends {"FR": [0.425], "RL": [2.025]}
+RUN U8-A|bottom-FR-Fs4-RE1bF-o0.0 fs1 0.1 pu 1.837 last 1.937 fail U832_pair_union reload 0.197
+    ev [[0.015, 0.196], [0.46, 0.773], [1.055, 1.282], [1.598, 1.681]] dg [[0.091, 0.551], [0.7, 1.106], [1.248, 1.575], [1.743, 1.937]]
+    starts {"FR": [0.1], "RL": [0.4]} ends {"FR": [0.4], "RL": [2.5]}
+S7 {"eps0.0": {"touch_first_t_s": {"2": 20.645999999997233, "3": 20.648999999997226, "0": 20.850999999996755, "1": 20.854999999996746}, "t_first_ready_s": 84.4, "t_touch_end_s": 21.6, "commands_sha256": "cc5b61d42848a258d1b0db73ec9534af5bcc2c2a1b96f547f03a7a5f690be565"}, "eps0.001": {"touch_first_t_s": {"2": 20.598999999997343, "3": 20.601999999997336, "0": 20.843999999996772, "1": 20.851999999996753}, "t_first_ready_s": 84.4, "t_touch_end_s": 21.6, "commands_sha256": "3f396716b3b68c588b6e5100ce17722799eda0f5e1a8125ab98c08f51ac9dfcd"}}

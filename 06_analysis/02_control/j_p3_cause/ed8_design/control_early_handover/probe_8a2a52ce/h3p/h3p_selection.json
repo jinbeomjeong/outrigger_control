@@ -1,0 +1,1491 @@
+{
+ "result": {
+  "rule": "P8-9 (spec v8 draft rev 1, 12) conditions, applied to H3' after the diagnosis (re-selection after seeing results, O8-4 extension)",
+  "cond1_U832_by_key": {
+   "bottom-FR-Fs0-RE1bF-ready-o0.0": true,
+   "bottom-FL-Fs4-RE1bF-ready-o0.0": true,
+   "bottom-FL-Fs2-RE1bF-ready-o0.0": true,
+   "bottom-FR-Fs2-RE1bF-ready-o0.0": true,
+   "bottom-FR-Fs4-RE1bF-ready-o0.0": true
+  },
+  "cond1": true,
+  "cond2_FS24_pass": true,
+  "cond3_failures": {
+   "bottom-FR-Fs4-RE1bF-ready-o0.075": {
+    "new_failed_gates": [
+     "end_att"
+    ],
+    "new_j7": [],
+    "ready_lost": true
+   }
+  },
+  "cond3": false,
+  "cond3_without_case1": true,
+  "eligible_as_written": false,
+  "eligible_if_case1_set_aside": true,
+  "n_keys_commands_differ_from_A": 12
+ },
+ "lines": {
+  "bottom-FR-Fs0-RE1bF-ready-o0.0": {
+   "group": "U",
+   "key": "bottom-FR-Fs0-RE1bF-ready-o0.0",
+   "source": "run; check vs H3 sha equal True",
+   "sha_H3p": "1bf3a48c",
+   "sha_A": "a799807b",
+   "sha_H3": "1bf3a48c",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    2.004,
+    1.6,
+    1.6
+   ],
+   "t_ready_back_s": [
+    29.0,
+    31.4,
+    31.4
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.1,
+     "FR",
+     false
+    ],
+    [
+     1.0,
+     "RL",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.0,
+     "FR",
+     "contact"
+    ],
+    [
+     2.1,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.4,
+     "FR",
+     false
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FL-Fs4-RE1bF-ready-o0.0": {
+   "group": "U",
+   "key": "bottom-FL-Fs4-RE1bF-ready-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "0e249a64",
+   "sha_A": "b716498d",
+   "sha_H3": "0e249a64",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.801,
+    1.537,
+    1.537
+   ],
+   "t_ready_back_s": [
+    23.5,
+    23.9,
+    23.9
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.1,
+     "FL",
+     false
+    ],
+    [
+     1.0,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.0,
+     "FL",
+     "contact"
+    ],
+    [
+     2.0,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.4,
+     "FL",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FL-Fs2-RE1bF-ready-o0.0": {
+   "group": "U",
+   "key": "bottom-FL-Fs2-RE1bF-ready-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "4b63a145",
+   "sha_A": "52cc9ef4",
+   "sha_H3": "4b63a145",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.831,
+    1.567,
+    1.567
+   ],
+   "t_ready_back_s": [
+    23.5,
+    23.7,
+    23.7
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.1,
+     "FL",
+     false
+    ],
+    [
+     1.0,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.0,
+     "FL",
+     "contact"
+    ],
+    [
+     2.1,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.4,
+     "FL",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FR-Fs2-RE1bF-ready-o0.0": {
+   "group": "U",
+   "key": "bottom-FR-Fs2-RE1bF-ready-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "81d53c88",
+   "sha_A": "08a2083e",
+   "sha_H3": "81d53c88",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.861,
+    1.586,
+    1.586
+   ],
+   "t_ready_back_s": [
+    29.7,
+    50.5,
+    50.5
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.1,
+     "FR",
+     false
+    ],
+    [
+     1.0,
+     "RL",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.0,
+     "FR",
+     "contact"
+    ],
+    [
+     2.1,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.4,
+     "FR",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FR-Fs4-RE1bF-ready-o0.0": {
+   "group": "U",
+   "key": "bottom-FR-Fs4-RE1bF-ready-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "5c9b3154",
+   "sha_A": "e83e0a41",
+   "sha_H3": "5c9b3154",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.837,
+    1.559,
+    1.559
+   ],
+   "t_ready_back_s": [
+    50.2,
+    36.2,
+    36.2
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.1,
+     "FR",
+     false
+    ],
+    [
+     1.0,
+     "RL",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.0,
+     "FR",
+     "contact"
+    ],
+    [
+     2.1,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.4,
+     "FR",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FR-Fs8-FS24-ready-o0.0": {
+   "group": "U_FS24",
+   "key": "bottom-FR-Fs8-FS24-ready-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "818b5f55",
+   "sha_A": "808bb997",
+   "sha_H3": "818b5f55",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.047,
+    0.894,
+    0.894
+   ],
+   "t_ready_back_s": [
+    22.0,
+    22.0,
+    22.0
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.2,
+     "FR",
+     false
+    ],
+    [
+     1.0,
+     "RL",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.0,
+     "FR",
+     "contact"
+    ],
+    [
+     1.6,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.5,
+     "FR",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FL-Fs2-RE1bF-ready-o0.025": {
+   "group": "phase",
+   "key": "bottom-FL-Fs2-RE1bF-ready-o0.025",
+   "source": "offline = A (H3 = A already)",
+   "sha_H3p": "8ea4eee8",
+   "sha_A": "8ea4eee8",
+   "sha_H3": "8ea4eee8",
+   "equal_A": true,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.477,
+    1.477,
+    1.477
+   ],
+   "t_ready_back_s": [
+    23.68,
+    23.68,
+    23.68
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.075,
+     "FL",
+     false
+    ],
+    [
+     0.975,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.975,
+     "FL",
+     "contact"
+    ],
+    [
+     1.975,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [],
+   "case1": false
+  },
+  "bottom-FR-Fs2-RE1bF-ready-o0.075": {
+   "group": "phase",
+   "key": "bottom-FR-Fs2-RE1bF-ready-o0.075",
+   "source": "offline = H3",
+   "sha_H3p": "46303014",
+   "sha_A": "d2e37d47",
+   "sha_H3": "46303014",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.59,
+    1.309,
+    1.309
+   ],
+   "t_ready_back_s": [
+    30.13,
+    30.53,
+    30.53
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     0.025,
+     "FR",
+     false
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.425,
+     "FR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.425,
+     "FR",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "bottom-FR-Fs4-RE1bF-ready-o0.075": {
+   "group": "phase",
+   "key": "bottom-FR-Fs4-RE1bF-ready-o0.075",
+   "source": "offline = H3",
+   "sha_H3p": "17f5ecd5",
+   "sha_A": "d9770fdf",
+   "sha_H3": "17f5ecd5",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [
+    "end_att"
+   ],
+   "gates_failed_H3p": [
+    "end_att"
+   ],
+   "new_failed_gates": [
+    "end_att"
+   ],
+   "new_j7": [],
+   "ready_lost": true,
+   "pair_union_s": [
+    1.581,
+    1.308,
+    1.308
+   ],
+   "t_ready_back_s": [
+    40.53,
+    null,
+    null
+   ],
+   "final_phase_H3p": "level",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.025,
+     "FR",
+     false
+    ]
+   ],
+   "ends_H3p": [
+    [
+     1.425,
+     "FR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.425,
+     "FR",
+     null
+    ]
+   ],
+   "case1": true
+  },
+  "R15-o0.0": {
+   "group": "regression",
+   "key": "R15-o0.0",
+   "source": "run",
+   "sha_H3p": "8c7a3dea",
+   "sha_A": "8c7a3dea",
+   "sha_H3": "d3809593",
+   "equal_A": true,
+   "equal_H3": false,
+   "gates_failed_A": [
+    "Fmin_after_W",
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3p": [
+    "Fmin_after_W",
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    2.063,
+    2.066,
+    2.063
+   ],
+   "t_ready_back_s": [
+    39.8,
+    39.8,
+    39.8
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.1,
+     "FL",
+     false
+    ],
+    [
+     0.6,
+     "RR",
+     true
+    ],
+    [
+     1.0,
+     "FL",
+     true
+    ],
+    [
+     1.3,
+     "RR",
+     true
+    ],
+    [
+     1.7,
+     "FL",
+     true
+    ],
+    [
+     2.0,
+     "RR",
+     true
+    ],
+    [
+     2.3,
+     "FL",
+     true
+    ],
+    [
+     3.1,
+     "RR",
+     true
+    ],
+    [
+     4.4,
+     "RL",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.6,
+     "FL",
+     "contact"
+    ],
+    [
+     1.0,
+     "RR",
+     "contact"
+    ],
+    [
+     1.3,
+     "FL",
+     "contact"
+    ],
+    [
+     1.7,
+     "RR",
+     "contact"
+    ],
+    [
+     2.0,
+     "FL",
+     "contact"
+    ],
+    [
+     2.3,
+     "RR",
+     "contact"
+    ],
+    [
+     2.6,
+     "FL",
+     "contact"
+    ],
+    [
+     3.4,
+     "RR",
+     "contact"
+    ],
+    [
+     4.7,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.5,
+     "FL",
+     false
+    ]
+   ],
+   "case1": false
+  },
+  "R15-o0.05": {
+   "group": "regression",
+   "key": "R15-o0.05",
+   "source": "run",
+   "sha_H3p": "e8cc588b",
+   "sha_A": "e8cc588b",
+   "sha_H3": "86b0667c",
+   "equal_A": true,
+   "equal_H3": false,
+   "gates_failed_A": [
+    "Fmin_after_W",
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union",
+    "recurrence"
+   ],
+   "gates_failed_H3p": [
+    "Fmin_after_W",
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    2.021,
+    2.021,
+    2.021
+   ],
+   "t_ready_back_s": [
+    39.75,
+    37.85,
+    39.75
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.05,
+     "FL",
+     false
+    ],
+    [
+     0.65,
+     "RR",
+     true
+    ],
+    [
+     0.95,
+     "FL",
+     true
+    ],
+    [
+     1.35,
+     "RR",
+     true
+    ],
+    [
+     1.85,
+     "RR",
+     true
+    ],
+    [
+     2.45,
+     "RR",
+     true
+    ],
+    [
+     3.05,
+     "RR",
+     true
+    ],
+    [
+     4.45,
+     "RL",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.65,
+     "FL",
+     "contact"
+    ],
+    [
+     0.95,
+     "RR",
+     "contact"
+    ],
+    [
+     1.35,
+     "FL",
+     "contact"
+    ],
+    [
+     1.75,
+     "RR",
+     "contact"
+    ],
+    [
+     2.35,
+     "RR",
+     "contact"
+    ],
+    [
+     2.85,
+     "RR",
+     "contact"
+    ],
+    [
+     3.35,
+     "RR",
+     "contact"
+    ],
+    [
+     4.75,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.55,
+     "FL",
+     false
+    ]
+   ],
+   "case1": false
+  },
+  "R16-o0.0": {
+   "group": "regression",
+   "key": "R16-o0.0",
+   "source": "run",
+   "sha_H3p": "42ad8249",
+   "sha_A": "42ad8249",
+   "sha_H3": "17cea6b8",
+   "equal_A": true,
+   "equal_H3": false,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3p": [
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.933,
+    1.933,
+    1.933
+   ],
+   "t_ready_back_s": [
+    24.8,
+    24.2,
+    24.8
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.1,
+     "FL",
+     false
+    ],
+    [
+     0.6,
+     "RR",
+     true
+    ],
+    [
+     1.0,
+     "FL",
+     true
+    ],
+    [
+     1.3,
+     "RR",
+     true
+    ],
+    [
+     1.7,
+     "FL",
+     true
+    ],
+    [
+     2.0,
+     "RR",
+     true
+    ],
+    [
+     2.5,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.6,
+     "FL",
+     "contact"
+    ],
+    [
+     1.0,
+     "RR",
+     "contact"
+    ],
+    [
+     1.3,
+     "FL",
+     "contact"
+    ],
+    [
+     1.7,
+     "RR",
+     "contact"
+    ],
+    [
+     2.0,
+     "FL",
+     "contact"
+    ],
+    [
+     2.3,
+     "RR",
+     "contact"
+    ],
+    [
+     2.8,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.5,
+     "FL",
+     false
+    ]
+   ],
+   "case1": false
+  },
+  "R16-o0.025": {
+   "group": "regression",
+   "key": "R16-o0.025",
+   "source": "run",
+   "sha_H3p": "1dda9e25",
+   "sha_A": "57bf08df",
+   "sha_H3": "94f38b7d",
+   "equal_A": false,
+   "equal_H3": false,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3p": [
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.909,
+    1.891,
+    1.891
+   ],
+   "t_ready_back_s": [
+    24.78,
+    24.28,
+    24.18
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.075,
+     "FL",
+     false
+    ],
+    [
+     0.675,
+     "RR",
+     true
+    ],
+    [
+     0.975,
+     "FL",
+     true
+    ],
+    [
+     1.275,
+     "RR",
+     true
+    ],
+    [
+     1.675,
+     "FL",
+     true
+    ],
+    [
+     1.975,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.675,
+     "FL",
+     "contact"
+    ],
+    [
+     0.975,
+     "RR",
+     "contact"
+    ],
+    [
+     1.275,
+     "FL",
+     "contact"
+    ],
+    [
+     1.675,
+     "RR",
+     "contact"
+    ],
+    [
+     1.975,
+     "FL",
+     "contact"
+    ],
+    [
+     2.275,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.575,
+     "FL",
+     false
+    ]
+   ],
+   "case1": false
+  },
+  "R16-o0.05": {
+   "group": "regression",
+   "key": "R16-o0.05",
+   "source": "offline = H3",
+   "sha_H3p": "32561b93",
+   "sha_A": "2e405abc",
+   "sha_H3": "32561b93",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3p": [
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.888,
+    1.873,
+    1.873
+   ],
+   "t_ready_back_s": [
+    24.05,
+    24.05,
+    24.05
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.05,
+     "FL",
+     false
+    ],
+    [
+     0.65,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.65,
+     "FL",
+     "contact"
+    ],
+    [
+     2.25,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.55,
+     "FL",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "R16-o0.075": {
+   "group": "regression",
+   "key": "R16-o0.075",
+   "source": "run",
+   "sha_H3p": "8dbb778f",
+   "sha_A": "8dbb778f",
+   "sha_H3": "d19a598e",
+   "equal_A": true,
+   "equal_H3": false,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3p": [
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.929,
+    1.929,
+    1.929
+   ],
+   "t_ready_back_s": [
+    24.03,
+    24.23,
+    24.03
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.025,
+     "FL",
+     false
+    ],
+    [
+     0.625,
+     "RR",
+     true
+    ],
+    [
+     1.025,
+     "FL",
+     true
+    ],
+    [
+     1.325,
+     "RR",
+     true
+    ],
+    [
+     1.725,
+     "FL",
+     true
+    ],
+    [
+     2.025,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.625,
+     "FL",
+     "contact"
+    ],
+    [
+     1.025,
+     "RR",
+     "contact"
+    ],
+    [
+     1.325,
+     "FL",
+     "contact"
+    ],
+    [
+     1.725,
+     "RR",
+     "contact"
+    ],
+    [
+     2.025,
+     "FL",
+     "contact"
+    ],
+    [
+     2.325,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.525,
+     "FL",
+     false
+    ]
+   ],
+   "case1": false
+  },
+  "LSM4-top-FR-Fs0-o0.05": {
+   "group": "regression",
+   "key": "LSM4-top-FR-Fs0-o0.05",
+   "source": "offline = A (H3 = A already)",
+   "sha_H3p": "bfe0c5e5",
+   "sha_A": "bfe0c5e5",
+   "sha_H3": "bfe0c5e5",
+   "equal_A": true,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    0,
+    0,
+    0
+   ],
+   "t_ready_back_s": [
+    37.35,
+    37.35,
+    37.35
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [],
+   "ends_H3p": [],
+   "h3_ext_H3p": [],
+   "case1": false
+  },
+  "VBMslow-top-FL-Fs0-o0.0": {
+   "group": "regression",
+   "key": "VBMslow-top-FL-Fs0-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "92a18eb4",
+   "sha_A": "4109dda7",
+   "sha_H3": "92a18eb4",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    0,
+    0,
+    0
+   ],
+   "t_ready_back_s": [
+    22.6,
+    22.0,
+    22.0
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     3.2,
+     "RR",
+     false
+    ]
+   ],
+   "ends_H3p": [
+    [
+     3.7,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     3.6,
+     "RR",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "S7-e0.002": {
+   "group": "regression",
+   "key": "S7-e0.002",
+   "source": "offline = A (H3 = A already)",
+   "sha_H3p": "1c325428",
+   "sha_A": "1c325428",
+   "sha_H3": "1c325428",
+   "equal_A": true,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    null,
+    null,
+    null
+   ],
+   "t_ready_back_s": [
+    null,
+    null,
+    null
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": null,
+   "starts_H3p": [],
+   "ends_H3p": [],
+   "h3_ext_H3p": [],
+   "case1": false
+  },
+  "top-FR-Fs8-o0.0": {
+   "group": "regression",
+   "key": "top-FR-Fs8-o0.0",
+   "source": "offline = H3",
+   "sha_H3p": "007b75e4",
+   "sha_A": "458d933a",
+   "sha_H3": "007b75e4",
+   "equal_A": false,
+   "equal_H3": true,
+   "gates_failed_A": [],
+   "gates_failed_H3": [],
+   "gates_failed_H3p": [],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    0,
+    0,
+    0
+   ],
+   "t_ready_back_s": [
+    22.5,
+    22.5,
+    22.5
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": true,
+   "starts_H3p": [
+    [
+     1.7,
+     "RL",
+     false
+    ]
+   ],
+   "ends_H3p": [
+    [
+     2.3,
+     "RL",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     2.2,
+     "RL",
+     null
+    ]
+   ],
+   "case1": false
+  },
+  "top-FL-Fs8-RE1bF-level-o0.0": {
+   "group": "regression",
+   "key": "top-FL-Fs8-RE1bF-level-o0.0",
+   "source": "run",
+   "sha_H3p": "be903ca8",
+   "sha_A": "be903ca8",
+   "sha_H3": "01e8959b",
+   "equal_A": true,
+   "equal_H3": false,
+   "gates_failed_A": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3": [
+    "U832_pair_union"
+   ],
+   "gates_failed_H3p": [
+    "U832_pair_union"
+   ],
+   "new_failed_gates": [],
+   "new_j7": [],
+   "ready_lost": false,
+   "pair_union_s": [
+    1.916,
+    1.916,
+    1.916
+   ],
+   "t_ready_back_s": [
+    23.9,
+    23.8,
+    23.9
+   ],
+   "final_phase_H3p": "ready",
+   "pass_H3p": false,
+   "starts_H3p": [
+    [
+     0.1,
+     "FL",
+     false
+    ],
+    [
+     0.6,
+     "RR",
+     true
+    ],
+    [
+     1.0,
+     "FL",
+     true
+    ],
+    [
+     1.3,
+     "RR",
+     true
+    ],
+    [
+     1.7,
+     "FL",
+     true
+    ],
+    [
+     2.0,
+     "RR",
+     true
+    ]
+   ],
+   "ends_H3p": [
+    [
+     0.6,
+     "FL",
+     "contact"
+    ],
+    [
+     1.0,
+     "RR",
+     "contact"
+    ],
+    [
+     1.3,
+     "FL",
+     "contact"
+    ],
+    [
+     1.7,
+     "RR",
+     "contact"
+    ],
+    [
+     2.0,
+     "FL",
+     "contact"
+    ],
+    [
+     2.3,
+     "RR",
+     "contact"
+    ]
+   ],
+   "h3_ext_H3p": [
+    [
+     0.5,
+     "FL",
+     false
+    ]
+   ],
+   "case1": false
+  }
+ }
+}

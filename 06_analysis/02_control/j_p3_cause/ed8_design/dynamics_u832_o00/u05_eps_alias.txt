@@ -1,0 +1,139 @@
+                       same_sha  same_times  same_events  same_cstats  discrete_alias   n
+src       eps_a eps_b                                                                    
+ed6_confa 0.000 0.001       0.0       0.667        0.833        0.833           0.500  24
+                0.002       0.0       0.268        0.518        0.357           0.196  56
+                0.003       0.0       0.500        0.708        0.792           0.500  24
+          0.001 0.002       0.0       0.625        1.000        0.833           0.625  24
+                0.003       0.0       0.500        0.875        0.958           0.500  24
+          0.002 0.003       0.0       0.625        0.875        0.833           0.625  24
+j9main    0.000 0.001       0.0       0.721        0.651        0.628           0.419  43
+                0.002       0.0       0.235        0.529        0.235           0.196  51
+                0.003       0.0       0.256        0.465        0.372           0.256  43
+          0.001 0.002       0.0       0.279        0.744        0.279           0.256  43
+                0.003       0.0       0.302        0.674        0.372           0.256  43
+          0.002 0.003       0.0       0.302        0.721        0.279           0.256  43
+sens      0.000 0.001       0.0       0.520        0.560        0.360           0.260  50
+                0.002       0.0       0.020        0.480        0.000           0.000  50
+                0.003       0.0       0.020        0.320        0.080           0.000  50
+          0.001 0.002       0.0       0.040        0.560        0.000           0.000  50
+                0.003       0.0       0.000        0.540        0.060           0.000  50
+          0.002 0.003       0.0       0.040        0.500        0.000           0.000  50
+
+== S7 ==
+        src  setting  eps_a  eps_b  same_sha  same_times  discrete_alias  t_touch_end_a  t_touch_end_b  t_ready_a  t_ready_b
+18   j9main      VBM  0.000  0.001     False        True            True           21.6           21.6       84.4       84.4
+19   j9main      VBM  0.000  0.002     False       False           False           21.6           21.6       84.4      100.7
+20   j9main      VBM  0.000  0.003     False       False           False           21.6           21.6       84.4       83.6
+21   j9main      VBM  0.001  0.002     False       False           False           21.6           21.6       84.4      100.7
+22   j9main      VBM  0.001  0.003     False       False           False           21.6           21.6       84.4       83.6
+23   j9main      VBM  0.002  0.003     False       False           False           21.6           21.6      100.7       83.6
+72   j9main     LSM1  0.000  0.001     False        True           False           21.6           21.6       83.7       83.7
+73   j9main     LSM1  0.000  0.002     False       False           False           21.6           21.6       83.7       83.6
+74   j9main     LSM1  0.000  0.003     False       False           False           21.6           21.6       83.7       83.5
+75   j9main     LSM1  0.001  0.002     False       False           False           21.6           21.6       83.7       83.6
+76   j9main     LSM1  0.001  0.003     False       False           False           21.6           21.6       83.7       83.5
+77   j9main     LSM1  0.002  0.003     False       False           False           21.6           21.6       83.6       83.5
+120  j9main     LSM2  0.000  0.001     False        True            True           21.6           21.6       83.7       83.7
+121  j9main     LSM2  0.000  0.002     False       False           False           21.6           21.6       83.7       83.5
+122  j9main     LSM2  0.000  0.003     False       False           False           21.6           21.6       83.7       83.6
+123  j9main     LSM2  0.001  0.002     False       False           False           21.6           21.6       83.7       83.5
+124  j9main     LSM2  0.001  0.003     False       False           False           21.6           21.6       83.7       83.6
+125  j9main     LSM2  0.002  0.003     False       False           False           21.6           21.6       83.5       83.6
+168  j9main     LSM3  0.000  0.001     False        True           False           21.6           21.6       84.4       84.4
+169  j9main     LSM3  0.000  0.002     False       False           False           21.6           21.6       84.4      113.9
+170  j9main     LSM3  0.000  0.003     False       False           False           21.6           21.6       84.4       83.6
+171  j9main     LSM3  0.001  0.002     False       False           False           21.6           21.6       84.4      113.9
+172  j9main     LSM3  0.001  0.003     False       False           False           21.6           21.6       84.4       83.6
+173  j9main     LSM3  0.002  0.003     False       False           False           21.6           21.6      113.9       83.6
+222  j9main     LSM4  0.000  0.001     False        True            True           21.6           21.6       84.4       84.4
+223  j9main     LSM4  0.000  0.002     False       False           False           21.6           21.6       84.4       84.2
+224  j9main     LSM4  0.000  0.003     False       False           False           21.6           21.6       84.4       83.7
+225  j9main     LSM4  0.001  0.002     False       False           False           21.6           21.6       84.4       84.2
+226  j9main     LSM4  0.001  0.003     False       False           False           21.6           21.6       84.4       83.7
+227  j9main     LSM4  0.002  0.003     False       False           False           21.6           21.6       84.2       83.7
+284    sens  VBMslow  0.000  0.001     False        True           False           21.6           21.6      102.9      102.9
+285    sens  VBMslow  0.000  0.002     False       False           False           21.6           21.6      102.9       86.3
+286    sens  VBMslow  0.000  0.003     False       False           False           21.6           21.6      102.9       86.0
+287    sens  VBMslow  0.001  0.002     False       False           False           21.6           21.6      102.9       86.3
+288    sens  VBMslow  0.001  0.003     False       False           False           21.6           21.6      102.9       86.0
+289    sens  VBMslow  0.002  0.003     False       False           False           21.6           21.6       86.3       86.0
+314    sens  VBMfast  0.000  0.001     False       False           False           21.6           21.6       82.1       82.1
+315    sens  VBMfast  0.000  0.002     False       False           False           21.6           21.6       82.1       81.9
+316    sens  VBMfast  0.000  0.003     False       False           False           21.6           21.6       82.1       98.8
+317    sens  VBMfast  0.001  0.002     False       False           False           21.6           21.6       82.1       81.9
+318    sens  VBMfast  0.001  0.003     False       False           False           21.6           21.6       82.1       98.8
+319    sens  VBMfast  0.002  0.003     False       False           False           21.6           21.6       81.9       98.8
+338    sens  VBMc005  0.000  0.001     False        True            True           21.6           21.6       83.6       83.6
+339    sens  VBMc005  0.000  0.002     False       False           False           21.6           21.6       83.6       83.3
+340    sens  VBMc005  0.000  0.003     False       False           False           21.6           21.6       83.6       86.1
+341    sens  VBMc005  0.001  0.002     False       False           False           21.6           21.6       83.6       83.3
+342    sens  VBMc005  0.001  0.003     False       False           False           21.6           21.6       83.6       86.1
+343    sens  VBMc005  0.002  0.003     False       False           False           21.6           21.6       83.3       86.1
+368    sens   VBMc04  0.000  0.001     False        True            True           21.6           21.6       84.3       84.3
+369    sens   VBMc04  0.000  0.002     False       False           False           21.6           21.6       84.3       84.3
+370    sens   VBMc04  0.000  0.003     False       False           False           21.6           21.6       84.3       84.3
+371    sens   VBMc04  0.001  0.002     False       False           False           21.6           21.6       84.3       84.3
+372    sens   VBMc04  0.001  0.003     False       False           False           21.6           21.6       84.3       84.3
+373    sens   VBMc04  0.002  0.003     False        True           False           21.6           21.6       84.3       84.3
+404    sens  VBMb069  0.000  0.001     False        True            True           21.6           21.6       85.1       85.1
+405    sens  VBMb069  0.000  0.002     False       False           False           21.6           21.6       85.1       85.1
+406    sens  VBMb069  0.000  0.003     False       False           False           21.6           21.6       85.1      101.8
+407    sens  VBMb069  0.001  0.002     False       False           False           21.6           21.6       85.1       85.1
+408    sens  VBMb069  0.001  0.003     False       False           False           21.6           21.6       85.1      101.8
+409    sens  VBMb069  0.002  0.003     False       False           False           21.6           21.6       85.1      101.8
+434    sens   VBMb16  0.000  0.001     False        True            True           21.6           21.6       82.7       82.7
+435    sens   VBMb16  0.000  0.002     False       False           False           21.6           21.6       82.7       82.6
+436    sens   VBMb16  0.000  0.003     False       False           False           21.6           21.6       82.7       82.8
+437    sens   VBMb16  0.001  0.002     False       False           False           21.6           21.6       82.7       82.6
+438    sens   VBMb16  0.001  0.003     False       False           False           21.6           21.6       82.7       82.8
+439    sens   VBMb16  0.002  0.003     False       False           False           21.6           21.6       82.6       82.8
+464    sens   VBMh05  0.000  0.001     False       False           False           21.6           21.6       82.8       96.7
+465    sens   VBMh05  0.000  0.002     False       False           False           21.6           21.6       82.8      103.0
+466    sens   VBMh05  0.000  0.003     False        True           False           21.6           21.6       82.8       82.8
+467    sens   VBMh05  0.001  0.002     False       False           False           21.6           21.6       96.7      103.0
+468    sens   VBMh05  0.001  0.003     False       False           False           21.6           21.6       96.7       82.8
+469    sens   VBMh05  0.002  0.003     False       False           False           21.6           21.6      103.0       82.8
+494    sens   VBMh15  0.000  0.001     False        True            True           21.6           21.6       99.6       99.6
+495    sens   VBMh15  0.000  0.002     False       False           False           21.6           21.6       99.6      101.5
+496    sens   VBMh15  0.000  0.003     False       False           False           21.6           21.6       99.6       84.5
+497    sens   VBMh15  0.001  0.002     False       False           False           21.6           21.6       99.6      101.5
+498    sens   VBMh15  0.001  0.003     False       False           False           21.6           21.6       99.6       84.5
+499    sens   VBMh15  0.002  0.003     False       False           False           21.6           21.6      101.5       84.5
+524    sens   VBMd05  0.000  0.001     False       False           False           21.6           21.6       83.3       96.3
+525    sens   VBMd05  0.000  0.002     False       False           False           21.6           21.6       83.3       83.2
+526    sens   VBMd05  0.000  0.003     False       False           False           21.6           21.6       83.3       83.2
+527    sens   VBMd05  0.001  0.002     False       False           False           21.6           21.6       96.3       83.2
+528    sens   VBMd05  0.001  0.003     False       False           False           21.6           21.6       96.3       83.2
+529    sens   VBMd05  0.002  0.003     False        True           False           21.6           21.6       83.2       83.2
+554    sens   VBMd15  0.000  0.001     False        True            True           21.6           21.6       84.6       84.6
+555    sens   VBMd15  0.000  0.002     False       False           False           21.6           21.6       84.6       83.9
+556    sens   VBMd15  0.000  0.003     False       False           False           21.6           21.6       84.6       84.5
+557    sens   VBMd15  0.001  0.002     False       False           False           21.6           21.6       84.6       83.9
+558    sens   VBMd15  0.001  0.003     False       False           False           21.6           21.6       84.6       84.5
+559    sens   VBMd15  0.002  0.003     False       False           False           21.6           21.6       83.9       84.5
+
+== discrete alias by controller family (VBM/LSM vs other) and eps pair ==
+                    mean  size
+newc  eps_a eps_b             
+False 0.000 0.001  0.500    24
+            0.002  0.196    56
+            0.003  0.500    24
+      0.001 0.002  0.625    24
+            0.003  0.500    24
+      0.002 0.003  0.625    24
+True  0.000 0.001  0.333    93
+            0.002  0.099   101
+            0.003  0.118    93
+      0.001 0.002  0.118    93
+            0.003  0.118    93
+      0.002 0.003  0.118    93
+
+== same t_touch_end (first-touch phase end) by eps pair ==
+              mean  size
+eps_a eps_b             
+0.000 0.001  0.769   117
+      0.002  0.433   157
+      0.003  0.496   117
+0.001 0.002  0.624   117
+      0.003  0.598   117
+0.002 0.003  0.752   117

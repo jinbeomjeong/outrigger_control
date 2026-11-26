@@ -1,0 +1,71 @@
+{
+ "module_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-impl\\03_src\\outrigger_sim\\hydraulics\\v5_options.py",
+ "extend_start_revision_of_base_tag": {
+  "final_C4G2_P3": 4,
+  "final_C4G2_P3H": 5,
+  "final_C4G2_P3W": 6,
+  "final_C4G2_P3X": 7
+ },
+ "table": {
+  "final_C4G2_P3X_LAS_K1_LSB": {
+   "switch_base_tag": "final_C4G2_P3X",
+   "extend_start_revision_of_tag": 7,
+   "is_extend_start_tag": true,
+   "is_liftoff_slow_tag": true,
+   "is_order_gate_tag": true,
+   "is_lock_start_b_tag": true,
+   "is_touch_creep_tag": false,
+   "with_lock_start_b_tag": "final_C4G2_P3X_LAS_K1_LSB"
+  },
+  "final_C4G2_LAS_K1_LSB": {
+   "switch_base_tag": "final_C4G2",
+   "extend_start_revision_of_tag": null,
+   "is_extend_start_tag": false,
+   "is_liftoff_slow_tag": true,
+   "is_order_gate_tag": true,
+   "is_lock_start_b_tag": true,
+   "is_touch_creep_tag": false,
+   "with_lock_start_b_tag": "final_C4G2_LAS_K1_LSB"
+  },
+  "final_C4G2_P3X_LAS_K1_LSB_E8": {
+   "switch_base_tag": "final_C4G2_P3X_LAS_K1_LSB_E8",
+   "extend_start_revision_of_tag": null,
+   "is_extend_start_tag": false,
+   "is_liftoff_slow_tag": false,
+   "is_order_gate_tag": false,
+   "is_lock_start_b_tag": false,
+   "is_touch_creep_tag": false,
+   "with_lock_start_b_tag": "final_C4G2_P3X_LAS_K1_LSB_E8_LSB"
+  },
+  "final_C4G2_LAS_K1_LSB_E8": {
+   "switch_base_tag": "final_C4G2_LAS_K1_LSB_E8",
+   "extend_start_revision_of_tag": null,
+   "is_extend_start_tag": false,
+   "is_liftoff_slow_tag": false,
+   "is_order_gate_tag": false,
+   "is_lock_start_b_tag": false,
+   "is_touch_creep_tag": false,
+   "with_lock_start_b_tag": "final_C4G2_LAS_K1_LSB_E8_LSB"
+  },
+  "final_C4G2_P3X_LAS_K1_E8_LSB": {
+   "switch_base_tag": "final_C4G2_P3X_LAS_K1_E8",
+   "extend_start_revision_of_tag": null,
+   "is_extend_start_tag": false,
+   "is_liftoff_slow_tag": false,
+   "is_order_gate_tag": false,
+   "is_lock_start_b_tag": true,
+   "is_touch_creep_tag": false,
+   "with_lock_start_b_tag": "final_C4G2_P3X_LAS_K1_E8_LSB"
+  },
+  "final_C4G2_P3X_E8_LAS_K1_LSB": {
+   "switch_base_tag": "final_C4G2_P3X_E8",
+   "extend_start_revision_of_tag": null,
+   "is_extend_start_tag": false,
+   "is_liftoff_slow_tag": true,
+   "is_order_gate_tag": true,
+   "is_lock_start_b_tag": true,
+   "is_touch_creep_tag": false,
+   "with_lock_start_b_tag": "final_C4G2_P3X_E8_LAS_K1_LSB"
+  }
+ }
+}

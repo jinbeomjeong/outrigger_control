@@ -1,0 +1,24 @@
+{
+ "task": "H3' check run (user decision 2026-11-26): H-3 only on runs that are not re-triggers, T_r 0.5 s, N_s 4 unchanged; re-selection after seeing the P8-9 and diagnosis results (O8-4 extension)",
+ "author": "dynamics-expert, 2026-11-26",
+ "code": {"worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl", "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+          "status_before_and_after": "clean", "imported_read_only": true,
+          "patch": "C2Controller._end_finished_reapproaches replaced by a copy (c2.py 6277-6309) whose H-3 count applies only when not run.is_retrigger; p89_rerun record wrappers (_begin_reapproach, _end_reapproach) on top"},
+ "environment": "conda run -n dynamics-dev python -I -B, spawn Pool 7 workers, mask 0xFFFF (reserve.py prune/list 2026-11-26 16:18: 0 reservations), NUMBA_CACHE_DIR scratchpad dynamics-p89h3p (removed after)",
+ "jobs": "P89-H3p-VBM x {R15 o0.0, R15 o0.05, R16 o0.0, R16 o0.025, R16 o0.075, R12 top-FL-Fs8-RE1bF-level o0.0} + check line R12 bottom-FR-Fs0-RE1bF-ready o0.0 (7 jobs, 99 s)",
+ "scripts": ["h3p_rerun.py -> raw/runs.jsonl, raw/logs/*_p89.json, console_h3p.txt", "h3p_analyze.py -> h3p_selection.json, h3p_metrics.csv, h3p_analyze_out.txt"],
+ "inputs_read": ["probe_8a2a52ce/raw (P8-9 A and H3 lines and logs)", "probe_8a2a52ce/diag/diag_scope_offline.csv (exact offline rule for the other 13 lines)"],
+ "columns": {
+  "h3p_metrics.csv": {
+   "source": "run (this folder) or offline (= H3 / = A by the exact rule of diag_scope_offline.py; the line is then the stored P8-9 line)",
+   "sha_H3p / sha_A / sha_H3": "commands_sha256 first 8 hex of H3', A, H3",
+   "gates_failed_*": "event_output.gates keys that are false",
+   "new_failed_gates": "gates false in H3' and not false in A (P8-9 condition (3) reading)",
+   "new_j7": "J7 items (p89_analyze.j7_set) of H3' not in A",
+   "ready_lost": "A reached READY (event rows: t_ready_back_s finite) and H3' did not",
+   "pair_union_s / t_ready_back_s": "[A, H3, H3'] [s]",
+   "starts_H3p / ends_H3p / h3_ext_H3p": "(t - t_event [s], leg, retrigger flag or outcome); H-3 extensions of the H3' run",
+   "case1": "true on R12 bottom-FR-Fs4-RE1bF-ready o0.075 (the existing LEVEL deadlock, diag report 1)"
+  }
+ }
+}

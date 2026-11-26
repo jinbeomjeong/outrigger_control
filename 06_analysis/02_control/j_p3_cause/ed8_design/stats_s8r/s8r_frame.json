@@ -1,0 +1,951 @@
+{
+ "v0_grid_runs": 672,
+ "start_time_precision": {
+  "0.01-grid": 1339
+ },
+ "v0_runs_missing_reapproach_key": 0,
+ "pool_rows": 672,
+ "clusters": 192,
+ "families_wo_fs": 48,
+ "v0_cluster_status": {
+  "all_pass": 171,
+  "mixed": 3,
+  "all_fail": 18
+ },
+ "v0_mixed_or_fail_by_family": {
+  "top|level|FL|FS24": 2,
+  "top|level|FL|RE1bF": 4,
+  "top|level|FR|FS24": 1,
+  "top|level|FR|RE1bF": 4,
+  "top|ready|FL|FS24": 1,
+  "top|ready|FL|RE1bF": 4,
+  "top|ready|FR|FS24": 1,
+  "top|ready|FR|RE1bF": 4
+ },
+ "v0_stratum_by_family_offset": [
+  {
+   "family": "bottom|level|front|FS24",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|front|FS24",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|front|FS24",
+   "offset": 0.05,
+   "stratum": "E",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|front|FS24",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 2
+  },
+  {
+   "family": "bottom|level|front|FS24",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 2
+  },
+  {
+   "family": "bottom|level|front|G4",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|front|G4",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|front|G4",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|front|G4",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|front|RE1bF",
+   "offset": 0.0,
+   "stratum": "E",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|front|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|front|RE1bF",
+   "offset": 0.05,
+   "stratum": "E",
+   "n": 1
+  },
+  {
+   "family": "bottom|level|front|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 7
+  },
+  {
+   "family": "bottom|level|front|RE1bF",
+   "offset": 0.075,
+   "stratum": "E",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|rear|FS24",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|rear|FS24",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|rear|FS24",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|rear|FS24",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|rear|G4",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|rear|G4",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|rear|G4",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|rear|G4",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|rear|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|rear|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|level|rear|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|level|rear|RE1bF",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|front|FS24",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|front|FS24",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|front|FS24",
+   "offset": 0.05,
+   "stratum": "E",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|front|FS24",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|front|G4",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 6
+  },
+  {
+   "family": "bottom|ready|front|G4",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 2
+  },
+  {
+   "family": "bottom|ready|front|G4",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|front|G4",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 7
+  },
+  {
+   "family": "bottom|ready|front|G4",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 1
+  },
+  {
+   "family": "bottom|ready|front|G4",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|front|RE1bF",
+   "offset": 0.0,
+   "stratum": "E",
+   "n": 7
+  },
+  {
+   "family": "bottom|ready|front|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 1
+  },
+  {
+   "family": "bottom|ready|front|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|front|RE1bF",
+   "offset": 0.05,
+   "stratum": "E",
+   "n": 3
+  },
+  {
+   "family": "bottom|ready|front|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 5
+  },
+  {
+   "family": "bottom|ready|front|RE1bF",
+   "offset": 0.075,
+   "stratum": "E",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|rear|FS24",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|rear|FS24",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|rear|FS24",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|rear|FS24",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|rear|G4",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|rear|G4",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|rear|G4",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|rear|G4",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|rear|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|rear|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "bottom|ready|rear|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "bottom|ready|rear|RE1bF",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 4
+  },
+  {
+   "family": "top|level|front|FS24",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|FS24",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|FS24",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|FS24",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|G4",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|G4",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|G4",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|G4",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|front|RE1bF",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|FS24",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|FS24",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|FS24",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|FS24",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|G4",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|G4",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|G4",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|G4",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|level|rear|RE1bF",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|FS24",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|FS24",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|FS24",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|FS24",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|G4",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 7
+  },
+  {
+   "family": "top|ready|front|G4",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 1
+  },
+  {
+   "family": "top|ready|front|G4",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|G4",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|G4",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 7
+  },
+  {
+   "family": "top|ready|front|G4",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 1
+  },
+  {
+   "family": "top|ready|front|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|front|RE1bF",
+   "offset": 0.075,
+   "stratum": "N(diag>0.45)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|FS24",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|FS24",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|FS24",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|FS24",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|G4",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|G4",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|G4",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|G4",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|RE1bF",
+   "offset": 0.0,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|RE1bF",
+   "offset": 0.025,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|RE1bF",
+   "offset": 0.05,
+   "stratum": "N(no diag start)",
+   "n": 8
+  },
+  {
+   "family": "top|ready|rear|RE1bF",
+   "offset": 0.075,
+   "stratum": "N(no diag start)",
+   "n": 8
+  }
+ ],
+ "v0_E_units_at_stored_offsets": 43,
+ "E_ties_within_5ms": [
+  "bottom|0.0|level|FL|FS24|0.05 diag 0.45",
+  "bottom|0.0|level|FR|FS24|0.05 diag 0.45",
+  "bottom|8.0|level|FL|FS24|0.05 diag 0.45",
+  "bottom|8.0|level|FR|RE1bF|0.05 diag 0.45",
+  "bottom|8.0|level|FR|FS24|0.05 diag 0.45",
+  "bottom|8.0|ready|FL|RE1bF|0.05 diag 0.45",
+  "bottom|8.0|ready|FL|FS24|0.05 diag 0.45",
+  "bottom|8.0|ready|FR|RE1bF|0.05 diag 0.45",
+  "bottom|8.0|ready|FR|FS24|0.05 diag 0.45",
+  "bottom|2.0|level|FL|FS24|0.05 diag 0.45",
+  "bottom|2.0|level|FR|FS24|0.05 diag 0.45",
+  "bottom|4.0|level|FL|FS24|0.05 diag 0.45",
+  "bottom|4.0|level|FR|FS24|0.05 diag 0.45",
+  "bottom|2.0|ready|FL|FS24|0.05 diag 0.45",
+  "bottom|2.0|ready|FR|FS24|0.05 diag 0.45",
+  "bottom|4.0|ready|FL|FS24|0.05 diag 0.45",
+  "bottom|4.0|ready|FR|RE1bF|0.05 diag 0.45",
+  "bottom|4.0|ready|FR|FS24|0.05 diag 0.45"
+ ],
+ "E_candidate_clusters": [
+  "bottom|0.0|level|FL|FS24",
+  "bottom|0.0|level|FL|RE1bF",
+  "bottom|0.0|level|FR|FS24",
+  "bottom|0.0|level|FR|RE1bF",
+  "bottom|0.0|ready|FL|FS24",
+  "bottom|0.0|ready|FL|RE1bF",
+  "bottom|0.0|ready|FR|FS24",
+  "bottom|0.0|ready|FR|RE1bF",
+  "bottom|2.0|level|FL|FS24",
+  "bottom|2.0|level|FL|RE1bF",
+  "bottom|2.0|level|FR|FS24",
+  "bottom|2.0|level|FR|RE1bF",
+  "bottom|2.0|ready|FL|FS24",
+  "bottom|2.0|ready|FL|RE1bF",
+  "bottom|2.0|ready|FR|FS24",
+  "bottom|2.0|ready|FR|RE1bF",
+  "bottom|4.0|level|FL|FS24",
+  "bottom|4.0|level|FL|RE1bF",
+  "bottom|4.0|level|FR|FS24",
+  "bottom|4.0|level|FR|RE1bF",
+  "bottom|4.0|ready|FL|FS24",
+  "bottom|4.0|ready|FL|RE1bF",
+  "bottom|4.0|ready|FR|FS24",
+  "bottom|4.0|ready|FR|RE1bF",
+  "bottom|8.0|level|FL|FS24",
+  "bottom|8.0|level|FL|RE1bF",
+  "bottom|8.0|level|FR|FS24",
+  "bottom|8.0|level|FR|RE1bF",
+  "bottom|8.0|ready|FL|FS24",
+  "bottom|8.0|ready|FL|RE1bF",
+  "bottom|8.0|ready|FR|FS24",
+  "bottom|8.0|ready|FR|RE1bF"
+ ],
+ "E_candidate_families_wo_fs": [
+  "bottom|level|FL|FS24",
+  "bottom|level|FL|RE1bF",
+  "bottom|level|FR|FS24",
+  "bottom|level|FR|RE1bF",
+  "bottom|ready|FL|FS24",
+  "bottom|ready|FL|RE1bF",
+  "bottom|ready|FR|FS24",
+  "bottom|ready|FR|RE1bF"
+ ],
+ "E_candidate_offsets_E_of_n": {
+  "1/2": 14,
+  "1/4": 8,
+  "2/4": 7,
+  "3/4": 1,
+  "2/2": 2
+ },
+ "interval_model_new_phases": {
+  "0.0125": [
+   [
+    false,
+    0.4875
+   ],
+   [
+    true,
+    0.3875
+   ]
+  ],
+  "0.0375": [
+   [
+    false,
+    0.4625
+   ]
+  ],
+  "0.0625": [
+   [
+    true,
+    0.4375
+   ]
+  ],
+  "0.0875": [
+   [
+    true,
+    0.4125
+   ]
+  ],
+  "0.0": [
+   [
+    true,
+    0.4
+   ]
+  ],
+  "0.025": [
+   [
+    false,
+    0.475
+   ]
+  ],
+  "0.05": [
+   [
+    false,
+    0.45
+   ],
+   [
+    true,
+    0.45
+   ]
+  ],
+  "0.075": [
+   [
+    true,
+    0.425
+   ]
+  ]
+ },
+ "ed6_VBL_handover_by_family": {
+  "bottom|level|front|FS24": {
+   "o0.0|N": 3,
+   "o0.05|E": 3,
+   "o0.075|N": 2
+  },
+  "bottom|level|front|G4": {
+   "o0.0|N": 4,
+   "o0.025|N": 1,
+   "o0.05|N": 2,
+   "o0.075|N": 1
+  },
+  "bottom|level|front|RE1bF": {
+   "o0.0|E": 1,
+   "o0.025|N": 1,
+   "o0.05|E": 2,
+   "o0.05|N": 1,
+   "o0.075|E": 3
+  },
+  "bottom|level|rear|FS24": {
+   "o0.025|N": 2,
+   "o0.05|N": 4,
+   "o0.075|N": 2
+  },
+  "bottom|level|rear|G4": {
+   "o0.0|N": 4,
+   "o0.025|N": 2,
+   "o0.05|N": 2
+  },
+  "bottom|level|rear|RE1bF": {
+   "o0.0|N": 4,
+   "o0.05|N": 4
+  },
+  "bottom|ready|front|FS24": {
+   "o0.0|N": 5,
+   "o0.025|N": 1,
+   "o0.05|E": 2
+  },
+  "bottom|ready|front|G4": {
+   "o0.0|N": 2,
+   "o0.025|N": 1,
+   "o0.05|N": 4,
+   "o0.075|N": 1
+  },
+  "bottom|ready|front|RE1bF": {
+   "o0.0|E": 5,
+   "o0.05|E": 3
+  },
+  "bottom|ready|rear|FS24": {
+   "o0.0|N": 3,
+   "o0.025|N": 2,
+   "o0.05|N": 3
+  },
+  "bottom|ready|rear|G4": {
+   "o0.0|N": 2,
+   "o0.025|N": 2,
+   "o0.05|N": 2,
+   "o0.075|N": 2
+  },
+  "bottom|ready|rear|RE1bF": {
+   "o0.0|N": 3,
+   "o0.05|N": 2,
+   "o0.075|N": 3
+  },
+  "top|level|front|FS24": {
+   "o0.0|N": 3,
+   "o0.025|N": 1,
+   "o0.05|N": 2,
+   "o0.075|N": 2
+  },
+  "top|level|front|G4": {
+   "o0.0|N": 1,
+   "o0.025|N": 2,
+   "o0.05|N": 4,
+   "o0.075|N": 1
+  },
+  "top|level|front|RE1bF": {
+   "o0.0|N": 2,
+   "o0.025|N": 3,
+   "o0.075|N": 3
+  },
+  "top|level|rear|FS24": {
+   "o0.0|N": 2,
+   "o0.025|N": 4,
+   "o0.05|N": 1,
+   "o0.075|N": 1
+  },
+  "top|level|rear|G4": {
+   "o0.0|N": 1,
+   "o0.025|N": 3,
+   "o0.05|N": 1,
+   "o0.075|N": 3
+  },
+  "top|level|rear|RE1bF": {
+   "o0.0|N": 2,
+   "o0.025|N": 1,
+   "o0.05|N": 2,
+   "o0.075|N": 3
+  },
+  "top|ready|front|FS24": {
+   "o0.025|N": 1,
+   "o0.05|N": 2,
+   "o0.075|N": 5
+  },
+  "top|ready|front|G4": {
+   "o0.025|N": 3,
+   "o0.05|N": 4,
+   "o0.075|N": 1
+  },
+  "top|ready|front|RE1bF": {
+   "o0.0|N": 1,
+   "o0.025|N": 4,
+   "o0.075|N": 3
+  },
+  "top|ready|rear|FS24": {
+   "o0.0|N": 5,
+   "o0.025|N": 1,
+   "o0.05|N": 1,
+   "o0.075|N": 1
+  },
+  "top|ready|rear|G4": {
+   "o0.0|N": 1,
+   "o0.025|N": 1,
+   "o0.075|N": 6
+  },
+  "top|ready|rear|RE1bF": {
+   "o0.0|N": 2,
+   "o0.025|N": 1,
+   "o0.05|N": 1,
+   "o0.075|N": 4
+  }
+ },
+ "G_sources": {
+  "a_phase_candidates": 768,
+  "a_phase_slots_one_per_cluster": 192,
+  "a_E_candidate_cluster_units_all_phases": 128,
+  "b_depth_RE1bF_clusters": 64,
+  "b_depth_conditions_2_shapes": 128,
+  "b_depth_E_family_conditions": 32,
+  "c_fs_naive_cluster_x_3": 576,
+  "c_fs_unique_conditions": 144,
+  "c_fs_unique_conditions_E_families": 24,
+  "E_families_wo_fs": 8
+ },
+ "census_G1": {
+  "lines": 171,
+  "v0_pass_E": 18,
+  "v0_pass_N": 153,
+  "no_v0_match": 0,
+  "E_lines": [
+   "bottom|0.0|level|FL|RE1bF|0.0 diag 0.4",
+   "bottom|0.0|level|FR|FS24|0.05 diag 0.45",
+   "bottom|0.0|ready|FR|FS24|0.05 diag 0.25",
+   "bottom|0.0|ready|FR|RE1bF|0.0 diag 0.4",
+   "bottom|2.0|level|FL|RE1bF|0.0 diag 0.4",
+   "bottom|2.0|ready|FL|FS24|0.05 diag 0.45",
+   "bottom|2.0|ready|FR|FS24|0.05 diag 0.45",
+   "bottom|2.0|ready|FR|RE1bF|0.075 diag 0.42",
+   "bottom|4.0|level|FL|RE1bF|0.075 diag 0.42",
+   "bottom|4.0|level|FR|FS24|0.05 diag 0.45",
+   "bottom|4.0|ready|FL|FS24|0.05 diag 0.45",
+   "bottom|4.0|ready|FL|RE1bF|0.0 diag 0.4",
+   "bottom|4.0|ready|FR|RE1bF|0.075 diag 0.42",
+   "bottom|8.0|level|FL|RE1bF|0.0 diag 0.4",
+   "bottom|8.0|level|FR|FS24|0.05 diag 0.45",
+   "bottom|8.0|level|FR|RE1bF|0.0 diag 0.4",
+   "bottom|8.0|ready|FL|FS24|0.05 diag 0.45",
+   "bottom|8.0|ready|FL|RE1bF|0.05 diag 0.45"
+  ]
+ }
+}

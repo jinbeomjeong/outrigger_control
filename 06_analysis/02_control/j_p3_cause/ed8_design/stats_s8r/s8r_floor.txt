@@ -1,0 +1,19 @@
+A/A all_clusters: clusters 192, ordered pairs 1590, fail 10 (0.0063); E opp 93, fail 0
+A/A excl_mixed_or_fail: clusters 171, ordered pairs 1572, fail 0 (0.0000); E opp 93, fail 0
+A/A mixed_only: clusters 3, ordered pairs 18, fail 10 (0.5556); E opp 0, fail 0
+mixed clusters: top|0.0|ready|FL|FS24 {0.0: False, 0.05: True, 0.025: False, 0.075: True}; top|0.0|ready|FR|FS24 {0.0: False, 0.05: True, 0.025: True, 0.075: True}; top|2.0|level|FL|FS24 {0.0: False, 0.025: False, 0.05: False, 0.075: True}
+
+ed6 VBL grid: V0-pass opportunities 174, failures 11
+  fail bottom|level|FL|FS24 Fs0.0 o0.05 E=True end_att
+  fail bottom|ready|FR|G4 Fs0.0 o0.0 E=False end_att
+  fail bottom|ready|FR|FS24 Fs0.0 o0.0 E=False end_att
+  fail bottom|ready|FL|FS24 Fs0.0 o0.05 E=True end_att
+  fail bottom|ready|FL|RE1bF Fs2.0 o0.0 E=True U832_pair_union
+  fail bottom|ready|FR|FS24 Fs2.0 o0.0 E=False end_att
+  fail bottom|ready|FR|RE1bF Fs2.0 o0.0 E=True U832_pair_union
+  fail bottom|ready|FR|RE1bF Fs4.0 o0.0 E=True U832_pair_union
+  fail bottom|ready|FL|FS24 Fs4.0 o0.025 E=False end_att
+  fail top|level|FL|G4 Fs0.0 o0.05 E=False end_att
+  fail top|ready|FL|G4 Fs2.0 o0.05 E=False end_att
+ed6 VBL failure ICC by cluster: 1.000 (groups 174, with a failure 11, n0 1.00)
+ed6 VBL failure ICC by family: 0.130 (groups 44, with a failure 8, n0 3.95)

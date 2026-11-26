@@ -1,0 +1,495 @@
+{
+ "files_scanned": 1545,
+ "roots": {
+  "03_src": [
+   ".py"
+  ],
+  "04_scripts": [
+   ".py"
+  ],
+  "05_tests": [
+   ".py"
+  ],
+  "00_docs": [
+   ".md",
+   ".yaml",
+   ".json"
+  ],
+  "02_params": [
+   ".md",
+   ".yaml",
+   ".json"
+  ]
+ },
+ "proposed_settings": [
+  "VBN",
+  "VBN0",
+  "LSN1",
+  "LSN2",
+  "LSN3",
+  "LSN4",
+  "VBNslow",
+  "VBNfast",
+  "VBNc005",
+  "VBNc04",
+  "VBNb069",
+  "VBNb16",
+  "VBNh05",
+  "VBNh15",
+  "VBNd05",
+  "VBNd15",
+  "VBKN",
+  "VBKN0"
+ ],
+ "counts": {
+  "VBN_any": 0,
+  "LSN_any": 0,
+  "VBKN_any": 0,
+  "_E8_case_sensitive": 0,
+  "E8_word_case_sensitive": 3,
+  "e8_token_case_insensitive": 48,
+  "_e8_case_insensitive": 35
+ },
+ "hits": {
+  "VBN_any": [],
+  "LSN_any": [],
+  "VBKN_any": [],
+  "_E8_case_sensitive": [],
+  "E8_word_case_sensitive": [
+   {
+    "file": "04_scripts/03_control/k2/k2_recount.py",
+    "line": 77,
+    "context": "nt (J4_LIMIT_DEG, J5_LIMIT_S, J6_*_BAR, J7_*, J9_ALLOWED, | # E8_MIN_WINDOW_S). | SH2_WINDOW_S = 0.3 | LATCH_WINDOW_SAMPLES = 5 | "
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 820,
+    "context": "s6_control_spec.md` 개정 39): **U-S8-1** 우선순위 1의 31사례 먼저(P7 + E8) 판정 뒤 나머지 49사례, **U-S8-2·4·6** 항목 9 합격 기준(결합 판정 놓침 0; 압력만이 "
+   },
+   {
+    "file": "00_docs/history/CLAUDE_2026-10-25_before_split.md",
+    "line": 55,
+    "context": "s6_control_spec.md` 개정 39): **U-S8-1** 우선순위 1의 31사례 먼저(P7 + E8) 판정 뒤 나머지 49사례, **U-S8-2·4·6** 항목 9 합격 기준(결합 판정 놓침 0; 압력만이 "
+   }
+  ],
+  "e8_token_case_insensitive": [
+   {
+    "file": "04_scripts/03_control/k2/k2_recount.py",
+    "line": 57,
+    "context": "unctions (``harness_items``, ``num_item``, ``list_item``, ``e8_check``, ``parse_events``, | ``_chrono_j6_locked``); ``_d8x_b"
+   },
+   {
+    "file": "04_scripts/03_control/k2/k2_recount.py",
+    "line": 77,
+    "context": "nt (J4_LIMIT_DEG, J5_LIMIT_S, J6_*_BAR, J7_*, J9_ALLOWED, | # E8_MIN_WINDOW_S). | SH2_WINDOW_S = 0.3 | LATCH_WINDOW_SAMPLES = 5 | "
+   },
+   {
+    "file": "04_scripts/03_control/k2/k2_recount.py",
+    "line": 595,
+    "context": "-3\") for s in fail) |     window = {\"unjudgeable\": []} |     d8.e8_check(block[\"J1_window_s\"], window)  # K-2 E-10 = D8x E-8 ("
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 4,
+    "context": "/ ``judge``) and the | run step gates of 8-9 (``run_steps_ed5/e8_gates_ed5.ps1``, run alone under pwsh with | ``Set-StrictMode"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 40,
+    "context": "se\" / \"prelaunch_j9\" / \"run_steps_ed5\" | GATES_PS1 = STEPS / \"e8_gates_ed5.ps1\" | EMPTY_GRADES = {\"vbk0\": {\"runs\": []}, \"vbk\":"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 125,
+    "context": "                             (5, 3, 1, \"failed\")]) | def test_e8_01_b1_b2_allowance_7(world, capsys, cwd_elsewhere, losses, "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 146,
+    "context": "\", \"verdict\"), [(3, 0, \"pass\"), (4, 1, \"failed\")]) | def test_e8_02_b1_b2_b4_allowance_9(world, capsys, cwd_elsewhere, b4_lo"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 166,
+    "context": "------------------------------------------------ 3 | def test_e8_03_b3_is_not_judgeable(world, capsys, cwd_elsewhere, tmp_pa"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 201,
+    "context": "------------------------------------------------ 4 | def test_e8_04_ready_delay_boundary(world, capsys, cwd_elsewhere) -> No"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 230,
+    "context": "------------------------------------------------ 5 | def test_e8_05_vbk0_without_ready(world, capsys, cwd_elsewhere) -> None"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 256,
+    "context": "------------------------------------------------ 6 | def test_e8_06_stall_signature(world, capsys, cwd_elsewhere) -> None: |  "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 305,
+    "context": "------------------------------------------------ 7 | def test_e8_07_decide_records_aa_and_goes_on(world, capsys, cwd_elsewhe"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 324,
+    "context": "ize(\"case\", [\"new_fault\", \"h7\", \"n23_and_defect\"]) | def test_e8_08_failures_and_their_order(world, capsys, cwd_elsewhere, c"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 354,
+    "context": "------------------------------------------------ 9 | def test_e8_09_decision_blocks_and_allowance(world, capsys, cwd_elsewhe"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 375,
+    "context": "----------------------------------------------- 10 | def test_e8_10_no_opportunity_pair_is_not_judgeable(world, capsys, cwd_"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 398,
+    "context": "----------------------------------------------- 11 | def test_e8_11_record_item_exceptions_keep_the_status(world, capsys, cw"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 446,
+    "context": "----------------------------------------------- 12 | def test_e8_12_no_blind_file_in_tests_or_fixtures(world) -> None: |     \""
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 460,
+    "context": "----------------------------------------------- 13 | def test_e8_13_expected_vbk0_inputs(world, capsys, cwd_elsewhere, monke"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 503,
+    "context": "----------------------------------------------- 14 | def test_e8_14_b4_chain(world, capsys, cwd_elsewhere, tmp_path) -> None"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 506,
+    "context": "8-9 3) and |     step6c takes the b4 decision when 12b_decide_e8_b4.done exists (8-9 4).\"\"\" |     written0, _ = build(world, b"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 520,
+    "context": "_path / \"runs_root\" |     for step, decision in ((\"12b_decide_e8\", first_path), (\"12b_decide_e8_b4\", second_path)): |         "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 520,
+    "context": "p, decision in ((\"12b_decide_e8\", first_path), (\"12b_decide_e8_b4\", second_path)): |         folder = runs / f\"{step}_a1\" |   "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 534,
+    "context": "a setting defect\" in out[3] |     chosen = runs / \"12b_decide_e8_b4_a1\" / \"decision.json\" |     assert out[4] == f\"ok|path={ch"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 535,
+    "context": "on\" |     assert out[4] == f\"ok|path={chosen};step=12b_decide_e8_b4\" |  |  | def test_e8_14_b4_below_45_is_not_judgeable(world, ca"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 538,
+    "context": "[4] == f\"ok|path={chosen};step=12b_decide_e8_b4\" |  |  | def test_e8_14_b4_below_45_is_not_judgeable(world, capsys, cwd_elsewher"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 564,
+    "context": "[str]: |     \"\"\"Run each PowerShell call after dot-sourcing ``e8_gates_ed5.ps1`` alone (strict mode 3, |     errors stop, as t"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 568,
+    "context": "he run step gate tests\" |     index = len(list(tmp_path.glob(\"e8_gate_*.ps1\"))) |     script = tmp_path / f\"e8_gate_{index}.ps"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 569,
+    "context": "(tmp_path.glob(\"e8_gate_*.ps1\"))) |     script = tmp_path / f\"e8_gate_{index}.ps1\" |     body = \"\\n\".join(f\"Write-Output (Show"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 589,
+    "context": "'\"' for line in lines) |     return f\"@({quoted})\" |  |  | def test_e8_gate_diff_rule(tmp_path) -> None: |     \"\"\"8-9 (a): the allow"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 614,
+    "context": "\"3|erratum 8 8-9 (a)\") for line in out[2:]), out |  |  | def test_e8_gate_ready_rule_of_step8(tmp_path) -> None: |     \"\"\"Erratum "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 648,
+    "context": "tart\": [entry], \"end\": [{**entry, \"time\": \"u\"}]} |  |  | def test_e8_gate_identity_environment_and_workers(tmp_path) -> None: |   "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 698,
+    "context": "text(record, encoding=\"utf-8\") |     return folder |  |  | def test_e8_gate_stopped_base_attempt(tmp_path) -> None: |     \"\"\"8-9 (e)"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 711,
+    "context": "(line.startswith(\"2|\") for line in out[1:]), out |  |  | def test_e8_gate_two_fixed_lists(tmp_path) -> None: |     \"\"\"8-9 (a''): t"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 747,
+    "context": "tartswith(\"2|fixed input 06_analysis/data.json\") |  |  | def test_e8_gate_decision_record_w5(tmp_path) -> None: |     \"\"\"8-9 (d) o"
+   },
+   {
+    "file": "00_docs/00_roadmap.md",
+    "line": 26,
+    "context": " 5 실행 커밋 `606f8713` 단계 (0)~(6) 통과, 6b A/A 멈춤 → 정오 8·경로 2 정오 e8 봉인(`cd2de978`). 다음은 정오 8 도구 커밋 → 재개 직전 감사 → 12b(VBK 실행은 사용자"
+   },
+   {
+    "file": "00_docs/00_roadmap.md",
+    "line": 330,
+    "context": " ≤ 7(b4 포함 ≤ 9), 6.3.8 폐지, b1·b2 VBK0 재사용, 두 커밋 운용, 경로 2 정오 e8 | | | LEVEL 완료 교착(VBK0 τ_C 약 3.2 %) | 판 5 뒤 | ⏳ 별건 등록(2026-11"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 810,
+    "context": "atum8.md` sha `8c420e85…`, 경로 2 정오 `jp3_rev6_p2_handoff_ed5_e8.md` `ef33e619…`, master `cd2de978`): 6b `12b_vbk0_base`가 A/"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 810,
+    "context": "1·b2 ≤ 7, b4 포함 ≤ 9, b3 필요 시 판정 불가; F3 거짓 실패 2.06 %, `stats_e8/`), (1)·(4) 0 건수 유지((1) A/A 바닥 0/167, 0/494로 배제 못 하는 거짓 실패 "
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 810,
+    "context": "재사용, 두 커밋 운용(시뮬레이션 606f8713·12b 판정과 이후 ps1은 도구 커밋), 경로 2 정오 e8 함께 봉인. stats-design-expert의 `dry_c.json` 노출은 코드로 무해 확인(감사 R"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 812,
+    "context": "ee `ed5-tool8` lock. 재개 직전 감사 차단 0(`ed5_design/audit_resume_e8_tool8.md`). 사용자 결정: step8 끝까지 master 동결(00_docs·CLAUDE.md M"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 812,
+    "context": "thon-ed5tool8/dry_decision.json`, 판정 근거로 쓰지 않음; `12b_decide_e8`가 같은 입력으로 다시 계산). |   - 436.9 판 5(실행 606f8713, 도구 74a4bbf4) 판"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 820,
+    "context": "s6_control_spec.md` 개정 39): **U-S8-1** 우선순위 1의 31사례 먼저(P7 + E8) 판정 뒤 나머지 49사례, **U-S8-2·4·6** 항목 9 합격 기준(결합 판정 놓침 0; 압력만이 "
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 7,
+    "context": "(`06_analysis/02_control/j_p3_cause/ed5_design/audit_resume_e8_tool8.md`, W-1~W-4). **step8 끝까지 master 동결**(00_docs·CLAUDE"
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 7,
+    "context": "paper-reviewer.md`는 그 뒤). 다음: `prelaunch_ed5.ps1 -Part list_e8`로 `FIXED_INPUTS_74a4bbf4` 생성·커밋 → 읽기 전용 smoke(Assert-ToolSc"
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 7,
+    "context": "cripts·E8FixedLists·ToolDiff) → **사용자 확인 뒤** `step6b_decide_e8`(→ 필요 시 b4 사슬) → step6c VBK → 7·7b·8. W-4 건식 decide 공개 문장은 "
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 8,
+    "context": "atum8.md` sha `8c420e85…`, 경로 2 정오 `jp3_rev6_p2_handoff_ed5_e8.md` `ef33e619…`, master `cd2de978`): (2)+(3) n23 ≤ 7(b4 포함 "
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 8,
+    "context": " 불변·`common_ed5.ps1`만, 블라인드 픽스처 금지) → 재개 직전 감사 → 12b_decide_e8 → 12b VBK 실행은 사용자 확인 뒤**(사용자 결정 2026-11-23). 경과 원본: 메모리 `ed"
+   },
+   {
+    "file": "00_docs/history/CLAUDE_2026-10-25_before_split.md",
+    "line": 55,
+    "context": "s6_control_spec.md` 개정 39): **U-S8-1** 우선순위 1의 31사례 먼저(P7 + E8) 판정 뒤 나머지 49사례, **U-S8-2·4·6** 항목 9 합격 기준(결합 판정 놓침 0; 압력만이 "
+   }
+  ],
+  "_e8_case_insensitive": [
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 125,
+    "context": "                              (5, 3, 1, \"failed\")]) | def test_e8_01_b1_b2_allowance_7(world, capsys, cwd_elsewhere, losses, "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 146,
+    "context": "e\", \"verdict\"), [(3, 0, \"pass\"), (4, 1, \"failed\")]) | def test_e8_02_b1_b2_b4_allowance_9(world, capsys, cwd_elsewhere, b4_lo"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 166,
+    "context": "------------------------------------------------- 3 | def test_e8_03_b3_is_not_judgeable(world, capsys, cwd_elsewhere, tmp_pa"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 201,
+    "context": "------------------------------------------------- 4 | def test_e8_04_ready_delay_boundary(world, capsys, cwd_elsewhere) -> No"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 230,
+    "context": "------------------------------------------------- 5 | def test_e8_05_vbk0_without_ready(world, capsys, cwd_elsewhere) -> None"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 256,
+    "context": "------------------------------------------------- 6 | def test_e8_06_stall_signature(world, capsys, cwd_elsewhere) -> None: |  "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 305,
+    "context": "------------------------------------------------- 7 | def test_e8_07_decide_records_aa_and_goes_on(world, capsys, cwd_elsewhe"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 324,
+    "context": "rize(\"case\", [\"new_fault\", \"h7\", \"n23_and_defect\"]) | def test_e8_08_failures_and_their_order(world, capsys, cwd_elsewhere, c"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 354,
+    "context": "------------------------------------------------- 9 | def test_e8_09_decision_blocks_and_allowance(world, capsys, cwd_elsewhe"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 375,
+    "context": "------------------------------------------------ 10 | def test_e8_10_no_opportunity_pair_is_not_judgeable(world, capsys, cwd_"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 398,
+    "context": "------------------------------------------------ 11 | def test_e8_11_record_item_exceptions_keep_the_status(world, capsys, cw"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 446,
+    "context": "------------------------------------------------ 12 | def test_e8_12_no_blind_file_in_tests_or_fixtures(world) -> None: |     \""
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 460,
+    "context": "------------------------------------------------ 13 | def test_e8_13_expected_vbk0_inputs(world, capsys, cwd_elsewhere, monke"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 503,
+    "context": "------------------------------------------------ 14 | def test_e8_14_b4_chain(world, capsys, cwd_elsewhere, tmp_path) -> None"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 506,
+    "context": "(8-9 3) and |     step6c takes the b4 decision when 12b_decide_e8_b4.done exists (8-9 4).\"\"\" |     written0, _ = build(world, b"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 520,
+    "context": "p_path / \"runs_root\" |     for step, decision in ((\"12b_decide_e8\", first_path), (\"12b_decide_e8_b4\", second_path)): |         "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 520,
+    "context": "ep, decision in ((\"12b_decide_e8\", first_path), (\"12b_decide_e8_b4\", second_path)): |         folder = runs / f\"{step}_a1\" |   "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 534,
+    "context": " a setting defect\" in out[3] |     chosen = runs / \"12b_decide_e8_b4_a1\" / \"decision.json\" |     assert out[4] == f\"ok|path={ch"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 535,
+    "context": "son\" |     assert out[4] == f\"ok|path={chosen};step=12b_decide_e8_b4\" |  |  | def test_e8_14_b4_below_45_is_not_judgeable(world, ca"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 538,
+    "context": "t[4] == f\"ok|path={chosen};step=12b_decide_e8_b4\" |  |  | def test_e8_14_b4_below_45_is_not_judgeable(world, capsys, cwd_elsewher"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 589,
+    "context": " '\"' for line in lines) |     return f\"@({quoted})\" |  |  | def test_e8_gate_diff_rule(tmp_path) -> None: |     \"\"\"8-9 (a): the allow"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 614,
+    "context": "(\"3|erratum 8 8-9 (a)\") for line in out[2:]), out |  |  | def test_e8_gate_ready_rule_of_step8(tmp_path) -> None: |     \"\"\"Erratum "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 648,
+    "context": "start\": [entry], \"end\": [{**entry, \"time\": \"u\"}]} |  |  | def test_e8_gate_identity_environment_and_workers(tmp_path) -> None: |   "
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 698,
+    "context": "_text(record, encoding=\"utf-8\") |     return folder |  |  | def test_e8_gate_stopped_base_attempt(tmp_path) -> None: |     \"\"\"8-9 (e)"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 711,
+    "context": "l(line.startswith(\"2|\") for line in out[1:]), out |  |  | def test_e8_gate_two_fixed_lists(tmp_path) -> None: |     \"\"\"8-9 (a''): t"
+   },
+   {
+    "file": "05_tests/unit/test_jp3_12b_erratum8.py",
+    "line": 747,
+    "context": "startswith(\"2|fixed input 06_analysis/data.json\") |  |  | def test_e8_gate_decision_record_w5(tmp_path) -> None: |     \"\"\"8-9 (d) o"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 810,
+    "context": "ratum8.md` sha `8c420e85…`, 경로 2 정오 `jp3_rev6_p2_handoff_ed5_e8.md` `ef33e619…`, master `cd2de978`): 6b `12b_vbk0_base`가 A/"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 810,
+    "context": "b1·b2 ≤ 7, b4 포함 ≤ 9, b3 필요 시 판정 불가; F3 거짓 실패 2.06 %, `stats_e8/`), (1)·(4) 0 건수 유지((1) A/A 바닥 0/167, 0/494로 배제 못 하는 거짓 실패 "
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 812,
+    "context": "ree `ed5-tool8` lock. 재개 직전 감사 차단 0(`ed5_design/audit_resume_e8_tool8.md`). 사용자 결정: step8 끝까지 master 동결(00_docs·CLAUDE.md M"
+   },
+   {
+    "file": "00_docs/decision_log.md",
+    "line": 812,
+    "context": "ython-ed5tool8/dry_decision.json`, 판정 근거로 쓰지 않음; `12b_decide_e8`가 같은 입력으로 다시 계산). |   - 436.9 판 5(실행 606f8713, 도구 74a4bbf4) 판"
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 7,
+    "context": "0(`06_analysis/02_control/j_p3_cause/ed5_design/audit_resume_e8_tool8.md`, W-1~W-4). **step8 끝까지 master 동결**(00_docs·CLAUDE"
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 7,
+    "context": "/paper-reviewer.md`는 그 뒤). 다음: `prelaunch_ed5.ps1 -Part list_e8`로 `FIXED_INPUTS_74a4bbf4` 생성·커밋 → 읽기 전용 smoke(Assert-ToolSc"
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 7,
+    "context": "Scripts·E8FixedLists·ToolDiff) → **사용자 확인 뒤** `step6b_decide_e8`(→ 필요 시 b4 사슬) → step6c VBK → 7·7b·8. W-4 건식 decide 공개 문장은 "
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 8,
+    "context": "ratum8.md` sha `8c420e85…`, 경로 2 정오 `jp3_rev6_p2_handoff_ed5_e8.md` `ef33e619…`, master `cd2de978`): (2)+(3) n23 ≤ 7(b4 포함 "
+   },
+   {
+    "file": "00_docs/handoff/session_handoff.md",
+    "line": 8,
+    "context": "` 불변·`common_ed5.ps1`만, 블라인드 픽스처 금지) → 재개 직전 감사 → 12b_decide_e8 → 12b VBK 실행은 사용자 확인 뒤**(사용자 결정 2026-11-23). 경과 원본: 메모리 `ed"
+   }
+  ]
+ }
+}

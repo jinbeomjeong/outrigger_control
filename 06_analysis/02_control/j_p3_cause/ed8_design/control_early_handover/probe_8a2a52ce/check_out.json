@@ -1,0 +1,290 @@
+{
+ "stored_U8A_sha": "a799807b8a995734d53f804a77f3c4a0ebb94db01ba966f081a745c7f8417b99",
+ "A_sha": "a799807b8a995734d53f804a77f3c4a0ebb94db01ba966f081a745c7f8417b99",
+ "A_equals_stored_U8A": true,
+ "H3n3_equals_A": true,
+ "H1off_equals_A": true,
+ "H3_equals_A": false,
+ "H1_equals_A": false,
+ "H1_p89": {
+  "stem": "R12_bottom-FR-Fs0-o0.0-RE1bF-ready_P89-H1-VBM",
+  "arm": "H1",
+  "patched_arm": "H1",
+  "params": {
+   "h1": 0.6
+  },
+  "end_finished_is_patched": "_end_finished_reapproaches",
+  "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+  "n_h3": 0,
+  "n_h1_defer": 3,
+  "n_h1_b3_block": 0,
+  "worker_wall_s": 87.4
+ },
+ "H3n3_p89": {
+  "stem": "R12_bottom-FR-Fs0-o0.0-RE1bF-ready_P89-H3n3-VBM",
+  "arm": "H3n3",
+  "patched_arm": "H3n3",
+  "params": {
+   "h3": [
+    0.5,
+    3
+   ]
+  },
+  "end_finished_is_patched": "end_finished",
+  "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+  "n_h3": 0,
+  "n_h1_defer": 0,
+  "n_h1_b3_block": 0,
+  "worker_wall_s": 87.4
+ },
+ "H1off_p89": {
+  "stem": "R12_bottom-FR-Fs0-o0.0-RE1bF-ready_P89-H1off-VBM",
+  "arm": "H1off",
+  "patched_arm": "H1off",
+  "params": {
+   "h1": -1.0
+  },
+  "end_finished_is_patched": "_end_finished_reapproaches",
+  "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+  "n_h3": 0,
+  "n_h1_defer": 0,
+  "n_h1_b3_block": 0,
+  "worker_wall_s": 87.5
+ },
+ "A_p89": {
+  "stem": "R12_bottom-FR-Fs0-o0.0-RE1bF-ready_P89-A-VBM",
+  "arm": "A",
+  "patched_arm": "A",
+  "params": {},
+  "end_finished_is_patched": "_end_finished_reapproaches",
+  "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+  "n_h3": 0,
+  "n_h1_defer": 0,
+  "n_h1_b3_block": 0,
+  "worker_wall_s": 87.5
+ },
+ "H3_p89": {
+  "stem": "R12_bottom-FR-Fs0-o0.0-RE1bF-ready_P89-H3-VBM",
+  "arm": "H3",
+  "patched_arm": "H3",
+  "params": {
+   "h3": [
+    0.5,
+    4
+   ]
+  },
+  "end_finished_is_patched": "end_finished",
+  "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+  "n_h3": 1,
+  "n_h1_defer": 0,
+  "n_h1_b3_block": 0,
+  "worker_wall_s": 88.5
+ },
+ "t_event_s": 47.7,
+ "A_starts_rel": [
+  [
+   0.1,
+   "FR",
+   false
+  ],
+  [
+   0.4,
+   "RL",
+   true
+  ]
+ ],
+ "A_ends_rel": [
+  [
+   0.4,
+   "FR",
+   "contact",
+   3,
+   null,
+   0.1
+  ],
+  [
+   2.6,
+   "RL",
+   "contact",
+   3,
+   null,
+   0.4
+  ]
+ ],
+ "A_h3_rel": [],
+ "A_h1_defer_rel": [],
+ "A_h1_land_rel": [],
+ "A_h1_b3_block_rel": [],
+ "A_gates": {
+  "U832_pair_union": false,
+  "U832_last_touch": true,
+  "fault0": true,
+  "U57_sum": true,
+  "U57_gap": true,
+  "U57_outside": true,
+  "Fmin_after_W": true,
+  "end_att": true,
+  "recurrence": true
+ },
+ "A_pair_union_s": 2.004,
+ "A_deferred_events": {},
+ "H3_starts_rel": [
+  [
+   0.1,
+   "FR",
+   false
+  ],
+  [
+   1.0,
+   "RL",
+   true
+  ]
+ ],
+ "H3_ends_rel": [
+  [
+   1.0,
+   "FR",
+   "contact",
+   3,
+   3,
+   0.1
+  ],
+  [
+   2.1,
+   "RL",
+   "contact",
+   3,
+   3,
+   1.0
+  ]
+ ],
+ "H3_h3_rel": [
+  [
+   0.4,
+   "FR",
+   3,
+   4
+  ]
+ ],
+ "H3_h1_defer_rel": [],
+ "H3_h1_land_rel": [],
+ "H3_h1_b3_block_rel": [],
+ "H3_gates": {
+  "U832_pair_union": true,
+  "U832_last_touch": true,
+  "fault0": true,
+  "U57_sum": true,
+  "U57_gap": true,
+  "U57_outside": true,
+  "Fmin_after_W": true,
+  "end_att": true,
+  "recurrence": true
+ },
+ "H3_pair_union_s": 1.6,
+ "H3_deferred_events": {},
+ "H1_starts_rel": [
+  [
+   0.1,
+   "FR",
+   false
+  ],
+  [
+   0.5,
+   "FR",
+   true
+  ],
+  [
+   1.1,
+   "FR",
+   true
+  ],
+  [
+   2.1,
+   "FR",
+   true
+  ]
+ ],
+ "H1_ends_rel": [
+  [
+   0.4,
+   "FR",
+   "contact",
+   3,
+   null,
+   0.1
+  ],
+  [
+   1.0,
+   "FR",
+   "contact",
+   3,
+   null,
+   0.5
+  ],
+  [
+   2.0,
+   "FR",
+   "contact",
+   3,
+   null,
+   1.1
+  ],
+  [
+   2.4,
+   "FR",
+   "contact",
+   3,
+   null,
+   2.1
+  ]
+ ],
+ "H1_h3_rel": [],
+ "H1_h1_defer_rel": [
+  [
+   0.4,
+   "RL"
+  ],
+  [
+   1.0,
+   "RL"
+  ],
+  [
+   2.0,
+   "RL"
+  ]
+ ],
+ "H1_h1_land_rel": [
+  [
+   0.6,
+   "RL"
+  ],
+  [
+   1.2,
+   "RL"
+  ],
+  [
+   2.1,
+   "RL"
+  ],
+  [
+   2.5,
+   "RL"
+  ]
+ ],
+ "H1_h1_b3_block_rel": [],
+ "H1_gates": {
+  "U832_pair_union": false,
+  "U832_last_touch": true,
+  "fault0": true,
+  "U57_sum": true,
+  "U57_gap": true,
+  "U57_outside": true,
+  "Fmin_after_W": true,
+  "end_att": true,
+  "recurrence": true
+ },
+ "H1_pair_union_s": 2.123,
+ "H1_deferred_events": {
+  "leg_reapproach_deferred": 3
+ }
+}

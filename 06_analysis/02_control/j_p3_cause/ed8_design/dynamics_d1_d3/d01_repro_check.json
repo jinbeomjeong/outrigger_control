@@ -1,0 +1,1505 @@
+[
+ {
+  "setting": "D8-M-a2",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-M-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-M-a2",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 73.7
+  },
+  "rerun": {
+   "commands_sha256": "4f1584a8deabfa830bdafee7103aaea77aacbe7ab4cd5fddc34af145d1b88087",
+   "final_phase": "ready",
+   "t_event_s": 52.0,
+   "events": [
+    [
+     47.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.643"
+    ],
+    [
+     78.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.745"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02162
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "4f1584a8deabfa830bdafee7103aaea77aacbe7ab4cd5fddc34af145d1b88087",
+   "final_phase": "ready",
+   "t_event_s": 52.0,
+   "events": [
+    [
+     47.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.643"
+    ],
+    [
+     78.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.745"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02162
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-M-A",
+  "job": {
+   "case": "S7",
+   "eps": 0.002,
+   "setting": "D8-M-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.002_D8-M-A",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 94.7
+  },
+  "rerun": {
+   "commands_sha256": "1c325428ab5c2f1bad56a9d04939c5d3edd56846f1b6f33ac697ededc93520b6",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.1064
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "77c1cf7bf6c3ca7e7739f3d887b728a42c537e2395a103244bb4ef462dc00ab6",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11935
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-M-A",
+  "job": {
+   "case": "S7",
+   "eps": 0.003,
+   "setting": "D8-M-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.003_D8-M-A",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 95.8
+  },
+  "rerun": {
+   "commands_sha256": "3f9b6db66b7f0d7ad1507315dff89617add61bdbc52bbbb8334c70cc31e86276",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.10598
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "a93ad01a905297bfd071d1f119f5c30718d24e5b87271bbbb1db1667531928a2",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11894
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-M-a2",
+  "job": {
+   "case": "S7",
+   "eps": 0.003,
+   "setting": "D8-M-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.003_D8-M-a2",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 98.9
+  },
+  "rerun": {
+   "commands_sha256": "a93ad01a905297bfd071d1f119f5c30718d24e5b87271bbbb1db1667531928a2",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11894
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "a93ad01a905297bfd071d1f119f5c30718d24e5b87271bbbb1db1667531928a2",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11894
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-M-a2",
+  "job": {
+   "case": "S7",
+   "eps": 0.0,
+   "setting": "D8-M-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.0_D8-M-a2",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 99.0
+  },
+  "rerun": {
+   "commands_sha256": "cc5b61d42848a258d1b0db73ec9534af5bcc2c2a1b96f547f03a7a5f690be565",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11917
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "cc5b61d42848a258d1b0db73ec9534af5bcc2c2a1b96f547f03a7a5f690be565",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11917
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-L-A",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-L-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-L-A",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 108.6
+  },
+  "rerun": {
+   "commands_sha256": "af603fead148a4c6c86f050733c483939f90912b3249b08321a4f0c59bfceb14",
+   "final_phase": "ready",
+   "t_event_s": 47.5,
+   "events": [],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02241
+   }
+  }
+ },
+ {
+  "setting": "D8-M-A",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-M-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-M-A",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 109.8
+  },
+  "rerun": {
+   "commands_sha256": "458d933a842d6b53aca990dad873775e15dbfb5ee81b61b2c39bef5e2f6b5101",
+   "final_phase": "ready",
+   "t_event_s": 47.5,
+   "events": [],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02241
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "4f1584a8deabfa830bdafee7103aaea77aacbe7ab4cd5fddc34af145d1b88087",
+   "final_phase": "ready",
+   "t_event_s": 52.0,
+   "events": [
+    [
+     47.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.643"
+    ],
+    [
+     78.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.745"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02162
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-L-a2",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-L-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-L-a2",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 112.7
+  },
+  "rerun": {
+   "commands_sha256": "a4b936ee491ed193455b1aa67c43ec8f582d6aac09431b21db85f1c32d20fba6",
+   "final_phase": "ready",
+   "t_event_s": 52.0,
+   "events": [
+    [
+     47.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.643"
+    ],
+    [
+     78.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.715"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02162
+   }
+  }
+ },
+ {
+  "setting": "D8-M-a2",
+  "job": {
+   "case": "S7",
+   "eps": 0.002,
+   "setting": "D8-M-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.002_D8-M-a2",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 115.3
+  },
+  "rerun": {
+   "commands_sha256": "77c1cf7bf6c3ca7e7739f3d887b728a42c537e2395a103244bb4ef462dc00ab6",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11935
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "77c1cf7bf6c3ca7e7739f3d887b728a42c537e2395a103244bb4ef462dc00ab6",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11935
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-Mslow-A",
+  "job": {
+   "case": "S7",
+   "eps": 0.0,
+   "setting": "D8-Mslow-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.0_D8-Mslow-A",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 87.5
+  },
+  "rerun": {
+   "commands_sha256": "9281cf4278304d7aff9b26e5f3711e69c2d97dcb9d8ca777be9e1d8729366792",
+   "final_phase": "probe",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.09452
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": {
+   "commands_sha256": "6b3df04947cc745e94667bd0c61f73fb4952867baffb7587f9eb22db86a0bac0",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [
+    [
+     102.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.589"
+    ]
+   ],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11452
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-Mslow-A",
+  "job": {
+   "case": "S7",
+   "eps": 0.002,
+   "setting": "D8-Mslow-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.002_D8-Mslow-A",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 87.0
+  },
+  "rerun": {
+   "commands_sha256": "a511b502aef89b84aa28c69781e55ee2be3d31648be43bebaf288144a42b4e1b",
+   "final_phase": "probe",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.09458
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": {
+   "commands_sha256": "6b412712f257359e01edec3b4dc3df3514cec275330ff8331e9874d3c72a3861",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11454
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-Mslow-a2",
+  "job": {
+   "case": "S7",
+   "eps": 0.002,
+   "setting": "D8-Mslow-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.002_D8-Mslow-a2",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 98.2
+  },
+  "rerun": {
+   "commands_sha256": "6b412712f257359e01edec3b4dc3df3514cec275330ff8331e9874d3c72a3861",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11454
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": {
+   "commands_sha256": "6b412712f257359e01edec3b4dc3df3514cec275330ff8331e9874d3c72a3861",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11454
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-Mslow-a2",
+  "job": {
+   "case": "S7",
+   "eps": 0.0,
+   "setting": "D8-Mslow-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "S7_e0.0_D8-Mslow-a2",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 107.8
+  },
+  "rerun": {
+   "commands_sha256": "6b3df04947cc745e94667bd0c61f73fb4952867baffb7587f9eb22db86a0bac0",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [
+    [
+     102.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.589"
+    ]
+   ],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11452
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": {
+   "commands_sha256": "6b3df04947cc745e94667bd0c61f73fb4952867baffb7587f9eb22db86a0bac0",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [
+    [
+     102.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.589"
+    ]
+   ],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 2,
+    "INFO_LOC_CLEARANCE_MARGIN": 1,
+    "INFO_LOC_REVOKED": 1,
+    "soil_mode_start": 1,
+    "INFO_CLEARANCE_BIAS": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.11452
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-Mslow-A",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FL",
+    "fs_kN": 0.0
+   },
+   "setting": "D8-Mslow-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FL-Fs0-o0.0_D8-Mslow-A",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 95.3
+  },
+  "rerun": {
+   "commands_sha256": "4109dda738a7b79c37abb331273b6c7c436c38a223e7b2a807f9ce9a5c318ca1",
+   "final_phase": "ready",
+   "t_event_s": 47.4,
+   "events": [
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:FL"
+    ],
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:FR"
+    ],
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:RL"
+    ],
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:RR"
+    ]
+   ],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "INFO_D6_NOT_OPENED": 8,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "WARN_PROBE_RETRACT_NOT_OPENED": 4
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02829
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": {
+   "commands_sha256": "45c7155e2e3b0248fdf42062329fce8b6626d3e54d08d4577252515bd0726629",
+   "final_phase": "probe",
+   "t_event_s": 55.0,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.03228
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-LSM4-A",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 0.0
+   },
+   "setting": "D8-LSM4-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs0-o0.05_D8-LSM4-A",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 102.8
+  },
+  "rerun": {
+   "commands_sha256": "bfe0c5e5d2edad07c4f1dd321608696d7d85735e0d5ad7516d209c419271447f",
+   "final_phase": "ready",
+   "t_event_s": 47.45,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02815
+   }
+  },
+  "stored_setting": "LSM4",
+  "stored": {
+   "commands_sha256": "e5aec722503bb3653021257c3363456d2d817c4c8347f911be0673c43d2293b9",
+   "final_phase": "probe",
+   "t_event_s": 52.95,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.03224
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-LSM4-a2",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 0.0
+   },
+   "setting": "D8-LSM4-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs0-o0.05_D8-LSM4-a2",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 114.8
+  },
+  "rerun": {
+   "commands_sha256": "e5aec722503bb3653021257c3363456d2d817c4c8347f911be0673c43d2293b9",
+   "final_phase": "probe",
+   "t_event_s": 52.95,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.03224
+   }
+  },
+  "stored_setting": "LSM4",
+  "stored": {
+   "commands_sha256": "e5aec722503bb3653021257c3363456d2d817c4c8347f911be0673c43d2293b9",
+   "final_phase": "probe",
+   "t_event_s": 52.95,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.03224
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-Mslow-a2",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FL",
+    "fs_kN": 0.0
+   },
+   "setting": "D8-Mslow-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FL-Fs0-o0.0_D8-Mslow-a2",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 114.1
+  },
+  "rerun": {
+   "commands_sha256": "45c7155e2e3b0248fdf42062329fce8b6626d3e54d08d4577252515bd0726629",
+   "final_phase": "probe",
+   "t_event_s": 55.0,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.03228
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": {
+   "commands_sha256": "45c7155e2e3b0248fdf42062329fce8b6626d3e54d08d4577252515bd0726629",
+   "final_phase": "probe",
+   "t_event_s": 55.0,
+   "events": [],
+   "event_names": {
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "INFO_LIFT_PAUSED": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1,
+    "relevel_predicted": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.03228
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-M-A",
+  "job": {
+   "case": "R7",
+   "eps": 0.0,
+   "setting": "D8-M-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R7_e0.0_D8-M-A",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 47.4
+  },
+  "rerun": {
+   "commands_sha256": "ba87b743897b5523c54fe19342edf147130171f7ba13f5bc7cb4daad9d1e1583",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 1,
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02004
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "34b142197a215b416affc1fe958e784b7f30da487f4596db691a95b1b59f3803",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [
+    [
+     59.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.856"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 1,
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02004
+   }
+  },
+  "same_commands": false
+ },
+ {
+  "setting": "D8-M-a2",
+  "job": {
+   "case": "R7",
+   "eps": 0.0,
+   "setting": "D8-M-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R7_e0.0_D8-M-a2",
+   "plant_objects": [
+    "o0"
+   ],
+   "ctrl_objects": [
+    "o0"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 48.8
+  },
+  "rerun": {
+   "commands_sha256": "34b142197a215b416affc1fe958e784b7f30da487f4596db691a95b1b59f3803",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [
+    [
+     59.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.856"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 1,
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02004
+   }
+  },
+  "stored_setting": "VBM",
+  "stored": {
+   "commands_sha256": "34b142197a215b416affc1fe958e784b7f30da487f4596db691a95b1b59f3803",
+   "final_phase": "ready",
+   "t_event_s": null,
+   "events": [
+    [
+     59.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.856"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 1,
+    "floor_estimate_touch": 1,
+    "INFO_TOUCH_TWIST_HOLD": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02004
+   }
+  },
+  "same_commands": true
+ },
+ {
+  "setting": "D8-Mh15-A",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-Mh15-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-Mh15-A",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 91.4
+  },
+  "rerun": {
+   "commands_sha256": "504d7d49584a91e93c6cb73a64ad9cb78220f1e0198acb7d034758689fdbca2b",
+   "final_phase": "ready",
+   "t_event_s": 47.5,
+   "events": [
+    [
+     42.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.734"
+    ],
+    [
+     70.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.866"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02226
+   }
+  },
+  "stored_setting": "VBMh15",
+  "stored": null
+ },
+ {
+  "setting": "D8-Mslow-A",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-Mslow-A"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-Mslow-A",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 91.4
+  },
+  "rerun": {
+   "commands_sha256": "8eca07993ba3d59a911c7cf0ba39de8aaf748e914055d64c383d65abe92d5d36",
+   "final_phase": "ready",
+   "t_event_s": 47.5,
+   "events": [
+    [
+     70.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.468"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02472
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": null
+ },
+ {
+  "setting": "D8-Mh15-a2",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-Mh15-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-Mh15-a2",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 99.1
+  },
+  "rerun": {
+   "commands_sha256": "89e280333140fe9a4d6cb2458d741b1d0c7280015ccbb734f651f9e4b250ad0c",
+   "final_phase": "ready",
+   "t_event_s": 52.4,
+   "events": [
+    [
+     47.4,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.417"
+    ],
+    [
+     81.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.461"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02167
+   }
+  },
+  "stored_setting": "VBMh15",
+  "stored": null
+ },
+ {
+  "setting": "D8-Mslow-a2",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "twin": {
+    "level": "top",
+    "leg": "FR",
+    "fs_kN": 8.0
+   },
+   "setting": "D8-Mslow-a2"
+  },
+  "error": null,
+  "d8": {
+   "stem": "R12_top-FR-Fs8-o0.0_D8-Mslow-a2",
+   "plant_objects": [
+    "o0",
+    "o1"
+   ],
+   "ctrl_objects": [
+    "o0",
+    "o1"
+   ],
+   "outrigger_sim_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\03_src\\outrigger_sim\\__init__.py",
+   "worker_wall_s": 100.1
+  },
+  "rerun": {
+   "commands_sha256": "c09bc97a1776623f485c78038253a35606850f789d84cd4c87228150bc497ec0",
+   "final_phase": "ready",
+   "t_event_s": 54.1,
+   "events": [
+    [
+     49.1,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.363"
+    ],
+    [
+     82.6,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.472"
+    ]
+   ],
+   "event_names": {
+    "INFO_TOUCH_DIP_HELD": 2,
+    "floor_estimate_touch": 1,
+    "crawler_liftoff_confirmed": 1,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE": 2,
+    "reanchor_skipped": 1,
+    "ready_heave_tail": 2,
+    "relevel_predicted": 1,
+    "leg_reapproach_start": 1,
+    "leg_reapproach_contact": 1,
+    "INFO_FLOOR_NONPLANAR": 1
+   },
+   "values_scalar": {
+    "probe_attitude_change_deg": 0.02167
+   }
+  },
+  "stored_setting": "VBMslow",
+  "stored": null
+ }
+]

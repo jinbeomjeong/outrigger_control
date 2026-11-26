@@ -1,0 +1,150 @@
+== VBMh05 windows 276
+  x_open_mm              n= 237 min    0.021 p5    0.026 med    0.153 p95    0.200 max    0.232
+  open_minus_mid_s       n= 237 min   -0.369 p5   -0.363 med   -0.249 p95   -0.142 max   -0.133
+  ds_mid_mm              n= 276 min    0.525 p5    0.539 med    0.661 p95    1.143 max    1.185
+  ds_half_mm             n= 276 min    1.146 p5    1.147 med    1.147 p95    1.460 max    1.465
+  dF_half_kN             n= 184 min    3.037 p5    3.080 med    7.381 p95    9.543 max    9.861
+  Kmot_half_MN_m         n= 184 min    2.649 p5    2.686 med    6.115 p95    7.863 max    8.596
+  Kpist_proxy_MN_m       n= 184 min    2.918 p5    2.959 med    7.743 p95   12.421 max   14.442
+  net_stroke_after_mm    n= 276 min   -0.257 p5   -0.244 med   -0.185 p95   -0.152 max   -0.100
+  ib_extra_mm            n= 184 min    0.700 p5    0.700 med    0.800 p95    1.585 max    1.900
+  d6_witness_mm          n= 184 min    1.913 p5    1.938 med    2.030 p95    2.440 max    2.547
+  p_h_start_bar          n= 276 min   71.440 p5   72.785 med   85.785 p95   97.940 max  101.830
+  p_r_start_bar          n= 184 min    0.660 p5    5.000 med    7.950 p95   26.578 max   35.470
+  dF_first_kN            n= 184 min    1.743 p5    4.443 med    8.706 p95   16.965 max   20.457
+  ib_target_reached: True 184 False 0 none 92
+  ret_open True 276 False 0
+  last_sign +1 180 -1 96 0 0
+  warn_round=False: Kpist med 7.743 p5 2.959 p95 12.421 n 184
+== VBMfast windows 276
+  x_open_mm              n= 236 min    0.023 p5    0.058 med    0.163 p95    0.198 max    0.230
+  open_minus_mid_s       n= 236 min   -0.367 p5   -0.324 med   -0.243 p95   -0.145 max   -0.130
+  ds_mid_mm              n= 276 min    0.385 p5    0.536 med    0.658 p95    1.104 max    1.186
+  ds_half_mm             n= 276 min    1.146 p5    1.147 med    1.147 p95    1.460 max    1.462
+  dF_half_kN             n= 184 min    3.106 p5    3.130 med    7.329 p95    9.154 max   10.369
+  Kmot_half_MN_m         n= 184 min    2.709 p5    2.730 med    6.052 p95    7.863 max    9.038
+  Kpist_proxy_MN_m       n= 184 min    2.998 p5    3.012 med    7.719 p95   12.456 max   15.625
+  net_stroke_after_mm    n= 276 min   -0.411 p5   -0.243 med   -0.207 p95   -0.149 max   -0.116
+  ib_extra_mm            n= 184 min    0.500 p5    0.500 med    0.500 p95    1.000 max    1.200
+  d6_witness_mm          n= 184 min    1.889 p5    1.987 med    2.025 p95    2.409 max    2.524
+  p_h_start_bar          n= 276 min   71.400 p5   72.775 med   85.385 p95   97.672 max  101.800
+  p_r_start_bar          n= 184 min   -0.850 p5    5.000 med    8.330 p95   26.097 max   35.070
+  dF_first_kN            n= 184 min    3.656 p5    4.363 med    8.458 p95   16.936 max   20.419
+  ib_target_reached: True 184 False 0 none 92
+  ret_open True 276 False 0
+  last_sign +1 177 -1 99 0 0
+  warn_round=False: Kpist med 7.719 p5 3.012 p95 12.456 n 184
+== VBMb069 windows 276
+  x_open_mm              n= 235 min    0.044 p5    0.082 med    0.311 p95    0.415 max    0.456
+  open_minus_mid_s       n= 235 min   -0.342 p5   -0.303 med   -0.169 p95   -0.057 max   -0.039
+  ds_mid_mm              n= 276 min    0.351 p5    0.412 med    0.541 p95    1.083 max    1.172
+  ds_half_mm             n= 276 min    1.145 p5    1.147 med    1.148 p95    1.460 max    1.460
+  dF_half_kN             n= 184 min    3.357 p5    3.425 med    7.614 p95    9.569 max   10.628
+  Kmot_half_MN_m         n= 184 min    2.928 p5    2.987 med    5.835 p95    8.193 max    9.255
+  Kpist_proxy_MN_m       n= 184 min    3.256 p5    3.328 med    8.001 p95   13.245 max   14.956
+  net_stroke_after_mm    n= 276 min   -0.377 p5   -0.249 med   -0.200 p95   -0.141 max   -0.096
+  ib_extra_mm            n= 184 min    1.000 p5    1.100 med    1.200 p95    2.100 max    2.400
+  d6_witness_mm          n= 184 min    1.656 p5    1.778 med    1.889 p95    2.331 max    2.526
+  p_h_start_bar          n= 276 min   71.370 p5   72.752 med   85.135 p95   97.670 max  101.630
+  p_r_start_bar          n= 184 min    0.070 p5    5.000 med    8.220 p95   20.234 max   35.150
+  dF_first_kN            n= 184 min    2.359 p5    3.748 med    7.386 p95   15.391 max   18.854
+  ib_target_reached: True 184 False 0 none 92
+  ret_open True 276 False 0
+  last_sign +1 182 -1 94 0 0
+  warn_round=True: Kpist med 10.190 p5 4.572 p95 14.188 n 32
+  warn_round=False: Kpist med 7.878 p5 3.328 p95 11.863 n 152
+== VBMd15 windows 276
+  x_open_mm              n= 237 min    0.045 p5    0.117 med    0.311 p95    0.405 max    0.434
+  open_minus_mid_s       n= 237 min   -0.340 p5   -0.273 med   -0.169 p95   -0.056 max   -0.038
+  ds_mid_mm              n= 276 min    0.378 p5    0.414 med    0.538 p95    1.052 max    1.171
+  ds_half_mm             n= 276 min    1.147 p5    1.147 med    1.149 p95    1.460 max    1.475
+  dF_half_kN             n= 184 min    3.067 p5    3.090 med    7.657 p95    9.927 max   10.170
+  Kmot_half_MN_m         n= 184 min    2.675 p5    2.695 med    6.059 p95    8.510 max    8.870
+  Kpist_proxy_MN_m       n= 184 min    2.947 p5    2.969 med    8.318 p95   12.919 max   15.204
+  net_stroke_after_mm    n= 276 min   -0.412 p5   -0.248 med   -0.194 p95   -0.140 max   -0.091
+  ib_extra_mm            n= 184 min    0.800 p5    0.800 med    0.900 p95    1.785 max    2.200
+  d6_witness_mm          n= 184 min    1.732 p5    1.741 med    1.874 p95    2.339 max    2.527
+  p_h_start_bar          n= 276 min   71.360 p5   72.838 med   85.170 p95   97.710 max  101.790
+  p_r_start_bar          n= 184 min    3.270 p5    5.000 med    8.050 p95   24.016 max   35.120
+  dF_first_kN            n= 184 min    3.484 p5    4.141 med    7.550 p95   15.335 max   18.907
+  ib_target_reached: True 184 False 0 none 92
+  ret_open True 276 False 0
+  last_sign +1 176 -1 100 0 0
+  warn_round=True: Kpist med 10.452 p5 4.995 p95 15.135 n 32
+  warn_round=False: Kpist med 8.201 p5 2.969 p95 12.149 n 152
+== VBMc04 windows 276
+  x_open_mm              n= 242 min    0.047 p5    0.132 med    0.320 p95    0.415 max    0.443
+  open_minus_mid_s       n= 242 min   -0.325 p5   -0.257 med   -0.161 p95   -0.049 max   -0.036
+  ds_mid_mm              n= 276 min    0.356 p5    0.400 med    0.536 p95    1.086 max    1.171
+  ds_half_mm             n= 276 min    1.147 p5    1.147 med    1.149 p95    1.460 max    1.481
+  dF_half_kN             n= 184 min    2.964 p5    3.098 med    7.712 p95    9.913 max   10.507
+  Kmot_half_MN_m         n= 184 min    2.585 p5    2.703 med    6.138 p95    8.572 max    9.134
+  Kpist_proxy_MN_m       n= 184 min    2.841 p5    2.979 med    8.473 p95   14.288 max   15.917
+  net_stroke_after_mm    n= 276 min   -0.467 p5   -0.251 med   -0.212 p95   -0.155 max   -0.101
+  ib_extra_mm            n= 184 min    0.700 p5    0.800 med    0.900 p95    1.685 max    2.100
+  d6_witness_mm          n= 184 min    1.682 p5    1.777 med    1.895 p95    2.349 max    2.549
+  p_h_start_bar          n= 276 min   71.530 p5   72.722 med   85.170 p95   97.930 max  101.750
+  p_r_start_bar          n= 184 min    1.090 p5    5.000 med    7.900 p95   25.770 max   35.110
+  dF_first_kN            n= 184 min    0.375 p5    3.969 med    7.196 p95   15.009 max   18.558
+  ib_target_reached: True 184 False 0 none 92
+  ret_open True 276 False 0
+  last_sign +1 174 -1 102 0 0
+  warn_round=True: Kpist med 10.587 p5 5.203 p95 15.073 n 32
+  warn_round=False: Kpist med 8.468 p5 2.945 p95 12.006 n 152
+== VBMh15 windows 276
+  x_open_mm              n= 234 min    0.209 p5    0.286 med    0.503 p95    0.614 max    0.670
+  open_minus_mid_s       n= 234 min   -0.218 p5   -0.180 med   -0.097 p95    0.014 max    0.036
+  ds_mid_mm              n= 276 min    0.142 p5    0.201 med    0.398 p95    0.871 max    1.172
+  ds_half_mm             n= 276 min    1.146 p5    1.146 med    1.153 p95    1.460 max    1.460
+  dF_half_kN             n= 184 min    3.570 p5    4.223 med    8.296 p95   10.505 max   11.314
+  Kmot_half_MN_m         n= 184 min    3.113 p5    3.683 med    6.587 p95    9.123 max    9.778
+  Kpist_proxy_MN_m       n= 184 min    3.489 p5    4.219 med    8.597 p95   14.504 max   19.048
+  net_stroke_after_mm    n= 276 min   -0.303 p5   -0.246 med   -0.201 p95   -0.157 max   -0.108
+  ib_extra_mm            n= 184 min    0.800 p5    0.800 med    0.900 p95    1.685 max    2.200
+  d6_witness_mm          n= 184 min    1.502 p5    1.577 med    1.714 p95    2.293 max    2.531
+  p_h_start_bar          n= 276 min   71.470 p5   72.713 med   85.145 p95   97.650 max  101.750
+  p_r_start_bar          n= 184 min    2.570 p5    4.728 med    7.940 p95   19.035 max   35.140
+  dF_first_kN            n= 184 min   -0.011 p5    3.514 med    5.334 p95   12.337 max   15.614
+  ib_target_reached: True 184 False 0 none 92
+  ret_open True 276 False 0
+  last_sign +1 192 -1 84 0 0
+  warn_round=True: Kpist med 9.609 p5 4.249 p95 16.035 n 144
+  warn_round=False: Kpist med 8.267 p5 3.853 p95 12.362 n 40
+== VBMslow windows 276
+  x_open_mm              n= 236 min    0.100 p5    0.188 med    0.476 p95    0.598 max    0.661
+  open_minus_mid_s       n= 236 min   -0.288 p5   -0.231 med   -0.106 p95    0.010 max    0.034
+  ds_mid_mm              n= 276 min    0.152 p5    0.232 med    0.453 p95    1.048 max    1.179
+  ds_half_mm             n= 276 min    1.142 p5    1.147 med    1.151 p95    1.460 max    1.460
+  dF_half_kN             n= 184 min    3.899 p5    4.164 med    8.121 p95   10.018 max   10.813
+  Kmot_half_MN_m         n= 184 min    3.400 p5    3.632 med    6.605 p95    8.617 max    9.432
+  Kpist_proxy_MN_m       n= 184 min    3.852 p5    4.158 med    8.840 p95   14.157 max   17.375
+  net_stroke_after_mm    n= 276 min   -0.380 p5   -0.244 med   -0.196 p95   -0.118 max    1.303
+  ib_extra_mm            n= 180 min    1.100 p5    1.100 med    1.400 p95    2.005 max    2.800
+  d6_witness_mm          n= 180 min    1.549 p5    1.594 med    1.750 p95    2.281 max    2.545
+  p_h_start_bar          n= 276 min   71.350 p5   72.705 med   85.145 p95   97.655 max  101.750
+  p_r_start_bar          n= 184 min    1.190 p5    5.000 med    7.960 p95   19.360 max   34.970
+  dF_first_kN            n= 184 min    1.373 p5    3.717 med    5.799 p95   12.887 max   16.438
+  ib_target_reached: True 180 False 0 none 96
+  ret_open True 275 False 1
+  last_sign +1 183 -1 93 0 0
+  warn_round=True: Kpist med 9.301 p5 4.023 p95 14.836 n 144
+  warn_round=False: Kpist med 8.604 p5 5.791 p95 12.348 n 40
+== pairs h15 - h05 (same sens key/round/leg)
+  d x_open_mm              n=231 med    0.352 p5    0.251 p95    0.442
+  d ds_half_mm             n=276 med    0.000 p5   -0.001 p95    0.042
+  d dF_half_kN             n=184 med    1.104 p5   -1.443 p95    2.650
+  d Kpist_proxy_MN_m       n=184 med    1.628 p5   -3.129 p95    3.929
+  d net_stroke_after_mm    n=276 med   -0.003 p5   -0.075 p95    0.053
+  d p_h_start_bar          n=276 med    0.000 p5   -1.862 p95    1.050
+  d ib_extra_mm            n=184 med    0.100 p5   -0.100 p95    0.400
+== warn ratios by setting and round index
+  VBMb069 round 1: n 4 min 2.505 med 2.505 max 2.505 low<0.8 0 high>2.3 4
+  VBMb069 round 2: n 4 min 2.539 med 2.608 max 2.706 low<0.8 0 high>2.3 4
+  VBMd15 round 1: n 4 min 2.676 med 2.676 max 2.676 low<0.8 0 high>2.3 4
+  VBMd15 round 2: n 4 min 2.643 med 2.679 max 2.719 low<0.8 0 high>2.3 4
+  VBMc04 round 1: n 4 min 2.684 med 2.684 max 2.684 low<0.8 0 high>2.3 4
+  VBMc04 round 2: n 4 min 2.722 med 2.728 max 2.733 low<0.8 0 high>2.3 4
+  VBMh15 round 1: n 22 min 2.555 med 2.634 max 3.417 low<0.8 0 high>2.3 22
+  VBMh15 round 2: n 19 min 0.695 med 2.605 max 3.499 low<0.8 1 high>2.3 18
+  VBMslow round 1: n 22 min 2.472 med 2.553 max 3.363 low<0.8 0 high>2.3 22
+  VBMslow round 2: n 20 min 0.588 med 2.503 max 3.508 low<0.8 2 high>2.3 18

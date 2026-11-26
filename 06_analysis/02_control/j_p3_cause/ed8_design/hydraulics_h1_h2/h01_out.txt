@@ -1,0 +1,858 @@
+command_m_s float64 (823, 4)
+head_pressure_Pa float64 (823, 4)
+jp3_carry_bound_Pa float64 (823, 4)
+jp3_class int8 (823, 4)
+jp3_class_names <U9 (6,)
+jp3_ext_bound_Pa float64 (823, 4)
+jp3_gate_fill_m float64 (823, 4)
+jp3_gate_open bool (823, 4)
+jp3_head_read_Pa float64 (823, 4)
+jp3_model_bound_Pa float64 (823, 4)
+jp3_model_bound_age_s float64 (823, 4)
+jp3_model_bound_head_Pa float64 (823, 4)
+jp3_model_bound_inherited bool (823, 4)
+jp3_model_bound_source int8 (823, 4)
+jp3_p_star_ret_Pa float64 (823, 4)
+jp3_p_tr_Pa float64 (823, 4)
+jp3_plant_state int8 (823, 4)
+jp3_plant_state_names <U10 (4,)
+jp3_r510_candidates int32 (823, 4)
+jp3_r58_witness bool (823, 4)
+jp3_r59_end_guard_substeps int32 (823, 4)
+jp3_r59_nan_stroke_substeps int32 (823, 4)
+jp3_r59_substeps int32 (823, 4)
+jp3_ret_after_gate_s float64 (823, 4)
+jp3_source_names <U15 (5,)
+jp3_t_s float64 (823,)
+jp3_u_m_s float64 (823, 4)
+jp3_used_bound_Pa float64 (823, 4)
+lock_events float64 (68, 3)
+locked bool (823, 4)
+lsb_a1_floor_m_s float64 (823, 4)
+lsb_a1_on bool (823, 4)
+lsb_a2_commanded_m float64 (823, 4)
+lsb_a2_lower_bound_m float64 (823, 4)
+lsb_a2_on bool (823, 4)
+lsb_a2_planned_m_s float64 (823, 4)
+lsb_b1_blocked bool (823, 4)
+lsb_event_leg int8 (823,)
+lsb_g2_split bool (823,)
+lsb_ib_floor_m_s float64 (823, 4)
+lsb_ib_on bool (823, 4)
+lsb_ib_stretch_periods int32 (823, 4)
+lsb_ib_twist_load_N float64 (823,)
+lsb_input_m_s float64 (823, 4)
+lsb_output_m_s float64 (823, 4)
+lsb_pre_twist_leg int8 (823,)
+lsb_protected bool (823, 4)
+lsb_read_found bool (823,)
+meta_json <U331474 ()
+motor_stroke_m float64 (823, 4)
+phase <U5 (823,)
+rod_pressure_Pa float64 (823, 4)
+seal_band_N float64 (823, 4)
+t_s float64 (823,)
+true_force_N float64 (823, 4)
+true_force_min_N float64 (823, 4)
+job: dict 5
+  case: str 3
+  eps: float 
+  offset_s: float 
+  twin: dict 3
+    level: str 3
+    leg: str 2
+    fs_kN: float 
+  setting: str 7
+wall_s: float 
+commands_sha256: str 64
+final_phase: str 5
+values: dict 20
+  times: dict 4
+    t_touch_end_s: float 
+    t_first_done_s: float 
+    t_first_ready_s: float 
+    t_check_start_s: float 
+  forces: dict 4
+    t_lift_s: float 
+    after_liftoff: dict 3
+      min_kN: float 
+      leg: str 2
+      t_s: float 
+    first_8s: dict 3
+      min_kN: float 
+      leg: str 2
+      t_s: float 
+    after_8s: dict 3
+      min_kN: float 
+      leg: str 2
+      t_s: float 
+  attitude: dict 5
+    end_abs_deg: dict 2
+      roll: float 
+      pitch: float 
+    max_abs_last_5s_deg: float 
+    max_abs_after_liftoff_deg: float 
+    rocking_amplitude_deg: float 
+    filter_residual_last_5s_deg: float 
+  probe_attitude_change_deg: float 
+  pressure: dict 3
+    max_moving_bar: float 
+    saturation_leg_chunks: int 
+    saturation_rule: str 338
+  twist: dict 2
+    peak_abs_after_liftoff_kN: float 
+    abs_at_first_done_kN: float 
+  events: dict 9
+    fault_events: list 0
+    warn_events: list 1
+    info_rule_events: list 0
+    soil_mode_started: bool 
+    t_loc_first_s: float 
+    t_loc_last_s: float 
+    reapproach_starts_after_liftoff: int 
+    p5_relevels_after_liftoff: int 
+    probe_aborts: int 
+  guard_active_s: float 
+  oil_force_max_kN: dict 4
+    FL: float 
+    FR: float 
+    RL: float 
+    RR: float 
+  supply_L_min: float 
+  V2_a: dict 8
+    max_sum_Q_over_supply_minus_1: float 
+    chunks: int 
+    demand_met_chunks: int 
+    max_abs_v_minus_u_on_demand_met_m_s: float 
+    fast_path_chunks: int 
+    solved_chunks: int 
+    audit_chunks: int 
+    audit_mismatches: int 
+  E1: dict 6
+    check: dict 3
+      duration_s: float 
+      short_s: float 
+      max_deficit_L_min: float 
+    done: dict 3
+      duration_s: float 
+      short_s: float 
+      max_deficit_L_min: float 
+    level: dict 3
+      duration_s: float 
+      short_s: float 
+      max_deficit_L_min: float 
+    probe: dict 3
+      duration_s: float 
+      short_s: float 
+      max_deficit_L_min: float 
+    ready: dict 3
+      duration_s: float 
+      short_s: float 
+      max_deficit_L_min: float 
+    touch: dict 3
+      duration_s: float 
+      short_s: float 
+      max_deficit_L_min: float 
+  E2: dict 4
+    FL: dict 2
+      min_r_by_phase: dict 2
+      longest_below_0p93_s: float 
+    FR: dict 2
+      min_r_by_phase: dict 2
+      longest_below_0p93_s: float 
+    RL: dict 2
+      min_r_by_phase: dict 2
+      longest_below_0p93_s: float 
+    RR: dict 2
+      min_r_by_phase: dict 2
+      longest_below_0p93_s: float 
+  E3: dict 2
+    max_abs_integral_mm: dict 4
+      FL: float 
+      FR: float 
+      RL: float 
+      RR: float 
+    max_between_legs_mm: float 
+  E4: dict 7
+    sample_period_s: float 
+    tie_width_bar: float 
+    group_time_s: dict 3
+      FL: float 
+      FL+FR: float 
+      FL+FR+RL+RR: float 
+    disjoint_swaps: int 
+    max_disjoint_swaps_in_1s: int 
+    saturated_s: float 
+    gallery_bar_while_saturated: list 2
+  E5: dict 4
+    integral_limit_rad_s: float 
+    max_abs_integral_rad_s: float 
+    abs_integral_at_saturation_end_rad_s: float 
+    back_in_band_after_saturation_s: float 
+  T4_inputs: dict 4
+    persist_s: float 
+    legs: dict 4
+      FL: dict 4
+      FR: dict 4
+      RL: dict 4
+      RR: dict 4
+    sets: dict 2
+      FL+FR: dict 3
+      FL+FR+RL+RR: dict 3
+    valve_constants: dict 9
+      X_comp: float 
+      dp_comp_Pa: float 
+      dp_unload_Pa: float 
+      width_Pa: float 
+      law: str 8
+      A_h_m2: list 4
+      A_r_m2: list 4
+      v_max_m_s: float 
+      Q_sup_m3_s: float 
+  sa4: dict 4
+    t_stop_s: NoneType 
+    lift_after_stop_ms: NoneType 
+    F_min_after_stop_N: NoneType 
+    rule: str 124
+  case_floor_deg: list 2
+  case_floor_source: str 91
+t_event_s: float 
+event_output: dict 30
+  run_after_s: float 
+  lifts: dict 0
+  pair: list 2
+  pair_union_s: int 
+  pair_last_touch_s: float 
+  W_end_s: float 
+  adj_lift_sum_W_s: float 
+  adj_max_gap_W_mm: float 
+  adj_lift_outside_W_s: float 
+  adj_min_F_in_W_kN: dict 2
+    FR: float 
+    RL: float 
+  min_F_after_W_kN: dict 4
+    FL: float 
+    FR: float 
+    RL: float 
+    RR: float 
+  min_F_after_event_kN: dict 4
+    FL: float 
+    FR: float 
+    RL: float 
+    RR: float 
+  fault_periods: int 
+  fault_events: list 0
+  final_phase: str 5
+  t_ready_back_s: float 
+  att_end_deg: list 2
+  max_att_change_deg: float 
+  crawler_contact_after_event_ms: int 
+  reapproach_starts: list 1
+  n_late_starts: int 
+  sign_changes: int 
+  warnings: list 1
+  gates: dict 5
+    no_lift: bool 
+    Fmin_after_event: bool 
+    fault0: bool 
+    end_att: bool 
+    recurrence: bool 
+  pass: bool 
+  margins: dict 5
+    pair_union_to_1.8_s: float 
+    last_touch_to_3.0_s: float 
+    adj_sum_to_0.5_s: float 
+    Fmin_after_W_minus_Fmin_kN: float 
+    Fmin_after_event_minus_Fmin_kN: float 
+  pressure: dict 4
+    window_max_bar: dict 4
+      FL: float 
+      FR: float 
+      RL: float 
+      RR: float 
+    moving_outside_max_bar: float 
+    saturation_outside_ms: int 
+    saturation_in_window_ms: int 
+  after_window_force: dict 10
+    window_end_s: float 
+    samples_after: int 
+    min_1ms_kN: float 
+    min_1ms_leg: str 2
+    min_1ms_t_rel_s: float 
+    below_f_min_ms_sum: int 
+    below_f_min_ms_longest: int 
+    min_trailing_0p5s_kN: float 
+    lift_ms_after_window: int 
+    FLAG_E3_1ms: bool 
+  lower_bound_miss: dict 8
+    window_end_s: float 
+    samples_after: int 
+    miss_intervals: int 
+    miss_intervals_by_leg: dict 4
+      FL: int 
+      FR: int 
+      RL: int 
+      RR: int 
+    miss_ms_sum: int 
+    miss_ms_longest: int 
+    lower_at_true_min_kN: float 
+    min_lower_kN: float 
+  ref_10hz_episodes: dict 17
+    basis: str 139
+    judge: str 8
+    estimate: str 16
+    scope: str 64
+    f_min_N: float 
+    lift_contact_N: float 
+    detect_delay_s: float 
+    unit_status: str 29
+    partial_jc: bool 
+    samples_after: int 
+    episodes: int 
+    episodes_by_leg: dict 4
+      FL: int 
+      FR: int 
+      RL: int 
+      RR: int 
+    episodes_lift: int 
+    missed: int 
+    missed_by_leg: dict 4
+      FL: int 
+      FR: int 
+      RL: int 
+      RR: int 
+    late: int 
+    first_flag_delay_s_max: NoneType 
+event_names: dict 9
+  floor_estimate_touch: int 
+  crawler_liftoff_confirmed: int 
+  WARN_PROBE_STIFFNESS_OUT_OF_RANGE: int 
+  reanchor_skipped: int 
+  ready_heave_tail: int 
+  relevel_predicted: int 
+  leg_reapproach_start: int 
+  leg_reapproach_contact: int 
+  INFO_FLOOR_NONPLANAR: int 
+events: list 2
+command_stats: dict 4
+  n_rev: int 
+  n_rev_legs: list 4
+  n_starts: list 4
+  retract_periods: list 4
+harness_class: NoneType 
+hydraulic_options: dict 18
+  flow: NoneType 
+  valve_tau_s: NoneType 
+  rod_release_force: bool 
+  check_delay: NoneType 
+  lock_closure: dict 2
+    overlap_ratio: float 
+    closing_delay_s: float 
+  lock_window_follows_plant: bool 
+  extend_start_tracked: bool 
+  extend_start_hold: bool 
+  line_fill_gate: dict 3
+    kind: str 2
+    volume_scale: float 
+    c_v: float 
+  lock_anchor_continuous: bool 
+  rod_flow_cap_all: bool 
+  rod_reading_truth: bool 
+  extend_start_witness: bool 
+  lsb_components: list 4
+  extend_start_rev7: bool 
+  p1_patch: dict 4
+    line_scale: float 
+    dead_scale: float 
+    bulk_modulus_Pa: float 
+    k_ext_form: str 2
+  probe_d6_settings: dict 2
+    retract_position_target: bool 
+    witness: bool 
+  m2_law: str 15
+hydraulics_record: dict 31
+  m2_law: dict 8
+    law: str 15
+    rule: str 476
+    meter_out_ratio: float 
+    spool_reference_drop_Pa: float 
+    tank_pressure_Pa: float 
+    status: str 66
+    rule_r6: str 335
+    b_T_ret_equivalent: str 47
+  m2_shift_total_mm: list 4
+  m2_clipped_steps: list 4
+  ext_lock_count: list 4
+  ext_lock_excess_count: list 4
+  ext_lock_excess_max_bar: list 4
+  ext_lock_risk_count: list 4
+  ext_lock_knee_max_kN: list 4
+  ext_lock_log: list 24
+  ext_lock_log_columns: list 6
+  m2_clipped_steps_pre_lift: list 4
+  m2_clipped_steps_post_lift: list 4
+  m2_clip_split_t_lift_s: float 
+  lock_events: list 68
+  line_fill_gate: dict 19
+    unit_status: str 29
+    setting: dict 3
+      kind: str 2
+      volume_scale: float 
+      c_v: float 
+    n_fills: list 4
+    hold_s: list 4
+    lost_mm: list 4
+    discharge_mm: list 4
+    creep_mm: list 4
+    void_peak_mm: list 4
+    fills: list 39
+    ext_starts: list 83
+    mode: str 18
+    output_exceptions: list 1
+    output_exception: str 51
+    p1_patch: dict 4
+      line_scale: float 
+      dead_scale: float 
+      bulk_modulus_Pa: float 
+      k_ext_form: str 2
+    fill_rise_peak_bar: list 4
+    rod_check_clear_count: int 
+    rod_check_clear_log: list 0
+    rod_check_clear_log_columns: list 3
+    rod_check_clear_log_truncated: bool 
+  p1_output_exceptions: list 1
+  p1_fill_release_log: list 10
+  p1_fill_release_log_columns: list 4
+  lock_log: list 34
+  lock_log_columns: list 16
+  relock_count: int 
+  relock_step_over_1bar_count: int 
+  max_abs_dp_tr_step_bar: float 
+  p1_retract_seed_count: int 
+  p1_retract_seed_step_max_bar: float 
+  p1_retract_seed_log: list 10
+  p1_retract_seed_log_columns: list 12
+  rod_reading_truth_calls: int 
+  two_pressure_reads: int 
+  tension_truth: dict 9
+    rule: str 101
+    substeps: list 4
+    substeps_over_margin: list 4
+    active_substeps: list 4
+    max_excess_bar: list 4
+    min_p_tr_minus_p_star_bar: list 4
+    first_t_s: list 4
+    back_pressure_bar: float 
+    margin_bar: float 
+  extend_bound_check: dict 80
+    rule: str 755
+    reads: list 4
+    breach_reads: list 4
+    margin_used_reads: list 4
+    min_gap_bar: list 4
+    min_gap_t_s: list 4
+    first_breach_t_s: list 4
+    locked_reads: list 4
+    locked_unpaired_reads: list 4
+    locked_breach_reads: list 4
+    locked_breach_over_tol_reads: list 4
+    locked_min_gap_bar: list 4
+    locked_min_gap_t_s: list 4
+    locked_bound_source: list 4
+    locked_tolerance_bar: list 4
+    locked_vs_extend_bound_reads: list 4
+    retract_reads: list 4
+    retract_breach_reads: list 4
+    rule_revision: int 
+    jp3_r58_witness_carries: list 4
+    jp3_r59_substeps: list 4
+    jp3_r510_candidates: list 4
+    r59_end_guard_substeps: list 4
+    r59_nan_stroke_substeps: list 4
+    rule_rev5: str 389
+    spec_edition: str 8
+    carry_end_rule: str 22
+    retract_start_rule: str 12
+    identity_consistent: bool 
+    retract_tracker_dominated_reads: list 4
+    retract_tracker_over_tol_reads: list 4
+    retract_tracker_false_drop_reads: list 4
+    retract_tracker_ret_after_gate_s: dict 4
+      p50: NoneType 
+      p90: NoneType 
+      max: NoneType 
+      count: int 
+    retract_tracker_stretch_log: list 0
+    retract_tracker_stretch_log_columns: list 6
+    jp3a_reads: list 4
+    jp3a_breach_reads: list 4
+    jp3a_margin_used_reads: list 4
+    jp3a_min_gap_bar: list 4
+    jp3a_min_gap_t_s: list 4
+    jp3a_first_breach_t_s: list 4
+    jp3a_by_plant_state: dict 4
+      moving_ext: dict 2
+      moving_ret: dict 2
+      locked_ext: dict 2
+      locked_ret: dict 2
+    jp3b_reads: list 4
+    jp3b_unpaired_reads: list 4
+    jp3b_breach_reads: list 4
+    jp3b_breach_over_tol_reads: list 4
+    jp3b_min_gap_bar: list 4
+    jp3b_min_gap_t_s: list 4
+    jp3b_tolerance_bar: list 4
+    jp3c_reads: list 4
+    jp3c_breach_reads: list 4
+    jp3c_min_gap_bar: list 4
+    jp3c_min_gap_t_s: list 4
+    jp3c_fill_reads: list 4
+    jp3c_fill_breach_reads: list 4
+    jp3c_fill_max_excess_bar: list 4
+    sensor_grade: str 5
+    jp3_judged_row: bool 
+    lock_ext_reads: list 4
+    lock_ext_unpaired_reads: list 4
+    lock_ext_breach_reads: list 4
+    lock_ext_breach_over_tol_reads: list 4
+    lock_ext_min_gap_bar: list 4
+    lock_ext_min_gap_t_s: list 4
+    lock_ret_reads: list 4
+    lock_ret_breach_reads: list 4
+    lock_moving_reads: list 4
+    ret_reads: list 4
+    ret_breach_reads: list 4
+    ret_max_excess_bar: list 4
+    ret_trapped_reads: list 4
+    ret_trapped_breach_reads: list 4
+    ret_trapped_max_excess_bar: list 4
+    ret_fill_reads: list 4
+    ret_fill_breach_reads: list 4
+    ret_fill_max_excess_bar: list 4
+    class_reads: dict 6
+      lock: list 4
+      hold: list 4
+      carry_ext: list 4
+      carry_ret: list 4
+      ext: list 4
+      ret: list 4
+    trace_excerpt: list 1656
+    trace_excerpt_columns: list 15
+    trace_excerpt_truncated: bool 
+review_record: dict 6
+  tension_rule: str 21
+  tension_substeps: list 4
+  tension_substeps_uncalibrated: list 4
+  tension_threshold_N: list 4
+  tension_read_margin_N: list 4
+  d2_violation_start_ratio: list 4
+lock_window_alignment: dict 15
+  stretches_by_leg: dict 4
+    FL: int 
+    FR: int 
+    RL: int 
+    RR: int 
+  judged_by_leg: dict 4
+    FL: int 
+    FR: int 
+    RL: int 
+    RR: int 
+  unjudged_by_leg: dict 4
+    FL: int 
+    FR: int 
+    RL: int 
+    RR: int 
+  n_late_by_leg: dict 4
+    FL: int 
+    FR: int 
+    RL: int 
+    RR: int 
+  n_late_fallback_by_leg: dict 4
+    FL: int 
+    FR: int 
+    RL: int 
+    RR: int 
+  n_late_fallback: int 
+  fallback_legs: dict 0
+  margin_min_s_by_leg: dict 4
+    FL: float 
+    FR: float 
+    RL: float 
+    RR: float 
+  margin_min_s_fallback: NoneType 
+  unjudged_command_resumed_by_leg: dict 4
+    FL: int 
+    FR: int 
+    RL: int 
+    RR: int 
+  late: list 0
+  window_check: dict 2
+    compared: int 
+    max_abs_diff_s: float 
+  unlock_in_stretch: int 
+  time_tol_s: float 
+  monitor_stretch_rule: dict 2
+    rule: str 20
+    hold_speed_m_s: float 
+controller_tag: str 25
+head_only_declared: bool 
+resume_k1: dict 6
+  applicable: bool 
+  k1_order_gate_request: str 6
+  k1_order_gate_effective: bool 
+  liftoff_approach_slow: dict 4
+    settings: dict 9
+      enable: bool 
+      sum_on_fraction_W: float 
+      light_leg_fraction_of_F_min: float 
+      slow_mean_fraction: float 
+      sum_off_fraction_W: float 
+      off_periods: int 
+      max_s: float 
+      rho_on: float 
+      require_soil_response: bool 
+    start_s: NoneType 
+    end_s: NoneType 
+    end_reason: NoneType 
+  slope_clearance_margin: dict 2
+    settings: dict 3
+      enable: bool 
+      flat_soil_margin_order_gate: bool 
+      flat_soil_margin_m: float 
+    order_gate: dict 2
+      enabled: bool 
+      decisions: list 0
+  event_counts: dict 3
+    flat_soil_margin_applied: int 
+    flat_soil_margin_skipped_order: int 
+    soil_mode_start: int 
+harness_commands_sha256: str 64
+lsb_components: list 4
+lsb_settings: dict 53
+  components: list 4
+  hold_speed_ratio: float 
+  a1_trigger_periods: int 
+  a1_trigger_travel_m: float 
+  a1_motion_ratio: float 
+  a1_witness_m: float 
+  a1_step_m_s: float 
+  a1_cap_m_s: float 
+  a1_cap_periods: int 
+  a2_extend: bool 
+  a2_lock_periods: int 
+  a2_fill_factor: float 
+  a2_fill_speed_ratio: float 
+  a2_hold_after_fill_s: NoneType 
+  a2_psi: float 
+  a2_bulk_modulus_Pa: float 
+  a2_line_volume_m3: float 
+  a2_hose_bulk_modulus_Pa: float 
+  a2_crack_Pa: float 
+  a2_tank_Pa: float 
+  a2_rod_dead_length_m: float 
+  a2_head_dead_length_m: float 
+  a2_friction_band_N: list 4
+  a2_reading_margin_Pa: float 
+  a2_void_estimate: bool 
+  a2_void_head_bulk_modulus_Pa: float 
+  a2_void_rod_bulk_modulus_Pa: float 
+  a2_retract_witness_m: float 
+  a2_rod_witness_min_Pa: float 
+  a2_rod_witness_ratio: float 
+  a2_extend_witness_m: float 
+  a2_on_fallback_legs: bool 
+  b1_exit_margin_N: float 
+  b1_exit_samples: int 
+  b2_required_samples: NoneType 
+  b3_end_periods: int 
+  b3_travel_cap_fraction: float 
+  b3_max_periods: NoneType 
+  b3_protect_margin_N: float 
+  b3_protect_predictive: bool 
+  b3_predictive_margin_N: float 
+  b3_twist_stiffness_N_m: float 
+  ib_blind_periods: int 
+  ib_still_m: float 
+  ib_reference_skip_reads: int 
+  ib_condition: str 10
+  ib_twist_limit_N: NoneType 
+  ib_latch_reversals: int 
+  ib_protect: bool 
+  ib_protect_travel_m: float 
+  ib_protect_stiffness_N_m: float 
+  ib_protect_margin_N: float 
+  ib_record_after_s: float 
+lsb_record: dict 10
+  components: list 4
+  settings: dict 53
+    components: list 4
+    hold_speed_ratio: float 
+    a1_trigger_periods: int 
+    a1_trigger_travel_m: float 
+    a1_motion_ratio: float 
+    a1_witness_m: float 
+    a1_step_m_s: float 
+    a1_cap_m_s: float 
+    a1_cap_periods: int 
+    a2_extend: bool 
+    a2_lock_periods: int 
+    a2_fill_factor: float 
+    a2_fill_speed_ratio: float 
+    a2_hold_after_fill_s: NoneType 
+    a2_psi: float 
+    a2_bulk_modulus_Pa: float 
+    a2_line_volume_m3: float 
+    a2_hose_bulk_modulus_Pa: float 
+    a2_crack_Pa: float 
+    a2_tank_Pa: float 
+    a2_rod_dead_length_m: float 
+    a2_head_dead_length_m: float 
+    a2_friction_band_N: list 4
+    a2_reading_margin_Pa: float 
+    a2_void_estimate: bool 
+    a2_void_head_bulk_modulus_Pa: float 
+    a2_void_rod_bulk_modulus_Pa: float 
+    a2_retract_witness_m: float 
+    a2_rod_witness_min_Pa: float 
+    a2_rod_witness_ratio: float 
+    a2_extend_witness_m: float 
+    a2_on_fallback_legs: bool 
+    b1_exit_margin_N: float 
+    b1_exit_samples: int 
+    b2_required_samples: NoneType 
+    b3_end_periods: int 
+    b3_travel_cap_fraction: float 
+    b3_max_periods: NoneType 
+    b3_protect_margin_N: float 
+    b3_protect_predictive: bool 
+    b3_predictive_margin_N: float 
+    b3_twist_stiffness_N_m: float 
+    ib_blind_periods: int 
+    ib_still_m: float 
+    ib_reference_skip_reads: int 
+    ib_condition: str 10
+    ib_twist_limit_N: NoneType 
+    ib_latch_reversals: int 
+    ib_protect: bool 
+    ib_protect_travel_m: float 
+    ib_protect_stiffness_N_m: float 
+    ib_protect_margin_N: float 
+    ib_record_after_s: float 
+  legs: dict 4
+    FL: dict 14
+      a1_triggers: int 
+      a1_cap_reached: int 
+      a1_trigger_periods: list 0
+      a1_end: dict 0
+      a1_raised_periods: int 
+      a2_floors: int 
+      a2_start_bounds_m: list 7
+      a2_end: dict 1
+      a2_end_periods: list 7
+      a2_raised_periods: int 
+      a2_hold_periods: int 
+      b1_blocked_periods: int 
+      b2_early_starts_s: list 0
+      b3_periods: int 
+    FR: dict 14
+      a1_triggers: int 
+      a1_cap_reached: int 
+      a1_trigger_periods: list 1
+      a1_end: dict 1
+      a1_raised_periods: int 
+      a2_floors: int 
+      a2_start_bounds_m: list 5
+      a2_end: dict 1
+      a2_end_periods: list 5
+      a2_raised_periods: int 
+      a2_hold_periods: int 
+      b1_blocked_periods: int 
+      b2_early_starts_s: list 0
+      b3_periods: int 
+    RL: dict 14
+      a1_triggers: int 
+      a1_cap_reached: int 
+      a1_trigger_periods: list 1
+      a1_end: dict 1
+      a1_raised_periods: int 
+      a2_floors: int 
+      a2_start_bounds_m: list 5
+      a2_end: dict 1
+      a2_end_periods: list 5
+      a2_raised_periods: int 
+      a2_hold_periods: int 
+      b1_blocked_periods: int 
+      b2_early_starts_s: list 0
+      b3_periods: int 
+    RR: dict 14
+      a1_triggers: int 
+      a1_cap_reached: int 
+      a1_trigger_periods: list 0
+      a1_end: dict 0
+      a1_raised_periods: int 
+      a2_floors: int 
+      a2_start_bounds_m: list 5
+      a2_end: dict 2
+      a2_end_periods: list 5
+      a2_raised_periods: int 
+      a2_hold_periods: int 
+      b1_blocked_periods: int 
+      b2_early_starts_s: list 0
+      b3_periods: int 
+  b_episodes: list 0
+  b_active_leg: NoneType 
+  b3_episodes: list 1
+    [0].leg: str 2
+    [0].start_s: float 
+    [0].end_s: float 
+    [0].end: str 10
+    [0].periods: int 
+    [0].commanded_travel_m: float 
+  b3_active_leg: NoneType 
+  g2_split_periods: int 
+  trace_reads: int 
+  blind: dict 6
+    legs: dict 4
+      FL: dict 8
+      FR: dict 8
+      RL: dict 8
+      RR: dict 8
+    shots: list 0
+    shots_twist_grew: int 
+    four_leg_twist_triggers: int 
+    level_done: list 2
+      [0].t_s: float 
+      [0].path: str 6
+      [0].twist_load_N: float 
+    twist_over_limit: dict 4
+      limit_N: float 
+      entries: int 
+      periods: int 
+      episodes: list 1
+probe_d6_settings: dict 7
+  witness: bool 
+  witness_m: float 
+  not_opened_warn_rounds: int 
+  retract_position_target: bool 
+  retract_slow_speed_m_s: float 
+  retract_extra_margin_m: float 
+  head_reading_margin_Pa: float 
+probe_d6_record: dict 4
+  rounds: list 8
+    [0].leg: str 2
+    [0].t_s: float 
+    [0].retract_witness_m: float 
+    [0].is_opened: bool 
+    [0].is_reversed: bool 
+    [0].k1_mid_opened: NoneType 
+    [0].rise_Pa: float 
+    [0].required_Pa: float 
+    [0].retract_extra_m: float 
+    [0].retract_extra_periods: int 
+    [0].retract_target_reached: bool 
+  not_opened_streak: list 4
+  not_judgeable_rounds: list 4
+  reversed_rounds: dict 2
+    not_substituted: list 4
+    substituted: list 4
+t4h_file: str 31

@@ -1,0 +1,1372 @@
+{
+ "inputs": {
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl",
+  "worktree_head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "worktree_clean": true,
+  "d00_scratch": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\0d95027e-6012-4053-b99a-1e505935768c\\scratchpad\\dynamics-ed8q\\rerun",
+  "runs_jsonl_sha256": "c3caf3680a69ebb4dc0bf71a11d1e04a420572fc51f78a93f6029baf87d83d58",
+  "env": "conda dynamics-dev (python -I -B), NUMBA_CACHE_DIR in scratch"
+ },
+ "repro": [
+  {
+   "setting": "D8-M-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-M-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBM",
+   "events": [
+    [
+     47.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.643"
+    ],
+    [
+     78.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.745"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-M-A",
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "D8-M-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-M-A",
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "D8-M-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-M-a2",
+   "job": {
+    "case": "S7",
+    "eps": 0.003,
+    "setting": "D8-M-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-M-a2",
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "D8-M-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-L-A",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-L-A"
+   },
+   "same_commands": null,
+   "stored_setting": null,
+   "events": []
+  },
+  {
+   "setting": "D8-M-A",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-M-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-L-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-L-a2"
+   },
+   "same_commands": null,
+   "stored_setting": null,
+   "events": [
+    [
+     47.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.643"
+    ],
+    [
+     78.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.715"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-M-a2",
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "D8-M-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-Mslow-A",
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "D8-Mslow-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBMslow",
+   "events": []
+  },
+  {
+   "setting": "D8-Mslow-A",
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "D8-Mslow-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBMslow",
+   "events": []
+  },
+  {
+   "setting": "D8-Mslow-a2",
+   "job": {
+    "case": "S7",
+    "eps": 0.002,
+    "setting": "D8-Mslow-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBMslow",
+   "events": []
+  },
+  {
+   "setting": "D8-Mslow-a2",
+   "job": {
+    "case": "S7",
+    "eps": 0.0,
+    "setting": "D8-Mslow-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBMslow",
+   "events": [
+    [
+     102.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.589"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-Mslow-A",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "D8-Mslow-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBMslow",
+   "events": [
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:FL"
+    ],
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:FR"
+    ],
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:RL"
+    ],
+    [
+     70.1,
+     "WARN_PROBE_RETRACT_NOT_OPENED:RR"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-LSM4-A",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "D8-LSM4-A"
+   },
+   "same_commands": false,
+   "stored_setting": "LSM4",
+   "events": []
+  },
+  {
+   "setting": "D8-LSM4-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.05,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 0.0
+    },
+    "setting": "D8-LSM4-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "LSM4",
+   "events": []
+  },
+  {
+   "setting": "D8-Mslow-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FL",
+     "fs_kN": 0.0
+    },
+    "setting": "D8-Mslow-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBMslow",
+   "events": []
+  },
+  {
+   "setting": "D8-M-A",
+   "job": {
+    "case": "R7",
+    "eps": 0.0,
+    "setting": "D8-M-A"
+   },
+   "same_commands": false,
+   "stored_setting": "VBM",
+   "events": []
+  },
+  {
+   "setting": "D8-M-a2",
+   "job": {
+    "case": "R7",
+    "eps": 0.0,
+    "setting": "D8-M-a2"
+   },
+   "same_commands": true,
+   "stored_setting": "VBM",
+   "events": [
+    [
+     59.9,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.856"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-Mh15-A",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-Mh15-A"
+   },
+   "same_commands": null,
+   "stored_setting": "VBMh15",
+   "events": [
+    [
+     42.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.734"
+    ],
+    [
+     70.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.866"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-Mslow-A",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-Mslow-A"
+   },
+   "same_commands": null,
+   "stored_setting": "VBMslow",
+   "events": [
+    [
+     70.0,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.468"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-Mh15-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-Mh15-a2"
+   },
+   "same_commands": null,
+   "stored_setting": "VBMh15",
+   "events": [
+    [
+     47.4,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.417"
+    ],
+    [
+     81.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.461"
+    ]
+   ]
+  },
+  {
+   "setting": "D8-Mslow-a2",
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "D8-Mslow-a2"
+   },
+   "same_commands": null,
+   "stored_setting": "VBMslow",
+   "events": [
+    [
+     49.1,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.363"
+    ],
+    [
+     82.6,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.472"
+    ]
+   ]
+  }
+ ],
+ "t_first_ready_s": {
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-A": 42.4,
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-a2": 50.0,
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-A": 42.4,
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-a2": 47.9,
+  "R12_top-FR-Fs8-o0.0_D8-L-A": 42.5,
+  "R12_top-FR-Fs8-o0.0_D8-L-a2": 47.0,
+  "R12_top-FR-Fs8-o0.0_D8-M-A": 42.5,
+  "R12_top-FR-Fs8-o0.0_D8-M-a2": 47.0,
+  "R12_top-FR-Fs8-o0.0_D8-Mh15-A": 42.5,
+  "R12_top-FR-Fs8-o0.0_D8-Mh15-a2": 47.4,
+  "R12_top-FR-Fs8-o0.0_D8-Mslow-A": 42.5,
+  "R12_top-FR-Fs8-o0.0_D8-Mslow-a2": 49.1,
+  "R7_e0.0_D8-M-A": 56.4,
+  "R7_e0.0_D8-M-a2": 59.9,
+  "S7_e0.002_D8-M-A": 78.5,
+  "S7_e0.002_D8-M-a2": 100.7,
+  "S7_e0.002_D8-Mslow-A": 62.3,
+  "S7_e0.002_D8-Mslow-a2": 86.3,
+  "S7_e0.003_D8-M-A": 78.7,
+  "S7_e0.003_D8-M-a2": 83.6,
+  "S7_e0.0_D8-M-a2": 84.4,
+  "S7_e0.0_D8-Mslow-A": 62.4,
+  "S7_e0.0_D8-Mslow-a2": 102.9
+ },
+ "k1_round_medians": [
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-M-a2",
+   "round": 1,
+   "median_ratio_K1": 2.643,
+   "median_ratio_Kpad": 2.156,
+   "ratios_K1": [
+    1.64,
+    2.594,
+    2.693,
+    3.351
+   ],
+   "ratios_Kpad": [
+    1.767,
+    1.716,
+    2.86,
+    2.546
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-M-a2",
+   "round": 2,
+   "median_ratio_K1": 2.745,
+   "median_ratio_Kpad": 2.088,
+   "ratios_K1": [
+    1.611,
+    2.608,
+    2.882,
+    3.397
+   ],
+   "ratios_Kpad": [
+    1.611,
+    1.721,
+    2.898,
+    2.454
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-M-A",
+   "round": 1,
+   "median_ratio_K1": 2.083,
+   "median_ratio_Kpad": 2.201,
+   "ratios_K1": [
+    1.64,
+    1.603,
+    2.525,
+    2.757
+   ],
+   "ratios_Kpad": [
+    1.767,
+    1.681,
+    2.635,
+    2.948
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-M-A",
+   "round": 2,
+   "median_ratio_K1": 2.187,
+   "median_ratio_Kpad": 2.246,
+   "ratios_K1": [
+    1.691,
+    1.585,
+    2.682,
+    2.985
+   ],
+   "ratios_Kpad": [
+    1.691,
+    1.688,
+    2.801,
+    3.14
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-L-a2",
+   "round": 1,
+   "median_ratio_K1": 2.643,
+   "median_ratio_Kpad": 2.156,
+   "ratios_K1": [
+    1.64,
+    2.594,
+    2.693,
+    3.351
+   ],
+   "ratios_Kpad": [
+    1.767,
+    1.716,
+    2.86,
+    2.546
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-L-a2",
+   "round": 2,
+   "median_ratio_K1": 2.716,
+   "median_ratio_Kpad": 2.087,
+   "ratios_K1": [
+    1.617,
+    2.581,
+    2.85,
+    3.423
+   ],
+   "ratios_Kpad": [
+    1.617,
+    1.728,
+    2.874,
+    2.447
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-L-A",
+   "round": 1,
+   "median_ratio_K1": 2.083,
+   "median_ratio_Kpad": 2.201,
+   "ratios_K1": [
+    1.64,
+    1.603,
+    2.525,
+    2.757
+   ],
+   "ratios_Kpad": [
+    1.767,
+    1.681,
+    2.635,
+    2.948
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-L-A",
+   "round": 2,
+   "median_ratio_K1": 2.036,
+   "median_ratio_Kpad": 2.117,
+   "ratios_K1": [
+    1.691,
+    1.585,
+    2.381,
+    2.894
+   ],
+   "ratios_Kpad": [
+    1.691,
+    1.688,
+    2.543,
+    3.048
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs0-o0.05_D8-LSM4-a2",
+   "round": 1,
+   "median_ratio_K1": 1.458,
+   "median_ratio_Kpad": 1.458,
+   "ratios_K1": [
+    1.533,
+    1.267,
+    1.686,
+    1.383
+   ],
+   "ratios_Kpad": [
+    1.533,
+    1.267,
+    1.686,
+    1.383
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs0-o0.05_D8-LSM4-A",
+   "round": 1,
+   "median_ratio_K1": 1.583,
+   "median_ratio_Kpad": 1.583,
+   "ratios_K1": [
+    1.533,
+    1.121,
+    1.633,
+    1.783
+   ],
+   "ratios_Kpad": [
+    1.533,
+    1.121,
+    1.633,
+    1.783
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs0-o0.05_D8-LSM4-A",
+   "round": 2,
+   "median_ratio_K1": 1.695,
+   "median_ratio_Kpad": 1.695,
+   "ratios_K1": [
+    1.686,
+    1.703,
+    0.99,
+    2.585
+   ],
+   "ratios_Kpad": [
+    1.686,
+    1.703,
+    0.99,
+    2.585
+   ]
+  },
+  {
+   "run": "R12_top-FL-Fs0-o0.0_D8-Mslow-a2",
+   "round": 1,
+   "median_ratio_K1": 1.304,
+   "median_ratio_Kpad": 1.304,
+   "ratios_K1": [
+    1.537,
+    1.072,
+    1.343,
+    1.265
+   ],
+   "ratios_Kpad": [
+    1.537,
+    1.072,
+    1.343,
+    1.265
+   ]
+  },
+  {
+   "run": "R12_top-FL-Fs0-o0.0_D8-Mslow-A",
+   "round": 1,
+   "median_ratio_K1": 1.417,
+   "median_ratio_Kpad": 1.417,
+   "ratios_K1": [
+    1.537,
+    1.056,
+    1.296,
+    1.901
+   ],
+   "ratios_Kpad": [
+    1.537,
+    1.056,
+    1.296,
+    1.901
+   ]
+  },
+  {
+   "run": "R12_top-FL-Fs0-o0.0_D8-Mslow-A",
+   "round": 2,
+   "median_ratio_K1": 1.389,
+   "median_ratio_Kpad": 1.389,
+   "ratios_K1": [
+    1.293,
+    0.871,
+    1.57,
+    1.484
+   ],
+   "ratios_Kpad": [
+    1.293,
+    0.871,
+    1.57,
+    1.484
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mslow-a2",
+   "round": 1,
+   "median_ratio_K1": 3.363,
+   "median_ratio_Kpad": 2.096,
+   "ratios_K1": [
+    1.628,
+    3.303,
+    3.423,
+    4.071
+   ],
+   "ratios_Kpad": [
+    1.764,
+    1.646,
+    3.226,
+    2.428
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mslow-a2",
+   "round": 2,
+   "median_ratio_K1": 3.472,
+   "median_ratio_Kpad": 2.046,
+   "ratios_K1": [
+    1.721,
+    3.429,
+    3.515,
+    4.195
+   ],
+   "ratios_Kpad": [
+    1.721,
+    1.634,
+    3.563,
+    2.372
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mslow-A",
+   "round": 1,
+   "median_ratio_K1": 2.239,
+   "median_ratio_Kpad": 1.925,
+   "ratios_K1": [
+    1.628,
+    2.027,
+    2.947,
+    2.451
+   ],
+   "ratios_Kpad": [
+    1.764,
+    2.085,
+    1.583,
+    2.451
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mslow-A",
+   "round": 2,
+   "median_ratio_K1": 2.467,
+   "median_ratio_Kpad": 1.885,
+   "ratios_K1": [
+    1.658,
+    2.014,
+    3.209,
+    2.921
+   ],
+   "ratios_Kpad": [
+    1.658,
+    2.083,
+    1.687,
+    2.921
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mh15-a2",
+   "round": 1,
+   "median_ratio_K1": 3.417,
+   "median_ratio_Kpad": 2.054,
+   "ratios_K1": [
+    1.629,
+    3.55,
+    3.283,
+    4.25
+   ],
+   "ratios_Kpad": [
+    1.764,
+    1.54,
+    3.391,
+    2.345
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mh15-a2",
+   "round": 2,
+   "median_ratio_K1": 3.46,
+   "median_ratio_Kpad": 2.023,
+   "ratios_K1": [
+    1.659,
+    3.48,
+    3.441,
+    4.525
+   ],
+   "ratios_Kpad": [
+    1.659,
+    1.567,
+    3.559,
+    2.387
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mh15-A",
+   "round": 1,
+   "median_ratio_K1": 2.734,
+   "median_ratio_Kpad": 2.454,
+   "ratios_K1": [
+    1.629,
+    2.272,
+    3.258,
+    3.196
+   ],
+   "ratios_Kpad": [
+    1.764,
+    2.28,
+    2.629,
+    3.245
+   ]
+  },
+  {
+   "run": "R12_top-FR-Fs8-o0.0_D8-Mh15-A",
+   "round": 2,
+   "median_ratio_K1": 2.867,
+   "median_ratio_Kpad": 2.519,
+   "ratios_K1": [
+    1.689,
+    2.255,
+    3.478,
+    3.713
+   ],
+   "ratios_Kpad": [
+    1.689,
+    2.283,
+    2.756,
+    3.704
+   ]
+  }
+ ],
+ "s7_relevel": [
+  {
+   "run": "S7_e0.002_D8-M-a2",
+   "probe_t0_s": 50.4,
+   "probe_len_s": 11.2,
+   "relevel_len_s": 24.8,
+   "probe_net_FL_mm": -0.302,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": -0.288,
+   "probe_dsp_FR_mm": 5.248,
+   "probe_net_RL_mm": 0.107,
+   "probe_dsp_RL_mm": 0.0,
+   "probe_net_RR_mm": -0.03,
+   "probe_dsp_RR_mm": 4.393,
+   "roll0_mrad": 1.4633,
+   "pitch0_mrad": 0.3459,
+   "roll_int0": -0.01314,
+   "pitch_int0": 2e-05,
+   "subhold_leg_periods": 606,
+   "moving_leg_periods": 383,
+   "sign_changes": 16,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -5.313,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": -0.335,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.868,
+   "relevel_dsp_RR_mm": 0.784,
+   "relevel_net_RR_mm": -0.448,
+   "ib_on_leg_periods": 20,
+   "D_start_kN": -0.001,
+   "D_end_kN": 0.387,
+   "t_first_on_target_after_start_s": 5.6
+  },
+  {
+   "run": "S7_e0.003_D8-M-a2",
+   "probe_t0_s": 50.4,
+   "probe_len_s": 11.3,
+   "relevel_len_s": 6.5,
+   "probe_net_FL_mm": -0.3,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": -0.28,
+   "probe_dsp_FR_mm": 5.232,
+   "probe_net_RL_mm": 0.011,
+   "probe_dsp_RL_mm": 0.0,
+   "probe_net_RR_mm": -0.03,
+   "probe_dsp_RR_mm": 4.441,
+   "roll0_mrad": 1.4772,
+   "pitch0_mrad": 0.34,
+   "roll_int0": -0.01328,
+   "pitch_int0": 3e-05,
+   "subhold_leg_periods": 59,
+   "moving_leg_periods": 198,
+   "sign_changes": 2,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -4.871,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": 0.949,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.398,
+   "relevel_dsp_RR_mm": 0.638,
+   "relevel_net_RR_mm": 0.152,
+   "ib_on_leg_periods": 0,
+   "D_start_kN": -0.162,
+   "D_end_kN": -1.62,
+   "t_first_on_target_after_start_s": 5.5
+  },
+  {
+   "run": "S7_e0.0_D8-M-a2",
+   "probe_t0_s": 50.5,
+   "probe_len_s": 11.2,
+   "relevel_len_s": 7.0,
+   "probe_net_FL_mm": -0.3,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": -0.278,
+   "probe_dsp_FR_mm": 5.242,
+   "probe_net_RL_mm": 0.109,
+   "probe_dsp_RL_mm": 0.0,
+   "probe_net_RR_mm": -0.029,
+   "probe_dsp_RR_mm": 4.383,
+   "roll0_mrad": 1.4676,
+   "pitch0_mrad": 0.3462,
+   "roll_int0": -0.01288,
+   "pitch_int0": 4e-05,
+   "subhold_leg_periods": 80,
+   "moving_leg_periods": 197,
+   "sign_changes": 2,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -4.904,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": 1.07,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.551,
+   "relevel_dsp_RR_mm": 0.617,
+   "relevel_net_RR_mm": 0.0,
+   "ib_on_leg_periods": 0,
+   "D_start_kN": 0.009,
+   "D_end_kN": -1.635,
+   "t_first_on_target_after_start_s": 5.7
+  },
+  {
+   "run": "S7_e0.0_D8-Mslow-a2",
+   "probe_t0_s": 50.5,
+   "probe_len_s": 12.1,
+   "relevel_len_s": 24.8,
+   "probe_net_FL_mm": -0.26,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": -0.263,
+   "probe_dsp_FR_mm": 5.03,
+   "probe_net_RL_mm": 0.105,
+   "probe_dsp_RL_mm": 0.0,
+   "probe_net_RR_mm": -0.029,
+   "probe_dsp_RR_mm": 4.142,
+   "roll0_mrad": 1.4397,
+   "pitch0_mrad": 0.3246,
+   "roll_int0": -0.01287,
+   "pitch_int0": 5e-05,
+   "subhold_leg_periods": 597,
+   "moving_leg_periods": 392,
+   "sign_changes": 14,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -5.128,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": -0.334,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.642,
+   "relevel_dsp_RR_mm": 0.77,
+   "relevel_net_RR_mm": -0.496,
+   "ib_on_leg_periods": 21,
+   "D_start_kN": -0.353,
+   "D_end_kN": 0.188,
+   "t_first_on_target_after_start_s": 5.6
+  },
+  {
+   "run": "S7_e0.002_D8-Mslow-a2",
+   "probe_t0_s": 50.4,
+   "probe_len_s": 12.1,
+   "relevel_len_s": 6.9,
+   "probe_net_FL_mm": -0.262,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": -0.271,
+   "probe_dsp_FR_mm": 5.03,
+   "probe_net_RL_mm": 0.097,
+   "probe_dsp_RL_mm": 0.0,
+   "probe_net_RR_mm": -0.03,
+   "probe_dsp_RR_mm": 4.151,
+   "roll0_mrad": 1.4334,
+   "pitch0_mrad": 0.3233,
+   "roll_int0": -0.01313,
+   "pitch_int0": 3e-05,
+   "subhold_leg_periods": 78,
+   "moving_leg_periods": 195,
+   "sign_changes": 2,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -4.609,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": 1.082,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.311,
+   "relevel_dsp_RR_mm": 0.616,
+   "relevel_net_RR_mm": 0.0,
+   "ib_on_leg_periods": 0,
+   "D_start_kN": -0.367,
+   "D_end_kN": -1.379,
+   "t_first_on_target_after_start_s": 5.6
+  },
+  {
+   "run": "S7_e0.002_D8-M-A",
+   "probe_t0_s": 50.4,
+   "probe_len_s": 10.4,
+   "relevel_len_s": 5.7,
+   "probe_net_FL_mm": 0.793,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": 0.806,
+   "probe_dsp_FR_mm": 4.697,
+   "probe_net_RL_mm": 0.323,
+   "probe_dsp_RL_mm": 0.075,
+   "probe_net_RR_mm": 1.834,
+   "probe_dsp_RR_mm": 5.376,
+   "roll0_mrad": 1.3417,
+   "pitch0_mrad": 0.0237,
+   "roll_int0": -0.01313,
+   "pitch_int0": 6e-05,
+   "subhold_leg_periods": 10,
+   "moving_leg_periods": 215,
+   "sign_changes": 0,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -6.014,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": -1.283,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.651,
+   "relevel_dsp_RR_mm": 0.078,
+   "relevel_net_RR_mm": -1.353,
+   "ib_on_leg_periods": 0,
+   "D_start_kN": 2.809,
+   "D_end_kN": 1.08,
+   "t_first_on_target_after_start_s": 4.7
+  },
+  {
+   "run": "S7_e0.003_D8-M-A",
+   "probe_t0_s": 50.4,
+   "probe_len_s": 10.5,
+   "relevel_len_s": 5.8,
+   "probe_net_FL_mm": 0.795,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": 0.81,
+   "probe_dsp_FR_mm": 4.678,
+   "probe_net_RL_mm": 0.323,
+   "probe_dsp_RL_mm": 0.077,
+   "probe_net_RR_mm": 2.172,
+   "probe_dsp_RR_mm": 5.665,
+   "roll0_mrad": 1.3381,
+   "pitch0_mrad": 0.0185,
+   "roll_int0": -0.01327,
+   "pitch_int0": 6e-05,
+   "subhold_leg_periods": 20,
+   "moving_leg_periods": 209,
+   "sign_changes": 0,
+   "relevel_dsp_FL_mm": 0.0,
+   "relevel_net_FL_mm": -6.186,
+   "relevel_dsp_FR_mm": 0.0,
+   "relevel_net_FR_mm": -1.518,
+   "relevel_dsp_RL_mm": 0.0,
+   "relevel_net_RL_mm": -5.83,
+   "relevel_dsp_RR_mm": 0.091,
+   "relevel_net_RR_mm": -1.581,
+   "ib_on_leg_periods": 0,
+   "D_start_kN": 2.725,
+   "D_end_kN": 1.127,
+   "t_first_on_target_after_start_s": 4.8
+  },
+  {
+   "run": "S7_e0.0_D8-Mslow-A",
+   "probe_t0_s": 50.5,
+   "probe_len_s": 11.9,
+   "relevel_len_s": null,
+   "probe_net_FL_mm": 1.133,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": 1.214,
+   "probe_dsp_FR_mm": 4.225,
+   "probe_net_RL_mm": 0.507,
+   "probe_dsp_RL_mm": 0.048,
+   "probe_net_RR_mm": 1.201,
+   "probe_dsp_RR_mm": 4.9
+  },
+  {
+   "run": "S7_e0.002_D8-Mslow-A",
+   "probe_t0_s": 50.4,
+   "probe_len_s": 11.9,
+   "relevel_len_s": null,
+   "probe_net_FL_mm": 1.131,
+   "probe_dsp_FL_mm": 0.0,
+   "probe_net_FR_mm": 1.206,
+   "probe_dsp_FR_mm": 4.226,
+   "probe_net_RL_mm": 0.505,
+   "probe_dsp_RL_mm": 0.049,
+   "probe_net_RR_mm": 1.195,
+   "probe_dsp_RR_mm": 4.902
+  }
+ ],
+ "tail_segments": {
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-a2": {
+   "t_event_s": 52.95,
+   "level_t0_s": 53.9,
+   "level_t1_s": 94.2,
+   "level_len_s": 40.4
+  },
+  "R12_top-FR-Fs0-o0.05_D8-LSM4-A": {
+   "t_event_s": 47.45,
+   "level_t0_s": 48.4,
+   "level_t1_s": 72.7,
+   "level_len_s": 24.4
+  },
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-a2": {
+   "t_event_s": 55.0,
+   "level_t0_s": 55.9,
+   "level_t1_s": 96.6,
+   "level_len_s": 40.8
+  },
+  "R12_top-FL-Fs0-o0.0_D8-Mslow-A": {
+   "t_event_s": 47.4,
+   "level_t0_s": 48.4,
+   "level_t1_s": 57.9,
+   "level_len_s": 9.6
+  }
+ },
+ "columns": {
+  "d05_d1_k1_decomposition.csv": {
+   "f0_before_kN": [
+    "seal force f of the probed leg one read before its first extend command (plant ``f``; + = holds against retraction, - = against extension)",
+    "d05_d1_k1_decomposition.py:105",
+    "kN",
+    "1 read",
+    "plant sign"
+   ],
+   "band_to_cross_kN": [
+    "F_s + f0: seal force change before the piston can slide in the extend direction",
+    "d05:111",
+    "kN",
+    "-",
+    "-"
+   ],
+   "f_mid_kN": [
+    "seal force at the controller's K1 mid read (|f| < F_s = stuck)",
+    "d05:112",
+    "kN",
+    "1 read",
+    "plant sign"
+   ],
+   "x_moved_by_mid_mm": [
+    "plant piston x at the mid read minus x one read before the leg's first command (FL round 1: the probe-phase start, includes the approach)",
+    "d05:114",
+    "mm",
+    "-",
+    "+ = extension"
+   ],
+   "dF_kN": [
+    "controller force reading change, extended read minus mid read (cue log)",
+    "d05:95",
+    "kN",
+    "mid -> ext",
+    "+ = more load"
+   ],
+   "dx_mm": [
+    "piston (rod_stroke) reading change mid -> ext = plant x (d04: read_piston == x)",
+    "d05:96",
+    "mm",
+    "mid -> ext",
+    "+ = extension"
+   ],
+   "dseal_kN": [
+    "seal force change mid -> ext (plant f)",
+    "d05:98",
+    "kN",
+    "mid -> ext",
+    "plant sign"
+   ],
+   "K1_MN_m": [
+    "controller K1 = dF / dx (ground_contact._stiffness_cue SECOND_HALF)",
+    "ground_contact.py:605-610 (ed7-impl)",
+    "MN/m",
+    "mid -> ext",
+    "-"
+   ],
+   "Kpad_MN_m": [
+    "pad-load slope (dF + dseal) / dx; F_cyl = F_el - W_r - f so this is dF_el/dx",
+    "d05:103",
+    "MN/m",
+    "mid -> ext",
+    "-"
+   ],
+   "Kband_MN_m": [
+    "-dseal / dx; K1 = Kpad + Kband (seal breakaway inside the window)",
+    "d05:118",
+    "MN/m",
+    "mid -> ext",
+    "-"
+   ],
+   "Km_MN_m": [
+    "oil-coordinate slope dF / ds_ref (plant s_ref = motor stroke)",
+    "d05:104",
+    "MN/m",
+    "mid -> ext",
+    "-"
+   ],
+   "K1_from_Km_MN_m": [
+    "1 / (1/Km - 1/k_o), check of the series identity",
+    "d05:120",
+    "MN/m",
+    "-",
+    "-"
+   ],
+   "amplification_dK1_dKm": [
+    "(dK1/K1) / (dKm/Km) = 1 / (1 - Km/k_o)",
+    "d05:121",
+    "-",
+    "-",
+    "-"
+   ],
+   "ratio_K1": [
+    "K1 / S_ii,nom (the controller's per-leg ratio; round median = raw ratio of c2.py:9891-9908)",
+    "d05:122",
+    "-",
+    "-",
+    "-"
+   ],
+   "ratio_Kpad": [
+    "Kpad / S_ii,nom (window artefact removed)",
+    "d05:122",
+    "-",
+    "-",
+    "-"
+   ]
+  },
+  "d06_d2_s7_relevel_summary.csv": {
+   "relevel_len_s": [
+    "length of the LEVEL segment right after PROBE 1",
+    "d06_d2_s7_relevel.py:73",
+    "s",
+    "-",
+    "-"
+   ],
+   "probe_net_<leg>_mm": [
+    "motor stroke after PROBE 1 minus before it",
+    "d06:76",
+    "mm",
+    "PROBE 1",
+    "+ = extension"
+   ],
+   "probe_dsp_<leg>_mm": [
+    "soil plastic sinkage sp added during PROBE 1 (plant soil.sp)",
+    "d06:77",
+    "mm",
+    "PROBE 1",
+    "+ = deeper"
+   ],
+   "roll0_mrad / pitch0_mrad": [
+    "controller filtered roll / pitch at the re-level start",
+    "d06:80",
+    "mrad",
+    "1 read",
+    "roll x, pitch y (pitch + = nose down)"
+   ],
+   "subhold_leg_periods": [
+    "leg-periods with 0 < |u| <= u_hold (0.209 mm/s)",
+    "d06:86",
+    "count",
+    "re-level",
+    "-"
+   ],
+   "sign_changes": [
+    "command sign changes per leg, summed",
+    "d06:89",
+    "count",
+    "re-level",
+    "-"
+   ],
+   "ib_on_leg_periods": [
+    "A(i)-b floor periods (T4h lsb_ib_on)",
+    "d06:95",
+    "count",
+    "re-level",
+    "-"
+   ],
+   "D_start_kN / D_end_kN": [
+    "twist load D = nu^T F (T4h lsb_ib_twist_load_N)",
+    "d06:96",
+    "kN",
+    "first / last read",
+    "nu = (+FL, -FR, -RL, +RR) unit"
+   ],
+   "t_first_on_target_after_start_s": [
+    "first read with completion is_on_target",
+    "d06:100",
+    "s",
+    "re-level",
+    "-"
+   ]
+  },
+  "d07_d2_gate_kick.csv": {
+   "in_mm_s / out_mm_s": [
+    "lock-start component input / output command (T4h lsb_input/output)",
+    "d07_d2_gate_kick.py:43",
+    "mm/s",
+    "1 read",
+    "+ = extend"
+   ],
+   "a1_floor_mm_s": [
+    "A(i) floor (T4h lsb_a1_floor_m_s), ramps by a1_step 0.2 mm/s per period",
+    "d07:47",
+    "mm/s",
+    "1 read",
+    "-"
+   ],
+   "plant_fill_x_mm": [
+    "P1 line-fill state of the plant gate (line_fill_gate.x)",
+    "d07:55",
+    "mm",
+    "1 read",
+    "-"
+   ]
+  },
+  "d08_d3_tail_twist_windows.csv": {
+   "dD_kN_per_10s": [
+    "D(last) - D(first) in the 10 s window",
+    "d08_d3_tail_twist.py:119",
+    "kN",
+    "10 s",
+    "nu sign as d06"
+   ],
+   "mean_nu_vx_mm_s / mean_nu_vs_mm_s": [
+    "mean twist component of the executed piston / oil-volume rate (plant dx/dt, ds_ref/dt)",
+    "d08:120-121",
+    "mm/s",
+    "10 s",
+    "-"
+   ],
+   "mean_nu_u_mm_s": [
+    "mean twist component of the command",
+    "d08:122",
+    "mm/s",
+    "10 s",
+    "-"
+   ],
+   "mean_nu_missing_mm_s": [
+    "mean twist component of the commands on locked legs (not executed)",
+    "d08:123",
+    "mm/s",
+    "10 s",
+    "-"
+   ],
+   "k_tw_eff_MN_m": [
+    "mean dD/dt over mean nu^T v_x (piston-coordinate twist stiffness; ~k_s when the oil columns carry the twist)",
+    "d08:124",
+    "MN/m",
+    "10 s",
+    "-"
+   ],
+   "held_leg_periods": [
+    "periods a leg is locked with a nonzero command",
+    "d08:126",
+    "count",
+    "10 s",
+    "-"
+   ]
+  }
+ },
+ "sign_conventions": {
+  "legs": "FL FR RL RR (index 0..3)",
+  "stroke": "+ = extension",
+  "seal_f": "plant f: F_cyl = F_el - W_r - f; + holds against retraction",
+  "D": "nu^T F, nu = C2Geometry.twist_vector = (0.4761, -0.4761, -0.5228, 0.5228)",
+  "units": "SI in the plant; tables kN, mm, mm/s, MN/m, mrad"
+ }
+}

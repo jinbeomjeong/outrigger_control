@@ -1,0 +1,84 @@
+{
+ "assumptions": "S8-R design, part 5: expected G' stratum sizes under the proposed slot design (assumption model).\n\nSlots (one condition per slot, stored-V0 clean clusters only = 171 of 192):\n  (a) phase  : 171 clusters x one phase from O' = {0.0125, 0.0375, 0.0625, 0.0875}\n  (b) depth  : 48 clean RE1bF clusters x one (shape, phase), shape in {25/0.05, 30/0.04}, phase in O' + old 4\n  (c) F_s    : 40 clean families x {1, 3, 6} kN, one phase in O' + old 4\nP(E | slot) [assumption]: only the 8 bottom-front RE1bF/FS24 families can be E (s8r_frame).\n  RE1bF: interval model of dynamics 4.3 (phi 0.0125 -> 0.5, 0.0375 -> 0, 0.0625 -> 1, 0.0875 -> 1) and\n         stored V0 rates at old phases (o0.0 15/16, o0.025 0/8, o0.05 4/16, o0.075 8/8).\n  FS24 : stored V0 at old phases (o0.05 16/16, else ~0); new phases q_fs (sensitivity 0, 0.125, 0.25).\n  depth/F_s change the window: E probability multiplied by m_shift (sensitivity 1.0, 0.7).\nUsage: python -I -B s8r_sizes.py <out_folder>\n",
+ "cases": [
+  {
+   "q_fs": 0.0,
+   "m_shift": 1.0,
+   "slots_total": 339,
+   "nE_mean": 27.89875,
+   "nE_p05": 22,
+   "nE_p95": 33,
+   "P_nE_lt_24": 0.10075,
+   "P_nE_lt_20": 0.0069,
+   "P_all4_RE1bF_fams_ge3": 0.97695,
+   "nN_mean": 311.10125
+  },
+  {
+   "q_fs": 0.0,
+   "m_shift": 0.7,
+   "slots_total": 339,
+   "nE_mean": 22.51965,
+   "nE_p05": 17,
+   "nE_p95": 28,
+   "P_nE_lt_24": 0.61475,
+   "P_nE_lt_20": 0.1864,
+   "P_all4_RE1bF_fams_ge3": 0.86405,
+   "nN_mean": 316.48035
+  },
+  {
+   "q_fs": 0.125,
+   "m_shift": 1.0,
+   "slots_total": 339,
+   "nE_mean": 30.5918,
+   "nE_p05": 24,
+   "nE_p95": 37,
+   "P_nE_lt_24": 0.02895,
+   "P_nE_lt_20": 0.00175,
+   "P_all4_RE1bF_fams_ge3": 0.9767,
+   "nN_mean": 308.4082
+  },
+  {
+   "q_fs": 0.125,
+   "m_shift": 0.7,
+   "slots_total": 339,
+   "nE_mean": 25.0033,
+   "nE_p05": 19,
+   "nE_p95": 31,
+   "P_nE_lt_24": 0.34345,
+   "P_nE_lt_20": 0.06705,
+   "P_all4_RE1bF_fams_ge3": 0.8664,
+   "nN_mean": 313.9967
+  },
+  {
+   "q_fs": 0.25,
+   "m_shift": 1.0,
+   "slots_total": 339,
+   "nE_mean": 33.3993,
+   "nE_p05": 27,
+   "nE_p95": 40,
+   "P_nE_lt_24": 0.0054,
+   "P_nE_lt_20": 0.0001,
+   "P_all4_RE1bF_fams_ge3": 0.9778,
+   "nN_mean": 305.6007
+  },
+  {
+   "q_fs": 0.25,
+   "m_shift": 0.7,
+   "slots_total": 339,
+   "nE_mean": 27.5953,
+   "nE_p05": 21,
+   "nE_p95": 34,
+   "P_nE_lt_24": 0.14725,
+   "P_nE_lt_20": 0.0169,
+   "P_all4_RE1bF_fams_ge3": 0.8668,
+   "nN_mean": 311.4047
+  }
+ ],
+ "phase_only": {
+  "nE_mean": 11.96775,
+  "nE_p95": 16,
+  "nN_mean": 159.03225,
+  "nE_all_4_phases_RE1bF_max": 40.0,
+  "note": "all 4 new phases of 16 RE1bF E clusters: 2-3 E each"
+ }
+}

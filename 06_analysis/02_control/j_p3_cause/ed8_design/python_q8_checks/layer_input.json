@@ -1,0 +1,150 @@
+{
+ "main_jsonl": {
+  "path": "06_analysis/03_hydraulic/coupled/v5/main.jsonl",
+  "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+  "sha256_prefix_ok": true,
+  "counts": {
+   "lines": 1200,
+   "v0_event_lines": 40,
+   "v0_event_reapproach_starts_shape:list_of_[number,str]": 40,
+   "v0_event_with_reapproach_starts": 40,
+   "v0_lines": 100,
+   "v0_steady_event_output_empty_or_absent": 60,
+   "v0_steady_lines": 60
+  },
+  "v0_keys_by_case": {
+   "R1": 2,
+   "R10": 2,
+   "R11": 2,
+   "R12": 32,
+   "R14": 2,
+   "R15": 2,
+   "R16": 4,
+   "R2": 8,
+   "R3": 4,
+   "R4": 4,
+   "R5": 2,
+   "R6": 2,
+   "R7": 4,
+   "R8": 2,
+   "R9": 2,
+   "S1": 4,
+   "S2": 4,
+   "S3": 2,
+   "S4": 4,
+   "S5": 4,
+   "S7": 4,
+   "S8": 4
+  }
+ },
+ "key_files": {
+  "confirm_b_grid192": {
+   "name": "confirm_b_grid192",
+   "sha256_ok": true,
+   "top_level_keys": [
+    "code_identity",
+    "expected_j_p3_judged_rows",
+    "expected_lines",
+    "extraction",
+    "generation_command",
+    "grid_sample",
+    "head_only_declared_lines",
+    "lines",
+    "rule",
+    "seed",
+    "settings",
+    "v0_pass_lines"
+   ],
+   "line_field_sets": {
+    "head_only_declared,job,t4h_file,v0_pair": 192,
+    "v0_pair:file,key,run_id,v0_commands_sha256,v0_pass": 192
+   },
+   "counts": {
+    "grid_run_has_event_output:False": 192,
+    "grid_run_ok": 192,
+    "grid_run_reapproach_starts_shape:list_of_[number,str]": 192,
+    "grid_run_top_level_reapproach_starts:True": 192,
+    "lines": 192,
+    "v0_pair_grid_file": 192,
+    "v0_pair_run_id_type:int": 192
+   }
+  },
+  "confirm_g1_grid171": {
+   "name": "confirm_g1_grid171",
+   "sha256_ok": true,
+   "top_level_keys": [
+    "code_identity",
+    "expected_j_p3_judged_rows",
+    "expected_lines",
+    "extraction",
+    "fault_jp3_judged_lines",
+    "generation_command",
+    "k_counted_lines",
+    "line_flags",
+    "lines",
+    "pool_csv_sha256",
+    "rule",
+    "seed",
+    "settings"
+   ],
+   "line_field_sets": {
+    "counted_for_k,head_only_declared,job,judged_fault_jp3,t4h_file,v0_pair": 171,
+    "v0_pair:file,key,run_id,v0_commands_sha256,v0_pass": 171
+   },
+   "counts": {
+    "grid_run_has_event_output:False": 171,
+    "grid_run_ok": 171,
+    "grid_run_reapproach_starts_shape:list_of_[number,str]": 171,
+    "grid_run_top_level_reapproach_starts:True": 171,
+    "lines": 171,
+    "v0_pair_grid_file": 171,
+    "v0_pair_run_id_type:str": 171
+   }
+  },
+  "sens_keys_ed7": {
+   "name": "sens_keys_ed7",
+   "sha256_ok": true,
+   "top_level_keys": [
+    "code_identity",
+    "expected_j_p3_judged_rows",
+    "expected_lines",
+    "generation_command",
+    "judged_lines",
+    "lines",
+    "probe_seen_units",
+    "rule",
+    "settings_judged",
+    "settings_record"
+   ],
+   "line_field_sets": {
+    "head_only_declared,job,judged,key,probe_seen,v0_pair": 460,
+    "v0_pair:job,source": 460
+   },
+   "counts": {
+    "lines": 460,
+    "main_event_pair_has_reapproach_starts:True": 260,
+    "main_steady_pair_has_reapproach_starts:False": 200,
+    "v0_pair_main_job": 460
+   }
+  },
+  "d_grid_keys12": {
+   "name": "d_grid_keys12",
+   "sha256_ok": true,
+   "top_level_keys": [
+    "inputs",
+    "jobs",
+    "level_breach_lines",
+    "purpose",
+    "rule"
+   ],
+   "line_field_sets": {},
+   "counts": {}
+  }
+ },
+ "grid_files_loaded": [
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+  "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json"
+ ]
+}
