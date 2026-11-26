@@ -3090,6 +3090,17 @@ def _bounded(value: float, lower: float | None, upper: float | None) -> float:
     return value
 
 
+def _is_stiffness_scale_leg(result: ProbeResult) -> bool:
+    """P-R8-3: a probe leg whose ratio enters the measured stiffness scale (grounded by its
+    stiffness cue, probed, finite K1)."""
+    return (bool(result.is_grounded_by_stiffness) and not result.is_skipped
+            and math.isfinite(result.incremental_stiffness_N_m))
+
+
+def _finite_or_none(value: float) -> float | None:
+    return float(value) if math.isfinite(value) else None
+
+
 def _optional_float(params: Params, key: str, default: float) -> float:
     try:
         return float(params.get(key))
@@ -4617,6 +4628,9 @@ class _RunState:
     completion_flags: CompletionFlags | None = None
     """The LEVEL completion tests of this period (condition 3 of A(i)-b); None outside a
     LEVEL step."""
+    # Edition 8 P-1 (record only; immutable default, as above)
+    probe_stiffness_rounds: tuple[dict[str, Any], ...] = ()
+    """One entry per finished probe round (:meth:`C2Controller.probe_stiffness_record`)."""
 
 
 @dataclass(frozen=True)
@@ -9820,6 +9834,7 @@ class C2Controller:
         state.probe_round = None
         self._update_seal_band(results)
         self._update_twist_stiffness_scale(results, reading.t_s)
+        self._record_probe_stiffness(results, reading.t_s)
         self._note_band_beyond_reanchor(reading.t_s)
 
         weakest = self._leg_to_reground(results, reading)
@@ -9891,9 +9906,7 @@ class C2Controller:
         ratios = [
             result.incremental_stiffness_N_m / nominal[result.leg_index]
             for result in results
-            if result.is_grounded_by_stiffness
-            and not result.is_skipped
-            and math.isfinite(result.incremental_stiffness_N_m)
+            if _is_stiffness_scale_leg(result)
         ]
         state = self._state
         state.twist_stiffness_leg_count = len(ratios)
@@ -9910,6 +9923,54 @@ class C2Controller:
         state.twist_stiffness_scale = _bounded(
             raw_ratio, r8.measured_stiffness_scale_min, r8.measured_stiffness_scale_max
         )
+
+    def _record_probe_stiffness(self, results: tuple[ProbeResult, ...], t_s: float) -> None:
+        """Edition 8 P-1 (record only, after :meth:`_update_twist_stiffness_scale`): K1,
+        ``k_nom`` and their ratio per leg, the median, the warning and the scale of the round.
+
+        ``raw_ratio`` / ``scale_leg_count`` are the state the update left (None with the
+        nominal reference or under ``MIN_STIFFNESS_SCALE_LEGS`` legs); ``scale_in_use`` None =
+        ``k_nom`` (the nominal reference). Non-finite values are written as None.
+        """
+        state = self._state
+        r8 = self.config.r8
+        nominal = self.geometry.load_sensitivity_diag_N_m
+        legs = {}
+        for result in results:
+            k_nom = float(nominal[result.leg_index])
+            k1 = float(result.incremental_stiffness_N_m)
+            legs[LEG_ORDER[result.leg_index]] = {
+                "k1_N_m": _finite_or_none(k1),
+                "k_nom_N_m": k_nom,
+                "ratio": _finite_or_none(k1 / k_nom),
+                "is_grounded_by_stiffness": result.is_grounded_by_stiffness,
+                "is_skipped": result.is_skipped,
+                "is_reversed": result.is_reversed,
+                "is_scale_leg": _is_stiffness_scale_leg(result),
+                "t_move_start_s": _finite_or_none(result.t_move_start_s),
+                "t_first_hold_end_s": _finite_or_none(result.t_first_hold_end_s),
+            }
+        raw_ratio = state.twist_stiffness_raw_ratio
+        warning_low, warning_high = r8.stiffness_warning_range
+        entry = {
+            "round": state.probe_round_count,
+            "t_s": float(t_s),
+            "reference": str(r8.twist_gain_reference),
+            "legs": legs,
+            "scale_leg_count": state.twist_stiffness_leg_count,
+            "raw_ratio": raw_ratio,
+            "warning_range": [warning_low, warning_high],
+            "is_warned": raw_ratio is not None and not warning_low <= raw_ratio <= warning_high,
+            "twist_stiffness_scale": state.twist_stiffness_scale,
+            "scale_in_use": self._twist_gain_scale(),
+        }
+        state.probe_stiffness_rounds = (*state.probe_stiffness_rounds, entry)
+
+    def probe_stiffness_record(self) -> list[dict[str, Any]]:
+        """Edition 8 P-1: one entry per finished probe round (record only, read only)."""
+        rounds = self._state.probe_stiffness_rounds
+        return [{**entry, "legs": {name: dict(leg) for name, leg in entry["legs"].items()},
+                 "warning_range": list(entry["warning_range"])} for entry in rounds]
 
     def _is_reanchor_after_probe(self) -> bool:
         """H5a: REANCHOR is decided after the probe (combined judge only; the pressure judge has
@@ -10439,6 +10500,20 @@ class C2Controller:
         if not self.config.lock_start_b.is_enabled:
             return None
         return self._lock_start_b_state().record()
+
+    def blind_block_record(self) -> dict[str, Any] | None:
+        """Edition 8 P-2: the A(i)-b block reasons of the run (None without ``A_ib``; record
+        only, read only)."""
+        if not self.config.lock_start_b.has(LsbComponent.BLIND_FILL):
+            return None
+        return self._lock_start_b_state().blind_block_record()
+
+    def blind_block_trace_arrays(self, t_s: NDArray[np.float64]) -> dict[str, NDArray[Any]]:
+        """Edition 8 P-2: ``lsb_ib_block`` on the read times ``t_s``; empty without ``A_ib``
+        (read only, for the T4h record)."""
+        if not self.config.lock_start_b.has(LsbComponent.BLIND_FILL):
+            return {}
+        return self._lock_start_b_state().blind_block_arrays_at(t_s)
 
     # --- output ---
 

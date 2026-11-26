@@ -854,13 +854,7 @@ def run_one(job: dict) -> dict:
                 "hydraulic_options": result.get("hydraulic_options"),
                 "hydraulics_record": result.get("hydraulics_record"),
                 "review_record": result.get("review_record"),
-                **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
-                                                "lock_window_alignment", "controller_tag",
-                                                "head_only_declared", "d1", RESUME_K1_KEY,
-                                                HARNESS_HASH_KEY, "lsb_components",
-                                                "lsb_settings", "lsb_record",
-                                                "probe_d6_settings", "probe_d6_record")
-                   if key in result},
+                **{key: result[key] for key in LINE_RECORD_KEYS if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
         return {"job": job, "error": repr(exc), "tb": traceback.format_exc()[-3000:],
@@ -915,6 +909,13 @@ RESUME_K1_KEY = "resume_k1"
 HARNESS_HASH_KEY = "harness_commands_sha256"
 """The harness' own command hash (the r67 screen hash of a stored grid row, prefix + branch;
 addendum 4a-2 R7 F-A compares it with ``grid_r67_top``). Record only."""
+LINE_RECORD_KEYS = ("overlap_found", "soil_stop_crawler", "lock_window_alignment",
+                    "controller_tag", "head_only_declared", "d1", RESUME_K1_KEY,
+                    HARNESS_HASH_KEY, "lsb_components", "lsb_settings", "lsb_record",
+                    "probe_d6_settings", "probe_d6_record", "probe_stiffness_record",
+                    "ib_block_record")
+"""Result keys a line copies when the run has them (in this order); the last two are the
+edition 8 records (``verdict_runs.enable_ed8_record``, record only)."""
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:

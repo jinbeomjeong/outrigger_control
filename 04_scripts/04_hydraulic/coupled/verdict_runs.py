@@ -224,6 +224,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
                              {**_meta_with_controller_tag(t4h["meta"], _LAST_FINISHED_CONFIG[0]),
                               **lock_start_b_meta(controller),
                               **probe_d6_meta(controller),
+                              **ed8_record_meta(controller),
                               "commands_sha256": _command_digest(period["command"])},
                              extra_arrays=_t4h_extra_arrays(plant, period["t"], controller))
     thresholds = controller.config.thresholds
@@ -248,6 +249,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
     result[resume_k1_record.RECORD_KEY] = resume_k1_record.controller_record(controller)
     result.update(lock_start_b_meta(controller, with_record=True))
     result.update(probe_d6_meta(controller))
+    result.update(ed8_record_meta(controller))
     stop_values = _soil_stop_values(plant, limiter, events)
     if stop_values is not None:  # v5 X-12, criteria 6: runs with a soil-guard stop only
         result["soil_stop_crawler"] = stop_values
@@ -318,6 +320,45 @@ def probe_d6_meta(controller) -> dict:
             PROBE_D6_RECORD_KEY: meta_for_json(monitor.get("d6_witness"))}
 
 
+PROBE_STIFFNESS_RECORD_KEY = "probe_stiffness_record"
+IB_BLOCK_RECORD_KEY = "ib_block_record"
+"""Edition 8 record keys (``ed7_j9fail_8a2a52ce/cause_analysis.md`` 8 P-1, P-2): a line and a
+T4h meta carry them only with :func:`enable_ed8_record` on (``ib_block_record`` also only with
+``A_ib``); the T4h array ``lsb_ib_block`` likewise."""
+_ED8_RECORD: list[bool] = [False]
+"""True = every run finished later in this process writes the edition 8 records. Off by
+default, so the lines and T4h records of other runs keep their keys; record only either way
+(the commands do not change)."""
+
+
+def enable_ed8_record() -> None:
+    """Turn the edition 8 records on for the rest of this process (record only)."""
+    _ED8_RECORD[0] = True
+
+
+def is_ed8_record_on() -> bool:
+    return _ED8_RECORD[0]
+
+
+def ed8_record_meta(controller) -> dict:
+    """``probe_stiffness_record`` (every probe round) and, with ``A_ib``, ``ib_block_record``
+    of a controller; empty with the switch off."""
+    if not is_ed8_record_on():
+        return {}
+    meta = {PROBE_STIFFNESS_RECORD_KEY: meta_for_json(controller.probe_stiffness_record())}
+    block = controller.blind_block_record()
+    if block is not None:
+        meta[IB_BLOCK_RECORD_KEY] = meta_for_json(block)
+    return meta
+
+
+def ed8_record_arrays(controller, t_s: np.ndarray) -> dict:
+    """The ``lsb_ib_block`` array of a controller with ``A_ib``; empty with the switch off."""
+    if not is_ed8_record_on():
+        return {}
+    return controller.blind_block_trace_arrays(t_s)
+
+
 def lock_start_b_arrays(controller, t_s: np.ndarray) -> dict:
     """The ``lsb_*`` per-read arrays (``lock_start_b.LockStartB.trace_arrays_at``); empty
     without an edition 6 component."""
@@ -329,7 +370,8 @@ def _t4h_extra_arrays(plant, t_s: np.ndarray, controller=None) -> dict | None:
     """The J-P3 trace arrays, plus the P1 read arrays and the edition 6 arrays when those
     records are on."""
     extra = jp3_trace_arrays(plant)
-    added = {**p1_read_arrays(plant, t_s), **lock_start_b_arrays(controller, t_s)}
+    added = {**p1_read_arrays(plant, t_s), **lock_start_b_arrays(controller, t_s),
+             **({} if controller is None else ed8_record_arrays(controller, t_s))}
     if not added:
         return extra
     return {**(extra or {}), **added}
