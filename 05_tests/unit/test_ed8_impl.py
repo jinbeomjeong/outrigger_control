@@ -716,6 +716,42 @@ def test_heldout_keys_are_deterministic(key_sources) -> None:
     assert [line["job"] for line in other_seed] != [line["job"] for line in lines]
 
 
+def test_edition_8_batches(key_sources, tmp_path: Path, monkeypatch) -> None:
+    import hashlib
+
+    import ed8_key_lists as keys
+    import run_v5
+
+    census = tmp_path / "census_keys_ed8.json"
+    census.write_bytes(keys.document_bytes(keys.census_document(key_sources)))
+    heldout = tmp_path / "heldout_g_ed8.json"
+    heldout.write_bytes(keys.document_bytes(keys.heldout_document(RECORDS_ROOT, key_sources)))
+    monkeypatch.setattr(run_v5, "ED8_KEYS_FILE", [census])
+    with pytest.raises(SystemExit):  # the table is empty until C8
+        run_v5.batch_jobs(run_v5.ED8_KEYS_BATCH)
+    monkeypatch.setattr(run_v5, "ED8_KEY_FILE_SHA256", {
+        path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in (census, heldout)})
+    assert len(run_v5.batch_jobs(run_v5.ED8_KEYS_BATCH)) == 1043
+    with pytest.raises(SystemExit):  # the census file is no held-out file
+        run_v5.batch_jobs(run_v5.ED8_HELDOUT_V0_BATCH)
+    monkeypatch.setattr(run_v5, "ED8_KEYS_FILE", [heldout])
+    vbn = run_v5.batch_jobs(run_v5.ED8_KEYS_BATCH)
+    v0 = run_v5.batch_jobs(run_v5.ED8_HELDOUT_V0_BATCH)
+    aa2 = run_v5.batch_jobs("ed8_heldout_aa2")
+    assert (len(vbn), len(v0), len(aa2)) == (339, 678, 339)
+    assert {job["setting"] for job in vbn} == {"VBN"}
+    assert {job["setting"] for job in v0 + aa2} == {"V0"}
+    assert len({run_v5.job_key(job) for job in v0}) == 678
+    main_jsonl = RECORDS_ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "main.jsonl"
+    if main_jsonl.exists():  # the stored V0 / VB lines (git excluded): P8-1 reads its 22 jobs
+        monkeypatch.setattr(run_v5, "P3_HASH_SOURCE_OVERRIDE", [main_jsonl])
+        t8 = run_v5.batch_jobs(run_v5.ED8_T8_BATCH)
+        assert len(t8) == 44 and {job["setting"] for job in t8} == {"VBN", "VBN0"}
+    cases = run_v5.batch_jobs(run_v5.ED8_CASES_BATCH)
+    assert len(cases) == 10 and {job["setting"] for job in cases} == set(
+        run_v5.ED8_JUDGED_SETTINGS)
+
+
 # ------------------------------------------------------------------------ old settings
 def test_old_settings_run_no_new_line(monkeypatch, geometry) -> None:
     """P8-0 premise: with every new field at its default the PSW, H3' record, L-2 count / waiver

@@ -405,6 +405,8 @@ def batch_jobs(name: str) -> list[dict]:
         return ed6_case_jobs()
     if name in ED7_BATCHES:
         return ed7_batch_jobs(name)
+    if name in ED8_BATCHES:
+        return ed8_batch_jobs(name)
     raise ValueError(f"unknown batch {name!r}")
 
 
@@ -443,6 +445,68 @@ def ed7_batch_jobs(name: str) -> list[dict]:
         return [{**job, "setting": setting} for job in _case_rows_e_f()
                 for setting in ED7_JUDGED_SETTINGS]
     return sealed_key_jobs(ED7_KEYS_FILE[0], ED7_KEY_FILE_SHA256, ED7_KEYS_BATCH)
+
+
+ED8_T8_BATCH = "ed8_t8"
+"""Edition 8 T8 = P8-1: the 22 jobs of :func:`p3_hash_jobs` x VBN, VBN0 = 44 runs."""
+ED8_CASES_BATCH = "ed8_cases"
+"""Edition 8 P8-2 case replay E and F x VBN, LSN1 .. LSN4 = 10 runs."""
+ED8_KEYS_BATCH = "ed8_keys"
+"""Edition 8 key-file rows (``--jobs-file``): the ``lines[*].job`` of a sealed edition 8 key
+file of :data:`ED8_KEY_FILE_SHA256` (``census_keys_ed8.json`` 1043, ``heldout_g_ed8.json``
+339 VBN); refused until C8 fills the table (spec v8 11.1, P8-10)."""
+ED8_HELDOUT_V0_BATCH = "ed8_heldout_v0"
+"""Edition 8 stage 5 (spec v8 7.3, 7.4): per held-out slot the V0 job of its condition and the
+V0 job of its first A/A candidate (``aa_order[0]``), 678 runs."""
+ED8_HELDOUT_AA_BATCHES = {"ed8_heldout_aa2": 1, "ed8_heldout_aa3": 2}
+"""Edition 8 7.4: the V0 jobs of every slot's second / third A/A candidate (339 each; a slot
+uses them only when the earlier candidate fell in the other layer)."""
+ED8_BATCHES = (ED8_T8_BATCH, ED8_CASES_BATCH, ED8_KEYS_BATCH, ED8_HELDOUT_V0_BATCH,
+               *ED8_HELDOUT_AA_BATCHES)
+ED8_KEY_FILE_SHA256: dict[str, str] = {}
+"""Edition 8 sealed key files (name -> sha256), filled by the run commit C8 (spec v8 11.1);
+every edition 8 key batch refuses a file not in it."""
+ED8_KEYS_FILE: list[Path | None] = [None]
+
+
+def ed8_batch_jobs(name: str) -> list[dict]:
+    """The jobs of an edition 8 batch (:data:`ED8_BATCHES`)."""
+    if name == ED8_T8_BATCH:
+        source = P3_HASH_SOURCE_OVERRIDE[0]
+        jobs = p3_hash_jobs() if source is None else p3_hash_jobs(source)
+        return [{**job, "setting": setting} for setting in ("VBN", "VBN0") for _, job in jobs]
+    if name == ED8_CASES_BATCH:
+        return [{**job, "setting": setting} for job in _case_rows_e_f()
+                for setting in ED8_JUDGED_SETTINGS]
+    if name == ED8_KEYS_BATCH:
+        return sealed_key_jobs(ED8_KEYS_FILE[0], ED8_KEY_FILE_SHA256, ED8_KEYS_BATCH)
+    return heldout_v0_jobs(ED8_KEYS_FILE[0], name)
+
+
+def heldout_v0_jobs(path: Path | None, batch: str) -> list[dict]:
+    """The V0 jobs of a sealed held-out key file for a stage 5 batch (slot order; the condition
+    and the first A/A candidate for :data:`ED8_HELDOUT_V0_BATCH`, else the A/A candidate of
+    :data:`ED8_HELDOUT_AA_BATCHES`).
+
+    Raises:
+        SystemExit: As :func:`sealed_key_jobs`, a file that is no held-out file, or a slot
+            without that A/A candidate.
+    """
+    sealed_key_jobs(path, ED8_KEY_FILE_SHA256, batch)  # the name, sha256 and line checks
+    document = json.loads(Path(path).read_bytes())
+    lines = document["lines"]
+    if not all("v0_pair" in line and "aa_order" in line for line in lines):
+        raise SystemExit(f"--jobs-file {path} is no held-out key file")
+    if batch == ED8_HELDOUT_V0_BATCH:
+        jobs = []
+        for line in lines:
+            jobs.append(dict(line["v0_pair"]["job"]))
+            jobs.append(dict(line["aa_order"][0]))
+        return jobs
+    index = ED8_HELDOUT_AA_BATCHES[batch]
+    if any(len(line["aa_order"]) <= index for line in lines):
+        raise SystemExit(f"--jobs-file {path}: a slot has no A/A candidate {index + 1}")
+    return [dict(line["aa_order"][index]) for line in lines]
 
 
 def _case_rows_e_f() -> list[dict]:
@@ -986,14 +1050,17 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help=f"{J9_V0_SAMPLE_BATCH}: the fixed V0 sample key file (erratum 2 "
                              f"2-7.1); {ED6_KEYS_BATCH}: a sealed edition 6 key file")
     args = parser.parse_args(argv)
-    jobs_file_batches = (J9_V0_SAMPLE_BATCH, ED6_KEYS_BATCH, ED7_KEYS_BATCH)
+    jobs_file_batches = (J9_V0_SAMPLE_BATCH, ED6_KEYS_BATCH, ED7_KEYS_BATCH, ED8_KEYS_BATCH,
+                         ED8_HELDOUT_V0_BATCH, *ED8_HELDOUT_AA_BATCHES)
     if (args.jobs_file is not None) != (args.batch in jobs_file_batches):
         parser.error(f"--jobs-file belongs to the {jobs_file_batches} batches (and they need it)")
     J9_V0_SAMPLE_FILE[0] = args.jobs_file
     ED7_KEYS_FILE[0] = args.jobs_file
+    ED8_KEYS_FILE[0] = args.jobs_file
     if args.p3_hash_source is not None:
-        if args.batch not in (J9_T8_BATCH, ED6_T8_BATCH, ED7_T8_BATCH):
-            parser.error("--p3-hash-source belongs to the j9_t8 / ed6_t8 / ed7_t8 batches")
+        if args.batch not in (J9_T8_BATCH, ED6_T8_BATCH, ED7_T8_BATCH, ED8_T8_BATCH):
+            parser.error("--p3-hash-source belongs to the j9_t8 / ed6_t8 / ed7_t8 / ed8_t8 "
+                         "batches")
         import jp3_fixed_inputs
 
         problem = jp3_fixed_inputs.sha_problem(args.p3_hash_source,
