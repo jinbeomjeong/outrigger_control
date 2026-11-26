@@ -403,7 +403,9 @@ def test_cli_refusals_exit_2(probe, tmp_path: Path, capsys, bad) -> None:
 def test_cli_list_and_the_existing_output_rule(probe, tmp_path: Path, capsys) -> None:
     code, last = _main(probe, tmp_path, "--part", "main,d", "--list", capsys=capsys)
     assert code == 0 and last["status"] == "listed"
-    assert last["planned"] == len(probe.PLANTS) * 15 * 2 + 2 * 12 * 2
+    # the default plants leave out the ③-off r79 plant KM0 (part p816 only, edition 8 P8-16)
+    default_plants = [plant for plant in probe.PLANTS if plant not in probe.P3_OFF_PLANTS]
+    assert last["planned"] == len(default_plants) * 15 * 2 + 2 * 12 * 2
     out = tmp_path / "p.jsonl"
     out.write_text("", encoding="utf-8")
     code, last = _main(probe, tmp_path, "--keys", "S7_e0.001", "--plants", "M", capsys=capsys)

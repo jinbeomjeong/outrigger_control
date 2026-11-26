@@ -86,6 +86,7 @@ from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     LOCK_SPEED_EPS_M_S,
     HydraulicOptions,
     apply_controller_options,
+    check_ed8_config,
     check_lock_start_b_config,
     check_lock_window_meta,
     check_probe_d6_config,
@@ -1264,6 +1265,20 @@ def check_last_probe_d6(options: HydraulicOptions, run_config=None) -> None:
     check_probe_d6_config(_LAST_PRESET[0], options)
     if run_config is not None:
         check_probe_d6_config(run_config, options)
+
+
+def check_last_ed8(options: HydraulicOptions, run_config=None) -> None:
+    """Edition 8 identity guard (``jp3_remedy_spec_v8_rules.md`` 3.6): the preset this process
+    built and the run's own config carry the edition 8 values of ``options``.
+
+    Raises:
+        RuntimeError: No preset was built, or a config differs from the options.
+    """
+    if _LAST_PRESET[0] is None:
+        raise RuntimeError("no C2 preset was built with the edition 8 options installed")
+    check_ed8_config(_LAST_PRESET[0], options)
+    if run_config is not None:
+        check_ed8_config(run_config, options)
 
 
 def check_last_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:

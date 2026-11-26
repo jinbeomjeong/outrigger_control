@@ -338,10 +338,10 @@ class LockStartBSettings:
     above P5 and not below the previous period's, this many LEVEL periods in a row, ends the
     pre-twist (the R-5 prediction itself is computed in READY / PROBE only)."""
     b3_travel_cap_fraction: float = 0.065
-    """Limit of the pre-twist's commanded twist travel of the leg (``|n_j tau_dot| T`` summed,
-    not the measured stroke; dynamics review) as a multiple of the re-approach
-    ``max_travel_m`` (stats s30: 0.065, about 2.6 mm). A period that would pass it ends the
-    pre-twist first."""
+    """Limit of the pre-twist's commanded twist travel of the fastest leg of the twist
+    (``max_i |n_i| |tau_dot| T`` summed over the periods, spec revision 5; not the measured
+    stroke, dynamics review) as a multiple of the re-approach ``max_travel_m`` (stats s30:
+    0.065, about 2.6 mm). A period that would pass it ends the pre-twist first."""
     b3_max_periods: int | None = None
     """Option (dynamics review): the pre-twist ends after this many periods; None = off."""
     b3_protect_margin_N: float = 35.0e3
@@ -948,11 +948,25 @@ class LockStartB:
         self._twist_limit_seen_N = math.nan
         self._blind_block = _BlindBlockLog()
         """Edition 8 P-2 record (only with ``A_ib``)."""
+        # edition 8 (both off unless the controller turns them on after construction)
+        self.counts_still_periods = False
+        """L-2 (spec v8 16 Y8-10): keep :attr:`still_periods` after every ``apply_floors``."""
+        self.still_periods = [0] * LEG_COUNT
+        """Consecutive LEVEL periods each leg sat in an A(i)-b stretch (condition 1) with
+        ``ib_reference_skip_reads + 3`` reads or more and moved less than ``ib_still_m``
+        (condition 2); 0 outside LEVEL."""
+        self.records_ed8 = False
+        """Y8-4: keep the A(i) episode record (:attr:`a1_episodes`)."""
+        self.a1_episodes: list[dict[str, Any]] = []
+        """Y8-4: one entry per A(i) floor episode (leg, start, end, end reason, floor max)."""
+        self._now_s = math.nan
 
     # --------------------------------------------------------------- output-stage rules
     def apply_floors(self, inputs: FloorInputs) -> NDArray[np.float64]:
         """The command of this period with the A(i) floor and the A(ii) fill (spec 3.1, 3.2)."""
         self.events = []
+        if getattr(self, "records_ed8", False):
+            self._now_s = float(inputs.t_s)  # the time of the Y8-4 A(i) episode record
         requested = np.asarray(inputs.requested_m_s, float)
         self._remember_acting(inputs)
         floors = np.zeros(LEG_COUNT)
@@ -971,7 +985,23 @@ class LockStartB:
         self.last_input_m_s = requested.copy()
         self._last_stroke_m = np.asarray(inputs.stroke_m, float).copy()
         self._record_trace(inputs, requested, output)
+        if getattr(self, "counts_still_periods", False):  # edition 8 L-2
+            self._count_still_periods(inputs)
         return output
+
+    def _count_still_periods(self, inputs: FloorInputs) -> None:
+        """Edition 8 L-2 ``n_still`` (spec v8 16 Y8-10 item 2): +1 for a leg in an A(i)-b
+        stretch (``stretch_sign != 0``) with at least ``ib_reference_skip_reads + 3`` reads
+        whose condition 2 displacement is below ``ib_still_m``, else 0 (0 outside LEVEL);
+        counted after this period's floors."""
+        settings = self.settings
+        minimum_reads = settings.ib_reference_skip_reads + WITNESS_READS
+        for leg, state in enumerate(self._blind):
+            is_still = False
+            if inputs.is_level and state.stretch_sign != 0 and len(
+                    state.stretch_reads) >= minimum_reads:
+                is_still = self._blind_still_m(state) < settings.ib_still_m
+            self.still_periods[leg] = self.still_periods[leg] + 1 if is_still else 0
 
     def after_output(self, output_m_s: NDArray[np.float64]) -> None:
         """Count the commanded fill of this period's output (after the increment limit)."""
@@ -1089,6 +1119,10 @@ class LockStartB:
         counts = self.counts[leg]
         counts.a1_triggers += 1
         counts.a1_trigger_periods.append(state.stretch_periods)
+        if getattr(self, "records_ed8", False):  # edition 8 Y8-4 record
+            self.a1_episodes.append({"leg": LEG_ORDER[leg], "start_t_s": float(self._now_s),
+                                     "end_t_s": None, "end": None,
+                                     "floor_max_m_s": float(state.floor_m_s)})
 
     def _next_deadband_floor(self, state: _DeadbandLeg, leg: int, inputs: FloorInputs,
                              requested_m_s: float) -> float:
@@ -1100,7 +1134,18 @@ class LockStartB:
         state.floor_m_s = min(state.floor_m_s + settings.a1_step_m_s, settings.a1_cap_m_s)
         if state.floor_m_s >= settings.a1_cap_m_s:
             state.cap_periods += 1
+        if getattr(self, "records_ed8", False):  # edition 8 Y8-4 record
+            episode = self._open_a1_episode(leg)
+            if episode is not None:
+                episode["floor_max_m_s"] = max(episode["floor_max_m_s"], float(state.floor_m_s))
         return state.floor_m_s
+
+    def _open_a1_episode(self, leg: int) -> dict[str, Any] | None:
+        """Y8-4: the leg's A(i) episode still without an end (None = none)."""
+        for episode in reversed(self.a1_episodes):
+            if episode["leg"] == LEG_ORDER[leg]:
+                return episode if episode["end"] is None else None
+        return None
 
     def _deadband_end_reason(self, state: _DeadbandLeg, leg: int, inputs: FloorInputs,
                              requested_m_s: float) -> A1End | None:
@@ -1126,6 +1171,10 @@ class LockStartB:
         state.cap_periods = 0
         state.floor_reads = []
         self.counts[leg].a1_end[str(reason)] += 1
+        if getattr(self, "records_ed8", False):  # edition 8 Y8-4 record
+            episode = self._open_a1_episode(leg)
+            if episode is not None:
+                episode["end_t_s"], episode["end"] = float(self._now_s), str(reason)
         # A new stretch must build up again before the next trigger.
         self._reset_stretch(state)
 
@@ -1658,8 +1707,9 @@ class LockStartB:
             self.end_pre_twist(t_s, B3End.TRAVEL_CAP)
 
     def command_pre_twist(self, t_s: float, travel_m: float, max_travel_m: float) -> bool:
-        """This period's commanded twist travel of the leg: counted, or (when it would pass
-        the travel limit) the pre-twist ends first (``cap``). True = the period runs."""
+        """This period's commanded twist travel of the fastest leg of the twist (``max_i |n_i|
+        |tau_dot| T``): counted, or (when it would pass the travel limit) the pre-twist ends
+        first (``cap``). True = the period runs."""
         twist = self.pre_twist
         limit_m = self.settings.b3_travel_cap_fraction * max_travel_m
         if twist.commanded_m + abs(float(travel_m)) > limit_m + 1e-12:
@@ -1754,6 +1804,8 @@ class LockStartB:
         record = self._edition_6_record()
         if self.settings.has(LsbComponent.BLIND_FILL):
             record["blind"] = self.blind_record()
+        if getattr(self, "records_ed8", False):  # edition 8 Y8-4 (A(i) end and floor max)
+            record["a1_episodes"] = [dict(episode) for episode in self.a1_episodes]
         return record
 
     def _edition_6_record(self) -> dict[str, Any]:

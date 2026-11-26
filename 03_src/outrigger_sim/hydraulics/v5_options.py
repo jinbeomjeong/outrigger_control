@@ -57,6 +57,12 @@ after ``_LAS`` and ``_K1`` and before a K-2 ``_TCL``: ``final_C4G2_P3W_LAS_K1_LS
 components a run has on are its ``lsb_components`` meta (the suffix stays when fewer are on).
 No other tag token is ``LSB`` (grep 2026-11-23: the word appears only as "least significant
 bit" in an IMU study)."""
+ED8_TAG_SUFFIX = "_ED8"
+"""Edition 8 (``jp3_remedy_spec_v8_rules.md`` 3.6, user decision 2026-11-26): a controller with
+an edition 8 change on (``C2Config.has_ed8_changes``: PSW, warning range, H3', L-2 or the R2
+witness record) ends its tag with this, after every other suffix:
+``final_C4G2_P3X_LAS_K1_LSB_ED8``. Not ``verdict_runs._ED8_RECORD`` (a process switch of the
+records), not the touch-phase K1, the K1 order gate or the harness token ``K1``."""
 EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG,
                      EXTEND_START_LAS_K1_CONTROLLER_TAG)
 """Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1). A list only: the ③
@@ -222,11 +228,11 @@ class P1PatchSetting:
 OPTIONAL_FIELDS = ("extend_start_tracked", "extend_start_hold", "extend_start_witness",
                    "line_fill_gate", "lock_anchor_continuous", "rod_flow_cap_all",
                    "rod_reading_truth", "lsb_components", "lsb_parameters",
-                   "extend_start_rev7", "p1_patch", "probe_d6_settings")
+                   "extend_start_rev7", "p1_patch", "probe_d6_settings", "ed8_settings")
 """Fields :meth:`HydraulicOptions.to_dict` leaves out while off (stored digests unchanged)."""
 LSB_FIELDS = ("lsb_components", "lsb_parameters")
 """Edition 6 controller fields (``jp3_remedy_spec_v6.md`` 3.4): empty = off."""
-EMPTY_WHEN_OFF_FIELDS = (*LSB_FIELDS, "probe_d6_settings")
+EMPTY_WHEN_OFF_FIELDS = (*LSB_FIELDS, "probe_d6_settings", "ed8_settings")
 """Tuple fields whose empty value is "off" (left out of :meth:`HydraulicOptions.to_dict`)."""
 M2_PLANT_FIELDS = ("lock_anchor_continuous", "rod_flow_cap_all", "rod_reading_truth")
 """P2, P3 and P4: defined on the M2 rod pressure only."""
@@ -270,6 +276,8 @@ class HydraulicOptions:
             ``line_fill_gate`` with ``volume_scale`` 1 (the split scales replace it). Harness only.
         probe_d6_settings: ``(name, value)`` pairs of ``ground_contact.ProbeD6Settings`` (the
             edition 7 D6 witness and the probe retract position target, spec 3.2); empty = off.
+        ed8_settings: ``(name, value)`` pairs of ``C2Config.with_ed8`` (edition 8 PSW,
+            warning range, H3', L-2; ``jp3_remedy_spec_v8_rules.md`` 3.3 .. 3.8); empty = off.
     """
 
     flow: FlowLimitSetting | None = None
@@ -290,6 +298,7 @@ class HydraulicOptions:
     extend_start_rev7: bool = False
     p1_patch: P1PatchSetting | None = None
     probe_d6_settings: tuple[tuple[str, Any], ...] = ()
+    ed8_settings: tuple[tuple[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
         components, parameters = _checked_lsb_fields(self.lsb_components, self.lsb_parameters)
@@ -297,6 +306,7 @@ class HydraulicOptions:
         object.__setattr__(self, "lsb_parameters", parameters)
         object.__setattr__(self, "probe_d6_settings",
                            _checked_probe_d6_fields(self.probe_d6_settings))
+        object.__setattr__(self, "ed8_settings", _checked_ed8_fields(self.ed8_settings))
         if self.lock_window_follows_plant and self.lock_closure is None:
             raise SystemExit("the controller lock window needs the plant lock rule "
                              "(spec 2.6: controller alone is refused)")
@@ -345,6 +355,7 @@ class HydraulicOptions:
         values["lsb_components"] = list(self.lsb_components)  # JSON form (a stored line)
         values["lsb_parameters"] = dict(self.lsb_parameters)
         values["probe_d6_settings"] = dict(self.probe_d6_settings)
+        values["ed8_settings"] = self.ed8_dict
         for name in OPTIONAL_FIELDS:
             is_empty = name in EMPTY_WHEN_OFF_FIELDS and not values[name]
             if is_empty or (not isinstance(values[name], (dict, list))
@@ -416,7 +427,8 @@ class HydraulicOptions:
             extend_start_rev7=bool(values.get("extend_start_rev7", False)),
             p1_patch=(None if values.get("p1_patch") is None
                       else P1PatchSetting.from_dict(values["p1_patch"])),
-            probe_d6_settings=tuple(dict(values.get("probe_d6_settings", {})).items()))
+            probe_d6_settings=tuple(dict(values.get("probe_d6_settings", {})).items()),
+            ed8_settings=tuple(dict(values.get("ed8_settings", {})).items()))
 
     @property
     def lsb_parameter_dict(self) -> dict[str, Any]:
@@ -425,6 +437,12 @@ class HydraulicOptions:
     @property
     def probe_d6_dict(self) -> dict[str, Any]:
         return dict(self.probe_d6_settings)
+
+    @property
+    def ed8_dict(self) -> dict[str, Any]:
+        """The edition 8 settings in JSON form (the warning range as a list)."""
+        return {name: list(value) if isinstance(value, tuple) else value
+                for name, value in self.ed8_settings}
 
     def without_flow(self) -> HydraulicOptions:
         """The plant options alone (the runners keep the flow limit on their own path)."""
@@ -671,6 +689,25 @@ def _checked_probe_d6_fields(values: Any) -> tuple[tuple[str, Any], ...]:
     return pairs
 
 
+def _checked_ed8_fields(values: Any) -> tuple[tuple[str, Any], ...]:
+    """The edition 8 fields sorted by name (a list value as a tuple), checked by building a
+    ``C2Config`` with them.
+
+    Raises:
+        ValueError: An unknown field or a value the settings refuse.
+    """
+    pairs = tuple(sorted((str(name), tuple(value) if isinstance(value, list) else value)
+                         for name, value in values))
+    if not pairs:
+        return ()
+    # Imported here: the control package imports this module (as _checked_lsb_fields).
+    from outrigger_sim.control.c2 import C2Config
+
+    # The class defaults, not the (possibly runner-patched) R8 preset: a check, no side effect.
+    C2Config().with_ed8(dict(pairs))
+    return pairs
+
+
 def _check_p1_patch(options: HydraulicOptions) -> None:
     """Edition 7 3.3: the supplement sits on the P1 gate, whose uniform ``volume_scale`` it
     replaces by the split scales (so the gate's scale must be 1), and needs M2 (the rod truth)
@@ -773,6 +810,8 @@ def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: 
         config = config.with_lock_start_b(options.lsb_components, options.lsb_parameter_dict)
     if options.probe_d6_settings:
         config = config.with_probe_d6(options.probe_d6_dict)
+    if options.ed8_settings:
+        config = config.with_ed8(dict(options.ed8_settings))
     return config
 
 
@@ -816,6 +855,12 @@ def is_lock_start_b_on(config: Any | None) -> bool:
     return bool(getattr(settings, "is_enabled", False))
 
 
+def is_ed8_on(config: Any | None) -> bool:
+    """The C2 configuration has an edition 8 controller change on (``has_ed8_changes``;
+    False for ``None`` and a config from code before edition 8)."""
+    return bool(getattr(config, "has_ed8_changes", False))
+
+
 def lsb_components_of(config: Any | None) -> list[str]:
     """The edition 6 components a C2 configuration has on (the ``lsb_components`` meta)."""
     settings = getattr(config, "lock_start_b", None)
@@ -839,18 +884,23 @@ def _split_touch_creep_suffix(tag: str) -> tuple[str, bool]:
     return _split_suffix(tag, TOUCH_CREEP_TAG_SUFFIX)
 
 
-def _split_tail(tag: str) -> tuple[str, bool, bool]:
-    """``(tag without a trailing _TCL and then _LSB, had _LSB, had _TCL)``: the suffixes that
-    follow ``_LAS`` / ``_K1`` (:data:`LOCK_START_B_TAG_SUFFIX` before the K-2 one)."""
+def _split_tail(tag: str) -> tuple[str, bool, bool, bool]:
+    """``(tag without a trailing _ED8, then _TCL, then _LSB; had _LSB, had _TCL, had _ED8)``:
+    the suffixes that follow ``_LAS`` / ``_K1`` (:data:`LOCK_START_B_TAG_SUFFIX` before the K-2
+    one, :data:`ED8_TAG_SUFFIX` last of all)."""
+    tag, has_ed8 = _split_suffix(tag, ED8_TAG_SUFFIX)
     tag, has_touch_creep = _split_touch_creep_suffix(tag)
     tag, has_lock_start_b = _split_suffix(tag, LOCK_START_B_TAG_SUFFIX)
-    return tag, has_lock_start_b, has_touch_creep
+    return tag, has_lock_start_b, has_touch_creep, has_ed8
 
 
-def _with_tail(tag: str, has_lock_start_b: bool, has_touch_creep: bool) -> str:
+def _with_tail(tag: str, has_lock_start_b: bool, has_touch_creep: bool,
+               has_ed8: bool = False) -> str:
     if has_lock_start_b:
         tag += LOCK_START_B_TAG_SUFFIX
-    return tag + TOUCH_CREEP_TAG_SUFFIX if has_touch_creep else tag
+    if has_touch_creep:
+        tag += TOUCH_CREEP_TAG_SUFFIX
+    return tag + ED8_TAG_SUFFIX if has_ed8 else tag
 
 
 def with_liftoff_slow_tag(tag: str | None) -> str:
@@ -861,12 +911,12 @@ def with_liftoff_slow_tag(tag: str | None) -> str:
     after both."""
     if tag is None:
         return LAS_CONTROLLER_TAG
-    tag, has_lock_start_b, has_touch_creep = _split_tail(tag)
+    tag, has_lock_start_b, has_touch_creep, has_ed8 = _split_tail(tag)
     base, has_order_gate = _split_order_gate_suffix(tag)
     if not base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
         base += LIFTOFF_SLOW_TAG_SUFFIX
     tag = base + ORDER_GATE_TAG_SUFFIX if has_order_gate else base
-    return _with_tail(tag, has_lock_start_b, has_touch_creep)
+    return _with_tail(tag, has_lock_start_b, has_touch_creep, has_ed8)
 
 
 def with_order_gate_tag(tag: str | None) -> str:
@@ -874,68 +924,88 @@ def with_order_gate_tag(tag: str | None) -> str:
     any other tag gets :data:`ORDER_GATE_TAG_SUFFIX` once (``ABL_LAS`` -> ``ABL_LAS_K1``); an
     edition 6 ``_LSB`` and a K-2 suffix stay last."""
     base = FINAL_CONTROLLER_TAG if tag is None else tag
-    base, has_lock_start_b, has_touch_creep = _split_tail(base)
+    base, has_lock_start_b, has_touch_creep, has_ed8 = _split_tail(base)
     tag = base if base.endswith(ORDER_GATE_TAG_SUFFIX) else base + ORDER_GATE_TAG_SUFFIX
-    return _with_tail(tag, has_lock_start_b, has_touch_creep)
+    return _with_tail(tag, has_lock_start_b, has_touch_creep, has_ed8)
 
 
 def with_lock_start_b_tag(tag: str | None) -> str:
     """The edition 6 tag of a run tag: ``None`` -> ``final_C4G2_LSB``, any other tag gets
     :data:`LOCK_START_B_TAG_SUFFIX` once, after ``_LAS`` / ``_K1`` and before a K-2 suffix
-    (``final_C4G2_P3W_LAS_K1`` -> ``final_C4G2_P3W_LAS_K1_LSB``)."""
+    (``final_C4G2_P3W_LAS_K1`` -> ``final_C4G2_P3W_LAS_K1_LSB``); an edition 8 tag keeps
+    ``_ED8`` last (``..._LSB_ED8`` is returned as it is)."""
     base = FINAL_CONTROLLER_TAG if tag is None else tag
-    base, _, has_touch_creep = _split_tail(base)
-    return _with_tail(base, True, has_touch_creep)
+    base, _, has_touch_creep, has_ed8 = _split_tail(base)
+    return _with_tail(base, True, has_touch_creep, has_ed8)
 
 
 def with_touch_creep_tag(tag: str | None) -> str:
     """The K-2 tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_TCL``,
     any other tag gets :data:`TOUCH_CREEP_TAG_SUFFIX` once (``final_C4G2_LAS_K1`` ->
-    ``final_C4G2_LAS_K1_TCL``)."""
+    ``final_C4G2_LAS_K1_TCL``), before an edition 8 ``_ED8``."""
     base = FINAL_CONTROLLER_TAG if tag is None else tag
-    return base if base.endswith(TOUCH_CREEP_TAG_SUFFIX) else base + TOUCH_CREEP_TAG_SUFFIX
+    base, has_lock_start_b, _, has_ed8 = _split_tail(base)
+    return _with_tail(base, has_lock_start_b, True, has_ed8)
+
+
+def with_ed8_tag(tag: str | None) -> str:
+    """The edition 8 tag of a run tag: ``None`` -> ``final_C4G2_ED8``, any other tag gets
+    :data:`ED8_TAG_SUFFIX` once, last (``final_C4G2_P3X_LAS_K1_LSB`` ->
+    ``final_C4G2_P3X_LAS_K1_LSB_ED8``)."""
+    base = FINAL_CONTROLLER_TAG if tag is None else tag
+    return base if base.endswith(ED8_TAG_SUFFIX) else base + ED8_TAG_SUFFIX
 
 
 def is_liftoff_slow_tag(tag: str | None) -> bool:
     """A recorded tag of a run with LAS-b on (records without a tag ran before the switch);
     true with or without the K1 suffix after ``_LAS`` (``final_C4G2_P3_LAS_K1``) and an
-    edition 6 / K-2 suffix after that."""
+    edition 6 / K-2 / edition 8 suffix after that."""
     if tag is None:
         return False
-    tag, _, _ = _split_tail(tag)
+    tag, _, _, _ = _split_tail(tag)
     base, _ = _split_order_gate_suffix(tag)
     return base.endswith(LIFTOFF_SLOW_TAG_SUFFIX)
 
 
 def is_order_gate_tag(tag: str | None) -> bool:
     """A recorded tag of a run with the LAS-b K1 order gate on (suffix ``_K1``, before an
-    edition 6 or K-2 suffix when there is one)."""
+    edition 6, K-2 or edition 8 suffix when there is one)."""
     if tag is None:
         return False
-    tag, _, _ = _split_tail(tag)
+    tag, _, _, _ = _split_tail(tag)
     return tag.endswith(ORDER_GATE_TAG_SUFFIX)
 
 
 def is_lock_start_b_tag(tag: str | None) -> bool:
     """A recorded tag of a run with an edition 6 component on (suffix ``_LSB``, before a K-2
-    suffix when there is one). Which components: the run's ``lsb_components``."""
+    or edition 8 suffix when there is one). Which components: the run's ``lsb_components``."""
     if tag is None:
         return False
-    _, has_lock_start_b, _ = _split_tail(tag)
+    _, has_lock_start_b, _, _ = _split_tail(tag)
     return has_lock_start_b
 
 
 def is_touch_creep_tag(tag: str | None) -> bool:
-    """A recorded tag of a run with the K-2 TOUCH creep latch on (suffix ``_TCL``)."""
-    return tag is not None and tag.endswith(TOUCH_CREEP_TAG_SUFFIX)
+    """A recorded tag of a run with the K-2 TOUCH creep latch on (suffix ``_TCL``, before an
+    edition 8 ``_ED8`` when there is one)."""
+    if tag is None:
+        return False
+    _, _, has_touch_creep, _ = _split_tail(tag)
+    return has_touch_creep
+
+
+def is_ed8_tag(tag: str | None) -> bool:
+    """A recorded tag of a run with an edition 8 controller change on (suffix ``_ED8``)."""
+    return tag is not None and tag.endswith(ED8_TAG_SUFFIX)
 
 
 def switch_base_tag(tag: str) -> str:
-    """``tag`` without the switch suffixes :func:`with_switch_tags` adds (a trailing ``_TCL``,
-    then ``_LSB``, then ``_K1``, then ``_LAS``): ``final_C4G2_P3_LAS_K1`` /
+    """``tag`` without the switch suffixes :func:`with_switch_tags` adds (a trailing ``_ED8``,
+    then ``_TCL``, then ``_LSB``, then ``_K1``, then ``_LAS``): ``final_C4G2_P3_LAS_K1`` /
     ``final_C4G2_P3_K1`` -> ``final_C4G2_P3``, ``final_C4G2_P3W_LAS_K1_LSB`` ->
-    ``final_C4G2_P3W``, ``ABL_LAS`` -> ``ABL``."""
-    tag, _, _ = _split_tail(tag)
+    ``final_C4G2_P3W``, ``final_C4G2_P3X_LAS_K1_LSB_ED8`` -> ``final_C4G2_P3X``, ``ABL_LAS``
+    -> ``ABL``."""
+    tag, _, _, _ = _split_tail(tag)
     base, _ = _split_order_gate_suffix(tag)
     if base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
         base = base[: -len(LIFTOFF_SLOW_TAG_SUFFIX)]
@@ -963,7 +1033,7 @@ def extend_start_revision_of_tag(tag: str | None) -> int | None:
 def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
     """``tag`` with the suffixes of the switches ``config`` has on: ``_LAS`` (LAS-b), then
     ``_K1`` (order gate), then the edition 6 ``_LSB``, then the K-2 ``_TCL`` (TOUCH creep
-    latch). Unchanged (possibly None) when all are off."""
+    latch), then the edition 8 ``_ED8``. Unchanged (possibly None) when all are off."""
     if is_liftoff_slow_on(config):
         tag = with_liftoff_slow_tag(tag)
     if is_order_gate_on(config):
@@ -972,6 +1042,8 @@ def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
         tag = with_lock_start_b_tag(tag)
     if is_touch_creep_on(config):
         tag = with_touch_creep_tag(tag)
+    if is_ed8_on(config):
+        tag = with_ed8_tag(tag)
     return tag
 
 
@@ -1015,6 +1087,36 @@ def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: Hydraulic
         raise RuntimeError(f"controller lock window meta differs from the options: {differing}")
 
 
+def check_ed8_config(config: Any | None, options: HydraulicOptions) -> None:
+    """Edition 8 identity guard (``jp3_remedy_spec_v8_rules.md`` 3.6): the C2 configuration a
+    run built carries exactly the edition 8 values of its options (with the options off: no
+    PSW, no H3', no L-2 and the R8 warning range).
+
+    Raises:
+        RuntimeError: No configuration with the settings on, or other values.
+    """
+    if config is None:
+        if options.ed8_settings:
+            raise RuntimeError("no C2 configuration was built for the edition 8 options")
+        return
+    from outrigger_sim.control.c2 import R8_D1_STIFFNESS_WARNING_RANGE
+
+    if not options.ed8_settings:
+        is_on = (config.probe.scale_mid_min_piston_travel_m is not None
+                 or config.r8.lifted_reapproach.short_run_s is not None
+                 or config.twist_completion_relax.locked_drift_waiver
+                 or config.r8.stiffness_warning_range != R8_D1_STIFFNESS_WARNING_RANGE)
+        if is_on:
+            raise RuntimeError("an edition 8 controller change is on, the options have none")
+        return
+    expected = config.with_ed8(dict(options.ed8_settings))
+    changed = [name for name in ("probe", "r8", "twist_completion_relax")
+               if getattr(expected, name) != getattr(config, name)]
+    if changed:
+        raise RuntimeError(f"edition 8 settings {options.ed8_dict} are not those of the run's "
+                           f"C2 configuration ({changed})")
+
+
 def check_lock_start_b_config(config: Any | None, options: HydraulicOptions) -> None:
     """Edition 6 identity guard (spec 3.4): the C2 configuration a run built has exactly the
     components and thresholds of its options (none with the options off).
@@ -1038,6 +1140,11 @@ def check_lock_start_b_config(config: Any | None, options: HydraulicOptions) -> 
 
 __all__ = [
     "ALLOW_GATE_WITH_REV4_FOR_TEST",
+    "ED8_TAG_SUFFIX",
+    "check_ed8_config",
+    "is_ed8_on",
+    "is_ed8_tag",
+    "with_ed8_tag",
     "EXTEND_REV7_CONTROLLER_TAG",
     "EXTEND_REV7_TAGS",
     "P1PatchSetting",

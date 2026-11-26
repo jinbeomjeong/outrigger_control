@@ -340,23 +340,77 @@ def is_ed8_record_on() -> bool:
     return _ED8_RECORD[0]
 
 
+ED8_SETTINGS_KEY = "ed8_settings"
+ED8_RECORD_KEY = "ed8_record"
+"""Edition 8 controller keys (``jp3_remedy_spec_v8_rules.md`` 3.5, 3.6): a line and a T4h meta
+of a run whose controller has an edition 8 change on carry the settings (``ed8_settings``) and
+the 3.5 records (``ed8_record``, besides ``probe_stiffness_record`` / ``ib_block_record``)."""
+
+
+def is_ed8_record_for(controller) -> bool:
+    """The edition 8 records of this run: the process switch, or a controller with an edition 8
+    change on (``C2Config.has_ed8_changes``)."""
+    config = getattr(controller, "config", None)
+    return is_ed8_record_on() or bool(getattr(config, "has_ed8_changes", False))
+
+
+def ed8_settings_meta(config) -> dict:
+    """``jp3_remedy_spec_v8_rules.md`` 3.6 meta of an edition 8 controller: the PSW
+    (``probe_k1_scale_settings``), ``r8.stiffness_warning_range``, the H3' fields of
+    ``r8.lifted_reapproach`` and the L-2 fields of ``twist_completion_relax``."""
+    reapproach = config.r8.lifted_reapproach
+    relax = config.twist_completion_relax
+    return {"probe_k1_scale_settings": {
+                "scale_mid_min_piston_travel_m": config.probe.scale_mid_min_piston_travel_m},
+            "r8": {"stiffness_warning_range": list(config.r8.stiffness_warning_range),
+                   "lifted_reapproach": {
+                       "short_run_s": reapproach.short_run_s,
+                       "short_run_exit_samples": reapproach.short_run_exit_samples}},
+            "twist_completion_relax": {"locked_drift_waiver": relax.locked_drift_waiver,
+                                       "waiver_max_rise_N": relax.waiver_max_rise_N,
+                                       "waiver_margin_N": relax.waiver_margin_N}}
+
+
 def ed8_record_meta(controller) -> dict:
     """``probe_stiffness_record`` (every probe round) and, with ``A_ib``, ``ib_block_record``
-    of a controller; empty with the switch off."""
-    if not is_ed8_record_on():
+    of a controller with the edition 8 records (:func:`is_ed8_record_for`); a controller with
+    an edition 8 change also gets ``ed8_settings`` and ``ed8_record`` (the re-approach runs and,
+    with L-2, the waiver record). Empty otherwise."""
+    if not is_ed8_record_for(controller):
         return {}
     meta = {PROBE_STIFFNESS_RECORD_KEY: meta_for_json(controller.probe_stiffness_record())}
     block = controller.blind_block_record()
     if block is not None:
         meta[IB_BLOCK_RECORD_KEY] = meta_for_json(block)
+    config = getattr(controller, "config", None)
+    if getattr(config, "has_ed8_changes", False):
+        record = {"reapproach_runs": controller.meta()["lifted_reapproach"]}
+        if config.twist_completion_relax.locked_drift_waiver:
+            record["twist_waiver"] = controller.twist_waiver_record()
+        meta[ED8_SETTINGS_KEY] = meta_for_json(ed8_settings_meta(config))
+        meta[ED8_RECORD_KEY] = meta_for_json(record)
     return meta
 
 
 def ed8_record_arrays(controller, t_s: np.ndarray) -> dict:
-    """The ``lsb_ib_block`` array of a controller with ``A_ib``; empty with the switch off."""
-    if not is_ed8_record_on():
+    """The ``lsb_ib_block`` array of a controller with ``A_ib`` and (edition 8 controller) the
+    split completion flags ``ed8_done_flags``; empty without the edition 8 records."""
+    if not is_ed8_record_for(controller):
         return {}
-    return controller.blind_block_trace_arrays(t_s)
+    completion_arrays = getattr(controller, "completion_trace_arrays", None)
+    return {**controller.blind_block_trace_arrays(t_s),
+            **({} if completion_arrays is None else completion_arrays(t_s))}
+
+
+def held_leg_arrays(controller, t_s: np.ndarray, locked: np.ndarray,
+                    command_m_s: np.ndarray) -> dict:
+    """Y8-4 "locked-leg commands" of an edition 8 controller: ``ed8_held_legs`` (reads x legs,
+    True = the plant lock is closed while the leg is commanded, ``|u| > 0``); empty
+    otherwise."""
+    if not getattr(getattr(controller, "config", None), "has_ed8_changes", False):
+        return {}
+    command = np.asarray(command_m_s, float).reshape(len(t_s), -1)
+    return {"ed8_held_legs": np.asarray(locked, bool) & (np.abs(command) > 0.0)}
 
 
 def lock_start_b_arrays(controller, t_s: np.ndarray) -> dict:
@@ -466,6 +520,9 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict,
         full_meta["stale_seed_release"] = stale_record()
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    held = held_leg_arrays(controller, t_s, locked, period["command"])  # edition 8 Y8-4
+    if held:
+        extra_arrays = {**(extra_arrays or {}), **held}
     np.savez_compressed(
         path, t_s=t_s, head_pressure_Pa=period["head_pressure_Pa"],
         rod_pressure_Pa=period["rod_pressure_Pa"], motor_stroke_m=period["motor_stroke_m"],
@@ -584,7 +641,7 @@ def _run_event(twin: EventTwin, contact: str | None = None, t4h: dict | None = N
     cl.rmf.CONFIG.clear()
     cl.rpt.RCFG.clear()
     leg = r67.LEGS.index(twin.leg)
-    event = SS_EVENT if twin.event == "SS" else r67.EVENTS[twin.event]
+    event = event_shape(twin, r67.EVENTS)
     r67.MIN_AFTER_S = max(r67.MIN_AFTER_S, event["ramp"] + SLOW_EVENT_TAIL_S)
     judge = None if contact is None else c2.ContactJudge[contact]
     plant, controller, _ = r67.make_base(cl, c2, twin.level, twin.fs_kN, contact=judge)
@@ -627,6 +684,8 @@ def _run_event(twin: EventTwin, contact: str | None = None, t4h: dict | None = N
     judged["ref_10hz_episodes"] = ref_10hz_episode_values(
         rows[:, 0] - t_event, rows[:, 1:5], rows[:, 5:9], period["t"] - t_event,
         period["lower_estimate_N"], window_end, r67.F_MIN_N, controller.config.contact.name)
+    if is_ed8_record_for(controller):  # edition 8 Y8-8 (record only)
+        judged.update(ed8_event_record(r67, rows, controller, t_event))
     phase_at_event = next((phase for t, phase in phases if t >= 0.0), None)
     extra.update(event=twin.event, leg=twin.leg, timing=twin.timing, offset_s=twin.offset_s,
                  t_event_s=round(t_event, 3), phase_at_event=phase_at_event,
@@ -641,6 +700,39 @@ def _run_event(twin: EventTwin, contact: str | None = None, t4h: dict | None = N
     finished["harness_commands_sha256"] = hasher.hexdigest()
     finished["values"].update(EVENT_CASE_FLOOR)  # 436.8 rules rev4 F-3, record only
     return finished, series
+
+
+def event_shape(twin: EventTwin, events: dict) -> dict:
+    """The r67 event of a twin: ``{"depth", "ramp"}`` from the twin's ``depth_m`` / ``ramp_s``
+    when given (edition 8 Y8-9, a variant of the named event), else the named shape
+    (``events[twin.event]``, SS the study A ramp); the same dict object as before for a twin
+    without them."""
+    if twin.depth_m is not None:
+        return {"depth": float(twin.depth_m), "ramp": float(twin.ramp_s)}
+    return SS_EVENT if twin.event == "SS" else events[twin.event]
+
+
+def ed8_event_record(r67, rows: np.ndarray, controller, t_event: float) -> dict:
+    """Edition 8 Y8-8 event-output record (spec v8 3.5): ``reapproach_ends`` (every re-approach
+    run that ended after the branch start: ``[t - t_ev rounded to 0.01 s, leg, outcome,
+    exit_required_samples, short_run_extended]``, as ``reapproach_starts``) and
+    ``lift_intervals`` (per leg, the 1 ms intervals with ``contact <= 0`` after the event,
+    ``[start, end]`` in s from the event, 0.001 s)."""
+    branch_start_s = t_event - r67.PRE_S - 1e-9
+    ends = []
+    for run in controller.meta()["lifted_reapproach"]:
+        if run["end_s"] is None or run["end_s"] < branch_start_s:
+            continue
+        ends.append([round(run["end_s"] - t_event, 2), run["leg"], run["outcome"],
+                     run.get("exit_required_samples"), run.get("short_run_extended")])
+    t = rows[:, 0] - t_event
+    lifted = rows[:, 1:5] <= 0.0
+    after = t >= 0.0
+    intervals = {}
+    for leg, name in enumerate(r67.LEGS):
+        found = r67._intervals(after & lifted[:, leg], t)
+        intervals[name] = [[round(float(a), 3), round(float(b), 3)] for a, b in found]
+    return {"reapproach_ends": ends, "lift_intervals": intervals}
 
 
 EVENT_CASE_FLOOR = {"case_floor_deg": [0.0, 0.0],
@@ -792,6 +884,8 @@ def plant_options_record(hydraulics=None, t_lift_s: float | None = None, *,
         harness_hydraulics.check_last_lock_start_b(hydraulics, config)
     if hydraulics.probe_d6_settings:  # edition 7 identity guard (spec 6.1)
         harness_hydraulics.check_last_probe_d6(hydraulics, config)
+    if hydraulics.ed8_settings:  # edition 8 identity guard (spec v8 3.6)
+        harness_hydraulics.check_last_ed8(hydraulics, config)
     record = {"hydraulic_options": hydraulics.to_dict(),
               "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
     tag = controller_tag(hydraulics, config)

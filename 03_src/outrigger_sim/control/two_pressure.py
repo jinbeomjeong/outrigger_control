@@ -147,6 +147,9 @@ class D6Witness:
 
     witness_m: float
     warn_rounds: int
+    is_record_only: bool = False
+    """Edition 8 R2 (``jp3_remedy_spec_v8_rules.md`` 3.2): record the rounds only; D6 judges
+    every round as in edition 6 and no witness event is raised."""
 
 
 # R8 (10 Hz) diagnosis constants, spec rev. 29 126 #3 (ASSUMPTION where the spec says so)
@@ -1788,8 +1791,10 @@ class TwoPressureMonitor:
             rise = at_retract[0][leg] - at_extend[0][leg]
             required = max(self.settings.probe_rise_min_Pa,
                            self.settings.probe_rise_head_ratio * at_retract[1][leg])
-            if witness is not None and not self._d6_witness_round(result, witness, rise,
-                                                                  required):
+            if witness is not None and witness.is_record_only:
+                self._d6_witness_record_round(result, witness, rise, required)
+            elif witness is not None and not self._d6_witness_round(result, witness, rise,
+                                                                    required):
                 continue
             watch = self._legs[leg]
             watch.probe_misses = watch.probe_misses + 1 if rise < required else 0
@@ -1821,6 +1826,31 @@ class TwoPressureMonitor:
         if streak[leg] >= witness.warn_rounds:
             self._event_once(f"{PROBE_RETRACT_NOT_OPENED_EVENT}:{LEG_ORDER[leg]}")
         return False
+
+    def _d6_witness_record_round(self, result, witness: D6Witness, rise_Pa: float,
+                                 required_Pa: float) -> None:
+        """Edition 8 R2: the round's witness values and, per leg, the not-opened rounds and
+        whether the edition 7 rule would have warned (record only: no event, no judgement)."""
+        leg = result.leg_index
+        moved_m = result.retract_witness_m
+        is_opened = moved_m is not None and math.isfinite(moved_m) and moved_m >= witness.witness_m
+        log = self._d6_witness_log()
+        log.setdefault("not_opened_rounds", [0] * LEG_COUNT)
+        log.setdefault("would_warn", [False] * LEG_COUNT)
+        log["rounds"].append({"leg": LEG_ORDER[leg], "t_s": result.t_second_hold_end_s,
+                              "retract_witness_m": moved_m, "is_opened": is_opened,
+                              "is_reversed": result.is_reversed,
+                              "k1_mid_opened": result.k1_mid_opened,
+                              "rise_Pa": float(rise_Pa), "required_Pa": float(required_Pa),
+                              "witness_mode": "record"})
+        streak = log["not_opened_streak"]
+        if is_opened:
+            streak[leg] = 0
+            return
+        streak[leg] += 1
+        log["not_opened_rounds"][leg] += 1
+        if streak[leg] >= witness.warn_rounds:
+            log["would_warn"][leg] = True
 
     def _d6_witness_log(self) -> dict[str, Any]:
         """The edition 7 D6 witness record (created on first use: a monitor without the witness

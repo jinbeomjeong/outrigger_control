@@ -279,12 +279,45 @@ ED7_JUDGED_SETTINGS = ("VBM", "LSM1", "LSM2", "LSM3", "LSM4")
 ED7_SENSITIVITY_SETTINGS = tuple(f"VBM{key}" for key in ED7_SENSITIVITY_JUDGED)
 ED7_SENSITIVITY_RECORD_SETTINGS = tuple(f"VBM{key}" for key in ED7_SENSITIVITY
                                         if key not in ED7_SENSITIVITY_JUDGED)
-ROD_FAULT_SETTINGS = ("VBK", "VBK0", "VBKL", "VBKL0", "VBKM", "VBKM0")
+PROBE_D6_ED8 = {"witness": True, "retract_position_target": False, "witness_mode": "record"}
+"""Edition 8 3.1 / 3.2 (meta ``probe_d6_settings``): (i-b) off, the D6 witness as a record only
+(R2: D6 judges as in edition 6, no witness event)."""
+ED8_CONTROLLER_CHANGES = {"locked_drift_waiver": True, "psw_min_travel_m": 0.05e-3,
+                          "short_run_exit_samples": 4, "short_run_s": 0.5,
+                          "stiffness_warning_range": [0.8, 3.6]}
+"""Edition 8 3.3, 3.4, 3.7, 3.8 (v5 option ``ed8_settings`` = ``c2.ED8_CONTROLLER_SETTINGS`` in
+JSON form; a unit test keeps the two equal): PSW 0.05 mm, warning (0.8, 3.6), H3' 0.5 s / 4,
+L-2 at its class limits."""
+_ED8_CONTROLLER_P3_OFF = {**_LSB7, "probe_d6_settings": dict(PROBE_D6_ED8),
+                          "ed8_settings": dict(ED8_CONTROLLER_CHANGES)}
+_ED8_CONTROLLER = {**_P3X, **_ED8_CONTROLLER_P3_OFF}
+ED8_SETTINGS: dict[str, tuple[bool, dict]] = {
+    "VBN": (True, {**ed7_plant(), **_ED8_CONTROLLER}),
+    **{f"LSN{n}": (True, {**ed7_plant(), "lock_closure": _lc(*closure), **_ED8_CONTROLLER})
+       for n, closure in LS_CLOSURES.items()},
+    "VBN0": (True, {**ed7_plant(), **_ED8_CONTROLLER_P3_OFF}),
+    **{f"VBN{key}": (True, {**ed7_plant(key), **_ED8_CONTROLLER}) for key in ED7_SENSITIVITY},
+    "VBKN": (True, {**ed7_plant(), **_ED8_CONTROLLER}),
+    "VBKN0": (True, {**ed7_plant(), **_ED8_CONTROLLER_P3_OFF}),
+}
+"""Edition 8 settings (``jp3_remedy_spec_v8_rules.md`` 3.6): the VBM family plants with the
+edition 8 controller (3.1 .. 3.8); VBN0 = VBN with ③ off (T8, 12a), ``VBN<key>`` the ten
+sensitivity settings, VBKN / VBKN0 = VBN / VBN0 with the rod fault plan (12b). Every older
+setting keeps its options (P8-0)."""
+ED8_JUDGED_SETTINGS = ("VBN", "LSN1", "LSN2", "LSN3", "LSN4")
+ED8_SENSITIVITY_SETTINGS = tuple(f"VBN{key}" for key in ED7_SENSITIVITY_JUDGED)
+ED8_SENSITIVITY_RECORD_SETTINGS = tuple(f"VBN{key}" for key in ED7_SENSITIVITY
+                                        if key not in ED7_SENSITIVITY_JUDGED)
+ED8_SETTING_OF_ED7 = {"VBM": "VBN", **{f"LSM{n}": f"LSN{n}" for n in LS_CLOSURES},
+                      "VBM0": "VBN0", **{f"VBM{key}": f"VBN{key}" for key in ED7_SENSITIVITY},
+                      "VBKM": "VBKN", "VBKM0": "VBKN0"}
+"""Spec v8 5.1 / 3.6 name map: the edition 7 setting -> the edition 8 setting of its plant."""
+ROD_FAULT_SETTINGS = ("VBK", "VBK0", "VBKL", "VBKL0", "VBKM", "VBKM0", "VBKN", "VBKN0")
 """Edition 5 6.3.1: the settings that run with a rod fault plan (``r79_sensor_screen`` refuses
 one without the other by this list, audit W15); edition 6 adds VBKL / VBKL0 (spec 3.4),
-edition 7 VBKM / VBKM0 (spec v7 3.6)."""
+edition 7 VBKM / VBKM0 (spec v7 3.6), edition 8 VBKN / VBKN0 (spec v8 3.6)."""
 ALL_SETTINGS: dict[str, tuple[bool, dict]] = {**SETTINGS, **JP3_SETTINGS, **ED6_SETTINGS,
-                                              **ED7_SETTINGS}
+                                              **ED7_SETTINGS, **ED8_SETTINGS}
 JP3_JUDGED_SETTINGS = ("VBJ", "LSJ1", "LSJ2", "LSJ3", "LSJ4")
 JP3_DIAG_SETTINGS = ("VBH", "LSH1", "LSH2", "LSH3", "LSH4", "VBJ0")
 
@@ -647,17 +680,21 @@ def p3_hash_jobs(source: Path = P3_HASH_SOURCE) -> list[tuple[int, dict]]:
     return list(jobs.values())
 
 
-GRID_TWIN_FIELDS = ("event", "timing")
+GRID_TWIN_FIELDS = ("event", "timing", "depth_m", "ramp_s")
 """Twin fields of a stored-grid row (edition 6 confirmation grid, spec 6.3 (나): the r67 event
-name and timing of ``EventTwin``); a job twin with them gets them in its T4h file name, so the
-FS24 / G4 / RE1bF rows of one (level, leg, F_s, offset) do not share a file."""
+name and timing of ``EventTwin``; edition 8 Y8-9: the event depth and ramp of a held-out shape
+variant); a job twin with them gets them in its T4h file name, so the FS24 / G4 / RE1bF rows
+(and the 25 mm / 30 mm RE1bF variants) of one (level, leg, F_s, offset) do not share a file."""
+GRID_TWIN_FIELD_PREFIX = {"depth_m": "d", "ramp_s": "r"}
+"""File-name prefix of the edition 8 twin fields (``-d0.025-r0.05``); the older fields have
+none."""
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
 """Job entries ``main`` adds for the worker only (not part of the job identity)."""
 T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4", *JP3_JUDGED_SETTINGS, *JP3_DIAG_SETTINGS,
-                *ED6_SETTINGS, *ED7_SETTINGS)
+                *ED6_SETTINGS, *ED7_SETTINGS, *ED8_SETTINGS)
 """Criteria 9 T4h (control-expert B): the runs that write a T4h record (436.9: the VBJ, LSJ,
 VBJ0, VBH and LSH settings too, spec 6.3; edition 6: every :data:`ED6_SETTINGS` run; edition 7:
-every :data:`ED7_SETTINGS` run)."""
+every :data:`ED7_SETTINGS` run; edition 8: every :data:`ED8_SETTINGS` run)."""
 
 
 def job_key(job: dict) -> str:
@@ -674,7 +711,7 @@ def t4h_file_name(job: dict) -> str:
         phase = f"{twin['level']}-{twin['leg']}-Fs{twin['fs_kN']:g}-o{job.get('offset_s')}"
         for field in GRID_TWIN_FIELDS:  # edition 6 grid rows (6.3 (나)); absent elsewhere
             if field in twin:
-                phase += f"-{twin[field]}"
+                phase += f"-{GRID_TWIN_FIELD_PREFIX.get(field, '')}{twin[field]}"
     elif job.get("offset_s") is not None:
         phase = f"o{job['offset_s']}"
     else:
@@ -913,9 +950,10 @@ LINE_RECORD_KEYS = ("overlap_found", "soil_stop_crawler", "lock_window_alignment
                     "controller_tag", "head_only_declared", "d1", RESUME_K1_KEY,
                     HARNESS_HASH_KEY, "lsb_components", "lsb_settings", "lsb_record",
                     "probe_d6_settings", "probe_d6_record", "probe_stiffness_record",
-                    "ib_block_record")
-"""Result keys a line copies when the run has them (in this order); the last two are the
-edition 8 records (``verdict_runs.enable_ed8_record``, record only)."""
+                    "ib_block_record", "ed8_settings", "ed8_record")
+"""Result keys a line copies when the run has them (in this order); the last four are the
+edition 8 records (``verdict_runs.enable_ed8_record`` or an edition 8 controller, record
+only)."""
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:

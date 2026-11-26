@@ -1299,9 +1299,23 @@ class LiftedReapproachSettings:
     """P-S9-10 (spec rev. 57 283.3 / 285, U-S9-C4): a re-approach still active this long after
     its start ends as ``no_contact`` (the twist protection can hold ``tau_dot`` at zero for good
     when two legs lift together, so ``max_travel_m`` is never reached); ``None`` = off."""
+    short_run_s: float | None = None
+    """Edition 8 H3' (``jp3_remedy_spec_v8_rules.md`` 3.7): a run that is not a re-trigger and
+    would end on contact within this time of its start needs ``short_run_exit_samples``
+    samples in a row instead of ``exit_samples`` (ASSUMPTION ``T_r`` 0.5 s: the rocking load
+    window 0.18..0.45 s). ``None`` = off."""
+    short_run_exit_samples: int = 4
+    """Edition 8 H3' ``N_s`` (ASSUMPTION 4: 0.3 s of samples, wider than the load window)."""
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "mode", ReapproachMode(self.mode))
+        if self.short_run_s is not None:
+            if not self.short_run_s > 0.0:
+                raise ValueError(f"short_run_s must be > 0 or None, got {self.short_run_s!r}")
+            short_samples = self.short_run_exit_samples
+            if not _is_positive_int(short_samples) or short_samples < self.exit_samples:
+                raise ValueError("short_run_exit_samples must be an int >= exit_samples, got "
+                                 f"{short_samples!r}")
         if not 0.0 < self.load_fraction_of_F_min <= 2.0:
             raise ValueError("load_fraction_of_F_min must be in (0, 2]")
         if self.samples is not None and not _is_positive_int(self.samples):
@@ -1341,6 +1355,16 @@ class LiftedReapproachSettings:
     def is_retrigger(self, t_s: float, last_end_s: float | None) -> bool:
         """RT 2: a start at ``t_s`` falls inside the re-trigger window of the last end."""
         return _is_inside_reapproach_window(t_s, last_end_s, self.retrigger_window_s)
+
+    def exit_samples_of(self, t_s: float, start_s: float, is_retrigger: bool) -> int:
+        """Edition 8 H3': the exit samples a run started at ``start_s`` needs at ``t_s``
+        (``short_run_exit_samples`` for a first run within ``short_run_s`` of its start, the
+        boundary included; ``exit_samples`` otherwise and with H3' off)."""
+        if self.short_run_s is None or is_retrigger:
+            return self.exit_samples
+        if t_s - start_s <= self.short_run_s + REAPPROACH_WINDOW_TOLERANCE_S:
+            return self.short_run_exit_samples
+        return self.exit_samples
 
     def needs_strong_confirmation(
         self, t_s: float, last_end_s: float | None, last_sign: float, leg_sign: float
@@ -1670,6 +1694,31 @@ rev. 52 228.3: P-S8-16 re-trigger rule RT; rev. 57 285: P-S9-10 re-approach time
 rev. 61 304: P-S8-22 R-5 fallback slope ``nominal_gap`` with ``column_nominal``, the
 operating default of U-S8-61 (L1 runs switch to ``plant_meta`` with
 :meth:`C2Config.with_fallback_ratio_source`))."""
+# Edition 8 controller changes (``jp3_remedy_spec_v8_rules.md`` 3.3 .. 3.8, user decisions
+# 2026-11-26); on through :meth:`C2Config.with_ed8` only (the v5 option ``ed8_settings``).
+ED8_PSW_MIN_TRAVEL_M = 0.05e-3
+"""PSW ``delta`` (spec v8 3.3, harness value; on a machine ``max(0.05, 3 sqrt(2) sigma_x)`` mm)."""
+ED8_STIFFNESS_WARNING_RANGE = (0.8, 3.6)
+"""Spec v8 3.4: the rigid three-leg upper bound 3.53 of a stuck-neighbour probe, PM 66.6 deg at
+3.6 (``control_k1_window/report.md`` 5)."""
+ED8_SHORT_RUN_S = 0.5
+"""H3' ``T_r`` (spec v8 3.7, ASSUMPTION)."""
+ED8_SHORT_RUN_EXIT_SAMPLES = 4
+"""H3' ``N_s`` (spec v8 3.7, ASSUMPTION)."""
+ED8_REAPPROACH_KEYS = ("short_run_s", "short_run_exit_samples")
+ED8_RELAX_KEYS = ("locked_drift_waiver", "waiver_max_rise_N", "waiver_margin_N")
+ED8_SETTING_KEYS = ("psw_min_travel_m", "stiffness_warning_range", *ED8_REAPPROACH_KEYS,
+                    *ED8_RELAX_KEYS)
+"""Keys of :meth:`C2Config.with_ed8` (the v5 option ``ed8_settings``)."""
+ED8_CONTROLLER_SETTINGS: dict[str, Any] = {
+    "psw_min_travel_m": ED8_PSW_MIN_TRAVEL_M,
+    "stiffness_warning_range": ED8_STIFFNESS_WARNING_RANGE,
+    "short_run_s": ED8_SHORT_RUN_S,
+    "short_run_exit_samples": ED8_SHORT_RUN_EXIT_SAMPLES,
+    "locked_drift_waiver": True,
+}
+"""The edition 8 judged controller changes (PSW, warning range, H3', L-2; the waiver limits at
+their class defaults 2.5 kN / 0.5 kN)."""
 QUASI_STATIC_PRESSURE_NOTE = (
     "10 Hz instantaneous samples: the 345 bar warning sees about 43 % of a heave transient "
     "and hardly any 102 Hz ringing; it is a quasi-static watch, not an overpressure "
@@ -1979,14 +2028,26 @@ class TwistCompletionRelaxSettings:
     rise_tol_N: float = 300.0
     max_twist_N: float = 15000.0
     require_loads_ge_F_min: bool = True
+    locked_drift_waiver: bool = False
+    """Edition 8 L-2 (``jp3_remedy_spec_v8_rules.md`` 3.8): when ``|D|`` has risen, the "not
+    rising" condition is waived while some leg has been still under a same-sign sub-hold
+    command (A(i)-b conditions 1 and 2) for the whole window, the window rise is at most
+    ``waiver_max_rise_N`` and ``|D| + waiver_margin_N <= max_twist_N``. Off by default."""
+    waiver_max_rise_N: float = 2500.0
+    """ASSUMPTION (spec v8 3.8): 0.5 kN/s over the 5 s window (observed drift 0.19..0.32 kN/s)."""
+    waiver_margin_N: float = 500.0
+    """ASSUMPTION (spec v8 3.8): the drift bound times ``done_hold_s``."""
 
     def __post_init__(self) -> None:
         for name in ("settle_s", "window_s"):
             if not getattr(self, name) > 0.0:
                 raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
-        for name in ("drop_N", "rise_tol_N", "max_twist_N"):
+        for name in ("drop_N", "rise_tol_N", "max_twist_N", "waiver_max_rise_N",
+                     "waiver_margin_N"):
             if not getattr(self, name) >= 0.0:
                 raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
+        if not isinstance(self.locked_drift_waiver, bool):
+            raise ValueError("locked_drift_waiver must be a bool")
 
 
 LIFT_PAUSED_EVENT = "INFO_LIFT_PAUSED"
@@ -2716,6 +2777,47 @@ class C2Config:
         if not settings.is_enabled:
             raise ValueError("with_probe_d6 needs the witness or the retract position target")
         return replace(self, probe_d6=settings)
+
+    def with_ed8(self, values: dict[str, Any]) -> C2Config:
+        """Copy with the edition 8 controller changes of ``values`` (keys of
+        :data:`ED8_SETTING_KEYS`; ``jp3_remedy_spec_v8_rules.md`` 3.3, 3.4, 3.7, 3.8).
+
+        ``psw_min_travel_m`` -> ``probe.scale_mid_min_piston_travel_m`` (PSW),
+        ``stiffness_warning_range`` -> ``r8.stiffness_warning_range``, ``short_run_s`` /
+        ``short_run_exit_samples`` -> ``r8.lifted_reapproach`` (H3'), ``locked_drift_waiver`` /
+        ``waiver_max_rise_N`` / ``waiver_margin_N`` -> ``twist_completion_relax`` (L-2). A key
+        not given keeps the value of this config.
+
+        Raises:
+            ValueError: An unknown key, no key, or a value the settings refuse.
+        """
+        unknown = sorted(set(values) - set(ED8_SETTING_KEYS))
+        if unknown or not values:
+            raise ValueError(f"with_ed8: unknown keys {unknown} (known {ED8_SETTING_KEYS})")
+        probe, r8, relax = self.probe, self.r8, self.twist_completion_relax
+        if "psw_min_travel_m" in values:
+            probe = replace(probe, scale_mid_min_piston_travel_m=values["psw_min_travel_m"])
+        if "stiffness_warning_range" in values:
+            low, high = values["stiffness_warning_range"]
+            r8 = replace(r8, stiffness_warning_range=(float(low), float(high)))
+        reapproach_changes = {key: values[key] for key in ED8_REAPPROACH_KEYS if key in values}
+        if reapproach_changes:
+            r8 = replace(r8, lifted_reapproach=replace(r8.lifted_reapproach,
+                                                       **reapproach_changes))
+        relax_changes = {key: values[key] for key in ED8_RELAX_KEYS if key in values}
+        if relax_changes:
+            relax = replace(relax, **relax_changes)
+        return replace(self, probe=probe, r8=r8, twist_completion_relax=relax)
+
+    @property
+    def has_ed8_changes(self) -> bool:
+        """An edition 8 controller change is on (PSW, a warning range other than the R8 one,
+        H3', L-2 or the R2 witness record): the ``_ED8`` tag and the edition 8 records."""
+        return (self.probe.scale_mid_min_piston_travel_m is not None
+                or self.r8.stiffness_warning_range != R8_D1_STIFFNESS_WARNING_RANGE
+                or self.r8.lifted_reapproach.short_run_s is not None
+                or self.twist_completion_relax.locked_drift_waiver
+                or self.probe_d6.is_witness_record_only)
 
     def with_fallback_ratio_source(
         self, source: str, plant_ratio: tuple[float, ...] | None = None
@@ -4013,9 +4115,18 @@ class _Reapproach:
     """Twist mode: periods with ``tau_dot`` held at zero to protect another grounded leg."""
     is_retrigger: bool = False
     """P-S8-16 RT 2: started inside the re-trigger window (runs at the reduced speed)."""
+    # Edition 8 Y8-8 record (written with H3' on only; class defaults for old pickles)
+    exit_required_samples: int | None = None
+    """The exit samples the run needed at its last exit test."""
+    short_run_extended: bool = False
+    """H3' kept the run going: it held ``exit_samples`` samples but fewer than required."""
+    ordinary_end_s: float | None = None
+    """The first sample at which the ``exit_samples`` rule alone would have ended it."""
+    handover_diagonal_load_N: float | None = None
+    """Lower load estimate of the diagonal leg at the contact end sample (the handover)."""
 
     def to_meta(self) -> dict[str, Any]:
-        return {
+        meta = {
             "leg": LEG_ORDER[self.leg],
             "mode": str(self.mode),
             "start_s": self.start_s,
@@ -4026,6 +4137,12 @@ class _Reapproach:
             "protected_periods": self.protected_periods,
             "is_retrigger": self.is_retrigger,
         }
+        if self.exit_required_samples is not None:  # edition 8 record (H3' on)
+            meta.update(exit_required_samples=self.exit_required_samples,
+                        short_run_extended=self.short_run_extended,
+                        ordinary_end_s=self.ordinary_end_s,
+                        handover_diagonal_load_N=self.handover_diagonal_load_N)
+        return meta
 
 
 @dataclass(frozen=True)
@@ -4631,6 +4748,18 @@ class _RunState:
     # Edition 8 P-1 (record only; immutable default, as above)
     probe_stiffness_rounds: tuple[dict[str, Any], ...] = ()
     """One entry per finished probe round (:meth:`C2Controller.probe_stiffness_record`)."""
+    # Edition 8 records (record only; immutable defaults, as above)
+    psw_round_legs: dict[str, dict[str, Any]] | None = None
+    """PSW per-leg values of the round being finished (None with the PSW off)."""
+    twist_waivers: list[dict[str, Any]] | None = None
+    """L-2: every period whose relax test the locked-drift waiver passed (created on use)."""
+    twist_waiver_done: list[dict[str, Any]] | None = None
+    """L-2: every relaxed DONE whose completion period used the waiver (created on use)."""
+    twist_waiver_now: dict[str, Any] | None = None
+    """L-2: the waiver entry of this period's completion test (None = not used)."""
+    completion_trace: list[tuple[float, int, int, int, int]] | None = None
+    """Edition 8 record: ``(t_s, on_target, clearance_done, twist_ok, complete)`` of every
+    LEVEL completion test (``twist_ok`` -1 = the strict test only); created on use."""
 
 
 @dataclass(frozen=True)
@@ -6303,7 +6432,12 @@ class C2Controller:
                 run.exit_samples_seen += 1
             else:
                 run.exit_samples_seen = 0
-            if run.exit_samples_seen >= settings.exit_samples:
+            required_samples = settings.exit_samples
+            if settings.short_run_s is not None:  # edition 8 H3' (spec v8 3.7)
+                required_samples = settings.exit_samples_of(reading.t_s, run.start_s,
+                                                            run.is_retrigger)
+                self._note_exit_test(run, reading, loads_N, required_samples, settings)
+            if run.exit_samples_seen >= required_samples:
                 self._end_reapproach(leg, reading, "contact")
                 self._add_event(reading.t_s, f"leg_reapproach_contact:{LEG_ORDER[leg]}")
                 if self.config.lock_start_b.is_enabled:
@@ -6321,6 +6455,25 @@ class C2Controller:
         # A leg left on the guard path after a failed re-approach is watched again once it
         # bears F_min, so a deep sink does not restart the same 40 mm search every period.
         state.is_reapproach_armed |= loads_N >= min_load_N
+
+    @staticmethod
+    def _note_exit_test(
+        run: _Reapproach,
+        reading: _Reading,
+        loads_N: NDArray[np.float64],
+        required_samples: int,
+        settings: LiftedReapproachSettings,
+    ) -> None:
+        """Edition 8 Y8-8 record of one exit test (H3' on; the commands do not read it)."""
+        run.exit_required_samples = required_samples
+        seen = run.exit_samples_seen
+        if settings.exit_samples <= seen < required_samples:
+            run.short_run_extended = True
+        if seen >= settings.exit_samples and run.ordinary_end_s is None:
+            run.ordinary_end_s = float(reading.t_s)
+        if seen >= required_samples:
+            diagonal = DIAGONAL_PARTNER_LEG[run.leg]
+            run.handover_diagonal_load_N = float(loads_N[diagonal])
 
     def _start_reapproaches(
         self,
@@ -7831,6 +7984,8 @@ class C2Controller:
         never before the lift-off confirmation (S-2)."""
         state = self._state
         state.twist_relaxed_load_N = None
+        if self.config.twist_completion_relax.locked_drift_waiver:
+            state.twist_waiver_now = None  # edition 8 L-2 record of this period
         if self.config.soil.enable and not self._is_liftoff_confirmed():
             state.complete_since_s = None
             return False
@@ -7849,16 +8004,16 @@ class C2Controller:
             )
             is_complete_now = is_on_target and is_clearance_done and is_twist_ok
         else:
-            is_complete_now = (
-                is_on_target
-                and is_clearance_done
-                and abs(twist_load) < thresholds.done_twist_N
-            )
+            is_twist_ok = abs(twist_load) < thresholds.done_twist_N
+            is_complete_now = is_on_target and is_clearance_done and is_twist_ok
         state.completion_flags = CompletionFlags(
             is_on_target=bool(is_on_target),
             is_clearance_done=bool(is_clearance_done),
             is_complete=bool(is_complete_now),
         )
+        if self.config.has_ed8_changes:  # edition 8 Y8-4 record (completion flags split)
+            self._note_completion_trace(reading.t_s, is_on_target, is_clearance_done,
+                                        is_twist_ok, is_complete_now)
         if not is_complete_now:
             state.complete_since_s = None
             return False
@@ -7866,6 +8021,31 @@ class C2Controller:
             state.complete_since_s = reading.t_s
             return False
         return reading.t_s - state.complete_since_s >= thresholds.done_hold_s
+
+    def _note_completion_trace(self, t_s: float, is_on_target: bool, is_clearance_done: bool,
+                               is_twist_ok: bool, is_complete: bool) -> None:
+        """Edition 8 Y8-4 (record only): the completion tests of this period, split."""
+        state = self._state
+        if state.completion_trace is None:
+            state.completion_trace = []
+        state.completion_trace.append((float(t_s), int(bool(is_on_target)),
+                                       int(bool(is_clearance_done)), int(bool(is_twist_ok)),
+                                       int(bool(is_complete))))
+
+    def completion_trace_arrays(self, t_s: NDArray[np.float64]) -> dict[str, NDArray[Any]]:
+        """Edition 8 Y8-4: ``ed8_done_flags`` (reads x 4 int8: on target, clearance done, twist
+        condition, complete; -1 at a read without a completion test) on the read times
+        ``t_s``; empty without the record (read only, for the T4h record)."""
+        trace = self._state.completion_trace
+        if trace is None:
+            return {}
+        flags = np.full((len(t_s), 4), -1, dtype=np.int8)
+        by_time = {round(entry[0], 6): entry[1:] for entry in trace}
+        for row, time_s in enumerate(np.asarray(t_s, dtype=float)):
+            entry = by_time.get(round(float(time_s), 6))
+            if entry is not None:
+                flags[row] = entry
+        return {"ed8_done_flags": flags}
 
     def _is_clearance_done(self, filtered_clearance_m: float) -> bool:
         """Completion clearance: the target within the tolerance, or (spec rev. 70 369.2)
@@ -7933,7 +8113,8 @@ class C2Controller:
         if not self._is_twist_relax_window_full(history):
             return False
         if not self._has_twist_load_stopped_rising(history):
-            return False
+            if not (settings.locked_drift_waiver and self._is_locked_drift_waived(history)):
+                return False
         if abs(twist_load_N) > settings.max_twist_N:
             return False
         if not settings.require_loads_ge_F_min:
@@ -7959,6 +8140,36 @@ class C2Controller:
             and largest_twist_N <= oldest_twist_N + settings.rise_tol_N
         )
 
+    def _is_locked_drift_waived(self, history: deque[tuple[float, float]]) -> bool:
+        """Edition 8 L-2 (spec v8 3.8, 16 Y8-10): the "not rising" test is waived when (i) some
+        leg has been still under a same-sign sub-hold command for at least the window's periods
+        (``LockStartB.still_periods``, counted after each ``apply_floors``; this test runs
+        before this period's floors, so it reads the count up to the previous period), (ii)
+        the window rise (maximum - start) is at most ``waiver_max_rise_N`` and (iii) ``|D| +
+        waiver_margin_N <= max_twist_N``. A waiver is recorded per period."""
+        settings = self.config.twist_completion_relax
+        lsb = self._state.lock_start_b
+        if lsb is None:
+            return False
+        counts = lsb.still_periods
+        need = int(round(settings.window_s / self.config.period_s))
+        start_N = history[0][1]
+        newest_N = history[-1][1]
+        rise_N = max(twist_N for _, twist_N in history) - start_N
+        legs = [LEG_ORDER[leg] for leg, count in enumerate(counts) if count >= need]
+        if not (legs and rise_N <= settings.waiver_max_rise_N
+                and newest_N + settings.waiver_margin_N <= settings.max_twist_N):
+            return False
+        entry = {"t_s": float(history[-1][0]), "abs_D_N": float(newest_N),
+                 "rise_N": float(rise_N), "legs": legs,
+                 "still_periods": [int(count) for count in counts]}
+        state = self._state
+        if state.twist_waivers is None:
+            state.twist_waivers = []
+        state.twist_waivers.append(entry)
+        state.twist_waiver_now = entry
+        return True
+
     def _twist_relax_history(self) -> deque[tuple[float, float]]:
         state = self._state
         if state.twist_relax_history is None:
@@ -7978,14 +8189,34 @@ class C2Controller:
         state.twist_relax_done_count += 1
         state.twist_relax_last_D_N = twist_load_N
         self._add_event(t_s, f"{TWIST_RELAX_DONE_EVENT}:{twist_load_N / 1e3:.1f}")
+        if state.twist_waiver_now is not None:  # edition 8 L-2 record
+            if state.twist_waiver_done is None:
+                state.twist_waiver_done = []
+            state.twist_waiver_done.append({**state.twist_waiver_now, "done_t_s": float(t_s),
+                                            "D_N": float(twist_load_N)})
 
     def _twist_relax_meta(self) -> dict[str, Any]:
         state = self._state
-        return {
+        meta = {
             "settings": asdict(self.config.twist_completion_relax),
             "n_relaxed_done": state.twist_relax_done_count,
             "last_D_N": state.twist_relax_last_D_N,
         }
+        if self.config.twist_completion_relax.locked_drift_waiver:  # edition 8 L-2 record
+            meta.update(self.twist_waiver_record())
+        return meta
+
+    def twist_waiver_record(self) -> dict[str, Any]:
+        """Edition 8 L-2 record (spec v8 16 Y8-10 item 4; record only, read only):
+        ``n_waiver_done``, ``waivers`` (the relaxed DONEs that used the waiver: time, ``|D|``,
+        window rise, the still legs) and ``n_waiver_periods`` / ``waiver_periods`` (every
+        completion test the waiver passed)."""
+        state = self._state
+        done = list(state.twist_waiver_done or [])
+        periods = list(state.twist_waivers or [])
+        return {"n_waiver_done": len(done), "waivers": [dict(entry) for entry in done],
+                "n_waiver_periods": len(periods),
+                "waiver_periods": [dict(entry) for entry in periods]}
 
     # --- pre-LOC lift slowdown (P-S8-30, spec rev. 73 383) ---
 
@@ -9824,7 +10055,11 @@ class C2Controller:
         state = self._state
         settings = self.config.probe
         d6 = self.config.probe_d6
-        if d6.witness:  # edition 7 3.2
+        if d6.witness and d6.is_witness_record_only:  # edition 8 R2: the witness as a record
+            witness = D6Witness(witness_m=d6.witness_m, warn_rounds=d6.not_opened_warn_rounds,
+                                is_record_only=True)
+            self._pressures.probe_round_finished(probe_round.results, witness)
+        elif d6.witness:  # edition 7 3.2
             witness = D6Witness(witness_m=d6.witness_m, warn_rounds=d6.not_opened_warn_rounds)
             self._pressures.probe_round_finished(probe_round.results, witness)
         else:
@@ -9903,11 +10138,14 @@ class C2Controller:
         if r8.twist_gain_reference is not TwistGainReference.MEASURED_SII:
             return
         nominal = self.geometry.load_sensitivity_diag_N_m
-        ratios = [
-            result.incremental_stiffness_N_m / nominal[result.leg_index]
-            for result in results
-            if _is_stiffness_scale_leg(result)
-        ]
+        if self.config.probe.scale_mid_min_piston_travel_m is not None:
+            ratios = self._psw_scale_ratios(results)  # edition 8 PSW (spec v8 3.3)
+        else:
+            ratios = [
+                result.incremental_stiffness_N_m / nominal[result.leg_index]
+                for result in results
+                if _is_stiffness_scale_leg(result)
+            ]
         state = self._state
         state.twist_stiffness_leg_count = len(ratios)
         if len(ratios) < MIN_STIFFNESS_SCALE_LEGS:
@@ -9923,6 +10161,31 @@ class C2Controller:
         state.twist_stiffness_scale = _bounded(
             raw_ratio, r8.measured_stiffness_scale_min, r8.measured_stiffness_scale_max
         )
+
+    def _psw_scale_ratios(self, results: tuple[ProbeResult, ...]) -> list[float]:
+        """Edition 8 PSW: ``K1_sc / k_nom`` of the legs that are scale legs now and have a
+        finite ``K1_sc`` above the grounded fraction of ``k_nom``; the per-leg values are kept
+        for the P-1 record (the only reader of the PSW fields of the results)."""
+        nominal = self.geometry.load_sensitivity_diag_N_m
+        grounded_ratio = self.config.probe.grounded_stiffness_ratio
+        ratios = []
+        legs: dict[str, dict[str, Any]] = {}
+        for result in results:
+            k_nom = float(nominal[result.leg_index])
+            scale_k = float(result.scale_stiffness_N_m)
+            is_scale_leg = (_is_stiffness_scale_leg(result) and math.isfinite(scale_k)
+                            and scale_k > grounded_ratio * k_nom)
+            if is_scale_leg:
+                ratios.append(scale_k / k_nom)
+            legs[LEG_ORDER[result.leg_index]] = {
+                "scale_k_N_m": _finite_or_none(scale_k),
+                "scale_ratio": _finite_or_none(scale_k / k_nom),
+                "scale_mid_shift_periods": result.scale_mid_shift_periods,
+                "moved_by_mid_m": _finite_or_none(float(result.moved_by_mid_m)),
+                "is_psw_scale_leg": bool(is_scale_leg),
+            }
+        self._state.psw_round_legs = legs
+        return ratios
 
     def _record_probe_stiffness(self, results: tuple[ProbeResult, ...], t_s: float) -> None:
         """Edition 8 P-1 (record only, after :meth:`_update_twist_stiffness_scale`): K1,
@@ -9950,6 +10213,11 @@ class C2Controller:
                 "t_move_start_s": _finite_or_none(result.t_move_start_s),
                 "t_first_hold_end_s": _finite_or_none(result.t_first_hold_end_s),
             }
+        psw_legs = state.psw_round_legs  # edition 8 PSW: this round's values (None = off)
+        if psw_legs is not None:
+            for name, values in psw_legs.items():
+                legs[name].update(values)
+            state.psw_round_legs = None
         raw_ratio = state.twist_stiffness_raw_ratio
         warning_low, warning_high = r8.stiffness_warning_range
         entry = {
@@ -10245,6 +10513,10 @@ class C2Controller:
                 ),
             )
             state.lock_start_b = LockStartB(self.config.lock_start_b, cylinders)
+            if self.config.twist_completion_relax.locked_drift_waiver:  # edition 8 L-2
+                state.lock_start_b.counts_still_periods = True
+            if self.config.has_ed8_changes:  # edition 8 Y8-4 record
+                state.lock_start_b.records_ed8 = True
         return state.lock_start_b
 
     def _lift_guard_period_count(self) -> int:

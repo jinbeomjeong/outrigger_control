@@ -60,6 +60,12 @@ from numpy.typing import ArrayLike, NDArray
 
 from outrigger_sim.signals import LEG_COUNT
 
+WITNESS_MODE_JUDGE = "judge"
+"""Edition 7 D6 witness: a round whose retract did not move is not judged (the default)."""
+WITNESS_MODE_RECORD = "record"
+"""Edition 8 R2: the witness is recorded only; D6 judges every round as in edition 6."""
+WITNESS_MODES = (WITNESS_MODE_JUDGE, WITNESS_MODE_RECORD)
+
 # --- settings and results ------------------------------------------------------------------
 
 
@@ -211,10 +217,19 @@ class ProbeSettings:
     """Tail option: standstill after the tail before the next leg (ASSUMPTION)."""
     sensitivity: ProbeSensitivity = ProbeSensitivity.NOMINAL
     """U63 (spec 63.2): ``S_ii`` of the corrections."""
+    scale_mid_min_piston_travel_m: float | None = None
+    """Edition 8 PSW (``jp3_remedy_spec_v8_rules.md`` 3.3): the K1 of the twist and guard gain
+    scale and of its warning starts at the first trapezoid first-move read, at or after the K1
+    mid read and before the end read, whose piston reading has moved this far from the leg's
+    first probe read (``scale_stiffness_N_m``). The ground verdict and the corrections keep
+    K1. ``None`` = off (no line of it runs)."""
 
     def __post_init__(self) -> None:
         if not 0.0 < self.speed_fraction <= 1.0:
             raise ValueError(f"speed_fraction must be in (0, 1], got {self.speed_fraction!r}")
+        travel_m = self.scale_mid_min_piston_travel_m
+        if travel_m is not None and not travel_m > 0.0:
+            raise ValueError(f"scale_mid_min_piston_travel_m must be > 0 or None, got {travel_m!r}")
         if not (self.depth_m > 0.0 and self.hold_s >= 0.0 and self.attitude_window_s > 0.0):
             raise ValueError("depth_m and attitude_window_s must be > 0, hold_s >= 0")
         object.__setattr__(self, "profile", ProbeProfile(self.profile))
@@ -249,6 +264,10 @@ class ProbeD6Settings:
         retract_extra_margin_m: The commanded retract travel stays at or below ``need_ub +
             depth + this`` (``need_ub``: the ③ tracker's retract need at ``p_h + e_h``).
         head_reading_margin_Pa: ``e_h`` of ``need_ub`` (the tracker's 9 bar).
+        witness_mode: Edition 8 R2 (``jp3_remedy_spec_v8_rules.md`` 3.2): ``"judge"`` (the
+            edition 7 rule above) or ``"record"`` (the witness values are a record only: D6
+            judges every round by the edition 6 rule and raises no witness event). Needs
+            ``witness`` for ``"record"``.
     """
 
     witness: bool = False
@@ -258,11 +277,17 @@ class ProbeD6Settings:
     retract_slow_speed_m_s: float = 1.0e-3
     retract_extra_margin_m: float = 0.2e-3
     head_reading_margin_Pa: float = 9.0e5
+    witness_mode: str = WITNESS_MODE_JUDGE
 
     def __post_init__(self) -> None:
         for name in ("witness", "retract_position_target"):
             if not isinstance(getattr(self, name), bool):
                 raise ValueError(f"{name} must be a bool")
+        if self.witness_mode not in WITNESS_MODES:
+            raise ValueError(f"witness_mode must be one of {WITNESS_MODES}, got "
+                             f"{self.witness_mode!r}")
+        if self.is_witness_record_only and not self.witness:
+            raise ValueError("witness_mode 'record' needs the witness on")
         if not (self.witness_m > 0.0 and self.retract_slow_speed_m_s > 0.0):
             raise ValueError("witness_m and retract_slow_speed_m_s must be > 0")
         if self.retract_slow_speed_m_s > 1.0e-3 + 1e-12:
@@ -277,8 +302,18 @@ class ProbeD6Settings:
     def is_enabled(self) -> bool:
         return self.witness or self.retract_position_target
 
+    @property
+    def is_witness_record_only(self) -> bool:
+        """Edition 8 R2: the witness is a record, D6 judges as in edition 6."""
+        return self.witness_mode == WITNESS_MODE_RECORD
+
     def to_meta(self) -> dict[str, object]:
-        return {item: getattr(self, item) for item in self.__dataclass_fields__}
+        """Every field; ``witness_mode`` only when it is not the edition 7 ``judge`` (the meta
+        of the edition 7 settings stays as it was)."""
+        meta = {item: getattr(self, item) for item in self.__dataclass_fields__}
+        if self.witness_mode == WITNESS_MODE_JUDGE:
+            del meta["witness_mode"]
+        return meta
 
 
 @dataclass(frozen=True)
@@ -344,6 +379,15 @@ class ProbeResult:
     """Edition 7 Q7-C2 record (witness on): on a retract-first probe, the retract reads up to
     the K1 mid reading reached ``s_w,D6``; None on an extend-first probe or with the witness
     off."""
+    # edition 8 PSW (``ProbeSettings.scale_mid_min_piston_travel_m``; defaults while it is off)
+    scale_stiffness_N_m: float = math.nan
+    """``K1_sc`` of the twist and guard gain scale (spec v8 3.3): K1 without a K1 mid read,
+    NaN without a scale mid read or with less than ``min_travel_m`` of travel after it."""
+    scale_mid_shift_periods: int | None = None
+    """First-move reads from the K1 mid read to the scale mid read (None = no scale mid)."""
+    moved_by_mid_m: float = math.nan
+    """Piston travel along the first move from the leg's first probe read to the K1 mid read
+    (record)."""
 
 
 @dataclass(frozen=True, eq=False)
@@ -407,6 +451,9 @@ class ProbeSample:
     """Q1b: time between the two window centres."""
     window_period_s: float = 0.02
     """Sample period of the attitude windows (the control period)."""
+    scale_mid_force_N: float = math.nan
+    """Edition 8 PSW: reading of the scale mid read (NaN = none)."""
+    scale_mid_rod_stroke_m: float = math.nan
 
 
 # --- physics pieces ------------------------------------------------------------------------
@@ -623,6 +670,33 @@ def _stiffness_cue(
     return _StiffnessCue(has_moved, stiffness, bool(is_grounded), load, seal_friction)
 
 
+def psw_scale_stiffness_N_m(
+    sample: ProbeSample, settings: ProbeSettings, stiffness_N_m: float
+) -> float:
+    """Edition 8 PSW ``K1_sc`` (spec v8 3.3) of a probe with the PSW on.
+
+    ``(F_ext - F_sc) / (x_ext - x_sc)`` from the scale mid read to the end read of the first
+    move (piston readings). Without a K1 mid read (or without the second-half window) it is
+    the K1 ``stiffness_N_m``; without a scale mid read, or with less than
+    ``settings.min_travel_m`` of piston travel after it along the first move, NaN.
+    """
+    is_second_half = settings.stiffness_window is StiffnessWindow.SECOND_HALF
+    if not (is_second_half and math.isfinite(sample.first_move_mid_rod_stroke_m)):
+        return stiffness_N_m
+    if not math.isfinite(sample.scale_mid_rod_stroke_m):
+        return math.nan
+    if sample.is_reversed:
+        first_force, first_rod, sign = (sample.retracted_force_N,
+                                        sample.retracted_rod_stroke_m, -1.0)
+    else:
+        first_force, first_rod, sign = (sample.extended_force_N, sample.extended_rod_stroke_m,
+                                        1.0)
+    travel_m = first_rod - sample.scale_mid_rod_stroke_m
+    if not sign * travel_m >= settings.min_travel_m:  # NaN travel fails too
+        return math.nan
+    return (first_force - sample.scale_mid_force_N) / travel_m
+
+
 def _correction_sensitivity(
     nominal: float,
     given: float | None,
@@ -749,6 +823,16 @@ class _LegRecord:
     is_target_reached: bool | None = None
     mid_retract_read_count: int | None = None
     """Retract reads taken up to the K1 mid reading (set when the mid reading is taken)."""
+    # edition 8 PSW (unused while ``ProbeSettings.scale_mid_min_piston_travel_m`` is None)
+    start_rod_stroke_m: float = math.nan
+    """``x_0``: the piston reading of the leg's first probe period."""
+    first_move_reads: int = 0
+    """Trapezoid first-move reads so far (the shift count of the scale mid)."""
+    mid_read_number: int | None = None
+    """``first_move_reads`` at the K1 mid read."""
+    scale_mid_force_N: float = math.nan
+    scale_mid_rod_stroke_m: float = math.nan
+    scale_mid_shift_periods: int | None = None
 
 
 @dataclass
@@ -888,6 +972,11 @@ class ProbeRound:
     def is_trapezoid(self) -> bool:
         return self.settings.profile is ProbeProfile.TRAPEZOID
 
+    @property
+    def _is_psw_on(self) -> bool:
+        """Edition 8 PSW (trapezoid profile only; the rect profile keeps K1)."""
+        return self.settings.scale_mid_min_piston_travel_m is not None and self.is_trapezoid
+
     def step(self, reading: ProbeReading) -> NDArray[np.float64]:
         """Leg speeds for this period; collects the readings at the end of each hold."""
         leg_speeds = np.zeros(LEG_COUNT)
@@ -902,6 +991,8 @@ class ProbeRound:
             self._record.window_before_rad = tuple(self._window.samples)
             self._record.start_t_s = reading.t_s
             self._record.start_motor_stroke_m = float(reading.motor_stroke_m[self.leg])
+            if self._is_psw_on:
+                self._record.start_rod_stroke_m = float(reading.rod_stroke_m[self.leg])
             if self.is_trapezoid:
                 self._record.planned_speeds = self._trapezoid.tolist()
         self._window.add(reading.rate_attitude_rad)
@@ -983,6 +1074,9 @@ class ProbeRound:
         self, record: _LegRecord, reading: ProbeReading, leg_speeds: NDArray[np.float64]
     ) -> NDArray[np.float64]:
         is_first_move = self._stage is _Stage.FIRST_MOVE
+        is_psw_read = is_first_move and self._is_psw_on
+        if is_psw_read:
+            record.first_move_reads += 1
         if record.planned_speeds:
             if is_first_move and not record.is_attitude_limited:
                 if self._exceeds_attitude_limit(reading):
@@ -991,6 +1085,10 @@ class ProbeRound:
             half_periods = len(self._trapezoid) // 2
             if is_first_move and len(record.sent_speeds) == half_periods:
                 self._record_mid_reading(record, reading)
+                if is_psw_read:
+                    record.mid_read_number = record.first_move_reads
+            if is_psw_read:
+                self._note_scale_mid(record, reading)
             if record.planned_speeds:
                 speed = record.planned_speeds.pop(0)
                 if is_first_move:
@@ -1014,6 +1112,8 @@ class ProbeRound:
         is_tail = self._stage is _Stage.TAIL
         hold_s = self.settings.tail_settle_s if is_tail else self.settings.hold_s
         if since_motion_s < hold_s - HOLD_SLACK_S:
+            if is_psw_read:  # a hold read before the end read is a scale mid candidate
+                self._note_scale_mid(record, reading)
             return leg_speeds
         if is_first_move:
             record.planned_speeds = list(reversed(record.sent_speeds))
@@ -1129,6 +1229,34 @@ class ProbeRound:
         record.mid_rod_stroke_m = float(reading.rod_stroke_m[self.leg])
         record.mid_retract_read_count = len(record.retract_reads)  # edition 7 record only
 
+    def _note_scale_mid(self, record: _LegRecord, reading: ProbeReading) -> None:
+        """Edition 8 PSW: the first read at or after the K1 mid read whose piston reading has
+        moved ``scale_mid_min_piston_travel_m`` along the first move from ``x_0``."""
+        if not math.isfinite(record.mid_rod_stroke_m):
+            return  # no K1 mid read yet
+        if math.isfinite(record.scale_mid_rod_stroke_m):
+            return  # taken already
+        rod_m = float(reading.rod_stroke_m[self.leg])
+        min_travel_m = self.settings.scale_mid_min_piston_travel_m
+        assert min_travel_m is not None
+        if not record.first_sign * (rod_m - record.start_rod_stroke_m) >= min_travel_m:
+            return
+        record.scale_mid_force_N = float(reading.cylinder_force_N[self.leg])
+        record.scale_mid_rod_stroke_m = rod_m
+        assert record.mid_read_number is not None
+        record.scale_mid_shift_periods = record.first_move_reads - record.mid_read_number
+
+    def _psw_fields(self, record: _LegRecord, sample: ProbeSample,
+                    stiffness_N_m: float) -> dict[str, object]:
+        """The edition 8 PSW :class:`ProbeResult` fields of the leg (PSW on)."""
+        if not self.is_trapezoid:  # the rect profile keeps K1 (no scale mid read)
+            return {"scale_stiffness_N_m": stiffness_N_m}
+        moved_m = record.first_sign * (record.mid_rod_stroke_m - record.start_rod_stroke_m)
+        return {"scale_stiffness_N_m": psw_scale_stiffness_N_m(sample, self.settings,
+                                                               stiffness_N_m),
+                "scale_mid_shift_periods": record.scale_mid_shift_periods,
+                "moved_by_mid_m": float(moved_m)}
+
     def _exceeds_attitude_limit(self, reading: ProbeReading) -> bool:
         roll, pitch = reading.filtered_attitude_rad
         start_roll, start_pitch = self._start_attitude
@@ -1208,6 +1336,8 @@ class ProbeRound:
             # the end of its hold.
             window_spacing_s=record.first_end_t_s - record.start_t_s + self.period_s,
             window_period_s=self.period_s,
+            scale_mid_force_N=record.scale_mid_force_N,
+            scale_mid_rod_stroke_m=record.scale_mid_rod_stroke_m,
         )
         corrections = self._correction_sensitivity
         correction = None if corrections is None else float(corrections[leg])
@@ -1228,6 +1358,9 @@ class ProbeRound:
         )
         if self.d6 is not None:
             result = replace(result, **self._d6_fields(record))
+        if self.settings.scale_mid_min_piston_travel_m is not None:
+            result = replace(result, **self._psw_fields(record, sample,
+                                                        result.incremental_stiffness_N_m))
         return result
 
 

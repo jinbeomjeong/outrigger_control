@@ -73,6 +73,18 @@ class EventTwin:
     event_time_s: float | None = None
     """Timing ``flow_saturation`` (v5 criteria 13.3, X-4): absolute reference time t_a [s]; the
     event starts at t_a + ``offset_s``. Unused by the other timings."""
+    depth_m: float | None = None
+    """Edition 8 Y8-9 (``jp3_remedy_spec_v8_rules.md`` 7.1 (나)): the event depth, with
+    ``ramp_s``, instead of the named shape of ``r67.EVENTS[event]`` (``event`` stays the name,
+    e.g. a 25 mm / 0.05 s RE1bF). None = the named shape (both or neither)."""
+    ramp_s: float | None = None
+    """Edition 8 Y8-9: the event ramp time with ``depth_m``."""
+
+    def __post_init__(self) -> None:
+        if (self.depth_m is None) != (self.ramp_s is None):
+            raise ValueError("EventTwin depth_m and ramp_s go together (both or neither)")
+        if self.depth_m is not None and not (self.depth_m > 0.0 and self.ramp_s > 0.0):
+            raise ValueError("EventTwin depth_m and ramp_s must be > 0")
 
 
 @dataclass(frozen=True)

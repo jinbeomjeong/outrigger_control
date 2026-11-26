@@ -217,8 +217,10 @@ def test_guard_list_and_prefix_agree() -> None:
     import run_v5
 
     # edition 6 (jp3_remedy_spec_v6.md 3.4) adds VBKL / VBKL0 with the same prefix, edition 7
-    # (jp3_remedy_spec_v7.md 3.6) VBKM / VBKM0
-    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0", "VBKL", "VBKL0", "VBKM", "VBKM0")
+    # (jp3_remedy_spec_v7.md 3.6) VBKM / VBKM0, edition 8 (jp3_remedy_spec_v8_rules.md 3.6)
+    # VBKN / VBKN0
+    assert run_v5.ROD_FAULT_SETTINGS == ("VBK", "VBK0", "VBKL", "VBKL0", "VBKM", "VBKM0",
+                                         "VBKN", "VBKN0")
     for name in run_v5.ALL_SETTINGS:
         assert screen.is_rod_fault_setting(name) == name.startswith(
             screen.ROD_FAULT_SETTING_PREFIX), name
