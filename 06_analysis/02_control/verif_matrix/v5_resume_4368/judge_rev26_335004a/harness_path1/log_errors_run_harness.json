@@ -1,0 +1,1263 @@
+{
+  "tool": "log_errors",
+  "pattern": "\\berrors\\s*[:=]?\\s*(\\d+)\\b",
+  "glob": "**/*.log",
+  "steps": [
+    {
+      "step": "_wait_until",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\_wait_until.log",
+      "matches": [],
+      "done_exit": null,
+      "done_line": null,
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h10_item8",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_item8.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:19:25 exit=0 wall_s=111",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h10_main",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_main.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:10:56 exit=0 wall_s=6036",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h10_overlap",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_overlap.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:23:18 exit=0 wall_s=233",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h10_u9_vb",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_u9_vb.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:17:34 exit=0 wall_s=399",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h1_d1",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h1_d1.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:07:45 exit=0 wall_s=8182",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h2_d1_select",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h2_d1_select.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:07:46 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h5_u9_v0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h5_u9_v0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T07:49:44 exit=0 wall_s=83",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h6_dg3_v4on",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h6_dg3_v4on.log",
+      "matches": [
+        {
+          "line": 649,
+          "count": 0
+        }
+      ],
+      "done_exit": 0,
+      "done_line": "2026-11-14T08:24:09 exit=0 wall_s=2063",
+      "last_count": 0,
+      "max_count": 0
+    },
+    {
+      "step": "h6_dg3_v4on_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h6_dg3_v4on_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T08:24:10 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h6_dg3_v4on_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h6_dg3_v4on_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T07:49:45 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h7_dg3_off",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h7_dg3_off.log",
+      "matches": [
+        {
+          "line": 595,
+          "count": 0
+        }
+      ],
+      "done_exit": 0,
+      "done_line": "2026-11-14T08:56:04 exit=0 wall_s=1913",
+      "last_count": 0,
+      "max_count": 0
+    },
+    {
+      "step": "h7_dg3_off_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h7_dg3_off_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T08:56:05 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h7_dg3_off_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h7_dg3_off_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T08:24:11 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_noise_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_V0.log",
+      "matches": [
+        {
+          "line": 2875,
+          "count": 0
+        }
+      ],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:06:05 exit=0 wall_s=8496",
+      "last_count": 0,
+      "max_count": 0
+    },
+    {
+      "step": "h8_noise_V0_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_V0_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:06:06 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_noise_V0_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_V0_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T14:44:29 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_noise_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_VB.log",
+      "matches": [
+        {
+          "line": 2812,
+          "count": 0
+        }
+      ],
+      "done_exit": 0,
+      "done_line": "2026-11-14T14:44:26 exit=0 wall_s=20899",
+      "last_count": 0,
+      "max_count": 0
+    },
+    {
+      "step": "h8_noise_VB_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_VB_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T14:44:28 exit=0 wall_s=2",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_noise_VB_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_VB_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T08:56:06 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_seedext_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_V0.log",
+      "matches": [
+        {
+          "line": 110,
+          "count": 0
+        }
+      ],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:23:29 exit=0 wall_s=313",
+      "last_count": 0,
+      "max_count": 0
+    },
+    {
+      "step": "h8_seedext_V0_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_V0_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:23:30 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_seedext_V0_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_V0_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:18:16 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_seedext_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_VB.log",
+      "matches": [
+        {
+          "line": 111,
+          "count": 0
+        }
+      ],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:18:14 exit=0 wall_s=726",
+      "last_count": 0,
+      "max_count": 0
+    },
+    {
+      "step": "h8_seedext_VB_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_VB_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:18:15 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h8_seedext_VB_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_VB_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T17:06:08 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r67_main",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_main.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T20:52:37 exit=0 wall_s=938",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r67_main_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_main_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T20:52:38 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r67_main_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_main_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T20:36:59 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r67_top",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_top.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:04:24 exit=0 wall_s=704",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r67_top_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_top_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:04:26 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r67_top_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_top_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T20:52:40 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r69_bottom",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_bottom.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:17:13 exit=0 wall_s=765",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r69_bottom_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_bottom_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:17:14 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r69_bottom_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_bottom_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:04:28 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r69_top",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_top.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:30:18 exit=0 wall_s=783",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r69_top_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_top_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:30:19 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_grid_r69_top_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_top_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T21:17:15 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_main",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_main.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T20:15:49 exit=0 wall_s=10338",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_pressure_only",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_pressure_only.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T20:36:57 exit=0 wall_s=1268",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r67_main",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_main.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:24:38 exit=0 wall_s=78",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r67_main_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_main_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:24:39 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r67_main_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_main_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:23:19 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r67_top",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_top.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:27:09 exit=0 wall_s=149",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r67_top_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_top_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:27:10 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r67_top_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_top_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:24:40 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r69_bottom",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_bottom.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:29:18 exit=0 wall_s=126",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r69_bottom_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_bottom_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:29:19 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r69_bottom_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_bottom_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:27:11 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r69_top",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_top.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:31:26 exit=0 wall_s=126",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r69_top_identity_end",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_top_identity_end.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:31:27 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "h9_v0_sample_grid_r69_top_identity_start",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_top_identity_start.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T23:29:20 exit=0 wall_s=1",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_C_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_C_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:09:48 exit=0 wall_s=190",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_C_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_C_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T04:06:07 exit=0 wall_s=437",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_D_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_D_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:12:03 exit=0 wall_s=134",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_D_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_D_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T04:11:45 exit=0 wall_s=338",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_g6_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g6_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:28:38 exit=0 wall_s=712",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_g6_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g6_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T02:04:47 exit=0 wall_s=1549",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_g8_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g8_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:52:08 exit=0 wall_s=1409",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_g8_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g8_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T03:13:59 exit=0 wall_s=4152",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_h6_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h6_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:16:47 exit=0 wall_s=122",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_h6_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h6_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:38:57 exit=0 wall_s=335",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_h9_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h9_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:14:44 exit=0 wall_s=96",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_h9_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h9_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:33:22 exit=0 wall_s=269",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_p3b_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_p3b_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:00:26 exit=0 wall_s=498",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_p3b_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_p3b_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T03:42:38 exit=0 wall_s=1718",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_slope_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_slope_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T00:13:08 exit=0 wall_s=322",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_slope_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_slope_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:28:53 exit=0 wall_s=1010",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_x426b_V0",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_x426b_V0.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T01:06:38 exit=0 wall_s=372",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u3_x426b_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_x426b_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T03:58:49 exit=0 wall_s=971",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u6_main_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_main_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T07:44:39 exit=0 wall_s=543",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u6_main_VB_IND_LAS",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_main_VB_IND_LAS.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T07:48:21 exit=0 wall_s=221",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u6_wide_VB",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_wide_VB.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T06:48:15 exit=0 wall_s=9390",
+      "last_count": null,
+      "max_count": null
+    },
+    {
+      "step": "u6_wide_VB_IND_LAS",
+      "log": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_wide_VB_IND_LAS.log",
+      "matches": [],
+      "done_exit": 0,
+      "done_line": "2026-11-14T07:35:35 exit=0 wall_s=2840",
+      "last_count": null,
+      "max_count": null
+    }
+  ],
+  "summary": {
+    "tool": "log_errors",
+    "command": "scan",
+    "logs": 74,
+    "steps_with_errors": 0,
+    "steps_without_line": 68,
+    "error_rows_total": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 68,
+    "categories": {
+      "no_errors_line": 68
+    }
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\_wait_until.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "_wait_until"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_item8.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h10_item8"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_main.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h10_main"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_overlap.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h10_overlap"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h10_u9_vb.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h10_u9_vb"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h1_d1.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h1_d1"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h2_d1_select.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h2_d1_select"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h5_u9_v0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h5_u9_v0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h6_dg3_v4on_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h6_dg3_v4on_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h6_dg3_v4on_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h6_dg3_v4on_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h7_dg3_off_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h7_dg3_off_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h7_dg3_off_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h7_dg3_off_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_V0_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_noise_V0_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_V0_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_noise_V0_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_VB_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_noise_VB_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_noise_VB_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_noise_VB_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_V0_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_seedext_V0_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_V0_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_seedext_V0_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_VB_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_seedext_VB_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h8_seedext_VB_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h8_seedext_VB_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_main.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r67_main"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_main_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r67_main_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_main_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r67_main_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_top.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r67_top"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_top_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r67_top_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r67_top_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r67_top_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_bottom.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r69_bottom"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_bottom_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r69_bottom_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_bottom_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r69_bottom_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_top.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r69_top"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_top_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r69_top_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_grid_r69_top_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_grid_r69_top_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_main.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_main"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_pressure_only.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_pressure_only"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_main.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r67_main"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_main_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r67_main_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_main_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r67_main_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_top.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r67_top"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_top_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r67_top_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r67_top_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r67_top_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_bottom.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r69_bottom"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_bottom_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r69_bottom_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_bottom_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r69_bottom_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_top.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r69_top"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_top_identity_end.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r69_top_identity_end"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\h9_v0_sample_grid_r69_top_identity_start.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "h9_v0_sample_grid_r69_top_identity_start"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_C_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_C_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_C_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_C_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_D_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_D_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_D_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_D_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g6_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_g6_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g6_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_g6_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g8_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_g8_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_g8_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_g8_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h6_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_h6_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h6_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_h6_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h9_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_h9_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_h9_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_h9_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_p3b_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_p3b_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_p3b_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_p3b_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_slope_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_slope_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_slope_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_slope_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_x426b_V0.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_x426b_V0"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u3_x426b_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u3_x426b_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_main_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u6_main_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_main_VB_IND_LAS.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u6_main_VB_IND_LAS"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_wide_VB.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u6_wide_VB"
+    },
+    {
+      "severity": "info",
+      "category": "no_errors_line",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\run_b9f5707\\logs\\run_harness\\u6_wide_VB_IND_LAS.log",
+      "line": 0,
+      "message": "no 'errors N' line in the log",
+      "target": "u6_wide_VB_IND_LAS"
+    }
+  ]
+}

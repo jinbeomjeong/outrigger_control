@@ -1,0 +1,221 @@
+{
+ "seals": {
+  "ok": true,
+  "r4_rev13_25_sha256": {
+   "v5_resume_4368_rules_rev13": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+   "v5_resume_4368_rules_rev14": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+   "v5_resume_4368_rules_rev15": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+   "v5_resume_4368_rules_rev16": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+   "v5_resume_4368_rules_rev17": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+   "v5_resume_4368_rules_rev18": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+   "v5_resume_4368_rules_rev19": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+   "v5_resume_4368_rules_rev20": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+   "v5_resume_4368_rules_rev21": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+   "v5_resume_4368_rules_rev22": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+   "v5_resume_4368_rules_rev23": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+   "v5_resume_4368_rules_rev24": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+   "v5_resume_4368_rules_rev25": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+  },
+  "r4_common_block_sha256": "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800",
+  "eol_only": [],
+  "v5_resume_4368_rules_rev26.md": {
+   "sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "want": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "seal_file_sha": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "ok": true
+  }
+ },
+ "G-3": true,
+ "marker": null,
+ "n_pairs": 8,
+ "pairs": [
+  {
+   "script": "s9_slope_fix_candidates.py",
+   "key": "base|G1|B|top|Fs0",
+   "field": "hash",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u3_p3b_none.json",
+   "compare_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+   "none_hash": "5227fcd4047444d4d75438178c8c3a6f2f76d1abea50a3653648296213e61ae0",
+   "compare_hash": "5227fcd4047444d4d75438178c8c3a6f2f76d1abea50a3653648296213e61ae0",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "s9_slope_fix_candidates.py",
+   "key": "slope|edge|top|4.0|ref|none|0|proj",
+   "field": "hash",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u3_g8_none.json",
+   "compare_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_V0.json",
+   "none_hash": "79ef1bd6723f5c5b",
+   "compare_hash": "79ef1bd6723f5c5b",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "r72_g6_screen.py",
+   "key": "g6|G1+J1@FL|top|Fs8",
+   "field": "commands_sha256",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u3_C_none.json",
+   "compare_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+   "none_hash": "0632b5c6d39243bcc9a0e48464dd2131942ffafa08f4ef4de725db999d37e902",
+   "compare_hash": "0632b5c6d39243bcc9a0e48464dd2131942ffafa08f4ef4de725db999d37e902",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "r72_g6_screen.py",
+   "key": "g6r|rigid+J1@FL|top|Fs8",
+   "field": "commands_sha256",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u3_C_none.json",
+   "compare_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+   "none_hash": "3c1bb15ce7930aaecdd567cfb6d44b7617011dd78a79007bb52efd6e333167b3",
+   "compare_hash": "3c1bb15ce7930aaecdd567cfb6d44b7617011dd78a79007bb52efd6e333167b3",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "s9_soil_slope.py",
+   "key": "H8|rigid|B|top|flat",
+   "field": "run.commands_sha256",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u3_D_none.json",
+   "compare_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+   "none_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "compare_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "s9_soil_slope.py",
+   "key": "H8|G1|B|top|flat|FL:g20",
+   "field": "run.commands_sha256",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u3_D_none.json",
+   "compare_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+   "none_hash": "2665f2046b1ce4f9659431fb174fe8498fbe5a513600b9cfc25e79880f83c90d",
+   "compare_hash": "2665f2046b1ce4f9659431fb174fe8498fbe5a513600b9cfc25e79880f83c90d",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "b5_baseline_compare.py",
+   "key": "A1-rigid",
+   "field": "commands_sha256",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u6_b5_A1_none.json",
+   "compare_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u6_b5_A1_V0.json",
+   "none_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "compare_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  },
+  {
+   "script": "b5_baseline_compare.py",
+   "key": "A1-J1",
+   "field": "commands_sha256",
+   "none_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u6_b5_A1_none.json",
+   "compare_file": "07_results/S9/R4368X_b9f5707_20261115_013947/H-11/u6_b5_A1_V0.json",
+   "none_hash": "2a3b8618080698f7bd95258c100000b57d7de413f473be45a63989e0d1fe66c4",
+   "compare_hash": "2a3b8618080698f7bd95258c100000b57d7de413f473be45a63989e0d1fe66c4",
+   "none_lines": 1,
+   "compare_lines": 1,
+   "equal": true
+  }
+ ],
+ "G-3_false_list": {
+  "columns": [
+   "script",
+   "key",
+   "field",
+   "none_hash",
+   "compare_hash",
+   "none_lines",
+   "compare_lines"
+  ],
+  "rows": []
+ },
+ "identity": {
+  "u3_C_none.json": {
+   "file": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11\\u3_C_none.identity.json",
+   "sha256": "7c857ae53190150c37dbc80cb61a3f9c1ebd7c12d7e9869cf303bc3cd570e92d",
+   "n_start": 1,
+   "n_end": 1,
+   "ok": true,
+   "why": null
+  },
+  "u3_D_none.json": {
+   "file": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11\\u3_D_none.identity.json",
+   "sha256": "9510e63cc234862247db9e1ed48042788626e2d98d4f92d30b8047955dcc54de",
+   "n_start": 1,
+   "n_end": 1,
+   "ok": true,
+   "why": null
+  },
+  "u3_g8_none.json": {
+   "file": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11\\u3_g8_none.identity.json",
+   "sha256": "91f9cd448b21b47da06c38996a6b454dee31c1d6e88d9a8f60f4787c600e6d45",
+   "n_start": 1,
+   "n_end": 1,
+   "ok": true,
+   "why": null
+  },
+  "u3_p3b_none.json": {
+   "file": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11\\u3_p3b_none.identity.json",
+   "sha256": "6a6427e793e8e59c17ce5ad84039b52557be6d920b37e27e113f776d0e1b3d67",
+   "n_start": 1,
+   "n_end": 1,
+   "ok": true,
+   "why": null
+  },
+  "u6_b5_A1_V0.json": {
+   "file": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11\\u6_b5_A1_V0.identity.json",
+   "sha256": "283360d3121ab5f0d4a891aebd0a6322f229d0297cad4b383d24af40e4e17da0",
+   "n_start": 1,
+   "n_end": 1,
+   "ok": true,
+   "why": null
+  },
+  "u6_b5_A1_none.json": {
+   "file": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11\\u6_b5_A1_none.identity.json",
+   "sha256": "b89bca35a0a09c1ac45b7cdced84bbc4a64dd3aa4c145170feec658c43f537b7",
+   "n_start": 1,
+   "n_end": 1,
+   "ok": true,
+   "why": null
+  }
+ },
+ "r2_commit": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+ "consequence": null,
+ "status": "pass",
+ "stops": [],
+ "undecidable": [],
+ "fails": [],
+ "records": [],
+ "stop_codes": [],
+ "head_check": {
+  "expect": "335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "head": "335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "ok": true,
+  "why": null
+ },
+ "tool": "p2_x16.py",
+ "version": "1",
+ "tool_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03",
+ "cmd": "g3",
+ "argv": [
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\g3.json",
+  "--data-root",
+  "C:\\workspace\\outrigger_control",
+  "g3",
+  "--h11-dir",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\H-11",
+  "--expect-head",
+  "335004a7ad9f5f988e7543dd98d45bf2b96e4294"
+ ],
+ "created": "2026-11-26T23:20:56+09:00"
+}

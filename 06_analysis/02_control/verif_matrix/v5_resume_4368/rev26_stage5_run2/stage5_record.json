@@ -1,0 +1,54 @@
+{
+ "wt_status_before": {
+  "time": "2026-11-27T00:10:46.514524+09:00",
+  "command": "git -C C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26b status --porcelain",
+  "exit": 0,
+  "stdout": "",
+  "ignored": ""
+ },
+ "main_status_before": {
+  "time": "2026-11-27T00:10:46.514524+09:00",
+  "command": "git -C C:\\workspace\\outrigger_control status --porcelain --untracked-files=no",
+  "exit": 0,
+  "stdout": ""
+ },
+ "env_inventory_before": {
+  "time": "2026-11-27T00:10:46.514524+09:00",
+  "python-dev": {
+   "sha256": "89bb6bb1a5a9ac6a5434474075a19f3a2fcad34df6b0eb19c8a78c5a2c42f6f5",
+   "conda_meta_count": 280,
+   "dist_info_count": 236
+  },
+  "dynamics-dev": {
+   "sha256": "aa9a3f9194301858de3fa80667db62c075e1a343560c51a2060b94dafabfad29",
+   "conda_meta_count": 477,
+   "dist_info_count": 348
+  }
+ },
+ "wt_status_after": {
+  "time": "2026-11-27T00:13:11.345219+09:00",
+  "command": "git -C C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26b status --porcelain",
+  "exit": 0,
+  "stdout": "",
+  "ignored": ""
+ },
+ "main_status_after": {
+  "time": "2026-11-27T00:13:11.345219+09:00",
+  "command": "git -C C:\\workspace\\outrigger_control status --porcelain --untracked-files=no",
+  "exit": 0,
+  "stdout": ""
+ },
+ "env_inventory_after": {
+  "time": "2026-11-27T00:13:11.345219+09:00",
+  "python-dev": {
+   "sha256": "89bb6bb1a5a9ac6a5434474075a19f3a2fcad34df6b0eb19c8a78c5a2c42f6f5",
+   "conda_meta_count": 280,
+   "dist_info_count": 236
+  },
+  "dynamics-dev": {
+   "sha256": "aa9a3f9194301858de3fa80667db62c075e1a343560c51a2060b94dafabfad29",
+   "conda_meta_count": 477,
+   "dist_info_count": 348
+  }
+ }
+}

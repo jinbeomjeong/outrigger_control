@@ -1,0 +1,15 @@
+step	rc	expected	verdict
+seal	0	0	expected
+harness	2	0/1/2	expected
+anchors	0	0/1/2	expected
+jp	0	0/2	expected
+g3	0	0	expected
+d1	1	0/1	expected
+u3	3	0/1/2	UNEXPECTED
+v5j_u9	not run	0/1/2	UNEXPECTED
+c16	not run	0/1/2	UNEXPECTED
+items	not run	0	UNEXPECTED
+v5c_stage1	not run	0/1/2	UNEXPECTED
+v5c_grid	not run	0/1/2	UNEXPECTED
+v5c_noise	not run	0/1/2	UNEXPECTED
+v5c_merge	not run	0/1/2	UNEXPECTED

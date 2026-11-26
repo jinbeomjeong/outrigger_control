@@ -1,0 +1,1500 @@
+{
+ "rules": "v5_resume_4368_rules.md",
+ "section": "R4 common block RD-7 / RD-8 / RD-9 / RD-10",
+ "r4_block_sha256": "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800",
+ "root": ".",
+ "family_table": {
+  "path": "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\family_table.json",
+  "sha256": "01dfa81901558f03303c06c02262b9ae367a505398d209888eae1afbc748e393"
+ },
+ "dg3_key_source": {
+  "path": "06_analysis/03_hydraulic/coupled/v5/dg3/dg3_v4_on.json",
+  "sha256": "5f912ca0d25d6dfe0114e05bf8c7a083fa542ad3de71e76c472e44a1a351167d",
+  "keys": 135
+ },
+ "supplement_2_sha256": "a9a15a139843e796c73fd9046cd8cd92ed0dcaeaa14bd41c7cd591aaef9c6452",
+ "supplement_3_sha256": "5360becf26cb287662e0a086aad92c367893c628dabcf4752fb97ee072c68ba8",
+ "lists": {
+  "J-P3": [
+   {
+    "bundle": "H-9",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json",
+    "location": "results[13].runs[3]",
+    "leg": "FR",
+    "key": "screen|top|8.0|ready|FR",
+    "setting": "VB",
+    "breach_reads": 3,
+    "min_gap_bar": -0.9000863000219455,
+    "first_breach_t_s": 48.7
+   },
+   {
+    "bundle": "H-9",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_bottom.json",
+    "location": "results[12].runs[0]",
+    "leg": "RR",
+    "key": "screen|bottom|4.0|ready|FL",
+    "setting": "VB",
+    "breach_reads": 2,
+    "min_gap_bar": -9.805922386165648,
+    "first_breach_t_s": 48.9
+   },
+   {
+    "bundle": "H-10",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+    "location": "line 28",
+    "leg": "RR",
+    "key": "R12",
+    "setting": "VB",
+    "breach_reads": 2,
+    "min_gap_bar": -9.805922386165648,
+    "first_breach_t_s": 48.9
+   },
+   {
+    "bundle": "H-10",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+    "location": "line 172",
+    "leg": "RR",
+    "key": "R12",
+    "setting": "LS2",
+    "breach_reads": 3,
+    "min_gap_bar": -9.643296298788957,
+    "first_breach_t_s": 48.8
+   },
+   {
+    "bundle": "H-10",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+    "location": "line 245",
+    "leg": "RR",
+    "key": "R12",
+    "setting": "LS3",
+    "breach_reads": 4,
+    "min_gap_bar": -26.33430043317365,
+    "first_breach_t_s": 48.8
+   }
+  ],
+  "J11": [],
+  "S-6": [
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+    "location": "results[24]",
+    "key": "ref|G1|top|Fs8",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+    "location": "results[29]",
+    "key": "ref|G1|middle|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_VB.json",
+    "location": "results[24]",
+    "key": "ref|G1|top|Fs8",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 23.59999999999035,
+    "n_P": 230,
+    "n_S": 235,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+    "location": "results[0]",
+    "key": "H8|G1|B|top|flat",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "location": "records[48]",
+    "key": "ref|G1|top|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 22.89999999999198,
+    "n_P": 223,
+    "n_S": 228,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "location": "records[49]",
+    "key": "ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "location": "records[50]",
+    "key": "ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+    "location": "records[51]",
+    "key": "ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[0]",
+    "key": "base|G1|B|top|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 22.89999999999198,
+    "n_P": 223,
+    "n_S": 228,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[1]",
+    "key": "base|G1|B|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[2]",
+    "key": "base|G1|B|top|Fs8",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[3]",
+    "key": "base|G1|B|middle|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.89999999999431,
+    "n_P": 213,
+    "n_S": 218,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[4]",
+    "key": "base|G1|B|middle|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[5]",
+    "key": "base|G1|B|middle|Fs8",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[6]",
+    "key": "base|G1|B|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[7]",
+    "key": "base|G1|B|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+    "location": "records[8]",
+    "key": "base|G1|B|bottom|Fs8",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 21.799999999994544,
+    "n_P": 212,
+    "n_S": 217,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+    "location": "records[2]",
+    "key": "base|G1|B|top|Fs8",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 23.59999999999035,
+    "n_P": 230,
+    "n_S": 235,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+    "location": "records[5]",
+    "key": "base|G1|B|middle|Fs8",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 23.699999999990116,
+    "n_P": 231,
+    "n_S": 236,
+    "dP": -5
+   },
+   {
+    "bundle": "H-3",
+    "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+    "location": "records[8]",
+    "key": "base|G1|B|bottom|Fs8",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 23.699999999990116,
+    "n_P": 231,
+    "n_S": 236,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[40]",
+    "key": "cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 26.49999999998359,
+    "n_P": 259,
+    "n_S": 264,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[41]",
+    "key": "cand=current#L1|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 25.49999999998592,
+    "n_P": 249,
+    "n_S": 254,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[42]",
+    "key": "cand=current#L1|s0|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 25.399999999986154,
+    "n_P": 248,
+    "n_S": 253,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[43]",
+    "key": "cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 25.399999999986154,
+    "n_P": 248,
+    "n_S": 253,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[163]",
+    "key": "cand=current#L1|s0|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 25.49999999998592,
+    "n_P": 249,
+    "n_S": 254,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[208]",
+    "key": "cand=current#L2|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[209]",
+    "key": "cand=current#L2|s0|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[210]",
+    "key": "cand=current#L2|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[330]",
+    "key": "cand=current#L2|s0|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[375]",
+    "key": "cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[376]",
+    "key": "cand=current#L2|s1|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[497]",
+    "key": "cand=current#L2|s1|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[541]",
+    "key": "cand=current#L2|s2|g6|48|ref|G1|top|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.099999999971246,
+    "n_P": 315,
+    "n_S": 320,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[542]",
+    "key": "cand=current#L2|s2|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[543]",
+    "key": "cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[544]",
+    "key": "cand=current#L2|s2|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[664]",
+    "key": "cand=current#L2|s2|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[709]",
+    "key": "cand=current#L2|s3|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[710]",
+    "key": "cand=current#L2|s3|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[711]",
+    "key": "cand=current#L2|s3|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[831]",
+    "key": "cand=current#L2|s3|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[875]",
+    "key": "cand=current#L2|s4|g6|48|ref|G1|top|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.19999999997172,
+    "n_P": 316,
+    "n_S": 321,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[876]",
+    "key": "cand=current#L2|s4|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[877]",
+    "key": "cand=current#L2|s4|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[878]",
+    "key": "cand=current#L2|s4|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[998]",
+    "key": "cand=current#L2|s4|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1043]",
+    "key": "cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1044]",
+    "key": "cand=current#L3|s0|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1045]",
+    "key": "cand=current#L3|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1165]",
+    "key": "cand=current#L3|s0|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1210]",
+    "key": "cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1211]",
+    "key": "cand=current#L3|s1|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1332]",
+    "key": "cand=current#L3|s1|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1377]",
+    "key": "cand=current#L3|s2|g6|49|ref|G1|top|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1378]",
+    "key": "cand=current#L3|s2|g6|50|ref|G1|bottom|Fs0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1379]",
+    "key": "cand=current#L3|s2|g6|51|ref|G1|bottom|Fs4",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+    "location": "results[1499]",
+    "key": "cand=current#L3|s2|ref|14|G1|B|0,0",
+    "setting": "V0",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 30.999999999973102,
+    "n_P": 304,
+    "n_S": 309,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[40]",
+    "key": "cand=current#L1|s0|g6|48|ref|G1|top|Fs0",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 28.199999999979628,
+    "n_P": 276,
+    "n_S": 281,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[43]",
+    "key": "cand=current#L1|s0|g6|51|ref|G1|bottom|Fs4",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 27.19999999998196,
+    "n_P": 266,
+    "n_S": 271,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[330]",
+    "key": "cand=current#L2|s0|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[375]",
+    "key": "cand=current#L2|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[497]",
+    "key": "cand=current#L2|s1|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[543]",
+    "key": "cand=current#L2|s2|g6|50|ref|G1|bottom|Fs0",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.69999999997411,
+    "n_P": 321,
+    "n_S": 326,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[998]",
+    "key": "cand=current#L2|s4|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[1043]",
+    "key": "cand=current#L3|s0|g6|49|ref|G1|top|Fs4",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[1165]",
+    "key": "cand=current#L3|s0|ref|14|G1|B|0,0",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   },
+   {
+    "bundle": "H-8",
+    "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+    "location": "results[1210]",
+    "key": "cand=current#L3|s1|g6|49|ref|G1|top|Fs4",
+    "setting": "VB",
+    "k": 0,
+    "family": "균일 연약",
+    "t_loc_s": 32.79999999997459,
+    "n_P": 322,
+    "n_S": 327,
+    "dP": -5
+   }
+  ]
+ },
+ "bundles": {
+  "H-1": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h1_d1.jsonl",
+     "sha256": "412e5b360d748e2552e42784c806c423adf48e4712b72477f6869ea8f25b3f56",
+     "units": 868
+    }
+   ],
+   "missing_files": [],
+   "units": 868,
+   "p3_units_RD9": 434,
+   "markers": [],
+   "error_units": 0,
+   "RD-8": {
+    "lines_with_breach_reads": 72,
+    "wrong_form": 0,
+    "top_level_mismatch_RD7_3": 0,
+    "vb_pass_without_breach_reads": 0
+   },
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  },
+  "H-3": {
+   "files": [
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_V0.json",
+     "sha256": "4e3aa79cfc2a079ca740cf217a56cf3c3b5fd0d46be91fdee869457483584ed5",
+     "units": 34
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_C_VB.json",
+     "sha256": "b2d06de98a0fa2d51efe39d94ce8707b0a1e1a69e56b865b5ad36d17c01646e2",
+     "units": 34
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_V0.json",
+     "sha256": "80a0a273fe7cdceba373841fbf8a5f667567c07939bbeb983108a3898c796eaa",
+     "units": 33
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_D_VB.json",
+     "sha256": "9a068f9dacc50f3517ca57c076de96fe74d5cd6df30e68ce4573c34ce41bd79c",
+     "units": 33
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_V0.json",
+     "sha256": "df91a50d22275aad6d074b4e5e3f4e5cf286ea9a8706adc1decaaa6dc6251d3a",
+     "units": 116
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g6_VB.json",
+     "sha256": "9a3dd41b5d4643f62638b2ebf4c211f2409d1d2aec918aa07d9777f18253f387",
+     "units": 116
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_V0.json",
+     "sha256": "aaf4b20d8f062aa414de9450acf66df333bfa45a3d6fc77c9c711681c61b0f0d",
+     "units": 516
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_g8_VB.json",
+     "sha256": "39cfbc4a5d220ced427ac355be5e2b5c2fb9d5fa930eb8cd6b6c452afaee3a1e",
+     "units": 516
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h6_V0.json",
+     "sha256": "41bda1c3a312c435a6c72c74c150e3c31661a64523c5a236644db39d2133cdd4",
+     "units": 26
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h6_VB.json",
+     "sha256": "b259f7ec176d161d7c0802a64409510d247501938f5e9be1265e6d1bbb707bcd",
+     "units": 26
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h9_V0.json",
+     "sha256": "53782f4aa767e0fcb4f01757388e96832e06bd0e055bcac0ab70ca36b81d68fd",
+     "units": 24
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_h9_VB.json",
+     "sha256": "0ad2ce2441a772e432f8afeb27af5a922defd72622721d2504bc89cb44a3f8e5",
+     "units": 24
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_V0.json",
+     "sha256": "b73743a5303adca480e0376ee96c674ee9555235f122ac6243172140ee1bb3f8",
+     "units": 171
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_p3b_VB.json",
+     "sha256": "871ebffe92774bcf58ec144833c1a4d9cb3a1abb97fbc207ef9b3949dccfd1a4",
+     "units": 171
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_slope_V0.json",
+     "sha256": "502dc0ab5368962264215f10cfb90a837d96b75d4a09ce15daa362068613efb5",
+     "units": 110
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_slope_VB.json",
+     "sha256": "229cd5800aba24e0acd517b4e9a4cf8131dedf200a6f7b51a2c8a5f429ba97fd",
+     "units": 110
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_x426b_V0.json",
+     "sha256": "47f6ff189d61945e6951f067a285160563531cb2aec703f4c058923cc3698050",
+     "units": 84
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u3_x426b_VB.json",
+     "sha256": "351ed507cc5125b1a2fc5de460a70b03712efaab2d1bbcd857fc374b690970dc",
+     "units": 84
+    }
+   ],
+   "missing_files": [],
+   "units": 2228,
+   "p3_units_RD9": 1114,
+   "markers": [
+    "멈춤 S-6"
+   ],
+   "error_units": 0,
+   "RD-8": {
+    "lines_with_breach_reads": 516,
+    "wrong_form": 0,
+    "top_level_mismatch_RD7_3": 0,
+    "vb_pass_without_breach_reads": 0
+   },
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 20
+  },
+  "H-4": {
+   "files": [
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB.json",
+     "sha256": "1eccdbbdc651f0249acf449e145f43bced0e6c972c64991233165236e9d7201c",
+     "units": 48
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB.json",
+     "sha256": "e987b614efacb133fe3d82a81f8ef71840a6d6c41677145e171cddc0ed80f046",
+     "units": 678
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_main_VB_IND_LAS.json",
+     "sha256": "a31461f9b1f2f7799e30f4ef19471196ca3b9998593bd9643cf067f64f1ddbed",
+     "units": 16
+    },
+    {
+     "result_file": "06_analysis/02_control/v5_rerun/las_k1/u6_b5_wide_VB_IND_LAS.json",
+     "sha256": "3fe4b35f0b02090b16209736e13880917124548f9fdde55fa1973604b5befbc2",
+     "units": 226
+    }
+   ],
+   "missing_files": [],
+   "units": 968,
+   "p3_units_RD9": 242,
+   "markers": [],
+   "error_units": 0,
+   "RD-8": {
+    "lines_with_breach_reads": 0,
+    "wrong_form": 0,
+    "top_level_mismatch_RD7_3": 0,
+    "vb_pass_without_breach_reads": 0
+   },
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  },
+  "H-5": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h5_u9_v0.jsonl",
+     "sha256": "661198e6b806ce4d063ab6031a411ae76e5d2a444cc69befde43a39932c0f44c",
+     "units": 14
+    }
+   ],
+   "missing_files": [],
+   "units": 14,
+   "p3_units_RD9": 0,
+   "markers": [],
+   "error_units": 0,
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  },
+  "H-6": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h6_dg3_v4on.json",
+     "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89",
+     "units": 135
+    }
+   ],
+   "missing_files": [],
+   "units": 135,
+   "p3_units_RD9": 135,
+   "markers": [],
+   "error_units": 0,
+   "J-P3_not_judgeable": {
+    "RD-8": 0,
+    "all": 0,
+    "S-2": 0
+   },
+   "J11_RD10": {
+    "not_judgeable": 0,
+    "no_input": 0
+   },
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  },
+  "H-7": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h7_dg3_off.json",
+     "sha256": "43997bf164655b45aa21a0b8483801053e842b4bfb1a3e9e71cfcf55cb341b0f",
+     "units": 135
+    }
+   ],
+   "missing_files": [],
+   "units": 135,
+   "p3_units_RD9": 0,
+   "markers": [],
+   "error_units": 0,
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  },
+  "H-8": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json",
+     "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43",
+     "units": 1503
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_V0.json",
+     "sha256": "54d1731611a27982a9e618ac734b6ccb5ab06d6dfed182b30eadb25682a3709e",
+     "units": 1503
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_seedext_VB.json",
+     "sha256": "41afdc7780e0eb9bf162a5baaa47ad27ca2082cb8abc0a828be930a478b6c4bb",
+     "units": 50
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_seedext_V0.json",
+     "sha256": "5f771ad24923867db5e37408a49026b32590a15d105ffa06e97058edfb158f4e",
+     "units": 50
+    }
+   ],
+   "missing_files": [],
+   "units": 3106,
+   "p3_units_RD9": 1553,
+   "markers": [
+    "멈춤 S-6"
+   ],
+   "dg3_replaced_excluded": {
+    "06_analysis/03_hydraulic/coupled/v5/resume_k1/h8_noise_VB.json": 135
+   },
+   "error_units": 0,
+   "J-P3_not_judgeable": {
+    "RD-8": 0,
+    "all": 0,
+    "S-2": 0
+   },
+   "J11_RD10": {
+    "not_judgeable": 0,
+    "no_input": 1553
+   },
+   "J-P3_rows": 0,
+   "J11_rows": 0,
+   "S-6_rows": 47
+  },
+  "H-9": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_stage1.jsonl",
+     "sha256": "f759ad0ff2c32039928c17ad8a2e340e3f90379d8bf155570765f42b95a6024f",
+     "units": 908
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_main.json",
+     "sha256": "79ca27fe7d57733ce23db96b4b1acabdc39bb7d0c1b8751b6787628fe8af8a33",
+     "units": 192
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r67_top.json",
+     "sha256": "7160f9f19b497ea264e9dd90c58c2da25540ded51e8510197205cf91f00bd827",
+     "units": 192
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_bottom.json",
+     "sha256": "6c06741fdc44d565265773a7d15157065631d631022da9c4034653273de11799",
+     "units": 192
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid/grid_r69_top.json",
+     "sha256": "fa1f9867c6f9393e82be5906103e23b1d313565564b90a3390b52f092a275595",
+     "units": 192
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r67_main.json",
+     "sha256": "1be9df4bc61fdd0fc43792b64f911ec6fe18e5bd3f166de8c2760ef3a76f24b5",
+     "units": 12
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r67_top.json",
+     "sha256": "32b63af51801eb2d596c5e0b8bc98849dccb02de7a4a4ea0ad84fe3b8f6d2c85",
+     "units": 24
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r69_bottom.json",
+     "sha256": "50ad9bcc10d7b44fb79360edd3548816aaf607b0b36afa0979f5c717bcc3d2b0",
+     "units": 24
+    },
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h9_grid_v0_sample/grid_r69_top.json",
+     "sha256": "69bffc1271fe364a14813ada72f7a2b18eb9fbf9b1166ad50b8a96c5f85669c4",
+     "units": 24
+    }
+   ],
+   "missing_files": [],
+   "units": 1760,
+   "p3_units_RD9": 768,
+   "markers": [
+    "J-P3 멈춤 H-7"
+   ],
+   "error_units": 0,
+   "J-P3_not_judgeable": {
+    "RD-8": 0,
+    "all": 0,
+    "S-2": 0
+   },
+   "J11_RD10": {
+    "not_judgeable": 0,
+    "no_input": 288
+   },
+   "J-P3_rows": 2,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  },
+  "H-10": {
+   "files": [
+    {
+     "result_file": "06_analysis/03_hydraulic/coupled/v5/resume_k1/h10_reuse_rerun.jsonl",
+     "sha256": "ce526b1f71e635e6b80d538f36841ece01710af46f02acb4b3fa1355a5a4dcb3",
+     "units": 440
+    }
+   ],
+   "missing_files": [],
+   "units": 440,
+   "p3_units_RD9": 426,
+   "markers": [
+    "J-P3 멈춤 H-7"
+   ],
+   "error_units": 0,
+   "J-P3_not_judgeable": {
+    "RD-8": 0,
+    "all": 0,
+    "S-2": 0
+   },
+   "J11_RD10": {
+    "not_judgeable": 0,
+    "no_input": 10
+   },
+   "J-P3_rows": 3,
+   "J11_rows": 0,
+   "S-6_rows": 0
+  }
+ },
+ "markers": [
+  "H-3: 멈춤 S-6",
+  "H-8: 멈춤 S-6",
+  "H-9: J-P3 멈춤 H-7",
+  "H-10: J-P3 멈춤 H-7"
+ ],
+ "missing_files": [],
+ "exit_code": 1,
+ "rules_seal": {
+  "revisions": {
+   "v5_resume_4368_rules.md": {
+    "expected_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "seal_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "rules_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "expected_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "seal_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "rules_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "expected_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "seal_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "rules_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "expected_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "seal_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "rules_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "expected_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "seal_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "rules_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "expected_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "seal_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "rules_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "expected_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "seal_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "rules_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "expected_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "seal_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "rules_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "expected_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "seal_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "rules_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "expected_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "seal_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "rules_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "expected_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "seal_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "rules_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "expected_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "seal_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "rules_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "expected_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "seal_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "rules_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   "v5_resume_4368_rules_rev13.md": {
+    "expected_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "seal_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "rules_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"
+   },
+   "v5_resume_4368_rules_rev14.md": {
+    "expected_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "seal_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "rules_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "expected_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "seal_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "rules_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "expected_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "seal_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "rules_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "expected_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "seal_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "rules_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "expected_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "seal_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "rules_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "expected_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "seal_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "rules_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "expected_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "seal_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "rules_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "expected_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "seal_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "rules_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   "v5_resume_4368_rules_rev22.md": {
+    "expected_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "seal_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "rules_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   "v5_resume_4368_rules_rev23.md": {
+    "expected_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "seal_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "rules_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   "v5_resume_4368_rules_rev24.md": {
+    "expected_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "seal_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "rules_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+   },
+   "v5_resume_4368_rules_rev25.md": {
+    "expected_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "seal_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "rules_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+   },
+   "v5_resume_4368_rules_rev26.md": {
+    "expected_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+    "seal_file_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+    "rules_file_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73"
+   }
+  },
+  "problems": [],
+  "stop_S1": false
+ },
+ "rules_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+ "rules_rev1_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+ "rules_rev2_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+ "rules_rev3_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+ "rules_rev4_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+ "rules_rev7_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+ "rules_rev8_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+ "rules_rev9_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+ "rules_rev10_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+ "rules_rev11_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+ "rules_rev12_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+ "rules_rev13_to_rev25_sha256": {
+  "v5_resume_4368_rules_rev13.md": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+  "v5_resume_4368_rules_rev14.md": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+  "v5_resume_4368_rules_rev15.md": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+  "v5_resume_4368_rules_rev16.md": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+  "v5_resume_4368_rules_rev17.md": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+  "v5_resume_4368_rules_rev18.md": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+  "v5_resume_4368_rules_rev19.md": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+  "v5_resume_4368_rules_rev20.md": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+  "v5_resume_4368_rules_rev21.md": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+  "v5_resume_4368_rules_rev22.md": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+  "v5_resume_4368_rules_rev23.md": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+  "v5_resume_4368_rules_rev24.md": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+  "v5_resume_4368_rules_rev25.md": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+ }
+}

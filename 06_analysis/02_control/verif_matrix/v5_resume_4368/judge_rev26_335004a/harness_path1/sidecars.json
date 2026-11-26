@@ -1,0 +1,558 @@
+{
+ "expected_head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+ "files": 20,
+ "records_start": 24,
+ "records_end": 24,
+ "problems": [],
+ "rows": [
+  {
+   "file": "h10_reuse_rerun.identity.json",
+   "start": {
+    "n": 4,
+    "heads_equal_expected": 4,
+    "is_clean_true": 4,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 4,
+    "times": [
+     "2026-11-14 21:30:24 +0900",
+     "2026-11-14 23:11:00 +0900",
+     "2026-11-14 23:17:39 +0900",
+     "2026-11-14 23:20:32 +0900"
+    ]
+   },
+   "end": {
+    "n": 4,
+    "heads_equal_expected": 4,
+    "is_clean_true": 4,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 4,
+    "times": [
+     "2026-11-14 23:10:55 +0900",
+     "2026-11-14 23:17:34 +0900",
+     "2026-11-14 23:19:25 +0900",
+     "2026-11-14 23:23:18 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h1_d1.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-13 21:51:29 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 00:07:45 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h5_u9_v0.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 07:48:25 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 07:49:43 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h6_dg3_v4on.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 07:49:45 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 08:24:10 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h7_dg3_off.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 08:24:11 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 08:56:05 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h8_noise_V0.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 14:44:28 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 17:06:06 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h8_noise_VB.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 08:56:06 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 14:44:27 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h8_seedext_V0.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 17:18:16 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 17:23:30 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h8_seedext_VB.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 17:06:07 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 17:18:15 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_family_F_V0.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:58:07 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-15 00:07:27 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_family_F_VB.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-15 00:07:28 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-15 00:30:05 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid\\grid_r67_main.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 20:36:58 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 20:52:38 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid\\grid_r67_top.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 20:52:39 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 21:04:25 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid\\grid_r69_bottom.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 21:04:27 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 21:17:13 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid\\grid_r69_top.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 21:17:14 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 21:30:19 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid_v0_sample\\grid_r67_main.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:23:19 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:24:38 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid_v0_sample\\grid_r67_top.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:24:39 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:27:10 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid_v0_sample\\grid_r69_bottom.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:27:11 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:29:19 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_grid_v0_sample\\grid_r69_top.identity.json",
+   "start": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:29:20 +0900"
+    ]
+   },
+   "end": {
+    "n": 1,
+    "heads_equal_expected": 1,
+    "is_clean_true": 1,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 1,
+    "times": [
+     "2026-11-14 23:31:27 +0900"
+    ]
+   }
+  },
+  {
+   "file": "h9_stage1.identity.json",
+   "start": {
+    "n": 2,
+    "heads_equal_expected": 2,
+    "is_clean_true": 2,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 2,
+    "times": [
+     "2026-11-14 17:23:35 +0900",
+     "2026-11-14 20:15:55 +0900"
+    ]
+   },
+   "end": {
+    "n": 2,
+    "heads_equal_expected": 2,
+    "is_clean_true": 2,
+    "affinity": [
+     "0xff0000"
+    ],
+    "seals_ok": 2,
+    "times": [
+     "2026-11-14 20:15:49 +0900",
+     "2026-11-14 20:36:57 +0900"
+    ]
+   }
+  }
+ ],
+ "exit_code": 0
+}

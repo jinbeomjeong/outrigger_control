@@ -1,0 +1,348 @@
+{
+ "tool": "compare_r4.py",
+ "tool_sha256": "8ff3d32ba0aaf5612f007591d03374470327acb3af4e95fc1b967addc155e193",
+ "column_map_sha256": "5f7ec6faed47e178fbc4566d9d79ec8d3d096d82e19000c94663d6e52e70341a",
+ "baseline_sha256_fixed": "a5627304037729330e1afa5f6a38dbd14fa6aa88210aea3326d5bb9e01b63f29",
+ "rule": "re-audit M-1; R4 block RD-5 K-10, RD-7..RD-11, JD-1..JD-8, supplements 4-6",
+ "inputs": [
+  {
+   "side": "path1",
+   "name": "r4_lists",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\r4_lists.json",
+   "sha256": "9e468352dedbf4932b27e5b0cf1b147c6088f27a96ef669a669dc640b43a5ffe"
+  },
+  {
+   "side": "path1",
+   "name": "u3",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\u3_judge.json",
+   "sha256": "68aebc4de95a8cd458f58bcce496216363e202082ac5b593abf778bc09260d7f"
+  },
+  {
+   "side": "path1",
+   "name": "h11",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h11.json",
+   "sha256": "e9d09c8e44307638a7fbceefd07a456f913b5c0371bc2afcba1970d362c9e3d2"
+  },
+  {
+   "side": "path1",
+   "name": "grid",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\grid_h10.json",
+   "sha256": "2de76905e5792cd86d2bdb363efa93e96befb623d15430918da1ff92640a5722"
+  },
+  {
+   "side": "path1",
+   "name": "family_f",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\family_f.json",
+   "sha256": "8280ec88dd55fb35722f67b02b93b30456baf3bdb829f554bcf103058d1af476"
+  },
+  {
+   "side": "path1",
+   "name": "jp",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\jp_reuse.json",
+   "sha256": "4e06970f79a378a1f374c953f8bd62c8a12045483a2b82141e2a8c13ee7aae54"
+  },
+  {
+   "side": "path1",
+   "name": "x16",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\x16_records.json",
+   "sha256": "1eb35dcea94128b2f06854a6c7b4a25701551f5c35dd42dc9a1af43ee24b4370"
+  },
+  {
+   "side": "path1",
+   "name": "item_list",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\item_list.json",
+   "sha256": "3ae5d964fe3f1e34a40162dfc653d1bf3568f13c4a915dd2c4fb65dc6ef8414a"
+  },
+  {
+   "side": "path2",
+   "name": "harness",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\harness.json",
+   "sha256": "c4bdc87c782a7b5f7b4027f43cd2019590e8ca56c1cf57ca593c40875afaee73"
+  },
+  {
+   "side": "path2",
+   "name": "merge",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\p2v5c_merge.json",
+   "sha256": null
+  },
+  {
+   "side": "path2",
+   "name": "grid",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\p2v5c_grid.json",
+   "sha256": null
+  },
+  {
+   "side": "path2",
+   "name": "u3",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\u3.json",
+   "sha256": null
+  },
+  {
+   "side": "path2",
+   "name": "g3",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\g3.json",
+   "sha256": "e7766c3855a26e48e34c3dec4aa720251609f3dfdd4b1449017a35efe95d6d5a"
+  },
+  {
+   "side": "path2",
+   "name": "jp",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\jp.json",
+   "sha256": "f61da4e96b33d9d5b883a73bbe44557f20d7fbcbae79486bce109408b236bf56"
+  },
+  {
+   "side": "path2",
+   "name": "c16",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\c16.json",
+   "sha256": null
+  },
+  {
+   "side": "path2",
+   "name": "noise",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\p2v5c_noise.json",
+   "sha256": null
+  },
+  {
+   "side": "path2",
+   "name": "items",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2\\rd13_items.json",
+   "sha256": null
+  },
+  {
+   "side": "baseline",
+   "name": "baseline",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\baseline\\r4_baseline_sets.json",
+   "sha256": "a5627304037729330e1afa5f6a38dbd14fa6aa88210aea3326d5bb9e01b63f29"
+  }
+ ],
+ "rd13_sha256": {
+  "path1": {
+   "H-1": "ded5c3f00fb0ada368825b857c3d2ee2491acff010aeb925feda69d0b10f6498",
+   "H-2": "f8943efa4091a0faa761dad6617792f6ec293f00d470c07351cdbb458b1f2e8d",
+   "H-3": "0128087ad3ce752de80533aa3ca18fc0e771338d818d634ac98e4c514bed2e4c",
+   "H-4": "a4ea2f5454680990b3e0507c5006bb1605d6c8b652d136ec3335b54068ec1f45",
+   "H-5": "fd3a629f4966383e87c910a3ba088169e3ed2138561e573a6021e180496b32eb",
+   "H-6": "13883157e913bbfa661467663c3f933540cdf9a036f379b27c8353ea0a395b16",
+   "H-7": "15d59085520959510f4a7e47009cb3f9e6229a720d594aa539b4f26523ab239e",
+   "H-8": "5986162223eacbf4f2bcf811c1d6082c4b35cdab366ee5cb30aa975cf0e52e52",
+   "H-9": "7af7f2b43342d4baf9a5d0621e000224caea0447b6a3e45a8acd82617a2458a2",
+   "H-10": "f1ac00fd4b8765fe5da5908a03859283356a43cafe8e39d878926ab3995e0ef8",
+   "H-11": "13f6732a777e00f0f38fc3724951424e1ea4ab566b9359c25ff0df09162d11a8",
+   "H-12": "f8a9a72bf1c045e62486e33d090d20a845521faa5541febdcc268747aa1bcc30",
+   "C-9": "e06fe2dc2551ab6576c9f74d28b25fcd2038b208a87f4c5881bcc76509c6418b",
+   "C-10": "a58d467f0321c32ecb01357652b25823d4420b60208824741776d93c496f7e56",
+   "C-11": "d4b88ae520526a1be368ed6569495b40fb3f28bc4fc5042bb3913609147e4d5c",
+   "J_P": "aff3b5c0665a2465aa3749063fd37d7d5f1d398ad89a15055275336f542e3f58"
+  },
+  "path2": {
+   "not_read": "path2: expected output file rd13_items.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+  },
+  "path2_v5c": {
+   "not_read": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+  }
+ },
+ "items": [
+  {
+   "item": "RD-7 J-P3 list (RD-7 2)",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "RD-7 J11 list (RD-7 2)",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "RD-7 S-6 list (RD-7 2)",
+   "status": "equal",
+   "detail": {
+    "rows_path1": 67,
+    "rows_path2": 67,
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "JD-1 J-P3 = jp_base",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "JD-3 S-6 = s6_base",
+   "status": "equal",
+   "detail": {
+    "baseline_rows": 67,
+    "path1": {
+     "equal": true,
+     "only_path": [],
+     "only_baseline": []
+    },
+    "path2": {
+     "equal": true,
+     "only_path": [],
+     "only_baseline": []
+    }
+   }
+  },
+  {
+   "item": "JD-2 G-5 (5 keys)",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file u3.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "JD-7 G-6 (3 keys)",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file u3.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "JD-8 RD-8 marker H-1 / H-3 / H-4",
+   "status": "equal",
+   "detail": {
+    "presence": {
+     "H-1": {
+      "path1": false,
+      "path2": false
+     },
+     "H-3": {
+      "path1": false,
+      "path2": false
+     },
+     "H-4": {
+      "path1": false,
+      "path2": false
+     }
+    }
+   }
+  },
+  {
+   "item": "S6-2 V0 pair source",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "S5-3 (a) raw pass->fail, N_raw",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "S5-3 (c) family F excluded pass->fail, N_F",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "S5-3 (b) family F table and application condition",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "S5-3 records (fail->pass, fail->fail, FAULT, undecidable rows)",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "S5-4 / S6-4 stop H-10 marker and grid term",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "S4-5 family F R-1 .. R-4",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_grid.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "RD-11 J_P reading",
+   "status": "equal",
+   "detail": {
+    "rows_count": {
+     "path1": 12,
+     "path2": 12
+    },
+    "stop_markers": {
+     "path1": [],
+     "path2": []
+    },
+    "reuse": {
+     "path1": true,
+     "path2": true
+    },
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "H-11 G-3 and false pairs",
+   "status": "equal",
+   "detail": {
+    "G-3": {
+     "path1": true,
+     "path2": true
+    },
+    "only_path1": [],
+    "only_path2": [],
+    "duplicates": [],
+    "value_differences": []
+   }
+  },
+  {
+   "item": "RD-8 undecidable counts and marker",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "RD-9 ③-on counts and H-8 dg3 substitution",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "RD-10 J11 undecidable / input missing",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file p2v5c_merge.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  },
+  {
+   "item": "C-9 .. C-11 records (K-10, CD-10 keys excluded)",
+   "status": "missing",
+   "detail": {
+    "input_error": "path2: expected output file c16.json missing in C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path2"
+   }
+  }
+ ],
+ "counts": {
+  "equal": 5,
+  "differ": 0,
+  "missing": 16
+ },
+ "exit_code": 2
+}

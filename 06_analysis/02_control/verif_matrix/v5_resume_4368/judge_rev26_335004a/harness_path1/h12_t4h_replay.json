@@ -1,0 +1,618 @@
+{
+ "rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback forced on all legs; unlocked tail samples recorded only",
+ "record": "T4h",
+ "extend_start_rule": null,
+ "extend_start_revision": null,
+ "runs": 3,
+ "runs_over": 2,
+ "offset_allowance_runs": 0,
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "pass",
+  "runs": 3,
+  "runs_judged": 3,
+  "runs_by_case": {
+   "judged": 3,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 2,
+  "runs_expected": 3,
+  "rule_missing_runs": 0
+ },
+ "rows": [
+  {
+   "file": "slope_edge_top_4.0_FR_raised_20.0_proj.npz",
+   "samples": 557,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "recorded_lower_max_abs_N": 9.094947017729282e-13,
+   "judged_samples_by_leg": {
+    "FL": 157,
+    "FR": 320,
+    "RL": 168,
+    "RR": 154
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 1,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 1,
+   "max_excess_N": 1110.4820770532206,
+   "max_excess_vs_window_min_N": 7702.517078572171,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 1,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": 5715.49951933985,
+   "provisional_pass": false,
+   "settings_equal": true,
+   "commands_sha256": "59aa22625ad36de67f2b41ac611b132b3686833b338ed5c64fccf9fbb71def10",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": {
+    "rule": "\u2462-on rows (tension_premise.md 5.4, 6.3), plant rod pressure p_tr at every controller read. ext_moving (judged): breach_reads = p_tr > p_hat + delta_m, the sum must be 0; margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the VB T4h replay (t4h_replay with the \u2462-on setting, over_0p6kN == 0); here a cross-check FLAG against the monitor's model bound \u2463 (before the reading bound \u2464): locked_breach_reads = p_tr > \u2463, locked_breach_over_tol_reads = p_tr > \u2463 + 0.6 kN / A_ann (the T4h tolerance; > 0 is a FLAG, a VB T4h disagreement is a replay mismatch); locked_vs_extend_bound_reads = p_tr > p_hat + delta_m on locked legs, diagnostic only. 1 Pa rounding allowance; retracting legs apart (premise \u2463); null record = option off or no rod reading",
+    "reads": [
+     386,
+     222,
+     330,
+     388
+    ],
+    "breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "margin_used_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "min_gap_bar": [
+     0.5000000000000431,
+     0.5000000000000431,
+     0.49999999999998485,
+     0.49999999999998485
+    ],
+    "min_gap_t_s": [
+     4.3,
+     22.2,
+     30.0,
+     22.4
+    ],
+    "first_breach_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "locked_reads": [
+     66,
+     260,
+     167,
+     154
+    ],
+    "locked_unpaired_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_breach_reads": [
+     0,
+     3,
+     0,
+     0
+    ],
+    "locked_breach_over_tol_reads": [
+     0,
+     1,
+     0,
+     0
+    ],
+    "locked_min_gap_bar": [
+     11.0,
+     -2.945645178323409,
+     10.999999999999972,
+     10.970018153375491
+    ],
+    "locked_min_gap_t_s": [
+     40.0,
+     19.4,
+     39.0,
+     49.0
+    ],
+    "locked_bound_source": [
+     "pilot_model",
+     "pilot_model",
+     "pilot_model",
+     "pilot_model"
+    ],
+    "locked_tolerance_bar": [
+     1.5915494309189526,
+     1.5915494309189526,
+     1.909859317102744,
+     1.909859317102744
+    ],
+    "locked_vs_extend_bound_reads": [
+     0,
+     29,
+     47,
+     30
+    ],
+    "retract_reads": [
+     11,
+     11,
+     55,
+     11
+    ],
+    "retract_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "p3_expected": true,
+   "has_rod_reading": true,
+   "head_only_declared": false,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "slope_edgeMr_top_4.0_FL_raised_20.0_proj.npz",
+   "samples": 550,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "recorded_lower_max_abs_N": 9.094947017729282e-13,
+   "judged_samples_by_leg": {
+    "FL": 322,
+    "FR": 156,
+    "RL": 154,
+    "RR": 168
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 1,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 1,
+   "max_excess_N": 1100.9207560394534,
+   "max_excess_vs_window_min_N": 8021.497230054185,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 1
+   },
+   "unlocked_tail_max_excess_N": 5526.37564157079,
+   "provisional_pass": false,
+   "settings_equal": true,
+   "commands_sha256": "0ffde01ea9e7b5f7e811b1ebc71f3cd951b07232c8925bccc9c7d3d3dd8d8c2e",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": {
+    "rule": "\u2462-on rows (tension_premise.md 5.4, 6.3), plant rod pressure p_tr at every controller read. ext_moving (judged): breach_reads = p_tr > p_hat + delta_m, the sum must be 0; margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the VB T4h replay (t4h_replay with the \u2462-on setting, over_0p6kN == 0); here a cross-check FLAG against the monitor's model bound \u2463 (before the reading bound \u2464): locked_breach_reads = p_tr > \u2463, locked_breach_over_tol_reads = p_tr > \u2463 + 0.6 kN / A_ann (the T4h tolerance; > 0 is a FLAG, a VB T4h disagreement is a replay mismatch); locked_vs_extend_bound_reads = p_tr > p_hat + delta_m on locked legs, diagnostic only. 1 Pa rounding allowance; retracting legs apart (premise \u2463); null record = option off or no rod reading",
+    "reads": [
+     214,
+     379,
+     372,
+     319
+    ],
+    "breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "margin_used_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "min_gap_bar": [
+     0.5000000000000431,
+     0.5000000000000431,
+     0.49999999999998485,
+     0.49999999999998485
+    ],
+    "min_gap_t_s": [
+     22.2,
+     4.3,
+     22.4,
+     30.2
+    ],
+    "first_breach_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "locked_reads": [
+     231,
+     96,
+     124,
+     167
+    ],
+    "locked_unpaired_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_breach_reads": [
+     3,
+     0,
+     0,
+     0
+    ],
+    "locked_breach_over_tol_reads": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "locked_min_gap_bar": [
+     -2.920282986612222,
+     10.872430068399895,
+     10.935644684709231,
+     10.53513437545051
+    ],
+    "locked_min_gap_t_s": [
+     19.4,
+     42.3,
+     38.3,
+     42.4
+    ],
+    "locked_bound_source": [
+     "pilot_model",
+     "pilot_model",
+     "pilot_model",
+     "pilot_model"
+    ],
+    "locked_tolerance_bar": [
+     1.5915494309189526,
+     1.5915494309189526,
+     1.909859317102744,
+     1.909859317102744
+    ],
+    "locked_vs_extend_bound_reads": [
+     9,
+     20,
+     20,
+     47
+    ],
+    "retract_reads": [
+     11,
+     11,
+     20,
+     59
+    ],
+    "retract_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "p3_expected": true,
+   "has_rod_reading": true,
+   "head_only_declared": false,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "slope_rpB_top_4.0_FR_raised_20.0_proj.npz",
+   "samples": 578,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "recorded_lower_max_abs_N": 9.094947017729282e-13,
+   "judged_samples_by_leg": {
+    "FL": 157,
+    "FR": 320,
+    "RL": 168,
+    "RR": 154
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": 425.9717523110048,
+   "max_excess_vs_window_min_N": 8030.557489978244,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 1,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": 5715.499519339559,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "95b0e05107c1da2cd19d0ffb7f7b611b83e64ee5d594e5620d21aed3e0d0e546",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": {
+    "rule": "\u2462-on rows (tension_premise.md 5.4, 6.3), plant rod pressure p_tr at every controller read. ext_moving (judged): breach_reads = p_tr > p_hat + delta_m, the sum must be 0; margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the VB T4h replay (t4h_replay with the \u2462-on setting, over_0p6kN == 0); here a cross-check FLAG against the monitor's model bound \u2463 (before the reading bound \u2464): locked_breach_reads = p_tr > \u2463, locked_breach_over_tol_reads = p_tr > \u2463 + 0.6 kN / A_ann (the T4h tolerance; > 0 is a FLAG, a VB T4h disagreement is a replay mismatch); locked_vs_extend_bound_reads = p_tr > p_hat + delta_m on locked legs, diagnostic only. 1 Pa rounding allowance; retracting legs apart (premise \u2463); null record = option off or no rod reading",
+    "reads": [
+     407,
+     243,
+     346,
+     409
+    ],
+    "breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "margin_used_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "min_gap_bar": [
+     0.5000000000000431,
+     0.5000000000000431,
+     0.49999999999998485,
+     0.49999999999998485
+    ],
+    "min_gap_t_s": [
+     4.3,
+     22.2,
+     30.5,
+     22.4
+    ],
+    "first_breach_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "locked_reads": [
+     66,
+     260,
+     167,
+     154
+    ],
+    "locked_unpaired_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_breach_reads": [
+     0,
+     1,
+     0,
+     0
+    ],
+    "locked_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_min_gap_bar": [
+     11.0,
+     -1.129925148810728,
+     10.992821154921627,
+     10.971769477510215
+    ],
+    "locked_min_gap_t_s": [
+     42.1,
+     19.4,
+     41.1,
+     51.1
+    ],
+    "locked_bound_source": [
+     "pilot_model",
+     "pilot_model",
+     "pilot_model",
+     "pilot_model"
+    ],
+    "locked_tolerance_bar": [
+     1.5915494309189526,
+     1.5915494309189526,
+     1.909859317102744,
+     1.909859317102744
+    ],
+    "locked_vs_extend_bound_reads": [
+     0,
+     29,
+     47,
+     32
+    ],
+    "retract_reads": [
+     11,
+     11,
+     60,
+     11
+    ],
+    "retract_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "p3_expected": true,
+   "has_rod_reading": true,
+   "head_only_declared": false,
+   "run_extend_start_rule": "tracked_bound"
+  }
+ ],
+ "recorded_lower_max_abs_N": 9.094947017729282e-13
+}

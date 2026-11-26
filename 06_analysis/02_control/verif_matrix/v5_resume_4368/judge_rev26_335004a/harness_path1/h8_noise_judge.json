@@ -1,0 +1,594 @@
+{
+ "script": "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py",
+ "script_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+ "rules_seal": {
+  "rules_dir": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\06_analysis\\02_control\\verif_matrix",
+  "revisions": {
+   "v5_resume_4368_rules.md": {
+    "pinned_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+    "seal_file_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+   },
+   "v5_resume_4368_rules_rev1.md": {
+    "pinned_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7",
+    "seal_file_sha256": "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+   },
+   "v5_resume_4368_rules_rev2.md": {
+    "pinned_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199",
+    "seal_file_sha256": "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+   },
+   "v5_resume_4368_rules_rev3.md": {
+    "pinned_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557",
+    "seal_file_sha256": "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+   },
+   "v5_resume_4368_rules_rev4.md": {
+    "pinned_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
+    "seal_file_sha256": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+   },
+   "v5_resume_4368_rules_rev5.md": {
+    "pinned_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
+    "seal_file_sha256": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+   },
+   "v5_resume_4368_rules_rev6.md": {
+    "pinned_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "seal_file_sha256": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+   },
+   "v5_resume_4368_rules_rev7.md": {
+    "pinned_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "seal_file_sha256": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+   },
+   "v5_resume_4368_rules_rev8.md": {
+    "pinned_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    "seal_file_sha256": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+   },
+   "v5_resume_4368_rules_rev9.md": {
+    "pinned_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "seal_file_sha256": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+   },
+   "v5_resume_4368_rules_rev10.md": {
+    "pinned_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "seal_file_sha256": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+   },
+   "v5_resume_4368_rules_rev11.md": {
+    "pinned_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "seal_file_sha256": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+   },
+   "v5_resume_4368_rules_rev12.md": {
+    "pinned_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    "seal_file_sha256": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+   },
+   "v5_resume_4368_rules_rev13.md": {
+    "pinned_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+    "seal_file_sha256": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b"
+   },
+   "v5_resume_4368_rules_rev14.md": {
+    "pinned_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+    "seal_file_sha256": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f"
+   },
+   "v5_resume_4368_rules_rev15.md": {
+    "pinned_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+    "seal_file_sha256": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef"
+   },
+   "v5_resume_4368_rules_rev16.md": {
+    "pinned_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+    "seal_file_sha256": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683"
+   },
+   "v5_resume_4368_rules_rev17.md": {
+    "pinned_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+    "seal_file_sha256": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422"
+   },
+   "v5_resume_4368_rules_rev18.md": {
+    "pinned_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+    "seal_file_sha256": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e"
+   },
+   "v5_resume_4368_rules_rev19.md": {
+    "pinned_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+    "seal_file_sha256": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2"
+   },
+   "v5_resume_4368_rules_rev20.md": {
+    "pinned_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+    "seal_file_sha256": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531"
+   },
+   "v5_resume_4368_rules_rev21.md": {
+    "pinned_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+    "seal_file_sha256": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a"
+   },
+   "v5_resume_4368_rules_rev22.md": {
+    "pinned_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+    "seal_file_sha256": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328"
+   },
+   "v5_resume_4368_rules_rev23.md": {
+    "pinned_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+    "seal_file_sha256": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97"
+   },
+   "v5_resume_4368_rules_rev24.md": {
+    "pinned_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+    "seal_file_sha256": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15"
+   },
+   "v5_resume_4368_rules_rev25.md": {
+    "pinned_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233",
+    "seal_file_sha256": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+   },
+   "v5_resume_4368_rules_rev26.md": {
+    "pinned_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+    "file_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+    "seal_file_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73"
+   }
+  },
+  "problems": [],
+  "stop_S1": false
+ },
+ "definition_changes": [],
+ "diff_vs_existing": [
+  {
+   "old": "04_scripts/03_control/s8/r79_L3L4_final.py",
+   "new": "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py",
+   "old_sha256": "d42748921440b233e8116d7d7fb837aa17e68a5a8baa85a98aa161a6642c71ac",
+   "new_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+   "added_lines": 579,
+   "removed_lines": 398
+  },
+  {
+   "old": "04_scripts/03_control/s8/r79_sensor_judge.py",
+   "new": "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py",
+   "old_sha256": "6c72b785648dbb56726706212afe5440187079b11fd7fb63d5a11f484c3afc23",
+   "new_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+   "added_lines": 575,
+   "removed_lines": 791
+  }
+ ],
+ "inputs": {
+  "noise_vb": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+   "sha256": "2219ab9782b22fbe07e6c1f90e8b49c6b3703b0575b5d7cfb7d72b4f067bec43"
+  },
+  "noise_v0": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_V0.json",
+   "sha256": "54d1731611a27982a9e618ac734b6ccb5ab06d6dfed182b30eadb25682a3709e"
+  },
+  "h6": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+   "sha256": "ea0ab94c81e58eeb83ab2b6a63494a56c16bcd4165a62de47eba5efd03f23c89"
+  },
+  "seedext_vb": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_seedext_VB.json",
+   "sha256": "41afdc7780e0eb9bf162a5baaa47ad27ca2082cb8abc0a828be930a478b6c4bb"
+  },
+  "seedext_v0": {
+   "path": "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_seedext_V0.json",
+   "sha256": "5f771ad24923867db5e37408a49026b32590a15d105ffa06e97058edfb158f4e"
+  }
+ },
+ "judge_outputs": {
+  "VB": {
+   "path": "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_noise_VB.json",
+   "sha256": "fba1c7e2eb740ac14fd43765def8eaf95b8b535aa2a53a6a17b91a3125fc8bbb"
+  },
+  "V0": {
+   "path": "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_noise_V0.json",
+   "sha256": "93114dde4cb0e5fba9f23204989866c860030e64f59166a40c3424db3dcf465e"
+  },
+  "seedext_VB": {
+   "path": "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_seedext_VB.json",
+   "sha256": "012810960bcd310e02fb65853041dd23bca6d16336c9dd1d6cdf746a6e73e0d0"
+  },
+  "seedext_V0": {
+   "path": "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_seedext_V0.json",
+   "sha256": "2dd5d27ae6aab5fdfbfd16022bba56f57762ade954e1cd84b0a02ae1ed90b063"
+  }
+ },
+ "judge_runs": {
+  "VB": {
+   "command": [
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge-merged",
+    "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_noise_VB.json",
+    "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h6_dg3_v4on.json",
+    "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_VB.json",
+    "--s4-late-loc"
+   ],
+   "exit_code": 0,
+   "last_line": "unmatched 0 errors 0 -> 06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_noise_VB.json",
+   "stderr_tail": []
+  },
+  "V0": {
+   "command": [
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_noise_V0.json",
+    "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_noise_V0.json",
+    "--s4-late-loc"
+   ],
+   "exit_code": 0,
+   "last_line": "unmatched 0 errors 0 -> 06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_noise_V0.json",
+   "stderr_tail": []
+  },
+  "seedext_VB": {
+   "command": [
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_seedext_VB.json",
+    "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_seedext_VB.json",
+    "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\h8_noise_VB_L1.json",
+    "--s4-late-loc"
+   ],
+   "exit_code": 0,
+   "last_line": "unmatched 0 errors 0 -> 06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_seedext_VB.json",
+   "stderr_tail": []
+  },
+  "seedext_V0": {
+   "command": [
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_seedext_V0.json",
+    "06_analysis\\03_hydraulic\\coupled\\v5\\resume_k1\\h8_seedext_V0.json",
+    "06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\h8_noise_V0_L1.json",
+    "--s4-late-loc"
+   ],
+   "exit_code": 0,
+   "last_line": "unmatched 0 errors 0 -> 06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_335004a\\harness_path1\\h8_r79_judge\\judge_h8_seedext_V0.json",
+   "stderr_tail": []
+  }
+ },
+ "aggregation_definitions": [
+  "13.2 S4_late_loc: S-4 LOC gate only + spec 419.8 FLAG record -> FLAG (criteria 13.2)",
+  "423.1 / 407.2: a new recontact counts only as strict_fail (judge recontact_new)",
+  "R5-C2: an S-4 failure explained by no sub-item is a failure (listed)",
+  "S1 front / pad A excluded (r79_L3L4_final.is_excluded), L2 n expected 835",
+  "CP one-sided 95 % by beta.ppf and binom.cdf root; L2 > 3 % = H-10",
+  "R4-B3 L1 gate four counts against the judge counts (difference = 판정 불가, S-13)",
+  "R5-C1: no settings_mismatch in the judge output = 대조 대상 없음",
+  "R5-C3: seedext L1 pair = same-setting noise L1 line; seeds 0 .. 4 hash = H-15"
+ ],
+ "dg3_substitution": {
+  "replaced": 135,
+  "replacement_lines": 135,
+  "without_noise_line": [],
+  "hash_same_top_level": 135,
+  "hash_differs_top_level": 0,
+  "hash_record_incomplete": 0
+ },
+ "VB": {
+  "L2": {
+   "level": "L2",
+   "lines": 835,
+   "excluded_s1_front_pad_a": 0,
+   "n": 835,
+   "failures": 4,
+   "cp95_upper_beta": 0.010928503511708891,
+   "cp95_upper_binom_root": 0.010928503511708867,
+   "cp_roots_abs_diff": 2.42861286636753e-17,
+   "is_within_3pct": true,
+   "not_judgeable": [],
+   "failed_keys": [
+    "L2|s0|g6|56|ref|J2|top|Fs0",
+    "L2|s1|g6|56|ref|J2|top|Fs0",
+    "L2|s1|g8|22|slope|rpB|top|4.0|FR|raised|140.0",
+    "L2|s4|g6|56|ref|J2|top|Fs0"
+   ],
+   "failed_gate_counts": {
+    "S-5": 3,
+    "S-4": 1
+   },
+   "flag_counts": {
+    "S3_true_over_band": 109,
+    "S4_baseline": 112,
+    "S4_late_loc": 2,
+    "S4_transient_recontact": 2
+   },
+   "s4_unexplained": [],
+   "judge_pass_differs": []
+  },
+  "L3": {
+   "level": "L3",
+   "lines": 501,
+   "excluded_s1_front_pad_a": 0,
+   "n": 501,
+   "failures": 11,
+   "cp95_upper_beta": 0.03608087304752577,
+   "cp95_upper_binom_root": 0.03608087304752583,
+   "cp_roots_abs_diff": 6.245004513516506e-17,
+   "is_within_3pct": false,
+   "not_judgeable": [],
+   "failed_keys": [
+    "L3|s0|g6|104|g6r|rigid+S1@RL|top|Fs0",
+    "L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "L3|s0|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+    "L3|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0",
+    "L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "L3|s1|g6|56|ref|J2|top|Fs0",
+    "L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+    "L3|s1|g8|22|slope|rpB|top|4.0|FR|raised|140.0",
+    "L3|s1|ref|2|rigid|B|-4.4,0",
+    "L3|s1|ref|7|rigid|B|2.2,-1.6",
+    "L3|s2|g6|62|ref|S1|bottom|Fs0"
+   ],
+   "failed_gate_counts": {
+    "S-3": 3,
+    "S-1": 7,
+    "S-5": 1,
+    "S-4": 3
+   },
+   "flag_counts": {
+    "S3_true_over_band": 78,
+    "S4_baseline": 69,
+    "S4_late_loc": 1,
+    "S4_transient_recontact": 1
+   },
+   "s4_unexplained": [],
+   "judge_pass_differs": []
+  },
+  "L1_gate": {
+   "setting": "VB",
+   "direct": {
+    "false_loc": 0,
+    "unmatched": 0,
+    "errors": 0,
+    "settings_mismatch": 0
+   },
+   "missing_crawler_ratio_L1": 0,
+   "error_parts": {
+    "meta_n_errors": 0,
+    "error_results": 0
+   },
+   "judge": {
+    "false_loc": 0,
+    "unmatched": 0,
+    "errors": 0,
+    "settings_mismatch": null
+   },
+   "errors_comparison_basis": "judge errors vs error results of L2 / L3 (judge definition)",
+   "comparisons": {
+    "false_loc": "같음",
+    "unmatched": "같음",
+    "errors": "같음",
+    "settings_mismatch": "대조 대상 없음"
+   },
+   "is_violated": false,
+   "is_count_mismatch": false
+  },
+  "vs_V0_L2": {
+   "pass_to_fail": [
+    "L2|s0|g6|56|ref|J2|top|Fs0",
+    "L2|s1|g6|56|ref|J2|top|Fs0",
+    "L2|s1|g8|22|slope|rpB|top|4.0|FR|raised|140.0",
+    "L2|s4|g6|56|ref|J2|top|Fs0"
+   ],
+   "fail_to_pass": [
+    "L2|s0|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+    "L2|s0|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L2|s2|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "L2|s2|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L2|s4|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ]
+  },
+  "vs_V0_L3": {
+   "pass_to_fail": [
+    "L3|s0|g6|104|g6r|rigid+S1@RL|top|Fs0",
+    "L3|s0|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+    "L3|s0|g8|32|slope|rpB|top|4.0|RR|raised|200.0",
+    "L3|s1|g6|56|ref|J2|top|Fs0",
+    "L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+    "L3|s1|g8|22|slope|rpB|top|4.0|FR|raised|140.0",
+    "L3|s1|ref|2|rigid|B|-4.4,0"
+   ],
+   "fail_to_pass": [
+    "L3|s0|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+    "L3|s0|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L3|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L3|s1|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "L3|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "L3|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L3|s2|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "L3|s2|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ]
+  }
+ },
+ "V0_record": {
+  "L2": {
+   "level": "L2",
+   "lines": 835,
+   "excluded_s1_front_pad_a": 0,
+   "n": 835,
+   "failures": 8,
+   "cp95_upper_beta": 0.01722042513065279,
+   "cp95_upper_binom_root": 0.0172204251306527,
+   "cp_roots_abs_diff": 9.020562075079397e-17,
+   "is_within_3pct": true,
+   "not_judgeable": [],
+   "failed_keys": [
+    "L2|s0|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+    "L2|s0|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L2|s2|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "L2|s2|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L2|s4|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ],
+   "failed_gate_counts": {
+    "S-1": 7,
+    "S-6": 2,
+    "S-4": 1
+   },
+   "flag_counts": {
+    "S3_true_over_band": 111,
+    "S4_baseline": 122,
+    "S4_transient_recontact": 5
+   },
+   "s4_unexplained": [],
+   "judge_pass_differs": []
+  },
+  "L3": {
+   "level": "L3",
+   "lines": 501,
+   "excluded_s1_front_pad_a": 0,
+   "n": 501,
+   "failures": 12,
+   "cp95_upper_beta": 0.038519118892780056,
+   "cp95_upper_binom_root": 0.03851911889278001,
+   "cp_roots_abs_diff": 4.85722573273506e-17,
+   "is_within_3pct": false,
+   "not_judgeable": [],
+   "failed_keys": [
+    "L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "L3|s0|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+    "L3|s0|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "L3|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L3|s1|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "L3|s1|ref|7|rigid|B|2.2,-1.6",
+    "L3|s2|g6|62|ref|S1|bottom|Fs0",
+    "L3|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "L3|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "L3|s2|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "L3|s2|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ],
+   "failed_gate_counts": {
+    "S-3": 2,
+    "S-1": 7,
+    "S-6": 2,
+    "S-4": 3
+   },
+   "flag_counts": {
+    "S3_true_over_band": 75,
+    "S4_baseline": 69,
+    "S4_transient_recontact": 2
+   },
+   "s4_unexplained": [],
+   "judge_pass_differs": []
+  },
+  "L1_gate": {
+   "setting": "V0",
+   "direct": {
+    "false_loc": 0,
+    "unmatched": 0,
+    "errors": 0,
+    "settings_mismatch": 0
+   },
+   "missing_crawler_ratio_L1": 0,
+   "error_parts": {
+    "meta_n_errors": 0,
+    "error_results": 0
+   },
+   "judge": {
+    "false_loc": 0,
+    "unmatched": 0,
+    "errors": 0,
+    "settings_mismatch": null
+   },
+   "errors_comparison_basis": "judge errors vs error results of L2 / L3 (judge definition)",
+   "comparisons": {
+    "false_loc": "같음",
+    "unmatched": "같음",
+    "errors": "같음",
+    "settings_mismatch": "대조 대상 없음"
+   },
+   "is_violated": false,
+   "is_count_mismatch": false
+  }
+ },
+ "seedext": {
+  "L2|g6|56|ref|J2|top|Fs0": {
+   "VB": {
+    "n": 25,
+    "failures": 16,
+    "cp95_upper_beta": 0.7976222201453378,
+    "cp95_upper_binom_root": 0.7976222201453376,
+    "failed_gate_counts": {
+     "S-5": 16
+    },
+    "not_judgeable": 0
+   },
+   "V0": {
+    "n": 25,
+    "failures": 1,
+    "cp95_upper_beta": 0.176120710604518,
+    "cp95_upper_binom_root": 0.176120710604518,
+    "failed_gate_counts": {
+     "S-5": 1
+    },
+    "not_judgeable": 0
+   },
+   "fisher_p_one_sided": 5.296429428409491e-06,
+   "wording": "VB 체계적 악화 의심(하네스)",
+   "is_n_expected": true
+  },
+  "L2|g8|22|slope|rpB|top|4.0|FR|raised|140.0": {
+   "VB": {
+    "n": 25,
+    "failures": 3,
+    "cp95_upper_beta": 0.28172250797771403,
+    "cp95_upper_binom_root": 0.281722507977714,
+    "failed_gate_counts": {
+     "S-4": 3
+    },
+    "not_judgeable": 0
+   },
+   "V0": {
+    "n": 25,
+    "failures": 0,
+    "cp95_upper_beta": 0.11292814500684321,
+    "cp95_upper_binom_root": 0.1129281450068432,
+    "failed_gate_counts": {},
+    "not_judgeable": 0
+   },
+   "fisher_p_one_sided": 0.11734693877551021,
+   "wording": "시드 산포와 구분되지 않음",
+   "is_n_expected": true
+  }
+ },
+ "seed_hash_H15": {
+  "VB": {
+   "checked": 10,
+   "different": [],
+   "record_incomplete": []
+  },
+  "V0": {
+   "checked": 10,
+   "different": [],
+   "record_incomplete": []
+  }
+ },
+ "status": "통과",
+ "findings": [
+  "사용자 확인: seedext L2|g6|56|ref|J2|top|Fs0 VB 체계적 악화 의심(하네스)"
+ ],
+ "exit_code": 1
+}

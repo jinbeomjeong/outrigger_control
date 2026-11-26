@@ -1,0 +1,4384 @@
+{
+ "rules": "u3_u6_rerun_rules.md",
+ "rules_sha256": "8de318825764114ad14afcec362c87c1e01a2ad47195b8491b1c96056e1960b3",
+ "rules_revisions": [
+  {
+   "rules": "u3_u6_rerun_rules_rev1.md",
+   "sha256": "2c5e69213b29fc930c478306676efc72b515d67af08634adab3eba2d05f5f15d",
+   "sealed_sha256": "2c5e69213b29fc930c478306676efc72b515d67af08634adab3eba2d05f5f15d",
+   "match_seal": true
+  },
+  {
+   "rules": "u3_u6_rerun_rules_rev2.md",
+   "sha256": "be1584a4448d68a30c4fe9ec613d3d7b3cb0b47169c2f5eff72e9a9ca0776880",
+   "sealed_sha256": "be1584a4448d68a30c4fe9ec613d3d7b3cb0b47169c2f5eff72e9a9ca0776880",
+   "match_seal": true
+  },
+  {
+   "rules": "v5_resume_4368_rules.md",
+   "sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+   "sealed_sha256": "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524",
+   "match_seal": true
+  }
+ ],
+ "script_sha256": "c35e3cfb2a93bc90e2dd7f57ef5da38f3e7c3f3aecc3488824ea9fe62465ab29",
+ "u3": {
+  "slope": {
+   "bundle": "slope",
+   "kind": "record",
+   "v4_file": "rev85/finB2_harness_rejudged.json",
+   "settle_v2": true,
+   "runs": {
+    "V0": 110,
+    "VB": 110
+   },
+   "reused_d1": 12,
+   "vb_counts": {
+    "pass": 57,
+    "flag": 0,
+    "safe_stop": 42,
+    "fail": 11
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 56,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 1,
+     "flag": 0,
+     "safe_stop": 42,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 11
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 58,
+     "NA": 52,
+     "mean": 1.332758620696019,
+     "min": -6.100000000029127,
+     "max": 4.000000000019099
+    },
+    "min_force_kN": {
+     "n": 110,
+     "NA": 0,
+     "mean": -0.38144254932409133,
+     "min": -3.0257508275110325,
+     "max": 1.4012041746556747
+    },
+    "max_stroke_mm": {
+     "n": 110,
+     "NA": 0,
+     "mean": -0.06914975995772052,
+     "min": -20.183552591993134,
+     "max": 12.484839223115046
+    },
+    "rut_ready_mm": {
+     "n": 58,
+     "NA": 52,
+     "mean": -0.6948537082136568,
+     "min": -7.796215831601245,
+     "max": 3.357360417456931
+    },
+    "att_end_deg": {
+     "n": 110,
+     "NA": 0,
+     "mean": 0.00014161126322703854,
+     "min": -0.057419403492454384,
+     "max": 0.06378834129796218
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [
+     "H1|J1|B|top|edge_nd",
+     "H1|J2|B|top|roll_pos",
+     "H1|J2|B|top|roll_neg",
+     "H1|J2|B|top|edge_nu",
+     "H1|S1|B|top|roll_pos",
+     "H1|S1|B|top|roll_neg",
+     "H2|J2|B|bottom|roll_neg",
+     "H2|S1|B|bottom|roll_pos",
+     "H2|S1|B|bottom|roll_neg",
+     "H3|J2|B|top|roll_pos@k0.5",
+     "H3|J2|B|top|roll_pos@k0.875"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": [
+     {
+      "key": "H2|J1|B|bottom|edge_nd",
+      "v0": "safe_stop",
+      "vb": "pass"
+     }
+    ]
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 56,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 43,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 11
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 58,
+      "NA": 52,
+      "mean": -1.58103448276617,
+      "min": -48.50000000023158,
+      "max": 3.900000000018622
+     },
+     "min_force_kN": {
+      "n": 110,
+      "NA": 0,
+      "mean": 0.5794667472270195,
+      "min": -0.16883636015070635,
+      "max": 32.5489250395381
+     },
+     "max_stroke_mm": {
+      "n": 110,
+      "NA": 0,
+      "mean": 0.006519371360972379,
+      "min": -1.6037098512187526,
+      "max": 1.0072150986404722
+     },
+     "rut_ready_mm": {
+      "n": 58,
+      "NA": 52,
+      "mean": 0.2954398551484847,
+      "min": -3.4782765861412486,
+      "max": 14.848436352258389
+     },
+     "att_end_deg": {
+      "n": 110,
+      "NA": 0,
+      "mean": 0.00017247238981399148,
+      "min": -0.023987592790746803,
+      "max": 0.02265991808227219
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 110,
+     "counts": {
+      "V0": 110,
+      "VB": 110
+     },
+     "v4_keys": 110,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "H1|G1|B|top|flat": "pass",
+     "H1|G1|B|top|nose_down": "pass",
+     "H1|G1|B|top|nose_up": "pass",
+     "H1|G1|B|top|roll_pos": "pass",
+     "H1|G1|B|top|roll_neg": "pass",
+     "H1|G1|B|top|edge_nd": "pass",
+     "H1|G1|B|top|edge_nu": "pass",
+     "H1|G1|B|top|rpB": "pass",
+     "H1|J1|B|top|flat": "pass",
+     "H1|J1|B|top|nose_down": "safe_stop",
+     "H1|J1|B|top|nose_up": "safe_stop",
+     "H1|J1|B|top|roll_pos": "safe_stop",
+     "H1|J1|B|top|roll_neg": "safe_stop",
+     "H1|J1|B|top|edge_nd": "fail",
+     "H1|J1|B|top|edge_nu": "safe_stop",
+     "H1|J1|B|top|rpB": "safe_stop",
+     "H1|J2|B|top|flat": "pass",
+     "H1|J2|B|top|nose_down": "safe_stop",
+     "H1|J2|B|top|nose_up": "safe_stop",
+     "H1|J2|B|top|roll_pos": "fail",
+     "H1|J2|B|top|roll_neg": "fail",
+     "H1|J2|B|top|edge_nd": "safe_stop",
+     "H1|J2|B|top|edge_nu": "fail",
+     "H1|J2|B|top|rpB": "safe_stop",
+     "H1|S1|B|top|flat": "pass",
+     "H1|S1|B|top|nose_down": "safe_stop",
+     "H1|S1|B|top|nose_up": "safe_stop",
+     "H1|S1|B|top|roll_pos": "fail",
+     "H1|S1|B|top|roll_neg": "fail",
+     "H1|S1|B|top|edge_nd": "safe_stop",
+     "H1|S1|B|top|edge_nu": "safe_stop",
+     "H1|S1|B|top|rpB": "safe_stop",
+     "H2|G1|B|bottom|flat": "pass",
+     "H2|G1|B|bottom|nose_down": "pass",
+     "H2|G1|B|bottom|nose_up": "pass",
+     "H2|G1|B|bottom|roll_pos": "pass",
+     "H2|G1|B|bottom|roll_neg": "pass",
+     "H2|G1|B|bottom|edge_nd": "pass",
+     "H2|G1|B|bottom|edge_nu": "pass",
+     "H2|G1|B|bottom|rpB": "pass",
+     "H2|J1|B|bottom|flat": "pass",
+     "H2|J1|B|bottom|nose_down": "pass",
+     "H2|J1|B|bottom|nose_up": "safe_stop",
+     "H2|J1|B|bottom|roll_pos": "pass",
+     "H2|J1|B|bottom|roll_neg": "safe_stop",
+     "H2|J1|B|bottom|edge_nd": "safe_stop",
+     "H2|J1|B|bottom|edge_nu": "pass",
+     "H2|J1|B|bottom|rpB": "pass",
+     "H2|J2|B|bottom|flat": "pass",
+     "H2|J2|B|bottom|nose_down": "safe_stop",
+     "H2|J2|B|bottom|nose_up": "safe_stop",
+     "H2|J2|B|bottom|roll_pos": "safe_stop",
+     "H2|J2|B|bottom|roll_neg": "fail",
+     "H2|J2|B|bottom|edge_nd": "safe_stop",
+     "H2|J2|B|bottom|edge_nu": "safe_stop",
+     "H2|J2|B|bottom|rpB": "safe_stop",
+     "H2|S1|B|bottom|flat": "pass",
+     "H2|S1|B|bottom|nose_down": "safe_stop",
+     "H2|S1|B|bottom|nose_up": "safe_stop",
+     "H2|S1|B|bottom|roll_pos": "fail",
+     "H2|S1|B|bottom|roll_neg": "fail",
+     "H2|S1|B|bottom|edge_nd": "safe_stop",
+     "H2|S1|B|bottom|edge_nu": "safe_stop",
+     "H2|S1|B|bottom|rpB": "safe_stop",
+     "H3|J1|B|top|nose_down@k0.5": "pass",
+     "H3|J1|B|top|nose_down@k0.75": "pass",
+     "H3|J1|B|top|nose_down@k0.875": "pass",
+     "H3|J1|B|top|roll_pos@k0.5": "pass",
+     "H3|J1|B|top|roll_pos@k0.75": "pass",
+     "H3|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|J1|B|top|edge_nd@k0.5": "pass",
+     "H3|J1|B|top|edge_nd@k0.75": "pass",
+     "H3|J1|B|top|edge_nd@k0.875": "pass",
+     "H3|J2|B|top|nose_down@k0.5": "pass",
+     "H3|J2|B|top|nose_down@k0.75": "pass",
+     "H3|J2|B|top|nose_down@k0.875": "pass",
+     "H3|J2|B|top|roll_pos@k0.5": "fail",
+     "H3|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|top|roll_pos@k0.875": "fail",
+     "H3|J2|B|top|edge_nd@k0.5": "pass",
+     "H3|J2|B|top|edge_nd@k0.75": "pass",
+     "H3|J2|B|top|edge_nd@k0.875": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.5": "pass",
+     "H3|S1|B|top|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.875": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5": "pass",
+     "H3|S1|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5": "pass",
+     "H3|S1|B|top|edge_nd@k0.75": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.875": "safe_stop",
+     "H4|G1|B|top|nose_down": "pass",
+     "H4|G1|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_down": "safe_stop",
+     "H4|J1|B|top|nose_down_2p8": "pass",
+     "H4|J2|B|top|nose_down": "safe_stop",
+     "H4|J2|B|top|nose_down_2p8": "pass",
+     "H4|S1|B|top|nose_down": "safe_stop",
+     "H4|S1|B|top|nose_down_2p8": "safe_stop",
+     "H4|rigid|B|top|nose_down": "pass",
+     "H4|rigid|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_up": "safe_stop",
+     "H5|rigid|B|top|flat": "pass",
+     "H5|rigid|B|top|nose_down": "pass",
+     "H5|rigid|B|top|nose_up": "pass",
+     "H5|rigid|B|top|roll_pos": "pass",
+     "H5|rigid|B|top|roll_neg": "pass",
+     "H5|rigid|B|top|edge_nd": "pass",
+     "H5|rigid|B|top|edge_nu": "pass",
+     "H5|rigid|B|top|rpB": "pass"
+    },
+    "VB": {
+     "H1|G1|B|top|flat": "pass",
+     "H1|G1|B|top|nose_down": "pass",
+     "H1|G1|B|top|nose_up": "pass",
+     "H1|G1|B|top|roll_pos": "pass",
+     "H1|G1|B|top|roll_neg": "pass",
+     "H1|G1|B|top|edge_nd": "pass",
+     "H1|G1|B|top|edge_nu": "pass",
+     "H1|G1|B|top|rpB": "pass",
+     "H1|J1|B|top|flat": "pass",
+     "H1|J1|B|top|nose_down": "safe_stop",
+     "H1|J1|B|top|nose_up": "safe_stop",
+     "H1|J1|B|top|roll_pos": "safe_stop",
+     "H1|J1|B|top|roll_neg": "safe_stop",
+     "H1|J1|B|top|edge_nd": "fail",
+     "H1|J1|B|top|edge_nu": "safe_stop",
+     "H1|J1|B|top|rpB": "safe_stop",
+     "H1|J2|B|top|flat": "pass",
+     "H1|J2|B|top|nose_down": "safe_stop",
+     "H1|J2|B|top|nose_up": "safe_stop",
+     "H1|J2|B|top|roll_pos": "fail",
+     "H1|J2|B|top|roll_neg": "fail",
+     "H1|J2|B|top|edge_nd": "safe_stop",
+     "H1|J2|B|top|edge_nu": "fail",
+     "H1|J2|B|top|rpB": "safe_stop",
+     "H1|S1|B|top|flat": "pass",
+     "H1|S1|B|top|nose_down": "safe_stop",
+     "H1|S1|B|top|nose_up": "safe_stop",
+     "H1|S1|B|top|roll_pos": "fail",
+     "H1|S1|B|top|roll_neg": "fail",
+     "H1|S1|B|top|edge_nd": "safe_stop",
+     "H1|S1|B|top|edge_nu": "safe_stop",
+     "H1|S1|B|top|rpB": "safe_stop",
+     "H2|G1|B|bottom|flat": "pass",
+     "H2|G1|B|bottom|nose_down": "pass",
+     "H2|G1|B|bottom|nose_up": "pass",
+     "H2|G1|B|bottom|roll_pos": "pass",
+     "H2|G1|B|bottom|roll_neg": "pass",
+     "H2|G1|B|bottom|edge_nd": "pass",
+     "H2|G1|B|bottom|edge_nu": "pass",
+     "H2|G1|B|bottom|rpB": "pass",
+     "H2|J1|B|bottom|flat": "pass",
+     "H2|J1|B|bottom|nose_down": "pass",
+     "H2|J1|B|bottom|nose_up": "safe_stop",
+     "H2|J1|B|bottom|roll_pos": "pass",
+     "H2|J1|B|bottom|roll_neg": "safe_stop",
+     "H2|J1|B|bottom|edge_nd": "pass",
+     "H2|J1|B|bottom|edge_nu": "pass",
+     "H2|J1|B|bottom|rpB": "pass",
+     "H2|J2|B|bottom|flat": "pass",
+     "H2|J2|B|bottom|nose_down": "safe_stop",
+     "H2|J2|B|bottom|nose_up": "safe_stop",
+     "H2|J2|B|bottom|roll_pos": "safe_stop",
+     "H2|J2|B|bottom|roll_neg": "fail",
+     "H2|J2|B|bottom|edge_nd": "safe_stop",
+     "H2|J2|B|bottom|edge_nu": "safe_stop",
+     "H2|J2|B|bottom|rpB": "safe_stop",
+     "H2|S1|B|bottom|flat": "pass",
+     "H2|S1|B|bottom|nose_down": "safe_stop",
+     "H2|S1|B|bottom|nose_up": "safe_stop",
+     "H2|S1|B|bottom|roll_pos": "fail",
+     "H2|S1|B|bottom|roll_neg": "fail",
+     "H2|S1|B|bottom|edge_nd": "safe_stop",
+     "H2|S1|B|bottom|edge_nu": "safe_stop",
+     "H2|S1|B|bottom|rpB": "safe_stop",
+     "H3|J1|B|top|nose_down@k0.5": "pass",
+     "H3|J1|B|top|nose_down@k0.75": "pass",
+     "H3|J1|B|top|nose_down@k0.875": "pass",
+     "H3|J1|B|top|roll_pos@k0.5": "pass",
+     "H3|J1|B|top|roll_pos@k0.75": "pass",
+     "H3|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|J1|B|top|edge_nd@k0.5": "pass",
+     "H3|J1|B|top|edge_nd@k0.75": "pass",
+     "H3|J1|B|top|edge_nd@k0.875": "pass",
+     "H3|J2|B|top|nose_down@k0.5": "pass",
+     "H3|J2|B|top|nose_down@k0.75": "pass",
+     "H3|J2|B|top|nose_down@k0.875": "pass",
+     "H3|J2|B|top|roll_pos@k0.5": "fail",
+     "H3|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|top|roll_pos@k0.875": "fail",
+     "H3|J2|B|top|edge_nd@k0.5": "pass",
+     "H3|J2|B|top|edge_nd@k0.75": "pass",
+     "H3|J2|B|top|edge_nd@k0.875": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.5": "pass",
+     "H3|S1|B|top|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|top|nose_down@k0.875": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5": "pass",
+     "H3|S1|B|top|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.875": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5": "pass",
+     "H3|S1|B|top|edge_nd@k0.75": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.875": "safe_stop",
+     "H4|G1|B|top|nose_down": "pass",
+     "H4|G1|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_down": "safe_stop",
+     "H4|J1|B|top|nose_down_2p8": "pass",
+     "H4|J2|B|top|nose_down": "safe_stop",
+     "H4|J2|B|top|nose_down_2p8": "pass",
+     "H4|S1|B|top|nose_down": "safe_stop",
+     "H4|S1|B|top|nose_down_2p8": "safe_stop",
+     "H4|rigid|B|top|nose_down": "pass",
+     "H4|rigid|B|top|nose_down_2p8": "pass",
+     "H4|J1|B|top|nose_up": "safe_stop",
+     "H5|rigid|B|top|flat": "pass",
+     "H5|rigid|B|top|nose_down": "pass",
+     "H5|rigid|B|top|nose_up": "pass",
+     "H5|rigid|B|top|roll_pos": "pass",
+     "H5|rigid|B|top|roll_neg": "pass",
+     "H5|rigid|B|top|edge_nd": "pass",
+     "H5|rigid|B|top|edge_nu": "pass",
+     "H5|rigid|B|top|rpB": "pass"
+    }
+   }
+  },
+  "h6": {
+   "bundle": "h6",
+   "kind": "record",
+   "v4_file": "rev85/finB2_harness_rejudged.json",
+   "settle_v2": true,
+   "runs": {
+    "V0": 26,
+    "VB": 26
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 20,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 6
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 20,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 6
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 20,
+     "NA": 6,
+     "mean": -0.49500000000236355,
+     "min": -10.800000000051568,
+     "max": 3.4000000000162345
+    },
+    "min_force_kN": {
+     "n": 26,
+     "NA": 0,
+     "mean": -0.6948618281629375,
+     "min": -7.964416473735334,
+     "max": 4.861862499442218
+    },
+    "max_stroke_mm": {
+     "n": 26,
+     "NA": 0,
+     "mean": 2.2819031542870984,
+     "min": 0.1932343265026475,
+     "max": 12.484839223115046
+    },
+    "rut_ready_mm": {
+     "n": 20,
+     "NA": 6,
+     "mean": -0.07989801465915462,
+     "min": -2.7654253766589036,
+     "max": 3.357360417456931
+    },
+    "att_end_deg": {
+     "n": 26,
+     "NA": 0,
+     "mean": -0.003289423022414263,
+     "min": -0.04352855472494664,
+     "max": 0.011932784028161454
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [
+     "H6|J1|B|top|flat|Fs0|m1.2",
+     "H6|J1|B|top|flat|m1.2",
+     "H6|J1|B|middle|flat|Fs0|m1.2",
+     "H6|J1|B|middle|flat|m1.2",
+     "H6|J1|B|bottom|flat|Fs0|m1.2",
+     "H6|J1|B|bottom|flat|m1.2"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 20,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 6
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 20,
+      "NA": 6,
+      "mean": 1.7600000000084037,
+      "min": -7.600000000036289,
+      "max": 21.80000000010409
+     },
+     "min_force_kN": {
+      "n": 26,
+      "NA": 0,
+      "mean": 0.03513153448302557,
+      "min": 0.0,
+      "max": 0.19746341189534178
+     },
+     "max_stroke_mm": {
+      "n": 26,
+      "NA": 0,
+      "mean": -0.5665072391006688,
+      "min": -3.0474516573605115,
+      "max": 0.7855121980921922
+     },
+     "rut_ready_mm": {
+      "n": 20,
+      "NA": 6,
+      "mean": -0.963960099700784,
+      "min": -6.733960004800132,
+      "max": 2.4505186252403206
+     },
+     "att_end_deg": {
+      "n": 26,
+      "NA": 0,
+      "mean": 0.001858147747831992,
+      "min": -0.018502657048278477,
+      "max": 0.024580033223642106
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 26,
+     "counts": {
+      "V0": 26,
+      "VB": 26
+     },
+     "v4_keys": 26,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "H6|J1|B|top|flat|Fs0": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|top|flat": "pass",
+     "H6|J1|B|top|flat|m1.1": "pass",
+     "H6|J1|B|top|flat|m1.2": "fail",
+     "H6|J1|B|middle|flat|Fs0": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|middle|flat": "pass",
+     "H6|J1|B|middle|flat|m1.1": "pass",
+     "H6|J1|B|middle|flat|m1.2": "fail",
+     "H6|J1|B|bottom|flat|Fs0": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|bottom|flat": "pass",
+     "H6|J1|B|bottom|flat|m1.1": "pass",
+     "H6|J1|B|bottom|flat|m1.2": "fail",
+     "H6|J2|B|top|flat": "pass",
+     "H6|J2|B|top|flat|m1.1": "pass",
+     "H6|J2|B|bottom|flat": "pass",
+     "H6|J2|B|bottom|flat|m1.1": "pass",
+     "H6|G1|B|top|flat|m1.2": "pass",
+     "H6|G1|B|bottom|flat|m1.2": "pass",
+     "H6|rigid|B|top|flat|Fs0|m1.2": "pass",
+     "H6|rigid|B|top|flat|m1.2": "pass"
+    },
+    "VB": {
+     "H6|J1|B|top|flat|Fs0": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|top|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|top|flat": "pass",
+     "H6|J1|B|top|flat|m1.1": "pass",
+     "H6|J1|B|top|flat|m1.2": "fail",
+     "H6|J1|B|middle|flat|Fs0": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|middle|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|middle|flat": "pass",
+     "H6|J1|B|middle|flat|m1.1": "pass",
+     "H6|J1|B|middle|flat|m1.2": "fail",
+     "H6|J1|B|bottom|flat|Fs0": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.1": "pass",
+     "H6|J1|B|bottom|flat|Fs0|m1.2": "fail",
+     "H6|J1|B|bottom|flat": "pass",
+     "H6|J1|B|bottom|flat|m1.1": "pass",
+     "H6|J1|B|bottom|flat|m1.2": "fail",
+     "H6|J2|B|top|flat": "pass",
+     "H6|J2|B|top|flat|m1.1": "pass",
+     "H6|J2|B|bottom|flat": "pass",
+     "H6|J2|B|bottom|flat|m1.1": "pass",
+     "H6|G1|B|top|flat|m1.2": "pass",
+     "H6|G1|B|bottom|flat|m1.2": "pass",
+     "H6|rigid|B|top|flat|Fs0|m1.2": "pass",
+     "H6|rigid|B|top|flat|m1.2": "pass"
+    }
+   }
+  },
+  "h9": {
+   "bundle": "h9",
+   "kind": "record",
+   "v4_file": "rev85/finB2_h9.json",
+   "settle_v2": false,
+   "runs": {
+    "V0": 24,
+    "VB": 24
+   },
+   "reused_d1": 1,
+   "vb_counts": {
+    "pass": 9,
+    "flag": 1,
+    "safe_stop": 10,
+    "fail": 4
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 7,
+     "flag": 1,
+     "safe_stop": 0,
+     "fail": 1
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 2,
+     "flag": 0,
+     "safe_stop": 10,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 3
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 10,
+     "NA": 14,
+     "mean": 4.7100000000224895,
+     "min": -1.7000000000081172,
+     "max": 20.30000000009693
+    },
+    "min_force_kN": {
+     "n": 24,
+     "NA": 0,
+     "mean": -0.500304385465574,
+     "min": -3.4215575602790267,
+     "max": 0.1420914535608091
+    },
+    "max_stroke_mm": {
+     "n": 24,
+     "NA": 0,
+     "mean": 0.9666537463983644,
+     "min": -1.6136674844736945,
+     "max": 18.67934700217245
+    },
+    "rut_ready_mm": {
+     "n": 10,
+     "NA": 14,
+     "mean": -1.0854772003437443,
+     "min": -7.181447537797034,
+     "max": 17.866192661942506
+    },
+    "att_end_deg": {
+     "n": 24,
+     "NA": 0,
+     "mean": -0.01887128463966146,
+     "min": -0.6808151417507746,
+     "max": 0.06378834129796218
+    }
+   },
+   "classes": {
+    "vb_only_failure": [
+     {
+      "key": "H9|J1|B|top|roll_pos@k0.6",
+      "v0": "pass",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     }
+    ],
+    "baseline_failure": [
+     "H9|J1|B|top|roll_pos@k0.65",
+     "H9|J2|B|top|roll_pos@k0.875",
+     "H9|J2|B|top|roll_neg@k0.875"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": [
+     {
+      "key": "H9|J1|B|top|roll_neg@k0.7",
+      "v0": "safe_stop",
+      "vb": "pass"
+     },
+     {
+      "key": "H9|J2|B|top|roll_pos@k0.7",
+      "v0": "safe_stop",
+      "vb": "pass"
+     }
+    ]
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 9,
+      "flag": 0,
+      "safe_stop": 1,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 11,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 3
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 10,
+      "NA": 14,
+      "mean": 0.030000000000143245,
+      "min": 0.0,
+      "max": 0.20000000000095497
+     },
+     "min_force_kN": {
+      "n": 24,
+      "NA": 0,
+      "mean": 0.1461569233117522,
+      "min": -0.01615416286738025,
+      "max": 3.408756975817141
+     },
+     "max_stroke_mm": {
+      "n": 24,
+      "NA": 0,
+      "mean": -0.035566264401362936,
+      "min": -1.023769873980882,
+      "max": 0.4881447825774785
+     },
+     "rut_ready_mm": {
+      "n": 10,
+      "NA": 14,
+      "mean": -0.01222719522729072,
+      "min": -0.06682649401783891,
+      "max": 0.02347401648762215
+     },
+     "att_end_deg": {
+      "n": 24,
+      "NA": 0,
+      "mean": 0.02923390577136038,
+      "min": -0.0011274197535599204,
+      "max": 0.6905723103078505
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 24,
+     "counts": {
+      "V0": 24,
+      "VB": 24
+     },
+     "v4_keys": 24,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": false,
+     "vb_only_failures": [
+      {
+       "key": "H9|J1|B|top|roll_pos@k0.6",
+       "v0": "pass",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      }
+     ]
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "H9|J1|B|top|roll_pos@k0.6": "pass",
+     "H9|J1|B|top|roll_pos@k0.65": "fail",
+     "H9|J1|B|top|roll_pos@k0.7": "pass",
+     "H9|J1|B|top|roll_pos@k0.75": "pass",
+     "H9|J1|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.6": "pass",
+     "H9|J1|B|top|roll_neg@k0.65": "pass",
+     "H9|J1|B|top|roll_neg@k0.7": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.875": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.6": "pass",
+     "H9|J2|B|top|roll_pos@k0.65": "pass",
+     "H9|J2|B|top|roll_pos@k0.7": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.875": "fail",
+     "H9|J2|B|top|roll_neg@k0.6": "pass",
+     "H9|J2|B|top|roll_neg@k0.65": "pass",
+     "H9|J2|B|top|roll_neg@k0.7": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.875": "fail"
+    },
+    "VB": {
+     "H9|J1|B|top|roll_pos@k0.6": "fail",
+     "H9|J1|B|top|roll_pos@k0.65": "fail",
+     "H9|J1|B|top|roll_pos@k0.7": "pass",
+     "H9|J1|B|top|roll_pos@k0.75": "pass",
+     "H9|J1|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_pos@k0.875": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.6": "flag",
+     "H9|J1|B|top|roll_neg@k0.65": "pass",
+     "H9|J1|B|top|roll_neg@k0.7": "pass",
+     "H9|J1|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J1|B|top|roll_neg@k0.875": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.6": "pass",
+     "H9|J2|B|top|roll_pos@k0.65": "pass",
+     "H9|J2|B|top|roll_pos@k0.7": "pass",
+     "H9|J2|B|top|roll_pos@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_pos@k0.875": "fail",
+     "H9|J2|B|top|roll_neg@k0.6": "pass",
+     "H9|J2|B|top|roll_neg@k0.65": "pass",
+     "H9|J2|B|top|roll_neg@k0.7": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.75": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.8": "safe_stop",
+     "H9|J2|B|top|roll_neg@k0.875": "fail"
+    }
+   }
+  },
+  "g6": {
+   "bundle": "g6",
+   "kind": "g6",
+   "v4_file": "rev85/finB2_p0.json",
+   "settle_v2": false,
+   "runs": {
+    "V0": 116,
+    "VB": 116
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 97,
+    "flag": 17,
+    "safe_stop": 0,
+    "fail": 2
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 95,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 2,
+     "flag": 16,
+     "safe_stop": 0,
+     "fail": 2
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 1,
+     "safe_stop": 0,
+     "fail": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 116,
+     "NA": 0,
+     "mean": 1.42241379311024,
+     "min": -4.200000000020054,
+     "max": 18.900000000090245
+    },
+    "min_force_kN": {
+     "n": 116,
+     "NA": 0,
+     "mean": 0.05365773286138365,
+     "min": -5.714781675880727,
+     "max": 8.862249462271777
+    },
+    "max_stroke_mm": {
+     "n": 116,
+     "NA": 0,
+     "mean": 0.026285949527746766,
+     "min": -50.86912712811409,
+     "max": 20.77157160901379
+    },
+    "rut_ready_mm": {
+     "n": 116,
+     "NA": 0,
+     "mean": -0.854160831036754,
+     "min": -50.63463550791391,
+     "max": 14.517638528017102
+    },
+    "att_end_deg": {
+     "n": 116,
+     "NA": 0,
+     "mean": 0.003622645414597039,
+     "min": -0.0050576277568495885,
+     "max": 0.03226348282403237
+    }
+   },
+   "classes": {
+    "vb_only_failure": [
+     {
+      "key": "g6r|rigid+S1@FL|top|Fs4",
+      "v0": "flag",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     },
+     {
+      "key": "g6r|rigid+S1@FR|top|Fs4",
+      "v0": "flag",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     }
+    ],
+    "baseline_failure": [],
+    "vb_improvement": [
+     {
+      "key": "g6r|rigid+J2@FL|top|Fs0",
+      "vb": "flag"
+     }
+    ],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "previous_g6_demotion": "not_applied",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 94,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 1,
+      "flag": 20,
+      "safe_stop": 0,
+      "fail": 1
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 116,
+      "NA": 0,
+      "mean": 0.33620689655332947,
+      "min": -3.2000000000152795,
+      "max": 4.900000000023397
+     },
+     "min_force_kN": {
+      "n": 116,
+      "NA": 0,
+      "mean": 0.10279226797747779,
+      "min": -4.814560921094067,
+      "max": 13.110039348568606
+     },
+     "max_stroke_mm": {
+      "n": 116,
+      "NA": 0,
+      "mean": -11.72769256303231,
+      "min": -39.498590703532955,
+      "max": 2.725120980100087
+     },
+     "rut_ready_mm": {
+      "n": 116,
+      "NA": 0,
+      "mean": -11.669784539842285,
+      "min": -39.50619911496328,
+      "max": 2.7558739378843597
+     },
+     "att_end_deg": {
+      "n": 116,
+      "NA": 0,
+      "mean": -0.0003987132979631751,
+      "min": -0.02510842530955177,
+      "max": 0.0012775882530345062
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 116,
+     "counts": {
+      "V0": 116,
+      "VB": 116
+     },
+     "v4_keys": 116,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": false,
+     "vb_only_failures": [
+      {
+       "key": "g6r|rigid+S1@FL|top|Fs4",
+       "v0": "flag",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      },
+      {
+       "key": "g6r|rigid+S1@FR|top|Fs4",
+       "v0": "flag",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      }
+     ]
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "g6|G1+J1@FL|top|Fs0": "pass",
+     "g6|G1+J1@FL|top|Fs4": "pass",
+     "g6|G1+J1@FL|bottom|Fs0": "pass",
+     "g6|G1+J1@FL|bottom|Fs4": "pass",
+     "g6|G1+J1@FR|top|Fs0": "pass",
+     "g6|G1+J1@FR|top|Fs4": "pass",
+     "g6|G1+J1@FR|bottom|Fs0": "pass",
+     "g6|G1+J1@FR|bottom|Fs4": "pass",
+     "g6|G1+J1@RL|top|Fs0": "pass",
+     "g6|G1+J1@RL|top|Fs4": "pass",
+     "g6|G1+J1@RL|bottom|Fs0": "pass",
+     "g6|G1+J1@RL|bottom|Fs4": "pass",
+     "g6|G1+J1@RR|top|Fs0": "pass",
+     "g6|G1+J1@RR|top|Fs4": "pass",
+     "g6|G1+J1@RR|bottom|Fs0": "pass",
+     "g6|G1+J1@RR|bottom|Fs4": "pass",
+     "g6|G1+J2@FL|top|Fs0": "pass",
+     "g6|G1+J2@FL|top|Fs4": "pass",
+     "g6|G1+J2@FL|bottom|Fs0": "pass",
+     "g6|G1+J2@FL|bottom|Fs4": "pass",
+     "g6|G1+J2@FR|top|Fs0": "pass",
+     "g6|G1+J2@FR|top|Fs4": "pass",
+     "g6|G1+J2@FR|bottom|Fs0": "pass",
+     "g6|G1+J2@FR|bottom|Fs4": "pass",
+     "g6|G1+J2@RL|top|Fs0": "pass",
+     "g6|G1+J2@RL|top|Fs4": "pass",
+     "g6|G1+J2@RL|bottom|Fs0": "pass",
+     "g6|G1+J2@RL|bottom|Fs4": "pass",
+     "g6|G1+J2@RR|top|Fs0": "pass",
+     "g6|G1+J2@RR|top|Fs4": "pass",
+     "g6|G1+J2@RR|bottom|Fs0": "pass",
+     "g6|G1+J2@RR|bottom|Fs4": "pass",
+     "g6|G1+S1@FL|top|Fs0": "flag",
+     "g6|G1+S1@FL|top|Fs4": "flag",
+     "g6|G1+S1@FL|bottom|Fs0": "flag",
+     "g6|G1+S1@FL|bottom|Fs4": "flag",
+     "g6|G1+S1@FR|top|Fs0": "flag",
+     "g6|G1+S1@FR|top|Fs4": "flag",
+     "g6|G1+S1@FR|bottom|Fs0": "flag",
+     "g6|G1+S1@FR|bottom|Fs4": "flag",
+     "g6|G1+S1@RL|top|Fs0": "flag",
+     "g6|G1+S1@RL|top|Fs4": "pass",
+     "g6|G1+S1@RL|bottom|Fs0": "pass",
+     "g6|G1+S1@RL|bottom|Fs4": "pass",
+     "g6|G1+S1@RR|top|Fs0": "flag",
+     "g6|G1+S1@RR|top|Fs4": "flag",
+     "g6|G1+S1@RR|bottom|Fs0": "pass",
+     "g6|G1+S1@RR|bottom|Fs4": "pass",
+     "ref|G1|top|Fs0": "pass",
+     "ref|G1|top|Fs4": "pass",
+     "ref|G1|bottom|Fs0": "pass",
+     "ref|G1|bottom|Fs4": "pass",
+     "ref|J1|top|Fs0": "pass",
+     "ref|J1|top|Fs4": "pass",
+     "ref|J1|bottom|Fs0": "pass",
+     "ref|J1|bottom|Fs4": "pass",
+     "ref|J2|top|Fs0": "pass",
+     "ref|J2|top|Fs4": "pass",
+     "ref|J2|bottom|Fs0": "pass",
+     "ref|J2|bottom|Fs4": "pass",
+     "ref|S1|top|Fs0": "pass",
+     "ref|S1|top|Fs4": "pass",
+     "ref|S1|bottom|Fs0": "pass",
+     "ref|S1|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FL|top|Fs0": "pass",
+     "g6r|rigid+J1@FL|top|Fs4": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FR|top|Fs0": "pass",
+     "g6r|rigid+J1@FR|top|Fs4": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RL|top|Fs0": "pass",
+     "g6r|rigid+J1@RL|top|Fs4": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RR|top|Fs0": "pass",
+     "g6r|rigid+J1@RR|top|Fs4": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FL|top|Fs0": "fail",
+     "g6r|rigid+J2@FL|top|Fs4": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FR|top|Fs0": "flag",
+     "g6r|rigid+J2@FR|top|Fs4": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RL|top|Fs0": "pass",
+     "g6r|rigid+J2@RL|top|Fs4": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RR|top|Fs0": "pass",
+     "g6r|rigid+J2@RR|top|Fs4": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs4": "pass",
+     "g6r|rigid+S1@FL|top|Fs0": "flag",
+     "g6r|rigid+S1@FL|top|Fs4": "flag",
+     "g6r|rigid+S1@FL|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FL|bottom|Fs4": "flag",
+     "g6r|rigid+S1@FR|top|Fs0": "flag",
+     "g6r|rigid+S1@FR|top|Fs4": "flag",
+     "g6r|rigid+S1@FR|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FR|bottom|Fs4": "flag",
+     "g6r|rigid+S1@RL|top|Fs0": "pass",
+     "g6r|rigid+S1@RL|top|Fs4": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+S1@RR|top|Fs0": "pass",
+     "g6r|rigid+S1@RR|top|Fs4": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs4": "pass",
+     "ref|rigid|top|Fs0": "pass",
+     "ref|rigid|top|Fs4": "pass",
+     "ref|rigid|bottom|Fs0": "pass",
+     "ref|rigid|bottom|Fs4": "pass"
+    },
+    "VB": {
+     "g6|G1+J1@FL|top|Fs0": "pass",
+     "g6|G1+J1@FL|top|Fs4": "pass",
+     "g6|G1+J1@FL|bottom|Fs0": "pass",
+     "g6|G1+J1@FL|bottom|Fs4": "pass",
+     "g6|G1+J1@FR|top|Fs0": "pass",
+     "g6|G1+J1@FR|top|Fs4": "pass",
+     "g6|G1+J1@FR|bottom|Fs0": "pass",
+     "g6|G1+J1@FR|bottom|Fs4": "pass",
+     "g6|G1+J1@RL|top|Fs0": "pass",
+     "g6|G1+J1@RL|top|Fs4": "pass",
+     "g6|G1+J1@RL|bottom|Fs0": "pass",
+     "g6|G1+J1@RL|bottom|Fs4": "pass",
+     "g6|G1+J1@RR|top|Fs0": "pass",
+     "g6|G1+J1@RR|top|Fs4": "pass",
+     "g6|G1+J1@RR|bottom|Fs0": "pass",
+     "g6|G1+J1@RR|bottom|Fs4": "pass",
+     "g6|G1+J2@FL|top|Fs0": "pass",
+     "g6|G1+J2@FL|top|Fs4": "pass",
+     "g6|G1+J2@FL|bottom|Fs0": "pass",
+     "g6|G1+J2@FL|bottom|Fs4": "pass",
+     "g6|G1+J2@FR|top|Fs0": "pass",
+     "g6|G1+J2@FR|top|Fs4": "pass",
+     "g6|G1+J2@FR|bottom|Fs0": "pass",
+     "g6|G1+J2@FR|bottom|Fs4": "pass",
+     "g6|G1+J2@RL|top|Fs0": "pass",
+     "g6|G1+J2@RL|top|Fs4": "pass",
+     "g6|G1+J2@RL|bottom|Fs0": "pass",
+     "g6|G1+J2@RL|bottom|Fs4": "pass",
+     "g6|G1+J2@RR|top|Fs0": "pass",
+     "g6|G1+J2@RR|top|Fs4": "pass",
+     "g6|G1+J2@RR|bottom|Fs0": "pass",
+     "g6|G1+J2@RR|bottom|Fs4": "pass",
+     "g6|G1+S1@FL|top|Fs0": "flag",
+     "g6|G1+S1@FL|top|Fs4": "flag",
+     "g6|G1+S1@FL|bottom|Fs0": "flag",
+     "g6|G1+S1@FL|bottom|Fs4": "flag",
+     "g6|G1+S1@FR|top|Fs0": "flag",
+     "g6|G1+S1@FR|top|Fs4": "flag",
+     "g6|G1+S1@FR|bottom|Fs0": "flag",
+     "g6|G1+S1@FR|bottom|Fs4": "flag",
+     "g6|G1+S1@RL|top|Fs0": "flag",
+     "g6|G1+S1@RL|top|Fs4": "pass",
+     "g6|G1+S1@RL|bottom|Fs0": "pass",
+     "g6|G1+S1@RL|bottom|Fs4": "pass",
+     "g6|G1+S1@RR|top|Fs0": "flag",
+     "g6|G1+S1@RR|top|Fs4": "pass",
+     "g6|G1+S1@RR|bottom|Fs0": "pass",
+     "g6|G1+S1@RR|bottom|Fs4": "pass",
+     "ref|G1|top|Fs0": "pass",
+     "ref|G1|top|Fs4": "pass",
+     "ref|G1|bottom|Fs0": "pass",
+     "ref|G1|bottom|Fs4": "pass",
+     "ref|J1|top|Fs0": "pass",
+     "ref|J1|top|Fs4": "pass",
+     "ref|J1|bottom|Fs0": "pass",
+     "ref|J1|bottom|Fs4": "pass",
+     "ref|J2|top|Fs0": "pass",
+     "ref|J2|top|Fs4": "pass",
+     "ref|J2|bottom|Fs0": "pass",
+     "ref|J2|bottom|Fs4": "pass",
+     "ref|S1|top|Fs0": "pass",
+     "ref|S1|top|Fs4": "pass",
+     "ref|S1|bottom|Fs0": "pass",
+     "ref|S1|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FL|top|Fs0": "pass",
+     "g6r|rigid+J1@FL|top|Fs4": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@FR|top|Fs0": "pass",
+     "g6r|rigid+J1@FR|top|Fs4": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RL|top|Fs0": "pass",
+     "g6r|rigid+J1@RL|top|Fs4": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J1@RR|top|Fs0": "pass",
+     "g6r|rigid+J1@RR|top|Fs4": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J1@RR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FL|top|Fs0": "flag",
+     "g6r|rigid+J2@FL|top|Fs4": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@FR|top|Fs0": "pass",
+     "g6r|rigid+J2@FR|top|Fs4": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@FR|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RL|top|Fs0": "pass",
+     "g6r|rigid+J2@RL|top|Fs4": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RL|bottom|Fs4": "pass",
+     "g6r|rigid+J2@RR|top|Fs0": "pass",
+     "g6r|rigid+J2@RR|top|Fs4": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs0": "pass",
+     "g6r|rigid+J2@RR|bottom|Fs4": "pass",
+     "g6r|rigid+S1@FL|top|Fs0": "flag",
+     "g6r|rigid+S1@FL|top|Fs4": "fail",
+     "g6r|rigid+S1@FL|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FL|bottom|Fs4": "flag",
+     "g6r|rigid+S1@FR|top|Fs0": "flag",
+     "g6r|rigid+S1@FR|top|Fs4": "fail",
+     "g6r|rigid+S1@FR|bottom|Fs0": "flag",
+     "g6r|rigid+S1@FR|bottom|Fs4": "flag",
+     "g6r|rigid+S1@RL|top|Fs0": "pass",
+     "g6r|rigid+S1@RL|top|Fs4": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RL|bottom|Fs4": "pass",
+     "g6r|rigid+S1@RR|top|Fs0": "pass",
+     "g6r|rigid+S1@RR|top|Fs4": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs0": "pass",
+     "g6r|rigid+S1@RR|bottom|Fs4": "pass",
+     "ref|rigid|top|Fs0": "pass",
+     "ref|rigid|top|Fs4": "pass",
+     "ref|rigid|bottom|Fs0": "pass",
+     "ref|rigid|bottom|Fs4": "pass"
+    }
+   }
+  },
+  "g8": {
+   "bundle": "g8",
+   "kind": "g8",
+   "v4_file": "rev85/finB2_p0.json",
+   "settle_v2": false,
+   "runs": {
+    "V0": 516,
+    "VB": 516
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 512,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 4
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 506,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 2
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 6,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 2
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 516,
+     "NA": 0,
+     "mean": 1.4379844961308972,
+     "min": -1.2000000000057298,
+     "max": 4.300000000020532
+    },
+    "min_force_kN": {
+     "n": 516,
+     "NA": 0,
+     "mean": -1.5394379844961241,
+     "min": -5.899999999999999,
+     "max": 0.7299999999999969
+    },
+    "max_stroke_mm": {
+     "n": 516,
+     "NA": 0,
+     "mean": 1.163333333333332,
+     "min": -38.60999999999996,
+     "max": 53.99000000000001
+    },
+    "rut_ready_mm": {
+     "n": 0,
+     "NA": 516,
+     "mean": null,
+     "min": null,
+     "max": null
+    },
+    "att_end_deg": {
+     "n": 516,
+     "NA": 0,
+     "mean": 0.002404263565891473,
+     "min": -0.007300000000000001,
+     "max": 0.013000000000000001
+    }
+   },
+   "classes": {
+    "vb_only_failure": [
+     {
+      "key": "slope|edge|top|4.0|RL|raised|20.0|proj",
+      "v0": "pass",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RR|raised|20.0|proj",
+      "v0": "pass",
+      "vb_verdict": "fail",
+      "vb_flags": []
+     }
+    ],
+    "baseline_failure": [
+     "slope|rpB|top|4.0|RL|raised|20.0|proj",
+     "slope|rpB|top|4.0|RR|raised|20.0|proj"
+    ],
+    "vb_improvement": [
+     {
+      "key": "slope|edge|top|4.0|RL|raised|140.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|rpB|top|4.0|RR|raised|170.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|rpB|top|4.0|RR|raised|230.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RL|raised|140.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RL|raised|230.0|proj",
+      "vb": "pass"
+     },
+     {
+      "key": "slope|edgeMr|top|4.0|RR|raised|140.0|proj",
+      "vb": "pass"
+     }
+    ],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 508,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 8
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 516,
+      "NA": 0,
+      "mean": -0.03837209302343903,
+      "min": -2.8000000000133696,
+      "max": 2.100000000010027
+     },
+     "min_force_kN": {
+      "n": 516,
+      "NA": 0,
+      "mean": 1.5305813953488372,
+      "min": -2.480000000000004,
+      "max": 24.82
+     },
+     "max_stroke_mm": {
+      "n": 516,
+      "NA": 0,
+      "mean": 0.9145348837209325,
+      "min": -53.90999999999997,
+      "max": 38.07000000000005
+     },
+     "rut_ready_mm": {
+      "n": 0,
+      "NA": 516,
+      "mean": null,
+      "min": null,
+      "max": null
+     },
+     "att_end_deg": {
+      "n": 516,
+      "NA": 0,
+      "mean": -0.0002488372093023256,
+      "min": -0.007600000000000003,
+      "max": 0.007300000000000001
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 516,
+     "counts": {
+      "V0": 516,
+      "VB": 516
+     },
+     "v4_keys": 516,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": false,
+     "vb_only_failures": [
+      {
+       "key": "slope|edge|top|4.0|RL|raised|20.0|proj",
+       "v0": "pass",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      },
+      {
+       "key": "slope|edgeMr|top|4.0|RR|raised|20.0|proj",
+       "v0": "pass",
+       "vb_verdict": "fail",
+       "vb_flags": []
+      }
+     ]
+    },
+    "G-6": {
+     "pass": false,
+     "stops": [
+      {
+       "key": "slope|edge|top|4.0|FR|raised|20.0|proj",
+       "suite": "g8",
+       "fallback_events": 1
+      },
+      {
+       "key": "slope|rpB|top|4.0|FR|raised|20.0|proj",
+       "suite": "g8",
+       "fallback_events": 1
+      },
+      {
+       "key": "slope|edgeMr|top|4.0|FL|raised|20.0|proj",
+       "suite": "g8",
+       "fallback_events": 1
+      }
+     ]
+    }
+   },
+   "grades": {
+    "V0": {
+     "slope|edge|top|4.0|ref|none|0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|140.0|proj": "fail",
+     "slope|edge|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|ref|none|0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|170.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|230.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|ref|none|0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|ref|none|0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|140.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|230.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|140.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|ref|none|0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|ref|none|0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|ref|none|0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|150.0|proj": "pass"
+    },
+    "VB": {
+     "slope|edge|top|4.0|ref|none|0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|20.0|proj": "fail",
+     "slope|edge|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edge|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|ref|none|0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|20.0|proj": "fail",
+     "slope|rpB|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|rpB|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|ref|none|0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r050|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|ref|none|0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|r075|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|20.0|proj": "fail",
+     "slope|edgeMr|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMr|top|4.0|RR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|ref|none|0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|FR|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RL|raised|290.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|20.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|55.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|140.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|170.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|200.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|230.0|proj": "pass",
+     "slope|edgeMp|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|ref|none|0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|ref|none|0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|ref|none|0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|top|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|top|8.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|0.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|4.0|RR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|ref|none|0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|FR|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RL|lowered|150.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|5.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|35.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|50.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|55.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|80.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|100.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|110.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|200.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|290.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|raised|320.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|20.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|60.0|proj": "pass",
+     "main|flat|bottom|8.0|RR|lowered|150.0|proj": "pass"
+    }
+   }
+  },
+  "p3b": {
+   "bundle": "p3b",
+   "kind": "record",
+   "v4_file": "rev85/finB2_p0.json",
+   "settle_v2": false,
+   "runs": {
+    "V0": 171,
+    "VB": 171
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 171,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 0
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 171,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 171,
+     "NA": 0,
+     "mean": 1.7695906432833033,
+     "min": -2.8000000000133696,
+     "max": 4.300000000020532
+    },
+    "min_force_kN": {
+     "n": 171,
+     "NA": 0,
+     "mean": -0.8445518790847416,
+     "min": -3.2715619395274302,
+     "max": 1.5792275694954228
+    },
+    "max_stroke_mm": {
+     "n": 171,
+     "NA": 0,
+     "mean": 0.5695768088442682,
+     "min": -0.8441555183734977,
+     "max": 20.77157160901379
+    },
+    "rut_ready_mm": {
+     "n": 171,
+     "NA": 0,
+     "mean": -0.3409194182238738,
+     "min": -2.3668744684055696,
+     "max": 1.8071054994825744
+    },
+    "att_end_deg": {
+     "n": 171,
+     "NA": 0,
+     "mean": 0.0009839413445552488,
+     "min": -0.005406384320682894,
+     "max": 0.03226348282403237
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 171,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 171,
+      "NA": 0,
+      "mean": 0.0152046783626457,
+      "min": -1.6000000000076398,
+      "max": 4.900000000023397
+     },
+     "min_force_kN": {
+      "n": 171,
+      "NA": 0,
+      "mean": 0.792697186163246,
+      "min": -1.6506848339266824,
+      "max": 10.701780430643204
+     },
+     "max_stroke_mm": {
+      "n": 171,
+      "NA": 0,
+      "mean": -1.5817550737541308,
+      "min": -30.014355390194908,
+      "max": 0.14431539328063536
+     },
+     "rut_ready_mm": {
+      "n": 171,
+      "NA": 0,
+      "mean": -1.5689384701536147,
+      "min": -29.697790214176663,
+      "max": 0.15532385807206595
+     },
+     "att_end_deg": {
+      "n": 171,
+      "NA": 0,
+      "mean": -0.0003523216133255544,
+      "min": -0.02510842530955177,
+      "max": 0.003901717029791335
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 171,
+     "counts": {
+      "V0": 171,
+      "VB": 171
+     },
+     "v4_keys": 171,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "base|G1|B|top|Fs0": "pass",
+     "base|G1|B|top|Fs4": "pass",
+     "base|G1|B|top|Fs8": "pass",
+     "base|G1|B|middle|Fs0": "pass",
+     "base|G1|B|middle|Fs4": "pass",
+     "base|G1|B|middle|Fs8": "pass",
+     "base|G1|B|bottom|Fs0": "pass",
+     "base|G1|B|bottom|Fs4": "pass",
+     "base|G1|B|bottom|Fs8": "pass",
+     "base|J1|B|top|Fs0": "pass",
+     "base|J1|B|top|Fs4": "pass",
+     "base|J1|B|top|Fs8": "pass",
+     "base|J1|B|middle|Fs0": "pass",
+     "base|J1|B|middle|Fs4": "pass",
+     "base|J1|B|middle|Fs8": "pass",
+     "base|J1|B|bottom|Fs0": "pass",
+     "base|J1|B|bottom|Fs4": "pass",
+     "base|J1|B|bottom|Fs8": "pass",
+     "base|J2|B|top|Fs0": "pass",
+     "base|J2|B|top|Fs4": "pass",
+     "base|J2|B|top|Fs8": "pass",
+     "base|J2|B|middle|Fs0": "pass",
+     "base|J2|B|middle|Fs4": "pass",
+     "base|J2|B|middle|Fs8": "pass",
+     "base|J2|B|bottom|Fs0": "pass",
+     "base|J2|B|bottom|Fs4": "pass",
+     "base|J2|B|bottom|Fs8": "pass",
+     "base|S1|B|top|Fs0": "pass",
+     "base|S1|B|top|Fs4": "pass",
+     "base|S1|B|top|Fs8": "pass",
+     "base|S1|B|middle|Fs0": "pass",
+     "base|S1|B|middle|Fs4": "pass",
+     "base|S1|B|middle|Fs8": "pass",
+     "base|S1|B|bottom|Fs0": "pass",
+     "base|S1|B|bottom|Fs4": "pass",
+     "base|S1|B|bottom|Fs8": "pass",
+     "base|rigid|0,0|top|Fs0|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b1": "pass",
+     "base|rigid|0,0|top|Fs8|b1": "pass",
+     "base|rigid|0,0|middle|Fs0|b1": "pass",
+     "base|rigid|0,0|middle|Fs4|b1": "pass",
+     "base|rigid|0,0|middle|Fs8|b1": "pass",
+     "base|rigid|0,0|bottom|Fs0|b1": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1": "pass",
+     "base|rigid|0,0|bottom|Fs8|b1": "pass",
+     "base|rigid|4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs8|b1": "pass",
+     "base|rigid|5.5,0|top|Fs0|b1": "pass",
+     "base|rigid|5.5,0|top|Fs4|b1": "pass",
+     "base|rigid|5.5,0|top|Fs8|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs0|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs4|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs8|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs0|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs4|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b0.69": "pass",
+     "base|rigid|0,0|top|Fs4|b1.6": "pass",
+     "base|rigid|0,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|top|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|top|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1.6": "pass"
+    },
+    "VB": {
+     "base|G1|B|top|Fs0": "pass",
+     "base|G1|B|top|Fs4": "pass",
+     "base|G1|B|top|Fs8": "pass",
+     "base|G1|B|middle|Fs0": "pass",
+     "base|G1|B|middle|Fs4": "pass",
+     "base|G1|B|middle|Fs8": "pass",
+     "base|G1|B|bottom|Fs0": "pass",
+     "base|G1|B|bottom|Fs4": "pass",
+     "base|G1|B|bottom|Fs8": "pass",
+     "base|J1|B|top|Fs0": "pass",
+     "base|J1|B|top|Fs4": "pass",
+     "base|J1|B|top|Fs8": "pass",
+     "base|J1|B|middle|Fs0": "pass",
+     "base|J1|B|middle|Fs4": "pass",
+     "base|J1|B|middle|Fs8": "pass",
+     "base|J1|B|bottom|Fs0": "pass",
+     "base|J1|B|bottom|Fs4": "pass",
+     "base|J1|B|bottom|Fs8": "pass",
+     "base|J2|B|top|Fs0": "pass",
+     "base|J2|B|top|Fs4": "pass",
+     "base|J2|B|top|Fs8": "pass",
+     "base|J2|B|middle|Fs0": "pass",
+     "base|J2|B|middle|Fs4": "pass",
+     "base|J2|B|middle|Fs8": "pass",
+     "base|J2|B|bottom|Fs0": "pass",
+     "base|J2|B|bottom|Fs4": "pass",
+     "base|J2|B|bottom|Fs8": "pass",
+     "base|S1|B|top|Fs0": "pass",
+     "base|S1|B|top|Fs4": "pass",
+     "base|S1|B|top|Fs8": "pass",
+     "base|S1|B|middle|Fs0": "pass",
+     "base|S1|B|middle|Fs4": "pass",
+     "base|S1|B|middle|Fs8": "pass",
+     "base|S1|B|bottom|Fs0": "pass",
+     "base|S1|B|bottom|Fs4": "pass",
+     "base|S1|B|bottom|Fs8": "pass",
+     "base|rigid|0,0|top|Fs0|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b1": "pass",
+     "base|rigid|0,0|top|Fs8|b1": "pass",
+     "base|rigid|0,0|middle|Fs0|b1": "pass",
+     "base|rigid|0,0|middle|Fs4|b1": "pass",
+     "base|rigid|0,0|middle|Fs8|b1": "pass",
+     "base|rigid|0,0|bottom|Fs0|b1": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1": "pass",
+     "base|rigid|0,0|bottom|Fs8|b1": "pass",
+     "base|rigid|4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|top|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|middle|Fs8|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs0|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs4|b1": "pass",
+     "base|rigid|-4.4,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.2|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|top|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|middle|Fs8|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs0|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs4|b1": "pass",
+     "base|rigid|-2.2,-1.6|bottom|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|top|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|middle|Fs8|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs0|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs4|b1": "pass",
+     "base|rigid|2.7355,1.7592|bottom|Fs8|b1": "pass",
+     "base|rigid|5.5,0|top|Fs0|b1": "pass",
+     "base|rigid|5.5,0|top|Fs4|b1": "pass",
+     "base|rigid|5.5,0|top|Fs8|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs0|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs4|b1": "pass",
+     "base|rigid|5.5,0|middle|Fs8|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs0|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs4|b1": "pass",
+     "base|rigid|5.5,0|bottom|Fs8|b1": "pass",
+     "base|rigid|0,3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|top|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|middle|Fs8|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs0|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs4|b1": "pass",
+     "base|rigid|0,-3.5|bottom|Fs8|b1": "pass",
+     "base|rigid|0,0|top|Fs4|b0.69": "pass",
+     "base|rigid|0,0|top|Fs4|b1.6": "pass",
+     "base|rigid|0,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|top|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|top|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|middle|Fs4|b1.6": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b0.69": "pass",
+     "base|rigid|4.4,0|bottom|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|top|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|top|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|middle|Fs4|b1.6": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b0.69": "pass",
+     "base|rigid|0,3.2|bottom|Fs4|b1.6": "pass"
+    }
+   }
+  },
+  "x426b": {
+   "bundle": "x426b",
+   "kind": "record",
+   "v4_file": "rev85/finB2_x426b_rejudged.json",
+   "settle_v2": true,
+   "runs": {
+    "V0": 84,
+    "VB": 84
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 54,
+    "flag": 0,
+    "safe_stop": 16,
+    "fail": 14
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 54,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 16,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 14
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 62,
+     "NA": 22,
+     "mean": 3.7241935484048794,
+     "min": -3.8000000000181444,
+     "max": 21.40000000010218
+    },
+    "min_force_kN": {
+     "n": 84,
+     "NA": 0,
+     "mean": -0.40080374990990447,
+     "min": -6.141971638340216,
+     "max": 1.7498167803057427
+    },
+    "max_stroke_mm": {
+     "n": 84,
+     "NA": 0,
+     "mean": 0.19959642027999366,
+     "min": -3.63170235993789,
+     "max": 5.791485876265028
+    },
+    "rut_ready_mm": {
+     "n": 62,
+     "NA": 22,
+     "mean": -1.859789377111584,
+     "min": -14.047179347490683,
+     "max": 0.6543282827403374
+    },
+    "att_end_deg": {
+     "n": 84,
+     "NA": 0,
+     "mean": 0.006139217959679278,
+     "min": -0.044997770158380766,
+     "max": 0.06962772542362228
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [
+     "H3|J2|B|top|roll_pos@k0.5|Fs0",
+     "H3|J2|B|top|roll_pos@k0.5|Fs8",
+     "H3|J2|B|middle|roll_pos@k0.5",
+     "H3|J1|B|top|nose_down@k0.5|m1.1",
+     "H3|J1|B|top|nose_down@k0.75|m1.1",
+     "H3|J1|B|top|roll_pos@k0.75|m1.1",
+     "H3|J1|B|top|edge_nd@k0.5|m1.1",
+     "H3|J2|B|top|nose_down@k0.75|m1.1",
+     "H3|J2|B|top|roll_pos@k0.5|m1.1",
+     "H3|J2|B|top|roll_pos@k0.75|m1.1",
+     "H3|J2|B|top|edge_nd@k0.5|m1.1",
+     "H3|J2|B|top|edge_nd@k0.75|m1.1",
+     "H3|S1|B|top|edge_nd@k0.5|m1.1",
+     "H3|S1|B|top|edge_nd@k0.75|m1.1"
+    ],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 54,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 16,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 14
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 62,
+      "NA": 22,
+      "mean": -0.004838709677442459,
+      "min": -7.000000000033424,
+      "max": 18.500000000088335
+     },
+     "min_force_kN": {
+      "n": 84,
+      "NA": 0,
+      "mean": 0.18850508679302647,
+      "min": -0.46098134576116934,
+      "max": 4.699006196458313
+     },
+     "max_stroke_mm": {
+      "n": 84,
+      "NA": 0,
+      "mean": 0.012489511671502453,
+      "min": -2.3501201559006404,
+      "max": 1.4173824770092551
+     },
+     "rut_ready_mm": {
+      "n": 62,
+      "NA": 22,
+      "mean": -0.18326518792329477,
+      "min": -3.6178729343719382,
+      "max": 1.1189468776729967
+     },
+     "att_end_deg": {
+      "n": 84,
+      "NA": 0,
+      "mean": 0.0005529753389647803,
+      "min": -0.016206548037358152,
+      "max": 0.013767245782503101
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 84,
+     "counts": {
+      "V0": 84,
+      "VB": 84
+     },
+     "v4_keys": 84,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "H1|G1|B|top|nose_down|Fs0": "pass",
+     "H1|G1|B|top|roll_pos|Fs0": "pass",
+     "H1|G1|B|top|edge_nd|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs0": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs0": "safe_stop",
+     "H1|G1|B|top|nose_down|Fs8": "pass",
+     "H1|G1|B|top|roll_pos|Fs8": "pass",
+     "H1|G1|B|top|edge_nd|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs8": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs8": "safe_stop",
+     "H1|G1|B|middle|nose_down": "pass",
+     "H1|G1|B|middle|roll_pos": "pass",
+     "H1|G1|B|middle|edge_nd": "pass",
+     "H3|J1|B|middle|nose_down@k0.5": "pass",
+     "H3|J1|B|middle|nose_down@k0.75": "pass",
+     "H3|J1|B|middle|roll_pos@k0.5": "pass",
+     "H3|J1|B|middle|roll_pos@k0.75": "pass",
+     "H3|J1|B|middle|edge_nd@k0.5": "pass",
+     "H3|J1|B|middle|edge_nd@k0.75": "pass",
+     "H3|J2|B|middle|nose_down@k0.5": "pass",
+     "H3|J2|B|middle|nose_down@k0.75": "pass",
+     "H3|J2|B|middle|roll_pos@k0.5": "fail",
+     "H3|J2|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|middle|edge_nd@k0.5": "pass",
+     "H3|J2|B|middle|edge_nd@k0.75": "pass",
+     "H3|S1|B|middle|nose_down@k0.5": "pass",
+     "H3|S1|B|middle|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|middle|roll_pos@k0.5": "pass",
+     "H3|S1|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|middle|edge_nd@k0.5": "pass",
+     "H3|S1|B|middle|edge_nd@k0.75": "safe_stop",
+     "H1|G1|B|top|nose_down|m1.1": "pass",
+     "H1|G1|B|top|roll_pos|m1.1": "pass",
+     "H1|G1|B|top|edge_nd|m1.1": "pass",
+     "H3|J1|B|top|nose_down@k0.5|m1.1": "fail",
+     "H3|J1|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J1|B|top|roll_pos@k0.5|m1.1": "safe_stop",
+     "H3|J1|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.75|m1.1": "safe_stop",
+     "H3|J2|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|J2|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.5|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.75|m1.1": "fail",
+     "H3|S1|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|S1|B|top|nose_down@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|m1.1": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|S1|B|top|edge_nd@k0.75|m1.1": "fail"
+    },
+    "VB": {
+     "H1|G1|B|top|nose_down|Fs0": "pass",
+     "H1|G1|B|top|roll_pos|Fs0": "pass",
+     "H1|G1|B|top|edge_nd|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs0": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs0": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs0": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs0": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs0": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs0": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs0": "safe_stop",
+     "H1|G1|B|top|nose_down|Fs8": "pass",
+     "H1|G1|B|top|roll_pos|Fs8": "pass",
+     "H1|G1|B|top|edge_nd|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J1|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|J1|B|top|roll_pos@k0.75|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J1|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|J2|B|top|nose_down@k0.75|Fs8": "pass",
+     "H3|J2|B|top|roll_pos@k0.5|Fs8": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|J2|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|J2|B|top|edge_nd@k0.75|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.5|Fs8": "pass",
+     "H3|S1|B|top|nose_down@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|Fs8": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|Fs8": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|Fs8": "pass",
+     "H3|S1|B|top|edge_nd@k0.75|Fs8": "safe_stop",
+     "H1|G1|B|middle|nose_down": "pass",
+     "H1|G1|B|middle|roll_pos": "pass",
+     "H1|G1|B|middle|edge_nd": "pass",
+     "H3|J1|B|middle|nose_down@k0.5": "pass",
+     "H3|J1|B|middle|nose_down@k0.75": "pass",
+     "H3|J1|B|middle|roll_pos@k0.5": "pass",
+     "H3|J1|B|middle|roll_pos@k0.75": "pass",
+     "H3|J1|B|middle|edge_nd@k0.5": "pass",
+     "H3|J1|B|middle|edge_nd@k0.75": "pass",
+     "H3|J2|B|middle|nose_down@k0.5": "pass",
+     "H3|J2|B|middle|nose_down@k0.75": "pass",
+     "H3|J2|B|middle|roll_pos@k0.5": "fail",
+     "H3|J2|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|J2|B|middle|edge_nd@k0.5": "pass",
+     "H3|J2|B|middle|edge_nd@k0.75": "pass",
+     "H3|S1|B|middle|nose_down@k0.5": "pass",
+     "H3|S1|B|middle|nose_down@k0.75": "safe_stop",
+     "H3|S1|B|middle|roll_pos@k0.5": "pass",
+     "H3|S1|B|middle|roll_pos@k0.75": "safe_stop",
+     "H3|S1|B|middle|edge_nd@k0.5": "pass",
+     "H3|S1|B|middle|edge_nd@k0.75": "safe_stop",
+     "H1|G1|B|top|nose_down|m1.1": "pass",
+     "H1|G1|B|top|roll_pos|m1.1": "pass",
+     "H1|G1|B|top|edge_nd|m1.1": "pass",
+     "H3|J1|B|top|nose_down@k0.5|m1.1": "fail",
+     "H3|J1|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J1|B|top|roll_pos@k0.5|m1.1": "safe_stop",
+     "H3|J1|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J1|B|top|edge_nd@k0.75|m1.1": "safe_stop",
+     "H3|J2|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|J2|B|top|nose_down@k0.75|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.5|m1.1": "fail",
+     "H3|J2|B|top|roll_pos@k0.75|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|J2|B|top|edge_nd@k0.75|m1.1": "fail",
+     "H3|S1|B|top|nose_down@k0.5|m1.1": "pass",
+     "H3|S1|B|top|nose_down@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|roll_pos@k0.5|m1.1": "pass",
+     "H3|S1|B|top|roll_pos@k0.75|m1.1": "safe_stop",
+     "H3|S1|B|top|edge_nd@k0.5|m1.1": "fail",
+     "H3|S1|B|top|edge_nd@k0.75|m1.1": "fail"
+    }
+   }
+  },
+  "C": {
+   "bundle": "C",
+   "kind": "r72",
+   "v4_file": "rev85/fin_x426_C.json",
+   "settle_v2": false,
+   "runs": {
+    "V0": 34,
+    "VB": 34
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 29,
+    "flag": 5,
+    "safe_stop": 0,
+    "fail": 0
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 29,
+     "flag": 1,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 4,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 34,
+     "NA": 0,
+     "mean": 0.9529411764751384,
+     "min": -5.000000000023874,
+     "max": 3.300000000015757
+    },
+    "min_force_kN": {
+     "n": 34,
+     "NA": 0,
+     "mean": -0.4742013077033272,
+     "min": -5.8661122669562715,
+     "max": 4.329793731356062
+    },
+    "max_stroke_mm": {
+     "n": 34,
+     "NA": 0,
+     "mean": 1.289868783042012,
+     "min": -3.841770153092739,
+     "max": 20.606359272296572
+    },
+    "rut_ready_mm": {
+     "n": 34,
+     "NA": 0,
+     "mean": 0.057963508509788354,
+     "min": -3.8737670244200046,
+     "max": 12.024438238982256
+    },
+    "att_end_deg": {
+     "n": 34,
+     "NA": 0,
+     "mean": 0.003138425550288738,
+     "min": -0.004584324554037596,
+     "max": 0.009498476204566873
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 30,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 4,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 34,
+      "NA": 0,
+      "mean": 0.35294117647227347,
+      "min": -1.0000000000047748,
+      "max": 3.0000000000143245
+     },
+     "min_force_kN": {
+      "n": 34,
+      "NA": 0,
+      "mean": 0.1262185200073522,
+      "min": -3.467968826394248,
+      "max": 5.857210284747808
+     },
+     "max_stroke_mm": {
+      "n": 34,
+      "NA": 0,
+      "mean": -10.396280144286933,
+      "min": -30.367252400625375,
+      "max": 7.41242530076272
+     },
+     "rut_ready_mm": {
+      "n": 34,
+      "NA": 0,
+      "mean": -10.374159245377557,
+      "min": -30.357451663475345,
+      "max": 6.200994183234613
+     },
+     "att_end_deg": {
+      "n": 34,
+      "NA": 0,
+      "mean": -0.0002479065442843359,
+      "min": -0.004302984552659688,
+      "max": 0.003901717029791335
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 34,
+     "counts": {
+      "V0": 34,
+      "VB": 34
+     },
+     "v4_keys": 34,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "g6|G1+J1@FL|top|Fs8": "pass",
+     "g6|G1+J1@RR|top|Fs8": "pass",
+     "g6|G1+J2@FL|top|Fs8": "pass",
+     "g6|G1+J2@RR|top|Fs8": "pass",
+     "g6|G1+S1@FL|top|Fs8": "flag",
+     "g6|G1+S1@RR|top|Fs8": "pass",
+     "g6r|rigid+J1@FL|top|Fs8": "pass",
+     "g6r|rigid+J1@RR|top|Fs8": "pass",
+     "g6r|rigid+J2@FL|top|Fs8": "pass",
+     "g6r|rigid+J2@RR|top|Fs8": "pass",
+     "g6r|rigid+S1@FL|top|Fs8": "flag",
+     "g6r|rigid+S1@RR|top|Fs8": "pass",
+     "g6|G1+J1@FL|middle|Fs4": "pass",
+     "g6|G1+J1@RR|middle|Fs4": "pass",
+     "g6|G1+J2@FL|middle|Fs4": "pass",
+     "g6|G1+J2@RR|middle|Fs4": "pass",
+     "g6|G1+S1@FL|middle|Fs4": "flag",
+     "g6|G1+S1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J1@FL|middle|Fs4": "pass",
+     "g6r|rigid+J1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J2@FL|middle|Fs4": "pass",
+     "g6r|rigid+J2@RR|middle|Fs4": "pass",
+     "g6r|rigid+S1@FL|middle|Fs4": "flag",
+     "g6r|rigid+S1@RR|middle|Fs4": "pass",
+     "ref|G1|top|Fs8": "pass",
+     "ref|J1|top|Fs8": "pass",
+     "ref|J2|top|Fs8": "pass",
+     "ref|S1|top|Fs8": "pass",
+     "ref|rigid|top|Fs8": "pass",
+     "ref|G1|middle|Fs4": "pass",
+     "ref|J1|middle|Fs4": "pass",
+     "ref|J2|middle|Fs4": "pass",
+     "ref|S1|middle|Fs4": "pass",
+     "ref|rigid|middle|Fs4": "pass"
+    },
+    "VB": {
+     "g6|G1+J1@FL|top|Fs8": "pass",
+     "g6|G1+J1@RR|top|Fs8": "pass",
+     "g6|G1+J2@FL|top|Fs8": "pass",
+     "g6|G1+J2@RR|top|Fs8": "pass",
+     "g6|G1+S1@FL|top|Fs8": "flag",
+     "g6|G1+S1@RR|top|Fs8": "pass",
+     "g6r|rigid+J1@FL|top|Fs8": "pass",
+     "g6r|rigid+J1@RR|top|Fs8": "pass",
+     "g6r|rigid+J2@FL|top|Fs8": "flag",
+     "g6r|rigid+J2@RR|top|Fs8": "pass",
+     "g6r|rigid+S1@FL|top|Fs8": "flag",
+     "g6r|rigid+S1@RR|top|Fs8": "pass",
+     "g6|G1+J1@FL|middle|Fs4": "pass",
+     "g6|G1+J1@RR|middle|Fs4": "pass",
+     "g6|G1+J2@FL|middle|Fs4": "pass",
+     "g6|G1+J2@RR|middle|Fs4": "pass",
+     "g6|G1+S1@FL|middle|Fs4": "flag",
+     "g6|G1+S1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J1@FL|middle|Fs4": "pass",
+     "g6r|rigid+J1@RR|middle|Fs4": "pass",
+     "g6r|rigid+J2@FL|middle|Fs4": "pass",
+     "g6r|rigid+J2@RR|middle|Fs4": "pass",
+     "g6r|rigid+S1@FL|middle|Fs4": "flag",
+     "g6r|rigid+S1@RR|middle|Fs4": "pass",
+     "ref|G1|top|Fs8": "pass",
+     "ref|J1|top|Fs8": "pass",
+     "ref|J2|top|Fs8": "pass",
+     "ref|S1|top|Fs8": "pass",
+     "ref|rigid|top|Fs8": "pass",
+     "ref|G1|middle|Fs4": "pass",
+     "ref|J1|middle|Fs4": "pass",
+     "ref|J2|middle|Fs4": "pass",
+     "ref|S1|middle|Fs4": "pass",
+     "ref|rigid|middle|Fs4": "pass"
+    }
+   }
+  },
+  "D": {
+   "bundle": "D",
+   "kind": "slope_result",
+   "v4_file": "rev85/fin_x426_D.json",
+   "settle_v2": false,
+   "runs": {
+    "V0": 33,
+    "VB": 33
+   },
+   "reused_d1": 0,
+   "vb_counts": {
+    "pass": 33,
+    "flag": 0,
+    "safe_stop": 0,
+    "fail": 0
+   },
+   "phrase": null,
+   "transition_V0_VB": {
+    "pass": {
+     "pass": 33,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "flag": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "safe_stop": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    },
+    "fail": {
+     "pass": 0,
+     "flag": 0,
+     "safe_stop": 0,
+     "fail": 0
+    }
+   },
+   "differences_VB_minus_V0": {
+    "t_ready_s": {
+     "n": 33,
+     "NA": 0,
+     "mean": 1.5121212121284322,
+     "min": -2.300000000010982,
+     "max": 4.400000000021009
+    },
+    "min_force_kN": {
+     "n": 33,
+     "NA": 0,
+     "mean": -1.1657761763088867,
+     "min": -2.6742143789476813,
+     "max": -0.02738345108528506
+    },
+    "max_stroke_mm": {
+     "n": 33,
+     "NA": 0,
+     "mean": 1.3949778215716064,
+     "min": -15.610707236957978,
+     "max": 20.77157160901379
+    },
+    "rut_ready_mm": {
+     "n": 33,
+     "NA": 0,
+     "mean": 0.36739320269234227,
+     "min": -15.355437627789478,
+     "max": 5.93283397200166
+    },
+    "att_end_deg": {
+     "n": 33,
+     "NA": 0,
+     "mean": 0.007549019936675071,
+     "min": -0.014433855409278277,
+     "max": 0.043508877625555324
+    }
+   },
+   "classes": {
+    "vb_only_failure": [],
+    "baseline_failure": [],
+    "vb_improvement": [],
+    "safe_stop_move": []
+   },
+   "previous_edition": {
+    "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+    "transition_v4_V0": {
+     "pass": {
+      "pass": 33,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "flag": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "safe_stop": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     },
+     "fail": {
+      "pass": 0,
+      "flag": 0,
+      "safe_stop": 0,
+      "fail": 0
+     }
+    },
+    "differences_V0_minus_v4": {
+     "t_ready_s": {
+      "n": 33,
+      "NA": 0,
+      "mean": 0.0,
+      "min": -0.7000000000033424,
+      "max": 1.0000000000047748
+     },
+     "min_force_kN": {
+      "n": 33,
+      "NA": 0,
+      "mean": 0.2513508588157562,
+      "min": -1.9010185370420487,
+      "max": 4.190699322362981
+     },
+     "max_stroke_mm": {
+      "n": 33,
+      "NA": 0,
+      "mean": -1.3903062019598589,
+      "min": -29.452332416529316,
+      "max": 0.39122059256737884
+     },
+     "rut_ready_mm": {
+      "n": 33,
+      "NA": 0,
+      "mean": -1.301781551777819,
+      "min": -29.4158194269029,
+      "max": 0.22009948260987855
+     },
+     "att_end_deg": {
+      "n": 33,
+      "NA": 0,
+      "mean": -0.00046207461576621653,
+      "min": -0.0038007460625431337,
+      "max": 0.0024338431772706753
+     }
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "expected": 33,
+     "counts": {
+      "V0": 33,
+      "VB": 33
+     },
+     "v4_keys": 33,
+     "errors": {
+      "V0": [],
+      "VB": []
+     },
+     "not_in_v4": {
+      "V0": [],
+      "VB": []
+     }
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "n_problems": 0,
+     "code_commit": {
+      "V0": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+      "VB": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+     }
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    },
+    "G-5": {
+     "pass": true,
+     "vb_only_failures": []
+    },
+    "G-6": {
+     "pass": true,
+     "stops": []
+    }
+   },
+   "grades": {
+    "V0": {
+     "H8|G1|B|top|flat": "pass",
+     "H8|G1|B|top|flat|FL:g20": "pass",
+     "H8|G1|B|top|flat|FL:g55": "pass",
+     "H8|G1|B|top|flat|FL:g110": "pass",
+     "H8|G1|B|top|flat|FL:d60": "pass",
+     "H8|G1|B|top|flat|FL:d150": "pass",
+     "H8|G1|B|top|flat|RR:g20": "pass",
+     "H8|G1|B|top|flat|RR:g55": "pass",
+     "H8|G1|B|top|flat|RR:g110": "pass",
+     "H8|G1|B|top|flat|RR:d60": "pass",
+     "H8|G1|B|top|flat|RR:d150": "pass",
+     "H8|J2|B|top|flat": "pass",
+     "H8|J2|B|top|flat|FL:g20": "pass",
+     "H8|J2|B|top|flat|FL:g55": "pass",
+     "H8|J2|B|top|flat|FL:g110": "pass",
+     "H8|J2|B|top|flat|FL:d60": "pass",
+     "H8|J2|B|top|flat|FL:d150": "pass",
+     "H8|J2|B|top|flat|RR:g20": "pass",
+     "H8|J2|B|top|flat|RR:g55": "pass",
+     "H8|J2|B|top|flat|RR:g110": "pass",
+     "H8|J2|B|top|flat|RR:d60": "pass",
+     "H8|J2|B|top|flat|RR:d150": "pass",
+     "H8|rigid|B|top|flat": "pass",
+     "H8|rigid|B|top|flat|FL:g20": "pass",
+     "H8|rigid|B|top|flat|FL:g55": "pass",
+     "H8|rigid|B|top|flat|FL:g110": "pass",
+     "H8|rigid|B|top|flat|FL:d60": "pass",
+     "H8|rigid|B|top|flat|FL:d150": "pass",
+     "H8|rigid|B|top|flat|RR:g20": "pass",
+     "H8|rigid|B|top|flat|RR:g55": "pass",
+     "H8|rigid|B|top|flat|RR:g110": "pass",
+     "H8|rigid|B|top|flat|RR:d60": "pass",
+     "H8|rigid|B|top|flat|RR:d150": "pass"
+    },
+    "VB": {
+     "H8|G1|B|top|flat": "pass",
+     "H8|G1|B|top|flat|FL:g20": "pass",
+     "H8|G1|B|top|flat|FL:g55": "pass",
+     "H8|G1|B|top|flat|FL:g110": "pass",
+     "H8|G1|B|top|flat|FL:d60": "pass",
+     "H8|G1|B|top|flat|FL:d150": "pass",
+     "H8|G1|B|top|flat|RR:g20": "pass",
+     "H8|G1|B|top|flat|RR:g55": "pass",
+     "H8|G1|B|top|flat|RR:g110": "pass",
+     "H8|G1|B|top|flat|RR:d60": "pass",
+     "H8|G1|B|top|flat|RR:d150": "pass",
+     "H8|J2|B|top|flat": "pass",
+     "H8|J2|B|top|flat|FL:g20": "pass",
+     "H8|J2|B|top|flat|FL:g55": "pass",
+     "H8|J2|B|top|flat|FL:g110": "pass",
+     "H8|J2|B|top|flat|FL:d60": "pass",
+     "H8|J2|B|top|flat|FL:d150": "pass",
+     "H8|J2|B|top|flat|RR:g20": "pass",
+     "H8|J2|B|top|flat|RR:g55": "pass",
+     "H8|J2|B|top|flat|RR:g110": "pass",
+     "H8|J2|B|top|flat|RR:d60": "pass",
+     "H8|J2|B|top|flat|RR:d150": "pass",
+     "H8|rigid|B|top|flat": "pass",
+     "H8|rigid|B|top|flat|FL:g20": "pass",
+     "H8|rigid|B|top|flat|FL:g55": "pass",
+     "H8|rigid|B|top|flat|FL:g110": "pass",
+     "H8|rigid|B|top|flat|FL:d60": "pass",
+     "H8|rigid|B|top|flat|FL:d150": "pass",
+     "H8|rigid|B|top|flat|RR:g20": "pass",
+     "H8|rigid|B|top|flat|RR:g55": "pass",
+     "H8|rigid|B|top|flat|RR:g110": "pass",
+     "H8|rigid|B|top|flat|RR:d60": "pass",
+     "H8|rigid|B|top|flat|RR:d150": "pass"
+    }
+   }
+  }
+ },
+ "u6": {
+  "b5_wide": {
+   "VB": {
+    "C2": {
+     "runs": 226,
+     "lite_pass": 169,
+     "safe_stop": 42,
+     "crawler_liftoff_fail": 0,
+     "official": {
+      "pass": 171,
+      "stroke_limited_stop": 42,
+      "fail": 13
+     },
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 226,
+     "lite_pass": 94,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 53,
+     "official": {
+      "fail": 226
+     },
+     "errors": 0
+    },
+    "IND": {
+     "runs": 226,
+     "lite_pass": 129,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 14,
+     "official": {
+      "pass": 124,
+      "fail": 102
+     },
+     "errors": 0
+    }
+   },
+   "v4_same_keys_record": {
+    "C2": {
+     "runs": 226,
+     "lite_pass": 168,
+     "safe_stop": 43,
+     "crawler_liftoff_fail": 0,
+     "official": {
+      "pass": 172,
+      "stroke_limited_stop": 43,
+      "fail": 11
+     },
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 226,
+     "lite_pass": 96,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 51,
+     "official": {
+      "fail": 226
+     },
+     "errors": 0
+    },
+    "IND": {
+     "runs": 226,
+     "lite_pass": 140,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 13,
+     "official": {
+      "pass": 138,
+      "fail": 88
+     },
+     "errors": 0
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "runs": 678,
+     "cases": 226,
+     "expected_cases": 226
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    }
+   }
+  },
+  "b5_main": {
+   "VB": {
+    "C2": {
+     "runs": 16,
+     "lite_pass": 16,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 0,
+     "official": {},
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 16,
+     "lite_pass": 9,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 4,
+     "official": {},
+     "errors": 0
+    },
+    "IND": {
+     "runs": 16,
+     "lite_pass": 9,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 2,
+     "official": {},
+     "errors": 0
+    }
+   },
+   "v4_same_keys_record": {
+    "C2": {
+     "runs": 16,
+     "lite_pass": 16,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 0,
+     "official": {},
+     "errors": 0
+    },
+    "ABL": {
+     "runs": 16,
+     "lite_pass": 9,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 4,
+     "official": {},
+     "errors": 0
+    },
+    "IND": {
+     "runs": 16,
+     "lite_pass": 10,
+     "safe_stop": 0,
+     "crawler_liftoff_fail": 2,
+     "official": {},
+     "errors": 0
+    }
+   },
+   "gates": {
+    "G-1": {
+     "pass": true,
+     "runs": 48,
+     "cases": 16,
+     "expected_cases": 16
+    },
+    "G-2": {
+     "pass": true,
+     "problems": [],
+     "code_commit": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612"
+    },
+    "G-4": {
+     "pass": true,
+     "stops": []
+    }
+   }
+  }
+ },
+ "G-3": {
+  "pass": false,
+  "note": "no G-3 record"
+ },
+ "exit_code": 1
+}

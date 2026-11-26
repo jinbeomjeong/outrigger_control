@@ -1,0 +1,1160 @@
+{
+ "seals": {
+  "ok": true,
+  "r4_rev13_25_sha256": {
+   "v5_resume_4368_rules_rev13": "383bffc1f2d920dbba5b5a8c0871786a43e983d83e2d5c1e477718257f70973b",
+   "v5_resume_4368_rules_rev14": "baedeab499133214804167dede4c4674f9edba4e67bd711dd6418a561f60ac3f",
+   "v5_resume_4368_rules_rev15": "0162561c3866412f06ef3be0b3a62434e4a9ba5a37c9003be4df2f373af545ef",
+   "v5_resume_4368_rules_rev16": "b38991943a565a020488d1046dd6e0b5c71276cf925715fa5ba844d8819d0683",
+   "v5_resume_4368_rules_rev17": "9400660e2f228c3bdfaf26b1eb36cf08a753e7ebc49fbcdedc4a8ab4e0b92422",
+   "v5_resume_4368_rules_rev18": "3693a69c3f04eb6c5b26556ec5997d081e38f8f6fa6a581aee66ba512d122a9e",
+   "v5_resume_4368_rules_rev19": "7f87b8bb091d23c1bdcd2bf356b732a77bea12c4cfc4853d0ea58f7d239c92b2",
+   "v5_resume_4368_rules_rev20": "615a8fbd82f4ef93f1ca76b3fb4d5c24a2e602e63a997c7c56119fcc73fb5531",
+   "v5_resume_4368_rules_rev21": "ecd709495f203eae1769ae42e67b5ae5bf2fb457146b558c12e46d636ed03f9a",
+   "v5_resume_4368_rules_rev22": "a48a81f9a71091aab40f643d48ae65ba559a5c0c629e02ef3145745a095f9328",
+   "v5_resume_4368_rules_rev23": "fa72e1726f87f686093e36f2f3f489d5b135df6392de6aae7fe91b8739b56f97",
+   "v5_resume_4368_rules_rev24": "f475cf77bc610802aa36026394cbe8dbae74745c8889ac203b53a6430e1e1e15",
+   "v5_resume_4368_rules_rev25": "c0b778fd3f53996a2caed37e373975afea591b3c798784843cb9e7eeaac6f233"
+  },
+  "r4_common_block_sha256": "e451f067db9787c9a8a45b7fc2f3e711970a914b29bc089b37bd94414d259800",
+  "eol_only": [],
+  "v5_resume_4368_rules_rev26.md": {
+   "sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "want": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "seal_file_sha": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "ok": true
+  }
+ },
+ "out_root": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947",
+ "identity_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_identity",
+ "bundles": {
+  "C-9": {
+   "rows": [
+    "R4368X_G1_B_top_Fs4_V0_gateon",
+    "R4368X_G1_B_top_Fs4_V0_gateoff"
+   ],
+   "incomplete": [],
+   "status": "기록 완료"
+  },
+  "C-10": {
+   "rows": [
+    "R4368X_rigidS1FL_B_top_Fs4_V0",
+    "R4368X_rigidS1FL_B_top_Fs4_VB",
+    "R4368X_rigidS1FR_B_top_Fs4_V0",
+    "R4368X_rigidS1FR_B_top_Fs4_VB"
+   ],
+   "incomplete": [],
+   "status": "기록 완료"
+  },
+  "C-11": {
+   "rows": [
+    "R4368X_J2_B_top_Fs0_L2_V0",
+    "R4368X_J2_B_top_Fs0_L2_VB"
+   ],
+   "incomplete": [],
+   "status": "기록 완료"
+  }
+ },
+ "rows": {
+  "R4368X_G1_B_top_Fs4_V0_gateon": {
+   "bundle": "C-9",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-9/R4368X_G1_B_top_Fs4_V0_gateon",
+   "present": true,
+   "files": {
+    "result.json": "9f934f64fcea94c8d96b9e59526ccfbd071f0be904e6e2551f4e0b1a87c641d4",
+    "controller_commands.npz": "a259ec19b2bc40bf99249f02f153624793e99e04078cdabe9150eeaaf191f9a6",
+    "step_series.npz": "66f2130b8e43bdd9e5f09fac77ba945ac412837a96e719da72967ef0c85c7cfe",
+    "r8_series.npz": "85f84acab9d522477a0457ceb0c3f40340ddcf0ae6e957272b73276b445506e1",
+    "completion_series.npz": "fbd61335a55651a3c057d433f64378d4a5fab416d83687d1b93c6b8fcd827b56",
+    "record/record.npz": "c3e0f67c907ed8d08001d4fb2c8308a157bf878fb27f8fb3c972a294f7171a1f",
+    "record/meta.json": "966886362af85232205d9b566ee9cc33d8e25d0b2dd3af9261d7ec9fd00d296a"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x0000000F",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_G1_B_top_Fs4_V0_gateon",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x0000000F",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_G1_B_top_Fs4_V0_gateon",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 51.30000000057945,
+    "last_sample_t_s": 128.00000000312562,
+    "max_stroke_mm": 402.58920863100303,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": true,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-5_within": true,
+     "P3-6_within": true,
+     "P3-7_within": true,
+     "P3-8_within": true,
+     "P3-9_flags": 0
+    },
+    "duration_s": 120.0,
+    "duration_expected_s": 120.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_Y1\\C9on_run.done",
+    "decisions": [],
+    "soil_mode_start_t_s": null,
+    "loc_t_s": 33.199999999978594,
+    "loc_first_t_s": 33.199999999978594,
+    "loc_final_t_s": 33.199999999978594,
+    "end_rut_gap_mm": 45.503524987490884,
+    "controller_commands_sha256": "a259ec19b2bc40bf99249f02f153624793e99e04078cdabe9150eeaaf191f9a6"
+   }
+  },
+  "R4368X_G1_B_top_Fs4_V0_gateoff": {
+   "bundle": "C-9",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-9/R4368X_G1_B_top_Fs4_V0_gateoff",
+   "present": true,
+   "files": {
+    "result.json": "04fd9b37f9dd98ee13f528c3f3e055045bfad64ab67b1d89aab9cdf46e258aa5",
+    "controller_commands.npz": "a259ec19b2bc40bf99249f02f153624793e99e04078cdabe9150eeaaf191f9a6",
+    "step_series.npz": "66f2130b8e43bdd9e5f09fac77ba945ac412837a96e719da72967ef0c85c7cfe",
+    "r8_series.npz": "85f84acab9d522477a0457ceb0c3f40340ddcf0ae6e957272b73276b445506e1",
+    "completion_series.npz": "fbd61335a55651a3c057d433f64378d4a5fab416d83687d1b93c6b8fcd827b56",
+    "record/record.npz": "c3e0f67c907ed8d08001d4fb2c8308a157bf878fb27f8fb3c972a294f7171a1f",
+    "record/meta.json": "a4ede61faf7bc92f5a3ccf0c61595ce263e75f7b35abdd6a3abf7666dda4a25c"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x000000F0",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_G1_B_top_Fs4_V0_gateoff",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x000000F0",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_G1_B_top_Fs4_V0_gateoff",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 51.30000000057945,
+    "last_sample_t_s": 128.00000000312562,
+    "max_stroke_mm": 402.58920863100303,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": true,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-5_within": true,
+     "P3-6_within": true,
+     "P3-7_within": true,
+     "P3-8_within": true,
+     "P3-9_flags": 0
+    },
+    "duration_s": 120.0,
+    "duration_expected_s": 120.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_Y2\\C9off_run.done",
+    "decisions": [],
+    "soil_mode_start_t_s": null,
+    "loc_t_s": 33.199999999978594,
+    "loc_first_t_s": 33.199999999978594,
+    "loc_final_t_s": 33.199999999978594,
+    "end_rut_gap_mm": 45.503524987490884,
+    "controller_commands_sha256": "a259ec19b2bc40bf99249f02f153624793e99e04078cdabe9150eeaaf191f9a6"
+   }
+  },
+  "R4368X_rigidS1FL_B_top_Fs4_V0": {
+   "bundle": "C-10",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-10/R4368X_rigidS1FL_B_top_Fs4_V0",
+   "present": true,
+   "files": {
+    "result.json": "5e0c1584cb99997ccec85e258295df4427fcd33162e642d1900615790cf53ed7",
+    "controller_commands.npz": "b6add03a411db2caff5461bea3eb683f8a8fe9092440176d959fcb53242f6bca",
+    "step_series.npz": "9820abfcdebf9a1c440d9e7405ba8333ec983746892d18fcf22c73c6ffa067d9",
+    "r8_series.npz": "cd18521bd1a76f957bf6e5a4d4c3c36160fc432a249daa924fcd6bda783f5a8e",
+    "completion_series.npz": "810b55d7c23ec28a074df609fd99adfe849c52b1735aba0680c8c2f5ad5221bb",
+    "record/record.npz": "9f7b80b4eb6f901a9a18575cd3574f205b175c97880526345d307a81f99b7777",
+    "record/meta.json": "521e12c4a9dfdc65e6f75a197778dbe3e7acb209636eae62ea2918e0d33f8668"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x000000F0",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_rigidS1FL_B_top_Fs4_V0",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x000000F0",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_rigidS1FL_B_top_Fs4_V0",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 66.90000000109731,
+    "last_sample_t_s": 168.00000000445348,
+    "max_stroke_mm": 609.5750111212868,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": false,
+     "P3-3_within": false,
+     "P3-4_within_0p2": true,
+     "P3-5_within": null,
+     "P3-6_within": true,
+     "P3-7_within": null,
+     "P3-8_within": false,
+     "P3-9_flags": 0
+    },
+    "duration_s": 160.0,
+    "duration_expected_s": 160.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_Y2\\C10FLV0_run.done",
+    "G6": {
+     "G6-1": true,
+     "G6-2": false,
+     "G6-3": false,
+     "G6-4": true,
+     "G6-5": null,
+     "G6-6": true,
+     "G6-7": false,
+     "READY_le_120s": true
+    },
+    "G6_source": {
+     "P3-2_verdict": "fail",
+     "fault_events": [],
+     "t_ready_after_loop_start_s": 58.90000000110262
+    },
+    "G6_rule": "R4 supplement 2-5 (rev25 CD-11 G6 table, p3b P3 values)",
+    "P3-3": false,
+    "end_phase": "ready",
+    "patch_leg": "FL",
+    "patch_leg_sinkage_mm": 132.61371768674525,
+    "force": {
+     "t_departure_s": 37.44700000011958,
+     "legs": [
+      {
+       "F_min_after_N": 79941.94263425717,
+       "t_min_after_s": 37.44700000011958,
+       "F_min_transient_N": 79941.94263425717,
+       "t_min_transient_s": 37.44700000011958,
+       "F_min_late_N": 106467.24915312641,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 96059.51917527629,
+       "t_min_after_s": 40.646000000225776,
+       "F_min_transient_N": 96059.51917527629,
+       "t_min_transient_s": 40.646000000225776,
+       "F_min_late_N": 107295.77005474427,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 47666.50121231253,
+       "t_min_after_s": 40.54400000022239,
+       "F_min_transient_N": 47666.50121231253,
+       "t_min_transient_s": 40.54400000022239,
+       "F_min_late_N": 61273.55962885156,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 3193.198893473321,
+       "t_min_after_s": 38.63200000015892,
+       "F_min_transient_N": 3193.198893473321,
+       "t_min_transient_s": 38.63200000015892,
+       "F_min_late_N": 56944.432311932345,
+       "t_below_F_min_s": 0.2960000000098262,
+       "t_below_F_min_plus_2kN_s": 0.36400000001208355,
+       "t_below_F_min_after_all_s": 0.2960000000098262
+      }
+     ],
+     "window_truncated_at_run_end": false,
+     "dt_s": 0.0010000000000331966
+    },
+    "controller_commands_sha256": "b6add03a411db2caff5461bea3eb683f8a8fe9092440176d959fcb53242f6bca"
+   }
+  },
+  "R4368X_rigidS1FL_B_top_Fs4_VB": {
+   "bundle": "C-10",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-10/R4368X_rigidS1FL_B_top_Fs4_VB",
+   "present": true,
+   "files": {
+    "result.json": "52396b8dfb157518d33ec24d77dfa42fa865a25cc7e4062056d6481caf303072",
+    "controller_commands.npz": "827aeefdad6277dd91570f37f594e121f2799755a44df3156fcbdab4498f2b0d",
+    "step_series.npz": "9e3825f89c5eb8a4d519da5e41515b9dcbdb668c57e18203178992c420ae8017",
+    "r8_series.npz": "64e17ece1dc3983ff177f8e03cc11b28015a41309cd6a8a7b13dc94431983b82",
+    "completion_series.npz": "812c5bb85f126cbe464cc82aeba361328f710f95102a6fa80eed9bd357c43fe8",
+    "record/record.npz": "f70bfb564be8c7013a2f1dce3ea41fb443134af5861375dbcc3845b925389879",
+    "record/meta.json": "3be4d4c9aad38bb3ce06fd00dfe8f30b8c6dd2382a95765a45d6cd99ef2a82f5"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x00000F00",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_rigidS1FL_B_top_Fs4_VB",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x00000F00",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_rigidS1FL_B_top_Fs4_VB",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 75.5000000013828,
+    "last_sample_t_s": 168.00000000445348,
+    "max_stroke_mm": 584.3461049839353,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": false,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-5_within": null,
+     "P3-6_within": true,
+     "P3-7_within": null,
+     "P3-8_within": false,
+     "P3-9_flags": 0
+    },
+    "duration_s": 160.0,
+    "duration_expected_s": 160.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_X1\\C10FLVB_run.done",
+    "G6": {
+     "G6-1": true,
+     "G6-2": false,
+     "G6-3": true,
+     "G6-4": true,
+     "G6-5": null,
+     "G6-6": true,
+     "G6-7": false,
+     "READY_le_120s": true
+    },
+    "G6_source": {
+     "P3-2_verdict": "flag",
+     "fault_events": [],
+     "t_ready_after_loop_start_s": 67.5000000013881
+    },
+    "G6_rule": "R4 supplement 2-5 (rev25 CD-11 G6 table, p3b P3 values)",
+    "P3-3": true,
+    "end_phase": "ready",
+    "patch_leg": "FL",
+    "patch_leg_sinkage_mm": 122.21299970197875,
+    "force": {
+     "t_departure_s": 38.049000000139564,
+     "legs": [
+      {
+       "F_min_after_N": 72558.4398422136,
+       "t_min_after_s": 38.049000000139564,
+       "F_min_transient_N": 72558.4398422136,
+       "t_min_transient_s": 38.049000000139564,
+       "F_min_late_N": 97457.48040293032,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 114142.19462523297,
+       "t_min_after_s": 40.65600000022611,
+       "F_min_transient_N": 114142.19462523297,
+       "t_min_transient_s": 40.65600000022611,
+       "F_min_late_N": 114186.44218535564,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 67274.1284785519,
+       "t_min_after_s": 40.55700000022282,
+       "F_min_transient_N": 67274.1284785519,
+       "t_min_transient_s": 40.55700000022282,
+       "F_min_late_N": 71098.28332178202,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 10401.88087484352,
+       "t_min_after_s": 40.164000000209775,
+       "F_min_transient_N": 10401.88087484352,
+       "t_min_transient_s": 40.164000000209775,
+       "F_min_late_N": 47184.568412929744,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.07100000000235696,
+       "t_below_F_min_after_all_s": 0.0
+      }
+     ],
+     "window_truncated_at_run_end": false,
+     "dt_s": 0.0010000000000331966
+    },
+    "controller_commands_sha256": "827aeefdad6277dd91570f37f594e121f2799755a44df3156fcbdab4498f2b0d"
+   }
+  },
+  "R4368X_rigidS1FR_B_top_Fs4_V0": {
+   "bundle": "C-10",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-10/R4368X_rigidS1FR_B_top_Fs4_V0",
+   "present": true,
+   "files": {
+    "result.json": "978be4d55d30089e4bf53e01a9b707682014d486d32040d0ceaebed3450a5d38",
+    "controller_commands.npz": "c2892ecc1cfc7069900a3cbbe8e1d7d042607a1247775c5fee32844f26ee0686",
+    "step_series.npz": "8f9fdaa0674b2b9e13a7eafe84cf4f24ea70182c0fcfe82385b035bf40dfa92b",
+    "r8_series.npz": "eeefecb0284e2622a563834679b3ca206d1540c30e6b3fefd6742dfefc8c0c78",
+    "completion_series.npz": "760f2b308ba275566d03833628c6b02b7aeeed006f8966dee1d52910b9e658d9",
+    "record/record.npz": "92b6d571928c257486d0c411fd29137f9c7f1add5a649e6968fd17438b909c7f",
+    "record/meta.json": "b1584d7095f4026b3b918ead8ada95cbb26bc9248d4186736f22bb39a36b4fc1"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x0000F000",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_rigidS1FR_B_top_Fs4_V0",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x0000F000",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_rigidS1FR_B_top_Fs4_V0",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 66.10000000107075,
+    "last_sample_t_s": 168.00000000445348,
+    "max_stroke_mm": 590.6615238179226,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": false,
+     "P3-3_within": false,
+     "P3-4_within_0p2": true,
+     "P3-5_within": null,
+     "P3-6_within": true,
+     "P3-7_within": null,
+     "P3-8_within": false,
+     "P3-9_flags": 0
+    },
+    "duration_s": 160.0,
+    "duration_expected_s": 160.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_X2\\C10FRV0_run.done",
+    "G6": {
+     "G6-1": true,
+     "G6-2": false,
+     "G6-3": false,
+     "G6-4": true,
+     "G6-5": null,
+     "G6-6": true,
+     "G6-7": false,
+     "READY_le_120s": true
+    },
+    "G6_source": {
+     "P3-2_verdict": "fail",
+     "fault_events": [],
+     "t_ready_after_loop_start_s": 58.10000000107606
+    },
+    "G6_rule": "R4 supplement 2-5 (rev25 CD-11 G6 table, p3b P3 values)",
+    "P3-3": false,
+    "end_phase": "ready",
+    "patch_leg": "FR",
+    "patch_leg_sinkage_mm": 125.52784467577771,
+    "force": {
+     "t_departure_s": 36.63000000009246,
+     "legs": [
+      {
+       "F_min_after_N": 99729.40621371673,
+       "t_min_after_s": 40.10700000020788,
+       "F_min_transient_N": 99729.40621371673,
+       "t_min_transient_s": 40.10700000020788,
+       "F_min_late_N": 111653.5939279668,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 69651.04415428668,
+       "t_min_after_s": 36.63000000009246,
+       "F_min_transient_N": 69651.04415428668,
+       "t_min_transient_s": 36.63000000009246,
+       "F_min_late_N": 100170.35133686758,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": -564.4428424140278,
+       "t_min_after_s": 38.0350000001391,
+       "F_min_transient_N": -564.4428424140278,
+       "t_min_transient_s": 38.0350000001391,
+       "F_min_late_N": 54927.17645040229,
+       "t_below_F_min_s": 0.42000000001394255,
+       "t_below_F_min_plus_2kN_s": 0.4900000000162663,
+       "t_below_F_min_after_all_s": 0.42000000001394255
+      },
+      {
+       "F_min_after_N": 53525.85803544289,
+       "t_min_after_s": 39.9930000002041,
+       "F_min_transient_N": 53525.85803544289,
+       "t_min_transient_s": 39.9930000002041,
+       "F_min_late_N": 61249.22524588223,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      }
+     ],
+     "window_truncated_at_run_end": false,
+     "dt_s": 0.0010000000000331966
+    },
+    "controller_commands_sha256": "c2892ecc1cfc7069900a3cbbe8e1d7d042607a1247775c5fee32844f26ee0686"
+   }
+  },
+  "R4368X_rigidS1FR_B_top_Fs4_VB": {
+   "bundle": "C-10",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-10/R4368X_rigidS1FR_B_top_Fs4_VB",
+   "present": true,
+   "files": {
+    "result.json": "3084fb0becdc1755d12150cd5ec17cc542c1458ccc964f78306667737fa5733f",
+    "controller_commands.npz": "e72965a1a99489cff176f7f5c759cdef8dac26287e6dba559c43d5b50d8d9940",
+    "step_series.npz": "962d1e0830f923d7ebbeef854acadac90f22fb44ed11622846400a7ca8c66a04",
+    "r8_series.npz": "622fcc99b3c4aa2ef75ac66798f2ff8a12c19cd88d6f6522470f2020fe72c592",
+    "completion_series.npz": "1c41610f7fba58f75c4957c7d7ef545187a1327c54b356a0a077836c14d3e192",
+    "record/record.npz": "fa4cb216d326ac403828b3b2cae08fea209ad4ab2b9228ec0ea4eb599a26b5a0",
+    "record/meta.json": "a168ecb8cfda8eab5c64d2238cd598b989302597f10a1bd4db08405d6bb040b1"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x0000000F",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_rigidS1FR_B_top_Fs4_VB",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x0000000F",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_rigidS1FR_B_top_Fs4_VB",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 69.00000000116702,
+    "last_sample_t_s": 168.00000000445348,
+    "max_stroke_mm": 586.9025177177314,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": false,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-5_within": null,
+     "P3-6_within": true,
+     "P3-7_within": null,
+     "P3-8_within": false,
+     "P3-9_flags": 0
+    },
+    "duration_s": 160.0,
+    "duration_expected_s": 160.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_Y1\\C10FRVB_run.done",
+    "G6": {
+     "G6-1": true,
+     "G6-2": false,
+     "G6-3": true,
+     "G6-4": true,
+     "G6-5": null,
+     "G6-6": true,
+     "G6-7": false,
+     "READY_le_120s": true
+    },
+    "G6_source": {
+     "P3-2_verdict": "flag",
+     "fault_events": [],
+     "t_ready_after_loop_start_s": 61.00000000117233
+    },
+    "G6_rule": "R4 supplement 2-5 (rev25 CD-11 G6 table, p3b P3 values)",
+    "P3-3": true,
+    "end_phase": "ready",
+    "patch_leg": "FR",
+    "patch_leg_sinkage_mm": 120.38563205718434,
+    "force": {
+     "t_departure_s": 37.968000000136875,
+     "legs": [
+      {
+       "F_min_after_N": 110455.79246029248,
+       "t_min_after_s": 40.84200000023228,
+       "F_min_transient_N": 110455.79246029248,
+       "t_min_transient_s": 40.84200000023228,
+       "F_min_late_N": 115620.2623025073,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 70385.79069540839,
+       "t_min_after_s": 37.968000000136875,
+       "F_min_transient_N": 70385.79069540839,
+       "t_min_transient_s": 37.968000000136875,
+       "F_min_late_N": 94921.0308600054,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 9976.181394354016,
+       "t_min_after_s": 39.51500000018823,
+       "F_min_transient_N": 9976.181394354016,
+       "t_min_transient_s": 39.51500000018823,
+       "F_min_late_N": 48737.61655187568,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.07100000000235696,
+       "t_below_F_min_after_all_s": 0.0
+      },
+      {
+       "F_min_after_N": 65852.61833548835,
+       "t_min_after_s": 39.90800000020128,
+       "F_min_transient_N": 65852.61833548835,
+       "t_min_transient_s": 39.90800000020128,
+       "F_min_late_N": 66058.81620217435,
+       "t_below_F_min_s": 0.0,
+       "t_below_F_min_plus_2kN_s": 0.0,
+       "t_below_F_min_after_all_s": 0.0
+      }
+     ],
+     "window_truncated_at_run_end": false,
+     "dt_s": 0.0010000000000331966
+    },
+    "controller_commands_sha256": "e72965a1a99489cff176f7f5c759cdef8dac26287e6dba559c43d5b50d8d9940"
+   }
+  },
+  "R4368X_J2_B_top_Fs0_L2_V0": {
+   "bundle": "C-11",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-11/R4368X_J2_B_top_Fs0_L2_V0",
+   "present": true,
+   "files": {
+    "result.json": "48692346bcb4b9ae8e88bdf520c09713d5c9865fc732e0ed9eb45f9ef9666686",
+    "controller_commands.npz": "3b1c54fb415cca82674eeca9c6b6875dea362af12f91823f63c59086ce951ccf",
+    "step_series.npz": "6963e870b74ca5600ede15af63c62424888db44ec6903cd7bd308618e52de8ff",
+    "r8_series.npz": "3b1b7fea80b5f912375183649180e342f53bf4db36ad360bc8e7496b3692a166",
+    "completion_series.npz": "0c18f3df60732c0b507ae8911850138ac39090516ed3eb2f618b591c0af42c93",
+    "record/record.npz": "5c5927534219e56f053be4984352b49658284df42e141b8685b22c478493946a",
+    "record/meta.json": "65872a5c1a590f9338e58ad471483e5d0a887241c36ffe12d7ae342da1108da7"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x00000F00",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_J2_B_top_Fs0_L2_V0",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x00000F00",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_J2_B_top_Fs0_L2_V0",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 84.10000000166829,
+    "last_sample_t_s": 128.00000000312562,
+    "max_stroke_mm": 540.4678791404112,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": true,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-5_within": true,
+     "P3-6_within": true,
+     "P3-7_within": false,
+     "P3-8_within": true,
+     "P3-9_flags": 0
+    },
+    "duration_s": 120.0,
+    "duration_expected_s": 120.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_X1\\C11V0_run.done",
+    "loc_first_t_s": 50.500000000552895,
+    "loc_final_t_s": 52.80000000062925,
+    "weight_N": 380112.91206408397,
+    "loc_revokes": 2,
+    "loc_period_crawler_max_N": 4755.644570052513,
+    "loc_period_crawler_max_over_W": 0.012511136609983797,
+    "above_0p01W": true,
+    "final_loc_period": {
+     "t_loc_s": 52.80000000062925,
+     "crawler_max_N": 0.0,
+     "crawler_max_over_W": 0.0,
+     "above_0p01W": false
+    },
+    "controller_commands_sha256": "3b1c54fb415cca82674eeca9c6b6875dea362af12f91823f63c59086ce951ccf"
+   }
+  },
+  "R4368X_J2_B_top_Fs0_L2_VB": {
+   "bundle": "C-11",
+   "folder": "07_results/S9/R4368X_b9f5707_20261115_013947/C-11/R4368X_J2_B_top_Fs0_L2_VB",
+   "present": true,
+   "files": {
+    "result.json": "d79d6db1de432995b46d9c2130392de8c3af4df82fec3c04a7a593fd0cb3a779",
+    "controller_commands.npz": "b5c010ca8f7826f145db9d27287f036cbdf0dd4eee950d2297091e0c51abe389",
+    "step_series.npz": "e12adff91300e00f29caeb457168745ef7d79995e29a4004b1675830ad6319e4",
+    "r8_series.npz": "898a676dba5722d4ea7b4dfd9161b2c68ddaa70c2f4c5ed06912749751517085",
+    "completion_series.npz": "1c16fb3c18f22bc59e666ca733a75e3954894acfdfdd262affa3c95074b90414",
+    "record/record.npz": "66db82751c8653a89c3e9ea0f0a92c169b03502bc46deb54230363174056b317",
+    "record/meta.json": "5a03dacc0539fb2a2269097a761144a3b44d1877a65e90f336d7583e68973b5e"
+   },
+   "identity": {
+    "result": {
+     "git_at_start": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "num_threads_chrono": 4,
+     "omp_wait_policy": "PASSIVE",
+     "affinity_mask_process": "0x0000F000",
+     "placement_requested": "pcore",
+     "hull_hook": {
+      "mode": "fast",
+      "dll_sha_validated": true,
+      "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+      "fallback_reason": null
+     }
+    },
+    "pre": {
+     "case": "R4368X_J2_B_top_Fs0_L2_VB",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "env": {
+      "OMP_WAIT_POLICY": "PASSIVE",
+      "OUTRIGGER_PLACEMENT": "pcore",
+      "OUTRIGGER_PCORE_MASK": "0x0000F000",
+      "OUTRIGGER_ECORE_MASK": null,
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "dll_sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
+    },
+    "post": {
+     "case": "R4368X_J2_B_top_Fs0_L2_VB",
+     "head": "b9f5707d7f3f7a26230b25f4edbc1fec587ca612",
+     "tracked_status": [],
+     "forbidden_env": {
+      "OUTRIGGER_LOC_SHADOW": null,
+      "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED": null,
+      "OUTRIGGER_HULL_HOOK_DLL": null,
+      "OUTRIGGER_HULL_HOOK": null,
+      "MIXED_HULL_MODE": null
+     },
+     "reflog_n5": [
+      "b9f5707 HEAD@{0}: merge z4371-p2dg3: Merge made by the 'ort' strategy.",
+      "30b7393 HEAD@{1}: merge z4371-r4c30: Merge made by the 'ort' strategy.",
+      "e1a2f66 HEAD@{2}: commit: 436.8 rules rev14 sealed (R4c30 enable record fix, H-0 rerun at R2, path 2 dg3-in-D1 fix, full G-S at R2)",
+      "75c5f75 HEAD@{3}: merge z4370-p2id: Merge made by the 'ort' strategy.",
+      "b202ab1 HEAD@{4}: commit: 436.8 rules rev13 sealed (A-5 anchor check, anchors kept; R = merge of z4370-p2id; full G-S at R)"
+     ],
+     "reflog_new_since_pre": []
+    }
+   },
+   "items": {
+    "first_ready_s": 95.10000000203345,
+    "last_sample_t_s": 128.00000000312562,
+    "max_stroke_mm": 544.809613972481,
+    "P3": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact_pass": true,
+     "P3-2_within": true,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-5_within": true,
+     "P3-6_within": true,
+     "P3-7_within": false,
+     "P3-8_within": true,
+     "P3-9_flags": 0
+    },
+    "duration_s": 120.0,
+    "duration_expected_s": 120.0,
+    "rc": 0,
+    "rc_source": "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947\\_runners\\logs_X2\\C11VB_run.done",
+    "loc_first_t_s": 51.90000000059937,
+    "loc_final_t_s": 54.30000000067904,
+    "weight_N": 380112.91206408397,
+    "loc_revokes": 2,
+    "loc_period_crawler_max_N": 5084.168785825655,
+    "loc_period_crawler_max_over_W": 0.013375417210159135,
+    "above_0p01W": true,
+    "final_loc_period": {
+     "t_loc_s": 54.30000000067904,
+     "crawler_max_N": 0.0,
+     "crawler_max_over_W": 0.0,
+     "above_0p01W": false
+    },
+    "controller_commands_sha256": "b5c010ca8f7826f145db9d27287f036cbdf0dd4eee950d2297091e0c51abe389"
+   }
+  }
+ },
+ "C-9_P-18": {
+  "premise": true,
+  "why": [],
+  "commands_equal": true
+ },
+ "note": "record bundles (rev16:55): no grade; 기록 불완전 when a record item or an identity file is missing",
+ "status": "pass",
+ "stops": [],
+ "undecidable": [],
+ "fails": [],
+ "records": [],
+ "stop_codes": [],
+ "head_check": {
+  "expect": "74c27846cbfab498bd59340d1eaec344f1596b0b",
+  "head": "74c27846cbfab498bd59340d1eaec344f1596b0b",
+  "ok": true,
+  "why": null
+ },
+ "tool": "p2_x16.py",
+ "version": "1",
+ "tool_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03",
+ "cmd": "c16",
+ "argv": [
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_rev26_74c2784\\harness_path2\\c16.json",
+  "--data-root",
+  "C:\\workspace\\outrigger_control",
+  "c16",
+  "--out-root",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\R4368X_b9f5707_20261115_013947",
+  "--expect-head",
+  "74c27846cbfab498bd59340d1eaec344f1596b0b"
+ ],
+ "created": "2026-11-27T00:12:46+09:00"
+}
