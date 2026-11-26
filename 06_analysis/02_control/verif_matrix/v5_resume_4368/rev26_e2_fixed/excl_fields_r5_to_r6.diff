@@ -1,0 +1,37 @@
+--- rev26_fixed/excl_fields_r5.py
++++ rev26_e2_fixed/excl_fields_r6.py
+@@ -1,2 +1,2 @@
+-"""rev26 normative exclusion / normalisation rules for the (d) and (c) comparisons, revision 5.
++"""rev26 normative exclusion / normalisation rules for the (d) and (c) comparisons, revision 6.
+ 
+@@ -7,3 +7,4 @@
+ the path 1 ``resume_k1_family.py`` is an identity pair like ``--root``), r5 (re-audit 5 B-6: NT also covers the rev26
+-section 2 W data locations, files the tools read from their own checkout by design).
++section 2 W data locations, files the tools read from their own checkout by design), r6 (4' audit B-1, erratum 2: the
++same-run part digests ``parts[].sha256`` of path 2 ``p2v5c_merge.json`` are I).
+ 
+@@ -34,2 +35,5 @@
+      ``created_at``, ``generated_at``, ``started_at``, ``finished_at``.
++  I  same-run output digests: in path 2 ``harness_path2/p2v5c_merge.json`` the scalar ``sha256`` of every element of
++     the top-level list ``parts`` (path ``parts / [] / sha256``): the raw sha256 of a part file written by the same
++     run; each part file is itself a (d) file and is compared there.
+   I  argument lists (keys ``argv``, ``args``, ``cmd``, ``command``, ``commands_run``): the ELEMENTS that hold the
+@@ -63,3 +67,3 @@
+ Usage (dynamics-dev or python-dev):
+-  python -I -B -X utf8 excl_fields_r5.py <out.json> --root <judge output dir> --commit <tool commit>
++  python -I -B -X utf8 excl_fields_r6.py <out.json> --root <judge output dir> --commit <tool commit>
+       --out-token <output-folder token> --window <folder>=<start>/<end> [...]
+@@ -98,2 +102,3 @@
+               "created_at", "generated_at", "started_at", "finished_at"}
++SAME_RUN_DIGESTS = {("harness_path2", "p2v5c_merge.json"): {("parts", "[]", "sha256")}}
+ ARG_NAMES = {"argv", "args", "cmd", "command", "commands_run"}
+@@ -211,2 +216,4 @@
+     if name in TIME_NAMES and is_scalar(v):
++        return "I"
++    if tuple(path + [name]) in SAME_RUN_DIGESTS.get((folder, fname), ()) and is_scalar(v):
+         return "I"
+@@ -293,3 +300,3 @@
+     rules = Rules(a.commit, a.out_token, windows, a.main_root, a.checkout_root)
+-    out = {"rules": "excl_fields_r5", "scope_d_skipped_files": sorted(f"{x}/{y}" for x, y in SKIP_D_FILES),
++    out = {"rules": "excl_fields_r6", "scope_d_skipped_files": sorted(f"{x}/{y}" for x, y in SKIP_D_FILES),
+            "scope_d_skipped_subtrees": {f"{x}/{y}": [list(s) for s in v] for (x, y), v in SKIP_D_SUBTREES.items()},

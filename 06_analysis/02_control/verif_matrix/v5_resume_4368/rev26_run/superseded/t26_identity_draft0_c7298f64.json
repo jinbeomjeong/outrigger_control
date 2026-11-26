@@ -1,0 +1,1188 @@
+{
+ "status": "draft (4' not done; prepared by python-expert for the main session 2026-11-26)",
+ "created": "2026-11-26T20:36:00+09:00",
+ "rules": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md (sections 2, 4')",
+ "location_note": "rules section 2 names rev26_fixed/t26_identity.json; written to rev26_run/ on the main session's instruction (rev26_fixed/** is the sealed copy folder)",
+ "t26": {
+  "commit": "335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "parent": "932f1fb1724f074e4ee93a9c02193c7c840d13c4",
+  "subject": "436.8 rev26 T26: path 1 R26-2/R26-3/--tag-mode/rev26 seal (ebda7c0c) + path 2 R26-1/R26-3/--tag-mode/--data-root/rev26 seal (b587a841)",
+  "base_m4": "932f1fb1724f074e4ee93a9c02193c7c840d13c4"
+ },
+ "changed_files": {
+  "command": "git diff --name-status 932f1fb1724f074e4ee93a9c02193c7c840d13c4..335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "count": 37,
+  "names_lf_joined_sha256": "101cead446974df82fc27b954ec13051b877e7b907828c3da9c8ce4fbc2f333f",
+  "files": [
+   {
+    "status": "M",
+    "file": ".gitattributes",
+    "category": ".gitattributes (section 7 -text lines only)",
+    "t26_blob_raw_sha256": "909690554a6a7ca6b169b5de7a4778b92ac6bd70e82ecd7de81309287d69b2d4"
+   },
+   {
+    "status": "M",
+    "file": "04_scripts/04_hydraulic/coupled/README_judges_4368.md",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "0c3acd8dc00949d7d01fffaee215be5141abb0ed1dd3081175ee92d609574341"
+   },
+   {
+    "status": "M",
+    "file": "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "f7a448d3b8656ac764b3074450b1ba1e800618a4797a04de50395451c82d7fb4"
+   },
+   {
+    "status": "M",
+    "file": "04_scripts/04_hydraulic/coupled/u3_judge_4368.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "7967096cfba750547af475ec9dd4087be4c3fe21923e98d0b1abf0d2dfbd5a9c"
+   },
+   {
+    "status": "M",
+    "file": "05_tests/unit/test_resume4368_rev1.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "8147b4188d30d85b038c0d15f4a5973092d1c971b9257675af6ddb5e69dbde2a"
+   },
+   {
+    "status": "M",
+    "file": "05_tests/unit/test_resume4368_rev16.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "19f6df34e46353321ca97368279e852c85eab7ec06d72fb57a4c3f63f9ff59a9"
+   },
+   {
+    "status": "M",
+    "file": "05_tests/unit/test_resume4368_supplement4.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "af44551481a5a9ab6210e9e775d3cc102c5d05a16b6861d0273aea5233dad6c9"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "1e8e567326cc15703639466af07157a592599ab75ab3628fce0885026b5d3787"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/README.md",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_4368.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_u3.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_x16.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_4368.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_u3.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_rev26_p2.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "3e8166b2132a530d4330f6c150fb594eb0c12f87fbd3e4c2df9ee8cc76ca2877"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/README.md",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_common.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_grid.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_noise.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_stage1.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/test_p2v5c.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/abs_roots.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "c3bcd25f7fa7e2479bdf6870bd6ed2a4c96158d1d6cd8db53ee09af61031522e"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_check.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "d00f2c54f7453f387077bea4254ed26b6bcc157bfa02b6a8e2648ad3318a22cf"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "37c57662b44b848da78a0ced5222fdebf02e0d02b1bd94467fbbd13c23d8d000"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r1.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "3da897c3fb5b266245273eaa37425d1b263253f7b898537023d69c17ae19d1ad"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r2.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "bda5e7da28c2d498520564588fe7f71c33d5762f24c2713372ef49eb2eae4da8"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r3.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "bfe6354e91d800f5c4479affda9582a110a0cccee6b20a3ded16ca057e39a142"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r4.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "1fb6f701a483f0b7ebcf9ffb78530649edfc46c9151f9ff36f99fdc7037c4a41"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r5.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "bee9eee74a002d84710cde59fa20a1f2517c0b8cfa56173314d1d4eec36465f5"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_d_excluded_fields.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "6051f77fff39299451ea6d7890f9b532b4c58f86e358b4eb4a4b2a20f419880b"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r1.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "8074503dca0219957ced67a9da1cf206384cb2a3e1d8b160060449af4b4d1a56"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r2.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "f450784b721b1450d1c3745b130b40ac2e8005f020da593eae9e806714a707c2"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r3.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "3a5d637c9efc170b07a6a92b1abefa855b9729aece5fec45563a0228d55aa05e"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r4.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "fafca4235c267620bde8738bb0b7277559eb376d868554f8011355a59b3ddeec"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r5.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "e74aeca93554d65a5e2344142827fa5cafa054153feff7f9d64406233676b80b"
+   }
+  ]
+ },
+ "rd1_4_substitute": {
+  "condition_1": {
+   "all_in_allowed_set": true,
+   "gitattributes": {
+    "added": [
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256 -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_seal_candidate_draft.md -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/** -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_rev26_*/** -text",
+     "06_analysis/02_control/verif_matrix/v5paper_imua_stats/** -text"
+    ],
+    "removed": [],
+    "only_section7_lines_added": true
+   },
+   "rule_files_equal_master_bytes": true,
+   "rule_files_diff_vs_master": [],
+   "fixed_list_equals_current": true,
+   "fixed_list_note": "the 4' fixed changed-file list is taken as the current list above"
+  },
+  "condition_2": {
+   "command": "git diff --name-only b9f5707d7f3f7a26230b25f4edbc1fec587ca612..335004a7ad9f5f988e7543dd98d45bf2b96e4294 -- 03_src 02_params",
+   "output": [],
+   "empty": true
+  },
+  "condition_3": {
+   "allow_list_files": 29,
+   "unchanged": 10,
+   "unchanged_all_lf_equal": true,
+   "rows": [
+    {
+     "file": "04_scripts/04_hydraulic/coupled/judge_stage1_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "t26_blob_raw_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "m4_lf_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "t26_lf_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "lf_equal": true
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "339a51277c064ae98105dc01fadd492f67fb2c1866e3eac675cc2856b34d2a52",
+     "t26_blob_raw_sha256": "f7a448d3b8656ac764b3074450b1ba1e800618a4797a04de50395451c82d7fb4"
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/u3_judge_4368.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "b46cfa7cc80211905c1c83c9bce5e8b16c2d567e2cc267b08c68d3854766096e",
+     "t26_blob_raw_sha256": "7967096cfba750547af475ec9dd4087be4c3fe21923e98d0b1abf0d2dfbd5a9c"
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "t26_blob_raw_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "m4_lf_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "t26_lf_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "lf_equal": true
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/h6_judge_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "t26_blob_raw_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "m4_lf_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "t26_lf_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "lf_equal": true
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/README_judges_4368.md",
+     "changed": true,
+     "m4_blob_raw_sha256": "3b1fa4b09ad27b04f75cb0e2856d376ff832ce0fa176eb2da60f5d7b89309032",
+     "t26_blob_raw_sha256": "0c3acd8dc00949d7d01fffaee215be5141abb0ed1dd3081175ee92d609574341"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "ac1e84f85b4f4534d11c5248169720ac4f7026a3ab65e96360e8bd650563ffbb",
+     "t26_blob_raw_sha256": "1e8e567326cc15703639466af07157a592599ab75ab3628fce0885026b5d3787"
+    },
+    {
+     "file": "05_tests/unit/test_judges_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "t26_blob_raw_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "m4_lf_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "t26_lf_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "lf_equal": true
+    },
+    {
+     "file": "05_tests/unit/test_judges_4368_h6_h8.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "t26_blob_raw_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "m4_lf_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "t26_lf_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "lf_equal": true
+    },
+    {
+     "file": "05_tests/unit/test_resume4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "t26_blob_raw_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "m4_lf_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "t26_lf_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "lf_equal": true
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_rev1.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "407699a71b2ef6ce06aebe1be0cfd3c53cfe7a67ee513ed02901ae692975cc13",
+     "t26_blob_raw_sha256": "8147b4188d30d85b038c0d15f4a5973092d1c971b9257675af6ddb5e69dbde2a"
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_rev16.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "761f3d110da9958453faf35f71e147511e363465ce7509047d4798d3c4f1acc2",
+     "t26_blob_raw_sha256": "19f6df34e46353321ca97368279e852c85eab7ec06d72fb57a4c3f63f9ff59a9"
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_supplement4.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "1945148f8c2e05896ee07dbcc0b32fc5ba3399b0099dd4d13d3cacd4f0c1397e",
+     "t26_blob_raw_sha256": "af44551481a5a9ab6210e9e775d3cc102c5d05a16b6861d0273aea5233dad6c9"
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_supplement5.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "t26_blob_raw_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "m4_lf_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "t26_lf_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/README.md",
+     "changed": true,
+     "m4_blob_raw_sha256": "f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4",
+     "t26_blob_raw_sha256": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_4368.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6",
+     "t26_blob_raw_sha256": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_u3.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72",
+     "t26_blob_raw_sha256": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_v5j.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "t26_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "m4_lf_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "t26_lf_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_x16.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5",
+     "t26_blob_raw_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_4368.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985",
+     "t26_blob_raw_sha256": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_u3.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23",
+     "t26_blob_raw_sha256": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_v5j.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "t26_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "m4_lf_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "t26_lf_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_x16.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "t26_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "m4_lf_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "t26_lf_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/README.md",
+     "changed": true,
+     "m4_blob_raw_sha256": "c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888",
+     "t26_blob_raw_sha256": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_common.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82",
+     "t26_blob_raw_sha256": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_grid.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388",
+     "t26_blob_raw_sha256": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_noise.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1",
+     "t26_blob_raw_sha256": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_stage1.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996",
+     "t26_blob_raw_sha256": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/test_p2v5c.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37",
+     "t26_blob_raw_sha256": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6"
+    }
+   ]
+  }
+ },
+ "stage5_runners": {
+  "run_judgement_path1_rev26.ps1": {
+   "m4_source": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/run/run_judgement_path1_M4.ps1",
+   "m4_raw_sha256": "868fa7b712eea4c3071c413f854143c376718ff776902392e3bd4bff7368c915",
+   "raw_sha256": "c7298f649b64ca3c0530c75ae63aec5502903e02cab73181590bdd4e0e0214ad",
+   "eol": "LF",
+   "edits": [
+    {
+     "m4_line": 13,
+     "kind": "replace",
+     "rule_item": "path1-1 $M4 -> T26",
+     "old": "$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "new": "$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'"
+    },
+    {
+     "m4_line": 14,
+     "kind": "replace",
+     "rule_item": "path1-1 $R4 -> T26",
+     "old": "$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "new": "$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'"
+    },
+    {
+     "m4_line": 21,
+     "kind": "replace",
+     "rule_item": "path1-4 $Out -> judge_rev26_<T26 7>/harness_path1",
+     "old": "$Out = \"$Base/judge_$($M4.Substring(0, 7))/harness_path1\"",
+     "new": "$Out = \"$Base/judge_rev26_$($M4.Substring(0, 7))/harness_path1\""
+    },
+    {
+     "m4_line": 26,
+     "kind": "replace",
+     "rule_item": "path1-2 $Judge -> <WT>",
+     "old": "$Judge = '06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py'",
+     "new": "$Judge = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\06_analysis\\02_control\\verif_matrix\\scripts\\resume4368_judge.py'"
+    },
+    {
+     "m4_line": 27,
+     "kind": "replace",
+     "rule_item": "path1-2 $Co -> <WT>",
+     "old": "$Co = '04_scripts/04_hydraulic/coupled'",
+     "new": "$Co = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\04_hydraulic\\coupled'"
+    },
+    {
+     "m4_line": 46,
+     "kind": "replace",
+     "rule_item": "path1-3 $FirstSidecars -> main repo copy",
+     "old": "$FirstSidecars = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\main\\sidecars_b9f5707.py'",
+     "new": "$FirstSidecars = '06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/tools/sidecars_b9f5707.py'"
+    },
+    {
+     "m4_line": 109,
+     "kind": "replace",
+     "rule_item": "path1-6 family_table --data-root .",
+     "old": "Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\") | Out-Null",
+     "new": "Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\", '--data-root', '.') | Out-Null"
+    },
+    {
+     "m4_line": 116,
+     "kind": "replace",
+     "rule_item": "path1-5 h11 --las-k1-dir",
+     "old": "Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--out', \"$Out/h11.json\") | Out-Null",
+     "new": "Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--las-k1-dir', '06_analysis/02_control/v5_rerun/las_k1', '--out', \"$Out/h11.json\") | Out-Null"
+    }
+   ],
+   "diff": {
+    "unified_diff_n0": [
+     "--- run_judgement_path1_M4.ps1",
+     "+++ run_judgement_path1_rev26.ps1",
+     "@@ -13,2 +13,2 @@",
+     "-$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "-$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "+$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "+$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "@@ -21 +21 @@",
+     "-$Out = \"$Base/judge_$($M4.Substring(0, 7))/harness_path1\"",
+     "+$Out = \"$Base/judge_rev26_$($M4.Substring(0, 7))/harness_path1\"",
+     "@@ -26,2 +26,2 @@",
+     "-$Judge = '06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py'",
+     "-$Co = '04_scripts/04_hydraulic/coupled'",
+     "+$Judge = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\06_analysis\\02_control\\verif_matrix\\scripts\\resume4368_judge.py'",
+     "+$Co = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\04_hydraulic\\coupled'",
+     "@@ -46 +46 @@",
+     "-$FirstSidecars = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\main\\sidecars_b9f5707.py'",
+     "+$FirstSidecars = '06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/tools/sidecars_b9f5707.py'",
+     "@@ -109 +109 @@",
+     "-Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\") | Out-Null",
+     "+Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\", '--data-root', '.') | Out-Null",
+     "@@ -116 +116 @@",
+     "-Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--out', \"$Out/h11.json\") | Out-Null",
+     "+Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--las-k1-dir', '06_analysis/02_control/v5_rerun/las_k1', '--out', \"$Out/h11.json\") | Out-Null"
+    ],
+    "unified_diff_sha256": "a87c14b031fc1944d5c0d3d07d77ab44fd4f267a1bd670cd6799b554e1883b8e",
+    "changed_m4_lines": [
+     13,
+     14,
+     21,
+     26,
+     27,
+     46,
+     109,
+     116
+    ],
+    "inserted_after_m4_lines": [],
+    "only_declared_lines_changed": true,
+    "line_count_m4": 207,
+    "line_count_new": 207
+   }
+  },
+  "run_judgement_path2_rev26.ps1": {
+   "m4_source": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/run/run_judgement_path2_M4.ps1",
+   "m4_raw_sha256": "9690f2de6aa36bd79bf996b025fe2cf0aa8d6018d983506015566e991546cf83",
+   "raw_sha256": "a6f0b90ca7e0747303ea11ccee5da9a20f388c320d480c80396fe6ac86dd145c",
+   "eol": "LF",
+   "edits": [
+    {
+     "m4_line": 23,
+     "kind": "insert_after",
+     "rule_item": "path2-2 add $WT",
+     "old": null,
+     "new": "$WT = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26'"
+    },
+    {
+     "m4_line": 24,
+     "kind": "replace",
+     "rule_item": "path2-2 Set-Location $WT",
+     "old": "Set-Location -LiteralPath $Repo",
+     "new": "Set-Location -LiteralPath $WT"
+    },
+    {
+     "m4_line": 25,
+     "kind": "replace",
+     "rule_item": "path2-1 $M4 -> T26",
+     "old": "$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "new": "$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'"
+    },
+    {
+     "m4_line": 26,
+     "kind": "replace",
+     "rule_item": "path2-1 $R4 -> T26",
+     "old": "$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "new": "$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'"
+    },
+    {
+     "m4_line": 35,
+     "kind": "replace",
+     "rule_item": "path2-5 $ManifestSource -> main repo copy",
+     "old": "$ManifestSource = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\r4-p2\\p2_manifest_draft.json'",
+     "new": "$ManifestSource = 'C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\manifest\\p2_manifest_draft.json'"
+    },
+    {
+     "m4_line": 38,
+     "kind": "replace",
+     "rule_item": "path2-3 $P2 -> $WT",
+     "old": "$P2 = \"$Repo\\$Base\\path2\"",
+     "new": "$P2 = \"$WT\\$Base\\path2\""
+    },
+    {
+     "m4_line": 39,
+     "kind": "replace",
+     "rule_item": "path2-3 $V5c -> $WT",
+     "old": "$V5c = \"$Repo\\$Base\\path2_v5c\"",
+     "new": "$V5c = \"$WT\\$Base\\path2_v5c\""
+    },
+    {
+     "m4_line": 57,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2/README.md\"           = 'f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4'",
+     "new": "    \"$BaseGit/path2/README.md\"           = 'a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d'"
+    },
+    {
+     "m4_line": 58,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2/p2_4368.py\"          = '51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6'",
+     "new": "    \"$BaseGit/path2/p2_4368.py\"          = '4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2'"
+    },
+    {
+     "m4_line": 59,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2/p2_u3.py\"            = '7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72'",
+     "new": "    \"$BaseGit/path2/p2_u3.py\"            = '7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f'"
+    },
+    {
+     "m4_line": 61,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2/p2_x16.py\"           = 'e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5'",
+     "new": "    \"$BaseGit/path2/p2_x16.py\"           = '4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03'"
+    },
+    {
+     "m4_line": 62,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2/test_p2_4368.py\"     = 'cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985'",
+     "new": "    \"$BaseGit/path2/test_p2_4368.py\"     = 'a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855'"
+    },
+    {
+     "m4_line": 63,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2/test_p2_u3.py\"       = '533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23'",
+     "new": "    \"$BaseGit/path2/test_p2_u3.py\"       = '98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7'"
+    },
+    {
+     "m4_line": 66,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2_v5c/README.md\"       = 'c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888'",
+     "new": "    \"$BaseGit/path2_v5c/README.md\"       = 'b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf'"
+    },
+    {
+     "m4_line": 67,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2_v5c/p2v5c_common.py\" = '6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82'",
+     "new": "    \"$BaseGit/path2_v5c/p2v5c_common.py\" = 'f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232'"
+    },
+    {
+     "m4_line": 68,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2_v5c/p2v5c_grid.py\"   = '88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388'",
+     "new": "    \"$BaseGit/path2_v5c/p2v5c_grid.py\"   = '0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44'"
+    },
+    {
+     "m4_line": 69,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2_v5c/p2v5c_noise.py\"  = '7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1'",
+     "new": "    \"$BaseGit/path2_v5c/p2v5c_noise.py\"  = '48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687'"
+    },
+    {
+     "m4_line": 70,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2_v5c/p2v5c_stage1.py\" = 'd49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996'",
+     "new": "    \"$BaseGit/path2_v5c/p2v5c_stage1.py\" = '6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34'"
+    },
+    {
+     "m4_line": 71,
+     "kind": "replace",
+     "rule_item": "path2-4 $AllowListPath2 -> T26 raw blob sha256",
+     "old": "    \"$BaseGit/path2_v5c/test_p2v5c.py\"   = '4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37'",
+     "new": "    \"$BaseGit/path2_v5c/test_p2v5c.py\"   = '65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6'"
+    },
+    {
+     "m4_line": 327,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "    Invoke-Step 'harness' \"$Out\\harness.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\harness.json\", 'harness',",
+     "new": "    Invoke-Step 'harness' \"$Out\\harness.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\harness.json\", '--data-root', $Repo, 'harness',"
+    },
+    {
+     "m4_line": 332,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "    Invoke-Step 'anchors' \"$Out\\anchors.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\anchors.json\", 'anchors',",
+     "new": "    Invoke-Step 'anchors' \"$Out\\anchors.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\anchors.json\", '--data-root', $Repo, 'anchors',"
+    },
+    {
+     "m4_line": 336,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "    Invoke-Step 'jp' \"$Out\\jp.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\jp.json\", 'jp',",
+     "new": "    Invoke-Step 'jp' \"$Out\\jp.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\jp.json\", '--data-root', $Repo, 'jp',"
+    },
+    {
+     "m4_line": 340,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "    Invoke-Step 'g3' \"$Out\\g3.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\g3.json\", 'g3', '--h11-dir', \"$X\\H-11\", '--expect-head', $M4)",
+     "new": "    Invoke-Step 'g3' \"$Out\\g3.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\g3.json\", '--data-root', $Repo, 'g3', '--h11-dir', \"$X\\H-11\", '--expect-head', $M4)"
+    },
+    {
+     "m4_line": 349,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "    Invoke-Step 'u3' \"$Out\\u3.json\" (@(\"$P2\\p2_u3.py\", '--out', \"$Out\\u3.json\") + $u3Arguments + @(",
+     "new": "    Invoke-Step 'u3' \"$Out\\u3.json\" (@(\"$P2\\p2_u3.py\", '--out', \"$Out\\u3.json\", '--data-root', $Repo) + $u3Arguments + @("
+    },
+    {
+     "m4_line": 362,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "    Invoke-Step 'c16' \"$Out\\c16.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\c16.json\", 'c16', '--out-root', $X, '--expect-head', $M4)",
+     "new": "    Invoke-Step 'c16' \"$Out\\c16.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\c16.json\", '--data-root', $Repo, 'c16', '--out-root', $X, '--expect-head', $M4)"
+    },
+    {
+     "m4_line": 369,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "        '--out', \"$Out\\p2v5c_stage1.json\", 'stage1', '--h9', \"$Rk\\h9_stage1.jsonl\",",
+     "new": "        '--out', \"$Out\\p2v5c_stage1.json\", '--data-root', $Repo, 'stage1', '--h9', \"$Rk\\h9_stage1.jsonl\","
+    },
+    {
+     "m4_line": 379,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "            '--out', \"$Out\\p2v5c_grid.json\", 'grid') + $gridArguments + @('--family-f', \"$Rk\\h9_family_F.jsonl\"))",
+     "new": "            '--out', \"$Out\\p2v5c_grid.json\", '--data-root', $Repo, 'grid') + $gridArguments + @('--family-f', \"$Rk\\h9_family_F.jsonl\"))"
+    },
+    {
+     "m4_line": 384,
+     "kind": "replace",
+     "rule_item": "path2-7 --data-root $Repo",
+     "old": "        '--out', \"$Out\\p2v5c_noise.json\", 'noise', '--noise-vb', \"$Rk\\h8_noise_VB.json\",",
+     "new": "        '--out', \"$Out\\p2v5c_noise.json\", '--data-root', $Repo, 'noise', '--noise-vb', \"$Rk\\h8_noise_VB.json\","
+    },
+    {
+     "m4_line": 430,
+     "kind": "replace",
+     "rule_item": "path2-6 $Out -> judge_rev26_<T26 7>\\harness_path2",
+     "old": "$Out = \"$Repo\\$Base\\judge_$($M4.Substring(0, 7))\\harness_path2\"",
+     "new": "$Out = \"$Repo\\$Base\\judge_rev26_$($M4.Substring(0, 7))\\harness_path2\""
+    }
+   ],
+   "diff": {
+    "unified_diff_n0": [
+     "--- run_judgement_path2_M4.ps1",
+     "+++ run_judgement_path2_rev26.ps1",
+     "@@ -24,3 +24,4 @@",
+     "-Set-Location -LiteralPath $Repo",
+     "-$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "-$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "+$WT = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26'",
+     "+Set-Location -LiteralPath $WT",
+     "+$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "+$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "@@ -35 +36 @@",
+     "-$ManifestSource = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\r4-p2\\p2_manifest_draft.json'",
+     "+$ManifestSource = 'C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\manifest\\p2_manifest_draft.json'",
+     "@@ -38,2 +39,2 @@",
+     "-$P2 = \"$Repo\\$Base\\path2\"",
+     "-$V5c = \"$Repo\\$Base\\path2_v5c\"",
+     "+$P2 = \"$WT\\$Base\\path2\"",
+     "+$V5c = \"$WT\\$Base\\path2_v5c\"",
+     "@@ -57,3 +58,3 @@",
+     "-    \"$BaseGit/path2/README.md\"           = 'f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4'",
+     "-    \"$BaseGit/path2/p2_4368.py\"          = '51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6'",
+     "-    \"$BaseGit/path2/p2_u3.py\"            = '7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72'",
+     "+    \"$BaseGit/path2/README.md\"           = 'a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d'",
+     "+    \"$BaseGit/path2/p2_4368.py\"          = '4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2'",
+     "+    \"$BaseGit/path2/p2_u3.py\"            = '7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f'",
+     "@@ -61,3 +62,3 @@",
+     "-    \"$BaseGit/path2/p2_x16.py\"           = 'e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5'",
+     "-    \"$BaseGit/path2/test_p2_4368.py\"     = 'cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985'",
+     "-    \"$BaseGit/path2/test_p2_u3.py\"       = '533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23'",
+     "+    \"$BaseGit/path2/p2_x16.py\"           = '4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03'",
+     "+    \"$BaseGit/path2/test_p2_4368.py\"     = 'a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855'",
+     "+    \"$BaseGit/path2/test_p2_u3.py\"       = '98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7'",
+     "@@ -66,6 +67,6 @@",
+     "-    \"$BaseGit/path2_v5c/README.md\"       = 'c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_common.py\" = '6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_grid.py\"   = '88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_noise.py\"  = '7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_stage1.py\" = 'd49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996'",
+     "-    \"$BaseGit/path2_v5c/test_p2v5c.py\"   = '4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37'",
+     "+    \"$BaseGit/path2_v5c/README.md\"       = 'b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_common.py\" = 'f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_grid.py\"   = '0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_noise.py\"  = '48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_stage1.py\" = '6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34'",
+     "+    \"$BaseGit/path2_v5c/test_p2v5c.py\"   = '65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6'",
+     "@@ -327 +328 @@",
+     "-    Invoke-Step 'harness' \"$Out\\harness.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\harness.json\", 'harness',",
+     "+    Invoke-Step 'harness' \"$Out\\harness.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\harness.json\", '--data-root', $Repo, 'harness',",
+     "@@ -332 +333 @@",
+     "-    Invoke-Step 'anchors' \"$Out\\anchors.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\anchors.json\", 'anchors',",
+     "+    Invoke-Step 'anchors' \"$Out\\anchors.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\anchors.json\", '--data-root', $Repo, 'anchors',",
+     "@@ -336 +337 @@",
+     "-    Invoke-Step 'jp' \"$Out\\jp.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\jp.json\", 'jp',",
+     "+    Invoke-Step 'jp' \"$Out\\jp.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\jp.json\", '--data-root', $Repo, 'jp',",
+     "@@ -340 +341 @@",
+     "-    Invoke-Step 'g3' \"$Out\\g3.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\g3.json\", 'g3', '--h11-dir', \"$X\\H-11\", '--expect-head', $M4)",
+     "+    Invoke-Step 'g3' \"$Out\\g3.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\g3.json\", '--data-root', $Repo, 'g3', '--h11-dir', \"$X\\H-11\", '--expect-head', $M4)",
+     "@@ -349 +350 @@",
+     "-    Invoke-Step 'u3' \"$Out\\u3.json\" (@(\"$P2\\p2_u3.py\", '--out', \"$Out\\u3.json\") + $u3Arguments + @(",
+     "+    Invoke-Step 'u3' \"$Out\\u3.json\" (@(\"$P2\\p2_u3.py\", '--out', \"$Out\\u3.json\", '--data-root', $Repo) + $u3Arguments + @(",
+     "@@ -362 +363 @@",
+     "-    Invoke-Step 'c16' \"$Out\\c16.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\c16.json\", 'c16', '--out-root', $X, '--expect-head', $M4)",
+     "+    Invoke-Step 'c16' \"$Out\\c16.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\c16.json\", '--data-root', $Repo, 'c16', '--out-root', $X, '--expect-head', $M4)",
+     "@@ -369 +370 @@",
+     "-        '--out', \"$Out\\p2v5c_stage1.json\", 'stage1', '--h9', \"$Rk\\h9_stage1.jsonl\",",
+     "+        '--out', \"$Out\\p2v5c_stage1.json\", '--data-root', $Repo, 'stage1', '--h9', \"$Rk\\h9_stage1.jsonl\",",
+     "@@ -379 +380 @@",
+     "-            '--out', \"$Out\\p2v5c_grid.json\", 'grid') + $gridArguments + @('--family-f', \"$Rk\\h9_family_F.jsonl\"))",
+     "+            '--out', \"$Out\\p2v5c_grid.json\", '--data-root', $Repo, 'grid') + $gridArguments + @('--family-f', \"$Rk\\h9_family_F.jsonl\"))",
+     "@@ -384 +385 @@",
+     "-        '--out', \"$Out\\p2v5c_noise.json\", 'noise', '--noise-vb', \"$Rk\\h8_noise_VB.json\",",
+     "+        '--out', \"$Out\\p2v5c_noise.json\", '--data-root', $Repo, 'noise', '--noise-vb', \"$Rk\\h8_noise_VB.json\",",
+     "@@ -430 +431 @@",
+     "-$Out = \"$Repo\\$Base\\judge_$($M4.Substring(0, 7))\\harness_path2\"",
+     "+$Out = \"$Repo\\$Base\\judge_rev26_$($M4.Substring(0, 7))\\harness_path2\""
+    ],
+    "unified_diff_sha256": "ee1bfcac17dd32ad2a48a8f9a43035d0ff58480d1ff9ac742c0eabfe637afd2b",
+    "changed_m4_lines": [
+     24,
+     25,
+     26,
+     35,
+     38,
+     39,
+     57,
+     58,
+     59,
+     61,
+     62,
+     63,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     327,
+     332,
+     336,
+     340,
+     349,
+     362,
+     369,
+     379,
+     384,
+     430
+    ],
+    "inserted_after_m4_lines": [
+     23
+    ],
+    "only_declared_lines_changed": true,
+    "line_count_m4": 456,
+    "line_count_new": 457
+   }
+  }
+ },
+ "allow_list_path2": {
+  "source": "git cat-file blob T26:<file>, raw bytes sha256 (rules section 2, path 2 item 4)",
+  "rows": [
+   {
+    "m4_line": 57,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/README.md",
+    "m4_table_value": "f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4",
+    "m4_blob_raw_sha256": "f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4",
+    "t26_blob_raw_sha256": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 58,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_4368.py",
+    "m4_table_value": "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6",
+    "m4_blob_raw_sha256": "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6",
+    "t26_blob_raw_sha256": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 59,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_u3.py",
+    "m4_table_value": "7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72",
+    "m4_blob_raw_sha256": "7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72",
+    "t26_blob_raw_sha256": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 60,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_v5j.py",
+    "m4_table_value": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+    "m4_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+    "t26_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+    "changed_932f1fb_to_t26": false
+   },
+   {
+    "m4_line": 61,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_x16.py",
+    "m4_table_value": "e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5",
+    "m4_blob_raw_sha256": "e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5",
+    "t26_blob_raw_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 62,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_4368.py",
+    "m4_table_value": "cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985",
+    "m4_blob_raw_sha256": "cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985",
+    "t26_blob_raw_sha256": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 63,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_u3.py",
+    "m4_table_value": "533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23",
+    "m4_blob_raw_sha256": "533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23",
+    "t26_blob_raw_sha256": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 64,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_v5j.py",
+    "m4_table_value": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+    "m4_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+    "t26_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+    "changed_932f1fb_to_t26": false
+   },
+   {
+    "m4_line": 65,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_x16.py",
+    "m4_table_value": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+    "m4_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+    "t26_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+    "changed_932f1fb_to_t26": false
+   },
+   {
+    "m4_line": 66,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/README.md",
+    "m4_table_value": "c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888",
+    "m4_blob_raw_sha256": "c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888",
+    "t26_blob_raw_sha256": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 67,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_common.py",
+    "m4_table_value": "6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82",
+    "m4_blob_raw_sha256": "6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82",
+    "t26_blob_raw_sha256": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 68,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_grid.py",
+    "m4_table_value": "88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388",
+    "m4_blob_raw_sha256": "88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388",
+    "t26_blob_raw_sha256": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 69,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_noise.py",
+    "m4_table_value": "7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1",
+    "m4_blob_raw_sha256": "7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1",
+    "t26_blob_raw_sha256": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 70,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_stage1.py",
+    "m4_table_value": "d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996",
+    "m4_blob_raw_sha256": "d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996",
+    "t26_blob_raw_sha256": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34",
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "m4_line": 71,
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/test_p2v5c.py",
+    "m4_table_value": "4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37",
+    "m4_blob_raw_sha256": "4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37",
+    "t26_blob_raw_sha256": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6",
+    "changed_932f1fb_to_t26": true
+   }
+  ],
+  "not_listed_new_file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_rev26_p2.py (kept out: see open_items)",
+  "not_listed_new_file_t26_blob_raw_sha256": "3e8166b2132a530d4330f6c150fb594eb0c12f87fbd3e4c2df9ee8cc76ca2877"
+ },
+ "ps1_lint": {
+  "command": "python-dev -I -B ~/.claude/tools/verif/ps1_lint.py <path1 runner> <path2 runner> --format json",
+  "exit_code": 1,
+  "summary": {
+   "tool": "ps1_lint",
+   "command": "lint",
+   "files": 2,
+   "parsers": [
+    "ast"
+   ],
+   "error": 1,
+   "warning": 0,
+   "info": 0,
+   "categories": {
+    "case_variant_overwrite": 1
+   }
+  },
+  "findings": [
+   {
+    "severity": "error",
+    "category": "case_variant_overwrite",
+    "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\rev26_run\\run_judgement_path1_rev26.ps1",
+    "line": 153,
+    "message": "`foreach ($grid in ...)`: 62행의 `$Grid`(assign)와 대소문자만 다른 이름. PowerShell 변수 이름은 대소문자를 가리지 않으므로 같은 변수를 덮어쓴다. 덮어쓴 뒤 `$Grid`을 읽는 줄: 159, 183",
+    "target": "$Grid"
+   }
+  ]
+ },
+ "worktree": {
+  "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26",
+  "head": "335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "branch": "refs/heads/rev26-t26",
+  "locked": "locked rev26 T26 335004a7 (judge checkout)",
+  "core_autocrlf": "true",
+  "core_autocrlf_origin": "file:C:/Program Files/Git/etc/gitconfig\ttrue"
+ },
+ "rule_files": [
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md",
+   "t26_blob_raw_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "worktree_raw_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text            "
+  },
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256",
+   "t26_blob_raw_sha256": "e74aeca93554d65a5e2344142827fa5cafa054153feff7f9d64406233676b80b",
+   "worktree_raw_sha256": "e74aeca93554d65a5e2344142827fa5cafa054153feff7f9d64406233676b80b",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text            "
+  },
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r5.py",
+   "t26_blob_raw_sha256": "bee9eee74a002d84710cde59fa20a1f2517c0b8cfa56173314d1d4eec36465f5",
+   "worktree_raw_sha256": "bee9eee74a002d84710cde59fa20a1f2517c0b8cfa56173314d1d4eec36465f5",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text            "
+  },
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r5.json",
+   "t26_blob_raw_sha256": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283",
+   "worktree_raw_sha256": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text            "
+  }
+ ],
+ "external_tools": [
+  {
+   "name": "log_errors",
+   "path": "C:\\Users\\jinbeom\\.claude\\tools\\verif\\log_errors.py",
+   "raw_sha256": "3b9a8eac9177a2e3749cc77594c83671b55ca05143205364d8b979e508be61c0",
+   "rule_prefix": "3b9a8eac",
+   "matches_rule_prefix": true
+  },
+  {
+   "name": "sidecars_copy",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\tools\\sidecars_b9f5707.py",
+   "raw_sha256": "0962f6397aaf3b1614d49c503008030f5b5d4426a73b7313f2a370391acc63b7",
+   "rule_prefix": "0962f639",
+   "matches_rule_prefix": true,
+   "main_head_blob_raw_sha256": "0962f6397aaf3b1614d49c503008030f5b5d4426a73b7313f2a370391acc63b7"
+  },
+  {
+   "name": "manifest_copy",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\manifest\\p2_manifest_draft.json",
+   "raw_sha256": "fa0b72bf90694455da2edc5aa0598614adbae541d8b769560e1eee7b42696786",
+   "rule_prefix": "fa0b72bf",
+   "matches_rule_prefix": true,
+   "main_head_blob_raw_sha256": "fa0b72bf90694455da2edc5aa0598614adbae541d8b769560e1eee7b42696786"
+  },
+  {
+   "name": "compare_r4",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\compare\\compare_r4.py",
+   "raw_sha256": "8ff3d32ba0aaf5612f007591d03374470327acb3af4e95fc1b967addc155e193",
+   "rule_prefix": "8ff3d32b",
+   "matches_rule_prefix": true,
+   "main_head_blob_raw_sha256": "8ff3d32ba0aaf5612f007591d03374470327acb3af4e95fc1b967addc155e193"
+  }
+ ],
+ "environment": {
+  "conda_exe": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe",
+  "conda_version": "conda 26.7.2",
+  "dynamics-dev": {
+   "python_exe": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+   "conda_list_export_exit": 0,
+   "conda_list_export_command": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe list -n dynamics-dev --export",
+   "conda_list_export_file": "conda_list_export_dynamics-dev.txt",
+   "conda_list_export_stdout_sha256": "6cca76b4300c362481bb7454d5f35b82ce13038c95d4ba78d184ff6d54532d38",
+   "conda_list_export_lines": 580
+  },
+  "python-dev": {
+   "python_exe": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe",
+   "python_version": "3.13.15 | packaged by conda-forge | (main, Sep  2 2026, 21:52:43) [MSC v.1944 64 bit (AMD64)]",
+   "conda_list_export_exit": 0,
+   "conda_list_export_command": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe list -n python-dev --export",
+   "conda_list_export_file": "conda_list_export_python-dev.txt",
+   "conda_list_export_stdout_sha256": "d5d668845af0375786b1bb91ecd175ff8aceb16ea56980ab85f7d8617c2d0f63",
+   "conda_list_export_lines": 380
+  }
+ },
+ "v5_options": {
+  "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+  "worktree_raw_sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "m4_blob_raw_sha256": "a88ad603596650fb41d7a87f37bd424c9dec33c328c6ff57751a4f7ac0098ec4",
+  "m4_blob_crlf_form_sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "expected_g": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "worktree_equals_m4_crlf_form": true,
+  "worktree_equals_expected_g": true
+ },
+ "input_basis_crosscheck": null,
+ "input_basis_crosscheck_note": "left to the 4' audit (rules 4' B-5: T26 code and the two implementation records rev26_impl/path1_report.md 3, path2_report.md 3)",
+ "wt_status_before": {
+  "command": "git -C C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26 status --porcelain",
+  "time": null,
+  "output": null
+ },
+ "wt_status_after": {
+  "command": "git -C C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26 status --porcelain",
+  "time": null,
+  "output": null
+ },
+ "open_items": [
+  "ps1_lint exit 1 on the path 1 runner: case_variant_overwrite at line 153 (`foreach ($grid ...)` overwrites `$Grid` of line 62, read at 159 stage1_judge --grid and 183 stroke_H-9). Inherited unchanged from run_judgement_path1_M4.ps1; the original outputs of those two steps come from run_judgement_path1_M4_retry1.ps1 (loop variable $gname). Rules section 2 allows only its listed lines, 4' asks ps1_lint exit 0: the two cannot both hold. Not fixed; needs a decision.",
+  "path2/test_rev26_p2.py (new in T26) is not added to $AllowListPath2: section 2 path 2 item 4 changes the values of lines 56..72 only, and the runner start gate counts 15 entries (line 206 of the M4 runner, not a listed line). Needs confirmation.",
+  "location: written to rev26_run/ instead of rev26_fixed/ (main session instruction)."
+ ]
+}

@@ -1,0 +1,1145 @@
+{
+ "status": "draft for 4' (prepared by python-expert 2026-11-26 after erratum 1; replaces draft 0, kept at rev26_run/superseded/t26_identity_draft0_c7298f64.json)",
+ "created": "2026-11-26T20:56:46+09:00",
+ "rules": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md (sections 2, 4')",
+ "erratum1": {
+  "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.md",
+  "raw_sha256": "5e3bf3e6ec35253cb58dad8ca34383359b43235b314888b4709cd36d24df11f7",
+  "expected_sha256": "5e3bf3e6ec35253cb58dad8ca34383359b43235b314888b4709cd36d24df11f7",
+  "matches": true,
+  "seal_file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.sha256",
+  "seal_file_raw_sha256": "27f98bae33b70c852ec7c34800cefbf3260e95e541bd700d7c68fe9025b4452f",
+  "seal_file_names_sha": true,
+  "tracked": false,
+  "in_t26": false
+ },
+ "location_note": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/t26_identity.json per erratum 1 E1-4 (rev26 :84/:109/:110/:143/:145/:194 named rev26_fixed/; rev26_fixed/** is the sealed copy folder)",
+ "checks": {
+  "runners_match_erratum_section3_and_tag_mode_0": true,
+  "allow_list_path2_15_equal_t26_without_test_rev26_p2": true,
+  "ps1_lint_exit_0_both": true,
+  "erratum1_sha": true,
+  "rd1_4_condition_1": true,
+  "rd1_4_condition_2": true,
+  "rd1_4_condition_3": true,
+  "v5_options_crlf_leaf": true,
+  "conda_export_recheck_equal_dynamics_dev": true
+ },
+ "checks_informational": {
+  "conda_export_recheck_equal_python_dev": false
+ },
+ "t26": {
+  "commit": "335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "parent": "932f1fb1724f074e4ee93a9c02193c7c840d13c4",
+  "subject": "436.8 rev26 T26: path 1 R26-2/R26-3/--tag-mode/rev26 seal (ebda7c0c) + path 2 R26-1/R26-3/--tag-mode/--data-root/rev26 seal (b587a841)",
+  "base_m4": "932f1fb1724f074e4ee93a9c02193c7c840d13c4"
+ },
+ "changed_files": {
+  "command": "git diff --name-status 932f1fb1724f074e4ee93a9c02193c7c840d13c4..335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "count": 37,
+  "names_lf_joined_sha256": "101cead446974df82fc27b954ec13051b877e7b907828c3da9c8ce4fbc2f333f",
+  "includes_test_rev26_p2": true,
+  "files": [
+   {
+    "status": "M",
+    "file": ".gitattributes",
+    "category": ".gitattributes (section 7 -text lines only)",
+    "t26_blob_raw_sha256": "909690554a6a7ca6b169b5de7a4778b92ac6bd70e82ecd7de81309287d69b2d4"
+   },
+   {
+    "status": "M",
+    "file": "04_scripts/04_hydraulic/coupled/README_judges_4368.md",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "0c3acd8dc00949d7d01fffaee215be5141abb0ed1dd3081175ee92d609574341"
+   },
+   {
+    "status": "M",
+    "file": "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "f7a448d3b8656ac764b3074450b1ba1e800618a4797a04de50395451c82d7fb4"
+   },
+   {
+    "status": "M",
+    "file": "04_scripts/04_hydraulic/coupled/u3_judge_4368.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "7967096cfba750547af475ec9dd4087be4c3fe21923e98d0b1abf0d2dfbd5a9c"
+   },
+   {
+    "status": "M",
+    "file": "05_tests/unit/test_resume4368_rev1.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "8147b4188d30d85b038c0d15f4a5973092d1c971b9257675af6ddb5e69dbde2a"
+   },
+   {
+    "status": "M",
+    "file": "05_tests/unit/test_resume4368_rev16.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "19f6df34e46353321ca97368279e852c85eab7ec06d72fb57a4c3f63f9ff59a9"
+   },
+   {
+    "status": "M",
+    "file": "05_tests/unit/test_resume4368_supplement4.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "af44551481a5a9ab6210e9e775d3cc102c5d05a16b6861d0273aea5233dad6c9"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py",
+    "category": "path 1 allow-list (incl. its unit tests)",
+    "t26_blob_raw_sha256": "1e8e567326cc15703639466af07157a592599ab75ab3628fce0885026b5d3787"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/README.md",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_4368.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_u3.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_x16.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_4368.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_u3.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_rev26_p2.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "3e8166b2132a530d4330f6c150fb594eb0c12f87fbd3e4c2df9ee8cc76ca2877"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/README.md",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_common.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_grid.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_noise.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_stage1.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34"
+   },
+   {
+    "status": "M",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/test_p2v5c.py",
+    "category": "path 2 tool folder (incl. its unit tests)",
+    "t26_blob_raw_sha256": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/abs_roots.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "c3bcd25f7fa7e2479bdf6870bd6ed2a4c96158d1d6cd8db53ee09af61031522e"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_check.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "d00f2c54f7453f387077bea4254ed26b6bcc157bfa02b6a8e2648ad3318a22cf"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "37c57662b44b848da78a0ced5222fdebf02e0d02b1bd94467fbbd13c23d8d000"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r1.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "3da897c3fb5b266245273eaa37425d1b263253f7b898537023d69c17ae19d1ad"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r2.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "bda5e7da28c2d498520564588fe7f71c33d5762f24c2713372ef49eb2eae4da8"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r3.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "bfe6354e91d800f5c4479affda9582a110a0cccee6b20a3ded16ca057e39a142"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r4.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "1fb6f701a483f0b7ebcf9ffb78530649edfc46c9151f9ff36f99fdc7037c4a41"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r5.py",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "bee9eee74a002d84710cde59fa20a1f2517c0b8cfa56173314d1d4eec36465f5"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_d_excluded_fields.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "6051f77fff39299451ea6d7890f9b532b4c58f86e358b4eb4a4b2a20f419880b"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r1.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "8074503dca0219957ced67a9da1cf206384cb2a3e1d8b160060449af4b4d1a56"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r2.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "f450784b721b1450d1c3745b130b40ac2e8005f020da593eae9e806714a707c2"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r3.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "3a5d637c9efc170b07a6a92b1abefa855b9729aece5fec45563a0228d55aa05e"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r4.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "fafca4235c267620bde8738bb0b7277559eb376d868554f8011355a59b3ddeec"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r5.json",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73"
+   },
+   {
+    "status": "A",
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256",
+    "category": "rule files (rev26 .md/.sha256, rev26_fixed/**)",
+    "t26_blob_raw_sha256": "e74aeca93554d65a5e2344142827fa5cafa054153feff7f9d64406233676b80b"
+   }
+  ]
+ },
+ "rd1_4_substitute": {
+  "condition_1": {
+   "all_in_allowed_set": true,
+   "gitattributes_t26": {
+    "added": [
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256 -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_seal_candidate_draft.md -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/** -text",
+     "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_rev26_*/** -text",
+     "06_analysis/02_control/verif_matrix/v5paper_imua_stats/** -text"
+    ],
+    "removed": [],
+    "only_section7_lines_added": true
+   },
+   "rule_files_equal_main_head_bytes": true,
+   "rule_files_diff_vs_main_head": [],
+   "fixed_list": "the current 37-file list above (erratum 1 header: unchanged)"
+  },
+  "condition_2": {
+   "command": "git diff --name-only b9f5707d7f3f7a26230b25f4edbc1fec587ca612..335004a7ad9f5f988e7543dd98d45bf2b96e4294 -- 03_src 02_params",
+   "output": [],
+   "empty": true
+  },
+  "condition_3": {
+   "allow_list_files": 29,
+   "unchanged": 10,
+   "unchanged_all_lf_equal": true,
+   "rows": [
+    {
+     "file": "04_scripts/04_hydraulic/coupled/judge_stage1_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "t26_blob_raw_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "m4_lf_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "t26_lf_sha256": "5d69e01335b2bd73397e4679423661046a53761cb646b91679834e6b0ae2d4ee",
+     "lf_equal": true
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "339a51277c064ae98105dc01fadd492f67fb2c1866e3eac675cc2856b34d2a52",
+     "t26_blob_raw_sha256": "f7a448d3b8656ac764b3074450b1ba1e800618a4797a04de50395451c82d7fb4"
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/u3_judge_4368.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "b46cfa7cc80211905c1c83c9bce5e8b16c2d567e2cc267b08c68d3854766096e",
+     "t26_blob_raw_sha256": "7967096cfba750547af475ec9dd4087be4c3fe21923e98d0b1abf0d2dfbd5a9c"
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "t26_blob_raw_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "m4_lf_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "t26_lf_sha256": "c037fe9ea8a10c1ba208a441ad2be1218d62841246db001e9d5ba9a54a3acf69",
+     "lf_equal": true
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/h6_judge_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "t26_blob_raw_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "m4_lf_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "t26_lf_sha256": "e9ae3ed9866dd8cc91ba8db275985544c1ab489bb297f9d672d3f8b7a224c31e",
+     "lf_equal": true
+    },
+    {
+     "file": "04_scripts/04_hydraulic/coupled/README_judges_4368.md",
+     "changed": true,
+     "m4_blob_raw_sha256": "3b1fa4b09ad27b04f75cb0e2856d376ff832ce0fa176eb2da60f5d7b89309032",
+     "t26_blob_raw_sha256": "0c3acd8dc00949d7d01fffaee215be5141abb0ed1dd3081175ee92d609574341"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "ac1e84f85b4f4534d11c5248169720ac4f7026a3ab65e96360e8bd650563ffbb",
+     "t26_blob_raw_sha256": "1e8e567326cc15703639466af07157a592599ab75ab3628fce0885026b5d3787"
+    },
+    {
+     "file": "05_tests/unit/test_judges_4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "t26_blob_raw_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "m4_lf_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "t26_lf_sha256": "d46ed1568225fc822588ee73c410b82068e9daed2ba7c793efef2168ea912703",
+     "lf_equal": true
+    },
+    {
+     "file": "05_tests/unit/test_judges_4368_h6_h8.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "t26_blob_raw_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "m4_lf_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "t26_lf_sha256": "ea81a4c6bc526ac8fec9b9b38516e58df89e37916a7f41dbea32cefd7e98b259",
+     "lf_equal": true
+    },
+    {
+     "file": "05_tests/unit/test_resume4368.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "t26_blob_raw_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "m4_lf_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "t26_lf_sha256": "b8851f7d80a8a185a577dd66f1a3a991511ce0fe60129bc64ee175fd37ac0498",
+     "lf_equal": true
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_rev1.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "407699a71b2ef6ce06aebe1be0cfd3c53cfe7a67ee513ed02901ae692975cc13",
+     "t26_blob_raw_sha256": "8147b4188d30d85b038c0d15f4a5973092d1c971b9257675af6ddb5e69dbde2a"
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_rev16.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "761f3d110da9958453faf35f71e147511e363465ce7509047d4798d3c4f1acc2",
+     "t26_blob_raw_sha256": "19f6df34e46353321ca97368279e852c85eab7ec06d72fb57a4c3f63f9ff59a9"
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_supplement4.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "1945148f8c2e05896ee07dbcc0b32fc5ba3399b0099dd4d13d3cacd4f0c1397e",
+     "t26_blob_raw_sha256": "af44551481a5a9ab6210e9e775d3cc102c5d05a16b6861d0273aea5233dad6c9"
+    },
+    {
+     "file": "05_tests/unit/test_resume4368_supplement5.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "t26_blob_raw_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "m4_lf_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "t26_lf_sha256": "e443b5539052b73c86ec25a34884430a97ab1db788719d0bd9323204d2c45ae7",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/README.md",
+     "changed": true,
+     "m4_blob_raw_sha256": "f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4",
+     "t26_blob_raw_sha256": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_4368.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6",
+     "t26_blob_raw_sha256": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_u3.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72",
+     "t26_blob_raw_sha256": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_v5j.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "t26_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "m4_lf_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "t26_lf_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_x16.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5",
+     "t26_blob_raw_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_4368.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985",
+     "t26_blob_raw_sha256": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_u3.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23",
+     "t26_blob_raw_sha256": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_v5j.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "t26_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "m4_lf_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "t26_lf_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_x16.py",
+     "changed": false,
+     "m4_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "t26_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "m4_lf_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "t26_lf_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+     "lf_equal": true
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/README.md",
+     "changed": true,
+     "m4_blob_raw_sha256": "c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888",
+     "t26_blob_raw_sha256": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_common.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82",
+     "t26_blob_raw_sha256": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_grid.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388",
+     "t26_blob_raw_sha256": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_noise.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1",
+     "t26_blob_raw_sha256": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_stage1.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996",
+     "t26_blob_raw_sha256": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34"
+    },
+    {
+     "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/test_p2v5c.py",
+     "changed": true,
+     "m4_blob_raw_sha256": "4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37",
+     "t26_blob_raw_sha256": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6"
+    }
+   ]
+  }
+ },
+ "stage5_runners": {
+  "run_judgement_path1_rev26.ps1": {
+   "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/run_judgement_path1_rev26.ps1",
+   "raw_sha256": "3516ea5e27db31e3d3127d64d33f84e55602343231ccf4641dd9542009d6a563",
+   "sha_matches_erratum_or_prep": true,
+   "eol": "LF",
+   "lines": 206,
+   "token_counts": {
+    "tag-mode": 0,
+    "imua": 0,
+    "pytest": 0
+   },
+   "vs_M4": {
+    "reference": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/run/run_judgement_path1_M4.ps1",
+    "reference_raw_sha256": "868fa7b712eea4c3071c413f854143c376718ff776902392e3bd4bff7368c915",
+    "reference_sha_matches_erratum": true,
+    "expected_differing_lines": [
+     13,
+     14,
+     21,
+     26,
+     27,
+     46,
+     109,
+     116,
+     153,
+     154,
+     155
+    ],
+    "inserted_after_reference_line": null,
+    "differing_lines": [
+     13,
+     14,
+     21,
+     26,
+     27,
+     46,
+     109,
+     116,
+     153,
+     154,
+     155
+    ],
+    "matches_erratum_section3": true,
+    "line_count_reference": 206,
+    "line_count_new": 206,
+    "unified_diff_n0": [
+     "--- run_judgement_path1_M4.ps1",
+     "+++ run_judgement_path1_rev26.ps1",
+     "@@ -13,2 +13,2 @@",
+     "-$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "-$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "+$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "+$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "@@ -21 +21 @@",
+     "-$Out = \"$Base/judge_$($M4.Substring(0, 7))/harness_path1\"",
+     "+$Out = \"$Base/judge_rev26_$($M4.Substring(0, 7))/harness_path1\"",
+     "@@ -26,2 +26,2 @@",
+     "-$Judge = '06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py'",
+     "-$Co = '04_scripts/04_hydraulic/coupled'",
+     "+$Judge = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\06_analysis\\02_control\\verif_matrix\\scripts\\resume4368_judge.py'",
+     "+$Co = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\04_hydraulic\\coupled'",
+     "@@ -46 +46 @@",
+     "-$FirstSidecars = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\main\\sidecars_b9f5707.py'",
+     "+$FirstSidecars = '06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/tools/sidecars_b9f5707.py'",
+     "@@ -109 +109 @@",
+     "-Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\") | Out-Null",
+     "+Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\", '--data-root', '.') | Out-Null",
+     "@@ -116 +116 @@",
+     "-Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--out', \"$Out/h11.json\") | Out-Null",
+     "+Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--las-k1-dir', '06_analysis/02_control/v5_rerun/las_k1', '--out', \"$Out/h11.json\") | Out-Null",
+     "@@ -153,3 +153,3 @@",
+     "-foreach ($grid in 'grid_r67_main', 'grid_r67_top', 'grid_r69_bottom', 'grid_r69_top') {",
+     "-    Invoke-Logged \"keyset_$grid\" $Py @($Judge, 'keyset', '--kind', 'grid', '--new', \"$Rk/h9_grid/$grid.json\",",
+     "-        '--stored', \"$V5/grid_vb/$grid.json\", '--out', \"$Out/keyset_$grid.json\") | Out-Null",
+     "+foreach ($gname in 'grid_r67_main', 'grid_r67_top', 'grid_r69_bottom', 'grid_r69_top') {",
+     "+    Invoke-Logged \"keyset_$gname\" $Py @($Judge, 'keyset', '--kind', 'grid', '--new', \"$Rk/h9_grid/$gname.json\",",
+     "+        '--stored', \"$V5/grid_vb/$gname.json\", '--out', \"$Out/keyset_$gname.json\") | Out-Null"
+    ],
+    "unified_diff_sha256": "b84f90904fcaad6ddc1c92390b229e6fac3ac8e05930aea4b46ab70bdd6e562a"
+   },
+   "vs_M4_retry1": {
+    "reference": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/run/run_judgement_path1_M4_retry1.ps1",
+    "reference_raw_sha256": "c93cfc5c883d661c7cb41bf92ad697f1d2a54ca124b0251656683bc17f1a5ef4",
+    "reference_sha_matches_erratum": true,
+    "expected_differing_lines": [
+     13,
+     14,
+     21,
+     26,
+     27,
+     46,
+     109,
+     116
+    ],
+    "inserted_after_reference_line": null,
+    "differing_lines": [
+     13,
+     14,
+     21,
+     26,
+     27,
+     46,
+     109,
+     116
+    ],
+    "matches_erratum_section3": true,
+    "line_count_reference": 206,
+    "line_count_new": 206,
+    "unified_diff_n0": [
+     "--- run_judgement_path1_M4_retry1.ps1",
+     "+++ run_judgement_path1_rev26.ps1",
+     "@@ -13,2 +13,2 @@",
+     "-$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "-$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "+$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "+$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "@@ -21 +21 @@",
+     "-$Out = \"$Base/judge_$($M4.Substring(0, 7))/harness_path1_retry1\"",
+     "+$Out = \"$Base/judge_rev26_$($M4.Substring(0, 7))/harness_path1\"",
+     "@@ -26,2 +26,2 @@",
+     "-$Judge = '06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py'",
+     "-$Co = '04_scripts/04_hydraulic/coupled'",
+     "+$Judge = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\06_analysis\\02_control\\verif_matrix\\scripts\\resume4368_judge.py'",
+     "+$Co = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26\\04_scripts\\04_hydraulic\\coupled'",
+     "@@ -46 +46 @@",
+     "-$FirstSidecars = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\main\\sidecars_b9f5707.py'",
+     "+$FirstSidecars = '06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/tools/sidecars_b9f5707.py'",
+     "@@ -109 +109 @@",
+     "-Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\") | Out-Null",
+     "+Invoke-Logged 'family_table' $Py @(\"$Co/resume_k1_family.py\", \"$Out/family_table.json\", '--data-root', '.') | Out-Null",
+     "@@ -116 +116 @@",
+     "-Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--out', \"$Out/h11.json\") | Out-Null",
+     "+Invoke-Logged 'h11' $Py @($Judge, 'h11', '--h11-dir', \"$X/H-11\", '--las-k1-dir', '06_analysis/02_control/v5_rerun/las_k1', '--out', \"$Out/h11.json\") | Out-Null"
+    ],
+    "unified_diff_sha256": "e886ef29b835a4f87cfa1c337d7598f4ce9976f29b13c600ac1adddc712df893"
+   },
+   "lines_153_155_equal_retry1": true
+  },
+  "run_judgement_path2_rev26.ps1": {
+   "path": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/run_judgement_path2_rev26.ps1",
+   "raw_sha256": "a6f0b90ca7e0747303ea11ccee5da9a20f388c320d480c80396fe6ac86dd145c",
+   "sha_matches_erratum_or_prep": true,
+   "eol": "LF",
+   "lines": 456,
+   "token_counts": {
+    "tag-mode": 0,
+    "imua": 0,
+    "pytest": 0
+   },
+   "vs_M4": {
+    "reference": "06_analysis/02_control/verif_matrix/v5_resume_4368/judge_932f1fb/_fixed/run/run_judgement_path2_M4.ps1",
+    "reference_raw_sha256": "9690f2de6aa36bd79bf996b025fe2cf0aa8d6018d983506015566e991546cf83",
+    "reference_sha_matches_erratum": true,
+    "expected_differing_lines": [
+     24,
+     25,
+     26,
+     35,
+     38,
+     39,
+     57,
+     58,
+     59,
+     61,
+     62,
+     63,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     327,
+     332,
+     336,
+     340,
+     349,
+     362,
+     369,
+     379,
+     384,
+     430
+    ],
+    "inserted_after_reference_line": 23,
+    "differing_lines": [
+     24,
+     25,
+     26,
+     35,
+     38,
+     39,
+     57,
+     58,
+     59,
+     61,
+     62,
+     63,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     327,
+     332,
+     336,
+     340,
+     349,
+     362,
+     369,
+     379,
+     384,
+     430
+    ],
+    "matches_erratum_section3": true,
+    "line_count_reference": 455,
+    "line_count_new": 456,
+    "unified_diff_n0": [
+     "--- run_judgement_path2_M4.ps1",
+     "+++ run_judgement_path2_rev26.ps1",
+     "@@ -24,3 +24,4 @@",
+     "-Set-Location -LiteralPath $Repo",
+     "-$M4 = '932f1fb1724f074e4ee93a9c02193c7c840d13c4'",
+     "-$R4 = '1ab93f0204eee35a39e84a85b2878b35310884b1'",
+     "+$WT = 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26'",
+     "+Set-Location -LiteralPath $WT",
+     "+$M4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "+$R4 = '335004a7ad9f5f988e7543dd98d45bf2b96e4294'",
+     "@@ -35 +36 @@",
+     "-$ManifestSource = 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\7ea6ef9d-fc13-4bf1-8179-0167f32d78a7\\scratchpad\\r4-p2\\p2_manifest_draft.json'",
+     "+$ManifestSource = 'C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\manifest\\p2_manifest_draft.json'",
+     "@@ -38,2 +39,2 @@",
+     "-$P2 = \"$Repo\\$Base\\path2\"",
+     "-$V5c = \"$Repo\\$Base\\path2_v5c\"",
+     "+$P2 = \"$WT\\$Base\\path2\"",
+     "+$V5c = \"$WT\\$Base\\path2_v5c\"",
+     "@@ -57,3 +58,3 @@",
+     "-    \"$BaseGit/path2/README.md\"           = 'f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4'",
+     "-    \"$BaseGit/path2/p2_4368.py\"          = '51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6'",
+     "-    \"$BaseGit/path2/p2_u3.py\"            = '7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72'",
+     "+    \"$BaseGit/path2/README.md\"           = 'a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d'",
+     "+    \"$BaseGit/path2/p2_4368.py\"          = '4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2'",
+     "+    \"$BaseGit/path2/p2_u3.py\"            = '7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f'",
+     "@@ -61,3 +62,3 @@",
+     "-    \"$BaseGit/path2/p2_x16.py\"           = 'e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5'",
+     "-    \"$BaseGit/path2/test_p2_4368.py\"     = 'cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985'",
+     "-    \"$BaseGit/path2/test_p2_u3.py\"       = '533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23'",
+     "+    \"$BaseGit/path2/p2_x16.py\"           = '4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03'",
+     "+    \"$BaseGit/path2/test_p2_4368.py\"     = 'a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855'",
+     "+    \"$BaseGit/path2/test_p2_u3.py\"       = '98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7'",
+     "@@ -66,6 +67,6 @@",
+     "-    \"$BaseGit/path2_v5c/README.md\"       = 'c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_common.py\" = '6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_grid.py\"   = '88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_noise.py\"  = '7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1'",
+     "-    \"$BaseGit/path2_v5c/p2v5c_stage1.py\" = 'd49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996'",
+     "-    \"$BaseGit/path2_v5c/test_p2v5c.py\"   = '4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37'",
+     "+    \"$BaseGit/path2_v5c/README.md\"       = 'b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_common.py\" = 'f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_grid.py\"   = '0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_noise.py\"  = '48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687'",
+     "+    \"$BaseGit/path2_v5c/p2v5c_stage1.py\" = '6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34'",
+     "+    \"$BaseGit/path2_v5c/test_p2v5c.py\"   = '65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6'",
+     "@@ -327 +328 @@",
+     "-    Invoke-Step 'harness' \"$Out\\harness.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\harness.json\", 'harness',",
+     "+    Invoke-Step 'harness' \"$Out\\harness.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\harness.json\", '--data-root', $Repo, 'harness',",
+     "@@ -332 +333 @@",
+     "-    Invoke-Step 'anchors' \"$Out\\anchors.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\anchors.json\", 'anchors',",
+     "+    Invoke-Step 'anchors' \"$Out\\anchors.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\anchors.json\", '--data-root', $Repo, 'anchors',",
+     "@@ -336 +337 @@",
+     "-    Invoke-Step 'jp' \"$Out\\jp.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\jp.json\", 'jp',",
+     "+    Invoke-Step 'jp' \"$Out\\jp.json\" @(\"$P2\\p2_4368.py\", '--out', \"$Out\\jp.json\", '--data-root', $Repo, 'jp',",
+     "@@ -340 +341 @@",
+     "-    Invoke-Step 'g3' \"$Out\\g3.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\g3.json\", 'g3', '--h11-dir', \"$X\\H-11\", '--expect-head', $M4)",
+     "+    Invoke-Step 'g3' \"$Out\\g3.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\g3.json\", '--data-root', $Repo, 'g3', '--h11-dir', \"$X\\H-11\", '--expect-head', $M4)",
+     "@@ -349 +350 @@",
+     "-    Invoke-Step 'u3' \"$Out\\u3.json\" (@(\"$P2\\p2_u3.py\", '--out', \"$Out\\u3.json\") + $u3Arguments + @(",
+     "+    Invoke-Step 'u3' \"$Out\\u3.json\" (@(\"$P2\\p2_u3.py\", '--out', \"$Out\\u3.json\", '--data-root', $Repo) + $u3Arguments + @(",
+     "@@ -362 +363 @@",
+     "-    Invoke-Step 'c16' \"$Out\\c16.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\c16.json\", 'c16', '--out-root', $X, '--expect-head', $M4)",
+     "+    Invoke-Step 'c16' \"$Out\\c16.json\" @(\"$P2\\p2_x16.py\", '--out', \"$Out\\c16.json\", '--data-root', $Repo, 'c16', '--out-root', $X, '--expect-head', $M4)",
+     "@@ -369 +370 @@",
+     "-        '--out', \"$Out\\p2v5c_stage1.json\", 'stage1', '--h9', \"$Rk\\h9_stage1.jsonl\",",
+     "+        '--out', \"$Out\\p2v5c_stage1.json\", '--data-root', $Repo, 'stage1', '--h9', \"$Rk\\h9_stage1.jsonl\",",
+     "@@ -379 +380 @@",
+     "-            '--out', \"$Out\\p2v5c_grid.json\", 'grid') + $gridArguments + @('--family-f', \"$Rk\\h9_family_F.jsonl\"))",
+     "+            '--out', \"$Out\\p2v5c_grid.json\", '--data-root', $Repo, 'grid') + $gridArguments + @('--family-f', \"$Rk\\h9_family_F.jsonl\"))",
+     "@@ -384 +385 @@",
+     "-        '--out', \"$Out\\p2v5c_noise.json\", 'noise', '--noise-vb', \"$Rk\\h8_noise_VB.json\",",
+     "+        '--out', \"$Out\\p2v5c_noise.json\", '--data-root', $Repo, 'noise', '--noise-vb', \"$Rk\\h8_noise_VB.json\",",
+     "@@ -430 +431 @@",
+     "-$Out = \"$Repo\\$Base\\judge_$($M4.Substring(0, 7))\\harness_path2\"",
+     "+$Out = \"$Repo\\$Base\\judge_rev26_$($M4.Substring(0, 7))\\harness_path2\""
+    ],
+    "unified_diff_sha256": "ee1bfcac17dd32ad2a48a8f9a43035d0ff58480d1ff9ac742c0eabfe637afd2b"
+   }
+  }
+ },
+ "allow_list_path2": {
+  "source": "git cat-file blob T26:<file>, raw bytes sha256 (rev26 2 path 2 item 4; erratum 1 E1-3)",
+  "count": 15,
+  "count_gate_expected": [
+   "15"
+  ],
+  "all_equal_t26": true,
+  "test_rev26_p2_in_table": false,
+  "rows": [
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/README.md",
+    "runner_value": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d",
+    "t26_blob_raw_sha256": "a45c4e1c8f2fc247a52f7bc03e1193d55baddefdd72841958f2d90d9741e0f1d",
+    "m4_blob_raw_sha256": "f1803a5852a387630bf2cd5c8f43de114e1267e4e151b93dbbe35f999d5e0dd4",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_4368.py",
+    "runner_value": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2",
+    "t26_blob_raw_sha256": "4c89a3758983083b768a30ffef13990e5030212d9765df0d086a05d254a687d2",
+    "m4_blob_raw_sha256": "51a0e7ccca2a6cbd3abfdf0c09d27fb03eac6985c31954e0b526c075ceba12e6",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_u3.py",
+    "runner_value": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f",
+    "t26_blob_raw_sha256": "7ec2d245bcdf42890c78fc00010a774a666a163c29487f57516b3ca1b954911f",
+    "m4_blob_raw_sha256": "7eb119223dfbb5236ee43213843edb1ae4e2ea1e618b5a33b72ae22660ffaf72",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_v5j.py",
+    "runner_value": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+    "t26_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+    "m4_blob_raw_sha256": "b815771dcaee69f5b474a7a6328f7699631d4c69309a973314a0ba3eaf06ecb8",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": false
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/p2_x16.py",
+    "runner_value": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03",
+    "t26_blob_raw_sha256": "4bd6b19ba308d10f9c894de820ebee6f202e67bc36bff176220b88ea08b21d03",
+    "m4_blob_raw_sha256": "e17a144c38b3fc3a8b8f5b47209be0d3711a3ccba643863be44a820d275223e5",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_4368.py",
+    "runner_value": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855",
+    "t26_blob_raw_sha256": "a965ab75f3b41059609ff0f5637463002f9312cea79cc55df24e5392cdd9c855",
+    "m4_blob_raw_sha256": "cd9c10a3aa8d2f5ed5e3bcd0c8e6bf301b84d153d663e7d76786d8f1e7fd7985",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_u3.py",
+    "runner_value": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7",
+    "t26_blob_raw_sha256": "98d9d7f255dbc6c09b26a9f2659c01be11adbaf63624946ebd3adfe662b7d9a7",
+    "m4_blob_raw_sha256": "533501dd889e8f263eee8215910d18f451bc0fca576732c8eb452d527a619c23",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_v5j.py",
+    "runner_value": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+    "t26_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+    "m4_blob_raw_sha256": "017d432730bc6e52d11fc116cd29692f1af3b38b4d098b53f80edb7a061f9092",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": false
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_p2_x16.py",
+    "runner_value": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+    "t26_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+    "m4_blob_raw_sha256": "c7efdefd7e7c6633823d6283d72086623055c6c73acafc40307b64b695f890d8",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": false
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/README.md",
+    "runner_value": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf",
+    "t26_blob_raw_sha256": "b5952a9acac1472a69cf10a1ef93ea124e340f91d0259677250f43b21a8a5daf",
+    "m4_blob_raw_sha256": "c64a5282f42a68481c7389b61a063c8ba190952d8da37589b4eefd69f5c02888",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_common.py",
+    "runner_value": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232",
+    "t26_blob_raw_sha256": "f15e75a4433a572f3a9ac5b34df71460a19bac6cbad422522dd2ff1abb8cb232",
+    "m4_blob_raw_sha256": "6640cc93d58a3eafe875e7b890472ac68263a31f511ea9d8f18123f69476fa82",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_grid.py",
+    "runner_value": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44",
+    "t26_blob_raw_sha256": "0d9c6d0f661f9334c7b259eb83b661c45161b901c31cbea7699f09b6350abc44",
+    "m4_blob_raw_sha256": "88e54e3438b145c2f6459e8fa1ea61acf819e1ae7f93311276216137cc476388",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_noise.py",
+    "runner_value": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687",
+    "t26_blob_raw_sha256": "48fe9cb1b43d9fea02043f58381697fe60009fb8cfd52490b7fb6cff4aecf687",
+    "m4_blob_raw_sha256": "7fa4153fe254d0d59d2f4dbb94b543f9235b6b76adea071ee637b16a73a112a1",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/p2v5c_stage1.py",
+    "runner_value": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34",
+    "t26_blob_raw_sha256": "6b5a10841d6a61efd89173cfb7351616c31946490fe36c9a448d0e41c7fcad34",
+    "m4_blob_raw_sha256": "d49cf4e617eb55283b68907524e56c6bd6659a93c656a9280ad0d24fe3421996",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   },
+   {
+    "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/test_p2v5c.py",
+    "runner_value": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6",
+    "t26_blob_raw_sha256": "65537a8e3864213ae3f457a20273268e81ea6c240b1ba41b3e7b3eeff9e31cd6",
+    "m4_blob_raw_sha256": "4793f54b31bb94cf6f1f3b64bc217efef998a08de543a025be7fddf5436fbb37",
+    "equal_t26": true,
+    "changed_932f1fb_to_t26": true
+   }
+  ],
+  "not_listed_new_file": "06_analysis/02_control/verif_matrix/v5_resume_4368/path2/test_rev26_p2.py (not in the table, erratum 1 E1-3)",
+  "not_listed_new_file_t26_blob_raw_sha256": "3e8166b2132a530d4330f6c150fb594eb0c12f87fbd3e4c2df9ee8cc76ca2877",
+  "not_listed_new_file_sha_matches_erratum": true
+ },
+ "ps1_lint": {
+  "command": "python-dev -I -B ~/.claude/tools/verif/ps1_lint.py 06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/run_judgement_path1_rev26.ps1 06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/run_judgement_path2_rev26.ps1 --format json",
+  "exit_code": 0,
+  "summary": {
+   "tool": "ps1_lint",
+   "command": "lint",
+   "files": 2,
+   "parsers": [
+    "ast"
+   ],
+   "error": 0,
+   "warning": 0,
+   "info": 0,
+   "categories": {}
+  },
+  "findings": []
+ },
+ "master_gitattributes_e1_5": {
+  "main_head": "2715230ee65b3c31826c0d50415dcba1085f6aa0",
+  "e1_5_lines_in_work_tree": {
+   "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/** -text": true,
+   "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.md -text": true,
+   "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.sha256 -text": true
+  },
+  "e1_5_lines_in_head_commit": {
+   "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/** -text": false,
+   "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.md -text": false,
+   "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.sha256 -text": false
+  },
+  "committed": false,
+  "check_attr_text_work_tree": {
+   "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/t26_identity.json": "unset",
+   "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/run_judgement_path1_rev26.ps1": "unset",
+   "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_run/run_judgement_path2_rev26.ps1": "unset",
+   "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.md": "unset",
+   "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26_erratum1.sha256": "unset"
+  },
+  "ls_files_eol": "not tracked yet (rev26_run/ untracked); erratum 1 section 3 checks it after commit"
+ },
+ "worktree": {
+  "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26",
+  "head": "335004a7ad9f5f988e7543dd98d45bf2b96e4294",
+  "branch": "refs/heads/rev26-t26",
+  "locked": "locked rev26 T26 335004a7 (judge checkout)",
+  "core_autocrlf": "true",
+  "core_autocrlf_origin": "file:C:/Program Files/Git/etc/gitconfig\ttrue"
+ },
+ "rule_files": [
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.md",
+   "t26_blob_raw_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "worktree_raw_sha256": "f6591836a205dd52c698bbb613dbe4d74bfdc4b5a318dcb0d7873e9bb02c3b73",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text"
+  },
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev26.sha256",
+   "t26_blob_raw_sha256": "e74aeca93554d65a5e2344142827fa5cafa054153feff7f9d64406233676b80b",
+   "worktree_raw_sha256": "e74aeca93554d65a5e2344142827fa5cafa054153feff7f9d64406233676b80b",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text"
+  },
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/excl_fields_r5.py",
+   "t26_blob_raw_sha256": "bee9eee74a002d84710cde59fa20a1f2517c0b8cfa56173314d1d4eec36465f5",
+   "worktree_raw_sha256": "bee9eee74a002d84710cde59fa20a1f2517c0b8cfa56173314d1d4eec36465f5",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text"
+  },
+  {
+   "file": "06_analysis/02_control/verif_matrix/v5_resume_4368/rev26_fixed/rev26_excluded_fields_r5.json",
+   "t26_blob_raw_sha256": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283",
+   "worktree_raw_sha256": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283",
+   "check_attr_text": "unset",
+   "ls_files_eol": "i/lf    w/lf    attr/-text"
+  }
+ ],
+ "external_tools": [
+  {
+   "name": "log_errors",
+   "path": "C:\\Users\\jinbeom\\.claude\\tools\\verif\\log_errors.py",
+   "raw_sha256": "3b9a8eac9177a2e3749cc77594c83671b55ca05143205364d8b979e508be61c0",
+   "rule_prefix": "3b9a8eac",
+   "matches_rule_prefix": true
+  },
+  {
+   "name": "sidecars_copy",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\tools\\sidecars_b9f5707.py",
+   "raw_sha256": "0962f6397aaf3b1614d49c503008030f5b5d4426a73b7313f2a370391acc63b7",
+   "rule_prefix": "0962f639",
+   "matches_rule_prefix": true,
+   "main_head_blob_raw_sha256": "0962f6397aaf3b1614d49c503008030f5b5d4426a73b7313f2a370391acc63b7"
+  },
+  {
+   "name": "manifest_copy",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\manifest\\p2_manifest_draft.json",
+   "raw_sha256": "fa0b72bf90694455da2edc5aa0598614adbae541d8b769560e1eee7b42696786",
+   "rule_prefix": "fa0b72bf",
+   "matches_rule_prefix": true,
+   "main_head_blob_raw_sha256": "fa0b72bf90694455da2edc5aa0598614adbae541d8b769560e1eee7b42696786"
+  },
+  {
+   "name": "compare_r4",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\v5_resume_4368\\judge_932f1fb\\_fixed\\compare\\compare_r4.py",
+   "raw_sha256": "8ff3d32ba0aaf5612f007591d03374470327acb3af4e95fc1b967addc155e193",
+   "rule_prefix": "8ff3d32b",
+   "matches_rule_prefix": true,
+   "main_head_blob_raw_sha256": "8ff3d32ba0aaf5612f007591d03374470327acb3af4e95fc1b967addc155e193"
+  }
+ ],
+ "environment": {
+  "conda_exe": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe",
+  "conda_version": "conda 26.7.2",
+  "dynamics-dev": {
+   "python_exe": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+   "conda_list_export_command": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe list -n dynamics-dev --export",
+   "conda_list_export_file": "conda_list_export_dynamics-dev.txt",
+   "conda_list_export_stdout_sha256": "6cca76b4300c362481bb7454d5f35b82ce13038c95d4ba78d184ff6d54532d38",
+   "conda_list_export_lines": 580,
+   "recheck_exit": 0,
+   "recheck_sha256": "6cca76b4300c362481bb7454d5f35b82ce13038c95d4ba78d184ff6d54532d38",
+   "recheck_equal_saved": true,
+   "stable_inventory": {
+    "method": "sorted names of <env>/conda-meta/*.json, then sorted <env>/Lib/site-packages/*.dist-info, LF-joined with the two '# ...' header lines",
+    "sha256": "c27f109fa9015b5d38f5a8fe7edf72e136d6bdac0aff0f969704222844283cc8",
+    "conda_meta_count": 477,
+    "dist_info_count": 348,
+    "duplicate_dist_info": {}
+   }
+  },
+  "python-dev": {
+   "python_exe": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe",
+   "python_version": "3.13.15 | packaged by conda-forge | (main, Sep  2 2026, 21:52:43) [MSC v.1944 64 bit (AMD64)]",
+   "conda_list_export_command": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe list -n python-dev --export",
+   "conda_list_export_file": "conda_list_export_python-dev.txt",
+   "conda_list_export_stdout_sha256": "d5d668845af0375786b1bb91ecd175ff8aceb16ea56980ab85f7d8617c2d0f63",
+   "conda_list_export_lines": 380,
+   "recheck_exit": 0,
+   "recheck_sha256": "faad5d836c17d40923e9d8812f0f6ff56003c5b4ad8374a36fdb67c34033b5a3",
+   "recheck_equal_saved": false,
+   "stable_inventory": {
+    "method": "sorted names of <env>/conda-meta/*.json, then sorted <env>/Lib/site-packages/*.dist-info, LF-joined with the two '# ...' header lines",
+    "sha256": "b32b783e582f26d708e9d9d6d3db57e458364f7129fc69d4677af8818906a817",
+    "conda_meta_count": 280,
+    "dist_info_count": 236,
+    "duplicate_dist_info": {
+     "onnxruntime": [
+      "onnxruntime-1.30.0.dist-info",
+      "onnxruntime-1.31.0.dist-info"
+     ],
+     "platformdirs": [
+      "platformdirs-4.11.12.dist-info",
+      "platformdirs-4.13.0.dist-info"
+     ],
+     "protobuf": [
+      "protobuf-7.35.1.dist-info",
+      "protobuf-7.36.2.dist-info"
+     ],
+     "soupsieve": [
+      "soupsieve-2.10.dist-info",
+      "soupsieve-3.0.3.dist-info"
+     ]
+    }
+   }
+  },
+  "export_stability_note": "python-dev has two dist-info folders for four projects (python-dev.stable_inventory.duplicate_dist_info: onnxruntime, platformdirs, protobuf 7.35.1 conda / 7.36.2 pip, soupsieve 3.0.3 conda / 2.10 pip); `conda list --export` picks one of each nondeterministically (protobuf and soupsieve lines changed between captures on 2026-11-26), so its stdout sha is not a stable identity for python-dev. stable_inventory is order-independent. The saved export files are the 2026-11-26 20:35 capture of draft 0 (not rewritten)."
+ },
+ "v5_options": {
+  "file": "03_src/outrigger_sim/hydraulics/v5_options.py",
+  "worktree_raw_sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "m4_blob_raw_sha256": "a88ad603596650fb41d7a87f37bd424c9dec33c328c6ff57751a4f7ac0098ec4",
+  "m4_blob_crlf_form_sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "expected_g": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e",
+  "worktree_equals_m4_crlf_form": true,
+  "worktree_equals_expected_g": true
+ },
+ "input_basis_crosscheck": null,
+ "input_basis_crosscheck_note": "left to the 4' audit (rev26 4' B-5: T26 code and rev26_impl/path1_report.md 3, path2_report.md 3)",
+ "wt_status_before": {
+  "command": "git -C C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26 status --porcelain",
+  "time": null,
+  "output": null
+ },
+ "wt_status_after": {
+  "command": "git -C C:\\workspace\\outrigger_control\\.claude\\worktrees\\rev26-t26 status --porcelain",
+  "time": null,
+  "output": null
+ },
+ "open_items": [
+  "python-dev `conda list --export` is not reproducible (duplicate dist-info for four projects, see environment.export_stability_note): decide whether the 4' / stage-5 environment identity uses environment.python-dev.stable_inventory.sha256 instead of the export stdout sha."
+ ],
+ "closed_items": [
+  {
+   "item": 1,
+   "was": "ps1_lint exit 1 on the path 1 runner ($Grid overwritten by foreach ($grid ...))",
+   "closed_by": "erratum 1 E1-1 / E1-2: path 1 runner lines 153..155 = M4_retry1 153..155 ($gname); ps1_lint exit 0 on both runners"
+  },
+  {
+   "item": 2,
+   "was": "path2/test_rev26_p2.py not in $AllowListPath2",
+   "closed_by": "erratum 1 E1-3: not in the table (15 entries, gate '15 expected' unchanged); its T26 blob sha256 is recorded in allow_list_path2.not_listed_new_file_t26_blob_raw_sha256"
+  },
+  {
+   "item": 3,
+   "was": "identity location rev26_run/ instead of rev26_fixed/",
+   "closed_by": "erratum 1 E1-4 (rev26_run/ is the location) and E1-5 (master .gitattributes rev26_run/** -text)"
+  }
+ ]
+}

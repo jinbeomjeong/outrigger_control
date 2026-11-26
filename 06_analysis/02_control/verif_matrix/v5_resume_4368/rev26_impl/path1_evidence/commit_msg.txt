@@ -1,0 +1,25 @@
+436.8 rev26 path 1 tools: R26-2 ind-las words, R26-3 u6 pairs, --tag-mode, rev26 seal
+
+Rules: v5_resume_4368_rules_rev26.md (sealed f6591836), step 4, path 1 part.
+
+- R26-2: ind-las adds state = status (기록 완료 / 기록 불완전) and markers
+  (IND_LAS:adapter_defect, IND_LAS:판독 불가 <n>, IND_LAS:기록 상태 미정) from
+  record_state / adapter_defect / gate_unreadable by the 1.2 table; other fields and the
+  exit code unchanged.
+- R26-3: r4-inputs reads every u6 stored line (IND_LAS files included) by its
+  (controller, v5.controller_tag) pair: C2 / ABL / IND / IND_LAS with exactly
+  final_C4G2_P3_LAS_K1 / ABL_LAS_K1 / IND / IND_LAS pass, anything else is S-2
+  (replaces the supplement 4-3 u6 S-3 / S-11). No head meta block, no suffix cutting.
+- --tag-mode {4368,imua} on every resume4368_judge subcommand and on u3_judge_4368
+  (default 4368; imua appends _IMUA to the 4.1 tags compared); never written to output.
+- RD-2: rev26 is the 27th seal in judge4368_common.SEALED_RULES and
+  resume4368_judge.SEALED_REVISIONS (file / revisions form cells), not in the
+  rules_rev13_to_rev25_sha256 map.
+- Sealed rule files copied from master byte-identical (rev26 .md / .sha256,
+  v5_resume_4368/rev26_fixed/**) and the rev26 section 7 -text lines added to
+  .gitattributes (no other line).
+- Tests: synthetic fixtures only (test_resume4368_supplement4.py rev26 section,
+  test_resume4368_rev16.py seal list).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01HrRftsyRhHD9o9vHBAp68j

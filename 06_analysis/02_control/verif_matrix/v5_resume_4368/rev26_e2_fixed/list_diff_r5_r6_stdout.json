@@ -1,0 +1,53 @@
+{
+ "status": "ok",
+ "sha256": {
+  "r5_list": "9e1831f5af2621510f9b6a7a8bf9f9c39c85f7633d8ef69bdc87895902e19283",
+  "r6_list": "36906ff25fe6437c865f6269fe6a308cfa80acc154bac06228b28dbf6f49c443"
+ },
+ "checks": {
+  "rules_names": true,
+  "scope_keys_equal": true,
+  "d_file_set_equal": true,
+  "c_equal": true,
+  "d_added_is_expected_row_only": true,
+  "d_removed_none": true
+ },
+ "d_files": [
+  68,
+  68
+ ],
+ "d_entries": [
+  1020,
+  1021
+ ],
+ "d_by_cat_r5": {
+  "F": 172,
+  "I": 105,
+  "NM": 87,
+  "NT": 9,
+  "S": 647
+ },
+ "d_by_cat_r6": {
+  "F": 172,
+  "I": 106,
+  "NM": 87,
+  "NT": 9,
+  "S": 647
+ },
+ "c_entries": [
+  13,
+  13
+ ],
+ "added": [
+  [
+   "harness_path2/p2v5c_merge.json",
+   [
+    "parts",
+    "[]",
+    "sha256"
+   ],
+   "I"
+  ]
+ ],
+ "removed": []
+}

@@ -1,0 +1,38 @@
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 30%]
+...................................F.................................... [ 40%]
+........................................................................ [ 50%]
+........................................................................ [ 60%]
+........................................................................ [ 70%]
+........................................................................ [ 80%]
+........................................................................ [ 90%]
+......................................................ss............ssss [100%]
+================================== FAILURES ===================================
+________________________ test_rev1_and_rev2_seal_check ________________________
+
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3451/test_rev1_and_rev2_seal_check0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023AAA315160>
+
+    def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
+        assert judge.sealed_rules_check()["problems"] == []
+        # R4 common block RD-2: the original and rev1 .. rev25 (26 revisions)
+>       assert set(judge.sealed_rules_check()["revisions"]) == {
+            judge.RULES_NAME,
+            *(f"v5_resume_4368_rules_rev{n}.md" for n in range(1, 26)),
+        }
+E       AssertionError: assert {'v5_resume_4...ev13.md', ...} == {'v5_resume_4...ev13.md', ...}
+E         
+E         Extra items in the left set:
+E         'v5_resume_4368_rules_rev26.md'
+E         Use -v to get more diff
+
+05_tests\unit\test_resume4368_rev1.py:326: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] 05_tests\unit\test_v5_resume_4368_chrono_rows.py:112: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_v5_resume_4368_chrono_rows.py:133: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_v5_resume_4368_chrono_rows.py:501: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_v5_resume_4368_manifest_oc5.py:47: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_v5_resume_4368_manifest_oc5.py:54: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_v5_resume_4368_manifest_oc5.py:65: could not import 'pychrono': No module named 'pychrono'
+1 failed, 713 passed, 6 skipped, 3 deselected in 886.48s (0:14:46)

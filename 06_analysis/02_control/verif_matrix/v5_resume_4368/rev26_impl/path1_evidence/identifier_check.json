@@ -1,0 +1,168 @@
+{
+ "u6_line_check": {
+  "strings": [
+   " != ",
+   " (",
+   " / ",
+   " is not one of ",
+   " missing (",
+   " with tag ",
+   ")",
+   "S-2",
+   "controller",
+   "controller "
+  ],
+  "names": [
+   "R26_3",
+   "U6_CONTROLLER_KINDS",
+   "U6_CONTROLLER_TAGS",
+   "U6_TAG_PATH",
+   "controller",
+   "dict",
+   "expected",
+   "get_path",
+   "has_controller",
+   "has_tag",
+   "isinstance",
+   "kind",
+   "list",
+   "missing",
+   "mode_tag",
+   "name",
+   "present",
+   "sorted",
+   "str",
+   "tag",
+   "tuple",
+   "unit"
+  ],
+  "attributes": [
+   "get",
+   "join"
+  ],
+  "calls": [
+   "get",
+   "get_path",
+   "isinstance",
+   "join",
+   "mode_tag",
+   "sorted"
+  ],
+  "suffix_cutting_calls": []
+ },
+ "ind_las_record_words": {
+  "strings": [
+   "adapter_defect",
+   "gate_unreadable",
+   "markers",
+   "record_state",
+   "state",
+   "status",
+   "기록 상태 미정",
+   "판독 불가 "
+  ],
+  "names": [
+   "IND_LAS_MARKER_PREFIX",
+   "IND_LAS_RECORDED",
+   "RECORD_COMPLETE",
+   "RECORD_INCOMPLETE",
+   "_has_type",
+   "bool",
+   "dict",
+   "has_all_keys",
+   "int",
+   "markers",
+   "report",
+   "str",
+   "word"
+  ],
+  "attributes": [
+   "append",
+   "get"
+  ],
+  "calls": [
+   "_has_type",
+   "append",
+   "get"
+  ],
+  "suffix_cutting_calls": []
+ },
+ "tag_sites": {
+  "mode_tag_calls": [
+   "_tag_recompute_record:1932",
+   "u6_line_check:3656",
+   "kind_tag_problem:3679",
+   "abl_line:609",
+   "_is_extend_start_split:2296",
+   "_is_extend_start_split:2297"
+  ],
+  "tag_names_not_in_mode_tag": [
+   "TAG_P3 in <module>:3621",
+   "TAG_P3 in <module>:3621",
+   "TAG_V0 in <module>:3621",
+   "TAG_ABL in <module>:3621",
+   "TAG_P3 in <module>:3628",
+   "TAG_ABL in <module>:3628",
+   "TAG_ABL in expected_harness_tag:1424",
+   "TAG_P3 in expected_harness_tag:1427",
+   "TAG_V0 in expected_harness_tag:1427",
+   "T3_ALL_OFF_TAG in read_controller_tag:1555",
+   "TAG_C4_OFF_V0 in _is_c4_off:745",
+   "TAG_C4_OFF_VB in _is_c4_off:745"
+  ]
+ },
+ "truth_tables": {
+  "R26-3": {
+   "rows": 208,
+   "differ": []
+  },
+  "R26-2": {
+   "rows": 128,
+   "differ": []
+  }
+ },
+ "U6_CONTROLLER_TAGS": {
+  "C2": "final_C4G2_P3_LAS_K1",
+  "ABL": "ABL_LAS_K1",
+  "IND": "IND",
+  "IND_LAS": "IND_LAS"
+ },
+ "U6_TAG_PATH": "v5.controller_tag",
+ "path_sites": {
+  "04_scripts/04_hydraulic/coupled/judge_stage1_4368.py": [
+   "71: STAGE1_SCRIPTS = ROOT / \"06_analysis\" / \"03_hydraulic\" / \"coupled\" / \"v5\" / \"paper_runs\" / \"scripts\"",
+   "75: ROOT / \"04_scripts\" / \"03_control\" / \"m1_check\",",
+   "76: ROOT / \"04_scripts\" / \"03_control\" / \"s9\",",
+   "77: ROOT / \"03_src\","
+  ],
+  "04_scripts/04_hydraulic/coupled/judge4368_common.py": [
+   "40: RULES_DIR = ROOT / \"06_analysis\" / \"02_control\" / \"verif_matrix\"",
+   "863: default=RULES_DIR,"
+  ],
+  "04_scripts/04_hydraulic/coupled/u3_judge_4368.py": [
+   "52: for _path in (HERE, ROOT / \"04_scripts\" / \"03_control\" / \"s9\", ROOT / \"03_src\"):"
+  ],
+  "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py": [
+   "62: R79_JUDGE = ROOT / \"04_scripts\" / \"03_control\" / \"s8\" / \"r79_sensor_judge.py\"",
+   "63: R79_FINAL = ROOT / \"04_scripts\" / \"03_control\" / \"s8\" / \"r79_L3L4_final.py\""
+  ],
+  "04_scripts/04_hydraulic/coupled/h6_judge_4368.py": [
+   "53: for _path in (HERE, ROOT / \"03_src\"):"
+  ],
+  "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py": [
+   "195: for _path in (ROOT / \"03_src\",):",
+   "1702: coupled = ROOT / \"04_scripts\" / \"04_hydraulic\" / \"coupled\"",
+   "3287: COUPLED_DIR = ROOT / \"04_scripts\" / \"04_hydraulic\" / \"coupled\"",
+   "4742: chrono_dir = ROOT / \"04_scripts\" / \"02_chrono\"",
+   "4762: params = rows_judge.load_params(ROOT / \"02_params\" / \"rexome33.yaml\")",
+   "5251: p.add_argument(\"--root\", type=Path, default=ROOT,",
+   "5313: p.add_argument(\"--root\", type=Path, default=ROOT, help=\"checkout (git_at_start)\")",
+   "5320: p.add_argument(\"--root\", type=Path, default=ROOT, help=\"checkout (git_at_start)\")",
+   "5338: p.add_argument(\"--root\", type=Path, default=ROOT, help=\"checkout with the R2 results\")",
+   "5341: p.add_argument(\"--root\", type=Path, default=ROOT,",
+   "5345: p.add_argument(\"--root\", type=Path, default=ROOT, help=\"checkout with the R2 results\")",
+   "5352: p.add_argument(\"--las-k1-dir\", type=Path, default=ROOT / LAS_K1_DIR,",
+   "5375: p.add_argument(\"--root\", type=Path, default=ROOT)"
+  ]
+ }
+}
