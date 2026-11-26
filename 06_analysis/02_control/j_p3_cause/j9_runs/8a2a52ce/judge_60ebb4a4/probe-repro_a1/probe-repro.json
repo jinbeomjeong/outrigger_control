@@ -1,0 +1,71 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 5 P7-3 / P7-9 (C probe a2 against 6bfb2560 and the fixed table, both ways), judge commit T",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_probe.done",
+   "step_done_sha256": "a06b6e6b95b864ef575d09ef27edfab70bcd56744c11972b330fd73b63543afd",
+   "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_probe_a1\\ed7_probe_a2.jsonl",
+     "sha256": "dd6afcc516055a01872f3ac4cdca6a3127d9bc9fb63077b1ddf233ad779a717c"
+    }
+   ]
+  },
+  "fixed_table": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\fixed_table_b46bdf8f\\fixed_table_a2.json",
+   "sha256": "f7754a693c75da218a0ccc0eeb42c598cd4843034f874b70e47a709eaf4554d8",
+   "pinned": true
+  },
+  "reference": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl",
+   "sha256": "1107b30962a038ec9ebccdd19543338f7df771261aa208ef458de6b814817ce9",
+   "pinned": true
+  },
+  "v0": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+   "pinned": true
+  },
+  "grid_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json",
+   "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b",
+   "pinned": true
+  },
+  "probe_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\tool_6bfb2560\\keys\\probe_keys_ed7.json",
+   "sha256": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da",
+   "pinned": true
+  },
+  "sens_keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed7_design\\keys_seal_b46bdf8f\\sens_keys_ed7.json",
+   "sha256": "be930b75a375877d07fc84fa98a9f8b0ee463f5b592319cfd6869fcc62a05b1b",
+   "pinned": true
+  }
+ },
+ "hash_match": {
+  "compared": 114,
+  "differing_jobs": [],
+  "differences": [],
+  "not_judgeable": []
+ },
+ "spec_edition_problems": [],
+ "fixed_table_reproduction": {
+  "units": 40,
+  "d_lines": 24,
+  "differences": []
+ },
+ "identity_defects": [],
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "command": "probe-repro",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+  "head": "60ebb4a412c0b9eb20323efa536a35a0caa8c30b",
+  "is_clean": true
+ }
+}

@@ -1,0 +1,48 @@
+2026-11-26 02:22:41 +09:00 [info] 436.9 J-P3 edition 7 main run - chain runner (run commit C 8a2a52ce, worktree ed7-impl)
+2026-11-26 02:22:41 +09:00 [info] Stages from scope: scope l1ref t8 cases probe confirm j9main sens dg3 pre10a 12b_plan 12b_vbkm0
+2026-11-26 02:22:41 +09:00 [info] Cores: run_v5 / probe steps 0x0FFFFFFF x 20 workers (P+E); l1ref, dg3, 12b fixed P masks of C
+2026-11-26 02:22:41 +09:00 [info] Started 2026-11-26 02:22:41 +09:00; expected end about 2026-11-26 08:24 (estimate, upper ends of the placement table)
+2026-11-26 02:22:41 +09:00 [info] Progress: C:\Users\jinbeom\.claude\runners\outrigger-ed7-run\progress.json; control lines: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\chain_log\chain_ed7_a1.log; step markers: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\*.done / *.stop
+2026-11-26 02:22:41 +09:00 [info] Pause after: probe; runner PID 74860
+2026-11-26 02:22:41 +09:00 [info] Do not close this window: closing it stops the running step.
+2026-11-26 02:22:42 +09:00 [identity] start check_ed7 exit=0, worktree status entries=0
+2026-11-26 02:22:42 +09:00 [start] scope n=1/12 step=impl_scope attempt=a1
+2026-11-26 02:22:42 +09:00 [run] "C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.9.0_x64__8wekyb3d8bbwe\pwsh.exe" -NoProfile -NonInteractive -File C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\06_analysis\02_control\j_p3_cause\prelaunch_j9\run_steps_ed7\step5_impl_ed7.ps1 -Attempt 1 -Part scope
+2026-11-26 02:22:43 +09:00 [end] scope exit=0 wall_s=2
+2026-11-26 02:22:43 +09:00 [run] write-sums: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\baseline_check.py write-sums --recursive C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_scope_a1 --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_impl_scope_a1_r1.md
+2026-11-26 02:22:43 +09:00 [check] write-sums exit=0
+2026-11-26 02:22:44 +09:00 [check] log_errors skipped: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_scope_a1\logs holds no .log (this step starts no run)
+2026-11-26 02:22:44 +09:00 [start] l1ref n=2/12 step=l1ref attempt=a1
+2026-11-26 02:22:44 +09:00 [reserve] r-20261126022244-260ec7 owner=ed7-l1ref mask=0xFFFF ttl_min=120
+2026-11-26 02:22:44 +09:00 [run] "C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.9.0_x64__8wekyb3d8bbwe\pwsh.exe" -NoProfile -NonInteractive -File C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\06_analysis\02_control\j_p3_cause\prelaunch_j9\run_steps_ed7\step_l1ref_ed7.ps1 -Attempt 1
+2026-11-26 03:35:47 +09:00 [reserve] released r-20261126022244-260ec7
+2026-11-26 03:35:47 +09:00 [end] l1ref exit=0 wall_s=4384
+2026-11-26 03:35:47 +09:00 [run] write-sums: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\baseline_check.py write-sums --recursive C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\l1ref_a1 --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_l1ref_a1_r1.md
+2026-11-26 03:35:48 +09:00 [check] write-sums exit=0
+2026-11-26 03:35:48 +09:00 [run] log_errors: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\log_errors.py C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\l1ref_a1\logs --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_l1ref_a1_r1.md
+2026-11-26 03:35:48 +09:00 [check] log_errors exit=0
+2026-11-26 03:35:48 +09:00 [run] key_presence: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\key_presence.py --npz-dir C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\l1ref_a1\L1_VBM_t4h --npz-dir C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\l1ref_a1\L1a_VBM_t4h --array t_s,phase,jp3_t_s,jp3_class,jp3_plant_state,jp3_p_tr_Pa,jp3_used_bound_Pa --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\t4h_arrays_l1ref_a1_r1.md
+2026-11-26 03:35:48 +09:00 [check] key_presence exit=0
+2026-11-26 03:35:48 +09:00 [start] t8 n=3/12 step=impl_t8 attempt=a1
+2026-11-26 03:35:48 +09:00 [run] "C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.9.0_x64__8wekyb3d8bbwe\pwsh.exe" -NoProfile -NonInteractive -File C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\06_analysis\02_control\j_p3_cause\prelaunch_j9\run_steps_ed7\step5_impl_ed7.ps1 -Attempt 1 -Part t8 -MaskHex 0x0FFFFFFF -Workers 20
+2026-11-26 03:40:12 +09:00 [end] t8 exit=0 wall_s=265
+2026-11-26 03:40:12 +09:00 [run] write-sums: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\baseline_check.py write-sums --recursive C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_t8_a1 --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_impl_t8_a1_r1.md
+2026-11-26 03:40:12 +09:00 [check] write-sums exit=0
+2026-11-26 03:40:12 +09:00 [run] log_errors: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\log_errors.py C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_t8_a1\logs --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_impl_t8_a1_r1.md
+2026-11-26 03:40:13 +09:00 [check] log_errors exit=0
+2026-11-26 03:40:13 +09:00 [start] cases n=4/12 step=impl_cases attempt=a1
+2026-11-26 03:40:13 +09:00 [run] "C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.9.0_x64__8wekyb3d8bbwe\pwsh.exe" -NoProfile -NonInteractive -File C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\06_analysis\02_control\j_p3_cause\prelaunch_j9\run_steps_ed7\step5_impl_ed7.ps1 -Attempt 1 -Part cases -MaskHex 0x0FFFFFFF -Workers 20
+2026-11-26 03:42:03 +09:00 [end] cases exit=0 wall_s=112
+2026-11-26 03:42:03 +09:00 [run] write-sums: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\baseline_check.py write-sums --recursive C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_cases_a1 --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_impl_cases_a1_r1.md
+2026-11-26 03:42:03 +09:00 [check] write-sums exit=0
+2026-11-26 03:42:03 +09:00 [run] log_errors: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\log_errors.py C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_cases_a1\logs --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_impl_cases_a1_r1.md
+2026-11-26 03:42:03 +09:00 [check] log_errors exit=0
+2026-11-26 03:42:03 +09:00 [start] probe n=5/12 step=impl_probe attempt=a1
+2026-11-26 03:42:03 +09:00 [run] "C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.9.0_x64__8wekyb3d8bbwe\pwsh.exe" -NoProfile -NonInteractive -File C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\06_analysis\02_control\j_p3_cause\prelaunch_j9\run_steps_ed7\step5_impl_ed7.ps1 -Attempt 1 -Part probe -MaskHex 0x0FFFFFFF -Workers 20
+2026-11-26 03:56:38 +09:00 [end] probe exit=0 wall_s=875
+2026-11-26 03:56:38 +09:00 [run] write-sums: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\baseline_check.py write-sums --recursive C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_probe_a1 --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_impl_probe_a1_r1.md
+2026-11-26 03:56:38 +09:00 [check] write-sums exit=0
+2026-11-26 03:56:38 +09:00 [run] log_errors: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\log_errors.py C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_probe_a1\logs --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_impl_probe_a1_r1.md
+2026-11-26 03:56:38 +09:00 [check] log_errors exit=0
+2026-11-26 03:56:39 +09:00 [identity] end check_ed7 exit=0, worktree status entries=0
+2026-11-26 03:56:39 +09:00 [pause] probe -PauseAfter probe: checks passed, waiting for the main session; marker C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\chain_log\probe.pause; resume with -StartAt confirm

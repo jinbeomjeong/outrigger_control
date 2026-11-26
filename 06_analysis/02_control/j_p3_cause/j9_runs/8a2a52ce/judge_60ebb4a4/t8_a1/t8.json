@@ -1,0 +1,49 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 5 P7-1 (T8), judge commit T; erratum 1 1-8",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_t8.done",
+   "step_done_sha256": "b0ac99c31eeb5a7d31c65da78854ae3d4a0e8e16c9889e19a555b2d950deb66f",
+   "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_t8_a1\\ed7_t8.jsonl",
+     "sha256": "9ba6e2a98ed0d86d3b9c9a314e63eac836b8042b116f83956ec8d1d6a5de00f8"
+    }
+   ]
+  },
+  "main_jsonl": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+   "pinned": true
+  }
+ },
+ "judged_pairs": 22,
+ "differing_pairs": [],
+ "fallback_pairs_record": [],
+ "identity_defects": [],
+ "controller_tags": {
+  "VBM": {
+   "final_C4G2_P3X_LAS_K1_LSB": 22
+  },
+  "VBM0": {
+   "final_C4G2_LAS_K1_LSB": 22
+  }
+ },
+ "expected_tags": {
+  "VBM": "final_C4G2_P3X_LAS_K1_LSB",
+  "VBM0": "final_C4G2_LAS_K1_LSB"
+ },
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "command": "t8",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+  "head": "60ebb4a412c0b9eb20323efa536a35a0caa8c30b",
+  "is_clean": true
+ }
+}

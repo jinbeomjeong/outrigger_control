@@ -1,0 +1,43 @@
+{
+  "step": "j9main",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\j9main_a1",
+  "exit_code": 0,
+  "commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+  "started": "2026-11-26 11:11:33 +09:00",
+  "done": "2026-11-26 11:56:28 +09:00",
+  "codes": {
+    "scope": "P7-10: b46bdf8fdbad730eabf9226c5e1cfed0e980b5e9 -> 8a2a52ce2c07d2af11a6212a2932d2061261f156 in scope",
+    "identity_start": {
+      "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+      "is_clean": true,
+      "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+      "time": "2026-11-26 11:11:34 +09:00"
+    },
+    "input:spec_v7": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v7.md",
+    "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed7 (run commit 8a2a52ce2c07d2af11a6212a2932d2061261f156)",
+    "core:j9_main": "mixed",
+    "run:j9_main": 0,
+    "identity_check": 0,
+    "identity_end": {
+      "head": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+      "is_clean": true,
+      "src_tree": "0cffdbdfc64f6a3daa855f5c2f2fdaf1c7dbf04f",
+      "time": "2026-11-26 11:56:28 +09:00"
+    }
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "j9_main",
+      "mask": "0x0FFFFFFF",
+      "environment": {},
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed7_j9_main --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\j9main_a1\\j9_main.jsonl --workers 20 --mask 0x0FFFFFFF",
+      "pid": 48464
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-impl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\j9main_a1 --expect-commit 8a2a52ce2c07d2af11a6212a2932d2061261f156 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\_identity_checks\\j9main_a1.md"
+    }
+  ]
+}

@@ -1,0 +1,383 @@
+{
+ "arm_settings": {
+  "a1": {
+   "retract_position_target": true,
+   "witness": true,
+   "lsb_components": [
+    "A_i",
+    "A_ii",
+    "B3"
+   ]
+  },
+  "a2": {
+   "retract_position_target": true,
+   "witness": true,
+   "lsb_components": [
+    "A_i",
+    "A_ib",
+    "A_ii",
+    "B3"
+   ]
+  },
+  "a3": {
+   "retract_position_target": true,
+   "witness": true,
+   "lsb_components": [
+    "A_i",
+    "A_ib",
+    "A_ii",
+    "B3"
+   ]
+  },
+  "a4": {
+   "retract_position_target": true,
+   "witness": true,
+   "lsb_components": [
+    "A_i",
+    "A_ib",
+    "A_ii",
+    "B3"
+   ]
+  },
+  "a5": {
+   "retract_position_target": true,
+   "witness": true,
+   "lsb_components": [
+    "A_i",
+    "A_ib",
+    "A_ii"
+   ]
+  },
+  "a6": {
+   "retract_position_target": true,
+   "witness": true,
+   "lsb_components": [
+    "A_ib",
+    "A_ii",
+    "B3"
+   ]
+  },
+  "c2": {
+   "retract_position_target": null,
+   "witness": null,
+   "lsb_components": [
+    "A_i",
+    "A_ib",
+    "A_ii",
+    "B3"
+   ]
+  }
+ },
+ "agg": {
+  "a1|M": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a2|M": {
+   "lines": 27,
+   "stiff_lines": 2,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-RL-Fs8-o0.025-FS24-level"
+   ]
+  },
+  "a3|M": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a4|M": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a5|M": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a6|M": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "c2|M": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a1|Mslow": {
+   "lines": 15,
+   "stiff_lines": 6,
+   "keys": [
+    "R2_e0.001",
+    "R2_e0.003",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "a2|Mslow": {
+   "lines": 27,
+   "stiff_lines": 11,
+   "keys": [
+    "R2_e0.001",
+    "R2_e0.003",
+    "S7_e0.001",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0",
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_top-RL-Fs8-o0.025-FS24-level",
+    "R12_bottom-RL-Fs4-o0.025-G4-level",
+    "R12_top-RR-Fs4-o0.075-RE1bF-level",
+    "R12_top-RL-Fs4-o0.025-RE1bF-level"
+   ]
+  },
+  "a3|Mslow": {
+   "lines": 15,
+   "stiff_lines": 7,
+   "keys": [
+    "R2_e0.001",
+    "R2_e0.003",
+    "S7_e0.001",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "a4|Mslow": {
+   "lines": 15,
+   "stiff_lines": 7,
+   "keys": [
+    "R2_e0.001",
+    "R2_e0.003",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_bottom-FL-Fs4-o0.0",
+    "S7_e0.001",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "a5|Mslow": {
+   "lines": 15,
+   "stiff_lines": 6,
+   "keys": [
+    "R2_e0.001",
+    "R2_e0.003",
+    "R12_o0.0",
+    "S7_e0.001",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "a6|Mslow": {
+   "lines": 15,
+   "stiff_lines": 6,
+   "keys": [
+    "R2_e0.001",
+    "R2_e0.003",
+    "R12_o0.0",
+    "R12_top-FL-Fs8-o0.0",
+    "R12_bottom-FL-Fs4-o0.0",
+    "R12_top-FR-Fs4-o0.0"
+   ]
+  },
+  "c2|Mslow": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a1|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a2|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a3|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a4|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a5|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a6|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "c2|Mfast": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a1|Mc005": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a2|Mc005": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a3|Mc005": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a4|Mc005": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a5|Mc005": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a6|Mc005": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "c2|Mc005": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a1|Mc04": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a2|Mc04": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a3|Mc04": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a4|Mc04": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a5|Mc04": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a6|Mc04": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "c2|Mc04": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  },
+  "a1|L": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a2|L": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a3|L": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a4|L": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a5|L": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "a6|L": {
+   "lines": 15,
+   "stiff_lines": 1,
+   "keys": [
+    "R12_top-FL-Fs8-o0.0"
+   ]
+  },
+  "c2|L": {
+   "lines": 15,
+   "stiff_lines": 0,
+   "keys": []
+  }
+ }
+}

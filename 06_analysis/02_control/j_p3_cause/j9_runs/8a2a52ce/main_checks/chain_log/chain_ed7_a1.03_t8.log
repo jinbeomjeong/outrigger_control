@@ -1,0 +1,5 @@
+DONE impl_t8 -> C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\impl_t8_a1
+report: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_impl_t8_a1_r1.md
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "baseline_check", "command": "write-sums", "action": "written", "list": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_t8_a1\\SHA256SUMS", "entries": 52, "skipped_folders": 0, "sha256": "642ce25a42beb9d8675ec281dce7c8a8c479b9a77b171ab70c5a2f46d0091f23", "bytes": 4865, "added": 0, "removed": 0, "changed": 0, "format_only": false}
+report: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_impl_t8_a1_r1.md
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "log_errors", "command": "scan", "logs": 2, "steps_with_errors": 0, "steps_without_line": 2, "error_rows_total": 0, "error": 0, "warning": 0, "info": 2, "categories": {"no_errors_line": 2}}

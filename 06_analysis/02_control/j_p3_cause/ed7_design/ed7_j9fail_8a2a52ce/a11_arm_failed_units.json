@@ -1,0 +1,536 @@
+{
+ "inputs": {
+  "rows": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\6bfb2560\\ed7_probe_a1\\ed7_probe.jsonl",
+  "keys_sha256": "189dbb1315e2267812a1a14724c1cf405c96b70e2f43735ee22da940b28053da",
+  "v0_sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+  "tool_checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+  "tool_identity": {
+   "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+   "head": "60ebb4a412c0b9eb20323efa536a35a0caa8c30b",
+   "is_clean": true
+  }
+ },
+ "reading": "J7 ed7_new, stiffness exempt on Mslow/Mfast/Mc005/Mc04, plants VBM5",
+ "arms": {
+  "a1": {
+   "failed_units": 10,
+   "units": [
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J7: WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mslow",
+     "R15_o0.0",
+     [
+      "J1: gate end_att",
+      "J5: t_back 37.7 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mslow",
+     "R15_o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 38.05 -> None",
+      "J4: final ready -> level"
+     ]
+    ],
+    [
+     "Mslow",
+     "S4_e0.002",
+     [
+      "J3: t_ready 76.9 -> 103.8"
+     ]
+    ],
+    [
+     "Mslow",
+     "S7_e0.001",
+     [
+      "J3: t_ready 77.1 -> 102.0"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate end_att",
+      "J5: t_back 26.5 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate end_att",
+      "J5: t_back 26.5 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> probe"
+     ]
+    ]
+   ]
+  },
+  "a2": {
+   "failed_units": 3,
+   "units": [
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J7: WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ]
+    ],
+    [
+     "Mslow",
+     "S7_e0.001",
+     [
+      "J3: t_ready 77.1 -> 102.9"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> probe"
+     ]
+    ]
+   ]
+  },
+  "a3": {
+   "failed_units": 2,
+   "units": [
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J7: WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ]
+    ],
+    [
+     "Mslow",
+     "S7_e0.001",
+     [
+      "J3: t_ready 77.1 -> 102.9"
+     ]
+    ]
+   ]
+  },
+  "a4": {
+   "failed_units": 3,
+   "units": [
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J7: WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ]
+    ],
+    [
+     "Mslow",
+     "S7_e0.001",
+     [
+      "J3: t_ready 77.1 -> 102.9"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> probe"
+     ]
+    ]
+   ]
+  },
+  "a5": {
+   "failed_units": 36,
+   "units": [
+    [
+     "M",
+     "R12_bottom-FL-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13440.0 N -> 5760.0 N"
+     ]
+    ],
+    [
+     "M",
+     "R12_o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13750.0 N -> 60.0 N"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12280.0 N -> 6030.0 N",
+      "J7: WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15990.0 N -> 6690.0 N"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15280.0 N -> 4690.0 N"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12770.0 N -> 3410.0 N"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-RL-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13770.0 N -> 3150.0 N"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_bottom-FL-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J1: gate end_att",
+      "J2: F 13440.0 N -> 5210.0 N",
+      "J5: t_back 22.6 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J1: gate no_lift"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12280.0 N -> 5270.0 N"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15990.0 N -> 5570.0 N"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15280.0 N -> 3830.0 N"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12770.0 N -> 2520.0 N"
+     ]
+    ],
+    [
+     "Mslow",
+     "R12_top-RL-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13770.0 N -> 2090.0 N"
+     ]
+    ],
+    [
+     "Mslow",
+     "S7_e0.001",
+     [
+      "J3: t_ready 77.1 -> 102.9"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_bottom-FL-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13440.0 N -> 6320.0 N"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13750.0 N -> 2100.0 N"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12280.0 N -> 6910.0 N"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15990.0 N -> 7650.0 N"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15280.0 N -> 5080.0 N"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12770.0 N -> 4370.0 N"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-RL-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13770.0 N -> 4080.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_bottom-FL-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13440.0 N -> 6620.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13750.0 N -> 5230.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12280.0 N -> 5720.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15990.0 N -> 7200.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15280.0 N -> 6380.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12770.0 N -> 3870.0 N"
+     ]
+    ],
+    [
+     "Mc005",
+     "R12_top-RL-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13770.0 N -> 4070.0000000000005 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_bottom-FL-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13440.0 N -> 5630.0 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13750.0 N -> 280.0 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12280.0 N -> 6130.0 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15990.0 N -> 7730.0 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 15280.0 N -> 5250.0 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 12770.0 N -> 3390.0 N"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-RL-Fs0-o0.0",
+     [
+      "J1: gate Fmin_after_event",
+      "J2: F 13770.0 N -> 4110.0 N"
+     ]
+    ]
+   ]
+  },
+  "a6": {
+   "failed_units": 5,
+   "units": [
+    [
+     "M",
+     "R12_top-FL-Fs8-o0.0",
+     [
+      "J7: WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ]
+    ],
+    [
+     "M",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.6 -> None",
+      "J4: final ready -> probe"
+     ]
+    ],
+    [
+     "Mfast",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> level"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs0-o0.05",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.55 -> None",
+      "J4: final ready -> level"
+     ]
+    ],
+    [
+     "Mc04",
+     "R12_top-FR-Fs4-o0.0",
+     [
+      "J1: gate end_att",
+      "J5: t_back 22.6 -> None",
+      "J4: final ready -> level"
+     ]
+    ]
+   ]
+  },
+  "c2": {
+   "failed_units": 1,
+   "units": [
+    [
+     "Mslow",
+     "S7_e0.001",
+     [
+      "J4: final ready -> probe"
+     ]
+    ]
+   ]
+  }
+ }
+}

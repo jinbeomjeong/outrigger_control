@@ -1,0 +1,3599 @@
+{
+ "rule": "jp3_remedy_spec_v7.md 5 P7-2 (cases E / F), judge commit T",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_cases.done",
+   "step_done_sha256": "f8a585c8be01efe9a76f0a0d93c28c0a3bd24039b887eb5b1343cf28aa6f4cd5",
+   "run_commit": "8a2a52ce2c07d2af11a6212a2932d2061261f156",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\impl_cases_a1\\ed7_cases.jsonl",
+     "sha256": "6bda01de017a76a82da1301b4f10fb8e1d03d7fc150c9a7d2e9350582fb338f2"
+    }
+   ]
+  }
+ },
+ "rows": 10,
+ "identity_defects": [],
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "pass",
+  "runs": 0,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_revision_5_record_in_revision_4_judgement": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "rev7": {
+   "name": "extend_bound_check rev5: jp3a_breach_reads + jp3b_breach_over_tol_reads + jp3c_breach_reads == 0",
+   "status": "pass",
+   "runs": 10,
+   "runs_judged": 10,
+   "expected_judged_runs": null,
+   "judged_key_missing_runs": 0,
+   "runs_by_case": {
+    "judged": 10,
+    "no_rod_reading": 0,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_record_not_revision_5": 0,
+    "defect_sensor_grade_missing": 0,
+    "defect_rule_identity_not_default": 0,
+    "record_only_sensor_grade": 0
+   },
+   "rule_revisions": [
+    7
+   ],
+   "jp3a_breach_reads": 0,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0,
+   "record_only_grade_sums": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   },
+   "runs_with_breach": 0,
+   "jp3b_breach_reads_flag": 0,
+   "jp3a_margin_used_reads_flag": 0,
+   "lock_ext_breach_over_tol_reads_flag": 0,
+   "ret_breach_reads_flag": 0
+  },
+  "rev7_unjudged_setting_runs": 0,
+  "runs_expected": 10,
+  "rule_missing_runs": 0,
+  "test_only_setting_runs": 0,
+  "l1_reference_runs": 0,
+  "revision_key_missing_runs": 0,
+  "revision_key_mismatch_runs": 0,
+  "status_by_revision": {
+   "4": "no_p3_runs",
+   "7": "pass"
+  }
+ },
+ "J-P3_judged_rows": 10,
+ "rev7_condition": {
+  "summary": {
+   "status": "pass",
+   "judged_lines": 10,
+   "judged_lines_with_condition": 10,
+   "judged_condition_reads": 158,
+   "judged_breach_reads": 0,
+   "record_lines": 0,
+   "head_only_lines": {
+    "judged_plant": 0,
+    "record_plant": 0
+   },
+   "states": {
+    "judged": 10
+   },
+   "record_artifact_reads": 0
+  },
+  "lines": [
+   {
+    "setting": "LSM1",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM1.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM4",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM4.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM2",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM2.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM3",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM3.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 17,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "VBM",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_VBM.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 17,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM3",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM3.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 17,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "VBM",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_VBM.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 17,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM2",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM2.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM1",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM1.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSM4",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM4.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   }
+  ]
+ },
+ "lsb_record": [
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "LSM1"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.00018086,
+       0.00018086,
+       0.000177965,
+       0.000177965
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 6,
+      "a2_start_bounds_m": [
+       0.000189349,
+       0.000189349,
+       0.000317113,
+       0.000459574,
+       0.000184543,
+       0.000184543
+      ],
+      "a2_end": {
+       "filled": 6
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000103881,
+       0.000101016,
+       0.000171884,
+       0.000171884,
+       0.000591846,
+       0.000170738,
+       0.000170738
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 6,
+      "a2_start_bounds_m": [
+       8.8539e-05,
+       8.6136e-05,
+       0.000170173,
+       0.000170173,
+       2.313e-05,
+       0.000163645
+      ],
+      "a2_end": {
+       "filled": 6
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       2
+      ],
+      "a2_raised_periods": 5,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RR",
+      "start_s": 52.90000000007056,
+      "end_s": 53.30000000007247,
+      "end": "travel_cap",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 812,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.599999999974035,
+       "path": "strict",
+       "twist_load_N": -1726.7205336566694
+      },
+      {
+       "t_s": 62.5000000001164,
+       "path": "strict",
+       "twist_load_N": -172.49012408553972
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 1,
+      "periods": 20,
+      "episodes": [
+       {
+        "start_t_s": 52.90000000007056,
+        "end_t_s": 54.90000000008011,
+        "periods": 20,
+        "max_abs_twist_N": 86601.77528376122
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "LSM4"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.00017762,
+       0.00017762,
+       0.00017361,
+       0.00017361
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 5,
+      "a2_start_bounds_m": [
+       0.000175439,
+       0.000175439,
+       0.000458908,
+       0.000170477,
+       0.000170477
+      ],
+      "a2_end": {
+       "filled": 5
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000104003,
+       0.000101181,
+       0.000164581,
+       0.000164581,
+       0.000804349,
+       0.000157327,
+       0.000157327
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       3,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 8,
+      "a2_start_bounds_m": [
+       8.8605e-05,
+       8.6244e-05,
+       0.000161818,
+       0.000161818,
+       1.3484e-05,
+       2.3771e-05,
+       0.000153401,
+       0.000153401
+      ],
+      "a2_end": {
+       "filled": 8
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RR",
+      "start_s": 53.10000000007152,
+      "end_s": 53.50000000007343,
+      "end": "resolved",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 814,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.599999999974035,
+       "path": "strict",
+       "twist_load_N": -1725.0837260591506
+      },
+      {
+       "t_s": 62.60000000011688,
+       "path": "strict",
+       "twist_load_N": 160.76799919389305
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 1,
+      "periods": 20,
+      "episodes": [
+       {
+        "start_t_s": 53.10000000007152,
+        "end_t_s": 55.10000000008107,
+        "periods": 20,
+        "max_abs_twist_N": 85284.40247368655
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "LSM2"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000177641,
+       0.000177641,
+       0.000173349,
+       0.000173349
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 5,
+      "a2_start_bounds_m": [
+       0.00017106,
+       0.00017106,
+       0.000461481,
+       0.000167421,
+       0.000167421
+      ],
+      "a2_end": {
+       "filled": 5
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 3,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000103852,
+       0.000100942,
+       0.000164651,
+       0.000164651,
+       0.000798635,
+       0.000155512,
+       0.000155512
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       3,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 8,
+      "a2_start_bounds_m": [
+       8.8397e-05,
+       8.5953e-05,
+       0.000158146,
+       0.000158146,
+       1.3473e-05,
+       2.3675e-05,
+       0.000149281,
+       0.000149281
+      ],
+      "a2_end": {
+       "filled": 8
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RR",
+      "start_s": 53.200000000071995,
+      "end_s": 53.600000000073905,
+      "end": "resolved",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 815,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.6999999999738,
+       "path": "strict",
+       "twist_load_N": -1730.6597848232705
+      },
+      {
+       "t_s": 62.700000000117356,
+       "path": "strict",
+       "twist_load_N": 51.91380439737259
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 1,
+      "periods": 20,
+      "episodes": [
+       {
+        "start_t_s": 53.200000000071995,
+        "end_t_s": 55.200000000081545,
+        "periods": 20,
+        "max_abs_twist_N": 85439.93868539165
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "LSM3"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000177351,
+       0.000177351,
+       0.000170131,
+       0.000170131
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 5,
+      "a2_start_bounds_m": [
+       0.000175438,
+       0.000175438,
+       0.000459163,
+       0.000173774,
+       0.000173774
+      ],
+      "a2_end": {
+       "filled": 5
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000103791,
+       0.000100848,
+       0.000168867,
+       0.000168867,
+       0.000804069,
+       0.000162432,
+       0.000162432
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       3,
+       1,
+       1
+      ],
+      "a2_raised_periods": 5,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 8,
+      "a2_start_bounds_m": [
+       8.8307e-05,
+       8.5828e-05,
+       0.000162144,
+       0.000162144,
+       1.3494e-05,
+       2.3792e-05,
+       0.000148453,
+       0.000148453
+      ],
+      "a2_end": {
+       "filled": 8
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RR",
+      "start_s": 53.200000000071995,
+      "end_s": 53.600000000073905,
+      "end": "resolved",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 822,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.6999999999738,
+       "path": "strict",
+       "twist_load_N": -1729.9913113463335
+      },
+      {
+       "t_s": 63.4000000001207,
+       "path": "strict",
+       "twist_load_N": -2009.4494345065978
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 1,
+      "periods": 20,
+      "episodes": [
+       {
+        "start_t_s": 53.200000000071995,
+        "end_t_s": 55.200000000081545,
+        "periods": 20,
+        "max_abs_twist_N": 85146.1539142746
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.0,
+    "twin": {
+     "level": "bottom",
+     "leg": "FL",
+     "fs_kN": 4.0
+    },
+    "setting": "VBM"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000177701,
+       0.000177701,
+       0.000170225,
+       0.000170225
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 5,
+      "a2_start_bounds_m": [
+       0.000175333,
+       0.000175333,
+       0.00045913,
+       0.000173674,
+       0.000173674
+      ],
+      "a2_end": {
+       "filled": 5
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000103828,
+       0.000100909,
+       0.00016666,
+       0.00016666,
+       0.000803995,
+       0.000162366,
+       0.000162366
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       3,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 8,
+      "a2_start_bounds_m": [
+       8.8365e-05,
+       8.5909e-05,
+       0.000162089,
+       0.000162089,
+       1.3479e-05,
+       2.3772e-05,
+       0.000148481,
+       0.000148481
+      ],
+      "a2_end": {
+       "filled": 8
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RR",
+      "start_s": 53.200000000071995,
+      "end_s": 53.600000000073905,
+      "end": "resolved",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 822,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.6999999999738,
+       "path": "strict",
+       "twist_load_N": -1729.989492964829
+      },
+      {
+       "t_s": 63.4000000001207,
+       "path": "strict",
+       "twist_load_N": -2012.67453236047
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 1,
+      "periods": 20,
+      "episodes": [
+       {
+        "start_t_s": 53.200000000071995,
+        "end_t_s": 55.200000000081545,
+        "periods": 20,
+        "max_abs_twist_N": 85193.42754514325
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "LSM3"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 6,
+      "a2_start_bounds_m": [
+       0.000191589,
+       0.000191589,
+       0.000333161,
+       0.000477916,
+       0.000191611,
+       0.000191611
+      ],
+      "a2_end": {
+       "filled": 6
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000190933,
+       0.000190933,
+       0.000182505,
+       0.000182505
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000115268,
+       0.000111889,
+       0.00017444,
+       0.00017444,
+       3.0319e-05,
+       0.000174534,
+       0.000174534
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     },
+     "RR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000100428,
+       9.7248e-05,
+       0.000177524,
+       0.000177524,
+       0.000498723,
+       0.000169265,
+       0.000169265
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RL",
+      "start_s": 52.90000000007056,
+      "end_s": 53.30000000007247,
+      "end": "travel_cap",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 815,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.499999999974268,
+       "path": "strict",
+       "twist_load_N": -1692.8282973305468
+      },
+      {
+       "t_s": 62.5000000001164,
+       "path": "strict",
+       "twist_load_N": -1747.0305335800876
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 2,
+      "periods": 32,
+      "episodes": [
+       {
+        "start_t_s": 52.90000000007056,
+        "end_t_s": 54.70000000007916,
+        "periods": 18,
+        "max_abs_twist_N": 82242.4310162279
+       },
+       {
+        "start_t_s": 54.800000000079635,
+        "end_t_s": 56.20000000008632,
+        "periods": 14,
+        "max_abs_twist_N": 25563.04290573655
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "VBM"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 6,
+      "a2_start_bounds_m": [
+       0.000191785,
+       0.000191785,
+       0.000332481,
+       0.000477272,
+       0.000191632,
+       0.000191632
+      ],
+      "a2_end": {
+       "filled": 6
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000187827,
+       0.000187827,
+       0.000180034,
+       0.000180034
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000115268,
+       0.000111888,
+       0.000178518,
+       0.000178518,
+       3.0287e-05,
+       0.000174254,
+       0.000174254
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     },
+     "RR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000100428,
+       9.7247e-05,
+       0.000175566,
+       0.000175566,
+       0.000496798,
+       0.0001688,
+       0.0001688
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RL",
+      "start_s": 52.90000000007056,
+      "end_s": 53.30000000007247,
+      "end": "travel_cap",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 816,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.499999999974268,
+       "path": "strict",
+       "twist_load_N": -1692.8310112328618
+      },
+      {
+       "t_s": 62.5000000001164,
+       "path": "strict",
+       "twist_load_N": -1760.11484373251
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 2,
+      "periods": 32,
+      "episodes": [
+       {
+        "start_t_s": 52.90000000007056,
+        "end_t_s": 54.70000000007916,
+        "periods": 18,
+        "max_abs_twist_N": 82327.40537345457
+       },
+       {
+        "start_t_s": 54.800000000079635,
+        "end_t_s": 56.20000000008632,
+        "periods": 14,
+        "max_abs_twist_N": 25474.41954709999
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "LSM2"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 5,
+      "a2_start_bounds_m": [
+       0.000191551,
+       0.000191551,
+       0.0003367,
+       0.000186947,
+       0.000186947
+      ],
+      "a2_end": {
+       "filled": 5
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000185788,
+       0.000185788,
+       0.000175617,
+       0.000175617
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000115354,
+       0.000111984,
+       0.00017635,
+       0.00017635,
+       3.0021e-05,
+       0.000172748,
+       0.000172748
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     },
+     "RR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000100512,
+       9.7342e-05,
+       0.000172179,
+       0.000172179,
+       0.000491101,
+       0.000162969,
+       0.000162969
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 5,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RL",
+      "start_s": 52.90000000007056,
+      "end_s": 53.30000000007247,
+      "end": "travel_cap",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 849,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.499999999974268,
+       "path": "strict",
+       "twist_load_N": -1693.2261857225676
+      },
+      {
+       "t_s": 66.00000000013311,
+       "path": "strict",
+       "twist_load_N": -2676.0168494339596
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 2,
+      "periods": 32,
+      "episodes": [
+       {
+        "start_t_s": 52.90000000007056,
+        "end_t_s": 54.70000000007916,
+        "periods": 18,
+        "max_abs_twist_N": 82146.9641286068
+       },
+       {
+        "start_t_s": 54.800000000079635,
+        "end_t_s": 56.20000000008632,
+        "periods": 14,
+        "max_abs_twist_N": 25259.70677525423
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "LSM1"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 6,
+      "a2_start_bounds_m": [
+       0.000198619,
+       0.000198619,
+       0.000332205,
+       0.000474005,
+       0.000202944,
+       0.000202944
+      ],
+      "a2_end": {
+       "filled": 6
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000176499,
+       0.000176499,
+       0.000169965,
+       0.000169965
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000115064,
+       0.000111654,
+       0.000179928,
+       0.000179928,
+       2.9423e-05,
+       0.000182076,
+       0.000182076
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     },
+     "RR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000100302,
+       9.709e-05,
+       0.00016841,
+       0.00016841,
+       0.000503437,
+       0.000160193,
+       0.000160193
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RL",
+      "start_s": 53.00000000007104,
+      "end_s": 53.40000000007295,
+      "end": "travel_cap",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 847,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.499999999974268,
+       "path": "strict",
+       "twist_load_N": -1695.5401772843106
+      },
+      {
+       "t_s": 65.70000000013168,
+       "path": "strict",
+       "twist_load_N": -2682.0086812904046
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 2,
+      "periods": 28,
+      "episodes": [
+       {
+        "start_t_s": 53.00000000007104,
+        "end_t_s": 54.70000000007916,
+        "periods": 17,
+        "max_abs_twist_N": 82453.05799446654
+       },
+       {
+        "start_t_s": 54.90000000008011,
+        "end_t_s": 56.000000000085365,
+        "periods": 11,
+        "max_abs_twist_N": 21764.22347023019
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "job": {
+    "case": "R12",
+    "eps": 0.0,
+    "offset_s": 0.075,
+    "twin": {
+     "level": "top",
+     "leg": "FR",
+     "fs_kN": 8.0
+    },
+    "setting": "LSM4"
+   },
+   "lsb_record": {
+    "components": [
+     "A_i",
+     "A_ib",
+     "A_ii",
+     "B3"
+    ],
+    "settings": {
+     "components": [
+      "A_i",
+      "A_ib",
+      "A_ii",
+      "B3"
+     ],
+     "hold_speed_ratio": 0.01,
+     "a1_trigger_periods": 10,
+     "a1_trigger_travel_m": 0.0005,
+     "a1_motion_ratio": 0.25,
+     "a1_witness_m": 0.0004,
+     "a1_step_m_s": 0.0002,
+     "a1_cap_m_s": 0.00105,
+     "a1_cap_periods": 50,
+     "a2_extend": false,
+     "a2_lock_periods": 2,
+     "a2_fill_factor": 1.0,
+     "a2_fill_speed_ratio": 1.0,
+     "a2_hold_after_fill_s": null,
+     "a2_psi": 6.0,
+     "a2_bulk_modulus_Pa": 1600000000.0,
+     "a2_line_volume_m3": 0.0001425,
+     "a2_hose_bulk_modulus_Pa": 1000000000.0,
+     "a2_crack_Pa": 100000.0,
+     "a2_tank_Pa": 200000.0,
+     "a2_rod_dead_length_m": 0.02,
+     "a2_head_dead_length_m": 0.05,
+     "a2_friction_band_N": [
+      16000.0,
+      16000.0,
+      13328.0,
+      13328.0
+     ],
+     "a2_reading_margin_Pa": 400000.0,
+     "a2_void_estimate": true,
+     "a2_void_head_bulk_modulus_Pa": 1600000000.0,
+     "a2_void_rod_bulk_modulus_Pa": 690000000.0,
+     "a2_retract_witness_m": 0.001,
+     "a2_rod_witness_min_Pa": 300000.0,
+     "a2_rod_witness_ratio": 0.5,
+     "a2_extend_witness_m": 0.001,
+     "a2_on_fallback_legs": false,
+     "b1_exit_margin_N": 2000.0,
+     "b1_exit_samples": 3,
+     "b2_required_samples": null,
+     "b3_end_periods": 2,
+     "b3_travel_cap_fraction": 0.065,
+     "b3_max_periods": null,
+     "b3_protect_margin_N": 35000.0,
+     "b3_protect_predictive": false,
+     "b3_predictive_margin_N": 5000.0,
+     "b3_twist_stiffness_N_m": 21700000.0,
+     "ib_blind_periods": 25,
+     "ib_still_m": 0.0001,
+     "ib_reference_skip_reads": 2,
+     "ib_condition": "with_twist",
+     "ib_twist_limit_N": null,
+     "ib_latch_reversals": 2,
+     "ib_protect": true,
+     "ib_protect_travel_m": 0.00085,
+     "ib_protect_stiffness_N_m": 41000000.0,
+     "ib_protect_margin_N": 5000.0,
+     "ib_record_after_s": 1.0
+    },
+    "legs": {
+     "FL": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 6,
+      "a2_start_bounds_m": [
+       0.000191783,
+       0.000191783,
+       0.000330551,
+       0.000475756,
+       0.00018964,
+       0.00018964
+      ],
+      "a2_end": {
+       "filled": 6
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "FR": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 4,
+      "a2_start_bounds_m": [
+       0.000172948,
+       0.000172948,
+       0.000166429,
+       0.000166429
+      ],
+      "a2_end": {
+       "filled": 4
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 3,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     },
+     "RL": {
+      "a1_triggers": 0,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [],
+      "a1_end": {},
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.000115276,
+       0.000111898,
+       0.000182049,
+       0.000182049,
+       3.0118e-05,
+       0.000180405,
+       0.000180405
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "a2_raised_periods": 6,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 4
+     },
+     "RR": {
+      "a1_triggers": 1,
+      "a1_cap_reached": 0,
+      "a1_trigger_periods": [
+       10
+      ],
+      "a1_end": {
+       "moved": 1
+      },
+      "a1_raised_periods": 0,
+      "a2_floors": 7,
+      "a2_start_bounds_m": [
+       0.00010042,
+       9.7236e-05,
+       0.000163134,
+       0.000163134,
+       0.000497156,
+       0.00015694,
+       0.00015694
+      ],
+      "a2_end": {
+       "filled": 7
+      },
+      "a2_end_periods": [
+       1,
+       1,
+       1,
+       1,
+       2,
+       1,
+       1
+      ],
+      "a2_raised_periods": 4,
+      "a2_hold_periods": 0,
+      "b1_blocked_periods": 0,
+      "b2_early_starts_s": [],
+      "b3_periods": 0
+     }
+    },
+    "b_episodes": [],
+    "b_active_leg": null,
+    "b3_episodes": [
+     {
+      "leg": "RL",
+      "start_s": 52.90000000007056,
+      "end_s": 53.30000000007247,
+      "end": "travel_cap",
+      "periods": 4,
+      "commanded_travel_m": 0.00209243
+     }
+    ],
+    "b3_active_leg": null,
+    "g2_split_periods": 0,
+    "trace_reads": 850,
+    "blind": {
+     "legs": {
+      "FL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "FR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RL": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      },
+      "RR": {
+       "triggers": 0,
+       "trigger_periods": [],
+       "triggers_completion_unknown": 0,
+       "end": {},
+       "latches": 0,
+       "n_rev": 0,
+       "protect_blocked_periods": 0,
+       "raised_periods": 0
+      }
+     },
+     "shots": [],
+     "shots_twist_grew": 0,
+     "four_leg_twist_triggers": 0,
+     "level_done": [
+      {
+       "t_s": 30.499999999974268,
+       "path": "strict",
+       "twist_load_N": -1694.3001117159656
+      },
+      {
+       "t_s": 66.00000000013311,
+       "path": "strict",
+       "twist_load_N": -2680.0353592305037
+      }
+     ],
+     "twist_over_limit": {
+      "limit_N": 15000.0,
+      "entries": 2,
+      "periods": 32,
+      "episodes": [
+       {
+        "start_t_s": 52.90000000007056,
+        "end_t_s": 54.70000000007916,
+        "periods": 18,
+        "max_abs_twist_N": 82687.0306656789
+       },
+       {
+        "start_t_s": 54.800000000079635,
+        "end_t_s": 56.20000000008632,
+        "periods": 14,
+        "max_abs_twist_N": 25229.15139534001
+       }
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "records": {
+  "rule": "spec 6.2 LEVEL deadlock signature; dynamics Q7-D3 records (never judged)",
+  "totals": {
+   "lines": 10,
+   "stall_signature_lines": 0,
+   "stall_not_readable": 0,
+   "twist_record_missing": 0,
+   "shots_twist_before_over_limit": 0,
+   "twist_over_limit_entries_in_shot_window": 0,
+   "shots_within_10s_after_event": 0
+  },
+  "lines": [
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "LSM1"
+    },
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM1.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 1,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "LSM4"
+    },
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM4.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 1,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "LSM2"
+    },
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM2.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 1,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "LSM3"
+    },
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSM3.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 1,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0
+     },
+     "setting": "VBM"
+    },
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_VBM.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 1,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "LSM3"
+    },
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM3.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 2,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "VBM"
+    },
+    "t4h_file": "R12_top-FR-Fs8-o0.075_VBM.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 2,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "LSM2"
+    },
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM2.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 2,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "LSM1"
+    },
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM1.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 2,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   },
+   {
+    "job": {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0
+     },
+     "setting": "LSM4"
+    },
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSM4.npz",
+    "stall_signature": false,
+    "twist_records": {
+     "limit_N": 15000.0,
+     "shots": 0,
+     "shots_twist_before_over_limit": 0,
+     "shots_within_10s_after_event": 0,
+     "twist_over_limit_entries": 2,
+     "twist_over_limit_entries_in_shot_window": 0,
+     "open_shot_windows": 0
+    }
+   }
+  ]
+ },
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "command": "cases",
+ "code_identity": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed7-judge",
+  "head": "60ebb4a412c0b9eb20323efa536a35a0caa8c30b",
+  "is_clean": true
+ }
+}

@@ -1,0 +1,7 @@
+DONE l1ref -> C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\l1ref_a1
+report: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_l1ref_a1_r1.md
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "baseline_check", "command": "write-sums", "action": "written", "list": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\l1ref_a1\\SHA256SUMS", "entries": 568, "skipped_folders": 0, "sha256": "d564b6371658ad9b80e4968e8124337186010e38158f1c037e0689a6a39bfd93", "bytes": 73476, "added": 0, "removed": 0, "changed": 0, "format_only": false}
+report: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_l1ref_a1_r1.md
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "log_errors", "command": "scan", "logs": 5, "steps_with_errors": 0, "steps_without_line": 1, "error_rows_total": 0, "error": 0, "warning": 0, "info": 1, "categories": {"no_errors_line": 1}}
+report: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\t4h_arrays_l1ref_a1_r1.md
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "key_presence", "command": "scan", "files": 0, "rows": 0, "selected": 0, "keys": 0, "keys_complete": 0, "keys_incomplete": 0, "npz_files": 269, "arrays": 7, "arrays_incomplete": 0, "error": 0, "warning": 0, "info": 0, "categories": {}}

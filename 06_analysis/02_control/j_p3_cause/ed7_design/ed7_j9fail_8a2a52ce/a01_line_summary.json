@@ -1,0 +1,192 @@
+{
+ "sources": {
+  "V0": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+  "ed5_j9main": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\606f8713\\j9main_a1\\j9_main.jsonl",
+  "ed6rec_j9main": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\records_after_stop\\B_a1\\j9_main.jsonl",
+  "ed6rec_sens": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\records_after_stop\\B_a1\\sens.jsonl",
+  "ed7_j9main": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\j9main_a1\\j9_main.jsonl",
+  "ed7_sens": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\sens_a1\\sens.jsonl"
+ },
+ "counts": {
+  "V0:V0": {
+   "lines": 100,
+   "stiff_lines": 0
+  },
+  "V0:V2": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:L1": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:L2": {
+   "lines": 8,
+   "stiff_lines": 0
+  },
+  "V0:V1": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:V3": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:VB": {
+   "lines": 100,
+   "stiff_lines": 0
+  },
+  "V0:V4": {
+   "lines": 100,
+   "stiff_lines": 17
+  },
+  "V0:V5": {
+   "lines": 100,
+   "stiff_lines": 10
+  },
+  "V0:V6": {
+   "lines": 72,
+   "stiff_lines": 14
+  },
+  "V0:V7": {
+   "lines": 72,
+   "stiff_lines": 11
+  },
+  "V0:V8": {
+   "lines": 72,
+   "stiff_lines": 20
+  },
+  "V0:LS1": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:LS2": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:LS3": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "V0:LS4": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed5_j9main:VBJ": {
+   "lines": 100,
+   "stiff_lines": 0
+  },
+  "ed5_j9main:LSJ1": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed5_j9main:LSJ2": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed5_j9main:LSJ3": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed5_j9main:LSJ4": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed6rec_j9main:VBL": {
+   "lines": 100,
+   "stiff_lines": 0
+  },
+  "ed6rec_j9main:LSL1": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed6rec_j9main:LSL2": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed6rec_j9main:LSL3": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed6rec_j9main:LSL4": {
+   "lines": 72,
+   "stiff_lines": 0
+  },
+  "ed6rec_sens:VBLc005": {
+   "lines": 46,
+   "stiff_lines": 0
+  },
+  "ed6rec_sens:VBLc04": {
+   "lines": 46,
+   "stiff_lines": 0
+  },
+  "ed6rec_sens:VBLv05": {
+   "lines": 46,
+   "stiff_lines": 0
+  },
+  "ed6rec_sens:VBLv15": {
+   "lines": 46,
+   "stiff_lines": 4
+  },
+  "ed7_j9main:VBM": {
+   "lines": 100,
+   "stiff_lines": 14
+  },
+  "ed7_j9main:LSM1": {
+   "lines": 72,
+   "stiff_lines": 14
+  },
+  "ed7_j9main:LSM2": {
+   "lines": 72,
+   "stiff_lines": 14
+  },
+  "ed7_j9main:LSM3": {
+   "lines": 72,
+   "stiff_lines": 14
+  },
+  "ed7_j9main:LSM4": {
+   "lines": 72,
+   "stiff_lines": 14
+  },
+  "ed7_sens:VBMslow": {
+   "lines": 46,
+   "stiff_lines": 28
+  },
+  "ed7_sens:VBMfast": {
+   "lines": 46,
+   "stiff_lines": 0
+  },
+  "ed7_sens:VBMc005": {
+   "lines": 46,
+   "stiff_lines": 4
+  },
+  "ed7_sens:VBMc04": {
+   "lines": 46,
+   "stiff_lines": 4
+  },
+  "ed7_sens:VBMb069": {
+   "lines": 46,
+   "stiff_lines": 4
+  },
+  "ed7_sens:VBMb16": {
+   "lines": 46,
+   "stiff_lines": 4
+  },
+  "ed7_sens:VBMh05": {
+   "lines": 46,
+   "stiff_lines": 0
+  },
+  "ed7_sens:VBMh15": {
+   "lines": 46,
+   "stiff_lines": 27
+  },
+  "ed7_sens:VBMd05": {
+   "lines": 46,
+   "stiff_lines": 4
+  },
+  "ed7_sens:VBMd15": {
+   "lines": 46,
+   "stiff_lines": 4
+  }
+ }
+}

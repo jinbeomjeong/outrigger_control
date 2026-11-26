@@ -1,0 +1,34 @@
+{
+ "purpose": "edition 7 (436.9 J-P3 remedy v7) j9main / sens judgement failure, path 1 cause analysis (control-expert, 2026-11-26). Headline numbers copied from the a01..a11 outputs of this folder.",
+ "judge_reports": {
+  "j9main": "j9_runs/8a2a52ce/judge_60ebb4a4/j9main_a1/j9main.json (status failed: VB J1..J11 pair items 15, L-a 2, L-b 1)",
+  "sens": "j9_runs/8a2a52ce/judge_60ebb4a4/sens_a1/sens.json (status failed: cluster rule; multi-phase VBMslow S7, single-phase VBMslow R12 top-FL-Fs0 (1 <= k 4))"
+ },
+ "failure_classes": {
+  "F1_J7_stiffness_warn": {
+   "units": "VBM vs V0: 14 (R12 top-{FL,FR,RL,RR}-Fs8 x o0/o0.05 = 8, R14 x 2, R7 eps 0..0.003 = 4)",
+   "independent_events": "round-1 probe shared by the 10 R12/R14 lines (raw ratio 2.643 in all), R7 own probe (2.856); round-2 ratios 2.657..2.745",
+   "warn_rule": "c2.py 9903-9909: median(K1 / k_nom) outside (0.8, 2.3) -> WARN; scale bounded to [1.0, 1.5] (9910-9912, R8_D1_MEASURED_STIFFNESS_SCALE_MAX 1.5)",
+   "plants_lines_with_warn_j9main": {"V0 VB": 0, "ed5 VBJ": 0, "ed6 VBL": 0, "ed7 VBM": 14, "ed7 LSM1..4": "14 each"},
+   "sens_lines_with_warn": {"VBMslow": 28, "VBMh15": 27, "VBMfast": 0, "VBMh05": 0, "others": 4},
+   "probe_arm_contrast": "probe 6bfb2560 main part, same plants: arms a1..a6 ((i-b) on) 10..16 WARN lines, c2 ((i-b) and witness off) 1 (Mslow); plant L (VBL plant) also WARNs under a2 -> controller (i-b), not the P1 patch",
+   "probe_known_before_seal": "M a2 R12_top-FL-Fs8-o0.0 = same ratios 2.643;2.684 as j9main VBM; fixed table row marked 'out of scope' (spec 7, row 811); adoption failed unit list a2 = 3 incl. this one"
+  },
+  "F2_S7_J3": {
+   "rule": "soil READY rows S1..S7: V0 within 100 s and setting above 100 s -> J3 fail (judge_stage1_4368.py 273-281)",
+   "t_first_ready_s": {"V0": "76.4..77.1", "VBJ": "78.7..78.8", "VBL": "78.9..79.1", "VBM": [84.4, 84.4, 100.7, 83.6], "VBMslow": [102.9, 102.9, 86.3, 86.0]},
+   "mechanism": "relevel after the first probe: 5.6..5.9 s in VBJ/VBL (all four legs retract 0.3..1.35 mm/s), VBM family bimodal 6.4..7.0 s or 20..38 s; probe-1 net oil-stroke change VBL +0.79/+0.81/+0.22/+2.32 mm, VBM -0.30/-0.28/+0.11/-0.03 mm ((i-b) returns each leg to its start); VBM relevel start commands -0.63/+0.50/-0.90/+0.14 mm/s (RR inside the blind band 0 < |u| <= 0.209 mm/s)",
+   "baseline_shift": "S7 READY +5.5 s (VBL 78.9 -> VBM 84.4) from longer probes; c2 vs a2 in the probe: M S7_e0.001 78.5 vs 84.4",
+   "tail_incidence_S7": "VBM 1/4, LSM3 1/4, VBMslow 2/4, VBMfast 1/4, VBMh05 2/4, VBMh15 3/4, VBMb069 1/4, VBMd05 1/4; ed6 only VBLv05 e0.001 (134.8 s)"
+  },
+  "F3_post_event_window": {
+   "lines": "LSM4 R12 top-FR-Fs0 o0.05 (j9main L-a J1/J4, L-b J5) and VBMslow R12 top-FL-Fs0 o0.0 (sens single-phase J1/J4/J5)",
+   "mechanism": "post-event LEVEL 40.3 / 40.7 s with |D| drifting 2.5 -> 8.8 kN (relax 5 s rise > 0.6 kN, strict |D| < 3 kN fails); one leg still and in the blind stretch for 16.2..16.4 s with A_ib triggers 0, protect 0, latch 0 -> blocked by condition 3 (da) (twist-only, |D| <= 15 kN); then the (i-b)-lengthened probe (+3.8 s median, 0.5..6.6 s) runs past the run end t_event + 60 s",
+   "ed6_same_key": "LSL4 R12 top-FR-Fs0 o0.05: LEVEL 39.8 s, probe 11.8 s, READY at t_event + 52.85 s (pass)",
+   "probe_known_before_seal": "Mc04 a2 R12_top-FR-Fs0-o0.05 final probe (adoption failed unit); a3 (condition 'LEVEL incomplete') passed it; c2 t_back 22.25 s"
+  }
+ },
+ "a11_failed_units_by_arm_probe_6bfb2560": {"a1": 10, "a2": 3, "a3": 2, "a4": 3, "a5": 36, "a6": 5, "c2": 1, "c2_unit": "Mslow S7_e0.001 J4 final ready -> probe", "reproduces_stored": "a2/a3/a4 = adoption_b46bdf8f.json, a1/a5/a6 = share_b46bdf8f"},
+ "t_back_event_lines": {"ed5": {"median": 24.25, "p90": 27.45, "over_50s": 0, "no_back": 13}, "ed6": {"median": 23.9, "p90": 49.46, "over_50s": 20, "no_back": 3}, "ed7": {"median": 28.48, "p90": 39.57, "over_50s": 3, "no_back": 1}},
+ "not_involved": {"J-P3 / rev 7 condition": "j9main 200 judged lines, 198 with condition, 2791 reads, 0 breach; sens 104 / 99 / 1414 / 0", "D6 fallback": "no D6 fallback J7 in ed7 (ed6 mechanism 2 gone)", "Q7-C4 retract WARN": "0"}
+}

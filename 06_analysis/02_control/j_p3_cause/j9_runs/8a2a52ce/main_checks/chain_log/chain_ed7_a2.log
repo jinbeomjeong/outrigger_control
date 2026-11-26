@@ -1,0 +1,17 @@
+2026-11-26 10:30:15 +09:00 [info] 436.9 J-P3 edition 7 main run - chain runner (run commit C 8a2a52ce, worktree ed7-impl)
+2026-11-26 10:30:15 +09:00 [info] Stages from confirm: confirm j9main sens dg3 pre10a 12b_plan 12b_vbkm0
+2026-11-26 10:30:15 +09:00 [info] Cores: run_v5 / probe steps 0x0FFFFFFF x 20 workers (P+E); l1ref, dg3, 12b fixed P masks of C
+2026-11-26 10:30:15 +09:00 [info] Started 2026-11-26 10:30:15 +09:00; expected end about 2026-11-26 15:02 (estimate, upper ends of the placement table)
+2026-11-26 10:30:15 +09:00 [info] Progress: C:\Users\jinbeom\.claude\runners\outrigger-ed7-run\progress.json; control lines: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\chain_log\chain_ed7_a2.log; step markers: C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\*.done / *.stop
+2026-11-26 10:30:15 +09:00 [info] Pause after: confirm; runner PID 59740
+2026-11-26 10:30:15 +09:00 [info] Do not close this window: closing it stops the running step.
+2026-11-26 10:30:16 +09:00 [identity] start check_ed7 exit=0, worktree status entries=0
+2026-11-26 10:30:16 +09:00 [start] confirm n=6/12 step=confirm attempt=a1
+2026-11-26 10:30:16 +09:00 [run] "C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.9.0_x64__8wekyb3d8bbwe\pwsh.exe" -NoProfile -NonInteractive -File C:\workspace\outrigger_control\.claude\worktrees\ed7-impl\06_analysis\02_control\j_p3_cause\prelaunch_j9\run_steps_ed7\step6_confirm_ed7.ps1 -Attempt 1 -MaskHex 0x0FFFFFFF -Workers 20
+2026-11-26 10:58:05 +09:00 [end] confirm exit=0 wall_s=1670
+2026-11-26 10:58:05 +09:00 [run] write-sums: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\baseline_check.py write-sums --recursive C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\confirm_a1 --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\sums_write_confirm_a1_r1.md
+2026-11-26 10:58:06 +09:00 [check] write-sums exit=0
+2026-11-26 10:58:06 +09:00 [run] log_errors: C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\verif\log_errors.py C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\confirm_a1\logs --out C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\log_errors_confirm_a1_r1.md
+2026-11-26 10:58:06 +09:00 [check] log_errors exit=0
+2026-11-26 10:58:07 +09:00 [identity] end check_ed7 exit=0, worktree status entries=0
+2026-11-26 10:58:07 +09:00 [pause] confirm -PauseAfter confirm: checks passed, waiting for the main session; marker C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\j9_runs\8a2a52ce\main_checks\chain_log\confirm.pause; resume with -StartAt j9main
