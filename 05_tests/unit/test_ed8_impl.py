@@ -727,7 +727,8 @@ def test_edition_8_batches(key_sources, tmp_path: Path, monkeypatch) -> None:
     heldout = tmp_path / "heldout_g_ed8.json"
     heldout.write_bytes(keys.document_bytes(keys.heldout_document(RECORDS_ROOT, key_sources)))
     monkeypatch.setattr(run_v5, "ED8_KEYS_FILE", [census])
-    with pytest.raises(SystemExit):  # the table is empty until C8
+    monkeypatch.setattr(run_v5, "ED8_KEY_FILE_SHA256", {})
+    with pytest.raises(SystemExit):  # an empty table refuses every file (before C8)
         run_v5.batch_jobs(run_v5.ED8_KEYS_BATCH)
     monkeypatch.setattr(run_v5, "ED8_KEY_FILE_SHA256", {
         path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in (census, heldout)})
