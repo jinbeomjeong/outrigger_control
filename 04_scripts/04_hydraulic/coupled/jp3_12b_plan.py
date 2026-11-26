@@ -59,10 +59,14 @@ plans carry the arms VBKM0 / VBKM. Every edition 7 walk (``--scan-root``, ``--sc
 counts its files: ``selection.json`` records only ``blind_prefixes_applied`` (the number of
 prefixes). Editions 5 and 6 keep their ``rglob`` scan unchanged.
 
+Edition 8 (``--edition 8``, ``jp3_remedy_spec_v8_rules.md`` 8): the edition 7 rule unchanged
+(seeds 50 .. 53, the required roots: the edition 6 / 7 outputs, the P8-14 and P8-16 outputs and
+the edition 8 outputs; the same blind prefixes); the plans carry the arms VBKN0 / VBKN.
+
 Usage (python-dev or Chrono-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/jp3_12b_plan.py --noise <h8_noise_VB.json>
       --scan-root <repo>/06_analysis --scan-extra <run worktree>/05_tests --out-dir <folder>
-      [--edition 6|7] [--scan-exclude <glob> ...] [--scan-keys-file <txt> ...]
+      [--edition 6|7|8] [--scan-exclude <glob> ...] [--scan-keys-file <txt> ...]
       [--scan-required <root> ...]
 
 Exit codes (the stdout's last line is JSON with ``status`` and the output folder):
@@ -532,7 +536,7 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     cases = l2_cases(json.loads(noise_path.read_text(encoding="utf-8")))
     if len(cases) != CASE_COUNT:
         raise NotUsable(f"{len(cases)} L2 cases in the case source, {CASE_COUNT} expected")
-    blind = ED7_BLIND_PREFIXES if edition == 7 else ()
+    blind = ED7_BLIND_PREFIXES if edition in REQUIRED_SCAN_EDITIONS else ()
     if any(is_blind(root, blind) for root in (scan_root, *extra_roots)):
         raise NotUsable("--scan-root / --scan-extra lies inside an edition 7 blind prefix")
     for root in extra_roots:
@@ -552,13 +556,13 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
     if empty:
         raise NotUsable(f"--scan-required roots without a file: {empty}")
     scan = _with_required(scan, required_scans)
-    if edition in (6, 7):
+    if edition in ED6_SEED_EDITIONS:
         seeds, repeats = block_seeds(cases, scan.keys, ED6_BLOCK_SEEDS, ED6_RESERVED_SEEDS)
     else:
         seeds, repeats = block_seeds(cases, scan.keys)
     table = cell_table(cases)
-    dry, dry_keys = ({}, {}) if edition in (6, 7) else dry_plans(table, scan.keys)
-    union_check = None if edition in (6, 7) else dry_union_check(dry)
+    dry, dry_keys = ({}, {}) if edition in ED6_SEED_EDITIONS else dry_plans(table, scan.keys)
+    union_check = None if edition in ED6_SEED_EDITIONS else dry_union_check(dry)
     out_dir.mkdir(parents=True, exist_ok=True)
     outputs = {}
     for block, (seed, phase_rule) in enumerate(zip(seeds, BLOCK_PHASES, strict=True), start=1):
@@ -586,9 +590,9 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
                        "blind_prefixes_applied": len(blind),
                        "blind_note": f"excluded prefixes applied: {len(blind)} (never walked; "
                                      "no path or count of them is written)"}
-                      if edition == 7 else {})},
+                      if edition in REQUIRED_SCAN_EDITIONS else {})},
         **({"edition": edition, "reserved_seeds": list(ED6_RESERVED_SEEDS)}
-           if edition in (6, 7) else {}),
+           if edition in ED6_SEED_EDITIONS else {}),
         "scan": {"files_scanned": len(scan.files), "r79_keys": len(scan.keys),
                  "seed_max": scan.seed_max,
                  "files": [{"path": path, "sha256": sha, "r79_keys": count}
@@ -610,8 +614,16 @@ def select(noise_path: Path, scan_root: Path, out_dir: Path,
 
 RULE_OF_EDITION = {5: "jp3_remedy_spec_v5.md 6.3.1 / 6.3.10 (X-11)",
                    6: "jp3_remedy_spec_v6.md 6.4 revision 9 (G-1)",
-                   7: "jp3_remedy_spec_v7.md 6.4 (Y7-7: the edition 6 seeds, scan widened)"}
-ARMS_OF_EDITION = {5: ("VBK0", "VBK"), 6: ("VBKL0", "VBKL"), 7: ("VBKM0", "VBKM")}
+                   7: "jp3_remedy_spec_v7.md 6.4 (Y7-7: the edition 6 seeds, scan widened)",
+                   8: "jp3_remedy_spec_v8_rules.md 8 (edition 7 6.4 unchanged; scan widened "
+                      "by the P8-14 / P8-16 outputs and the edition 8 outputs)"}
+ARMS_OF_EDITION = {5: ("VBK0", "VBK"), 6: ("VBKL0", "VBKL"), 7: ("VBKM0", "VBKM"),
+                   8: ("VBKN0", "VBKN")}
+ED6_SEED_EDITIONS = (6, 7, 8)
+"""Editions with the edition 6 block seeds 50 .. 53, the reserved seeds and no c dry plans."""
+REQUIRED_SCAN_EDITIONS = (7, 8)
+"""Editions with ``--scan-required`` roots and the blind-prefix pruned walk (edition 8 keeps the
+edition 7 rule: 12b seeds 50 .. 53 were never run, spec v8 8)."""
 
 
 def _check_edition_inputs(edition: int, excludes: tuple[str, ...],
@@ -626,12 +638,13 @@ def _check_edition_inputs(edition: int, excludes: tuple[str, ...],
         raise NotUsable(f"edition {edition}: one of {sorted(RULE_OF_EDITION)}")
     if edition == 5 and (excludes or key_lists):
         raise NotUsable("--scan-exclude / --scan-keys-file are edition 6 options (and 7)")
-    if edition != 7 and required_roots:
+    if edition not in REQUIRED_SCAN_EDITIONS and required_roots:
         raise NotUsable("--scan-required is an edition 7 option")
-    if edition == 7 and not required_roots:
+    if edition in REQUIRED_SCAN_EDITIONS and not required_roots:
         raise NotUsable("edition 7 needs --scan-required (the edition 6 run outputs, records "
                         "B / C / D and the edition 7 outputs, spec v7 6.4)")
-    if edition == 7 and any(is_blind(root, ED7_BLIND_PREFIXES) for root in required_roots):
+    if edition in REQUIRED_SCAN_EDITIONS and any(is_blind(root, ED7_BLIND_PREFIXES)
+                                                 for root in required_roots):
         raise NotUsable("a --scan-required root lies inside an edition 7 blind prefix")
     for root in required_roots:
         if not root.is_dir():
@@ -652,7 +665,7 @@ def _edition_6_inputs(edition: int, scan_root: Path, excludes: tuple[str, ...],
                       key_lists: tuple[Path, ...], blind: tuple[str, ...] = ()) -> dict:
     """The edition 6 / 7 scan inputs of ``selection.json`` (an edition 5 document keeps its
     former keys)."""
-    if edition not in (6, 7):
+    if edition not in ED6_SEED_EDITIONS:
         return {}
     return {"scan_exclude": list(excludes),
             "scan_excluded_files": excluded_files(scan_root, tuple(excludes), blind),
@@ -681,7 +694,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scan-extra", type=Path, action="append", required=True,
                         help="a test or probe source root (repeatable; at least the run "
                              "worktree's 05_tests, erratum 1 audit E-1)")
-    parser.add_argument("--edition", type=int, default=5, choices=(5, 6, 7))
+    parser.add_argument("--edition", type=int, default=5, choices=(5, 6, 7, 8))
     parser.add_argument("--scan-exclude", action="append", default=[],
                         help="glob relative to --scan-root: files left out, never opened")
     parser.add_argument("--scan-keys-file", type=Path, action="append", default=[],

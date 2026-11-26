@@ -752,6 +752,31 @@ def test_edition_8_batches(key_sources, tmp_path: Path, monkeypatch) -> None:
         run_v5.ED8_JUDGED_SETTINGS)
 
 
+def test_12b_plan_edition_8_is_edition_7_with_the_vbkn_arms(tmp_path: Path) -> None:
+    import jp3_12b_plan as plan
+    from test_jp3_12b_tools import write_noise
+
+    noise = tmp_path / "noise.json"
+    noise_sha = write_noise(noise)
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    required = tmp_path / "ed8_run"
+    required.mkdir()
+    np.savez(required / "t4h.npz", meta_json=np.array(json.dumps(
+        {"key": "L2|s50|g6|0|x0|top|Fs0"})))
+    with pytest.raises(plan.NotUsable, match="needs --scan-required"):
+        plan.select(noise, scan, tmp_path / "p0", noise_sha256=noise_sha, edition=8)
+    seven = plan.select(noise, scan, tmp_path / "p7", noise_sha256=noise_sha, edition=7,
+                        required_roots=(required,))
+    eight = plan.select(noise, scan, tmp_path / "p8", noise_sha256=noise_sha, edition=8,
+                        required_roots=(required,))
+    assert eight["edition"] == 8 and eight["blocks"] == seven["blocks"]
+    assert eight["run_commands"][0].startswith("R79_V5_SETTING=VBKN0 ")
+    for block in ("b1", "b2", "b3", "b4"):
+        name = f"{block}_plan.json"
+        assert (tmp_path / "p8" / name).read_bytes() == (tmp_path / "p7" / name).read_bytes()
+
+
 # ------------------------------------------------------------------------ old settings
 def test_old_settings_run_no_new_line(monkeypatch, geometry) -> None:
     """P8-0 premise: with every new field at its default the PSW, H3' record, L-2 count / waiver
