@@ -1,0 +1,160 @@
+{
+ "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\j9main_a1\\j9_main.jsonl": {
+  "lwa_kinds": [
+   [
+    [
+     "fallback_legs",
+     "judged_by_leg",
+     "late",
+     "margin_min_s_by_leg",
+     "margin_min_s_fallback",
+     "monitor_stretch_rule",
+     "n_late_by_leg",
+     "n_late_fallback",
+     "n_late_fallback_by_leg",
+     "stretches_by_leg",
+     "time_tol_s",
+     "unjudged_by_leg",
+     "unjudged_command_resumed_by_leg",
+     "unlock_in_stretch",
+     "window_check"
+    ],
+    "None",
+    200
+   ],
+   [
+    [
+     "n_late",
+     "reason"
+    ],
+    "no rod reading",
+    188
+   ]
+  ],
+  "hyd_kinds": [
+   [
+    [
+     "lock_events_len_gt0",
+     "post_clip_type_list"
+    ],
+    388
+   ]
+  ]
+ },
+ "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\8a2a52ce\\confirm_a1\\confirm_g1.jsonl": {
+  "lwa_kinds": [
+   [
+    [
+     "fallback_legs",
+     "judged_by_leg",
+     "late",
+     "margin_min_s_by_leg",
+     "margin_min_s_fallback",
+     "monitor_stretch_rule",
+     "n_late_by_leg",
+     "n_late_fallback",
+     "n_late_fallback_by_leg",
+     "stretches_by_leg",
+     "time_tol_s",
+     "unjudged_by_leg",
+     "unjudged_command_resumed_by_leg",
+     "unlock_in_stretch",
+     "window_check"
+    ],
+    "None",
+    171
+   ]
+  ],
+  "hyd_kinds": [
+   [
+    [
+     "lock_events_len_gt0",
+     "post_clip_type_list"
+    ],
+    171
+   ]
+  ]
+ },
+ "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\79495405\\confirm_a1\\confirm_b.jsonl": {
+  "lwa_kinds": [
+   [
+    [
+     "fallback_legs",
+     "judged_by_leg",
+     "late",
+     "margin_min_s_by_leg",
+     "margin_min_s_fallback",
+     "monitor_stretch_rule",
+     "n_late_by_leg",
+     "n_late_fallback",
+     "n_late_fallback_by_leg",
+     "stretches_by_leg",
+     "time_tol_s",
+     "unjudged_by_leg",
+     "unjudged_command_resumed_by_leg",
+     "unlock_in_stretch",
+     "window_check"
+    ],
+    "None",
+    192
+   ]
+  ],
+  "hyd_kinds": [
+   [
+    [
+     "lock_events_len_gt0",
+     "post_clip_type_list"
+    ],
+    192
+   ]
+  ]
+ },
+ "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl": {
+  "lwa_kinds": [
+   [
+    [
+     "fallback_legs",
+     "judged_by_leg",
+     "late",
+     "margin_min_s_by_leg",
+     "margin_min_s_fallback",
+     "n_late_by_leg",
+     "n_late_fallback",
+     "n_late_fallback_by_leg",
+     "stretches_by_leg",
+     "time_tol_s",
+     "unjudged_by_leg",
+     "unjudged_command_resumed_by_leg",
+     "unlock_in_stretch",
+     "window_check"
+    ],
+    "None",
+    523
+   ],
+   [
+    [
+     "n_late",
+     "reason"
+    ],
+    "no rod reading",
+    505
+   ]
+  ],
+  "hyd_kinds": [
+   [
+    [
+     "lock_events_len_gt0",
+     "post_clip_type_list"
+    ],
+    948
+   ],
+   [
+    [
+     "lock_events_len_gt0",
+     "post_clip_type_NoneType"
+    ],
+    80
+   ]
+  ]
+ }
+}

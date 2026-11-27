@@ -1,0 +1,43 @@
+[
+ {
+  "case": "R12",
+  "eps": 0.0,
+  "offset_s": 0.0,
+  "setting": "V0",
+  "twin": {
+   "depth_m": 0.03,
+   "event": "RE1bF",
+   "fs_kN": 0.0,
+   "leg": "FL",
+   "level": "bottom",
+   "ramp_s": 0.05,
+   "timing": "ready"
+  }
+ },
+ {
+  "case": "R12",
+  "eps": 0.0,
+  "offset_s": 0.0,
+  "setting": "V0",
+  "twin": {
+   "event": "FS24",
+   "fs_kN": 0.0,
+   "leg": "FL",
+   "level": "top",
+   "timing": "level"
+  }
+ },
+ {
+  "case": "R12",
+  "eps": 0.0,
+  "offset_s": 0.0,
+  "setting": "V0",
+  "twin": {
+   "event": "G4",
+   "fs_kN": 0.0,
+   "leg": "FL",
+   "level": "bottom",
+   "timing": "level"
+  }
+ }
+]

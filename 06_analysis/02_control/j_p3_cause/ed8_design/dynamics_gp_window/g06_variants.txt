@@ -1,0 +1,22 @@
+25/0.05  ensemble x 8 runs            n 48 | d_t_contact  -42.8 [ -45.0,  -40.0] ms | d_t_r_star  -40.8 [ -45.0,  -33.0] ms | d_t_h_star  -16.7 [ -23.0,  -10.0] ms | d_t_relift  -17.2 [ -23.0,  -12.0] ms | d_d_land  -59.0 [ -71.0,  -52.0] ms
+25/0.05  valve_off (o0.0, best)       n  2 | d_t_contact  -43.5 [ -45.0,  -42.0] ms | d_t_r_star  -42.5 [ -43.0,  -42.0] ms | d_t_h_star   -9.5 [ -10.0,   -9.0] ms | d_t_relift  -11.0 [ -11.0,  -11.0] ms | d_d_land  -85.0 [ -87.0,  -83.0] ms
+25/0.05  mu0.3                        n  2 | d_t_contact  -44.0 [ -45.0,  -43.0] ms | d_t_r_star  -43.0 [ -44.0,  -42.0] ms | d_t_h_star  -12.0 [ -13.0,  -11.0] ms | d_t_relift  -14.5 [ -16.0,  -13.0] ms | d_d_land  -80.5 [ -83.0,  -78.0] ms
+25/0.05  mu1.0                        n  2 | d_t_contact  -44.0 [ -45.0,  -43.0] ms | d_t_r_star  -42.5 [ -43.0,  -42.0] ms | d_t_h_star  -16.0 [ -16.0,  -16.0] ms | d_t_relift  -17.0 [ -17.0,  -17.0] ms | d_d_land  -63.5 [ -65.0,  -62.0] ms
+25/0.05  dt_half                      n  2 | d_t_contact  -43.5 [ -45.0,  -42.0] ms | d_t_r_star  -42.5 [ -43.0,  -42.0] ms | d_t_h_star  -17.5 [ -18.0,  -17.0] ms | d_t_relift  -18.5 [ -19.0,  -18.0] ms | d_d_land  -63.0 [ -65.0,  -61.0] ms
+25/0.05  best member ens0 x 8 runs    n  8 | d_t_contact  -43.0 [ -45.0,  -41.0] ms | d_t_r_star  -40.9 [ -43.0,  -39.0] ms | d_t_h_star  -17.9 [ -19.0,  -17.0] ms | d_t_relift  -18.5 [ -19.0,  -18.0] ms | d_d_land  -61.0 [ -65.0,  -57.0] ms
+30/0.04  ensemble x 8 runs            n 48 | d_t_contact   -2.0 [  -2.0,   -1.0] ms | d_t_r_star   -2.1 [  -3.0,   -2.0] ms | d_t_h_star   -2.0 [  -3.0,   -1.0] ms | d_t_relift   -2.0 [  -3.0,   -2.0] ms | d_d_land   -1.7 [  -2.0,   -1.0] ms
+30/0.04  valve_off (o0.0, best)       n  2 | d_t_contact   -2.0 [  -2.0,   -2.0] ms | d_t_r_star   -2.0 [  -2.0,   -2.0] ms | d_t_h_star   -2.0 [  -2.0,   -2.0] ms | d_t_relift   -2.0 [  -2.0,   -2.0] ms | d_d_land   -2.0 [  -2.0,   -2.0] ms
+30/0.04  mu0.3                        n  2 | d_t_contact   -2.0 [  -2.0,   -2.0] ms | d_t_r_star   -2.5 [  -3.0,   -2.0] ms | d_t_h_star   -2.0 [  -2.0,   -2.0] ms | d_t_relift   -2.0 [  -2.0,   -2.0] ms | d_d_land   -2.0 [  -2.0,   -2.0] ms
+30/0.04  mu1.0                        n  2 | d_t_contact   -2.0 [  -2.0,   -2.0] ms | d_t_r_star   -2.0 [  -2.0,   -2.0] ms | d_t_h_star   -2.0 [  -2.0,   -2.0] ms | d_t_relift   -2.0 [  -2.0,   -2.0] ms | d_d_land   -1.5 [  -2.0,   -1.0] ms
+30/0.04  dt_half                      n  2 | d_t_contact   -2.0 [  -2.0,   -2.0] ms | d_t_r_star   -2.0 [  -2.0,   -2.0] ms | d_t_h_star   -2.0 [  -2.0,   -2.0] ms | d_t_relift   -2.0 [  -2.0,   -2.0] ms | d_d_land   -2.0 [  -2.0,   -2.0] ms
+30/0.04  best member ens0 x 8 runs    n  8 | d_t_contact   -2.0 [  -2.0,   -2.0] ms | d_t_r_star   -2.0 [  -2.0,   -2.0] ms | d_t_h_star   -2.0 [  -2.0,   -2.0] ms | d_t_relift   -2.0 [  -2.0,   -2.0] ms | d_d_land   -1.8 [  -2.0,   -1.0] ms
+
+ens0 stored-shape absolute (model) per run: stem, t_contact, t_r*, t_h*, t_relift, d_land
+  R12_bottom-FL-Fs2-o0.0-RE1bF-ready_V0: 0.182 0.189 0.451 0.457 0.526
+  R12_bottom-FL-Fs2-o0.025-RE1bF-ready_V0: 0.182 0.186 0.45 0.456 0.521
+  R12_bottom-FL-Fs2-o0.05-RE1bF-ready_V0: 0.182 0.186 0.45 0.456 0.516
+  R12_bottom-FL-Fs2-o0.075-RE1bF-ready_V0: 0.181 0.185 0.449 0.455 0.511
+  R12_bottom-FR-Fs4-o0.0-RE1bF-ready_V0: 0.189 0.197 0.453 0.459 0.532
+  R12_bottom-FR-Fs4-o0.025-RE1bF-ready_V0: 0.189 0.194 0.452 0.458 0.527
+  R12_bottom-FR-Fs4-o0.05-RE1bF-ready_V0: 0.188 0.193 0.451 0.458 0.521
+  R12_bottom-FR-Fs4-o0.075-RE1bF-ready_V0: 0.187 0.192 0.451 0.457 0.516

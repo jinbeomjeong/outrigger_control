@@ -1,0 +1,16 @@
+C2 t=45.10 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+1/2 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0', 'twin': {'fs_kN': 0.0, 'leg': 'FL', 'level': 'top'}}: ready 9b3ca334 26.9s
+2/2 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'setting': 'V0', 'twin': {'fs_kN': 0.0, 'leg': 'FL', 'level': 'top'}}: ready 9d72d16e 27.0s
+{"status": "written", "lines": 2, "out": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\smoke_v0_56849248\\v0_smoke.jsonl"}
+exit=0

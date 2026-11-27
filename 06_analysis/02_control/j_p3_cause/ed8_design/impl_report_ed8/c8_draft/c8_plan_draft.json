@@ -1,0 +1,35 @@
+{
+ "status": "DRAFT (not committed; C8 is the next step after the user's go)",
+ "spec": "jp3_remedy_spec_v8_rules.md sha256 35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520, 11.1 and P8-10",
+ "parent_implementation_commit": "27c0f046eb15eaa83b4df7d547bcd22ada9de59a",
+ "c8_contents": {
+  "run_v5.ED8_KEY_FILE_SHA256": {
+   "census_keys_ed8.json": "278b332f694405d5f9be432467e294b64492d5ffd638a76986e819460c88c535",
+   "heldout_g_ed8.json": "a18b5818734f1b10840c903fb9e4b5c140f619705048344f9ea48d16d3142ee5"
+  },
+  "key_file_drafts": "ed8_design/impl_report_ed8/keys_draft/ (made by ed8_key_lists.py at 66648ea8 from the five spec 5.1 sources, --root = the main checkout; the generator did not change in 27c0f046)",
+  "key_file_location_proposal": "ed8_design/keys_seal_27c0f046/ (re-made at the C8 parent clean; the bytes must equal the drafts)",
+  "tests": [
+   "test_ed8_run_commit.py: ED8_KEY_FILE_SHA256 equals the two values; ed8_keys accepts the sealed bytes and refuses any other",
+   "P8-10 regeneration: ed8_key_lists census / heldout from the sources reproduce the sealed bytes (and the lines)"
+  ],
+  "run_steps": "prelaunch_j9/run_steps_ed8/ (common_ed8.ps1 on the run_steps_ed7 pattern; numba cache outside the worktree: numba_cache_ed8_fragment.ps1)"
+ },
+ "stages_after_c8": [
+  {"step": "4 P8-10", "what": "scope check of C8 (diff paths only the table, the tests, run steps, run config)"},
+  {"step": "4 P8-4", "what": "unit suite at C8 (baseline at the C8 parent 27c0f046)"},
+  {"step": "4 P8-0", "what": "8 stored hashes (test_ed8_harness) and ed7_probe.py --arms a2 --part all 114 lines vs j9_runs/b46bdf8f/repro_a2/ed7_probe_a2.jsonl", "lines": 114},
+  {"step": "4 P8-5", "what": "ed8_probe --part p816 --plants M,LSM4,Mslow --arms a8,a8_psw_off (23 keys x 2)", "lines": 46},
+  {"step": "4 P8-8", "what": "ed8_probe --part p816 --plants M,LSM4,Mslow --arms a8,a8_h3_off", "lines": 46},
+  {"step": "4 P8-15", "what": "ed8_probe --part p816 --arms a8,a8_l2_off --r79-plan <P8-14 plan> (27 keys x 2, KM0 = VBN0-like)", "lines": 54},
+  {"step": "4 P8-6", "what": "test_ed8_impl_harness.py::test_p86_first_round_scale_stiffness_equals_the_replay (passed at 66648ea8)"},
+  {"step": "4 P8-16 (C8)", "what": "ed8_probe --part p816 --arms B_impl,L2_impl --r79-plan <P8-14 plan>, p816_compare.py", "lines": 54},
+  {"step": "4 P8-1", "what": "run_v5 ed8_t8 --p3-hash-source <main.jsonl>", "lines": 44},
+  {"step": "4 P8-2", "what": "run_v5 ed8_cases", "lines": 10},
+  {"step": "5 G' V0", "what": "run_v5 ed8_heldout_v0 (+ ed8_heldout_aa2 / aa3 as 7.4 needs)", "lines": 678},
+  {"step": "6 census", "what": "run_v5 ed8_keys --jobs-file census_keys_ed8.json", "lines": 1043},
+  {"step": "8 G'", "what": "run_v5 ed8_keys --jobs-file heldout_g_ed8.json", "lines": 339},
+  {"step": "9-10 12a / 12b", "what": "as edition 7 with VBN / VBN0 and VBKN / VBKN0"}
+ ],
+ "invocation_note": "P8-16 used conda run --no-capture-output -n dynamics-dev python -I -B (the P8-14 invocation); keep the run steps' invocation recorded in the identity"
+}

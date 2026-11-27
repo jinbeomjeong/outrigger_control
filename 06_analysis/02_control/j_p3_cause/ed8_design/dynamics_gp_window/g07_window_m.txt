@@ -1,0 +1,70 @@
+edge fit t_r*: {"U8-A|FL": 0.18475, "U8-A|FR": 0.19517, "V0|FL": 0.18362, "V0|FR": 0.19012, "VBM|FL": 0.18881, "VBM|FR": 0.1937, "a_Fs": 0.00125, "beta": 0.05652} se a_Fs 0.00039 resid sd 0.0019 max 0.0029
+edge fit t_h*: {"U8-A|FL": 0.44509, "U8-A|FR": 0.44906, "V0|FL": 0.44473, "V0|FR": 0.44729, "VBM|FL": 0.44845, "VBM|FR": 0.44841, "a_Fs": 0.00097, "beta": 0.00455} se a_Fs 0.00029 resid sd 0.0014 max 0.0021
+SIG_L 0.001 SIG_R 0.0; calibration top: [{'sig_L': 0.001, 'sig_R': 0.0, 'agreement': np.float64(0.9486)}, {'sig_L': 0.002, 'sig_R': 0.0, 'agreement': np.float64(0.9456)}, {'sig_L': 0.0, 'sig_R': 0.0, 'agreement': np.float64(0.9375)}]
+nominal model vs stored grid (old phases):
+  ready-FL-Fs0     phi 0.0    stored E model E (t_r* 0.1836, t_h* 0.4447)
+  ready-FL-Fs0     phi 0.05   stored N model N (t_r* 0.1808, t_h* 0.4445)
+  ready-FL-Fs2     phi 0.0    stored E model E (t_r* 0.1861, t_h* 0.4467)
+  ready-FL-Fs2     phi 0.025  stored N model N (t_r* 0.1847, t_h* 0.4466)
+  ready-FL-Fs2     phi 0.05   stored N model N (t_r* 0.1833, t_h* 0.4464)
+  ready-FL-Fs2     phi 0.075  stored E model E (t_r* 0.1819, t_h* 0.4463)
+  ready-FL-Fs4     phi 0.0    stored E model E (t_r* 0.1886, t_h* 0.4486)
+  ready-FL-Fs4     phi 0.025  stored N model N (t_r* 0.1872, t_h* 0.4485)
+  ready-FL-Fs4     phi 0.05   stored N model N (t_r* 0.1858, t_h* 0.4484)
+  ready-FL-Fs4     phi 0.075  stored E model E (t_r* 0.1844, t_h* 0.4483)
+  ready-FL-Fs8     phi 0.0    stored E model E (t_r* 0.1936, t_h* 0.4525)
+  ready-FL-Fs8     phi 0.05   stored E model E (t_r* 0.1908, t_h* 0.4523)
+  ready-FR-Fs0     phi 0.0    stored E model E (t_r* 0.1901, t_h* 0.4473)
+  ready-FR-Fs0     phi 0.05   stored N model N (t_r* 0.1873, t_h* 0.4471)
+  ready-FR-Fs2     phi 0.0    stored E model E (t_r* 0.1926, t_h* 0.4492)
+  ready-FR-Fs2     phi 0.025  stored N model N (t_r* 0.1912, t_h* 0.4491)
+  ready-FR-Fs2     phi 0.05   stored N model N (t_r* 0.1898, t_h* 0.449)
+  ready-FR-Fs2     phi 0.075  stored E model E (t_r* 0.1884, t_h* 0.4489)
+  ready-FR-Fs4     phi 0.0    stored E model E (t_r* 0.1951, t_h* 0.4512)
+  ready-FR-Fs4     phi 0.025  stored N model N (t_r* 0.1937, t_h* 0.4511)
+  ready-FR-Fs4     phi 0.05   stored E model E (t_r* 0.1923, t_h* 0.4509)
+  ready-FR-Fs4     phi 0.075  stored E model E (t_r* 0.1909, t_h* 0.4508)
+  ready-FR-Fs8     phi 0.0    stored N model N (t_r* 0.2001, t_h* 0.455)
+  ready-FR-Fs8     phi 0.05   stored E model E (t_r* 0.1973, t_h* 0.4548)
+  level-FL-Fs0     phi 0.0    stored E model E (t_r* 0.1836, t_h* 0.4447)
+  level-FL-Fs0     phi 0.05   stored N model N (t_r* 0.1808, t_h* 0.4445)
+  level-FL-Fs2     phi 0.0    stored E model E (t_r* 0.1861, t_h* 0.4467)
+  level-FL-Fs2     phi 0.025  stored N model N (t_r* 0.1847, t_h* 0.4466)
+  level-FL-Fs2     phi 0.05   stored N model N (t_r* 0.1833, t_h* 0.4464)
+  level-FL-Fs2     phi 0.075  stored E model E (t_r* 0.1819, t_h* 0.4463)
+  level-FL-Fs4     phi 0.0    stored E model E (t_r* 0.1886, t_h* 0.4486)
+  level-FL-Fs4     phi 0.025  stored N model N (t_r* 0.1872, t_h* 0.4485)
+  level-FL-Fs4     phi 0.05   stored N model N (t_r* 0.1858, t_h* 0.4484)
+  level-FL-Fs4     phi 0.075  stored E model E (t_r* 0.1844, t_h* 0.4483)
+  level-FL-Fs8     phi 0.0    stored E model E (t_r* 0.1936, t_h* 0.4525)
+  level-FL-Fs8     phi 0.05   stored N model E (t_r* 0.1908, t_h* 0.4523)
+  level-FR-Fs0     phi 0.0    stored E model E (t_r* 0.1901, t_h* 0.4473)
+  level-FR-Fs0     phi 0.05   stored N model N (t_r* 0.1873, t_h* 0.4471)
+  level-FR-Fs2     phi 0.0    stored E model E (t_r* 0.1926, t_h* 0.4492)
+  level-FR-Fs2     phi 0.025  stored N model N (t_r* 0.1912, t_h* 0.4491)
+  level-FR-Fs2     phi 0.05   stored N model N (t_r* 0.1898, t_h* 0.449)
+  level-FR-Fs2     phi 0.075  stored E model E (t_r* 0.1884, t_h* 0.4489)
+  level-FR-Fs4     phi 0.0    stored E model E (t_r* 0.1951, t_h* 0.4512)
+  level-FR-Fs4     phi 0.025  stored N model N (t_r* 0.1937, t_h* 0.4511)
+  level-FR-Fs4     phi 0.05   stored N model E (t_r* 0.1923, t_h* 0.4509)
+  level-FR-Fs4     phi 0.075  stored E model E (t_r* 0.1909, t_h* 0.4508)
+  level-FR-Fs8     phi 0.0    stored E model N (t_r* 0.2001, t_h* 0.455)
+  level-FR-Fs8     phi 0.05   stored E model E (t_r* 0.1973, t_h* 0.4548)
+
+P(E) by phase     0.0  0.0125   0.025  0.0375    0.05  0.0625   0.075  0.0875   mean   m(model)
+base            0.928   0.301   0.000   0.000   0.354   1.000   1.000   1.000  0.573  1.000
+25/0.05         1.000   1.000   1.000   0.988   0.675   0.220   0.936   1.000  0.852  1.488
+30/0.04         0.966   0.474   0.000   0.000   0.206   1.000   1.000   1.000  0.581  1.014
+Fs1             1.000   0.512   0.000   0.000   0.007   1.000   1.000   1.000  0.565  0.986
+Fs3             1.000   0.366   0.000   0.000   0.245   1.000   1.000   1.000  0.576  1.006
+Fs6             0.919   0.053   0.000   0.000   0.746   1.000   1.000   1.000  0.590  1.029
+Fs0             1.000   0.505   0.000   0.000   0.001   1.000   1.000   1.000  0.563  0.983
+Fs2             1.000   0.499   0.000   0.000   0.060   1.000   1.000   1.000  0.570  0.995
+Fs4             0.999   0.195   0.000   0.000   0.434   1.000   1.000   1.000  0.578  1.010
+Fs8             0.746   0.022   0.000   0.000   0.894   1.000   1.000   1.000  0.583  1.017
+25L-10          0.264   1.000   1.000   0.995   0.737   0.068   0.000   0.000  0.508  0.887
+25L0            0.988   1.000   1.000   0.995   0.744   0.059   0.000   0.118  0.613  1.070
+25L10           1.000   1.000   1.000   0.995   0.733   0.053   0.040   0.916  0.717  1.251
+25L20           1.000   1.000   1.000   0.993   0.738   0.065   0.687   1.000  0.810  1.414
+25L30           1.000   1.000   1.000   0.996   0.739   0.507   1.000   1.000  0.905  1.580
+stats P_RE      0.938   0.500   0.000   0.000   0.250   1.000   1.000   1.000  0.586

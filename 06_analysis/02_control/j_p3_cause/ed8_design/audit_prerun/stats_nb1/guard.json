@@ -1,0 +1,1016 @@
+{
+  "tool": "source_guard",
+  "schema": 1,
+  "created_at": "2026-11-27T01:21:54+09:00",
+  "inputs": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\jp3_remedy_spec_v8_rules.md",
+      "sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+      "size": 65223,
+      "mtime_ns": 1795685336590249300
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\audit_prerun\\control_nb1_decision.md",
+      "sha256": "06b23f911598693d2fc8a30262f324c633fb9f7cb313b7876699ba9213896282",
+      "size": 26111,
+      "mtime_ns": 1795710077739363200
+    }
+  ],
+  "folders": {
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause": [
+      {
+        "name": "audit_postjudge_tjr12.md",
+        "kind": "file",
+        "size": 13757,
+        "mtime_ns": 1795263126211579100
+      },
+      {
+        "name": "baseline_221456d",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1794838811714668800
+      },
+      {
+        "name": "ed5_d0_390f88a9",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795435924607344300
+      },
+      {
+        "name": "ed5_design",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795434811533972600
+      },
+      {
+        "name": "ed5_j9fail_606f8713",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795430084257899400
+      },
+      {
+        "name": "ed5_judgement_606f8713",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795432609727013300
+      },
+      {
+        "name": "ed5_p2_606f8713",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795433970387618300
+      },
+      {
+        "name": "ed6_design",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795503791315861800
+      },
+      {
+        "name": "ed6_p2_79495405",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795503088578981900
+      },
+      {
+        "name": "ed7_design",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795666927854361500
+      },
+      {
+        "name": "ed8_design",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795708153845789500
+      },
+      {
+        "name": "fmin_effect.json",
+        "kind": "file",
+        "size": 3479,
+        "mtime_ns": 1794821415641642200
+      },
+      {
+        "name": "h01_trace",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1794822586102400300
+      },
+      {
+        "name": "h01_trace_run.py",
+        "kind": "file",
+        "size": 5358,
+        "mtime_ns": 1794822579263200900
+      },
+      {
+        "name": "h02_trace_analyze.py",
+        "kind": "file",
+        "size": 3424,
+        "mtime_ns": 1794822579290524700
+      },
+      {
+        "name": "h02_trace_events.json",
+        "kind": "file",
+        "size": 5219,
+        "mtime_ns": 1794822579402470900
+      },
+      {
+        "name": "h03_physical_counterfactual.json",
+        "kind": "file",
+        "size": 10369,
+        "mtime_ns": 1794822579432746200
+      },
+      {
+        "name": "h03_physical_counterfactual.py",
+        "kind": "file",
+        "size": 3477,
+        "mtime_ns": 1794822579327014800
+      },
+      {
+        "name": "h04_line_fill.json",
+        "kind": "file",
+        "size": 2438,
+        "mtime_ns": 1794822579459361100
+      },
+      {
+        "name": "h04_line_fill.py",
+        "kind": "file",
+        "size": 4690,
+        "mtime_ns": 1794822579364035200
+      },
+      {
+        "name": "hr01_p3_flow_law.json",
+        "kind": "file",
+        "size": 175273,
+        "mtime_ns": 1794828563379061100
+      },
+      {
+        "name": "hr01_p3_flow_law.py",
+        "kind": "file",
+        "size": 14079,
+        "mtime_ns": 1794828552440742500
+      },
+      {
+        "name": "hr02_gate_check.json",
+        "kind": "file",
+        "size": 15091,
+        "mtime_ns": 1794828898289202400
+      },
+      {
+        "name": "hr02_gate_check.py",
+        "kind": "file",
+        "size": 21569,
+        "mtime_ns": 1794828876012153500
+      },
+      {
+        "name": "hr03_gate_consequence.json",
+        "kind": "file",
+        "size": 5239,
+        "mtime_ns": 1794828842011436300
+      },
+      {
+        "name": "hr03_gate_consequence.py",
+        "kind": "file",
+        "size": 8235,
+        "mtime_ns": 1794828822404644700
+      },
+      {
+        "name": "hr04_gate_plant_points.json",
+        "kind": "file",
+        "size": 27255,
+        "mtime_ns": 1794828938631503000
+      },
+      {
+        "name": "hr04_gate_plant_points.py",
+        "kind": "file",
+        "size": 3484,
+        "mtime_ns": 1794828932040025700
+      },
+      {
+        "name": "hr05_eh_required.json",
+        "kind": "file",
+        "size": 234,
+        "mtime_ns": 1794829011446902500
+      },
+      {
+        "name": "hr05_eh_required.py",
+        "kind": "file",
+        "size": 3913,
+        "mtime_ns": 1794829005118545000
+      },
+      {
+        "name": "hr06_two_chamber_ode.json",
+        "kind": "file",
+        "size": 4335,
+        "mtime_ns": 1794829155473094200
+      },
+      {
+        "name": "hr06_two_chamber_ode.py",
+        "kind": "file",
+        "size": 3187,
+        "mtime_ns": 1794829148271522600
+      },
+      {
+        "name": "hr07_pstar_boundary.json",
+        "kind": "file",
+        "size": 1551,
+        "mtime_ns": 1794831351930427800
+      },
+      {
+        "name": "hr07_pstar_boundary.py",
+        "kind": "file",
+        "size": 4815,
+        "mtime_ns": 1794831342828405900
+      },
+      {
+        "name": "hr11",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1794837832418969900
+      },
+      {
+        "name": "hydraulics_remedy_review.md",
+        "kind": "file",
+        "size": 62861,
+        "mtime_ns": 1794837764795203400
+      },
+      {
+        "name": "hydraulics_review.md",
+        "kind": "file",
+        "size": 30243,
+        "mtime_ns": 1794822752795120100
+      },
+      {
+        "name": "j4a_remedy_325b77a8",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795225646414938100
+      },
+      {
+        "name": "j4a_remedy_3b949f5",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795182996806815700
+      },
+      {
+        "name": "j4a_remedy_738a09f",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795186292509958200
+      },
+      {
+        "name": "j4a_remedy_78fd5d2d",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795251544175690200
+      },
+      {
+        "name": "j4a_remedy_9618e00e",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795223166333381800
+      },
+      {
+        "name": "j4a_remedy_99e9132b",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795216585824366600
+      },
+      {
+        "name": "j4a_remedy_b06e409e",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795188910339204700
+      },
+      {
+        "name": "j4a_remedy_b51ed6e1",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795235749053320600
+      },
+      {
+        "name": "j4a_remedy_d3c6c57e",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795259220916578600
+      },
+      {
+        "name": "j4a_remedy_d84ba7bd",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795227535223464200
+      },
+      {
+        "name": "j4a_remedy_f83a51e3",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795243163240649000
+      },
+      {
+        "name": "j4a_remedy_fa997f4c",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795245166614400400
+      },
+      {
+        "name": "j9_runs",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795669098384214800
+      },
+      {
+        "name": "jp3_cause_report.md",
+        "kind": "file",
+        "size": 28967,
+        "mtime_ns": 1794821599995073400
+      },
+      {
+        "name": "jp3_ed5_j9main_judgement_606f8713.md",
+        "kind": "file",
+        "size": 50820,
+        "mtime_ns": 1795434058158095400
+      },
+      {
+        "name": "jp3_ed6_judgement_79495405.md",
+        "kind": "file",
+        "size": 44334,
+        "mtime_ns": 1795504071567668900
+      },
+      {
+        "name": "jp3_ed7_judgement_8a2a52ce.md",
+        "kind": "file",
+        "size": 44546,
+        "mtime_ns": 1795670019267135100
+      },
+      {
+        "name": "jp3_ed7_judgement_8a2a52ce_erratum1.md",
+        "kind": "file",
+        "size": 1489,
+        "mtime_ns": 1795690489470350500
+      },
+      {
+        "name": "jp3_impl_rereview_4a2.md",
+        "kind": "file",
+        "size": 17722,
+        "mtime_ns": 1795183788917750200
+      },
+      {
+        "name": "jp3_impl_rereview_4a3.md",
+        "kind": "file",
+        "size": 10177,
+        "mtime_ns": 1795186860737391800
+      },
+      {
+        "name": "jp3_impl_rereview_4a4.md",
+        "kind": "file",
+        "size": 6450,
+        "mtime_ns": 1795189130465459300
+      },
+      {
+        "name": "jp3_impl_rereview_4a4e1.md",
+        "kind": "file",
+        "size": 9307,
+        "mtime_ns": 1795216791498619700
+      },
+      {
+        "name": "jp3_impl_rereview_4a5.md",
+        "kind": "file",
+        "size": 4140,
+        "mtime_ns": 1795225796403783700
+      },
+      {
+        "name": "jp3_impl_review.md",
+        "kind": "file",
+        "size": 35586,
+        "mtime_ns": 1794838052985446200
+      },
+      {
+        "name": "jp3_impl_review_4a.md",
+        "kind": "file",
+        "size": 25329,
+        "mtime_ns": 1795156630144869300
+      },
+      {
+        "name": "jp3_remedy_spec.md",
+        "kind": "file",
+        "size": 143906,
+        "mtime_ns": 1794839223172997400
+      },
+      {
+        "name": "jp3_remedy_spec.md.sha256",
+        "kind": "file",
+        "size": 85,
+        "mtime_ns": 1794839223289373100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a1.md",
+        "kind": "file",
+        "size": 2070,
+        "mtime_ns": 1794839596034837100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a2.md",
+        "kind": "file",
+        "size": 27158,
+        "mtime_ns": 1795179313347318100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a2.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795179313379752100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a3.md",
+        "kind": "file",
+        "size": 22035,
+        "mtime_ns": 1795184325759592700
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a3.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795184327826494800
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a4.md",
+        "kind": "file",
+        "size": 10024,
+        "mtime_ns": 1795187124385463300
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a4.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795187126375567800
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a4_erratum1.md",
+        "kind": "file",
+        "size": 1542,
+        "mtime_ns": 1795215036144454800
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a4_erratum1.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795215040820926600
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a5.md",
+        "kind": "file",
+        "size": 17644,
+        "mtime_ns": 1795223551603616600
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a5.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795223553735024000
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a5_erratum1.md",
+        "kind": "file",
+        "size": 923,
+        "mtime_ns": 1795225800717590300
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a5_erratum1.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795225802347190700
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a6.md",
+        "kind": "file",
+        "size": 9614,
+        "mtime_ns": 1795245166956257300
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a6.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795250928043716600
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7.md",
+        "kind": "file",
+        "size": 18548,
+        "mtime_ns": 1795251097963932500
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795251097964937700
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7_erratum1.md",
+        "kind": "file",
+        "size": 6407,
+        "mtime_ns": 1795248543765199000
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7_erratum1.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795250928050327200
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7_erratum2.md",
+        "kind": "file",
+        "size": 5632,
+        "mtime_ns": 1795250879347154500
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7_erratum2.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795250928052331700
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7_erratum3.md",
+        "kind": "file",
+        "size": 994,
+        "mtime_ns": 1795251523102120100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a7_erratum3.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795251598179985900
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a8.md",
+        "kind": "file",
+        "size": 16908,
+        "mtime_ns": 1795259693720855100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a8.md.sha256",
+        "kind": "file",
+        "size": 98,
+        "mtime_ns": 1795259693734858500
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a8_erratum1.md",
+        "kind": "file",
+        "size": 5484,
+        "mtime_ns": 1795259538140573100
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a8_erratum1.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795259693736864200
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a8_erratum2.md",
+        "kind": "file",
+        "size": 1186,
+        "mtime_ns": 1795261758452573000
+      },
+      {
+        "name": "jp3_remedy_spec_addendum_4a8_erratum2.md.sha256",
+        "kind": "file",
+        "size": 107,
+        "mtime_ns": 1795261807842099600
+      },
+      {
+        "name": "jp3_remedy_spec_v5.md",
+        "kind": "file",
+        "size": 54084,
+        "mtime_ns": 1795272320333824400
+      },
+      {
+        "name": "jp3_remedy_spec_v5.md.sha256",
+        "kind": "file",
+        "size": 88,
+        "mtime_ns": 1795272406082448500
+      },
+      {
+        "name": "jp3_remedy_spec_v5_draft.md",
+        "kind": "file",
+        "size": 30653,
+        "mtime_ns": 1795272267638028300
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum1.md",
+        "kind": "file",
+        "size": 22541,
+        "mtime_ns": 1795286885064349300
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum1.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795286886352074300
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum2.md",
+        "kind": "file",
+        "size": 42204,
+        "mtime_ns": 1795316077492404800
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum2.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795316138576435400
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum3.md",
+        "kind": "file",
+        "size": 3317,
+        "mtime_ns": 1795318707551134500
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum3.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795318799064429100
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum4.md",
+        "kind": "file",
+        "size": 3206,
+        "mtime_ns": 1795328432139212900
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum4.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795328445956034600
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum5.md",
+        "kind": "file",
+        "size": 4037,
+        "mtime_ns": 1795341423637367100
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum5.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795341423662089200
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum6.md",
+        "kind": "file",
+        "size": 15561,
+        "mtime_ns": 1795354101791522000
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum6.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795354101793117100
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum7.md",
+        "kind": "file",
+        "size": 5295,
+        "mtime_ns": 1795356508829477600
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum7.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795356520311990000
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum8.md",
+        "kind": "file",
+        "size": 43745,
+        "mtime_ns": 1795408613517343900
+      },
+      {
+        "name": "jp3_remedy_spec_v5_erratum8.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795408633765366100
+      },
+      {
+        "name": "jp3_remedy_spec_v6.md",
+        "kind": "file",
+        "size": 114643,
+        "mtime_ns": 1795457825182460400
+      },
+      {
+        "name": "jp3_remedy_spec_v6.md.sha256",
+        "kind": "file",
+        "size": 88,
+        "mtime_ns": 1795457868324394900
+      },
+      {
+        "name": "jp3_remedy_spec_v6_erratum1.md",
+        "kind": "file",
+        "size": 14079,
+        "mtime_ns": 1795460481853681300
+      },
+      {
+        "name": "jp3_remedy_spec_v6_erratum1.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795460527017675500
+      },
+      {
+        "name": "jp3_remedy_spec_v6_erratum2.md",
+        "kind": "file",
+        "size": 19605,
+        "mtime_ns": 1795467741169531500
+      },
+      {
+        "name": "jp3_remedy_spec_v6_erratum2.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795467767890021600
+      },
+      {
+        "name": "jp3_remedy_spec_v6_erratum3.md",
+        "kind": "file",
+        "size": 9143,
+        "mtime_ns": 1795476692256199000
+      },
+      {
+        "name": "jp3_remedy_spec_v6_erratum3.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795476723504306700
+      },
+      {
+        "name": "jp3_remedy_spec_v7.md",
+        "kind": "file",
+        "size": 193466,
+        "mtime_ns": 1795570031377221000
+      },
+      {
+        "name": "jp3_remedy_spec_v7.md.sha256",
+        "kind": "file",
+        "size": 88,
+        "mtime_ns": 1795587795332422800
+      },
+      {
+        "name": "jp3_remedy_spec_v7_erratum1.md",
+        "kind": "file",
+        "size": 66607,
+        "mtime_ns": 1795619273926186900
+      },
+      {
+        "name": "jp3_remedy_spec_v7_erratum1.md.sha256",
+        "kind": "file",
+        "size": 97,
+        "mtime_ns": 1795619467323649200
+      },
+      {
+        "name": "jp3_remedy_spec_v8_rules.md",
+        "kind": "file",
+        "size": 65223,
+        "mtime_ns": 1795685336590249300
+      },
+      {
+        "name": "jp3_remedy_spec_v8_rules.md.sha256",
+        "kind": "file",
+        "size": 94,
+        "mtime_ns": 1795685347431754300
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_4a7.md",
+        "kind": "file",
+        "size": 10457,
+        "mtime_ns": 1795247849241358100
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_4a7e1.md",
+        "kind": "file",
+        "size": 6637,
+        "mtime_ns": 1795248549931954500
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_4a7e2.md",
+        "kind": "file",
+        "size": 3782,
+        "mtime_ns": 1795250886055270800
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_4a7e3.md",
+        "kind": "file",
+        "size": 1146,
+        "mtime_ns": 1795251598188596400
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_4a8.md",
+        "kind": "file",
+        "size": 2111,
+        "mtime_ns": 1795257033226703200
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_4a8e1.md",
+        "kind": "file",
+        "size": 1266,
+        "mtime_ns": 1795259554782963600
+      },
+      {
+        "name": "jp3_rev5_p2_handoff_tjr12.md",
+        "kind": "file",
+        "size": 3923,
+        "mtime_ns": 1795261835341643200
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed5.md",
+        "kind": "file",
+        "size": 16655,
+        "mtime_ns": 1795272398524561100
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed5.md.sha256",
+        "kind": "file",
+        "size": 93,
+        "mtime_ns": 1795272406085467500
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed5_e1.md",
+        "kind": "file",
+        "size": 5059,
+        "mtime_ns": 1795286028575699100
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed5_e1.md.sha256",
+        "kind": "file",
+        "size": 96,
+        "mtime_ns": 1795286887677209200
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed5_e8.md",
+        "kind": "file",
+        "size": 7419,
+        "mtime_ns": 1795408330592657200
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed5_e8.md.sha256",
+        "kind": "file",
+        "size": 96,
+        "mtime_ns": 1795408633768348100
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed6.md",
+        "kind": "file",
+        "size": 19395,
+        "mtime_ns": 1795457834089638300
+      },
+      {
+        "name": "jp3_rev6_p2_handoff_ed6.md.sha256",
+        "kind": "file",
+        "size": 93,
+        "mtime_ns": 1795457868332394300
+      },
+      {
+        "name": "jp3_scenario_overview.md",
+        "kind": "file",
+        "size": 8453,
+        "mtime_ns": 1795217081218810000
+      },
+      {
+        "name": "jp3_tjr12_judgement_78fd5d2d_d3c6c57e.md",
+        "kind": "file",
+        "size": 13599,
+        "mtime_ns": 1795263124072288500
+      },
+      {
+        "name": "jp3_tjr12_stop_report_78fd5d2d.md",
+        "kind": "file",
+        "size": 4411,
+        "mtime_ns": 1795256618775469700
+      },
+      {
+        "name": "prelaunch_j9",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795623571517636700
+      },
+      {
+        "name": "relock_census.json",
+        "kind": "file",
+        "size": 225363,
+        "mtime_ns": 1794821105738914600
+      },
+      {
+        "name": "review_evidence",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1794839213340643900
+      },
+      {
+        "name": "rs01_scope_census.py",
+        "kind": "file",
+        "size": 3112,
+        "mtime_ns": 1794826226241187300
+      },
+      {
+        "name": "rs02_check_totals.json",
+        "kind": "file",
+        "size": 4743,
+        "mtime_ns": 1794826346369624500
+      },
+      {
+        "name": "rs02_check_totals.py",
+        "kind": "file",
+        "size": 2757,
+        "mtime_ns": 1794826338319111800
+      },
+      {
+        "name": "rs03_expected_49p1.json",
+        "kind": "file",
+        "size": 798,
+        "mtime_ns": 1794827069795588300
+      },
+      {
+        "name": "rs03_expected_49p1.py",
+        "kind": "file",
+        "size": 6562,
+        "mtime_ns": 1794826931757410000
+      },
+      {
+        "name": "s01_inspect_records.py",
+        "kind": "file",
+        "size": 1838,
+        "mtime_ns": 1794820610679203600
+      },
+      {
+        "name": "s02_t4h_window.py",
+        "kind": "file",
+        "size": 1449,
+        "mtime_ns": 1794820630785601600
+      },
+      {
+        "name": "s03_fallback_scan.py",
+        "kind": "file",
+        "size": 1420,
+        "mtime_ns": 1794820758655097900
+      },
+      {
+        "name": "s04_breach_numbers.py",
+        "kind": "file",
+        "size": 2805,
+        "mtime_ns": 1794820812608926300
+      },
+      {
+        "name": "s05_grid_runs.py",
+        "kind": "file",
+        "size": 1949,
+        "mtime_ns": 1794820883681733000
+      },
+      {
+        "name": "s06_relock_census.py",
+        "kind": "file",
+        "size": 6051,
+        "mtime_ns": 1794821102367883000
+      },
+      {
+        "name": "s07_fmin_effect.py",
+        "kind": "file",
+        "size": 4734,
+        "mtime_ns": 1794821411466889500
+      }
+    ],
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\audit_prerun": [
+      {
+        "name": "control_nb1_decision.md",
+        "kind": "file",
+        "size": 26111,
+        "mtime_ns": 1795710077739363200
+      },
+      {
+        "name": "control_t8p_decisions.md",
+        "kind": "file",
+        "size": 38019,
+        "mtime_ns": 1795705853584207100
+      },
+      {
+        "name": "control_t8p_evidence",
+        "kind": "dir",
+        "size": null,
+        "mtime_ns": 1795710077767885300
+      },
+      {
+        "name": "t8p_report.md",
+        "kind": "file",
+        "size": 13023,
+        "mtime_ns": 1795708258856281600
+      },
+      {
+        "name": "verif_c8_t8.md",
+        "kind": "file",
+        "size": 29591,
+        "mtime_ns": 1795703659515657700
+      },
+      {
+        "name": "verif_t8p.md",
+        "kind": "file",
+        "size": 19683,
+        "mtime_ns": 1795708653903854500
+      }
+    ]
+  },
+  "lock_files_at_snapshot": []
+}

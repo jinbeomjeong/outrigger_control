@@ -1,0 +1,47 @@
+base C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed8_design\t8p_evidence\junit_T8p_2bf16b31.xml
+new  C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed8_design\t8pp_evidence\junit_T8pp_5955f25b.xml
+base counts {'passed': 8863, 'skipped': 134, 'failure': 2}
+new counts {'passed': 8895, 'skipped': 134, 'failure': 2}
+
+status changes (base -> new):
+  (none)
+
+only in new (state):
+  passed  05_tests.unit.test_ed8_gate_judge::test_p815_waiver_count_missing_is_left_out[waiver0]
+  passed  05_tests.unit.test_ed8_gate_judge::test_p815_waiver_count_missing_is_left_out[waiver1]
+  passed  05_tests.unit.test_ed8_gate_judge::test_p815_waiver_count_that_is_not_an_integer_is_a_setting_defect[0]
+  passed  05_tests.unit.test_ed8_gate_judge::test_p815_waiver_count_that_is_not_an_integer_is_a_setting_defect[1.0]
+  passed  05_tests.unit.test_ed8_gate_judge::test_p815_waiver_count_that_is_not_an_integer_is_a_setting_defect[True]
+  passed  05_tests.unit.test_ed8_t8p::test_b3_each_v0_mismatch_is_an_identity_problem[changes14]
+  passed  05_tests.unit.test_ed8_t8pp::test_m1p_census_failure_with_a_selection_mismatch_is_failed
+  passed  05_tests.unit.test_ed8_t8pp::test_m2p_waiver_count_missing_is_left_out_and_non_integer_is_a_setting_defect
+  passed  05_tests.unit.test_ed8_t8pp::test_own_setting_items_only_j11
+  passed  05_tests.unit.test_ed8_t8pp::test_r4p_decision_without_blocks_used_is_a_problem
+  passed  05_tests.unit.test_ed8_t8pp::test_t1_aa_pair_on_producer_v0_lines_is_judged_and_j11_is_no_input
+  passed  05_tests.unit.test_ed8_t8pp::test_t2_stage5_end_to_end_on_the_sealed_jobs_is_judgeable
+  passed  05_tests.unit.test_ed8_t8pp::test_t3_lock_window_alignment_on_a_v0_line_is_a_setting_defect
+  passed  05_tests.unit.test_ed8_t8pp::test_t4_aa_pair_groups_that_differ_are_a_setting_defect
+  passed  05_tests.unit.test_ed8_t8pp::test_t4_candidate_that_is_no_v0_line_is_a_setting_defect
+  passed  05_tests.unit.test_ed8_t8pp::test_t5_event_list_cut_stays_not_judgeable
+  passed  05_tests.unit.test_ed8_t8pp::test_t6_vbn_j11_stop_still_fails_on_the_census_reading
+  passed  05_tests.unit.test_ed8_t8pp::test_t7_vbn_without_the_block_stays_not_judgeable
+  passed  05_tests.unit.test_ed8_t8pp::test_t8_stored_v0_event_pairs_are_all_judged
+  passed  05_tests.unit.test_ed8_t8pp_records::test_aa_shape_record_counts_decided_pairs_only
+  passed  05_tests.unit.test_ed8_t8pp_records::test_census_jx_keeps_the_census_status
+  passed  05_tests.unit.test_ed8_t8pp_records::test_effective_shape_defaults_to_re1bf
+  passed  05_tests.unit.test_ed8_t8pp_records::test_heldout_jx_never_changes_the_judgement
+  passed  05_tests.unit.test_ed8_t8pp_records::test_j11_opportunity_by_reason_and_witness_sums
+  passed  05_tests.unit.test_ed8_t8pp_records::test_j9_only_failure_on_the_real_items_is_jx_only
+  passed  05_tests.unit.test_ed8_t8pp_records::test_jx_any_but_not_only_with_another_item
+  passed  05_tests.unit.test_ed8_t8pp_records::test_shape_severity_dominance[candidate0-condition0-harsher]
+  passed  05_tests.unit.test_ed8_t8pp_records::test_shape_severity_dominance[candidate1-condition1-milder]
+  passed  05_tests.unit.test_ed8_t8pp_records::test_shape_severity_dominance[candidate2-condition2-harsher]
+  passed  05_tests.unit.test_ed8_t8pp_records::test_shape_severity_dominance[candidate3-condition3-milder]
+  passed  05_tests.unit.test_ed8_t8pp_records::test_shape_severity_dominance[candidate4-condition4-same]
+  passed  05_tests.unit.test_ed8_t8pp_records::test_shape_severity_dominance[candidate5-condition5-not_comparable]
+  passed  05_tests.unit.test_ed8_t8pp_records::test_witness_record_of_another_form_is_counted_apart
+
+only in base (state):
+  passed  05_tests.unit.test_ed8_gate_judge::test_p815_waiver_count_that_is_not_an_integer_is_unread
+
+new tests not passed: 0

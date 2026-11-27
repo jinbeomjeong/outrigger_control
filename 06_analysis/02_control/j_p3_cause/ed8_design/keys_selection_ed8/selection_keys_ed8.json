@@ -1,0 +1,638 @@
+{
+ "census_keys_sha256": "278b332f694405d5f9be432467e294b64492d5ffd638a76986e819460c88c535",
+ "entries": [
+  {
+   "census_role": "unit:C-G",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"FS24\", \"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-G",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "absent",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "absent",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-G",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 4.0, \"leg\": \"FL\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "absent",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 4.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "absent",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 8.0, \"leg\": \"FL\", \"level\": \"top\", \"timing\": \"level\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\", \"twin\": {\"fs_kN\": 8.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-S",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBNslow\", \"twin\": {\"fs_kN\": 0.0, \"leg\": \"FL\", \"level\": \"top\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-G",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.025, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "line:C-J judged_vs_VBN",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.05, \"setting\": \"LSN4\", \"twin\": {\"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"top\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-G",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-G",
+   "job_key": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBN\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 4.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R15\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R15\", \"eps\": 0.0, \"offset_s\": 0.05, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R16\", \"eps\": 0.0, \"offset_s\": 0.0, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R16\", \"eps\": 0.0, \"offset_s\": 0.025, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R16\", \"eps\": 0.0, \"offset_s\": 0.05, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R16\", \"eps\": 0.0, \"offset_s\": 0.075, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3",
+    "P89-H3p"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9",
+    "P8-9p"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"R2\", \"eps\": 0.001, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2"
+   ],
+   "sources": [
+    "P8-14"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"S4\", \"eps\": 0.002, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2"
+   ],
+   "sources": [
+    "P8-14"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"S7\", \"eps\": 0.002, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2",
+    "P89-A",
+    "P89-H1",
+    "P89-H3"
+   ],
+   "sources": [
+    "P8-14",
+    "P8-9"
+   ]
+  },
+  {
+   "census_role": "unit:C-J",
+   "job_key": "{\"case\": \"S8\", \"eps\": 0.0, \"setting\": \"VBN\"}",
+   "probe_arms": [
+    "P814-B",
+    "P814-L1",
+    "P814-L2"
+   ],
+   "sources": [
+    "P8-14"
+   ]
+  }
+ ],
+ "expected": {
+  "absent_from_census": 4,
+  "by_stage": {
+   "C-D": 0,
+   "C-G": 6,
+   "C-J": 11,
+   "C-S": 1
+  },
+  "jobs": 23,
+  "non_unit_census_lines": 1,
+  "r79_lines_skipped": {
+   "P8-14": 13,
+   "P8-9": 0,
+   "P8-9p": 0
+  },
+  "unit_matches": 18
+ },
+ "jobs": [
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "FS24",
+    "fs_kN": 8.0,
+    "leg": "FR",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 0.0,
+    "leg": "FR",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 2.0,
+    "leg": "FL",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 2.0,
+    "leg": "FR",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 4.0,
+    "leg": "FL",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 4.0,
+    "leg": "FR",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 8.0,
+    "leg": "FL",
+    "level": "top",
+    "timing": "level"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN",
+   "twin": {
+    "fs_kN": 8.0,
+    "leg": "FR",
+    "level": "top"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBNslow",
+   "twin": {
+    "fs_kN": 0.0,
+    "leg": "FL",
+    "level": "top"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.025,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 2.0,
+    "leg": "FL",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "setting": "LSN4",
+   "twin": {
+    "fs_kN": 0.0,
+    "leg": "FR",
+    "level": "top"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 2.0,
+    "leg": "FR",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "setting": "VBN",
+   "twin": {
+    "event": "RE1bF",
+    "fs_kN": 4.0,
+    "leg": "FR",
+    "level": "bottom",
+    "timing": "ready"
+   }
+  },
+  {
+   "case": "R15",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN"
+  },
+  {
+   "case": "R15",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "setting": "VBN"
+  },
+  {
+   "case": "R16",
+   "eps": 0.0,
+   "offset_s": 0.0,
+   "setting": "VBN"
+  },
+  {
+   "case": "R16",
+   "eps": 0.0,
+   "offset_s": 0.025,
+   "setting": "VBN"
+  },
+  {
+   "case": "R16",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "setting": "VBN"
+  },
+  {
+   "case": "R16",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "setting": "VBN"
+  },
+  {
+   "case": "R2",
+   "eps": 0.001,
+   "setting": "VBN"
+  },
+  {
+   "case": "S4",
+   "eps": 0.002,
+   "setting": "VBN"
+  },
+  {
+   "case": "S7",
+   "eps": 0.002,
+   "setting": "VBN"
+  },
+  {
+   "case": "S8",
+   "eps": 0.0,
+   "setting": "VBN"
+  }
+ ],
+ "plant_to_census": {
+  "LSM4": "LSN4",
+  "VBM": "VBN",
+  "VBMslow": "VBNslow"
+ },
+ "r79_lines_skipped": {
+  "P8-14": 13,
+  "P8-9": 0,
+  "P8-9p": 0
+ },
+ "rule": "jp3_remedy_spec_v8_rules.md 5.2, 5.3, 13 13 (selection-used keys, record)",
+ "sources": {
+  "P8-14": {
+   "path": "06_analysis/02_control/j_p3_cause/ed8_design/control_level_deadlock/probe_8a2a52ce/raw/runs.jsonl",
+   "sha256": "89efe66fc521f6d58c8c90304a9258747eef45d422ef43666a53f5ddd7fa9418"
+  },
+  "P8-9": {
+   "path": "06_analysis/02_control/j_p3_cause/ed8_design/control_early_handover/probe_8a2a52ce/raw/runs.jsonl",
+   "sha256": "3c0979f57000dd2236908d0e08df4fa6776e16a7d58458701ccae10345fd6aeb"
+  },
+  "P8-9p": {
+   "path": "06_analysis/02_control/j_p3_cause/ed8_design/control_early_handover/probe_8a2a52ce/h3p/raw/runs.jsonl",
+   "sha256": "06b9d8fcb40f44d054f7fbfda922f5032c096c9750974183457d0fa7064b95e5"
+  }
+ }
+}

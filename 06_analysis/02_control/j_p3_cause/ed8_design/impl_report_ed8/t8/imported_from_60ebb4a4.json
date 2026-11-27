@@ -1,0 +1,16 @@
+{
+ "rule": "T8 (spec v8 11.2): the edition 7 judge tools brought into the ed8-judge branch by `git checkout 60ebb4a4 -- <files>` (merge base of 60ebb4a4 and C8 = 8a2a52ce; none of these files changed on the ed8 side since 8a2a52ce, none is in the C8 run path list)",
+ "source_commit": "60ebb4a4",
+ "judge_commit_T8": "ecf6c142",
+ "files": [
+  {"path": "04_scripts/04_hydraulic/coupled/ed7_condition3_adoption.py", "blob_60ebb4a4": "5402b7ca9239531533897f2f24c840e586047b85", "in_T8": "as imported"},
+  {"path": "04_scripts/04_hydraulic/coupled/jp3_12b_judge_ed7.py", "blob_60ebb4a4": "8d6cfdf108998886d1bd9f620605220701fc9d5a", "in_T8": "as imported"},
+  {"path": "04_scripts/04_hydraulic/coupled/jp3_ed7_judge.py", "blob_60ebb4a4": "a3a842a5c7f4a3406282bef37e8de20f8d9d0771", "in_T8": "as imported"},
+  {"path": "04_scripts/04_hydraulic/coupled/jp3_ed7_rules.py", "blob_60ebb4a4": "e55b3e6da10ec416dcc9b29dbe145e480824776b", "in_T8": "as imported"},
+  {"path": "04_scripts/04_hydraulic/coupled/jp3_rev7_condition.py", "blob_60ebb4a4": "fb9230ff2fe739346c86f279ce320ec409edd7c3", "in_T8": "as imported"},
+  {"path": "04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed7.py", "blob_60ebb4a4": "673aecaef9176ccadb5674e49ad21b39231f822a", "in_T8": "as imported"},
+  {"path": "05_tests/unit/test_ed7_adoption.py", "blob_60ebb4a4": "de891586ee2a6e5b7e6c6937bb51393d7f454052", "in_T8": "as imported"},
+  {"path": "05_tests/unit/test_ed7_judge.py", "blob_60ebb4a4": "7e62648cf432881de701f2d369e786f73efbdf43", "in_T8": "changed: the two edition 7 P7-11 run path tests (test_run_path_modules_are_the_run_commit_bytes, test_run_path_closure_is_unchanged_here), RUN_PATH_LIST and their docstring lines removed (the edition 8 run path differs from the edition 7 run commit by design; P8-11 is test_ed8_run_path.py)"},
+  {"path": "05_tests/data/ed7_run_path_modules_8a2a52ce.json", "blob_60ebb4a4": "a3491352465663bd2985966d140573fcd24148bd", "in_T8": "not carried (only the removed tests read it)"}
+ ]
+}

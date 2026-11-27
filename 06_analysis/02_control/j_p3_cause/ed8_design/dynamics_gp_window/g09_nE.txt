@@ -1,0 +1,8 @@
+n_E of G' stratum E (reading I, independent slots as f3): mean, 5-95 %, P(n_E < 16) +- MCSE
+stats m=1 (check)                        mean  26.4 (exact  26.4) 5-95 % 21-32  P(n_E<16) 0.0006 +- 0.0002
+stats m=0.7 (check)                      mean  21.4 (exact  21.5) 5-95 % 16-27  P(n_E<16) 0.0323 +- 0.0013
+g07 nominal, (a) stats                   mean  28.4 (exact  28.4) 5-95 % 23-33  P(n_E<16) 0.0000 +- 0.0000
+g07 nominal, (a) model                   mean  27.6 (exact  27.6) 5-95 % 22-33  P(n_E<16) 0.0001 +- 0.0001
+L=0 (window translates), (a) model       mean  25.6 (exact  25.7) 5-95 % 20-31  P(n_E<16) 0.0013 +- 0.0002
+L=-10 ms (window shrinks), (a) model     mean  24.8 (exact  24.8) 5-95 % 19-30  P(n_E<16) 0.0023 +- 0.0003
+L=+30 ms, (a) model                      mean  28.0 (exact  28.0) 5-95 % 23-33  P(n_E<16) 0.0001 +- 0.0000

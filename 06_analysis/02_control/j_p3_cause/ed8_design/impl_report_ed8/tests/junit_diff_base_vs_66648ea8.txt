@@ -1,0 +1,24 @@
+base 8681 new 8732
+skip:tool commit 7cd7031 not reachable   -> pass                                                         05_tests.unit.test_chrono_bundle_grade_4368::test_r23_same_names_keep_the_rev22_output[C-1]
+skip:tool commit 7cd7031 not reachable   -> pass                                                         05_tests.unit.test_chrono_bundle_grade_4368::test_r23_same_names_keep_the_rev22_output[C-2]
+fail                                     -> pass                                                         05_tests.unit.test_d8x_chrono_rows::test_retagged_rows_differ_only_in_the_tag
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_item_failure_is_a_fail
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_recompute_passes
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_source_problems_are_not_judgeable[override0-rules_rev]
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_source_problems_are_not_judgeable[override1-reuse]
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_source_problems_are_not_judgeable[override2-clean]
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_source_problems_are_not_judgeable[override3-run_commit]
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_source_problems_are_not_judgeable[override4-closure blobs differ]
+fail                                     -> pass                                                         05_tests.unit.test_d8x_judge::test_judge_g0_rev3_source_problems_are_not_judgeable[override5-rev6 4]
+fail                                     -> pass                                                         05_tests.unit.test_ed6_prelock::test_key_lists_counts_probe_units_and_declarations
+fail                                     -> pass                                                         05_tests.unit.test_ed6_prelock::test_key_lists_only_writes_the_named_files
+fail                                     -> pass                                                         05_tests.unit.test_ed6_prelock::test_key_lists_stop_when_the_counts_differ
+skip:the record part D commit is not in  -> pass                                                         05_tests.unit.test_ed7_units::test_probe_d_keys_equal_the_record_part_d_blob
+fail                                     -> pass                                                         05_tests.unit.test_jp3_prelaunch_audit::test_m1_wrap_writes_start_and_end_and_returns_the_exit_code
+fail                                     -> pass                                                         05_tests.unit.test_k2_chrono_runner::test_batch_identity_records
+fail                                     -> pass                                                         05_tests.unit.test_k2_hashes::test_i8_g0_values_unchanged
+pass                                     -> fail                                                         05_tests.unit.test_k2_post_audit_fixes::test_acc_d8_error_row_ends_with_code_2_and_allow_errors_keeps_0
+fail                                     -> pass                                                         05_tests.unit.test_las_p5r4_k1_chrono_rows::test_code_files_record_structure
+fail                                     -> pass                                                         05_tests.unit.test_resume4368_rev16::test_head_check_blobs_same_for_one_commit
+fail                                     -> pass                                                         05_tests.unit.test_resume4368_rev16::test_head_check_is_s12_unless_head_is_m4
+skip:stored batches not reachable        -> pass                                                         05_tests.unit.test_v5_stage3_las_rows::test_stored_argv_check

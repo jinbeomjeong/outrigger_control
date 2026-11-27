@@ -1,0 +1,44 @@
+{
+ "judge_code": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge2",
+ "lines": 2,
+ "premises": [
+  {
+   "has_error": false,
+   "controller_tag_is_v0_tag": true,
+   "controller_tag_present": true,
+   "v0_absent_keys_present": [],
+   "hydraulic_options_is_null": true,
+   "hydraulics_record_is_null": true,
+   "lock_window_alignment_absent": true,
+   "t4h_file_absent": true,
+   "has_event_output": true,
+   "has_reapproach_starts_key": true
+  },
+  {
+   "has_error": false,
+   "controller_tag_is_v0_tag": true,
+   "controller_tag_present": true,
+   "v0_absent_keys_present": [],
+   "hydraulic_options_is_null": true,
+   "hydraulics_record_is_null": true,
+   "lock_window_alignment_absent": true,
+   "t4h_file_absent": true,
+   "has_event_output": true,
+   "has_reapproach_starts_key": true
+  }
+ ],
+ "v0_identity_problems": [
+  [],
+  []
+ ],
+ "aa_pair": {
+  "raised": null,
+  "j11_state": "입력 없음",
+  "fail_is_bool": true
+ },
+ "not_judgeable_item_names": [],
+ "own_setting_record_items": [
+  "J11"
+ ],
+ "base_pass_is_bool": true
+}

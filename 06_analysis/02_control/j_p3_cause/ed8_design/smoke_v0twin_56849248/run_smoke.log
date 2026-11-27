@@ -1,0 +1,23 @@
+C2 t=26.00 s: leg_reapproach_start:RR
+C2 t=24.60 s: leg_reapproach_start:FL
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.00 s: leg_reapproach_start:RR
+C2 t=25.40 s: leg_reapproach_start:FL
+C2 t=25.70 s: leg_reapproach_start:RR
+C2 t=26.00 s: leg_reapproach_start:FL
+C2 t=26.30 s: leg_reapproach_start:RR
+C2 t=26.80 s: leg_reapproach_start:RR
+C2 t=28.10 s: leg_reapproach_start:RL
+C2 t=44.70 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=44.70 s: leg_reapproach_start:FL
+C2 t=44.70 s: relevel_predicted:FL
+C2 t=45.00 s: leg_reapproach_start:RR
+1/3 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0', 'twin': {'event': 'G4', 'fs_kN': 0.0, 'leg': 'FL', 'level': 'bottom', 'timing': 'level'}}: ready eff89063 32.2s
+2/3 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0', 'twin': {'event': 'FS24', 'fs_kN': 0.0, 'leg': 'FL', 'level': 'top', 'timing': 'level'}}: ready 5b7b5780 36.5s
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+3/3 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'setting': 'V0', 'twin': {'depth_m': 0.03, 'event': 'RE1bF', 'fs_kN': 0.0, 'leg': 'FL', 'level': 'bottom', 'ramp_s': 0.05, 'timing': 'ready'}}: ready 1be900f8 37.2s
+{"status": "written", "lines": 3, "out": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\smoke_v0twin_56849248\\v0_smoke.jsonl"}
+exit=0

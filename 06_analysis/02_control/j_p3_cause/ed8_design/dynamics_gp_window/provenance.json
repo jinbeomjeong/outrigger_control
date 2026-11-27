@@ -1,0 +1,121 @@
+{
+ "created": "2026-11-26",
+ "agent": "dynamics-expert",
+ "env": "conda dynamics-dev (python -I -B, MKL_THREADING_LAYER=TBB)",
+ "inputs": {
+  "C:\\workspace\\outrigger_control\\02_params\\rexome33.yaml": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+  "C:\\workspace\\outrigger_control\\04_scripts\\03_control\\s8\\r67_g1_screen.py": "1aad3a5f9e90c404522b30769d87d64cc87a931c28e751a9b6a72122ee1c0d62",
+  "C:\\workspace\\outrigger_control\\04_scripts\\03_control\\s8\\r51_reapp_closed_loop.py": "a3f1494e398d8d0f60151ea5627e5aaef22c0a8c82f2643bbfe4eab79580cdb4",
+  "C:\\workspace\\outrigger_control\\04_scripts\\01_dynamics\\run_mast_flex_c2_check.py": "c0dc124cc5becadb6e30acc40f4b224da0d92d6e8f618010996bdc6ce780a15c",
+  "C:\\workspace\\outrigger_control\\04_scripts\\01_dynamics\\s8_g4_rodside_check.py": "6bfec4ba073beff0e40865bb4cd8d5046b0839f9f3c9bd2672a1e26fc91cbe10",
+  "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py": "01c4a89e672177baffac8b44bd37ab4bf3346b65c75c595806d683a1171aca38",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\u11_periods.csv": "6a08270278d42e4cebbc925eeee9e06612d70f9dd258677186aeb41649c5815d",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\u12_exit_window.csv": "a7f65a17c8918c37d070d4ff716fbfeb2f3a9ba6a5c7185c7ae3b44955080d69",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\u04_v0_detail.txt": "a5fb118fe15ce9dcb06aabf0b49ca83b0341f17269df70e8dd15a11353829ef3",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\u11_rerun_analysis.txt": "898a03f835562df9d48b3c7e192f075bea41314fc471f1207f850e73100c71ee",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\report.md": "9f9ce32240e914b9193a73f8f7792f8e111ade8a43eb1f477eae5a576eb3106c",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r67_main.json": "a2e74481760a27695ac63800a650e0be1b9b3980fcfaef1f1b64d4e98628316d",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r67_top.json": "1d07e49fdbcaf375c4266866ff6955569c967d6d4eb9d4babc07558a64e92559",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_bottom.json": "91026c460489463aa34e0377236854c892e46257d55133bda9c777584b548a89",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_top.json": "87e8d72a25a5d40cccedce1c632a7e4f168f126aed38ada8a3b6760794d02390",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.0-RE1bF-ready_U8-A_rows.npz": "e22d10882eb47b844624094080c7cfac1a4add85052e75cd18884cf1e99a3717",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.0-RE1bF-ready_V0_rows.npz": "79766a712ad89dc321fe06625466908dc65665eccf7484920acd992b76122890",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.0-RE1bF-ready_VBM_rows.npz": "3ebbf8ef67f664f45503df6c33b58b6524cd5daecea093a407d02ec479178aec",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.025-RE1bF-ready_V0_rows.npz": "7a1bc18561d15fe58ac5350d4b757857fa4d7421806f9e1667b7ccf1a234dbbd",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.025-RE1bF-ready_VBM_rows.npz": "0603fd696b0f136a70f690ea93cfc35b4c66cd61817e76f14c18deb4c0a8509a",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.05-RE1bF-ready_V0_rows.npz": "33f842e0982096209a9365414d20ddea285d91339072501ca63cdb5f4b22e44e",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs2-o0.075-RE1bF-ready_V0_rows.npz": "99193eb555fcee4e3aef3b5b77ec2af5e443ca2e8ca867321f78d88c08c17392",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs4-o0.0-RE1bF-ready_U8-A_rows.npz": "49170c0776bf7a4acf10ea243f316ceb7f1c73cc8eee065d8ab3e72924acd643",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FL-Fs4-o0.0-RE1bF-ready_VBM_rows.npz": "51b0315466b82a44a859c6f196d5122f94a7012f66fb1574f922f8b209511346",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs0-o0.0-RE1bF-ready_U8-A_rows.npz": "5c1d98ac2a538dbba9c54276f73d0c268ae9604889457bd830493253686e2723",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs0-o0.0-RE1bF-ready_VBM_rows.npz": "adbbbd183e660fc7ae757ea75efff2b4ed643c4763dec30c594ed2464daf0392",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs2-o0.0-RE1bF-ready_U8-A_rows.npz": "ea64051cbd1cd1a41a49acaf8402c40922be05ebdfdbf9abf339fffed7a3c016",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs2-o0.0-RE1bF-ready_VBM_rows.npz": "7786806736f9d4597ee83618e88555e9f9393fbb27a3c22cbb0ea9989d81ff01",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs2-o0.075-RE1bF-ready_VBM_rows.npz": "e19db147a3dcd79ded3f1243e5c5920add164a8ce0f67a06c5c955ca99be2978",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.0-RE1bF-ready_U8-A_rows.npz": "aebf2c208b8ffc6a7d78f27a657cb3d707a20cb027d4581c621178671e48d3b6",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.0-RE1bF-ready_V0_rows.npz": "ade51ce80e508cc1b2f119962ea721329a20a6914e9e7776d3f91bd62de50c56",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.0-RE1bF-ready_VBM_rows.npz": "29a122c0ce54e8b6b81f9c6dca5fd202389d0b2c1fa89a1e2c61d245d2af223a",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.025-RE1bF-ready_V0_rows.npz": "7bdf41068d7785f85ffec2270f1cc731edc39a5b372b280407443c797c08954e",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.05-RE1bF-ready_V0_rows.npz": "704d81e8afbf1eed418dd3d7fb4751685f1361155646139a8291e52dc613ef75",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.075-RE1bF-ready_V0_rows.npz": "7e76052d8829c52a84731a665e61c880f28f4bad71baebec35ab7b3ade67fc0e",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs4-o0.075-RE1bF-ready_VBM_rows.npz": "74ed3de6a212f516613dd14c5dce9ef3715a779523c66d2df4da2dad1cb0b7aa",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs8-o0.0-FS24-ready_U8-A_rows.npz": "d6d96cd2cf29774ac9ae71f8f8efa95843b77a290244aa0000e39467b27a0f4b",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\dynamics_u832_o00\\rerun_raw\\logs\\R12_bottom-FR-Fs8-o0.0-FS24-ready_VBM_rows.npz": "88c7793fe65c3fbf52f1dce74c0a25df2e5f8ef87bec4d51d63cba5fb6850cc0"
+ },
+ "outputs": {
+  "g00_rock_model.py": "fec5cfc8dc2d55004a7d6aef7b0353741690d3d8eb186d8c21c88a4b72860e17",
+  "g01_grid_E.py": "529003b3cde577afc445fbe446cd2d836c8af81bbb75ed10220ee8182dd4969c",
+  "g01_grid_E.txt": "1548ca5cfb3f4edb0f3e84846ac26943c552138eeaaa435eb9d65424504c1f55",
+  "g01_grid_E_rows.csv": "e51dfa0ebd3e6c3bc8c6acca22fe7d808c0aaa9f73410c218585deb448b7a199",
+  "g02_traces.csv": "ed8ef9ab79136204b7a64ef5c059f168316c9fb0fe1e7a4b69b0fa715ebbb6ef",
+  "g02_traces.npz": "087d1e0dbbddf6126d968cf14e70368c9bfcd30b82e08c37f23204b894296121",
+  "g02_traces.png": "424c1f1d18fa65c95d20d741a8bf6178377cb60a423188fc5987472614166b5e",
+  "g02_traces.py": "210f750427c86b65f025faa80825a1621f8d363e2ac07fa6f0a6bf54827a8842",
+  "g03_reading_offset.csv": "c57a6be4ea3b67d6be8ce89e20f887ac3df2cca2389d33822d27a2c258fa5b22",
+  "g03_reading_offset.py": "b130113f15d736ccbd6d7d4b026f756dfd78012f3fa2083bf19d9efb317a01e6",
+  "g03_reading_offset.txt": "83ff186180354169766da343538371509a9856326bbbf1c79dda6973fb5c85a4",
+  "g04_calibrate.py": "5d190c9bb5167fceefa3614c07764346ca19914b85d104a354b692ff9cd83390",
+  "g04_calibration.json": "cd56f22251b810eb74f68a1756ae4671468fa7586f1d8c004e361baf0f3f7696",
+  "g04_calibration_grid.csv": "0cde3856ef3d0d9b4a9e5137b64f3d3605360e1f38aa2ff1c0034b937b3e874f",
+  "g04a_3dof_calibration.json": "45ad491cc3217c0c380d6bee5493f6930ba70c093784db695fca13206d169c19",
+  "g04a_3dof_calibration_grid.csv": "7c7e8877a0685f06a87edcbac9c79f170cdd46c850fad9e9b233bd444182c965",
+  "g04a_3dof_model.py": "1371f649d70b326549e347f9b28b9cbb802cc75c0a07c937e0a3fe2144f88024",
+  "g05_contact_shift.csv": "82ff823f00a362b7fd59086b35b0f585fef274e9e3a3b8f6b2792c462c87e11a",
+  "g05_contact_shift.py": "5419014b247296d5fe13d12eaa27a479e9c22a0f59677c4ce2d31b22b2ca169b",
+  "g06_variants.csv": "ce0fdc0b46fb31549375122badfffe5fd072518102f9965777aefd7ce3fab28b",
+  "g06_variants.py": "20aa3c748c39c62230f2fc86a2ef74a9a50cfef0e22b57e3cdbf300403356475",
+  "g06_variants.txt": "bd3ea1c6d2d29a75cea684587c1a5eeb09a26be4218955b628e81394be97bc0c",
+  "g07_window_m.json": "bccc5d5c3bab8ec3f37c5d1490105d5cad2f4370ed7269e1097461b8f95744ff",
+  "g07_window_m.py": "f9fdda82f6ac41f3f9f47af38526756d6dd60e3dd79040e4e7de4635ce82a2e0",
+  "g07_window_m.txt": "f4d21b3d5e1a3dfd6b42cc00df8d3f7ec4388f94d04973beead9f9ac54440ce4",
+  "g08_model_check.json": "e6a6675c28a9e602656ca704855d5d84d0aab3d251b02e84a664bcdaecbe9471",
+  "g08_model_check.py": "17a743c6b4df5a192a2f0544bea4c9d08c70aa303b55bdaf9b414c8571377c1b",
+  "g08_model_check.txt": "e63c7882f6ef17fd2def35d01919d8d740d45e3661eeeb82bacbadbc79a01f6e",
+  "g09_nE.json": "5a957d0bd40ff7d055fb40e2b4c2f7daa9a82907adbd64cbda24ea49e55196b7",
+  "g09_nE.py": "9516e7bb21c1306d7609cf06bef95371e33970d39b9e0157b5c6b86dfefbb4d2",
+  "g09_nE.txt": "43bac2cca173551585f0d195e80ff1fcc23c3b1c4c0ee018a6d8b2cdad561dfa",
+  "g10_figure.py": "ba271d98d438cb9e801dc02232b6e9a90c54ac12d19b69651cb84f807d12e494",
+  "g10_window_m.png": "4f1315436a32edb6b64c26e0d85126d07168a271de8ace8e9824a87568424c41",
+  "g11_provenance.py": "68d20ca64f68eb4b49ba955af3874a0eb569dcb8c31b22dd9a1c32b45b8436dc"
+ },
+ "columns": {
+  "g01_grid_E_rows.csv": {
+   "diag_start_grid_s": "first re-approach start of the event leg's diagonal (FL<->RR, FR<->RL), stored value (0.01 s rounded) snapped to the run's 0.1 s grid 0.1 k - phi; s after the event start",
+   "E": "round(diag_start_grid_s, 3) <= 0.450 (spec 6.3 reading); g01_grid_E.py:58",
+   "phi_s": "offset mod 0.1 s"
+  },
+  "g02_traces.csv": {
+   "t_contact_s": "first 1 ms row after the event-leg lift with pad contact force > 0; s after the event",
+   "t_reload_exit_s": "first row after re-contact with F_true >= F_exit = 14.4146 kN (F_true = contact - W_rod)",
+   "t_hold_end_s": "last row before the re-lift with F_true >= F_exit",
+   "t_relift_s": "first row after re-contact with contact <= 0",
+   "v_impact_m_s": "gap closing speed over the last 5 ms before re-contact (m/s, > 0 = approaching)",
+   "contact_s": "t_relift - t_contact"
+  },
+  "g03_reading_offset.csv": {
+   "offset_kN": "F_true(sample) - L(sample); L = controller lower load estimate (u11_periods, cylinder force lower - seal band); edge 'load' = before the force peak, 'unload' = after"
+  },
+  "g05_contact_shift.csv": {
+   "t_gap5mm_s": "time the stored 30 mm pad clearance falls to 5 mm (= re-contact time of a 25 mm floor, pre-lift difference not included); linear interpolation of 1 ms rows",
+   "dt_contact_25_minus_30_s": "t_gap5mm_s - t_contact_30_s (negative = earlier)"
+  },
+  "g06_variants.csv": {
+   "t_r_star": "controller-effective rising edge: first row after re-contact with F_true >= F_exit + 6.1 + 2.4 F_s kN (g03 loading offset fit), reduced model",
+   "t_h_star": "controller-effective falling edge: last row before re-lift with F_true >= F_exit - 6.6 + 0.5 F_s kN",
+   "d_*": "value(shape) - value(30/0.05) at the same stem / case (s)",
+   "case": "ens0..ens5 = calibrated ensemble (g04); valve_off / mu0.3 / mu1.0 / dt_half = sensitivities on ens0"
+  },
+  "g07_window_m.json": {
+   "P_by_phase": "P(E | condition, phi): MC over families, cluster F_s, level offset N(0, SIG_L), F_s slope se, shape shift pairs; E <=> s1 + 0.2 <= t_h* and round(s1 + 0.2, 3) <= 0.450, s1 = first 0.1 k - phi >= t_r* (g07_window_m.py is_E)",
+   "m_vs_model_base": "mean over the 8 phases of P(E | condition) / same for 'base' (model base 0.573 vs stats 0.586)"
+  },
+  "g09_nE.json": {
+   "P_lt_16": "fraction of 20,000 replications with n_E < 16 under the f3 slot structure (reading I)"
+  }
+ },
+ "seeds": {
+  "g07": 20261126,
+  "g09": 8817
+ },
+ "held_out_note": "no harness / Chrono run; the held-out shapes and F_s values were evaluated only with the own reduced model (g00) and the empirical window model (g07)"
+}
