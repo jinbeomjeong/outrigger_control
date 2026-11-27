@@ -1,0 +1,573 @@
+{
+  "tool": "key_presence",
+  "keys_required": [
+    "key",
+    "v5_setting",
+    "level",
+    "rod_model",
+    "t4h_file",
+    "commands_sha256",
+    "controller_tag",
+    "hydraulic_options",
+    "hydraulic_options.p1_patch",
+    "hydraulic_options.ed8_settings",
+    "base",
+    "lock_window_alignment"
+  ],
+  "where": [],
+  "list_key": null,
+  "allow_null": false,
+  "keys": [
+    {
+      "key": "key",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "v5_setting",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "level",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "rod_model",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "t4h_file",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "commands_sha256",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "controller_tag",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulic_options",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulic_options.p1_patch",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulic_options.ed8_settings",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "base",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "lock_window_alignment",
+      "present": 538,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    }
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\l1ref_a1\\L1_VBN.json",
+      "container_key": "results",
+      "rows": 167,
+      "selected": 167,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "key",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "v5_setting",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "level",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "rod_model",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "commands_sha256",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "controller_tag",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.p1_patch",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.ed8_settings",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "base",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lock_window_alignment",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\l1ref_a1\\L1_VBN0.json",
+      "container_key": "results",
+      "rows": 167,
+      "selected": 167,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "key",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "v5_setting",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "level",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "rod_model",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "commands_sha256",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "controller_tag",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.p1_patch",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.ed8_settings",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "base",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lock_window_alignment",
+          "present": 167,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\l1ref_a1\\L1a_VBN.json",
+      "container_key": "results",
+      "rows": 102,
+      "selected": 102,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "key",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "v5_setting",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "level",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "rod_model",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "commands_sha256",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "controller_tag",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.p1_patch",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.ed8_settings",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "base",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lock_window_alignment",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\l1ref_a1\\L1a_VBN0.json",
+      "container_key": "results",
+      "rows": 102,
+      "selected": 102,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "key",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "v5_setting",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "level",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "rod_model",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "commands_sha256",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "controller_tag",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.p1_patch",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options.ed8_settings",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "base",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lock_window_alignment",
+          "present": 102,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    }
+  ],
+  "npz": {
+    "glob": "*.npz",
+    "dirs": [],
+    "arrays_required": [],
+    "arrays": [],
+    "files": []
+  },
+  "summary": {
+    "tool": "key_presence",
+    "command": "scan",
+    "files": 4,
+    "rows": 538,
+    "selected": 538,
+    "keys": 12,
+    "keys_complete": 12,
+    "keys_incomplete": 0,
+    "npz_files": 0,
+    "arrays": 0,
+    "arrays_incomplete": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}

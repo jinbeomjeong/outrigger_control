@@ -1,0 +1,1302 @@
+{
+ "summary": {
+  "base_41e107e9": {
+   "tests": 8782,
+   "states": {
+    "passed": 8765,
+    "skipped": 15,
+    "failure": 2
+   }
+  },
+  "run_C8_56849248": {
+   "tests": 8789,
+   "states": {
+    "passed": 8772,
+    "skipped": 15,
+    "failure": 2
+   }
+  },
+  "C8_plain_56849248": {
+   "tests": 8741,
+   "states": {
+    "passed": 8605,
+    "skipped": 134,
+    "failure": 2
+   }
+  },
+  "T8ppp_2263b246": {
+   "tests": 9054,
+   "states": {
+    "passed": 8918,
+    "skipped": 134,
+    "failure": 2
+   }
+  },
+  "T8pppp_7ea78232": {
+   "tests": 9071,
+   "states": {
+    "passed": 8935,
+    "skipped": 134,
+    "failure": 2
+   }
+  }
+ },
+ "T8pppp_not_passed_by_C8_plain_state": {
+  "skipped": 134,
+  "failure": 2
+ },
+ "T8pppp_not_passed_but_passed_in_C8_plain": [],
+ "T8pppp_not_passed": 136,
+ "T8pppp_not_passed_by_base_state": {
+  "passed": 117,
+  "skipped": 15,
+  "failure": 1,
+  "absent": 3
+ },
+ "T8pppp_not_passed_but_passed_in_base": 117,
+ "of_which_core": 0,
+ "of_which_skipped": 116,
+ "of_which_failed": 1,
+ "skip_reasons_of_those": {
+  "07_results/... not present": 93,
+  "ML pilot not judged": 1,
+  "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk": 2,
+  "batch_P3b_20261027_174330/P3b_J1_B_top_Fs4 not on disk": 1,
+  "batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not ": 2,
+  "batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on dis": 2,
+  "P3b batch 20261026_122444 or control p3b_loc_detail.json not": 1,
+  "G6P batch 20261028 not on disk": 1,
+  "c36 A records absent": 2,
+  "c36 records absent": 3,
+  "07_results/S8 records absent": 4,
+  "07_results/S8 old ML episodes absent": 4
+ },
+ "core_tests_not_passed_T8pppp": [],
+ "tests_new_since_C8_run": 334,
+ "rows": [
+  {
+   "test": "05_tests.unit.test_chrono_t45_replay::test_b_t4_0_on_a_stored_v0_record",
+   "T8pppp": "skipped",
+   "reason": "stored V0 Chrono record not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_chrono_t45_replay::test_r4_lock_window_of_a_stored_vb_record",
+   "T8pppp": "skipped",
+   "reason": "stored VB Chrono record not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_chrono_t45_replay::test_replay_case_of_a_stage3_vb_record_with_m2_records",
+   "T8pppp": "skipped",
+   "reason": "stored stage 3 VB record not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_chrono_t45_replay::test_rev7_regression_on_the_stage3_records",
+   "T8pppp": "skipped",
+   "reason": "stored stage 3 records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_chrono_t45_replay::test_t5_copied_state_equals_a_full_replay",
+   "T8pppp": "skipped",
+   "reason": "stored VB Chrono record not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_episode::test_build_from_a_bundle_c_case_reproduces_the_controller_band",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_G4_combined_ph0.075",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_episode::test_build_from_an_s8_case_keeps_the_crawler_meta",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\p1r_20261024_222013\\E_G4_Fs0",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun33_/C1_RE1bF_top_flat_dropRR30]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun33_L1R_20261024_125604\\C1_RE1bF_top_flat_dropRR30",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun33_/C1_RE1bP_top_flat_dropRR30_probe]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun33_L1R_20261024_125604\\C1_RE1bP_top_flat_dropRR30_pro",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_D8_top_rpB_b0.69]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_D8_top_rpB_b0.69",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_G4_combined_ph0.075]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_G4_combined_ph0.075",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_RE1bF_top_flat_dropRR30]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_RE1bF_top_flat_dropRR30",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_RE1bP_top_flat_dropRR30_probe]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_RE1bP_top_flat_dropRR30_pro",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay::test_replayed_events_equal_the_controller_events[bundleC_rerun34_/C1_RE1b_top_flat_settleRR30]",
+   "T8pppp": "skipped",
+   "reason": "record not present: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_RE1b_top_flat_settleRR30",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay_fallback_slope::test_record_fallback_slope_replay_has_no_false_relevel[column_nominal-values_127_8_kN1]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay_fallback_slope::test_record_fallback_slope_replay_has_no_false_relevel[plant_meta-values_127_8_kN0]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_contact_replay_fallback_slope::test_record_level_replay_reproduces_the_controller",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext",
+   "T8pppp": "skipped",
+   "reason": "VERIFICATION_EXT installed",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash",
+   "T8pppp": "failure",
+   "reason": "AssertionError: assert 'c0b626b9d8ed...4ad4093a8c758' == '4700d690fb09...c802b1e591729'\n  \n  - 4700d690fb098a3760f40dde032feb49461c081aa97453156d5c802b1e591729\n",
+   "base_41e107e9": "failure",
+   "run_C8": "failure",
+   "C8_plain": "failure",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume",
+   "T8pppp": "failure",
+   "reason": "AssertionError: assert False\n +  where False = is_file()\n +    where is_file = ((((WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge4') / ",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "failure",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows",
+   "T8pppp": "skipped",
+   "reason": "LAS-b merged: no blocked row",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_las_off_chrono::test_t45_replay_of_a_las_row_rebuilds_las_on_and_gives_t4_t5",
+   "T8pppp": "skipped",
+   "reason": "stored stage 3 VB record not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision",
+   "T8pppp": "skipped",
+   "reason": "could not import 'torch': No module named 'torch'",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch",
+   "T8pppp": "skipped",
+   "reason": "could not import 'torch': No module named 'torch'",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript",
+   "T8pppp": "skipped",
+   "reason": "could not import 'torch': No module named 'torch'",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster",
+   "T8pppp": "skipped",
+   "reason": "could not import 'torch': No module named 'torch'",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end",
+   "T8pppp": "skipped",
+   "reason": "could not import 'torch': No module named 'torch'",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_params_l2b::test_l1_default_is_unchanged",
+   "T8pppp": "skipped",
+   "reason": "YAML regenerated since S7; L1 fingerprint baseline no longer applies",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_169_0_row_is_not_watched",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_302_5_reconstruction_with_l_hat_true[column_nominal-20.7]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_302_5_reconstruction_with_l_hat_true[plant_meta-45.06]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_command_source_matches_and_aborted_rounds_probed_rl",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_official_judgement_passes[column_nominal]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_official_judgement_passes[plant_meta]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_record_passes_the_level_gate",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\R3_PS2_fdown_diag_20261026\\current_dur125 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_own_source_is_replayed_even_when_not_asked",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010709\\L1_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[G4RF_Fs0]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\v4_c29_Fs0_20261027_011211\\MLJ_K0V_fdown3.5_G4RF_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[G4RF_Fs8]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\v4_c29_Fs8_20261027_011151\\MLJ_K0V_fdown3.5_G4RF_Fs8 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[L1_PS2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010709\\L1_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_official_judgement[L2b_PS2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010707\\L2b_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[G4RF_Fs0]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\v4_c29_Fs0_20261027_011211\\MLJ_K0V_fdown3.5_G4RF_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[G4RF_Fs8]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\v4_c29_Fs8_20261027_011151\\MLJ_K0V_fdown3.5_G4RF_Fs8 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[L1_PS2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010709\\L1_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_passes_the_same_run_gate[L2b_PS2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010707\\L2b_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[G4RF_Fs0]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\v4_c29_Fs0_20261027_011211\\MLJ_K0V_fdown3.5_G4RF_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[G4RF_Fs8]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\v4_c29_Fs8_20261027_011151\\MLJ_K0V_fdown3.5_G4RF_Fs8 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[L1_PS2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010709\\L1_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_r5_fallback_replay::test_v4_record_truth_source[L2b_PS2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S7\\ctrl3_check_20261027_010707\\L2b_PS2_fdown3.5_old_worst_nocal not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_rod_chamber::test_h6_gas_separation",
+   "T8pppp": "skipped",
+   "reason": "gas separation after FLOOR (14.3 optional) is not implemented",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s6_bundle_c::test_stored_snapshots_rrpre_refused_top_flat_accepted",
+   "T8pppp": "skipped",
+   "reason": "07_results/states_L1R snapshots not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s7_control_rev37::test_ctrl3_rejudged_file",
+   "T8pppp": "skipped",
+   "reason": "ctrl3 batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_c_s8_33::test_mlj_rejudge_rev50",
+   "T8pppp": "skipped",
+   "reason": "MLJ batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_c_s8_34::test_main_ml_rejudge_expected",
+   "T8pppp": "skipped",
+   "reason": "main ML batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control::test_c1_on_the_s7_rpb_record",
+   "T8pppp": "skipped",
+   "reason": "S7 ctrl3 record not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control::test_rev43_on_the_p1_re1bf_fs8_case",
+   "T8pppp": "skipped",
+   "reason": "S8 p1 batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control::test_rev43_verdict_matches_the_control_f2_recheck",
+   "T8pppp": "skipped",
+   "reason": "S8 p1 verdict not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev45::test_p1r_calibration_split_reproduces_the_controller_offsets",
+   "T8pppp": "skipped",
+   "reason": "p1r not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev45::test_p1r_ideal_sensor_cases_reading_law_within_0_1_kN",
+   "T8pppp": "skipped",
+   "reason": "p1r verdict not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev45::test_p1r_rev45_rejudgement_keeps_zero_gate_failures",
+   "T8pppp": "skipped",
+   "reason": "p1r verdict not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev45::test_p1r_wika_reading_law_reproduces_5_27_2[S_top_fdown3.5_wika_Fs8]",
+   "T8pppp": "skipped",
+   "reason": "p1r not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev45::test_p1r_wika_reading_law_reproduces_5_27_2[S_top_rpB_wika_Fs8]",
+   "T8pppp": "skipped",
+   "reason": "p1r not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev45::test_p1r_wika_std_pooled_per_side_within_3_percent",
+   "T8pppp": "skipped",
+   "reason": "p1r not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev46::test_cb_rev46_fallback_caught",
+   "T8pppp": "skipped",
+   "reason": "CB not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev46::test_ml_judge_rows",
+   "T8pppp": "skipped",
+   "reason": "ML pilot not judged",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev46::test_p1r_rev46_c11_twins_from_rest",
+   "T8pppp": "skipped",
+   "reason": "p1r not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_control_rev46::test_rest_rev46_zero_failures",
+   "T8pppp": "skipped",
+   "reason": "rest not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_ml_main::test_pilot_rejudge_matches_rev50",
+   "T8pppp": "skipped",
+   "reason": "ML pilot batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_rev54_cad::test_768_recurrence_list_equals_spec_248_2",
+   "T8pppp": "skipped",
+   "reason": "768 batch records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_rev55_cad::test_bundle_a_gate_lists_the_17_runs_of_spec_260_1",
+   "T8pppp": "skipped",
+   "reason": "C-S8-36 bundle A records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_rev55_cad::test_bundle_d_fs0_rr_deferred_minimum",
+   "T8pppp": "skipped",
+   "reason": "C-S8-36 bundle D records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_rev56_cad::test_iv_bundle_a_deferred_minima_unchanged_with_768_reference",
+   "T8pppp": "skipped",
+   "reason": "C-S8-36 bundle A / 768 records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_rev56_cad::test_iv_bundle_d_fs0_rr_unchanged_with_mlj_reference",
+   "T8pppp": "skipped",
+   "reason": "C-S8-36 bundle D / original MLJ records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s8_soil_restore::test_soil_restore_check_reads_the_plan_of_this_tree",
+   "T8pppp": "skipped",
+   "reason": "S8 ML plan not present (07_results is not tracked): C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\ml_main_20261025_090131\\ml_plan.js",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_final::test_final_r_s6_rows_match_their_former_batch",
+   "T8pppp": "skipped",
+   "reason": "former S6 batch not here",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_final::test_final_rep_x_check_sources",
+   "T8pppp": "skipped",
+   "reason": "source run folder absent (07_results is not in git)",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_final::test_source_args_check_on_the_former_runs",
+   "T8pppp": "skipped",
+   "reason": "no former run folders under 07_results/S9",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL]",
+   "T8pppp": "skipped",
+   "reason": "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_P3b_20261027_174330/P3b_J1_B_top_Fs4]",
+   "T8pppp": "skipped",
+   "reason": "batch_P3b_20261027_174330/P3b_J1_B_top_Fs4 not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0]",
+   "T8pppp": "skipped",
+   "reason": "batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_mass_scale::test_stored_rejudge_p37_unchanged_at_scale_one[batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4]",
+   "T8pppp": "skipped",
+   "reason": "batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_p3b_rev60::test_rejudge_24_stored_cases_against_control",
+   "T8pppp": "skipped",
+   "reason": "P3b batch 20261026_122444 or control p3b_loc_detail.json not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_rev420_records::test_e420_on_the_stored_pre_implementation_g6p_batch",
+   "T8pppp": "skipped",
+   "reason": "G6P batch 20261028 not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_rev420_records::test_stored_case_rejudge_unchanged[batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL]",
+   "T8pppp": "skipped",
+   "reason": "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_rev420_records::test_stored_case_rejudge_unchanged[batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0]",
+   "T8pppp": "skipped",
+   "reason": "batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_s9_rev420_records::test_stored_case_rejudge_unchanged[batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4]",
+   "T8pppp": "skipped",
+   "reason": "batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_cb_moving::test_cb_record_moving_samples_are_never_optimistic",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 CB batches not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_c36_a_false_fallbacks_are_drains",
+   "T8pppp": "skipped",
+   "reason": "c36 A records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_c36_a_other_38_runs_keep_their_controller_outputs",
+   "T8pppp": "skipped",
+   "reason": "c36 A records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_c36_b_c_d_have_no_drain_hold[B_f1only]",
+   "T8pppp": "skipped",
+   "reason": "c36 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_c36_b_c_d_have_no_drain_hold[C_gate]",
+   "T8pppp": "skipped",
+   "reason": "c36 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_c36_b_c_d_have_no_drain_hold[D_fs24]",
+   "T8pppp": "skipped",
+   "reason": "c36 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[cb_20261025_013946]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[ml_main_20261025_090131/episodes]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[p1r_20261024_222013]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_drain::test_other_records_gain_no_sensor_fault[rest_20261024_233615]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 records absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_all_ml_pilot_runs_have_no_sensor_fault_and_match_d1_prime_elsewhere",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_injected_head_jumps_are_detected_at_least_as_often_as_with_d1_prime",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML00_ep5]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML02_ep1]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML02_ep5]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_old_d1_episodes_have_no_fault_with_d1_double_prime[ML22_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML00_ep5]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML08_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML10_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML11_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML17_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML18_ep6]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_d1_prime_replay_matches_the_record[ML21_ep1]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 D1' ML records not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML00_ep5]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML08_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML10_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML11_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML17_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML18_ep6]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_rerun_head_step_episodes_have_no_fault_with_d1_double_prime[ML21_ep1]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_imu::test_restored_branch_gets_the_lever_arm_of_its_auger_level[NOTSET]",
+   "T8pppp": "skipped",
+   "reason": "got empty parameter set for (base)",
+   "base_41e107e9": "absent",
+   "run_C8": "absent",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_steps::test_controller_from_an_old_branch_runs_on_the_current_settings[NOTSET]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot bases not present",
+   "base_41e107e9": "absent",
+   "run_C8": "absent",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML00_ep5]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML02_ep1]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML02_ep5]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_d1_steps::test_ml_d1_episodes_have_no_false_fault_with_explained_steps[ML22_ep4]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 old ML episodes absent",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_controller_from_an_old_branch_runs_with_a_fallback_leg[NOTSET]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot bases not present",
+   "base_41e107e9": "absent",
+   "run_C8": "absent",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T1]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\ml_pilot_20261025_002044\\episodes\\missing\\ML00_ep5 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T1b]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\ml_pilot_20261025_002044\\episodes\\ML17_ep4 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T2]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\p1r_20261024_222013\\K0V_top_fdown3.5_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T3]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\cb_20261025_000840\\CB_H4V_fdown3.5_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T6a]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\p1r_20261024_222013\\E_G4_Fs8 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T6b]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\cb_20261025_000840\\CB_H4V_fdown3.5_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_bound::test_record_replay_lower_bound_is_not_optimistic[T6c]",
+   "T8pppp": "skipped",
+   "reason": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\p1r_20261024_222013\\K0_top_rpBop_Fs0 not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_valve::test_cb_equivalent_roll_record_has_no_false_rl_fallback",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 p1r batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_valve::test_cb_record_replay_has_no_false_rod_fallback[CB_G4_Fs0]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 CB batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_valve::test_cb_record_replay_has_no_false_rod_fallback[CB_RE1bF_Fs0]",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 CB batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_valve::test_controller_from_a_branch_pickled_before_p_s8_11_keeps_running",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 ML pilot bases not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_two_pressure_lock_valve::test_pilot_check_record_replay_is_bit_identical_through_with_lock_valve",
+   "T8pppp": "skipped",
+   "reason": "07_results/S8 p1r batch not present",
+   "base_41e107e9": "passed",
+   "run_C8": "passed",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ0-VBJ0]",
+   "T8pppp": "skipped",
+   "reason": "X10_BASE_ROOT not set (a checkout of the commit before X-10)",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  },
+  {
+   "test": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ5-VBJ]",
+   "T8pppp": "skipped",
+   "reason": "X10_BASE_ROOT not set (a checkout of the commit before X-10)",
+   "base_41e107e9": "skipped",
+   "run_C8": "skipped",
+   "C8_plain": "skipped",
+   "core": false
+  }
+ ]
+}

@@ -1,0 +1,514 @@
+== impl_p80/ed7_probe_a2.jsonl: 114 lines
+  -- setting=P7-L-a2: 15 lines, all-present keys 14/35
+     not all present: event_output.pass {'present': 9, 'absent': 6}
+     not all present: event_output.gates.fault0 {'present': 9, 'absent': 6}
+     not all present: event_output.fault_periods {'present': 9, 'absent': 6}
+     not all present: event_output.fault_events {'present': 9, 'absent': 6}
+     not all present: probe_stiffness_record {'absent': 15}
+     not all present: ed8_record {'absent': 15}
+     not all present: ed8_record.reapproach_runs {'absent': 15}
+     not all present: ed8_record.twist_waiver {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 15}
+     not all present: ed8_settings {'absent': 15}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'absent': 15}
+     not all present: ed8_settings.r8.stiffness_warning_range {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_exit_samples {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.locked_drift_waiver {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_max_rise_N {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_margin_N {'absent': 15}
+     not all present: hydraulics_record.extend_bound_check {'present': 9, 'null': 6}
+     not all present: event_output.reapproach_starts {'present': 9, 'absent': 6}
+     not all present: probe_d6_record {'present': 9, 'null': 6}
+     meta lookup: hydraulic_options.ed8_settings {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record {'line_absent/meta_absent': 15}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 15}
+     form: {'lines': 15, 'error_lines': 0, 'commands_sha256_64hex': 15, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 9, 'lock_window_alignment_object': 15, 'events_at_cap': 0, 'probe_d6_record_null': 6, 'event_elements': 4}
+  -- setting=P7-M-a2: 27 lines, all-present keys 14/35
+     not all present: event_output.pass {'absent': 6, 'present': 21}
+     not all present: event_output.gates.fault0 {'absent': 6, 'present': 21}
+     not all present: event_output.fault_periods {'absent': 6, 'present': 21}
+     not all present: event_output.fault_events {'absent': 6, 'present': 21}
+     not all present: probe_stiffness_record {'absent': 27}
+     not all present: ed8_record {'absent': 27}
+     not all present: ed8_record.reapproach_runs {'absent': 27}
+     not all present: ed8_record.twist_waiver {'absent': 27}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 27}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 27}
+     not all present: ed8_settings {'absent': 27}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'absent': 27}
+     not all present: ed8_settings.r8.stiffness_warning_range {'absent': 27}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'absent': 27}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_exit_samples {'absent': 27}
+     not all present: ed8_settings.twist_completion_relax.locked_drift_waiver {'absent': 27}
+     not all present: ed8_settings.twist_completion_relax.waiver_max_rise_N {'absent': 27}
+     not all present: ed8_settings.twist_completion_relax.waiver_margin_N {'absent': 27}
+     not all present: hydraulics_record.extend_bound_check {'null': 6, 'present': 21}
+     not all present: event_output.reapproach_starts {'absent': 6, 'present': 21}
+     not all present: probe_d6_record {'null': 6, 'present': 21}
+     meta lookup: hydraulic_options.ed8_settings {'line_absent/meta_absent': 27}
+     meta lookup: ed8_record {'line_absent/meta_absent': 27}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 27}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 27}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 27}
+     form: {'lines': 27, 'error_lines': 0, 'commands_sha256_64hex': 27, 'probe_d6_record_null': 6, 'lock_window_alignment_object': 27, 'events_at_cap': 0, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 21, 'event_elements': 6}
+  -- setting=P7-Mc005-a2: 15 lines, all-present keys 14/35
+     not all present: event_output.pass {'absent': 6, 'present': 9}
+     not all present: event_output.gates.fault0 {'absent': 6, 'present': 9}
+     not all present: event_output.fault_periods {'absent': 6, 'present': 9}
+     not all present: event_output.fault_events {'absent': 6, 'present': 9}
+     not all present: probe_stiffness_record {'absent': 15}
+     not all present: ed8_record {'absent': 15}
+     not all present: ed8_record.reapproach_runs {'absent': 15}
+     not all present: ed8_record.twist_waiver {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 15}
+     not all present: ed8_settings {'absent': 15}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'absent': 15}
+     not all present: ed8_settings.r8.stiffness_warning_range {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_exit_samples {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.locked_drift_waiver {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_max_rise_N {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_margin_N {'absent': 15}
+     not all present: hydraulics_record.extend_bound_check {'null': 6, 'present': 9}
+     not all present: event_output.reapproach_starts {'absent': 6, 'present': 9}
+     not all present: probe_d6_record {'null': 6, 'present': 9}
+     meta lookup: hydraulic_options.ed8_settings {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record {'line_absent/meta_absent': 15}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 15}
+     form: {'lines': 15, 'error_lines': 0, 'commands_sha256_64hex': 15, 'probe_d6_record_null': 6, 'lock_window_alignment_object': 15, 'events_at_cap': 0, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 9, 'event_elements': 4}
+  -- setting=P7-Mc04-a2: 15 lines, all-present keys 14/35
+     not all present: event_output.pass {'absent': 6, 'present': 9}
+     not all present: event_output.gates.fault0 {'absent': 6, 'present': 9}
+     not all present: event_output.fault_periods {'absent': 6, 'present': 9}
+     not all present: event_output.fault_events {'absent': 6, 'present': 9}
+     not all present: probe_stiffness_record {'absent': 15}
+     not all present: ed8_record {'absent': 15}
+     not all present: ed8_record.reapproach_runs {'absent': 15}
+     not all present: ed8_record.twist_waiver {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 15}
+     not all present: ed8_settings {'absent': 15}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'absent': 15}
+     not all present: ed8_settings.r8.stiffness_warning_range {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_exit_samples {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.locked_drift_waiver {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_max_rise_N {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_margin_N {'absent': 15}
+     not all present: hydraulics_record.extend_bound_check {'null': 6, 'present': 9}
+     not all present: event_output.reapproach_starts {'absent': 6, 'present': 9}
+     not all present: probe_d6_record {'null': 6, 'present': 9}
+     meta lookup: hydraulic_options.ed8_settings {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record {'line_absent/meta_absent': 15}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 15}
+     form: {'lines': 15, 'error_lines': 0, 'commands_sha256_64hex': 15, 'probe_d6_record_null': 6, 'lock_window_alignment_object': 15, 'events_at_cap': 0, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 9, 'event_elements': 4}
+  -- setting=P7-Mfast-a2: 15 lines, all-present keys 14/35
+     not all present: event_output.pass {'absent': 6, 'present': 9}
+     not all present: event_output.gates.fault0 {'absent': 6, 'present': 9}
+     not all present: event_output.fault_periods {'absent': 6, 'present': 9}
+     not all present: event_output.fault_events {'absent': 6, 'present': 9}
+     not all present: probe_stiffness_record {'absent': 15}
+     not all present: ed8_record {'absent': 15}
+     not all present: ed8_record.reapproach_runs {'absent': 15}
+     not all present: ed8_record.twist_waiver {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 15}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 15}
+     not all present: ed8_settings {'absent': 15}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'absent': 15}
+     not all present: ed8_settings.r8.stiffness_warning_range {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'absent': 15}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_exit_samples {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.locked_drift_waiver {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_max_rise_N {'absent': 15}
+     not all present: ed8_settings.twist_completion_relax.waiver_margin_N {'absent': 15}
+     not all present: hydraulics_record.extend_bound_check {'null': 6, 'present': 9}
+     not all present: event_output.reapproach_starts {'absent': 6, 'present': 9}
+     not all present: probe_d6_record {'null': 6, 'present': 9}
+     meta lookup: hydraulic_options.ed8_settings {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record {'line_absent/meta_absent': 15}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 15}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 15}
+     form: {'lines': 15, 'error_lines': 0, 'commands_sha256_64hex': 15, 'probe_d6_record_null': 6, 'lock_window_alignment_object': 15, 'events_at_cap': 0, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 9, 'event_elements': 2}
+  -- setting=P7-Mslow-a2: 27 lines, all-present keys 14/35
+     not all present: event_output.pass {'present': 21, 'absent': 6}
+     not all present: event_output.gates.fault0 {'present': 21, 'absent': 6}
+     not all present: event_output.fault_periods {'present': 21, 'absent': 6}
+     not all present: event_output.fault_events {'present': 21, 'absent': 6}
+     not all present: probe_stiffness_record {'absent': 27}
+     not all present: ed8_record {'absent': 27}
+     not all present: ed8_record.reapproach_runs {'absent': 27}
+     not all present: ed8_record.twist_waiver {'absent': 27}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 27}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 27}
+     not all present: ed8_settings {'absent': 27}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'absent': 27}
+     not all present: ed8_settings.r8.stiffness_warning_range {'absent': 27}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'absent': 27}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_exit_samples {'absent': 27}
+     not all present: ed8_settings.twist_completion_relax.locked_drift_waiver {'absent': 27}
+     not all present: ed8_settings.twist_completion_relax.waiver_max_rise_N {'absent': 27}
+     not all present: ed8_settings.twist_completion_relax.waiver_margin_N {'absent': 27}
+     not all present: hydraulics_record.extend_bound_check {'present': 21, 'null': 6}
+     not all present: event_output.reapproach_starts {'present': 21, 'absent': 6}
+     not all present: probe_d6_record {'present': 21, 'null': 6}
+     meta lookup: hydraulic_options.ed8_settings {'line_absent/meta_absent': 27}
+     meta lookup: ed8_record {'line_absent/meta_absent': 27}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 27}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 27}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 27}
+     form: {'lines': 27, 'error_lines': 0, 'commands_sha256_64hex': 27, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 21, 'lock_window_alignment_object': 27, 'events_at_cap': 0, 'probe_d6_record_null': 6, 'event_elements': 17}
+== impl_p816/p816.jsonl: 54 lines
+  -- arm=B_impl plant=KM0: 4 lines, all-present keys 18/28
+     not all present: extend_bound_check {'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'null': 4}
+     not all present: run_extend_start_revision {'absent': 4}
+     not all present: lsb_components {'absent': 4}
+     not all present: lsb_settings {'absent': 4}
+     not all present: probe_d6_settings {'absent': 4}
+     not all present: head_only_declared {'absent': 4}
+     not all present: ed8_record {'absent': 4}
+     not all present: probe_stiffness_record {'absent': 4}
+     not all present: ed8_settings {'absent': 4}
+     meta lookup: lsb_components {'line_absent/meta_no_t4h': 4}
+     meta lookup: lsb_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_d6_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: controller_tag {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options.ed8_settings {'line_present/meta_no_t4h': 4}
+     meta lookup: ed8_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_stiffness_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_no_t4h': 4}
+     form: {'lines': 4, 'error_lines': 0, 'commands_sha256_64hex': 4, 'probe_d6_record_absent': 4, 'lock_window_alignment_object': 4, 'events_at_cap': 0, 'event_elements': 73, 'fallback_warning_events': 4, 'reason_events': 4, 'reason_events_leg_known': 4}
+     reason tokens: {'D1': 4}
+  -- arm=B_impl plant=LSM4: 1 lines, all-present keys 34/38
+     not all present: ed8_record.twist_waiver {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 1}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 1}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_not_object': 1, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 1, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=B_impl plant=M: 21 lines, all-present keys 27/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: ed8_record.twist_waiver {'absent': 21}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 21}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 21}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 21}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 21}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_not_object': 21, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 17, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=B_impl plant=Mslow: 1 lines, all-present keys 34/38
+     not all present: ed8_record.twist_waiver {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 1}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 1}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_not_object': 1, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 1, 'lock_window_alignment_object': 1, 'events_at_cap': 0, 'event_elements': 4}
+  -- arm=L2_impl plant=KM0: 4 lines, all-present keys 18/28
+     not all present: extend_bound_check {'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'null': 4}
+     not all present: run_extend_start_revision {'absent': 4}
+     not all present: lsb_components {'absent': 4}
+     not all present: lsb_settings {'absent': 4}
+     not all present: probe_d6_settings {'absent': 4}
+     not all present: head_only_declared {'absent': 4}
+     not all present: ed8_record {'absent': 4}
+     not all present: probe_stiffness_record {'absent': 4}
+     not all present: ed8_settings {'absent': 4}
+     meta lookup: lsb_components {'line_absent/meta_no_t4h': 4}
+     meta lookup: lsb_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_d6_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: controller_tag {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options.ed8_settings {'line_present/meta_no_t4h': 4}
+     meta lookup: ed8_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_stiffness_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_no_t4h': 4}
+     form: {'lines': 4, 'error_lines': 0, 'commands_sha256_64hex': 4, 'probe_d6_record_absent': 4, 'lock_window_alignment_object': 4, 'events_at_cap': 0, 'event_elements': 78, 'fallback_warning_events': 4, 'reason_events': 4, 'reason_events_leg_known': 4}
+     reason tokens: {'D1': 4}
+  -- arm=L2_impl plant=LSM4: 1 lines, all-present keys 37/38
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 1, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=L2_impl plant=M: 21 lines, all-present keys 30/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 21}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 21, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 17, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=L2_impl plant=Mslow: 1 lines, all-present keys 37/38
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 0, 'probe_d6_record_witness_other_form': 1, 'lock_window_alignment_object': 1, 'events_at_cap': 0, 'event_elements': 4}
+== impl_p85/p85.jsonl: 46 lines
+  -- arm=a8 plant=LSM4: 1 lines, all-present keys 38/38
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8 plant=M: 21 lines, all-present keys 31/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 21, 'probe_d6_record_witness_form_ok': 17, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=a8 plant=Mslow: 1 lines, all-present keys 38/38
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8_psw_off plant=LSM4: 1 lines, all-present keys 37/38
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8_psw_off plant=M: 21 lines, all-present keys 30/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 21}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 21, 'probe_d6_record_witness_form_ok': 17, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=a8_psw_off plant=Mslow: 1 lines, all-present keys 37/38
+     not all present: ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m {'null': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+== impl_p88/p88.jsonl: 46 lines
+  -- arm=a8 plant=LSM4: 1 lines, all-present keys 38/38
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8 plant=M: 21 lines, all-present keys 31/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 21, 'probe_d6_record_witness_form_ok': 17, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=a8 plant=Mslow: 1 lines, all-present keys 38/38
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8_h3_off plant=LSM4: 1 lines, all-present keys 37/38
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'null': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8_h3_off plant=M: 21 lines, all-present keys 30/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'null': 21}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 4, 'reapproach_runs_other_form': 17, 'twist_waiver_counts_int': 21, 'probe_d6_record_witness_form_ok': 17, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=a8_h3_off plant=Mslow: 1 lines, all-present keys 37/38
+     not all present: ed8_settings.r8.lifted_reapproach.short_run_s {'null': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 0, 'reapproach_runs_other_form': 1, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+== impl_p815/p815.jsonl: 54 lines
+  -- arm=a8 plant=KM0: 4 lines, all-present keys 18/28
+     not all present: extend_bound_check {'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'null': 4}
+     not all present: run_extend_start_revision {'absent': 4}
+     not all present: lsb_components {'absent': 4}
+     not all present: lsb_settings {'absent': 4}
+     not all present: probe_d6_settings {'absent': 4}
+     not all present: head_only_declared {'absent': 4}
+     not all present: ed8_record {'absent': 4}
+     not all present: probe_stiffness_record {'absent': 4}
+     not all present: ed8_settings {'absent': 4}
+     meta lookup: lsb_components {'line_absent/meta_no_t4h': 4}
+     meta lookup: lsb_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_d6_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: controller_tag {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options.ed8_settings {'line_present/meta_no_t4h': 4}
+     meta lookup: ed8_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_stiffness_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_no_t4h': 4}
+     form: {'lines': 4, 'error_lines': 0, 'commands_sha256_64hex': 4, 'probe_d6_record_absent': 4, 'lock_window_alignment_object': 4, 'events_at_cap': 0, 'event_elements': 78, 'fallback_warning_events': 4, 'reason_events': 4, 'reason_events_leg_known': 4}
+     reason tokens: {'D1': 4}
+  -- arm=a8 plant=LSM4: 1 lines, all-present keys 38/38
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8 plant=M: 21 lines, all-present keys 31/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 21, 'probe_d6_record_witness_form_ok': 17, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=a8 plant=Mslow: 1 lines, all-present keys 38/38
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8_l2_off plant=KM0: 4 lines, all-present keys 18/28
+     not all present: extend_bound_check {'absent': 4}
+     not all present: hydraulics_record.extend_bound_check {'null': 4}
+     not all present: run_extend_start_revision {'absent': 4}
+     not all present: lsb_components {'absent': 4}
+     not all present: lsb_settings {'absent': 4}
+     not all present: probe_d6_settings {'absent': 4}
+     not all present: head_only_declared {'absent': 4}
+     not all present: ed8_record {'absent': 4}
+     not all present: probe_stiffness_record {'absent': 4}
+     not all present: ed8_settings {'absent': 4}
+     meta lookup: lsb_components {'line_absent/meta_no_t4h': 4}
+     meta lookup: lsb_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_d6_settings {'line_absent/meta_no_t4h': 4}
+     meta lookup: controller_tag {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options {'line_present/meta_no_t4h': 4}
+     meta lookup: hydraulic_options.ed8_settings {'line_present/meta_no_t4h': 4}
+     meta lookup: ed8_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: probe_stiffness_record {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_no_t4h': 4}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_no_t4h': 4}
+     form: {'lines': 4, 'error_lines': 0, 'commands_sha256_64hex': 4, 'probe_d6_record_absent': 4, 'lock_window_alignment_object': 4, 'events_at_cap': 0, 'event_elements': 73, 'fallback_warning_events': 4, 'reason_events': 4, 'reason_events_leg_known': 4}
+     reason tokens: {'D1': 4}
+  -- arm=a8_l2_off plant=LSM4: 1 lines, all-present keys 35/38
+     not all present: ed8_record.twist_waiver {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 1}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_not_object': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+  -- arm=a8_l2_off plant=M: 21 lines, all-present keys 28/38
+     not all present: event_output.pass {'present': 17, 'absent': 4}
+     not all present: event_output.gates.fault0 {'present': 17, 'absent': 4}
+     not all present: event_output.fault_periods {'present': 17, 'absent': 4}
+     not all present: event_output.fault_events {'present': 17, 'absent': 4}
+     not all present: ed8_record.twist_waiver {'absent': 21}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 21}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 21}
+     not all present: hydraulics_record.extend_bound_check {'present': 17, 'null': 4}
+     not all present: event_output.reapproach_starts {'present': 17, 'absent': 4}
+     not all present: probe_d6_record {'present': 17, 'null': 4}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 21}
+     form: {'lines': 21, 'error_lines': 0, 'commands_sha256_64hex': 21, 'probe_stiffness_record_list_of_scale_entries': 21, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 21, 'reapproach_runs_other_form': 0, 'twist_waiver_not_object': 21, 'probe_d6_record_witness_form_ok': 17, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 21, 'events_at_cap': 0, 'event_elements': 17, 'probe_d6_record_null': 4}
+  -- arm=a8_l2_off plant=Mslow: 1 lines, all-present keys 35/38
+     not all present: ed8_record.twist_waiver {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_done {'absent': 1}
+     not all present: ed8_record.twist_waiver.n_waiver_periods {'absent': 1}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 1}
+     form: {'lines': 1, 'error_lines': 0, 'commands_sha256_64hex': 1, 'probe_stiffness_record_list_of_scale_entries': 1, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 1, 'reapproach_runs_other_form': 0, 'twist_waiver_not_object': 1, 'probe_d6_record_witness_form_ok': 1, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 1, 'events_at_cap': 0}
+== impl_t8/ed8_t8.jsonl: 44 lines
+  -- setting=VBN: 22 lines, all-present keys 28/35
+     not all present: event_output.pass {'absent': 18, 'present': 4}
+     not all present: event_output.gates.fault0 {'absent': 18, 'present': 4}
+     not all present: event_output.fault_periods {'absent': 18, 'present': 4}
+     not all present: event_output.fault_events {'absent': 18, 'present': 4}
+     not all present: hydraulics_record.extend_bound_check {'null': 18, 'present': 4}
+     not all present: event_output.reapproach_starts {'absent': 18, 'present': 4}
+     not all present: probe_d6_record {'null': 18, 'present': 4}
+     form: {'lines': 22, 'error_lines': 0, 'commands_sha256_64hex': 22, 'probe_stiffness_record_list_of_scale_entries': 22, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 22, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 22, 'probe_d6_record_null': 18, 'lock_window_alignment_object': 22, 'events_at_cap': 0, 'event_elements': 4, 'probe_d6_record_witness_form_ok': 4, 'probe_d6_record_witness_other_form': 0}
+  -- setting=VBN0: 22 lines, all-present keys 28/35
+     not all present: event_output.pass {'present': 4, 'absent': 18}
+     not all present: event_output.gates.fault0 {'present': 4, 'absent': 18}
+     not all present: event_output.fault_periods {'present': 4, 'absent': 18}
+     not all present: event_output.fault_events {'present': 4, 'absent': 18}
+     not all present: hydraulics_record.extend_bound_check {'null': 22}
+     not all present: event_output.reapproach_starts {'present': 4, 'absent': 18}
+     not all present: probe_d6_record {'present': 4, 'null': 18}
+     form: {'lines': 22, 'error_lines': 0, 'commands_sha256_64hex': 22, 'probe_stiffness_record_list_of_scale_entries': 22, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 22, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 22, 'probe_d6_record_witness_form_ok': 4, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 22, 'events_at_cap': 0, 'event_elements': 4, 'probe_d6_record_null': 18}
+== impl_cases/ed8_cases.jsonl: 10 lines
+  -- setting=LSN1: 2 lines, all-present keys 35/35
+     form: {'lines': 2, 'error_lines': 0, 'commands_sha256_64hex': 2, 'probe_stiffness_record_list_of_scale_entries': 2, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 2, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 2, 'probe_d6_record_witness_form_ok': 2, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 2, 'events_at_cap': 0}
+  -- setting=LSN2: 2 lines, all-present keys 35/35
+     form: {'lines': 2, 'error_lines': 0, 'commands_sha256_64hex': 2, 'probe_stiffness_record_list_of_scale_entries': 2, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 2, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 2, 'probe_d6_record_witness_form_ok': 2, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 2, 'events_at_cap': 0}
+  -- setting=LSN3: 2 lines, all-present keys 35/35
+     form: {'lines': 2, 'error_lines': 0, 'commands_sha256_64hex': 2, 'probe_stiffness_record_list_of_scale_entries': 2, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 2, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 2, 'probe_d6_record_witness_form_ok': 2, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 2, 'events_at_cap': 0}
+  -- setting=LSN4: 2 lines, all-present keys 35/35
+     form: {'lines': 2, 'error_lines': 0, 'commands_sha256_64hex': 2, 'probe_stiffness_record_list_of_scale_entries': 2, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 2, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 2, 'probe_d6_record_witness_form_ok': 2, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 2, 'events_at_cap': 0}
+  -- setting=VBN: 2 lines, all-present keys 35/35
+     form: {'lines': 2, 'error_lines': 0, 'commands_sha256_64hex': 2, 'probe_stiffness_record_list_of_scale_entries': 2, 'probe_stiffness_record_other_form': 0, 'reapproach_runs_form_ok': 2, 'reapproach_runs_other_form': 0, 'twist_waiver_counts_int': 2, 'probe_d6_record_witness_form_ok': 2, 'probe_d6_record_witness_other_form': 0, 'lock_window_alignment_object': 2, 'events_at_cap': 0}
+== l1ref/L1_VBN.json: 167 lines
+   document: {'meta.keys_file': {'present': 1}, 'meta.keys_file.sha256': {'present': 1}, 'meta.keys_file.n_keys': {'present': 1}}
+  -- v5_setting=VBN: 167 lines, all-present keys 18/25
+     not all present: lsb_components {'absent': 167}
+     not all present: lsb_settings {'absent': 167}
+     not all present: probe_d6_settings {'absent': 167}
+     not all present: rod_fault {'absent': 167}
+     not all present: ed8_record {'absent': 167}
+     not all present: probe_stiffness_record {'absent': 167}
+     not all present: ed8_settings {'absent': 167}
+     meta lookup: lsb_components {'line_absent/meta_present': 167}
+     meta lookup: lsb_settings {'line_absent/meta_present': 167}
+     meta lookup: probe_d6_settings {'line_absent/meta_present': 167}
+     meta lookup: ed8_record {'line_absent/meta_absent': 167}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 167}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 167}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 167}
+     form: {'lines': 167, 'error_lines': 0, 'commands_sha256_64hex': 167, 'probe_d6_record_absent': 167, 'lock_window_alignment_object': 167, 'events_at_cap': 0, 'event_elements': 1819}
+== l1ref/L1_VBN0.json: 167 lines
+   document: {'meta.keys_file': {'present': 1}, 'meta.keys_file.sha256': {'present': 1}, 'meta.keys_file.n_keys': {'present': 1}}
+  -- v5_setting=VBN0: 167 lines, all-present keys 15/25
+     not all present: extend_bound_check {'null': 167}
+     not all present: hydraulics_record.extend_bound_check {'null': 167}
+     not all present: run_extend_start_revision {'absent': 167}
+     not all present: lsb_components {'absent': 167}
+     not all present: lsb_settings {'absent': 167}
+     not all present: probe_d6_settings {'absent': 167}
+     not all present: rod_fault {'absent': 167}
+     not all present: ed8_record {'absent': 167}
+     not all present: probe_stiffness_record {'absent': 167}
+     not all present: ed8_settings {'absent': 167}
+     meta lookup: lsb_components {'line_absent/meta_present': 167}
+     meta lookup: lsb_settings {'line_absent/meta_present': 167}
+     meta lookup: probe_d6_settings {'line_absent/meta_present': 167}
+     meta lookup: ed8_record {'line_absent/meta_absent': 167}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 167}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 167}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 167}
+     form: {'lines': 167, 'error_lines': 0, 'commands_sha256_64hex': 167, 'probe_d6_record_absent': 167, 'lock_window_alignment_object': 167, 'events_at_cap': 0, 'event_elements': 1819}
+== l1ref/L1a_VBN.json: 102 lines
+   document: {'meta.keys_file': {'present': 1}, 'meta.keys_file.sha256': {'present': 1}, 'meta.keys_file.n_keys': {'present': 1}}
+  -- v5_setting=VBN: 102 lines, all-present keys 18/25
+     not all present: lsb_components {'absent': 102}
+     not all present: lsb_settings {'absent': 102}
+     not all present: probe_d6_settings {'absent': 102}
+     not all present: rod_fault {'absent': 102}
+     not all present: ed8_record {'absent': 102}
+     not all present: probe_stiffness_record {'absent': 102}
+     not all present: ed8_settings {'absent': 102}
+     meta lookup: lsb_components {'line_absent/meta_present': 102}
+     meta lookup: lsb_settings {'line_absent/meta_present': 102}
+     meta lookup: probe_d6_settings {'line_absent/meta_present': 102}
+     meta lookup: ed8_record {'line_absent/meta_absent': 102}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 102}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 102}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 102}
+     form: {'lines': 102, 'error_lines': 0, 'commands_sha256_64hex': 102, 'probe_d6_record_absent': 102, 'lock_window_alignment_object': 102, 'events_at_cap': 0, 'event_elements': 1116}
+== l1ref/L1a_VBN0.json: 102 lines
+   document: {'meta.keys_file': {'present': 1}, 'meta.keys_file.sha256': {'present': 1}, 'meta.keys_file.n_keys': {'present': 1}}
+  -- v5_setting=VBN0: 102 lines, all-present keys 15/25
+     not all present: extend_bound_check {'null': 102}
+     not all present: hydraulics_record.extend_bound_check {'null': 102}
+     not all present: run_extend_start_revision {'absent': 102}
+     not all present: lsb_components {'absent': 102}
+     not all present: lsb_settings {'absent': 102}
+     not all present: probe_d6_settings {'absent': 102}
+     not all present: rod_fault {'absent': 102}
+     not all present: ed8_record {'absent': 102}
+     not all present: probe_stiffness_record {'absent': 102}
+     not all present: ed8_settings {'absent': 102}
+     meta lookup: lsb_components {'line_absent/meta_present': 102}
+     meta lookup: lsb_settings {'line_absent/meta_present': 102}
+     meta lookup: probe_d6_settings {'line_absent/meta_present': 102}
+     meta lookup: ed8_record {'line_absent/meta_absent': 102}
+     meta lookup: probe_stiffness_record {'line_absent/meta_absent': 102}
+     meta lookup: ed8_record.twist_waiver {'line_absent/meta_absent': 102}
+     meta lookup: ed8_record.reapproach_runs {'line_absent/meta_absent': 102}
+     form: {'lines': 102, 'error_lines': 0, 'commands_sha256_64hex': 102, 'probe_d6_record_absent': 102, 'lock_window_alignment_object': 102, 'events_at_cap': 0, 'event_elements': 1116}
+== v0_smoke: {"lines": 2, "present_expected": {"controller_tag": {"present": 2}, "commands_sha256": {"present": 2}, "event_output.reapproach_starts": {"present": 2}}, "absent_expected": {"lsb_components": {"absent": 2}, "lsb_settings": {"absent": 2}, "lsb_record": {"absent": 2}, "probe_d6_settings": {"absent": 2}, "probe_d6_record": {"absent": 2}, "probe_stiffness_record": {"absent": 2}, "ib_block_record": {"absent": 2}, "ed8_settings": {"absent": 2}, "ed8_record": {"absent": 2}, "lock_window_alignment": {"absent": 2}}, "null_expected": {"hydraulic_options": {"null": 2}, "hydraulics_record": {"null": 2}}, "settings": {"V0": 2}}

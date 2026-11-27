@@ -1,0 +1,60 @@
+{
+ "rule": "spec v8 12 P8-0",
+ "key": "run_v5.job_key (spec v8 12 P8-0)",
+ "jobs": 114,
+ "run_jobs": 114,
+ "equal": 114,
+ "missing": [],
+ "extra": [],
+ "differing": [],
+ "run_line_problems": [],
+ "reference_line_problems": [],
+ "reference_compared": true,
+ "settings_reference": {
+  "P7-L-a2": 15,
+  "P7-M-a2": 27,
+  "P7-Mc005-a2": 15,
+  "P7-Mc04-a2": 15,
+  "P7-Mfast-a2": 15,
+  "P7-Mslow-a2": 27
+ },
+ "settings_run": {
+  "P7-L-a2": 15,
+  "P7-M-a2": 27,
+  "P7-Mc005-a2": 15,
+  "P7-Mc04-a2": 15,
+  "P7-Mfast-a2": 15,
+  "P7-Mslow-a2": 27
+ },
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p80.done",
+   "step_done_sha256": "20eddc468f5305d789778b3b46f34150071eccf54e1d8236dbeeb3d65c2729fb",
+   "run_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p80_a1\\ed7_probe_a2.jsonl",
+     "sha256": "48deb5e7c04cd96d4e8108e974afa6926076e1469024c8924002dd5e530b8220"
+    }
+   ]
+  },
+  "reference": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\b46bdf8f\\repro_a2\\ed7_probe_a2.jsonl",
+   "sha256": "d60306db8073b3ffba285f58e54d8fd9779867d47c4e79e9878d02974f082430",
+   "pinned": true
+  }
+ },
+ "command": "p80",
+ "spec_v8_sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+ "judge_code": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4",
+  "head": "7ea782323c427917709ecbb365a58044449beac2",
+  "is_clean": true
+ }
+}

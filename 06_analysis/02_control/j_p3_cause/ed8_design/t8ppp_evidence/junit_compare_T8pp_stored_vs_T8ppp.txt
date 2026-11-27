@@ -1,0 +1,38 @@
+base C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed8_design\t8pp_evidence\junit_T8pp_5955f25b.xml
+new  C:\Users\jinbeom\AppData\Local\Temp\claude\63917d480778c1ba\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\scratchpad\python-t8ppp\junit_T8ppp_worktree.xml
+base counts {'passed': 8895, 'skipped': 134, 'failure': 2}
+new counts {'passed': 8916, 'skipped': 134, 'error': 2, 'failure': 2}
+
+status changes (base -> new):
+  passed -> error  05_tests.unit.test_k2_chrono_runner::test_dhat_recorder_reads_only
+  passed -> error  05_tests.unit.test_k2_chrono_runner::test_hook_sets_cn_only_from_the_valve
+
+only in new (state):
+  passed  05_tests.unit.test_ed8_jp3_settings::test_a_judged_names_are_the_rule_and_run_v5_sets
+  passed  05_tests.unit.test_ed8_jp3_settings::test_b_nested_override_adds_each_name_once
+  passed  05_tests.unit.test_ed8_jp3_settings::test_b_override_inside_and_c8_tuples_outside
+  passed  05_tests.unit.test_ed8_jp3_settings::test_b_override_restored_after_an_exception
+  passed  05_tests.unit.test_ed8_jp3_settings::test_b_shared_module_is_the_c8_blob
+  passed  05_tests.unit.test_ed8_jp3_settings::test_b_tjr_binding_inside_edition_8_and_restored
+  passed  05_tests.unit.test_ed8_jp3_settings::test_c_cases_lines_are_ten_judged_rows
+  passed  05_tests.unit.test_ed8_jp3_settings::test_c_p3_off_line_is_no_expected_row
+  passed  05_tests.unit.test_ed8_jp3_settings::test_c_producer_lines_are_edition_8_lines
+  passed  05_tests.unit.test_ed8_jp3_settings::test_c_record_settings_are_never_judged
+  passed  05_tests.unit.test_ed8_jp3_settings::test_c_stage_line_sets_are_judged[settings0-1-4]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_c_stage_line_sets_are_judged[settings1-12-24]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_d_check_lines_reads_the_vbn_judged_line_evidence
+  passed  05_tests.unit.test_ed8_jp3_settings::test_d_without_the_edition_8_names_the_check_is_skipped
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_changes_since_t8pp_are_the_two_judges_and_tests
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[j_p3_inputs.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[jp3_12b_judge_ed7.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[jp3_ed6_judge.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[jp3_ed7_judge.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[jp3_j9main_judge.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[jp3_tjr_judge.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_older_editions_never_import_the_edition_8_judges[jp3_tjr_judge_ed7.py]
+  passed  05_tests.unit.test_ed8_jp3_settings::test_e_override_is_used_by_the_edition_8_judges_only
+
+only in base (state):
+  (none)
+
+new tests not passed: 0

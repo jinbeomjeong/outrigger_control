@@ -1,0 +1,43 @@
+{
+ "rule": "spec v8 12 P8-5",
+ "arms": [
+  "a8",
+  "a8_psw_off"
+ ],
+ "pairs": 23,
+ "judged_pairs": 14,
+ "differing": [],
+ "unread": [],
+ "hashless": [],
+ "malformed": [],
+ "pairing_problems": [],
+ "record_failures": [],
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": [
+   "p85: 14 judged pairs < 15"
+  ]
+ },
+ "status": "not_judgeable",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p85.done",
+   "step_done_sha256": "2b6e3255b5fd7d99581e9099f2d7b31ed0fb59e6983d47ba69798202dbb89244",
+   "run_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p85_a1\\p85.jsonl",
+     "sha256": "91a00b3006b9b40191b9d249d061f225019c58001556c6b511d51d427796e41c"
+    }
+   ]
+  }
+ },
+ "command": "p85",
+ "spec_v8_sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+ "judge_code": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge3",
+  "head": "2263b2461238da7f93eda147838c01c847315561",
+  "is_clean": true
+ }
+}

@@ -1,0 +1,30 @@
+diff --git a/04_scripts/04_hydraulic/coupled/run_v5.py b/04_scripts/04_hydraulic/coupled/run_v5.py
+index 12fe34f7..417ae610 100644
+--- a/04_scripts/04_hydraulic/coupled/run_v5.py
++++ b/04_scripts/04_hydraulic/coupled/run_v5.py
+@@ -454,7 +454,7 @@ ED8_CASES_BATCH = "ed8_cases"
+ ED8_KEYS_BATCH = "ed8_keys"
+ """Edition 8 key-file rows (``--jobs-file``): the ``lines[*].job`` of a sealed edition 8 key
+ file of :data:`ED8_KEY_FILE_SHA256` (``census_keys_ed8.json`` 1043, ``heldout_g_ed8.json``
+-339 VBN); refused until C8 fills the table (spec v8 11.1, P8-10)."""
++339 VBN; spec v8 11.1, P8-10)."""
+ ED8_HELDOUT_V0_BATCH = "ed8_heldout_v0"
+ """Edition 8 stage 5 (spec v8 7.3, 7.4): per held-out slot the V0 job of its condition and the
+ V0 job of its first A/A candidate (``aa_order[0]``), 678 runs."""
+@@ -463,9 +463,13 @@ ED8_HELDOUT_AA_BATCHES = {"ed8_heldout_aa2": 1, "ed8_heldout_aa3": 2}
+ uses them only when the earlier candidate fell in the other layer)."""
+ ED8_BATCHES = (ED8_T8_BATCH, ED8_CASES_BATCH, ED8_KEYS_BATCH, ED8_HELDOUT_V0_BATCH,
+                *ED8_HELDOUT_AA_BATCHES)
+-ED8_KEY_FILE_SHA256: dict[str, str] = {}
+-"""Edition 8 sealed key files (name -> sha256), filled by the run commit C8 (spec v8 11.1);
+-every edition 8 key batch refuses a file not in it."""
++ED8_KEY_FILE_SHA256: dict[str, str] = {
++    "census_keys_ed8.json": "278b332f694405d5f9be432467e294b64492d5ffd638a76986e819460c88c535",
++    "heldout_g_ed8.json": "a18b5818734f1b10840c903fb9e4b5c140f619705048344f9ea48d16d3142ee5",
++}
++"""Edition 8 sealed key files (name -> sha256; spec v8 11.1, P8-10: the files of
++``ed8_design/keys_seal_41e107e9/``, made by ``ed8_key_lists.py`` at the implementation commit
++41e107e9 clean). Every edition 8 key batch refuses a file not in it."""
+ ED8_KEYS_FILE: list[Path | None] = [None]
+ 
+ 

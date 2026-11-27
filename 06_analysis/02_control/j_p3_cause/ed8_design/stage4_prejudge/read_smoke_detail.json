@@ -1,0 +1,72 @@
+{
+ "note": "reason texts of defect / not-judgeable lists only",
+ "jp3 impl_cases (as judge_cases)": {
+  "lines": 10,
+  "judged_rows": "0",
+  "setting_defects": [],
+  "not_judgeable": [
+   "J-P3 0 judged rows",
+   "J-P3 no_judged_runs"
+  ]
+ },
+ "jp3 impl_t8 VBN": {
+  "lines": 22,
+  "judged_rows": "0",
+  "setting_defects": [],
+  "not_judgeable": [
+   "J-P3 0 judged rows",
+   "J-P3 no_judged_runs"
+  ]
+ },
+ "jp3 impl_t8 VBN not head-only": {
+  "lines": 4,
+  "judged_rows": "0",
+  "setting_defects": [],
+  "not_judgeable": [
+   "J-P3 0 judged rows",
+   "J-P3 no_judged_runs"
+  ]
+ },
+ "jp3 impl_t8 VBN0": {
+  "lines": 22,
+  "judged_rows": "0",
+  "setting_defects": [
+   "J-P3 setting_defect",
+   "J-P3 \u2462 rev 7 condition setting_defect"
+  ],
+  "not_judgeable": [
+   "J-P3 0 judged rows"
+  ]
+ },
+ "jp3 impl_t8 VBN0 not head-only": {
+  "lines": 4,
+  "judged_rows": "0",
+  "setting_defects": [
+   "J-P3 setting_defect",
+   "J-P3 \u2462 rev 7 condition setting_defect"
+  ],
+  "not_judgeable": [
+   "J-P3 0 judged rows"
+  ]
+ },
+ "lines without a V0 main line (by setting)": {
+  "LSN1": 1,
+  "LSN2": 1,
+  "VBN": 1,
+  "LSN3": 1,
+  "LSN4": 1
+ },
+ "C-J unit not-judgeable item names": {},
+ "C-J (ii) LS not-judgeable items (setting, item)": {
+  "LS1 L-c": 1,
+  "LS2 L-c": 1,
+  "LS3 L-c": 1,
+  "LS4 L-c": 1
+ },
+ "C-J (ii) LS no_reference (setting count)": {
+  "LS1": 0,
+  "LS2": 0,
+  "LS3": 0,
+  "LS4": 0
+ }
+}

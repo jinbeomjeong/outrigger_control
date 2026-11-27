@@ -1,0 +1,24 @@
+base C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed8_design\t8pp_evidence\junit_T8pp_5955f25b.xml
+new  C:\Users\jinbeom\AppData\Local\Temp\claude\63917d480778c1ba\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\scratchpad\python-t8ppp\junit_base_5955f25b.xml
+base counts {'passed': 8895, 'skipped': 134, 'failure': 2}
+new counts {'passed': 8885, 'skipped': 134, 'failure': 12}
+
+status changes (base -> new):
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_branch_before_the_liftoff_is_refused
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_loc_anchor_case_fails_as_soil_state_restore_error
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_missing_base_record_is_refused
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_record_without_liftoff_is_refused
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_refresh_sets_the_reapproach_time_limit
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_restore_event_and_meta
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_restored_controller_commands_the_native_bits[old_code]
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_restored_controller_commands_the_native_bits[soil_off_config]
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_restored_soil_state_equals_the_native_one[old_code]
+  passed -> failure  05_tests.unit.test_s8_soil_restore::test_restored_soil_state_equals_the_native_one[soil_off_config]
+
+only in new (state):
+  (none)
+
+only in base (state):
+  (none)
+
+new tests not passed: 0

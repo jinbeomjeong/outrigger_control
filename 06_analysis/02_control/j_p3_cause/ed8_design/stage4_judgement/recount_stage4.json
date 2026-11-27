@@ -1,0 +1,339 @@
+{
+ "judge_new": {
+  "p80": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true,
+   "reference_sha_ok": true,
+   "reference_pinned": true
+  },
+  "p816": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true,
+   "reference_sha_ok": true,
+   "reference_pinned": true
+  },
+  "p85": {
+   "status": "not_judgeable",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true
+  },
+  "p88": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true
+  },
+  "p815": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true
+  },
+  "t8": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true,
+   "main_jsonl_sha_ok": true,
+   "main_jsonl_pinned": true
+  },
+  "cases": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 1,
+   "outputs_sha_ok": true
+  },
+  "l1ref": {
+   "status": "pass",
+   "head_ok": true,
+   "is_clean": true,
+   "spec_ok": true,
+   "run_commit_ok": true,
+   "step_done_sha_ok": true,
+   "outputs": 4,
+   "outputs_sha_ok": true
+  }
+ },
+ "judge_old_status": {
+  "p80": "failed",
+  "p816": "pass",
+  "p85": "not_judgeable",
+  "p88": "pass",
+  "p815": "pass",
+  "t8": "pass",
+  "cases": "pass",
+  "l1ref": "pass"
+ },
+ "judge_old_head_ok": {
+  "p80": true,
+  "p816": true,
+  "p85": true,
+  "p88": true,
+  "p815": true,
+  "t8": true,
+  "cases": true,
+  "l1ref": true
+ },
+ "p80_t8ppp_signature": {
+  "status": "failed",
+  "jobs": 27,
+  "equal": 27,
+  "differing": 0,
+  "failures": [
+   "run line problems: 174"
+  ],
+  "setting_defects": [
+   "reference: 27 jobs, 114 expected"
+  ]
+ },
+ "p80": {
+  "run_lines": 114,
+  "reference_lines": 114,
+  "run_error_lines": 0,
+  "run_hashless_lines": 0,
+  "run_distinct_keys": 114,
+  "reference_distinct_keys": 114,
+  "run_duplicate_keys": 0,
+  "reference_duplicate_keys": 0,
+  "equal": 114,
+  "differing": 0,
+  "missing": 0,
+  "extra": 0,
+  "settings_run": {
+   "P7-L-a2": 15,
+   "P7-M-a2": 27,
+   "P7-Mc005-a2": 15,
+   "P7-Mc04-a2": 15,
+   "P7-Mfast-a2": 15,
+   "P7-Mslow-a2": 27
+  },
+  "folded_keys_t8ppp_form": 27,
+  "reference_sha_ok": true,
+  "matches_tool": true,
+  "rule_status": "pass"
+ },
+ "p816": {
+  "run_lines": 54,
+  "run_arms": {
+   "B_impl": 27,
+   "L2_impl": 27
+  },
+  "reference_arms": {
+   "B": 27,
+   "B0": 1,
+   "L1": 27,
+   "L2": 27
+  },
+  "per_arm": {
+   "B_impl": {
+    "run_lines": 27,
+    "reference_lines": 27,
+    "run_hashless": 0,
+    "multiset_equal": true
+   },
+   "L2_impl": {
+    "run_lines": 27,
+    "reference_lines": 27,
+    "run_hashless": 0,
+    "multiset_equal": true
+   }
+  },
+  "reference_sha_ok": true,
+  "matches_tool": true,
+  "rule_status": "pass"
+ },
+ "p85": {
+  "rule": "P8-5",
+  "lines": 46,
+  "lines_by_arm": {
+   "a8": 23,
+   "a8_psw_off": 23
+  },
+  "pairs": 23,
+  "pairing_problems": 0,
+  "judged_pairs": 14,
+  "differing_judged_pairs": 0,
+  "hashless_judged_pairs": 0,
+  "pair_states": {
+   "not_selected": 9
+  },
+  "min_pairs": 15,
+  "matches_tool": true,
+  "rule_status": "not_judgeable"
+ },
+ "p88": {
+  "rule": "P8-8",
+  "lines": 46,
+  "lines_by_arm": {
+   "a8": 23,
+   "a8_h3_off": 23
+  },
+  "pairs": 23,
+  "pairing_problems": 0,
+  "judged_pairs": 6,
+  "differing_judged_pairs": 0,
+  "hashless_judged_pairs": 0,
+  "pair_states": {
+   "not_selected": 17
+  },
+  "min_pairs": 5,
+  "matches_tool": true,
+  "rule_status": "pass"
+ },
+ "p815": {
+  "rule": "P8-15",
+  "lines": 54,
+  "lines_by_arm": {
+   "a8": 27,
+   "a8_l2_off": 27
+  },
+  "pairs": 27,
+  "pairing_problems": 0,
+  "judged_pairs": 21,
+  "differing_judged_pairs": 0,
+  "hashless_judged_pairs": 0,
+  "pair_states": {
+   "no_record": 4,
+   "not_selected": 2
+  },
+  "min_pairs": 20,
+  "matches_tool": true,
+  "rule_status": "pass"
+ },
+ "t8": {
+  "lines": 44,
+  "settings": {
+   "VBN": 22,
+   "VBN0": 22
+  },
+  "jobs": 22,
+  "complete_jobs": 22,
+  "fallback_pair_records": 0,
+  "judged_pairs": 22,
+  "differing_pairs": 0,
+  "matches_tool": true,
+  "rule_status": "pass"
+ },
+ "cases": {
+  "lines": 10,
+  "error_lines": 0,
+  "settings": {
+   "LSN1": 2,
+   "LSN2": 2,
+   "LSN3": 2,
+   "LSN4": 2,
+   "VBN": 2
+  },
+  "cases": {
+   "R12": 10
+  },
+  "extend_bound_check_records": 10,
+  "rule_revisions": {
+   "7": 10
+  },
+  "breach_read_sums": {
+   "jp3a_breach_reads": 0,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0
+  },
+  "breach_read_field_types": {
+   "jp3a_breach_reads": [
+    "list"
+   ],
+   "jp3b_breach_over_tol_reads": [
+    "list"
+   ],
+   "jp3c_breach_reads": [
+    "list"
+   ]
+  },
+  "matches_tool": true,
+  "rule_status": "pass"
+ },
+ "l1ref": {
+  "L1_VBN0": {
+   "top_lists": {
+    "results": 167
+   },
+   "rows": 167,
+   "controller_tags": {
+    "final_C4G2_LAS_K1_LSB_ED8": 167
+   },
+   "tool_lines": 167,
+   "matches_tool": true
+  },
+  "L1_VBN": {
+   "top_lists": {
+    "results": 167
+   },
+   "rows": 167,
+   "controller_tags": {
+    "final_C4G2_P3X_LAS_K1_LSB_ED8": 167
+   },
+   "tool_lines": 167,
+   "matches_tool": true
+  },
+  "L1a_VBN0": {
+   "top_lists": {
+    "results": 102
+   },
+   "rows": 102,
+   "controller_tags": {
+    "final_C4G2_LAS_K1_LSB_ED8": 102
+   },
+   "tool_lines": 102,
+   "matches_tool": true
+  },
+  "L1a_VBN": {
+   "top_lists": {
+    "results": 102
+   },
+   "rows": 102,
+   "controller_tags": {
+    "final_C4G2_P3X_LAS_K1_LSB_ED8": 102
+   },
+   "tool_lines": 102,
+   "matches_tool": true
+  },
+  "matches_tool": true
+ },
+ "summary": {
+  "recount_matches_tool": true,
+  "identity_ok": true,
+  "rule_status_matches_tool": true,
+  "status": "same"
+ }
+}

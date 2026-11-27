@@ -1,0 +1,320 @@
+{
+ "km0_meta": {
+  "impl_p815 arm=a8 plant=KM0": {
+   "top_file_exists:False": 4,
+   "sub_file_exists:True": 4,
+   "sub_meta ed8_record:absent": 4,
+   "sub_meta probe_stiffness_record:absent": 4,
+   "sub_meta hydraulic_options:present": 4,
+   "sub_meta hydraulic_options.ed8_settings:present": 4,
+   "sub_meta lsb_components:present": 4,
+   "sub_meta lsb_settings:present": 4,
+   "sub_meta probe_d6_settings:present": 4,
+   "sub_meta controller_tag:present": 4
+  },
+  "impl_p815 arm=a8_l2_off plant=KM0": {
+   "top_file_exists:False": 4,
+   "sub_file_exists:True": 4,
+   "sub_meta ed8_record:absent": 4,
+   "sub_meta probe_stiffness_record:absent": 4,
+   "sub_meta hydraulic_options:present": 4,
+   "sub_meta hydraulic_options.ed8_settings:present": 4,
+   "sub_meta lsb_components:present": 4,
+   "sub_meta lsb_settings:present": 4,
+   "sub_meta probe_d6_settings:present": 4,
+   "sub_meta controller_tag:present": 4
+  },
+  "impl_p816 arm=B_impl plant=KM0": {
+   "top_file_exists:False": 4,
+   "sub_file_exists:True": 4,
+   "sub_meta ed8_record:absent": 4,
+   "sub_meta probe_stiffness_record:absent": 4,
+   "sub_meta hydraulic_options:present": 4,
+   "sub_meta hydraulic_options.ed8_settings:present": 4,
+   "sub_meta lsb_components:present": 4,
+   "sub_meta lsb_settings:present": 4,
+   "sub_meta probe_d6_settings:present": 4,
+   "sub_meta controller_tag:present": 4
+  },
+  "impl_p816 arm=L2_impl plant=KM0": {
+   "top_file_exists:False": 4,
+   "sub_file_exists:True": 4,
+   "sub_meta ed8_record:absent": 4,
+   "sub_meta probe_stiffness_record:absent": 4,
+   "sub_meta hydraulic_options:present": 4,
+   "sub_meta hydraulic_options.ed8_settings:present": 4,
+   "sub_meta lsb_components:present": 4,
+   "sub_meta lsb_settings:present": 4,
+   "sub_meta probe_d6_settings:present": 4,
+   "sub_meta controller_tag:present": 4
+  }
+ },
+ "event_name_classes": {
+  "impl_p85": {
+   "arm=a8 plant=Mslow": {
+    "event_names:other": 9
+   },
+   "arm=a8_psw_off plant=Mslow": {
+    "event_names:other": 9
+   },
+   "arm=a8_psw_off plant=M": {
+    "event_names:other": 182,
+    "events:other": 17
+   },
+   "arm=a8 plant=M": {
+    "event_names:other": 182,
+    "events:other": 17
+   },
+   "arm=a8 plant=LSM4": {
+    "event_names:other": 7
+   },
+   "arm=a8_psw_off plant=LSM4": {
+    "event_names:other": 7
+   }
+  },
+  "impl_p88": {
+   "arm=a8 plant=Mslow": {
+    "event_names:other": 9
+   },
+   "arm=a8_h3_off plant=Mslow": {
+    "event_names:other": 9
+   },
+   "arm=a8_h3_off plant=M": {
+    "event_names:other": 186,
+    "events:other": 17
+   },
+   "arm=a8 plant=M": {
+    "event_names:other": 182,
+    "events:other": 17
+   },
+   "arm=a8_h3_off plant=LSM4": {
+    "event_names:other": 7
+   },
+   "arm=a8 plant=LSM4": {
+    "event_names:other": 7
+   }
+  },
+  "impl_p815": {
+   "arm=a8_l2_off plant=Mslow": {
+    "event_names:other": 9
+   },
+   "arm=a8 plant=Mslow": {
+    "event_names:other": 9
+   },
+   "arm=a8_l2_off plant=M": {
+    "event_names:other": 179,
+    "events:other": 17
+   },
+   "arm=a8 plant=M": {
+    "event_names:other": 182,
+    "events:other": 17
+   },
+   "arm=a8_l2_off plant=LSM4": {
+    "event_names:other": 7
+   },
+   "arm=a8 plant=LSM4": {
+    "event_names:other": 7
+   },
+   "arm=a8 plant=KM0": {
+    "events:fallback_warning": 4,
+    "events:reason_event": 4,
+    "events:other": 70
+   },
+   "arm=a8_l2_off plant=KM0": {
+    "events:fallback_warning": 4,
+    "events:reason_event": 4,
+    "events:other": 65
+   }
+  },
+  "impl_p816": {
+   "arm=L2_impl plant=Mslow": {
+    "event_names:other": 11,
+    "events:other": 4
+   },
+   "arm=B_impl plant=Mslow": {
+    "event_names:other": 11,
+    "events:other": 4
+   },
+   "arm=B_impl plant=M": {
+    "event_names:other": 179,
+    "events:other": 17
+   },
+   "arm=L2_impl plant=M": {
+    "event_names:other": 182,
+    "events:other": 17
+   },
+   "arm=B_impl plant=LSM4": {
+    "event_names:other": 7
+   },
+   "arm=L2_impl plant=LSM4": {
+    "event_names:other": 7
+   },
+   "arm=B_impl plant=KM0": {
+    "events:fallback_warning": 4,
+    "events:reason_event": 4,
+    "events:other": 65
+   },
+   "arm=L2_impl plant=KM0": {
+    "events:fallback_warning": 4,
+    "events:reason_event": 4,
+    "events:other": 70
+   }
+  },
+  "impl_t8": {
+   "setting=VBN": {
+    "event_names:other": 159,
+    "events:other": 4
+   },
+   "setting=VBN0": {
+    "event_names:other": 159,
+    "events:other": 4
+   }
+  },
+  "impl_cases": {
+   "setting=LSN1": {
+    "event_names:other": 17
+   },
+   "setting=LSN2": {
+    "event_names:other": 17
+   },
+   "setting=VBN": {
+    "event_names:other": 17
+   },
+   "setting=LSN3": {
+    "event_names:other": 17
+   },
+   "setting=LSN4": {
+    "event_names:other": 17
+   }
+  }
+ },
+ "head_only": {
+  "impl_p85": {
+   "arm=a8 plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8_psw_off plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8_psw_off plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=a8 plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=a8 plant=LSM4": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8_psw_off plant=LSM4": {
+    "check_present/head_only_False": 1
+   }
+  },
+  "impl_p88": {
+   "arm=a8 plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8_h3_off plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8_h3_off plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=a8 plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=a8_h3_off plant=LSM4": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8 plant=LSM4": {
+    "check_present/head_only_False": 1
+   }
+  },
+  "impl_p815": {
+   "arm=a8_l2_off plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8 plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8_l2_off plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=a8 plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=a8_l2_off plant=LSM4": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8 plant=LSM4": {
+    "check_present/head_only_False": 1
+   },
+   "arm=a8 plant=KM0": {
+    "check_null/head_only_None": 4
+   },
+   "arm=a8_l2_off plant=KM0": {
+    "check_null/head_only_None": 4
+   }
+  },
+  "impl_p816": {
+   "arm=L2_impl plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=B_impl plant=Mslow": {
+    "check_present/head_only_False": 1
+   },
+   "arm=B_impl plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=L2_impl plant=M": {
+    "check_present/head_only_False": 17,
+    "check_null/head_only_True": 4
+   },
+   "arm=B_impl plant=LSM4": {
+    "check_present/head_only_False": 1
+   },
+   "arm=L2_impl plant=LSM4": {
+    "check_present/head_only_False": 1
+   },
+   "arm=B_impl plant=KM0": {
+    "check_null/head_only_None": 4
+   },
+   "arm=L2_impl plant=KM0": {
+    "check_null/head_only_None": 4
+   }
+  },
+  "impl_t8": {
+   "setting=VBN": {
+    "check_null/head_only_True": 18,
+    "check_present/head_only_False": 4
+   },
+   "setting=VBN0": {
+    "check_null/head_only_False": 4,
+    "check_null/head_only_True": 18
+   }
+  },
+  "impl_cases": {
+   "setting=LSN1": {
+    "check_present/head_only_False": 2
+   },
+   "setting=LSN2": {
+    "check_present/head_only_False": 2
+   },
+   "setting=VBN": {
+    "check_present/head_only_False": 2
+   },
+   "setting=LSN3": {
+    "check_present/head_only_False": 2
+   },
+   "setting=LSN4": {
+    "check_present/head_only_False": 2
+   }
+  }
+ }
+}

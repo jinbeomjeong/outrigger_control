@@ -1,0 +1,129 @@
+{
+ "T8pppp_7ea78232": {
+  "tests": 9071,
+  "states": {
+   "passed": 8935,
+   "skipped": 134,
+   "failure": 2
+  },
+  "failed_or_error": [
+   "05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash",
+   "05_tests.unit.test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume"
+  ],
+  "groups": {
+   "P8-6 (test_p86*)": {
+    "tests": 1,
+    "states": {
+     "passed": 1
+    },
+    "not_passed": []
+   },
+   "P8-10 (test_p8_10*)": {
+    "tests": 2,
+    "states": {
+     "passed": 2
+    },
+    "not_passed": []
+   },
+   "P8-11 (test_ed8_run_path)": {
+    "tests": 4,
+    "states": {
+     "passed": 4
+    },
+    "not_passed": []
+   },
+   "P8-0 key (test_ed8_gate_p80_key)": {
+    "tests": 17,
+    "states": {
+     "passed": 17
+    },
+    "not_passed": []
+   },
+   "gate judge (test_ed8_gate_judge)": {
+    "tests": 37,
+    "states": {
+     "passed": 37
+    },
+    "not_passed": []
+   },
+   "D-1 settings (test_ed8_jp3_settings)": {
+    "tests": 23,
+    "states": {
+     "passed": 23
+    },
+    "not_passed": []
+   },
+   "all test_ed8_*": {
+    "tests": 354,
+    "states": {
+     "passed": 354
+    },
+    "not_passed": []
+   }
+  }
+ },
+ "T8ppp_2263b246": {
+  "tests": 9054,
+  "states": {
+   "passed": 8918,
+   "skipped": 134,
+   "failure": 2
+  },
+  "failed_or_error": [
+   "05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash",
+   "05_tests.unit.test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume"
+  ],
+  "groups": {
+   "P8-6 (test_p86*)": {
+    "tests": 1,
+    "states": {
+     "passed": 1
+    },
+    "not_passed": []
+   },
+   "P8-10 (test_p8_10*)": {
+    "tests": 2,
+    "states": {
+     "passed": 2
+    },
+    "not_passed": []
+   },
+   "P8-11 (test_ed8_run_path)": {
+    "tests": 4,
+    "states": {
+     "passed": 4
+    },
+    "not_passed": []
+   },
+   "P8-0 key (test_ed8_gate_p80_key)": {
+    "tests": 0,
+    "states": {},
+    "not_passed": []
+   },
+   "gate judge (test_ed8_gate_judge)": {
+    "tests": 37,
+    "states": {
+     "passed": 37
+    },
+    "not_passed": []
+   },
+   "D-1 settings (test_ed8_jp3_settings)": {
+    "tests": 23,
+    "states": {
+     "passed": 23
+    },
+    "not_passed": []
+   },
+   "all test_ed8_*": {
+    "tests": 337,
+    "states": {
+     "passed": 337
+    },
+    "not_passed": []
+   }
+  }
+ },
+ "summary": {
+  "gate_tests_all_passed_T8pppp": true
+ }
+}

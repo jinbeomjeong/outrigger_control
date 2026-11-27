@@ -1,0 +1,221 @@
+{
+ "rule": "jp3_remedy_spec_v8_rules.md 12 P8-2 (cases E / F), T8",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_cases.done",
+   "step_done_sha256": "99332bc902ad6a531ecca08add7cd769d9a03a490eb53813997eb0428a9edc11",
+   "run_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_cases_a1\\ed8_cases.jsonl",
+     "sha256": "f0ee363adf951bbb06b713d02233bfc20dd9be6bbfcc4ab0df2caf08985aa7ef"
+    }
+   ]
+  }
+ },
+ "rows": 10,
+ "identity_defects": [],
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "pass",
+  "runs": 0,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 0,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0,
+   "defect_revision_5_record_in_revision_4_judgement": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 0,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "rev7": {
+   "name": "extend_bound_check rev5: jp3a_breach_reads + jp3b_breach_over_tol_reads + jp3c_breach_reads == 0",
+   "status": "pass",
+   "runs": 10,
+   "runs_judged": 10,
+   "expected_judged_runs": null,
+   "judged_key_missing_runs": 0,
+   "runs_by_case": {
+    "judged": 10,
+    "no_rod_reading": 0,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_record_not_revision_5": 0,
+    "defect_sensor_grade_missing": 0,
+    "defect_rule_identity_not_default": 0,
+    "record_only_sensor_grade": 0
+   },
+   "rule_revisions": [
+    7
+   ],
+   "jp3a_breach_reads": 0,
+   "jp3b_breach_over_tol_reads": 0,
+   "jp3c_breach_reads": 0,
+   "record_only_grade_sums": {
+    "jp3a_breach_reads": 0,
+    "jp3b_breach_over_tol_reads": 0,
+    "jp3c_breach_reads": 0
+   },
+   "runs_with_breach": 0,
+   "jp3b_breach_reads_flag": 0,
+   "jp3a_margin_used_reads_flag": 0,
+   "lock_ext_breach_over_tol_reads_flag": 0,
+   "ret_breach_reads_flag": 0
+  },
+  "rev7_unjudged_setting_runs": 0,
+  "runs_expected": 10,
+  "rule_missing_runs": 0,
+  "test_only_setting_runs": 0,
+  "l1_reference_runs": 0,
+  "revision_key_missing_runs": 0,
+  "revision_key_mismatch_runs": 0,
+  "status_by_revision": {
+   "4": "no_p3_runs",
+   "7": "pass"
+  }
+ },
+ "J-P3_judged_rows": 10,
+ "J-P3_judged_settings": [
+  "VBN",
+  "LSN1",
+  "LSN2",
+  "LSN3",
+  "LSN4",
+  "VBKN",
+  "VBNslow",
+  "VBNfast",
+  "VBNc005",
+  "VBNc04"
+ ],
+ "rev7_condition": {
+  "summary": {
+   "status": "pass",
+   "judged_lines": 10,
+   "judged_lines_with_condition": 10,
+   "judged_condition_reads": 117,
+   "judged_breach_reads": 0,
+   "record_lines": 0,
+   "head_only_lines": {
+    "judged_plant": 0,
+    "record_plant": 0
+   },
+   "states": {
+    "judged": 10
+   },
+   "record_artifact_reads": 0
+  },
+  "lines": [
+   {
+    "setting": "LSN1",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSN1.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 17,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN2",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSN2.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "VBN",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_VBN.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN3",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSN3.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 10,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN2",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSN2.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 10,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN1",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSN1.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 5,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "VBN",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_VBN.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 10,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN4",
+    "t4h_file": "R12_bottom-FL-Fs4-o0.0_LSN4.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 5,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN3",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSN3.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   },
+   {
+    "setting": "LSN4",
+    "t4h_file": "R12_top-FR-Fs8-o0.075_LSN4.npz",
+    "is_judged_plant": true,
+    "head_only_declared": false,
+    "condition_reads": 15,
+    "condition_breach_reads": 0,
+    "state": "judged"
+   }
+  ]
+ },
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "command": "cases",
+ "spec_v8_sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+ "run_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+ "judge_code": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4",
+  "head": "7ea782323c427917709ecbb365a58044449beac2",
+  "is_clean": true
+ }
+}

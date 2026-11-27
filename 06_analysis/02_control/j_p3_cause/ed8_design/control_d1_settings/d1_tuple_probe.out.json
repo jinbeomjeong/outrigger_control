@@ -1,0 +1,129 @@
+{
+ "run_v5_ED8_SETTINGS": [
+  "VBN",
+  "LSN1",
+  "LSN2",
+  "LSN3",
+  "LSN4",
+  "VBN0",
+  "VBNslow",
+  "VBNfast",
+  "VBNc005",
+  "VBNc04",
+  "VBNb069",
+  "VBNb16",
+  "VBNh05",
+  "VBNh15",
+  "VBNd05",
+  "VBNd15",
+  "VBKN",
+  "VBKN0"
+ ],
+ "run_v5_ED8_SENSITIVITY_SETTINGS": [
+  "VBNslow",
+  "VBNfast",
+  "VBNc005",
+  "VBNc04"
+ ],
+ "run_v5_ED8_SENSITIVITY_RECORD_SETTINGS": [
+  "VBNb069",
+  "VBNb16",
+  "VBNh05",
+  "VBNh15",
+  "VBNd05",
+  "VBNd15"
+ ],
+ "ed8_names_in_REV5_now": [],
+ "ed8_names_in_P3_OFF_now": [],
+ "tjr_binding_is_same_object": true,
+ "is_p3_expected_now": {
+  "VBN": true,
+  "LSN1": true,
+  "LSN2": true,
+  "LSN3": true,
+  "LSN4": true,
+  "VBN0": true,
+  "VBNslow": true,
+  "VBNfast": true,
+  "VBNc005": true,
+  "VBNc04": true,
+  "VBNb069": true,
+  "VBNb16": true,
+  "VBNh05": true,
+  "VBNh15": true,
+  "VBNd05": true,
+  "VBNd15": true,
+  "VBKN": true,
+  "VBKN0": true
+ },
+ "is_p3_expected_off_tag_now": {
+  "VBN0": true,
+  "VBKN0": true
+ },
+ "split_now": {
+  "cases_VBN_LSN": {
+   "judged": 0,
+   "status": "no_judged_runs",
+   "unjudged": 10
+  },
+  "CS_judged4": {
+   "judged": 0,
+   "status": "no_judged_runs",
+   "unjudged": 4
+  },
+  "CD_VBN_VBNslow": {
+   "judged": 0,
+   "status": "no_judged_runs",
+   "unjudged": 24
+  },
+  "record6": {
+   "judged": 0,
+   "status": "no_judged_runs",
+   "unjudged": 6
+  }
+ },
+ "ed8_names_absent_from_older_tuples": true,
+ "proposed_names_are_run_v5_settings": true,
+ "proposed_equals_rule_sets": true,
+ "split_override": {
+  "cases_VBN_LSN": {
+   "judged": 10,
+   "status": "pass",
+   "unjudged": 0
+  },
+  "CS_judged4": {
+   "judged": 4,
+   "status": "pass",
+   "unjudged": 0
+  },
+  "CD_VBN_VBNslow": {
+   "judged": 24,
+   "status": "pass",
+   "unjudged": 0
+  },
+  "record6": {
+   "judged": 0,
+   "status": "no_judged_runs",
+   "unjudged": 6
+  },
+  "ed7_names": {
+   "judged": 10,
+   "status": "pass",
+   "unjudged": 0
+  }
+ },
+ "is_p3_expected_off_tag_override": {
+  "VBN0": false,
+  "VBKN0": false
+ },
+ "tjr_line_check_takes": {
+  "VBN": true,
+  "VBN0": false
+ },
+ "restored": true,
+ "split_after_exit_ed7": {
+  "judged": 10,
+  "status": "pass",
+  "unjudged": 0
+ }
+}

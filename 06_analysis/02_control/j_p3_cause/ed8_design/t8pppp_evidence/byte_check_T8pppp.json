@@ -1,0 +1,37 @@
+{
+ "head": "2263b2461238da7f93eda147838c01c847315561",
+ "run_path_files": 156,
+ "run_path_working_blob_mismatch": [],
+ "src_tree_head_eq_list": true,
+ "src_working_diff": [],
+ "unchanged_vs_t8ppp": {
+  "04_scripts/04_hydraulic/coupled/jp3_ed8_judge.py": true,
+  "04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed8.py": true,
+  "04_scripts/04_hydraulic/coupled/jp3_ed8_rules.py": true,
+  "04_scripts/04_hydraulic/coupled/p816_compare.py": true,
+  "04_scripts/04_hydraulic/coupled/run_v5.py": true,
+  "04_scripts/04_hydraulic/coupled/ed7_probe.py": true,
+  "04_scripts/04_hydraulic/coupled/j_p3_inputs.py": true,
+  "05_tests/unit/test_ed8_gate_judge.py": true
+ },
+ "diff_vs_t8ppp_working": [
+  "04_scripts/04_hydraulic/coupled/jp3_ed8_gate_judge.py",
+  "05_tests/unit/test_ed8_jp3_settings.py"
+ ],
+ "untracked": [
+  "05_tests/unit/test_ed8_gate_p80_key.py"
+ ],
+ "diff_vs_c8_working_count": 23,
+ "diff_vs_c8_outside_scripts_tests": [],
+ "diff_vs_c8_in_run_path": [],
+ "changed_files_sha256_raw": {
+  "04_scripts/04_hydraulic/coupled/jp3_ed8_gate_judge.py": "f3b0565c15428511ee4598a702c3431bb49a6fcd97f177f928100a08e1fd5c11",
+  "05_tests/unit/test_ed8_gate_p80_key.py": "cf9bd2cd639dad56b66d69d70f6ddd813d83401e4160ff0612435063635e296d",
+  "05_tests/unit/test_ed8_jp3_settings.py": "b824b3d5cb5e4bb08a055b3be5d97f13b4e1e2c59c178b5108fb126b001e70f2"
+ },
+ "changed_files_has_crlf": {
+  "04_scripts/04_hydraulic/coupled/jp3_ed8_gate_judge.py": true,
+  "05_tests/unit/test_ed8_gate_p80_key.py": false,
+  "05_tests/unit/test_ed8_jp3_settings.py": true
+ }
+}

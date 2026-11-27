@@ -1,0 +1,37 @@
+{
+ "rule": "spec v8 12 P8-1",
+ "judged_pairs": 22,
+ "differing_pairs": [],
+ "fallback_pairs_record": [],
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "inputs": {
+  "rows": {
+   "step_done": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_t8.done",
+   "step_done_sha256": "a774f422acc33d1111c451b52e7a6453be52241174425d8d8c4145abdf21a973",
+   "run_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+   "outputs": [
+    {
+     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_t8_a1\\ed8_t8.jsonl",
+     "sha256": "c60ccd25b52b772fc869f586333f317d1f10553723c3982ffa9e2de1d004d53a"
+    }
+   ]
+  },
+  "main_jsonl": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+   "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e",
+   "pinned": true
+  }
+ },
+ "command": "t8",
+ "spec_v8_sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+ "judge_code": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge3",
+  "head": "2263b2461238da7f93eda147838c01c847315561",
+  "is_clean": true
+ }
+}

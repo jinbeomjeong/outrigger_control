@@ -1,0 +1,659 @@
+{
+  "tool": "key_presence",
+  "keys_required": [
+    "commands_sha256",
+    "t4h_file",
+    "controller_tag",
+    "hydraulic_options",
+    "lsb_components",
+    "lsb_settings",
+    "probe_d6_settings",
+    "hydraulics_record",
+    "head_only_declared",
+    "events",
+    "event_names",
+    "lock_window_alignment",
+    "probe_stiffness_record",
+    "ed8_record.reapproach_runs",
+    "ed8_record.twist_waiver.n_waiver_done",
+    "ed8_record.twist_waiver.n_waiver_periods",
+    "ed8_settings",
+    "ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m",
+    "ed8_settings.r8.stiffness_warning_range",
+    "ed8_settings.r8.lifted_reapproach.short_run_s",
+    "ed8_settings.r8.lifted_reapproach.short_run_exit_samples",
+    "ed8_settings.twist_completion_relax.locked_drift_waiver",
+    "ed8_settings.twist_completion_relax.waiver_max_rise_N",
+    "ed8_settings.twist_completion_relax.waiver_margin_N"
+  ],
+  "where": [],
+  "list_key": null,
+  "allow_null": false,
+  "keys": [
+    {
+      "key": "commands_sha256",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "t4h_file",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "controller_tag",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulic_options",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "lsb_components",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "lsb_settings",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "probe_d6_settings",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "hydraulics_record",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "head_only_declared",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "events",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "event_names",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "lock_window_alignment",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "probe_stiffness_record",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_record.reapproach_runs",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_record.twist_waiver.n_waiver_done",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_record.twist_waiver.n_waiver_periods",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.r8.stiffness_warning_range",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.r8.lifted_reapproach.short_run_s",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.r8.lifted_reapproach.short_run_exit_samples",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.twist_completion_relax.locked_drift_waiver",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.twist_completion_relax.waiver_max_rise_N",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_settings.twist_completion_relax.waiver_margin_N",
+      "present": 54,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    }
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_t8_a1\\ed8_t8.jsonl",
+      "container_key": null,
+      "rows": 44,
+      "selected": 44,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "commands_sha256",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "controller_tag",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lsb_components",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lsb_settings",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_d6_settings",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulics_record",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "head_only_declared",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "events",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "event_names",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lock_window_alignment",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_stiffness_record",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.reapproach_runs",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_done",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_periods",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.r8.stiffness_warning_range",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.r8.lifted_reapproach.short_run_s",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.r8.lifted_reapproach.short_run_exit_samples",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.twist_completion_relax.locked_drift_waiver",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.twist_completion_relax.waiver_max_rise_N",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.twist_completion_relax.waiver_margin_N",
+          "present": 44,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_cases_a1\\ed8_cases.jsonl",
+      "container_key": null,
+      "rows": 10,
+      "selected": 10,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "commands_sha256",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "controller_tag",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulic_options",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lsb_components",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lsb_settings",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_d6_settings",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "hydraulics_record",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "head_only_declared",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "events",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "event_names",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "lock_window_alignment",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_stiffness_record",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.reapproach_runs",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_done",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_periods",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.probe_k1_scale_settings.scale_mid_min_piston_travel_m",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.r8.stiffness_warning_range",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.r8.lifted_reapproach.short_run_s",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.r8.lifted_reapproach.short_run_exit_samples",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.twist_completion_relax.locked_drift_waiver",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.twist_completion_relax.waiver_max_rise_N",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_settings.twist_completion_relax.waiver_margin_N",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    }
+  ],
+  "npz": {
+    "glob": "*.npz",
+    "dirs": [],
+    "arrays_required": [],
+    "arrays": [],
+    "files": []
+  },
+  "summary": {
+    "tool": "key_presence",
+    "command": "scan",
+    "files": 2,
+    "rows": 54,
+    "selected": 54,
+    "keys": 24,
+    "keys_complete": 24,
+    "keys_incomplete": 0,
+    "npz_files": 0,
+    "arrays": 0,
+    "arrays_incomplete": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}

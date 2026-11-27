@@ -1,0 +1,225 @@
+{
+ "note": "state only: exceptions, setting_defect, not_judgeable, judgeable counts; no pass/fail split, no values",
+ "pinned_inputs": {
+  "main_jsonl": "ok",
+  "p80_reference": "ok",
+  "grid_keys": "ok"
+ },
+ "step_records": {
+  "impl_p80": "no problem",
+  "impl_p816": "no problem",
+  "impl_p85": "no problem",
+  "impl_p88": "no problem",
+  "impl_p815": "no problem",
+  "impl_t8": "no problem",
+  "impl_cases": "no problem",
+  "l1ref": "no problem"
+ },
+ "identity_defects": {
+  "impl_t8": {
+   "lines": 44,
+   "lines_with_problems": 0,
+   "by_setting": {}
+  },
+  "impl_cases": {
+   "lines": 10,
+   "lines_with_problems": 0,
+   "by_setting": {}
+  }
+ },
+ "v0_pairs": {
+  "lines": 54,
+  "with_v0_main_line": 49
+ },
+ "metric_of": {
+  "C-J lines (VBN as VB, LSN as LS)": {
+   "lines": 32,
+   "computed": 32,
+   "exceptions": 0
+  },
+  "V0 main lines of the same jobs": {
+   "lines": 23,
+   "computed": 23,
+   "exceptions": 0
+  }
+ },
+ "unit_item_verdicts C-J": {
+  "judgeable_units": 23,
+  "not_judgeable_units": 1,
+  "no_reference": 1
+ },
+ "is_base_pass": {
+  "computed": 23
+ },
+ "layer_of (VBN, V0 main starts)": {
+  "computed": 24
+ },
+ "C-J (ii) groups": {
+  "ls_not_judgeable_items": 4,
+  "group_keys": [
+   "L-a",
+   "L-b",
+   "L-c",
+   "L-e",
+   "S8",
+   "baseline_failures",
+   "no_reference",
+   "not_judgeable_items",
+   "r15_worsening",
+   "stops",
+   "vb_fail_by_item",
+   "vb_fail_items",
+   "vb_fail_pair_items"
+  ]
+ },
+ "jp3_of": {
+  "impl_t8": {
+   "setting_defects": 2,
+   "not_judgeable": 2,
+   "judged_rows_equal_case_rows": null
+  },
+  "impl_cases": {
+   "setting_defects": 0,
+   "not_judgeable": 2,
+   "judged_rows_equal_case_rows": false
+  }
+ },
+ "jx_line_counts": {
+  "impl_t8 VBN": {
+   "lines": 22,
+   "j11_opportunity_lines": 0,
+   "j11_opportunity_by_reason": {
+    "D1": 0,
+    "D1_stuck": 0,
+    "D2": 0,
+    "D3": 0,
+    "D4": 0,
+    "D6": 0,
+    "unknown": 0
+   },
+   "j11_not_judgeable_lines": 0,
+   "witness_lines_with_record": 4,
+   "witness_lines_without_record": 18,
+   "witness_lines_other_form": 0
+  },
+  "impl_cases VBN": {
+   "lines": 2,
+   "j11_opportunity_lines": 0,
+   "j11_opportunity_by_reason": {
+    "D1": 0,
+    "D1_stuck": 0,
+    "D2": 0,
+    "D3": 0,
+    "D4": 0,
+    "D6": 0,
+    "unknown": 0
+   },
+   "j11_not_judgeable_lines": 0,
+   "witness_lines_with_record": 2,
+   "witness_lines_without_record": 0,
+   "witness_lines_other_form": 0
+  }
+ },
+ "C-S unit_table": {
+  "units": 54,
+  "judgeable": 47,
+  "not_judgeable": 7,
+  "settings_with_no_reference": 5
+ },
+ "d_lines_of": {
+  "lines": 54,
+  "v0_comparison_missing": 54,
+  "condition_breach_reads_none": 40,
+  "line_jp3a_breach_reads_none": 40,
+  "fault_keys_missing": 36
+ },
+ "d_lines_of_distinct_t4h_keys": 54,
+ "grid_line_values": {
+  "lines": 54,
+  "with_grid_pair": 0,
+  "v0_comparison_missing": 54,
+  "fault_not_readable": 36
+ },
+ "line_records": {
+  "lines": 54,
+  "stall_not_readable": 0,
+  "twist_record_missing": 0
+ },
+ "waiver_lines_ran": true,
+ "heldout per-line reading (VBN t8 vs V0 main)": {
+  "lines": 22,
+  "not_judgeable_items": 0,
+  "base_pass_computed": 22,
+  "fault_not_readable (no grid keys)": 18
+ },
+ "heldout jx_line_counts ran": true,
+ "12b readers on l1ref": {
+  "L1_VBN0": {
+   "load_lines": {
+    "lines": 167,
+    "setting_defects": 0,
+    "not_judgeable": 0,
+    "t4h_files_found": 167,
+    "meta_loaded": 167,
+    "distinct_cases": 167
+   },
+   "line_identity_problems": {
+    "lines_with_problems": 0,
+    "exceptions": 0
+   },
+   "A-4 ed8_settings switch problems (lines)": 0,
+   "l1_reference_problems": 0
+  },
+  "L1_VBN": {
+   "load_lines": {
+    "lines": 167,
+    "setting_defects": 0,
+    "not_judgeable": 0,
+    "t4h_files_found": 167,
+    "meta_loaded": 167,
+    "distinct_cases": 167
+   },
+   "line_identity_problems": {
+    "lines_with_problems": 0,
+    "exceptions": 0
+   },
+   "A-4 ed8_settings switch problems (lines)": 0,
+   "l1_reference_problems": 0
+  },
+  "L1a_VBN0": {
+   "load_lines": {
+    "lines": 102,
+    "setting_defects": 0,
+    "not_judgeable": 0,
+    "t4h_files_found": 102,
+    "meta_loaded": 102,
+    "distinct_cases": 102
+   },
+   "line_identity_problems": {
+    "lines_with_problems": 0,
+    "exceptions": 0
+   },
+   "A-4 ed8_settings switch problems (lines)": 0,
+   "l1_reference_problems": 0
+  },
+  "L1a_VBN": {
+   "load_lines": {
+    "lines": 102,
+    "setting_defects": 0,
+    "not_judgeable": 0,
+    "t4h_files_found": 102,
+    "meta_loaded": 102,
+    "distinct_cases": 102
+   },
+   "line_identity_problems": {
+    "lines_with_problems": 0,
+    "exceptions": 0
+   },
+   "A-4 ed8_settings switch problems (lines)": 0,
+   "l1_reference_problems": 0
+  }
+ },
+ "module_files_outside_judge_root": [],
+ "modules_checked": 38,
+ "exception_count": 0
+}

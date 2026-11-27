@@ -1,0 +1,152 @@
+FFFF.F.FFF.FF..F.......                                                  [100%]
+================================== FAILURES ===================================
+______________ test_a_judged_names_are_the_rule_and_run_v5_sets _______________
+
+    def test_a_judged_names_are_the_rule_and_run_v5_sets() -> None:
+>       judged = set(ed8.ED8_JP3_JUDGED_SETTINGS)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'jp3_ed8_judge' has no attribute 'ED8_JP3_JUDGED_SETTINGS'
+
+05_tests\unit\test_ed8_jp3_settings.py:137: AttributeError
+________________ test_b_override_inside_and_c8_tuples_outside _________________
+
+    def test_b_override_inside_and_c8_tuples_outside() -> None:
+        saved_judged, saved_off = j_p3_inputs.REV5_JUDGED_SETTINGS, j_p3_inputs.P3_OFF_SETTINGS
+        assert (saved_judged, saved_off) == (C8_REV5_JUDGED_SETTINGS, C8_P3_OFF_SETTINGS)
+>       with ed8.ed8_jp3_settings():
+             ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'jp3_ed8_judge' has no attribute 'ed8_jp3_settings'
+
+05_tests\unit\test_ed8_jp3_settings.py:157: AttributeError
+_________________ test_b_override_restored_after_an_exception _________________
+
+    def test_b_override_restored_after_an_exception() -> None:
+        saved_judged, saved_off = j_p3_inputs.REV5_JUDGED_SETTINGS, j_p3_inputs.P3_OFF_SETTINGS
+>       with pytest.raises(RuntimeError), ed8.ed8_jp3_settings():
+                                          ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'jp3_ed8_judge' has no attribute 'ed8_jp3_settings'
+
+05_tests\unit\test_ed8_jp3_settings.py:173: AttributeError
+_________________ test_b_nested_override_adds_each_name_once __________________
+
+    def test_b_nested_override_adds_each_name_once() -> None:
+>       with ed8.ed8_jp3_settings(), ed8.ed8_jp3_settings():
+             ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'jp3_ed8_judge' has no attribute 'ed8_jp3_settings'
+
+05_tests\unit\test_ed8_jp3_settings.py:180: AttributeError
+______________ test_b_tjr_binding_inside_edition_8_and_restored _______________
+
+    def test_b_tjr_binding_inside_edition_8_and_restored() -> None:
+        saved = tjr.REV5_JUDGED_SETTINGS
+        with tjr8.edition_8():
+>           assert "VBN" in tjr.REV5_JUDGED_SETTINGS and "VBN0" not in tjr.REV5_JUDGED_SETTINGS
+E           AssertionError: assert ('VBN' in ('VBJ', 'LSJ1', 'LSJ2', 'LSJ3', 'LSJ4', 'VBK', ...))
+E            +  where ('VBJ', 'LSJ1', 'LSJ2', 'LSJ3', 'LSJ4', 'VBK', ...) = tjr.REV5_JUDGED_SETTINGS
+
+05_tests\unit\test_ed8_jp3_settings.py:194: AssertionError
+___________________ test_c_cases_lines_are_ten_judged_rows ____________________
+
+t4h_reads = None
+
+    def test_c_cases_lines_are_ten_judged_rows(t4h_reads) -> None:
+        lines = case_lines()
+        jp3 = ed8.jp3_of(lines, ())
+>       assert jp3["J-P3_judged_rows"] == 10
+E       assert 0 == 10
+
+05_tests\unit\test_ed8_jp3_settings.py:219: AssertionError
+______________ test_c_stage_line_sets_are_judged[settings0-1-4] _______________
+
+t4h_reads = None, settings = ('VBNslow', 'VBNfast', 'VBNc005', 'VBNc04')
+per_setting = 1, judged = 4
+
+    @pytest.mark.parametrize(("settings", "per_setting", "judged"), [
+        (CS_JUDGED, 1, 4),
+        (CD_SETTINGS, CD_LINES_PER_SETTING, 24),
+    ])
+    def test_c_stage_line_sets_are_judged(t4h_reads, settings, per_setting, judged) -> None:
+        jp3 = ed8.jp3_of(lines_of(settings, per_setting), ())
+>       assert jp3["J-P3_judged_rows"] == judged
+E       assert 0 == 4
+
+05_tests\unit\test_ed8_jp3_settings.py:236: AssertionError
+_____________ test_c_stage_line_sets_are_judged[settings1-12-24] ______________
+
+t4h_reads = None, settings = ('VBN', 'VBNslow'), per_setting = 12, judged = 24
+
+    @pytest.mark.parametrize(("settings", "per_setting", "judged"), [
+        (CS_JUDGED, 1, 4),
+        (CD_SETTINGS, CD_LINES_PER_SETTING, 24),
+    ])
+    def test_c_stage_line_sets_are_judged(t4h_reads, settings, per_setting, judged) -> None:
+        jp3 = ed8.jp3_of(lines_of(settings, per_setting), ())
+>       assert jp3["J-P3_judged_rows"] == judged
+E       assert 0 == 24
+
+05_tests\unit\test_ed8_jp3_settings.py:236: AssertionError
+____________________ test_c_p3_off_line_is_no_expected_row ____________________
+
+t4h_reads = None
+
+    def test_c_p3_off_line_is_no_expected_row(t4h_reads) -> None:
+        """D-1b: a VBN0 line (��-off tag, no �� record) with the cases lines is not a J-P3 row."""
+        vbn0 = producer_line({**run_v5.ed8_batch_jobs(run_v5.ED8_CASES_BATCH)[0], "setting": "VBN0"})
+        assert vbn0["controller_tag"] == ed8.ED8_P3_OFF_TAG
+        assert "extend_bound_check" not in vbn0["hydraulics_record"]
+        jp3 = ed8.jp3_of([*case_lines(), vbn0], ())
+>       assert jp3["J-P3_judged_rows"] == 10
+E       assert 0 == 10
+
+05_tests\unit\test_ed8_jp3_settings.py:255: AssertionError
+____________ test_d_check_lines_reads_the_vbn_judged_line_evidence ____________
+
+    def test_d_check_lines_reads_the_vbn_judged_line_evidence() -> None:
+        import jp3_baseline_compare as compare
+    
+        problems = compare.Problems()
+        with tjr8.edition_8(), tjr8.tjr7.edition_7():
+>           assert "VBN" in tjr.REV5_JUDGED_SETTINGS and "VBN0" not in tjr.REV5_JUDGED_SETTINGS
+E           AssertionError: assert ('VBN' in ('VBJ', 'LSJ1', 'LSJ2', 'LSJ3', 'LSJ4', 'VBK', ...))
+E            +  where ('VBJ', 'LSJ1', 'LSJ2', 'LSJ3', 'LSJ4', 'VBK', ...) = tjr.REV5_JUDGED_SETTINGS
+
+05_tests\unit\test_ed8_jp3_settings.py:278: AssertionError
+____________ test_e_override_is_used_by_the_edition_8_judges_only _____________
+
+    def test_e_override_is_used_by_the_edition_8_judges_only() -> None:
+        users = sorted(path.name for folder in (ROOT / "04_scripts", ROOT / "03_src")
+                       for path in _python_files(folder)
+                       if "ed8_jp3_settings" in path.read_text(encoding="utf-8"))
+>       assert users == sorted(EDITION_8_MODULES)
+E       AssertionError: assert [] == ['jp3_ed8_jud...judge_ed8.py']
+E         
+E         Right contains 2 more items, first extra item: 'jp3_ed8_judge.py'
+E         Use -v to get more diff
+
+05_tests\unit\test_ed8_jp3_settings.py:313: AssertionError
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_b_shared_module_is_the_c8_blob
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_c_producer_lines_are_edition_8_lines
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_c_record_settings_are_never_judged
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_d_without_the_edition_8_names_the_check_is_skipped
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_changes_since_t8pp_are_the_two_judges_and_tests
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[jp3_ed6_judge.py]
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[jp3_ed7_judge.py]
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[jp3_tjr_judge_ed7.py]
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[jp3_12b_judge_ed7.py]
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[jp3_j9main_judge.py]
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[jp3_tjr_judge.py]
+PASSED 05_tests/unit/test_ed8_jp3_settings.py::test_e_older_editions_never_import_the_edition_8_judges[j_p3_inputs.py]
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_a_judged_names_are_the_rule_and_run_v5_sets
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_b_override_inside_and_c8_tuples_outside
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_b_override_restored_after_an_exception
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_b_nested_override_adds_each_name_once
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_b_tjr_binding_inside_edition_8_and_restored
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_c_cases_lines_are_ten_judged_rows
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_c_stage_line_sets_are_judged[settings0-1-4]
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_c_stage_line_sets_are_judged[settings1-12-24]
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_c_p3_off_line_is_no_expected_row
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_d_check_lines_reads_the_vbn_judged_line_evidence
+FAILED 05_tests/unit/test_ed8_jp3_settings.py::test_e_override_is_used_by_the_edition_8_judges_only
+11 failed, 12 passed in 1.70s

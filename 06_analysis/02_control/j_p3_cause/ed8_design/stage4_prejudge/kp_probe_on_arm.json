@@ -1,0 +1,444 @@
+{
+  "tool": "key_presence",
+  "keys_required": [
+    "commands_sha256",
+    "t4h_file",
+    "job",
+    "ed8_probe.arm",
+    "ed8_probe.plant",
+    "probe_stiffness_record",
+    "ed8_record.reapproach_runs",
+    "ed8_record.twist_waiver.n_waiver_done",
+    "ed8_record.twist_waiver.n_waiver_periods"
+  ],
+  "where": [
+    "ed8_probe.arm=a8"
+  ],
+  "list_key": null,
+  "allow_null": false,
+  "keys": [
+    {
+      "key": "commands_sha256",
+      "present": 73,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "t4h_file",
+      "present": 73,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "job",
+      "present": 73,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_probe.arm",
+      "present": 73,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "ed8_probe.plant",
+      "present": 73,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    },
+    {
+      "key": "probe_stiffness_record",
+      "present": 69,
+      "absent": 4,
+      "null": 0,
+      "missing": 4,
+      "first_missing": [
+        "p815.jsonl 줄 47",
+        "p815.jsonl 줄 50",
+        "p815.jsonl 줄 51",
+        "p815.jsonl 줄 53"
+      ]
+    },
+    {
+      "key": "ed8_record.reapproach_runs",
+      "present": 69,
+      "absent": 4,
+      "null": 0,
+      "missing": 4,
+      "first_missing": [
+        "p815.jsonl 줄 47",
+        "p815.jsonl 줄 50",
+        "p815.jsonl 줄 51",
+        "p815.jsonl 줄 53"
+      ]
+    },
+    {
+      "key": "ed8_record.twist_waiver.n_waiver_done",
+      "present": 69,
+      "absent": 4,
+      "null": 0,
+      "missing": 4,
+      "first_missing": [
+        "p815.jsonl 줄 47",
+        "p815.jsonl 줄 50",
+        "p815.jsonl 줄 51",
+        "p815.jsonl 줄 53"
+      ]
+    },
+    {
+      "key": "ed8_record.twist_waiver.n_waiver_periods",
+      "present": 69,
+      "absent": 4,
+      "null": 0,
+      "missing": 4,
+      "first_missing": [
+        "p815.jsonl 줄 47",
+        "p815.jsonl 줄 50",
+        "p815.jsonl 줄 51",
+        "p815.jsonl 줄 53"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p85_a1\\p85.jsonl",
+      "container_key": null,
+      "rows": 46,
+      "selected": 23,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "commands_sha256",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "job",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_probe.arm",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_probe.plant",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_stiffness_record",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.reapproach_runs",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_done",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_periods",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p88_a1\\p88.jsonl",
+      "container_key": null,
+      "rows": 46,
+      "selected": 23,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "commands_sha256",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "job",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_probe.arm",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_probe.plant",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_stiffness_record",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.reapproach_runs",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_done",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_periods",
+          "present": 23,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    },
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p815_a1\\p815.jsonl",
+      "container_key": null,
+      "rows": 54,
+      "selected": 27,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "commands_sha256",
+          "present": 27,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "t4h_file",
+          "present": 27,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "job",
+          "present": 27,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_probe.arm",
+          "present": 27,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "ed8_probe.plant",
+          "present": 27,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        },
+        {
+          "key": "probe_stiffness_record",
+          "present": 23,
+          "absent": 4,
+          "null": 0,
+          "missing": 4,
+          "first_missing": [
+            "줄 47",
+            "줄 50",
+            "줄 51",
+            "줄 53"
+          ]
+        },
+        {
+          "key": "ed8_record.reapproach_runs",
+          "present": 23,
+          "absent": 4,
+          "null": 0,
+          "missing": 4,
+          "first_missing": [
+            "줄 47",
+            "줄 50",
+            "줄 51",
+            "줄 53"
+          ]
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_done",
+          "present": 23,
+          "absent": 4,
+          "null": 0,
+          "missing": 4,
+          "first_missing": [
+            "줄 47",
+            "줄 50",
+            "줄 51",
+            "줄 53"
+          ]
+        },
+        {
+          "key": "ed8_record.twist_waiver.n_waiver_periods",
+          "present": 23,
+          "absent": 4,
+          "null": 0,
+          "missing": 4,
+          "first_missing": [
+            "줄 47",
+            "줄 50",
+            "줄 51",
+            "줄 53"
+          ]
+        }
+      ]
+    }
+  ],
+  "npz": {
+    "glob": "*.npz",
+    "dirs": [],
+    "arrays_required": [],
+    "arrays": [],
+    "files": []
+  },
+  "summary": {
+    "tool": "key_presence",
+    "command": "scan",
+    "files": 3,
+    "rows": 146,
+    "selected": 73,
+    "keys": 9,
+    "keys_complete": 5,
+    "keys_incomplete": 4,
+    "npz_files": 0,
+    "arrays": 0,
+    "arrays_incomplete": 0,
+    "error": 4,
+    "warning": 0,
+    "info": 0,
+    "categories": {
+      "key_absent": 4
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "key_absent",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p815_a1\\p815.jsonl",
+      "line": 0,
+      "message": "`probe_stiffness_record` 없음 4/27줄 (처음: 줄 47, 줄 50, 줄 51, 줄 53)",
+      "target": "probe_stiffness_record"
+    },
+    {
+      "severity": "error",
+      "category": "key_absent",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p815_a1\\p815.jsonl",
+      "line": 0,
+      "message": "`ed8_record.reapproach_runs` 없음 4/27줄 (처음: 줄 47, 줄 50, 줄 51, 줄 53)",
+      "target": "ed8_record.reapproach_runs"
+    },
+    {
+      "severity": "error",
+      "category": "key_absent",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p815_a1\\p815.jsonl",
+      "line": 0,
+      "message": "`ed8_record.twist_waiver.n_waiver_done` 없음 4/27줄 (처음: 줄 47, 줄 50, 줄 51, 줄 53)",
+      "target": "ed8_record.twist_waiver.n_waiver_done"
+    },
+    {
+      "severity": "error",
+      "category": "key_absent",
+      "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_p815_a1\\p815.jsonl",
+      "line": 0,
+      "message": "`ed8_record.twist_waiver.n_waiver_periods` 없음 4/27줄 (처음: 줄 47, 줄 50, 줄 51, 줄 53)",
+      "target": "ed8_record.twist_waiver.n_waiver_periods"
+    }
+  ]
+}

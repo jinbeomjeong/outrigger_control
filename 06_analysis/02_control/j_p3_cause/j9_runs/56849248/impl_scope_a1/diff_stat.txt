@@ -1,0 +1,18 @@
+ 04_scripts/04_hydraulic/coupled/run_v5.py          |  12 +-
+ 05_tests/unit/test_ed8_impl.py                     |   3 +-
+ 05_tests/unit/test_ed8_run_commit.py               | 127 +++++++
+ .../prelaunch_j9/run_steps_ed8/check_ed8.ps1       |  29 ++
+ .../prelaunch_j9/run_steps_ed8/common_ed8.ps1      | 373 +++++++++++++++++++++
+ .../prelaunch_j9/run_steps_ed8/dry_run_ed8.ps1     |  79 +++++
+ .../run_steps_ed8/ed8_run_config.template.json     |   5 +
+ .../prelaunch_j9/run_steps_ed8/full_suite_ed8.ps1  |  59 ++++
+ .../run_steps_ed8/step10a_plan_ed8.ps1             |  25 ++
+ .../run_steps_ed8/step10b_vbkn0_ed8.ps1            |  48 +++
+ .../run_steps_ed8/step10c_vbkn_ed8.ps1             |  45 +++
+ .../prelaunch_j9/run_steps_ed8/step4_impl_ed8.ps1  |  92 +++++
+ .../run_steps_ed8/step5_heldout_v0_ed8.ps1         |  29 ++
+ .../run_steps_ed8/step6_census_ed8.ps1             |  20 ++
+ .../run_steps_ed8/step8_heldout_ed8.ps1            |  20 ++
+ .../prelaunch_j9/run_steps_ed8/step9_dg3_ed8.ps1   |  25 ++
+ .../prelaunch_j9/run_steps_ed8/step_l1ref_ed8.ps1  |  35 ++
+ 17 files changed, 1021 insertions(+), 5 deletions(-)

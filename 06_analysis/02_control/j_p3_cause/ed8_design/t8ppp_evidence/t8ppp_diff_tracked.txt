@@ -1,0 +1,127 @@
+diff --git a/04_scripts/04_hydraulic/coupled/jp3_ed8_judge.py b/04_scripts/04_hydraulic/coupled/jp3_ed8_judge.py
+index 996545e5..20f764ab 100644
+--- a/04_scripts/04_hydraulic/coupled/jp3_ed8_judge.py
++++ b/04_scripts/04_hydraulic/coupled/jp3_ed8_judge.py
+@@ -8,6 +8,12 @@ edition 6 readings (1) .. (3) and the edition 7 J7, the V0 grid comparison, FAUL
+ the ③ rev 7 condition) are the edition 7 judge's (``jp3_ed7_judge.py``, brought from the
+ edition 7 judge commit 60ebb4a4) with the edition 8 tags.
+ 
++T8''' (``control_d1_settings.md`` 4, D-1 / D-1b): J-P3 judges the edition 8 settings of spec
++3.6 / 5.1 / 5.2 / 9 (:data:`ED8_JP3_JUDGED_SETTINGS`) and reads VBN0 / VBKN0 as ③ off
++(:data:`ED8_P3_OFF_SETTINGS`). The shared tuples of ``j_p3_inputs.py`` (a run path module of C8,
++byte-identical) get these names only inside :func:`ed8_jp3_settings`, around each J-P3 read of
++:func:`jp3_of`; outside it they are the C8 tuples.
++
+ Sub-commands (every one writes ``--out``, a new path, never overwritten):
+ 
+ ``census``    Spec 5 on ``census_keys_ed8.json`` (1043 lines, pinned sha256) and the
+@@ -253,6 +259,39 @@ def ed8_identity() -> Iterator[None]:
+          ed7.r79_identity_view) = saved
+ 
+ 
++ED8_JP3_JUDGED_SETTINGS = ("VBN", "LSN1", "LSN2", "LSN3", "LSN4", "VBKN", "VBNslow", "VBNfast",
++                           "VBNc005", "VBNc04")
++"""Spec v8 3.6:154-157, 5.1, 5.2, 9:332 (``control_d1_settings.md`` 1): the ③-on settings J-P3
++judges - VBN and LSN1 .. LSN4 (C-J (iii), P8-2), the four judged sensitivity settings (C-S; VBN
++and VBNslow on the C-D lines), VBKN (12b judges its own J-P3; kept here like edition 6 VBKL and
++edition 7 VBKM). The six record sensitivity settings (VBNb069 .. VBNd15) are ③ on but recorded
++apart, never judged."""
++ED8_P3_OFF_SETTINGS = ("VBN0", "VBKN0")
++"""Spec v8 3.6:155, 157: VBN / VBKN with ③ off, never a J-P3 row (edition 6 VBL0 / VBKL0,
++edition 7 VBM0 / VBKM0)."""
++
++
++def _with_names(names: tuple[str, ...], added: tuple[str, ...]) -> tuple[str, ...]:
++    """``names`` with the ``added`` names it lacks at the end (no name twice)."""
++    return (*names, *(name for name in added if name not in names))
++
++
++@contextlib.contextmanager
++def ed8_jp3_settings() -> Iterator[None]:
++    """``j_p3_inputs.REV5_JUDGED_SETTINGS`` and ``P3_OFF_SETTINGS`` with the edition 8 names
++    for one J-P3 read; the original tuple objects are restored afterwards (also on an
++    exception). ``j_p3_inputs.py`` itself stays the C8 bytes (P8-11)."""
++    import j_p3_inputs
++
++    saved = (j_p3_inputs.REV5_JUDGED_SETTINGS, j_p3_inputs.P3_OFF_SETTINGS)
++    try:
++        j_p3_inputs.REV5_JUDGED_SETTINGS = _with_names(saved[0], ED8_JP3_JUDGED_SETTINGS)
++        j_p3_inputs.P3_OFF_SETTINGS = _with_names(saved[1], ED8_P3_OFF_SETTINGS)
++        yield
++    finally:
++        j_p3_inputs.REV5_JUDGED_SETTINGS, j_p3_inputs.P3_OFF_SETTINGS = saved
++
++
+ IDENTITY_EXCEPTIONS = (KeyError, TypeError, ValueError)
+ 
+ 
+@@ -281,14 +320,18 @@ def identity_defects(rows: Iterable[Mapping]) -> list[dict]:
+ 
+ def jp3_of(rows: list[dict], folders: tuple[Path, ...]) -> dict:
+     """J-P3 (path 1, line by line, never merged) and the ③ rev 7 condition of the lines with
+-    their basis lists (0 judged rows or no condition read: not judgeable)."""
++    their basis lists (0 judged rows or no condition read: not judgeable). The J-P3 rows are
++    read with the edition 8 setting names (:func:`ed8_jp3_settings`); ``J-P3_judged_settings``
++    is a record of them (no status reads it)."""
+     import jp3_ed7_judge as ed7
+ 
+-    jp3 = ed7.jp3_of_rows(rows, folders)
++    with ed8_jp3_settings():
++        jp3 = ed7.jp3_of_rows(rows, folders)
+     condition = ed7.condition_judgement(rows, folders)
+     failures, defects, unjudged = ed7.jp3_basis(jp3, None)
+     cond_failures, cond_defects, cond_unjudged = ed7.condition_basis(condition)
+     return {"J-P3": jp3, "J-P3_judged_rows": ed7.jp3_judged_rows(jp3),
++            "J-P3_judged_settings": list(ED8_JP3_JUDGED_SETTINGS),
+             "rev7_condition": condition,
+             "basis": {"failures": failures + cond_failures,
+                       "setting_defects": defects + cond_defects,
+diff --git a/04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed8.py b/04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed8.py
+index 02765143..22c34754 100644
+--- a/04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed8.py
++++ b/04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed8.py
+@@ -7,6 +7,11 @@ Sub-commands, arguments, exit codes and outputs are those of ``jp3_tjr_judge_ed7
+ (``dg3-judge --setting VBN | VBN0``, ``t12 --bundle VBN``, ``l1-hash-record --bundle VBN``); the
+ ③ rev 7 identity (revision 7, edition 10902ffd) is unchanged in edition 8.
+ 
++T8''' (``control_d1_settings.md`` 4, D-1c): inside :func:`edition_8` the J-P3 setting names of
++edition 8 (``jp3_ed8_judge.ed8_jp3_settings``) hold for ``j_p3_inputs`` and for the name
++``REV5_JUDGED_SETTINGS`` that ``jp3_tjr_judge`` imported from it, so ``t12 --bundle VBN`` checks
++the J-P3 judged-line P4 evidence of the VBN lines (``jp3_tjr_judge._check_lines``).
++
+ Usage (dynamics-dev ``python.exe -I -B``, the judge worktree root), e.g.
+   python -I -B 04_scripts/04_hydraulic/coupled/jp3_tjr_judge_ed8.py t12 --bundle VBN
+       --base <dg3_VBN0.json> --base-judge <..> --new <dg3_VBN.json> --new-judge <..>
+@@ -32,15 +37,30 @@ ED8_BUNDLE = "VBN"
+ ED8_BASE = "VBN0"
+ 
+ 
++@contextlib.contextmanager
++def _tjr_judged_settings() -> Iterator[None]:
++    """``jp3_tjr_judge.REV5_JUDGED_SETTINGS`` (its own binding of the ``j_p3_inputs`` tuple,
++    made at import) set to the tuple ``j_p3_inputs`` holds now; the old binding is restored."""
++    import j_p3_inputs
++
++    saved = tjr7.tjr.REV5_JUDGED_SETTINGS
++    try:
++        tjr7.tjr.REV5_JUDGED_SETTINGS = j_p3_inputs.REV5_JUDGED_SETTINGS
++        yield
++    finally:
++        tjr7.tjr.REV5_JUDGED_SETTINGS = saved
++
++
+ @contextlib.contextmanager
+ def edition_8() -> Iterator[None]:
+-    """The edition 8 names inside the edition 7 wrapper (restored afterwards)."""
++    """The edition 8 names inside the edition 7 wrapper (restored afterwards): bundle, base,
++    run commit, tags and the J-P3 setting names."""
+     import jp3_ed7_judge as ed7
+ 
+     saved = (tjr7.ED7_BUNDLE, tjr7.ED7_BASE, ed7.RUN_COMMIT)
+     tjr7.ED7_BUNDLE, tjr7.ED7_BASE, ed7.RUN_COMMIT = ED8_BUNDLE, ED8_BASE, gate.RUN_COMMIT
+     try:
+-        with ed8.ed8_identity():
++        with ed8.ed8_identity(), ed8.ed8_jp3_settings(), _tjr_judged_settings():
+             yield
+     finally:
+         tjr7.ED7_BUNDLE, tjr7.ED7_BASE, ed7.RUN_COMMIT = saved

@@ -1,0 +1,65 @@
+{
+  "tool": "key_presence",
+  "keys_required": [
+    "hydraulics_record.extend_bound_check"
+  ],
+  "where": [],
+  "list_key": null,
+  "allow_null": false,
+  "keys": [
+    {
+      "key": "hydraulics_record.extend_bound_check",
+      "present": 10,
+      "absent": 0,
+      "null": 0,
+      "missing": 0,
+      "first_missing": []
+    }
+  ],
+  "files": [
+    {
+      "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\impl_cases_a1\\ed8_cases.jsonl",
+      "container_key": null,
+      "rows": 10,
+      "selected": 10,
+      "where_field_absent": 0,
+      "parse_errors": 0,
+      "list_key_absent": 0,
+      "keys": [
+        {
+          "key": "hydraulics_record.extend_bound_check",
+          "present": 10,
+          "absent": 0,
+          "null": 0,
+          "missing": 0,
+          "first_missing": []
+        }
+      ]
+    }
+  ],
+  "npz": {
+    "glob": "*.npz",
+    "dirs": [],
+    "arrays_required": [],
+    "arrays": [],
+    "files": []
+  },
+  "summary": {
+    "tool": "key_presence",
+    "command": "scan",
+    "files": 1,
+    "rows": 10,
+    "selected": 10,
+    "keys": 1,
+    "keys_complete": 1,
+    "keys_incomplete": 0,
+    "npz_files": 0,
+    "arrays": 0,
+    "arrays_incomplete": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 0,
+    "categories": {}
+  },
+  "findings": []
+}

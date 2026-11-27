@@ -1,0 +1,586 @@
+bringing up nodes...
+bringing up nodes...
+
+........................................................................ [  0%]
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+........................................................................ [  4%]
+........................................................................ [  5%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 11%]
+........................................................................ [ 11%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+........................................................................ [ 15%]
+........................................................................ [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 19%]
+........................................................................ [ 20%]
+........................................................................ [ 21%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+........................................................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 25%]
+........................................................................ [ 26%]
+........................................................................ [ 27%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+........................................................................ [ 29%]
+........................................................................ [ 30%]
+........................................................................ [ 31%]
+........................................................................ [ 31%]
+........................................................................ [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+........................................................................ [ 35%]
+........................................................................ [ 35%]
+........................................................................ [ 36%]
+......................sssssssssssssssssssss............................. [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 39%]
+........................................................................ [ 39%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 42%]
+........................................................................ [ 43%]
+........................................................................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+........................................................................ [ 46%]
+..........sssssss..............sssssssssssss............................ [ 47%]
+........................................................................ [ 47%]
+........................................................................ [ 48%]
+........................................................................ [ 49%]
+s....................................................................... [ 50%]
+........................................................................ [ 51%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+........................................................................ [ 53%]
+........................................................................ [ 54%]
+........................................................................ [ 55%]
+........................................................................ [ 55%]
+........................................................................ [ 56%]
+.............................................................s.......... [ 57%]
+...........ss..................................................FF..F.F.. [ 58%]
+F.F.....FFF.............F...s.............................s.sssssss..... [ 58%]
+........................................................................ [ 59%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 62%]
+...................................s.................................... [ 63%]
+...........................................................ss.........ss [ 64%]
+s.s..................................................................... [ 65%]
+..............................sssssssss................................. [ 66%]
+........................................................................ [ 66%]
+........................................................................ [ 67%]
+........................................................................ [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 70%]
+........................................................................ [ 70%]
+........................................................................ [ 71%]
+........................................................................ [ 72%]
+........................................................................ [ 73%]
+........................................................................ [ 74%]
+........................................................................ [ 74%]
+..........................................sssss......................... [ 75%]
+........................................................................ [ 76%]
+........................................................................ [ 77%]
+.................................................ssss......s............ [ 78%]
+........................................................................ [ 78%]
+..................s.........s...........................s............... [ 79%]
+........................................................................ [ 80%]
+........................................................................ [ 81%]
+.............................ss......................................... [ 82%]
+............ssss........................................................ [ 82%]
+...........................sssss........................................ [ 83%]
+.......sssss...........................ss.........sssssss............... [ 84%]
+....................................s...............s................... [ 85%]
+.......................................................................s [ 86%]
+........ssssss.......................................................... [ 86%]
+......................................................................s. [ 87%]
+........................................................................ [ 88%]
+........................................................................ [ 89%]
+........................................................................ [ 90%]
+........................................................................ [ 90%]
+s......ssss............................F................................ [ 91%]
+........................................................................ [ 92%]
+...................s......................................s............. [ 93%]
+.......................................sss.............................. [ 94%]
+.........s.....................................s..............ss........ [ 94%]
+........s............................................................... [ 95%]
+....................................................................s... [ 96%]
+........................................................................ [ 97%]
+........................................................................ [ 98%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+..............F................                                          [100%]
+================================== FAILURES ===================================
+__________ test_restored_soil_state_equals_the_native_one[old_code] ___________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+kind = 'old_code'
+
+    @pytest.mark.parametrize("kind", sorted(OLD_PICKLE_KINDS))
+    def test_restored_soil_state_equals_the_native_one(branch, kind) -> None:
+>       restored, _, soil_meta, _, ran_without_soil = restored_controller(branch, kind=kind)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_s8_soil_restore.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+05_tests\unit\test_s8_soil_restore.py:135: in restored_controller
+    soil_meta = run_S8C.apply_soil_rule(old, fresh, branch["base_dir"], branch["branch_t_s"],
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4B47470>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4B44A10>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+_______ test_restored_soil_state_equals_the_native_one[soil_off_config] _______
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+kind = 'soil_off_config'
+
+    @pytest.mark.parametrize("kind", sorted(OLD_PICKLE_KINDS))
+    def test_restored_soil_state_equals_the_native_one(branch, kind) -> None:
+>       restored, _, soil_meta, _, ran_without_soil = restored_controller(branch, kind=kind)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_s8_soil_restore.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+05_tests\unit\test_s8_soil_restore.py:135: in restored_controller
+    soil_meta = run_S8C.apply_soil_rule(old, fresh, branch["base_dir"], branch["branch_t_s"],
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A7D910>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A0A510>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+_________ test_restored_controller_commands_the_native_bits[old_code] _________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+kind = 'old_code'
+
+    @pytest.mark.parametrize("kind", sorted(OLD_PICKLE_KINDS))
+    def test_restored_controller_commands_the_native_bits(branch, kind) -> None:
+>       restored, *_ = restored_controller(branch, kind=kind)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_s8_soil_restore.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+05_tests\unit\test_s8_soil_restore.py:135: in restored_controller
+    soil_meta = run_S8C.apply_soil_rule(old, fresh, branch["base_dir"], branch["branch_t_s"],
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A38950>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A65A60>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+_____ test_restored_controller_commands_the_native_bits[soil_off_config] ______
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+kind = 'soil_off_config'
+
+    @pytest.mark.parametrize("kind", sorted(OLD_PICKLE_KINDS))
+    def test_restored_controller_commands_the_native_bits(branch, kind) -> None:
+>       restored, *_ = restored_controller(branch, kind=kind)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_s8_soil_restore.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+05_tests\unit\test_s8_soil_restore.py:135: in restored_controller
+    soil_meta = run_S8C.apply_soil_rule(old, fresh, branch["base_dir"], branch["branch_t_s"],
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A7EAE0>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4D1F320>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+_________________________ test_restore_event_and_meta _________________________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+
+    def test_restore_event_and_meta(branch) -> None:
+>       restored, _, soil_meta, _, _ = restored_controller(branch)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_s8_soil_restore.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+05_tests\unit\test_s8_soil_restore.py:135: in restored_controller
+    soil_meta = run_S8C.apply_soil_rule(old, fresh, branch["base_dir"], branch["branch_t_s"],
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A3FBF0>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A3D760>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+_________________ test_refresh_sets_the_reapproach_time_limit _________________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+
+    def test_refresh_sets_the_reapproach_time_limit(branch) -> None:
+>       restored, _, _, limit_meta, _ = restored_controller(branch)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+05_tests\unit\test_s8_soil_restore.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+05_tests\unit\test_s8_soil_restore.py:135: in restored_controller
+    soil_meta = run_S8C.apply_soil_rule(old, fresh, branch["base_dir"], branch["branch_t_s"],
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A382C0>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A0B230>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+__________________ test_branch_before_the_liftoff_is_refused __________________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+
+    def test_branch_before_the_liftoff_is_refused(branch) -> None:
+        old = aged(branch["old_bench"].controller)
+        fresh = C2Controller(branch["old_bench"].geometry, soil_config())
+        run_S8C.refresh_restored_controller(old, fresh)
+        t_loc = branch["native_bench"].controller.meta()["soil"]["t_loc_s"]
+        with pytest.raises(run_S8C.SoilStateRestoreError, match="before the LOC"):
+>           run_S8C.restore_soil_state(old, fresh, branch["base_dir"], t_loc - PERIOD_S)
+
+05_tests\unit\test_s8_soil_restore.py:268: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF2E26EA0>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A3CD40>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/base0/ML99')
+branch_t_s = 1.4
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+_____________________ test_missing_base_record_is_refused _____________________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/test_missing_base_record_is_re0')
+
+    def test_missing_base_record_is_refused(branch, tmp_path) -> None:
+        old = aged(branch["old_bench"].controller)
+        fresh = C2Controller(branch["old_bench"].geometry, soil_config())
+        run_S8C.refresh_restored_controller(old, fresh)
+        with pytest.raises(run_S8C.SoilStateRestoreError, match="not usable"):
+>           run_S8C.apply_soil_rule(old, fresh, tmp_path / "ML98", branch["branch_t_s"],
+                                    ran_without_soil=True, soil_off_replay=False)
+
+05_tests\unit\test_s8_soil_restore.py:277: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+04_scripts\02_chrono\run_S8C.py:2813: in apply_soil_rule
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022E5A62CE00>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4D1D850>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/test_missing_base_record_is_re0/ML98')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+___________________ test_record_without_liftoff_is_refused ____________________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+branch = {'old_bench': SinkBench(controller=<outrigger_sim.control.c2.C2Controller object at 0x0000022EEEE6DCA0>, geometry=C2Ge...1, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), array([0.3511, 0.3511, 0.3409, 0.3409]), ...], ...}, ...}
+geometry = C2Geometry(pad_xy_m=array([[ 2.2938,  1.3238],
+       [ 2.2938, -1.3238],
+       [-2.556 ,  1.1679],
+       [-2.556 , ...ance_lag_tau_s=0.05, superstructure_mass_kg=38400.8366, imu_lever_arm_m=array([-0.1501905 ,  0.88136233, -2.14347069]))
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/test_record_without_liftoff_is0')
+
+    def test_record_without_liftoff_is_refused(branch, geometry, tmp_path) -> None:
+        """A base record cut before the LOC (the window never confirms) stops the episode."""
+        rows = branch["old_rows"]
+        t_loc = branch["native_bench"].controller.meta()["soil"]["t_loc_s"]
+        keep = sum(1 for t in rows["t"] if t < t_loc)
+        cut = {key: values[:keep] for key, values in rows.items()}
+        base_dir = tmp_path / "ML97"
+        write_base_record(base_dir, cut, geometry)
+        old = aged(branch["old_bench"].controller)
+        fresh = C2Controller(geometry, soil_config())
+        run_S8C.refresh_restored_controller(old, fresh)
+        with pytest.raises(run_S8C.SoilStateRestoreError, match="no LOC"):
+>           run_S8C.restore_soil_state(old, fresh, base_dir, branch["branch_t_s"])
+
+05_tests\unit\test_s8_soil_restore.py:293: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+restored = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4A7FF20>
+fresh = <outrigger_sim.control.c2.C2Controller object at 0x0000022EF4D1C3B0>
+base_dir = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/test_record_without_liftoff_is0/ML97')
+branch_t_s = 9.8
+
+    def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+        """Compatibility rule (��) (user decision 2026-10-26): give the refreshed controller
+        ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+        had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+        fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+        and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+    
+        Raises:
+            SoilStateRestoreError: missing base record or a condition of
+                :func:`soil_restore_problems` fails (never silently skipped).
+        """
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+04_scripts\02_chrono\run_S8C.py:2766: ModuleNotFoundError
+___________ test_loc_anchor_case_fails_as_soil_state_restore_error ____________
+[gw3] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+geometry = C2Geometry(pad_xy_m=array([[ 2.2938,  1.3238],
+       [ 2.2938, -1.3238],
+       [-2.556 ,  1.1679],
+       [-2.556 , ...ance_lag_tau_s=0.05, superstructure_mass_kg=38400.8366, imu_lever_arm_m=array([-0.1501905 ,  0.88136233, -2.14347069]))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022EF4CA8DD0>
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw3/test_loc_anchor_case_fails_as_0')
+
+    def test_loc_anchor_case_fails_as_soil_state_restore_error(geometry, monkeypatch,
+                                                                tmp_path) -> None:
+        """The ValueError of ``restore_liftoff_confirmation`` (c_min(t_P) below the LOC anchor dead
+        zone) no longer escapes unnamed: rule (��) refuses it first with SoilStateRestoreError."""
+        restored = _anchor_controller(geometry)
+>       _fake_offline(monkeypatch, -0.030)
+
+05_tests\unit\test_s8_soil_restore.py:368: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022EF4CA8DD0>
+c_p = -0.03
+
+    def _fake_offline(monkeypatch, c_p: float) -> None:
+>       from s9_merge import m4_offline
+E       ModuleNotFoundError: No module named 's9_merge'
+
+05_tests\unit\test_s8_soil_restore.py:354: ModuleNotFoundError
+_____________________ test_coupled_batch_rows_and_resume ______________________
+[gw8] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-3509/popen-gw8/test_coupled_batch_rows_and_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000018F6F5F29F0>
+
+    def test_coupled_batch_rows_and_resume(tmp_path, monkeypatch) -> None:
+        """COUPLED_eta085: ten rows = the stored argv + the flow arguments; --resume skips finished rows."""
+        source = Path(__file__).resolve().parents[2] / "04_scripts" / "02_chrono"
+        monkeypatch.syspath_prepend(str(source))
+        import s9_batch  # noqa: PLC0415
+    
+        batches = s9_batch.batches()
+        rows = batches[s9_batch.COUPLED_BATCH]
+        flow = s9_batch.coupled_flow_argv()
+        assert len(rows) == 10
+        stored = {c["case"]: c["argv"] for name in ("FINAL-REP", "FINAL-REP-X", "FINAL-R-REP") for c in batches[name]}
+        for row in rows:
+            assert row["argv"][-len(flow):] == flow
+            former = stored[row["case"]]
+            kept = row["argv"][: -len(flow)]
+            if row.get("s8c"):
+                tag = kept.index("--tag") + 1
+                assert kept[tag] == f"coupled_eta085_{row['case']}"
+                assert kept[:tag] + kept[tag + 1:] == former[:tag] + former[tag + 1:]
+            else:
+                assert kept == former
+>               assert (Path(s9_batch.ROOT) / "07_results" / "S9" / row["source_run"] / "result.json").is_file()
+E               AssertionError: assert False
+E                +  where False = is_file()
+E                +    where is_file = ((((WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge3') / '07_results') / 'S9') / 'batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4') / 'result.json').is_file
+E                +      where WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge3') = Path(WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge3'))
+E                +        where WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge3') = <module 's9_batch' from 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge3\\04_scripts\\02_chrono\\s9_batch.py'>.ROOT
+
+05_tests\unit\test_hydraulics_flow_limit_run.py:199: AssertionError
+__________________ test_rerun_gives_the_stored_command_hash ___________________
+[gw1] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+rerun = {'plain': {'id': 'main|C2_tv0.1|top|rigid|r+p+0.5', 'cfg': 'C2_tv0.1', 'min_true_cyl_force_kN': 56.93, 'min_true_cyl_f...body_rate_rad_s', 'command_m_s', 'crawler_clearance_m', 'crawler_contact', 'crawler_normal_N', ...], 'n_chunks': 52900}
+
+    def test_rerun_gives_the_stored_command_hash(rerun) -> None:
+        if not STORED_RA_OFF.is_file():
+            pytest.skip(f"no stored R-a file {STORED_RA_OFF}")
+        stored = next(row for row in json.loads(STORED_RA_OFF.read_text(encoding="utf-8"))["runs"]
+                      if row["id"] == RERUN_ID)
+        diag = rerun["diag"]
+>       assert diag["commands_sha256"] == stored["commands_sha256"]
+E       AssertionError: assert 'c0b626b9d8ed...4ad4093a8c758' == '4700d690fb09...c802b1e591729'
+E         
+E         - 4700d690fb098a3760f40dde032feb49461c081aa97453156d5c802b1e591729
+E         + c0b626b9d8ed1fabcc647701e802a567fcae0b697840f881c9c4ad4093a8c758
+
+05_tests\unit\test_d8x_diag.py:109: AssertionError
+=========================== short test summary info ===========================
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_restored_soil_state_equals_the_native_one[old_code]
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_restored_soil_state_equals_the_native_one[soil_off_config]
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_restored_controller_commands_the_native_bits[old_code]
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_restored_controller_commands_the_native_bits[soil_off_config]
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_restore_event_and_meta - M...
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_refresh_sets_the_reapproach_time_limit
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_branch_before_the_liftoff_is_refused
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_missing_base_record_is_refused
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_record_without_liftoff_is_refused
+FAILED 05_tests/unit/test_s8_soil_restore.py::test_loc_anchor_case_fails_as_soil_state_restore_error
+FAILED 05_tests/unit/test_hydraulics_flow_limit_run.py::test_coupled_batch_rows_and_resume
+FAILED 05_tests/unit/test_d8x_diag.py::test_rerun_gives_the_stored_command_hash
+12 failed, 8885 passed, 134 skipped in 1508.74s (0:25:08)
+suite exit=1 head_start=5955f25baa2bc0ebc8d7587747752d46def8cbb4 head_end=5955f25baa2bc0ebc8d7587747752d46def8cbb4 status_start=[] status_end=[]

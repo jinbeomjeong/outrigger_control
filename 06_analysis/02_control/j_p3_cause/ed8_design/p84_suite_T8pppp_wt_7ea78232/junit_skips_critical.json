@@ -1,0 +1,325 @@
+{
+  "tool": "junit_skips",
+  "critical": [
+    "test_p86_first_round_scale_stiffness_equals_the_replay",
+    "test_p8_10_",
+    "test_ed8_run_path",
+    "test_ed8_gate_p80_key",
+    "test_ed8_impl::test_psw_stuck_reads_move_the_scale_mid_and_keep_k1",
+    "test_ed8_impl::test_psw_fields_are_read_by_the_scale_update_only",
+    "test_ed8_harness::test_switch_off_runs_keep_the_stored_hashes_and_keys"
+  ],
+  "cases": [
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "VERIFICATION_EXT installed",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash",
+      "file": "",
+      "outcome": "failed",
+      "type": "",
+      "reason": "AssertionError: assert 'c0b626b9d8ed...4ad4093a8c758' == '4700d690fb09...c802b1e591729' - 4700d690fb098a3760f40dde032feb49461c081aa97453156d5c802b1e591729 + c0b626b9d8ed1fabcc647701e802a567fcae0b69784",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "LAS-b merged: no blocked row",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'torch': No module named 'torch'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'torch': No module named 'torch'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'torch': No module named 'torch'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'torch': No module named 'torch'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'torch': No module named 'torch'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_params_l2b::test_l1_default_is_unchanged",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "YAML regenerated since S7; L1 fingerprint baseline no longer applies",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_record::test_default_snapshot_directory_is_results_states",
+      "file": "",
+      "outcome": "failed",
+      "type": "",
+      "reason": "AssertionError: assert WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge4/07_results/states') == (WindowsPath('C:/workspace/outrigger_control/07_results') / 'states') + where Win",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_rod_chamber::test_h6_gas_separation",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "gas separation after FLOOR (14.3 optional) is not implemented",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_s8_soil_restore::test_soil_restore_check_reads_the_plan_of_this_tree",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "S8 ML plan not present (07_results is not tracked): C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\ml_main_20261025_090131\\ml_plan.json",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_s9_final::test_source_args_check_on_the_former_runs",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "no former run folders under 07_results/S9",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_s9_final::test_final_r_s6_rows_match_their_former_batch",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "former S6 batch not here",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_s9_final::test_final_rep_x_check_sources",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "source run folder absent (07_results is not in git)",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ5-VBJ]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "X10_BASE_ROOT not set (a checkout of the commit before X-10)",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "node_id": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ0-VBJ0]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "X10_BASE_ROOT not set (a checkout of the commit before X-10)",
+      "strict": null
+    }
+  ],
+  "summary": {
+    "tool": "junit_skips",
+    "command": "check",
+    "reports": 1,
+    "tests": 9119,
+    "passed": 9102,
+    "failed": 2,
+    "errors": 0,
+    "skipped": 15,
+    "xfailed": 0,
+    "xpassed": 0,
+    "critical_skipped": 0,
+    "error": 2,
+    "warning": 0,
+    "info": 15,
+    "categories": {
+      "skipped": 15,
+      "test_failed": 2
+    }
+  },
+  "findings": [
+    {
+      "severity": "error",
+      "category": "test_failed",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash: failed (AssertionError: assert 'c0b626b9d8ed...4ad4093a8c758' == '4700d690fb09...c802b1e591729' - 4700d690fb098a3760f40dde032feb49461c081aa97453156d5c802b1e591729 + c0b626b9d8ed1fabcc647701e802a567fcae0b69784)",
+      "target": "05_tests.unit.test_d8x_diag::test_rerun_gives_the_stored_command_hash"
+    },
+    {
+      "severity": "error",
+      "category": "test_failed",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_record::test_default_snapshot_directory_is_results_states: failed (AssertionError: assert WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/ed8-judge4/07_results/states') == (WindowsPath('C:/workspace/outrigger_control/07_results') / 'states') + where Win)",
+      "target": "05_tests.unit.test_record::test_default_snapshot_directory_is_results_states"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext: 건너뜀 (pytest.skip: VERIFICATION_EXT installed)",
+      "target": "05_tests.unit.test_d8x_chrono_rows::test_refuses_without_verification_ext"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows: 건너뜀 (pytest.skip: LAS-b merged: no blocked row)",
+      "target": "05_tests.unit.test_las_chrono_rows::test_run_refuses_blocked_rows"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch: 건너뜀 (pytest.skip: could not import 'torch': No module named 'torch')",
+      "target": "05_tests.unit.test_ml_pipeline::test_gru_onnx_dynamo_export_matches_torch"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript: 건너뜀 (pytest.skip: could not import 'torch': No module named 'torch')",
+      "target": "05_tests.unit.test_ml_pipeline::test_gru_onnx_falls_back_to_torchscript"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision: 건너뜀 (pytest.skip: could not import 'torch': No module named 'torch')",
+      "target": "05_tests.unit.test_ml_pipeline::test_float32_thresholds_keep_every_booster_decision"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster: 건너뜀 (pytest.skip: could not import 'torch': No module named 'torch')",
+      "target": "05_tests.unit.test_ml_pipeline::test_lightgbm_onnx_export_matches_booster"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end: 건너뜀 (pytest.skip: could not import 'torch': No module named 'torch')",
+      "target": "05_tests.unit.test_ml_pipeline::test_training_export_and_scoring_run_end_to_end"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_params_l2b::test_l1_default_is_unchanged: 건너뜀 (pytest.skip: YAML regenerated since S7; L1 fingerprint baseline no longer applies)",
+      "target": "05_tests.unit.test_params_l2b::test_l1_default_is_unchanged"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_rod_chamber::test_h6_gas_separation: 건너뜀 (pytest.skip: gas separation after FLOOR (14.3 optional) is not implemented)",
+      "target": "05_tests.unit.test_rod_chamber::test_h6_gas_separation"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_s8_soil_restore::test_soil_restore_check_reads_the_plan_of_this_tree: 건너뜀 (pytest.skip: S8 ML plan not present (07_results is not tracked): C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-judge4\\07_results\\S8\\ml_main_20261025_090131\\ml_plan.json)",
+      "target": "05_tests.unit.test_s8_soil_restore::test_soil_restore_check_reads_the_plan_of_this_tree"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_s9_final::test_source_args_check_on_the_former_runs: 건너뜀 (pytest.skip: no former run folders under 07_results/S9)",
+      "target": "05_tests.unit.test_s9_final::test_source_args_check_on_the_former_runs"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_s9_final::test_final_r_s6_rows_match_their_former_batch: 건너뜀 (pytest.skip: former S6 batch not here)",
+      "target": "05_tests.unit.test_s9_final::test_final_r_s6_rows_match_their_former_batch"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_s9_final::test_final_rep_x_check_sources: 건너뜀 (pytest.skip: source run folder absent (07_results is not in git))",
+      "target": "05_tests.unit.test_s9_final::test_final_rep_x_check_sources"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ5-VBJ]: 건너뜀 (pytest.skip: X10_BASE_ROOT not set (a checkout of the commit before X-10))",
+      "target": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ5-VBJ]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\p84wt_7ea78232\\out\\junit.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ0-VBJ0]: 건너뜀 (pytest.skip: X10_BASE_ROOT not set (a checkout of the commit before X-10))",
+      "target": "05_tests.unit.test_x10_rod_fault::test_i_without_a_plan_the_rows_are_the_commit_before_x10[VBJ0-VBJ0]"
+    }
+  ]
+}
