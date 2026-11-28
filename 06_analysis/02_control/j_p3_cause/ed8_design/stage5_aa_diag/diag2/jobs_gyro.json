@@ -1,0 +1,190 @@
+[
+ {
+  "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+  "purpose": "key line 179 A/A candidate (FAULT)",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0875,
+   "twin": {
+    "level": "bottom",
+    "leg": "FR",
+    "fs_kN": 0.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  "stored": [
+   {
+    "file": "ho_aa2_a1/ed8_heldout_aa2.jsonl",
+    "batch": "ho_aa2",
+    "file_line": 182,
+    "commands_sha256": "bdcb1d8824979a4719ffedafa96eecb6e6a1ea39260e1305ff38db0ec7b80ac7",
+    "final_phase": "fault",
+    "error": null,
+    "wall_s": 24.7
+   }
+  ]
+ },
+ {
+  "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+  "purpose": "same shape, o 0.075 (pass expected)",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "twin": {
+    "level": "bottom",
+    "leg": "FR",
+    "fs_kN": 0.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  "stored": []
+ },
+ {
+  "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+  "purpose": "key line 173 base shape at o 0.0875 (pass expected)",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0875,
+   "twin": {
+    "level": "bottom",
+    "leg": "FL",
+    "fs_kN": 2.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.025,
+    "ramp_s": 0.05
+   },
+   "setting": "V0"
+  },
+  "stored": []
+ },
+ {
+  "label": "J4_l270_FR_Fs1_ready_default_o0875",
+  "purpose": "key line 270 A/A candidate (FAULT)",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0875,
+   "twin": {
+    "level": "bottom",
+    "leg": "FR",
+    "fs_kN": 1.0,
+    "event": "RE1bF",
+    "timing": "ready"
+   },
+   "setting": "V0"
+  },
+  "stored": [
+   {
+    "file": "ho_v0_a1/ed8_heldout_v0.jsonl",
+    "batch": "ho_v0",
+    "file_line": 544,
+    "commands_sha256": "dd217e437e39d76a0a91c174a3a257bd50d99e78555f2b763a66a96322d61b23",
+    "final_phase": "fault",
+    "error": null,
+    "wall_s": 25.4
+   }
+  ]
+ },
+ {
+  "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+  "purpose": "added: key line 173 A/A candidate (FAULT), the shape twin of J3",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0875,
+   "twin": {
+    "level": "bottom",
+    "leg": "FL",
+    "fs_kN": 2.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  "stored": [
+   {
+    "file": "ho_v0_a1/ed8_heldout_v0.jsonl",
+    "batch": "ho_v0",
+    "file_line": 348,
+    "commands_sha256": "be59c0bcfb8ca0b4de6a16a622561189d33d3a269b2c6c8cca04694ac9fdfa3a",
+    "final_phase": "fault",
+    "error": null,
+    "wall_s": 23.9
+   }
+  ]
+ },
+ {
+  "label": "S2_FR_Fs2_level_30mm004_o075",
+  "purpose": "added: stored neighbour of J2 (F_s 2 kN)",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "twin": {
+    "level": "bottom",
+    "leg": "FR",
+    "fs_kN": 2.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  "stored": [
+   {
+    "file": "ho_v0_a1/ed8_heldout_v0.jsonl",
+    "batch": "ho_v0",
+    "file_line": 362,
+    "commands_sha256": "312ea7570f5d12e5623fb7d4919c89607b6f9ec8585421ecff4f407a1c59e632",
+    "final_phase": "ready",
+    "error": null,
+    "wall_s": 18.1
+   }
+  ]
+ },
+ {
+  "label": "S3_FL_Fs0_level_25mm005_o0875",
+  "purpose": "added: stored neighbour of J3 (F_s 0 kN)",
+  "job": {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0875,
+   "twin": {
+    "level": "bottom",
+    "leg": "FL",
+    "fs_kN": 0.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.025,
+    "ramp_s": 0.05
+   },
+   "setting": "V0"
+  },
+  "stored": [
+   {
+    "file": "ho_aa2_a1/ed8_heldout_aa2.jsonl",
+    "batch": "ho_aa2",
+    "file_line": 171,
+    "commands_sha256": "a489671712df370e70b21db63f6167fe9c17a011ed085c11248e0f906d2401ff",
+    "final_phase": "ready",
+    "error": null,
+    "wall_s": 18.1
+   }
+  ]
+ }
+]

@@ -1,0 +1,230 @@
+{
+ "what": "436.9 edition 8 stage-5 A/A D1 diagnosis (closing judgement 4.5, decision stage 5-3). Record only, not a judgement; edition 9 design input.",
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+ "branch": "ed8-diag",
+ "base_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+ "worktree_status": [
+  " M 03_src/outrigger_sim/control/two_pressure.py",
+  "?? 05_tests/unit/test_two_pressure_d1_trace.py"
+ ],
+ "committed": false,
+ "trace_source": {
+  "path": "03_src/outrigger_sim/control/two_pressure.py",
+  "base_blob": "983e1f0df081ca86c258819264812af518fea3e1",
+  "modified_sha256": "490e5ff96b04702fb2d630d649114ee00f105270e2b273d05f77ffff669dbb9a",
+  "patch_sha256": "6a9dd61c9752bf5cd5672662f39c83df6d03df1f8c973b58801cc197ada704b3"
+ },
+ "test_source": {
+  "path": "05_tests/unit/test_two_pressure_d1_trace.py",
+  "sha256": "3f8f01414ba308e2c1cbf01bb763efbaf7b15f2355bc7a25ffe7c10c58d3f8e1"
+ },
+ "inputs_sha256": {
+  "key_file": "a18b5818734f1b10840c903fb9e4b5c140f619705048344f9ea48d16d3142ee5",
+  "stored_ho_v0": "fd5f85f529d7a85aecba8588743ae18eb215e3ca1d7df22fe26acfe3f6c333d8",
+  "stored_ho_aa2": "182dcaabbd1e29642386645a4d95521b83ff5d0fe14639ca5172d77e92dbd6b2",
+  "stored_ho_aa3": "a2d65df1833442b422668b1ada4abc1187a65ca9fdb791eb93d1a4b7e4b448a1",
+  "cause_analysis": "32c2a68594b77065902b168cacc88698add91babb2bca72036003d42b96b5dfa"
+ },
+ "inputs_path": {
+  "key_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json",
+  "stored_ho_v0": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_v0_a1\\ed8_heldout_v0.jsonl",
+  "stored_ho_aa2": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1\\ed8_heldout_aa2.jsonl",
+  "stored_ho_aa3": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa3_a1\\ed8_heldout_aa3.jsonl",
+  "cause_analysis": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_cause\\aa_cause_analysis.md"
+ },
+ "scripts_sha256": {
+  "d1_diag_extra.py": "38b856fb59b1ed914f94c2b4d289505f81daf3143b3f1679ddb4582077771c60",
+  "d1_diag_run.py": "1b2a0039365c5588456d493bcf651ba3b4f6afc1a968937410dad60fb51238ce",
+  "d1_diag_tables.py": "d9483009a6576a95facd45202cb1043ac8b68077152c76b209437a40f7e5e615",
+  "make_diag_jobs.py": "626288e6524e10669084b8a080ff389397768d74296dd69a8f3263a3da005b24",
+  "make_provenance.py": "d5a94ff3105ef84a901850bff1e3f03ce9ec68295159f943fee35a7208048b36"
+ },
+ "run_log": {
+  "argv": [
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\scripts\\d1_diag_run.py",
+   "--worktree",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+   "--jobs",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag_jobs.json",
+   "--out",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag",
+   "--mask",
+   "0xF003",
+   "--workers",
+   "4"
+  ],
+  "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "started": "2026-11-28 13:34:37 +0900",
+  "environment": {
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\numba_cache"
+  },
+  "mask": "0xF003",
+  "workers": 4,
+  "runs": [
+   {
+    "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+    "trace": false,
+    "wall_s": 52.5,
+    "state": "fault bdcb1d882497"
+   },
+   {
+    "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+    "trace": false,
+    "wall_s": 44.3,
+    "state": "ready 165ada369fbd"
+   },
+   {
+    "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+    "trace": false,
+    "wall_s": 45.2,
+    "state": "ready 6e5b583914f3"
+   },
+   {
+    "label": "J4_l270_FR_Fs1_ready_default_o0875",
+    "trace": false,
+    "wall_s": 55.5,
+    "state": "fault dd217e437e39"
+   },
+   {
+    "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+    "trace": false,
+    "wall_s": 32.7,
+    "state": "fault be59c0bcfb8c"
+   },
+   {
+    "label": "S2_FR_Fs2_level_30mm004_o075",
+    "trace": false,
+    "wall_s": 24.5,
+    "state": "ready 312ea7570f5d"
+   },
+   {
+    "label": "S3_FL_Fs0_level_25mm005_o0875",
+    "trace": false,
+    "wall_s": 25.4,
+    "state": "ready a489671712df"
+   },
+   {
+    "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+    "trace": true,
+    "wall_s": 31.3,
+    "state": "fault bdcb1d882497"
+   },
+   {
+    "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+    "trace": true,
+    "wall_s": 23.7,
+    "state": "ready 165ada369fbd"
+   },
+   {
+    "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+    "trace": true,
+    "wall_s": 21.8,
+    "state": "ready 6e5b583914f3"
+   },
+   {
+    "label": "J4_l270_FR_Fs1_ready_default_o0875",
+    "trace": true,
+    "wall_s": 30.2,
+    "state": "fault dd217e437e39"
+   },
+   {
+    "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+    "trace": true,
+    "wall_s": 25.1,
+    "state": "fault be59c0bcfb8c"
+   },
+   {
+    "label": "S2_FR_Fs2_level_30mm004_o075",
+    "trace": true,
+    "wall_s": 18.3,
+    "state": "ready 312ea7570f5d"
+   },
+   {
+    "label": "S3_FL_Fs0_level_25mm005_o0875",
+    "trace": true,
+    "wall_s": 16.9,
+    "state": "ready a489671712df"
+   }
+  ],
+  "done": "2026-11-28 13:36:36 +0900"
+ },
+ "trace_row_keys": {
+  "t_s": "period time [s] (the 10 Hz read of TwoPressureMonitor.read)",
+  "monitor": "hex id of the monitor object that wrote the row",
+  "is_locked_phase": "READY (legs locked) as passed to read",
+  "is_crawler_lifted": "LEVEL or later (D1'' applies) as passed to read",
+  "commanded_m_s": "controller output of the previous period per leg [m/s]",
+  "grounded": "net force - seal band >= F_min per leg (D1 input)",
+  "f_z_raw_m_s2": "body-z specific force of the last 10 ms IMU partial mean [m/s^2]",
+  "f_z_used_m_s2": "f_z D1'' uses: raw minus the lever term (alpha x r)_z when corrected",
+  "lever_z_m_s2": "(alpha x r)_z subtracted; null when not applied (gyro missing or off)",
+  "gyro_partial_means": "rows of imu_gyro_rad_s passed (null = no gyro samples)",
+  "is_lever_missing": "lever correction on but < 2 finite gyro partial means (WARN_D1_IMU_GYRO_MISSING branch, f_z uncorrected)",
+  "previous_f_z_used_m_s2": "f_z_used of the period before (null = none)",
+  "head_Pa": "head readings per leg [Pa] (held value for a held leg)",
+  "rod_Pa": "rod readings per leg [Pa]",
+  "dp_head_Pa / dp_rod_Pa": "one-period change per leg [Pa] (absent in the first period)",
+  "is_step_rule_suspended": "P-S8-25 suspension (no step judged)",
+  "head_range_faults": "D1 range / current / non-finite reasons of this period",
+  "head_step_candidates / rod_step_candidates": "legs with |dp| > max_step_Pa",
+  "net_sum_N": "sum F = sum(p_h A_p - p_r A_ann), raw readings [N]",
+  "previous_net_sum_N": "sum F of the period before [N]",
+  "mass_kg": "M_eff D1'' would use now (_d1_mass_kg)",
+  "d1pp_inputs_ready": "explained_imu, lifted, f_z now and before, M_eff known",
+  "residual_N / previous_residual_N": "r = sum F - M_eff f_z_used now / before (same M_eff)",
+  "residual_change_N": "|r - r_previous| [N], every period with d1pp_inputs_ready",
+  "step_rule_branch": "imu_residual (D1'') or load_redistribution (D1') when candidates",
+  "judged_change_N": "the change the candidates were judged against [N]",
+  "judged_ratio": "imu_residual_step_ratio or explained_step_sum_ratio",
+  "judged_mass_kg": "M_eff of the judgement (null = D1' branch)",
+  "candidates": "per candidate leg: dp_head_Pa, step_force_N = |dp_h| A_p, threshold_N = ratio * step_force_N, is_unexplained (judged_change_N >= threshold_N)",
+  "head_fault_reasons": "legs given D1_step (or a range reason) this period",
+  "rod_steps_unexplained": "rod-side step legs that fell back this period",
+  "events": "event names the diagnosis appended this period (D1 / D2 / D3 / moving)"
+ },
+ "csv_notes": {
+  "units": "trace_<label>.csv / event_window.csv: pressures and dp in bar, forces in kN",
+  "M_f_z_kN": "M_eff * f_z_used",
+  "M_df_z_kN": "M_eff * (f_z_used - previous_f_z_used)",
+  "sum_change_kN": "net_sum - previous_net_sum",
+  "threshold_kN_<leg>": "imu_residual_step_ratio (or D1' ratio) * |dp_h| A_p of a candidate",
+  "unexplained_<leg>": "True = FAULT D1_step (judged change >= threshold)",
+  "repro_check.csv": "off_*: trace off run, on_*: trace on run; *_equals_*: comparison of commands_sha256 / final_phase / the whole run_one record without wall_s, label, trace, two_pressure_file",
+  "step_candidates.csv": "every head step candidate from t_event - 0.3 s on (primary monitor)",
+  "diag_summary.json": "lift_s = t_event_s + event_output.lifts[event leg].first_s; lift_phase_in_period_s = lift_s modulo 0.1 s; first_period_after_lift = the first traced period with t_s >= lift_s"
+ },
+ "outputs_sha256": {
+  "diag_jobs.json": "9bcbe48c0f7495930b10ef140be16e96721eb6f1b1b64f166ab76f6527aee70c",
+  "diag_summary.json": "a9ba3ca89c0c8521a56884f4346d5f92e02796b092f8acbb650c418c5627a4b8",
+  "event_window.csv": "1ebc9d8663e0e3dcdbdef61f31357caee211965966b683c83c47bba78be6fb70",
+  "first_step_period.csv": "7980a3bdc854db5ba8eae699dcdd8ea2729c87b8a1f2dc98a3e91319ad3cd9b8",
+  "gyro_availability.csv": "9b65651808d7a8723eeda926f033f5b628ab42d99360e407ab714a3f891f33bd",
+  "repro_check.csv": "6f3328d58cda610d2dce8cd61250ef194e76914a624234aeeb91bba66016845e",
+  "run_console.log": "4bec39f71453d5e487fdff10e0cb25f9f08c35313d180eff9083ed54c3c32b31",
+  "run_log.json": "36c6a7396f41e3da26998184447e5466615990c6ba1b56b4d56ee6e7dd3cadd6",
+  "runs_trace_off.jsonl": "2ff10bcf96a60f7154c81d46bd8d15293ad9a0899bc688c6697fdac3a96a3797",
+  "runs_trace_on.jsonl": "cfba89d2096342b0e24d659dc1f7670a474234cf169c8b101e650519236c8b5e",
+  "step_candidates.csv": "4842047f3ed1e40377d600ea223ce58d8a7d001848b41db3f084b742a7c826dc",
+  "test_runs.json": "670cbe23503bf12137091d0228f04d02dae6b432afe7623769de6dfcbc37d7ff",
+  "test_worktree_tests.json": "02197bc07664af10adcbe021d7d134274b27f3010161567f8e3a41d833a854f9",
+  "trace_J1_l179_FR_Fs0_level_30mm004_o0875.csv": "d951c3a51065b0da208846af4bc040e1adf922380a6a5fd1e822a96ea0833a13",
+  "trace_J1_l179_FR_Fs0_level_30mm004_o0875.json": "07b020deea50fd82e87e520cb3b2aeca4da8c6c4423ed771ef03ff52d4bd1e00",
+  "trace_J2_l179_FR_Fs0_level_30mm004_o075.csv": "f00126c072a9ef90f3e6dc22e14f999bdbb8f56e7af06dc3a4041da38ffb5968",
+  "trace_J2_l179_FR_Fs0_level_30mm004_o075.json": "ca954431560ce8921858086cd428a1061ebef6c259b28b518bb65322f4164ced",
+  "trace_J3_l173_FL_Fs2_level_25mm005_o0875.csv": "15935f0408ea91f15bc51dd0aa24be9cf5858a4d1cc472cf3750a28091ef7d17",
+  "trace_J3_l173_FL_Fs2_level_25mm005_o0875.json": "1d81fc4aefe2e4b3f22abb58338143524e67dba7d1d6a06878ff4ac9158ce0c4",
+  "trace_J4_l270_FR_Fs1_ready_default_o0875.csv": "e492af82929030cc9d9a8e0878d35c7b78a698789599bd95ad686a539e11116c",
+  "trace_J4_l270_FR_Fs1_ready_default_o0875.json": "c199a3c9f7e9e7e12b390e80e1fe25568fcbbf699378790619b3b3cba99ee017",
+  "trace_S1_l173_FL_Fs2_level_30mm004_o0875.csv": "11382a2c5a0d8654f7600964924f2a4c16c217900ee5746adfcd19945b3afe41",
+  "trace_S1_l173_FL_Fs2_level_30mm004_o0875.json": "f84b8d4ae5f490b357e896b9fd7cfe4feb334ef73442fc854e8c0fcf3c8edc00",
+  "trace_S2_FR_Fs2_level_30mm004_o075.csv": "25546fb827ed6d0056e2b6f96063189a170aadff9abe34540a6ac3176dbcc827",
+  "trace_S2_FR_Fs2_level_30mm004_o075.json": "f395e3870a74be45d5993c433fc1821dacf8bfeaaf1d9fc0aa1e8f7467102db2",
+  "trace_S3_FL_Fs0_level_25mm005_o0875.csv": "330ea16284a8793de583dd06000e14cbb4f3171911934eaed6fccbcf15c370fc",
+  "trace_S3_FL_Fs0_level_25mm005_o0875.json": "a60ba41c3cadd3f2b119d88e8971462aa445055afc05468e380841a54baf8298"
+ }
+}

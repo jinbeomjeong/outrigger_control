@@ -1,0 +1,114 @@
+{
+ "argv": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\scripts\\d1_diag_run.py",
+  "--worktree",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+  "--jobs",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag_jobs.json",
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag",
+  "--mask",
+  "0xF003",
+  "--workers",
+  "4"
+ ],
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "started": "2026-11-28 13:34:37 +0900",
+ "environment": {
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB",
+  "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\numba_cache"
+ },
+ "mask": "0xF003",
+ "workers": 4,
+ "runs": [
+  {
+   "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+   "trace": false,
+   "wall_s": 52.5,
+   "state": "fault bdcb1d882497"
+  },
+  {
+   "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+   "trace": false,
+   "wall_s": 44.3,
+   "state": "ready 165ada369fbd"
+  },
+  {
+   "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+   "trace": false,
+   "wall_s": 45.2,
+   "state": "ready 6e5b583914f3"
+  },
+  {
+   "label": "J4_l270_FR_Fs1_ready_default_o0875",
+   "trace": false,
+   "wall_s": 55.5,
+   "state": "fault dd217e437e39"
+  },
+  {
+   "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+   "trace": false,
+   "wall_s": 32.7,
+   "state": "fault be59c0bcfb8c"
+  },
+  {
+   "label": "S2_FR_Fs2_level_30mm004_o075",
+   "trace": false,
+   "wall_s": 24.5,
+   "state": "ready 312ea7570f5d"
+  },
+  {
+   "label": "S3_FL_Fs0_level_25mm005_o0875",
+   "trace": false,
+   "wall_s": 25.4,
+   "state": "ready a489671712df"
+  },
+  {
+   "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+   "trace": true,
+   "wall_s": 31.3,
+   "state": "fault bdcb1d882497"
+  },
+  {
+   "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+   "trace": true,
+   "wall_s": 23.7,
+   "state": "ready 165ada369fbd"
+  },
+  {
+   "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+   "trace": true,
+   "wall_s": 21.8,
+   "state": "ready 6e5b583914f3"
+  },
+  {
+   "label": "J4_l270_FR_Fs1_ready_default_o0875",
+   "trace": true,
+   "wall_s": 30.2,
+   "state": "fault dd217e437e39"
+  },
+  {
+   "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+   "trace": true,
+   "wall_s": 25.1,
+   "state": "fault be59c0bcfb8c"
+  },
+  {
+   "label": "S2_FR_Fs2_level_30mm004_o075",
+   "trace": true,
+   "wall_s": 18.3,
+   "state": "ready 312ea7570f5d"
+  },
+  {
+   "label": "S3_FL_Fs0_level_25mm005_o0875",
+   "trace": true,
+   "wall_s": 16.9,
+   "state": "ready a489671712df"
+  }
+ ],
+ "done": "2026-11-28 13:36:36 +0900"
+}

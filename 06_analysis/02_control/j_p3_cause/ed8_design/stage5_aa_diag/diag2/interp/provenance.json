@@ -1,0 +1,14 @@
+{
+ "made": "2026-11-28 dynamics-expert; interpretation of diag2 (edition 9 design input, record only, not a judgement)",
+ "inputs": "../traces_B/trace_*.json, ../first_step_period_B.csv (python-expert, ed8-diag 51d7831b, R51_DIAG_GYRO_SAMPLES=on), ../../interp/residual_split.csv (diag1 interpretation)",
+ "env": "conda dynamics-dev python.exe -I -B s4_gyro_pairs.py <diag2 folder>",
+ "files": {"gyro_pairs.csv": "s4_gyro_pairs.py: periods k (sample before the step period; python-expert t_{k-1}) and k+1 (step period) of the event-run monitor (the monitor whose step-period row has head step candidates)"},
+ "columns": {
+  "lever_z_m_s2": {"definition": "trace lever_z_m_s2 = (alpha_hat x r)_z the code subtracts, alpha_hat from the last two 10 ms gyro means", "code": "s4_gyro_pairs.py:41-44", "unit": "m/s^2"},
+  "M_lever_kN": {"definition": "mass_kg * lever_z_m_s2; r_B = r_diag1 + M_lever (f_z_used = f_z_raw - lever_z)", "code": "s4_gyro_pairs.py:45", "unit": "kN"},
+  "r_B_kN": {"definition": "trace residual_N with the gyro lever correction", "code": "s4_gyro_pairs.py:46", "unit": "kN"},
+  "r_diag1_kN": {"definition": "diag1 residual (no gyro) at the same period", "code": "s4_gyro_pairs.py:47", "unit": "kN"},
+  "lever_share_estimate_diag1_kN": {"definition": "diag1 interpretation rigid-body estimate -M (alpha x r)_z (instantaneous alpha from the sampled forces); compare with -M_lever_kN", "code": "s4_gyro_pairs.py:48", "unit": "kN"},
+  "dr_B_kN": {"definition": "trace residual_change_N (|r_B now - r_B before|)", "code": "s4_gyro_pairs.py:49", "unit": "kN"}
+ }
+}

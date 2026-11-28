@@ -1,0 +1,136 @@
+{
+ "argv": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+  "--worktree",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+  "--jobs",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_sweep_ext.json",
+  "--gyro",
+  "off",
+  "--out-jsonl",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\E_sweep_ext_gyro_off_trace_on.jsonl",
+  "--trace-dir",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_E",
+  "--mask",
+  "0xFFF3",
+  "--workers",
+  "8"
+ ],
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "gyro_mode": "off",
+ "started": "2026-11-28 13:57:57 +0900",
+ "mask": "0xFFF3",
+ "workers": 8,
+ "environment": {
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB",
+  "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+  "R51_DIAG_GYRO_SAMPLES": null
+ },
+ "runs": [
+  {
+   "label": "J1shape_o0.0745",
+   "wall_s": 20.3,
+   "state": "ready 9fd6b83095db"
+  },
+  {
+   "label": "J1shape_o0.0755",
+   "wall_s": 20.8,
+   "state": "ready 31d4489281cc"
+  },
+  {
+   "label": "J1shape_o0.0765",
+   "wall_s": 20.6,
+   "state": "ready 8fe9e336eccd"
+  },
+  {
+   "label": "J1shape_o0.0775",
+   "wall_s": 20.2,
+   "state": "ready 187fca3d111c"
+  },
+  {
+   "label": "J1shape_o0.0785",
+   "wall_s": 33.7,
+   "state": "ready 85455885d18b"
+  },
+  {
+   "label": "J1shape_o0.0795",
+   "wall_s": 20.3,
+   "state": "ready db712331ee60"
+  },
+  {
+   "label": "J1shape_o0.0805",
+   "wall_s": 20.5,
+   "state": "ready 3de2f59b9b02"
+  },
+  {
+   "label": "J1shape_o0.0815",
+   "wall_s": 20.3,
+   "state": "ready 1a187d392d81"
+  },
+  {
+   "label": "J1shape_o0.0825",
+   "wall_s": 19.9,
+   "state": "ready 436883a6ad96"
+  },
+  {
+   "label": "J1shape_o0.0835",
+   "wall_s": 24.4,
+   "state": "fault 6651922a0fd6"
+  },
+  {
+   "label": "J3shape_o0.0745",
+   "wall_s": 20.2,
+   "state": "ready de2b6df2ac79"
+  },
+  {
+   "label": "J3shape_o0.0755",
+   "wall_s": 19.7,
+   "state": "ready 98cf8b605cde"
+  },
+  {
+   "label": "J3shape_o0.0765",
+   "wall_s": 19.6,
+   "state": "ready a6223baad94d"
+  },
+  {
+   "label": "J3shape_o0.0775",
+   "wall_s": 19.9,
+   "state": "ready fe42758a4497"
+  },
+  {
+   "label": "J3shape_o0.0785",
+   "wall_s": 19.8,
+   "state": "ready 98131b4441a1"
+  },
+  {
+   "label": "J3shape_o0.0795",
+   "wall_s": 17.6,
+   "state": "ready cb7a86e08150"
+  },
+  {
+   "label": "J3shape_o0.0805",
+   "wall_s": 15.6,
+   "state": "ready 3ae12e896263"
+  },
+  {
+   "label": "J3shape_o0.0815",
+   "wall_s": 15.6,
+   "state": "ready aafedaf67c14"
+  },
+  {
+   "label": "J3shape_o0.0825",
+   "wall_s": 15.6,
+   "state": "ready 67e205cb93c4"
+  },
+  {
+   "label": "J3shape_o0.0835",
+   "wall_s": 15.5,
+   "state": "ready 426e545cf670"
+  }
+ ],
+ "done": "2026-11-28 13:58:56 +0900"
+}

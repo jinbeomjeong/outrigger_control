@@ -1,0 +1,704 @@
+{
+ "what": "436.9 edition 8 stage-5 A/A D1 diagnosis 2 (gyro supply contrast, lift-phase sweep), approved by the user; record only, not a judgement",
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+ "branch": "ed8-diag",
+ "base_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+ "trace_commit": "b040274c8782a9297077e2d362871beb154cf4e3",
+ "head": "51d7831bb1b7b5c0335ae739c4579ce5bd91f76e",
+ "patch_commit": "51d7831b",
+ "worktree_status": [],
+ "patched_file": {
+  "path": "04_scripts/03_control/s8/r51_reapp_closed_loop.py",
+  "sha256": "4bca8d7013c66f9221d03cd48094fac1fb4ef4376f1b8c312537cad473acdf28",
+  "patch_sha256": "6f08df2278d29b119a2fa84723cb93a0005c0658a82ebf716dc9b21904713b92"
+ },
+ "inputs_sha256": {
+  "key_file": "a18b5818734f1b10840c903fb9e4b5c140f619705048344f9ea48d16d3142ee5",
+  "diag1_jobs": "9bcbe48c0f7495930b10ef140be16e96721eb6f1b1b64f166ab76f6527aee70c",
+  "diag1_runs_trace_off": "2ff10bcf96a60f7154c81d46bd8d15293ad9a0899bc688c6697fdac3a96a3797",
+  "diag1_first_step_period": "7980a3bdc854db5ba8eae699dcdd8ea2729c87b8a1f2dc98a3e91319ad3cd9b8",
+  "diag1_provenance": "faefc1328ac863065ce19ee08a09a240b9d62d14493fdcb44cca978c92fc0dae",
+  "interpretation": "f40569316f115db936272305c84cb9eb49fac257690372a1436c6e81690988eb"
+ },
+ "scripts_sha256": {
+  "d2_make_jobs.py": "a78d5975f70de18c59babdfc09f14cf18fc44253bdf18d67b25c583e351010e5",
+  "d2_make_sweep_ext.py": "dad1d27d8719327cf9e4f9cb8389e3a027cc1457b270f82128a38c3a66845aed",
+  "d2_provenance.py": "7bcfd4c8c0ca0b94575e6501c37a4a0febc3829a57ac6badb8796b3d7ccbf7de",
+  "d2_record_diff.py": "bf6dda8c3f38a102e06bf961446569aa2f39e861d41f222f73c964453c34afd7",
+  "d2_run.py": "eef15415ba9f2e41bc2951747c878a05dc4bd7d6a8535507273756e48e0bc825",
+  "d2_tables.py": "802da3b331122efd47e54195b5091c670b06d53731619b6fe43c9a456ee1d8e8"
+ },
+ "run_logs": {
+  "A_gyro_off_trace_off.log.json": {
+   "argv": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+    "--jobs",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_gyro.json",
+    "--gyro",
+    "off",
+    "--out-jsonl",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\A_gyro_off_trace_off.jsonl",
+    "--worktree",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+    "--mask",
+    "0xFFF3",
+    "--workers",
+    "8"
+   ],
+   "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "gyro_mode": "off",
+   "started": "2026-11-28 13:53:29 +0900",
+   "mask": "0xFFF3",
+   "workers": 8,
+   "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB",
+    "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+    "R51_DIAG_GYRO_SAMPLES": null
+   },
+   "runs": [
+    {
+     "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+     "wall_s": 36.3,
+     "state": "fault bdcb1d882497"
+    },
+    {
+     "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+     "wall_s": 31.8,
+     "state": "ready 165ada369fbd"
+    },
+    {
+     "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+     "wall_s": 32.0,
+     "state": "ready 6e5b583914f3"
+    },
+    {
+     "label": "J4_l270_FR_Fs1_ready_default_o0875",
+     "wall_s": 38.5,
+     "state": "fault dd217e437e39"
+    },
+    {
+     "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+     "wall_s": 36.1,
+     "state": "fault be59c0bcfb8c"
+    },
+    {
+     "label": "S2_FR_Fs2_level_30mm004_o075",
+     "wall_s": 31.4,
+     "state": "ready 312ea7570f5d"
+    },
+    {
+     "label": "S3_FL_Fs0_level_25mm005_o0875",
+     "wall_s": 31.8,
+     "state": "ready a489671712df"
+    }
+   ],
+   "done": "2026-11-28 13:54:08 +0900"
+  },
+  "B_gyro_all_trace_on.log.json": {
+   "argv": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+    "--jobs",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_gyro.json",
+    "--gyro",
+    "all",
+    "--out-jsonl",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\B_gyro_all_trace_on.jsonl",
+    "--trace-dir",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_B",
+    "--worktree",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+    "--mask",
+    "0xFFF3",
+    "--workers",
+    "8"
+   ],
+   "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "gyro_mode": "all",
+   "started": "2026-11-28 13:54:08 +0900",
+   "mask": "0xFFF3",
+   "workers": 8,
+   "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB",
+    "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+    "R51_DIAG_GYRO_SAMPLES": "on"
+   },
+   "runs": [
+    {
+     "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+     "wall_s": 24.9,
+     "state": "fault bdcb1d882497"
+    },
+    {
+     "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+     "wall_s": 19.5,
+     "state": "ready 165ada369fbd"
+    },
+    {
+     "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+     "wall_s": 20.2,
+     "state": "ready 6e5b583914f3"
+    },
+    {
+     "label": "J4_l270_FR_Fs1_ready_default_o0875",
+     "wall_s": 26.8,
+     "state": "fault dd217e437e39"
+    },
+    {
+     "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+     "wall_s": 24.8,
+     "state": "fault be59c0bcfb8c"
+    },
+    {
+     "label": "S2_FR_Fs2_level_30mm004_o075",
+     "wall_s": 19.9,
+     "state": "ready 312ea7570f5d"
+    },
+    {
+     "label": "S3_FL_Fs0_level_25mm005_o0875",
+     "wall_s": 19.8,
+     "state": "ready a489671712df"
+    }
+   ],
+   "done": "2026-11-28 13:54:36 +0900"
+  },
+  "C_gyro_d1only_trace_on.log.json": {
+   "argv": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+    "--jobs",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_gyro.json",
+    "--gyro",
+    "d1only",
+    "--out-jsonl",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\C_gyro_d1only_trace_on.jsonl",
+    "--trace-dir",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_C",
+    "--worktree",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+    "--mask",
+    "0xFFF3",
+    "--workers",
+    "8"
+   ],
+   "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "gyro_mode": "d1only",
+   "started": "2026-11-28 13:54:36 +0900",
+   "mask": "0xFFF3",
+   "workers": 8,
+   "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB",
+    "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+    "R51_DIAG_GYRO_SAMPLES": "on"
+   },
+   "runs": [
+    {
+     "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+     "wall_s": 23.8,
+     "state": "fault bdcb1d882497"
+    },
+    {
+     "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+     "wall_s": 19.4,
+     "state": "ready 165ada369fbd"
+    },
+    {
+     "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+     "wall_s": 19.0,
+     "state": "ready 6e5b583914f3"
+    },
+    {
+     "label": "J4_l270_FR_Fs1_ready_default_o0875",
+     "wall_s": 25.7,
+     "state": "fault dd217e437e39"
+    },
+    {
+     "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+     "wall_s": 23.9,
+     "state": "fault be59c0bcfb8c"
+    },
+    {
+     "label": "S2_FR_Fs2_level_30mm004_o075",
+     "wall_s": 18.8,
+     "state": "ready 312ea7570f5d"
+    },
+    {
+     "label": "S3_FL_Fs0_level_25mm005_o0875",
+     "wall_s": 19.2,
+     "state": "ready a489671712df"
+    }
+   ],
+   "done": "2026-11-28 13:55:03 +0900"
+  },
+  "D_sweep_gyro_off_trace_on.log.json": {
+   "argv": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+    "--jobs",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_sweep.json",
+    "--gyro",
+    "off",
+    "--out-jsonl",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\D_sweep_gyro_off_trace_on.jsonl",
+    "--trace-dir",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_D",
+    "--worktree",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+    "--mask",
+    "0xFFF3",
+    "--workers",
+    "8"
+   ],
+   "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "gyro_mode": "off",
+   "started": "2026-11-28 13:55:03 +0900",
+   "mask": "0xFFF3",
+   "workers": 8,
+   "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB",
+    "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+    "R51_DIAG_GYRO_SAMPLES": null
+   },
+   "runs": [
+    {
+     "label": "J1shape_o0.0845",
+     "wall_s": 26.9,
+     "state": "fault f598c7d8f1a5"
+    },
+    {
+     "label": "J1shape_o0.0855",
+     "wall_s": 28.0,
+     "state": "fault 002331350141"
+    },
+    {
+     "label": "J1shape_o0.0865",
+     "wall_s": 27.8,
+     "state": "fault 2452ebfa5b17"
+    },
+    {
+     "label": "J1shape_o0.0875",
+     "wall_s": 28.1,
+     "state": "fault bdcb1d882497"
+    },
+    {
+     "label": "J1shape_o0.0885",
+     "wall_s": 28.1,
+     "state": "fault 572dc47e3fe0"
+    },
+    {
+     "label": "J1shape_o0.0895",
+     "wall_s": 28.6,
+     "state": "fault 9a82da169201"
+    },
+    {
+     "label": "J1shape_o0.0905",
+     "wall_s": 21.1,
+     "state": "ready f8c467805d79"
+    },
+    {
+     "label": "J1shape_o0.0915",
+     "wall_s": 20.8,
+     "state": "ready 5384801410e3"
+    },
+    {
+     "label": "J1shape_o0.0925",
+     "wall_s": 21.0,
+     "state": "ready 3c851c68d24a"
+    },
+    {
+     "label": "J1shape_o0.0935",
+     "wall_s": 21.4,
+     "state": "ready e707b46e2242"
+    },
+    {
+     "label": "J1shape_o0.0945",
+     "wall_s": 22.1,
+     "state": "ready 1f9c7ab97572"
+    },
+    {
+     "label": "J1shape_o0.0955",
+     "wall_s": 22.1,
+     "state": "ready a4dd4e837c33"
+    },
+    {
+     "label": "J1shape_o0.0965",
+     "wall_s": 22.1,
+     "state": "ready b452ee8c30c7"
+    },
+    {
+     "label": "J1shape_o0.0975",
+     "wall_s": 22.3,
+     "state": "ready 9fba8a543c8a"
+    },
+    {
+     "label": "J1shape_o0.0985",
+     "wall_s": 22.2,
+     "state": "ready e1e386190af0"
+    },
+    {
+     "label": "J1shape_o0.0995",
+     "wall_s": 22.4,
+     "state": "ready 0a28a2af12ee"
+    },
+    {
+     "label": "J1shape_o0.1005",
+     "wall_s": 22.3,
+     "state": "ready d6006b1c423d"
+    },
+    {
+     "label": "J3shape_o0.0845",
+     "wall_s": 22.7,
+     "state": "ready f042151c9055"
+    },
+    {
+     "label": "J3shape_o0.0855",
+     "wall_s": 23.1,
+     "state": "ready f2021bedda6b"
+    },
+    {
+     "label": "J3shape_o0.0865",
+     "wall_s": 22.7,
+     "state": "ready 3bc428ad32f6"
+    },
+    {
+     "label": "J3shape_o0.0875",
+     "wall_s": 23.8,
+     "state": "ready 6e5b583914f3"
+    },
+    {
+     "label": "J3shape_o0.0885",
+     "wall_s": 23.5,
+     "state": "ready e1fdd6cf5ea1"
+    },
+    {
+     "label": "J3shape_o0.0895",
+     "wall_s": 23.1,
+     "state": "ready 9dbfef71dc47"
+    },
+    {
+     "label": "J3shape_o0.0905",
+     "wall_s": 22.9,
+     "state": "ready 40b87eec1fa8"
+    },
+    {
+     "label": "J3shape_o0.0915",
+     "wall_s": 22.9,
+     "state": "ready 3b90c657d14f"
+    },
+    {
+     "label": "J3shape_o0.0925",
+     "wall_s": 23.1,
+     "state": "ready 810c4a4d0f47"
+    },
+    {
+     "label": "J3shape_o0.0935",
+     "wall_s": 23.0,
+     "state": "ready 4eecb7ea5d88"
+    },
+    {
+     "label": "J3shape_o0.0945",
+     "wall_s": 22.1,
+     "state": "ready c6f3875f1c0f"
+    },
+    {
+     "label": "J3shape_o0.0955",
+     "wall_s": 22.6,
+     "state": "ready f68a9e809aeb"
+    },
+    {
+     "label": "J3shape_o0.0965",
+     "wall_s": 22.2,
+     "state": "ready 73b87e17f8eb"
+    },
+    {
+     "label": "J3shape_o0.0975",
+     "wall_s": 22.2,
+     "state": "ready 11ec092764e7"
+    },
+    {
+     "label": "J3shape_o0.0985",
+     "wall_s": 22.2,
+     "state": "ready 649d638e7d05"
+    },
+    {
+     "label": "J3shape_o0.0995",
+     "wall_s": 17.4,
+     "state": "ready 9b31bb4b30ed"
+    },
+    {
+     "label": "J3shape_o0.1005",
+     "wall_s": 16.8,
+     "state": "ready ef382dc53c1b"
+    }
+   ],
+   "done": "2026-11-28 13:56:55 +0900"
+  },
+  "E_sweep_ext_gyro_off_trace_on.log.json": {
+   "argv": [
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+    "--worktree",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+    "--jobs",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_sweep_ext.json",
+    "--gyro",
+    "off",
+    "--out-jsonl",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\E_sweep_ext_gyro_off_trace_on.jsonl",
+    "--trace-dir",
+    "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_E",
+    "--mask",
+    "0xFFF3",
+    "--workers",
+    "8"
+   ],
+   "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "gyro_mode": "off",
+   "started": "2026-11-28 13:57:57 +0900",
+   "mask": "0xFFF3",
+   "workers": 8,
+   "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB",
+    "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+    "R51_DIAG_GYRO_SAMPLES": null
+   },
+   "runs": [
+    {
+     "label": "J1shape_o0.0745",
+     "wall_s": 20.3,
+     "state": "ready 9fd6b83095db"
+    },
+    {
+     "label": "J1shape_o0.0755",
+     "wall_s": 20.8,
+     "state": "ready 31d4489281cc"
+    },
+    {
+     "label": "J1shape_o0.0765",
+     "wall_s": 20.6,
+     "state": "ready 8fe9e336eccd"
+    },
+    {
+     "label": "J1shape_o0.0775",
+     "wall_s": 20.2,
+     "state": "ready 187fca3d111c"
+    },
+    {
+     "label": "J1shape_o0.0785",
+     "wall_s": 33.7,
+     "state": "ready 85455885d18b"
+    },
+    {
+     "label": "J1shape_o0.0795",
+     "wall_s": 20.3,
+     "state": "ready db712331ee60"
+    },
+    {
+     "label": "J1shape_o0.0805",
+     "wall_s": 20.5,
+     "state": "ready 3de2f59b9b02"
+    },
+    {
+     "label": "J1shape_o0.0815",
+     "wall_s": 20.3,
+     "state": "ready 1a187d392d81"
+    },
+    {
+     "label": "J1shape_o0.0825",
+     "wall_s": 19.9,
+     "state": "ready 436883a6ad96"
+    },
+    {
+     "label": "J1shape_o0.0835",
+     "wall_s": 24.4,
+     "state": "fault 6651922a0fd6"
+    },
+    {
+     "label": "J3shape_o0.0745",
+     "wall_s": 20.2,
+     "state": "ready de2b6df2ac79"
+    },
+    {
+     "label": "J3shape_o0.0755",
+     "wall_s": 19.7,
+     "state": "ready 98cf8b605cde"
+    },
+    {
+     "label": "J3shape_o0.0765",
+     "wall_s": 19.6,
+     "state": "ready a6223baad94d"
+    },
+    {
+     "label": "J3shape_o0.0775",
+     "wall_s": 19.9,
+     "state": "ready fe42758a4497"
+    },
+    {
+     "label": "J3shape_o0.0785",
+     "wall_s": 19.8,
+     "state": "ready 98131b4441a1"
+    },
+    {
+     "label": "J3shape_o0.0795",
+     "wall_s": 17.6,
+     "state": "ready cb7a86e08150"
+    },
+    {
+     "label": "J3shape_o0.0805",
+     "wall_s": 15.6,
+     "state": "ready 3ae12e896263"
+    },
+    {
+     "label": "J3shape_o0.0815",
+     "wall_s": 15.6,
+     "state": "ready aafedaf67c14"
+    },
+    {
+     "label": "J3shape_o0.0825",
+     "wall_s": 15.6,
+     "state": "ready 67e205cb93c4"
+    },
+    {
+     "label": "J3shape_o0.0835",
+     "wall_s": 15.5,
+     "state": "ready 426e545cf670"
+    }
+   ],
+   "done": "2026-11-28 13:58:56 +0900"
+  }
+ },
+ "notes": {
+  "steps": {
+   "A": "gyro switch off (R51_DIAG_GYRO_SAMPLES unset), trace off, the 7 jobs: bit check of the harness patch against diagnosis 1 trace-off records and the stored lines",
+   "B": "gyro switch on (all consumers: D1'' lever term and DSb75 gyro window), trace on",
+   "C": "gyro switch on, DSb75 gyro window fed without the samples (driver patch of C2Controller._diff_sink_feed_gyro in the worker), trace on: D1'' only",
+   "D": "sweep, gyro off, trace on: J1 shape (FR Fs0 level 30 mm / 0.04 s) and J3 shape (FL Fs2 level 25 mm / 0.05 s) at offsets 0.0845 .. 0.1005 s (1 ms)"
+  },
+  "gyro_samples": "per IMU window (10 ms): trapezoid mean of plant.w at the 11 chunk boundaries (1 ms), the same window as the specific force samples; plant sub-steps inside a 1 ms chunk are not sampled (approximation)",
+  "trace_columns": "as diagnosis 1 (../provenance.json trace_row_keys, csv_notes)",
+  "repro_check.csv": "sha_equals_diag1 / record_equals_diag1: against ../runs_trace_off.jsonl (record without wall_s, label, trace, two_pressure_file, diag); sha_equals_stored: against the stored stage-5 line (5 jobs)",
+  "compare_gyro.csv": "diag1_* = diagnosis 1 (no gyro), B_* / C_* = this run; <step>_lever_z_m_s2 = lever term subtracted from f_z in the first step period, <step>_M_lever_z_kN = M_eff times it; candidates = leg:dp_h/threshold/outcome",
+  "sweep_summary.csv": "lift_phase_in_period_s = lift time modulo 0.1 s (lift - the sample before it); first_step_minus_lift_ms = first sample with a head step candidate after the lift minus the lift; max_ratio_to_threshold = |dr| / threshold, largest candidate (>= 1 = FAULT)"
+ },
+ "outputs_sha256": {
+  "A_gyro_off_trace_off.jsonl": "29ee8e57404a8aff5ee7088de238fb4503a8334d40a7ba2773f63169925f469c",
+  "A_gyro_off_trace_off.log.json": "f10c3354100328bae6f265559283510a41bca3037dc1fcbd83e09cdefb4dd5c7",
+  "B_gyro_all_trace_on.jsonl": "879bf40d87eef0d9bcde35a9ee42fce0ed224885cde434226de635601f664abd",
+  "B_gyro_all_trace_on.log.json": "4833560ed24f77cb987cf6fcfa0e9364f842d4080f4dc6fa293c82b896d37e5c",
+  "C_gyro_d1only_trace_on.jsonl": "0a37503d34b5f062940c7cd67cb1f6e3e2b5d0d93d3163903c4ce39719774fef",
+  "C_gyro_d1only_trace_on.log.json": "f4d6f9bb04b19717e0f0e65dad6e4b7e2fd27bf7926a2c4b292a7619a7b3575f",
+  "code/r51_gyro_switch.patch": "6f08df2278d29b119a2fa84723cb93a0005c0658a82ebf716dc9b21904713b92",
+  "compare_gyro.csv": "bab64e556f5c6486619bb72d0374913b193b442598cd913e655cd4ef861ede59",
+  "console_A.log": "0198b45d1aedbef102776ba788cb8d7b9cb26515e6fb81605ffe2f164c6b87d1",
+  "console_B.log": "a051c6e47505eaa8bc8f29d770b29ef91bf40ceb0dccc3e68303c8b0d7852877",
+  "console_C.log": "389a0acf2f2a62c0884d3af52eddd48dba4348652c73e65d3428a364c14bb111",
+  "console_D.log": "b07789f63687c9d847d4e379d16ff70d8a49d1480a0cd27f2e8860bf77b1cee3",
+  "console_E.log": "d76eb4dc245b46899ce8cb75977b512e50f4bcb9b5d06a9f5e8a49cd6b2c7dea",
+  "D_sweep_gyro_off_trace_on.jsonl": "21ebfd49f253a42f72e351ea703932879b034d479b3d68b0803cafea67a26535",
+  "D_sweep_gyro_off_trace_on.log.json": "20698199a9243b513a0e17821fe42d6c3b8879b25438634da2bdc2f609ee4293",
+  "E_sweep_ext_gyro_off_trace_on.jsonl": "ff729a7e2a07ea1b1194ffedd20544673667ab7e070970e328850f4efd8c4a35",
+  "E_sweep_ext_gyro_off_trace_on.log.json": "0fdccb2cbde407c350f1499d389c6515b7bd039fcb656606ee60a8b5c412f67b",
+  "first_step_period_B.csv": "1a65fb28028d8c80e8cafbb005d0c6a4176aef3772e9e09decc4eff685d5a95c",
+  "first_step_period_C.csv": "1a65fb28028d8c80e8cafbb005d0c6a4176aef3772e9e09decc4eff685d5a95c",
+  "first_step_period_D.csv": "61bc7d88fc5216affeda18e747b2183c91107fe11b2ccdd553104794732950ac",
+  "first_step_period_E.csv": "571a0d08b6b3d6a8ece6fe87d7a401ab730f629e8c63aa21f44bfcf28b79349e",
+  "gyro_availability_B.csv": "f0f575b9d3bf9c5a1b4587f26c720cb271155e1e67f317ed9327b2e770c9a470",
+  "gyro_availability_C.csv": "f0f575b9d3bf9c5a1b4587f26c720cb271155e1e67f317ed9327b2e770c9a470",
+  "gyro_availability_D.csv": "c33193a1398833a5700668649bd7f8085384a82435993db30de5940215d69bb5",
+  "gyro_availability_E.csv": "1dc2b34262bd5313362931d50d35247baee3be70f2c41d75b5e525fbfb8aae18",
+  "jobs_gyro.json": "c722ade097b899cb8ecdd2b5850275159097036e227d68d7e4a4084e9848858e",
+  "jobs_sweep.json": "f77321ee3407be9403ec52556e99c65b31a83ce2b7acd2e95f97b7e78c1d79a0",
+  "jobs_sweep_ext.json": "f29f463c26a22e77d8180c230afe519db5a6553ef6ec13653ea9e944a22bcbec",
+  "record_diff_vs_diag1.txt": "9ca2dc5b574c6d36def3dee624b0316f9a19bbc4e5651b9e766598fb67acc2cc",
+  "repro_check.csv": "df408e51aaab6a5f82b7ab655afea869c01e6d71a4baae6cd3667fc79713559e",
+  "step_candidates_B.csv": "6cc4fc7f507701cbaf3f90e1d48276bbb6f127e18397ff05664c84a73dccf4e5",
+  "step_candidates_C.csv": "6cc4fc7f507701cbaf3f90e1d48276bbb6f127e18397ff05664c84a73dccf4e5",
+  "step_candidates_D.csv": "73b881310d794ee30b45acda13b8151535bbaa5625561a3e8f8a5084b177f2a1",
+  "step_candidates_E.csv": "aab5f1999fdea3e0d96bab1833ff4ea6d8d5aa25c649f10afbefa9a4214a2d1a",
+  "sweep_summary.csv": "5902dba5b45bb5a25faed8121e6be550064798b20412dec4e22768dccd7b3fad",
+  "traces_B/trace_J1_l179_FR_Fs0_level_30mm004_o0875.json": "3958ae92f3a73d354b9ee091bf030a844a5ec8f458805292b4132f6299d2ece6",
+  "traces_B/trace_J2_l179_FR_Fs0_level_30mm004_o075.json": "7a60f94f51bf7772d0646577ccb00d971e5c2836a389240484fb6e14fec26a20",
+  "traces_B/trace_J3_l173_FL_Fs2_level_25mm005_o0875.json": "660472653da21641306d99eb7123e71cba72fdd12e267fffe0d3ec514695e3f7",
+  "traces_B/trace_J4_l270_FR_Fs1_ready_default_o0875.json": "ca2d65b7ace0f7fa092d1e37dc7e0bcaea6cd91e54ba63134196c283f71f89b3",
+  "traces_B/trace_S1_l173_FL_Fs2_level_30mm004_o0875.json": "9fa992fa8f9d4461ffec22526f81233d8231c6cca5f7af2f1ae5231b25415f5f",
+  "traces_B/trace_S2_FR_Fs2_level_30mm004_o075.json": "f8b94dde43e12441e00235f79e91d2ea5d049402e3aa830821c3bf6558c60fcb",
+  "traces_B/trace_S3_FL_Fs0_level_25mm005_o0875.json": "56dcb629acf79acfd63347e6ce04556e4fd8baaf83d709b6f29a5ceea22eca16",
+  "traces_C/trace_J1_l179_FR_Fs0_level_30mm004_o0875.json": "9fa88e07673774a19e4f769cc23b1b7c0098e17db3fbe7a5ecabb67f308a53d7",
+  "traces_C/trace_J2_l179_FR_Fs0_level_30mm004_o075.json": "e555b73ee42f2457288cfdcffa5d5bfaabffae27c7dfe3541fd2c6890503b3c4",
+  "traces_C/trace_J3_l173_FL_Fs2_level_25mm005_o0875.json": "de0bb2db5cd765aac7a9a3572fc63824237f98cff6d311275291e9d9d8532a6b",
+  "traces_C/trace_J4_l270_FR_Fs1_ready_default_o0875.json": "c7e4c95a484469cc3d21d92528a5e40cfc25b6776eaaa22c5b916ef0d15ae0af",
+  "traces_C/trace_S1_l173_FL_Fs2_level_30mm004_o0875.json": "8739907f6bd9d2f89fa6f8a1074a6e7b6bbda21c01855a5a629603ed96eab76e",
+  "traces_C/trace_S2_FR_Fs2_level_30mm004_o075.json": "9a1dc2d84581e27e4bc46ca40a2d449565e7172c64080e7ad3aa7ece71df8933",
+  "traces_C/trace_S3_FL_Fs0_level_25mm005_o0875.json": "1a52d5547c6dae94d2884aa224a87d8edca6323ee533dc7ec014a2cb7f7f0e94",
+  "traces_D/trace_J1shape_o0.0845.json": "b79163a5d83cb2fbaf44faf3cbf7bf7570c1e0c1dc4d35df4df39e977f535c49",
+  "traces_D/trace_J1shape_o0.0855.json": "a7c853a497df5bb947bd484d943a3134d5d2c3442ea92f74b775824ecd2553dc",
+  "traces_D/trace_J1shape_o0.0865.json": "3614f28e335e0429d36408734a68ed56b091af08a88773678d5635d30ce4215b",
+  "traces_D/trace_J1shape_o0.0875.json": "18b8e5e537e0011fbea0f86b139cff6a32d55af29fe2077fc5aaad84ea77d514",
+  "traces_D/trace_J1shape_o0.0885.json": "90ce79e548d684c1643151d9cfacac49f07678a7e540ee86e54c5495fb5bc9e3",
+  "traces_D/trace_J1shape_o0.0895.json": "cad995c0fd004afd7875e6286b725b21ead16356d47592d18741c4ff77f7468e",
+  "traces_D/trace_J1shape_o0.0905.json": "ab648bda47d0901367dabe951881b1bf9a0724d630e2fd28603228786f3a5b74",
+  "traces_D/trace_J1shape_o0.0915.json": "f8aea3bb25eb8e58d466ca1195a3a6df7877526c54755c54a5e558eb541806c6",
+  "traces_D/trace_J1shape_o0.0925.json": "36c5c69fe45f56bb0f4dd1089eb9745c1a782394f92348ef5e7d67f4ddf96473",
+  "traces_D/trace_J1shape_o0.0935.json": "696cc240074023043b281e3389beb6fcaed6ae8876fc90f580ab211bba21844c",
+  "traces_D/trace_J1shape_o0.0945.json": "60cfc874d1129abd2eb4a32ab5f6a4909f48a7b6920a5ec68aef99bc6beeef13",
+  "traces_D/trace_J1shape_o0.0955.json": "19e698fe578dd399c2a2a4e20fa7291811750af5e31ca521465925af4851cb84",
+  "traces_D/trace_J1shape_o0.0965.json": "5e39e0db7b24b9cb04e784b58f5a0566c97461d48dd3fabddbc7c674ec3b2a7b",
+  "traces_D/trace_J1shape_o0.0975.json": "c0f6e828830788d5ff27f38673a56328f60f75a32b2e52814ebd39c95069e07c",
+  "traces_D/trace_J1shape_o0.0985.json": "365764cd97513304ab7cd4d63efafa9ad02718e15dddb64c2c760e0202ac1dca",
+  "traces_D/trace_J1shape_o0.0995.json": "f2b93b5b97d271b3a9ee0c5226badbdb3ce10e1d8a6cbc410a14e15eaad791e8",
+  "traces_D/trace_J1shape_o0.1005.json": "c33b430e3f2ba2ae2e6e7ec3f1895d606c599591092cf42d7cc60f3d85bc3738",
+  "traces_D/trace_J3shape_o0.0845.json": "3bfa0567137aed6e4f24952bf7b0be6acdf8c6cb4f8f94ca0e44fe79ca3cd2e9",
+  "traces_D/trace_J3shape_o0.0855.json": "4a0bdc2a17fd0f5cd0223d03503973606ef8b1219b6a3a7ea511ba63b80fea39",
+  "traces_D/trace_J3shape_o0.0865.json": "19cae8e0fafe4d137a5096e91780855fe58416d4da8855e39857052c2439e7de",
+  "traces_D/trace_J3shape_o0.0875.json": "dc4e7de04130bbb3c13c83b3d3c212c7d93a2bea1911857d7773363c5d7a31fd",
+  "traces_D/trace_J3shape_o0.0885.json": "5b7901179b62ade2cf42e58640daecc0a5776ddd2af9545327bf0d051273187e",
+  "traces_D/trace_J3shape_o0.0895.json": "14b766779d2f4a4d438a2fb56a2191330cb786a3be5c3907dab8f6e6ff4bf540",
+  "traces_D/trace_J3shape_o0.0905.json": "45a07a5e32c6d6dc562f140703a8b77ba2e24f127ab0bc5f1f2a091c0b78d75d",
+  "traces_D/trace_J3shape_o0.0915.json": "80f67ba3037e304bb3f8ea54f4bb99f1e93937623e98f79275ec232559253123",
+  "traces_D/trace_J3shape_o0.0925.json": "5ba794f9103fd96a2b5fce3907ddc9752cbbb292d7a837bc42cda645e6d75b2d",
+  "traces_D/trace_J3shape_o0.0935.json": "2f5270498fa41971dc463a9e46a5082d2a5bbeffad5154c9d22f4f0e13fe0875",
+  "traces_D/trace_J3shape_o0.0945.json": "1b5ad2f0ff6f410b051c44effad16991f41079ef5a898c65c39771694c768640",
+  "traces_D/trace_J3shape_o0.0955.json": "3a0207b8a6e810fea3f2aacb105a25c9140e85e5b1dd8d8e0dd9bd6e808ade16",
+  "traces_D/trace_J3shape_o0.0965.json": "078717a4d34b8b122b4ffb7a21734942301572d51a2acd86191da0219fc91503",
+  "traces_D/trace_J3shape_o0.0975.json": "9343773ab5c674d9a243ca7087aa13507de1151cfeb50f1b8df71a915aac3814",
+  "traces_D/trace_J3shape_o0.0985.json": "a47b275868bc57eed58dd58a475ab578538ee50e10a400d194c5fe62823dddda",
+  "traces_D/trace_J3shape_o0.0995.json": "5b59c4e99ac093fb50b99fca1ad2153458ed8ee0625ca78a556fae03b54932fc",
+  "traces_D/trace_J3shape_o0.1005.json": "31e02179f0ca949cab4f6e9477e08b4fe4ec9025f6e40b7b4c4e0dcdd6fd15df",
+  "traces_E/trace_J1shape_o0.0745.json": "66050110d688926023b6ff4d3b389e9139ef042a352947b50a01b1fa9defbdcc",
+  "traces_E/trace_J1shape_o0.0755.json": "432dc721c89e6b5382bfdafd685b215b17f71e75087d9fa8c8416dd8de062395",
+  "traces_E/trace_J1shape_o0.0765.json": "b28ca2bd8bce8810867fd1e791f37065ac7127cd27216a9794a64eedb4ab0913",
+  "traces_E/trace_J1shape_o0.0775.json": "6c60c47590d3285b27c9b30550914822224c8d7f88c6cd23b22e3e6ff6d18945",
+  "traces_E/trace_J1shape_o0.0785.json": "7ad6e80acfd0987966534876e8a8dba0e245f0d45de705712a0225561e397506",
+  "traces_E/trace_J1shape_o0.0795.json": "c0db4866798cd1aeaf0942a0728a81478c0b695c86563283b9ffde1b203a791a",
+  "traces_E/trace_J1shape_o0.0805.json": "6e0c07286d9a03fcde9661572d648e56f5ceb4a055cdd32d0bfe3147a669c9d5",
+  "traces_E/trace_J1shape_o0.0815.json": "7703984c1a4611ca1113a40bd98e275cb360dd5048b2df9291388bb78e9c1263",
+  "traces_E/trace_J1shape_o0.0825.json": "41d81da1775108f4bf638af0111d2c3a6ae57680b0cd011f4a72dc0d76ccecde",
+  "traces_E/trace_J1shape_o0.0835.json": "adf221dd6d0008cdcddf82fa1a2d8d6549c0d08ddb3d26cef79db8f06d5ca23a",
+  "traces_E/trace_J3shape_o0.0745.json": "7e40d9eda540befc15a0ed2bb3331de6717f486b6781c6fa095106e35ee620b1",
+  "traces_E/trace_J3shape_o0.0755.json": "76c6fbae8c67969829a6ba422b103b62b323826570143cac9428c5af76a6284c",
+  "traces_E/trace_J3shape_o0.0765.json": "c9ec585c6f29326c703a234bb2ddcd0e496c0460153abd071ccaa6b794535be7",
+  "traces_E/trace_J3shape_o0.0775.json": "140e992dd4a2773768b37dbf297a738cf9725f7ed533bac770c4f32908680556",
+  "traces_E/trace_J3shape_o0.0785.json": "08813d765e2660e3a58e58fd6e5660bbad6c5207b1411a66a82f410015509b36",
+  "traces_E/trace_J3shape_o0.0795.json": "259104e90023216581daba5110f173e604fdcac683a58f7ebde2a7c62b83da9d",
+  "traces_E/trace_J3shape_o0.0805.json": "496025247c6e39158bbab6404e9d3fef16502e7b37acaa4476bb5eb75feaedf2",
+  "traces_E/trace_J3shape_o0.0815.json": "e9ceb53b3030fc7a0794355688b932c3fb4ddb3711b287ef88fe8e6c75bc6ccb",
+  "traces_E/trace_J3shape_o0.0825.json": "5c227ba0853511e3cfdde6783d4219357c57f43ea876da88accd225a62915e2f",
+  "traces_E/trace_J3shape_o0.0835.json": "67dc71ecdb277a3e78f8caf749f0ad4ac81026965e394b4dac8c608b15252d2f"
+ }
+}

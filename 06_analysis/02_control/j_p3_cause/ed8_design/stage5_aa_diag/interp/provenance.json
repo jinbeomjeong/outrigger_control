@@ -1,0 +1,23 @@
+{
+ "made": "2026-11-28 dynamics-expert; interpretation of the stage-5 A/A D1 diagnosis (edition 9 design input, record only, not a judgement)",
+ "inputs": "../first_step_period.csv, ../event_window.csv (python-expert, worktree ed8-diag), 02_params/rexome33.yaml (bottom auger level CoM / inertia, pad_bottom_center_retracted_m, head / annulus areas)",
+ "env": "conda dynamics-dev python.exe -I -B <script> <stage5_aa_diag folder>",
+ "files": {
+  "window_rows.csv": "s1_window.py: periods t_event-0.15 .. +0.45 s of the primary monitor per label",
+  "residual_split.csv": "s2_lever.py: rigid-body split of r into lever and window shares (estimate)",
+  "pair_periods.csv": "s3_corrected.py: lift-adjacent period k and step period k+1 per label",
+  "cp95_table.csv": "s3_corrected.py: one-sided 95 % Clopper-Pearson upper bound for x/310"
+ },
+ "columns": {
+  "t_rel_lift_s": {"definition": "t_s - lift_s (lift_s from first_step_period.csv)", "code": "s1_window.py:34", "unit": "s", "sign": "negative = sample before the event-leg lift"},
+  "alpha_x_rad_s2 / alpha_y_rad_s2": {"definition": "I^-1 sum (p_i - c) x (0,0,F_i), F_i = p_h A_p - p_r A_ann at the pad xy", "code": "s2_lever.py:41-47", "unit": "rad/s^2", "note": "ASSUMPTION: vertical forces only (lateral bushing moments and omega^2 terms left out), bottom-auger inertia about the CoM, body = world axes"},
+  "lever_z_m_s2": {"definition": "(alpha x r_imu)_z, r_imu = (0.31, 0.88, 0.040) - CoM", "code": "s2_lever.py:48", "unit": "m/s^2"},
+  "residual_kN": {"definition": "trace r = sum F - M_eff f_z_used", "code": "s2_lever.py:50", "unit": "kN"},
+  "lever_share_kN": {"definition": "-M_eff lever_z (the part an ideal lever correction would remove)", "code": "s2_lever.py:51-52", "unit": "kN"},
+  "window_share_kN": {"definition": "residual - lever_share (instantaneous pressure vs 10 ms IMU mean timing, plus any model error of the alpha estimate, seal and M_eff bias)", "code": "s2_lever.py:58", "unit": "kN", "note": "relation: residual = lever_share + window_share"},
+  "event_leg_unloaded_at_k": {"definition": "1 - p_h,event leg(t_k) / p_h,event leg(first window row)", "code": "s3_corrected.py:31-33", "unit": "-"},
+  "abs_dr_kN": {"definition": "|r_k+1 - r_k| (= trace residual_change at k+1)", "code": "s3_corrected.py:34", "unit": "kN"},
+  "abs_dr_lever_corrected_kN": {"definition": "|window_share_k+1 - window_share_k| (estimate of |dr| with an ideal instantaneous lever correction)", "code": "s3_corrected.py:36-41", "unit": "kN"},
+  "unexplained_now / unexplained_if_lever_corrected": {"definition": "candidate legs with |dr| (resp. corrected) >= threshold_kN (0.5 |dp_h| A_p)", "code": "s3_corrected.py:43-44", "unit": "leg list"}
+ }
+}

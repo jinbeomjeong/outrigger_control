@@ -1,0 +1,71 @@
+{
+ "argv": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+  "--jobs",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_gyro.json",
+  "--gyro",
+  "all",
+  "--out-jsonl",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\B_gyro_all_trace_on.jsonl",
+  "--trace-dir",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_B",
+  "--worktree",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+  "--mask",
+  "0xFFF3",
+  "--workers",
+  "8"
+ ],
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "gyro_mode": "all",
+ "started": "2026-11-28 13:54:08 +0900",
+ "mask": "0xFFF3",
+ "workers": 8,
+ "environment": {
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB",
+  "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+  "R51_DIAG_GYRO_SAMPLES": "on"
+ },
+ "runs": [
+  {
+   "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+   "wall_s": 24.9,
+   "state": "fault bdcb1d882497"
+  },
+  {
+   "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+   "wall_s": 19.5,
+   "state": "ready 165ada369fbd"
+  },
+  {
+   "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+   "wall_s": 20.2,
+   "state": "ready 6e5b583914f3"
+  },
+  {
+   "label": "J4_l270_FR_Fs1_ready_default_o0875",
+   "wall_s": 26.8,
+   "state": "fault dd217e437e39"
+  },
+  {
+   "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+   "wall_s": 24.8,
+   "state": "fault be59c0bcfb8c"
+  },
+  {
+   "label": "S2_FR_Fs2_level_30mm004_o075",
+   "wall_s": 19.9,
+   "state": "ready 312ea7570f5d"
+  },
+  {
+   "label": "S3_FL_Fs0_level_25mm005_o0875",
+   "wall_s": 19.8,
+   "state": "ready a489671712df"
+  }
+ ],
+ "done": "2026-11-28 13:54:36 +0900"
+}

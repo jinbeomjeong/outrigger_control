@@ -1,0 +1,413 @@
+{
+  "tool": "worktree_tests",
+  "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+  "data_root": "C:\\workspace\\outrigger_control",
+  "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "inifile": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\pyproject.toml",
+  "rebase_dirs": [
+    "07_results"
+  ],
+  "probe_modules": [
+    "outrigger_sim"
+  ],
+  "pin_modules": [],
+  "run_dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308",
+  "progress_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\progress.json",
+  "pytest": {
+    "command": [
+      "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+      "-B",
+      "-m",
+      "pytest",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree\\05_tests\\unit\\test_two_pressure_d1_imu.py",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree\\05_tests\\unit\\test_two_pressure_d1_steps.py",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree\\05_tests\\unit\\test_two_pressure_d1_drain.py",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree\\05_tests\\unit\\test_two_pressure_lock_bound.py",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree\\05_tests\\unit\\test_two_pressure_lock_valve.py",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree\\05_tests\\unit\\test_two_pressure_cb_moving.py",
+      "--rootdir",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree",
+      "--confcutdir",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\tree",
+      "-c",
+      "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\pyproject.toml",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "_wt_probe",
+      "--junitxml",
+      "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag\\wt_runs\\wt_tests_20261128_132922_48308\\junit.xml",
+      "-q",
+      "-rfEsxX"
+    ],
+    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+    "dropped_environment": [],
+    "set_environment": [],
+    "exit_code": 0,
+    "wall_s": 349.6,
+    "log_tail": [
+      "........................................................................ [ 33%]",
+      "........................................................................ [ 66%]",
+      "........................................................................ [100%]",
+      "216 passed in 348.59s (0:05:48)"
+    ]
+  },
+  "tests": {
+    "tests": 216,
+    "passed": 216,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0
+  },
+  "cases": [],
+  "probe_records": [
+    {
+      "worker": "main",
+      "pid": 34436,
+      "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+      "modules": {
+        "outrigger_sim": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\03_src\\outrigger_sim\\__init__.py"
+      },
+      "pinned": {},
+      "rebase": {
+        "rebased": 6,
+        "already_in_data_root": 0,
+        "unmatched": 0
+      },
+      "rebased_examples": [
+        [
+          "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\07_results",
+          "C:\\workspace\\outrigger_control\\07_results"
+        ]
+      ],
+      "unmatched_values": [],
+      "progress_write_errors": 0
+    }
+  ],
+  "rebase_totals": {
+    "rebased": 6,
+    "already_in_data_root": 0,
+    "unmatched": 0
+  },
+  "copies": [
+    {
+      "file": "05_tests/unit/test_two_pressure_d1_imu.py",
+      "is_test": true,
+      "file_references": 2,
+      "wrapped": [
+        {
+          "line": 429,
+          "expression": "Path(__file__).resolve().parents[2] / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": [
+        {
+          "line": 592,
+          "text": "07_results/S8 D1' ML records not present"
+        },
+        {
+          "line": 604,
+          "text": "07_results/S8 ML pilot not present"
+        },
+        {
+          "line": 617,
+          "text": "07_results/S8 old ML episodes not present"
+        },
+        {
+          "line": 636,
+          "text": "07_results/S8 ML pilot not present"
+        },
+        {
+          "line": 720,
+          "text": "07_results/S8 ML pilot not present"
+        }
+      ]
+    },
+    {
+      "file": "05_tests/unit/test_two_pressure_d1_steps.py",
+      "is_test": true,
+      "file_references": 1,
+      "wrapped": [
+        {
+          "line": 266,
+          "expression": "Path(__file__).resolve().parents[2] / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": [
+        {
+          "line": 318,
+          "text": "07_results/S8 old ML episodes absent"
+        },
+        {
+          "line": 339,
+          "text": "07_results/S8 ML pilot bases not present"
+        }
+      ]
+    },
+    {
+      "file": "05_tests/unit/test_two_pressure_d1_drain.py",
+      "is_test": true,
+      "file_references": 1,
+      "wrapped": [
+        {
+          "line": 241,
+          "expression": "Path(__file__).resolve().parents[2] / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": [
+        {
+          "line": 415,
+          "text": "07_results/S8 records absent"
+        }
+      ]
+    },
+    {
+      "file": "05_tests/unit/test_two_pressure_lock_bound.py",
+      "is_test": true,
+      "file_references": 1,
+      "wrapped": [
+        {
+          "line": 52,
+          "expression": "Path(__file__).resolve().parents[2] / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": [
+        {
+          "line": 371,
+          "text": "07_results/S8 ML pilot bases not present"
+        }
+      ]
+    },
+    {
+      "file": "05_tests/unit/test_two_pressure_lock_valve.py",
+      "is_test": true,
+      "file_references": 1,
+      "wrapped": [
+        {
+          "line": 47,
+          "expression": "Path(__file__).resolve().parents[2] / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": [
+        {
+          "line": 286,
+          "text": "07_results/S8 CB batch not present"
+        },
+        {
+          "line": 293,
+          "text": "07_results/S8 p1r batch not present"
+        },
+        {
+          "line": 304,
+          "text": "07_results/S8 p1r batch not present"
+        },
+        {
+          "line": 315,
+          "text": "07_results/S8 ML pilot bases not present"
+        }
+      ]
+    },
+    {
+      "file": "05_tests/unit/test_two_pressure_cb_moving.py",
+      "is_test": true,
+      "file_references": 1,
+      "wrapped": [
+        {
+          "line": 272,
+          "expression": "Path(__file__).resolve().parents[2] / \"07_results\""
+        }
+      ],
+      "unwrapped_literals": [
+        {
+          "line": 334,
+          "text": "07_results/S8 CB batches not present"
+        }
+      ]
+    },
+    {
+      "file": "05_tests/conftest.py",
+      "is_test": false,
+      "file_references": 1,
+      "wrapped": [],
+      "unwrapped_literals": []
+    }
+  ],
+  "originals": {
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\unit\\test_two_pressure_d1_imu.py": "f4c7e048e8adb5613c73c68ffed5931304ba5b7d2054f8eb148bfbc7895cd617",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\unit\\test_two_pressure_d1_steps.py": "3d6ec38d36340bd5ee7c43aa2cd2c5015e33c214def9afcf84f126a6e65b640b",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\unit\\test_two_pressure_d1_drain.py": "0ad54d31c1524fc9d0d0c633baa97740e2277c45ceb57a19584bc213b8362089",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\unit\\test_two_pressure_lock_bound.py": "91329b1539cc0bd5ca23c70f97e48fa4af2fac384691687342c0e125814c04ae",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\unit\\test_two_pressure_lock_valve.py": "bc88e8a595447459502d621066ade577d5aa5f37fdacbc56a988359b86064b65",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\unit\\test_two_pressure_cb_moving.py": "88fc5500d119272538f4db6eeb6d20ce7e08b2130dedb4de22f6bfc023331075",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\05_tests\\conftest.py": "035a1b6ff423b47e59e4d0def251c442e3601dc8bfe256d8cc763fedd4749edc"
+  },
+  "worktree_status": {
+    "before": 2,
+    "after": 2,
+    "after_cleanup": null,
+    "new_count": 0,
+    "new": [],
+    "new_kinds": {
+      "pycache": 0,
+      "hypothesis": 0,
+      "other": 0
+    },
+    "removed_pycache": [],
+    "error": ""
+  },
+  "summary": {
+    "tool": "worktree_tests",
+    "command": "run",
+    "pytest_exit": 0,
+    "pytest_exit_text": "모든 시험 통과",
+    "tests": 216,
+    "passed": 216,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0,
+    "probe": {
+      "outrigger_sim": "worktree"
+    },
+    "rebased_paths": 6,
+    "copies": 7,
+    "test_files": 6,
+    "args_file": false,
+    "originals_unchanged": true,
+    "run_dir_removed": true,
+    "status_lines_before": 2,
+    "status_lines_after": 2,
+    "error": 0,
+    "warning": 14,
+    "info": 1,
+    "categories": {
+      "data_literal_not_rebased": 14,
+      "probe_worktree": 1
+    }
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_cb_moving.py",
+      "line": 334,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 CB batches not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_drain.py",
+      "line": 415,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 records absent': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_imu.py",
+      "line": 592,
+      "message": "감싸지 않은 데이터 경로 글자 \"07_results/S8 D1' ML records not present\": 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_imu.py",
+      "line": 604,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 ML pilot not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_imu.py",
+      "line": 617,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 old ML episodes not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_imu.py",
+      "line": 636,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 ML pilot not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_imu.py",
+      "line": 720,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 ML pilot not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_steps.py",
+      "line": 318,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 old ML episodes absent': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_d1_steps.py",
+      "line": 339,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 ML pilot bases not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_lock_bound.py",
+      "line": 371,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 ML pilot bases not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_lock_valve.py",
+      "line": 286,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 CB batch not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_lock_valve.py",
+      "line": 293,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 p1r batch not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_lock_valve.py",
+      "line": 304,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 p1r batch not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "warning",
+      "category": "data_literal_not_rebased",
+      "file": "05_tests/unit/test_two_pressure_lock_valve.py",
+      "line": 315,
+      "message": "감싸지 않은 데이터 경로 글자 '07_results/S8 ML pilot bases not present': 여기는 worktree를 읽는다",
+      "target": ""
+    },
+    {
+      "severity": "info",
+      "category": "probe_worktree",
+      "file": "probe",
+      "line": 0,
+      "message": "worktree에서 import됨: C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag\\03_src\\outrigger_sim\\__init__.py (main)",
+      "target": "outrigger_sim"
+    }
+  ]
+}

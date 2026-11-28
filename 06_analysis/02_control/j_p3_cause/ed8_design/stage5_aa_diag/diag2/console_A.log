@@ -1,0 +1,31 @@
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: FAULT_HEAD_PRESSURE:RL
+C2 t=24.80 s: fault_reground_start:FL
+C2 t=24.70 s: leg_reapproach_start:FR
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: FAULT_HEAD_PRESSURE:FL
+C2 t=24.90 s: FAULT_HEAD_PRESSURE:RR
+C2 t=25.10 s: leg_reapproach_start:RL
+C2 t=25.80 s: WARN_FAULT_REGROUND_ABORT:protected_leg_low
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: leg_reapproach_start:FL
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.20 s: leg_reapproach_start:RR
+C2 t=25.20 s: leg_reapproach_start:RL
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: FAULT_HEAD_PRESSURE:RR
+J1_l179_FR_Fs0_level_30mm004_o0875 gyro=off trace=False: fault bdcb1d882497
+J2_l179_FR_Fs0_level_30mm004_o075 gyro=off trace=False: ready 165ada369fbd
+J3_l173_FL_Fs2_level_25mm005_o0875 gyro=off trace=False: ready 6e5b583914f3
+J4_l270_FR_Fs1_ready_default_o0875 gyro=off trace=False: fault dd217e437e39
+S1_l173_FL_Fs2_level_30mm004_o0875 gyro=off trace=False: fault be59c0bcfb8c
+S2_FR_Fs2_level_30mm004_o075 gyro=off trace=False: ready 312ea7570f5d
+S3_FL_Fs0_level_25mm005_o0875 gyro=off trace=False: ready a489671712df

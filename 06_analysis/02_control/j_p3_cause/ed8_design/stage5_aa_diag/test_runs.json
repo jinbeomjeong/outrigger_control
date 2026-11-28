@@ -1,0 +1,22 @@
+{
+ "what": "Tests run on the ed8-diag worktree (C8 56849248 + D1 trace change), 2026-11-28",
+ "runs": [
+  {
+   "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -m pytest -q -p no:cacheprovider 05_tests/unit/test_two_pressure_d1_trace.py",
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+   "environment": {"PYTHONDONTWRITEBYTECODE": "1", "MKL_THREADING_LAYER": "TBB"},
+   "result": "3 passed"
+  },
+  {
+   "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -m pytest -q -p no:cacheprovider -rs 05_tests/unit/test_two_pressure*.py (10 files)",
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+   "environment": {"PYTHONDONTWRITEBYTECODE": "1", "MKL_THREADING_LAYER": "TBB"},
+   "result": "197 passed, 49 skipped (all skips: stored 07_results/S8 records absent in the worktree)"
+  },
+  {
+   "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\worktree_tests.py --worktree <ed8-diag> --data-root C:\\workspace\\outrigger_control --python C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe --test test_two_pressure_d1_imu.py test_two_pressure_d1_steps.py test_two_pressure_d1_drain.py test_two_pressure_lock_bound.py test_two_pressure_lock_valve.py test_two_pressure_cb_moving.py --probe-module outrigger_sim --remove-new-pycache --format json",
+   "result": "216 passed, 0 skipped, probe outrigger_sim = worktree, originals unchanged; tool exit 1 = 14 warnings data_literal_not_rebased (the 07_results words are in pytest skip-reason strings, not paths; no test skipped)",
+   "report": "test_worktree_tests.json"
+  }
+ ]
+}

@@ -1,0 +1,206 @@
+{
+ "argv": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\scripts\\d2_run.py",
+  "--jobs",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\jobs_sweep.json",
+  "--gyro",
+  "off",
+  "--out-jsonl",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\D_sweep_gyro_off_trace_on.jsonl",
+  "--trace-dir",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\traces_D",
+  "--worktree",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-diag",
+  "--mask",
+  "0xFFF3",
+  "--workers",
+  "8"
+ ],
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "gyro_mode": "off",
+ "started": "2026-11-28 13:55:03 +0900",
+ "mask": "0xFFF3",
+ "workers": 8,
+ "environment": {
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB",
+  "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-expert-ed8diag2\\numba_cache",
+  "R51_DIAG_GYRO_SAMPLES": null
+ },
+ "runs": [
+  {
+   "label": "J1shape_o0.0845",
+   "wall_s": 26.9,
+   "state": "fault f598c7d8f1a5"
+  },
+  {
+   "label": "J1shape_o0.0855",
+   "wall_s": 28.0,
+   "state": "fault 002331350141"
+  },
+  {
+   "label": "J1shape_o0.0865",
+   "wall_s": 27.8,
+   "state": "fault 2452ebfa5b17"
+  },
+  {
+   "label": "J1shape_o0.0875",
+   "wall_s": 28.1,
+   "state": "fault bdcb1d882497"
+  },
+  {
+   "label": "J1shape_o0.0885",
+   "wall_s": 28.1,
+   "state": "fault 572dc47e3fe0"
+  },
+  {
+   "label": "J1shape_o0.0895",
+   "wall_s": 28.6,
+   "state": "fault 9a82da169201"
+  },
+  {
+   "label": "J1shape_o0.0905",
+   "wall_s": 21.1,
+   "state": "ready f8c467805d79"
+  },
+  {
+   "label": "J1shape_o0.0915",
+   "wall_s": 20.8,
+   "state": "ready 5384801410e3"
+  },
+  {
+   "label": "J1shape_o0.0925",
+   "wall_s": 21.0,
+   "state": "ready 3c851c68d24a"
+  },
+  {
+   "label": "J1shape_o0.0935",
+   "wall_s": 21.4,
+   "state": "ready e707b46e2242"
+  },
+  {
+   "label": "J1shape_o0.0945",
+   "wall_s": 22.1,
+   "state": "ready 1f9c7ab97572"
+  },
+  {
+   "label": "J1shape_o0.0955",
+   "wall_s": 22.1,
+   "state": "ready a4dd4e837c33"
+  },
+  {
+   "label": "J1shape_o0.0965",
+   "wall_s": 22.1,
+   "state": "ready b452ee8c30c7"
+  },
+  {
+   "label": "J1shape_o0.0975",
+   "wall_s": 22.3,
+   "state": "ready 9fba8a543c8a"
+  },
+  {
+   "label": "J1shape_o0.0985",
+   "wall_s": 22.2,
+   "state": "ready e1e386190af0"
+  },
+  {
+   "label": "J1shape_o0.0995",
+   "wall_s": 22.4,
+   "state": "ready 0a28a2af12ee"
+  },
+  {
+   "label": "J1shape_o0.1005",
+   "wall_s": 22.3,
+   "state": "ready d6006b1c423d"
+  },
+  {
+   "label": "J3shape_o0.0845",
+   "wall_s": 22.7,
+   "state": "ready f042151c9055"
+  },
+  {
+   "label": "J3shape_o0.0855",
+   "wall_s": 23.1,
+   "state": "ready f2021bedda6b"
+  },
+  {
+   "label": "J3shape_o0.0865",
+   "wall_s": 22.7,
+   "state": "ready 3bc428ad32f6"
+  },
+  {
+   "label": "J3shape_o0.0875",
+   "wall_s": 23.8,
+   "state": "ready 6e5b583914f3"
+  },
+  {
+   "label": "J3shape_o0.0885",
+   "wall_s": 23.5,
+   "state": "ready e1fdd6cf5ea1"
+  },
+  {
+   "label": "J3shape_o0.0895",
+   "wall_s": 23.1,
+   "state": "ready 9dbfef71dc47"
+  },
+  {
+   "label": "J3shape_o0.0905",
+   "wall_s": 22.9,
+   "state": "ready 40b87eec1fa8"
+  },
+  {
+   "label": "J3shape_o0.0915",
+   "wall_s": 22.9,
+   "state": "ready 3b90c657d14f"
+  },
+  {
+   "label": "J3shape_o0.0925",
+   "wall_s": 23.1,
+   "state": "ready 810c4a4d0f47"
+  },
+  {
+   "label": "J3shape_o0.0935",
+   "wall_s": 23.0,
+   "state": "ready 4eecb7ea5d88"
+  },
+  {
+   "label": "J3shape_o0.0945",
+   "wall_s": 22.1,
+   "state": "ready c6f3875f1c0f"
+  },
+  {
+   "label": "J3shape_o0.0955",
+   "wall_s": 22.6,
+   "state": "ready f68a9e809aeb"
+  },
+  {
+   "label": "J3shape_o0.0965",
+   "wall_s": 22.2,
+   "state": "ready 73b87e17f8eb"
+  },
+  {
+   "label": "J3shape_o0.0975",
+   "wall_s": 22.2,
+   "state": "ready 11ec092764e7"
+  },
+  {
+   "label": "J3shape_o0.0985",
+   "wall_s": 22.2,
+   "state": "ready 649d638e7d05"
+  },
+  {
+   "label": "J3shape_o0.0995",
+   "wall_s": 17.4,
+   "state": "ready 9b31bb4b30ed"
+  },
+  {
+   "label": "J3shape_o0.1005",
+   "wall_s": 16.8,
+   "state": "ready ef382dc53c1b"
+  }
+ ],
+ "done": "2026-11-28 13:56:55 +0900"
+}
