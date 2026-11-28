@@ -1,0 +1,542 @@
+{
+ "meta": {
+  "script": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\v5-imua\\04_scripts\\03_control\\s9\\b5_baseline_compare.py",
+  "jobs": 1,
+  "workers": 1,
+  "official": false,
+  "allow_no_settle_row": false,
+  "settle_table_sha256": "7ea9a01d039a72519d7ccd1b8f8a2ab4535901e5e431788f7c0213d96568e074",
+  "controller_settings": {
+   "IND_LAS": {
+    "soil_stop": null,
+    "soil_stop_scope": null,
+    "flat_soil_margin_m": null
+   }
+  },
+  "r72_path_env": "per_leg",
+  "wall_s": 122.7,
+  "affinity": "0xf000000",
+  "v5": {
+   "imu_sensor": {
+    "model": "inclinometer",
+    "gains_preset": "v5_A",
+    "attitude_kp": 0.1,
+    "attitude_ki": 0.004,
+    "guard_kg": 0.08,
+    "sensor": {
+     "kind": "inclinometer",
+     "sample_period_s": 0.01,
+     "delay_samples": 2,
+     "resolution_rad": 0.00017453292519943296,
+     "resolution_deg": 0.01,
+     "internal_filter": "bessel2",
+     "internal_filter_hz": 1.0,
+     "a_1_1_s": 13.843130589492304,
+     "a_0_1_s2": 63.877421505912515
+    },
+    "raw_imu": "error-free (the harness IMU samples), ImuErrorConfig()",
+    "controller": {
+     "imu_outputs": "attitude",
+     "probe_cue": "off",
+     "two_pressure": "D1' explained (d1_prime_two_pressure)"
+    }
+   },
+   "imu_sensor_industry": {
+    "model": "inclinometer",
+    "sensor": {
+     "kind": "inclinometer",
+     "sample_period_s": 0.01,
+     "delay_samples": 2,
+     "resolution_rad": 0.00017453292519943296,
+     "resolution_deg": 0.01,
+     "internal_filter": "bessel2",
+     "internal_filter_hz": 1.0,
+     "a_1_1_s": 13.843130589492304,
+     "a_0_1_s2": 63.877421505912515
+    },
+    "raw_imu": "error-free (the harness IMU samples), ImuErrorConfig()",
+    "controller": {
+     "c8": "constants unchanged; the inclinometer angles go into the C8 attitude low-pass in place of the tilt from the specific force"
+    }
+   },
+   "imua_record_dir": "u6_b5_main_VB_IND_LAS_imua",
+   "v5_setting": "VB",
+   "controller_tags": {
+    "IND_LAS": "IND_LAS"
+   },
+   "definitions": {
+    "IND_LAS": {
+     "setting": "VB",
+     "flow_setting": {
+      "is_enabled": true,
+      "eta_v": 0.85,
+      "dp_comp_Pa": null,
+      "dp_unload_Pa": null,
+      "width_Pa": null,
+      "law": null,
+      "always_solve": false
+     },
+     "hydraulic_options": {
+      "flow": null,
+      "valve_tau_s": null,
+      "rod_release_force": true,
+      "check_delay": null,
+      "lock_closure": {
+       "overlap_ratio": 0.02,
+       "closing_delay_s": 0.05
+      },
+      "lock_window_follows_plant": true,
+      "m2_law": "flow_limited_r5"
+     },
+     "controller_tag": "IND_LAS"
+    }
+   },
+   "definition_sha256": {
+    "IND_LAS": "6ea95f283612047f4e23e73c6748d1e30c7efb1b2400042814e505db5f00de45"
+   },
+   "code": {
+    "commit": "2ea96c9674d28653879194ae6293f085db32782f",
+    "dirty": true
+   },
+   "rules": "u3_u6_rerun_rules.md",
+   "rules_sha256": "8de318825764114ad14afcec362c87c1e01a2ad47195b8491b1c96056e1960b3",
+   "head_only_declared": true,
+   "ids_from": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-imua\\ids\\ids_b5main.json",
+   "ids_from_sha256": "18e1221fc4678b2f91f368aa774f8dab27d4698e42bf27aeb29e73cc09a054ac",
+   "pad": null,
+   "n_keys": 1,
+   "commands_sha256": "per run: v5.commands_sha256 (screen hash) and v5.logged_commands_sha256 (verdict_runs log)"
+  }
+ },
+ "records": [
+  {
+   "case": "A1-rigid",
+   "src": "H5|rigid|B|top|flat",
+   "controller": "IND_LAS",
+   "lite_pass": true,
+   "lite_gates": {
+    "ready_no_fault": true,
+    "crawler": true,
+    "Fmin": true,
+    "att": true,
+    "rut": true,
+    "stroke": true
+   },
+   "t_ready_s": 28.599999999978696,
+   "final_phase": "ready",
+   "fault": false,
+   "att_end_deg": [
+    -0.0039,
+    0.0279
+   ],
+   "att_end_absmax_deg": 0.0279,
+   "att_ok": true,
+   "F_min_kN": 9.415,
+   "min_Fcyl_after_off_kN": 67.72234252288615,
+   "below_Fmin_after_off_s": 0,
+   "min_Fcyl_after_ready_kN": 67.9378731500556,
+   "below_Fmin_after_ready_s": 0,
+   "t_event_s": null,
+   "min_Fcyl_after_event_kN": null,
+   "crawler_N_at_ready": 0.0,
+   "crawler_N_max_after_ready": 0.0,
+   "n_crawler_recontact": 0,
+   "crawler_liftoff_fail": false,
+   "n_loc": 0,
+   "false_loc": [],
+   "rut_all_ready_mm": 57.11,
+   "rut_settle_ready_mm": 58.36676169131438,
+   "clear_est_ready_mm": 57.16478928164359,
+   "p_max_move_bar": 94.21,
+   "p_max_lock_bar": 90.69,
+   "p_max_move_leg": "FL",
+   "max_motor_stroke_mm": 412.34,
+   "commands_sha256": "360a48311bc57dc3c0b29dbbc289f021b183ee548c826cd1e9b73798f79fbfe5",
+   "warnings": [],
+   "liftoff_slow_events": [],
+   "phase_path": [
+    [
+     18.9,
+     "level"
+    ],
+    [
+     28.5,
+     "done"
+    ],
+    [
+     28.6,
+     "ready"
+    ]
+   ],
+   "sim_end_s": 38.60000000000228,
+   "v5": {
+    "v5_setting": "VB",
+    "controller_tag": "IND_LAS_IMUA",
+    "extend_start": {
+     "rule": null,
+     "revision": null
+    },
+    "hydraulic_options": {
+     "flow": null,
+     "valve_tau_s": null,
+     "rod_release_force": true,
+     "check_delay": null,
+     "lock_closure": {
+      "overlap_ratio": 0.02,
+      "closing_delay_s": 0.05
+     },
+     "lock_window_follows_plant": true,
+     "m2_law": "flow_limited_r5"
+    },
+    "definition_sha256": "6ea95f283612047f4e23e73c6748d1e30c7efb1b2400042814e505db5f00de45",
+    "code": {
+     "commit": "2ea96c9674d28653879194ae6293f085db32782f",
+     "dirty": true
+    },
+    "head_only_declared": true,
+    "has_rod_reading": false,
+    "j_p3": "not_applicable",
+    "commands_sha256": "360a48311bc57dc3c0b29dbbc289f021b183ee548c826cd1e9b73798f79fbfe5",
+    "logged_commands_sha256": null,
+    "t_lift_s": null,
+    "rod_pressure_fallback_events": 0,
+    "las_events": {
+     "liftoff_slow": [],
+     "fault_names": [],
+     "event_count": 6
+    },
+    "resume_k1": {
+     "applicable": false,
+     "reason": "no C2 configuration (C8 skeleton)"
+    },
+    "hydraulics_record": {
+     "m2_law": {
+      "law": "flow_limited_r5",
+      "rule": "moving p_r: lag to p* capped by the valve flow; retract meter-in A_ann |u|, extend meter-out b_T A_h |u| sqrt((p_r - p_T) / dp_c); C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included; M2 reads p_hat = p_r + Delta w, Delta = p_r0 - p_r,rel at the release, w = base release decay (revision 4); extension lock anchor p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor), p_tr = moving rod pressure before the lock, p* = extension target; retract lock keeps p_ret (revision 5)",
+      "meter_out_ratio": 1.0,
+      "spool_reference_drop_Pa": 1000000.0,
+      "tank_pressure_Pa": 200000.0,
+      "status": "ASSUMPTION b_T, dp_c, p_T (coupled/params.py values)"
+     },
+     "m2_shift_total_mm": [
+      -0.110428682980374,
+      -0.07199176149492453,
+      -0.08133780461701173,
+      -0.08133780461701191
+     ],
+     "m2_clipped_steps": [
+      25,
+      25,
+      28,
+      28
+     ],
+     "ext_lock_count": [
+      3,
+      2,
+      2,
+      2
+     ],
+     "ext_lock_excess_count": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ext_lock_excess_max_bar": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "ext_lock_risk_count": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ext_lock_knee_max_kN": [
+      4.0890357108266855,
+      4.0890357108266855,
+      3.170129809504481,
+      3.170129809504481
+     ],
+     "ext_lock_log": [
+      [
+       19.647,
+       2,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       19.647,
+       3,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       23.55,
+       0,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       23.55,
+       1,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       26.647,
+       0,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       26.647,
+       1,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       28.05,
+       0,
+       499999.98774260125,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       28.05,
+       2,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       28.05,
+       3,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ]
+     ],
+     "ext_lock_log_columns": [
+      "t_s",
+      "leg",
+      "p_tr_Pa",
+      "p_star_Pa",
+      "p_r0_Pa",
+      "dF_knee_N"
+     ],
+     "m2_clipped_steps_pre_lift": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "m2_clipped_steps_post_lift": [
+      25,
+      25,
+      28,
+      28
+     ],
+     "m2_clip_split_t_lift_s": null,
+     "lock_events": [
+      [
+       0.2,
+       0,
+       false
+      ],
+      [
+       0.2,
+       1,
+       false
+      ],
+      [
+       0.2,
+       2,
+       false
+      ],
+      [
+       0.2,
+       3,
+       false
+      ],
+      [
+       19.647,
+       2,
+       true
+      ],
+      [
+       19.647,
+       3,
+       true
+      ],
+      [
+       23.522,
+       2,
+       false
+      ],
+      [
+       23.522,
+       3,
+       false
+      ],
+      [
+       23.55,
+       0,
+       true
+      ],
+      [
+       23.55,
+       1,
+       true
+      ],
+      [
+       23.7,
+       0,
+       false
+      ],
+      [
+       23.7,
+       1,
+       false
+      ],
+      [
+       26.647,
+       0,
+       true
+      ],
+      [
+       26.647,
+       1,
+       true
+      ],
+      [
+       27.2,
+       0,
+       false
+      ],
+      [
+       28.05,
+       0,
+       true
+      ],
+      [
+       28.05,
+       2,
+       true
+      ],
+      [
+       28.05,
+       3,
+       true
+      ]
+     ],
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 0,
+     "tension_truth": {
+      "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+      "substeps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "substeps_over_margin": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "active_substeps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "max_excess_bar": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_p_tr_minus_p_star_bar": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "first_t_s": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "back_pressure_bar": 5.0,
+      "margin_bar": 0.5
+     },
+     "extend_bound_check": null
+    },
+    "imu_sensor": {
+     "model": "inclinometer",
+     "sensor": {
+      "kind": "inclinometer",
+      "sample_period_s": 0.01,
+      "delay_samples": 2,
+      "resolution_rad": 0.00017453292519943296,
+      "resolution_deg": 0.01,
+      "internal_filter": "bessel2",
+      "internal_filter_hz": 1.0,
+      "a_1_1_s": 13.843130589492304,
+      "a_0_1_s2": 63.877421505912515
+     },
+     "raw_imu": "error-free (the harness IMU samples), ImuErrorConfig()",
+     "controller": {
+      "c8": "constants unchanged; the inclinometer angles go into the C8 attitude low-pass in place of the tilt from the specific force"
+     }
+    },
+    "imua_check_g5": {
+     "t_first_done_s": 28.5,
+     "n_rev_pre_done_by_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_periods_pre_done": 100,
+     "t_last_ready_entry_s": 28.6,
+     "ready_tail_max_abs_command_m_s": 0.0,
+     "n_periods_ready_tail": 101,
+     "n_ready_relevels": 0,
+     "t_end_s": 38.6,
+     "ready_tail_shape_ok": true,
+     "n_tail_shape_violations": 0,
+     "ready_post_tail_max_abs_command_m_s": 0.0,
+     "n_periods_post_tail": 94
+    },
+    "imua_record_file": "A1-rigid_IND_LAS_435fd57c365c.npz"
+   },
+   "controller_settings": {
+    "soil_stop": null,
+    "soil_stop_scope": null,
+    "flat_soil_margin_m": null
+   },
+   "wall_s": 120.9
+  }
+ ]
+}

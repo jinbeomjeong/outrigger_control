@@ -1,0 +1,136 @@
+{
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b",
+ "start": {
+  "head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+  "status": ""
+ },
+ "end": {
+  "head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+  "status": ""
+ },
+ "results": [
+  {
+   "batch": "ed8_heldout_v0",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 678
+  },
+  {
+   "batch": "ed8_heldout_aa2",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 339
+  },
+  {
+   "batch": "ed8_heldout_aa3",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 339
+  },
+  {
+   "batch": "ed9_heldout_same_shape_off",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 7
+  },
+  {
+   "batch": "ed9_census_v0_off",
+   "args": [],
+   "exit": 0,
+   "runs": 100
+  },
+  {
+   "batch": "ed9_heldout_v0",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 678
+  },
+  {
+   "batch": "ed9_heldout_aa2",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 339
+  },
+  {
+   "batch": "ed9_heldout_aa3",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 339
+  },
+  {
+   "batch": "ed9_heldout_same_shape",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 7
+  },
+  {
+   "batch": "ed9_census_v0",
+   "args": [],
+   "exit": 0,
+   "runs": 100
+  },
+  {
+   "batch": "ed9_keys",
+   "args": [
+    "--jobs-file",
+    "census_keys_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 1043
+  },
+  {
+   "batch": "ed9_keys",
+   "args": [
+    "--jobs-file",
+    "heldout_g_ed8.json"
+   ],
+   "exit": 0,
+   "runs": 339
+  },
+  {
+   "batch": "ed9_t8",
+   "args": [
+    "--p3-hash-source",
+    "main.jsonl"
+   ],
+   "exit": 0,
+   "runs": 44
+  },
+  {
+   "batch": "ed9_cases",
+   "args": [],
+   "exit": 0,
+   "runs": 10
+  },
+  {
+   "batch": "ed9_heldout_aa2",
+   "args": [],
+   "exit": 2,
+   "runs": null
+  }
+ ]
+}

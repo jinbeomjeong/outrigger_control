@@ -1,0 +1,56 @@
+{
+ "case": "K0_top_roll4.4_Fs0",
+ "controller_tag": "final_C4G2_LAS_K1_IMUA",
+ "ready_t_s": 75.90000000149377,
+ "phases": [
+  [
+   0.10000000000021103,
+   "check"
+  ],
+  [
+   4.699999999993487,
+   "touch"
+  ],
+  [
+   23.89999999994874,
+   "level"
+  ],
+  [
+   63.90000000109541,
+   "done"
+  ],
+  [
+   64.00000000109873,
+   "probe"
+  ],
+  [
+   75.90000000149377,
+   "ready"
+  ]
+ ],
+ "s8_end": {
+  "end_t_s": 85.90000000182573,
+  "stopped_at_target": true,
+  "timeout": false,
+  "final_phase": "ready"
+ },
+ "events": [
+  "C2Event(t_s=7.1999999999965585, name='INFO_PRESSURE_ZERO_CALIBRATED:FL')",
+  "C2Event(t_s=7.1999999999965585, name='INFO_PRESSURE_ZERO_CALIBRATED:FR')",
+  "C2Event(t_s=7.1999999999965585, name='INFO_PRESSURE_ZERO_CALIBRATED:RL')",
+  "C2Event(t_s=7.1999999999965585, name='INFO_PRESSURE_ZERO_CALIBRATED:RR')",
+  "C2Event(t_s=7.699999999995393, name='INFO_GYRO_BIAS_NO_GYRO')",
+  "C2Event(t_s=26.899999999950648, name='floor_estimate_touch')",
+  "C2Event(t_s=28.199999999947618, name='crawler_liftoff_confirmed')",
+  "C2Event(t_s=78.90000000149567, name='reanchor_skipped:theta_below_min')",
+  "C2Event(t_s=78.90000000149567, name='ready_heave_tail')"
+ ],
+ "worst_roll_error": {
+  "t_rel_s": 24.76999999994664,
+  "err_deg": 0.45800006239552904,
+  "inclinometer_deg": 4.760000000000001,
+  "true_deg": 4.301999937604472,
+  "phase": "level"
+ },
+ "runner_wall_s": 292.4361824999796
+}

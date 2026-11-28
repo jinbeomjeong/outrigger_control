@@ -1,0 +1,62 @@
+{
+ "R3f": "8a0c8432d23c9db0916bf6f9cb9139466bd32551",
+ "r3f_anc_932": true,
+ "r3f_to_932": {
+  "chrono_or_t45_04_scripts": [
+   "04_scripts/02_chrono/chrono_bundle_grade_4368.py",
+   "04_scripts/02_chrono/chrono_rows_judge_4368_README.md",
+   "04_scripts/04_hydraulic/coupled/README_judges_4368.md",
+   "04_scripts/04_hydraulic/coupled/h6_judge_4368.py",
+   "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+   "04_scripts/04_hydraulic/coupled/judge_stage1_4368.py",
+   "04_scripts/04_hydraulic/coupled/u3_judge_4368.py"
+  ],
+  "verif_scripts": [
+   "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py"
+  ],
+  "path2_count": 15,
+  "src_params": []
+ },
+ "m932_to_t26p": {
+  "chrono_or_t45_04_scripts": [
+   "04_scripts/04_hydraulic/coupled/README_judges_4368.md",
+   "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+   "04_scripts/04_hydraulic/coupled/u3_judge_4368.py"
+  ],
+  "verif_scripts": [
+   "06_analysis/02_control/verif_matrix/scripts/resume4368_judge.py"
+  ],
+  "path2_count": 13,
+  "src_params": []
+ },
+ "m932_to_imua": {
+  "chrono_or_t45_04_scripts": [
+   "04_scripts/02_chrono/chrono_rows_judge_4368.py",
+   "04_scripts/02_chrono/s9_batch.py",
+   "04_scripts/02_chrono/v5_resume_4368_chrono_rows.py",
+   "04_scripts/04_hydraulic/coupled/chrono_t45_replay.py",
+   "04_scripts/04_hydraulic/coupled/h6_judge_4368.py",
+   "04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py",
+   "04_scripts/04_hydraulic/coupled/judge4368_common.py",
+   "04_scripts/04_hydraulic/coupled/t4h_replay.py"
+  ],
+  "verif_scripts": [],
+  "path2_count": 0,
+  "src_params": [
+   "03_src/outrigger_sim/control/c2.py",
+   "03_src/outrigger_sim/control/extend_start_bound.py",
+   "03_src/outrigger_sim/control/ground_contact.py",
+   "03_src/outrigger_sim/control/imu_outputs.py",
+   "03_src/outrigger_sim/control/standstill.py",
+   "03_src/outrigger_sim/control/two_pressure.py",
+   "03_src/outrigger_sim/hydraulics/check_open_delay.py",
+   "03_src/outrigger_sim/hydraulics/rod_release.py",
+   "03_src/outrigger_sim/hydraulics/v5_options.py",
+   "03_src/outrigger_sim/sensors/__init__.py",
+   "03_src/outrigger_sim/sensors/attitude.py",
+   "03_src/outrigger_sim/sensors/attitude_only.py",
+   "03_src/outrigger_sim/sensors/suite.py",
+   "03_src/outrigger_sim/signals.py"
+  ]
+ }
+}

@@ -1,0 +1,97 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.2 R1 (P9-D1-2 set S); event names only, no line value",
+ "started_at": "2026-11-28T15:21:08+09:00",
+ "finished_at": "2026-11-28T15:21:08+09:00",
+ "inputs": {
+  "stage5_rows": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_v0_a1\\ed8_heldout_v0.jsonl",
+    "sha256": "fd5f85f529d7a85aecba8588743ae18eb215e3ca1d7df22fe26acfe3f6c333d8"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1\\ed8_heldout_aa2.jsonl",
+    "sha256": "182dcaabbd1e29642386645a4d95521b83ff5d0fe14639ca5172d77e92dbd6b2"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa3_a1\\ed8_heldout_aa3.jsonl",
+    "sha256": "a2d65df1833442b422668b1ada4abc1187a65ca9fdb791eb93d1a4b7e4b448a1"
+   }
+  ],
+  "main_jsonl": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+    "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+   }
+  ],
+  "grid_keys": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed6_design\\keys\\confirm_b_grid192.json",
+    "sha256": "4e80e69bd2233b994853ae3f60ed0749f2c39c7dbb6390bc012b016efa5cf85b"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\census_keys_ed8.json",
+    "sha256": "278b332f694405d5f9be432467e294b64492d5ffd638a76986e819460c88c535"
+   }
+  ]
+ },
+ "groups": {
+  "stage5_v0": {
+   "lines": 1356,
+   "lines_by_reason": {
+    "D1_step": 8
+   },
+   "fault_head_lines": 8,
+   "fault_head_without_reason_lines": 0,
+   "d1_step_keys": [
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FL\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 1.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"ready\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}"
+   ],
+   "error_lines": 0,
+   "d1_step_lines": 8
+  },
+  "census_v0_main": {
+   "lines": 100,
+   "lines_by_reason": {},
+   "fault_head_lines": 0,
+   "fault_head_without_reason_lines": 0,
+   "d1_step_keys": [],
+   "error_lines": 0,
+   "d1_step_lines": 0
+  },
+  "stored_grid_v0": {
+   "lines": 768,
+   "lines_by_reason": {},
+   "fault_head_lines": 0,
+   "fault_head_without_reason_lines": 0,
+   "d1_step_keys": [],
+   "files": [
+    {
+     "name": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json",
+     "sha256": "a2e74481760a27695ac63800a650e0be1b9b3980fcfaef1f1b64d4e98628316d"
+    },
+    {
+     "name": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json",
+     "sha256": "1d07e49fdbcaf375c4266866ff6955569c967d6d4eb9d4babc07558a64e92559"
+    },
+    {
+     "name": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json",
+     "sha256": "91026c460489463aa34e0377236854c892e46257d55133bda9c777584b548a89"
+    },
+    {
+     "name": "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json",
+     "sha256": "87e8d72a25a5d40cccedce1c632a7e4f168f126aed38ada8a3b6760794d02390"
+    }
+   ],
+   "d1_step_lines": 0
+  }
+ },
+ "notes": [
+  "S of a group = d1_step_lines; a FAULT_HEAD_PRESSURE line without any reason (fault_head_without_reason_lines) is unknown for S"
+ ]
+}

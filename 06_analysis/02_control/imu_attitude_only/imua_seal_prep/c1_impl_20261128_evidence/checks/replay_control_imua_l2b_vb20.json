@@ -1,0 +1,35 @@
+{
+ "with_a_type": {
+  "settings_equal": true,
+  "t4_0": true,
+  "max_relative_difference": 0.0,
+  "setting_differences": []
+ },
+ "without_a_type_rebuild": {
+  "settings_equal": false,
+  "t4_0": null,
+  "setting_differences": [
+   "two_pressure.settings.crawler_recontact_watch: run None replay True",
+   "two_pressure.settings.imu_gyro_sample_period_s: run None replay 0.01",
+   "two_pressure.settings.imu_lever_arm_m: run None replay None",
+   "two_pressure.settings.imu_lever_correction: run None replay True",
+   "two_pressure.settings.imu_mass_before_ready: run None replay 'yaml'",
+   "two_pressure.settings.imu_mass_calibration: run None replay 'median'",
+   "two_pressure.settings.imu_mass_min_samples: run None replay 3",
+   "two_pressure.settings.imu_mass_nominal_kg: run None replay None",
+   "two_pressure.settings.imu_mass_slope_min_rms_m_s2: run None replay 0.02",
+   "two_pressure.settings.imu_mass_slope_min_samples: run None replay 50",
+   "two_pressure.settings.imu_residual_step_ratio: run None replay 0.5",
+   "two_pressure.settings.imu_seal_band_factor: run None replay 0.0",
+   "two_pressure.settings.recontact_clear_N: run None replay 15000.0",
+   "two_pressure.settings.recontact_hold_s: run None replay 1.0",
+   "two_pressure.settings.recontact_min_threshold_N: run None replay 30000.0",
+   "two_pressure.settings.recontact_seal_factor: run None replay 2.0",
+   "two_pressure.settings.recontact_seal_margin_N: run None replay 10000.0",
+   "two_pressure.settings.recontact_window_s: run None replay 1.0",
+   "two_pressure.settings.regain_ratio_margin: run None replay 1.4",
+   "two_pressure.settings.regain_stroke_change_max_m: run None replay 0.001",
+   "two_pressure.settings.step_rule: run 'explained' replay 'explained_imu'"
+  ]
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "judge_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-t9\\04_scripts\\04_hydraulic\\coupled\\jp3_ed8_judge.py",
+ "r5_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-t9\\06_analysis\\03_hydraulic\\coupled\\v5\\paper_runs\\scripts\\judge_stage1_r5.py",
+ "r5_J4_source_lines": {
+  "124": "        if base[\"p_move\"] <= P_MOVE < on[\"p_move\"]:",
+  "125": "            add(\"J10\", f\"p_move {base['p_move']} -> {on['p_move']}\", False)",
+  "126": "    if base[\"final\"] == \"ready\" and on[\"final\"] != \"ready\":",
+  "127": "        add(\"J4\", f\"final {base['final']} -> {on['final']}\",",
+  "128": "            any(b[\"final\"] != \"ready\" for b in base_all))",
+  "129": "    if base[\"t_ready\"] is not None and on[\"t_ready\"] is None and not on[\"is_event\"]:",
+  "130": "        add(\"J4\", \"first READY reached by V0, not by the setting\", False)",
+  "131": "    for name in on[\"bad\"]:"
+ },
+ "FAULT_PHASE_PREFIX": "fault",
+ "groups": {
+  "J4 fail: final ready -> fault": [
+   "end_state"
+  ],
+  "J4 fail: final ready -> fault_reground": [
+   "end_state"
+  ],
+  "J4 fail: final ready -> done": [
+   "end_state"
+  ],
+  "J4 fail: final ready -> level": [
+   "end_state"
+  ],
+  "J4 fail: final ready -> probe": [
+   "end_state"
+  ],
+  "J4 fail: final ready -> idle": [
+   "end_state"
+  ],
+  "J4 fail: first READY reached by V0, not by the setting": [
+   "end_state"
+  ],
+  "J4 fail: final fault": [
+   "fault"
+  ]
+ }
+}

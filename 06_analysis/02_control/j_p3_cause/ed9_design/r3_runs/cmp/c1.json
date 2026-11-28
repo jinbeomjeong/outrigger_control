@@ -1,0 +1,70 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:03+09:00",
+ "finished_at": "2026-11-28T20:06:03+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_v0_a1\\ed8_heldout_v0.jsonl",
+    "sha256": "fd5f85f529d7a85aecba8588743ae18eb215e3ca1d7df22fe26acfe3f6c333d8"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1\\ed8_heldout_aa2.jsonl",
+    "sha256": "182dcaabbd1e29642386645a4d95521b83ff5d0fe14639ca5172d77e92dbd6b2"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa3_a1\\ed8_heldout_aa3.jsonl",
+    "sha256": "a2d65df1833442b422668b1ada4abc1187a65ca9fdb791eb93d1a4b7e4b448a1"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_v0_a1\\ed8_heldout_v0.jsonl",
+    "sha256": "eae9cc0c454b8ae697a4047dcc75021ddf3484f12683c2d2c1d49e79bd07b457"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_aa2_a1\\ed8_heldout_aa2.jsonl",
+    "sha256": "cb49068f125e3955b8906ec4a3b3362dd2d0bee50992975e3c77d620a0734f47"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_aa3_a1\\ed8_heldout_aa3.jsonl",
+    "sha256": "92d48e21307ca973f5d849a0756b9425687b5dcf6be80dac2b716481c6512cec"
+   }
+  ],
+  "allowed_from": null,
+  "priors": []
+ },
+ "stored_tag_absent": null,
+ "stored_lines_without_tag": 0,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names"
+ ],
+ "status": "identical",
+ "only_common": false,
+ "path_under": {
+  "stored": null,
+  "new": null
+ },
+ "counts": {
+  "stored_jobs": 1356,
+  "new_jobs": 1356,
+  "compared": 1356,
+  "differing": 0,
+  "differing_outside_allowed": 0,
+  "allowed": null,
+  "allowed_unchanged": null,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": "off",
+ "not_judgeable": [],
+ "differing": [],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

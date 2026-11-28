@@ -1,0 +1,994 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
+  "suites": "slope",
+  "candidates": [
+   "current"
+  ],
+  "params": {},
+  "defaults": {
+   "e1": false,
+   "e1_max_mismatch_m": 0.004,
+   "e2": false,
+   "e2_drop_fraction": 0.08,
+   "e2_confirm_samples": 2,
+   "e2_max_relifts": 2,
+   "e3": false,
+   "e3_tilt_min_rad": 0.017453292519943295,
+   "e3_margin_m": 0.03,
+   "e3_require_soil_use": true,
+   "e3_min_clearance_at_P_m": -1.0,
+   "e4": false,
+   "e4_min_rise_ratio": 0.5,
+   "e4_gravity_samples": 100,
+   "reanchor_soil_skip": false,
+   "s4_stroke_limit": false,
+   "s4_stroke_basis": "max",
+   "lw_restart": false,
+   "lw_exclude": false,
+   "l1_revoke": false,
+   "l1_watch_m": 0.02,
+   "l1_rise_N": 2000.0,
+   "l1_rise_fraction_W": 0.005,
+   "l1_mean_s": 1.0,
+   "l1_confirm_periods": 2,
+   "l1_max_revokes": 2,
+   "l2_confirm_window": false,
+   "l2_min_clearance_at_P_m": 0.01,
+   "l2_extra_m": 0.005,
+   "l2_rise_N": 1000.0,
+   "l1_soil_gate": false,
+   "l1_gate_min_clearance_at_P_m": 0.01,
+   "l1_gate_tilt_min_rad": 0.017453292519943295,
+   "l1_stroke_guard": false,
+   "l1_stroke_margin_m": 0.04,
+   "l2_soil_gate": false,
+   "ds_enable": false,
+   "ds_threshold_m_s": 0.003,
+   "ds_confirm_s": 1.0,
+   "ds_release_m_s": 0.001,
+   "ds_release_s": 0.5,
+   "ds_max_s": 10.0,
+   "ds_push_fraction": 0.25,
+   "ds_track_w_m": [
+    2.648,
+    2.411
+   ],
+   "ds_mode": "floor",
+   "ds_gain": 1.0,
+   "ds_add_cap_fraction": 0.25,
+   "ds_release_on_reverse": false,
+   "ds_gate_max_settle_tilt_rad": null,
+   "l4_probe_reuse": false,
+   "d1_fall_hold": false,
+   "d2_fall_slow": false,
+   "d3_repeat_reapproach_slow": false,
+   "d1p_over_p30fz": false,
+   "d1p_level_fraction_F_min": 2.0,
+   "d1p_needs_running_p30fz": true,
+   "d1r_predicted_hold": false,
+   "d1r_trigger_margin_N": 5000.0,
+   "d1r_release_margin_N": 10000.0,
+   "d1q_hold": false,
+   "d1q_gate_a": true,
+   "d1q_gate_b": true,
+   "d1q_slow": false,
+   "d1q_horizon_periods": 4,
+   "d1q_trigger_margin_N": 5000.0,
+   "d1q_twist_m": 0.015,
+   "d1q_hold_max_s": 1.5,
+   "d1q_hold_total_s": 3.0,
+   "d_level_fraction_F_min": 3.0,
+   "d_release_fraction_F_min": 3.5,
+   "d_drop_N": 1000.0,
+   "d_max_s": 3.0,
+   "d2_slow_fraction": 0.16,
+   "d3_reapproach_factor": 2.0,
+   "s5_push_extend": false,
+   "s5_eval_m": 0.05,
+   "s5_progress_frac": 0.02,
+   "s5_step_m": 0.05,
+   "s5_stroke_margin_m": 0.03,
+   "s5_max_total_m": 0.3,
+   "s6_saturation_loc": false,
+   "s6_ratio": 0.3,
+   "s6_rise_max_N": 4000.0,
+   "s6_min_clearance_m": 0.01,
+   "p36": false,
+   "p36_delta": 0.05,
+   "p36_compensation": "last_motion",
+   "p36_mean_s": 1.0,
+   "p36_confirm_periods": 2,
+   "p36_probe_settle_s": 0.5,
+   "p36_relift_margin_m": 0.04,
+   "p36_max_relifts": 1,
+   "p36s": false,
+   "p36s_all_loc": false,
+   "p37": false,
+   "p37_min_twist_m": 0.005,
+   "p37_max_offset_m": 0.06,
+   "p37_settle_att_rad": -1.0,
+   "r4_margin_m": 0.0,
+   "p38": false,
+   "p38_cap_fraction": 0.5,
+   "p38_window": "first_ready"
+  },
+  "filter": "",
+  "ids": "",
+  "settle_hook": "harness",
+  "workers": 1,
+  "placement": {
+   "requested_mask": "0xff0000",
+   "set_ok": true,
+   "process_mask": "0xff0000",
+   "system_mask": "0xfffffff"
+  },
+  "wall_s": 62.1,
+  "n_records": 1,
+  "harness_sha256": {
+   "04_scripts/03_control/s9/s9_slope_fix_candidates.py": "b88347f7469fe1dfd6a63f1d08edb73e29adf886cdd68dd7986918df6d786393",
+   "04_scripts/03_control/s9/s9_soil_slope.py": "c6338d9a08e27c02792e356dcd112160d092075aa7f5dbf3ee379ce1264fbed8",
+   "04_scripts/03_control/s8/r72_g6_screen.py": "bd90c78b0da5bf93833203073cb94298feb32b97bd777933c1a452bf5222263c",
+   "04_scripts/03_control/s9/s9_soil_closed_loop.py": "14a30be06bb0e0955ebe89d76f45947a4251444f547b8e105f4fab5748c69035",
+   "04_scripts/03_control/s9/soil_guard_stop_rule.py": "c89aea9bebc1fa267deac24b9fe4bc1ad02bee03d9f10d4669d4b2514de47afb"
+  },
+  "v5": {
+   "v5_setting": "VB",
+   "controller_tags": {
+    "C2": "final_C4G2_P3"
+   },
+   "definitions": {
+    "C2": {
+     "setting": "VB",
+     "flow_setting": {
+      "is_enabled": true,
+      "eta_v": 0.85,
+      "dp_comp_Pa": null,
+      "dp_unload_Pa": null,
+      "width_Pa": null,
+      "law": null,
+      "always_solve": false
+     },
+     "hydraulic_options": {
+      "flow": null,
+      "valve_tau_s": null,
+      "rod_release_force": true,
+      "check_delay": null,
+      "lock_closure": {
+       "overlap_ratio": 0.02,
+       "closing_delay_s": 0.05
+      },
+      "lock_window_follows_plant": true,
+      "extend_start_tracked": true,
+      "m2_law": "flow_limited_r5"
+     },
+     "controller_tag": "final_C4G2_P3"
+    }
+   },
+   "definition_sha256": {
+    "C2": "317d2a7d670ac9345c4841a1ab5ec080807ff010c1560485f4830fa6051dce8d"
+   },
+   "code": {
+    "commit": "b04167248a49cfc4435a3b80e6baedef0713771e",
+    "dirty": false
+   },
+   "rules": "u3_u6_rerun_rules.md",
+   "rules_sha256": "8de318825764114ad14afcec362c87c1e01a2ad47195b8491b1c96056e1960b3",
+   "head_only_declared": true,
+   "ids_from": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-imua\\ids\\ids_slope.json",
+   "ids_from_sha256": "768c69a72f2b6ff2b58ce74120c1afd6b52efff215a8683d90d124eb72c41c99",
+   "pad": "B",
+   "n_keys": 1,
+   "commands_sha256": "per run: v5.commands_sha256 (screen hash) and v5.logged_commands_sha256 (verdict_runs log)"
+  }
+ },
+ "summary": {},
+ "comparison": [],
+ "records": [
+  {
+   "suite": "slope",
+   "id": "H1|G1|B|top|flat",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "77a9fcb1ba89ebeae1f52e24e207c6587c0a140a55a7f8146e2681c60554f3b1",
+   "t_ready_s": 42.40000000002043,
+   "min_force_kN": 60.9102375418283,
+   "att_end_deg": [
+    0.00047656169198740723,
+    -0.014595624445507351
+   ],
+   "max_stroke_mm": 407.62106994195756,
+   "final_phase": "ready",
+   "rut_ready_mm": 44.59658995794642,
+   "crawler_N_max_after_ready": 0.0,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 22.799999999992213,
+    "t_loc_s": 23.299999999991048,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.4999999999988347,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "soil_stop": null,
+   "lifted_legs": [],
+   "settle_v2": {
+    "version": "v2: window-mean pen (rotation-corrected), residual-aware attitude tolerance",
+    "status": "checked",
+    "inputs": {
+     "table": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\v5-imua\\06_analysis\\00_dynamics\\slope_crawler_settle.json",
+     "table_sha256": "7ea9a01d039a72519d7ccd1b8f8a2ab4535901e5e431788f7c0213d96568e074",
+     "table_key": "G1|top|0|0",
+     "pad_xy_m": [
+      [
+       2.2938,
+       1.3238
+      ],
+      [
+       2.2938,
+       -1.3238
+      ],
+      [
+       -2.556,
+       1.1679
+      ],
+      [
+       -2.556,
+       -1.2429
+      ]
+     ],
+     "pen_inst_mm": [
+      -340.23766646983483,
+      -340.23164345848886,
+      -342.0313478711003,
+      -342.02586355483174
+     ],
+     "q_floor_inst_deg": [
+      0.00013035370546930742,
+      0.1417486450200436
+     ],
+     "q_floor_mean_deg": [
+      0.00013029522417993495,
+      0.14186896905313545
+     ],
+     "d_attitude_deg": [
+      5.8481289372469764e-08,
+      -0.00012032403309183981
+     ],
+     "window_end_s": 4.9999999999999485,
+     "gap_target_mm": [
+      340.19759127258874,
+      340.19157093672646,
+      342.0036598223417,
+      341.9981779422628
+     ],
+     "gap_target_source": "table",
+     "table_gap_target_mm": [
+      340.19759127258874,
+      340.19157093672646,
+      342.0036598223417,
+      341.9981779422628
+     ],
+     "residual_deg": [
+      -1.1836068253894386e-08,
+      -2.330410433807848e-05
+     ],
+     "attitude_error_deg": [
+      1.1255240859535025e-08,
+      2.4487277319612008e-05
+     ],
+     "mass_scale": 1.0
+    },
+    "result": {
+     "pen_mean_mm": [
+      -340.23284802269995,
+      -340.2268277137356,
+      -342.0367144082327,
+      -342.0312325526461
+     ],
+     "pen_plus_gap_mm": [
+      -0.035256750111216206,
+      -0.03525677700912411,
+      -0.03305458589096588,
+      -0.0330546103832603
+     ],
+     "gap_ok": true,
+     "attitude_tol_deg": [
+      0.005,
+      0.005
+     ],
+     "attitude_ok": true,
+     "ok": true,
+     "gate": "judged"
+    },
+    "tolerances": {
+     "gap_mm": 1.0,
+     "attitude_min_deg": 0.005,
+     "attitude_residual_margin_deg": 0.002
+    }
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9458,
+    "window_checks": [
+     {
+      "t_s": 23.3,
+      "e1_spread_mm": 6.25,
+      "e4_rise_ratio": 1.072,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      42.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "p36": {
+     "armed_t_s": null,
+     "minima": {},
+     "relifts": 0,
+     "actions": []
+    },
+    "p36s": {
+     "soil_sign": null,
+     "sign_history": [
+      {
+       "t_s": 23.3,
+       "sign": null
+      }
+     ],
+     "guard_t_s": null,
+     "stop": null,
+     "preempted": null
+    },
+    "p37": null,
+    "p38": null,
+    "t_first_done_s": 30.3999999999745,
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      22.7,
+      358.04,
+      205.995,
+      297.7,
+      null
+     ],
+     [
+      22.8,
+      359.92,
+      165.227,
+      325.84,
+      null
+     ],
+     [
+      22.9,
+      361.8,
+      119.429,
+      350.51,
+      null
+     ],
+     [
+      23.0,
+      363.68,
+      72.358,
+      369.31,
+      null
+     ],
+     [
+      23.1,
+      365.56,
+      34.322,
+      382.02,
+      null
+     ],
+     [
+      23.2,
+      367.44,
+      8.617,
+      389.16,
+      null
+     ]
+    ],
+    "soil_push_mm": null,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.652999999992556,
+      "t_confirmed_s": 22.752999999992323,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.299999999991048,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    },
+    "roll_abs_max_after_loc_deg": 0.0145,
+    "side_sink_after_loc_mm": [
+     0.05,
+     0.05
+    ],
+    "ds_events": [],
+    "ds_active_s": 0.0,
+    "recontact_after_final_loc_N_max": 0.0,
+    "rut_clear_min_after_final_loc_mm": 11.3
+   },
+   "v5": {
+    "v5_setting": "VB",
+    "controller_tag": "final_C4G2_P3_LAS_K1",
+    "extend_start": {
+     "rule": "tracked_bound",
+     "revision": 4
+    },
+    "hydraulic_options": {
+     "flow": null,
+     "valve_tau_s": null,
+     "rod_release_force": true,
+     "check_delay": null,
+     "lock_closure": {
+      "overlap_ratio": 0.02,
+      "closing_delay_s": 0.05
+     },
+     "lock_window_follows_plant": true,
+     "extend_start_tracked": true,
+     "m2_law": "flow_limited_r5"
+    },
+    "definition_sha256": "317d2a7d670ac9345c4841a1ab5ec080807ff010c1560485f4830fa6051dce8d",
+    "code": {
+     "commit": "b04167248a49cfc4435a3b80e6baedef0713771e",
+     "dirty": false
+    },
+    "head_only_declared": true,
+    "has_rod_reading": false,
+    "j_p3": "no_rod_reading",
+    "commands_sha256": "77a9fcb1ba89ebeae1f52e24e207c6587c0a140a55a7f8146e2681c60554f3b1",
+    "logged_commands_sha256": "77a9fcb1ba89ebeae1f52e24e207c6587c0a140a55a7f8146e2681c60554f3b1",
+    "t_lift_s": 22.677,
+    "rod_pressure_fallback_events": 0,
+    "las_events": {
+     "liftoff_slow": [],
+     "fault_names": [],
+     "event_count": 4
+    },
+    "resume_k1": {
+     "applicable": true,
+     "k1_order_gate_request": "preset",
+     "k1_order_gate_effective": true,
+     "liftoff_approach_slow": {
+      "settings": {
+       "enable": true,
+       "sum_on_fraction_W": 0.6,
+       "light_leg_fraction_of_F_min": 3.5,
+       "slow_mean_fraction": 0.16,
+       "sum_off_fraction_W": 0.85,
+       "off_periods": 5,
+       "max_s": 1.5,
+       "rho_on": 0.18,
+       "require_soil_response": true
+      },
+      "start_s": null,
+      "end_s": null,
+      "end_reason": null
+     },
+     "slope_clearance_margin": {
+      "settings": {
+       "enable": true,
+       "flat_soil_margin_order_gate": true,
+       "flat_soil_margin_m": 0.03
+      },
+      "order_gate": {
+       "enabled": true,
+       "decisions": []
+      }
+     },
+     "event_counts": {
+      "flat_soil_margin_applied": 0,
+      "flat_soil_margin_skipped_order": 0,
+      "soil_mode_start": 0
+     }
+    },
+    "hydraulics_record": {
+     "m2_law": {
+      "law": "flow_limited_r5",
+      "rule": "moving p_r: lag to p* capped by the valve flow; retract meter-in A_ann |u|, extend meter-out b_T A_h |u| sqrt((p_r - p_T) / dp_c); C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included; M2 reads p_hat = p_r + Delta w, Delta = p_r0 - p_r,rel at the release, w = base release decay (revision 4); extension lock anchor p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor), p_tr = moving rod pressure before the lock, p* = extension target; retract lock keeps p_ret (revision 5)",
+      "meter_out_ratio": 1.0,
+      "spool_reference_drop_Pa": 1000000.0,
+      "tank_pressure_Pa": 200000.0,
+      "status": "ASSUMPTION b_T, dp_c, p_T (coupled/params.py values)"
+     },
+     "m2_shift_total_mm": [
+      -0.08950660063416181,
+      -0.13517417309599264,
+      0.08874772486239783,
+      0.039010582986723885
+     ],
+     "m2_clipped_steps": [
+      25,
+      25,
+      28,
+      28
+     ],
+     "ext_lock_count": [
+      3,
+      4,
+      3,
+      3
+     ],
+     "ext_lock_excess_count": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ext_lock_excess_max_bar": [
+      0.0010637664815643802,
+      0.0013736006322968752,
+      0.0013258345290832222,
+      0.001473794898185879
+     ],
+     "ext_lock_risk_count": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ext_lock_knee_max_kN": [
+      4.090528812733867,
+      4.09096369573628,
+      3.171572551309378,
+      3.1717335582867117
+     ],
+     "ext_lock_log": [
+      [
+       21.534,
+       0,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       21.534,
+       1,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       21.734,
+       2,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       21.734,
+       3,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       30.65,
+       1,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       31.661,
+       0,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       34.661,
+       1,
+       500000.0000077567,
+       500000.0,
+       200000.0000077567,
+       4089.0357109355577
+      ],
+      [
+       37.661,
+       2,
+       500000.2958250356,
+       500000.0,
+       200000.2958250356,
+       3170.133028602615
+      ],
+      [
+       40.661,
+       3,
+       500000.322254071,
+       500000.0,
+       200000.322254071,
+       3170.133316197133
+      ],
+      [
+       43.188,
+       0,
+       500106.37664815644,
+       500000.0,
+       200106.37664815644,
+       4090.528812733867
+      ],
+      [
+       43.188,
+       1,
+       500137.3600632297,
+       500000.0,
+       200137.3600632297,
+       4090.9636957362795
+      ],
+      [
+       43.188,
+       2,
+       500132.5834529083,
+       500000.0,
+       200132.58345290832,
+       3171.572551309378
+      ],
+      [
+       43.188,
+       3,
+       500147.3794898186,
+       500000.0,
+       200147.3794898186,
+       3171.7335582867117
+      ]
+     ],
+     "ext_lock_log_columns": [
+      "t_s",
+      "leg",
+      "p_tr_Pa",
+      "p_star_Pa",
+      "p_r0_Pa",
+      "dF_knee_N"
+     ],
+     "m2_clipped_steps_pre_lift": [
+      25,
+      25,
+      28,
+      28
+     ],
+     "m2_clipped_steps_post_lift": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "m2_clip_split_t_lift_s": 22.677,
+     "lock_events": [
+      [
+       1.1,
+       0,
+       false
+      ],
+      [
+       1.1,
+       1,
+       false
+      ],
+      [
+       1.1,
+       2,
+       false
+      ],
+      [
+       1.1,
+       3,
+       false
+      ],
+      [
+       21.534,
+       0,
+       true
+      ],
+      [
+       21.534,
+       1,
+       true
+      ],
+      [
+       21.734,
+       2,
+       true
+      ],
+      [
+       21.734,
+       3,
+       true
+      ],
+      [
+       21.9,
+       0,
+       false
+      ],
+      [
+       21.9,
+       1,
+       false
+      ],
+      [
+       21.9,
+       2,
+       false
+      ],
+      [
+       21.9,
+       3,
+       false
+      ],
+      [
+       30.65,
+       1,
+       true
+      ],
+      [
+       30.65,
+       2,
+       true
+      ],
+      [
+       30.65,
+       3,
+       true
+      ],
+      [
+       31.661,
+       0,
+       true
+      ],
+      [
+       32.1,
+       0,
+       false
+      ],
+      [
+       33.241,
+       0,
+       true
+      ],
+      [
+       33.6,
+       1,
+       false
+      ],
+      [
+       34.661,
+       1,
+       true
+      ],
+      [
+       35.1,
+       1,
+       false
+      ],
+      [
+       36.241,
+       1,
+       true
+      ],
+      [
+       36.6,
+       2,
+       false
+      ],
+      [
+       37.661,
+       2,
+       true
+      ],
+      [
+       38.1,
+       2,
+       false
+      ],
+      [
+       39.241,
+       2,
+       true
+      ],
+      [
+       39.6,
+       3,
+       false
+      ],
+      [
+       40.661,
+       3,
+       true
+      ],
+      [
+       41.1,
+       3,
+       false
+      ],
+      [
+       42.241,
+       3,
+       true
+      ],
+      [
+       42.6,
+       0,
+       false
+      ],
+      [
+       42.6,
+       1,
+       false
+      ],
+      [
+       42.6,
+       2,
+       false
+      ],
+      [
+       42.6,
+       3,
+       false
+      ],
+      [
+       43.188,
+       0,
+       true
+      ],
+      [
+       43.188,
+       1,
+       true
+      ],
+      [
+       43.188,
+       2,
+       true
+      ],
+      [
+       43.188,
+       3,
+       true
+      ]
+     ],
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 0,
+     "tension_truth": {
+      "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+      "substeps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "substeps_over_margin": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "active_substeps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "max_excess_bar": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_p_tr_minus_p_star_bar": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "first_t_s": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "back_pressure_bar": 5.0,
+      "margin_bar": 0.5
+     },
+     "extend_bound_check": null
+    },
+    "lock_window_alignment": {
+     "n_late": null,
+     "reason": "no rod reading"
+    }
+   },
+   "wall_s": 61.7
+  }
+ ]
+}

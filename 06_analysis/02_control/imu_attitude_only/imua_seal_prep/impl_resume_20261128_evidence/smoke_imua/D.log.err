@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "C:\workspace\outrigger_control\.claude\worktrees\v5-imua\04_scripts\03_control\s9\s9_soil_slope.py", line 1900, in <module>
+    main()
+  File "C:\workspace\outrigger_control\.claude\worktrees\v5-imua\04_scripts\03_control\s9\s9_soil_slope.py", line 1890, in main
+    meta["v5"] = {**_v5_rerun().file_meta(rerun, [c.case_id for c in cases]),
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\workspace\outrigger_control\.claude\worktrees\v5-imua\04_scripts\04_hydraulic\coupled\v5_rerun.py", line 737, in file_meta
+    imu_meta = {imu_a_harness.RECORD_KEY: options.imu.to_meta(),
+                                          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\workspace\outrigger_control\.claude\worktrees\v5-imua\04_scripts\04_hydraulic\coupled\imu_a_harness.py", line 123, in to_meta
+    meta["sensor"] = self.sensor_config().to_meta()
+                     ^^^^^^^^^^^^^^^^^^^^
+  File "C:\workspace\outrigger_control\.claude\worktrees\v5-imua\04_scripts\04_hydraulic\coupled\imu_a_harness.py", line 91, in sensor_config
+    from outrigger_sim.sensors.attitude_only import AttitudeSensorConfig, AttitudeSensorKind
+ModuleNotFoundError: No module named 'outrigger_sim'

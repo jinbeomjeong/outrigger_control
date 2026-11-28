@@ -1,0 +1,538 @@
+{
+ "rule": "criteria rev. 7 3 (E exclusion, guard, B1) on rev. 6 4 (T4-0, T4, T5) and 5 / 7 records",
+ "criteria": "rev7",
+ "record": "T4",
+ "summary": {
+  "rows": 1,
+  "settings_equal": 1,
+  "t4_0_passed": 1,
+  "T4_over_0p6kN": 0,
+  "T5_over_0p6kN": 0,
+  "ext_lock_risk_count": 0,
+  "tension_truth_substeps_over_margin": 0,
+  "extend_bound_breach_reads": 0,
+  "extend_bound_margin_used_reads": 0,
+  "extend_bound_locked_over_tol_reads": 0,
+  "anchor_note": "\uc575\ucee4 \uc704\ud5d8 \ubbf8\uad00\uce21",
+  "criteria": "rev7",
+  "rev7": {
+   "T4_judged_samples_rev6": 125,
+   "T4_judged_samples": 113,
+   "T4_e_excluded": 12,
+   "T4_e1_to_e4_samples": 24,
+   "T4_over_0p6kN_rev6": 0,
+   "T4_raw_over_0p6kN": 0,
+   "T4_guard_violations": 0,
+   "T4_check_precal_grounded": 0,
+   "T4_max_own_excess_N": null,
+   "T5_over_0p6kN_rev6": 0,
+   "T5_raw_over_0p6kN": 0,
+   "T5_e_excluded": 0,
+   "T5_guard_violations": 0,
+   "T5_max_own_excess_N": null,
+   "sensor_model_rows": 0,
+   "sample_note": "\uac1c\uc815 7 \ud310\uc815 \ud45c\ubcf8(E \uc81c\uc678 113, \uc81c\uc678 \ud45c\ubcf8 12)"
+  },
+  "J-P3": {
+   "name": "extend_bound_check.ext_moving.breach_reads == 0",
+   "status": "pass",
+   "runs": 1,
+   "runs_judged": 1,
+   "runs_by_case": {
+    "judged": 1,
+    "no_rod_reading": 0,
+    "defect_rod_reading_without_record": 0,
+    "defect_no_rod_reading_not_declared": 0,
+    "defect_record_without_rod_reading": 0,
+    "defect_revision_5_record_in_revision_4_judgement": 0
+   },
+   "missing_records": 0,
+   "no_rod_reading_runs": 0,
+   "breach_reads": 0,
+   "runs_with_breach": 0,
+   "margin_used_reads_flag": 0,
+   "locked_breach_over_tol_reads_flag": 0,
+   "runs_expected": 1,
+   "rule_missing_runs": 0,
+   "test_only_setting_runs": 0,
+   "l1_reference_runs": 0,
+   "revision_key_missing_runs": 0,
+   "revision_key_mismatch_runs": 0,
+   "status_by_revision": {
+    "4": "pass"
+   }
+  }
+ },
+ "rows": [
+  {
+   "case": "imua_l2b_vb20",
+   "settings_equal": true,
+   "setting_differences": [],
+   "setting_notes": [],
+   "extend_start_rule": null,
+   "run_extend_start_rule": "tracked_bound",
+   "extend_start_revision": 4,
+   "p3_expected": true,
+   "t4_0": true,
+   "max_relative_difference": 0.0,
+   "T4": {
+    "legs": {
+     "FL": {
+      "judged_locked": 26,
+      "judged_tail": 3,
+      "airborne_judged": 29,
+      "over_0p6kN_locked": 0,
+      "over_0p6kN_tail": 0,
+      "max_excess_N": 1.292569617692834,
+      "max_excess_t_s": 7.0999999999967915,
+      "max_excess_class": "locked",
+      "max_excess_vs_window_min_N": 329.603546818199,
+      "unarmed": 0,
+      "conservatism": {
+       "p50_kN": 4.262101211047345,
+       "p90_kN": 10.90192027877386,
+       "p99_kN": 12.395879569012324
+      },
+      "tail_ready_extend_samples": 0,
+      "judged_samples_rev6": 32,
+      "e_excluded": 3,
+      "e_excluded_over_0p6kN": 0,
+      "e_excluded_max_excess_N": -5579.702644189304,
+      "guard_violations": 0,
+      "e1_to_e4_samples": 6,
+      "check_precal_grounded": 0,
+      "check_precal_grounded_t_s": [],
+      "over_0p6kN_rev6": 0,
+      "raw_over_0p6kN": 0
+     },
+     "FR": {
+      "judged_locked": 26,
+      "judged_tail": 3,
+      "airborne_judged": 29,
+      "over_0p6kN_locked": 0,
+      "over_0p6kN_tail": 0,
+      "max_excess_N": -0.2134190165727432,
+      "max_excess_t_s": 6.599999999997957,
+      "max_excess_class": "locked",
+      "max_excess_vs_window_min_N": 271.8574023931267,
+      "unarmed": 0,
+      "conservatism": {
+       "p50_kN": 4.262059895870599,
+       "p90_kN": 10.760865786298085,
+       "p99_kN": 12.223097111644268
+      },
+      "tail_ready_extend_samples": 0,
+      "judged_samples_rev6": 32,
+      "e_excluded": 3,
+      "e_excluded_over_0p6kN": 0,
+      "e_excluded_max_excess_N": -5401.684486273317,
+      "guard_violations": 0,
+      "e1_to_e4_samples": 6,
+      "check_precal_grounded": 0,
+      "check_precal_grounded_t_s": [],
+      "over_0p6kN_rev6": 0,
+      "raw_over_0p6kN": 0
+     },
+     "RL": {
+      "judged_locked": 23,
+      "judged_tail": 3,
+      "airborne_judged": 26,
+      "over_0p6kN_locked": 0,
+      "over_0p6kN_tail": 0,
+      "max_excess_N": -1.6094376085836757,
+      "max_excess_t_s": 7.0999999999967915,
+      "max_excess_class": "locked",
+      "max_excess_vs_window_min_N": 262.873419947447,
+      "unarmed": 0,
+      "conservatism": {
+       "p50_kN": 3.5481624914279606,
+       "p90_kN": 8.177314690670986,
+       "p99_kN": 9.218873935500666
+      },
+      "tail_ready_extend_samples": 0,
+      "judged_samples_rev6": 29,
+      "e_excluded": 3,
+      "e_excluded_over_0p6kN": 0,
+      "e_excluded_max_excess_N": -4507.434501707445,
+      "guard_violations": 0,
+      "e1_to_e4_samples": 6,
+      "check_precal_grounded": 0,
+      "check_precal_grounded_t_s": [],
+      "over_0p6kN_rev6": 0,
+      "raw_over_0p6kN": 0
+     },
+     "RR": {
+      "judged_locked": 26,
+      "judged_tail": 3,
+      "airborne_judged": 29,
+      "over_0p6kN_locked": 0,
+      "over_0p6kN_tail": 0,
+      "max_excess_N": 5.465649166049275,
+      "max_excess_t_s": 7.499999999995859,
+      "max_excess_class": "locked",
+      "max_excess_vs_window_min_N": 212.4362190418027,
+      "unarmed": 0,
+      "conservatism": {
+       "p50_kN": 3.5477573585635502,
+       "p90_kN": 8.027296391193337,
+       "p99_kN": 9.03519267353504
+      },
+      "tail_ready_extend_samples": 0,
+      "judged_samples_rev6": 32,
+      "e_excluded": 3,
+      "e_excluded_over_0p6kN": 0,
+      "e_excluded_max_excess_N": -4257.943227773231,
+      "guard_violations": 0,
+      "e1_to_e4_samples": 6,
+      "check_precal_grounded": 0,
+      "check_precal_grounded_t_s": [],
+      "over_0p6kN_rev6": 0,
+      "raw_over_0p6kN": 0
+     }
+    },
+    "over_0p6kN": 0,
+    "judged_samples": 113,
+    "e1_to_e4_samples": 24,
+    "criteria": "rev7",
+    "sensor_model": false,
+    "judged_samples_rev6": 125,
+    "e_excluded": 12,
+    "guard_violations": 0,
+    "over_0p6kN_rev6": 0,
+    "raw_over_0p6kN": 0,
+    "check_precal_grounded": 0,
+    "max_own_excess_N": null
+   },
+   "lift": {
+    "t_lift_s": null,
+    "t_lift_basis": "1ms",
+    "t_lift_sus_s": null,
+    "relift_contacts": {
+     "samples": 0,
+     "max_N": null,
+     "last_t_s": null
+    },
+    "false_liftoff": false
+   },
+   "m2_clip_split": {
+    "m2_clipped_steps_pre_lift": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "m2_clipped_steps_post_lift": [
+     548,
+     1568,
+     720,
+     577
+    ],
+    "m2_clip_split_t_lift_s": null
+   },
+   "m2_release_judgement": {
+    "releases": [
+     {
+      "leg": 0,
+      "t_rel_s": 3.30010000000254,
+      "S_meas_m": -4.206989423588815e-06,
+      "S_M2_m": -4.259019270523001e-06,
+      "sum_bound_m": 1.352583163145676e-06,
+      "hook_shift_m": 1.9471285459284655e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 1,
+      "t_rel_s": 3.30010000000254,
+      "S_meas_m": -4.2073463835633495e-06,
+      "S_M2_m": -4.259404410783736e-06,
+      "sum_bound_m": 1.352917903290121e-06,
+      "hook_shift_m": 2.0529774444065526e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 2,
+      "t_rel_s": 3.30010000000254,
+      "S_meas_m": -4.885107681939311e-06,
+      "S_M2_m": -4.958223947076658e-06,
+      "sum_bound_m": 1.4103535091636316e-06,
+      "hook_shift_m": 1.785709910211593e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 3,
+      "t_rel_s": 3.30010000000254,
+      "S_meas_m": -4.8855956835959825e-06,
+      "S_M2_m": -4.958721139808598e-06,
+      "sum_bound_m": 1.4103946095293836e-06,
+      "hook_shift_m": 1.8850171998022828e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 3,
+      "t_rel_s": 5.200100000001219,
+      "S_meas_m": -2.6343956916869967e-05,
+      "S_M2_m": -2.6599599724921804e-05,
+      "sum_bound_m": 3.596774439330159e-06,
+      "hook_shift_m": 1.9681568024508753e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 0,
+      "t_rel_s": 5.200100000001219,
+      "S_meas_m": -2.7105817964028208e-05,
+      "S_M2_m": -2.743451633279913e-05,
+      "sum_bound_m": 3.535967489067002e-06,
+      "hook_shift_m": 1.9138242519576983e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 1,
+      "t_rel_s": 5.200100000001219,
+      "S_meas_m": -2.7086694662836237e-05,
+      "S_M2_m": -2.7413876309296726e-05,
+      "sum_bound_m": 3.531136329369108e-06,
+      "hook_shift_m": 1.978261733253462e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 2,
+      "t_rel_s": 5.200100000001219,
+      "S_meas_m": -2.6211381443791223e-05,
+      "S_M2_m": -2.645852185719204e-05,
+      "sum_bound_m": 3.623405278750516e-06,
+      "hook_shift_m": 1.927338168939699e-14,
+      "sum_recorded_only": true,
+      "flags": []
+     },
+     {
+      "leg": 0,
+      "t_rel_s": 8.000099999994694,
+      "S_meas_m": 4.262488835426104e-05,
+      "S_M2_m": 4.2344193583759963e-05,
+      "sum_bound_m": 0.0002328227044470293,
+      "hook_shift_m": 2.0246977011164152e-14,
+      "sum_recorded_only": false,
+      "flags": []
+     },
+     {
+      "leg": 1,
+      "t_rel_s": 8.000099999994694,
+      "S_meas_m": 4.195602760235607e-05,
+      "S_M2_m": 4.168160877890914e-05,
+      "sum_bound_m": 0.00022925067705831064,
+      "hook_shift_m": 2.0010488769308163e-14,
+      "sum_recorded_only": false,
+      "flags": []
+     },
+     {
+      "leg": 2,
+      "t_rel_s": 8.000099999994694,
+      "S_meas_m": 4.3597356564288806e-05,
+      "S_M2_m": 4.3293322540021554e-05,
+      "sum_bound_m": 0.0002444287008170394,
+      "hook_shift_m": 2.0113416105059327e-14,
+      "sum_recorded_only": false,
+      "flags": []
+     },
+     {
+      "leg": 3,
+      "t_rel_s": 8.000099999994694,
+      "S_meas_m": 4.259115662126776e-05,
+      "S_M2_m": 4.2297267044970255e-05,
+      "sum_bound_m": 0.00023884138882479202,
+      "hook_shift_m": 1.998931097517897e-14,
+      "sum_recorded_only": false,
+      "flags": []
+     }
+    ],
+    "flags": []
+   },
+   "ext_lock": {
+    "ext_lock_count": [
+     2,
+     2,
+     2,
+     2
+    ],
+    "ext_lock_excess_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "ext_lock_risk_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "ext_lock_excess_max_bar": [
+     1.0544051241595297e-06,
+     1.5049893409013747e-09,
+     0.0,
+     0.0
+    ],
+    "ext_lock_knee_max_kN": [
+     59.100620627354026,
+     59.100620627354026,
+     42.44353503099572,
+     42.44353503099572
+    ],
+    "ext_lock_basis": "released locks of m2_releases"
+   },
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     1,
+     2,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     1,
+     2,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.3864989969642274,
+     0.9210774673637608,
+     0.0,
+     0.1933593318371859
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     -0.385726771453073,
+     -0.9214737897197983,
+     null,
+     -0.19297299933533532
+    ],
+    "first_t_s": [
+     3.6601,
+     3.6601,
+     null,
+     9.3332
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": {
+    "rule": "\u2462-on rows (tension_premise.md 5.4, 6.3), plant rod pressure p_tr at every controller read. ext_moving (judged): breach_reads = p_tr > p_hat + delta_m, the sum must be 0; margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the VB T4h replay (t4h_replay with the \u2462-on setting, over_0p6kN == 0); here a cross-check FLAG against the monitor's model bound \u2463 (before the reading bound \u2464): locked_breach_reads = p_tr > \u2463, locked_breach_over_tol_reads = p_tr > \u2463 + 0.6 kN / A_ann (the T4h tolerance; > 0 is a FLAG, a VB T4h disagreement is a replay mismatch); locked_vs_extend_bound_reads = p_tr > p_hat + delta_m on locked legs, diagnostic only. 1 Pa rounding allowance; retracting legs apart (premise \u2463); null record = option off or no rod reading",
+    "reads": [
+     161,
+     161,
+     161,
+     161
+    ],
+    "breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "margin_used_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "min_gap_bar": [
+     0.5000080077689985,
+     0.5000103784383414,
+     0.5000144655613107,
+     0.5000131599632452
+    ],
+    "min_gap_t_s": [
+     4.3,
+     4.3,
+     4.4,
+     4.4
+    ],
+    "first_breach_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "locked_reads": [
+     11,
+     11,
+     11,
+     11
+    ],
+    "locked_unpaired_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_breach_over_tol_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "locked_min_gap_bar": [
+     11.29648112425517,
+     11.295482354041818,
+     11.280158648947747,
+     11.27894785166963
+    ],
+    "locked_min_gap_t_s": [
+     5.0,
+     4.6,
+     5.1,
+     5.1
+    ],
+    "locked_bound_source": [
+     "pilot_model",
+     "pilot_model",
+     "pilot_model",
+     "pilot_model"
+    ],
+    "locked_tolerance_bar": [
+     1.5915494327375639,
+     1.5915494327375639,
+     1.9098593192850766,
+     1.9098593192850766
+    ],
+    "locked_vs_extend_bound_reads": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "retract_reads": [
+     13,
+     13,
+     16,
+     13
+    ],
+    "retract_breach_reads": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  }
+ ]
+}

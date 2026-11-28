@@ -1,0 +1,59 @@
+{
+ "rule": "R2 by band and run (module docstring); ml_inject_cm.py rules imported",
+ "started_at": "2026-11-28T16:57:15+09:00",
+ "finished_at": "2026-11-28T16:57:47+09:00",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\ml_pilot_20261025_002044",
+ "params": "C:\\workspace\\outrigger_control\\02_params\\rexome33.yaml",
+ "params_sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+ "runs_used": {
+  "episodes": 192,
+  "bases": 24
+ },
+ "runs_skipped": {
+  "episodes": [],
+  "bases": []
+ },
+ "reference": "crawler lift-off: first |F_crawler| crossing above -> below 1000.0 N (an episode takes its base's)",
+ "bands_s": {
+  "k0": [
+   0.0,
+   0.1
+  ],
+  "k1": [
+   0.1,
+   0.2
+  ],
+  "k2": [
+   0.2,
+   0.3
+  ],
+  "late": [
+   0.3,
+   2.5
+  ],
+  "tail": [
+   2.5,
+   Infinity
+  ]
+ },
+ "script_sha256": "7a651277a0104865d5b888c367f134122c467052f5829f5ec0303686047ad1fc",
+ "rules_script_sha256": "4fb43a6c46bc8e0760341720e4346048e1e7f3dc20816fd99f2a9c6a6f275684",
+ "outputs": {
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\ml_inject_cm_bands_ev.csv": "4d73ab49fba462eb8087d3046383144687c6028b3e2cbf9ca73d0a5aacc63dfe",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\ml_inject_cm_runs_ev.csv": "6dcb58ced05aa660974d6cd6f67ba023f3ce1456d924bdd7137104ff7aa85264"
+ },
+ "event_reference": "episodes: result.json event_t_s; bases: no_event",
+ "row_roles": {
+  "judged": "P9-D1-5 judged row (episodes)",
+  "identity_cell": "C-m = C0 by construction (fallback, valid references < 3), not evidence",
+  "evidence": "C-m evidence cell (bases_liftoff late / tail)",
+  "outside_run_conditions": "outside the edition 9 run conditions (soil response off, phase rule); a public record row, kept"
+ },
+ "columns": {
+  "band": "band of t - t_lift (crawler lift-off)",
+  "event_band": "band of t - t_event (episodes), no_event (bases)",
+  "row_role": "the row's use (row_roles)",
+  "c0_minus_cm": "C0 flagged minus C-m flagged (the loss count, >= 0)",
+  "cm_minus_d1p": "C-m flagged minus D1' flagged (P-S8-14 (c) margin)"
+ }
+}

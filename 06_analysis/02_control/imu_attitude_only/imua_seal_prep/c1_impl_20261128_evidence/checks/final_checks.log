@@ -1,0 +1,64 @@
+commit caa706542ded002f03c4e84a23a8211858d93a93  start 2026-11-28T16:28:32.0384020+09:00
+== bit l2b_v0
+npz pads.npz equal 94fe14d98d6c 94fe14d98d6c
+npz r8_series.npz equal 9e06db05a84e 9e06db05a84e
+npz record/record.npz equal 9fae7bd81f48 9fae7bd81f48
+npz s8_series.npz equal 4637cdf9d7b6 4637cdf9d7b6
+json controller_events.json volatile 0 non-volatile 0 []
+json driver.json volatile 3 non-volatile 0 []
+json las_events.json volatile 0 non-volatile 0 []
+json probe_history.json volatile 0 non-volatile 0 []
+json record/meta.json volatile 2 non-volatile 0 []
+json result.json volatile 3 non-volatile 0 []
+ok True
+rc=0
+== bit l2b_vb
+npz flow_series.npz equal 9200e10a51d4 9200e10a51d4
+npz pads.npz equal 50fc0552bce7 50fc0552bce7
+npz r8_series.npz equal fa66acb9e0a7 fa66acb9e0a7
+npz record/record.npz equal 575eb69e7b2e 575eb69e7b2e
+npz s8_series.npz equal 1813e701c6e8 1813e701c6e8
+json controller_events.json volatile 0 non-volatile 0 []
+json driver.json volatile 3 non-volatile 0 []
+json las_events.json volatile 0 non-volatile 0 []
+json probe_history.json volatile 0 non-volatile 0 []
+json record/meta.json volatile 2 non-volatile 0 []
+json result.json volatile 3 non-volatile 0 []
+ok True
+rc=0
+== bit scm_vb
+npz completion_series.npz equal 8fb6f85c6bfc 8fb6f85c6bfc
+npz controller_commands.npz equal a4f8befa82d3 a4f8befa82d3
+npz flow_series.npz equal 41f7b6f8789e 41f7b6f8789e
+npz r8_series.npz equal 0c0abcbb7335 0c0abcbb7335
+npz record/record.npz equal d51d63ac93c7 d51d63ac93c7
+npz step_series.npz equal 694410bb98ee 694410bb98ee
+json record/meta.json volatile 2 non-volatile 0 []
+json result.json volatile 9 non-volatile 0 []
+ok True
+rc=0
+== meta imua_l2b_vb20
+rc=0
+== expected_sensor imua_l2b_vb20
+{"status": "ok", "chrono_c2": "from C-1 record", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\imu_attitude_only\\imua_seal_prep\\c1_impl_20261128_evidence\\checks\\expected_sensor_imua_l2b_vb20.json"}
+rc=0
+== meta imua_scm_vb
+rc=0
+== expected_sensor imua_scm_vb
+{"status": "ok", "chrono_c2": "from C-1 record", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\imu_attitude_only\\imua_seal_prep\\c1_impl_20261128_evidence\\checks\\expected_sensor_imua_scm_vb.json"}
+rc=0
+== meta gd_v0_full
+rc=0
+== expected_sensor gd_v0_full
+{"status": "ok", "chrono_c2": "from C-1 record", "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\imu_attitude_only\\imua_seal_prep\\c1_impl_20261128_evidence\\checks\\expected_sensor_gd_v0_full.json"}
+rc=0
+== replay imua_l2b_vb20
+{"rows": 1, "settings_equal": 1, "t4_0_passed": 1, "T4_over_0p6kN": 0, "T5_over_0p6kN": 0, "ext_lock_risk_count": 0, "tension_truth_substeps_over_margin": 0, "extend_bound_breach_reads": 0, "extend_bound_margin_used_reads": 0, "extend_bound_locked_over_tol_reads": 0, "anchor_note": "\uc575\ucee4 \uc704\ud5d8 \ubbf8\uad00\uce21", "criteria": "rev7", "rev7": {"T4_judged_samples_rev6": 125, "T4_judged_samples": 113, "T4_e_excluded": 12, "T4_e1_to_e4_samples": 24, "T4_over_0p6kN_rev6": 0, "T4_raw_over_0p6kN": 0, "T4_guard_violations": 0, "T4_check_precal_grounded": 0, "T4_max_own_excess_N": null, "T5_over_0p6kN_rev6": 0, "T5_raw_over_0p6kN": 0, "T5_e_excluded": 0, "T5_guard_violations": 0, "T5_max_own_excess_N": null, "sensor_model_rows": 0, "sample_note": "\uac1c\uc815 7 \ud310\uc815 \ud45c\ubcf8(E \uc81c\uc678 113, \uc81c\uc678 \ud45c\ubcf8 12)"}, "J-P3": {"name": "extend_bound_check.ext_moving.breach_reads == 0", "status": "pass", "runs": 1, "runs_judged": 1, "runs_by_case": {"judged": 1, "no_rod_reading": 0, "defect_rod_reading_without_record": 0, "defect_no_rod_reading_not_declared": 0, "defect_record_without_rod_reading": 0, "defect_revision_5_record_in_revision_4_judgement": 0}, "missing_records": 0, "no_rod_reading_runs": 0, "breach_reads": 0, "runs_with_breach": 0, "margin_used_reads_flag": 0, "locked_breach_over_tol_reads_flag": 0, "runs_expected": 1, "rule_missing_runs": 0, "test_only_setting_runs": 0, "l1_reference_runs": 0, "revision_key_missing_runs": 0, "revision_key_mismatch_runs": 0, "status_by_revision": {"4": "pass"}}}
+rc=0
+control rc=0
+== replay gd_v0_full
+{"rows": 1, "settings_equal": 1, "t4_0_passed": 1, "T4_over_0p6kN": 0, "T5_over_0p6kN": 0, "ext_lock_risk_count": 0, "tension_truth_substeps_over_margin": 0, "extend_bound_breach_reads": 0, "extend_bound_margin_used_reads": 0, "extend_bound_locked_over_tol_reads": 0, "anchor_note": "\uc575\ucee4 \uc704\ud5d8 \ubbf8\uad00\uce21", "criteria": "rev7", "rev7": {"T4_judged_samples_rev6": 924, "T4_judged_samples": 924, "T4_e_excluded": 0, "T4_e1_to_e4_samples": 32, "T4_over_0p6kN_rev6": 0, "T4_raw_over_0p6kN": 0, "T4_guard_violations": 0, "T4_check_precal_grounded": 0, "T4_max_own_excess_N": null, "T5_over_0p6kN_rev6": 0, "T5_raw_over_0p6kN": 0, "T5_e_excluded": 0, "T5_guard_violations": 0, "T5_max_own_excess_N": null, "sensor_model_rows": 0, "sample_note": "\uac1c\uc815 7 \ud310\uc815 \ud45c\ubcf8(E \uc81c\uc678 924, \uc81c\uc678 \ud45c\ubcf8 0)"}, "J-P3": {"name": "extend_bound_check.ext_moving.breach_reads == 0", "status": "no_p3_runs", "runs": 0, "runs_judged": 0, "runs_by_case": {"judged": 0, "no_rod_reading": 0, "defect_rod_reading_without_record": 0, "defect_no_rod_reading_not_declared": 0, "defect_record_without_rod_reading": 0, "defect_revision_5_record_in_revision_4_judgement": 0}, "missing_records": 0, "no_rod_reading_runs": 0, "breach_reads": 0, "runs_with_breach": 0, "margin_used_reads_flag": 0, "locked_breach_over_tol_reads_flag": 0, "runs_expected": 0, "rule_missing_runs": 0, "test_only_setting_runs": 0, "l1_reference_runs": 0, "revision_key_missing_runs": 0, "revision_key_mismatch_runs": 0, "status_by_revision": {"4": "no_p3_runs"}}}
+rc=0
+control rc=0
+gd_summary rc=0
+end 2026-11-28T16:28:40.1134073+09:00

@@ -1,0 +1,35 @@
+ed9_heldout_same_shape: 7 runs, 7 to do
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=25.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=24.90 s: leg_reapproach_start:RR
+C2 t=44.30 s: leg_reapproach_start:RL
+C2 t=44.30 s: relevel_predicted:RL
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=45.50 s: leg_reapproach_start:RL
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.30 s: relevel_predicted:RR
+1/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready c5a39752 18.1s
+2/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 1c12e2b8 18.1s
+3/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready e152bf69 18.3s
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+4/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 3fa75473 20.1s
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+5/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 4b39f7e1 20.4s
+6/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready e769b4ed 20.6s
+7/7 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 2751b7f5 22.4s

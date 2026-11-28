@@ -1,0 +1,55 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:05+09:00",
+ "finished_at": "2026-11-28T20:06:05+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\on_plain.jsonl",
+    "sha256": "509390b7d000157bdd592345fbbdd08dd2e4181e956439a34591c5ee0cc09c8b"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\on_trace.jsonl",
+    "sha256": "cc7e60e5cf30d85052b0580e04f9976d87e1f9b146cccbcb3ab315ad4e1b4fb1"
+   }
+  ],
+  "allowed_from": null,
+  "priors": []
+ },
+ "stored_tag_absent": null,
+ "stored_lines_without_tag": 0,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names",
+  "d1_info_reasons"
+ ],
+ "status": "identical",
+ "only_common": false,
+ "path_under": {
+  "stored": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b",
+  "new": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-diag"
+ },
+ "counts": {
+  "stored_jobs": 59,
+  "new_jobs": 59,
+  "compared": 59,
+  "differing": 0,
+  "differing_outside_allowed": 0,
+  "allowed": null,
+  "allowed_unchanged": null,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": null,
+ "not_judgeable": [],
+ "differing": [],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

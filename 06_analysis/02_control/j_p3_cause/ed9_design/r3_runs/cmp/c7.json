@@ -1,0 +1,156 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:05+09:00",
+ "finished_at": "2026-11-28T20:06:05+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\off_plain.jsonl",
+    "sha256": "9ed85262085f07ac9c953ac94a3a7885727ebcb6b38e32ee17d12cae367c663b"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\on_plain.jsonl",
+    "sha256": "509390b7d000157bdd592345fbbdd08dd2e4181e956439a34591c5ee0cc09c8b"
+   }
+  ],
+  "allowed_from": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\r3c_expected_d1_step.json",
+   "group": "r3c_expected",
+   "sha256": "046bd02be5af2fe2cf305db8798f4ed3dbe9907101b908aa538e2a1c69db4bbc"
+  },
+  "priors": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\cmp\\c6a.json",
+    "sha256": "99f7cab761ea9896bfd6ac529965da999971f94619b626dd24ee4653124272af",
+    "status": "identical"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\cmp\\c6b.json",
+    "sha256": "a2b61242e1b245eed159e2234be610efbf0f5015c72cb3c450c46318ed1f7a01",
+    "status": "identical"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\cmp\\c6c.json",
+    "sha256": "ba0b38c396f72c569b3c099eb2e6e97dc054e22ddf30d1952805c2b6bd9c8442",
+    "status": "identical"
+   }
+  ]
+ },
+ "stored_tag_absent": null,
+ "stored_lines_without_tag": 0,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names"
+ ],
+ "status": "as_expected",
+ "only_common": false,
+ "path_under": {
+  "stored": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b",
+  "new": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b"
+ },
+ "counts": {
+  "stored_jobs": 59,
+  "new_jobs": 59,
+  "compared": 59,
+  "differing": 9,
+  "differing_outside_allowed": 0,
+  "allowed": 9,
+  "allowed_unchanged": 0,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": "on",
+ "not_judgeable": [],
+ "differing": [
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 1.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0845, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0855, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0865, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0885, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0895, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0835, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  }
+ ],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

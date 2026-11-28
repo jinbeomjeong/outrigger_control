@@ -1,0 +1,431 @@
+{
+ "rule": "v5paper_imua_rules_draft.md revision 10, 3 identity gate 1",
+ "seed": 20261114,
+ "population_lines": 4064,
+ "cells": 44,
+ "sample_lines": 50,
+ "sample_sha256": "29d451b1d75fd2d1d7b59185cbff27b69787132711bd5675134c16c775dcfa76",
+ "sample": [
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-0|V0",
+   "setting": "V0",
+   "key": "D1|H-R-0|rigid|T|roll+val|K3",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-0|VB",
+   "setting": "VB",
+   "key": "D1|H-R-0|rigid|T|roll-op|K1",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A-J2|V0",
+   "setting": "V0",
+   "key": "D1|H-R-A-J2|rigid+J2@FL|T|flat|K1",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A-J2|VB",
+   "setting": "VB",
+   "key": "D1|H-R-A-J2|rigid+J2@FL|T|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A-S1|V0",
+   "setting": "V0",
+   "key": "D1|H-R-A-S1|rigid+S1@FL|T|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A-S1|VB",
+   "setting": "VB",
+   "key": "D1|H-R-A-S1|rigid+S1@FL|T|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A-stop|V0",
+   "setting": "V0",
+   "key": "D1|H-R-A-stop|rigid+J1@RL|T|fup-op|K1",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A-stop|VB",
+   "setting": "VB",
+   "key": "D1|H-R-A-stop|rigid+J1@RL|T|fup-op|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A|V0",
+   "setting": "V0",
+   "key": "D1|H-R-A|rigid+J1@RL|M|fup-psa|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-R-A|VB",
+   "setting": "VB",
+   "key": "D1|H-R-A|rigid+J1@FL|M|fdown-psa|K3",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-0|V0",
+   "setting": "V0",
+   "key": "D1|H-S-0|G1|B|diag-rec|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-0|V0",
+   "setting": "V0",
+   "key": "D1|H-S-0|J1|B|diag-rec|K1",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-0|VB",
+   "setting": "VB",
+   "key": "D1|H-S-0|J1|B|fup-rec|K1",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-1|V0",
+   "setting": "V0",
+   "key": "D1|H-S-1|S1|B|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-1|VB",
+   "setting": "VB",
+   "key": "D1|H-S-1|S1|B|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-A-J2|V0",
+   "setting": "V0",
+   "key": "D1|H-S-A-J2|G1+J2@FL|T|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-A-J2|VB",
+   "setting": "VB",
+   "key": "D1|H-S-A-J2|G1+J2@FL|T|flat|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-A|V0",
+   "setting": "V0",
+   "key": "D1|H-S-A|G1+J1@RL|B|flat|K1",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-A|VB",
+   "setting": "VB",
+   "key": "D1|H-S-A|G1+J1@RL|M|fup-psa|K1",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-C-g|V0",
+   "setting": "V0",
+   "key": "D1|H-S-C-g|J1|M|fdown-rec|K1|c-mid@FL|dsb_gated_off",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-C-g|VB",
+   "setting": "VB",
+   "key": "D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-C|V0",
+   "setting": "V0",
+   "key": "D1|H-S-C|J1|B|flat|K1|c-mid@FL",
+   "eps": 0.0,
+   "controller": "C2"
+  },
+  {
+   "bundle": "D-1",
+   "cell": "D-1|H-S-C|VB",
+   "setting": "VB",
+   "key": "D1|H-S-C|J2|T|flat|K1|c-mid@FL",
+   "eps": 0.002,
+   "controller": "C2"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|C|V0",
+   "setting": "V0",
+   "key": "g6|G1+J2@FL|top|Fs8",
+   "eps": null,
+   "controller": "C2",
+   "study": "C"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|C|VB",
+   "setting": "VB",
+   "key": "g6r|rigid+J1@FL|middle|Fs4",
+   "eps": null,
+   "controller": "C2",
+   "study": "C"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|D|V0",
+   "setting": "V0",
+   "key": "H8|rigid|B|top|flat|FL:d60",
+   "eps": null,
+   "controller": "C2",
+   "study": "D"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|D|VB",
+   "setting": "VB",
+   "key": "H8|rigid|B|top|flat|RR:d60",
+   "eps": null,
+   "controller": "C2",
+   "study": "D"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|g6|V0",
+   "setting": "V0",
+   "key": "g6|G1+S1@FL|bottom|Fs0",
+   "eps": null,
+   "controller": "C2",
+   "study": "g6"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|g6|VB",
+   "setting": "VB",
+   "key": "g6r|rigid+S1@FL|top|Fs4",
+   "eps": null,
+   "controller": "C2",
+   "study": "g6"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|g6|VB",
+   "setting": "VB",
+   "key": "g6|G1+J1@RL|top|Fs0",
+   "eps": null,
+   "controller": "C2",
+   "study": "g6"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|g8|V0",
+   "setting": "V0",
+   "key": "slope|r075|top|4.0|RL|raised|140.0|proj",
+   "eps": null,
+   "controller": "C2",
+   "study": "g8"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|g8|VB",
+   "setting": "VB",
+   "key": "main|flat|bottom|4.0|FR|raised|20.0|proj",
+   "eps": null,
+   "controller": "C2",
+   "study": "g8"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|g8|VB",
+   "setting": "VB",
+   "key": "main|flat|top|0.0|RR|lowered|150.0|proj",
+   "eps": null,
+   "controller": "C2",
+   "study": "g8"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|h6|V0",
+   "setting": "V0",
+   "key": "H6|rigid|B|top|flat|Fs0|m1.2",
+   "eps": null,
+   "controller": "C2",
+   "study": "h6"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|h6|VB",
+   "setting": "VB",
+   "key": "H6|J2|B|top|flat",
+   "eps": null,
+   "controller": "C2",
+   "study": "h6"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|h9|V0",
+   "setting": "V0",
+   "key": "H9|J1|B|top|roll_pos@k0.6",
+   "eps": null,
+   "controller": "C2",
+   "study": "h9"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|h9|VB",
+   "setting": "VB",
+   "key": "H9|J1|B|top|roll_pos@k0.875",
+   "eps": null,
+   "controller": "C2",
+   "study": "h9"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|p3b|V0",
+   "setting": "V0",
+   "key": "base|rigid|0,0|middle|Fs4|b1",
+   "eps": null,
+   "controller": "C2",
+   "study": "p3b"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|p3b|VB",
+   "setting": "VB",
+   "key": "base|rigid|-4.4,0|bottom|Fs8|b1",
+   "eps": null,
+   "controller": "C2",
+   "study": "p3b"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|p3b|VB",
+   "setting": "VB",
+   "key": "base|rigid|2.7355,1.7592|top|Fs0|b1",
+   "eps": null,
+   "controller": "C2",
+   "study": "p3b"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|slope|V0",
+   "setting": "V0",
+   "key": "H3|J2|B|top|nose_down@k0.75",
+   "eps": null,
+   "controller": "C2",
+   "study": "slope"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|slope|VB",
+   "setting": "VB",
+   "key": "H1|G1|B|top|edge_nd",
+   "eps": null,
+   "controller": "C2",
+   "study": "slope"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|x426b|V0",
+   "setting": "V0",
+   "key": "H3|J1|B|top|roll_pos@k0.5|m1.1",
+   "eps": null,
+   "controller": "C2",
+   "study": "x426b"
+  },
+  {
+   "bundle": "U-3",
+   "cell": "U-3|x426b|VB",
+   "setting": "VB",
+   "key": "H3|J2|B|top|roll_pos@k0.75|Fs8",
+   "eps": null,
+   "controller": "C2",
+   "study": "x426b"
+  },
+  {
+   "bundle": "U-6",
+   "cell": "U-6|ABL|VB",
+   "setting": "VB",
+   "key": "G|g6r|rigid+S1@RR|top|Fs0",
+   "eps": null,
+   "controller": "ABL"
+  },
+  {
+   "bundle": "U-6",
+   "cell": "U-6|C2|VB",
+   "setting": "VB",
+   "key": "G|g6r|rigid+J1@RL|top|Fs4",
+   "eps": null,
+   "controller": "C2"
+  },
+  {
+   "bundle": "U-6",
+   "cell": "U-6|C2|VB",
+   "setting": "VB",
+   "key": "G|ref|J2|bottom|Fs4",
+   "eps": null,
+   "controller": "C2"
+  },
+  {
+   "bundle": "U-6",
+   "cell": "U-6|C2|VB",
+   "setting": "VB",
+   "key": "S|H1|J1|B|top|edge_nd",
+   "eps": null,
+   "controller": "C2"
+  },
+  {
+   "bundle": "U-6",
+   "cell": "U-6|IND_LAS|VB",
+   "setting": "VB",
+   "key": "G|ref|rigid|top|Fs0",
+   "eps": null,
+   "controller": "IND_LAS"
+  },
+  {
+   "bundle": "U-6",
+   "cell": "U-6|IND|VB",
+   "setting": "VB",
+   "key": "S|H2|J1|B|bottom|rpB",
+   "eps": null,
+   "controller": "IND"
+  }
+ ]
+}

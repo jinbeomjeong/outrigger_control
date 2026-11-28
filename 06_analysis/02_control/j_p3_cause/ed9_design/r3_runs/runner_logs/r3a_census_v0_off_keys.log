@@ -1,0 +1,28 @@
+[start] r3a_census_v0_off_keys 2026-11-28T18:41:21 mask=0xFFFF priority=Normal
+# key_presence — 필수 키 존재 점검 (값은 읽지 않음)
+
+- 파일 1개, 행 100개 중 대상 100개, 키 2개 · 오류 0 · 경고 0 · 참고 0
+- 조건: (없음), null은 없음으로 셈
+
+| 키 | 있음 | 없음 | null | 대상 행 |
+|---|---|---|---|---|
+| `controller_tag` | 100 | 0 | 0 | 100 |
+| `commands_sha256` | 100 | 0 | 0 | 100 |
+
+## 파일별
+
+| 파일 | 목록 키 | 행 | 대상 | 빠진 키 |
+|---|---|---|---|---|
+| `ed9_census_v0_off.jsonl` | - | 100 | 100 | 0 |
+
+## 있으면 안 되는 키 (--absent-key)
+
+| 키 | 있는 줄 | 대상 행 | 처음 있는 곳 |
+|---|---|---|---|
+| `error` | 0 | 100 | - |
+
+## 발견 사항
+
+발견 사항 없음.
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "key_presence", "command": "scan", "files": 1, "rows": 100, "selected": 100, "keys": 2, "keys_complete": 2, "keys_incomplete": 0, "absent_keys": 1, "absent_keys_violated": 0, "npz_files": 0, "arrays": 0, "arrays_incomplete": 0, "error": 0, "warning": 0, "info": 0, "categories": {}}
+[end] r3a_census_v0_off_keys exit=0 wall_s=0

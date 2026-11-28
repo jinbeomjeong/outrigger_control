@@ -1,0 +1,19 @@
+{
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [
+   "run step record: [\"ho_v0.done: commit '56849248371b4916e2fe683265e7abffdd6fb8d7'\", \"ho_v0.done: end identity '56849248371b4916e2fe683265e7abffdd6fb8d7' / is_clean True\"]"
+  ],
+  "not_judgeable": []
+ },
+ "status": "setting_defect",
+ "command": "stage5",
+ "spec_v8_sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+ "spec_sha256": "<ED9_SPEC_SHA256>",
+ "run_commit": "86121e8f6f45c24e32ceee680a307355bdfe3ba4",
+ "judge_code": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-t9",
+  "head": "2deb5fd78f5b35fcb09766b10d659eb33f0fe8dd",
+  "is_clean": true
+ }
+}

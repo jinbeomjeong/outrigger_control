@@ -1,0 +1,66 @@
+{
+ "assumptions": {
+  "K_1_s": 0.5,
+  "tau_s": 0.8,
+  "stages": 2,
+  "T_loop_s": 0.15000000000000002,
+  "T_inclinometer_s": 0.02,
+  "bessel_hz": 1.0,
+  "bessel_dc_group_delay_s": 0.21671332826107928,
+  "feedback": "negative, L = K/s * F(s) * exp(-sT)"
+ },
+ "full_imu (tilt -> LPF)": {
+  "sweep": {
+   "wgc_rad_s": 0.4439790729169303,
+   "pm_deg": 47.07590781502944,
+   "wpc_rad_s": 1.0647557645326042,
+   "gm_abs": 3.674623543978795,
+   "gm_db": 11.304257066243098,
+   "Ms": 1.7931258906916938,
+   "delay_margin_s": 1.85060431866644
+  },
+  "ct_margin_pade6": {
+   "gm_abs": 3.6746315570209114,
+   "pm_deg": 47.07521041473589,
+   "w_phase_cross_rad_s": 1.0647570257474015,
+   "w_gain_cross_rad_s": 0.4439868219852877
+  },
+  "cl_poles_max_real": -0.265559232950135
+ },
+ "A-type kept LPF (incl -> LPF)": {
+  "sweep": {
+   "wgc_rad_s": 0.4434171640216732,
+   "pm_deg": 41.112572712588076,
+   "wpc_rad_s": 0.8825209016002907,
+   "gm_abs": 2.6611142988744128,
+   "gm_db": 8.501270571105845,
+   "Ms": 2.07336069042282,
+   "delay_margin_s": 1.6182272947944933
+  },
+  "ct_margin_pade6": {
+   "gm_abs": 2.661163379947766,
+   "pm_deg": 41.11145603369408,
+   "w_phase_cross_rad_s": 0.8825306039168977,
+   "w_gain_cross_rad_s": 0.443427944490021
+  },
+  "cl_poles_max_real": -0.20951717396979638
+ },
+ "A-type LPF bypassed (incl only)": {
+  "sweep": {
+   "wgc_rad_s": 0.49901373564776264,
+   "pm_deg": 78.9433506846116,
+   "wpc_rad_s": 4.087544558904003,
+   "gm_abs": 9.427891146692874,
+   "gm_db": 19.48829119137849,
+   "Ms": 1.1791218390526548,
+   "delay_margin_s": 2.7610891115340976
+  },
+  "ct_margin_pade6": {
+   "gm_abs": 9.428068472407967,
+   "pm_deg": 78.94311335885072,
+   "w_phase_cross_rad_s": 4.08760371846244,
+   "w_gain_cross_rad_s": 0.49902444681483227
+  },
+  "cl_poles_max_real": -0.6432975075397743
+ }
+}

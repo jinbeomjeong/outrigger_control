@@ -1,0 +1,58 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:04+09:00",
+ "finished_at": "2026-11-28T20:06:04+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\same_shape_off_a1\\ed9_heldout_same_shape_off.jsonl",
+    "sha256": "2a9ee95167f51e3c71b94809547ac3278f6896e7e0232ed8ffa4870b51aa25f3"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\same_shape_a1\\ed9_heldout_same_shape.jsonl",
+    "sha256": "5c533ff7fac2e38fb6362673b4208dd7cc091b4964b8ffcafd0e44b745a14751"
+   }
+  ],
+  "allowed_from": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\cmp\\scan_same_shape_off.json",
+   "group": "same_shape_off",
+   "sha256": "b67923fda6f8bd459f432060744c4a935a6ee08293c9364bc64328db7343f8cf"
+  },
+  "priors": []
+ },
+ "stored_tag_absent": null,
+ "stored_lines_without_tag": 0,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names"
+ ],
+ "status": "identical",
+ "only_common": false,
+ "path_under": {
+  "stored": null,
+  "new": null
+ },
+ "counts": {
+  "stored_jobs": 7,
+  "new_jobs": 7,
+  "compared": 7,
+  "differing": 0,
+  "differing_outside_allowed": 0,
+  "allowed": 0,
+  "allowed_unchanged": 0,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": "on",
+ "not_judgeable": [],
+ "differing": [],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

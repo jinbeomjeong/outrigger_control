@@ -1,0 +1,64 @@
+# 단계 완료 기록 점검 (step_check)
+
+- 기대 커밋: `15d3a4a4f0d3244c242e98856d2228160d090b2d`
+
+| 단계 | exit_code | commit | src_tree | 폴더 | 이전 시도 | 기록 바이트 같음 | 발견 |
+|---|---|---|---|---|---|---|---|
+| census_v0_off | 0 | 15d3a4a4f0d3 | - | census_v0_off_a1 | None | None | 4 |
+| ho_aa2 | 0 | 15d3a4a4f0d3 | - | ho_aa2_a1 | None | None | 4 |
+| ho_aa3 | 0 | 15d3a4a4f0d3 | - | ho_aa3_a1 | None | None | 4 |
+| ho_v0 | 0 | 15d3a4a4f0d3 | - | ho_v0_a1 | None | None | 4 |
+| same_shape_off | 0 | 15d3a4a4f0d3 | - | same_shape_off_a1 | None | None | 4 |
+| census_v0 | 0 | 15d3a4a4f0d3 | - | census_v0_a1 | None | None | 4 |
+| ho_aa2 | 0 | 15d3a4a4f0d3 | - | ho_aa2_a1 | None | None | 4 |
+| ho_aa3 | 0 | 15d3a4a4f0d3 | - | ho_aa3_a1 | None | None | 4 |
+| ho_v0 | 0 | 15d3a4a4f0d3 | - | ho_v0_a1 | None | None | 4 |
+| same_shape | 0 | 15d3a4a4f0d3 | - | same_shape_a1 | None | None | 4 |
+
+## 발견 사항
+
+### 오류 (error) — 40건
+
+| 분류 | 위치 | 대상 | 내용 |
+|---|---|---|---|
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\census_v0_off.done | census_v0_off | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\census_v0_off.done | census_v0_off | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\census_v0_off.done | census_v0_off | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\census_v0_off.done | census_v0_off | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa2.done | ho_aa2 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa2.done | ho_aa2 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa2.done | ho_aa2 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa2.done | ho_aa2 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa3.done | ho_aa3 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa3.done | ho_aa3 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa3.done | ho_aa3 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_aa3.done | ho_aa3 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_v0.done | ho_v0 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_v0.done | ho_v0 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_v0.done | ho_v0 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\ho_v0.done | ho_v0 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\same_shape_off.done | same_shape_off | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\same_shape_off.done | same_shape_off | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\same_shape_off.done | same_shape_off | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3a_off_15d3a4a4\same_shape_off.done | same_shape_off | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\census_v0.done | census_v0 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\census_v0.done | census_v0 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\census_v0.done | census_v0 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\census_v0.done | census_v0 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa2.done | ho_aa2 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa2.done | ho_aa2 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa2.done | ho_aa2 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa2.done | ho_aa2 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa3.done | ho_aa3 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa3.done | ho_aa3 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa3.done | ho_aa3 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_aa3.done | ho_aa3 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_v0.done | ho_v0 | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_v0.done | ho_v0 | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_v0.done | ho_v0 | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\ho_v0.done | ho_v0 | `previous_attempts` NoneType |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\same_shape.done | same_shape | `identity_start.src_tree` None |
+| src_tree_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\same_shape.done | same_shape | `identity_end.src_tree` None |
+| step_record_missing | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\same_shape.done | same_shape | step_record.json 없음 |
+| previous_attempts_invalid | C:\workspace\outrigger_control\06_analysis\02_control\j_p3_cause\ed9_design\r3_runs\r3b_on_15d3a4a4\same_shape.done | same_shape | `previous_attempts` NoneType |
+{"status": "findings", "ok": true, "exit_code": 1, "tool": "step_check", "command": "check", "steps": 10, "steps_ok": 0, "expect_commit": "15d3a4a4f0d3244c242e98856d2228160d090b2d", "error": 40, "warning": 0, "info": 0, "categories": {"previous_attempts_invalid": 10, "src_tree_invalid": 20, "step_record_missing": 10}}

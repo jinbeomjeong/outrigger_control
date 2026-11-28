@@ -1,0 +1,180 @@
+{
+ "worktree": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9",
+ "c2_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9\\03_src\\outrigger_sim\\control\\c2.py",
+ "run_v5_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9\\04_scripts\\04_hydraulic\\coupled\\run_v5.py",
+ "cl_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9\\04_scripts\\03_control\\r8d1\\c2py_r8d1_closed_loop.py",
+ "s9_soil_slope_patch_replaces_make_controller": true,
+ "factories": {
+  "c2py_r8d1_closed_loop.preset_config(COMBINED)": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": null
+  },
+  "c2py_r8d1_closed_loop.preset_config(PRESSURE)": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": null
+  },
+  "s9_soil_closed_loop.reference_config (unpatched factory)": {
+   "soil.enable": false,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "phase_rule",
+   "controller_tag": null
+  }
+ },
+ "key_file_settings": {
+  "census_keys_ed8.json": [
+   "LSN1",
+   "LSN2",
+   "LSN3",
+   "LSN4",
+   "VBN",
+   "VBNb069",
+   "VBNb16",
+   "VBNc005",
+   "VBNc04",
+   "VBNd05",
+   "VBNd15",
+   "VBNfast",
+   "VBNh05",
+   "VBNh15",
+   "VBNslow"
+  ],
+  "heldout_g_ed8.json": [
+   "VBN"
+  ]
+ },
+ "ed9_batch_settings": {
+  "ed9_heldout_v0": [
+   "V0"
+  ],
+  "ed9_heldout_aa2": [
+   "V0"
+  ],
+  "ed9_heldout_aa3": [
+   "V0"
+  ],
+  "ed9_heldout_same_shape": [
+   "V0"
+  ],
+  "ed9_census_v0": [
+   "V0"
+  ],
+  "ed9_heldout_same_shape_off": [
+   "V0"
+  ],
+  "ed9_census_v0_off": [
+   "V0"
+  ]
+ },
+ "d1_median_batches": [
+  "ed9_heldout_v0",
+  "ed9_heldout_aa2",
+  "ed9_heldout_aa3",
+  "ed9_heldout_same_shape",
+  "ed9_census_v0"
+ ],
+ "settings": {
+  "LSN1": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "LSN2": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "LSN3": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "LSN4": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "V0": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_LAS_K1_CM"
+  },
+  "VBN": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNb069": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNb16": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNc005": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNc04": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNd05": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNd15": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNfast": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNh05": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNh15": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  },
+  "VBNslow": {
+   "soil.enable": true,
+   "imu_residual_median_check": true,
+   "d1_crawler_rule": "loc_rule",
+   "controller_tag": "final_C4G2_P3X_LAS_K1_LSB_CM_ED8"
+  }
+ },
+ "any_phase_rule": [
+  "s9_soil_closed_loop.reference_config (unpatched factory)"
+ ]
+}

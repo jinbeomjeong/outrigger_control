@@ -1,0 +1,8042 @@
+{
+ "rule": "edition 9 design: stats_aa_j7/report.md 2.2, 3.1 (a list, not a judgement)",
+ "inputs": {
+  "keys": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json",
+   "sha256": "a18b5818734f1b10840c903fb9e4b5c140f619705048344f9ea48d16d3142ee5",
+   "pinned": true
+  }
+ },
+ "rule_set": "ed9",
+ "slot_count": 339,
+ "by_source": {
+  "a_phase": {
+   "slots": 171,
+   "not_run": 0
+  },
+  "b_shape": {
+   "slots": 48,
+   "not_run": 7
+  },
+  "c_fs": {
+   "slots": 120,
+   "not_run": 0
+  }
+ },
+ "not_run_jobs": [
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.0125,
+   "twin": {
+    "level": "bottom",
+    "leg": "FL",
+    "fs_kN": 0.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.025,
+   "twin": {
+    "level": "bottom",
+    "leg": "FL",
+    "fs_kN": 4.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "twin": {
+    "level": "bottom",
+    "leg": "RL",
+    "fs_kN": 4.0,
+    "event": "RE1bF",
+    "timing": "ready",
+    "depth_m": 0.025,
+    "ramp_s": 0.05
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.025,
+   "twin": {
+    "level": "bottom",
+    "leg": "RR",
+    "fs_kN": 8.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.05,
+   "twin": {
+    "level": "bottom",
+    "leg": "RR",
+    "fs_kN": 8.0,
+    "event": "RE1bF",
+    "timing": "ready",
+    "depth_m": 0.03,
+    "ramp_s": 0.04
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "twin": {
+    "level": "top",
+    "leg": "RL",
+    "fs_kN": 0.0,
+    "event": "RE1bF",
+    "timing": "ready",
+    "depth_m": 0.025,
+    "ramp_s": 0.05
+   },
+   "setting": "V0"
+  },
+  {
+   "case": "R12",
+   "eps": 0.0,
+   "offset_s": 0.075,
+   "twin": {
+    "level": "top",
+    "leg": "RL",
+    "fs_kN": 4.0,
+    "event": "RE1bF",
+    "timing": "level",
+    "depth_m": 0.025,
+    "ramp_s": 0.05
+   },
+   "setting": "V0"
+  }
+ ],
+ "slots": [
+  {
+   "slot": "a_phase|bottom|FL|Fs0|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs0|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs0|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs0|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs2|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs2|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs4|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs4|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs8|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FL|Fs8|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs0|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs0|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs0|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs0|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs2|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs2|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs4|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs4|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs8|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|FR|Fs8|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs0|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs0|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs0|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs0|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs2|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs2|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs4|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs4|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs8|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RL|Fs8|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs0|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs0|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs0|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs0|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs2|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs2|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs4|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs4|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs8|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|bottom|RR|Fs8|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FL|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|FR|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs0|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs0|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs0|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs0|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs2|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs2|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs4|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs4|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs8|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RL|Fs8|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs0|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs0|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs0|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs0|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs0|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs0|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs2|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs2|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs2|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs2|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs2|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs2|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs4|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs4|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs4|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs4|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs4|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs4|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs8|FS24|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs8|FS24|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs8|G4|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs8|G4|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs8|RE1bF|level",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "a_phase|top|RR|Fs8|RE1bF|ready",
+   "source": "a_phase",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs0|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    4
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs0|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs2|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs2|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs4|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    3
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs4|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs8|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FL|Fs8|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs0|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs0|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs2|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs2|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs4|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs4|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs8|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|FR|Fs8|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs0|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs0|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs2|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs2|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs4|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs4|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    4
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs8|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RL|Fs8|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs0|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs0|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs2|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs2|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs4|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs4|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs8|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    4
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|bottom|RR|Fs8|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    3
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|top|RL|Fs0|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RL|Fs0|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    3
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|top|RL|Fs2|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RL|Fs2|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RL|Fs4|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    3
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": false
+  },
+  {
+   "slot": "b_shape|top|RL|Fs4|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RL|Fs8|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RL|Fs8|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    1
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs0|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs0|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 0.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs2|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs2|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 2.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs4|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs4|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 4.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs8|RE1bF|level",
+   "source": "b_shape",
+   "aa_order_indices": [
+    2
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "level",
+      "depth_m": 0.03,
+      "ramp_s": 0.04
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "b_shape|top|RR|Fs8|RE1bF|ready",
+   "source": "b_shape",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 8.0,
+      "event": "RE1bF",
+      "timing": "ready",
+      "depth_m": 0.025,
+      "ramp_s": 0.05
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FL|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|FR|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RL|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|level|RR|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FL|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|FR|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RL|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|bottom|ready|RR|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "bottom",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|FL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|FL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|FL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|FR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|FR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|FR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RL|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.05,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|level|RR|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "level"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|FL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|FL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|FL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|FR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|FR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|FR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "FR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0625,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RL|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "RL",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|FS24|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|FS24|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.075,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|FS24|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "FS24",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|G4|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0875,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|G4|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|G4|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "G4",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|RE1bF|Fs1",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.025,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 1.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|RE1bF|Fs3",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0125,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 3.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  },
+  {
+   "slot": "c_fs|top|ready|RR|RE1bF|Fs6",
+   "source": "c_fs",
+   "aa_order_indices": [
+    0
+   ],
+   "jobs": [
+    {
+     "case": "R12",
+     "eps": 0.0,
+     "offset_s": 0.0375,
+     "twin": {
+      "level": "top",
+      "leg": "RR",
+      "fs_kN": 6.0,
+      "event": "RE1bF",
+      "timing": "ready"
+     },
+     "setting": "V0"
+    }
+   ],
+   "run_in_stage5": true
+  }
+ ],
+ "status_basis": {
+  "failures": [],
+  "setting_defects": [],
+  "not_judgeable": []
+ },
+ "status": "pass",
+ "command": "aa-candidates",
+ "spec_v8_sha256": "35f9eba8f98f93ddb0fa850ff60844ebd7a443f819febcdf0906a5502c121520",
+ "run_commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+ "judge_code": {
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-impl",
+  "head": "320a1f641420573a1fb66c53aec36d421e42bb4d",
+  "is_clean": true
+ }
+}

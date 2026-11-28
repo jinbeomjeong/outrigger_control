@@ -1,0 +1,34 @@
+{
+ "rule": "control_cm_switch/report.md 2.4 row 1 (C0 D1_step FAULT jobs, expected to change with C-m); audit M-4",
+ "source_jobs": {
+  "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\r3c_jobs.json",
+  "sha256": "d542db7cd6d5c04c395be53fda167759bd1ae1cd133e57e50b237113e0d15cc8"
+ },
+ "labels": [
+  "J1_l179_FR_Fs0_level_30mm004_o0875",
+  "J4_l270_FR_Fs1_ready_default_o0875",
+  "S1_l173_FL_Fs2_level_30mm004_o0875",
+  "J1shape_o0.0835",
+  "J1shape_o0.0845",
+  "J1shape_o0.0855",
+  "J1shape_o0.0865",
+  "J1shape_o0.0885",
+  "J1shape_o0.0895"
+ ],
+ "groups": {
+  "r3c_expected": {
+   "d1_step_keys": [
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 1.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0835, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0845, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0855, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0865, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0885, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+    "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0895, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}"
+   ],
+   "d1_step_lines": 9
+  }
+ }
+}

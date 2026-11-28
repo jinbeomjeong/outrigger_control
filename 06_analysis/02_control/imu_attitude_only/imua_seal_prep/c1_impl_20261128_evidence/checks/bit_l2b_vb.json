@@ -1,0 +1,99 @@
+{
+ "before": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\base\\l2b_vb",
+ "after": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\final\\l2b_vb",
+ "npz": {
+  "flow_series.npz": {
+   "same_keys": true,
+   "arrays": 4,
+   "differing_arrays": [],
+   "digest_before": "9200e10a51d4716532b1683ea1bec9621c16572414f412c408b4f47da00fcbe8",
+   "digest_after": "9200e10a51d4716532b1683ea1bec9621c16572414f412c408b4f47da00fcbe8"
+  },
+  "pads.npz": {
+   "same_keys": true,
+   "arrays": 47,
+   "differing_arrays": [],
+   "digest_before": "50fc0552bce75b10ca6f66eaf00a37857aee46a48cf909aee7ab5144f66aacee",
+   "digest_after": "50fc0552bce75b10ca6f66eaf00a37857aee46a48cf909aee7ab5144f66aacee"
+  },
+  "r8_series.npz": {
+   "same_keys": true,
+   "arrays": 28,
+   "differing_arrays": [],
+   "digest_before": "fa66acb9e0a773d8044bd5037b4ee009ebfbd73ec5a983b8343363acd6c77adf",
+   "digest_after": "fa66acb9e0a773d8044bd5037b4ee009ebfbd73ec5a983b8343363acd6c77adf"
+  },
+  "record/record.npz": {
+   "same_keys": true,
+   "arrays": 25,
+   "differing_arrays": [],
+   "digest_before": "575eb69e7b2eb77386f88f6f34099741e157876a1799ea3be6587cae9a62c373",
+   "digest_after": "575eb69e7b2eb77386f88f6f34099741e157876a1799ea3be6587cae9a62c373"
+  },
+  "s8_series.npz": {
+   "same_keys": true,
+   "arrays": 9,
+   "differing_arrays": [],
+   "digest_before": "1813e701c6e86f64a266a1438306606209297c1a93b4ce24f97a231b612c99ee",
+   "digest_after": "1813e701c6e86f64a266a1438306606209297c1a93b4ce24f97a231b612c99ee"
+  }
+ },
+ "json": {
+  "controller_events.json": {
+   "differing_leaves": 0,
+   "volatile": [],
+   "volatile_count": 0,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  },
+  "driver.json": {
+   "differing_leaves": 3,
+   "volatile": [
+    "argv[2]",
+    "pid",
+    "wall_s"
+   ],
+   "volatile_count": 3,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  },
+  "las_events.json": {
+   "differing_leaves": 0,
+   "volatile": [],
+   "volatile_count": 0,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  },
+  "probe_history.json": {
+   "differing_leaves": 0,
+   "volatile": [],
+   "volatile_count": 0,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  },
+  "record/meta.json": {
+   "differing_leaves": 2,
+   "volatile": [
+    "run.scenario.settings.l2b_start.settle.wall_s",
+    "saved_utc"
+   ],
+   "volatile_count": 2,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  },
+  "result.json": {
+   "differing_leaves": 3,
+   "volatile": [
+    "runner.us_per_step",
+    "runner.wall_s",
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "volatile_count": 3,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  }
+ },
+ "ok": true,
+ "npz_files_equal_sets": true,
+ "json_files_equal_sets": true
+}

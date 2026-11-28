@@ -1,0 +1,54 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:04+09:00",
+ "finished_at": "2026-11-28T20:06:04+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\v5\\main.jsonl",
+    "sha256": "9ad749907c34c9e9efb77579a8ab6e3b1f86cdc32d36162c0029005ca545b29e"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\census_v0_off_a1\\ed9_census_v0_off.jsonl",
+    "sha256": "57109f7dc9cbe01b1774d071bb262b9d82ed5a8ac02a6af235592cb00f4e651d"
+   }
+  ],
+  "allowed_from": null,
+  "priors": []
+ },
+ "stored_tag_absent": "final_C4G2_LAS_K1",
+ "stored_lines_without_tag": 100,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names"
+ ],
+ "status": "identical",
+ "only_common": false,
+ "path_under": {
+  "stored": null,
+  "new": null
+ },
+ "counts": {
+  "stored_jobs": 100,
+  "new_jobs": 100,
+  "compared": 100,
+  "differing": 0,
+  "differing_outside_allowed": 0,
+  "allowed": null,
+  "allowed_unchanged": null,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": "off",
+ "not_judgeable": [],
+ "differing": [],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

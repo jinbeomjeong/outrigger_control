@@ -1,0 +1,30 @@
+{
+  "step": "ho_aa3",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_aa3_a1",
+  "exit_code": 0,
+  "commit": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+  "started": "2026-11-28 18:21:31 +09:00",
+  "done": "2026-11-28 18:36:40 +09:00",
+  "codes": {
+    "identity_start": {
+      "head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+      "is_clean": true,
+      "time": "2026-11-28 18:21:31 +09:00"
+    },
+    "identity_end": {
+      "head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+      "is_clean": true,
+      "time": "2026-11-28 18:36:40 +09:00"
+    },
+    "batch": "ed8_heldout_aa3",
+    "invocation": "python.exe -I -B",
+    "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "numba_cache_dir": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\numba_cache\\15d3a4a4",
+    "mask": "0xFFFF",
+    "workers": 8,
+    "jobs_file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+  },
+  "commands": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed8_heldout_aa3 --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_aa3_a1\\ed8_heldout_aa3.jsonl --workers 8 --mask 0xFFFF"
+  ]
+}

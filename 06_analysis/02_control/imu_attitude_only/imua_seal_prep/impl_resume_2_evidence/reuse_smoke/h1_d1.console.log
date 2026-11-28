@@ -1,0 +1,4 @@
+d1: 2 runs, 2 to do
+C2 t=42.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.635
+1/2 {'d1': {'group': 'H-S-0', 'base': 'G1', 'level': 'top', 'slope_name': 'flat', 'roll_deg': 0.0, 'pitch_deg': 0.0, 'ready_limit_s': 90.0, 'crawler_k_scale': 1.0, 'patch_soil': None, 'patch_leg': None, 'sink': None, 'role': 'judge', 'tags': ['stroke_limited_stop_allowed'], 'key': 'D1|H-S-0|G1|T|flat|K1'}, 'eps': 0.0, 'setting': 'V0'}: ready 8f9cba86 25.3s
+2/2 {'d1': {'group': 'H-S-0', 'base': 'J1', 'level': 'top', 'slope_name': 'flat', 'roll_deg': 0.0, 'pitch_deg': 0.0, 'ready_limit_s': 100.0, 'crawler_k_scale': 1.0, 'patch_soil': None, 'patch_leg': None, 'sink': None, 'role': 'judge', 'tags': ['stroke_limited_stop_allowed'], 'key': 'D1|H-S-0|J1|T|flat|K1'}, 'eps': 0.0, 'setting': 'V0'}: ready 319f168a 42.2s

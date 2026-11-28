@@ -1,0 +1,83 @@
+{
+ "checkout": {
+  "head": "caa706542ded002f03c4e84a23a8211858d93a93",
+  "is_clean": true,
+  "script_sha256_lf": "1ac07cd55152c49e9b99aec721cef8fbf46b6bb31432af449b7507f0bf791b08"
+ },
+ "chrono_c2": {
+  "attitude_ki": 0.004,
+  "attitude_kp": 0.1,
+  "controller": {
+   "imu_outputs": "attitude",
+   "probe_cue": "off",
+   "two_pressure": "D1' explained (d1_prime_two_pressure)"
+  },
+  "gains_preset": "v5_A",
+  "guard_kg": 0.08,
+  "model": "inclinometer",
+  "raw_imu": "error-free (the Chrono IMU truth samples: 10 ms means at the IMU mount point), ImuErrorConfig(sample_period_s=0.01); G-e ASSUMPTION",
+  "sensor": {
+   "a_0_1_s2": 63.877421505912515,
+   "a_1_1_s": 13.843130589492304,
+   "delay_samples": 2,
+   "internal_filter": "bessel2",
+   "internal_filter_hz": 1.0,
+   "kind": "inclinometer",
+   "resolution_deg": 0.01,
+   "resolution_rad": 0.00017453292519943296,
+   "sample_period_s": 0.01
+  }
+ },
+ "chrono_c2_source": {
+  "path": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\final\\gd_v0_full\\result.json",
+  "sha256": "93be49d7323842022bd8c516593bb7961913f487ed0ec6a254539142838595d7"
+ },
+ "chrono_c2_status": "from C-1 record",
+ "harness_c2": {
+  "attitude_ki": 0.004,
+  "attitude_kp": 0.1,
+  "controller": {
+   "imu_outputs": "attitude",
+   "probe_cue": "off",
+   "two_pressure": "D1' explained (d1_prime_two_pressure)"
+  },
+  "gains_preset": "v5_A",
+  "guard_kg": 0.08,
+  "model": "inclinometer",
+  "raw_imu": "error-free (the harness IMU samples), ImuErrorConfig()",
+  "sensor": {
+   "a_0_1_s2": 63.877421505912515,
+   "a_1_1_s": 13.843130589492304,
+   "delay_samples": 2,
+   "internal_filter": "bessel2",
+   "internal_filter_hz": 1.0,
+   "kind": "inclinometer",
+   "resolution_deg": 0.01,
+   "resolution_rad": 0.00017453292519943296,
+   "sample_period_s": 0.01
+  }
+ },
+ "harness_ind": {
+  "controller": {
+   "c8": "constants unchanged; the inclinometer angles go into the C8 attitude low-pass in place of the tilt from the specific force"
+  },
+  "model": "inclinometer",
+  "raw_imu": "error-free (the harness IMU samples), ImuErrorConfig()",
+  "sensor": {
+   "a_0_1_s2": 63.877421505912515,
+   "a_1_1_s": 13.843130589492304,
+   "delay_samples": 2,
+   "internal_filter": "bessel2",
+   "internal_filter_hz": 1.0,
+   "kind": "inclinometer",
+   "resolution_deg": 0.01,
+   "resolution_rad": 0.00017453292519943296,
+   "sample_period_s": 0.01
+  }
+ },
+ "rule": "v5paper_imua_rules_draft_r11.md revision 11, 1.1 (whole-block comparison)",
+ "setting": {
+  "gains_preset": "v5_A",
+  "model": "inclinometer"
+ }
+}

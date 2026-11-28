@@ -1,0 +1,121 @@
+{
+ "c2_soil": {
+  "settings": {
+   "enable": true,
+   "plateau_window_m": 0.01,
+   "plateau_mean_speed_fraction": 0.15,
+   "plateau_rise_max_N": 2000.0,
+   "plausibility_fraction": 0.85,
+   "push_speed_fraction": 0.25,
+   "corner_bias_deadzone_m": 0.02,
+   "max_push_m": 0.15,
+   "weight_record_range": [
+    0.9,
+    1.15
+   ],
+   "settle_tilt_samples": 10,
+   "loc_anchor_enable": true,
+   "loc_anchor_deadzone_m": 0.02,
+   "loc_anchor_offset_m": 0.005,
+   "mode_defer_periods": 0,
+   "mode_defer_stroke_m": 0.0,
+   "mode_defer_rise_factor": 4.0,
+   "mode_defer_shadow": false
+  },
+  "loc": false,
+  "soil_mode": false,
+  "t_P_s": null,
+  "t_loc_s": null,
+  "W_hat_N": null,
+  "W_ratio": null,
+  "W_ref_N": 376583.56424339,
+  "corner_order": [
+   "RR",
+   "RL",
+   "FR",
+   "FL"
+  ],
+  "bias_corner_m": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "bias_corner_raw_m": null,
+  "clearance_at_P_m": null,
+  "clearance_at_loc_m": null,
+  "settle_attitude_rad": null,
+  "soil_mode_t_s": null,
+  "soil_mode_start_stroke_m": null,
+  "defer": {
+   "settings": {
+    "mode_defer_periods": 0,
+    "mode_defer_stroke_m": 0.0,
+    "mode_defer_rise_factor": 4.0,
+    "mode_defer_shadow": false
+   },
+   "deferral": null,
+   "shadow": null,
+   "checks": []
+  },
+  "mode_starts": [],
+  "deferrals": [],
+  "push_m": null,
+  "restored_from": null,
+  "loc_anchor_applied": false,
+  "loc_anchor_bias_mm": null
+ },
+ "checks": {
+  "P3-1_crawler_zero_after_ready": null,
+  "P3-1_recontact": null,
+  "P3-1_recontact_pass": true,
+  "P3-1_flags": [],
+  "P3-1_recontact_classes": [],
+  "P3-2_within": false,
+  "P3-2_within_2s_record": false,
+  "P3-2_loc_minus_departure_s": null,
+  "P3-2_limit_s": 2.91165281234524,
+  "P3-2_late_loc_reapproach": false,
+  "P3-2_late_loc_revoked": false,
+  "P3-2_verdict": "fail",
+  "t_loc_first_s": null,
+  "t_loc_final_s": null,
+  "loc_revokes": 0,
+  "P3-3_within": null,
+  "P3-4_within_0p2": false,
+  "P3-4_verdict": "fail",
+  "P3-4_absmax_deg": null,
+  "P3-4_window_s": null,
+  "P3-4_flags": [
+   "no_ready",
+   "no_creep_stop",
+   "window_short"
+  ],
+  "P3-4_window_short": true,
+  "P3-4_creep_vibration_suspect": false,
+  "P3-4_sensor_allowance_left_deg": null,
+  "P3-4_budget_residual_le_0p04_record": null,
+  "reapproach_limit_fired_FLAG": 0,
+  "reapproach_limit_by_cause": {
+   "time": 0,
+   "travel": 0,
+   "unknown": 0
+  },
+  "P3-5_within": null,
+  "P3-5_within_after_departure_record": false,
+  "P3-5_rut_clearance_min_after_first_ready_m": null,
+  "P3-6_within": false,
+  "P3-7_within": null,
+  "P3-7_rise_min_loaded_N": null,
+  "P3-7_reconstruct_ok": false,
+  "P3-8_within": true,
+  "P3-8_within_first": true,
+  "P3-9_flags": 0,
+  "pre_liftoff_flag": false,
+  "W61_warnings": 0,
+  "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (\uac00)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+  "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+ },
+ "us_per_step": 1600.7011049989767
+}
+-> C:\Users\jinbeom\AppData\Local\Temp\claude\63917d480778c1ba\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\scratchpad\cad-imua-c1\final\scm_vb

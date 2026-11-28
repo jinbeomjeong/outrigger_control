@@ -1,0 +1,25 @@
+{
+ "rule": "scan_d1_step.py rules on given rows (module docstring); event names only",
+ "started_at": "2026-11-28T20:06:03+09:00",
+ "finished_at": "2026-11-28T20:06:03+09:00",
+ "inputs": {
+  "rows": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\same_shape_off_a1\\ed9_heldout_same_shape_off.jsonl",
+    "sha256": "2a9ee95167f51e3c71b94809547ac3278f6896e7e0232ed8ffa4870b51aa25f3"
+   }
+  ],
+  "scan_script_sha256": "7c3a636fff7b3c75fa296a6ca94217fead6f3c108a0375983bc074eb05a6af6d"
+ },
+ "groups": {
+  "same_shape_off": {
+   "lines": 7,
+   "lines_by_reason": {},
+   "fault_head_lines": 0,
+   "fault_head_without_reason_lines": 0,
+   "d1_step_keys": [],
+   "error_lines": 0,
+   "d1_step_lines": 0
+  }
+ }
+}

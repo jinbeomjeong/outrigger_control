@@ -1,0 +1,248 @@
+{
+ "rule": "v5paper_imua_rules_draft_r11.md revision 11 4.2 end (E-2 controls, 4.2.1)",
+ "controls": [
+  {
+   "group": "positive",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_A2_t4h/S3_e0.0_VB-eta0.85.npz",
+   "expected": "holds",
+   "observed": "holds",
+   "result": {
+    "status": "holds",
+    "failed": [],
+    "values": {
+     "t_R_s": 87.8000000002372,
+     "t_L_s": 88.40000000024007,
+     "t_D_s": 75.8000000001799,
+     "gap_s": 0.6000000000028649,
+     "t_end_s": 97.80000000028495,
+     "n_inclinometer_readings": 21,
+     "filtered_at_t_L_deg": 0.07566860096910118,
+     "probe_change_deg": 0.0702454686685691,
+     "inclinometer_error_max_deg": 0.011698877979229893,
+     "min_true_force_N": 66304.42506210705
+    },
+    "note": null
+   },
+   "as_expected": true
+  },
+  {
+   "group": "negative_2",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_A2_t4h/S3_e0.0_VB-eta0.85.npz + leg_reapproach_start:FL @ 82.100 s",
+   "expected": "fails",
+   "observed": "fails",
+   "result": {
+    "status": "fails",
+    "failed": [
+     "vi_events"
+    ],
+    "values": {
+     "t_R_s": 87.8000000002372,
+     "t_L_s": 88.40000000024007,
+     "t_D_s": 75.8000000001799,
+     "gap_s": 0.6000000000028649,
+     "t_end_s": 97.80000000028495,
+     "n_inclinometer_readings": 21,
+     "filtered_at_t_L_deg": 0.07566860096910118,
+     "probe_change_deg": 0.0702454686685691,
+     "inclinometer_error_max_deg": 0.011698877979229893,
+     "min_true_force_N": 66304.42506210705,
+     "excluding_events": [
+      [
+       82.10000000020999,
+       "leg_reapproach_start:FL"
+      ]
+     ]
+    },
+    "note": null
+   },
+   "as_expected": true
+  },
+  {
+   "group": "positive",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_A2_t4h/S3_e0.002_VB-eta0.85.npz",
+   "expected": "holds",
+   "observed": "holds",
+   "result": {
+    "status": "holds",
+    "failed": [],
+    "values": {
+     "t_R_s": 87.70000000023673,
+     "t_L_s": 88.30000000023959,
+     "t_D_s": 75.70000000017943,
+     "gap_s": 0.6000000000028649,
+     "t_end_s": 97.70000000028448,
+     "n_inclinometer_readings": 21,
+     "filtered_at_t_L_deg": 0.07492486172531718,
+     "probe_change_deg": 0.0692905297947883,
+     "inclinometer_error_max_deg": 0.012656392375871428,
+     "min_true_force_N": 66306.8486169747
+    },
+    "note": null
+   },
+   "as_expected": true
+  },
+  {
+   "group": "positive",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_A2_t4h/S5_e0.001_VB-eta0.8.npz",
+   "expected": "holds",
+   "observed": "holds",
+   "result": {
+    "status": "holds",
+    "failed": [],
+    "values": {
+     "t_R_s": 91.70000000025583,
+     "t_L_s": 92.30000000025869,
+     "t_D_s": 79.70000000019853,
+     "gap_s": 0.6000000000028649,
+     "t_end_s": 101.70000000030358,
+     "n_inclinometer_readings": 21,
+     "filtered_at_t_L_deg": 0.07438028049234154,
+     "probe_change_deg": 0.07670802948491892,
+     "inclinometer_error_max_deg": 0.015264222583786886,
+     "min_true_force_N": 73505.88406215521
+    },
+    "note": null
+   },
+   "as_expected": true
+  },
+  {
+   "group": "positive",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_A2_t4h/S5_e0.002_VB-eta0.8.npz",
+   "expected": "holds",
+   "observed": "holds",
+   "result": {
+    "status": "holds",
+    "failed": [],
+    "values": {
+     "t_R_s": 91.90000000025678,
+     "t_L_s": 92.50000000025965,
+     "t_D_s": 79.90000000019948,
+     "gap_s": 0.6000000000028649,
+     "t_end_s": 101.90000000030453,
+     "n_inclinometer_readings": 21,
+     "filtered_at_t_L_deg": 0.07609086830877808,
+     "probe_change_deg": 0.07798192018101992,
+     "inclinometer_error_max_deg": 0.007509811373791657,
+     "min_true_force_N": 73487.49014974451
+    },
+    "note": null
+   },
+   "as_expected": true
+  },
+  {
+   "group": "positive",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_A2_t4h/S4_e0.0_VB.npz",
+   "expected": "holds",
+   "observed": "holds",
+   "result": {
+    "status": "holds",
+    "failed": [],
+    "values": {
+     "t_R_s": 102.40000000030692,
+     "t_L_s": 104.50000000031694,
+     "t_D_s": 90.40000000024962,
+     "gap_s": 2.100000000010027,
+     "t_end_s": 112.40000000035467,
+     "n_inclinometer_readings": 21,
+     "filtered_at_t_L_deg": 0.07756991920506902,
+     "probe_change_deg": 0.09004894355768174,
+     "inclinometer_error_max_deg": 0.008078709623153863,
+     "min_true_force_N": 74079.29673445663
+    },
+    "note": null
+   },
+   "as_expected": true
+  },
+  {
+   "group": "negative_1",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_R0_t4h/S3_e0.0_VB-eta0.85.npz",
+   "expected": "not_target",
+   "observed": "not_target",
+   "result": {
+    "status": "not_target",
+    "failed": [],
+    "values": {},
+    "note": "no READY -> LEVEL after the last READY entry"
+   },
+   "as_expected": true
+  },
+  {
+   "group": "negative_1",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_R0_t4h/S3_e0.002_VB-eta0.85.npz",
+   "expected": "not_target",
+   "observed": "not_target",
+   "result": {
+    "status": "not_target",
+    "failed": [],
+    "values": {},
+    "note": "no READY -> LEVEL after the last READY entry"
+   },
+   "as_expected": true
+  },
+  {
+   "group": "negative_1",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_R0_t4h/S5_e0.001_VB-eta0.8.npz",
+   "expected": "not_target",
+   "observed": "not_target",
+   "result": {
+    "status": "not_target",
+    "failed": [],
+    "values": {},
+    "note": "no READY -> LEVEL after the last READY entry"
+   },
+   "as_expected": true
+  },
+  {
+   "group": "negative_1",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_R0_t4h/S5_e0.002_VB-eta0.8.npz",
+   "expected": "not_target",
+   "observed": "not_target",
+   "result": {
+    "status": "not_target",
+    "failed": [],
+    "values": {},
+    "note": "no READY -> LEVEL after the last READY entry"
+   },
+   "as_expected": true
+  },
+  {
+   "group": "negative_1",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check_a2/imua_check_R0_t4h/S4_e0.0_VB.npz",
+   "expected": "not_target",
+   "observed": "not_target",
+   "result": {
+    "status": "not_target",
+    "failed": [],
+    "values": {},
+    "note": "no READY -> LEVEL after the last READY entry"
+   },
+   "as_expected": true
+  },
+  {
+   "group": "not_evaluable",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check/imua_check_A-v5_t4h/S5_e0.002_VB-eta0.8.npz",
+   "expected": "not_evaluable",
+   "observed": "not_evaluable",
+   "result": {
+    "status": "not_evaluable",
+    "failed": [],
+    "values": {},
+    "note": "no arrays ['attitude_filtered_deg', 'attitude_true_rad', 'inclinometer_t_s', 'inclinometer_rad', 'attitude_true_at_inclinometer_rad']"
+   },
+   "as_expected": true
+  },
+  {
+   "group": "not_evaluable",
+   "record": "06_analysis/03_hydraulic/coupled/v5/imua_check/imua_check_A-v5_t4h/S5_e0.003_VB-eta0.8.npz",
+   "expected": "not_evaluable",
+   "observed": "not_evaluable",
+   "result": {
+    "status": "not_evaluable",
+    "failed": [],
+    "values": {},
+    "note": "no arrays ['attitude_filtered_deg', 'attitude_true_rad', 'inclinometer_t_s', 'inclinometer_rad', 'attitude_true_at_inclinometer_rad']"
+   },
+   "as_expected": true
+  }
+ ]
+}

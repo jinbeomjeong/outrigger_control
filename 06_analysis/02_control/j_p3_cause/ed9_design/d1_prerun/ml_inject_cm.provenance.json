@@ -1,0 +1,33 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.2 R2, P-S8-14 (c); module docstring",
+ "started_at": "2026-11-28T15:24:45+09:00",
+ "finished_at": "2026-11-28T15:25:12+09:00",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\ml_pilot_20261025_002044",
+ "episodes_used": 192,
+ "episodes_skipped": [],
+ "lever_sources": {
+  "no_gyro": 185,
+  "yaml_top": 3,
+  "yaml_bottom": 3,
+  "yaml_middle": 1
+ },
+ "jumps_bar": [
+  -150.0,
+  -100.0,
+  100.0,
+  150.0
+ ],
+ "params": "C:\\workspace\\outrigger_control\\02_params\\rexome33.yaml",
+ "params_sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+ "script_sha256": "4fb43a6c46bc8e0760341720e4346048e1e7f3dc20816fd99f2a9c6a6f275684",
+ "out": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\ml_inject_cm.csv",
+ "out_sha256": "48a8e4c264cd9623047e1cc059e666b8b379433353756ef3cda94dd5bcf435dc",
+ "columns": {
+  "candidates": "D1 candidates (|dp| > 100 bar) of the rows' periods",
+  "<rule>_flagged": "candidates the rule leaves unexplained (a FAULT)",
+  "<rule>_rate": "flagged / candidates",
+  "cm_ge_d1p": "jump rows: C-m flagged >= D1' flagged (P-S8-14 (c))",
+  "cm_full_quiet": "quiet jump rows: C-m flags every candidate",
+  "real_steps": "no injection: the flagged counts are false FAULTs"
+ }
+}

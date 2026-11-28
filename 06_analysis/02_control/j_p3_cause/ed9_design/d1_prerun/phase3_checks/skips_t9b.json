@@ -1,0 +1,556 @@
+{
+  "tool": "junit_skips",
+  "critical": [
+    "test_ed9_|test_ed8_run_path|test_ed8_gate_p80_key"
+  ],
+  "cases": [
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_las_rows",
+      "file": "",
+      "outcome": "skipped",
+      "type": "",
+      "reason": "collection skipped",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_chrono_options::test_v2_run_s9_without_options_has_no_keys_and_no_options",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_chrono_options::test_run_s9_lc_without_the_valve_option_stops",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_chrono_options::test_run_s9_extend_start_argument_sets_the_option_and_the_p3_tag",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_openloop_rows_are_the_stored_p3a_rows_plus_vb",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_openloop_prop_row_changes_only_the_flow_law",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_openloop_fb_rows_change_only_the_lift_speed_and_time",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_openloop_r_rows_add_only_the_soil_damping_override",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_case_env_adds_row_env_only_when_given",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_jp_rows_use_the_live_rigid_vb_arguments",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_paper_rows::test_machine_parser_takes_the_vb_argv",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_counts_and_tags",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_c4_and_c8_diffs",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_stored_manifest_table_and_scope",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_empty_state_same_as_launch",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_decided_keeps_run_probes_and_adds_main",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_probing_lists_run_then_next",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_rows::test_bundle_sizes_and_unique_names",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_rows::test_rigid_rows_carry_their_setting_arguments",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_rows::test_ls_values",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_rows::test_v0v_rows_add_only_the_valve",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_rows::test_rigid_source_check_finds_a_wrong_argument",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_stage3_rows::test_new_rec_case_is_the_c72_case_with_the_phase_only",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-False-False-None]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-False-True-final_C4G2_P3]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-False-False-final_C4G2_LAS]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-False-True-final_C4G2_P3_LAS]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-True-False-final_C4G2_K1]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-True-True-final_C4G2_P3_K1]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-True-False-final_C4G2_LAS_K1]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    },
+    {
+      "report": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "node_id": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-True-True-final_C4G2_P3_LAS_K1]",
+      "file": "",
+      "outcome": "skipped",
+      "type": "pytest.skip",
+      "reason": "could not import 'pychrono': No module named 'pychrono'",
+      "strict": null
+    }
+  ],
+  "summary": {
+    "tool": "junit_skips",
+    "command": "check",
+    "reports": 1,
+    "tests": 1577,
+    "passed": 1546,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 31,
+    "xfailed": 0,
+    "xpassed": 0,
+    "critical_skipped": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 31,
+    "categories": {
+      "skipped": 31
+    }
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_las_rows: 건너뜀 (-: collection skipped)",
+      "target": "05_tests.unit.test_v5_stage3_las_rows"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_chrono_options::test_v2_run_s9_without_options_has_no_keys_and_no_options: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_chrono_options::test_v2_run_s9_without_options_has_no_keys_and_no_options"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_chrono_options::test_run_s9_lc_without_the_valve_option_stops: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_chrono_options::test_run_s9_lc_without_the_valve_option_stops"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_chrono_options::test_run_s9_extend_start_argument_sets_the_option_and_the_p3_tag: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_chrono_options::test_run_s9_extend_start_argument_sets_the_option_and_the_p3_tag"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_openloop_rows_are_the_stored_p3a_rows_plus_vb: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_openloop_rows_are_the_stored_p3a_rows_plus_vb"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_openloop_prop_row_changes_only_the_flow_law: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_openloop_prop_row_changes_only_the_flow_law"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_openloop_fb_rows_change_only_the_lift_speed_and_time: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_openloop_fb_rows_change_only_the_lift_speed_and_time"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_openloop_r_rows_add_only_the_soil_damping_override: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_openloop_r_rows_add_only_the_soil_damping_override"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_case_env_adds_row_env_only_when_given: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_case_env_adds_row_env_only_when_given"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_jp_rows_use_the_live_rigid_vb_arguments: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_jp_rows_use_the_live_rigid_vb_arguments"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_paper_rows::test_machine_parser_takes_the_vb_argv: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_paper_rows::test_machine_parser_takes_the_vb_argv"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_counts_and_tags: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_counts_and_tags"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_c4_and_c8_diffs: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_c4_and_c8_diffs"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_stored_manifest_table_and_scope: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_resume_4368_chrono_rows::test_stored_manifest_table_and_scope"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_empty_state_same_as_launch: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_empty_state_same_as_launch"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_decided_keeps_run_probes_and_adds_main: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_decided_keeps_run_probes_and_adds_main"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_probing_lists_run_then_next: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_resume_4368_manifest_oc5::test_probing_lists_run_then_next"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_rows::test_bundle_sizes_and_unique_names: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_stage3_rows::test_bundle_sizes_and_unique_names"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_rows::test_rigid_rows_carry_their_setting_arguments: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_stage3_rows::test_rigid_rows_carry_their_setting_arguments"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_rows::test_ls_values: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_stage3_rows::test_ls_values"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_rows::test_v0v_rows_add_only_the_valve: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_stage3_rows::test_v0v_rows_add_only_the_valve"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_rows::test_rigid_source_check_finds_a_wrong_argument: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_stage3_rows::test_rigid_source_check_finds_a_wrong_argument"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_stage3_rows::test_new_rec_case_is_the_c72_case_with_the_phase_only: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_stage3_rows::test_new_rec_case_is_the_c72_case_with_the_phase_only"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-False-False-None]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-False-False-None]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-False-True-final_C4G2_P3]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-False-True-final_C4G2_P3]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-False-False-final_C4G2_LAS]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-False-False-final_C4G2_LAS]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-False-True-final_C4G2_P3_LAS]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-False-True-final_C4G2_P3_LAS]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-True-False-final_C4G2_K1]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-True-False-final_C4G2_K1]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-True-True-final_C4G2_P3_K1]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[False-True-True-final_C4G2_P3_K1]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-True-False-final_C4G2_LAS_K1]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-True-False-final_C4G2_LAS_K1]"
+    },
+    {
+      "severity": "info",
+      "category": "skipped",
+      "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-ed9impl\\junit_t9b.xml",
+      "line": 0,
+      "message": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-True-True-final_C4G2_P3_LAS_K1]: 건너뜀 (pytest.skip: could not import 'pychrono': No module named 'pychrono')",
+      "target": "05_tests.unit.test_v5_switch_tags::test_switch_combination_passes_its_run_s9_expectation[True-True-True-final_C4G2_P3_LAS_K1]"
+    }
+  ]
+}

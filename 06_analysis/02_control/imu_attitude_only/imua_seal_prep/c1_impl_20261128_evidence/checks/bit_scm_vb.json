@@ -1,0 +1,80 @@
+{
+ "before": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\base\\scm_vb",
+ "after": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\final\\scm_vb",
+ "npz": {
+  "completion_series.npz": {
+   "same_keys": true,
+   "arrays": 15,
+   "differing_arrays": [],
+   "digest_before": "8fb6f85c6bfc4b2e93fd1bcf2530b3f8e2e860418730572b2a0be6c47ba47a4c",
+   "digest_after": "8fb6f85c6bfc4b2e93fd1bcf2530b3f8e2e860418730572b2a0be6c47ba47a4c"
+  },
+  "controller_commands.npz": {
+   "same_keys": true,
+   "arrays": 2,
+   "differing_arrays": [],
+   "digest_before": "a4f8befa82d359b212c97239d29ef2494c5f38d2162dc306bf9fa17b3daf490a",
+   "digest_after": "a4f8befa82d359b212c97239d29ef2494c5f38d2162dc306bf9fa17b3daf490a"
+  },
+  "flow_series.npz": {
+   "same_keys": true,
+   "arrays": 4,
+   "differing_arrays": [],
+   "digest_before": "41f7b6f8789ead6bb9cd501b64cc1d637cf091a4f75ef2d270d6ef4ad7817bcf",
+   "digest_after": "41f7b6f8789ead6bb9cd501b64cc1d637cf091a4f75ef2d270d6ef4ad7817bcf"
+  },
+  "r8_series.npz": {
+   "same_keys": true,
+   "arrays": 5,
+   "differing_arrays": [],
+   "digest_before": "0c0abcbb733503f075d3674ee7c8c7f050ccf8e50c11c7da598c4bc9edaa8bce",
+   "digest_after": "0c0abcbb733503f075d3674ee7c8c7f050ccf8e50c11c7da598c4bc9edaa8bce"
+  },
+  "record/record.npz": {
+   "same_keys": true,
+   "arrays": 25,
+   "differing_arrays": [],
+   "digest_before": "d51d63ac93c7b54e1acb0f50ae5340848f85ad64d5325ee83b8df99ca0f173e9",
+   "digest_after": "d51d63ac93c7b54e1acb0f50ae5340848f85ad64d5325ee83b8df99ca0f173e9"
+  },
+  "step_series.npz": {
+   "same_keys": true,
+   "arrays": 13,
+   "differing_arrays": [],
+   "digest_before": "694410bb98ee01e75ca373ab62ae86b0f621a55b039dfe1ba04563527ee81f7e",
+   "digest_after": "694410bb98ee01e75ca373ab62ae86b0f621a55b039dfe1ba04563527ee81f7e"
+  }
+ },
+ "json": {
+  "record/meta.json": {
+   "differing_leaves": 2,
+   "volatile": [
+    "run.scenario.settings.args.out_root",
+    "saved_utc"
+   ],
+   "volatile_count": 2,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  },
+  "result.json": {
+   "differing_leaves": 9,
+   "volatile": [
+    "args.out_root",
+    "build_s",
+    "code_state.files_at_start.taken_utc",
+    "code_state.git_at_start.head",
+    "code_state.git_at_start.taken_utc",
+    "loop_wall_s",
+    "settle_wall_s",
+    "us_per_step",
+    "wall_s"
+   ],
+   "volatile_count": 9,
+   "non_volatile": [],
+   "non_volatile_count": 0
+  }
+ },
+ "ok": true,
+ "npz_files_equal_sets": true,
+ "json_files_equal_sets": true
+}

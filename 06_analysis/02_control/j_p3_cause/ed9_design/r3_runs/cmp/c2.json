@@ -1,0 +1,153 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:03+09:00",
+ "finished_at": "2026-11-28T20:06:04+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_v0_a1\\ed8_heldout_v0.jsonl",
+    "sha256": "fd5f85f529d7a85aecba8588743ae18eb215e3ca1d7df22fe26acfe3f6c333d8"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1\\ed8_heldout_aa2.jsonl",
+    "sha256": "182dcaabbd1e29642386645a4d95521b83ff5d0fe14639ca5172d77e92dbd6b2"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa3_a1\\ed8_heldout_aa3.jsonl",
+    "sha256": "a2d65df1833442b422668b1ada4abc1187a65ca9fdb791eb93d1a4b7e4b448a1"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\ho_v0_a1\\ed9_heldout_v0.jsonl",
+    "sha256": "9c5921ddd4ec7576ad874aa75ae49402dec13bd684488cc2f54af42966b731f1"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\ho_aa2_a1\\ed9_heldout_aa2.jsonl",
+    "sha256": "9f5d20be8ff03a6ca05609244f2f9cb7cb6c9ea8ab7876d89595b6805dd0fcee"
+   },
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\ho_aa3_a1\\ed9_heldout_aa3.jsonl",
+    "sha256": "8d0cf766d385fdb8c5103c304c3d554dcbfe941f948872708b88aa3cdcc86d18"
+   }
+  ],
+  "allowed_from": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\scan_d1_step.json",
+   "group": "stage5_v0",
+   "sha256": "b990c14a8c5215052e9643a7d6715846c43ec0d07350c11dbcd719e1952bdd9e"
+  },
+  "priors": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\cmp\\c1.json",
+    "sha256": "c07ed2ef1945db7285e6c76ee395d4a175b5275bdb06693e78b13eafd4b6e2df",
+    "status": "identical"
+   }
+  ]
+ },
+ "stored_tag_absent": null,
+ "stored_lines_without_tag": 0,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names"
+ ],
+ "status": "as_expected",
+ "only_common": false,
+ "path_under": {
+  "stored": null,
+  "new": null
+ },
+ "counts": {
+  "stored_jobs": 1356,
+  "new_jobs": 1356,
+  "compared": 1356,
+  "differing": 8,
+  "differing_outside_allowed": 0,
+  "allowed": 8,
+  "allowed_unchanged": 0,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": "on",
+ "not_judgeable": [],
+ "differing": [
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FL\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 1.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FR\", \"level\": \"bottom\", \"timing\": \"ready\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 2.0, \"leg\": \"FL\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"ready\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  },
+  {
+   "job": "{\"case\": \"R12\", \"eps\": 0.0, \"offset_s\": 0.0875, \"setting\": \"V0\", \"twin\": {\"depth_m\": 0.03, \"event\": \"RE1bF\", \"fs_kN\": 0.0, \"leg\": \"FR\", \"level\": \"bottom\", \"ramp_s\": 0.04, \"timing\": \"level\"}}",
+   "fields": [
+    "commands_sha256",
+    "final_phase",
+    "warn_fault_names"
+   ],
+   "allowed": true
+  }
+ ],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

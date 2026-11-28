@@ -1,0 +1,98 @@
+{
+ "u3_C_VB.json": [
+  {
+   "key": "g6|G1+J1@FL|top|Fs8",
+   "controller": null,
+   "error": null,
+   "tag": "final_C4G2_P3_LAS_K1_IMUA",
+   "commands": "ac0149ba87778507e20207ca8e68db0faa4ea593ccbbe249040980becbfb8eba",
+   "logged": "ac0149ba87778507e20207ca8e68db0faa4ea593ccbbe249040980becbfb8eba",
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "g6_G1+J1@FL_top_Fs8_C2_bea4bafbb545.npz"
+  }
+ ],
+ "u3_slope_VB.json": [
+  {
+   "key": "H1|G1|B|top|flat",
+   "controller": null,
+   "error": null,
+   "tag": "final_C4G2_P3_LAS_K1_IMUA",
+   "commands": "5237544cca871e041dc9c3ed21b597f3efdcfb999b3597417831a4d6e2393db8",
+   "logged": "5237544cca871e041dc9c3ed21b597f3efdcfb999b3597417831a4d6e2393db8",
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "slope_H1_G1_B_top_flat_C2_0b4ff4a69f30.npz"
+  }
+ ],
+ "u6_b5_main_VB.json": [
+  {
+   "key": "A1-rigid",
+   "controller": "C2",
+   "error": null,
+   "tag": "final_C4G2_P3_LAS_K1_IMUA",
+   "commands": "8352396f69691d589d220ac25b296d61ac4b656d34d268484f6481af9b079c1f",
+   "logged": "8352396f69691d589d220ac25b296d61ac4b656d34d268484f6481af9b079c1f",
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "A1-rigid_C2_bdc99a1d4daf.npz"
+  },
+  {
+   "key": "A1-rigid",
+   "controller": "ABL",
+   "error": null,
+   "tag": "ABL_LAS_K1_IMUA",
+   "commands": "8352396f69691d589d220ac25b296d61ac4b656d34d268484f6481af9b079c1f",
+   "logged": "8352396f69691d589d220ac25b296d61ac4b656d34d268484f6481af9b079c1f",
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "A1-rigid_ABL_29667f41b675.npz"
+  },
+  {
+   "key": "A1-rigid",
+   "controller": "IND",
+   "error": null,
+   "tag": "IND_IMUA",
+   "commands": "360a48311bc57dc3c0b29dbbc289f021b183ee548c826cd1e9b73798f79fbfe5",
+   "logged": null,
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "A1-rigid_IND_a8d1cd443592.npz"
+  }
+ ],
+ "u6_b5_main_VB_IND_LAS.json": [
+  {
+   "key": "A1-rigid",
+   "controller": "IND_LAS",
+   "error": null,
+   "tag": "IND_LAS_IMUA",
+   "commands": "360a48311bc57dc3c0b29dbbc289f021b183ee548c826cd1e9b73798f79fbfe5",
+   "logged": null,
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "A1-rigid_IND_LAS_435fd57c365c.npz"
+  }
+ ],
+ "d1.jsonl": [
+  {
+   "key": "D1|H-R-0|rigid|T|flat|K1",
+   "setting": "V0",
+   "error": null,
+   "tag": "final_C4G2_LAS_K1_IMUA",
+   "commands": "300d9ea456c2f311025937aa12a3cf83fc151bf6d3fdd0ab7104ec0ab297c380",
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "D1_H-R-0_rigid_T_flat_K1_V0_e0.0_d6b3de371a9e.npz"
+  },
+  {
+   "key": "D1|H-R-0|rigid|T|flat|K1",
+   "setting": "VB",
+   "error": null,
+   "tag": "final_C4G2_P3_LAS_K1_IMUA",
+   "commands": "8352396f69691d589d220ac25b296d61ac4b656d34d268484f6481af9b079c1f",
+   "imu_sensor": "inclinometer",
+   "g5": true,
+   "record": "D1_H-R-0_rigid_T_flat_K1_VB_e0.0_46e4dac75866.npz"
+  }
+ ]
+}

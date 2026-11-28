@@ -1,0 +1,58 @@
+{
+ "argv": [
+  "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\l2b_row.py",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\v5-imua",
+  "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\final\\l2b_vb",
+  "K0_top_roll4.4_Fs0",
+  "VB",
+  "--duration",
+  "20",
+  "--expect",
+  "final_C4G2_P3_LAS_K1"
+ ],
+ "v5_argv": [
+  "--flow-eta-v",
+  "0.85",
+  "--flow-dp-comp-bar",
+  "10",
+  "--flow-dp-unload-bar",
+  "20",
+  "--flow-width-bar",
+  "1",
+  "--flow-law",
+  "priority",
+  "--rod-release-force",
+  "--lock-overlap-ratio",
+  "0.02",
+  "--lock-closing-delay-s",
+  "0.05",
+  "--lock-window-follows-plant",
+  "--extend-start-tracked"
+ ],
+ "kw": {
+  "flow_limit": {
+   "eta_v": 0.85,
+   "compensator_drop_bar": 10.0,
+   "unloading_drop_bar": 20.0,
+   "smoothing_width_bar": 1.0,
+   "law": "priority",
+   "record_period_s": 0.001
+  },
+  "hydraulics": {
+   "flow": null,
+   "valve_tau_s": null,
+   "rod_release_force": true,
+   "check_delay": null,
+   "lock_closure": {
+    "overlap_ratio": 0.02,
+    "closing_delay_s": 0.05
+   },
+   "lock_window_follows_plant": true,
+   "extend_start_tracked": true,
+   "m2_law": "flow_limited_r5"
+  },
+  "expect_controller": "final_C4G2_P3_LAS_K1"
+ },
+ "wall_s": 244.9470954000717,
+ "pid": 134136
+}

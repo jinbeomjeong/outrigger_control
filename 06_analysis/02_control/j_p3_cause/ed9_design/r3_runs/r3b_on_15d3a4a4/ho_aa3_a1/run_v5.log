@@ -1,0 +1,1697 @@
+ed9_heldout_aa3: 339 runs, 339 to do
+C2 t=24.90 s: leg_reapproach_start:FL
+C2 t=25.30 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.70 s: leg_reapproach_start:RR
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: leg_reapproach_start:FL
+C2 t=25.20 s: leg_reapproach_start:RR
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=26.10 s: leg_reapproach_start:RR
+C2 t=44.80 s: leg_reapproach_start:FL
+C2 t=44.80 s: relevel_predicted:FL
+C2 t=44.70 s: leg_reapproach_start:FL
+C2 t=44.70 s: relevel_predicted:FL
+C2 t=44.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.10 s: leg_reapproach_start:RR
+C2 t=45.60 s: relevel_predicted:RR
+C2 t=45.60 s: leg_reapproach_start:RR
+C2 t=46.30 s: leg_reapproach_start:RR
+1/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 6e2569ed 20.7s
+2/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready ee2aa5d0 20.6s
+3/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready f5caf038 21.0s
+4/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 274816a2 20.9s
+C2 t=67.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+5/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready d9725532 23.9s
+6/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready fde64a8c 24.1s
+7/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready d042536e 24.2s
+C2 t=45.00 s: leg_reapproach_start:FL
+C2 t=45.00 s: relevel_predicted:FL
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=26.00 s: leg_reapproach_start:RR
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=44.90 s: leg_reapproach_start:FL
+C2 t=44.90 s: relevel_predicted:FL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.80 s: relevel_predicted:RR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=46.40 s: leg_reapproach_start:RR
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+8/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 80aad799 42.7s
+9/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready f311bac7 21.6s
+10/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready d6f79cff 22.4s
+C2 t=45.00 s: leg_reapproach_start:FL
+C2 t=45.00 s: relevel_predicted:FL
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.40 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+11/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 7d7f64fb 24.9s
+12/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 70c9bafe 25.1s
+13/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 0e44284f 22.7s
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+14/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 550288ae 25.3s
+C2 t=26.00 s: leg_reapproach_start:RR
+15/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready a11a5581 32.9s
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=45.70 s: relevel_predicted:RR
+C2 t=46.20 s: leg_reapproach_start:RR
+C2 t=44.90 s: leg_reapproach_start:FL
+C2 t=44.90 s: relevel_predicted:FL
+C2 t=25.10 s: leg_reapproach_start:FL
+C2 t=45.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.40 s: leg_reapproach_start:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=26.20 s: leg_reapproach_start:RR
+16/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready e388ac13 22.5s
+C2 t=45.40 s: leg_reapproach_start:FL
+C2 t=45.40 s: relevel_predicted:FL
+C2 t=45.70 s: leg_reapproach_start:RR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+17/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready bb273bef 25.7s
+18/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready b76ea54f 22.2s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+19/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 956d8fef 22.5s
+20/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 06aff8ce 25.9s
+C2 t=46.00 s: relevel_predicted:RR
+C2 t=46.60 s: leg_reapproach_start:RR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+21/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 965a72b8 25.6s
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=24.90 s: leg_reapproach_start:FL
+C2 t=25.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.80 s: leg_reapproach_start:RR
+22/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 50335815 25.9s
+23/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 6bf42c49 22.1s
+C2 t=24.90 s: leg_reapproach_start:FR
+C2 t=25.20 s: leg_reapproach_start:RL
+C2 t=45.30 s: relevel_predicted:FL
+C2 t=45.40 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.40 s: leg_reapproach_start:FL
+C2 t=45.70 s: leg_reapproach_start:RR
+C2 t=26.10 s: leg_reapproach_start:RL
+C2 t=44.80 s: relevel_predicted:FR
+C2 t=44.90 s: leg_reapproach_start:FR
+C2 t=45.20 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.70 s: leg_reapproach_start:RL
+C2 t=45.60 s: relevel_predicted:RL
+24/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 55c102d0 21.7s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+25/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready ef642548 21.5s
+26/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready e973d692 26.0s
+C2 t=66.80 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.80 s: WARN_ROD_PRESSURE_FALLBACK:RR
+27/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready ff9965bd 24.2s
+28/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready faa7f901 21.7s
+C2 t=72.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=72.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=72.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=72.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.70 s: leg_reapproach_start:FR
+C2 t=44.70 s: relevel_predicted:FR
+C2 t=44.90 s: WARN_D1_IMU_GYRO_MISSING
+29/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 0473cfb0 25.4s
+C2 t=45.60 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=70.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+30/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 2c154ce0 24.5s
+31/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready db0cbdc9 20.6s
+C2 t=24.70 s: leg_reapproach_start:FR
+C2 t=26.00 s: leg_reapproach_start:RL
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.10 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.00 s: leg_reapproach_start:FR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.10 s: leg_reapproach_start:RL
+32/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 3ed53a72 20.2s
+33/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 6bee6c7f 21.8s
+C2 t=44.90 s: leg_reapproach_start:FR
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+34/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 47685261 24.5s
+35/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready bf12ee7b 21.0s
+C2 t=45.80 s: relevel_predicted:RL
+C2 t=46.50 s: leg_reapproach_start:RL
+C2 t=26.00 s: leg_reapproach_start:RL
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+36/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 1788002c 23.5s
+C2 t=45.00 s: relevel_predicted:FR
+C2 t=45.10 s: leg_reapproach_start:FR
+C2 t=45.40 s: leg_reapproach_start:RL
+37/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 6294348f 20.5s
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+38/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready c9085126 30.2s
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+39/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 4fcace42 23.7s
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.10 s: leg_reapproach_start:RL
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.30 s: leg_reapproach_start:RL
+C2 t=25.00 s: leg_reapproach_start:FR
+C2 t=25.30 s: leg_reapproach_start:RL
+40/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready fb2ee083 18.0s
+C2 t=44.90 s: leg_reapproach_start:FR
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+41/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready d91b5eb9 21.0s
+C2 t=45.30 s: relevel_predicted:FR
+C2 t=45.40 s: leg_reapproach_start:FR
+C2 t=45.70 s: leg_reapproach_start:RL
+42/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 1b41b267 18.5s
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=26.30 s: leg_reapproach_start:RL
+43/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 80ba0d33 21.0s
+C2 t=24.90 s: leg_reapproach_start:FR
+C2 t=25.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=46.00 s: relevel_predicted:RL
+C2 t=46.60 s: leg_reapproach_start:RL
+44/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 79e3b2a8 21.0s
+45/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 76f5e549 18.3s
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+46/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 92d32b7e 18.1s
+47/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready b44d79af 20.7s
+C2 t=45.30 s: relevel_predicted:FR
+C2 t=45.40 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.40 s: leg_reapproach_start:FR
+C2 t=45.70 s: leg_reapproach_start:RL
+C2 t=24.90 s: leg_reapproach_start:RL
+C2 t=26.00 s: leg_reapproach_start:RL
+C2 t=44.80 s: leg_reapproach_start:RL
+C2 t=44.80 s: relevel_predicted:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+48/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready d7c14e48 20.8s
+49/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 1e7c4de4 18.1s
+C2 t=24.80 s: leg_reapproach_start:RL
+50/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 76435392 18.3s
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.50 s: relevel_predicted:RL
+C2 t=46.20 s: leg_reapproach_start:RL
+51/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 5a5d29cf 20.7s
+C2 t=24.80 s: leg_reapproach_start:RL
+52/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 748cbf9f 18.4s
+C2 t=44.70 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=44.70 s: leg_reapproach_start:RL
+C2 t=44.70 s: relevel_predicted:RL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+53/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready a889b236 21.1s
+54/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready be16db1b 18.8s
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+55/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 3c7fd8d4 20.9s
+C2 t=25.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=24.70 s: leg_reapproach_start:RL
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.30 s: leg_reapproach_start:RL
+56/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 491af987 18.0s
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+57/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 42c78f39 20.5s
+C2 t=24.80 s: leg_reapproach_start:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+58/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 25d4fbda 18.0s
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+59/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready d13df36e 20.3s
+C2 t=26.00 s: leg_reapproach_start:RL
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+60/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 7bb8c7f9 17.8s
+61/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 7fae0353 20.3s
+62/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready cba14acc 17.7s
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+63/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 181182e9 20.1s
+C2 t=24.80 s: leg_reapproach_start:RL
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.20 s: leg_reapproach_start:RL
+C2 t=25.00 s: leg_reapproach_start:RL
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+64/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 1a7d6287 20.1s
+65/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready cee4af72 17.9s
+C2 t=26.10 s: leg_reapproach_start:RL
+66/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 457081e3 17.8s
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=45.30 s: relevel_predicted:RL
+67/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready a075ad34 20.3s
+C2 t=25.00 s: leg_reapproach_start:RL
+68/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 5e665359 18.2s
+C2 t=46.00 s: relevel_predicted:RL
+C2 t=46.50 s: leg_reapproach_start:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+69/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 9e46da00 20.3s
+70/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 58679a2a 18.1s
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+71/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 20e53d23 20.7s
+C2 t=24.90 s: leg_reapproach_start:RR
+C2 t=26.00 s: leg_reapproach_start:RR
+C2 t=44.70 s: relevel_predicted:RR
+C2 t=44.80 s: leg_reapproach_start:RR
+72/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready aa69d7f8 18.6s
+C2 t=24.80 s: leg_reapproach_start:RR
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+73/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 650ad4a4 18.4s
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.50 s: relevel_predicted:RR
+C2 t=46.10 s: leg_reapproach_start:RR
+74/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 4a1bbbf0 21.1s
+C2 t=24.80 s: leg_reapproach_start:RR
+C2 t=44.70 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=44.70 s: leg_reapproach_start:RR
+C2 t=44.70 s: relevel_predicted:RR
+75/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 90f62b28 18.5s
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+76/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready c4242edd 20.9s
+C2 t=70.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+77/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 6ef2a274 28.1s
+78/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready f42071e3 18.9s
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+79/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 0e6dbe7c 21.7s
+C2 t=25.90 s: leg_reapproach_start:RR
+C2 t=45.70 s: relevel_predicted:RR
+C2 t=46.30 s: leg_reapproach_start:RR
+C2 t=24.70 s: leg_reapproach_start:RR
+80/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready e101319d 19.2s
+C2 t=24.80 s: leg_reapproach_start:RR
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+81/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 7191d4cd 21.5s
+82/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready ede88855 19.4s
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+83/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 9e39fc00 19.1s
+84/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 2a292692 29.1s
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:RR
+85/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready ed3aee9c 22.2s
+C2 t=68.80 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.80 s: WARN_ROD_PRESSURE_FALLBACK:RR
+86/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 6feea0fa 22.4s
+C2 t=25.90 s: leg_reapproach_start:RR
+C2 t=24.70 s: leg_reapproach_start:RR
+87/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 553e0a46 32.0s
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=26.10 s: leg_reapproach_start:RR
+88/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready bacbbee3 22.0s
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=25.00 s: leg_reapproach_start:RR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+89/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 5a5eb61e 24.4s
+90/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 10dbca63 21.6s
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=46.00 s: relevel_predicted:RR
+C2 t=46.50 s: leg_reapproach_start:RR
+91/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 6151625d 24.4s
+C2 t=45.70 s: relevel_predicted:RR
+C2 t=46.20 s: leg_reapproach_start:RR
+92/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready b7589bfc 27.6s
+C2 t=70.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+93/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 6fa485f6 24.6s
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+94/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 5baa4a99 37.0s
+C2 t=24.90 s: leg_reapproach_start:RR
+95/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready c66fe453 21.1s
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=25.70 s: leg_reapproach_start:RR
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+96/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 59f27873 22.9s
+97/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 4a071932 19.4s
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:FL
+C2 t=44.60 s: leg_reapproach_start:FL
+C2 t=44.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:RR
+C2 t=45.40 s: leg_reapproach_start:FL
+C2 t=45.70 s: leg_reapproach_start:RR
+C2 t=46.00 s: leg_reapproach_start:FL
+C2 t=67.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+98/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready ddf0d39b 22.1s
+C2 t=24.50 s: leg_reapproach_start:FL
+C2 t=24.90 s: leg_reapproach_start:RR
+C2 t=25.30 s: leg_reapproach_start:FL
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+99/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 855707c8 19.5s
+C2 t=45.40 s: relevel_predicted:RR
+100/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 9543aeca 22.7s
+C2 t=46.00 s: leg_reapproach_start:RR
+101/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready d23db8a3 19.7s
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+102/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready a21c5d55 22.6s
+C2 t=44.60 s: leg_reapproach_start:FL
+C2 t=44.60 s: relevel_predicted:FL
+C2 t=44.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.10 s: leg_reapproach_start:RR
+C2 t=45.60 s: leg_reapproach_start:RR
+C2 t=46.20 s: leg_reapproach_start:RR
+C2 t=25.70 s: leg_reapproach_start:RR
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+103/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready a82ebf3b 23.8s
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=24.50 s: leg_reapproach_start:FL
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.00 s: leg_reapproach_start:RR
+C2 t=25.50 s: leg_reapproach_start:RR
+C2 t=26.10 s: leg_reapproach_start:RR
+104/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 4a0d177a 21.2s
+C2 t=25.70 s: leg_reapproach_start:RR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+105/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 171d9e53 24.0s
+C2 t=44.60 s: leg_reapproach_start:FL
+C2 t=44.60 s: relevel_predicted:FL
+C2 t=44.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.10 s: leg_reapproach_start:RR
+C2 t=45.60 s: leg_reapproach_start:RR
+C2 t=46.20 s: leg_reapproach_start:RR
+106/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready e40194c0 21.4s
+107/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 788009a9 20.9s
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+108/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready fbe7ced7 24.9s
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+109/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready f44d9ea6 24.4s
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=45.20 s: relevel_predicted:RL
+C2 t=24.50 s: leg_reapproach_start:FR
+C2 t=45.90 s: leg_reapproach_start:RL
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: leg_reapproach_start:RL
+C2 t=25.30 s: leg_reapproach_start:FR
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=26.10 s: leg_reapproach_start:RL
+C2 t=27.50 s: leg_reapproach_start:RR
+110/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 3530ee37 28.9s
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=25.70 s: leg_reapproach_start:RL
+111/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 0a520488 23.0s
+112/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 4f4f70c9 20.0s
+C2 t=44.50 s: relevel_predicted:FR
+C2 t=44.60 s: leg_reapproach_start:FR
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=45.40 s: leg_reapproach_start:FR
+C2 t=45.60 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.70 s: leg_reapproach_start:RL
+C2 t=46.20 s: leg_reapproach_start:RL
+C2 t=24.50 s: leg_reapproach_start:FR
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=24.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: leg_reapproach_start:RL
+C2 t=46.00 s: leg_reapproach_start:RL
+C2 t=25.50 s: leg_reapproach_start:RL
+C2 t=26.10 s: leg_reapproach_start:RL
+113/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 41451968 19.5s
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+114/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 46271c68 22.1s
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+115/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready cd3a3971 21.6s
+116/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 7277a3e8 18.3s
+C2 t=44.60 s: leg_reapproach_start:FR
+C2 t=44.60 s: relevel_predicted:FR
+C2 t=44.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=45.60 s: leg_reapproach_start:RL
+C2 t=46.20 s: leg_reapproach_start:RL
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+117/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 0080b83d 21.0s
+C2 t=24.50 s: leg_reapproach_start:FR
+C2 t=25.00 s: leg_reapproach_start:RL
+C2 t=25.40 s: leg_reapproach_start:FR
+C2 t=25.70 s: leg_reapproach_start:RL
+118/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 90a6c40d 17.7s
+C2 t=45.40 s: relevel_predicted:RL
+C2 t=45.90 s: leg_reapproach_start:RL
+119/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 585fc17a 17.5s
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+120/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 007aeb2a 20.0s
+C2 t=44.60 s: leg_reapproach_start:FR
+C2 t=44.60 s: relevel_predicted:FR
+C2 t=44.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=46.20 s: leg_reapproach_start:RL
+121/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 028775b6 17.7s
+C2 t=45.20 s: relevel_predicted:RL
+C2 t=45.70 s: leg_reapproach_start:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+122/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 62cbbeca 20.5s
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+123/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 1d446322 20.2s
+C2 t=44.40 s: leg_reapproach_start:RL
+C2 t=44.40 s: relevel_predicted:RL
+C2 t=24.60 s: leg_reapproach_start:RL
+C2 t=25.70 s: leg_reapproach_start:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+124/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 8711409f 20.6s
+125/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready f4b9c024 26.8s
+126/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 0adfe2d3 18.4s
+C2 t=45.10 s: relevel_predicted:RL
+C2 t=45.80 s: leg_reapproach_start:RL
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=24.50 s: leg_reapproach_start:RL
+127/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 968ab109 22.0s
+C2 t=44.30 s: leg_reapproach_start:RL
+C2 t=44.30 s: relevel_predicted:RL
+C2 t=24.50 s: leg_reapproach_start:RL
+128/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready e0fee7a0 20.0s
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+129/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready a4e901b3 22.4s
+C2 t=44.60 s: leg_reapproach_start:RL
+C2 t=44.60 s: relevel_predicted:RL
+130/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready d209f31d 28.1s
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+131/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 07aca70f 22.9s
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.80 s: leg_reapproach_start:RL
+132/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 6a7d090a 19.3s
+133/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 56d5d5d3 19.5s
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+134/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 7ec83bed 22.0s
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+135/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready ed34a866 21.0s
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=44.60 s: leg_reapproach_start:RL
+136/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready b44b29e7 18.3s
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+137/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready ffb95af4 17.7s
+138/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 0919a8ce 20.6s
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.80 s: leg_reapproach_start:RL
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=24.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:RR
+139/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready dc8a877f 19.9s
+140/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 6ff48d58 17.7s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+141/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 8470e43e 17.7s
+142/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 68577766 20.5s
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=44.60 s: leg_reapproach_start:RL
+C2 t=44.60 s: relevel_predicted:RL
+C2 t=24.40 s: leg_reapproach_start:RL
+143/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 8c164f6b 17.7s
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+144/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready b471d737 20.4s
+C2 t=45.20 s: relevel_predicted:RL
+C2 t=45.70 s: leg_reapproach_start:RL
+145/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 441920a2 18.2s
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+146/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 93a3aee2 20.6s
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=25.70 s: leg_reapproach_start:RR
+C2 t=44.40 s: leg_reapproach_start:RR
+C2 t=44.40 s: relevel_predicted:RR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+147/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 06c1b804 20.9s
+148/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 4038980b 17.4s
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+149/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 0531d6a3 20.1s
+C2 t=24.60 s: leg_reapproach_start:RR
+C2 t=24.50 s: leg_reapproach_start:RR
+C2 t=45.10 s: relevel_predicted:RR
+C2 t=45.70 s: leg_reapproach_start:RR
+150/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready a30a3971 28.6s
+151/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 18538c15 17.8s
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=24.50 s: leg_reapproach_start:RR
+C2 t=44.30 s: leg_reapproach_start:RR
+C2 t=44.30 s: relevel_predicted:RR
+152/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 4d78006c 19.8s
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+153/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 4e4b1179 17.9s
+154/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready f4ebb467 20.2s
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=44.60 s: leg_reapproach_start:RR
+C2 t=44.60 s: relevel_predicted:RR
+155/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready f85866cc 17.4s
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+156/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 1ee32f35 20.0s
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+157/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 87eb5205 17.8s
+158/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready d4f0913e 17.8s
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=25.60 s: leg_reapproach_start:RR
+159/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready d4aeec4a 20.1s
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+160/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 02065149 18.6s
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=44.60 s: leg_reapproach_start:RR
+C2 t=44.60 s: relevel_predicted:RR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+161/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 7bfceb55 17.8s
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+162/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready a9e2c3ad 20.3s
+163/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready f49077a7 37.2s
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+164/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 437303d6 27.1s
+C2 t=24.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=44.60 s: leg_reapproach_start:RR
+165/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 51aca4e7 17.7s
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=25.60 s: leg_reapproach_start:RR
+166/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready e25b9201 20.4s
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+167/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 41729dc5 20.5s
+168/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready e6f257dc 18.0s
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.70 s: leg_reapproach_start:RR
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+169/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 5bc318d8 17.8s
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+170/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 4090146d 17.7s
+171/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 5f6f53a9 20.4s
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+172/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 49ee7373 20.5s
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=44.70 s: leg_reapproach_start:FL
+C2 t=44.70 s: relevel_predicted:FL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:RR
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=25.00 s: leg_reapproach_start:RR
+C2 t=25.40 s: WARN_D1_IMU_GYRO_MISSING
+173/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 34c4bc63 18.0s
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:FL
+C2 t=44.90 s: relevel_predicted:FL
+174/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 500e805b 20.2s
+C2 t=45.20 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.20 s: leg_reapproach_start:RR
+175/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 7499f0f6 17.7s
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+176/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready a89d39d0 20.3s
+C2 t=24.90 s: leg_reapproach_start:FL
+C2 t=25.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.80 s: leg_reapproach_start:RR
+C2 t=44.90 s: leg_reapproach_start:FL
+C2 t=44.90 s: relevel_predicted:FL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.70 s: leg_reapproach_start:RL
+C2 t=45.30 s: leg_reapproach_start:FL
+C2 t=45.30 s: relevel_predicted:FL
+C2 t=45.50 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.60 s: leg_reapproach_start:RR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+177/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 034411f3 17.9s
+178/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 62ecf692 20.1s
+179/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 7c7117f7 17.4s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+180/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 8a0b18fa 20.4s
+C2 t=24.70 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.70 s: leg_reapproach_start:FR
+C2 t=25.00 s: leg_reapproach_start:RL
+C2 t=44.70 s: leg_reapproach_start:FR
+C2 t=44.70 s: relevel_predicted:FR
+C2 t=44.80 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.10 s: leg_reapproach_start:RL
+181/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready fa430ea2 17.5s
+C2 t=24.70 s: leg_reapproach_start:FR
+C2 t=25.00 s: leg_reapproach_start:RL
+C2 t=25.40 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:FR
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.80 s: leg_reapproach_start:RL
+182/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 49e5aea6 19.9s
+183/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 114c5b67 17.5s
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+184/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 576cc460 20.2s
+C2 t=24.90 s: leg_reapproach_start:FR
+C2 t=25.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:RL
+C2 t=45.30 s: leg_reapproach_start:FR
+C2 t=45.30 s: relevel_predicted:FR
+C2 t=45.50 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.60 s: leg_reapproach_start:RL
+185/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 9ec4f2f1 17.6s
+186/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 54ba9daa 17.7s
+C2 t=44.90 s: leg_reapproach_start:FR
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+187/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 84e8dec2 20.3s
+C2 t=24.70 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.70 s: leg_reapproach_start:RL
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=66.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+188/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready c17a5538 25.5s
+C2 t=24.80 s: leg_reapproach_start:RL
+189/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 88935338 18.3s
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+190/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 344f7401 17.8s
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.70 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=44.70 s: leg_reapproach_start:RL
+C2 t=44.70 s: relevel_predicted:RL
+191/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 9c7e9560 20.6s
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=24.90 s: leg_reapproach_start:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+192/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 21072e93 28.8s
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+193/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 22a33675 20.8s
+194/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready d12d483f 18.4s
+C2 t=24.80 s: leg_reapproach_start:RR
+C2 t=70.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+195/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready de5661e2 20.7s
+C2 t=44.70 s: leg_reapproach_start:RR
+C2 t=44.70 s: relevel_predicted:RR
+196/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 12ee36b6 18.1s
+C2 t=24.70 s: leg_reapproach_start:RR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+197/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready b563c553 20.5s
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+198/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready df6422a0 18.0s
+C2 t=24.70 s: leg_reapproach_start:RR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+199/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 1accd081 20.2s
+C2 t=24.90 s: leg_reapproach_start:RR
+200/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 3612d799 17.9s
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=24.50 s: leg_reapproach_start:RL
+201/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 1b679e76 18.0s
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+202/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 78b7e0ea 20.6s
+203/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 6cd943c9 17.7s
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=70.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+204/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready e5b2d645 20.2s
+C2 t=44.30 s: leg_reapproach_start:RL
+C2 t=44.30 s: relevel_predicted:RL
+205/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 27315e07 17.7s
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+206/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready a713cc98 20.2s
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+207/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 30977156 17.7s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+208/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 33af52c8 20.6s
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+209/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 8d5207ae 17.5s
+210/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 072eb90c 20.1s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+211/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready b5b9733e 20.0s
+C2 t=44.30 s: leg_reapproach_start:RR
+C2 t=44.30 s: relevel_predicted:RR
+C2 t=45.50 s: leg_reapproach_start:RR
+C2 t=24.50 s: leg_reapproach_start:RR
+212/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready 1d333726 17.8s
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+213/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready bb2d1e83 20.1s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+214/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready dc4cd202 17.6s
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+215/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 2.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 08946ba0 20.1s
+216/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 0.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready e63f7217 30.5s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+217/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'level', 'depth_m': 0.03, 'ramp_s': 0.04}, 'setting': 'V0'}: ready eb9ac95c 17.8s
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+218/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 4.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready 986319df 20.1s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=24.90 s: leg_reapproach_start:FL
+C2 t=25.20 s: leg_reapproach_start:RR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+219/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 8.0, 'event': 'RE1bF', 'timing': 'ready', 'depth_m': 0.025, 'ramp_s': 0.05}, 'setting': 'V0'}: ready f4cfbb92 20.3s
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=24.80 s: leg_reapproach_start:FL
+C2 t=25.10 s: leg_reapproach_start:RR
+220/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 4a1491c2 17.6s
+C2 t=26.00 s: leg_reapproach_start:RR
+C2 t=26.00 s: leg_reapproach_start:RR
+221/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 576a568a 22.4s
+222/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 04c29520 17.7s
+223/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready fc05014a 17.8s
+C2 t=26.00 s: leg_reapproach_start:RR
+224/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 47b66317 17.5s
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.00 s: leg_reapproach_start:RR
+225/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready f9009d2b 17.5s
+226/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 38054db5 17.7s
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=24.70 s: leg_reapproach_start:FL
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.00 s: leg_reapproach_start:RR
+227/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 1e1d8bda 17.8s
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.10 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.10 s: leg_reapproach_start:RL
+228/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 5e103ee1 17.9s
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=26.00 s: leg_reapproach_start:RL
+229/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready d675e4d5 17.5s
+230/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 5f76910c 17.6s
+C2 t=26.00 s: leg_reapproach_start:RL
+231/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready cead960f 17.8s
+232/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 9e6462f4 17.7s
+C2 t=26.00 s: leg_reapproach_start:RL
+233/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 3d8be5bc 17.6s
+234/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 035e0e0d 18.0s
+C2 t=24.70 s: leg_reapproach_start:FR
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.60 s: leg_reapproach_start:RL
+235/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 3ca58639 17.4s
+C2 t=24.80 s: leg_reapproach_start:FR
+C2 t=25.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.10 s: leg_reapproach_start:RL
+C2 t=24.70 s: leg_reapproach_start:RL
+C2 t=24.70 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:RL
+236/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 204b6c8d 17.1s
+237/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready ceba2104 17.4s
+C2 t=25.90 s: leg_reapproach_start:RL
+238/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 85f22192 17.3s
+C2 t=24.70 s: leg_reapproach_start:FR
+C2 t=24.90 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.60 s: leg_reapproach_start:RL
+239/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready d1d59e69 17.5s
+C2 t=25.90 s: leg_reapproach_start:RL
+240/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready b5ecf0ae 17.6s
+241/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready d77a5e76 17.6s
+C2 t=25.90 s: leg_reapproach_start:RL
+242/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready af7148b0 30.9s
+243/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready c5a7fc5c 17.8s
+C2 t=24.70 s: leg_reapproach_start:RL
+C2 t=24.70 s: leg_reapproach_start:RL
+C2 t=24.80 s: leg_reapproach_start:RR
+244/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready b8d7f220 17.7s
+C2 t=24.80 s: leg_reapproach_start:RR
+245/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready ec94df95 18.0s
+246/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready c05b64ad 17.6s
+C2 t=24.80 s: leg_reapproach_start:RR
+247/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 9c19a941 17.5s
+C2 t=25.90 s: leg_reapproach_start:RR
+C2 t=24.70 s: leg_reapproach_start:RL
+248/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 9868c039 17.6s
+C2 t=25.90 s: leg_reapproach_start:RR
+249/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 23a23588 17.5s
+250/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 4740464f 17.5s
+C2 t=25.90 s: leg_reapproach_start:RR
+251/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready d15fd295 31.9s
+C2 t=24.70 s: leg_reapproach_start:RR
+C2 t=24.70 s: leg_reapproach_start:RR
+252/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready cec1831b 17.4s
+C2 t=24.70 s: leg_reapproach_start:RR
+253/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 9aaec55e 17.6s
+254/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready eebfb361 17.5s
+255/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 0ede3613 17.5s
+C2 t=45.00 s: relevel_predicted:FL
+C2 t=45.10 s: leg_reapproach_start:RR
+C2 t=45.00 s: leg_reapproach_start:FL
+C2 t=45.00 s: relevel_predicted:FL
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.80 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.00 s: leg_reapproach_start:FL
+C2 t=45.00 s: relevel_predicted:FL
+C2 t=45.30 s: leg_reapproach_start:RR
+256/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready aaed12b2 19.9s
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+257/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready c8576805 19.9s
+C2 t=45.70 s: relevel_predicted:RR
+C2 t=46.40 s: leg_reapproach_start:RR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+258/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready d75d1c0f 19.8s
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.80 s: relevel_predicted:RR
+C2 t=46.40 s: leg_reapproach_start:RR
+259/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 03733b83 19.5s
+C2 t=45.60 s: relevel_predicted:RR
+C2 t=46.20 s: leg_reapproach_start:RR
+C2 t=44.90 s: leg_reapproach_start:FL
+C2 t=44.90 s: relevel_predicted:FL
+C2 t=45.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.20 s: leg_reapproach_start:RR
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+260/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready e44cee34 19.5s
+C2 t=44.90 s: relevel_predicted:FL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:FL
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+261/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready e7e5e2e1 19.6s
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+262/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready cccb9f21 19.9s
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+263/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready fe2193a4 19.6s
+C2 t=44.90 s: leg_reapproach_start:FL
+C2 t=44.90 s: relevel_predicted:FL
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.30 s: leg_reapproach_start:RR
+C2 t=45.00 s: leg_reapproach_start:FR
+C2 t=45.00 s: relevel_predicted:FR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+264/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 2823fb0a 19.7s
+C2 t=45.00 s: relevel_predicted:FR
+C2 t=45.10 s: leg_reapproach_start:FR
+C2 t=45.40 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=46.10 s: leg_reapproach_start:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+265/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 45977901 19.8s
+C2 t=45.00 s: leg_reapproach_start:FR
+C2 t=45.00 s: relevel_predicted:FR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+266/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 716b295e 19.8s
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+267/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready b06be225 19.6s
+C2 t=45.80 s: relevel_predicted:RL
+C2 t=46.60 s: leg_reapproach_start:RL
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.40 s: leg_reapproach_start:RL
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.20 s: leg_reapproach_start:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+268/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 46f415f5 19.6s
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:FR
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.80 s: leg_reapproach_start:RL
+269/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 1cd85db0 19.7s
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+270/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 30a5be1c 19.5s
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+271/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 92ccc3d0 20.0s
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:FR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:FR
+C2 t=45.00 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=45.00 s: leg_reapproach_start:FR
+C2 t=45.30 s: leg_reapproach_start:RL
+C2 t=71.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=71.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=71.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=71.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=45.00 s: relevel_predicted:RL
+272/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready e2c8122e 20.2s
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=45.00 s: relevel_predicted:RL
+273/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready fa557ec4 20.0s
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+274/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 6d89d7a6 19.9s
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.00 s: leg_reapproach_start:RL
+C2 t=45.00 s: relevel_predicted:RL
+275/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 22c02a3b 19.8s
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.30 s: leg_reapproach_start:RL
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.30 s: leg_reapproach_start:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+276/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready d3f145c5 19.9s
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+277/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready b6c5f43c 19.7s
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+278/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready d141281b 19.7s
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:RL
+C2 t=44.90 s: relevel_predicted:RL
+279/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready de601965 19.8s
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=45.00 s: leg_reapproach_start:RR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+280/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 2be4db2c 20.0s
+C2 t=45.70 s: relevel_predicted:RL
+C2 t=46.10 s: leg_reapproach_start:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+281/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 7fb3ed38 19.9s
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=45.00 s: leg_reapproach_start:RR
+C2 t=45.00 s: relevel_predicted:RR
+282/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 806876ec 19.7s
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=45.80 s: relevel_predicted:RR
+C2 t=46.30 s: leg_reapproach_start:RR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+283/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 0a435b0b 20.0s
+284/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 4fc852fb 35.0s
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+285/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready be9cfca3 20.1s
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+286/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready c6b3ab98 20.0s
+C2 t=45.70 s: relevel_predicted:RR
+C2 t=46.20 s: leg_reapproach_start:RR
+C2 t=45.70 s: relevel_predicted:RR
+C2 t=46.10 s: leg_reapproach_start:RR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.40 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+287/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 99e09769 19.8s
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+288/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready a0d347be 20.1s
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+289/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready ffe3bc28 20.1s
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.90 s: leg_reapproach_start:RR
+C2 t=44.90 s: relevel_predicted:RR
+C2 t=25.70 s: leg_reapproach_start:RR
+290/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 7c2afa15 20.2s
+C2 t=25.70 s: leg_reapproach_start:RR
+291/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 18640ea8 17.2s
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+292/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 64c3aa7f 17.5s
+293/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'bottom', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 584c1fba 19.9s
+294/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 8e8b1936 17.3s
+C2 t=25.80 s: leg_reapproach_start:RL
+C2 t=25.70 s: leg_reapproach_start:RL
+295/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 0e228ce3 17.1s
+C2 t=25.70 s: leg_reapproach_start:RL
+296/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready e9c5cd1c 17.4s
+C2 t=24.50 s: leg_reapproach_start:RL
+297/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 0f166703 17.4s
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=25.60 s: leg_reapproach_start:RL
+298/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready b473eae7 18.5s
+C2 t=24.50 s: leg_reapproach_start:RL
+299/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 06e99889 17.5s
+300/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 72c6a9b2 17.4s
+301/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 632dfe08 17.7s
+302/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 934e2af5 22.8s
+C2 t=25.60 s: leg_reapproach_start:RL
+C2 t=24.40 s: leg_reapproach_start:RL
+303/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 20d22127 17.5s
+304/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 7d469cfb 17.5s
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=24.40 s: leg_reapproach_start:RL
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=24.50 s: leg_reapproach_start:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+305/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 03769981 17.5s
+C2 t=25.50 s: leg_reapproach_start:RR
+306/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 53e05173 17.2s
+307/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 672ce61b 17.4s
+308/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready e091f8c1 22.7s
+309/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'level'}, 'setting': 'V0'}: ready 873d9768 17.3s
+310/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 0c3a777f 17.2s
+C2 t=25.60 s: leg_reapproach_start:RR
+C2 t=25.60 s: leg_reapproach_start:RR
+311/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready ec6424f8 17.1s
+312/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'level'}, 'setting': 'V0'}: ready 83a75fbe 17.4s
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+C2 t=24.40 s: leg_reapproach_start:RR
+313/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready ab8a8084 17.4s
+C2 t=45.40 s: relevel_predicted:RR
+C2 t=46.00 s: leg_reapproach_start:RR
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=45.90 s: leg_reapproach_start:RR
+314/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready c36786a3 17.5s
+315/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'level'}, 'setting': 'V0'}: ready 3b85be9b 17.5s
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+316/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 24cc4eb9 19.6s
+317/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 3aa69d58 19.6s
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+318/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'FL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 420d0091 19.8s
+C2 t=45.40 s: relevel_predicted:RL
+C2 t=46.00 s: leg_reapproach_start:RL
+C2 t=45.40 s: relevel_predicted:RL
+C2 t=46.00 s: leg_reapproach_start:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+319/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready d1667044 19.6s
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+320/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 662cdfd3 19.9s
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.90 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=44.60 s: leg_reapproach_start:RL
+C2 t=44.60 s: leg_reapproach_start:RL
+C2 t=44.60 s: relevel_predicted:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+321/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'FR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready a98c3223 19.6s
+C2 t=44.60 s: leg_reapproach_start:RL
+C2 t=44.60 s: relevel_predicted:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+322/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready c92a75d1 19.7s
+323/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.075, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready f53b9199 19.7s
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.80 s: leg_reapproach_start:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+324/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready f17fcd53 19.8s
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+325/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready b416ce32 19.7s
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.80 s: leg_reapproach_start:RL
+C2 t=45.30 s: relevel_predicted:RL
+C2 t=45.90 s: leg_reapproach_start:RL
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+326/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0875, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 37afd90b 19.7s
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.80 s: WARN_ROD_PRESSURE_FALLBACK:RR
+327/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 3659f0fe 30.2s
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+328/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready ae6f2531 20.4s
+C2 t=44.50 s: leg_reapproach_start:RL
+C2 t=44.50 s: relevel_predicted:RL
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=44.60 s: leg_reapproach_start:RR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+329/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 214fdc4a 20.0s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+330/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready be9cadc1 19.7s
+331/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.05, 'twin': {'level': 'top', 'leg': 'RL', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 4591bb82 20.0s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=68.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+332/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 57bcc05f 19.9s
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+333/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'FS24', 'timing': 'ready'}, 'setting': 'V0'}: ready 6ee59034 19.8s
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.80 s: leg_reapproach_start:RR
+C2 t=45.20 s: relevel_predicted:RR
+C2 t=45.70 s: leg_reapproach_start:RR
+C2 t=45.30 s: relevel_predicted:RR
+C2 t=45.90 s: leg_reapproach_start:RR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+334/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0125, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 0543d861 18.9s
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+335/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.025, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready af034028 19.0s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=67.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+336/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0625, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'G4', 'timing': 'ready'}, 'setting': 'V0'}: ready 03caafc3 23.8s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+337/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0375, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 1.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 37f17411 18.6s
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+338/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 3.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready ac0fe625 17.4s
+C2 t=44.50 s: leg_reapproach_start:RR
+C2 t=44.50 s: relevel_predicted:RR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=69.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+339/339 {'case': 'R12', 'eps': 0.0, 'offset_s': 0.0, 'twin': {'level': 'top', 'leg': 'RR', 'fs_kN': 6.0, 'event': 'RE1bF', 'timing': 'ready'}, 'setting': 'V0'}: ready 7ea52380 28.8s

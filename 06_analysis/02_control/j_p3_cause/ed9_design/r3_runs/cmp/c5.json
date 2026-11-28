@@ -1,0 +1,64 @@
+{
+ "rule": "ed9_design/control_d1_rule/report.md 4.1 P9-D1-1 / P9-D1-2 (module docstring)",
+ "started_at": "2026-11-28T20:06:04+09:00",
+ "finished_at": "2026-11-28T20:06:04+09:00",
+ "inputs": {
+  "stored": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\census_v0_off_a1\\ed9_census_v0_off.jsonl",
+    "sha256": "57109f7dc9cbe01b1774d071bb262b9d82ed5a8ac02a6af235592cb00f4e651d"
+   }
+  ],
+  "new": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\census_v0_a1\\ed9_census_v0.jsonl",
+    "sha256": "fa6f63838b86fe33496625881ad106e4f55b71499c789d6417ab7d3c81866b28"
+   }
+  ],
+  "allowed_from": {
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\scan_d1_step.json",
+   "group": "census_v0_main",
+   "sha256": "b990c14a8c5215052e9643a7d6715846c43ec0d07350c11dbcd719e1952bdd9e"
+  },
+  "priors": [
+   {
+    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\cmp\\c4.json",
+    "sha256": "2004b9d5ea2b1d9ac1891d013afd71beade055f378dfe3bbbdd35ea4979c6a5d",
+    "status": "identical"
+   }
+  ]
+ },
+ "stored_tag_absent": null,
+ "stored_lines_without_tag": 0,
+ "compared_fields": [
+  "commands_sha256",
+  "final_phase",
+  "warn_fault_names"
+ ],
+ "status": "identical",
+ "only_common": false,
+ "path_under": {
+  "stored": null,
+  "new": null
+ },
+ "counts": {
+  "stored_jobs": 100,
+  "new_jobs": 100,
+  "compared": 100,
+  "differing": 0,
+  "differing_outside_allowed": 0,
+  "allowed": 0,
+  "allowed_unchanged": 0,
+  "missing": 0,
+  "extra": 0,
+  "switch_mismatch": 0,
+  "path_marker_problems": 0
+ },
+ "expect_switch": "on",
+ "not_judgeable": [],
+ "differing": [],
+ "switch_mismatch": [],
+ "path_marker": [],
+ "missing": [],
+ "extra": []
+}

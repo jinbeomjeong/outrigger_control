@@ -1,0 +1,161 @@
+........................................................................ [ 12%]
+............................s......................................sssss [ 25%]
+sss..................................................................... [ 38%]
+........................................................................ [ 51%]
+........................................................................ [ 64%]
+...ssss................................................................. [ 77%]
+...................................................................sssss [ 90%]
+ssssssss.sss..s.....sss.....................s.........                   [100%]
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.15-final-0 _______________
+
+Name                                                            Stmts   Miss Branch BrPart  Cover
+-------------------------------------------------------------------------------------------------
+04_scripts\04_hydraulic\coupled\aggregate_clip.py                  99     99     18      0     0%
+04_scripts\04_hydraulic\coupled\aggregate_v5.py                   225    225    100      0     0%
+04_scripts\04_hydraulic\coupled\aggregate_verdict.py              124    124     44      0     0%
+04_scripts\04_hydraulic\coupled\build_hopsan_spec.py              159    159     16      0     0%
+04_scripts\04_hydraulic\coupled\check_m1c_repro.py                101    101     30      0     0%
+04_scripts\04_hydraulic\coupled\chrono_lock_window.py              51     21     12      2    60%
+04_scripts\04_hydraulic\coupled\chrono_t45_replay.py              679    345    158     14    46%
+04_scripts\04_hydraulic\coupled\converge.py                        51     51     14      0     0%
+04_scripts\04_hydraulic\coupled\cross_check.py                    214    214     40      0     0%
+04_scripts\04_hydraulic\coupled\d1_judge_4368.py                  134    134     46      0     0%
+04_scripts\04_hydraulic\coupled\d1_rows.py                        233     68     38      2    67%
+04_scripts\04_hydraulic\coupled\d1_runs.py                        291    227     76      1    18%
+04_scripts\04_hydraulic\coupled\d1_select.py                      280    280     84      0     0%
+04_scripts\04_hydraulic\coupled\fb_judge.py                       623    623    212      0     0%
+04_scripts\04_hydraulic\coupled\fb_targeted.py                    868    595    208      5    26%
+04_scripts\04_hydraulic\coupled\flow_exposure.py                   71     71     20      0     0%
+04_scripts\04_hydraulic\coupled\flow_share.py                      80     45     12      0    38%
+04_scripts\04_hydraulic\coupled\h6_judge_4368.py                  179    179     68      0     0%
+04_scripts\04_hydraulic\coupled\h8_noise_judge_4368.py            305    305    108      0     0%
+04_scripts\04_hydraulic\coupled\hand_calc.py                       78     78     20      0     0%
+04_scripts\04_hydraulic\coupled\harness_flow.py                   150     93     16      1    35%
+04_scripts\04_hydraulic\coupled\harness_hydraulics.py             568    460    172      2    15%
+04_scripts\04_hydraulic\coupled\ideal_sensor_targeted.py          968    968    282      0     0%
+04_scripts\04_hydraulic\coupled\ideal_stage1_judge.py             264    264     56      0     0%
+04_scripts\04_hydraulic\coupled\ideal_stage1_path2.py             546    546    218      0     0%
+04_scripts\04_hydraulic\coupled\ideal_stage1_path2_compare.py     123    123     50      0     0%
+04_scripts\04_hydraulic\coupled\imu_a_harness.py                  168     13     30      3    90%
+04_scripts\04_hydraulic\coupled\imua_check.py                     317    171     96     12    43%
+04_scripts\04_hydraulic\coupled\imua_check_judge.py               676    365    278     19    42%
+04_scripts\04_hydraulic\coupled\imua_classify.py                  289    289     64      0     0%
+04_scripts\04_hydraulic\coupled\imua_identity_sample.py           109    109     28      0     0%
+04_scripts\04_hydraulic\coupled\imua_records.py                   113      6     18      4    92%
+04_scripts\04_hydraulic\coupled\inspect_record.py                  12     12      6      0     0%
+04_scripts\04_hydraulic\coupled\j_p3_inputs.py                    132     57     34      4    51%
+04_scripts\04_hydraulic\coupled\jp3_12b_judge.py                  752    752    288      0     0%
+04_scripts\04_hydraulic\coupled\jp3_12b_l1_keys.py                 63     63     18      0     0%
+04_scripts\04_hydraulic\coupled\jp3_12b_plan.py                   212    212     56      0     0%
+04_scripts\04_hydraulic\coupled\jp3_baseline_compare.py           439    439    168      0     0%
+04_scripts\04_hydraulic\coupled\jp3_case_judge.py                 324    324    114      0     0%
+04_scripts\04_hydraulic\coupled\jp3_case_replay.py                 48     48     12      0     0%
+04_scripts\04_hydraulic\coupled\jp3_ckdrop_plan.py                 80     80     18      0     0%
+04_scripts\04_hydraulic\coupled\jp3_ckdrop_record.py              121    121     36      0     0%
+04_scripts\04_hydraulic\coupled\jp3_dryrun_evidence.py            349    349     96      0     0%
+04_scripts\04_hydraulic\coupled\jp3_fixed_inputs.py                43     43      4      0     0%
+04_scripts\04_hydraulic\coupled\jp3_fixed_inputs_list.py          148    148     62      0     0%
+04_scripts\04_hydraulic\coupled\jp3_import_closure.py             128    128     44      0     0%
+04_scripts\04_hydraulic\coupled\jp3_j9main_judge.py               466    466    202      0     0%
+04_scripts\04_hydraulic\coupled\jp3_l1_input_guard.py              45     45      8      0     0%
+04_scripts\04_hydraulic\coupled\jp3_p5_fixed_values.py            255    255     74      0     0%
+04_scripts\04_hydraulic\coupled\jp3_p51_compare.py                114    114     34      0     0%
+04_scripts\04_hydraulic\coupled\jp3_record_table.py               104    104     30      0     0%
+04_scripts\04_hydraulic\coupled\jp3_rejudge_inputs.py              10     10      0      0     0%
+04_scripts\04_hydraulic\coupled\jp3_rerun_match.py                357    357    138      0     0%
+04_scripts\04_hydraulic\coupled\jp3_run_identity.py                78     78     20      0     0%
+04_scripts\04_hydraulic\coupled\jp3_t8_rules.py                    56     56     14      0     0%
+04_scripts\04_hydraulic\coupled\jp3_tjr_judge.py                 1012   1012    384      0     0%
+04_scripts\04_hydraulic\coupled\jp3_x11_replay.py                  61     61     14      0     0%
+04_scripts\04_hydraulic\coupled\judge4368_common.py               354    227    106      7    30%
+04_scripts\04_hydraulic\coupled\judge_chrono_v5.py                 82     82     22      0     0%
+04_scripts\04_hydraulic\coupled\judge_stage1_4368.py              434    434    160      0     0%
+04_scripts\04_hydraulic\coupled\k1_judge.py                       712    712    258      0     0%
+04_scripts\04_hydraulic\coupled\k1_targeted.py                    328    328    100      0     0%
+04_scripts\04_hydraulic\coupled\las_chrono_records.py              72     72     20      0     0%
+04_scripts\04_hydraulic\coupled\las_h7.py                         381    169    128     19    49%
+04_scripts\04_hydraulic\coupled\las_judge.py                      323    165    122     14    45%
+04_scripts\04_hydraulic\coupled\las_p5r4k1_targeted.py            552    552    190      0     0%
+04_scripts\04_hydraulic\coupled\las_phase_diag.py                 653    653    148      0     0%
+04_scripts\04_hydraulic\coupled\las_phase_judge.py                182    182     66      0     0%
+04_scripts\04_hydraulic\coupled\las_revA_diag.py                  578    578    156      0     0%
+04_scripts\04_hydraulic\coupled\las_revA_judge.py                 880    880    300      0     0%
+04_scripts\04_hydraulic\coupled\las_revA_targeted.py              493    493    174      0     0%
+04_scripts\04_hydraulic\coupled\las_rev_judge.py                  721    721    296      0     0%
+04_scripts\04_hydraulic\coupled\las_rev_targeted.py               658    658    232      0     0%
+04_scripts\04_hydraulic\coupled\las_shadow.py                     823    584    242     12    24%
+04_scripts\04_hydraulic\coupled\las_t3.py                         539    300    148     12    40%
+04_scripts\04_hydraulic\coupled\las_t3_dg3.py                      72     72     18      0     0%
+04_scripts\04_hydraulic\coupled\las_t3_judge.py                   496    231    192     19    51%
+04_scripts\04_hydraulic\coupled\las_t3_judge_4368.py              167    167     42      0     0%
+04_scripts\04_hydraulic\coupled\las_t3_presets.py                  12     12      2      0     0%
+04_scripts\04_hydraulic\coupled\las_targeted.py                   721    461    202     10    30%
+04_scripts\04_hydraulic\coupled\lock_window_alignment.py          177    129     62      0    20%
+04_scripts\04_hydraulic\coupled\make_tables.py                     85     85     28      0     0%
+04_scripts\04_hydraulic\coupled\model.py                          108    108     12      0     0%
+04_scripts\04_hydraulic\coupled\p3_chrono_check.py                129    129     28      0     0%
+04_scripts\04_hydraulic\coupled\p3_hash_check.py                  104    104     26      0     0%
+04_scripts\04_hydraulic\coupled\params.py                         121     40      0      0    67%
+04_scripts\04_hydraulic\coupled\replay.py                          64     64      4      0     0%
+04_scripts\04_hydraulic\coupled\replay_share.py                   167    167     44      0     0%
+04_scripts\04_hydraulic\coupled\resume_k1_family.py               202    142     56      2    25%
+04_scripts\04_hydraulic\coupled\resume_k1_family_f.py              36     14     10      1    63%
+04_scripts\04_hydraulic\coupled\resume_k1_identity.py              24     24      6      0     0%
+04_scripts\04_hydraulic\coupled\resume_k1_record.py                36      3     10      1    87%
+04_scripts\04_hydraulic\coupled\resume_k1_steps.py                413     27     86     13    92%
+04_scripts\04_hydraulic\coupled\run_hopsan.py                      42     42      4      0     0%
+04_scripts\04_hydraulic\coupled\run_hopsan_sens.py                 23     23      4      0     0%
+04_scripts\04_hydraulic\coupled\run_numpy.py                       57     57     14      0     0%
+04_scripts\04_hydraulic\coupled\run_v5.py                         510    206    170     26    55%
+04_scripts\04_hydraulic\coupled\run_verdict.py                    150    150     42      0     0%
+04_scripts\04_hydraulic\coupled\s2_defer_judge.py                1034   1034    328      0     0%
+04_scripts\04_hydraulic\coupled\s2_defer_targeted.py              614    614    218      0     0%
+04_scripts\04_hydraulic\coupled\scenarios.py                       48     48      6      0     0%
+04_scripts\04_hydraulic\coupled\sensitivity.py                     39     39     12      0     0%
+04_scripts\04_hydraulic\coupled\stage3_las_compare.py             361    361    114      0     0%
+04_scripts\04_hydraulic\coupled\t4h_replay.py                     226    141     52      5    37%
+04_scripts\04_hydraulic\coupled\test_aggregate_v5.py               46     46      0      0     0%
+04_scripts\04_hydraulic\coupled\test_fb_targeted.py               797    797     40      0     0%
+04_scripts\04_hydraulic\coupled\test_flow_share.py                 49     49      4      0     0%
+04_scripts\04_hydraulic\coupled\test_harness_flow.py              230    230     10      0     0%
+04_scripts\04_hydraulic\coupled\test_ideal_sensor_targeted.py     307    307     36      0     0%
+04_scripts\04_hydraulic\coupled\test_k1.py                        411    411     22      0     0%
+04_scripts\04_hydraulic\coupled\test_las_chrono_records.py         38     38      2      0     0%
+04_scripts\04_hydraulic\coupled\test_las_h7.py                    200    200      8      0     0%
+04_scripts\04_hydraulic\coupled\test_las_p5r4k1_targeted.py        84     84      2      0     0%
+04_scripts\04_hydraulic\coupled\test_las_phase_diag.py            271    271     22      0     0%
+04_scripts\04_hydraulic\coupled\test_las_phase_judge.py           128    128     16      0     0%
+04_scripts\04_hydraulic\coupled\test_las_revA.py                  507    507     40      0     0%
+04_scripts\04_hydraulic\coupled\test_las_revA_diag.py             321    321     10      0     0%
+04_scripts\04_hydraulic\coupled\test_las_rev_targeted.py          348    348     10      0     0%
+04_scripts\04_hydraulic\coupled\test_las_shadow.py                247    247      2      0     0%
+04_scripts\04_hydraulic\coupled\test_las_t3.py                    298     10      6      0    97%
+04_scripts\04_hydraulic\coupled\test_las_t3_k1.py                 399    399     14      0     0%
+04_scripts\04_hydraulic\coupled\test_las_targeted.py              258    258      8      0     0%
+04_scripts\04_hydraulic\coupled\test_s2_defer.py                 1055   1055     72      0     0%
+04_scripts\04_hydraulic\coupled\test_u9_targeted.py                83     83      2      0     0%
+04_scripts\04_hydraulic\coupled\u3_judge.py                       358    168    128     16    53%
+04_scripts\04_hydraulic\coupled\u3_judge_4368.py                  282    282    106      0     0%
+04_scripts\04_hydraulic\coupled\u3_judge_k1.py                    358    279    128      2    17%
+04_scripts\04_hydraulic\coupled\u3_reuse.py                       162     10     58      8    92%
+04_scripts\04_hydraulic\coupled\u9_judge_4368.py                  155    155     46      0     0%
+04_scripts\04_hydraulic\coupled\unit_table.py                      26     26      4      0     0%
+04_scripts\04_hydraulic\coupled\v5_rerun.py                       381     78    126     18    76%
+04_scripts\04_hydraulic\coupled\verdict_cases.py                  110     26     12      0    69%
+04_scripts\04_hydraulic\coupled\verdict_metrics.py                433    334     98      1    19%
+04_scripts\04_hydraulic\coupled\verdict_runs.py                   360    230     86      7    33%
+04_scripts\04_hydraulic\coupled\write_hopsan_model.py              25     25      6      0     0%
+-------------------------------------------------------------------------------------------------
+TOTAL                                                           38275  32571  10290    262    14%
+Coverage JSON written to file C:\Users\jinbeom\AppData\Local\Temp\claude\63917d480778c1ba\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\scratchpad\python-imua\cov_p2p8.json
+============================= slowest 8 durations =============================
+76.76s call     05_tests/unit/test_resume4368_rev1.py::test_rev3_r79_top_level_hash
+64.00s call     05_tests/unit/test_imu_a_harness.py::test_a2_vb_job_records_attitude_in_t4h
+40.90s call     05_tests/unit/test_imu_a_harness.py::test_one_u9_job_per_arm_end_to_end
+34.20s call     05_tests/unit/test_b5_baseline_compare.py::test_abl_commands_do_not_depend_on_the_order_gate[A1-J1]
+31.98s call     05_tests/unit/test_imu_attitude_study.py::test_r0_matches_r79_and_attitude_arms_have_no_d1_warning
+31.43s call     05_tests/unit/test_resume4368_rev1.py::test_settle_v2_record_keeps_the_command_hash
+11.61s call     05_tests/unit/test_b5_baseline_compare.py::test_c2_command_hash_matches_r2ds[A1-rigid]
+4.28s setup    05_tests/unit/test_d1_harness_paths.py::test_g6_plant_takes_the_settle_row_of_the_base_level_and_slope
+524 passed, 34 skipped, 17 deselected in 352.20s (0:05:52)

@@ -1,0 +1,25 @@
+{
+ "argv": [
+  "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\l2b_row.py",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\v5-imua",
+  "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\cad-imua-c1\\final\\gd_v0_full",
+  "K0_top_roll4.4_Fs0",
+  "V0",
+  "--expect",
+  "final_C4G2_LAS_K1_IMUA",
+  "--imu-model",
+  "inclinometer",
+  "--imu-gains",
+  "v5_A"
+ ],
+ "v5_argv": [],
+ "kw": {
+  "expect_controller": "final_C4G2_LAS_K1_IMUA",
+  "imu_a": {
+   "model": "inclinometer",
+   "gains": "v5_A"
+  }
+ },
+ "wall_s": 311.51081689994317,
+ "pid": 137572
+}

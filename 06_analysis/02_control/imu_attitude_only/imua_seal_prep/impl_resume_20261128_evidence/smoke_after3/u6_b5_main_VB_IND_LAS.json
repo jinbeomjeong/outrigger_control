@@ -1,0 +1,407 @@
+{
+ "meta": {
+  "script": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\v5-imua\\04_scripts\\03_control\\s9\\b5_baseline_compare.py",
+  "jobs": 1,
+  "workers": 1,
+  "official": false,
+  "allow_no_settle_row": false,
+  "settle_table_sha256": "7ea9a01d039a72519d7ccd1b8f8a2ab4535901e5e431788f7c0213d96568e074",
+  "controller_settings": {
+   "IND_LAS": {
+    "soil_stop": null,
+    "soil_stop_scope": null,
+    "flat_soil_margin_m": null
+   }
+  },
+  "r72_path_env": "per_leg",
+  "wall_s": 53.4,
+  "affinity": "0xff0000",
+  "v5": {
+   "v5_setting": "VB",
+   "controller_tags": {
+    "IND_LAS": "IND_LAS"
+   },
+   "definitions": {
+    "IND_LAS": {
+     "setting": "VB",
+     "flow_setting": {
+      "is_enabled": true,
+      "eta_v": 0.85,
+      "dp_comp_Pa": null,
+      "dp_unload_Pa": null,
+      "width_Pa": null,
+      "law": null,
+      "always_solve": false
+     },
+     "hydraulic_options": {
+      "flow": null,
+      "valve_tau_s": null,
+      "rod_release_force": true,
+      "check_delay": null,
+      "lock_closure": {
+       "overlap_ratio": 0.02,
+       "closing_delay_s": 0.05
+      },
+      "lock_window_follows_plant": true,
+      "m2_law": "flow_limited_r5"
+     },
+     "controller_tag": "IND_LAS"
+    }
+   },
+   "definition_sha256": {
+    "IND_LAS": "6ea95f283612047f4e23e73c6748d1e30c7efb1b2400042814e505db5f00de45"
+   },
+   "code": {
+    "commit": "b04167248a49cfc4435a3b80e6baedef0713771e",
+    "dirty": false
+   },
+   "rules": "u3_u6_rerun_rules.md",
+   "rules_sha256": "8de318825764114ad14afcec362c87c1e01a2ad47195b8491b1c96056e1960b3",
+   "head_only_declared": true,
+   "ids_from": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\c52f3f13-1809-41e7-8ed4-76fbbd933dd2\\scratchpad\\python-imua\\ids\\ids_b5main.json",
+   "ids_from_sha256": "18e1221fc4678b2f91f368aa774f8dab27d4698e42bf27aeb29e73cc09a054ac",
+   "pad": null,
+   "n_keys": 1,
+   "commands_sha256": "per run: v5.commands_sha256 (screen hash) and v5.logged_commands_sha256 (verdict_runs log)"
+  }
+ },
+ "records": [
+  {
+   "case": "A1-rigid",
+   "src": "H5|rigid|B|top|flat",
+   "controller": "IND_LAS",
+   "lite_pass": true,
+   "lite_gates": {
+    "ready_no_fault": true,
+    "crawler": true,
+    "Fmin": true,
+    "att": true,
+    "rut": true,
+    "stroke": true
+   },
+   "t_ready_s": 27.19999999998196,
+   "final_phase": "ready",
+   "fault": false,
+   "att_end_deg": [
+    -0.0031,
+    0.0306
+   ],
+   "att_end_absmax_deg": 0.0306,
+   "att_ok": true,
+   "F_min_kN": 9.415,
+   "min_Fcyl_after_off_kN": 67.02247012368862,
+   "below_Fmin_after_off_s": 0,
+   "min_Fcyl_after_ready_kN": 68.23386762195788,
+   "below_Fmin_after_ready_s": 0,
+   "t_event_s": null,
+   "min_Fcyl_after_event_kN": null,
+   "crawler_N_at_ready": 0.0,
+   "crawler_N_max_after_ready": 0.0,
+   "n_crawler_recontact": 0,
+   "crawler_liftoff_fail": false,
+   "n_loc": 0,
+   "false_loc": [],
+   "rut_all_ready_mm": 57.66,
+   "rut_settle_ready_mm": 59.00114662945511,
+   "clear_est_ready_mm": 57.67456962985129,
+   "p_max_move_bar": 94.11,
+   "p_max_lock_bar": 90.17,
+   "p_max_move_leg": "FL",
+   "max_motor_stroke_mm": 412.76,
+   "commands_sha256": "dd06c826ae0aff26dc700ff5ba54ee48ba9525e49dc3771c48fcb5aab8184a34",
+   "warnings": [],
+   "liftoff_slow_events": [],
+   "phase_path": [
+    [
+     18.9,
+     "level"
+    ],
+    [
+     27.1,
+     "done"
+    ],
+    [
+     27.2,
+     "ready"
+    ]
+   ],
+   "sim_end_s": 37.1999999999956,
+   "v5": {
+    "v5_setting": "VB",
+    "controller_tag": "IND_LAS",
+    "extend_start": {
+     "rule": null,
+     "revision": null
+    },
+    "hydraulic_options": {
+     "flow": null,
+     "valve_tau_s": null,
+     "rod_release_force": true,
+     "check_delay": null,
+     "lock_closure": {
+      "overlap_ratio": 0.02,
+      "closing_delay_s": 0.05
+     },
+     "lock_window_follows_plant": true,
+     "m2_law": "flow_limited_r5"
+    },
+    "definition_sha256": "6ea95f283612047f4e23e73c6748d1e30c7efb1b2400042814e505db5f00de45",
+    "code": {
+     "commit": "b04167248a49cfc4435a3b80e6baedef0713771e",
+     "dirty": false
+    },
+    "head_only_declared": true,
+    "has_rod_reading": false,
+    "j_p3": "not_applicable",
+    "commands_sha256": "dd06c826ae0aff26dc700ff5ba54ee48ba9525e49dc3771c48fcb5aab8184a34",
+    "logged_commands_sha256": null,
+    "t_lift_s": null,
+    "rod_pressure_fallback_events": 0,
+    "las_events": {
+     "liftoff_slow": [],
+     "fault_names": [],
+     "event_count": 6
+    },
+    "resume_k1": {
+     "applicable": false,
+     "reason": "no C2 configuration (C8 skeleton)"
+    },
+    "hydraulics_record": {
+     "m2_law": {
+      "law": "flow_limited_r5",
+      "rule": "moving p_r: lag to p* capped by the valve flow; retract meter-in A_ann |u|, extend meter-out b_T A_h |u| sqrt((p_r - p_T) / dp_c); C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included; M2 reads p_hat = p_r + Delta w, Delta = p_r0 - p_r,rel at the release, w = base release decay (revision 4); extension lock anchor p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor), p_tr = moving rod pressure before the lock, p* = extension target; retract lock keeps p_ret (revision 5)",
+      "meter_out_ratio": 1.0,
+      "spool_reference_drop_Pa": 1000000.0,
+      "tank_pressure_Pa": 200000.0,
+      "status": "ASSUMPTION b_T, dp_c, p_T (coupled/params.py values)"
+     },
+     "m2_shift_total_mm": [
+      -0.03355483841800113,
+      -0.03355483841800113,
+      -0.08133780461701157,
+      -0.0813378046170118
+     ],
+     "m2_clipped_steps": [
+      25,
+      25,
+      28,
+      28
+     ],
+     "ext_lock_count": [
+      1,
+      1,
+      2,
+      2
+     ],
+     "ext_lock_excess_count": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ext_lock_excess_max_bar": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "ext_lock_risk_count": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "ext_lock_knee_max_kN": [
+      4.0890357108266855,
+      4.0890357108266855,
+      3.170129809504481,
+      3.170129809504481
+     ],
+     "ext_lock_log": [
+      [
+       19.647,
+       2,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       19.85,
+       3,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       26.547,
+       0,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       26.547,
+       1,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       4089.0357108266853
+      ],
+      [
+       26.753,
+       3,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ],
+      [
+       26.766,
+       2,
+       499999.9999999971,
+       500000.0,
+       200000.0,
+       3170.129809504481
+      ]
+     ],
+     "ext_lock_log_columns": [
+      "t_s",
+      "leg",
+      "p_tr_Pa",
+      "p_star_Pa",
+      "p_r0_Pa",
+      "dF_knee_N"
+     ],
+     "m2_clipped_steps_pre_lift": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "m2_clipped_steps_post_lift": [
+      25,
+      25,
+      28,
+      28
+     ],
+     "m2_clip_split_t_lift_s": null,
+     "lock_events": [
+      [
+       0.2,
+       0,
+       false
+      ],
+      [
+       0.2,
+       1,
+       false
+      ],
+      [
+       0.2,
+       2,
+       false
+      ],
+      [
+       0.2,
+       3,
+       false
+      ],
+      [
+       19.647,
+       2,
+       true
+      ],
+      [
+       19.8,
+       2,
+       false
+      ],
+      [
+       19.85,
+       3,
+       true
+      ],
+      [
+       23.5,
+       3,
+       false
+      ],
+      [
+       26.547,
+       0,
+       true
+      ],
+      [
+       26.547,
+       1,
+       true
+      ],
+      [
+       26.753,
+       3,
+       true
+      ],
+      [
+       26.766,
+       2,
+       true
+      ]
+     ],
+     "rod_reading_truth_calls": 0,
+     "two_pressure_reads": 0,
+     "tension_truth": {
+      "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+      "substeps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "substeps_over_margin": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "active_substeps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "max_excess_bar": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "min_p_tr_minus_p_star_bar": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "first_t_s": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "back_pressure_bar": 5.0,
+      "margin_bar": 0.5
+     },
+     "extend_bound_check": null
+    }
+   },
+   "controller_settings": {
+    "soil_stop": null,
+    "soil_stop_scope": null,
+    "flat_soil_margin_m": null
+   },
+   "wall_s": 52.9
+  }
+ ]
+}

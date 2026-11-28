@@ -1,0 +1,342 @@
+{
+ "argv": [
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\scripts\\r3c_run.py",
+  "--jobs",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\r3c_jobs.json",
+  "--mask",
+  "0xFFFF",
+  "--workers",
+  "8",
+  "--worktree",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b",
+  "--expect-head",
+  "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+  "--d1-median",
+  "off",
+  "--out-jsonl",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\off_plain.jsonl"
+ ],
+ "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "d1_median": false,
+ "trace": false,
+ "started": "2026-11-28 19:48:14 +0900",
+ "mask": "0xFFFF",
+ "workers": 8,
+ "expect_head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+ "worktree": {
+  "path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b",
+  "head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+  "is_clean": true
+ },
+ "environment": {
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB",
+  "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\numba_cache\\r3c_1"
+ },
+ "runs": [
+  {
+   "label": "J1_l179_FR_Fs0_level_30mm004_o0875",
+   "wall_s": 36.6,
+   "state": "done"
+  },
+  {
+   "label": "J2_l179_FR_Fs0_level_30mm004_o075",
+   "wall_s": 30.7,
+   "state": "done"
+  },
+  {
+   "label": "J3_l173_FL_Fs2_level_25mm005_o0875",
+   "wall_s": 30.7,
+   "state": "done"
+  },
+  {
+   "label": "J4_l270_FR_Fs1_ready_default_o0875",
+   "wall_s": 38.9,
+   "state": "done"
+  },
+  {
+   "label": "S1_l173_FL_Fs2_level_30mm004_o0875",
+   "wall_s": 36.4,
+   "state": "done"
+  },
+  {
+   "label": "S2_FR_Fs2_level_30mm004_o075",
+   "wall_s": 30.6,
+   "state": "done"
+  },
+  {
+   "label": "S3_FL_Fs0_level_25mm005_o0875",
+   "wall_s": 30.9,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0845",
+   "wall_s": 36.3,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0855",
+   "wall_s": 22.9,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0865",
+   "wall_s": 23.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0885",
+   "wall_s": 23.1,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0895",
+   "wall_s": 23.4,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0905",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0915",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0925",
+   "wall_s": 17.5,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0935",
+   "wall_s": 17.8,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0945",
+   "wall_s": 18.1,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0955",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0965",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0975",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0985",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0995",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.1005",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0845",
+   "wall_s": 17.9,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0855",
+   "wall_s": 17.5,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0865",
+   "wall_s": 17.4,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0885",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0895",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0905",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0915",
+   "wall_s": 23.0,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0925",
+   "wall_s": 17.5,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0935",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0945",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0955",
+   "wall_s": 17.9,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0965",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0975",
+   "wall_s": 17.9,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0985",
+   "wall_s": 17.9,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0995",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.1005",
+   "wall_s": 18.2,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0745",
+   "wall_s": 17.8,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0755",
+   "wall_s": 17.9,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0765",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0775",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0785",
+   "wall_s": 17.8,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0795",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0805",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0815",
+   "wall_s": 18.0,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0825",
+   "wall_s": 18.1,
+   "state": "done"
+  },
+  {
+   "label": "J1shape_o0.0835",
+   "wall_s": 22.6,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0745",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0755",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0765",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0775",
+   "wall_s": 17.7,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0785",
+   "wall_s": 17.8,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0795",
+   "wall_s": 17.6,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0805",
+   "wall_s": 17.2,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0815",
+   "wall_s": 13.9,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0825",
+   "wall_s": 13.8,
+   "state": "done"
+  },
+  {
+   "label": "J3shape_o0.0835",
+   "wall_s": 13.7,
+   "state": "done"
+  }
+ ],
+ "done": "2026-11-28 19:50:58 +0900",
+ "worktree_end": {
+  "head": "15d3a4a4f0d3244c242e98856d2228160d090b2d",
+  "is_clean": true
+ },
+ "head_problem": null
+}

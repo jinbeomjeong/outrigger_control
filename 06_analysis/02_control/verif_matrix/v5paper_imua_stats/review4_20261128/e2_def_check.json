@@ -1,0 +1,741 @@
+{
+ "summary": {
+  "files": 36,
+  "e2_targets": [
+   "S3_e0.002_VB-eta0.85",
+   "S3_e0.0_VB-eta0.85",
+   "S4_e0.0_VB",
+   "S5_e0.001_VB-eta0.8",
+   "S5_e0.002_VB-eta0.8"
+  ],
+  "positives_expected": [
+   "S3_e0.002_VB-eta0.85",
+   "S3_e0.0_VB-eta0.85",
+   "S4_e0.0_VB",
+   "S5_e0.001_VB-eta0.8",
+   "S5_e0.002_VB-eta0.8"
+  ],
+  "impl_holds": [
+   "S3_e0.002_VB-eta0.85",
+   "S3_e0.0_VB-eta0.85",
+   "S4_e0.0_VB",
+   "S5_e0.001_VB-eta0.8",
+   "S5_e0.002_VB-eta0.8"
+  ],
+  "r11_holds": [
+   "S3_e0.002_VB-eta0.85",
+   "S3_e0.0_VB-eta0.85",
+   "S4_e0.0_VB",
+   "S5_e0.001_VB-eta0.8",
+   "S5_e0.002_VB-eta0.8"
+  ],
+  "changed_by_r11": {},
+  "positives_match_impl": true,
+  "positives_match_r11": true,
+  "incl_window_counts_all_cycles": {
+   "11": 36,
+   "20": 36,
+   "21": 33597
+  },
+  "incl_window_counts_inner_cycles": {
+   "21": 33597
+  },
+  "targets_end_minus_tL_s": {
+   "S3_e0.002_VB-eta0.85": 9.400000000044884,
+   "S3_e0.0_VB-eta0.85": 9.400000000044884,
+   "S4_e0.0_VB": 7.900000000037721,
+   "S5_e0.001_VB-eta0.8": 9.400000000044884,
+   "S5_e0.002_VB-eta0.8": 9.400000000044884
+  },
+  "a2_end_gaps": {
+   "files_with_ready": 34,
+   "end_minus_last_ready_entry_s": {
+    "min": 10.00000000001647,
+    "p10": 10.000000000047748,
+    "median": 10.000000000047748,
+    "max": 10.000000000047748
+   }
+  },
+  "r0_end_gaps": {
+   "files_with_ready": 35,
+   "end_minus_last_ready_entry_s": {
+    "min": 10.000000000047748,
+    "p10": 10.000000000047748,
+    "median": 10.000000000047748,
+    "max": 10.000000000047748
+   }
+  }
+ },
+ "per_file": {
+  "R2_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R2ra_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.001_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.001_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.002_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.002_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.003_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.003_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.0_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R3_e0.0_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "R7_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S1_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.001_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.001_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.002_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.002_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.003_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.003_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.0_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S2_e0.0_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S3_e0.002_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S3_e0.002_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "t_R": 87.70000000023673,
+    "t_L": 88.30000000023959,
+    "t_end": 97.70000000028448,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 75.70000000017943,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07492486172531718,
+    "iii_true_change_deg": 0.0692905297947883,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.012656392375871428,
+    "v_force_min_N": 66306.8486169747,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   },
+   "r11": {
+    "variant": "r11",
+    "t_R": 87.70000000023673,
+    "t_L": 88.30000000023959,
+    "t_end": 97.70000000028448,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 75.70000000017943,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07492486172531718,
+    "iii_true_change_deg": 0.0692905297947883,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.012656392375871428,
+    "v_force_min_N": 66306.8486169747,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   }
+  },
+  "S3_e0.0_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S3_e0.0_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "t_R": 87.8000000002372,
+    "t_L": 88.40000000024007,
+    "t_end": 97.80000000028495,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 75.8000000001799,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07566860096910118,
+    "iii_true_change_deg": 0.0702454686685691,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.011698877979229893,
+    "v_force_min_N": 66304.42506210705,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   },
+   "r11": {
+    "variant": "r11",
+    "t_R": 87.8000000002372,
+    "t_L": 88.40000000024007,
+    "t_end": 97.80000000028495,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 75.8000000001799,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07566860096910118,
+    "iii_true_change_deg": 0.0702454686685691,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.011698877979229893,
+    "v_force_min_N": 66304.42506210705,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   }
+  },
+  "S4_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "t_R": 102.40000000030692,
+    "t_L": 104.50000000031694,
+    "t_end": 112.40000000035467,
+    "end_minus_tL": 7.900000000037721,
+    "t_D": 90.40000000024962,
+    "gap_s": 2.100000000010027,
+    "ii_filt_deg": 0.07756991920506902,
+    "iii_true_change_deg": 0.09004894355768174,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.008078709623153863,
+    "v_force_min_N": 74079.29673445663,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   },
+   "r11": {
+    "variant": "r11",
+    "t_R": 102.40000000030692,
+    "t_L": 104.50000000031694,
+    "t_end": 112.40000000035467,
+    "end_minus_tL": 7.900000000037721,
+    "t_D": 90.40000000024962,
+    "gap_s": 2.100000000010027,
+    "ii_filt_deg": 0.07756991920506902,
+    "iii_true_change_deg": 0.09004894355768174,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.008078709623153863,
+    "v_force_min_N": 74079.29673445663,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   }
+  },
+  "S5_e0.001_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "t_R": 91.70000000025583,
+    "t_L": 92.30000000025869,
+    "t_end": 101.70000000030358,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 79.70000000019853,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07438028049234154,
+    "iii_true_change_deg": 0.07670802948491892,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.015264222583786886,
+    "v_force_min_N": 73505.88406215521,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   },
+   "r11": {
+    "variant": "r11",
+    "t_R": 91.70000000025583,
+    "t_L": 92.30000000025869,
+    "t_end": 101.70000000030358,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 79.70000000019853,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07438028049234154,
+    "iii_true_change_deg": 0.07670802948491892,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.015264222583786886,
+    "v_force_min_N": 73505.88406215521,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   }
+  },
+  "S5_e0.001_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S5_e0.002_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "t_R": 91.90000000025678,
+    "t_L": 92.50000000025965,
+    "t_end": 101.90000000030453,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 79.90000000019948,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07609086830877808,
+    "iii_true_change_deg": 0.07798192018101992,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.007509811373791657,
+    "v_force_min_N": 73487.49014974451,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   },
+   "r11": {
+    "variant": "r11",
+    "t_R": 91.90000000025678,
+    "t_L": 92.50000000025965,
+    "t_end": 101.90000000030453,
+    "end_minus_tL": 9.400000000044884,
+    "t_D": 79.90000000019948,
+    "gap_s": 0.6000000000028649,
+    "ii_filt_deg": 0.07609086830877808,
+    "iii_true_change_deg": 0.07798192018101992,
+    "iv_n": 21,
+    "iv_err_max_deg": 0.007509811373791657,
+    "v_force_min_N": 73487.49014974451,
+    "vi_hits": [],
+    "vi_window_past_end": false,
+    "conds": {
+     "i": true,
+     "ii": true,
+     "iii": true,
+     "iv": true,
+     "v": true,
+     "vi": true
+    },
+    "result": "holds"
+   }
+  },
+  "S5_e0.002_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S5_e0.003_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S5_e0.003_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S5_e0.0_VB-eta0.8": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S5_e0.0_VB-eta0.85": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S5_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY->LEVEL after last READY entry"
+   }
+  },
+  "S7_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY entry"
+   }
+  },
+  "S8_e0.0_VB": {
+   "impl": {
+    "variant": "impl",
+    "result": "not_target",
+    "why": "no READY entry"
+   },
+   "r11": {
+    "variant": "r11",
+    "result": "not_target",
+    "why": "no READY entry"
+   }
+  }
+ },
+ "sha16": {
+  "R2_e0.0_VB.npz": "1bd0bfb295000f15",
+  "R2ra_e0.0_VB.npz": "479bec029a0579cb",
+  "R3_e0.001_VB-eta0.8.npz": "ffbdff2a6a2ee5c1",
+  "R3_e0.001_VB-eta0.85.npz": "d7b0835338afb6a1",
+  "R3_e0.002_VB-eta0.8.npz": "a5300d7b142e4d41",
+  "R3_e0.002_VB-eta0.85.npz": "b48effc0b839db5b",
+  "R3_e0.003_VB-eta0.8.npz": "1d86ee37fadaf31b",
+  "R3_e0.003_VB-eta0.85.npz": "fa5cbf9a1e601524",
+  "R3_e0.0_VB-eta0.8.npz": "50b4af0aacf0d49a",
+  "R3_e0.0_VB-eta0.85.npz": "c3d7fc133b3169e8",
+  "R7_e0.0_VB.npz": "d87a4972d17f02fa",
+  "S1_e0.0_VB.npz": "38f6fa94ae354084",
+  "S2_e0.001_VB-eta0.8.npz": "6977da2b77587cc6",
+  "S2_e0.001_VB-eta0.85.npz": "9ff0a8158341a2d1",
+  "S2_e0.002_VB-eta0.8.npz": "6539c32ddb255a5c",
+  "S2_e0.002_VB-eta0.85.npz": "428bda3b6a4226b9",
+  "S2_e0.003_VB-eta0.8.npz": "e6aa7ff56de448dc",
+  "S2_e0.003_VB-eta0.85.npz": "90a2d671dfc9bab6",
+  "S2_e0.0_VB-eta0.8.npz": "6170a25864b21c13",
+  "S2_e0.0_VB-eta0.85.npz": "c145eb2170dc6e9c",
+  "S3_e0.002_VB-eta0.8.npz": "63baca818efdb4c9",
+  "S3_e0.002_VB-eta0.85.npz": "d8ba541ac09d81c8",
+  "S3_e0.0_VB-eta0.8.npz": "8679ac63802c64e8",
+  "S3_e0.0_VB-eta0.85.npz": "6e5b9c300202e9ee",
+  "S4_e0.0_VB.npz": "8eabf4c294586978",
+  "S5_e0.001_VB-eta0.8.npz": "3b474407b78d3e81",
+  "S5_e0.001_VB-eta0.85.npz": "b1ef37e9bc024c0f",
+  "S5_e0.002_VB-eta0.8.npz": "efa333dd64624404",
+  "S5_e0.002_VB-eta0.85.npz": "1efacd6cdfe179fb",
+  "S5_e0.003_VB-eta0.8.npz": "1b406192970ab94b",
+  "S5_e0.003_VB-eta0.85.npz": "f9a4794fa016544e",
+  "S5_e0.0_VB-eta0.8.npz": "944c313cf870131e",
+  "S5_e0.0_VB-eta0.85.npz": "97fe7205fd72f764",
+  "S5_e0.0_VB.npz": "0ac50cabf7237199",
+  "S7_e0.0_VB.npz": "5e8b6bdb9c775efd",
+  "S8_e0.0_VB.npz": "3443dbacc82649f0"
+ }
+}

@@ -1,0 +1,103 @@
+[
+ {
+  "id": "r3a_ho_v0",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4 -Batch ed8_heldout_v0 -Step ho_v0 -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3a_ho_v0_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_v0_a1\\ed8_heldout_v0.jsonl --absent-key error --key controller_tag --key commands_sha256"
+ },
+ {
+  "id": "r3a_ho_aa2",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4 -Batch ed8_heldout_aa2 -Step ho_aa2 -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3a_ho_aa2_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_aa2_a1\\ed8_heldout_aa2.jsonl --absent-key error --key controller_tag --key commands_sha256"
+ },
+ {
+  "id": "r3a_ho_aa3",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4 -Batch ed8_heldout_aa3 -Step ho_aa3 -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3a_ho_aa3_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\ho_aa3_a1\\ed8_heldout_aa3.jsonl --absent-key error --key controller_tag --key commands_sha256"
+ },
+ {
+  "id": "r3a_same_shape_off",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4 -Batch ed9_heldout_same_shape_off -Step same_shape_off -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3a_same_shape_off_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\same_shape_off_a1\\ed9_heldout_same_shape_off.jsonl --absent-key error --key controller_tag --key commands_sha256"
+ },
+ {
+  "id": "r3a_census_v0_off",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4 -Batch ed9_census_v0_off -Step census_v0_off"
+ },
+ {
+  "id": "r3a_census_v0_off_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3a_off_15d3a4a4\\census_v0_off_a1\\ed9_census_v0_off.jsonl --absent-key error --key controller_tag --key commands_sha256"
+ },
+ {
+  "id": "r3b_ho_v0",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4 -Batch ed9_heldout_v0 -Step ho_v0 -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3b_ho_v0_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\ho_v0_a1\\ed9_heldout_v0.jsonl --absent-key error --key controller_tag --key commands_sha256 --key d1_settings"
+ },
+ {
+  "id": "r3b_ho_aa2",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4 -Batch ed9_heldout_aa2 -Step ho_aa2 -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3b_ho_aa2_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\ho_aa2_a1\\ed9_heldout_aa2.jsonl --absent-key error --key controller_tag --key commands_sha256 --key d1_settings"
+ },
+ {
+  "id": "r3b_ho_aa3",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4 -Batch ed9_heldout_aa3 -Step ho_aa3 -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3b_ho_aa3_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\ho_aa3_a1\\ed9_heldout_aa3.jsonl --absent-key error --key controller_tag --key commands_sha256 --key d1_settings"
+ },
+ {
+  "id": "r3b_same_shape",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4 -Batch ed9_heldout_same_shape -Step same_shape -JobsFile C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json"
+ },
+ {
+  "id": "r3b_same_shape_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\same_shape_a1\\ed9_heldout_same_shape.jsonl --absent-key error --key controller_tag --key commands_sha256 --key d1_settings"
+ },
+ {
+  "id": "r3b_census_v0",
+  "cmd": "C:\\Users\\jinbeom\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe -NoProfile -File C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\step_r3.ps1 -Commit 15d3a4a4f0d3244c242e98856d2228160d090b2d -Worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b -MaskHex 0xFFFF -Workers 8 -Root C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4 -Batch ed9_census_v0 -Step census_v0"
+ },
+ {
+  "id": "r3b_census_v0_keys",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\key_presence.py C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3b_on_15d3a4a4\\census_v0_a1\\ed9_census_v0.jsonl --absent-key error --key controller_tag --key commands_sha256 --key d1_settings"
+ },
+ {
+  "id": "r3c_off_plain",
+  "env": {
+   "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\numba_cache\\r3c_1"
+  },
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\scripts\\r3c_run.py --jobs C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\r3c_jobs.json --mask 0xFFFF --workers 8 --worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b --expect-head 15d3a4a4f0d3244c242e98856d2228160d090b2d --d1-median off --out-jsonl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\off_plain.jsonl"
+ },
+ {
+  "id": "r3c_on_plain",
+  "env": {
+   "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\numba_cache\\r3c_2"
+  },
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\scripts\\r3c_run.py --jobs C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\r3c_jobs.json --mask 0xFFFF --workers 8 --worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-c9b --expect-head 15d3a4a4f0d3244c242e98856d2228160d090b2d --d1-median on --out-jsonl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\on_plain.jsonl"
+ },
+ {
+  "id": "r3c_on_trace",
+  "env": {
+   "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed9-r3\\numba_cache\\r3c_3"
+  },
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\scripts\\r3c_run.py --jobs C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\d1_prerun\\r3c_jobs.json --mask 0xFFFF --workers 8 --worktree C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed9-diag --expect-head 8e0bce462fd3531bf75df3d093199b38d5b259e6 --d1-median on --trace-dir C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\trace_on --out-jsonl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed9_design\\r3_runs\\r3c_diag_15d3a4a4\\on_trace.jsonl"
+ }
+]

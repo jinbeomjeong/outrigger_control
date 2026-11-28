@@ -1,0 +1,28 @@
+[start] r3a_ho_aa2_keys 2026-11-28T18:21:29 mask=0xFFFF priority=Normal
+# key_presence — 필수 키 존재 점검 (값은 읽지 않음)
+
+- 파일 1개, 행 339개 중 대상 339개, 키 2개 · 오류 0 · 경고 0 · 참고 0
+- 조건: (없음), null은 없음으로 셈
+
+| 키 | 있음 | 없음 | null | 대상 행 |
+|---|---|---|---|---|
+| `controller_tag` | 339 | 0 | 0 | 339 |
+| `commands_sha256` | 339 | 0 | 0 | 339 |
+
+## 파일별
+
+| 파일 | 목록 키 | 행 | 대상 | 빠진 키 |
+|---|---|---|---|---|
+| `ed8_heldout_aa2.jsonl` | - | 339 | 339 | 0 |
+
+## 있으면 안 되는 키 (--absent-key)
+
+| 키 | 있는 줄 | 대상 행 | 처음 있는 곳 |
+|---|---|---|---|
+| `error` | 0 | 339 | - |
+
+## 발견 사항
+
+발견 사항 없음.
+{"status": "ok", "ok": true, "exit_code": 0, "tool": "key_presence", "command": "scan", "files": 1, "rows": 339, "selected": 339, "keys": 2, "keys_complete": 2, "keys_incomplete": 0, "absent_keys": 1, "absent_keys_violated": 0, "npz_files": 0, "arrays": 0, "arrays_incomplete": 0, "error": 0, "warning": 0, "info": 0, "categories": {}}
+[end] r3a_ho_aa2_keys exit=0 wall_s=0
