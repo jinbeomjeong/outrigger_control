@@ -34,6 +34,7 @@ Deterministic (no random numbers).
 from __future__ import annotations
 
 import copy
+import dataclasses
 import json
 import math
 import os
@@ -323,6 +324,18 @@ L1 value (locked) always.
 An empty R51_DAMP counts as unset (switch): a runner that restores an unset variable as ""
 must not turn the damping switch off (spec 429.11.1)."""
 DAMP_SWITCH = (os.environ.get("R51_DAMP") or "switch") == "switch"
+DIAG_GYRO_SAMPLES = os.environ.get("R51_DIAG_GYRO_SAMPLES") == "on"
+"""Diagnosis only (436.9 edition 8 stage-5 A/A, ``ed8_design/stage5_aa_diag/diag2``): with
+R51_DIAG_GYRO_SAMPLES=on a period also hands the controller ``imu_angular_rate_samples_rad_s``,
+one row per IMU sample window = the trapezoid mean of the plant body rate ``plant.w`` at the
+1 ms chunk ends of that window (start and end included). Unset or any other value = off: the
+measurements are built as before (no gyro samples)."""
+
+
+def _trapezoid_mean(rates: list[np.ndarray]) -> np.ndarray:
+    """Mean over a window of equally spaced samples, the first and last at half weight."""
+    stacked = np.array(rates)
+    return (stacked[1:-1].sum(axis=0) + 0.5 * (stacked[0] + stacked[-1])) / (len(rates) - 1)
 
 
 def control_period(cl, Measurements, plant, cmd, valve, ha, period_s, floor_fn=None, rec=None):
@@ -330,8 +343,10 @@ def control_period(cl, Measurements, plant, cmd, valve, ha, period_s, floor_fn=N
     cps = round(cl.IMU_SAMPLE_S / cl.LAG_CHUNK_S)
     nsp = round(period_s / cl.IMU_SAMPLE_S)
     imu = []
+    gyro = [] if DIAG_GYRO_SAMPLES else None
     for _ in range(nsp):
         fsum = np.zeros(3)
+        window_rates = None if gyro is None else [np.array(plant.w, float)]
         for _ in range(cps):
             if floor_fn is not None:
                 floor_fn(plant)
@@ -342,11 +357,18 @@ def control_period(cl, Measurements, plant, cmd, valve, ha, period_s, floor_fn=N
             if rec is not None:
                 c = np.asarray(acc[11:15], float)
                 rec.append(np.r_[plant.t, c, c - plant.Wr, valve, pad_gaps(cl, plant), np.degrees(plant.attitude())])
+            if window_rates is not None:
+                window_rates.append(np.array(plant.w, float))
         imu.append(fsum / (lag_steps * cps))
-    return Measurements(
+        if gyro is not None:
+            gyro.append(_trapezoid_mean(window_rates))
+    measurements = Measurements(
         t_s=plant.t, specific_force_m_s2=np.mean(imu, axis=0), angular_rate_rad_s=np.asarray(plant.w, float),
         head_pressure_Pa=plant.pressure() / ha, stroke_m=np.asarray(plant.sref, float),
         stroke_corrected_m=np.asarray(plant.x, float), imu_specific_force_samples_m_s2=np.array(imu))
+    if gyro is None:
+        return measurements
+    return dataclasses.replace(measurements, imu_angular_rate_samples_rad_s=np.array(gyro))
 
 
 def _intervals(mask, t):
