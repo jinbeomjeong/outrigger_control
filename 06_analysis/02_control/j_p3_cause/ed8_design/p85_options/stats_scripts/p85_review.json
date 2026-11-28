@@ -1,0 +1,1244 @@
+{
+  "seed": 20261114,
+  "reps": 20000,
+  "A_coverage": {
+    "5": {
+      "q95_upper": 0.4507197283469412,
+      "q95_cp_check": 0.45071972834694096,
+      "detect_q0.10": 0.40950999999999993,
+      "detect_q0.20": 0.6723199999999999
+    },
+    "6": {
+      "q95_upper": 0.39303776899708276,
+      "q95_cp_check": 0.39303776899708265,
+      "detect_q0.10": 0.46855899999999995,
+      "detect_q0.20": 0.7378559999999998
+    },
+    "7": {
+      "q95_upper": 0.3481636551311609,
+      "q95_cp_check": 0.34816365513116077,
+      "detect_q0.10": 0.5217030999999999,
+      "detect_q0.20": 0.7902847999999999
+    },
+    "14": {
+      "q95_upper": 0.19263617565013536,
+      "q95_cp_check": 0.19263617565013527,
+      "detect_q0.10": 0.7712320754503899,
+      "detect_q0.20": 0.95601953488896
+    },
+    "15": {
+      "q95_upper": 0.18103627252208465,
+      "q95_cp_check": 0.18103627252208462,
+      "detect_q0.10": 0.794108867905351,
+      "detect_q0.20": 0.9648156279111679
+    },
+    "20": {
+      "q95_upper": 0.13910834066826516,
+      "q95_cp_check": 0.13910834066826516,
+      "detect_q0.10": 0.8784233454094307,
+      "detect_q0.20": 0.9884707849539315
+    },
+    "21": {
+      "q95_upper": 0.13294591102652342,
+      "q95_cp_check": 0.13294591102652337,
+      "detect_q0.10": 0.8905810108684876,
+      "detect_q0.20": 0.9907766279631453
+    },
+    "23": {
+      "q95_upper": 0.12212338890652308,
+      "q95_cp_check": 0.12212338890652302,
+      "detect_q0.10": 0.9113706188034749,
+      "detect_q0.20": 0.9940970418964129
+    },
+    "29": {
+      "q95_upper": 0.0981446276772957,
+      "q95_cp_check": 0.0981446276772957,
+      "detect_q0.10": 0.9528987130275375,
+      "detect_q0.20": 0.9984525749508932
+    },
+    "37": {
+      "q95_upper": 0.07777471100513789,
+      "q95_cp_check": 0.0777747110051379,
+      "detect_q0.10": 0.9797244404095548,
+      "detect_q0.20": 0.9997403851570733
+    },
+    "cluster_neff": {
+      "n14_rho0.0": {
+        "n_eff": 14.0,
+        "q95": 0.19263617565013536
+      },
+      "n15_rho0.0": {
+        "n_eff": 15.0,
+        "q95": 0.18103627252208465
+      },
+      "n23_rho0.0": {
+        "n_eff": 23.0,
+        "q95": 0.12212338890652308
+      },
+      "n14_rho0.3": {
+        "n_eff": 8.75,
+        "q95": 0.28991415136931353
+      },
+      "n15_rho0.3": {
+        "n_eff": 9.375,
+        "q95": 0.2735203270940556
+      },
+      "n23_rho0.3": {
+        "n_eff": 14.375,
+        "q95": 0.18811677996648435
+      },
+      "n14_rho0.6": {
+        "n_eff": 6.363636363636363,
+        "q95": 0.37547125940205417
+      },
+      "n15_rho0.6": {
+        "n_eff": 6.8181818181818175,
+        "q95": 0.35556032894050216
+      },
+      "n23_rho0.6": {
+        "n_eff": 10.454545454545453,
+        "q95": 0.24914919176289252
+      },
+      "n14_rho1.0": {
+        "n_eff": 4.666666666666667,
+        "q95": 0.47373091575645676
+      },
+      "n15_rho1.0": {
+        "n_eff": 5.0,
+        "q95": 0.4507197283469412
+      },
+      "n23_rho1.0": {
+        "n_eff": 7.666666666666667,
+        "q95": 0.32344916350114516
+      }
+    }
+  },
+  "B_design_time": {
+    "A": {
+      "rows": 11,
+      "rounds": 19,
+      "rounds_changed": 1,
+      "rows_changed": 1,
+      "p_same_row": 0.9090909090909091,
+      "mean_rounds_per_row": 1.7272727272727273,
+      "expected_same_of_23": 20.90909090909091,
+      "P_reach15_of_23": 0.9998942862875692,
+      "P_le14_of_23": 0.00010571371243085251,
+      "implied_r_from_14of23": 0.24979653975770066
+    },
+    "a2": {
+      "rows": 12,
+      "rounds": 23,
+      "rounds_changed": 7,
+      "rows_changed": 6,
+      "p_same_row": 0.5,
+      "mean_rounds_per_row": 1.9166666666666667,
+      "expected_same_of_23": 11.5,
+      "P_reach15_of_23": 0.10501980781555176,
+      "P_le14_of_23": 0.8949801921844482,
+      "implied_r_from_14of23": 0.2281851191686074
+    },
+    "generic": {
+      "r0.053_R1": {
+        "p_same": 0.9473684210526316,
+        "E_same23": 21.789473684210527,
+        "P_reach15": 0.9999987132128325
+      },
+      "r0.053_R1.7": {
+        "p_same": 0.912183342052911,
+        "E_same23": 20.980216867216953,
+        "P_reach15": 0.9999192743393238
+      },
+      "r0.053_R2": {
+        "p_same": 0.8975069252077563,
+        "E_same23": 20.642659279778396,
+        "P_reach15": 0.9997342216971742
+      },
+      "r0.053_R3": {
+        "p_same": 0.8502697186178745,
+        "E_same23": 19.556203528211114,
+        "P_reach15": 0.9958250699654245
+      },
+      "r0.100_R1": {
+        "p_same": 0.9,
+        "E_same23": 20.7,
+        "P_reach15": 0.9997796862725752
+      },
+      "r0.100_R1.7": {
+        "p_same": 0.836011527916834,
+        "E_same23": 19.22826514208718,
+        "P_reach15": 0.9922737884638572
+      },
+      "r0.100_R2": {
+        "p_same": 0.81,
+        "E_same23": 18.630000000000003,
+        "P_reach15": 0.9800465429408577
+      },
+      "r0.100_R3": {
+        "p_same": 0.7290000000000001,
+        "E_same23": 16.767000000000003,
+        "P_reach15": 0.8557759268266445
+      },
+      "r0.261_R1": {
+        "p_same": 0.7391304347826086,
+        "E_same23": 17.0,
+        "P_reach15": 0.8803595928500442
+      },
+      "r0.261_R1.7": {
+        "p_same": 0.5981716762608584,
+        "E_same23": 13.757948553999745,
+        "P_reach15": 0.38147198924525316
+      },
+      "r0.261_R2": {
+        "p_same": 0.546313799621928,
+        "E_same23": 12.565217391304346,
+        "P_reach15": 0.20988337733420617
+      },
+      "r0.261_R3": {
+        "p_same": 0.4037971562422947,
+        "E_same23": 9.287334593572778,
+        "P_reach15": 0.01412739969064859
+      },
+      "r0.300_R1": {
+        "p_same": 0.7,
+        "E_same23": 16.099999999999998,
+        "P_reach15": 0.7708550377956617
+      },
+      "r0.300_R1.7": {
+        "p_same": 0.5453391388693143,
+        "E_same23": 12.542800193994228,
+        "P_reach15": 0.20717968343802495
+      },
+      "r0.300_R2": {
+        "p_same": 0.48999999999999994,
+        "E_same23": 11.269999999999998,
+        "P_reach15": 0.08851960778451057
+      },
+      "r0.300_R3": {
+        "p_same": 0.3429999999999999,
+        "E_same23": 7.8889999999999985,
+        "P_reach15": 0.002419582374831157
+      }
+    }
+  },
+  "C_reach": {
+    "p_hat": 0.6086956521739131,
+    "jeffreys95": [
+      0.40619544516092126,
+      0.7856893206764021
+    ],
+    "p0.406": {
+      "analytic": 0.015012463068313294,
+      "sim": 0.0164,
+      "mcse": 0.0008598572271294759
+    },
+    "p0.609": {
+      "analytic": 0.4216441337444632,
+      "sim": 0.42495,
+      "mcse": 0.0034918502131631047
+    },
+    "p0.786": {
+      "analytic": 0.9587875711027628,
+      "sim": 0.95855,
+      "mcse": 0.0014055953294178835
+    },
+    "p0.800": {
+      "analytic": 0.9726577237619392,
+      "sim": 0.9733,
+      "mcse": 0.0011531408450007835
+    },
+    "p0.900": {
+      "analytic": 0.9997796862725752,
+      "sim": 0.99965,
+      "mcse": 0.00010494407779534841
+    },
+    "p_needed_reach0.5": 0.6285266978744883,
+    "p_needed_reach0.8": 0.7091963434644094,
+    "p_needed_reach0.95": 0.7783641508676293
+  },
+  "D_sizing": {
+    "plugin_p0.609": {
+      "ga1_m_for_15new": 32,
+      "ga2_m_for_1new": 4
+    },
+    "jeffreys_low_0.406": {
+      "ga1_m_for_15new": 50,
+      "ga2_m_for_1new": 6
+    },
+    "predictive_jeffreys_post_B(14.5,9.5)": {
+      "ga1_m_for_15new": 38,
+      "ga2_m_for_1new": 4
+    },
+    "predictive_power_prior_a0.5_B(7.5,5.0)": {
+      "ga1_m_for_15new": 43,
+      "ga2_m_for_1new": 4
+    },
+    "no_result_design_prior_k02A": {
+      "ga1_m_for_15new": 23,
+      "ga2_m_for_1new": 2
+    },
+    "no_result_vague_B(1,1)": {
+      "ga1_m_for_15new": 299,
+      "ga2_m_for_1new": 19
+    },
+    "ga1_clustered_cases_x3": {
+      "p0.609_rho0.0": {
+        "cases": 11,
+        "keys": 33
+      },
+      "p0.406_rho0.0": {
+        "cases": 17,
+        "keys": 51
+      },
+      "p0.609_rho0.3": {
+        "cases": 12,
+        "keys": 36
+      },
+      "p0.406_rho0.3": {
+        "cases": 18,
+        "keys": 54
+      },
+      "p0.609_rho0.6": {
+        "cases": 12,
+        "keys": 36
+      },
+      "p0.406_rho0.6": {
+        "cases": 20,
+        "keys": 60
+      }
+    }
+  },
+  "E_masking": {
+    "pnew0.609_q0.0_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.96405,
+        "fail": 0.0,
+        "not_judgeable": 0.03595
+      },
+      "ga1_m50": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.97705,
+        "fail": 0.0,
+        "not_judgeable": 0.02295
+      },
+      "ga2_m6": {
+        "pass": 0.9965,
+        "fail": 0.0,
+        "not_judgeable": 0.0035
+      },
+      "ga2_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.0_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.96165,
+        "fail": 0.0,
+        "not_judgeable": 0.03835
+      },
+      "ga1_m50": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.9761,
+        "fail": 0.0,
+        "not_judgeable": 0.0239
+      },
+      "ga2_m6": {
+        "pass": 0.9966,
+        "fail": 0.0,
+        "not_judgeable": 0.0034
+      },
+      "ga2_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.0_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.96215,
+        "fail": 0.0,
+        "not_judgeable": 0.03785
+      },
+      "ga1_m50": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.97775,
+        "fail": 0.0,
+        "not_judgeable": 0.02225
+      },
+      "ga2_m6": {
+        "pass": 0.99635,
+        "fail": 0.0,
+        "not_judgeable": 0.00365
+      },
+      "ga2_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.05_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.3554,
+        "fail": 0.6255,
+        "not_judgeable": 0.0191
+      },
+      "ga1_m50": {
+        "pass": 0.20945,
+        "fail": 0.79055,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.86265,
+        "fail": 0.11325,
+        "not_judgeable": 0.0241
+      },
+      "ga2_m6": {
+        "pass": 0.82875,
+        "fail": 0.16785,
+        "not_judgeable": 0.0034
+      },
+      "ga2_m32": {
+        "pass": 0.3743,
+        "fail": 0.6257,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.05_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.57285,
+        "fail": 0.38925,
+        "not_judgeable": 0.0379
+      },
+      "ga1_m50": {
+        "pass": 0.46255,
+        "fail": 0.53745,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.91275,
+        "fail": 0.059,
+        "not_judgeable": 0.02825
+      },
+      "ga2_m6": {
+        "pass": 0.90565,
+        "fail": 0.08915,
+        "not_judgeable": 0.0052
+      },
+      "ga2_m32": {
+        "pass": 0.61245,
+        "fail": 0.38755,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.05_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.8382,
+        "fail": 0.0958,
+        "not_judgeable": 0.066
+      },
+      "ga1_m50": {
+        "pass": 0.86145,
+        "fail": 0.13855,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.956,
+        "fail": 0.01155,
+        "not_judgeable": 0.03245
+      },
+      "ga2_m6": {
+        "pass": 0.9765,
+        "fail": 0.019,
+        "not_judgeable": 0.0045
+      },
+      "ga2_m32": {
+        "pass": 0.90725,
+        "fail": 0.09275,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.1_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.12145,
+        "fail": 0.86945,
+        "not_judgeable": 0.0091
+      },
+      "ga1_m50": {
+        "pass": 0.04505,
+        "fail": 0.95495,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.7583,
+        "fail": 0.21985,
+        "not_judgeable": 0.02185
+      },
+      "ga2_m6": {
+        "pass": 0.6835,
+        "fail": 0.3133,
+        "not_judgeable": 0.0032
+      },
+      "ga2_m32": {
+        "pass": 0.13175,
+        "fail": 0.86825,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.1_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.3363,
+        "fail": 0.62465,
+        "not_judgeable": 0.03905
+      },
+      "ga1_m50": {
+        "pass": 0.21485,
+        "fail": 0.78515,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.8517,
+        "fail": 0.1151,
+        "not_judgeable": 0.0332
+      },
+      "ga2_m6": {
+        "pass": 0.82215,
+        "fail": 0.1721,
+        "not_judgeable": 0.00575
+      },
+      "ga2_m32": {
+        "pass": 0.37445,
+        "fail": 0.62555,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.1_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.7146,
+        "fail": 0.17515,
+        "not_judgeable": 0.11025
+      },
+      "ga1_m50": {
+        "pass": 0.7367,
+        "fail": 0.26325,
+        "not_judgeable": 5e-05
+      },
+      "ga2_m4": {
+        "pass": 0.9373,
+        "fail": 0.0233,
+        "not_judgeable": 0.0394
+      },
+      "ga2_m6": {
+        "pass": 0.95665,
+        "fail": 0.03475,
+        "not_judgeable": 0.0086
+      },
+      "ga2_m32": {
+        "pass": 0.8259,
+        "fail": 0.1741,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.2_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.01345,
+        "fail": 0.98385,
+        "not_judgeable": 0.0027
+      },
+      "ga1_m50": {
+        "pass": 0.0016,
+        "fail": 0.9984,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.5678,
+        "fail": 0.40925,
+        "not_judgeable": 0.02295
+      },
+      "ga2_m6": {
+        "pass": 0.4564,
+        "fail": 0.53985,
+        "not_judgeable": 0.00375
+      },
+      "ga2_m32": {
+        "pass": 0.01625,
+        "fail": 0.98375,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.2_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.10415,
+        "fail": 0.8644,
+        "not_judgeable": 0.03145
+      },
+      "ga1_m50": {
+        "pass": 0.0441,
+        "fail": 0.9559,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.73345,
+        "fail": 0.2253,
+        "not_judgeable": 0.04125
+      },
+      "ga2_m6": {
+        "pass": 0.6814,
+        "fail": 0.31065,
+        "not_judgeable": 0.00795
+      },
+      "ga2_m32": {
+        "pass": 0.1331,
+        "fail": 0.8669,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.2_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.45045,
+        "fail": 0.3294,
+        "not_judgeable": 0.22015
+      },
+      "ga1_m50": {
+        "pass": 0.5449,
+        "fail": 0.4537,
+        "not_judgeable": 0.0014
+      },
+      "ga2_m4": {
+        "pass": 0.88675,
+        "fail": 0.04785,
+        "not_judgeable": 0.0654
+      },
+      "ga2_m6": {
+        "pass": 0.91545,
+        "fail": 0.069,
+        "not_judgeable": 0.01555
+      },
+      "ga2_m32": {
+        "pass": 0.67625,
+        "fail": 0.32375,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.3_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.001,
+        "fail": 0.99845,
+        "not_judgeable": 0.00055
+      },
+      "ga1_m50": {
+        "pass": 0.0,
+        "fail": 1.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.4269,
+        "fail": 0.55135,
+        "not_judgeable": 0.02175
+      },
+      "ga2_m6": {
+        "pass": 0.292,
+        "fail": 0.7049,
+        "not_judgeable": 0.0031
+      },
+      "ga2_m32": {
+        "pass": 0.0015,
+        "fail": 0.9985,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.3_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.02705,
+        "fail": 0.9527,
+        "not_judgeable": 0.02025
+      },
+      "ga1_m50": {
+        "pass": 0.0083,
+        "fail": 0.9917,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.62975,
+        "fail": 0.31655,
+        "not_judgeable": 0.0537
+      },
+      "ga2_m6": {
+        "pass": 0.5467,
+        "fail": 0.44075,
+        "not_judgeable": 0.01255
+      },
+      "ga2_m32": {
+        "pass": 0.04475,
+        "fail": 0.95525,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.609_q0.3_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.23395,
+        "fail": 0.4409,
+        "not_judgeable": 0.32515
+      },
+      "ga1_m50": {
+        "pass": 0.3945,
+        "fail": 0.5975,
+        "not_judgeable": 0.008
+      },
+      "ga2_m4": {
+        "pass": 0.83425,
+        "fail": 0.06855,
+        "not_judgeable": 0.0972
+      },
+      "ga2_m6": {
+        "pass": 0.8654,
+        "fail": 0.10465,
+        "not_judgeable": 0.02995
+      },
+      "ga2_m32": {
+        "pass": 0.5563,
+        "fail": 0.4437,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.0_mu0.0": {
+      "ga1_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.99855,
+        "fail": 0.0,
+        "not_judgeable": 0.00145
+      },
+      "ga2_m6": {
+        "pass": 0.9999,
+        "fail": 0.0,
+        "not_judgeable": 0.0001
+      },
+      "ga2_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.0_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.99995,
+        "fail": 0.0,
+        "not_judgeable": 5e-05
+      },
+      "ga1_m50": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.9984,
+        "fail": 0.0,
+        "not_judgeable": 0.0016
+      },
+      "ga2_m6": {
+        "pass": 0.99995,
+        "fail": 0.0,
+        "not_judgeable": 5e-05
+      },
+      "ga2_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.0_mu0.9": {
+      "ga1_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.99815,
+        "fail": 0.0,
+        "not_judgeable": 0.00185
+      },
+      "ga2_m6": {
+        "pass": 0.99995,
+        "fail": 0.0,
+        "not_judgeable": 5e-05
+      },
+      "ga2_m32": {
+        "pass": 1.0,
+        "fail": 0.0,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.05_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.2658,
+        "fail": 0.7342,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 0.1276,
+        "fail": 0.8724,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.84985,
+        "fail": 0.1488,
+        "not_judgeable": 0.00135
+      },
+      "ga2_m6": {
+        "pass": 0.7786,
+        "fail": 0.22135,
+        "not_judgeable": 5e-05
+      },
+      "ga2_m32": {
+        "pass": 0.2723,
+        "fail": 0.7277,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.05_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.52445,
+        "fail": 0.47555,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 0.36205,
+        "fail": 0.63795,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.91915,
+        "fail": 0.0784,
+        "not_judgeable": 0.00245
+      },
+      "ga2_m6": {
+        "pass": 0.88835,
+        "fail": 0.1115,
+        "not_judgeable": 0.00015
+      },
+      "ga2_m32": {
+        "pass": 0.5248,
+        "fail": 0.4752,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.05_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.8783,
+        "fail": 0.12165,
+        "not_judgeable": 5e-05
+      },
+      "ga1_m50": {
+        "pass": 0.8196,
+        "fail": 0.1804,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.97975,
+        "fail": 0.01735,
+        "not_judgeable": 0.0029
+      },
+      "ga2_m6": {
+        "pass": 0.97705,
+        "fail": 0.0228,
+        "not_judgeable": 0.00015
+      },
+      "ga2_m32": {
+        "pass": 0.88345,
+        "fail": 0.11655,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.1_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.07005,
+        "fail": 0.92995,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 0.0155,
+        "fail": 0.9845,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.7169,
+        "fail": 0.28145,
+        "not_judgeable": 0.00165
+      },
+      "ga2_m6": {
+        "pass": 0.60705,
+        "fail": 0.39295,
+        "not_judgeable": 0.0
+      },
+      "ga2_m32": {
+        "pass": 0.07185,
+        "fail": 0.92815,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.1_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.271,
+        "fail": 0.729,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 0.12805,
+        "fail": 0.87195,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.84525,
+        "fail": 0.15175,
+        "not_judgeable": 0.003
+      },
+      "ga2_m6": {
+        "pass": 0.78355,
+        "fail": 0.21635,
+        "not_judgeable": 0.0001
+      },
+      "ga2_m32": {
+        "pass": 0.2703,
+        "fail": 0.7297,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.1_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.7739,
+        "fail": 0.22555,
+        "not_judgeable": 0.00055
+      },
+      "ga1_m50": {
+        "pass": 0.6674,
+        "fail": 0.3326,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.9625,
+        "fail": 0.03145,
+        "not_judgeable": 0.00605
+      },
+      "ga2_m6": {
+        "pass": 0.95205,
+        "fail": 0.0475,
+        "not_judgeable": 0.00045
+      },
+      "ga2_m32": {
+        "pass": 0.76575,
+        "fail": 0.23425,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.2_mu0.0": {
+      "ga1_m32": {
+        "pass": 0.0037,
+        "fail": 0.9963,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 0.00015,
+        "fail": 0.99985,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.49905,
+        "fail": 0.4995,
+        "not_judgeable": 0.00145
+      },
+      "ga2_m6": {
+        "pass": 0.34625,
+        "fail": 0.65355,
+        "not_judgeable": 0.0002
+      },
+      "ga2_m32": {
+        "pass": 0.0043,
+        "fail": 0.9957,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.2_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.06685,
+        "fail": 0.93305,
+        "not_judgeable": 0.0001
+      },
+      "ga1_m50": {
+        "pass": 0.0161,
+        "fail": 0.9839,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.71105,
+        "fail": 0.28395,
+        "not_judgeable": 0.005
+      },
+      "ga2_m6": {
+        "pass": 0.6067,
+        "fail": 0.3926,
+        "not_judgeable": 0.0007
+      },
+      "ga2_m32": {
+        "pass": 0.06925,
+        "fail": 0.93075,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.2_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.59385,
+        "fail": 0.4008,
+        "not_judgeable": 0.00535
+      },
+      "ga1_m50": {
+        "pass": 0.45005,
+        "fail": 0.54995,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.92715,
+        "fail": 0.05935,
+        "not_judgeable": 0.0135
+      },
+      "ga2_m6": {
+        "pass": 0.90525,
+        "fail": 0.09325,
+        "not_judgeable": 0.0015
+      },
+      "ga2_m32": {
+        "pass": 0.59585,
+        "fail": 0.40415,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.3_mu0.0": {
+      "ga1_m32": {
+        "pass": 5e-05,
+        "fail": 0.99995,
+        "not_judgeable": 0.0
+      },
+      "ga1_m50": {
+        "pass": 0.0,
+        "fail": 1.0,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.3344,
+        "fail": 0.6643,
+        "not_judgeable": 0.0013
+      },
+      "ga2_m6": {
+        "pass": 0.19145,
+        "fail": 0.8084,
+        "not_judgeable": 0.00015
+      },
+      "ga2_m32": {
+        "pass": 0.00015,
+        "fail": 0.99985,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.3_mu0.5": {
+      "ga1_m32": {
+        "pass": 0.01725,
+        "fail": 0.98245,
+        "not_judgeable": 0.0003
+      },
+      "ga1_m50": {
+        "pass": 0.00145,
+        "fail": 0.99855,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.59195,
+        "fail": 0.39785,
+        "not_judgeable": 0.0102
+      },
+      "ga2_m6": {
+        "pass": 0.46095,
+        "fail": 0.5372,
+        "not_judgeable": 0.00185
+      },
+      "ga2_m32": {
+        "pass": 0.0169,
+        "fail": 0.9831,
+        "not_judgeable": 0.0
+      }
+    },
+    "pnew0.800_q0.3_mu0.9": {
+      "ga1_m32": {
+        "pass": 0.42155,
+        "fail": 0.5403,
+        "not_judgeable": 0.03815
+      },
+      "ga1_m50": {
+        "pass": 0.2914,
+        "fail": 0.7086,
+        "not_judgeable": 0.0
+      },
+      "ga2_m4": {
+        "pass": 0.8733,
+        "fail": 0.09315,
+        "not_judgeable": 0.03355
+      },
+      "ga2_m6": {
+        "pass": 0.8599,
+        "fail": 0.13485,
+        "not_judgeable": 0.00525
+      },
+      "ga2_m32": {
+        "pass": 0.46595,
+        "fail": 0.53405,
+        "not_judgeable": 0.0
+      }
+    },
+    "ga2_sequential_cap50": {
+      "q0.0_mu0.0": {
+        "pass": 1.0,
+        "mean_keys": 1.66505
+      },
+      "q0.0_mu0.9": {
+        "pass": 1.0,
+        "mean_keys": 1.6442
+      },
+      "q0.1_mu0.0": {
+        "pass": 0.9024,
+        "mean_keys": 1.65195
+      },
+      "q0.1_mu0.9": {
+        "pass": 0.98935,
+        "mean_keys": 1.80335
+      },
+      "q0.2_mu0.0": {
+        "pass": 0.80065,
+        "mean_keys": 1.63715
+      },
+      "q0.2_mu0.9": {
+        "pass": 0.9753,
+        "mean_keys": 2.0076
+      }
+    },
+    "unconditional_pass": {
+      "q0.0_mu0.0": {
+        "sealed_single": 0.41965,
+        "ga1_two_stage_m32": 0.9773,
+        "ga2_two_stage_m4": 0.77755
+      },
+      "q0.0_mu0.9": {
+        "sealed_single": 0.42235,
+        "ga1_two_stage_m32": 0.97785,
+        "ga2_two_stage_m4": 0.7788
+      },
+      "q0.1_mu0.0": {
+        "sealed_single": 0.076,
+        "ga1_two_stage_m32": 0.09535,
+        "ga2_two_stage_m4": 0.14265
+      },
+      "q0.1_mu0.9": {
+        "sealed_single": 0.20245,
+        "ga1_two_stage_m32": 0.6789,
+        "ga2_two_stage_m4": 0.48875
+      },
+      "q0.2_mu0.0": {
+        "sealed_single": 0.01215,
+        "ga1_two_stage_m32": 0.0129,
+        "ga2_two_stage_m4": 0.0218
+      },
+      "q0.2_mu0.9": {
+        "sealed_single": 0.0706,
+        "ga1_two_stage_m32": 0.38055,
+        "ga2_two_stage_m4": 0.23845
+      }
+    },
+    "mcse_max": 0.0035355339059327377
+  },
+  "F_siblings": {
+    "P8-5": {
+      "k": 14,
+      "n": 23,
+      "thr": 15,
+      "p_hat": 0.6086956521739131,
+      "jeffreys95": [
+        0.40619544516092126,
+        0.7856893206764021
+      ],
+      "retro_P_reach_plugin": 0.4216441337444632,
+      "retro_P_reach_jeff_low": 0.015012463068313294,
+      "q95_if_pass_at_thr": 0.18103627252208465
+    },
+    "P8-8": {
+      "k": 6,
+      "n": 23,
+      "thr": 5,
+      "p_hat": 0.2608695652173913,
+      "jeffreys95": [
+        0.11694872959503032,
+        0.46079306357927674
+      ],
+      "retro_P_reach_plugin": 0.7552892108036726,
+      "retro_P_reach_jeff_low": 0.12304301895593289,
+      "q95_if_pass_at_thr": 0.4507197283469412
+    },
+    "P8-15_readable": {
+      "k": 21,
+      "n": 23,
+      "thr": 20,
+      "p_hat": 0.9130434782608695,
+      "jeffreys95": [
+        0.7492127304822074,
+        0.9814853865476507
+      ],
+      "retro_P_reach_plugin": 0.8656423173087764,
+      "retro_P_reach_jeff_low": 0.13512408480811902,
+      "q95_if_pass_at_thr": 0.13910834066826516
+    },
+    "P8-15_all27": {
+      "k": 21,
+      "n": 27,
+      "thr": 20,
+      "p_hat": 0.7777777777777778,
+      "jeffreys95": [
+        0.5980929104066961,
+        0.9015146805216755
+      ],
+      "retro_P_reach_plugin": 0.7631226584748476,
+      "retro_P_reach_jeff_low": 0.0919517653100344,
+      "q95_if_pass_at_thr": 0.13910834066826516
+    },
+    "P8-15_design_pred_exempt2_of23": {
+      "E_same": 21,
+      "P_reach20_binom": 0.8656423173087764
+    },
+    "P8-15_design_pred_exempt3_of23": {
+      "E_same": 20,
+      "P_reach20_binom": 0.6475966689682668
+    }
+  }
+}
