@@ -97,6 +97,11 @@ commands and its phase.
   leg's load unknown the step explanation (sum, IMU residual) is undetermined;
   ``INFO_D1_STEP_SUSPENDED:<leg>`` once. Range, current, finite-value and stuck checks stay.
   :meth:`TwoPressureMonitor.suspend_step_rule` does the same on request. Off by default.
+* D1 trace (436.9 edition 8 stage-5 A/A diagnosis, record only): between
+  :func:`start_d1_trace` and :func:`stop_d1_trace` every diagnosed period appends its D1
+  inputs and intermediate values (pressures, ``sum F``, ``f_z``, ``M_eff``, IMU residual and
+  its change, step candidates, per-candidate thresholds, the events of the period) to a
+  :class:`D1Trace`. Off by default; off, no value or decision differs from the code before it.
 
 Every threshold here depends on the cylinder dimensions; the defaults are the values of spec 53
 for the YAML cylinder and are settings only, to be replaced after the REXOME35 recalculation
@@ -150,6 +155,38 @@ class D6Witness:
     is_record_only: bool = False
     """Edition 8 R2 (``jp3_remedy_spec_v8_rules.md`` 3.2): record the rounds only; D6 judges
     every round as in edition 6 and no witness event is raised."""
+
+
+@dataclass
+class D1Trace:
+    """D1 internal record of every diagnosed period (stage-5 A/A diagnosis, record only).
+
+    ``rows`` holds one dict per :meth:`TwoPressureMonitor.read` that ran the D1 diagnosis
+    (rod sensors, ``diagnostics`` on); ``monitors`` the settings and areas of each monitor
+    that wrote a row, keyed by the row's ``monitor`` value. Reading the trace never changes a
+    decision: every value is computed beside the diagnosis, from the same inputs.
+    """
+
+    rows: list[dict[str, Any]] = field(default_factory=list)
+    monitors: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+
+_active_d1_trace: D1Trace | None = None
+"""The trace the monitors of this process write to; None = off (the default)."""
+
+
+def start_d1_trace() -> D1Trace:
+    """Turn the D1 trace on for this process and return its (new, empty) record."""
+    global _active_d1_trace
+    _active_d1_trace = D1Trace()
+    return _active_d1_trace
+
+
+def stop_d1_trace() -> D1Trace | None:
+    """Turn the D1 trace off; the record written since :func:`start_d1_trace` (None if off)."""
+    global _active_d1_trace
+    trace, _active_d1_trace = _active_d1_trace, None
+    return trace
 
 
 # R8 (10 Hz) diagnosis constants, spec rev. 29 126 #3 (ASSUMPTION where the spec says so)
@@ -1663,8 +1700,13 @@ class TwoPressureMonitor:
             grounded = net - seal_band_N >= self.F_min_N
             imu_input = self._imu_input(imu_specific_force_z_m_s2, is_crawler_lifted,
                                         imu_gyro_rad_s)
+            trace_row = None
+            if _active_d1_trace is not None:
+                trace_row = self._new_d1_trace_row(
+                    t_s, imu_specific_force_z_m_s2, imu_gyro_rad_s, imu_input,
+                    is_locked_phase, commanded_m_s, grounded)
             self._diagnose_sensors(t_s, head_pressure_Pa, rod, commanded_m_s, grounded,
-                                   imu_input)
+                                   imu_input, trace_row)
             if self.settings.step_rule is StepRule.EXPLAINED_IMU:
                 self._track_imu_mass(head_pressure_Pa, rod, imu_input, is_locked_phase)
                 self._report_imu_mass_source(imu_input)
@@ -1978,7 +2020,9 @@ class TwoPressureMonitor:
 
     # --- D1, D2, D3 ---
 
-    def _diagnose_sensors(self, t_s, head, rod, commanded, grounded, imu_input) -> None:
+    def _diagnose_sensors(self, t_s, head, rod, commanded, grounded, imu_input,
+                          trace_row: dict[str, Any] | None = None) -> None:
+        events_before = len(self._events)
         head_faults = self._sensor_fault_reasons(head)
         rod_faults = self._sensor_fault_reasons(rod)
         head_steps, rod_steps = self._pressure_steps(head, rod, head_faults, rod_faults)
@@ -1988,8 +2032,12 @@ class TwoPressureMonitor:
                                   has_step=bool(head_steps or rod_steps))
         head_step_reasons = {leg: "D1_step" for leg in head_steps}
         unconfirmed_drains = self._resolve_rod_drain_holds(head, rod)
+        if trace_row is not None:  # after the slope update: the mass D1'' uses below
+            self._trace_d1_inputs(trace_row, head, rod, imu_input, head_faults, head_steps,
+                                  rod_steps)
         if step_rule is not StepRule.JUMP:
-            head_step_reasons = self._unexplained_head_steps(head_steps, head, rod, imu_input)
+            head_step_reasons = self._unexplained_head_steps(head_steps, head, rod, imu_input,
+                                                             trace_row)
             rod_steps = self._unexplained_rod_steps(rod_steps, head, rod, commanded)
         for leg in sorted(set(head_faults) | set(head_step_reasons)):
             self._head_fault(leg, head_faults.get(leg) or head_step_reasons[leg])
@@ -2006,6 +2054,105 @@ class TwoPressureMonitor:
         self._previous_commanded_m_s = np.array(commanded, dtype=float)
         self._previous_imu_f_z_m_s2 = imu_input.f_z_m_s2 if imu_input.has_f_z else None
         self._check_moving(t_s, head, rod, commanded, grounded)
+        if trace_row is not None:
+            trace_row["head_fault_reasons"] = {LEG_ORDER[leg]: reason for leg, reason
+                                               in sorted(head_step_reasons.items())}
+            trace_row["rod_steps_unexplained"] = [LEG_ORDER[leg] for leg in rod_steps]
+            trace_row["events"] = [name for name, _ in self._events[events_before:]]
+            self._append_d1_trace_row(trace_row)
+
+    # --- D1 trace (record only; reads the monitor, never writes it) ---
+
+    def _new_d1_trace_row(self, t_s, f_z_raw_m_s2, gyro_rad_s, imu_input: _ImuInput,
+                          is_locked_phase: bool, commanded, grounded) -> dict[str, Any]:
+        """The IMU and phase inputs of one diagnosed period (raw and as D1'' uses them)."""
+        gyro = None if gyro_rad_s is None else np.asarray(gyro_rad_s, dtype=float)
+        f_z_raw = None if f_z_raw_m_s2 is None else float(f_z_raw_m_s2)
+        f_z_used = imu_input.f_z_m_s2 if imu_input.has_f_z else None
+        is_lever_applied = (f_z_used is not None and f_z_raw is not None
+                            and self.settings.imu_lever_correction
+                            and not imu_input.is_lever_missing)
+        return {
+            "t_s": float(t_s),
+            "monitor": f"{id(self):x}",
+            "is_locked_phase": bool(is_locked_phase),
+            "is_crawler_lifted": bool(imu_input.is_crawler_lifted),
+            "commanded_m_s": [float(value) for value in np.asarray(commanded, dtype=float)],
+            "grounded": [bool(value) for value in np.asarray(grounded)],
+            "f_z_raw_m_s2": f_z_raw,
+            "f_z_used_m_s2": None if f_z_used is None else float(f_z_used),
+            "lever_z_m_s2": float(f_z_raw - f_z_used) if is_lever_applied else None,
+            "gyro_partial_means": None if gyro is None else int(gyro.shape[0]),
+            "is_lever_missing": bool(imu_input.is_lever_missing),
+            "previous_f_z_used_m_s2": self._previous_imu_f_z_m_s2,
+        }
+
+    def _trace_d1_inputs(self, row, head, rod, imu_input: _ImuInput, head_faults, head_steps,
+                         rod_steps) -> None:
+        """Pressures, step candidates, ``sum F`` and the IMU residual of this period; the
+        residual uses the same ``M_eff`` and ``f_z`` pair as :meth:`_unexplained_head_steps`
+        and is computed for every period (with or without a candidate)."""
+        row["head_Pa"] = [float(value) for value in head]
+        row["rod_Pa"] = [float(value) for value in rod]
+        row["is_step_rule_suspended"] = bool(self.is_step_rule_suspended)
+        row["head_range_faults"] = {LEG_ORDER[leg]: reason
+                                    for leg, reason in sorted(head_faults.items())}
+        row["head_step_candidates"] = [LEG_ORDER[leg] for leg in head_steps]
+        row["rod_step_candidates"] = [LEG_ORDER[leg] for leg in rod_steps]
+        net_sum_N = self._net_sum_N(head, rod)
+        row["net_sum_N"] = net_sum_N
+        mass_kg = self._d1_mass_kg()
+        row["mass_kg"] = mass_kg
+        row["d1pp_inputs_ready"] = bool(
+            self.settings.step_rule is StepRule.EXPLAINED_IMU and imu_input.is_crawler_lifted
+            and imu_input.has_f_z and self._previous_imu_f_z_m_s2 is not None
+            and mass_kg is not None)
+        if self._previous is None:
+            return
+        head_previous, rod_previous = self._previous
+        row["dp_head_Pa"] = [float(value) for value in head - head_previous]
+        row["dp_rod_Pa"] = [float(value) for value in rod - rod_previous]
+        previous_sum_N = self._net_sum_N(head_previous, rod_previous)
+        row["previous_net_sum_N"] = previous_sum_N
+        if not row["d1pp_inputs_ready"]:
+            return
+        residual_N = net_sum_N - mass_kg * imu_input.f_z_m_s2
+        previous_residual_N = previous_sum_N - mass_kg * self._previous_imu_f_z_m_s2
+        row["residual_N"] = float(residual_N)
+        row["previous_residual_N"] = float(previous_residual_N)
+        row["residual_change_N"] = float(abs(residual_N - previous_residual_N))
+
+    def _trace_d1_judgement(self, row, legs, head, change_N, ratio, reason, unexplained) -> None:
+        """Per candidate leg: step force ``|dp_h| A_p``, the threshold ``ratio`` times it, the
+        change it was judged against and the outcome."""
+        head_previous, _ = self._previous
+        row["step_rule_branch"] = str(reason)
+        row["judged_change_N"] = float(change_N)
+        row["judged_ratio"] = float(ratio)
+        candidates = {}
+        for leg in legs:
+            step_force_N = float(abs(head[leg] - head_previous[leg]) * self.head_area_m2[leg])
+            candidates[LEG_ORDER[leg]] = {
+                "dp_head_Pa": float(head[leg] - head_previous[leg]),
+                "step_force_N": step_force_N,
+                "threshold_N": float(ratio * step_force_N),
+                "is_unexplained": leg in unexplained,
+            }
+        row["candidates"] = candidates
+
+    def _append_d1_trace_row(self, row: dict[str, Any]) -> None:
+        trace = _active_d1_trace
+        if trace is None:  # stopped during this read
+            return
+        if row["monitor"] not in trace.monitors:
+            trace.monitors[row["monitor"]] = {
+                "settings": self.settings.to_meta(),
+                "head_area_m2": self.head_area_m2.tolist(),
+                "annulus_area_m2": self.annulus_area_m2.tolist(),
+                "period_s": float(self.period_s),
+                "first_t_s": row["t_s"],
+            }
+        trace.rows.append(row)
 
     def _sensor_fault_reasons(self, values: NDArray[np.float64]) -> dict[int, str]:
         """D1 per leg (ascending): ``D1_nonfinite``, ``D1_range`` (outside the range widened by
@@ -2049,7 +2196,8 @@ class TwoPressureMonitor:
             steps.append([int(leg) for leg in np.flatnonzero(jumped) if leg not in faults])
         return steps[0], steps[1]
 
-    def _unexplained_head_steps(self, legs: list[int], head, rod, imu_input) -> dict[int, str]:
+    def _unexplained_head_steps(self, legs: list[int], head, rod, imu_input,
+                                trace_row: dict[str, Any] | None = None) -> dict[int, str]:
         """D1' head (217.5): a step is explained when the four-leg net-force sum changed by
         less than ``explained_step_sum_ratio |dp_h| A_p`` (the load moved between legs; a
         sensor jump moves the sum by the whole step force). D1'' (218.4) uses the change of
@@ -2068,13 +2216,15 @@ class TwoPressureMonitor:
         if mass_kg is not None:
             residual_change_N = abs((net_sum_N - mass_kg * imu_input.f_z_m_s2)
                                     - (previous_sum_N - mass_kg * self._previous_imu_f_z_m_s2))
-            unexplained = self._judge_head_steps(legs, head, residual_change_N,
-                                                 self.settings.imu_residual_step_ratio,
-                                                 StepReason.IMU_RESIDUAL)
+            change_N, ratio = residual_change_N, self.settings.imu_residual_step_ratio
+            reason = StepReason.IMU_RESIDUAL
         else:
-            unexplained = self._judge_head_steps(legs, head, abs(net_sum_N - previous_sum_N),
-                                                 self.settings.explained_step_sum_ratio,
-                                                 StepReason.LOAD_REDISTRIBUTION)
+            change_N, ratio = abs(net_sum_N - previous_sum_N), self.settings.explained_step_sum_ratio
+            reason = StepReason.LOAD_REDISTRIBUTION
+        unexplained = self._judge_head_steps(legs, head, change_N, ratio, reason)
+        if trace_row is not None:
+            trace_row["judged_mass_kg"] = mass_kg
+            self._trace_d1_judgement(trace_row, legs, head, change_N, ratio, reason, unexplained)
         return {leg: "D1_step" for leg in unexplained}
 
     def _net_sum_N(self, head, rod) -> float:
