@@ -1,0 +1,61 @@
+{
+ "author": "control-expert",
+ "date": "2026-11-28",
+ "nature": "edition-9 design analysis; record replay of stage-5 diagnosis traces (seen data); no simulation run, no code change; not a judgement",
+ "env": "dynamics-dev via conda run, python -I -B",
+ "commands": [
+  "conda run -n dynamics-dev python -I -B scripts/d1_rule_eval.py <stage5_aa_diag> <this folder>",
+  "conda run -n dynamics-dev python -I -B scripts/d1_rule_tables.py <this folder>",
+  "conda run -n dynamics-dev python -I -B scripts/d1_rule_split.py <this folder>",
+  "conda run -n dynamics-dev python -I -B scripts/cp_and_delay.py <this folder>/cp_and_delay.json"
+ ],
+ "inputs": {
+  "root": "C:/workspace/outrigger_control/06_analysis/02_control/j_p3_cause/ed8_design/stage5_aa_diag",
+  "sha256": {
+   "runs_trace_on.jsonl": "cfba89d2096342b0e24d659dc1f7670a474234cf169c8b101e650519236c8b5e",
+   "diag2/B_gyro_all_trace_on.jsonl": "879bf40d87eef0d9bcde35a9ee42fce0ed224885cde434226de635601f664abd",
+   "diag2/C_gyro_d1only_trace_on.jsonl": "0a37503d34b5f062940c7cd67cb1f6e3e2b5d0d93d3163903c4ce39719774fef",
+   "diag2/D_sweep_gyro_off_trace_on.jsonl": "21ebfd49f253a42f72e351ea703932879b034d479b3d68b0803cafea67a26535",
+   "diag2/E_sweep_ext_gyro_off_trace_on.jsonl": "ff729a7e2a07ea1b1194ffedd20544673667ab7e070970e328850f4efd8c4a35"
+  },
+  "traces": "trace_<label>.json: 7 in the root (diagnosis 1), 7 traces_B, 7 traces_C, 34 traces_D, 20 traces_E (75; unique jobs 61, B and C repeat the 7 diagnosis-1 jobs with gyro samples)",
+  "code_reference": "C8 worktree ed8-impl 56849248, 03_src/outrigger_sim/control/two_pressure.py 2034-2050 (_pressure_steps, |dp| > max_step_Pa), 2052-2078 (_unexplained_head_steps, |r_k - r_{k-1}| with the current M), 2085-2096 (_judge_head_steps, explained iff change < ratio * step force), 2098-2116 (_imu_residual_mass_kg, WARN_D1_IMU_GYRO_MISSING at 2112-2113, called only from 2067 after the empty-candidate return at 2062), 2005-2007 (_previous and previous f_z updated each read)"
+ },
+ "scripts_sha256": {
+  "scripts/d1_rule_eval.py": "f2c9647885038318b2d815ef62211ae032b7903a9f2441643b96be6154eb021a",
+  "scripts/d1_rule_tables.py": "9b0e19552409d52cc498534f6710ab89d5f5e3f1420bc27d2049ff56fa0d28ad",
+  "scripts/d1_rule_split.py": "a4d4680002bf8d63fccba60b87758907ebf9513cfb35e54afdf77b3170e4dd66",
+  "scripts/cp_and_delay.py": "2d4a55795966b6a37dc7d65c730a894cfe068cbc02ca5864949f71a79e751c3e"
+ },
+ "definitions": {
+  "residual": "r_j = sum_i (p_h,i A_p,i - p_r,i A_ann,i)(t_j) - M f_z,used(t_j) [N]; f_z,used = 10 ms partial mean of the IMU specific force (body z) minus the lever term when gyro samples exist; M = mass_kg of the judged period, used for every reference period (trace net_sum_N and f_z_used_m_s2)",
+  "candidate": "leg with |dp_h| > max_step_Pa (100 bar in every traced monitor) in the judged period; threshold thr = 0.5 |dp_h| A_p [N]",
+  "C0": "|r_j - r_{j-1}| >= thr (current D1'', reproduced: 0 mismatches against the traced is_unexplained over 300 candidate leg-periods)",
+  "Cd": "C0 and |r_j - r_{j-2}| >= thr (r_{j-2} missing -> C0)",
+  "Ce": "C0 at j, then FAULT at j+1 iff |r_{j+1} - r_{j-2}| >= thr_j; on actual faulted rows r_{j+1} is the post-fault trajectory (not a counterfactual)",
+  "Cf": "C0 and not (some leg's net-force reading fell >= 50 % from j-2 to j-1 with >= 20 kN at j-2)",
+  "Cm": "C0 and |r_j - median(r_{j-1}, r_{j-2}, r_{j-3})| >= thr (fewer than three valid references -> C0); valid reference = crawler lifted and f_z present",
+  "Cmo": "|r_j - median(r_{j-1}, r_{j-2}, r_{j-3})| >= thr alone (not a subset of C0)",
+  "D1p": "D1' sum rule |sum F_j - sum F_{j-1}| >= thr (spec 217.5), the reference of P-S8-14 (c)",
+  "injection": "open-loop replay (spec 219.2 (d) method): persistent head offset J in {+100, -100, +150, -150} bar on one leg from period j on, every D1''-ready period j before the first head fault of the trace and every leg; adds J A_p to sum F of j and later, dp_h(j) -> dp_h(j) + J; detection judged at j (C0, Cd, Cf, Cm, Cmo, D1p) or j+1 (Ce); a jump missed at j has no later step candidate",
+  "kind": "quiet = max_i |dp_h,i| <= 30 bar in period j, transient otherwise (spec 219.2 (b))",
+  "band": "t_j - t_event: pre < 0, k0 [0, 0.1), k1 [0.1, 0.2) (judged against the lift-instant sample), k2 [0.2, 0.3), late [0.3, 2.5), tail >= 2.5 s"
+ },
+ "outputs": {
+  "candidate_periods.csv": {"rows": "actual D1'' candidate leg-periods (300)", "columns": {"r_jm2_kN..r_jp1_kN": "residuals with the judged-period M [kN]", "d1_kN": "|r_j - r_{j-1}| [kN]", "d2_kN": "|r_j - r_{j-2}| [kN]", "r_med_kN": "median of the three references [kN]", "d1_over_thr, d2_over_thr, dmed_over_thr": "ratios to thr [-]", "code_unexplained": "trace verdict", "C0..D1p": "rule verdict (True = unexplained = FAULT)", "prev_sample_minus_lift_ms": "t_{j-1} - lift [ms], > 0 = sample after the lift"}},
+  "false_fault_rows.csv": "candidate_periods rows with C0 True (21 leg-periods, 16 traces)",
+  "injection_detail.csv": "one row per (trace, period, leg, jump); threshold_kN empty = not a step candidate; t_minus_event_s [s]",
+  "injection_summary.csv": "unconditional detection per scope x jump (non-candidates count as missed)",
+  "injection_conditional.csv": "detection among step candidates per scope x jump x rule",
+  "injection_by_band.csv": "detection among step candidates per band x kind x jump x rule",
+  "cd_loss_rows.csv / cm_loss_rows.csv": "injected jumps C0 detects and Cd / Cm does not",
+  "loss_by_period.csv": "those losses per t - t_event",
+  "cp_and_delay.json": "CP95 one-sided upper bounds beta.ppf(0.95, x+1, n-x); one-period delay bound (stroke = command x 0.1 s, load = stroke x stiffness, attitude = stroke / span)",
+  "rule_eval_summary.json": "per-trace info and counts"
+ },
+ "limits": [
+  "harness traces only: front RE1bF events, level/ready, F_s 0..2 kN, two sweep shapes; not the spec 219.2 (d) Chrono ML set",
+  "open-loop injection: no controller reaction to the injected offset",
+  "decisions after a C0 fault (rows after the first head fault) follow the faulted trajectory; Cd, Cm, Cmo verdicts at the decision period use only samples before it and are exact for that period"
+ ]
+}

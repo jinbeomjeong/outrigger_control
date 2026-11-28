@@ -1,0 +1,294 @@
+{
+ "what": "D1'' time component on real chains, edition 9 design input (analysis, not a judgement)",
+ "author": "hydraulics-expert 2026-11-28",
+ "oil": {
+  "grade": "ISO VG 46 (ASSUMPTION, H-1 unanswered)",
+  "temp_C": 50,
+  "rho_kg_m3": 860.0,
+  "nu_m2_s": 3e-05,
+  "beta_eff_Pa": 1000000000.0,
+  "beta_note": "project base 1.0 GPa, sensitivity 0.69-1.6 GPa",
+  "wave_speed_m_s": 1078.327732034384,
+  "wave_speed_range_m_s": [
+   895.7262870963143,
+   1363.988678940947
+  ]
+ },
+ "front_leg": {
+  "A_p": 0.013273,
+  "A_ann": 0.00377,
+  "m_rod": 106.78,
+  "e": 0.4015,
+  "stroke": 0.7,
+  "L0h": 0.05,
+  "L0r": 0.05,
+  "k_h_N_m": 29397563.676633444,
+  "k_r_N_m": 10817790.530846488,
+  "rod_local_mode_Hz": 97.67223429111358,
+  "rod_local_mode_Hz_head_only": 83.50853084288977,
+  "rod_local_mode_Hz_beta_range": [
+   81.13265121070891,
+   123.54668980700818
+  ],
+  "K_ground_N_m_ASSUMPTION": 500000000.0,
+  "zeta_rod_ASSUMPTION": 0.05
+ },
+ "fits": {
+  "J1shape_FR_30mm_0.04s": {
+   "T_u_s": 0.013,
+   "F0_N": 117683.26686012076,
+   "n": 3.4262404127747907,
+   "rms_kN": 2.0922439440741116,
+   "max_abs_kN": 3.5923725195154828,
+   "points": [
+    {
+     "phase_ms": -0.0,
+     "obs_kN": 81.12,
+     "fit_kN": 83.17178366456243
+    },
+    {
+     "phase_ms": -1.0,
+     "obs_kN": 65.95,
+     "fit_kN": 65.21252871310392
+    },
+    {
+     "phase_ms": -2.0,
+     "obs_kN": 51.79,
+     "fit_kN": 49.895422577240616
+    },
+    {
+     "phase_ms": -3.0,
+     "obs_kN": 38.92,
+     "fit_kN": 37.076614495519784
+    },
+    {
+     "phase_ms": -4.0,
+     "obs_kN": 27.56,
+     "fit_kN": 26.59610141904959
+    },
+    {
+     "phase_ms": -5.0,
+     "obs_kN": 17.9,
+     "fit_kN": 18.26845415721461
+    },
+    {
+     "phase_ms": -6.0,
+     "obs_kN": 10.03,
+     "fit_kN": 11.880143983354166
+    },
+    {
+     "phase_ms": -7.0,
+     "obs_kN": 3.99,
+     "fit_kN": 7.193616181922522
+    },
+    {
+     "phase_ms": -8.0,
+     "obs_kN": 0.36,
+     "fit_kN": 3.952372519515483
+    }
+   ]
+  },
+  "J3shape_FL_25mm_0.05s": {
+   "T_u_s": 0.017,
+   "F0_N": 88537.11156090227,
+   "n": 2.5430646318104975,
+   "rms_kN": 0.470268033946215,
+   "max_abs_kN": 0.735185226554604,
+   "points": [
+    {
+     "phase_ms": 0.0,
+     "obs_kN": 47.19,
+     "fit_kN": 47.887832839153546
+    },
+    {
+     "phase_ms": -1.0,
+     "obs_kN": 42.69,
+     "fit_kN": 42.67852271918157
+    },
+    {
+     "phase_ms": -2.0,
+     "obs_kN": 38.09,
+     "fit_kN": 37.69191142154873
+    },
+    {
+     "phase_ms": -3.0,
+     "obs_kN": 33.48,
+     "fit_kN": 32.9371782964586
+    },
+    {
+     "phase_ms": -4.0,
+     "obs_kN": 28.9,
+     "fit_kN": 28.424940616694613
+    },
+    {
+     "phase_ms": -5.0,
+     "obs_kN": 24.41,
+     "fit_kN": 24.167735368594634
+    },
+    {
+     "phase_ms": -6.0,
+     "obs_kN": 20.08,
+     "fit_kN": 20.18082115347241
+    },
+    {
+     "phase_ms": -7.0,
+     "obs_kN": 16.02,
+     "fit_kN": 16.48378885781311
+    },
+    {
+     "phase_ms": -8.0,
+     "obs_kN": 12.37,
+     "fit_kN": 13.105185226554603
+    }
+   ]
+  }
+ },
+ "line": {
+  "production_block_short": {
+   "length_m": 0.6,
+   "one_way_delay_ms": 0.5564171097297422,
+   "quarter_wave_Hz_closed_stub": 449.3032216809934
+  },
+  "photo_head_tube_long": {
+   "length_m": 1.35,
+   "one_way_delay_ms": 1.25193849689192,
+   "quarter_wave_Hz_closed_stub": 199.69032074710816
+  }
+ },
+ "stub_quarter_wave_Hz": {
+  "head_tube_0.9m": 299.53548112066227,
+  "block_0.15m": 1797.2128867239735
+ },
+ "filters": {
+  "box_10ms": {
+   "group_delay_ms": 5.0,
+   "f_3dB_Hz": 44.3,
+   "first_null_Hz": 100.0
+  },
+  "box_10ms_gain": {
+   "1_Hz": 0.9998355147105485,
+   "2_Hz": 0.9993421562398412,
+   "4_Hz": 0.9973701827725034,
+   "8_Hz": 0.9895056209813083,
+   "20_Hz": 0.935489283788639,
+   "44.3_Hz": 0.707042871207153,
+   "98_Hz": 0.02039473788244581,
+   "150_Hz": 0.2122065907891938,
+   "300_Hz": 3.8981718325193755e-17
+  },
+  "bw2_group_delay_ms_low_freq": {
+   "10_Hz": 22.507907903927656,
+   "25_Hz": 9.003163161571061,
+   "40_Hz": 5.626976975981914,
+   "50_Hz": 4.501581580785531,
+   "100_Hz": 2.2507907903927653
+  },
+  "first_order_group_delay_ms_low_freq": {
+   "10_Hz": 15.915494309189533,
+   "25_Hz": 6.366197723675813,
+   "50_Hz": 3.1830988618379066,
+   "100_Hz": 1.5915494309189533
+  },
+  "wika_settling_lt_1ms_as_first_order_tau_ms": {
+   "if_settling_is_10_90pct": 0.45511961331341866,
+   "if_settling_is_to_1pct": 0.21714724095162588,
+   "upper_bound_tau_eq_settling": 1.0,
+   "2017_edition_lt_4ms_upper": 4.0
+  }
+ },
+ "q1_rates_front_J1fit": {
+  "head_drop_bar_equiv": 88.66365317571066,
+  "mean_rate_bar_per_ms": 6.820281013516205,
+  "end_rate_bar_per_ms": 23.36792243498983,
+  "end_force_rate_kN_per_ms": 31.016243447961998,
+  "note": "head-pressure equivalent of the net-force change (rod side ignored)",
+  "stub_ringing_bound_bar": {
+   "head_tube_0.9m": 19.503467792498764,
+   "block_0.15m": 3.2505779654164604
+  },
+  "stub_ringing_note": "order bound: end slope x one-way delay of the dead-end passage (chamber port to sensor), lossless, abrupt slope change",
+  "sensor_lag_error_at_lift_bar": {
+   "tau_0.25ms": 5.841980608747457,
+   "tau_1.0ms": 23.36792243498983,
+   "tau_4.0ms": 93.47168973995932
+  }
+ },
+ "rod_ringing_Fs0": {
+  "peak_to_peak_kN_first_20ms": 52.972891164527304,
+  "oil_force_at_lift_minus_massless_kN": 1.788266940076428
+ },
+ "cb_allowable_misalignment_J1fit": {
+  "ts_offset_for_peak_25pct_of_threshold_ms": 0.7551255783801024,
+  "ts_offset_for_peak_50pct_of_threshold_ms": 1.7470667066663732
+ },
+ "j3_subset": [
+  {
+   "case": "J3 A0 harness",
+   "peak_abs_kN": 47.89,
+   "peak_phase_ms": 8.673617379884035e-15,
+   "ratio_peak_to_49p8kN": 0.962,
+   "fault_window_ms_thr49p8": 0.0
+  },
+  {
+   "case": "J3 B1 + rod mass",
+   "peak_abs_kN": 49.07,
+   "peak_phase_ms": 8.673617379884035e-15,
+   "ratio_peak_to_49p8kN": 0.985,
+   "fault_window_ms_thr49p8": 0.0
+  },
+  {
+   "case": "J3 D box10 +0 nominal p",
+   "peak_abs_kN": 42.13,
+   "peak_phase_ms": 0.7500000000000093,
+   "ratio_peak_to_49p8kN": 0.846,
+   "fault_window_ms_thr49p8": 0.0
+  },
+  {
+   "case": "J3 D box10 +5 nominal p",
+   "peak_abs_kN": 73.29,
+   "peak_phase_ms": 1.2500000000000098,
+   "ratio_peak_to_49p8kN": 1.472,
+   "fault_window_ms_thr49p8": 8.0
+  },
+  {
+   "case": "J3 D bw2_25 +0 nominal p",
+   "peak_abs_kN": 65.29,
+   "peak_phase_ms": 1.0000000000000095,
+   "ratio_peak_to_49p8kN": 1.311,
+   "fault_window_ms_thr49p8": 6.5
+  },
+  {
+   "case": "J3 E C-b box +0",
+   "peak_abs_kN": 4.93,
+   "peak_phase_ms": 0.7500000000000093,
+   "ratio_peak_to_49p8kN": 0.099,
+   "fault_window_ms_thr49p8": 0.0
+  },
+  {
+   "case": "J3 E C-b box +2",
+   "peak_abs_kN": 10.79,
+   "peak_phase_ms": 2.500000000000011,
+   "ratio_peak_to_49p8kN": 0.217,
+   "fault_window_ms_thr49p8": 0.0
+  },
+  {
+   "case": "J3 E C-b box -2",
+   "peak_abs_kN": 20.32,
+   "peak_phase_ms": 0.5000000000000091,
+   "ratio_peak_to_49p8kN": 0.408,
+   "fault_window_ms_thr49p8": 0.0
+  },
+  {
+   "case": "J3 E C-b box +5",
+   "peak_abs_kN": 33.39,
+   "peak_phase_ms": 4.250000000000012,
+   "ratio_peak_to_49p8kN": 0.671,
+   "fault_window_ms_thr49p8": 0.0
+  }
+ ],
+ "outputs": [
+  "pressure_sampling_cases.csv",
+  "pressure_sampling_phase.csv"
+ ],
+ "sweep_source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\stage5_aa_diag\\diag2\\sweep_summary.csv"
+}

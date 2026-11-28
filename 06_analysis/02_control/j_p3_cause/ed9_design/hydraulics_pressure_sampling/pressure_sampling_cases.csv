@@ -1,0 +1,44 @@
+case,physics,line_delay_ms,sensor_tau_ms,adc,imu_chain,ts_offset_ms,rule,peak_abs_kN,peak_phase_ms,ratio_peak_to_49p8kN,fault_window_ms_thr49p8,fault_window_ms_thr47p8,fault_window_pct_of_100ms
+"A0 harness (massless, instant p, box IMU aligned)",massless_harness,0.0,0.0,none,box10,0.0,instant,83.17,8.673617379884035e-15,1.67,5.0,5.25,5.0
+"B1 + rod mass, Fs 0",rod_mass_Fs0,0.0,0.0,none,box10,0.0,instant,84.36,0.2500000000000089,1.694,6.75,7.0,6.75
+"B2 + rod mass, Fs 4 kN",rod_mass_Fs4kN,0.0,0.0,none,box10,0.0,instant,88.49,0.2500000000000089,1.777,7.0,7.25,7.0
+C line short + sensor tau 0.25 ms (rod mass Fs 0),rod_mass_Fs0,0.5564,0.25,none,box10,0.0,instant,74.12,1.0000000000000095,1.488,5.5,5.75,5.5
+C line short + sensor tau 1 ms (rod mass Fs 0),rod_mass_Fs0,0.5564,1.0,none,box10,0.0,instant,60.33,1.7500000000000102,1.211,3.75,4.25,3.75
+C line short + sensor tau 4 ms (rod mass Fs 0),rod_mass_Fs0,0.5564,4.0,none,box10,0.0,instant,18.04,2.500000000000011,0.362,0.0,0.0,0.0
+C line long + sensor tau 0.25 ms (rod mass Fs 0),rod_mass_Fs0,1.2519,0.25,none,box10,0.0,instant,65.68,1.7500000000000102,1.319,4.0,4.25,4.0
+C line long + sensor tau 1 ms (rod mass Fs 0),rod_mass_Fs0,1.2519,1.0,none,box10,0.0,instant,51.71,2.500000000000011,1.038,1.5,2.25,1.5
+C line long + sensor tau 4 ms (rod mass Fs 0),rod_mass_Fs0,1.2519,4.0,none,box10,0.0,instant,10.46,14.750000000000021,0.21,0.0,0.0,0.0
+C ADC RC 1.6 ms (100 Hz) + line short + tau 0.25,rod_mass_Fs0,0.5564,0.25,rc_1p6ms,box10,0.0,instant,46.86,2.500000000000011,0.941,0.0,0.0,0.0
+C ADC 20 ms integration (50 Hz rejection) + line short + tau 0.25,rod_mass_Fs0,0.5564,0.25,box_20ms,box10,0.0,instant,57.75,8.250000000000016,1.16,5.5,6.0,5.5
+"D IMU box10, ts offset -5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,box10,-5.0,instant,23.99,13.250000000000021,0.482,0.0,0.0,0.0
+"D IMU box10, ts offset +0 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,box10,0.0,instant,74.12,1.0000000000000095,1.488,5.5,5.75,5.5
+"D IMU box10, ts offset +5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,box10,5.0,instant,117.08,2.750000000000011,2.351,10.75,11.0,10.75
+"D IMU bw2_50, ts offset -5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_50,-5.0,instant,23.17,13.250000000000021,0.465,0.0,0.0,0.0
+"D IMU bw2_50, ts offset +0 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_50,0.0,instant,74.41,1.0000000000000095,1.494,5.0,5.25,5.0
+"D IMU bw2_50, ts offset +5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_50,5.0,instant,118.16,2.750000000000011,2.373,10.75,10.75,10.75
+"D IMU bw2_25, ts offset -5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_25,-5.0,instant,60.55,1.2500000000000098,1.216,4.25,4.75,4.25
+"D IMU bw2_25, ts offset +0 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_25,0.0,instant,102.19,2.0000000000000107,2.052,10.25,10.5,10.25
+"D IMU bw2_25, ts offset +5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_25,5.0,instant,128.3,4.000000000000012,2.576,13.25,13.5,13.25
+"D IMU fo_25, ts offset -5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,fo_25,-5.0,instant,27.78,7.250000000000015,0.558,0.0,0.0,0.0
+"D IMU fo_25, ts offset +0 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,fo_25,0.0,instant,69.63,1.0000000000000095,1.398,5.75,6.0,5.75
+"D IMU fo_25, ts offset +5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,fo_25,5.0,instant,114.51,2.500000000000011,2.299,10.75,11.25,10.75
+"D IMU bw2_10, ts offset -5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_10,-5.0,instant,112.2,4.000000000000012,2.253,19.25,20.25,19.25
+"D IMU bw2_10, ts offset +0 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_10,0.0,instant,127.07,4.500000000000012,2.552,25.0,26.0,25.0
+"D IMU bw2_10, ts offset +5 ms (nominal p chain)",rod_mass_Fs0,0.5564,0.25,none,bw2_10,5.0,instant,135.87,5.000000000000013,2.728,28.25,28.5,28.25
+"E C-b box, IMU box10, ts offset -5 ms",rod_mass_Fs0,0.5564,0.25,none,box10,-5.0,cb_box,68.3,0.7500000000000093,1.372,7.5,7.75,7.5
+"E C-b box, IMU box10, ts offset -2 ms",rod_mass_Fs0,0.5564,0.25,none,box10,-2.0,cb_box,32.49,2.0000000000000107,0.652,0.0,0.0,0.0
+"E C-b box, IMU box10, ts offset -1 ms",rod_mass_Fs0,0.5564,0.25,none,box10,-1.0,cb_box,19.98,2.500000000000011,0.401,0.0,0.0,0.0
+"E C-b box, IMU box10, ts offset +0 ms",rod_mass_Fs0,0.5564,0.25,none,box10,0.0,cb_box,7.39,2.2500000000000107,0.148,0.0,0.0,0.0
+"E C-b box, IMU box10, ts offset +1 ms",rod_mass_Fs0,0.5564,0.25,none,box10,1.0,cb_box,5.42,4.500000000000012,0.109,0.0,0.0,0.0
+"E C-b box, IMU box10, ts offset +2 ms",rod_mass_Fs0,0.5564,0.25,none,box10,2.0,cb_box,18.02,4.500000000000012,0.362,0.0,0.0,0.0
+"E C-b box, IMU box10, ts offset +5 ms",rod_mass_Fs0,0.5564,0.25,none,box10,5.0,cb_box,54.64,5.750000000000014,1.097,4.5,5.0,4.5
+"E C-b box, harness massless, ideal chains",massless_harness,0.0,0.0,none,box10,0.0,cb_box,0.0,-10.0,0.0,0.0,0.0,0.0
+"E C-b box, sensor tau 4 ms, long line",rod_mass_Fs0,1.2519,4.0,none,box10,0.0,cb_box,52.49,6.250000000000014,1.054,3.25,4.5,3.25
+"E C-b box, Fs 4 kN (seal term only)",rod_mass_Fs4kN,0.5564,0.25,none,box10,0.0,cb_box,3.68,6.500000000000014,0.074,0.0,0.0,0.0
+E C-b box but IMU is bw2_50 (shape mismatch),rod_mass_Fs0,0.5564,0.25,none,bw2_50,0.0,cb_box,13.11,5.000000000000013,0.263,0.0,0.0,0.0
+E C-b matched filter (pressure through bw2_50),rod_mass_Fs0,0.5564,0.25,none,bw2_50,0.0,cb_matched,8.88,2.2500000000000107,0.178,0.0,0.0,0.0
+E C-b box but IMU is bw2_25 (shape mismatch),rod_mass_Fs0,0.5564,0.25,none,bw2_25,0.0,cb_box,42.99,7.750000000000016,0.863,0.0,0.0,0.0
+E C-b matched filter (pressure through bw2_25),rod_mass_Fs0,0.5564,0.25,none,bw2_25,0.0,cb_matched,5.26,5.750000000000014,0.106,0.0,0.0,0.0
+E C-b box but IMU is fo_25 (shape mismatch),rod_mass_Fs0,0.5564,0.25,none,fo_25,0.0,cb_box,20.22,12.25000000000002,0.406,0.0,0.0,0.0
+E C-b matched filter (pressure through fo_25),rod_mass_Fs0,0.5564,0.25,none,fo_25,0.0,cb_matched,7.39,0.5000000000000091,0.148,0.0,0.0,0.0
+E C-b first-order 5 ms instead of box (IMU box10),rod_mass_Fs0,0.5564,0.25,none,box10,0.0,cb_rc5,12.92,10.000000000000018,0.259,0.0,0.0,0.0
