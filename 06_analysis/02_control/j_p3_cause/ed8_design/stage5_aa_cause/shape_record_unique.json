@@ -1,0 +1,178 @@
+{
+ "same": {
+  "pairs": 309,
+  "failures": 10,
+  "slots": []
+ },
+ "harsher": {
+  "pairs": 10,
+  "failures": 1,
+  "slots": [
+   [
+    172,
+    "b_shape",
+    "bottom|FL|Fs0|RE1bF|ready",
+    false
+   ],
+   [
+    173,
+    "b_shape",
+    "bottom|FL|Fs2|RE1bF|level",
+    true
+   ],
+   [
+    178,
+    "b_shape",
+    "bottom|FL|Fs8|RE1bF|ready",
+    false
+   ],
+   [
+    192,
+    "b_shape",
+    "bottom|RL|Fs4|RE1bF|ready",
+    false
+   ],
+   [
+    193,
+    "b_shape",
+    "bottom|RL|Fs8|RE1bF|level",
+    false
+   ],
+   [
+    204,
+    "b_shape",
+    "top|RL|Fs0|RE1bF|ready",
+    false
+   ],
+   [
+    207,
+    "b_shape",
+    "top|RL|Fs4|RE1bF|level",
+    false
+   ],
+   [
+    211,
+    "b_shape",
+    "top|RR|Fs0|RE1bF|level",
+    false
+   ],
+   [
+    214,
+    "b_shape",
+    "top|RR|Fs2|RE1bF|ready",
+    false
+   ],
+   [
+    216,
+    "b_shape",
+    "top|RR|Fs4|RE1bF|ready",
+    false
+   ]
+  ]
+ },
+ "milder": {
+  "pairs": 15,
+  "failures": 0,
+  "slots": [
+   [
+    171,
+    "b_shape",
+    "bottom|FL|Fs0|RE1bF|level",
+    false
+   ],
+   [
+    175,
+    "b_shape",
+    "bottom|FL|Fs4|RE1bF|level",
+    false
+   ],
+   [
+    177,
+    "b_shape",
+    "bottom|FL|Fs8|RE1bF|level",
+    false
+   ],
+   [
+    183,
+    "b_shape",
+    "bottom|FR|Fs4|RE1bF|level",
+    false
+   ],
+   [
+    188,
+    "b_shape",
+    "bottom|RL|Fs0|RE1bF|ready",
+    false
+   ],
+   [
+    194,
+    "b_shape",
+    "bottom|RL|Fs8|RE1bF|ready",
+    false
+   ],
+   [
+    195,
+    "b_shape",
+    "bottom|RR|Fs0|RE1bF|level",
+    false
+   ],
+   [
+    197,
+    "b_shape",
+    "bottom|RR|Fs2|RE1bF|level",
+    false
+   ],
+   [
+    201,
+    "b_shape",
+    "bottom|RR|Fs8|RE1bF|level",
+    false
+   ],
+   [
+    202,
+    "b_shape",
+    "bottom|RR|Fs8|RE1bF|ready",
+    false
+   ],
+   [
+    205,
+    "b_shape",
+    "top|RL|Fs2|RE1bF|level",
+    false
+   ],
+   [
+    206,
+    "b_shape",
+    "top|RL|Fs2|RE1bF|ready",
+    false
+   ],
+   [
+    210,
+    "b_shape",
+    "top|RL|Fs8|RE1bF|ready",
+    false
+   ],
+   [
+    215,
+    "b_shape",
+    "top|RR|Fs4|RE1bF|level",
+    false
+   ],
+   [
+    217,
+    "b_shape",
+    "top|RR|Fs8|RE1bF|level",
+    false
+   ]
+  ]
+ },
+ "not_comparable": {
+  "pairs": 0,
+  "failures": 0,
+  "slots": []
+ },
+ "default_re1bf_shape": [
+  0.03,
+  0.05
+ ]
+}

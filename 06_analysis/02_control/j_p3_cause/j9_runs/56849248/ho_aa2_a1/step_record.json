@@ -1,0 +1,48 @@
+{
+  "step": "ho_aa2",
+  "folder": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1",
+  "exit_code": 0,
+  "commit": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+  "started": "2026-11-28 11:12:29 +09:00",
+  "done": "2026-11-28 11:27:04 +09:00",
+  "codes": {
+    "scope": "P8-10: 41e107e98a5b0e45c3197dbfee46e8dd033eba35 -> 56849248371b4916e2fe683265e7abffdd6fb8d7 in scope",
+    "identity_start": {
+      "head": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+      "is_clean": true,
+      "src_tree": "ed797e8e6bb239cad6bd80a24fba3504ab4df92b",
+      "time": "2026-11-28 11:12:30 +09:00"
+    },
+    "numba_cache_dir": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\numba_cache\\56849248",
+    "input:spec_v8": "06_analysis/02_control/j_p3_cause/jp3_remedy_spec_v8_rules.md",
+    "input:heldout_keys": "06_analysis/02_control/j_p3_cause/ed8_design/keys_seal_41e107e9/heldout_g_ed8.json",
+    "run_steps": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-impl\\06_analysis\\02_control\\j_p3_cause\\prelaunch_j9\\run_steps_ed8 (run commit 56849248371b4916e2fe683265e7abffdd6fb8d7)",
+    "core:ed8_heldout_aa2": "P",
+    "invocation:ed8_heldout_aa2": "python.exe -I -B",
+    "run:ed8_heldout_aa2": 0,
+    "identity_check": 0,
+    "identity_end": {
+      "head": "56849248371b4916e2fe683265e7abffdd6fb8d7",
+      "is_clean": true,
+      "src_tree": "ed797e8e6bb239cad6bd80a24fba3504ab4df92b",
+      "time": "2026-11-28 11:27:03 +09:00"
+    }
+  },
+  "previous_attempts": [],
+  "cleared_variables": [],
+  "commands": [
+    {
+      "label": "ed8_heldout_aa2",
+      "mask": "0xFFFF",
+      "environment": {
+        "NUMBA_CACHE_DIR": "C:\\Users\\jinbeom\\.claude\\runners\\outrigger-ed8\\numba_cache\\56849248"
+      },
+      "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B 04_scripts/04_hydraulic/coupled/run_v5.py ed8_heldout_aa2 --jobs-file C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\ed8_design\\keys_seal_41e107e9\\heldout_g_ed8.json --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1\\ed8_heldout_aa2.jsonl --workers 8 --mask 0xFFFF",
+      "pid": 84932
+    },
+    {
+      "label": "identity_check",
+      "command": "C:\\ProgramData\\miniforge3\\envs\\python-dev\\python.exe -I -B C:\\Users\\jinbeom\\.claude\\tools\\verif\\baseline_check.py identity --repo C:\\workspace\\outrigger_control\\.claude\\worktrees\\ed8-impl C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\ho_aa2_a1 --expect-commit 56849248371b4916e2fe683265e7abffdd6fb8d7 --mtime --out C:\\workspace\\outrigger_control\\06_analysis\\02_control\\j_p3_cause\\j9_runs\\56849248\\_identity_checks\\ho_aa2_a1.md"
+    }
+  ]
+}

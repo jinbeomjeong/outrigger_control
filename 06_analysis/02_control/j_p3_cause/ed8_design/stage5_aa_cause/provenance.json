@@ -1,0 +1,32 @@
+{
+ "made": "2026-11-28 dynamics-expert, after the stage 5 result was seen (post-hoc analysis, record only, not a judgement)",
+ "inputs": {
+  "keys": "06_analysis/02_control/j_p3_cause/ed8_design/keys_seal_41e107e9/heldout_g_ed8.json (sha256 a18b5818...)",
+  "rows": ["j9_runs/56849248/ho_v0_a1/ed8_heldout_v0.jsonl (fd5f85f5...)", "j9_runs/56849248/ho_aa2_a1/ed8_heldout_aa2.jsonl (182dcaab...)", "j9_runs/56849248/ho_aa3_a1/ed8_heldout_aa3.jsonl (a2d65df1...)"],
+  "grid_keys": "06_analysis/02_control/j_p3_cause/ed6_design/keys/confirm_b_grid192.json (4e80e69b...)",
+  "judge_code_imported_read_only": ".claude/worktrees/ed8-judge4 (T8'''' 7ea78232): jp3_ed8_judge.slot_inputs, unit_item_verdicts, shape_severity; jp3_ed8_rules.aa_pair_of, stage5_selection (library calls, the CLI was not run, no output written by the judge)"
+ },
+ "env": "conda dynamics-dev python.exe -I -B; scripts in scripts/ (s1..s10), argv[1] = this folder",
+ "files": {
+  "slots_stage5.json/.csv": "s1: the 339 key lines rebuilt with slot_inputs, each with its OWN A/A pair (aa_pair_of on that slot), keyed by line index",
+  "dup_name_pairs.csv": "s2: slots sharing a name, own pair vs the pair the name-keyed dict gives (tool_pair_from_index = the line whose pair the tool used)",
+  "pair_lines.json": "s4: condition and candidate line summaries of the failing pairs and of slots 10, 28, 173, 179",
+  "stage5_line_census.csv": "s5: all 1356 lines",
+  "fault_by_offset.csv": "s5: counts by (event, leg side, timing, offset)",
+  "front_re1bf_lift_phase.csv": "s6: front-leg RE1bF lines by (timing, shape, offset)",
+  "rerule_unique_names.json": "s7: sealed stage5_selection on the rebuilt slots with the tool names (reproduces ho_k_selection) and with unique names <source>|<slot>",
+  "fault_line_slots.csv": "s8: role of each FAULT line in the slots",
+  "shape_record_unique.json": "s9: stats Q-3 shape record with own pairs",
+  "aphase_E_hand_check.csv": "s10: no judge code; a_phase E slots' own pairs, discrete fields only"
+ },
+ "columns": {
+  "event_phase_in_period_s": {"definition": "t_event_s mod 0.1", "code": "scripts/s5_census.py:33-35", "unit": "s", "note": "phase in the 10 Hz control/pressure-sample period (samples at multiples of 0.1 s)"},
+  "t_lift_event_leg_s": {"definition": "t_event_s + event_output.lifts[event leg].first_s", "code": "scripts/s5_census.py:30-32", "unit": "s (absolute)"},
+  "lift_phase_in_period_s": {"definition": "t_lift_event_leg_s mod 0.1", "code": "scripts/s5_census.py:33-35", "unit": "s", "note": "0.000-0.003 = event-leg pad lift within 3 ms after a 10 Hz sample"},
+  "gyro_missing": {"definition": "WARN_D1_IMU_GYRO_MISSING in event_output.warnings or values.events.warn_events", "code": "scripts/s5_census.py:36,51", "unit": "bool", "note": "once-warning of the D1'' head-step check run without the lever correction (two_pressure.py:2112-2113 at C8)"},
+  "rod_fallback_D6": {"definition": "any warning ending ':D6'", "code": "scripts/s5_census.py:52", "unit": "bool"},
+  "fault (fault_by_offset)": {"definition": "final_phase == 'fault'", "code": "scripts/s5_census.py:71", "unit": "count of lines"},
+  "own_aa_fail / tool_aa_fail": {"definition": "aa_fail of the slot's own decided pair / of the pair under the slot name in the tool's dict (last line of that name)", "code": "scripts/s2_diff.py:16-30", "unit": "bool"},
+  "same_discrete (aphase_E_hand_check)": {"definition": "condition and chosen candidate equal in final_phase, fault_events, all(event gates), sorted warning set", "code": "scripts/s10_hand.py:43-47,67-70", "unit": "bool", "note": "covers J1 gates, J4, J7 sets only; J2/J5/J6/J8 thresholds not hand-checked"}
+ }
+}

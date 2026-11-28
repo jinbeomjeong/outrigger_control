@@ -1,0 +1,9 @@
+index,source,slot,slot_layer,role,line_layer,offset_s,depth_m,ramp_s,use
+5,a_phase,bottom|FL|Fs0|RE1bF|ready,N,condition,N,0.0875,,,condition (base fail -> slot not counted)
+29,a_phase,bottom|FR|Fs0|RE1bF|ready,N,condition,N,0.0875,,,condition (base fail -> slot not counted)
+35,a_phase,bottom|FR|Fs2|RE1bF|ready,N,candidate2,N,0.0875,,,after decided try (ignored)
+173,b_shape,bottom|FL|Fs2|RE1bF|level,N,candidate1,N,0.0875,0.03,0.04,judged A/A candidate
+174,b_shape,bottom|FL|Fs2|RE1bF|ready,E,candidate2,N,0.0875,0.03,0.04,after decided try (ignored)
+179,b_shape,bottom|FR|Fs0|RE1bF|level,N,candidate2,N,0.0875,0.03,0.04,judged A/A candidate
+181,b_shape,bottom|FR|Fs2|RE1bF|level,N,condition,N,0.0875,0.03,0.04,condition (base fail -> slot not counted)
+270,c_fs,bottom|ready|FR|RE1bF|Fs1,N,candidate1,N,0.0875,,,judged A/A candidate

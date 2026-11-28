@@ -1,0 +1,11 @@
+# Stage 5 (436.9 ed8) stored V0 grid files read by jp3_ed8_judge.py stage5 (GridStore, --grid-root = main checkout).
+# Recorded 2026-11-28 before the stage 5 judgement, for the judgement report.
+# main checkout HEAD: 0aa6cbb80da0e346b008be9d181111cfdc39419e
+# last commit touching these files: 7320f0056fb154a2816918f2fc155dc36a86104d 2026-11-05T15:19:57+09:00
+# git status --porcelain --ignored -- (the 4 files): 0 lines (0 = clean)
+# git check-attr text: 06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json: text: unspecified | 06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json: text: unspecified | 06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json: text: unspecified | 06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json: text: unspecified
+# columns: hash_object (git hash-object of the work tree file)  head_blob (HEAD:path in the main checkout)  sha256_raw  sha256_lf  bytes  path
+1f88d9c98760353e90dbcdc6c00123c320cf8020  1f88d9c98760353e90dbcdc6c00123c320cf8020  a2e74481760a27695ac63800a650e0be1b9b3980fcfaef1f1b64d4e98628316d  0496e08fbbb90641b3e977640a0c64a559c7bec39ec7f29fb69f7a19c480e370  503144  06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_main.json
+8797afe1dd3e9d4dbe7508c1070eda330d6cfe57  8797afe1dd3e9d4dbe7508c1070eda330d6cfe57  1d07e49fdbcaf375c4266866ff6955569c967d6d4eb9d4babc07558a64e92559  f0a56208b7ef656059fe9b55978aa5b97e45e564ab786c600f41ba3804590cee  501873  06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r67_top.json
+d4f3f8c69358f858daa34144e3531cda6fb9919e  d4f3f8c69358f858daa34144e3531cda6fb9919e  91026c460489463aa34e0377236854c892e46257d55133bda9c777584b548a89  ac5df53e8e6e575e68fae6edb592646778df54bc32ed4e5ff0418fb9dae73929  481989  06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_bottom.json
+33e7508d5f027aef1884066f43e28bce183e8b9c  33e7508d5f027aef1884066f43e28bce183e8b9c  87e8d72a25a5d40cccedce1c632a7e4f168f126aed38ada8a3b6760794d02390  256f2d7902be0c4f3eaded8a34a6bcf34044ced21f1dbb7abf0375e22380494c  501858  06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid/grid_r69_top.json

@@ -1,0 +1,95 @@
+{
+ "tool_names": {
+  "status": "stop",
+  "reasons": [
+   "E A/A failures 2 >= 2"
+  ],
+  "merged": false,
+  "merged_why": null,
+  "layers": {
+   "E": {
+    "n": 24,
+    "x_aa": 2,
+    "n_aa": 22,
+    "cp95": 0.25946653222843696,
+    "k": null,
+    "mde80": null
+   },
+   "N": {
+    "n": 312,
+    "x_aa": 10,
+    "n_aa": 310,
+    "cp95": 0.05410248375064101,
+    "k": null,
+    "mde80": null
+   }
+  },
+  "n_before_merge": {
+   "E": 24,
+   "N": 312
+  },
+  "aa_summary": {
+   "E": {
+    "same_hash_slots": 0,
+    "same_hash_with_same_layer_after": 0,
+    "crossed_tries": 14,
+    "none_in_layer_slots": 2,
+    "pairs": 22
+   },
+   "N": {
+    "same_hash_slots": 0,
+    "same_hash_with_same_layer_after": 0,
+    "crossed_tries": 22,
+    "none_in_layer_slots": 3,
+    "pairs": 312
+   }
+  }
+ },
+ "unique_names": {
+  "status": "stop",
+  "reasons": [
+   "N A/A CP95 0.058051 > 0.025"
+  ],
+  "merged": false,
+  "merged_why": null,
+  "layers": {
+   "E": {
+    "n": 24,
+    "x_aa": 0,
+    "n_aa": 24,
+    "cp95": 0.11734615615494874,
+    "k": null,
+    "mde80": null
+   },
+   "N": {
+    "n": 312,
+    "x_aa": 11,
+    "n_aa": 310,
+    "cp95": 0.058050880256826996,
+    "k": null,
+    "mde80": null
+   }
+  },
+  "n_before_merge": {
+   "E": 24,
+   "N": 312
+  },
+  "aa_summary": {
+   "E": {
+    "same_hash_slots": 0,
+    "same_hash_with_same_layer_after": 0,
+    "crossed_tries": 12,
+    "none_in_layer_slots": 0,
+    "pairs": 24
+   },
+   "N": {
+    "same_hash_slots": 0,
+    "same_hash_with_same_layer_after": 0,
+    "crossed_tries": 23,
+    "none_in_layer_slots": 3,
+    "pairs": 312
+   }
+  }
+ },
+ "note": "record only: the sealed rules code run on the 339 rebuilt slots; tool_names must equal ho_k_selection.json; unique_names gives each slot its own A/A pair"
+}
